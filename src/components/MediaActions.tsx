@@ -62,6 +62,7 @@ export function MediaActions(props: IProps) {
     <div className={classes.arrangeActions}>
       {!readonly && (
         <IconButton
+          id="audActAttach"
           className={classes.actionButton}
           title={!attached ? t.attach : t.detach}
           onClick={handleAttach}
@@ -75,6 +76,7 @@ export function MediaActions(props: IProps) {
       )}
       {(isElectron || online) && (
         <IconButton
+          id="audActPlayStop"
           className={classes.actionButton}
           title={isPlaying ? t.stop : t.play}
           disabled={(mediaId || '') === ''}

@@ -103,12 +103,8 @@ function TranscribeAddNote(props: IProps) {
 
   return (
     <div>
-      <Dialog
-        open={open}
-        onClose={handleCancel}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">{t.addNoteTitle}</DialogTitle>
+      <Dialog open={open} onClose={handleCancel} aria-labelledby="transAddDlg">
+        <DialogTitle id="transAddDlg">{t.addNoteTitle}</DialogTitle>
         <DialogContent>
           <TextField
             variant="filled"

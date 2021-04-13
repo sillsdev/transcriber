@@ -44,6 +44,7 @@ function TeamCol(props: IProps) {
           <div className={classes.grow}>{'\u00A0'}</div>
           {!detail && orgRole === 'admin' && !allUsers && (
             <IconButton
+              id="teamColAdd"
               size="small"
               className={classes.addButton}
               onClick={add}

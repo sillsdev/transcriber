@@ -197,13 +197,13 @@ function PassageRecord(props: IProps) {
       className={classes.root}
       open={open}
       onClose={handleCancel}
-      aria-labelledby="form-dialog-title"
+      aria-labelledby="recDlg"
     >
-      <DialogTitle id="form-dialog-title">{t.title}</DialogTitle>
+      <DialogTitle id="recDlg">{t.title}</DialogTitle>
       <DialogContent>
         {mediaState.status === MediaSt.FETCHED &&
           mediaState.urlMediaId === mediaId && (
-            <Button variant="contained" onClick={handleLoadAudio}>
+            <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
               {loading ? t.loading : t.loadfile}
             </Button>
           )}
@@ -228,6 +228,7 @@ function PassageRecord(props: IProps) {
       </DialogContent>
       <DialogActions>
         <Button
+          id="rec-cancel"
           className={classes.button}
           onClick={handleCancel}
           variant="outlined"
@@ -236,6 +237,7 @@ function PassageRecord(props: IProps) {
           {t.cancel}
         </Button>
         <Button
+          id="rec-save"
           className={classes.button}
           onClick={handleAddOrSave}
           variant="contained"

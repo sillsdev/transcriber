@@ -54,6 +54,7 @@ const TeamActions = (props: IProps) => {
     <div className={classes.root}>
       {(!offline || isDeveloper) && (
         <Button
+          id="TeamActAdd"
           variant="contained"
           color="default"
           className={classes.button}
@@ -63,7 +64,12 @@ const TeamActions = (props: IProps) => {
         </Button>
       )}
       {offline && (
-        <Button variant="contained" color="default" onClick={handleClickImport}>
+        <Button
+          id="teamActImport"
+          variant="contained"
+          color="default"
+          onClick={handleClickImport}
+        >
           {t.import}
         </Button>
       )}

@@ -39,20 +39,16 @@ function TokenDialog(props: TokenDialogProps) {
   const handleContinue = () => onClose(0);
 
   return (
-    <Dialog
-      onClose={handleClose}
-      aria-labelledby="token-dialog-title"
-      open={open}
-    >
-      <DialogTitle id="token-dialog-title">{t.sessionExpiring}</DialogTitle>
+    <Dialog onClose={handleClose} aria-labelledby="tokenDlg" open={open}>
+      <DialogTitle id="tokenDlg">{t.sessionExpiring}</DialogTitle>
       <DialogContentText className={classes.text}>
         {t.sessionExpireTask.replace('{0}', seconds.toString())}
       </DialogContentText>
       <DialogActions>
-        <Button variant="outlined" onClick={handleExit}>
+        <Button id="tokExit" variant="outlined" onClick={handleExit}>
           {t.exit}
         </Button>
-        <Button variant="contained" onClick={handleContinue}>
+        <Button id="tokCont" variant="contained" onClick={handleContinue}>
           {t.continue}
         </Button>
       </DialogActions>

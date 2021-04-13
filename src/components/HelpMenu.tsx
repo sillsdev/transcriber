@@ -250,7 +250,7 @@ export function HelpMenu(props: IProps) {
   }, [planRec, projType, (planRec as Plan)?.attributes?.flat]);
 
   return (
-    <div>
+    <div id="helpMenu">
       <IconButton
         aria-controls="customized-menu"
         aria-haspopup="true"
@@ -260,20 +260,20 @@ export function HelpMenu(props: IProps) {
         <HelpIcon className={classes.help} />
       </IconButton>
       <StyledMenu
-        id="customized-menu"
+        id="helpClose"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        <StyledMenuItem onClick={handleHelp()}>
+        <StyledMenuItem id="helpHelp" onClick={handleHelp()}>
           <ListItemIcon>
             <HelpIcon />
           </ListItemIcon>
           <ListItemText primary={t.helpCenter} />
         </StyledMenuItem>
         {planRec && (
-          <StyledMenuItem onClick={handleHelp(spreadsheetTopic)}>
+          <StyledMenuItem id="helpSheet" onClick={handleHelp(spreadsheetTopic)}>
             <ListItemIcon>
               <HelpIcon />
             </ListItemIcon>
@@ -287,7 +287,7 @@ export function HelpMenu(props: IProps) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <StyledMenuItem>
+            <StyledMenuItem id="helpSampleOn">
               <ListItemIcon>
                 <DownloadIcon />
               </ListItemIcon>
@@ -296,7 +296,10 @@ export function HelpMenu(props: IProps) {
           </a>
         )}
         {planRec && isElectron && (
-          <StyledMenuItem onClick={handleDownload(sampleHref)}>
+          <StyledMenuItem
+            id="helpSampleOff"
+            onClick={handleDownload(sampleHref)}
+          >
             <ListItemIcon>
               <DownloadIcon />
             </ListItemIcon>
@@ -304,7 +307,7 @@ export function HelpMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {isElectron && (
-          <StyledMenuItem onClick={handleReportIssue}>
+          <StyledMenuItem id="helpFeedbackOff" onClick={handleReportIssue}>
             <ListItemIcon>
               <ReportIcon />
             </ListItemIcon>
@@ -318,7 +321,7 @@ export function HelpMenu(props: IProps) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <StyledMenuItem>
+            <StyledMenuItem id="helpFeedbackOn">
               <ListItemIcon>
                 <ReportIcon />
               </ListItemIcon>
@@ -327,14 +330,14 @@ export function HelpMenu(props: IProps) {
           </a>
         )}
         {shift && (
-          <StyledMenuItem onClick={handleDeveloper}>
+          <StyledMenuItem id="helpDevMode" onClick={handleDeveloper}>
             <ListItemIcon>
               {developer ? <RemoveIcon /> : <AddIcon />}
             </ListItemIcon>
             <ListItemText primary={t.developer} />
           </StyledMenuItem>
         )}
-        <StyledMenuItem onClick={handleAbout(true)}>
+        <StyledMenuItem id="helpAbout" onClick={handleAbout(true)}>
           <ListItemIcon>
             <InfoIcon />
           </ListItemIcon>

@@ -159,14 +159,14 @@ function AboutDialog(props: AboutDialogProps) {
 
   return (
     <Dialog
+      id="about"
       onClose={handleClose}
-      aria-labelledby="about-dialog-title"
-      aria-describedby="about-dialog-content"
+      aria-labelledby="aboutDlg"
       open={open}
       scroll={'paper'}
     >
-      <DialogTitle id="about-dialog-title">{t.about}</DialogTitle>
-      <DialogContentText id="about-dialog-content" className={classes.text}>
+      <DialogTitle id="aboutDlg">{t.about}</DialogTitle>
+      <DialogContentText id="about-version" className={classes.text}>
         <Tooltip title={t.copyClipboard} onClick={handleVersionCopy}>
           <div>
             <div className={classes.row}>
@@ -196,7 +196,7 @@ function AboutDialog(props: AboutDialogProps) {
         <ExternalLink externalUrl={externalUrl} />
       </DialogContentText>
       <DialogActions>
-        <Button variant="outlined" onClick={handleExit}>
+        <Button id="aboutExit" variant="outlined" onClick={handleExit}>
           {t.exit}
         </Button>
       </DialogActions>

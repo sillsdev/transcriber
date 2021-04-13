@@ -91,6 +91,7 @@ export const EmailUnverified = (props: IProps) => {
       >
         <div className={classes.actions}>
           <Button
+            id="emailResent"
             variant="contained"
             color="primary"
             className={classes.button}
@@ -101,6 +102,7 @@ export const EmailUnverified = (props: IProps) => {
         </div>
         <div className={classes.actions}>
           <Button
+            id="emailVerified"
             variant="contained"
             color="primary"
             className={classes.button}
@@ -111,6 +113,7 @@ export const EmailUnverified = (props: IProps) => {
         </div>
         <div className={classes.actions}>
           <Button
+            id="emailLogout"
             variant="contained"
             color="primary"
             className={classes.button}

@@ -271,7 +271,11 @@ export const AddCard = (props: IProps) => {
 
   return (
     <>
-      <Card className={classes.root} onClick={handleSolutionShow}>
+      <Card
+        id={`teamAdd-${team}`}
+        className={classes.root}
+        onClick={handleSolutionShow}
+      >
         <CardContent className={classes.content}>
           <div className={classes.icon}>
             <AddIcon fontSize="large" />

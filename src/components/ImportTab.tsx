@@ -740,9 +740,9 @@ export function ImportTab(props: IProps) {
       onClose={handleClose}
       disableBackdropClick={true}
       disableEscapeKeyDown={true}
-      aria-labelledby="form-dialog-title"
+      aria-labelledby="importDlg"
     >
-      <DialogTitle id="form-dialog-title">
+      <DialogTitle id="importDlg">
         {syncBuffer ? t.importSync : t.importProject + ' ' + (planName || '')}
       </DialogTitle>
       <DialogContent>
@@ -766,7 +766,8 @@ export function ImportTab(props: IProps) {
             <div className={classes.actions}>
               <div className={classes.grow}>{'\u00A0'}</div>
               <Button
-                key="filter"
+                id="importCopy"
+                key="copy"
                 aria-label={t.copy}
                 variant="outlined"
                 color="primary"
@@ -777,6 +778,7 @@ export function ImportTab(props: IProps) {
                 {t.copy}
               </Button>
               <Button
+                id="importFilt"
                 key="filter"
                 aria-label={t.filter}
                 variant="outlined"
@@ -838,10 +840,11 @@ export function ImportTab(props: IProps) {
       </DialogContent>
       <DialogActions className={classes.actions}>
         <Button
-          disabled={importStatus !== undefined}
+          id="importClose"
           onClick={handleClose}
           variant="contained"
           color="primary"
+          disabled={importStatus !== undefined}
         >
           {t.close}
         </Button>

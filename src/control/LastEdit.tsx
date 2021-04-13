@@ -39,6 +39,7 @@ export const LastEdit = (props: IProps) => {
 
   return when ? (
     <Button
+      id="editHist"
       key="last-edit"
       aria-label={t.lastEdit}
       variant="text"

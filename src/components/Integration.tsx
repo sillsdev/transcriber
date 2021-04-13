@@ -692,6 +692,7 @@ export function IntegrationPanel(props: IProps) {
               <FormControlLabel
                 control={
                   <Button
+                    id="IntWebSync"
                     key="sync"
                     aria-label={t.sync}
                     variant="contained"
@@ -825,6 +826,7 @@ export function IntegrationPanel(props: IProps) {
               <FormControlLabel
                 control={
                   <Button
+                    id="IntLocalSync"
                     key="localSync"
                     aria-label={t.sync}
                     variant="contained"

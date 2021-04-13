@@ -103,6 +103,7 @@ export function UserMenu(props: IProps) {
   return (
     <div>
       <Button
+        id="userMenu"
         aria-controls="custom-user-menu"
         aria-haspopup="true"
         onClick={handleClick}
@@ -132,7 +133,7 @@ export function UserMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {!isProfile && (
-          <StyledMenuItem onClick={handleAction('Profile')}>
+          <StyledMenuItem id="myAccount" onClick={handleAction('Profile')}>
             <ListItemIcon>
               <AccountIcon fontSize="small" />
             </ListItemIcon>
@@ -140,7 +141,7 @@ export function UserMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {shift && !isElectron && (
-          <StyledMenuItem onClick={handleAction('Clear')}>
+          <StyledMenuItem id="clearCache" onClick={handleAction('Clear')}>
             <ListItemIcon>
               <ClearIcon fontSize="small" />
             </ListItemIcon>
@@ -148,7 +149,7 @@ export function UserMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {shift && (
-          <StyledMenuItem onClick={handleAction('ClearLogout')}>
+          <StyledMenuItem id="clrLogout" onClick={handleAction('ClearLogout')}>
             <ListItemIcon>
               <ClearIcon fontSize="small" />
             </ListItemIcon>
@@ -156,14 +157,14 @@ export function UserMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {shift && developer && (
-          <StyledMenuItem onClick={handleAction('Error')}>
+          <StyledMenuItem id="clearError" onClick={handleAction('Error')}>
             <ListItemIcon>
               <ClearIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary={'Error'} />
           </StyledMenuItem>
         )}
-        <StyledMenuItem onClick={handleAction('Logout')}>
+        <StyledMenuItem id="logout" onClick={handleAction('Logout')}>
           <ListItemIcon>
             <ExitIcon fontSize="small" />
           </ListItemIcon>

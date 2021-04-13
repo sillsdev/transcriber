@@ -73,6 +73,7 @@ export const ProjButtons = (props: IProps) => {
     <>
       {!onLeft && <Divider orientation="vertical" flexItem />}
       <Button
+        id="projButton"
         key="importExport"
         aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
         aria-label={t.importExport}
@@ -92,12 +93,17 @@ export const ProjButtons = (props: IProps) => {
         onClose={handleClose}
       >
         {(!isElectron || isOffline) && (
-          <MenuItem onClick={handleImport}>{t.import}</MenuItem>
+          <MenuItem id="projButtonImp" onClick={handleImport}>
+            {t.import}
+          </MenuItem>
         )}
-        <MenuItem onClick={handleExport}>{t.export}</MenuItem>
+        <MenuItem id="projButtonExp" onClick={handleExport}>
+          {t.export}
+        </MenuItem>
       </Menu>
       {projType.toLowerCase() === 'scripture' && (
         <Button
+          id="projButtonInt"
           key="integrations"
           aria-label={t.integrations}
           variant="outlined"

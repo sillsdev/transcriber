@@ -303,10 +303,10 @@ function Invite(props: IProps) {
       <Dialog
         open={open}
         onClose={handleCancel}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby="inviteDlg"
         maxWidth="lg"
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id="inviteDlg">
           {inviteIn ? t.editInvite : t.addInvite}
         </DialogTitle>
         <DialogContent>
@@ -437,10 +437,16 @@ function Invite(props: IProps) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel} variant="outlined" color="primary">
+          <Button
+            id="inviteCancel"
+            onClick={handleCancel}
+            variant="outlined"
+            color="primary"
+          >
             {t.cancel}
           </Button>
           <Button
+            id="inviteSave"
             onClick={handleAddOrSave}
             variant="contained"
             color="primary"

@@ -272,6 +272,7 @@ export function AssignmentTable(props: IProps) {
             {projRole === 'admin' && (
               <>
                 <Button
+                  id="assignAdd"
                   key="assign"
                   aria-label={t.assignSec}
                   variant="outlined"
@@ -283,6 +284,7 @@ export function AssignmentTable(props: IProps) {
                   {t.assignSec.replace('{0}', organizedBy)}
                 </Button>
                 <Button
+                  id="assignRem"
                   key="remove"
                   aria-label={t.removeSec}
                   variant="outlined"
@@ -297,6 +299,7 @@ export function AssignmentTable(props: IProps) {
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
             <Button
+              id="assignFilt"
               key="filter"
               aria-label={t.filter}
               variant="outlined"

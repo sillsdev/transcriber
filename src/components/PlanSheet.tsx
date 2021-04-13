@@ -636,6 +636,7 @@ export function PlanSheet(props: IProps) {
             <div className={classes.actions}>
               <>
                 <Button
+                  id="planSheetAddSec"
                   key="addSection"
                   aria-label={t.addSection}
                   variant="outlined"
@@ -649,6 +650,7 @@ export function PlanSheet(props: IProps) {
                 </Button>
                 {!inlinePassages && (
                   <Button
+                    id="planSheetAddPass"
                     key="addPassage"
                     aria-label={t.addPassage}
                     variant="outlined"
@@ -662,6 +664,7 @@ export function PlanSheet(props: IProps) {
                   </Button>
                 )}
                 <Button
+                  id="planSheetImp"
                   key="importExcel"
                   aria-label={t.tablePaste}
                   variant="outlined"
@@ -673,6 +676,7 @@ export function PlanSheet(props: IProps) {
                   {t.tablePaste}
                 </Button>
                 <Button
+                  id="planSheetReseq"
                   key="resequence"
                   aria-label={t.resequence}
                   variant="outlined"
@@ -693,6 +697,7 @@ export function PlanSheet(props: IProps) {
                 <div className={classes.grow}>{'\u00A0'}</div>
                 <LastEdit when={lastSaved} t={ts} />
                 <Button
+                  id="planSheetSave"
                   key="save"
                   aria-label={t.save}
                   variant="contained"
@@ -732,13 +737,13 @@ export function PlanSheet(props: IProps) {
           }
         >
           {position.i > 0 && isSection(rowData[position.i - 1]) && (
-            <MenuItem onClick={handleSectionAbove}>
+            <MenuItem id="secAbove" onClick={handleSectionAbove}>
               {t.sectionAbove.replace('{0}', organizedBy)}
             </MenuItem>
           )}
 
           {!inlinePassages && (
-            <MenuItem onClick={handlePassageBelow}>
+            <MenuItem id="passBelow" onClick={handlePassageBelow}>
               {t.passageBelow.replace(
                 '{0}',
                 position.i > 0

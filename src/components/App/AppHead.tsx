@@ -80,7 +80,7 @@ const ProjectName = ({ setView }: INameProps) => {
 
   return (
     <>
-      <IconButton onClick={checkSavedAndGoHome}>
+      <IconButton id="home" onClick={checkSavedAndGoHome}>
         <HomeIcon />
       </IconButton>
       <Typography variant="h6" noWrap>
@@ -278,7 +278,7 @@ export const AppHead = (props: IProps) => {
                 .replace('{0}', latestVersion)
                 .replace('{1}', latestRelease)}
             >
-              <IconButton onClick={handleDownloadClick}>
+              <IconButton id="systemUpdate" onClick={handleDownloadClick}>
                 <SystemUpdateIcon color="primary" />
               </IconButton>
             </Tooltip>

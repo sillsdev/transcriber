@@ -157,8 +157,12 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           variant="scrollable"
           scrollButtons="auto"
         >
-          <Tab label={t.sectionsPassages.replace('{0}', organizedBy)} />
           <Tab
+            id="secPass"
+            label={t.sectionsPassages.replace('{0}', organizedBy)}
+          />
+          <Tab
+            id="audio"
             label={
               <Title
                 text={t.media}
@@ -171,6 +175,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
             }
           />
           <Tab
+            id="assignments"
             label={
               <Title
                 text={t.assignments}
@@ -184,6 +189,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
             disabled={isOffline && !offlineOnly}
           />
           <Tab
+            id="transcriptions"
             label={
               <Title
                 text={t.transcriptions}

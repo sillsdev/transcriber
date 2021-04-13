@@ -85,18 +85,19 @@ export function TeamDialog(props: IProps) {
 
   return (
     <Dialog
+      id="teamDialog"
       open={isOpen}
       onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      aria-labelledby="teamDlg"
     >
-      <DialogTitle id="form-dialog-title">
+      <DialogTitle id="teamDlg">
         {mode === DialogMode.add ? t.addTeam : t.teamSettings}
       </DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin="dense"
-          id="name"
+          id="teamName"
           label={t.teamName}
           value={name}
           helperText={nameInUse(name) && t.nameInUse}
@@ -112,10 +113,11 @@ export function TeamDialog(props: IProps) {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button id="teamCancel" onClick={handleClose} color="primary">
           {t.cancel}
         </Button>
         <Button
+          id="teamCommit"
           onClick={handleCommit}
           color="primary"
           disabled={name === '' || nameInUse(name)}

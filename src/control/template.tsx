@@ -78,8 +78,8 @@ const InfoDialog = connect(mapStateToProps)((props: InfoDialogProps) => {
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>{t.templateCodes}</DialogTitle>
+    <Dialog onClose={handleClose} open={open} aria-labelledby="templDlg">
+      <DialogTitle id="templDlg">{t.templateCodes}</DialogTitle>
       <List>
         {Object.keys(pattern).map((pat) => (
           <ListItem button key={pat}>
@@ -177,6 +177,7 @@ export function Template(props: ITemplateProps) {
         onChange={handleTemplateChange}
       />
       <IconButton
+        id="templApply"
         className={classes.iconButton}
         aria-label={t.apply}
         onClick={handleApply}
@@ -186,6 +187,7 @@ export function Template(props: ITemplateProps) {
       </IconButton>
       <Divider className={classes.divider} orientation="vertical" />
       <IconButton
+        id="templCodes"
         color="primary"
         className={classes.iconButton}
         onClick={handleTemplateInfo}

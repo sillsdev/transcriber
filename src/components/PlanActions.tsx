@@ -57,6 +57,7 @@ export function PlanActions(props: IProps) {
     <div className={classes.arrangeActions}>
       {isSection && canAssign && !readonly && (
         <IconButton
+          id="planActAssign"
           className={classes.actionButton}
           title={t.assign}
           onClick={onAssign([rowIndex])}
@@ -66,6 +67,7 @@ export function PlanActions(props: IProps) {
       )}
       {isPassage && (
         <IconButton
+          id="planActTrans"
           className={classes.actionButton}
           title={t.transcribe}
           onClick={onTranscribe(rowIndex)}
@@ -76,6 +78,7 @@ export function PlanActions(props: IProps) {
       )}
       {canDelete && !readonly && (
         <IconButton
+          id="planActDel"
           className={classes.actionButton}
           title={t.delete}
           onClick={onDelete(rowIndex)}

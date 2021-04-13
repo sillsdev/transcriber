@@ -253,7 +253,11 @@ export const ProjectCard = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <Card className={classes.card} onClick={handleSelect(project)}>
+      <Card
+        id={`card-${project.id}`}
+        className={classes.card}
+        onClick={handleSelect(project)}
+      >
         <CardContent className={classes.content}>
           <div className={classes.firstLine}>
             <Typography variant="h6" component="h2" className={classes.name}>

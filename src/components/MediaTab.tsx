@@ -855,6 +855,7 @@ export function MediaTab(props: IProps) {
             {projRole === 'admin' && (!isOffline || offlineOnly) && (
               <>
                 <Button
+                  id="audUpload"
                   key="upload"
                   aria-label={ts.uploadMediaPlural}
                   variant="outlined"
@@ -866,6 +867,7 @@ export function MediaTab(props: IProps) {
                   <AddIcon className={classes.icon} />
                 </Button>
                 <Button
+                  id="audMatch"
                   key={t.autoMatch}
                   aria-label={t.autoMatch}
                   variant="outlined"
@@ -879,6 +881,7 @@ export function MediaTab(props: IProps) {
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
             <Button
+              id="audFilt"
               key="filter"
               aria-label={t.filter}
               variant="outlined"

@@ -98,12 +98,8 @@ function TranscriptionShow(props: IProps) {
 
   return (
     <div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">{t.transcription}</DialogTitle>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="transShowDlg">
+        <DialogTitle id="transShowDlg">{t.transcription}</DialogTitle>
         <DialogContent>
           <DialogContentText>{t.transcriptionDisplay}</DialogContentText>
           {fontData && fontStatus !== 'active' ? (
@@ -137,10 +133,15 @@ function TranscriptionShow(props: IProps) {
           )}
         </DialogContent>
         <DialogActions className={classes.actions}>
-          <IconButton onClick={handleCopy(transcription)}>
+          <IconButton id="transCopy" onClick={handleCopy(transcription)}>
             <FaCopy />
           </IconButton>
-          <Button onClick={handleClose} variant="contained" color="primary">
+          <Button
+            id="transClose"
+            onClick={handleClose}
+            variant="contained"
+            color="primary"
+          >
             {t.close}
           </Button>
         </DialogActions>
