@@ -3212,12 +3212,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.configure">
-         <segment>
-            <source>Configure</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="vProject.newProject">
          <segment>
             <source>{0} Project</source>
