@@ -100,21 +100,20 @@ export function UserAdd(props: IProps) {
         open={open}
         onClose={handleClose}
         scroll={scroll}
-        aria-labelledby="scroll-dialog-title"
-        aria-describedby="scroll-dialog-description"
+        aria-labelledby="userAddDlg"
         className={classes.root}
       >
-        <DialogTitle id="scroll-dialog-title">{t.selectUser}</DialogTitle>
+        <DialogTitle id="userAddDlg">{t.selectUser}</DialogTitle>
         <DialogContent dividers={scroll === 'paper'}>
           {hasIncluded() && (
             <UserList isSelected={isIncluded} select={select} />
           )}
         </DialogContent>
         <DialogActions className={classes.actions}>
-          <Button variant="contained" onClick={handleAdd}>
+          <Button id="userAdd" variant="contained" onClick={handleAdd}>
             {t.addNewUser}
           </Button>
-          <Button variant="contained" onClick={handleClose}>
+          <Button id="userAddCancel" variant="contained" onClick={handleClose}>
             {t.cancel}
           </Button>
         </DialogActions>

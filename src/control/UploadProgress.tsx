@@ -57,12 +57,9 @@ export function UploadProgress(props: IProps) {
     <Dialog
       open={open}
       onClose={handleChoice('Close')}
-      aria-labelledby="upload-progress-title"
-      aria-describedby="upload-progress-description"
+      aria-labelledby="uploadProgDlg"
     >
-      <DialogTitle id="upload-progress-title">
-        {title || t.progressTitle}
-      </DialogTitle>
+      <DialogTitle id="uploadProgDlg">{title || t.progressTitle}</DialogTitle>
       <DialogContent>
         {steps && currentStep !== undefined && (
           <List dense component="div">
@@ -86,6 +83,7 @@ export function UploadProgress(props: IProps) {
       </DialogContent>
       <DialogActions>
         <Button
+          id="uploadProgCancel"
           onClick={handleChoice('Cancel')}
           color="primary"
           disabled={cancelRef.current}

@@ -94,12 +94,8 @@ function GroupMemberAdd(props: IProps) {
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleCancel}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">
+    <Dialog open={open} onClose={handleCancel} aria-labelledby="memberDlg">
+      <DialogTitle id="memberDlg">
         {t.addGroupMember.replace(
           '{0}',
           role.toLocaleLowerCase() === 'admin' ? 'Owner' : role
@@ -137,10 +133,16 @@ function GroupMemberAdd(props: IProps) {
         </TextField>
       </DialogContent>
       <DialogActions>
-        <Button variant="outlined" onClick={handleCancel} color="primary">
+        <Button
+          id="memberCancel"
+          variant="outlined"
+          onClick={handleCancel}
+          color="primary"
+        >
           {t.cancel}
         </Button>
         <Button
+          id="memberAdd"
           variant="outlined"
           onClick={handleAddMember}
           color="primary"

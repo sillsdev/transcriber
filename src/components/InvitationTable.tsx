@@ -182,6 +182,7 @@ export function InvitationTable(props: IProps) {
           {orgRole === 'admin' && (
             <>
               <Button
+                id="inviteAdd"
                 key="add"
                 aria-label={t.invite}
                 variant="contained"
@@ -193,6 +194,7 @@ export function InvitationTable(props: IProps) {
                 <AddIcon className={classes.buttonIcon} />
               </Button>
               <Button
+                id="inviteAction"
                 key="action"
                 aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
                 aria-label={t.action}
@@ -210,7 +212,10 @@ export function InvitationTable(props: IProps) {
                 open={Boolean(actionMenuItem)}
                 onClose={handleConfirmAction('Close')}
               >
-                <MenuItem onClick={handleConfirmAction('Delete')}>
+                <MenuItem
+                  id="inviteDelete"
+                  onClick={handleConfirmAction('Delete')}
+                >
                   {t.delete}
                 </MenuItem>
               </Menu>
@@ -218,6 +223,7 @@ export function InvitationTable(props: IProps) {
           )}
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
+            id="inviteFilt"
             key="filter"
             aria-label={t.filter}
             variant="outlined"

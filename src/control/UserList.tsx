@@ -43,7 +43,11 @@ export const UserList = (props: IProps) => {
               : 1
           )
           .map((u) => (
-            <ListItem key={u.id} onClick={handleSelect(u.id)}>
+            <ListItem
+              id={`user-${u.id}`}
+              key={u.id}
+              onClick={handleSelect(u.id)}
+            >
               <ListItemIcon>
                 <UserAvatar {...props} users={users} userRec={u} />
               </ListItemIcon>

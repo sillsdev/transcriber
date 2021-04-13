@@ -204,22 +204,24 @@ function MediaUpload(props: IProps) {
 
   return (
     <div>
-      <Dialog
-        open={open}
-        onClose={handleCancel}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">{title[uploadType]}</DialogTitle>
+      <Dialog open={open} onClose={handleCancel} aria-labelledby="audUploadDlg">
+        <DialogTitle id="audUploadDlg">{title[uploadType]}</DialogTitle>
         <DialogContent>
           <DialogContentText>{text[uploadType]}</DialogContentText>
           <div className={classes.drop}>{dropTarget}</div>
           {metaData}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel} variant="outlined" color="primary">
+          <Button
+            id="uploadCancel"
+            onClick={handleCancel}
+            variant="outlined"
+            color="primary"
+          >
             {t.cancel}
           </Button>
           <Button
+            id="uploadSave"
             onClick={handleAddOrSave}
             variant="contained"
             color="primary"

@@ -112,9 +112,9 @@ function TranscribeReject(props: IProps) {
       <Dialog
         open={open}
         onClose={handleCancel}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby="transRejectDlg"
       >
-        <DialogTitle id="form-dialog-title">{t.rejectTitle}</DialogTitle>
+        <DialogTitle id="transRejectDlg">{t.rejectTitle}</DialogTitle>
         <DialogContent>
           <FormControl component="fieldset" className={classes.formControl}>
             <FormLabel component="legend">{t.rejectReason}</FormLabel>

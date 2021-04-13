@@ -640,7 +640,7 @@ export function Profile(props: IProps) {
                   <FormControlLabel
                     control={
                       <TextField
-                        id="name"
+                        id="profileName"
                         label={t.name}
                         className={classes.textField}
                         value={name}
@@ -829,6 +829,7 @@ export function Profile(props: IProps) {
                     currentUser.attributes?.name !==
                       currentUser.attributes?.email)) && (
                   <Button
+                    id="profileCancel"
                     key="cancel"
                     aria-label={t.cancel}
                     variant="outlined"
@@ -840,6 +841,7 @@ export function Profile(props: IProps) {
                   </Button>
                 )}
                 <Button
+                  id="profileSave"
                   key="add"
                   aria-label={t.add}
                   variant="contained"

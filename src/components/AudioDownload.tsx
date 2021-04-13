@@ -64,6 +64,7 @@ export const AudioDownload = (props: IProps) => {
   return (
     <div>
       <IconButton
+        id="audDownload"
         className={classes.actionButton}
         title={title || t.downloadMedia}
         disabled={(mediaId || '') === ''}

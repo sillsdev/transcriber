@@ -64,6 +64,7 @@ export function MediaActions2(props: IProps) {
       )}
       {canDelete && !readonly && (
         <IconButton
+          id="audActDel"
           className={classes.actionButton}
           title={t.delete}
           onClick={handleDelete}

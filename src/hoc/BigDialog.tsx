@@ -104,14 +104,14 @@ export function BigDialog({
         [classes.rootLg]: bp === BigDialogBp.lg,
         [classes.rootXl]: bp === BigDialogBp.xl,
       })}
-      aria-labelledby="form-dialog-title"
+      aria-labelledby="bigDlg"
     >
-      <DialogTitle id="form-dialog-title">
+      <DialogTitle id="bigDlg">
         <div className={classes.row}>
           {title}
           <div className={classes.grow}>{'\u00A0'}</div>
           {!isExportBusy ? (
-            <IconButton onClick={handleClose}>
+            <IconButton id="bigClose" onClick={handleClose}>
               <CloseIcon />
             </IconButton>
           ) : (
@@ -123,7 +123,7 @@ export function BigDialog({
       {(onCancel || onSave) && (
         <DialogActions>
           {onCancel && (
-            <Button onClick={onCancel} color="primary">
+            <Button id="bigCancel" onClick={onCancel} color="primary">
               {ts.cancel}
             </Button>
           )}

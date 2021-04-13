@@ -74,6 +74,7 @@ export function PlanAudioActions(props: IProps) {
         !readonly &&
         online && ( //online here is really connected or offlineOnly
           <IconButton
+            id="planAudUpload"
             className={classes.actionButton}
             onClick={onUpload(rowIndex)}
             title={
@@ -85,6 +86,7 @@ export function PlanAudioActions(props: IProps) {
         )}
       {isPassage && !readonly && (
         <IconButton
+          id="planAudRec"
           className={classes.actionButton}
           onClick={handleRecord(rowIndex)}
           title={t.recordAudio}
@@ -94,6 +96,7 @@ export function PlanAudioActions(props: IProps) {
       )}
       {isPassage && (
         <IconButton
+          id="planAudPlayStop"
           className={classes.actionButton}
           title={t.playpause}
           disabled={(mediaId || '') === ''}

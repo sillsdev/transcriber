@@ -76,6 +76,7 @@ export const NewProject = (props: IProps) => {
 
   interface Solution {
     name: string;
+    type: string;
     kind?: integration;
     tip?: string;
     buttons?: number;
@@ -86,16 +87,19 @@ export const NewProject = (props: IProps) => {
       name: t.obt,
       kind: integration.pt,
       tip: t.obtTip,
+      type: 'aud',
     },
     {
       name: t.storying,
       // kind: integration.oneStory,
       tip: t.storyingTip,
+      type: 'aud',
     },
     {
       name: t.adaptation,
       kind: integration.pt,
       tip: t.adaptationTip,
+      type: 'aud',
     },
   ];
 
@@ -104,6 +108,7 @@ export const NewProject = (props: IProps) => {
       name: t.drafting,
       kind: integration.pt,
       tip: t.draftingTip,
+      type: 'tex',
     },
   ];
 
@@ -111,10 +116,12 @@ export const NewProject = (props: IProps) => {
     {
       name: t.general,
       tip: t.generalTip,
+      type: 'oth',
     },
     {
       name: t.blank,
       buttons: 1,
+      type: 'oth',
     },
   ];
 
@@ -174,18 +181,20 @@ export const NewProject = (props: IProps) => {
         />
         <ListItemSecondaryAction className={classes.actionButtons}>
           {to.buttons ? (
-            <Button color="primary" onClick={handleNewProj}>
+            <Button id="config" color="primary" onClick={handleNewProj}>
               {t.configure}
             </Button>
           ) : (
             <>
               <Button
+                id={`addProjUp-${to.type}-${i}`}
                 color="primary"
                 onClick={handleUpload(to.kind || integration.none)}
               >
                 {t.uploadAudio}
               </Button>
               <Button
+                id={`addProjRec-${to.type}-${i}`}
                 color="primary"
                 onClick={handleRecord(to.kind || integration.none)}
               >

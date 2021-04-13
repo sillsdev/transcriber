@@ -84,7 +84,11 @@ export function TaskItem(props: IProps) {
 
   return (
     <List className={classes.root}>
-      <ListItem alignItems="flex-start" onClick={handleSelect(passage.id)}>
+      <ListItem
+        id="taskSelect"
+        alignItems="flex-start"
+        onClick={handleSelect(passage.id)}
+      >
         <ListItemAvatar className={classes.listAvatar}>
           <TaskAvatar assigned={assigned} />
         </ListItemAvatar>

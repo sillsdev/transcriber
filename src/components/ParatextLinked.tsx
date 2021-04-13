@@ -72,7 +72,7 @@ export const ParatextLinked = (props: IProps) => {
         {status?.errStatus || 0 || (isOffline && !ptPath) ? (
           <>
             <Link onClick={handleHowTo}>{t.paratextNotLinked}</Link>
-            <IconButton color="primary" onClick={handleHowTo}>
+            <IconButton id="howToLink" color="primary" onClick={handleHowTo}>
               <InfoIcon />
             </IconButton>
           </>

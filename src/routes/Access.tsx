@@ -296,6 +296,7 @@ export function Access(props: IProps) {
               {t.withInternet}
             </Typography>
             <Button
+              id="accessLogin"
               variant="contained"
               color="primary"
               className={classes.button}
@@ -322,6 +323,7 @@ export function Access(props: IProps) {
             )}
             <div className={classes.actions}>
               <Button
+                id="accessCreateUser"
                 variant="contained"
                 color="primary"
                 className={classes.button}
@@ -330,6 +332,7 @@ export function Access(props: IProps) {
                 {t.createUser}
               </Button>
               <Button
+                id="accessImport"
                 variant="contained"
                 color="primary"
                 className={classes.button}

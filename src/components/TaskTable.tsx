@@ -365,6 +365,7 @@ export function TaskTable(props: IProps) {
   const PlayCell = ({ value, style, mediaId, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
       <IconButton
+        id={`audio-${mediaId}`}
         key={'audio-' + mediaId}
         aria-label={'audio-' + mediaId}
         color="primary"
@@ -437,7 +438,7 @@ export function TaskTable(props: IProps) {
               project={projectId}
             />
             {filter && (
-              <IconButton onClick={handleToggleFilter}>
+              <IconButton id="taskFiltClose" onClick={handleToggleFilter}>
                 <CloseIcon />
               </IconButton>
             )}

@@ -638,23 +638,23 @@ export function TranscriptionTab(props: IProps) {
       <Dialog
         open={openExport}
         onClose={closeNoChoice}
-        aria-labelledby="which-export-title"
-        aria-describedby="which-export-description"
+        aria-labelledby="transExpDlg"
+        aria-describedby="transExpDesc"
       >
-        <DialogTitle id="which-export-title">{t.exportType}</DialogTitle>
+        <DialogTitle id="transExpDlg">{t.exportType}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id="transExpDesc">
             {t.exportExplanation}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeNoChoice} color="default">
+          <Button id="expCancel" onClick={closeNoChoice} color="default">
             {t.cancel}
           </Button>
-          <Button onClick={doPTF} color="primary">
+          <Button id="expPtf" onClick={doPTF} color="primary">
             {t.exportPTFtype}
           </Button>
-          <Button onClick={doITF} color="primary" autoFocus>
+          <Button id="expItf" onClick={doITF} color="primary" autoFocus>
             {t.exportITFtype}
           </Button>
         </DialogActions>
@@ -675,6 +675,7 @@ export function TranscriptionTab(props: IProps) {
           <div className={classes.actions}>
             {planColumn && (
               <Button
+                id="transExp"
                 key="export"
                 aria-label={t.exportProject}
                 variant="contained"
@@ -688,6 +689,7 @@ export function TranscriptionTab(props: IProps) {
               </Button>
             )}
             <Button
+              id="transCopy"
               key="copy"
               aria-label={t.copyTranscriptions}
               variant="contained"
@@ -700,6 +702,7 @@ export function TranscriptionTab(props: IProps) {
             </Button>
             {planColumn && offline && projects.length > 1 && (
               <Button
+                id="transBackup"
                 key="backup"
                 aria-label={t.electronBackup}
                 variant="contained"
@@ -713,6 +716,7 @@ export function TranscriptionTab(props: IProps) {
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
             <Button
+              id="transFilt"
               key="filter"
               aria-label={t.filter}
               variant="outlined"

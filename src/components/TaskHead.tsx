@@ -109,12 +109,13 @@ export function TaskHead(props: IProps) {
           }
         />
         <Menu
-          id="action-menu"
+          id="taskMenu"
           anchorEl={menuItem}
           open={Boolean(menuItem)}
           onClose={handleAction('Close')}
         >
           <MenuItem
+            id="taskTrans"
             onClick={handleAction(tranAction, 'transcriber')}
             disabled={
               tranAction === unassignAction &&
@@ -135,6 +136,7 @@ export function TaskHead(props: IProps) {
             }
           </MenuItem>
           <MenuItem
+            id="taskEditor"
             onClick={handleAction(editAction, 'editor')}
             disabled={
               (editAction === unassignAction &&
@@ -156,6 +158,7 @@ export function TaskHead(props: IProps) {
         </Menu>
         <ListItemSecondaryAction>
           <IconButton
+            id="taskAssign"
             size="small"
             onClick={handleMenu}
             aria-owns={menuItem !== '' ? 'action-menu' : undefined}

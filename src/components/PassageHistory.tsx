@@ -116,6 +116,7 @@ export function PassageHistory(props: IProps) {
       };
       return (
         <ListItem
+          id={`hist-${psc.id}-${type}`}
           key={psc.id + type}
           button
           selected={selectedId === psc.id && editable}

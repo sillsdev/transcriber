@@ -168,6 +168,7 @@ function AssignSection(props: IProps) {
       const labelId = 'user-' + m.attributes.name;
       return (
         <ListItem
+          id={`assignTranscriber-${index}`}
           key={index}
           role="listitem"
           onClick={handleSelectTranscriber(m.id)}
@@ -200,6 +201,7 @@ function AssignSection(props: IProps) {
       const labelId = 'user-' + m.attributes.name;
       return (
         <ListItem
+          id={`assignReview-${index}`}
           key={index}
           role="listitem"
           onClick={handleSelectReviewer(m.id)}
@@ -236,9 +238,9 @@ function AssignSection(props: IProps) {
         fullWidth={true}
         maxWidth="md"
         onClose={handleClose}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby="assignDlg"
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id="assignDlg">
           {t.title.replace('{0}', organizedBy)}
         </DialogTitle>
         <DialogContent>
@@ -306,7 +308,12 @@ function AssignSection(props: IProps) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} variant="contained" color="primary">
+          <Button
+            id="assignClose"
+            onClick={handleClose}
+            variant="contained"
+            color="primary"
+          >
             {t.close}
           </Button>
         </DialogActions>

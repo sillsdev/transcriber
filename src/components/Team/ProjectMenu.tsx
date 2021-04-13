@@ -116,6 +116,7 @@ export function ProjectMenu(props: IProps) {
   return (
     <div>
       <IconButton
+        id="projectMenu"
         aria-controls="customized-menu"
         aria-haspopup="true"
         className={classes.icon}
@@ -131,7 +132,7 @@ export function ProjectMenu(props: IProps) {
         onClose={handle('Close')}
       >
         {!inProject && isOwner && (!isOffline || offlineOnly) && (
-          <StyledMenuItem onClick={handle('settings')}>
+          <StyledMenuItem id="projMenuSettings" onClick={handle('settings')}>
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
@@ -139,7 +140,7 @@ export function ProjectMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {isElectron && !isOffline && (
-          <StyledMenuItem onClick={handle('offlineAvail')}>
+          <StyledMenuItem id="projMenuOl" onClick={handle('offlineAvail')}>
             <ListItemIcon>
               {offlineProject?.attributes?.offlineAvailable ? (
                 <CheckedIcon />
@@ -158,14 +159,14 @@ export function ProjectMenu(props: IProps) {
             primary={tpb.sync.replace('{0}', toBeSynced.toString())}
           />
         </StyledMenuItem> */}
-        <StyledMenuItem onClick={handle('reports')}>
+        <StyledMenuItem id="projMenuRep" onClick={handle('reports')}>
           <ListItemIcon>
             <ReportIcon />
           </ListItemIcon>
           <ListItemText primary={tpb.reports} />
         </StyledMenuItem>
         {projectType.toLowerCase() === 'scripture' && (
-          <StyledMenuItem onClick={handle('integration')}>
+          <StyledMenuItem id="projMenuInt" onClick={handle('integration')}>
             <ListItemIcon>
               <ParatextLogo />
             </ListItemIcon>
@@ -173,21 +174,21 @@ export function ProjectMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {isOwner && (!isElectron || isOffline) && (
-          <StyledMenuItem onClick={handle('import')}>
+          <StyledMenuItem id="projMenuImp" onClick={handle('import')}>
             <ListItemIcon>
               <ImportIcon />
             </ListItemIcon>
             <ListItemText primary={tpb.import} />
           </StyledMenuItem>
         )}
-        <StyledMenuItem onClick={handle('export')}>
+        <StyledMenuItem id="projMenuExp" onClick={handle('export')}>
           <ListItemIcon>
             <ExportIcon />
           </ListItemIcon>
           <ListItemText primary={tpb.export} />
         </StyledMenuItem>
         {inProject ? (
-          <StyledMenuItem onClick={handle('filter')}>
+          <StyledMenuItem id="projMenuFilt" onClick={handle('filter')}>
             <ListItemIcon>
               <FilterIcon />
             </ListItemIcon>
@@ -196,7 +197,7 @@ export function ProjectMenu(props: IProps) {
         ) : (
           (!isOffline || offlineOnly) &&
           isOwner && (
-            <StyledMenuItem onClick={handle('delete')}>
+            <StyledMenuItem id="projMenuDel" onClick={handle('delete')}>
               <ListItemIcon>
                 <DeleteIcon />
               </ListItemIcon>
