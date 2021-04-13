@@ -36,7 +36,7 @@ export function MediaPlayer(props: IProps) {
 
   useEffect(() => {
     if (mediaState.status === MediaSt.FETCHED) setReady(true);
-  }, [mediaState.status]);
+  }, [mediaState]);
 
   useEffect(() => {
     if (ready && audioRef.current && !playing && playItem !== '') {
