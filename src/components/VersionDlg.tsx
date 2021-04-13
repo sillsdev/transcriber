@@ -13,10 +13,12 @@ import {
   BookName,
   IMediaTabStrings,
 } from '../model';
+import { Link } from '@material-ui/core';
 import localStrings from '../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import ShapingTable from './ShapingTable';
+import TranscriptionShow from './TranscriptionShow';
 import MediaPlayer from './MediaPlayer';
 import MediaActions from './MediaActions';
 import MediaActions2 from './MediaActions2';
@@ -84,6 +86,7 @@ export const VersionDlg = (props: IProps) => {
   const [data, setData] = useState<IRow[]>([]);
   const [refresh, setRefresh] = useState(false);
   const locale = localeDefault(isDeveloper);
+  const [showId, setShowId] = useState('');
 
   const columnDefs = [
     { name: 'planName', title: t.planName },
@@ -131,6 +134,14 @@ export const VersionDlg = (props: IProps) => {
   const mSummaryItems = [{ columnName: 'fileName', type: 'count' }];
   const [pageSizes] = useState<number[]>([]);
   const [hiddenColumnNames] = useState<string[]>(['planName']);
+
+  const handleShowTranscription = (id: string) => () => {
+    setShowId(id);
+  };
+
+  const handleCloseTranscription = () => {
+    setShowId('');
+  };
 
   const handleConfirmAction = (i: number) => {
     setDeleteItem(i);
@@ -199,13 +210,11 @@ export const VersionDlg = (props: IProps) => {
 
     let index = 0;
     media.forEach((f) => {
-      const passageId = related(f, 'passage');
-      const passage = passageId
-        ? passages.filter((p) => p.id === passageId)
-        : [];
+      const showId = related(f, 'passage');
+      const passage = showId ? passages.filter((p) => p.id === showId) : [];
       const sectionId = related(passage[0], 'section');
       const section = sections.filter((s) => s.id === sectionId);
-      var updateddt = passageId
+      var updateddt = showId
         ? passage[0]?.attributes?.dateUpdated || ''
         : f?.attributes?.dateUpdated || '';
       if (!updateddt.endsWith('Z')) updateddt += 'Z';
@@ -217,7 +226,7 @@ export const VersionDlg = (props: IProps) => {
       rowData.push({
         index,
         planid: related(f, 'plan'),
-        passId: passageId,
+        passId: showId,
         planName,
         id: f.id,
         playIcon: playItem,
@@ -303,6 +312,12 @@ export const VersionDlg = (props: IProps) => {
     );
   };
 
+  const ReferenceCell = ({ row, value, ...props }: ICell) => (
+    <Table.Cell row {...props} value>
+      <Link onClick={handleShowTranscription(row.id)}>{value}</Link>
+    </Table.Cell>
+  );
+
   const Cell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'actions') {
@@ -312,6 +327,9 @@ export const VersionDlg = (props: IProps) => {
     if (column.name === 'detach') {
       const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
       return <DetachCell {...props} mediaId={mediaId} />;
+    }
+    if (column.name === 'reference') {
+      return <ReferenceCell {...props} />;
     }
     return <Table.Cell {...props} />;
   };
@@ -336,6 +354,14 @@ export const VersionDlg = (props: IProps) => {
         bandHeader={null}
         summaryItems={mSummaryItems}
       />
+      {showId !== '' && (
+        <TranscriptionShow
+          id={showId}
+          isMediaId={true}
+          visible={showId !== ''}
+          closeMethod={handleCloseTranscription}
+        />
+      )}
       {confirmAction === '' || (
         <Confirm
           text={t.deleteConfirm.replace('{0}', data[deleteItem].fileName)}
