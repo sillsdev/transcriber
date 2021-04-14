@@ -998,7 +998,7 @@ export function MediaTab(props: IProps) {
         status={status}
       />
       <BigDialog
-        title={'Version History'}
+        title={t.versionHistory}
         isOpen={Boolean(verHist)}
         onOpen={handleVerHist}
       >

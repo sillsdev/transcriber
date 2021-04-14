@@ -118,7 +118,7 @@ export const VersionDlg = (props: IProps) => {
   ];
   const mSorting = [
     { columnName: 'planName', direction: 'asc' },
-    { columnName: 'fileName', direction: 'asc' },
+    { columnName: 'version', direction: 'desc' },
   ];
   const columnSorting = [
     { columnName: 'duration', compare: numCompare },
@@ -214,9 +214,7 @@ export const VersionDlg = (props: IProps) => {
       const passage = showId ? passages.filter((p) => p.id === showId) : [];
       const sectionId = related(passage[0], 'section');
       const section = sections.filter((s) => s.id === sectionId);
-      var updateddt = showId
-        ? passage[0]?.attributes?.dateUpdated || ''
-        : f?.attributes?.dateUpdated || '';
+      var updateddt = f?.attributes?.dateUpdated || '';
       if (!updateddt.endsWith('Z')) updateddt += 'Z';
       const updated = moment(updateddt);
       const date = updated ? updated.format('YYYY-MM-DD') : '';

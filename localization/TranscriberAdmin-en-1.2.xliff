@@ -2290,7 +2290,14 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.viewAssociations">
+      	<trans-unit id="mediaTab.versionHistory">
+      		<source>Version History</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.viewAssociations">
             <source>View Associations</source>
             <target/>
             <context-group>

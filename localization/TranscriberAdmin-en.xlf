@@ -1966,6 +1966,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.versionHistory">
+         <segment>
+            <source>Version History</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.viewAssociations">
          <segment>
             <source>View Associations</source>

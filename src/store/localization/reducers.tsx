@@ -415,6 +415,7 @@ const initialState = {
 			"unsupported": "File {0} is an unsupported file type.",
 			"uploadComplete": "{0} of {1} files uploaded successfully.",
 			"version": "Version",
+			"versionHistory": "Version History",
 			"viewAssociations": "View Associations",
 		}
 	}),
