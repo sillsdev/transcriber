@@ -121,6 +121,8 @@ function TranscriptionShow(props: IProps) {
                 onChange={handleChange}
                 inputProps={{ style: textStyle }}
                 fullWidth
+                lang={fontData?.langTag || 'en'}
+                spellCheck={false}
               />
             </WebFontLoader>
           ) : (
@@ -135,6 +137,8 @@ function TranscriptionShow(props: IProps) {
               onChange={handleChange}
               inputProps={{ style: textStyle }}
               fullWidth
+              lang={fontData?.langTag || 'en'}
+              spellCheck={false}
             />
           )}
         </DialogContent>

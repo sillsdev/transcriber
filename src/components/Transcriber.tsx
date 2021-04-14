@@ -821,6 +821,8 @@ export function Transcriber(props: IProps) {
                       readOnly={selected === '' || role === 'view'}
                       style={textAreaStyle}
                       onChange={handleChange}
+                      lang={projData?.langTag || 'en'}
+                      spellCheck={false}
                     />
                   </WebFontLoader>
                 ) : (
@@ -830,6 +832,8 @@ export function Transcriber(props: IProps) {
                     readOnly={selected === '' || role === 'view'}
                     style={textAreaStyle}
                     onChange={handleChange}
+                    lang={projData?.langTag || 'en'}
+                    spellCheck={false}
                   />
                 )}
               </Grid>
