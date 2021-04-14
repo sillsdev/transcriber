@@ -25,7 +25,6 @@ import {
   Radio,
   Switch,
   FormControlLabel,
-  Link,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -812,7 +811,9 @@ export function MediaTab(props: IProps) {
 
   const VersionCell = ({ value, row, ...restProps }: ICell) => (
     <Table.Cell row={row} {...restProps} value>
-      <Link onClick={handleVerHistOpen(row.passId)}>{value}</Link>
+      <Button color="primary" onClick={handleVerHistOpen(row.passId)}>
+        {value}
+      </Button>
     </Table.Cell>
   );
 

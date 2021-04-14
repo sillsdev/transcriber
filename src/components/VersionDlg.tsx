@@ -13,7 +13,7 @@ import {
   BookName,
   IMediaTabStrings,
 } from '../model';
-import { Link } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import localStrings from '../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
@@ -314,7 +314,9 @@ export const VersionDlg = (props: IProps) => {
 
   const ReferenceCell = ({ row, value, ...props }: ICell) => (
     <Table.Cell row {...props} value>
-      <Link onClick={handleShowTranscription(row.id)}>{value}</Link>
+      <Button color="primary" onClick={handleShowTranscription(row.id)}>
+        {value}
+      </Button>
     </Table.Cell>
   );
 

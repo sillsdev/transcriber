@@ -764,14 +764,12 @@ export function TranscriptionTab(props: IProps) {
         </div>
       </div>
 
-      {passageId !== '' ? (
+      {passageId !== '' && (
         <TranscriptionShow
-          passageId={passageId}
+          id={passageId}
           visible={passageId !== ''}
           closeMethod={handleCloseTranscription}
         />
-      ) : (
-        <></>
       )}
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a ref={exportAnchor} href={exportUrl} download={exportName} />
