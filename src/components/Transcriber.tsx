@@ -391,7 +391,7 @@ export function Transcriber(props: IProps) {
           t.replaceAttribute(oldRec[0], 'duration', Math.ceil(totalSeconds))
         );
       console.log(`update duration to ${Math.ceil(totalSeconds)}`);
-      transcriptionRef.current.firstChild.focus();
+      if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration, totalSeconds]);
