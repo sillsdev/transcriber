@@ -107,6 +107,7 @@ function TranscribeAddNote(props: IProps) {
         <DialogTitle id="transAddDlg">{t.addNoteTitle}</DialogTitle>
         <DialogContent>
           <TextField
+            id="transcriberNote.text"
             variant="filled"
             multiline
             rowsMax={5}
