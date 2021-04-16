@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as actions from '../store';
+import * as actions from '../../store';
 import {
   IState,
   MediaFile,
@@ -12,54 +12,38 @@ import {
   Plan,
   BookName,
   ISharedStrings,
-  IMediaActionsStrings,
-} from '../model';
-import localStrings from '../selector/localize';
-import { withData, WithDataProps } from '../mods/react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+} from '../../model';
+import localStrings from '../../selector/localize';
+import { withData, WithDataProps } from '../../mods/react-orbitjs';
+import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, AppBar, Typography } from '@material-ui/core';
+import { Button, AppBar } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
-import { Table } from '@devexpress/dx-react-grid-material-ui';
-import { ActionHeight, tabActions, actionBar } from './PlanTabs';
-import { PlanContext } from '../context/PlanContext';
-import { useSnackBar } from '../hoc/SnackBar';
-import MediaActions from './MediaActions';
-import MediaActions2 from './MediaActions2';
-import Confirm from './AlertDialog';
-import BigDialog from '../hoc/BigDialog';
-import ShapingTable from './ShapingTable';
-import Uploader, { statusInit } from './Uploader';
-import Template from '../control/template';
-import Auth from '../auth/Auth';
-import moment from 'moment';
-
+import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
+import { useSnackBar } from '../../hoc/SnackBar';
+import BigDialog from '../../hoc/BigDialog';
+import AudioTable from './AudioTable';
+import Uploader, { statusInit } from '../Uploader';
+import Template from '../../control/template';
+import Auth from '../../auth/Auth';
 import {
   related,
-  remoteId,
   passageReference,
   sectionDescription,
   getMediaInPlans,
   usePlan,
-  useOrganizedBy,
   remoteIdGuid,
-} from '../crud';
+} from '../../crud';
 import { useGlobal } from 'reactn';
-import {
-  dateCompare,
-  numCompare,
-  localeDefault,
-  useRemoteSave,
-  refMatch,
-} from '../utils';
-import { HeadHeight } from '../App';
-import MediaPlayer from './MediaPlayer';
-import { useMediaAttach } from '../crud/useMediaAttach';
+import { localeDefault, useRemoteSave, refMatch } from '../../utils';
+import { HeadHeight } from '../../App';
+import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
 import VersionDlg from './VersionDlg';
 import PassageChooser from './PassageChooser';
+import { IRow, IPRow, getMedia, IGetMedia } from '.';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -115,39 +99,6 @@ enum StatusL {
   Yes = 'Y',
 }
 
-export interface IRow {
-  index: number;
-  planid: string;
-  passId: string;
-  id: string;
-  planName: string;
-  playIcon: string;
-  fileName: string;
-  sectionId: string;
-  sectionDesc: string;
-  reference: string;
-  duration: string;
-  size: number;
-  version: string;
-  date: string;
-  actions: typeof MediaActions;
-}
-
-export interface IPRow {
-  id: string;
-  sectionId: string;
-  sectionDesc: string;
-  reference: string;
-  attached: string;
-  sort: string;
-  book: string;
-  chap: number;
-  beg: number;
-  end: number;
-  secNum: number;
-  pasNum: number;
-}
-
 // key is mediaId and value is row in pdata (passage data) table
 interface IAttachMap {
   [key: string]: number;
@@ -155,7 +106,6 @@ interface IAttachMap {
 
 interface IStateProps {
   t: IMediaTabStrings;
-  tma: IMediaActionsStrings;
   ts: ISharedStrings;
   allBookData: BookName[];
 }
@@ -176,13 +126,11 @@ interface IProps
     IRecordProps,
     WithDataProps {
   auth: Auth;
-  attachTool?: boolean;
 }
 
-export function MediaTab(props: IProps) {
+export function AudioTab(props: IProps) {
   const {
     t,
-    tma,
     ts,
     doOrbitError,
     mediaFiles,
@@ -190,11 +138,8 @@ export function MediaTab(props: IProps) {
     sections,
     auth,
     allBookData,
-    attachTool,
   } = props;
   const classes = useStyles();
-  const ctx = React.useContext(PlanContext);
-  const { connected, readonly } = ctx.state;
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const [coordinator] = useGlobal('coordinator');
@@ -211,81 +156,11 @@ export function MediaTab(props: IProps) {
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
   const [attachCount, setAttachCount] = useState(0);
-  const [attachVisible, setAttachVisible] = useState(attachTool);
-  // const [actionMenuItem, setActionMenuItem] = useState(null);
-  const [check, setCheck] = useState(Array<number>());
+  const [attachVisible, setAttachVisible] = useState(false);
   const [mcheck, setMCheck] = useState(-1);
   const [pcheck, setPCheck] = useState(-1);
-  const [confirmAction, setConfirmAction] = useState('');
-  const { getOrganizedBy } = useOrganizedBy();
-  const [organizedBy] = useState(getOrganizedBy(true));
   const [verHist, setVerHist] = useState('');
-
-  const columnDefs = [
-    { name: 'planName', title: t.planName },
-    { name: 'actions', title: t.actions },
-    { name: 'fileName', title: t.fileName },
-    { name: 'sectionDesc', title: organizedBy },
-    {
-      name: 'reference',
-      title: attachVisible ? t.viewAssociations : t.reference,
-    },
-    { name: 'duration', title: t.duration },
-    { name: 'size', title: t.size },
-    { name: 'version', title: t.version },
-    { name: 'date', title: t.date },
-    { name: 'detach', title: '\u00A0' },
-  ];
-  const columnWidths = [
-    { columnName: 'planName', width: 150 },
-    { columnName: 'actions', width: 120 },
-    { columnName: 'fileName', width: 220 },
-    { columnName: 'sectionDesc', width: 150 },
-    { columnName: 'reference', width: attachVisible ? 165 : 150 },
-    { columnName: 'duration', width: 100 },
-    { columnName: 'size', width: 100 },
-    { columnName: 'version', width: 100 },
-    { columnName: 'date', width: 100 },
-    { columnName: 'detach', width: 120 },
-  ];
-  const columnFormatting = [
-    { columnName: 'actions', aligh: 'center', wordWrapEnabled: false },
-    { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
-    { columnName: 'version', align: 'center' },
-  ];
-  const sorting = [
-    { columnName: 'planName', direction: 'asc' },
-    { columnName: 'fileName', direction: 'asc' },
-  ];
-  const columnSorting = [
-    { columnName: 'duration', compare: numCompare },
-    { columnName: 'size', compare: numCompare },
-    { columnName: 'version', compare: numCompare },
-    { columnName: 'date', compare: dateCompare },
-  ];
-  const sortingEnabled = [
-    { columnName: 'actions', sortingEnabled: false },
-    { columnName: 'detach', sortingEnabled: false },
-  ];
-  const numCols = ['duration', 'size', 'version'];
   const [filter, setFilter] = useState(false);
-  const bandHead = [
-    {
-      title: <Typography variant="h6">{t.mediaAssociations}</Typography>,
-      children: [
-        { columnName: 'fileName' },
-        { columnName: 'sectionDesc' },
-        { columnName: 'reference' },
-        { columnName: 'detach' },
-      ],
-    },
-  ];
-  const summaryItems = [{ columnName: 'fileName', type: 'count' }];
-  const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
-  const [filteringEnabled, setFilteringEnabled] = useState([
-    { columnName: 'actions', filteringEnabled: false },
-  ]);
-  const [pageSizes, setPageSizes] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [status] = useState(statusInit);
   const [, setComplete] = useGlobal('progress');
@@ -300,7 +175,7 @@ export function MediaTab(props: IProps) {
     ts,
     doOrbitError,
   });
-  const [deleteFlag, setDeleteFlag] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const hasPassage = (pRow: number) => {
     for (let mediaId of Object.keys(attachMap)) {
@@ -309,55 +184,12 @@ export function MediaTab(props: IProps) {
     return false;
   };
 
-  const handleVerHistOpen = (passId: string) => () => {
-    setVerHist(passId);
-  };
-
   const handleVerHist = () => {
     setVerHist('');
   };
 
   const handleUpload = () => {
     setUploadVisible(true);
-  };
-
-  const handleConfirmAction = (i: number) => {
-    setCheck((check) => {
-      return [...check, i];
-    });
-    setConfirmAction('Delete');
-  };
-
-  const handleDelete = (i: number) => {
-    let versions = mediaFiles.filter(
-      (f) =>
-        related(f, 'plan') === data[i].planid &&
-        f.attributes.originalFile === data[i].fileName
-    );
-    versions.forEach((v) => {
-      memory.update((t: TransformBuilder) =>
-        t.removeRecord({
-          type: 'mediafile',
-          id: v.id,
-        })
-      );
-    });
-    if (versions.length > 0) setDeleteFlag(true);
-  };
-
-  const handleActionConfirmed = () => {
-    if (confirmAction === 'Delete') {
-      check.forEach((i) => {
-        handleDelete(i);
-      });
-      setCheck(Array<number>());
-    }
-    setConfirmAction('');
-  };
-
-  const handleActionRefused = () => {
-    setConfirmAction('');
-    setCheck(Array<number>());
   };
 
   const handleAutoMatch = () => setAutoMatch(!autoMatch);
@@ -420,7 +252,6 @@ export function MediaTab(props: IProps) {
     handleSave({ ...attachMap, [data[mRow].id]: pRow });
     setMCheck(-1);
     setPCheck(-1);
-    setCheck([]);
   };
 
   const handleCheck = (checks: Array<number>, visible?: boolean) => {
@@ -430,17 +261,10 @@ export function MediaTab(props: IProps) {
         doAttach(checks[0], pcheck);
         return;
       }
-      setCheck([newCheck]);
       setMCheck(newCheck);
-    } else {
-      setCheck(checks);
     }
   };
   const handleFilter = () => setFilter(!filter);
-  const handleSelect = (id: string) => {
-    if (id === playItem) setPlayItem('');
-    else setPlayItem(id);
-  };
 
   useEffect(() => {
     if (urlOpen) {
@@ -449,35 +273,6 @@ export function MediaTab(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [urlOpen]);
-
-  const noPlanFilt = ['duration', 'size', 'version', 'date', 'planName'];
-  const noPlanNoFilt = ['planName'];
-  const noPlayFilt = [
-    { columnName: 'actions', filteringEnabled: false },
-    { columnName: 'detach', filteringEnabled: false },
-  ];
-  const attachFilt = [
-    { columnName: 'actions', filteringEnabled: false },
-    { columnName: 'sectionDesc', filteringEnabled: false },
-    { columnName: 'reference', filteringEnabled: false },
-    { columnName: 'detach', filteringEnabled: false },
-  ];
-  const noPaging: number[] = [];
-  const paging = [4, 10, 40];
-  useEffect(() => {
-    let newFilt = noPlayFilt;
-    let newHide = attachVisible ? noPlanFilt : noPlanNoFilt;
-    if (attachFilt) newFilt = attachFilt;
-
-    const newPages =
-      attachVisible && (data.length > 40 || pdata.length > 40)
-        ? paging
-        : noPaging;
-    if (hiddenColumnNames !== newHide) setHiddenColumnNames(newHide);
-    if (filteringEnabled !== newFilt) setFilteringEnabled(newFilt);
-    if (pageSizes !== newPages) setPageSizes(newPages);
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [plan, attachVisible]);
 
   const locale = localeDefault(isDeveloper);
 
@@ -496,60 +291,6 @@ export function MediaTab(props: IProps) {
       setAttachVisible(true);
       handleCheck(checks, true);
     } else doDetach(data[checks[0]].id);
-  };
-
-  const getMedia = (
-    planName: string,
-    media: Array<MediaFile>,
-    passages: Array<Passage>,
-    sections: Array<Section>,
-    playItem: string,
-    allBookData: BookName[],
-    attachMap: IAttachMap,
-    pdata: IPRow[],
-    locale: string,
-    t: IMediaActionsStrings
-  ) => {
-    let rowData: IRow[] = [];
-
-    let index = 0;
-    media.forEach((f) => {
-      const passageId = related(f, 'passage');
-      const passage = passageId
-        ? passages.filter((p) => p.id === passageId)
-        : [];
-      const sectionId = related(passage[0], 'section');
-      const section = sections.filter((s) => s.id === sectionId);
-      var updateddt = passageId
-        ? passage[0]?.attributes?.dateUpdated || ''
-        : f?.attributes?.dateUpdated || '';
-      if (!updateddt.endsWith('Z')) updateddt += 'Z';
-      const updated = moment(updateddt);
-      const date = updated ? updated.format('YYYY-MM-DD') : '';
-      const displayDate = updated ? updated.locale(locale).format('L') : '';
-      const displayTime = updated ? updated.locale(locale).format('LT') : '';
-      const today = moment().format('YYYY-MM-DD');
-      rowData.push({
-        index,
-        planid: related(f, 'plan'),
-        passId: passageId,
-        planName,
-        id: f.id,
-        playIcon: playItem,
-        fileName: f.attributes.originalFile,
-        sectionId: sectionId,
-        sectionDesc: getSection(section),
-        reference: getReference(passage, allBookData),
-        duration: f.attributes.duration ? f.attributes.duration.toString() : '',
-        size: f.attributes.filesize,
-        version: f.attributes.versionNumber
-          ? f.attributes.versionNumber.toString()
-          : '',
-        date: date === today ? displayTime : displayDate,
-      } as IRow);
-      index += 1;
-    });
-    return rowData;
   };
 
   const isAttached = (p: Passage, media: MediaFile[]) => {
@@ -601,18 +342,16 @@ export function MediaTab(props: IProps) {
     const playChange = data[0]?.playIcon !== playItem;
     const media: MediaFile[] = getMediaInPlans([planRec.id], mediaFiles);
 
-    const newData = getMedia(
-      planRec?.attributes?.name,
-      media,
+    const mediaData: IGetMedia = {
+      planName: planRec?.attributes?.name,
       passages,
       sections,
       playItem,
       allBookData,
-      attachMap,
-      pdata,
       locale,
-      tma
-    );
+      isPassageDate: true,
+    };
+    const newData = getMedia(media, mediaData);
     const medAttach = new Set<number>();
     newData.forEach((r, i) => {
       if (r.sectionDesc !== '') medAttach.add(i);
@@ -621,11 +360,11 @@ export function MediaTab(props: IProps) {
       medAttach.size !== dataAttach.size ||
       newData.length !== data.length ||
       playChange ||
-      deleteFlag
+      refresh
     ) {
       setDataAttach(medAttach);
       setData(newData);
-      setDeleteFlag(false);
+      setRefresh(false);
     }
     const newPassData = getPassages(
       [planRec],
@@ -721,81 +460,6 @@ export function MediaTab(props: IProps) {
     }
   };
 
-  interface ICell {
-    value: string;
-    style?: React.CSSProperties;
-    mediaId?: string;
-    selected?: boolean;
-    onToggle?: () => void;
-    row: IRow;
-    column: any;
-    tableRow: any;
-    tableColumn: any;
-    children?: Array<any>;
-  }
-
-  const PlayCell = ({ value, style, row, mediaId, ...restProps }: ICell) => (
-    <Table.Cell row={row} {...restProps} style={{ ...style }} value>
-      <MediaActions
-        t={t}
-        rowIndex={row.index}
-        mediaId={mediaId}
-        online={connected || offlineOnly}
-        readonly={readonly}
-        attached={Boolean(row.passId)}
-        onAttach={onAttach}
-        onPlayStatus={handleSelect}
-        isPlaying={mediaId !== '' && playItem === mediaId}
-      />
-    </Table.Cell>
-  );
-
-  const DetachCell = ({ mediaId, ...props }: ICell) => {
-    const { row } = props;
-    return (
-      <Table.Cell {...props}>
-        <MediaActions2
-          t={t}
-          rowIndex={row.index}
-          mediaId={mediaId}
-          auth={auth}
-          online={connected || offlineOnly}
-          readonly={readonly}
-          canDelete={!readonly}
-          onDelete={handleConfirmAction}
-        />
-      </Table.Cell>
-    );
-  };
-
-  const VersionCell = ({ value, row, ...restProps }: ICell) => (
-    <Table.Cell row={row} {...restProps} value>
-      <Button color="primary" onClick={handleVerHistOpen(row.passId)}>
-        {value}
-      </Button>
-    </Table.Cell>
-  );
-
-  const Cell = (props: ICell) => {
-    const { column, row } = props;
-    if (column.name === 'actions') {
-      const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
-      return <PlayCell {...props} mediaId={mediaId} />;
-    }
-    if (column.name === 'detach') {
-      const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
-      return <DetachCell {...props} mediaId={mediaId} />;
-    }
-    if (column.name === 'version' && row.version !== '1') {
-      return <VersionCell {...props} />;
-    }
-    return <Table.Cell {...props} />;
-  };
-
-  const playEnded = () => {
-    setPlayItem('');
-  };
-
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
@@ -861,23 +525,13 @@ export function MediaTab(props: IProps) {
             </div>
           )}
           <div className={classes.row}>
-            <ShapingTable
-              columns={columnDefs}
-              columnWidths={columnWidths}
-              columnFormatting={columnFormatting}
-              columnSorting={columnSorting}
-              sortingEnabled={sortingEnabled}
-              pageSizes={pageSizes}
-              filteringEnabled={filteringEnabled}
-              dataCell={Cell}
-              sorting={sorting}
-              numCols={numCols}
-              rows={data}
-              shaping={attachVisible || filter}
-              hiddenColumnNames={hiddenColumnNames}
-              expandedGroups={!filter ? [] : undefined} // shuts off toolbar row
-              bandHeader={attachVisible ? bandHead : null}
-              summaryItems={summaryItems}
+            <AudioTable
+              data={data}
+              auth={auth}
+              setRefresh={setRefresh}
+              playItem={playItem}
+              setPlayItem={setPlayItem}
+              onAttach={onAttach}
             />
             <BigDialog
               title={t.choosePassage}
@@ -917,21 +571,12 @@ export function MediaTab(props: IProps) {
       >
         <VersionDlg auth={auth} passId={verHist} />
       </BigDialog>
-      {confirmAction === '' || (
-        <Confirm
-          text={t.deleteConfirm.replace('{0}', data[check[0]].fileName)}
-          yesResponse={handleActionConfirmed}
-          noResponse={handleActionRefused}
-        />
-      )}
-      <MediaPlayer auth={auth} srcMediaId={playItem} onEnded={playEnded} />
     </div>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaTab' }),
-  tma: localStrings(state, { layout: 'mediaActions' }),
   ts: localStrings(state, { layout: 'shared' }),
   allBookData: state.books.bookData,
 });
@@ -952,5 +597,5 @@ const mapRecordsToProps = {
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(MediaTab) as any
+  connect(mapStateToProps, mapDispatchToProps)(AudioTab) as any
 ) as any;

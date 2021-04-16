@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IMediaTabStrings } from '../model';
+import { IState, IMediaTabStrings } from '../../model';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
-import localStrings from '../selector/localize';
+import localStrings from '../../selector/localize';
 import { FormControlLabel, Switch, Radio } from '@material-ui/core';
-import ShapingTable from './ShapingTable';
-import { useOrganizedBy } from '../crud';
-import { IRow, IPRow } from './MediaTab';
+import ShapingTable from '../ShapingTable';
+import { useOrganizedBy } from '../../crud';
+import { IRow, IPRow } from '.';
 
 interface IStateProps {
   t: IMediaTabStrings;

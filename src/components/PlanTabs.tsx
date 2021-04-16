@@ -15,7 +15,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AppBar, Tabs, Tab } from '@material-ui/core';
 import grey from '@material-ui/core/colors/grey';
 import ScriptureTable from '../components/ScriptureTable';
-import MediaTab from '../components/MediaTab';
+import AudioTab from '../components/AudioTab/AudioTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import StickyRedirect from './StickyRedirect';
@@ -234,7 +234,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           </>
         )}
         {tab === tabs.media && (
-          <MediaTab
+          <AudioTab
             {...props}
             projectplans={plans.filter((p) => p.id === plan)}
           />
