@@ -22,6 +22,8 @@ import {
   Button,
   IconButton,
   TextareaAutosize,
+  FormControlLabel,
+  Checkbox,
 } from '@material-ui/core';
 import useTodo from '../context/useTodo';
 import PullIcon from '@material-ui/icons/GetAppOutlined';
@@ -198,6 +200,7 @@ export function Transcriber(props: IProps) {
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
   const [projData, setProjData] = useState<FontData>();
+  const [spellCheck, setSpellCheck] = useState(false);
   const [fontStatus, setFontStatus] = useState<string>();
   // playedSecsRef is needed for autosave
   const playedSecsRef = React.useRef<number>(0);
@@ -369,6 +372,9 @@ export function Transcriber(props: IProps) {
         q.findRecord({ type: 'project', id: project })
       ) as Project;
       setProjData(getFontData(r, offline));
+      setSpellCheck(
+        r.attributes.spellCheck === undefined ? true : r.attributes.spellCheck
+      );
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
@@ -753,7 +759,20 @@ export function Transcriber(props: IProps) {
       setTextValue(textArea.value);
     }
   };
+
   const onPlayStatus = (newPlaying: boolean) => setPlaying(newPlaying);
+  const handleSpellCheckChange = (e: any) => {
+    setSpellCheck(e.target.checked);
+    if (!e.target.checked) {
+      var tmp = textValue;
+      setTextValue('');
+      setTimeout(() => {
+        setTextValue(tmp);
+      }, 100); //long enough to not be bounced with above, short enough not to freak out the user
+    }
+    if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
+  };
+  console.log(spellCheck);
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
@@ -798,6 +817,19 @@ export function Transcriber(props: IProps) {
                         ? undefined
                         : onSaveProgress
                     }
+                    metaData={
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            id="transcriber.spellCheck"
+                            checked={spellCheck}
+                            onChange={handleSpellCheckChange}
+                            value="spellCheck"
+                          />
+                        }
+                        label="t.spellCheck"
+                      />
+                    }
                   />
                 </Grid>
               </Grid>
@@ -822,7 +854,7 @@ export function Transcriber(props: IProps) {
                       style={textAreaStyle}
                       onChange={handleChange}
                       lang={projData?.langTag || 'en'}
-                      spellCheck={false}
+                      spellCheck={spellCheck}
                     />
                   </WebFontLoader>
                 ) : (
@@ -833,7 +865,7 @@ export function Transcriber(props: IProps) {
                     style={textAreaStyle}
                     onChange={handleChange}
                     lang={projData?.langTag || 'en'}
-                    spellCheck={false}
+                    spellCheck={spellCheck}
                   />
                 )}
               </Grid>
