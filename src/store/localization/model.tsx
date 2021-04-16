@@ -365,6 +365,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "duration": string;
     "fileAttached": string;
     "actions": string;
+    "choosePassage": string;
     "fileName": string;
     "filter": string;
     "loadingTable": string;

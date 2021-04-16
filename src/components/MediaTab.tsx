@@ -18,14 +18,7 @@ import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import {
-  Button,
-  AppBar,
-  Typography,
-  Radio,
-  Switch,
-  FormControlLabel,
-} from '@material-ui/core';
+import { Button, AppBar, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
@@ -66,6 +59,7 @@ import MediaPlayer from './MediaPlayer';
 import { useMediaAttach } from '../crud/useMediaAttach';
 import Memory from '@orbit/memory';
 import VersionDlg from './VersionDlg';
+import PassageChooser from './PassageChooser';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -121,7 +115,7 @@ enum StatusL {
   Yes = 'Y',
 }
 
-interface IRow {
+export interface IRow {
   index: number;
   planid: string;
   passId: string;
@@ -139,7 +133,7 @@ interface IRow {
   actions: typeof MediaActions;
 }
 
-interface IPRow {
+export interface IPRow {
   id: string;
   sectionId: string;
   sectionDesc: string;
@@ -287,23 +281,6 @@ export function MediaTab(props: IProps) {
     },
   ];
   const mSummaryItems = [{ columnName: 'fileName', type: 'count' }];
-  const pColumnDefs = [
-    { name: 'sectionDesc', title: organizedBy },
-    { name: 'reference', title: t.reference },
-    { name: 'attached', title: t.associated },
-    { name: 'sort', title: '\u00A0' },
-  ];
-  const pColumnWidths = [
-    { columnName: 'sectionDesc', width: 150 },
-    { columnName: 'reference', width: 150 },
-  ];
-  const pColumnFormatting = [
-    { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
-    { columnName: 'reference', aligh: 'left', wordWrapEnabled: true },
-  ];
-  const pSorting = [{ columnName: 'sort', direction: 'asc' }];
-  const pHiddenColumnNames = ['sort', 'attached'];
-  const pSummaryItems = [{ columnName: 'reference', type: 'count' }];
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
   const [filteringEnabled, setFilteringEnabled] = useState([
     { columnName: 'actions', filteringEnabled: false },
@@ -317,11 +294,6 @@ export function MediaTab(props: IProps) {
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
   const [dataAttach, setDataAttach] = useState(new Set<number>());
   const [uploadMedia, setUploadMedia] = useState<string>();
-  const [attachedFilter, setAttachedFilter] = useState({
-    columnName: 'attached',
-    operation: 'equal',
-    value: 'N',
-  });
   const inProcess = React.useRef<boolean>(false);
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
@@ -465,19 +437,6 @@ export function MediaTab(props: IProps) {
     }
   };
   const handleFilter = () => setFilter(!filter);
-  const handlePCheck = (checks: Array<number>) => {
-    let mRow = mcheck;
-    if (uploadMedia) {
-      mRow = mediaRow(uploadMedia);
-      setUploadMedia(undefined);
-    }
-    if (attachVisible && checks.length === 1 && mRow >= 0) {
-      doAttach(mRow, checks[0]);
-      setAttachVisible(false);
-      return;
-    }
-    setPCheck(checks[0] === pcheck ? checks[1] : checks[0]);
-  };
   const handleSelect = (id: string) => {
     if (id === playItem) setPlayItem('');
     else setPlayItem(id);
@@ -833,32 +792,6 @@ export function MediaTab(props: IProps) {
     return <Table.Cell {...props} />;
   };
 
-  const PCell = (props: ICell) => {
-    return <Table.Cell {...props} />;
-  };
-
-  const SelectCell = (props: ICell) => {
-    const handleSelect = () => {
-      props.onToggle && props.onToggle();
-    };
-    return projRole === 'admin' ? (
-      <Table.Cell {...props}>
-        {(!props.row.fileName || props.row.reference === '') && (
-          <Radio checked={props.selected} onChange={handleSelect} />
-        )}
-      </Table.Cell>
-    ) : (
-      <Table.Cell {...props} />
-    );
-  };
-  const handleAttachedFilterChange = (e: any) => {
-    setAttachedFilter({
-      columnName: 'attached',
-      operation: 'equal',
-      value: e.target.checked ? 'Y' : 'N',
-    });
-  };
-
   const playEnded = () => {
     setPlayItem('');
   };
@@ -947,41 +880,21 @@ export function MediaTab(props: IProps) {
               summaryItems={mSummaryItems}
             />
             <BigDialog
-              title={'Choose Passage'}
+              title={t.choosePassage}
               isOpen={attachVisible || false}
               onOpen={setAttachVisible}
               onCancel={handleAttachCancel}
             >
-              <span>
-                <FormControlLabel
-                  value="attached"
-                  labelPlacement="end"
-                  control={
-                    <Switch
-                      checked={attachedFilter.value === 'Y'}
-                      onChange={handleAttachedFilterChange}
-                    />
-                  }
-                  label={t.alreadyAssociated}
-                />
-                <ShapingTable
-                  columns={pColumnDefs}
-                  columnWidths={pColumnWidths}
-                  columnFormatting={pColumnFormatting}
-                  filters={[attachedFilter]}
-                  dataCell={PCell}
-                  sorting={pSorting}
-                  pageSizes={pageSizes}
-                  rows={pdata}
-                  select={handlePCheck}
-                  selectCell={SelectCell}
-                  checks={pcheck >= 0 ? [pcheck] : []}
-                  shaping={true}
-                  hiddenColumnNames={pHiddenColumnNames}
-                  expandedGroups={[]} // shuts off toolbar row
-                  summaryItems={pSummaryItems}
-                />
-              </span>
+              <PassageChooser
+                data={pdata}
+                row={mcheck}
+                doAttach={doAttach}
+                visible={attachVisible}
+                setVisible={setAttachVisible}
+                uploadMedia={uploadMedia}
+                setUploadMedia={setUploadMedia}
+                mediaRow={mediaRow}
+              />
             </BigDialog>
           </div>
         </div>

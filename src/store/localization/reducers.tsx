@@ -391,6 +391,7 @@ const initialState = {
 			"duration": "Length (s)",
 			"fileAttached": "File already attached",
 			"actions": "Actions",
+			"choosePassage": "Choose Passage",
 			"fileName": "File Name",
 			"filter": "Filter",
 			"loadingTable": "Loading data",
