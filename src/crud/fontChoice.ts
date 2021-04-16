@@ -3,6 +3,7 @@ import { dataPath, PathType } from '../utils';
 import { isElectron } from '../api-variable';
 
 export interface FontData {
+  langTag: string;
   fontFamily: string;
   fontSize: string;
   fontDir: string;
@@ -16,6 +17,7 @@ export interface FontData {
 }
 
 export const getFontData = (r: Project, offline: boolean) => {
+  const langTag = r?.attributes?.language;
   const fontFamily = r?.attributes?.defaultFont
     ? r.attributes.defaultFont.split(',')[0].replace(/ /g, '')
     : 'CharisSIL';
@@ -32,6 +34,7 @@ export const getFontData = (r: Project, offline: boolean) => {
     if (local !== 'http') url = 'transcribe-safe://' + local;
   }
   const data: FontData = {
+    langTag,
     fontFamily,
     fontSize,
     fontDir,

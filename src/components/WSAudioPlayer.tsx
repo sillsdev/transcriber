@@ -163,6 +163,7 @@ interface IProps extends IStateProps {
   visible: boolean;
   blob?: Blob;
   allowRecord?: boolean;
+  metaData?: JSX.Element;
   setMimeType?: (type: string) => void;
   setAcceptedMimes?: (types: MimeInfo[]) => void;
   onPlayStatus?: (playing: boolean) => void;
@@ -194,6 +195,7 @@ function WSAudioPlayer(props: IProps) {
     t,
     blob,
     allowRecord,
+    metaData,
     setMimeType,
     setAcceptedMimes,
     onProgress,
@@ -792,6 +794,7 @@ function WSAudioPlayer(props: IProps) {
                     </span>
                   </LightTooltip>
                 </Grid>
+                {metaData}
               </>
             )}
             <Grid item className={classes.grow}>
