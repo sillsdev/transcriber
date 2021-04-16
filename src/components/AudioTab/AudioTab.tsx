@@ -28,22 +28,15 @@ import AudioTable from './AudioTable';
 import Uploader, { statusInit } from '../Uploader';
 import Template from '../../control/template';
 import Auth from '../../auth/Auth';
-import {
-  related,
-  passageReference,
-  sectionDescription,
-  getMediaInPlans,
-  usePlan,
-  remoteIdGuid,
-} from '../../crud';
+import { getMediaInPlans, usePlan, remoteIdGuid } from '../../crud';
 import { useGlobal } from 'reactn';
-import { localeDefault, useRemoteSave, refMatch } from '../../utils';
+import { localeDefault, useRemoteSave } from '../../utils';
 import { HeadHeight } from '../../App';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
 import VersionDlg from './VersionDlg';
 import PassageChooser from './PassageChooser';
-import { IRow, IPRow, getMedia, IGetMedia } from '.';
+import { IRow, IPRow, getMedia, IGetMedia, getPassages, IPassageData } from '.';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -92,12 +85,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-enum StatusL {
-  No = 'N',
-  Proposed = 'P',
-  Yes = 'Y',
-}
 
 // key is mediaId and value is row in pdata (passage data) table
 interface IAttachMap {
@@ -276,66 +263,11 @@ export function AudioTab(props: IProps) {
 
   const locale = localeDefault(isDeveloper);
 
-  const getSection = (section: Section[]) => {
-    if (section.length === 0) return '';
-    return sectionDescription(section[0]);
-  };
-
-  const getReference = (passage: Passage[], bookData: BookName[] = []) => {
-    if (passage.length === 0) return '';
-    return passageReference(passage[0], bookData);
-  };
-
   const onAttach = (checks: number[], attach: boolean) => {
     if (attach) {
       setAttachVisible(true);
       handleCheck(checks, true);
     } else doDetach(data[checks[0]].id);
-  };
-
-  const isAttached = (p: Passage, media: MediaFile[]) => {
-    return media.filter((m) => related(m, 'passage') === p.id).length > 0;
-  };
-
-  const pad = (text: number) => ('00' + text).slice(-2);
-
-  const getPassages = (
-    projectplans: Array<Plan>,
-    media: MediaFile[],
-    passages: Array<Passage>,
-    sections: Array<Section>,
-    allBookData: BookName[]
-  ) => {
-    const prowData: IPRow[] = [];
-    projectplans.forEach((plan) => {
-      const planId = plan.id;
-      const selSects = sections.filter((s) => related(s, 'plan') === planId);
-      selSects.forEach((section) => {
-        const sectionId = section.id;
-        passages
-          .filter((p) => related(p, 'section') === sectionId)
-          .forEach((passage) => {
-            const refMat = refMatch(passage.attributes.reference);
-            prowData.push({
-              id: passage.id,
-              sectionId: section.id,
-              sectionDesc: getSection([section]),
-              reference: getReference([passage], allBookData),
-              attached: isAttached(passage, media) ? StatusL.Yes : StatusL.No,
-              sort: `${pad(section.attributes.sequencenum)}.${pad(
-                passage.attributes.sequencenum
-              )}`,
-              book: passage.attributes.book,
-              chap: (refMat && parseInt(refMat[1])) || -1,
-              beg: (refMat && refMat.length > 2 && parseInt(refMat[2])) || -1,
-              end: (refMat && refMat.length > 3 && parseInt(refMat[3])) || -1,
-              pasNum: passage.attributes.sequencenum,
-              secNum: section.attributes.sequencenum,
-            });
-          });
-      });
-    });
-    return prowData;
   };
 
   useEffect(() => {
@@ -366,13 +298,8 @@ export function AudioTab(props: IProps) {
       setData(newData);
       setRefresh(false);
     }
-    const newPassData = getPassages(
-      [planRec],
-      media,
-      passages,
-      sections,
-      allBookData
-    );
+    const passData: IPassageData = { media, allBookData };
+    const newPassData = getPassages(plan, passages, sections, passData);
     if (pdata.length !== newPassData.length || medAttach.size !== attachCount) {
       setPData(newPassData);
       setAttachCount(medAttach.size);
