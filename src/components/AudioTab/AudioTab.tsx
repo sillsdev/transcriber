@@ -64,24 +64,12 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       marginLeft: theme.spacing(1),
     },
-    link: {},
-    unsupported: {
-      color: theme.palette.secondary.light,
-    },
     row: {
       display: 'flex',
       flexDirection: 'row',
     },
     template: {
       marginBottom: theme.spacing(2),
-    },
-    slider: {
-      marginLeft: theme.spacing(2),
-      width: '80%',
-    },
-    cell: {
-      width: '100%',
-      padding: theme.spacing(1),
     },
   })
 );
