@@ -253,7 +253,7 @@ export function MediaTab(props: IProps) {
     { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
     { columnName: 'version', align: 'center' },
   ];
-  const mSorting = [
+  const sorting = [
     { columnName: 'planName', direction: 'asc' },
     { columnName: 'fileName', direction: 'asc' },
   ];
@@ -269,7 +269,7 @@ export function MediaTab(props: IProps) {
   ];
   const numCols = ['duration', 'size', 'version'];
   const [filter, setFilter] = useState(false);
-  const mBandHead = [
+  const bandHead = [
     {
       title: <Typography variant="h6">{t.mediaAssociations}</Typography>,
       children: [
@@ -280,7 +280,7 @@ export function MediaTab(props: IProps) {
       ],
     },
   ];
-  const mSummaryItems = [{ columnName: 'fileName', type: 'count' }];
+  const summaryItems = [{ columnName: 'fileName', type: 'count' }];
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
   const [filteringEnabled, setFilteringEnabled] = useState([
     { columnName: 'actions', filteringEnabled: false },
@@ -423,7 +423,7 @@ export function MediaTab(props: IProps) {
     setCheck([]);
   };
 
-  const handleMCheck = (checks: Array<number>, visible?: boolean) => {
+  const handleCheck = (checks: Array<number>, visible?: boolean) => {
     if (visible || attachVisible) {
       const newCheck = checks[0] === mcheck ? checks[1] : checks[0];
       if (checks.length === 1 && pcheck >= 0) {
@@ -494,7 +494,7 @@ export function MediaTab(props: IProps) {
   const onAttach = (checks: number[], attach: boolean) => {
     if (attach) {
       setAttachVisible(true);
-      handleMCheck(checks, true);
+      handleCheck(checks, true);
     } else doDetach(data[checks[0]].id);
   };
 
@@ -870,14 +870,14 @@ export function MediaTab(props: IProps) {
               pageSizes={pageSizes}
               filteringEnabled={filteringEnabled}
               dataCell={Cell}
-              sorting={mSorting}
+              sorting={sorting}
               numCols={numCols}
               rows={data}
               shaping={attachVisible || filter}
               hiddenColumnNames={hiddenColumnNames}
               expandedGroups={!filter ? [] : undefined} // shuts off toolbar row
-              bandHeader={attachVisible ? mBandHead : null}
-              summaryItems={mSummaryItems}
+              bandHeader={attachVisible ? bandHead : null}
+              summaryItems={summaryItems}
             />
             <BigDialog
               title={t.choosePassage}
