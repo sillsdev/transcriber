@@ -3574,6 +3574,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.spellCheck">
+         <segment>
+            <source>Spell Check</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.font">
          <segment>
             <source>Font</source>

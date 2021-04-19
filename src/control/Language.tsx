@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   TextField,
+  Checkbox,
   FormLabel,
   FormGroup,
   FormControlLabel,
@@ -35,6 +36,7 @@ export interface ILanguage {
   bcp47: string;
   languageName: string;
   font: string;
+  spellCheck: boolean;
 }
 
 interface IProps extends ILanguage {
@@ -43,11 +45,12 @@ interface IProps extends ILanguage {
 
 export const Language = (props: IProps) => {
   const classes = useStyles();
-  const { bcp47, languageName, font, onChange } = props;
+  const { bcp47, languageName, font, spellCheck, onChange } = props;
   const [state, setState] = React.useState<ILanguage>({
     bcp47,
     languageName,
     font,
+    spellCheck,
   });
   const ctx = React.useContext(TeamContext);
   const t = ctx.state.vProjectStrings;
@@ -65,6 +68,10 @@ export const Language = (props: IProps) => {
 
   const handleFont = (font: string) => {
     setState((state) => ({ ...state, font }));
+  };
+
+  const handleSpellCheckChange = (e: any) => {
+    setState((state) => ({ ...state, spellCheck: e.target.checked }));
   };
 
   const TAB = 9;
@@ -109,7 +116,7 @@ export const Language = (props: IProps) => {
         <FormControlLabel
           control={
             <TextField
-              id="default-font"
+              id="language-font"
               label={t.font}
               className={classes.textField}
               value={font}
@@ -122,6 +129,17 @@ export const Language = (props: IProps) => {
             />
           }
           label=""
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              id="language-spellCheck"
+              checked={spellCheck}
+              onChange={handleSpellCheckChange}
+              value="spellCheck"
+            />
+          }
+          label={t.spellCheck}
         />
       </FormGroup>
     </div>

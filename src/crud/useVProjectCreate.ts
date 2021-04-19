@@ -47,7 +47,7 @@ export const useVProjectCreate = () => {
         defaultFont,
         defaultFontSize,
         rtl,
-        spellCheck: true,
+        spellCheck: false,
         allowClaim: true,
         isPublic: true,
         dateCreated: currentDateTime(),

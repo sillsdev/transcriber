@@ -3569,13 +3569,19 @@
             <target>Plate</target>
          </segment>
       </unit>
-      <unit id="vProject.font">
+      <unit id="vProject.spellCheck">
          <segment>
-            <source>Font</source>
-            <target>Police</target>
+            <source>Spell Check</source>
+         	<target>Vérification des sorts</target>
          </segment>
       </unit>
-      <unit id="vProject.fontSize">
+   	<unit id="vProject.font">
+   		<segment>
+   			<source>Font</source>
+   			<target>Police</target>
+   		</segment>
+   	</unit>
+   	<unit id="vProject.fontSize">
          <segment>
             <source>Font Size</source>
             <target>Taille de la police</target>

@@ -775,6 +775,7 @@ const initialState = {
 			"edit": "Edit",
 			"editorSettings": "Editor Settings",
 			"flat": "Flat",
+			"spellCheck": "Spell Check",
 			"font": "Font",
 			"fontSize": "Font Size",
 			"hierarchical": "Hierarchical",

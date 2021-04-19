@@ -49,6 +49,7 @@ const initLang = {
   bcp47: 'und',
   languageName: '',
   font: '',
+  spellCheck: false,
 };
 
 interface IProps {
@@ -168,6 +169,7 @@ export const AddCard = (props: IProps) => {
       description,
       type,
       languageName,
+      spellCheck,
       rtl,
       tags,
       organizedBy,
@@ -180,6 +182,7 @@ export const AddCard = (props: IProps) => {
           type,
           language: values.bcp47,
           languageName,
+          spellCheck,
           defaultFont: values.font,
           defaultFontSize: values.fontSize,
           rtl,

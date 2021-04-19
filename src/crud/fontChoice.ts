@@ -4,6 +4,7 @@ import { isElectron } from '../api-variable';
 
 export interface FontData {
   langTag: string;
+  spellCheck: boolean;
   fontFamily: string;
   fontSize: string;
   fontDir: string;
@@ -18,6 +19,7 @@ export interface FontData {
 
 export const getFontData = (r: Project, offline: boolean) => {
   const langTag = r?.attributes?.language;
+  const spellCheck = r?.attributes?.spellCheck;
   const fontFamily = r?.attributes?.defaultFont
     ? r.attributes.defaultFont.split(',')[0].replace(/ /g, '')
     : 'CharisSIL';
@@ -35,6 +37,7 @@ export const getFontData = (r: Project, offline: boolean) => {
   }
   const data: FontData = {
     langTag,
+    spellCheck,
     fontFamily,
     fontSize,
     fontDir,
