@@ -296,27 +296,31 @@ export function AudioTab(props: IProps) {
   }, [planMedia, passages, sections, refresh]);
 
   useEffect(() => {
-    const passData: IPassageData = { media: planMedia, allBookData };
-    const newPassData = getPassages(plan, passages, sections, passData);
-    setPData(newPassData);
+    if (attachVisible) {
+      const passData: IPassageData = { media: planMedia, allBookData };
+      const newPassData = getPassages(plan, passages, sections, passData);
+      setPData(newPassData);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [planMedia, passages, sections]);
+  }, [planMedia, passages, sections, attachVisible]);
 
   useEffect(() => {
-    let dataChange = false;
-    const newPData = pdata.map((r, i) => {
-      const newRow = hasPassage(i)
-        ? { ...r, attached: 'Y', isAttaching: true }
-        : null;
-      if (newRow) {
-        dataChange = true;
-        return newRow;
-      }
-      return { ...r };
-    });
-    if (dataChange) setPData(newPData);
+    if (attachVisible) {
+      let dataChange = false;
+      const newPData = pdata.map((r, i) => {
+        const newRow = hasPassage(i)
+          ? { ...r, attached: 'Y', isAttaching: true }
+          : null;
+        if (newRow) {
+          dataChange = true;
+          return newRow;
+        }
+        return { ...r };
+      });
+      if (dataChange) setPData(newPData);
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [attachMap]);
+  }, [attachMap, attachVisible]);
 
   const afterUpload = (planId: string, mediaRemoteIds?: string[]) => {
     if (mediaRemoteIds && mediaRemoteIds.length === 1) {
@@ -419,23 +423,25 @@ export function AudioTab(props: IProps) {
               setPlayItem={setPlayItem}
               onAttach={onAttach}
             />
-            <BigDialog
-              title={t.choosePassage}
-              isOpen={attachVisible || false}
-              onOpen={setAttachVisible}
-              onCancel={handleAttachCancel}
-            >
-              <PassageChooser
-                data={pdata}
-                row={mcheck}
-                doAttach={doAttach}
-                visible={attachVisible}
-                setVisible={setAttachVisible}
-                uploadMedia={uploadMedia}
-                setUploadMedia={setUploadMedia}
-                mediaRow={mediaRow}
-              />
-            </BigDialog>
+            {attachVisible && (
+              <BigDialog
+                title={t.choosePassage}
+                isOpen={attachVisible || false}
+                onOpen={setAttachVisible}
+                onCancel={handleAttachCancel}
+              >
+                <PassageChooser
+                  data={pdata}
+                  row={mcheck}
+                  doAttach={doAttach}
+                  visible={attachVisible}
+                  setVisible={setAttachVisible}
+                  uploadMedia={uploadMedia}
+                  setUploadMedia={setUploadMedia}
+                  mediaRow={mediaRow}
+                />
+              </BigDialog>
+            )}
           </div>
         </div>
       </div>
