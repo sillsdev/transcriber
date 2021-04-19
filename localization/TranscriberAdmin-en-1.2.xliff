@@ -4167,7 +4167,14 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="vProject.font">
+      	<trans-unit id="vProject.spellCheck">
+      		<source>Spell Check</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">addCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="vProject.font">
             <source>Font</source>
             <target/>
             <context-group>

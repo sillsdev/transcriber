@@ -726,6 +726,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "edit": string;
     "editorSettings": string;
     "flat": string;
+    "spellCheck": string;
     "font": string;
     "fontSize": string;
     "hierarchical": string;

@@ -18,6 +18,7 @@ export const useVProjectUpdate = () => {
       uilanguagebcp47,
       language,
       languageName,
+      spellCheck,
       defaultFont,
       defaultFontSize,
       rtl,
@@ -26,22 +27,27 @@ export const useVProjectUpdate = () => {
       organizedBy,
     } = vProject.attributes;
     await memory.update((t: TransformBuilder) => [
-      ...UpdateRecord(t, {
-        type: 'project',
-        id,
-        attributes: {
-          name,
-          description,
-          uilanguagebcp47,
-          language,
-          languageName,
-          defaultFont,
-          defaultFontSize,
-          rtl,
-        },
-      } as Project, user),
+      ...UpdateRecord(
+        t,
+        {
+          type: 'project',
+          id,
+          attributes: {
+            name,
+            description,
+            uilanguagebcp47,
+            language,
+            languageName,
+            spellCheck,
+            defaultFont,
+            defaultFontSize,
+            rtl,
+          },
+        } as Project,
+        user
+      ),
       // We use the plan type and not the project type
-      t.replaceRelatedRecord({type: 'project', id: id}, 'projecttype', {
+      t.replaceRelatedRecord({ type: 'project', id: id }, 'projecttype', {
         type: 'projecttype',
         id: getTypeId(
           type.toLowerCase() === 'scripture' ? type : 'generic',
@@ -52,16 +58,20 @@ export const useVProjectUpdate = () => {
     ]);
 
     await memory.update((t: TransformBuilder) => [
-      ...UpdateRecord(t, {
-        type: 'plan',
-        id: vProject.id,
-        attributes: {
-          name,
-          flat,
-          tags: JSON.stringify(tags),
-          organizedBy,
-        },
-      } as any as Plan, user),
+      ...UpdateRecord(
+        t,
+        ({
+          type: 'plan',
+          id: vProject.id,
+          attributes: {
+            name,
+            flat,
+            tags: JSON.stringify(tags),
+            organizedBy,
+          },
+        } as any) as Plan,
+        user
+      ),
       t.replaceRelatedRecord({ type: 'plan', id: vProject.id }, 'plantype', {
         type: 'plantype',
         id: getTypeId(type, 'plan'),
