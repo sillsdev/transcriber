@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
-import { IState, ITemplateStrings, Plan, PlanType } from '../model';
+import localStrings from '../../selector/localize';
+import { IState, ITemplateStrings, Plan, PlanType } from '../../model';
 import { QueryBuilder } from '@orbit/data';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
@@ -20,7 +20,8 @@ import {
 } from '@material-ui/core';
 import DoneIcon from '@material-ui/icons/Done';
 import InfoIcon from '@material-ui/icons/Info';
-import { related, useOrganizedBy } from '../crud';
+import { related, useOrganizedBy } from '../../crud';
+import { IMatchData } from './makeRefMap';
 
 interface IstrMap {
   [key: string]: string;
@@ -93,11 +94,12 @@ const InfoDialog = connect(mapStateToProps)((props: InfoDialogProps) => {
 });
 
 export interface ITemplateProps extends IStateProps {
-  matchMap: (pat: string, terms?: string[]) => void;
+  matchMap: (pat: string, options: IMatchData) => void;
+  options: IMatchData;
 }
 
 export function Template(props: ITemplateProps) {
-  const { t, matchMap } = props;
+  const { t, matchMap, options } = props;
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const classes = useStyles();
@@ -137,7 +139,7 @@ export function Template(props: ITemplateProps) {
       for (let t of terms) {
         sPat = sPat.replace('{' + t + '}', rex[t]);
       }
-    matchMap(sPat, terms);
+    matchMap(sPat, { ...options, terms });
   };
 
   React.useEffect(() => {

@@ -26,7 +26,6 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import BigDialog from '../../hoc/BigDialog';
 import AudioTable from './AudioTable';
 import Uploader, { statusInit } from '../Uploader';
-import Template from '../../control/template';
 import Auth from '../../auth/Auth';
 import { getMediaInPlans, usePlan, remoteIdGuid } from '../../crud';
 import { useGlobal } from 'reactn';
@@ -36,7 +35,17 @@ import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
 import VersionDlg from './VersionDlg';
 import PassageChooser from './PassageChooser';
-import { IRow, IPRow, getMedia, IGetMedia, getPassages, IPassageData } from '.';
+import Template from './template';
+import {
+  getMedia,
+  getPassages,
+  IAttachMap,
+  IGetMedia,
+  IPassageData,
+  IPRow,
+  IRow,
+} from '.';
+import { IMatchData, makeMatchMap } from './makeRefMap';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,11 +82,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-// key is mediaId and value is row in pdata (passage data) table
-interface IAttachMap {
-  [key: string]: number;
-}
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -321,58 +325,19 @@ export function AudioTab(props: IProps) {
     }
   };
 
-  const matchMap = (pat: string, terms?: string[]) => {
+  const matchMap = (pat: string, options: IMatchData) => {
     if (pdata.length === 0 || data.length === 0) return;
-    const rpat = new RegExp(pat);
-    const newMap = { ...attachMap };
-    const usedPass = new Set<number>();
-    Object.keys(newMap).forEach((k) => usedPass.add(newMap[k]));
-    let found = 0;
-    data.forEach((dr, dn) => {
-      if (dr.reference === '') {
-        const m = rpat.exec(dr.fileName);
-        if (m) {
-          for (let i = 0; i < pdata.length; i++) {
-            if (usedPass.has(i)) continue;
-            const r = pdata[i];
-            let fail = false;
-            if (terms) {
-              for (let j = 0; j < terms.length; j++) {
-                const t = terms[j];
-                const val = m[j + 1];
-                if (t === 'SECT') {
-                  if (parseInt(val) !== r.secNum) fail = true;
-                } else if (t === 'PASS') {
-                  if (parseInt(val) !== r.pasNum) fail = true;
-                } else if (t === 'BOOK') {
-                  if (val !== r.book) fail = true;
-                } else if (t === 'CHAP') {
-                  if (parseInt(val) !== r.chap) fail = true;
-                } else if (t === 'BEG') {
-                  if (parseInt(val) !== r.beg) fail = true;
-                } else if (t === 'END') {
-                  if (parseInt(val) !== r.end) fail = true;
-                }
-                if (fail) break;
-              }
-            }
-            if (!fail) {
-              newMap[dr.id] = i;
-              usedPass.add(i);
-              found += 1;
-              break;
-            }
-          }
-        }
+    const result = makeMatchMap(pat, options);
+    if (result) {
+      const { found, newMap } = result;
+      if (found) {
+        setAttachMap(newMap);
+        showMessage(t.matchAdded.replace('{0}', found.toString()));
+        handleSave(newMap);
+        return;
       }
-    });
-    if (found) {
-      setAttachMap(newMap);
-      showMessage(t.matchAdded.replace('{0}', found.toString()));
-      handleSave(newMap);
-    } else {
-      showMessage(t.noMatch);
     }
+    showMessage(t.noMatch);
   };
 
   return (
@@ -436,7 +401,10 @@ export function AudioTab(props: IProps) {
         <div className={classes.content}>
           {autoMatch && (
             <div className={classes.template}>
-              <Template matchMap={matchMap} />
+              <Template
+                matchMap={matchMap}
+                options={{ data, pdata, attachMap } as IMatchData}
+              />
             </div>
           )}
           <div className={classes.row}>

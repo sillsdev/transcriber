@@ -6,3 +6,4 @@ export * from './getReference';
 export * from './isAttached';
 export * from './pad';
 export * from './getPassages';
+export * from './IAttachMap';
