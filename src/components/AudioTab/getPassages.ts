@@ -30,6 +30,8 @@ export const passageRow = (
     sort: `${pad(section.attributes.sequencenum)}.${pad(
       passage.attributes.sequencenum
     )}`,
+
+    // Used for Reference matching
     book: passage.attributes.book,
     chap: (refMat && parseInt(refMat[1])) || -1,
     beg: (refMat && refMat.length > 2 && parseInt(refMat[2])) || -1,

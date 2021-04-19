@@ -33,7 +33,6 @@ import { localeDefault, useRemoteSave } from '../../utils';
 import { HeadHeight } from '../../App';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
-import VersionDlg from './VersionDlg';
 import PassageChooser from './PassageChooser';
 import Template from './Template';
 import {
@@ -134,11 +133,9 @@ export function AudioTab(props: IProps) {
   const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
-  const [attachCount, setAttachCount] = useState(0);
   const [attachVisible, setAttachVisible] = useState(false);
   const [mcheck, setMCheck] = useState(-1);
   const [pcheck, setPCheck] = useState(-1);
-  const [verHist, setVerHist] = useState('');
   const [filter, setFilter] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [status] = useState(statusInit);
@@ -146,7 +143,7 @@ export function AudioTab(props: IProps) {
   const [autoMatch, setAutoMatch] = useState(false);
   const [playItem, setPlayItem] = useState('');
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
-  const [dataAttach, setDataAttach] = useState(new Set<number>());
+  const [planMedia, setPlanMedia] = useState<MediaFile[]>([]);
   const [uploadMedia, setUploadMedia] = useState<string>();
   const inProcess = React.useRef<boolean>(false);
   const [attachPassage, detachPassage] = useMediaAttach({
@@ -161,10 +158,6 @@ export function AudioTab(props: IProps) {
       if (attachMap[mediaId] === pRow) return true;
     }
     return false;
-  };
-
-  const handleVerHist = () => {
-    setVerHist('');
   };
 
   const handleUpload = () => {
@@ -224,7 +217,7 @@ export function AudioTab(props: IProps) {
   };
 
   const doAttach = (mRow: number, pRow: number) => {
-    if (attachMap.hasOwnProperty(data[mRow].id) || dataAttach.has(mRow)) {
+    if (attachMap.hasOwnProperty(data[mRow].id)) {
       showMessage(t.fileAttached);
       return;
     }
@@ -263,9 +256,30 @@ export function AudioTab(props: IProps) {
   };
 
   useEffect(() => {
-    const playChange = data[0]?.playIcon !== playItem;
-    const media: MediaFile[] = getMediaInPlans([planRec.id], mediaFiles);
+    if (plan && mediaFiles.length > 0) {
+      setPlanMedia(getMediaInPlans([plan], mediaFiles));
+    }
+  }, [mediaFiles, plan]);
 
+  // Check if playItem changes
+  useEffect(() => {
+    if (data[0]?.playIcon !== playItem) {
+      const mediaData: IGetMedia = {
+        planName: planRec?.attributes?.name,
+        passages,
+        sections,
+        playItem,
+        allBookData,
+        locale,
+        isPassageDate: true,
+      };
+      const newData = getMedia(planMedia, mediaData);
+      setData(newData);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playItem]);
+
+  useEffect(() => {
     const mediaData: IGetMedia = {
       planName: planRec?.attributes?.name,
       passages,
@@ -275,29 +289,18 @@ export function AudioTab(props: IProps) {
       locale,
       isPassageDate: true,
     };
-    const newData = getMedia(media, mediaData);
-    const medAttach = new Set<number>();
-    newData.forEach((r, i) => {
-      if (r.sectionDesc !== '') medAttach.add(i);
-    });
-    if (
-      medAttach.size !== dataAttach.size ||
-      newData.length !== data.length ||
-      playChange ||
-      refresh
-    ) {
-      setDataAttach(medAttach);
-      setData(newData);
-      setRefresh(false);
-    }
-    const passData: IPassageData = { media, allBookData };
+    const newData = getMedia(planMedia, mediaData);
+    setData(newData);
+    setRefresh(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [planMedia, passages, sections, refresh]);
+
+  useEffect(() => {
+    const passData: IPassageData = { media: planMedia, allBookData };
     const newPassData = getPassages(plan, passages, sections, passData);
-    if (pdata.length !== newPassData.length || medAttach.size !== attachCount) {
-      setPData(newPassData);
-      setAttachCount(medAttach.size);
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediaFiles, passages, sections, playItem, allBookData, attachMap, pdata]);
+    setPData(newPassData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [planMedia, passages, sections]);
 
   useEffect(() => {
     let dataChange = false;
@@ -447,13 +450,6 @@ export function AudioTab(props: IProps) {
         finish={afterUpload}
         status={status}
       />
-      <BigDialog
-        title={t.versionHistory}
-        isOpen={Boolean(verHist)}
-        onOpen={handleVerHist}
-      >
-        <VersionDlg auth={auth} passId={verHist} />
-      </BigDialog>
     </div>
   );
 }

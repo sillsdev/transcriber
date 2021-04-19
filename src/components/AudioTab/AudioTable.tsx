@@ -8,6 +8,8 @@ import { Button } from '@material-ui/core';
 import localStrings from '../../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
+import BigDialog from '../../hoc/BigDialog';
+import VersionDlg from './VersionDlg';
 import ShapingTable from '../ShapingTable';
 import TranscriptionShow from '../TranscriptionShow';
 import MediaPlayer from '../MediaPlayer';
@@ -98,6 +100,7 @@ export const AudioTable = (props: IProps) => {
   const mSummaryItems = [{ columnName: 'fileName', type: 'count' }];
   const [pageSizes] = useState<number[]>([]);
   const [hiddenColumnNames] = useState<string[]>(['planName']);
+  const [verHist, setVerHist] = useState('');
 
   const handleShowTranscription = (id: string) => () => {
     setShowId(id);
@@ -145,6 +148,13 @@ export const AudioTable = (props: IProps) => {
   const handleSelect = (id: string) => {
     if (id === playItem) setPlayItem('');
     else setPlayItem(id);
+  };
+
+  const handleVerHistOpen = (passId: string) => () => {
+    setVerHist(passId);
+  };
+  const handleVerHistClose = () => {
+    setVerHist('');
   };
 
   const playEnded = () => {
@@ -198,6 +208,14 @@ export const AudioTable = (props: IProps) => {
     );
   };
 
+  const VersionCell = ({ value, row, ...restProps }: ICell) => (
+    <Table.Cell row={row} {...restProps} value>
+      <Button color="primary" onClick={handleVerHistOpen(row.passId)}>
+        {value}
+      </Button>
+    </Table.Cell>
+  );
+
   const ReferenceCell = ({ row, value, ...props }: ICell) => (
     <Table.Cell row {...props} value>
       <Button color="primary" onClick={handleShowTranscription(row.id)}>
@@ -215,6 +233,9 @@ export const AudioTable = (props: IProps) => {
     if (column.name === 'detach') {
       const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
       return <DetachCell {...props} mediaId={mediaId} />;
+    }
+    if (column.name === 'version' && row.version !== '1') {
+      return <VersionCell {...props} />;
     }
     if (column.name === 'reference') {
       return <ReferenceCell {...props} />;
@@ -242,6 +263,16 @@ export const AudioTable = (props: IProps) => {
         bandHeader={null}
         summaryItems={mSummaryItems}
       />
+      {verHist && (
+        <BigDialog
+          title={t.versionHistory}
+          isOpen={Boolean(verHist)}
+          onOpen={handleVerHistClose}
+        >
+          <VersionDlg auth={auth} passId={verHist} />
+        </BigDialog>
+      )}
+
       {showId !== '' && (
         <TranscriptionShow
           id={showId}
