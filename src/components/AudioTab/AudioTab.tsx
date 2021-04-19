@@ -35,7 +35,7 @@ import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
 import VersionDlg from './VersionDlg';
 import PassageChooser from './PassageChooser';
-import Template from './template';
+import Template from './Template';
 import {
   getMedia,
   getPassages,
