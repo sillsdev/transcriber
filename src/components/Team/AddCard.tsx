@@ -206,6 +206,7 @@ export const AddCard = (props: IProps) => {
           type,
           language: language.bcp47,
           languageName: language.languageName,
+          spellCheck: language.spellCheck,
           defaultFont: language.font,
           defaultFontSize: 'large',
           rtl: false,
