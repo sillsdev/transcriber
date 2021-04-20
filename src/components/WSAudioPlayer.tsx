@@ -545,7 +545,7 @@ function WSAudioPlayer(props: IProps) {
                       id="wsAudioAddSilence"
                       className={classes.togglebutton}
                       onClick={handleAddSilence()}
-                      disabled={!ready}
+                      disabled={!ready || recording}
                     >
                       <SilenceIcon />
                     </IconButton>
@@ -582,6 +582,7 @@ function WSAudioPlayer(props: IProps) {
                   <IconButton
                     id="wsAudioDeleteRegion"
                     onClick={handleDeleteRegion()}
+                    disabled={recording}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -642,7 +643,7 @@ function WSAudioPlayer(props: IProps) {
                     <IconButton
                       id="wsAudioHome"
                       onClick={handleGotoEv(0)}
-                      disabled={!ready}
+                      disabled={!ready || recording}
                     >
                       <SkipPreviousIcon />
                     </IconButton>
@@ -659,7 +660,7 @@ function WSAudioPlayer(props: IProps) {
                     <IconButton
                       id="wsAudioBack"
                       onClick={handleJumpEv(-1 * jump)}
-                      disabled={!ready}
+                      disabled={!ready || recording}
                     >
                       <ReplayIcon />
                     </IconButton>
@@ -676,7 +677,7 @@ function WSAudioPlayer(props: IProps) {
                     <IconButton
                       id="wsAudioPlay"
                       onClick={handlePlayStatus}
-                      disabled={duration === 0}
+                      disabled={duration === 0 || recording}
                     >
                       <>{playing ? <PauseIcon /> : <PlayIcon />}</>
                     </IconButton>
@@ -693,7 +694,7 @@ function WSAudioPlayer(props: IProps) {
                     <IconButton
                       id="wsAudioForward"
                       onClick={handleJumpEv(jump)}
-                      disabled={!ready}
+                      disabled={!ready || recording}
                     >
                       <ForwardIcon />{' '}
                     </IconButton>
@@ -707,7 +708,7 @@ function WSAudioPlayer(props: IProps) {
                     <IconButton
                       id="wsAudioEnd"
                       onClick={handleGotoEv(duration)}
-                      disabled={!ready}
+                      disabled={!ready || recording}
                     >
                       <SkipNextIcon />{' '}
                     </IconButton>
@@ -731,7 +732,7 @@ function WSAudioPlayer(props: IProps) {
                     <IconButton
                       id="wsAudioSlower"
                       onClick={handleSlower}
-                      disabled={playbackRate === MIN_SPEED}
+                      disabled={playbackRate === MIN_SPEED || recording}
                     >
                       <FaAngleDoubleDown fontSize="small" />{' '}
                     </IconButton>
@@ -761,7 +762,7 @@ function WSAudioPlayer(props: IProps) {
                     <IconButton
                       id="wsAudioFaster"
                       onClick={handleFaster}
-                      disabled={playbackRate === MAX_SPEED}
+                      disabled={playbackRate === MAX_SPEED || recording}
                     >
                       <FaAngleDoubleUp fontSize="small" />{' '}
                     </IconButton>
