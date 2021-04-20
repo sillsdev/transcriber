@@ -3811,7 +3811,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="transcriptionTab.elan">
-            <source>Elan</source>
+            <source>ELAN</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
