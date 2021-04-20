@@ -2122,6 +2122,13 @@
       			<context context-type="sourcefile">MediaTab.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="mediaTab.choosePassage">
+      		<source>Choose Passage</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="mediaTab.fileName">
             <source>File Name</source>
             <target/>

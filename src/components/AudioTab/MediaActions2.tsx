@@ -1,12 +1,12 @@
 import React from 'react';
-import { IMediaActionsStrings, IState } from '../model';
+import { IMediaActionsStrings, IState } from '../../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
-import localStrings from '../selector/localize';
+import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
-import { isElectron } from '../api-variable';
-import AudioDownload from './AudioDownload';
-import Auth from '../auth/Auth';
+import { isElectron } from '../../api-variable';
+import AudioDownload from '../AudioDownload';
+import Auth from '../../auth/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

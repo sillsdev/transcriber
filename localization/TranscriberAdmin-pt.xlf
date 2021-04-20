@@ -1633,6 +1633,12 @@
    			<target/>
    		</segment>
    	</unit>
+   	<unit id="mediaTab.choosePassage">
+   		<segment>
+   			<source>Choose Passage</source>
+   			<target>Escolha a Passagem</target>
+   		</segment>
+   	</unit>
    	<unit id="mediaTab.fileName">
          <segment>
             <source>File Name</source>

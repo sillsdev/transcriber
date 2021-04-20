@@ -1771,6 +1771,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="mediaTab.choosePassage">
+			<segment>
+				<source>Choose Passage</source>
+				<target>Выберите Проход</target>
+			</segment>
+		</unit>
 		<unit id="mediaTab.book">
 			<segment>
 				<source>Book</source>

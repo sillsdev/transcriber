@@ -1,91 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
-import moment from 'moment';
 import { connect } from 'react-redux';
-import { withData } from '../mods/react-orbitjs';
-import { PlanContext } from '../context/PlanContext';
-import {
-  IState,
-  MediaFile,
-  Passage,
-  Section,
-  Plan,
-  BookName,
-  IMediaTabStrings,
-} from '../model';
+import { withData } from '../../mods/react-orbitjs';
+import { PlanContext } from '../../context/PlanContext';
+import { IState, MediaFile, IMediaTabStrings } from '../../model';
 import { Button } from '@material-ui/core';
-import localStrings from '../selector/localize';
+import localStrings from '../../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
-import ShapingTable from './ShapingTable';
-import TranscriptionShow from './TranscriptionShow';
-import MediaPlayer from './MediaPlayer';
+import BigDialog from '../../hoc/BigDialog';
+import VersionDlg from './VersionDlg';
+import ShapingTable from '../ShapingTable';
+import TranscriptionShow from '../TranscriptionShow';
+import MediaPlayer from '../MediaPlayer';
 import MediaActions from './MediaActions';
 import MediaActions2 from './MediaActions2';
-import Confirm from './AlertDialog';
-import Auth from '../auth/Auth';
-import {
-  related,
-  remoteId,
-  useOrganizedBy,
-  usePlan,
-  passageReference,
-  sectionDescription,
-} from '../crud';
-import { numCompare, dateCompare, localeDefault } from '../utils';
-
-interface IRow {
-  index: number;
-  planid: string;
-  passId: string;
-  id: string;
-  planName: string;
-  playIcon: string;
-  fileName: string;
-  sectionId: string;
-  sectionDesc: string;
-  reference: string;
-  duration: string;
-  size: number;
-  version: string;
-  date: string;
-  actions: typeof MediaActions;
-}
+import Confirm from '../AlertDialog';
+import Auth from '../../auth/Auth';
+import { related, remoteId, useOrganizedBy } from '../../crud';
+import { numCompare, dateCompare } from '../../utils';
+import { IRow } from '.';
 
 interface IStateProps {
   t: IMediaTabStrings;
-  allBookData: BookName[];
 }
 
 interface IRecordProps {
   mediaFiles: Array<MediaFile>;
-  passages: Array<Passage>;
-  sections: Array<Section>;
 }
 
 interface IProps extends IStateProps, IRecordProps {
   auth: Auth;
-  passId: string;
+  data: IRow[];
+  setRefresh: (refresh: boolean) => void;
+  playItem: string;
+  setPlayItem: (item: string) => void;
+  onAttach?: (checks: number[], attach: boolean) => void;
 }
-export const VersionDlg = (props: IProps) => {
-  const { passId, auth, t, allBookData } = props;
-  const { mediaFiles, passages, sections } = props;
+export const AudioTable = (props: IProps) => {
+  const { data, setRefresh, auth, t } = props;
+  const { playItem, setPlayItem, onAttach } = props;
+  const { mediaFiles } = props;
   const ctx = React.useContext(PlanContext);
   const { connected, readonly } = ctx.state;
-  const [plan] = useGlobal('plan');
-  const { getPlan } = usePlan();
-  const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [memory] = useGlobal('memory');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [isDeveloper] = useGlobal('developer');
-  const [playItem, setPlayItem] = useState('');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const [confirmAction, setConfirmAction] = useState('');
   const [deleteItem, setDeleteItem] = useState(-1);
-  const [data, setData] = useState<IRow[]>([]);
-  const [refresh, setRefresh] = useState(false);
-  const locale = localeDefault(isDeveloper);
   const [showId, setShowId] = useState('');
 
   const columnDefs = [
@@ -102,7 +65,7 @@ export const VersionDlg = (props: IProps) => {
   ];
   const columnWidths = [
     { columnName: 'planName', width: 150 },
-    { columnName: 'actions', width: 50 },
+    { columnName: 'actions', width: onAttach ? 120 : 50 },
     { columnName: 'fileName', width: 220 },
     { columnName: 'sectionDesc', width: 150 },
     { columnName: 'reference', width: 150 },
@@ -116,9 +79,12 @@ export const VersionDlg = (props: IProps) => {
     { columnName: 'actions', aligh: 'center', wordWrapEnabled: false },
     { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
   ];
-  const mSorting = [
+  const sorting = [
     { columnName: 'planName', direction: 'asc' },
-    { columnName: 'version', direction: 'desc' },
+    {
+      columnName: onAttach ? 'fileName' : 'version',
+      direction: onAttach ? 'asc' : 'desc',
+    },
   ];
   const columnSorting = [
     { columnName: 'duration', compare: numCompare },
@@ -134,6 +100,7 @@ export const VersionDlg = (props: IProps) => {
   const mSummaryItems = [{ columnName: 'fileName', type: 'count' }];
   const [pageSizes] = useState<number[]>([]);
   const [hiddenColumnNames] = useState<string[]>(['planName']);
+  const [verHist, setVerHist] = useState('');
 
   const handleShowTranscription = (id: string) => () => {
     setShowId(id);
@@ -183,86 +150,16 @@ export const VersionDlg = (props: IProps) => {
     else setPlayItem(id);
   };
 
+  const handleVerHistOpen = (passId: string) => () => {
+    setVerHist(passId);
+  };
+  const handleVerHistClose = () => {
+    setVerHist('');
+  };
+
   const playEnded = () => {
     setPlayItem('');
   };
-
-  const getSection = (section: Section[]) => {
-    if (section.length === 0) return '';
-    return sectionDescription(section[0]);
-  };
-
-  const getReference = (passage: Passage[], bookData: BookName[] = []) => {
-    if (passage.length === 0) return '';
-    return passageReference(passage[0], bookData);
-  };
-
-  const getMedia = (
-    planName: string,
-    media: Array<MediaFile>,
-    passages: Array<Passage>,
-    sections: Array<Section>,
-    playItem: string,
-    allBookData: BookName[],
-    locale: string
-  ) => {
-    let rowData: IRow[] = [];
-
-    let index = 0;
-    media.forEach((f) => {
-      const showId = related(f, 'passage');
-      const passage = showId ? passages.filter((p) => p.id === showId) : [];
-      const sectionId = related(passage[0], 'section');
-      const section = sections.filter((s) => s.id === sectionId);
-      var updateddt = f?.attributes?.dateUpdated || '';
-      if (!updateddt.endsWith('Z')) updateddt += 'Z';
-      const updated = moment(updateddt);
-      const date = updated ? updated.format('YYYY-MM-DD') : '';
-      const displayDate = updated ? updated.locale(locale).format('L') : '';
-      const displayTime = updated ? updated.locale(locale).format('LT') : '';
-      const today = moment().format('YYYY-MM-DD');
-      rowData.push({
-        index,
-        planid: related(f, 'plan'),
-        passId: showId,
-        planName,
-        id: f.id,
-        playIcon: playItem,
-        fileName: f.attributes.originalFile,
-        sectionId: sectionId,
-        sectionDesc: getSection(section),
-        reference: getReference(passage, allBookData),
-        duration: f.attributes.duration ? f.attributes.duration.toString() : '',
-        size: f.attributes.filesize,
-        version: f.attributes.versionNumber
-          ? f.attributes.versionNumber.toString()
-          : '',
-        date: date === today ? displayTime : displayDate,
-      } as IRow);
-      index += 1;
-    });
-    return rowData;
-  };
-
-  useEffect(() => {
-    const playChange = data[0]?.playIcon !== playItem;
-    const media: MediaFile[] = mediaFiles.filter(
-      (m) => related(m, 'passage') === passId
-    );
-
-    const newData = getMedia(
-      planRec?.attributes?.name,
-      media,
-      passages,
-      sections,
-      playItem,
-      allBookData,
-      locale
-    );
-    if (newData.length !== data.length || playChange || refresh)
-      setData(newData);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediaFiles, sections, passages, planRec, passId, playItem, locale]);
 
   interface ICell {
     value: string;
@@ -284,8 +181,9 @@ export const VersionDlg = (props: IProps) => {
         rowIndex={row.index}
         mediaId={mediaId}
         online={connected || offlineOnly}
-        readonly={true}
+        readonly={onAttach ? readonly : true}
         attached={Boolean(row.passId)}
+        onAttach={onAttach}
         onPlayStatus={handleSelect}
         isPlaying={mediaId !== '' && playItem === mediaId}
       />
@@ -310,6 +208,14 @@ export const VersionDlg = (props: IProps) => {
     );
   };
 
+  const VersionCell = ({ value, row, ...restProps }: ICell) => (
+    <Table.Cell row={row} {...restProps} value>
+      <Button color="primary" onClick={handleVerHistOpen(row.passId)}>
+        {value}
+      </Button>
+    </Table.Cell>
+  );
+
   const ReferenceCell = ({ row, value, ...props }: ICell) => (
     <Table.Cell row {...props} value>
       <Button color="primary" onClick={handleShowTranscription(row.id)}>
@@ -328,6 +234,9 @@ export const VersionDlg = (props: IProps) => {
       const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
       return <DetachCell {...props} mediaId={mediaId} />;
     }
+    if (column.name === 'version' && row.version !== '1') {
+      return <VersionCell {...props} />;
+    }
     if (column.name === 'reference') {
       return <ReferenceCell {...props} />;
     }
@@ -345,7 +254,7 @@ export const VersionDlg = (props: IProps) => {
         pageSizes={pageSizes}
         // filteringEnabled={filteringEnabled}
         dataCell={Cell}
-        sorting={mSorting}
+        sorting={sorting}
         numCols={numCols}
         rows={data}
         // shaping={attachVisible || filter}
@@ -354,6 +263,16 @@ export const VersionDlg = (props: IProps) => {
         bandHeader={null}
         summaryItems={mSummaryItems}
       />
+      {verHist && (
+        <BigDialog
+          title={t.versionHistory}
+          isOpen={Boolean(verHist)}
+          onOpen={handleVerHistClose}
+        >
+          <VersionDlg auth={auth} passId={verHist} />
+        </BigDialog>
+      )}
+
       {showId !== '' && (
         <TranscriptionShow
           id={showId}
@@ -376,15 +295,12 @@ export const VersionDlg = (props: IProps) => {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaTab' }),
-  allBookData: state.books.bookData,
 });
 
 const mapRecordsToProps = {
   mediaFiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(VersionDlg) as any
+  connect(mapStateToProps)(AudioTable) as any
 ) as any;
