@@ -2920,8 +2920,8 @@
       </unit>
       <unit id="transcriptionTab.elan">
          <segment>
-            <source>Elan</source>
-            <target>Elan</target>
+            <source>ELAN</source>
+            <target>ELAN</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.electronBackup">

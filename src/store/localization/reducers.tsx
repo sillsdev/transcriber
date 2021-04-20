@@ -708,7 +708,7 @@ const initialState = {
 			"copyTip": "Copy transcriptions to Clipboard",
 			"copyTranscriptions": "Copy Transcriptions",
 			"downloading": "Creation complete. Downloading {0}",
-			"elan": "Elan",
+			"elan": "ELAN",
 			"electronBackup": "Back up All Projects",
 			"error": "Export Error",
 			"export": "Export",
