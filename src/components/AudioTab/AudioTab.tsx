@@ -296,16 +296,16 @@ export function AudioTab(props: IProps) {
   }, [planMedia, passages, sections, refresh]);
 
   useEffect(() => {
-    if (attachVisible) {
+    if (attachVisible || autoMatch) {
       const passData: IPassageData = { media: planMedia, allBookData };
       const newPassData = getPassages(plan, passages, sections, passData);
       setPData(newPassData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [planMedia, passages, sections, attachVisible]);
+  }, [planMedia, passages, sections, attachVisible, autoMatch]);
 
   useEffect(() => {
-    if (attachVisible) {
+    if (attachVisible || autoMatch) {
       let dataChange = false;
       const newPData = pdata.map((r, i) => {
         const newRow = hasPassage(i)
@@ -320,7 +320,7 @@ export function AudioTab(props: IProps) {
       if (dataChange) setPData(newPData);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [attachMap, attachVisible]);
+  }, [attachMap, attachVisible, autoMatch]);
 
   const afterUpload = (planId: string, mediaRemoteIds?: string[]) => {
     if (mediaRemoteIds && mediaRemoteIds.length === 1) {
