@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { withData } from '../../mods/react-orbitjs';
 import { PlanContext } from '../../context/PlanContext';
-import { IState, MediaFile, IMediaTabStrings } from '../../model';
+import { IState, IMediaTabStrings } from '../../model';
 import { Button } from '@material-ui/core';
 import localStrings from '../../selector/localize';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { TransformBuilder } from '@orbit/data';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from './VersionDlg';
@@ -17,7 +16,7 @@ import MediaActions from './MediaActions';
 import MediaActions2 from './MediaActions2';
 import Confirm from '../AlertDialog';
 import Auth from '../../auth/Auth';
-import { related, remoteId, useOrganizedBy } from '../../crud';
+import { remoteId, useOrganizedBy } from '../../crud';
 import { numCompare, dateCompare } from '../../utils';
 import { IRow } from '.';
 
@@ -25,11 +24,7 @@ interface IStateProps {
   t: IMediaTabStrings;
 }
 
-interface IRecordProps {
-  mediaFiles: Array<MediaFile>;
-}
-
-interface IProps extends IStateProps, IRecordProps {
+interface IProps extends IStateProps {
   auth: Auth;
   data: IRow[];
   setRefresh: (refresh: boolean) => void;
@@ -40,7 +35,6 @@ interface IProps extends IStateProps, IRecordProps {
 export const AudioTable = (props: IProps) => {
   const { data, setRefresh, auth, t } = props;
   const { playItem, setPlayItem, onAttach } = props;
-  const { mediaFiles } = props;
   const ctx = React.useContext(PlanContext);
   const { connected, readonly } = ctx.state;
   const [memory] = useGlobal('memory');
@@ -116,19 +110,12 @@ export const AudioTable = (props: IProps) => {
   };
 
   const handleDelete = (i: number) => {
-    let versions = mediaFiles.filter(
-      (f) =>
-        related(f, 'plan') === data[i].planid &&
-        f.attributes.originalFile === data[i].fileName
+    memory.update((t: TransformBuilder) =>
+      t.removeRecord({
+        type: 'mediafile',
+        id: data[i].id,
+      })
     );
-    versions.forEach((v) => {
-      memory.update((t: TransformBuilder) =>
-        t.removeRecord({
-          type: 'mediafile',
-          id: v.id,
-        })
-      );
-    });
   };
 
   const handleActionConfirmed = () => {
@@ -234,7 +221,7 @@ export const AudioTable = (props: IProps) => {
       const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
       return <DetachCell {...props} mediaId={mediaId} />;
     }
-    if (column.name === 'version' && row.version !== '1') {
+    if (column.name === 'version' && row.version !== '1' && onAttach) {
       return <VersionCell {...props} />;
     }
     if (column.name === 'reference') {
@@ -297,10 +284,4 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaTab' }),
 });
 
-const mapRecordsToProps = {
-  mediaFiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(AudioTable) as any
-) as any;
+export default connect(mapStateToProps)(AudioTable) as any;
