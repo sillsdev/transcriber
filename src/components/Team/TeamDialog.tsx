@@ -79,6 +79,8 @@ export function TeamDialog(props: IProps) {
     if (!name) {
       setName(values?.attributes?.name || '');
       if (!offlineOnly && values) teamApiPull(values.id);
+    } else if (!isOpen) {
+      setName('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, isOpen]);
