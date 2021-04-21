@@ -79,7 +79,7 @@ export const useMediaAttach = (props: IProps) => {
       q.findRecord(mediaRecId)
     ) as MediaFile;
     ops.push(
-      tb.replaceAttribute(mediaRecId, 'versionNumber', '1'),
+      tb.replaceAttribute(mediaRecId, 'versionNumber', 1),
       tb.replaceRelatedRecord(mediaRecId, 'passage', null)
     );
     ops = UpdatePassageStateOps(
