@@ -22,6 +22,7 @@ export function useWaveSurfer(
   const isMounted = useMounted('wavesurfer');
   const progressRef = useRef(0);
   const wsRef = useRef<WaveSurfer>();
+  const blobToLoad = useRef<Blob>();
   const blobTypeRef = useRef('');
   const playingRef = useRef(false);
   const regionRef = useRef<any>();
@@ -79,7 +80,13 @@ export function useWaveSurfer(
 
       return ws;
     }
-    if (container && !wsRef.current) create(container, height);
+    if (container && !wsRef.current) {
+      create(container, height);
+      if (blobToLoad.current) {
+        wsLoad(blobToLoad.current);
+        blobToLoad.current = undefined;
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [container]);
 
@@ -100,6 +107,7 @@ export function useWaveSurfer(
     if (wsRef.current?.isReady && playingRef.current) setPlaying(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsRef.current?.isReady]);
+
   const setProgress = (value: number) => {
     progressRef.current = value;
     onProgress(value);
@@ -165,7 +173,9 @@ export function useWaveSurfer(
     wsRef.current?.setPlaybackRate(rate);
 
   const wsLoad = (blob: Blob, mimeType?: string) => {
-    wsRef.current?.loadBlob(blob);
+    durationRef.current = 0;
+    if (!wsRef.current) blobToLoad.current = blob;
+    else wsRef.current?.loadBlob(blob);
     blobTypeRef.current = mimeType || blob.type;
   };
 
