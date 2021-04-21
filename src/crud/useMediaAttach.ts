@@ -74,21 +74,21 @@ export const useMediaAttach = (props: IProps) => {
   ) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
+    const mediaRecId = { type: 'mediafile', id: mediaId };
+    const mediaRec = memory.cache.query((q) =>
+      q.findRecord(mediaRecId)
+    ) as MediaFile;
     ops.push(
-      tb.replaceRelatedRecord(
-        {
-          type: 'mediafile',
-          id: mediaId,
-        },
-        'passage',
-        null
-      )
+      tb.replaceAttribute(mediaRecId, 'versionNumber', '1'),
+      tb.replaceRelatedRecord(mediaRecId, 'passage', null)
     );
     ops = UpdatePassageStateOps(
       passage,
       section,
       plan,
-      ActivityStates.NoMedia,
+      mediaRec?.attributes?.versionNumber === 1
+        ? ActivityStates.NoMedia
+        : ActivityStates.TranscribeReady,
       'Media Detached',
       user,
       tb,
