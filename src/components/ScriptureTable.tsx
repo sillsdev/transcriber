@@ -451,7 +451,10 @@ export function ScriptureTable(props: IProps) {
   const handleDelete = (what: string, where: number[]) => {
     if (what === 'Delete') {
       setUploadRow(undefined);
-      doDelete(where);
+      setSaving(true);
+      doDelete(where).then(() => {
+        setSaving(false);
+      });
       return true;
     } else {
       showMessage(<span>{what}...</span>);
@@ -459,9 +462,11 @@ export function ScriptureTable(props: IProps) {
     }
   };
   const doDelete = async (where: number[]) => {
+    let modified = false;
     const deleteOrbitRow = async (id: RecordIdentity | undefined) => {
       if (id && id.id !== '') {
         await memory.update((t: TransformBuilder) => t.removeRecord(id));
+        modified = true;
       }
     };
     //work from the bottom up so we can detach/delete passages before the section
@@ -490,7 +495,7 @@ export function ScriptureTable(props: IProps) {
       }
       await deleteOrbitRow(rowInfo[rowIndex].sectionId as RecordIdentity);
     }
-    updateLastModified();
+    if (modified) updateLastModified();
     setData(
       resequence(data.filter((row, rowIndex) => !where.includes(rowIndex)))
     );
