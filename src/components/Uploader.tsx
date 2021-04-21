@@ -129,7 +129,7 @@ export const Uploader = (props: IProps) => {
     const uploadList = fileList.current;
     if (!uploadList) return; // This should never happen
     if (data?.stringId) mediaIdRef.current.push(data?.stringId);
-    else {
+    else if (success && data) {
       // offlineOnly
       const planRecId = { type: 'plan', id: planIdRef.current };
       if (planRecId.id) {
