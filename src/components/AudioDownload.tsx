@@ -7,6 +7,7 @@ import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 import DownloadIcon from '@material-ui/icons/GetAppOutlined';
 import { remoteIdGuid, useFetchMediaUrl, MediaSt } from '../crud';
 import Auth from '../auth/Auth';
+import { loadBlob, removeExtension } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,28 +39,42 @@ export const AudioDownload = (props: IProps) => {
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const audAnchor = React.useRef<HTMLAnchorElement>(null);
   const [audName, setAudName] = useState('');
+  const [blobUrl, setBlobUrl] = useState('');
 
   const handleDownload = () => {
     const id = remoteIdGuid('mediafile', mediaId, memory.keyMap) || mediaId;
     const mediaRec = memory.cache.query((q) =>
       q.findRecord({ type: 'mediafile', id })
     ) as MediaFile;
-    const name = mediaRec?.attributes?.originalFile || `media-${id}`;
-    setAudName(name);
+    const fullName = mediaRec?.attributes?.originalFile || `media-${id}`;
+    const { name, ext } = removeExtension(fullName);
+    const version = mediaRec?.attributes?.versionNumber || '1';
+    setAudName(`${name}-ver${version}.${ext}`);
     if (id !== mediaState.urlMediaId) {
       fetchMediaUrl({ id, auth });
     }
   };
 
   useEffect(() => {
-    if (audName !== '' && mediaState.status === MediaSt.FETCHED) {
+    setBlobUrl('');
+    const unused = false;
+    if (mediaState.status === MediaSt.FETCHED)
+      loadBlob(mediaState.url, unused, (b) => {
+        //not sure what this intermediary file is, but causes console errors
+        if (b.type !== 'text/html') setBlobUrl(URL.createObjectURL(b));
+      });
+  }, [mediaState]);
+
+  useEffect(() => {
+    if (audName !== '' && blobUrl !== '') {
       if (audAnchor?.current) {
         audAnchor.current.click();
         setAudName('');
+        setBlobUrl('');
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediaState, audName]);
+  }, [blobUrl, audName]);
 
   return (
     <div>
@@ -72,14 +87,16 @@ export const AudioDownload = (props: IProps) => {
       >
         <DownloadIcon />
       </IconButton>
-      {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
-      <a
-        ref={audAnchor}
-        href={mediaState.url}
-        download={audName}
-        target="_blank"
-        rel="noopener noreferrer"
-      />
+      {blobUrl && (
+        /* eslint-disable-next-line jsx-a11y/anchor-has-content */
+        <a
+          ref={audAnchor}
+          href={blobUrl}
+          download={audName}
+          target="_blank"
+          rel="noopener noreferrer"
+        />
+      )}
     </div>
   );
 };
