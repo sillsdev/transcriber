@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { IHotKeyStrings, IState } from '../model';
 import localStrings from '../selector/localize';
@@ -39,20 +39,15 @@ interface hotKeyInfo {
 const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
   const { t } = props;
   const [hotKeys, setHotKeys] = useState<hotKeyInfo[]>([]);
-  const ctrlDown = useRef(false);
-  const altDown = useRef(false);
 
   const [state, setState] = useState({
     ...initState,
   });
   const isMounted = useMounted('hotkeycontext');
 
-  const hotKeyCallback = (key: string) => {
+  const hotKeyCallback = (key: string, ctrl: boolean, alt: boolean) => {
     var ix = hotKeys.findIndex(
-      (hk) =>
-        hk.key === key.toUpperCase() &&
-        hk.ctrl === ctrlDown.current &&
-        hk.alt === altDown.current
+      (hk) => hk.key === key.toUpperCase() && hk.ctrl === ctrl && hk.alt === alt
     );
     if (ix !== -1) return hotKeys[ix].cb;
     return undefined;
@@ -60,28 +55,17 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     switch (e.key.toUpperCase()) {
       case 'CONTROL':
-        ctrlDown.current = true;
-        return;
       case 'ALT':
-        altDown.current = true;
+      case 'SHIFT':
         return;
       default:
-        var cb = hotKeyCallback(e.key);
+        var cb = hotKeyCallback(e.key, e.ctrlKey, e.altKey);
         var handled = false;
         if (cb) handled = cb();
         if (handled) e.preventDefault();
     }
   };
-  const handleKeyUp = (e: React.KeyboardEvent) => {
-    switch (e.key.toUpperCase()) {
-      case 'CONTROL':
-        ctrlDown.current = false;
-        return;
-      case 'ALT':
-        altDown.current = true;
-        return;
-    }
-  };
+
   const newHotKey = (key: string, cb?: () => boolean) => {
     if (!cb)
       cb = () => {
@@ -158,9 +142,7 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
         setState,
       }}
     >
-      <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>
-        {props.children}
-      </div>
+      <div onKeyDown={handleKeyDown}>{props.children}</div>
     </HotKeyContext.Provider>
   );
 });
