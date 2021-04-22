@@ -767,9 +767,9 @@ export function ScriptureTable(props: IProps) {
     var planRec = getPlan(plan);
     if (planRec !== null) {
       //don't use sections here, it hasn't been updated yet
-      var plansections = memory.cache.query((qb) =>
+      var plansections = (await memory.query((qb) =>
         qb.findRecords('section')
-      ) as Section[];
+      )) as Section[];
       planRec.attributes.sectionCount = plansections.filter(
         (s) => related(s, 'plan') === plan
       ).length;
