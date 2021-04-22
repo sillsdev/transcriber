@@ -35,20 +35,22 @@ export const useTeamDelete = () => {
       teamgrpIds.includes(related(om, 'organization'))
     );
     /* remove the memberships first so that refreshing happens before projects and teams disappear and causes problems */
-    var ops: Operation[] = [];
+    let ops: Operation[] = [];
     const t: TransformBuilder = new TransformBuilder();
     teamoms.forEach((gm) => ops.push(t.removeRecord(gm)));
     teamgms.forEach((gm) => ops.push(t.removeRecord(gm)));
     await memory.update(ops);
     ops = [];
     teamprojs.forEach((tp) => ops.push(t.removeRecord(tp)));
+    await memory.update(ops);
+    ops = [];
     teamgrpIds.forEach((tg) =>
       ops.push(t.removeRecord({ type: 'group', id: tg }))
     );
-    for (var ix = 0; ix < projIds.length; ix++)
+    ops.push(t.removeRecord(team));
+    for (let ix = 0; ix < projIds.length; ix++)
       await offlineDelete(projIds[ix]);
     await memory.update(ops);
-    await memory.update((t: TransformBuilder) => t.removeRecord(team));
     setProjectsLoaded(projectsLoaded.filter((p) => !projIds.includes(p)));
   };
 };
