@@ -376,6 +376,7 @@ export function Transcriber(props: IProps) {
     const newAssigned = rowData[index]?.assigned;
     if (newAssigned !== assigned) setAssigned(newAssigned);
     stateRef.current = rowData[index]?.state;
+    focusOnTranscription();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [index, rowData]);
 
@@ -390,7 +391,6 @@ export function Transcriber(props: IProps) {
           t.replaceAttribute(oldRec[0], 'duration', Math.ceil(totalSeconds))
         );
       console.log(`update duration to ${Math.ceil(totalSeconds)}`);
-      if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration, totalSeconds]);
@@ -405,6 +405,9 @@ export function Transcriber(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_username, paratext_usernameStatus]);
 
+  const focusOnTranscription = () => {
+    if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
+  };
   const handleChange = (e: any) => {
     setTextValue(e.target.value);
     if (!changed) setChanged(true);
@@ -702,7 +705,7 @@ export function Transcriber(props: IProps) {
     //focus on player
     if (transcriptionRef.current) {
       transcriptionRef.current.firstChild.value = val.transcription;
-      transcriptionRef.current.firstChild.focus();
+      focusOnTranscription();
     }
     setLastSaved(passage.attributes?.dateUpdated || '');
     setTotalSeconds(duration);
@@ -744,7 +747,7 @@ export function Transcriber(props: IProps) {
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {
-      transcriptionRef.current.firstChild.focus();
+      focusOnTranscription();
       const timeStamp = '(' + formatTime(progress) + ')';
       const textArea = transcriptionRef.current
         .firstChild as HTMLTextAreaElement;
@@ -816,6 +819,7 @@ export function Transcriber(props: IProps) {
                     onStatus={loadStatus}
                   >
                     <TextareaAutosize
+                      autoFocus
                       id="transcriber.text"
                       value={textValue}
                       readOnly={selected === '' || role === 'view'}
@@ -827,6 +831,7 @@ export function Transcriber(props: IProps) {
                   </WebFontLoader>
                 ) : (
                   <TextareaAutosize
+                    autoFocus
                     id="transcriber.text"
                     value={textValue}
                     readOnly={selected === '' || role === 'view'}
