@@ -210,6 +210,7 @@ export function PlanSheet(props: IProps) {
   const [startSave] = useRemoteSave();
   const [srcMediaId, setSrcMediaId] = useState('');
   const [warning, setWarning] = useState<string>();
+  const [deleting, setDeleting] = useState(false);
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = bookCol > 0 ? 6 : 5;
@@ -266,10 +267,12 @@ export function PlanSheet(props: IProps) {
 
   const handleActionConfirmed = () => {
     if (action != null) {
+      setDeleting(true);
       if (action(confirmAction, check)) {
         setCheck(Array<number>());
       }
     }
+    setDeleting(false);
     setConfirmAction('');
   };
 
@@ -565,7 +568,7 @@ export function PlanSheet(props: IProps) {
                     onTranscribe={handleTranscribe}
                     readonly={readonly}
                     canAssign={projRole === 'admin'}
-                    canDelete={projRole === 'admin'}
+                    canDelete={projRole === 'admin' && !deleting}
                   />
                 ),
                 readOnly: true,
