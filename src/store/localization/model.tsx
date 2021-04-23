@@ -819,6 +819,8 @@ export interface IHotKeyStrings extends Localize.LocalizedStringsMethods {
 export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
     "spellingLangsTip": string;
     "spellingLangs": string;
+    "restart": string;
+    "close": string;
 };
 
 export interface ILocalizedStrings {

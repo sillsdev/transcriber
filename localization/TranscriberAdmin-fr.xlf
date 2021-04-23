@@ -4061,5 +4061,17 @@
    			<target>Langues de vérification de l'orthographe</target>
    		</segment>
    	</unit>
+   	<unit id="spelling.restart">
+   		<segment>
+   			<source>Dictionaries will be loaded when app is restared</source>
+   			<target>Les dictionnaires seront chargés lors du redémarrage de l'application.</target>
+   		</segment>
+   	</unit>
+   	<unit id="spelling.close">
+   		<segment>
+   			<source>Close</source>
+   			<target>Fermer</target>
+   		</segment>
+   	</unit>
    </file>
 </xliff>

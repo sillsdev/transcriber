@@ -6,6 +6,7 @@ import { IconButton } from '@material-ui/core';
 import SpellCheckIcon from '@material-ui/icons/Spellcheck';
 import SpellLanguagePicker from './SpellLanguagePicker';
 import BigDialog from '../hoc/BigDialog';
+import Confirm from './AlertDialog';
 import { LightTooltip } from '../control';
 import { isElectron } from '../api-variable';
 const ipc = isElectron ? require('electron').ipcRenderer : null;
@@ -18,6 +19,8 @@ export const Spelling = (props: IStateProps) => {
   const { t } = props;
   const [open, setOpen] = React.useState(false);
   const [codes, setCodes] = React.useState<string[]>([]);
+  const [confirm, setConfirm] = React.useState(false);
+  const [changed, setChanged] = React.useState(false);
 
   const handleOpen = () => {
     setOpen(!open);
@@ -28,13 +31,20 @@ export const Spelling = (props: IStateProps) => {
   };
 
   const handleSave = () => {
-    console.log(codes);
-    ipc?.invoke('setSpellLangs', codes);
+    if (changed) {
+      ipc?.invoke('setSpellLangs', codes);
+      setConfirm(true);
+    }
     setOpen(false);
+  };
+
+  const confirmed = () => {
+    setConfirm(false);
   };
 
   const handleCodes = (codes: string[]) => {
     setCodes(codes);
+    setChanged(true);
   };
 
   return (
@@ -54,6 +64,14 @@ export const Spelling = (props: IStateProps) => {
         >
           <SpellLanguagePicker codes={codes} onSetCodes={handleCodes} />
         </BigDialog>
+      )}
+      {confirm && (
+        <Confirm
+          text={t.restart}
+          no={t.close}
+          noResponse={confirmed}
+          yes={''}
+        />
       )}
     </span>
   );

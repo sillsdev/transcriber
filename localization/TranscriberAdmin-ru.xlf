@@ -4004,5 +4004,17 @@
 				<target>Проверка орфографии Языки</target>
 			</segment>
 		</unit>
+		<unit id="spelling.restart">
+			<segment>
+				<source>Dictionaries will be loaded when app is restared</source>
+				<target>Словари будут загружены при перезагрузке приложения.</target>
+			</segment>
+		</unit>
+		<unit id="spelling.close">
+			<segment>
+				<source>Close</source>
+				<target>Закрыть</target>
+			</segment>
+		</unit>
 	</file>
 </xliff>

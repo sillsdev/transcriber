@@ -4060,5 +4060,17 @@
             <target/>
          </segment>
       </unit>
+      <unit id="spelling.restart">
+         <segment>
+            <source>Dictionaries will be loaded when app is restared</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="spelling.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

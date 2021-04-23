@@ -872,6 +872,8 @@ const initialState = {
 		"en": {
 			"spellingLangsTip": "Choose spell checking languages",
 			"spellingLangs": "Spell Checking Languages",
+			"restart": "Dictionaries will be loaded when app is restared",
+			"close": "Close",
 		}
 	}),
 };

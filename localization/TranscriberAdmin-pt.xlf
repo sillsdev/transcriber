@@ -3662,5 +3662,17 @@
    			<target>Idiomas de verificação ortográfica</target>
    		</segment>
    	</unit>
+   	<unit id="spelling.restart">
+   		<segment>
+   			<source>Dictionaries will be loaded when app is restared</source>
+   			<target>Os dicionários serão carregados quando o aplicativo for restaurado</target>
+   		</segment>
+   	</unit>
+   	<unit id="spelling.close">
+   		<segment>
+   			<source>Close</source>
+   			<target>Fechar</target>
+   		</segment>
+   	</unit>
    </file>
 </xliff>

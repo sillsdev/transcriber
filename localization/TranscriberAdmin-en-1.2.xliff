@@ -4734,6 +4734,20 @@
       			<context context-type="sourcefile">wsAudioPlayer.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="spelling.restart">
+      		<source>Dictionaries will be loaded when app is restared</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">wsAudioPlayer.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="spelling.close">
+      		<source>Close</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">wsAudioPlayer.tsx</context>
+      		</context-group>
+      	</trans-unit>
       </body>
    </file>
 </xliff>
