@@ -4049,5 +4049,17 @@
             <target/>
          </segment>
       </unit>
+   	<unit id="spelling.spellingLangsTip">
+   		<segment>
+   			<source>Choose spell checking languages</source>
+   			<target>Choisir les langues de vérification orthographique</target>
+   		</segment>
+   	</unit>
+   	<unit id="spelling.spellingLangs">
+   		<segment>
+   			<source>Spell Checking Languages</source>
+   			<target>Langues de vérification de l'orthographe</target>
+   		</segment>
+   	</unit>
    </file>
 </xliff>

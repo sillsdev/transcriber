@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu, MenuItem } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const { shell } = require('electron');
@@ -15,6 +15,7 @@ function createAppWindow() {
       webSecurity: false,
       nodeIntegration: true,
       enableRemoteModule: true,
+      spellcheck: true,
     },
   });
 
@@ -141,6 +142,36 @@ function createAppWindow() {
       ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../build/index.html')}`
   );
+
+  mainWindow.webContents.on('context-menu', (event, params) => {
+    const menu = new Menu();
+
+    // Add each spelling suggestion
+    for (const suggestion of params.dictionarySuggestions) {
+      menu.append(
+        new MenuItem({
+          label: suggestion,
+          click: () =>
+            event.mainWindow.webContents.replaceMisspelling(suggestion),
+        })
+      );
+    }
+
+    // Allow users to add the misspelled word to the dictionary
+    if (params.misspelledWord) {
+      menu.append(
+        new MenuItem({
+          label: 'Add to dictionary',
+          click: () =>
+            event.mainWindow.webContents.session.addWordToSpellCheckerDictionary(
+              params.misspelledWord
+            ),
+        })
+      );
+    }
+
+    menu.popup();
+  });
 
   if (isDev) {
     mainWindow.webContents.openDevTools();

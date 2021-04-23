@@ -4720,7 +4720,20 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
-
+      	<trans-unit id="spelling.spellingLangsTip">
+      		<source>Choose spell checking languages</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">wsAudioPlayer.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="spelling.spellingLangs">
+      		<source>Spell Checking Languages</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">wsAudioPlayer.tsx</context>
+      		</context-group>
+      	</trans-unit>
       </body>
    </file>
 </xliff>

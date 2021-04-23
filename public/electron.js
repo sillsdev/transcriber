@@ -1,4 +1,4 @@
-const { app, ipcMain } = require('electron');
+const { app, ipcMain, session } = require('electron');
 
 const createAppWindow = require('./app-process');
 const { createAuthWindow, createLogoutWindow } = require('./auth-process');
@@ -33,6 +33,18 @@ app.on('window-all-closed', () => {
 //     createWindow();
 //   }
 // });
+
+ipcMain.handle('availSpellLangs', async () => {
+  return session.defaultSession.availableSpellCheckerLanguages;
+});
+
+ipcMain.handle('getSpellLangs', async () => {
+  return session.defaultSession.getSpellCheckerLanguages();
+});
+
+ipcMain.handle('setSpellLangs', async (event, langs) => {
+  session.defaultSession.setSpellCheckerLanguages(langs);
+});
 
 ipcMain.handle('temp', async () => {
   return app.getPath('temp');

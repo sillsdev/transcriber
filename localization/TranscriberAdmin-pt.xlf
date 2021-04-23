@@ -3650,6 +3650,17 @@
             <target/>
          </segment>
       </unit>
-
+   	<unit id="spelling.spellingLangsTip">
+   		<segment>
+   			<source>Choose spell checking languages</source>
+   			<target>Escolher idiomas de verificação ortográfica</target>
+   		</segment>
+   	</unit>
+   	<unit id="spelling.spellingLangs">
+   		<segment>
+   			<source>Spell Checking Languages</source>
+   			<target>Idiomas de verificação ortográfica</target>
+   		</segment>
+   	</unit>
    </file>
 </xliff>

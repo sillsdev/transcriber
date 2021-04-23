@@ -39,3 +39,4 @@ export * from './createFolder';
 export * from './loadBlob';
 export * from './removeExtension';
 export * from './localizeRole';
+export * from './langName';
