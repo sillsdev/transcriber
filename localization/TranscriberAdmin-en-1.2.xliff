@@ -1373,13 +1373,6 @@
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="invite.admin">
-      		<source>Admin</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">Invite.tsx</context>
-      		</context-group>
-      	</trans-unit>
       	<trans-unit id="invite.allUsersProjects">
             <source>Projects</source>
             <target/>
@@ -1396,6 +1389,13 @@
          </trans-unit>
          <trans-unit id="invite.cancel">
             <source>Cancel</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Invite.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="invite.detail">
+            <source>{0} Detail</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -3151,8 +3151,127 @@
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shapingTable.groupByColumn">
+            <source>Drag a column header here to group by that column</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.filterPlaceholder">
+            <source>Filter...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.contains">
+            <source>Contains</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.notcontains">
+            <source>Does not contain</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.startsWith">
+            <source>Starts with</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.endsWith">
+            <source>Ends with</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.equal">
+            <source>Equals</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.notEqual">
+            <source>Does not equal</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.greaterThan">
+            <source>Greater than</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.greaterThanOrEqual">
+            <source>Greater than or equal to</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.lessThan">
+            <source>Less than</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.lessThanOrEqual">
+            <source>Less than or equal to</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.all">
+            <source>All</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.rowsPerPage">
+            <source>Rows per Page</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.pageInfo">
+            <source>Rows {from} to {to} ({count} Rows)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.yes">
+            <source>Yes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Access.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.no">
+            <source>No</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Access.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.admin">
-            <source>Owner</source>
+            <source>Admin</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
@@ -3235,7 +3354,21 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="shared.save">
+         <trans-unit id="shared.owner">
+            <source>Owner</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.member">
+            <source>Member</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+       	<trans-unit id="shared.save">
             <source>Save</source>
             <target/>
             <context-group>

@@ -246,10 +246,10 @@ export interface IInvitationTableStrings extends Localize.LocalizedStringsMethod
 
 export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "addInvite": string;
-    "admin": string;
     "allUsersProjects": string;
     "alreadyInvited": string;
     "cancel": string;
+    "detail": string;
     "editInvite": string;
     "email": string;
     "emailsubject": string;
@@ -542,9 +542,26 @@ export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
     "noColumns": string;
     "noData": string;
     "sum": string;
+    "groupByColumn": string;
+    "filterPlaceholder": string;
+    "contains": string;
+    "notcontains": string;
+    "startsWith": string;
+    "endsWith": string;
+    "equal": string;
+    "notEqual": string;
+    "greaterThan": string;
+    "greaterThanOrEqual": string;
+    "lessThan": string;
+    "lessThanOrEqual": string;
+    "all": string;
+    "rowsPerPage": string;
+    "pageInfo": string;
 };
 
 export interface ISharedStrings extends Localize.LocalizedStringsMethods {
+    "yes": string;
+    "no": string;
     "admin": string;
     "cancel": string;
     "editor": string;
@@ -557,6 +574,8 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "expiredParatextToken": string;
     "expiredToken": string;
     "invalidParatextLogin": string;
+    "owner": string;
+    "member": string;
     "save": string;
     "transcriber": string;
     "uploadMediaPlural": string;
