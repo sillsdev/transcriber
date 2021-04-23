@@ -883,11 +883,7 @@ export function Transcriber(props: IProps) {
                   </span>
                 </LightTooltip>
 
-                <LightTooltip title={'Choose spell checking languages'}>
-                  <span>
-                    <Spelling />
-                  </span>
-                </LightTooltip>
+                <Spelling />
               </Grid>
               <Grid item xs>
                 <Grid container justify="flex-end">

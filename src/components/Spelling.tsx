@@ -3,6 +3,7 @@ import { IconButton } from '@material-ui/core';
 import SpellCheckIcon from '@material-ui/icons/Spellcheck';
 import SpellLanguagePicker from './SpellLanguagePicker';
 import BigDialog from '../hoc/BigDialog';
+import { LightTooltip } from '../control';
 import { isElectron } from '../api-variable';
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 
@@ -30,9 +31,11 @@ export const Spelling = () => {
 
   return (
     <span>
-      <IconButton onClick={handleOpen}>
-        <SpellCheckIcon />
-      </IconButton>
+      <LightTooltip title={'Choose spell checking languages'}>
+        <IconButton onClick={handleOpen}>
+          <SpellCheckIcon />
+        </IconButton>
+      </LightTooltip>
       {open && (
         <BigDialog
           title={'Spell Check Languages'}
