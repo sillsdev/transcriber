@@ -1,4 +1,4 @@
-const { app, ipcMain } = require('electron');
+const { app, ipcMain, session } = require('electron');
 
 const createAppWindow = require('./app-process');
 const { createAuthWindow, createLogoutWindow } = require('./auth-process');
@@ -26,6 +26,10 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin' && !isLogingIn) {
     app.quit();
   }
+});
+
+ipcMain.handle('spellLanguages', async () => {
+  return session.defaultSession.availableSpellCheckerLanguages;
 });
 
 ipcMain.handle('temp', async () => {
