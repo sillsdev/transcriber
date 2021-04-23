@@ -3992,6 +3992,17 @@
             <target/>
          </segment>
       </unit>
-
+		<unit id="spelling.spellingLangsTip">
+			<segment>
+				<source>Choose spell checking languages</source>
+				<target>Выберите языки проверки орфографии</target>
+			</segment>
+		</unit>
+		<unit id="spelling.spellingLangs">
+			<segment>
+				<source>Spell Checking Languages</source>
+				<target>Проверка орфографии Языки</target>
+			</segment>
+		</unit>
 	</file>
 </xliff>

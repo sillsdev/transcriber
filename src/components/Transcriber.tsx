@@ -66,7 +66,7 @@ import TranscribeAddNote from './TranscribeAddNote';
 import WSAudioPlayer from './WSAudioPlayer';
 import PassageHistory from './PassageHistory';
 import { HotKeyContext } from '../context/HotKeyContext';
-import { Spelling } from './Spelling';
+import Spelling from './Spelling';
 
 const HISTORY_KEY = 'F7,CTRL+7';
 const NON_BOX_HEIGHT = 360;

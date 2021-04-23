@@ -868,6 +868,12 @@ const initialState = {
 			"spaceKey": "Space",
 		}
 	}),
+	"spelling": new LocalizedStrings({
+		"en": {
+			"spellingLangsTip": "Choose spell checking languages",
+			"spellingLangs": "Spell Checking Languages",
+		}
+	}),
 };
 
 const localizationReducer = function (state = initialState, action: any): ILocalizedStrings {
@@ -923,6 +929,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"wsAudioPlayer" : new LocalizedStrings(action.payload.data.wsAudioPlayer),
 				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),
 				"hotKey" : new LocalizedStrings(action.payload.data.hotKey),
+				"spelling" : new LocalizedStrings(action.payload.data.spelling),
 			};
 		case SET_LANGUAGE:
 			return {

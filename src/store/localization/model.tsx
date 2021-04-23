@@ -816,6 +816,11 @@ export interface IHotKeyStrings extends Localize.LocalizedStringsMethods {
     "spaceKey": string;
 };
 
+export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
+    "spellingLangsTip": string;
+    "spellingLangs": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -866,5 +871,6 @@ export interface ILocalizedStrings {
 	wsAudioPlayer: IWsAudioPlayerStrings;
 	passageRecord: IPassageRecordStrings;
 	hotKey: IHotKeyStrings;
+	spelling: ISpellingStrings;
 	[key: string]: any;
 };
