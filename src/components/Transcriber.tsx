@@ -882,8 +882,7 @@ export function Transcriber(props: IProps) {
                     </IconButton>
                   </span>
                 </LightTooltip>
-
-                <Spelling />
+                {isElectron && <Spelling />}
               </Grid>
               <Grid item xs>
                 <Grid container justify="flex-end">
