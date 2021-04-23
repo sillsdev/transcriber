@@ -1738,7 +1738,7 @@
 		<unit id="mediaActions.play">
 			<segment>
 				<source>Play</source>
-				<target/>
+				<target>Играть</target>
 			</segment>
 		</unit>
 		<unit id="mediaActions.stop">
@@ -2031,8 +2031,8 @@
 		</unit>
 		<unit id="mediaUpload.title">
 			<segment>
-				<source>Upload Media</source>
-				<target/>
+				<source>Upload Audio</source>
+				<target>Загрузить аудио</target>
 			</segment>
 		</unit>
 		<unit id="mediaUpload.upload">
@@ -2836,14 +2836,14 @@
 		</unit>
 		<unit id="shared.uploadMediaPlural">
 			<segment>
-				<source>Upload Media</source>
-				<target/>
+				<source>Upload Audio</source>
+				<target>Загрузить аудио</target>
 			</segment>
 		</unit>
 		<unit id="shared.uploadMediaSingular">
 			<segment>
-				<source>Upload Media</source>
-				<target/>
+				<source>Upload Audio</source>
+				<target>Загрузить аудио</target>
 			</segment>
 		</unit>
 		<unit id="shared.importMediaSingular">
@@ -3059,7 +3059,7 @@
 		<unit id="transcriber.historyTip">
 			<segment>
 				<source>History [{0}]</source>
-				<target/>
+				<target>История [{0}]</target>
 			</segment>
 		</unit>
 		<unit id="transcriber.incomplete">
