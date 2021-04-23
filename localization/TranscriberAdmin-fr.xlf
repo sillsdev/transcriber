@@ -1994,6 +1994,12 @@
             <target>Glissez et déposez un fichier ici, ou cliquez ici pour rechercher le fichier.</target>
          </segment>
       </unit>
+            <unit id="mediaUpload.dragDropMultiple">
+         <segment>
+            <source>Drag and drop files here, or click here to browse for the files.</source>
+            <target>Faites glisser et déposez les fichiers ici, ou cliquez ici pour rechercher les fichiers.</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.invalidFile">
          <segment>
             <source>Not valid for this operation:  {0}</source>
@@ -2032,7 +2038,7 @@
       </unit>
       <unit id="mediaUpload.title">
          <segment>
-            <source>Upload Media</source>
+            <source>Upload Audio</source>
             <target>Télécharger des fichiers audio</target>
          </segment>
       </unit>
@@ -2890,14 +2896,14 @@
    	</unit>
       <unit id="shared.uploadMediaPlural">
          <segment>
-            <source>Upload Media</source>
-            <target>Télécharger des médias</target>
+            <source>Upload Audio</source>
+            <target>Télécharger des audios</target>
          </segment>
       </unit>
       <unit id="shared.uploadMediaSingular">
          <segment>
-            <source>Upload Media</source>
-            <target>Télécharger des médias</target>
+            <source>Upload Audio</source>
+            <target>Télécharger de audio</target>
          </segment>
       </unit>
    	<unit id="shared.importMediaSingular">

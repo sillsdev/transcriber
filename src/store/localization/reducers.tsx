@@ -444,7 +444,7 @@ const initialState = {
 		"en": {
 			"assign": "Assign",
 			"delete": "Delete",
-			"playpause": "Play / Pause",
+			"playpause": "Play/Pause",
 			"recordAudio": "Record/Edit Audio",
 			"transcribe": "Transcribe",
 		}

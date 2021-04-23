@@ -2410,7 +2410,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planActions.playpause">
-            <source>Play / Pause</source>
+            <source>Play/Pause</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
