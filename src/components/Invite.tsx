@@ -33,7 +33,7 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import { related, useRole, getUserById } from '../crud';
-import { validateEmail } from '../utils';
+import { localizeRole, validateEmail } from '../utils';
 import { API_CONFIG } from '../api-variable';
 import { AddRecord } from '../model/baseModel';
 
@@ -377,7 +377,7 @@ function Invite(props: IProps) {
                   )
                   .map((option: Role) => (
                     <MenuItem key={option.id} value={option.id}>
-                      {t.getString(option.attributes.roleName.toLowerCase())}
+                      {localizeRole(option.attributes.roleName, ts)}
                     </MenuItem>
                   ))}
               </TextField>
@@ -416,11 +416,10 @@ function Invite(props: IProps) {
                   .map((option: Role) => (
                     <ListItem key={option.id} value={option.id}>
                       <ListItemText
-                        primary={ts.getString(
-                          option.attributes.roleName.toLowerCase()
-                        )}
-                        secondary={t.getString(
-                          option.attributes.roleName.toLowerCase() + 'Detail'
+                        primary={localizeRole(option.attributes.roleName, ts)}
+                        secondary={t.detail.replace(
+                          '{0}',
+                          localizeRole(option.attributes.roleName, ts)
                         )}
                       />
                     </ListItem>

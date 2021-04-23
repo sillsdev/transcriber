@@ -8,6 +8,7 @@ import {
   Invitation,
   IInvitationTableStrings,
   Group,
+  ISharedStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -24,6 +25,7 @@ import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import { related } from '../crud';
+import { localizeRole } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,7 +66,8 @@ interface IRow {
 const getInvites = (
   organization: string,
   roles: Array<Role>,
-  invitations: Array<Invitation>
+  invitations: Array<Invitation>,
+  ts: ISharedStrings
 ) => {
   const invites = invitations.filter(
     (i) => related(i, 'organization') === organization
@@ -73,8 +76,11 @@ const getInvites = (
     const role = roles.filter((r) => r.id === related(i, 'role'));
     return {
       email: i.attributes.email ? i.attributes.email : '',
-      orgRole: role.length === 1 ? role[0].attributes.roleName : 'xx',
-      accepted: i.attributes.accepted ? 'true' : 'false',
+      orgRole:
+        role.length === 1
+          ? localizeRole(role[0].attributes.roleName, ts)
+          : 'xx',
+      accepted: i.attributes.accepted ? ts.yes : ts.no,
       id: { type: 'invitation', id: i.id },
     } as IRow;
   });
@@ -82,6 +88,7 @@ const getInvites = (
 
 interface IStateProps {
   t: IInvitationTableStrings;
+  ts: ISharedStrings;
 }
 
 interface IDispatchProps {}
@@ -95,7 +102,7 @@ interface IRecordProps {
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
 
 export function InvitationTable(props: IProps) {
-  const { t, roles, invitations } = props;
+  const { t, ts, roles, invitations } = props;
   const classes = useStyles();
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
@@ -172,8 +179,8 @@ export function InvitationTable(props: IProps) {
   ) as any;
 
   useEffect(() => {
-    setData(getInvites(organization, roles, invitations));
-  }, [organization, roles, invitations, confirmAction]);
+    setData(getInvites(organization, roles, invitations, ts));
+  }, [organization, roles, invitations, confirmAction, ts]);
 
   return (
     <div className={classes.container}>
@@ -270,6 +277,7 @@ export function InvitationTable(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'invitationTable' }),
+  ts: localStrings(state, { layout: 'shared' }),
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

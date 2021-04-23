@@ -1099,6 +1099,12 @@
             <target>Cancelar</target>
          </segment>
       </unit>
+      <unit id="invite.detail">
+         <segment>
+            <source>{0} Detail</source>
+            <target>Detalhe da {0}</target>
+         </segment>
+      </unit>
       <unit id="invite.editInvite">
          <segment>
             <source>Edit Invite</source>
@@ -2455,13 +2461,115 @@
             <target>Título</target>
          </segment>
       </unit>
-      <unit id="shapingTable.NoColumns">
+      <unit id="shapingTable.noColumns">
          <segment>
             <source>No columns visible</source>
             <target>Nenhuma coluna visível</target>
          </segment>
       </unit>
-      <unit id="shared.admin">
+      <unit id="shapingTable.groupByColumn">
+         <segment>
+            <source>Drag a column header here to group by that column</source>
+            <target>Arraste um cabeçalho de coluna aqui para agrupar por essa coluna</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.filterPlaceholder">
+         <segment>
+            <source>Filter...</source>
+            <target>Filtro...</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.contains">
+         <segment>
+            <source>Contains</source>
+            <target>Contém</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.notcontains">
+         <segment>
+            <source>Does not contain</source>
+            <target>Não contém</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.startsWith">
+         <segment>
+            <source>Starts with</source>
+            <target>Começa com</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.endsWith">
+         <segment>
+            <source>Ends with</source>
+            <target>Termina com</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.equal">
+         <segment>
+            <source>Equals</source>
+            <target>É igual a</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.notEqual">
+         <segment>
+            <source>Does not equal</source>
+            <target>Não é igual</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.greaterThan">
+         <segment>
+            <source>Greater than</source>
+            <target>Maior que</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.greaterThanOrEqual">
+         <segment>
+            <source>Greater than or equal to</source>
+            <target>Melhor que ou igual a</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.lessThan">
+         <segment>
+            <source>Less than</source>
+            <target>Menor que</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.lessThanOrEqual">
+         <segment>
+            <source>Less than or equal to</source>
+            <target>Menos que ou igual a</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.all">
+         <segment>
+            <source>All</source>
+            <target>Tudo</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.rowsPerPage">
+         <segment>
+            <source>Rows per Page</source>
+            <target>Linhas por página</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.pageInfo">
+         <segment>
+            <source>Rows {from} to {to} ({count} Rows)</source>
+            <target>Linhas de {from} a {to} ({count} linhas)</target>
+         </segment>
+      </unit>
+      <unit id="shared.yes">
+         <segment>
+            <source>Yes</source>
+            <target>Sim</target>
+         </segment>
+      </unit>
+      <unit id="shared.no">
+         <segment>
+            <source>No</source>
+            <target>Não</target>
+         </segment>
+      </unit>
+      <unit id="shared.owner">
          <segment>
             <source>Owner</source>
             <target>Proprietário</target>

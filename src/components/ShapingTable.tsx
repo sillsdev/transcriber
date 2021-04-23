@@ -198,7 +198,6 @@ export function ShapingTable(props: IProps) {
   const [myGroups, setMyGroups] = React.useState<string[]>();
   const [currentFilters, setCurrentFilters] = React.useState(filters || []);
 
-
   const handleExpGrp = (groups: string[]) => {
     setMyGroups(groups);
   };
@@ -220,9 +219,31 @@ export function ShapingTable(props: IProps) {
     min: t.min,
     sum: t.sum,
   };
+  const groupingPanelMessages = {
+    groupByColumn: t.groupByColumn,
+  };
+  const filterRowMessages = {
+    filterPlaceholder: t.filterPlaceholder,
+    contains: t.contains,
+    notContains: t.notcontains,
+    startsWith: t.startsWith,
+    endsWith: t.endsWith,
+    equal: t.equal,
+    notEqual: t.notEqual,
+    greaterThan: t.greaterThan,
+    greaterThanOrEqual: t.greaterThanOrEqual,
+    lessThan: t.lessThan,
+    lessThanOrEqual: t.lessThanOrEqual,
+  };
+  const pagingPanelMessages = {
+    showAll: 'Alle',
+    rowsPerPage: 'Zeilen pro Seite',
+    info: (parameters: { from: number; to: number; count: number }) =>
+      'Zeilen {from} bis {to} ({count} Elemente)',
+  };
   useEffect(() => {
-    setCurrentFilters(filters || [])
-  }, [filters])
+    setCurrentFilters(filters || []);
+  }, [filters]);
 
   return (
     <Grid rows={rows} columns={columns}>
@@ -327,14 +348,25 @@ export function ShapingTable(props: IProps) {
       <TableHeaderRow showSortingControls={true} />
 
       {shaping !== null && !shaping ? (
-        <TableFilterRow showFilterSelector={true} rowComponent={noRow} />
+        <TableFilterRow
+          showFilterSelector={true}
+          messages={filterRowMessages}
+          rowComponent={noRow}
+        />
       ) : filterCell ? (
-        <TableFilterRow showFilterSelector={true} cellComponent={filterCell} />
+        <TableFilterRow
+          showFilterSelector={true}
+          messages={filterRowMessages}
+          cellComponent={filterCell}
+        />
       ) : (
-        <TableFilterRow showFilterSelector={true} />
+        <TableFilterRow
+          showFilterSelector={true}
+          messages={filterRowMessages}
+        />
       )}
       {pageSizes && pageSizes.length > 0 && (
-        <PagingPanel pageSizes={pageSizes} />
+        <PagingPanel pageSizes={pageSizes} messages={pagingPanelMessages} />
       )}
 
       <TableGroupRow />
@@ -349,6 +381,7 @@ export function ShapingTable(props: IProps) {
         <GroupingPanel
           showSortingControls={true}
           emptyMessageComponent={noRow}
+          messages={groupingPanelMessages}
         />
       ) : (
         !expandedGroups && <GroupingPanel showSortingControls={true} />

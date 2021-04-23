@@ -1177,12 +1177,6 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="invite.admin">
-			<segment>
-				<source>Admin</source>
-				<target>Администратор</target>
-			</segment>
-		</unit>
 		<unit id="invite.allUsersProjects">
 			<segment>
 				<source>Projects</source>
@@ -1201,6 +1195,12 @@
 				<target/>
 			</segment>
 		</unit>
+      <unit id="invite.detail">
+         <segment>
+            <source>{0} Detail</source>
+            <target>Деталь {0}</target>
+         </segment>
+      </unit>
 		<unit id="invite.editInvite">
 			<segment>
 				<source>Edit Invite</source>
@@ -2689,10 +2689,113 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="shared.admin">
+      <unit id="shapingTable.groupByColumn">
+         <segment>
+            <source>Drag a column header here to group by that column</source>
+            <target>Перетащите сюда заголовок столбца, чтобы сгруппировать по этому столбцу</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.filterPlaceholder">
+         <segment>
+            <source>Filter...</source>
+            <target>Фильтр...</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.contains">
+         <segment>
+            <source>Contains</source>
+            <target>Содержит</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.notcontains">
+         <segment>
+            <source>Does not contain</source>
+            <target>Не содержит</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.startsWith">
+         <segment>
+            <source>Starts with</source>
+            <target>Начинается с</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.endsWith">
+         <segment>
+            <source>Ends with</source>
+            <target>Заканчивается на</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.equal">
+         <segment>
+            <source>Equals</source>
+            <target>Равно</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.notEqual">
+         <segment>
+            <source>Does not equal</source>
+            <target>Не равно</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.greaterThan">
+         <segment>
+            <source>Greater than</source>
+            <target>Больше чем</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.greaterThanOrEqual">
+         <segment>
+            <source>Greater than or equal to</source>
+            <target>Больше или равно</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.lessThan">
+         <segment>
+            <source>Less than</source>
+            <target>Меньше, чем</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.lessThanOrEqual">
+         <segment>
+            <source>Less than or equal to</source>
+            <target>Меньше или равно</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.all">
+         <segment>
+            <source>All</source>
+            <target>Все</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.rowsPerPage">
+         <segment>
+            <source>Rows per Page</source>
+            <target>Строк на странице</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.pageInfo">
+         <segment>
+            <source>Rows {from} to {to} ({count} Rows)</source>
+            <target>Строки {from} до {to} ({count} строк)</target>
+         </segment>
+      </unit>
+      <unit id="shared.yes">
+         <segment>
+            <source>Yes</source>
+            <target>да</target>
+         </segment>
+      </unit>
+      <unit id="shared.no">
+         <segment>
+            <source>No</source>
+            <target>Нет</target>
+         </segment>
+      </unit>
+
+ 	<unit id="shared.admin">
 			<segment>
-				<source>Owner</source>
-				<target/>
+				<source>Admin</source>
+				<target>Администратор</target>
 			</segment>
 		</unit>
 		<unit id="shared.cancel">
@@ -2704,7 +2807,7 @@
 		<unit id="shared.editor">
 			<segment>
 				<source>Editor</source>
-				<target/>
+				<target>редактор</target>
 			</segment>
 		</unit>
 		<unit id="shared.lastEdit">
@@ -2761,7 +2864,19 @@
 				<target>Часть {0}</target>
 			</segment>
 		</unit>
-		<unit id="taskItem.assign">
+      <unit id="shared.owner">
+         <segment>
+            <source>Owner</source>
+            <target>Maître</target>
+         </segment>
+      </unit>
+      <unit id="shared.member">
+         <segment>
+            <source>Member</source>
+            <target>Membres</target>
+         </segment>
+      </unit>
+    <unit id="taskItem.assign">
 			<segment>
 				<source>Assign {0}</source>
 				<target/>
