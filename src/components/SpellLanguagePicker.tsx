@@ -68,11 +68,16 @@ export const SpellLanguagePicker = (props: IProps) => {
   };
 
   React.useEffect(() => {
-    ipc?.invoke('spellLanguages').then((list) => {
+    ipc?.invoke('availSpellLangs').then((list) => {
       setCodes(list);
     });
+
+    ipc?.invoke('getSpellLangs').then((list) => {
+      setChecked(list);
+    });
+
     const userRec = users.filter((u) => u.id === user) as User[];
-    setUiLang(userRec[0]?.attributes?.uilanguagebcp47 || 'en');
+    setUiLang(userRec[0]?.attributes?.locale || 'en');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

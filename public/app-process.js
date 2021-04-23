@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, MenuItem, session } = require('electron');
+const { app, BrowserWindow, Menu, MenuItem } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const { shell } = require('electron');
@@ -176,49 +176,6 @@ function createAppWindow() {
   if (isDev) {
     mainWindow.webContents.openDevTools();
   }
-
-  console.log(`session=`, JSON.stringify(session.defaultSession, null, 2));
-
-  session.defaultSession.on(
-    'preconnect',
-    (event, preconnectUrl, allowCredentials) => {
-      console.log(`preconnect=${preconnectUrl}`);
-    }
-  );
-
-  session.defaultSession.on(
-    'spellcheck-dictionary-initialized',
-    (event, languageCode) => {
-      console.log(`dictionary init=${languageCode}`);
-    }
-  );
-
-  session.defaultSession.on(
-    'spellcheck-dictionary-download-begin',
-    (event, languageCode) => {
-      console.log(`dictionary download begin=${languageCode}`);
-    }
-  );
-
-  session.defaultSession.on(
-    'spellcheck-dictionary-download-success',
-    (event, languageCode) => {
-      console.log(`dictionary downloaded=${languageCode}`);
-    }
-  );
-
-  session.defaultSession.on(
-    'spellcheck-dictionary-download-failure',
-    (event, languageCode) => {
-      console.log(`dictionary download fail=${languageCode}`);
-    }
-  );
-
-  console.log(
-    `available spelling`,
-    session.defaultSession.availableSpellCheckerLanguages
-  );
-  session.defaultSession.setSpellCheckerLanguages(['en-US', 'fr']);
 
   mainWindow.on('closed', () => (mainWindow = null));
 }

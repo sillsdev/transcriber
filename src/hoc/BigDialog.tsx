@@ -127,7 +127,11 @@ export function BigDialog({
               {ts.cancel}
             </Button>
           )}
-          {onSave && <Button color="primary">{ts.save}</Button>}
+          {onSave && (
+            <Button color="primary" onClick={onSave}>
+              {ts.save}
+            </Button>
+          )}
         </DialogActions>
       )}
     </Dialog>
