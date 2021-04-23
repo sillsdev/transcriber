@@ -37,7 +37,7 @@ export const SpellLanguagePicker = (props: IProps) => {
   const [user] = useGlobal('user');
   const [checked, setChecked] = React.useState<string[]>([]);
   const [codes, setCodes] = React.useState<string[]>([]);
-  const [ui, setUi] = React.useState('en');
+  const [uiLang, setUiLang] = React.useState('en');
 
   const handleToggle = (value: string) => () => {
     const currentIndex = checked.indexOf(value);
@@ -52,11 +52,15 @@ export const SpellLanguagePicker = (props: IProps) => {
     setChecked(newChecked);
   };
 
-  const getName = (value: string) => {
-    const res = langName(ui, value) || langName(ui, value.replace('-', '_'));
+  const getUiName = (value: string, ui: string) => {
+    let res = langName(ui, value) || langName(ui, value.replace('-', '_'));
     if (res) return res;
     const items = value.split('-').slice(0, -1);
     return langName(ui, items.join('_'));
+  };
+
+  const getName = (value: string) => {
+    return getUiName(value, uiLang) || getUiName(value, 'en');
   };
 
   const compare = (x: string, y: string) => {
@@ -68,7 +72,7 @@ export const SpellLanguagePicker = (props: IProps) => {
       setCodes(list);
     });
     const userRec = users.filter((u) => u.id === user) as User[];
-    setUi(userRec[0]?.attributes?.uilanguagebcp47 || 'en');
+    setUiLang(userRec[0]?.attributes?.uilanguagebcp47 || 'en');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
