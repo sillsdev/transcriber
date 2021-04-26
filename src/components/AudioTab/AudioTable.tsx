@@ -19,6 +19,7 @@ import Auth from '../../auth/Auth';
 import { remoteId, useOrganizedBy } from '../../crud';
 import { numCompare, dateCompare } from '../../utils';
 import { IRow } from '.';
+import { Sorting } from '@devexpress/dx-react-grid';
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -79,7 +80,7 @@ export const AudioTable = (props: IProps) => {
       columnName: onAttach ? 'fileName' : 'version',
       direction: onAttach ? 'asc' : 'desc',
     },
-  ];
+  ] as Sorting[];
   const columnSorting = [
     { columnName: 'duration', compare: numCompare },
     { columnName: 'size', compare: numCompare },
@@ -247,7 +248,7 @@ export const AudioTable = (props: IProps) => {
         // shaping={attachVisible || filter}
         hiddenColumnNames={hiddenColumnNames}
         expandedGroups={[]}
-        bandHeader={null}
+        bandHeader={undefined}
         summaryItems={mSummaryItems}
       />
       {verHist && (
