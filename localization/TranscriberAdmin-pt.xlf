@@ -2473,85 +2473,85 @@
             <target>Arraste um cabeçalho de coluna aqui para agrupar por essa coluna</target>
          </segment>
       </unit>
-      <unit id="shapingTable.filterPlaceholder">
+      <unit id="grid.filterPlaceholder">
          <segment>
             <source>Filter...</source>
             <target>Filtro...</target>
          </segment>
       </unit>
-      <unit id="shapingTable.contains">
+      <unit id="grid.contains">
          <segment>
             <source>Contains</source>
             <target>Contém</target>
          </segment>
       </unit>
-      <unit id="shapingTable.notcontains">
+      <unit id="grid.notcontains">
          <segment>
             <source>Does not contain</source>
             <target>Não contém</target>
          </segment>
       </unit>
-      <unit id="shapingTable.startsWith">
+      <unit id="grid.startsWith">
          <segment>
             <source>Starts with</source>
             <target>Começa com</target>
          </segment>
       </unit>
-      <unit id="shapingTable.endsWith">
+      <unit id="grid.endsWith">
          <segment>
             <source>Ends with</source>
             <target>Termina com</target>
          </segment>
       </unit>
-      <unit id="shapingTable.equal">
+      <unit id="grid.equal">
          <segment>
             <source>Equals</source>
             <target>É igual a</target>
          </segment>
       </unit>
-      <unit id="shapingTable.notEqual">
+      <unit id="grid.notEqual">
          <segment>
             <source>Does not equal</source>
             <target>Não é igual</target>
          </segment>
       </unit>
-      <unit id="shapingTable.greaterThan">
+      <unit id="grid.greaterThan">
          <segment>
             <source>Greater than</source>
             <target>Maior que</target>
          </segment>
       </unit>
-      <unit id="shapingTable.greaterThanOrEqual">
+      <unit id="grid.greaterThanOrEqual">
          <segment>
             <source>Greater than or equal to</source>
             <target>Melhor que ou igual a</target>
          </segment>
       </unit>
-      <unit id="shapingTable.lessThan">
+      <unit id="grid.lessThan">
          <segment>
             <source>Less than</source>
             <target>Menor que</target>
          </segment>
       </unit>
-      <unit id="shapingTable.lessThanOrEqual">
+      <unit id="grid.lessThanOrEqual">
          <segment>
             <source>Less than or equal to</source>
             <target>Menos que ou igual a</target>
          </segment>
       </unit>
-      <unit id="shapingTable.all">
+      <unit id="grid.all">
          <segment>
             <source>All</source>
             <target>Tudo</target>
          </segment>
       </unit>
-      <unit id="shapingTable.rowsPerPage">
+      <unit id="grid.rowsPerPage">
          <segment>
             <source>Rows per Page</source>
             <target>Linhas por página</target>
          </segment>
       </unit>
-      <unit id="shapingTable.pageInfo">
+      <unit id="grid.pageInfo">
          <segment>
             <source>Rows {from} to {to} ({count} Rows)</source>
             <target>Linhas de {from} a {to} ({count} linhas)</target>

@@ -3102,154 +3102,154 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.avg">
+         <trans-unit id="grid.avg">
             <source>Avg</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.count">
+         <trans-unit id="grid.count">
             <source>Count</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.max">
+         <trans-unit id="grid.max">
             <source>Max</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.min">
+         <trans-unit id="grid.min">
             <source>Min</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.noColumns">
+         <trans-unit id="grid.noColumns">
             <source>No columns visible</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.noData">
+         <trans-unit id="grid.noData">
             <source>No data</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.sum">
+         <trans-unit id="grid.sum">
             <source>Sum</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.groupByColumn">
+         <trans-unit id="grid.groupByColumn">
             <source>Drag a column header here to group by that column</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.filterPlaceholder">
+         <trans-unit id="grid.filterPlaceholder">
             <source>Filter...</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">shapingTable.tsx</context>
+               <context context-type="sourcefile">grid.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.contains">
+         <trans-unit id="grid.contains">
             <source>Contains</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.notcontains">
-            <source>Does not contain</source>
+         <trans-unit id="grid.notcontains">
+            <source>Does not containxyz</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.startsWith">
+         <trans-unit id="grid.startsWith">
             <source>Starts with</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.endsWith">
+         <trans-unit id="grid.endsWith">
             <source>Ends with</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.equal">
+         <trans-unit id="grid.equal">
             <source>Equals</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.notEqual">
+         <trans-unit id="grid.notEqual">
             <source>Does not equal</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.greaterThan">
+         <trans-unit id="grid.greaterThan">
             <source>Greater than</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.greaterThanOrEqual">
+         <trans-unit id="grid.greaterThanOrEqual">
             <source>Greater than or equal to</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.lessThan">
+         <trans-unit id="grid.lessThan">
             <source>Less than</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.lessThanOrEqual">
+         <trans-unit id="grid.lessThanOrEqual">
             <source>Less than or equal to</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.all">
+         <trans-unit id="grid.all">
             <source>All</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.rowsPerPage">
+         <trans-unit id="grid.rowsPerPage">
             <source>Rows per Page</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.pageInfo">
+         <trans-unit id="grid.pageInfo">
             <source>Rows {from} to {to} ({count} Rows)</source>
             <target/>
             <context-group>

@@ -40,3 +40,4 @@ export * from './loadBlob';
 export * from './removeExtension';
 export * from './localizeRole';
 export * from './langName';
+export * from './localizeGrid';

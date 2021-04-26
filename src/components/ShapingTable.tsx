@@ -44,10 +44,11 @@ import {
   TableSummaryRow,
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import { IState, IShapingTableStrings } from '../model';
-import localStrings from '../selector/localize';
-import { connect } from 'react-redux';
+import { IGridStrings, IState } from '../model';
 import { useEffect } from 'reactn';
+import { localizeGrid } from '../utils';
+import { connect } from 'react-redux';
+import localStrings from '../selector/localize';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -137,8 +138,11 @@ const SizeTypeProvider: React.ComponentType<DataTypeProviderProps> = (
   />
 );
 interface IStateProps {
-  t: IShapingTableStrings;
+  tg: IGridStrings;
 }
+const mapStateToProps = (state: IState): IStateProps => ({
+  tg: localStrings(state, { layout: 'grid' }),
+});
 interface IProps extends IStateProps {
   columns: Array<Column>;
   columnWidths?: Array<TableColumnWidthInfo>;
@@ -166,9 +170,9 @@ interface IProps extends IStateProps {
   summaryItems?: SummaryItem[];
 }
 
-export function ShapingTable(props: IProps) {
+function ShapingTable(props: IProps) {
   const {
-    t,
+    tg,
     columns,
     columnWidths,
     columnFormatting,
@@ -197,6 +201,13 @@ export function ShapingTable(props: IProps) {
 
   const [myGroups, setMyGroups] = React.useState<string[]>();
   const [currentFilters, setCurrentFilters] = React.useState(filters || []);
+  const {
+    localizeFilter,
+    localizeGroupingPanel,
+    localizePaging,
+    localizeRowSummary,
+    localizeTableMessages,
+  } = localizeGrid(tg);
 
   const handleExpGrp = (groups: string[]) => {
     setMyGroups(groups);
@@ -208,39 +219,8 @@ export function ShapingTable(props: IProps) {
     }
   };
   const noRow = () => <></>;
-  const noCols = () => <span>{t.noColumns}</span>;
-  const tableMessages = {
-    noData: t.noData,
-  };
-  const tableSummaryRowMessages = {
-    avg: t.avg,
-    count: t.count,
-    max: t.max,
-    min: t.min,
-    sum: t.sum,
-  };
-  const groupingPanelMessages = {
-    groupByColumn: t.groupByColumn,
-  };
-  const filterRowMessages = {
-    filterPlaceholder: t.filterPlaceholder,
-    contains: t.contains,
-    notContains: t.notcontains,
-    startsWith: t.startsWith,
-    endsWith: t.endsWith,
-    equal: t.equal,
-    notEqual: t.notEqual,
-    greaterThan: t.greaterThan,
-    greaterThanOrEqual: t.greaterThanOrEqual,
-    lessThan: t.lessThan,
-    lessThanOrEqual: t.lessThanOrEqual,
-  };
-  const pagingPanelMessages = {
-    showAll: 'Alle',
-    rowsPerPage: 'Zeilen pro Seite',
-    info: (parameters: { from: number; to: number; count: number }) =>
-      'Zeilen {from} bis {to} ({count} Elemente)',
-  };
+  const noCols = () => <span>{tg.noColumns}</span>;
+
   useEffect(() => {
     setCurrentFilters(filters || []);
   }, [filters]);
@@ -294,35 +274,41 @@ export function ShapingTable(props: IProps) {
 
       {dataCell && noDataCell && !columnFormatting ? (
         <Table
-          messages={tableMessages}
+          messages={localizeTableMessages}
           cellComponent={dataCell}
           noDataCellComponent={noDataCell}
         />
       ) : dataCell && !noDataCell && !columnFormatting ? (
-        <Table messages={tableMessages} cellComponent={dataCell} />
+        <Table messages={localizeTableMessages} cellComponent={dataCell} />
       ) : !dataCell && noDataCell && !columnFormatting ? (
-        <Table messages={tableMessages} noDataCellComponent={noDataCell} />
+        <Table
+          messages={localizeTableMessages}
+          noDataCellComponent={noDataCell}
+        />
       ) : dataCell && noDataCell && columnFormatting ? (
         <Table
-          messages={tableMessages}
+          messages={localizeTableMessages}
           cellComponent={dataCell}
           noDataCellComponent={noDataCell}
           columnExtensions={columnFormatting}
         />
       ) : dataCell && !noDataCell && columnFormatting ? (
         <Table
-          messages={tableMessages}
+          messages={localizeTableMessages}
           cellComponent={dataCell}
           columnExtensions={columnFormatting}
         />
       ) : !dataCell && noDataCell && columnFormatting ? (
         <Table
-          messages={tableMessages}
+          messages={localizeTableMessages}
           noDataCellComponent={noDataCell}
           columnExtensions={columnFormatting}
         />
       ) : !dataCell && !noDataCell && columnFormatting ? (
-        <Table messages={tableMessages} columnExtensions={columnFormatting} />
+        <Table
+          messages={localizeTableMessages}
+          columnExtensions={columnFormatting}
+        />
       ) : (
         <Table />
       )}
@@ -350,27 +336,24 @@ export function ShapingTable(props: IProps) {
       {shaping !== null && !shaping ? (
         <TableFilterRow
           showFilterSelector={true}
-          messages={filterRowMessages}
+          messages={localizeFilter}
           rowComponent={noRow}
         />
       ) : filterCell ? (
         <TableFilterRow
           showFilterSelector={true}
-          messages={filterRowMessages}
+          messages={localizeFilter}
           cellComponent={filterCell}
         />
       ) : (
-        <TableFilterRow
-          showFilterSelector={true}
-          messages={filterRowMessages}
-        />
+        <TableFilterRow showFilterSelector={true} messages={localizeFilter} />
       )}
       {pageSizes && pageSizes.length > 0 && (
-        <PagingPanel pageSizes={pageSizes} messages={pagingPanelMessages} />
+        <PagingPanel pageSizes={pageSizes} messages={localizePaging} />
       )}
 
       <TableGroupRow />
-      {summaryItems && <TableSummaryRow messages={tableSummaryRowMessages} />}
+      {summaryItems && <TableSummaryRow messages={localizeRowSummary} />}
       {bandHeader && <TableBandHeader columnBands={bandHeader} />}
       {(shaping !== null && !shaping) || expandedGroups ? (
         <Toolbar rootComponent={noRow} />
@@ -381,7 +364,7 @@ export function ShapingTable(props: IProps) {
         <GroupingPanel
           showSortingControls={true}
           emptyMessageComponent={noRow}
-          messages={groupingPanelMessages}
+          messages={localizeGroupingPanel}
         />
       ) : (
         !expandedGroups && <GroupingPanel showSortingControls={true} />
@@ -389,8 +372,4 @@ export function ShapingTable(props: IProps) {
     </Grid>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'shapingTable' }),
-});
-
 export default (connect(mapStateToProps)(ShapingTable) as any) as any;

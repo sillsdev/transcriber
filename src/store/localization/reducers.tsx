@@ -569,7 +569,7 @@ const initialState = {
 			"title": "Title",
 		}
 	}),
-	"shapingTable": new LocalizedStrings({
+	"grid": new LocalizedStrings({
 		"en": {
 			"avg": "Avg",
 			"count": "Count",
@@ -581,7 +581,7 @@ const initialState = {
 			"groupByColumn": "Drag a column header here to group by that column",
 			"filterPlaceholder": "Filter...",
 			"contains": "Contains",
-			"notcontains": "Does not contain",
+			"notcontains": "Does not containxyz",
 			"startsWith": "Starts with",
 			"endsWith": "Ends with",
 			"equal": "Equals",
@@ -916,7 +916,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"projButtons" : new LocalizedStrings(action.payload.data.projButtons),
 				"newProject" : new LocalizedStrings(action.payload.data.newProject),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
-				"shapingTable" : new LocalizedStrings(action.payload.data.shapingTable),
+				"grid" : new LocalizedStrings(action.payload.data.grid),
 				"shared" : new LocalizedStrings(action.payload.data.shared),
 				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),
 				"template" : new LocalizedStrings(action.payload.data.template),

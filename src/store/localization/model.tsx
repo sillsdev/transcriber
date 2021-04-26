@@ -534,7 +534,7 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "title": string;
 };
 
-export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
+export interface IGridStrings extends Localize.LocalizedStringsMethods {
     "avg": string;
     "count": string;
     "max": string;
@@ -858,7 +858,7 @@ export interface ILocalizedStrings {
 	projButtons: IProjButtonsStrings;
 	newProject: INewProjectStrings;
 	scriptureTable: IScriptureTableStrings;
-	shapingTable: IShapingTableStrings;
+	grid: IGridStrings;
 	shared: ISharedStrings;
 	taskItem: ITaskItemStrings;
 	template: ITemplateStrings;
