@@ -4016,5 +4016,17 @@
 				<target>Закрыть</target>
 			</segment>
 		</unit>
+		<unit id="spelling.dictionaries">
+			<segment>
+				<source>Dictionaries</source>
+				<target>Словари</target>
+			</segment>
+		</unit>
+		<unit id="spelling.custom">
+			<segment>
+				<source>Custom</source>
+				<target>Пользовательский</target>
+			</segment>
+		</unit>
 	</file>
 </xliff>

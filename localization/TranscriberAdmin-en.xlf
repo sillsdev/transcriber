@@ -4072,5 +4072,17 @@
             <target/>
          </segment>
       </unit>
+      <unit id="spelling.dictionaries">
+         <segment>
+            <source>Dictionaries</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="spelling.custom">
+         <segment>
+            <source>Custom</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

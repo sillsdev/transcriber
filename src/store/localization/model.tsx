@@ -821,6 +821,8 @@ export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
     "spellingLangs": string;
     "restart": string;
     "close": string;
+    "dictionaries": string;
+    "custom": string;
 };
 
 export interface ILocalizedStrings {

@@ -4,7 +4,7 @@ import localStrings from '../selector/localize';
 import { IState, ISpellingStrings } from '../model';
 import { IconButton } from '@material-ui/core';
 import SpellCheckIcon from '@material-ui/icons/Spellcheck';
-import SpellLanguagePicker from './SpellLanguagePicker';
+import SpellingTabs from './SpellingTabs';
 import BigDialog from '../hoc/BigDialog';
 import Confirm from './AlertDialog';
 import { LightTooltip } from '../control';
@@ -42,11 +42,6 @@ export const Spelling = (props: IStateProps) => {
     setConfirm(false);
   };
 
-  const handleCodes = (codes: string[]) => {
-    setCodes(codes);
-    setChanged(true);
-  };
-
   return (
     <span>
       <LightTooltip title={t.spellingLangsTip}>
@@ -62,7 +57,11 @@ export const Spelling = (props: IStateProps) => {
           onSave={handleSave}
           onCancel={handleCancel}
         >
-          <SpellLanguagePicker codes={codes} onSetCodes={handleCodes} />
+          <SpellingTabs
+            codes={codes}
+            setCodes={setCodes}
+            setChanged={setChanged}
+          />
         </BigDialog>
       )}
       {confirm && (

@@ -3674,5 +3674,17 @@
    			<target>Fechar</target>
    		</segment>
    	</unit>
+   	<unit id="spelling.dictionaries">
+   		<segment>
+   			<source>Dictionaries</source>
+   			<target>Dicionários</target>
+   		</segment>
+   	</unit>
+   	<unit id="spelling.custom">
+   		<segment>
+   			<source>Custom</source>
+   			<target>Personalizado</target>
+   		</segment>
+   	</unit>
    </file>
 </xliff>
