@@ -12,7 +12,7 @@ export const localUserKey = (id: LocalKey, memory: Memory) => {
   if (isElectron && id === LocalKey.time) userRemoteId = 'electron';
   else {
     const userId = localStorage.getItem('user-id') || '';
-    userRemoteId = remoteId('user', userId, memory.keyMap) || userId;
+    userRemoteId = userId; // remoteId('user', userId, memory.keyMap) || userId;
   }
   return `${userRemoteId}-${id}`;
 };
