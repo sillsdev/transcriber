@@ -3664,8 +3664,8 @@
    	</unit>
    	<unit id="spelling.restart">
    		<segment>
-   			<source>Dictionaries will be loaded when app is restared</source>
-   			<target>Os dicionários serão carregados quando o aplicativo for restaurado</target>
+   			<source>To load the spelling dictionaries you selected, while connected to the Internet, exit and reopen this desktop app.</source>
+   			<target>Para carregar os dicionários ortográficos que você selecionou, enquanto estava conectado à Internet, saia e reabra este aplicativo desktop.</target>
    		</segment>
    	</unit>
    	<unit id="spelling.close">

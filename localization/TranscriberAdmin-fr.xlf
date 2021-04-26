@@ -4063,8 +4063,8 @@
    	</unit>
    	<unit id="spelling.restart">
    		<segment>
-   			<source>Dictionaries will be loaded when app is restared</source>
-   			<target>Les dictionnaires seront chargés lors du redémarrage de l'application.</target>
+   			<source>To load the spelling dictionaries you selected, while connected to the Internet, exit and reopen this desktop app.</source>
+   			<target>Pour charger les dictionnaires d'orthographe que vous avez sélectionnés, lorsque vous êtes connecté à Internet, quittez et rouvrez cette application de bureau.</target>
    		</segment>
    	</unit>
    	<unit id="spelling.close">

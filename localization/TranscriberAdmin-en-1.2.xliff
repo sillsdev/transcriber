@@ -4724,49 +4724,49 @@
       		<source>Choose spell checking languages</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">wsAudioPlayer.tsx</context>
+      			<context context-type="sourcefile">Spelling.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="spelling.spellingLangs">
       		<source>Spell Checking Languages</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">wsAudioPlayer.tsx</context>
+      			<context context-type="sourcefile">Spelling.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="spelling.restart">
-      		<source>Dictionaries will be loaded when app is restared</source>
+      		<source>To load the spelling dictionaries you selected, while on the Internet, exit and reopen this desktop app.</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">wsAudioPlayer.tsx</context>
+      			<context context-type="sourcefile">Spelling.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="spelling.close">
       		<source>Close</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">wsAudioPlayer.tsx</context>
+      			<context context-type="sourcefile">Spelling.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="spelling.dictionaries">
       		<source>Dictionaries</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">wsAudioPlayer.tsx</context>
+      			<context context-type="sourcefile">SpellingTabs.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="spelling.custom">
       		<source>Custom</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">wsAudioPlayer.tsx</context>
+      			<context context-type="sourcefile">SpellingTabs.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="spelling.addToDict">
       		<source>Add to dictionary</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">wsAudioPlayer.tsx</context>
+      			<context context-type="sourcefile">SpellingTabs.tsx</context>
       		</context-group>
       	</trans-unit>
       </body>

@@ -144,6 +144,14 @@ function createAppWindow() {
       : `file://${path.join(__dirname, '../build/index.html')}`
   );
 
+  function addSuggestion(win, suggestion) {
+    win.replaceMisspelling(suggestion);
+  }
+
+  function addCustom(win, word) {
+    win.session.addWordToSpellCheckerDictionary(word);
+  }
+
   mainWindow.webContents.on('context-menu', (event, params) => {
     const menu = new Menu();
 
@@ -152,8 +160,7 @@ function createAppWindow() {
       menu.append(
         new MenuItem({
           label: suggestion,
-          click: () =>
-            event.mainWindow.webContents.replaceMisspelling(suggestion),
+          click: addSuggestion(mainWindow.webContents, suggestion),
         })
       );
     }
@@ -163,10 +170,7 @@ function createAppWindow() {
       menu.append(
         new MenuItem({
           label: localString.addToDict,
-          click: () =>
-            mainWindow.webContents.session.addWordToSpellCheckerDictionary(
-              params.misspelledWord
-            ),
+          click: addCustom(mainWindow.webContents, params.misspelledWord),
         })
       );
     }
