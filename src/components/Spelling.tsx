@@ -42,6 +42,11 @@ export const Spelling = (props: IStateProps) => {
     setConfirm(false);
   };
 
+  React.useEffect(() => {
+    ipc?.invoke('setAddToDict', t.addToDict);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <span>
       <LightTooltip title={t.spellingLangsTip}>

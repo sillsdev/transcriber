@@ -3686,5 +3686,11 @@
    			<target>Personalizado</target>
    		</segment>
    	</unit>
+   	<unit id="spelling.addToDict">
+   		<segment>
+   			<source>Add to dictionary</source>
+   			<target>Adicionar ao dicionário</target>
+   		</segment>
+   	</unit>
    </file>
 </xliff>

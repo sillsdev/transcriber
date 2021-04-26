@@ -4028,5 +4028,11 @@
 				<target>Пользовательский</target>
 			</segment>
 		</unit>
+		<unit id="spelling.addToDict">
+			<segment>
+				<source>Add to dictionary</source>
+				<target>Добавить в словарь</target>
+			</segment>
+		</unit>
 	</file>
 </xliff>

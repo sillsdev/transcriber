@@ -876,6 +876,7 @@ const initialState = {
 			"close": "Close",
 			"dictionaries": "Dictionaries",
 			"custom": "Custom",
+			"addToDict": "Add to dictionary",
 		}
 	}),
 };

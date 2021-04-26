@@ -1,10 +1,11 @@
-const { app, BrowserWindow, Menu, MenuItem } = require('electron');
+const { app, ipcMain, BrowserWindow, Menu, MenuItem } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const { shell } = require('electron');
 require('@electron/remote/main').initialize();
 
 let mainWindow;
+let localString = { addToDict: 'Add to dictionary' };
 
 function createAppWindow() {
   mainWindow = new BrowserWindow({
@@ -161,7 +162,7 @@ function createAppWindow() {
     if (params.misspelledWord) {
       menu.append(
         new MenuItem({
-          label: 'Add to dictionary',
+          label: localString.addToDict,
           click: () =>
             mainWindow.webContents.session.addWordToSpellCheckerDictionary(
               params.misspelledWord
@@ -179,5 +180,9 @@ function createAppWindow() {
 
   mainWindow.on('closed', () => (mainWindow = null));
 }
+
+ipcMain.handle('setAddToDict', async (event, str) => {
+  localString.addToDict = str;
+});
 
 module.exports = createAppWindow;
