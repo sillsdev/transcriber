@@ -823,6 +823,7 @@ export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
     "close": string;
     "dictionaries": string;
     "custom": string;
+    "addToDict": string;
 };
 
 export interface ILocalizedStrings {
