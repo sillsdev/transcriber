@@ -22,16 +22,18 @@ const useStyles = makeStyles((theme: Theme) =>
 export function SpellCustomList() {
   const classes = useStyles();
   const [list, setList] = React.useState<string[]>([]);
+  const [refresh, setRefresh] = React.useState(0);
 
   const handleDelete = (value: string) => () => {
     ipc?.invoke('customRemove', value);
+    setRefresh(refresh + 1);
   };
 
   React.useEffect(() => {
     ipc?.invoke('customList').then((list) => {
       setList(list);
     });
-  }, []);
+  }, [refresh]);
 
   return (
     <List className={classes.root}>
