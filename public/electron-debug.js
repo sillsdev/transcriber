@@ -40,6 +40,18 @@ ipcMain.handle('setSpellLangs', async (event, langs) => {
   session.defaultSession.setSpellCheckerLanguages(langs);
 });
 
+ipcMain.handle('customList', async () => {
+  return session.defaultSession.listWordsInSpellCheckerDictionary();
+});
+
+ipcMain.handle('customRemove', async (event, word) => {
+  session.defaultSession.removeWordFromSpellCheckerDictionary(word);
+});
+
+ipcMain.handle('customAdd', async (event, word) => {
+  session.defaultSession.addWordToSpellCheckerDictionary(word);
+});
+
 ipcMain.handle('temp', async () => {
   return app.getPath('temp');
 });

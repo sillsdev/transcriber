@@ -874,6 +874,8 @@ const initialState = {
 			"spellingLangs": "Spell Checking Languages",
 			"restart": "Dictionaries will be loaded when app is restared",
 			"close": "Close",
+			"dictionaries": "Dictionaries",
+			"custom": "Custom",
 		}
 	}),
 };

@@ -4073,5 +4073,17 @@
    			<target>Fermer</target>
    		</segment>
    	</unit>
+   	<unit id="spelling.Dictionnaires">
+   		<segment>
+   			<source>Dictionaries</source>
+   			<target>Dictionaries</target>
+   		</segment>
+   	</unit>
+   	<unit id="spelling.custom">
+   		<segment>
+   			<source>Custom</source>
+   			<target>Personnalisé</target>
+   		</segment>
+   	</unit>
    </file>
 </xliff>
