@@ -170,7 +170,7 @@ function createAppWindow() {
       );
     }
 
-    menu.popup();
+    if (params.misspelledWord) menu.popup();
   });
 
   if (isDev) {
