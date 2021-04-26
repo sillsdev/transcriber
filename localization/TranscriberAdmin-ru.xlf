@@ -4006,8 +4006,8 @@
 		</unit>
 		<unit id="spelling.restart">
 			<segment>
-				<source>Dictionaries will be loaded when app is restared</source>
-				<target>Словари будут загружены при перезагрузке приложения.</target>
+				<source>To load the spelling dictionaries you selected, while connected to the Internet, exit and reopen this desktop app.</source>
+				<target>Чтобы загрузить выбранные вами орфографические словари при подключении к Интернету, выйдите и снова откройте это настольное приложение.</target>
 			</segment>
 		</unit>
 		<unit id="spelling.close">

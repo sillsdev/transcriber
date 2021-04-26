@@ -4062,7 +4062,7 @@
       </unit>
       <unit id="spelling.restart">
          <segment>
-            <source>Dictionaries will be loaded when app is restared</source>
+            <source>To load the spelling dictionaries you selected, while on the Internet, exit and reopen this desktop app.</source>
             <target/>
          </segment>
       </unit>

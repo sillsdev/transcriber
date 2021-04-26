@@ -41,3 +41,4 @@ export * from './removeExtension';
 export * from './localizeRole';
 export * from './langName';
 export * from './localizeGrid';
+export * from './restartApp';
