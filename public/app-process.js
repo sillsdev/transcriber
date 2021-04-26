@@ -163,7 +163,7 @@ function createAppWindow() {
         new MenuItem({
           label: 'Add to dictionary',
           click: () =>
-            event.mainWindow.webContents.session.addWordToSpellCheckerDictionary(
+            mainWindow.webContents.session.addWordToSpellCheckerDictionary(
               params.misspelledWord
             ),
         })
