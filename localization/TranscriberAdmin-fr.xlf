@@ -4063,8 +4063,14 @@
    	</unit>
    	<unit id="spelling.restart">
    		<segment>
-   			<source>To load the spelling dictionaries you selected, while connected to the Internet, exit and reopen this desktop app.</source>
-   			<target>Pour charger les dictionnaires d'orthographe que vous avez sélectionnés, lorsque vous êtes connecté à Internet, quittez et rouvrez cette application de bureau.</target>
+   			<source>To load the spelling dictionaries you selected, while connected to the Internet, exit and reopen this desktop app. Do you want to restart now?</source>
+   			<target>Pour charger les dictionnaires d'orthographe que vous avez sélectionnés, lorsque vous êtes connecté à Internet, quittez et rouvrez cette application de bureau. Voulez-vous redémarrer maintenant ?</target>
+   		</segment>
+   	</unit>
+   	<unit id="spelling.restartApp">
+   		<segment>
+   			<source>Restart</source>
+   			<target>Redémarrer</target>
    		</segment>
    	</unit>
    	<unit id="spelling.close">

@@ -4735,7 +4735,14 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="spelling.restart">
-      		<source>To load the spelling dictionaries you selected, while on the Internet, exit and reopen this desktop app.</source>
+      		<source>To load the spelling dictionaries you selected, while on the Internet, exit and reopen this desktop app. Do you want to restart now?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Spelling.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="spelling.restartApp">
+      		<source>Restart</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">Spelling.tsx</context>

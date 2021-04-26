@@ -3664,8 +3664,14 @@
    	</unit>
    	<unit id="spelling.restart">
    		<segment>
-   			<source>To load the spelling dictionaries you selected, while connected to the Internet, exit and reopen this desktop app.</source>
-   			<target>Para carregar os dicionários ortográficos que você selecionou, enquanto estava conectado à Internet, saia e reabra este aplicativo desktop.</target>
+   			<source>To load the spelling dictionaries you selected, while connected to the Internet, exit and reopen this desktop app. Do you want to restart now?</source>
+   			<target>Para carregar os dicionários ortográficos que você selecionou, enquanto estava conectado à Internet, saia e reabra este aplicativo desktop. Você quer reiniciar agora?</target>
+   		</segment>
+   	</unit>
+   	<unit id="spelling.restartApp">
+   		<segment>
+   			<source>Restart</source>
+   			<target>Reinicie</target>
    		</segment>
    	</unit>
    	<unit id="spelling.close">

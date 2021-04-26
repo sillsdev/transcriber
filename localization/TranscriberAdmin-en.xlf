@@ -4062,7 +4062,13 @@
       </unit>
       <unit id="spelling.restart">
          <segment>
-            <source>To load the spelling dictionaries you selected, while on the Internet, exit and reopen this desktop app.</source>
+            <source>To load the spelling dictionaries you selected, while on the Internet, exit and reopen this desktop app. Do you want to restart now?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="spelling.restartApp">
+         <segment>
+            <source>Restart</source>
             <target/>
          </segment>
       </unit>

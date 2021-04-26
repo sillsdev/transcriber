@@ -820,6 +820,7 @@ export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
     "spellingLangsTip": string;
     "spellingLangs": string;
     "restart": string;
+    "restartApp": string;
     "close": string;
     "dictionaries": string;
     "custom": string;

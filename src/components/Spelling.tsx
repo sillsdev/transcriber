@@ -8,6 +8,7 @@ import SpellingTabs from './SpellingTabs';
 import BigDialog from '../hoc/BigDialog';
 import Confirm from './AlertDialog';
 import { LightTooltip } from '../control';
+import { relaunchApp, exitApp } from '../utils';
 import { isElectron } from '../api-variable';
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 
@@ -42,6 +43,11 @@ export const Spelling = (props: IStateProps) => {
     setConfirm(false);
   };
 
+  const restart = () => {
+    relaunchApp();
+    exitApp();
+  };
+
   React.useEffect(() => {
     ipc?.invoke('setAddToDict', t.addToDict);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,7 +80,8 @@ export const Spelling = (props: IStateProps) => {
           text={t.restart}
           no={t.close}
           noResponse={confirmed}
-          yes={''}
+          yes={t.restartApp}
+          yesResponse={restart}
         />
       )}
     </span>

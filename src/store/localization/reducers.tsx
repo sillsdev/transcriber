@@ -872,7 +872,8 @@ const initialState = {
 		"en": {
 			"spellingLangsTip": "Choose spell checking languages",
 			"spellingLangs": "Spell Checking Languages",
-			"restart": "To load the spelling dictionaries you selected, while on the Internet, exit and reopen this desktop app.",
+			"restart": "To load the spelling dictionaries you selected, while on the Internet, exit and reopen this desktop app. Do you want to restart now?",
+			"restartApp": "Restart",
 			"close": "Close",
 			"dictionaries": "Dictionaries",
 			"custom": "Custom",
