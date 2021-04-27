@@ -4063,8 +4063,8 @@
    	</unit>
    	<unit id="spelling.restart">
    		<segment>
-   			<source>To load the spelling dictionaries you selected, while connected to the Internet, exit and reopen this desktop app. Do you want to restart now?</source>
-   			<target>Pour charger les dictionnaires d'orthographe que vous avez sélectionnés, lorsque vous êtes connecté à Internet, quittez et rouvrez cette application de bureau. Voulez-vous redémarrer maintenant ?</target>
+   			<source>To load or unload dictionaries requires this app to be restarted. Loading dictionaries that have not been loaded before will require this device to have a connection to the Internet. Do you want to restart this desktop app now?</source>
+   			<target>Pour charger ou décharger des dictionnaires, il faut redémarrer l'application. Pour charger des dictionnaires qui n'ont pas été chargés auparavant, il faut que cet appareil dispose d'une connexion à l'Internet. Voulez-vous redémarrer cette application de bureau maintenant ?</target>
    		</segment>
    	</unit>
    	<unit id="spelling.restartApp">
