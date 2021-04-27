@@ -287,7 +287,7 @@ export function Transcriber(props: IProps) {
   }, [integrations]);
 
   useEffect(() => {
-    if (doSave) {
+    if (doSave && !playing) {
       handleSave();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
