@@ -107,10 +107,10 @@ const getMedia = (
           locale: u.attributes.locale ? u.attributes.locale : '',
           // phone: u.attributes.phone ? u.attributes.phone : '',
           timezone: u.attributes.timezone ? u.attributes.timezone : '',
-          role:
-            role.length === 1
-              ? localizeRole(role[0].attributes.roleName, ts)
-              : '',
+          role: localizeRole(
+            role.length > 0 ? role[0].attributes.roleName : 'member',
+            ts
+          ),
           action: u.id,
           id: { type: 'user', id: u.id },
         } as IRow);

@@ -58,6 +58,7 @@ function PersonItems(props: IProps) {
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
         .map((u) => (
           <ListItem
+            key={u.id}
             disabled={
               !detail && !ids.filter((id) => id.user === u.id)[0].canDelete
             }

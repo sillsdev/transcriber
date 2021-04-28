@@ -76,10 +76,10 @@ const getInvites = (
     const role = roles.filter((r) => r.id === related(i, 'role'));
     return {
       email: i.attributes.email ? i.attributes.email : '',
-      orgRole:
-        role.length === 1
-          ? localizeRole(role[0].attributes.roleName, ts)
-          : 'xx',
+      orgRole: localizeRole(
+        role.length > 0 ? role[0].attributes.roleName : 'member',
+        ts
+      ),
       accepted: i.attributes.accepted ? ts.yes : ts.no,
       id: { type: 'invitation', id: i.id },
     } as IRow;

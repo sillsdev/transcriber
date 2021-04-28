@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useEffect, useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IMainStrings, User } from '../model';
+import { IState, IMainStrings, ISharedStrings, User } from '../model';
 import localStrings from '../selector/localize';
 import { withStyles } from '@material-ui/core/styles';
 import { MenuProps } from '@material-ui/core/Menu';
@@ -21,6 +21,7 @@ import { isElectron } from '../api-variable';
 import { useLocation } from 'react-router-dom';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
+import { localizeRole } from '../utils';
 
 const StyledMenu = withStyles({
   paper: {
@@ -60,6 +61,7 @@ const roleStyle = {
 
 interface IStateProps {
   t: IMainStrings;
+  ts: ISharedStrings;
 }
 interface IRecordProps {
   users: Array<User>;
@@ -69,7 +71,7 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 export function UserMenu(props: IProps) {
-  const { action, t, users } = props;
+  const { action, t, ts, users } = props;
   const [projRole] = useGlobal('projRole');
   const [developer] = useGlobal('developer');
   const [user] = useGlobal('user');
@@ -123,9 +125,7 @@ export function UserMenu(props: IProps) {
               primary={
                 <div style={roleStyle}>
                   <Typography>
-                    {t.projRole +
-                      ' ' +
-                      (projRole === 'admin' ? t.owner : projRole)}
+                    {`${t.projRole} ${localizeRole(projRole, ts, true)}`}
                   </Typography>
                 </div>
               }
@@ -177,6 +177,7 @@ export function UserMenu(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
+  ts: localStrings(state, { layout: 'shared' }),
 });
 
 const mapRecordsToProps = {
