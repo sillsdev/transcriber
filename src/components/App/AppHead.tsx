@@ -128,7 +128,7 @@ export const AppHead = (props: IProps) => {
   const [pathDescription, setPathDescription] = React.useState('');
   const [version, setVersion] = useState('');
   const [updates] = useState(
-    isElectron && (localStorage.getItem('updates') || 'true') === 'true'
+    (localStorage.getItem('updates') || 'true') === 'true'
   );
   const [latestVersion, setLatestVersion] = useGlobal('latestVersion');
   const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
@@ -272,7 +272,7 @@ export const AppHead = (props: IProps) => {
           {(isOffline || orbitStatus !== undefined || !connected) && (
             <CloudOffIcon className={classes.spacing} color="action" />
           )}
-          {latestVersion !== '' && latestVersion !== version && (
+          {latestVersion !== '' && latestVersion !== version && isElectron && (
             <Tooltip
               title={t.updateAvailable
                 .replace('{0}', latestVersion)
