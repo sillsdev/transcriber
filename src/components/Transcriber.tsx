@@ -229,11 +229,16 @@ export function Transcriber(props: IProps) {
   const [, saveCompleted] = useRemoteSave();
   const [audioBlob, setAudioBlob] = useState<Blob>();
   const transcriptionRef = React.useRef<any>();
+  const playingRef = useRef<Boolean>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
   const { subscribe, unsubscribe, localizeHotKey } = useContext(
     HotKeyContext
   ).state;
   const t = transcriberStr;
+
+  useEffect(() => {
+    playingRef.current = playing;
+  }, [playing]);
 
   useEffect(() => {
     setAudioBlob(undefined);
@@ -287,7 +292,7 @@ export function Transcriber(props: IProps) {
   }, [integrations]);
 
   useEffect(() => {
-    if (doSave && !playing) {
+    if (doSave) {
       handleSave();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -715,6 +720,7 @@ export function Transcriber(props: IProps) {
 
   const handleAutosave = async () => {
     if (
+      !playingRef.current &&
       !saving.current &&
       transcriptionRef.current &&
       transcriptionIn.current !== undefined
@@ -757,7 +763,10 @@ export function Transcriber(props: IProps) {
     }
   };
 
-  const onPlayStatus = (newPlaying: boolean) => setPlaying(newPlaying);
+  const onPlayStatus = (newPlaying: boolean) => {
+    setPlaying(newPlaying);
+    playingRef.current = newPlaying;
+  };
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
