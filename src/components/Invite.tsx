@@ -7,6 +7,7 @@ import {
   Invitation,
   IInviteStrings,
   ISharedStrings,
+  IGroupSettingsStrings,
   Group,
   RoleNames,
   User,
@@ -33,7 +34,7 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import { related, useRole, getUserById } from '../crud';
-import { localizeRole, validateEmail } from '../utils';
+import { localizeRole, localizeRoleDetail, validateEmail } from '../utils';
 import { API_CONFIG } from '../api-variable';
 import { AddRecord } from '../model/baseModel';
 
@@ -53,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IStateProps {
   t: IInviteStrings;
   ts: ISharedStrings;
+  tg: IGroupSettingsStrings;
 }
 
 interface IRecordProps {
@@ -82,6 +84,7 @@ function Invite(props: IProps) {
   const {
     t,
     ts,
+    tg,
     visible,
     roles,
     groups,
@@ -416,10 +419,15 @@ function Invite(props: IProps) {
                   .map((option: Role) => (
                     <ListItem key={option.id} value={option.id}>
                       <ListItemText
-                        primary={localizeRole(option.attributes.roleName, ts)}
-                        secondary={t.detail.replace(
-                          '{0}',
-                          localizeRole(option.attributes.roleName, ts)
+                        primary={localizeRole(
+                          option.attributes.roleName,
+                          ts,
+                          true
+                        )}
+                        secondary={localizeRoleDetail(
+                          option.attributes.roleName,
+                          tg,
+                          true
                         )}
                       />
                     </ListItem>
@@ -467,6 +475,7 @@ function Invite(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'invite' }),
   ts: localStrings(state, { layout: 'shared' }),
+  tg: localStrings(state, { layout: 'groupSettings' }),
 });
 
 const mapRecordsToProps = {

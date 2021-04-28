@@ -38,6 +38,7 @@ export * from './execFolder';
 export * from './createFolder';
 export * from './loadBlob';
 export * from './removeExtension';
+export * from './localizeRoleDetail';
 export * from './localizeRole';
 export * from './langName';
 export * from './localizeGrid';
