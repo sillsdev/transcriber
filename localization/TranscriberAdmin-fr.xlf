@@ -1282,7 +1282,7 @@
       </unit>
       <unit id="invite.noProjects">
          <segment>
-            <source>No Projects are associated with this group.</source>
+            <source>No projects are associated with this group.</source>
             <target>Aucun projet n'est associé à ce groupe.</target>
          </segment>
       </unit>
@@ -1312,14 +1312,14 @@
       </unit>
       <unit id="invite.selectProjectRole">
          <segment>
-            <source>Select project role</source>
-            <target>Choisir le rôle du projet</target>
+            <source>Select project role.</source>
+            <target>Choisir le rôle du projet.</target>
          </segment>
       </unit>
       <unit id="invite.selectTeamRole">
          <segment>
-            <source>Select Team Role</source>
-            <target>Choisir le rôle dans l'équipe</target>
+            <source>Select team role.</source>
+            <target>Choisir le rôle dans l'équipe.</target>
          </segment>
       </unit>
       <unit id="invite.send">

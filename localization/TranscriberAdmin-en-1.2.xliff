@@ -1479,7 +1479,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="invite.noProjects">
-            <source>No Projects are associated with this group.</source>
+            <source>No projects are associated with this group.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -1521,14 +1521,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="invite.selectProjectRole">
-            <source>Select project role</source>
+            <source>Select project role.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="invite.selectTeamRole">
-            <source>Select Team Role</source>
+            <source>Select team role.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
