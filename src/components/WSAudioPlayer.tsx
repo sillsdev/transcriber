@@ -226,7 +226,8 @@ function WSAudioPlayer(props: IProps) {
   const [ready, setReadyx] = useState(false);
   const [silence, setSilence] = useState(0.5);
   const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const durationRef = useRef(0);
+  const [duration, setDurationx] = useState(0);
   const { showMessage } = useSnackBar();
   //const isMounted = useMounted('wsaudioplayer');
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
@@ -276,8 +277,7 @@ function WSAudioPlayer(props: IProps) {
       {
         key: PLAY_PAUSE_KEY,
         cb: () => {
-          console.log('here');
-          wsTogglePlay();
+          handlePlayStatus();
           return true;
         },
       },
@@ -291,7 +291,7 @@ function WSAudioPlayer(props: IProps) {
       {
         key: END_KEY,
         cb: () => {
-          wsGoto(duration);
+          wsGoto(durationRef.current);
           return true;
         },
       },
@@ -407,6 +407,10 @@ function WSAudioPlayer(props: IProps) {
     setPlaybackRatex(newVal);
   };
 
+  const setDuration = (value: number) => {
+    durationRef.current = value;
+    setDurationx(value);
+  };
   const setReady = (value: boolean) => {
     setReadyx(value);
     readyRef.current = value;
