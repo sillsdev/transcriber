@@ -142,7 +142,7 @@ interface IProps extends IStateProps {
   lastSaved?: string;
   updateData: (rows: string[][]) => void;
   paste: (rows: string[][]) => string[][];
-  action: (what: string, where: number[]) => boolean;
+  action: (what: string, where: number[]) => Promise<boolean>;
   addPassage: (i?: number, before?: boolean) => void;
   addSection: (i?: number) => void;
   lookupBook: (book: string) => string;
@@ -268,11 +268,11 @@ export function PlanSheet(props: IProps) {
   const handleActionConfirmed = () => {
     if (action != null) {
       setDeleting(true);
-      if (action(confirmAction, check)) {
+      action(confirmAction, check).then((result) => {
         setCheck(Array<number>());
-      }
+        setDeleting(false);
+      });
     }
-    setDeleting(false);
     setConfirmAction('');
   };
 
@@ -304,7 +304,6 @@ export function PlanSheet(props: IProps) {
   const numCol = [3, 5]; // Section num = col 2, Passage num = col 4
   const handleCellsChanged = (changes: Array<IChange>) => {
     if (readonly) return; //readonly
-
     const grid = data.map((row: Array<ICell>) => [...row]);
     changes.forEach(({ cell, row, col, value }: IChange) => {
       if (row !== 0 && numCol.includes(col) && value && !isNum(value)) {
@@ -568,7 +567,8 @@ export function PlanSheet(props: IProps) {
                     onTranscribe={handleTranscribe}
                     readonly={readonly}
                     canAssign={projRole === 'admin'}
-                    canDelete={projRole === 'admin' && !deleting}
+                    canDelete={projRole === 'admin'}
+                    noDeleteNow={deleting}
                   />
                 ),
                 readOnly: true,
@@ -589,7 +589,6 @@ export function PlanSheet(props: IProps) {
       }
       if (refErr && !warning) setWarning(t.refErr);
       else if (!refErr && warning) setWarning(undefined);
-
       setData(data);
     }
 
