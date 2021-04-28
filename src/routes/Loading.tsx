@@ -246,6 +246,14 @@ export function Loading(props: IProps) {
     }
   }, [doSync, importOpen, setBusy]);
 
+  const getGotoUrl = () => {
+    let fromUrl = localStorage.getItem(localUserKey(LocalKey.deeplink, memory));
+    if (fromUrl) {
+      localStorage.removeItem(localUserKey(LocalKey.deeplink, memory));
+      return fromUrl;
+    }
+    return localStorage.getItem(localUserKey(LocalKey.url, memory));
+  };
   const LoadComplete = () => {
     setCompleted(100);
     setLoadComplete(true);
@@ -260,7 +268,7 @@ export function Loading(props: IProps) {
       setView('/profile');
       return;
     }
-    let fromUrl = localStorage.getItem(localUserKey(LocalKey.url, memory));
+    let fromUrl = getGotoUrl();
     if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
     if (fromUrl) {
       const m = /^\/[workplan]+\/([0-9a-f-]+)/.exec(fromUrl);
