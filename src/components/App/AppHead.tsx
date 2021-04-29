@@ -253,11 +253,11 @@ export const AppHead = (props: IProps) => {
       <>
         {complete === 0 || complete === 100 || (
           <div className={classes.progress}>
-            <LinearProgress variant="determinate" value={complete} />
+            <LinearProgress id="prog" variant="determinate" value={complete} />
           </div>
         )}
         {(!busy && !doSave) || complete !== 0 || (
-          <LinearProgress variant="indeterminate" />
+          <LinearProgress id="busy" variant="indeterminate" />
         )}
         <Toolbar>
           {projRole !== '' && <ProjectName setView={setView} />}
