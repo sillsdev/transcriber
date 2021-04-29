@@ -3,11 +3,15 @@ import { VProject, Project, Plan, Group } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import { related, useTypeId, useOfflnProjCreate } from '.';
 import { useProjectsLoaded, localeDefault, currentDateTime } from '../utils';
+import JSONAPISource from '@orbit/jsonapi';
 
 export const useVProjectCreate = () => {
   const [memory] = useGlobal('memory');
+  const [coordinator] = useGlobal('coordinator');
   const [user] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
+  const [offlineOnly] = useGlobal('offlineOnly');
+
   const offlineProjectCreate = useOfflnProjCreate();
 
   const AddProjectLoaded = useProjectsLoaded();
@@ -105,7 +109,15 @@ export const useVProjectCreate = () => {
         id: project.id,
       }),
     ]);
-
+    //fetch the slug from the server
+    if (!offlineOnly) {
+      const remote = coordinator.getSource('remote') as JSONAPISource;
+      await memory.sync(
+        await remote.pull((q: any) =>
+          q.findRecord({ type: 'plan', id: plan.id })
+        )
+      );
+    }
     return plan.id;
   };
 };
