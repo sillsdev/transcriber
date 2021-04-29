@@ -42,11 +42,9 @@ function createAuthWindow() {
   ]);
   Menu.setApplicationMenu(menu);
 
+  // Full userAgent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
   win
-    .loadURL(authService.getAuthenticationURL(), {
-      userAgent:
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
-    })
+    .loadURL(authService.getAuthenticationURL(), { userAgent: 'Chrome' })
     .catch((error) => {
       if (error.code === 'ERR_NAME_NOT_RESOLVED') {
         // allow working offline

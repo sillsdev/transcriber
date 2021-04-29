@@ -141,7 +141,8 @@ function createAppWindow() {
   mainWindow.loadURL(
     isDev
       ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../build/index.html')}`
+      : `file://${path.join(__dirname, '../build/index.html')}`,
+    { userAgent: 'Chrome' }
   );
 
   mainWindow.webContents.on('context-menu', (event, params) => {
