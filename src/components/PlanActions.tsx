@@ -32,6 +32,7 @@ interface IProps extends IStateProps {
   isPlaying: boolean;
   canAssign: boolean;
   canDelete: boolean;
+  noDeleteNow: boolean;
   onTranscribe: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
@@ -50,6 +51,7 @@ export function PlanActions(props: IProps) {
     onDelete,
     canAssign,
     canDelete,
+    noDeleteNow,
   } = props;
   const classes = useStyles();
 
@@ -82,6 +84,7 @@ export function PlanActions(props: IProps) {
           className={classes.actionButton}
           title={t.delete}
           onClick={onDelete(rowIndex)}
+          disabled={noDeleteNow}
         >
           <DeleteIcon />
         </IconButton>
