@@ -42,12 +42,14 @@ function createAuthWindow() {
   ]);
   Menu.setApplicationMenu(menu);
 
-  win.loadURL(authService.getAuthenticationURL()).catch((error) => {
-    if (error.code === 'ERR_NAME_NOT_RESOLVED') {
-      // allow working offline
-      return workOffline();
-    }
-  });
+  win
+    .loadURL(authService.getAuthenticationURL(), { userAgent: 'Chrome' })
+    .catch((error) => {
+      if (error.code === 'ERR_NAME_NOT_RESOLVED') {
+        // allow working offline
+        return workOffline();
+      }
+    });
 
   const {
     session: { webRequest },
