@@ -204,7 +204,7 @@ export function AssignmentTable(props: IProps) {
       if (!work) {
         showMessage(t.selectRowsToRemove);
       } else {
-        setConfirmAction(t.delete + '? (' + check.length + ')');
+        setConfirmAction(t.removeSec + '? (' + check.length + ')');
       }
     }
   };
