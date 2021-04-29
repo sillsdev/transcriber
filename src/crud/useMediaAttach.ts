@@ -30,24 +30,26 @@ export const useMediaAttach = (props: IProps) => {
     var ops: Operation[] = [];
     var mediaRI = { type: 'mediafile', id: mediaId };
     var mediaRec = memory.cache.query((q) => q.findRecord(mediaRI));
-    if (!mediaRec || related(mediaRec, 'passage') === passage) return;
-    var media = getMediaInPlans(
-      [plan],
-      memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
-    ).filter((m) => related(m, 'passage') === passage);
-    ops.push(
-      tb.replaceAttribute(
-        mediaRI,
-        'versionNumber',
-        media.length > 0 ? media[0].attributes.versionNumber + 1 : 1
-      )
-    );
-    ops.push(
-      tb.replaceRelatedRecord(mediaRI, 'passage', {
-        type: 'passage',
-        id: passage,
-      })
-    );
+    if (!mediaRec) return;
+    if (related(mediaRec, 'passage') !== passage) {
+      var media = getMediaInPlans(
+        [plan],
+        memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
+      ).filter((m) => related(m, 'passage') === passage);
+      ops.push(
+        tb.replaceAttribute(
+          mediaRI,
+          'versionNumber',
+          media.length > 0 ? media[0].attributes.versionNumber + 1 : 1
+        )
+      );
+      ops.push(
+        tb.replaceRelatedRecord(mediaRI, 'passage', {
+          type: 'passage',
+          id: passage,
+        })
+      );
+    }
     ops = UpdatePassageStateOps(
       passage,
       section,
