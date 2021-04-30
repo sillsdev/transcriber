@@ -55,5 +55,6 @@ export const translateParatextError = (
       return translateParatextReferenceError(err, t);
     }
   }
+  if (err.errMsg === 'no range') return t.referenceNotFound;
   return err.errMsg;
 };

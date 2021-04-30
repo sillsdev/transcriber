@@ -2822,7 +2822,13 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="shared.save">
+     <unit id="shared.referenceNotFound">
+         <segment>
+            <source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
+            <target>Ссылка не существует в главе Паратекста, или ссылка находится в пределах большего диапазона стихов.</target>
+         </segment>
+      </unit>
+      <unit id="shared.save">
 			<segment>
 				<source>Save</source>
 				<target>Сохранить</target>

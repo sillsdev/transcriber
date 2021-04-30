@@ -607,6 +607,7 @@ const initialState = {
 			"bookNotInParatext": "Passage {0}.{1}: Paratext project does not contain book {2}.",
 			"paratextchapterSpan": "Passage {0}.{1} {2}: Passage must not span chapters.",
 			"invalidReference": "Passage {0}.{1} {2}: Invalid Reference",
+			"referenceNotFound": "Reference does not exist in Paratext chapter, or reference is within a larger verse range.",
 			"BookNotSet": "Book was not set for Section {0} Passage {1}",
 			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please log out and login again.",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",

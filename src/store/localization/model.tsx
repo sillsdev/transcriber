@@ -570,6 +570,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "bookNotInParatext": string;
     "paratextchapterSpan": string;
     "invalidReference": string;
+    "referenceNotFound": string;
     "BookNotSet": string;
     "expiredParatextToken": string;
     "expiredToken": string;

@@ -472,6 +472,7 @@ const removeOverlappingVerses = (doc: Document, p: Passage) => {
 };
 const getPassageVerses = (doc: Document, p: Passage) => {
   const existing = getExistingVerses(doc, p, true);
+  if (existing.allVerses.length === 0) throw new Error('no range');
   var transcription = '';
   existing.allVerses.forEach((v) => {
     if (isVerse(v))
