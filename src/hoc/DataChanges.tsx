@@ -66,6 +66,7 @@ export const doDataChanges = async (
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const userLastTimeKey = localUserKey(LocalKey.time, memory);
+  if (!remote) return;
   let lastTime = localStorage.getItem(userLastTimeKey);
   if (!lastTime) lastTime = currentDateTime(); // should not happen
   let nextTime = currentDateTime();
@@ -99,6 +100,7 @@ export const doDataChanges = async (
       })
     );
   };
+
   var api = API_CONFIG.host + '/api/datachanges/';
   var params;
   if (isElectron) {

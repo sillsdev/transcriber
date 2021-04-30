@@ -76,7 +76,7 @@ export function TeamDialog(props: IProps) {
   };
 
   useEffect(() => {
-    if (!name) {
+    if (isOpen && !name) {
       setName(values?.attributes?.name || '');
       if (!offlineOnly && values) teamApiPull(values.id);
     } else if (!isOpen) {
