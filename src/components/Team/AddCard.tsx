@@ -97,12 +97,14 @@ export const AddCard = (props: IProps) => {
   const [recordAudio, setRecordAudio] = React.useState(false);
 
   useEffect(() => {
+    status.canceled = false;
+  }, [status]);
+
+  useEffect(() => {
     if (status.canceled) {
       setInProgress(false);
-      //get ready for next time
-      status.canceled = false;
     }
-  }, [status, status.canceled]);
+  }, [status.canceled]);
 
   useEffect(() => {
     setLanguage(initLang);
