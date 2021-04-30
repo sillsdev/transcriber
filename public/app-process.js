@@ -149,7 +149,7 @@ function createAppWindow() {
     const menu = new Menu();
 
     // Add each spelling suggestion
-    const addSuggestion = (suggestion) =>
+    const addSuggestion = (suggestion) => () =>
       mainWindow.webContents.replaceMisspelling(suggestion);
     for (const suggestion of params.dictionarySuggestions) {
       menu.append(
