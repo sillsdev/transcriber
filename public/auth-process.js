@@ -82,9 +82,17 @@ function destroyAuthWin() {
 }
 
 function createLogoutWindow() {
-  const logoutWindow = new BrowserWindow({
-    show: false,
+  const googleLogoutWindow = new BrowserWindow({ show: false });
+
+  googleLogoutWindow.loadURL(authService.getGoogleLogOutUrl(), {
+    userAgent: 'Chrome',
   });
+
+  googleLogoutWindow.on('ready-to-show', () => {
+    googleLogoutWindow.close();
+  });
+
+  const logoutWindow = new BrowserWindow({ show: false });
 
   logoutWindow.loadURL(authService.getLogOutUrl(), { userAgent: 'Chrome' });
 

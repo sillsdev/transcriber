@@ -121,10 +121,15 @@ function getLogOutUrl() {
   return `https://${auth0Domain}/v2/logout`;
 }
 
+function getGoogleLogOutUrl() {
+  return `https://accounts.google.com/Logout`;
+}
+
 module.exports = {
   getAccessToken,
   getAuthenticationURL,
   getLogOutUrl,
+  getGoogleLogOutUrl,
   getProfile,
   loadTokens,
   logout,
