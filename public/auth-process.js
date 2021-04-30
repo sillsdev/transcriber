@@ -86,7 +86,7 @@ function createLogoutWindow() {
     show: false,
   });
 
-  logoutWindow.loadURL(authService.getLogOutUrl());
+  logoutWindow.loadURL(authService.getLogOutUrl(), { userAgent: 'Chrome' });
 
   logoutWindow.on('ready-to-show', async () => {
     logoutWindow.close();
