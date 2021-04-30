@@ -65,11 +65,12 @@ export const getParatextText = (
     );
     dispatch({ payload: response.data, type: TEXT_SUCCESS });
   } catch (err) {
-    logError(
-      Severity.info,
-      errorReporter,
-      infoMsg(err, 'Paratext Text failed')
-    );
+    if (err.errMsg !== 'no range')
+      logError(
+        Severity.info,
+        errorReporter,
+        infoMsg(err, 'Paratext Text failed')
+      );
     dispatch({ payload: errStatus(err), type: TEXT_ERROR });
   }
 };
@@ -95,11 +96,12 @@ export const getParatextTextLocal = (
         type: TEXT_ERROR,
       });
   } catch (err) {
-    logError(
-      Severity.info,
-      errorReporter,
-      infoMsg(err, 'Paratext Text failed')
-    );
+    if (err.errMsg !== 'no range')
+      logError(
+        Severity.info,
+        errorReporter,
+        infoMsg(err, 'Paratext Text failed')
+      );
     dispatch({ payload: errStatus(err), type: TEXT_ERROR });
   }
 };

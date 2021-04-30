@@ -2846,6 +2846,12 @@
             <target>Passage {0}. {1} {2}: référence non valide</target>
          </segment>
       </unit>
+      <unit id="shared.referenceNotFound">
+         <segment>
+            <source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
+            <target>La référence n'existe pas dans le chapitre Paratext, ou la référence se trouve dans une plage de versets plus large.</target>
+         </segment>
+      </unit>
       <unit id="shared.BookNotSet">
          <segment>
             <source>Book was not set for Section {0} Passage {1}</source>

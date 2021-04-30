@@ -2854,6 +2854,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.referenceNotFound">
+         <segment>
+            <source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.BookNotSet">
          <segment>
             <source>Book was not set for Section {0} Passage {1}</source>

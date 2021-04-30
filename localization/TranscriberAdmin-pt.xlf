@@ -2599,7 +2599,13 @@
             <target/>
          </segment>
       </unit>
-	   	<unit id="shared.save">
+     <unit id="shared.referenceNotFound">
+         <segment>
+            <source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
+            <target>A referência não existe no capítulo do Paratexto ou a referência está dentro de um intervalo maior de versos.</target>
+         </segment>
+      </unit>
+      <unit id="shared.save">
 	   		<segment>
 	   			<source>Save</source>
 	   			<target>Salvar</target>
