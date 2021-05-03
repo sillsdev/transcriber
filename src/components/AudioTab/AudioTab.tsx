@@ -29,7 +29,7 @@ import Uploader, { statusInit } from '../Uploader';
 import Auth from '../../auth/Auth';
 import { getMediaInPlans, usePlan, remoteIdGuid } from '../../crud';
 import { useGlobal } from 'reactn';
-import { localeDefault, useRemoteSave } from '../../utils';
+import { useRemoteSave } from '../../utils';
 import { HeadHeight } from '../../App';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
@@ -129,7 +129,7 @@ export function AudioTab(props: IProps) {
   const [, setChanged] = useGlobal('changed');
   const [, saveCompleted] = useRemoteSave();
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
-  const [isDeveloper] = useGlobal('developer');
+  const [locale] = useGlobal('lang');
   const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
@@ -245,8 +245,6 @@ export function AudioTab(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [urlOpen]);
-
-  const locale = localeDefault(isDeveloper);
 
   const onAttach = (checks: number[], attach: boolean) => {
     if (attach) {

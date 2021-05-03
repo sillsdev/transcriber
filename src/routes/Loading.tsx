@@ -125,6 +125,7 @@ export function Loading(props: IProps) {
   const [user, setUser] = useGlobal('user');
   const [, setOrganization] = useGlobal('organization');
   const [globalStore] = useGlobal();
+  const [, setLang] = useGlobal('lang');
   const [, setOrbitRetries] = useGlobal('orbitRetries');
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [, setLoadComplete] = useGlobal('loadComplete');
@@ -215,6 +216,7 @@ export function Loading(props: IProps) {
       setUser,
       setProjectsLoaded,
       setOrbitRetries,
+      setLang,
       globalStore,
       getOfflineProject
     );
@@ -291,7 +293,7 @@ export function Loading(props: IProps) {
       remote
         .pull((q) => q.findRecords('currentuser'))
         .then((tr) => {
-          const user = (tr[0].operations[0] as any).record;
+          const user = (tr[0].operations[0] as any).record as User;
           InviteUser(remote, user?.attributes?.email || 'neverhere').then(
             () => {
               setCompleted(10);

@@ -173,6 +173,7 @@ export function Profile(props: IProps) {
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
   const [user, setUser] = useGlobal('user');
+  const [, setLang] = useGlobal('lang');
   const [orgRole] = useGlobal('orgRole');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
@@ -321,6 +322,7 @@ export function Profile(props: IProps) {
           )
         // we aren't allowing them to change owner oraganization currently
       );
+      setLang(locale);
       const newRoleRec = getRoleRec(role, true);
       const mbrRec = getMbrRoleRec(
         'organization',

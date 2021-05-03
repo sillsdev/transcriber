@@ -55,6 +55,7 @@ export const fetchOrbitData = (
   setUser: (id: string) => void,
   setProjectsLoaded: (value: string[]) => void,
   setOrbitRetries: (r: number) => void,
+  setLang: (locale: string) => void,
   global: any,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
 ) => (dispatch: any) => {
@@ -66,6 +67,7 @@ export const fetchOrbitData = (
     setProjectsLoaded,
     (ex: IApiError) => dispatch(orbitError(ex)),
     setOrbitRetries,
+    setLang,
     global,
     getOfflineProject
   ).then((fr) => {

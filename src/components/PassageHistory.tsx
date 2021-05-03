@@ -15,7 +15,6 @@ import {
   ListItemText,
   Typography,
 } from '@material-ui/core';
-import moment from 'moment';
 import UserAvatar from './UserAvatar';
 import { useGlobal } from 'reactn';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -23,6 +22,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import useTodo from '../context/useTodo';
 import TranscribeAddNote from './TranscribeAddNote';
 import { UpdateRecord } from '../model/baseModel';
+import { dateOrTime } from '../utils';
 
 interface IStateProps {}
 interface IDispatchProps {}
@@ -59,6 +59,7 @@ export function PassageHistory(props: IProps) {
     []
   );
   const [user] = useGlobal('user');
+  const [locale] = useGlobal('lang');
   const [editNoteVisible, setEditNoteVisible] = useState(false);
   const historyStyle = { height: boxHeight };
   const [selectedId, setSelectedId] = React.useState('');
@@ -88,7 +89,6 @@ export function PassageHistory(props: IProps) {
       type: string,
       editable: boolean
     ) => {
-      const curZone = moment.tz.guess();
       const userFromId = (psc: PassageStateChange): User => {
         var id = related(psc, 'lastModifiedByUser');
         if (!id) {
@@ -135,9 +135,7 @@ export function PassageHistory(props: IProps) {
                 </Typography>
                 {'\u00A0\u00A0 '}
                 <Typography component="span">
-                  {moment
-                    .tz(moment.tz(psc.attributes.dateCreated, 'utc'), curZone)
-                    .calendar()}
+                  {dateOrTime(psc.attributes.dateCreated, locale)}
                 </Typography>
               </>
             }
