@@ -1,25 +1,103 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="pt" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
-      <unit id="access.accessFirst">
-         <segment>
-            <source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="access.accessSilTranscriber">
-         <segment>
-            <source>To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="access.importProject">
-         <segment>
-            <source>Import PTF File</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="activityState.approved">
+   	<unit id="access.availableOfflineUsers">
+   		<segment>
+   			<source>Available Offline Users</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="access.availableOnlineUsers">
+   		<segment>
+   			<source>Available Online Users</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="access.cancel">
+   		<segment>
+   			<source>Cancel</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="access.createUser">
+   		<segment>
+   			<source>Add a new user</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="access.goOnline">
+   		<segment>
+   			<source>Go Online</source>
+   			<target>Entre online</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.logIn">
+   		<segment>
+   			<source>Log In</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="access.logout">
+   		<segment>
+   			<source>Log Out</source>
+   			<target>Sair</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.screenTitle">
+   		<segment>
+   			<source>I want to work...</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="access.importSnapshot">
+   		<segment>
+   			<source>Import Project</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="access.withInternet">
+   		<segment>
+   			<source>With an Internet connection</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="access.withoutInternet">
+   		<segment>
+   			<source>Without an Internet connection</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="access.mustBeOnline">
+   		<segment>
+   			<source>You must be connected to the Internet to Log In!</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="access.importProject">
+   		<segment>
+   			<source>ImportProject</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="access.download">
+   		<segment>
+   			<source>Download?</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="access.downloadLater">
+   		<segment>
+   			<source>Download Later</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="access.downloadMb">
+   		<segment>
+   			<source>Download {0}MB of offline project files?</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="activityState.approved">
          <segment>
             <source>Ready to Sync</source>
             <target/>

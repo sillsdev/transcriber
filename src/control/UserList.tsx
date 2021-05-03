@@ -1,8 +1,8 @@
 import React from 'react';
 import { User } from '../model';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import { UserAvatar } from '../components/UserAvatar';
+import { List } from '@material-ui/core';
+import { UserListItem } from '.';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 
@@ -26,10 +26,6 @@ export const UserList = (props: IProps) => {
   const { users, isSelected, select, title } = props;
   const classes = useStyles();
 
-  const handleSelect = (userId: string) => () => {
-    select(userId);
-  };
-
   return (
     <>
       {title && <div className={classes.listHead}>{title}</div>}
@@ -43,16 +39,7 @@ export const UserList = (props: IProps) => {
               : 1
           )
           .map((u) => (
-            <ListItem
-              id={`user-${u.id}`}
-              key={u.id}
-              onClick={handleSelect(u.id)}
-            >
-              <ListItemIcon>
-                <UserAvatar {...props} users={users} userRec={u} />
-              </ListItemIcon>
-              <ListItemText primary={u.attributes ? u.attributes.name : ''} />
-            </ListItem>
+            <UserListItem u={u} users={users} onSelect={select} />
           ))}
       </List>
     </>

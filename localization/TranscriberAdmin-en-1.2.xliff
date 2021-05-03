@@ -30,8 +30,22 @@
       			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="access.goOnline">
+      		<source>Go Online</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="access.logIn">
       		<source>Log In</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.logout">
+      		<source>Log Out</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
