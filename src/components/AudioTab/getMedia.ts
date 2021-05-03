@@ -1,7 +1,7 @@
 import { MediaFile, Passage, Section, BookName } from '../../model';
 import { related } from '../../crud';
 import { IRow, getSection, getReference } from '.';
-import moment from 'moment';
+import { dateOrTime } from '../../utils';
 
 export interface IGetMedia {
   planName: string;
@@ -24,12 +24,6 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
     showId && data.isPassageDate
       ? passage[0]?.attributes?.dateUpdated || ''
       : f?.attributes?.dateUpdated || '';
-  if (!updateddt.endsWith('Z')) updateddt += 'Z';
-  const updated = moment(updateddt);
-  const date = updated ? updated.format('YYYY-MM-DD') : '';
-  const displayDate = updated ? updated.locale(locale).format('L') : '';
-  const displayTime = updated ? updated.locale(locale).format('LT') : '';
-  const today = moment().format('YYYY-MM-DD');
 
   return {
     planid: related(f, 'plan'),
@@ -46,7 +40,7 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
     version: f.attributes.versionNumber
       ? f.attributes.versionNumber.toString()
       : '',
-    date: date === today ? displayTime : displayDate,
+    date: dateOrTime(updateddt, locale),
   } as IRow;
 };
 

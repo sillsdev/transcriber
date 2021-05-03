@@ -62,7 +62,7 @@ import {
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
-import { logError, Severity } from '../utils';
+import { logError, Severity, dateOrTime } from '../utils';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 import AudioDownload from './AudioDownload';
 
@@ -108,8 +108,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const curZone = moment.tz.guess();
-
 interface IRow {
   id: string;
   name: string;
@@ -140,9 +138,6 @@ const getSection = (section: Section) => {
 const getReference = (passage: Passage, bookData: BookName[] = []) => {
   return passageDescription(passage, bookData);
 };
-
-const calendar = (date: string) =>
-  moment.tz(moment.tz(date, 'utc'), curZone).calendar();
 
 interface IStateProps {
   t: ITranscriptionTabStrings;
@@ -490,7 +485,7 @@ export function TranscriptionTab(props: IProps) {
             editor: sectionEditorName(section, users),
             transcriber: sectionTranscriberName(section, users),
             passages: sectionpassages.length.toString(),
-            updated: calendar(section?.attributes?.dateUpdated),
+            updated: dateOrTime(section?.attributes?.dateUpdated, lang),
             action: '',
             parentId: '',
           });
@@ -507,7 +502,7 @@ export function TranscriptionTab(props: IProps) {
               editor: '',
               transcriber: '',
               passages: '',
-              updated: calendar(passage.attributes.dateUpdated),
+              updated: dateOrTime(passage.attributes.dateUpdated, lang),
               action: passage.id,
               parentId: section.id,
             } as IRow);

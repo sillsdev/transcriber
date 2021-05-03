@@ -42,3 +42,4 @@ export * from './localizeRoleDetail';
 export * from './localizeRole';
 export * from './langName';
 export * from './localizeGrid';
+export * from './dateOrTime';
