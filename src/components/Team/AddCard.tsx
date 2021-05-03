@@ -97,13 +97,14 @@ export const AddCard = (props: IProps) => {
   const [recordAudio, setRecordAudio] = React.useState(false);
 
   useEffect(() => {
-    status.canceled = false;
-  }, [status]);
-
-  useEffect(() => {
     if (status.canceled) {
       setInProgress(false);
+      setTimeout(() => {
+        // Allow time for everyone to notice canceled
+        status.canceled = false;
+      }, 500);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status.canceled]);
 
   useEffect(() => {
