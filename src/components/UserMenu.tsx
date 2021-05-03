@@ -164,20 +164,21 @@ export function UserMenu(props: IProps) {
             <ListItemText primary={'Error'} />
           </StyledMenuItem>
         )}
-        {isElectron && (
+        {isElectron ? (
           <StyledMenuItem id="logout" onClick={handleAction('Home')}>
             <ListItemIcon>
               <ExitIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary={t.exit} />
           </StyledMenuItem>
+        ) : (
+          <StyledMenuItem id="logout" onClick={handleAction('Logout')}>
+            <ListItemIcon>
+              <ExitIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary={t.logout} />
+          </StyledMenuItem>
         )}
-        <StyledMenuItem id="logout" onClick={handleAction('Logout')}>
-          <ListItemIcon>
-            <ExitIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary={t.logout} />
-        </StyledMenuItem>
       </StyledMenu>
     </div>
   );
