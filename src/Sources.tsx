@@ -290,6 +290,7 @@ export const Sources = async (
     const locale = user?.attributes?.locale || 'en';
     setLang(locale);
     localStorage.setItem('user-id', user.id);
+    localStorage.setItem('online-user-id', user.id);
   }
   setUser(localStorage.getItem('user-id') as string);
   return { syncBuffer, syncFile, goRemote };

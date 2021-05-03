@@ -146,7 +146,7 @@ export const AppHead = (props: IProps) => {
     }
     const remote = coordinator.getSource('remote');
     if (isElectron && /Logout|Home/i.test(what)) {
-      const next = /Home/i.test(what) ? 'Access' : 'Logout';
+      const next = /Home/i.test(what) && !isOffline ? 'Access' : 'Logout';
       localStorage.removeItem('isLoggedIn');
       checkSavedFn(async () => {
         waitForIt(

@@ -126,6 +126,7 @@ export function Logout(props: IProps) {
     localStorage.removeItem('user-id');
     if (auth.accessToken) {
       localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('online-user-id');
       setIsOffline(isElectron);
       if (isElectron && coordinator?.sourceNames.includes('remote')) {
         await coordinator.deactivate();

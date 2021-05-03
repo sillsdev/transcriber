@@ -147,6 +147,8 @@ export function Access(props: IProps) {
     const selected = users.filter((u) => u.id === uId);
     if (selected.length > 0) {
       if (selected[0]?.keys?.remoteId === undefined) setOfflineOnly(true);
+      setOffline(true);
+      auth.logout();
       localStorage.setItem('user-id', selected[0].id);
       setSelectedUser(uId);
     }
@@ -273,21 +275,20 @@ export function Access(props: IProps) {
         if (result) {
           // Even tho async, this executes first b/c users takes time to load
           ipc?.invoke('get-token').then((accessToken) => {
+            const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
             setConnected(true);
-            if (offline) setOffline(false);
+            if (offline && loggedIn) setOffline(false);
             if (auth) auth.setDesktopSession(result, accessToken);
-            if (
-              selectedUser === '' &&
-              localStorage.getItem('isLoggedIn') === 'true'
-            )
-              setSelectedUser('unknownUser');
+            if (selectedUser === '' && loggedIn) setSelectedUser('unknownUser');
           });
         }
       });
     }
-    const userId = localStorage.getItem('user-id');
+    const userId = localStorage.getItem('online-user-id');
     if (isElectron && userId && !curUser) {
-      const thisUser = users.filter((u) => u.id === userId);
+      const thisUser = users.filter(
+        (u) => u.id === userId && Boolean(u?.keys?.remoteId)
+      );
       setCurUser(thisUser[0]);
       setLanguage(thisUser[0]?.attributes?.locale || 'en');
     }
@@ -300,9 +301,12 @@ export function Access(props: IProps) {
     (!isElectron && auth?.isAuthenticated()) ||
     offlineOnly ||
     (isElectron && selectedUser !== '')
-  )
+  ) {
     return <Redirect to="/loading" />;
-  if (/Logout/i.test(view)) return <Redirect to="/logout" />;
+  }
+  if (/Logout/i.test(view)) {
+    return <Redirect to="/logout" />;
+  }
 
   return (
     <div className={classes.root}>
