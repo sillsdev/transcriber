@@ -145,14 +145,16 @@ export const AppHead = (props: IProps) => {
       exitElectronApp();
     }
     const remote = coordinator.getSource('remote');
-    if (isElectron && /Logout/i.test(what)) {
+    if (isElectron && /Logout|Home/i.test(what)) {
+      const next = /Home/i.test(what) ? 'Access' : 'Logout';
+      localStorage.removeItem('isLoggedIn');
       checkSavedFn(async () => {
         waitForIt(
           'logout after user delete',
           () => !remote || !connected || remote.requestQueue.length === 0,
           () => false,
           20
-        ).then(() => setView('Logout'));
+        ).then(() => setView(next));
       });
       return;
     }
@@ -200,7 +202,10 @@ export const AppHead = (props: IProps) => {
   useEffect(() => {
     if (exitAlert)
       if (!isChanged) {
-        if (isMounted()) setView('Logout');
+        if (isMounted()) {
+          localStorage.removeItem('isLoggedIn');
+          setView('Access');
+        }
       } else if (!dosave) setDoSave(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exitAlert, isChanged, dosave]);

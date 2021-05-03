@@ -6,7 +6,9 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "availableOnlineUsers": string;
     "cancel": string;
     "createUser": string;
+    "goOnline": string;
     "logIn": string;
+    "logout": string;
     "screenTitle": string;
     "importSnapshot": string;
     "withInternet": string;

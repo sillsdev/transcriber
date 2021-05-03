@@ -28,9 +28,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="access.goOnline">
+         <segment>
+            <source>Go Online</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.logIn">
          <segment>
             <source>Log In</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.logout">
+         <segment>
+            <source>Log Out</source>
             <target/>
          </segment>
       </unit>
