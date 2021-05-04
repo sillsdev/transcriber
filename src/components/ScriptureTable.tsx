@@ -1338,6 +1338,7 @@ export function ScriptureTable(props: IProps) {
           mediaRemoteIds[0]
       );
     }
+    setUploadRow(undefined);
   };
 
   const handleLookupBook = (book: string) =>
