@@ -242,6 +242,7 @@ export function Access(props: IProps) {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('online-user-id');
     forceLogin();
     ipc?.invoke('logout');
     setView('Logout');
