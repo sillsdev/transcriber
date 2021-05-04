@@ -92,7 +92,7 @@ export const ProjButtons = (props: IProps) => {
         open={Boolean(actionMenuItem)}
         onClose={handleClose}
       >
-        {(!isElectron || !isOffline) && (
+        {(!isElectron || isOffline) && (
           <MenuItem id="projButtonImp" onClick={handleImport}>
             {t.import}
           </MenuItem>
