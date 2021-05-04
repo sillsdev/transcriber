@@ -134,6 +134,9 @@ export const AppHead = (props: IProps) => {
   const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
   const [complete] = useGlobal('progress');
 
+  const logOutView = (what: string) =>
+    /Home/i.test(what) && !isOffline ? 'Access' : 'Logout';
+
   const handleUserMenuAction = (
     what: string,
     lastpath: string,
@@ -146,7 +149,6 @@ export const AppHead = (props: IProps) => {
     }
     const remote = coordinator.getSource('remote');
     if (isElectron && /Logout|Home/i.test(what)) {
-      const next = /Home/i.test(what) && !isOffline ? 'Access' : 'Logout';
       localStorage.removeItem('isLoggedIn');
       checkSavedFn(async () => {
         waitForIt(
@@ -154,7 +156,7 @@ export const AppHead = (props: IProps) => {
           () => !remote || !connected || remote.requestQueue.length === 0,
           () => false,
           20
-        ).then(() => setView(next));
+        ).then(() => setView(logOutView(what)));
       });
       return;
     }
@@ -204,7 +206,7 @@ export const AppHead = (props: IProps) => {
       if (!isChanged) {
         if (isMounted()) {
           localStorage.removeItem('isLoggedIn');
-          setView('Access');
+          setView(logOutView('Home'));
         }
       } else if (!dosave) setDoSave(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
