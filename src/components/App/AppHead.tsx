@@ -34,6 +34,7 @@ import { usePlan } from '../../crud';
 import Busy from '../Busy';
 import StickyRedirect from '../StickyRedirect';
 import CloudOffIcon from '@material-ui/icons/CloudOff';
+import ProjectDownloadAlert from '../ProjectDownloadAlert';
 import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
 
@@ -111,7 +112,8 @@ export const AppHead = (props: IProps) => {
   const { pathname } = useLocation();
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
-  const [isOffline] = useGlobal('offline');
+  const [isOffline, setOffline] = useGlobal('offline');
+  const [, setUser] = useGlobal('user');
   const [projRole] = useGlobal('projRole');
   const [connected] = useGlobal('connected');
   const ctx = React.useContext(UnsavedContext);
@@ -133,6 +135,8 @@ export const AppHead = (props: IProps) => {
   const [latestVersion, setLatestVersion] = useGlobal('latestVersion');
   const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
   const [complete] = useGlobal('progress');
+  const [downloadAlert, setDownloadAlert] = React.useState(false);
+  const [nextView, setNextView] = React.useState('');
 
   const logOutView = (what: string) =>
     /Home/i.test(what) && !isOffline ? 'Access' : 'Logout';
@@ -149,14 +153,14 @@ export const AppHead = (props: IProps) => {
     }
     const remote = coordinator.getSource('remote');
     if (isElectron && /Logout|Home/i.test(what)) {
-      localStorage.removeItem('isLoggedIn');
+      setNextView(logOutView(what));
       checkSavedFn(async () => {
         waitForIt(
           'logout after user delete',
           () => !remote || !connected || remote.requestQueue.length === 0,
           () => false,
           20
-        ).then(() => setView(logOutView(what)));
+        ).then(() => setDownloadAlert(true));
       });
       return;
     }
@@ -184,6 +188,15 @@ export const AppHead = (props: IProps) => {
     handleUserMenuAction(what, pathname, setView, resetRequests);
   };
 
+  const downDone = () => {
+    setDownloadAlert(false);
+    setOffline(true);
+    setUser('');
+    localStorage.removeItem('user-id');
+    auth.logout();
+    setView(nextView);
+  };
+
   React.useEffect(() => {
     const handleUnload = (e: any) => {
       if (pathname === '/') return true;
@@ -206,7 +219,8 @@ export const AppHead = (props: IProps) => {
       if (!isChanged) {
         if (isMounted()) {
           localStorage.removeItem('isLoggedIn');
-          setView(logOutView('Home'));
+          setNextView(logOutView('Home'));
+          setDownloadAlert(true);
         }
       } else if (!dosave) setDoSave(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -294,6 +308,7 @@ export const AppHead = (props: IProps) => {
           {pathname !== '/' && <UserMenu action={handleUserMenu} auth={auth} />}
         </Toolbar>
         {!importexportBusy || <Busy />}
+        {downloadAlert && <ProjectDownloadAlert auth={auth} cb={downDone} />}
       </>
     </AppBar>
   );

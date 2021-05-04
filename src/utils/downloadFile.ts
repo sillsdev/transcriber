@@ -38,16 +38,16 @@ export function downloadFile(props: IProps) {
 
     req.on('error', function (err) {
       error = err;
-      reject(err)
-    })
+      reject(err);
+    });
 
     out.on('close', function () {
-      if (!error) resolve();
+      if (!error) resolve(undefined);
     });
 
     out.on('error', function (err: Error) {
-      error = err
-      reject(err)
-    })
+      error = err;
+      reject(err);
+    });
   });
 }
