@@ -208,7 +208,6 @@ export const AppHead = (props: IProps) => {
     if (exitAlert)
       if (!isChanged) {
         if (isMounted()) {
-          localStorage.removeItem('isLoggedIn');
           setDownloadAlert(true);
         }
       } else if (!dosave) setDoSave(true);
