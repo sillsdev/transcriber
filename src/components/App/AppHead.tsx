@@ -112,8 +112,7 @@ export const AppHead = (props: IProps) => {
   const { pathname } = useLocation();
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
-  const [isOffline, setOffline] = useGlobal('offline');
-  const [, setUser] = useGlobal('user');
+  const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [connected] = useGlobal('connected');
   const ctx = React.useContext(UnsavedContext);
@@ -136,10 +135,6 @@ export const AppHead = (props: IProps) => {
   const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
   const [complete] = useGlobal('progress');
   const [downloadAlert, setDownloadAlert] = React.useState(false);
-  const [nextView, setNextView] = React.useState('');
-
-  const logOutView = (what: string) =>
-    /Home/i.test(what) && !isOffline ? 'Access' : 'Logout';
 
   const handleUserMenuAction = (
     what: string,
@@ -152,8 +147,7 @@ export const AppHead = (props: IProps) => {
       exitElectronApp();
     }
     const remote = coordinator.getSource('remote');
-    if (isElectron && /Logout|Home/i.test(what)) {
-      setNextView(logOutView(what));
+    if (isElectron && /Logout/i.test(what)) {
       checkSavedFn(async () => {
         waitForIt(
           'logout after user delete',
@@ -190,11 +184,7 @@ export const AppHead = (props: IProps) => {
 
   const downDone = () => {
     setDownloadAlert(false);
-    setOffline(true);
-    setUser('');
-    localStorage.removeItem('user-id');
-    auth.logout();
-    setView(nextView);
+    setView('Logout');
   };
 
   React.useEffect(() => {
@@ -219,7 +209,6 @@ export const AppHead = (props: IProps) => {
       if (!isChanged) {
         if (isMounted()) {
           localStorage.removeItem('isLoggedIn');
-          setNextView(logOutView('Home'));
           setDownloadAlert(true);
         }
       } else if (!dosave) setDoSave(true);

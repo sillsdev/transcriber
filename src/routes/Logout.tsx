@@ -15,8 +15,6 @@ import { LogLevel } from '@orbit/coordinator';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
-const ipc = isElectron ? require('electron').ipcRenderer : null;
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -62,7 +60,6 @@ export function Logout(props: IProps) {
     localStorage.removeItem('user-id');
     if (auth.accessToken) {
       localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('online-user-id');
       setIsOffline(isElectron);
       if (isElectron && coordinator?.sourceNames.includes('remote')) {
         await coordinator.deactivate();
@@ -75,12 +72,8 @@ export function Logout(props: IProps) {
         await coordinator.activate({ logLevel: LogLevel.Warnings });
       }
       auth.logout();
-      ipc?.invoke('logout').then(() => {
-        setView('Access');
-      });
-    } else {
-      setView('Access');
     }
+    setView('Access');
   };
 
   useEffect(() => {

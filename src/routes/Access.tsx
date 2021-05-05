@@ -147,6 +147,8 @@ export function Access(props: IProps) {
     const selected = users.filter((u) => u.id === uId);
     if (selected.length > 0) {
       if (selected[0]?.keys?.remoteId === undefined) setOfflineOnly(true);
+      setOffline(true);
+      auth.logout();
       localStorage.setItem('user-id', selected[0].id);
       setSelectedUser(uId);
     }
