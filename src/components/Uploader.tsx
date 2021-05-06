@@ -205,6 +205,7 @@ export const Uploader = (props: IProps) => {
   };
 
   const uploadMedia = async (files: File[]) => {
+    successCount.current = 0;
     if (!files || files.length === 0) {
       showMessage(t.selectFiles);
       return;
@@ -212,7 +213,6 @@ export const Uploader = (props: IProps) => {
     setBusy(true);
     if (createProject) planIdRef.current = await createProject(files);
     uploadFiles(files);
-    successCount.current = 0;
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
     authRef.current = auth;
