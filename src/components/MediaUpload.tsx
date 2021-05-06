@@ -96,8 +96,8 @@ function MediaUpload(props: IProps) {
     setOpen(false);
   };
   const handleCancel = () => {
+    handleFiles(undefined);
     if (cancelMethod) {
-      handleFiles(undefined);
       cancelMethod();
     }
     setOpen(false);
