@@ -184,6 +184,7 @@ export const ProjectDownload = (props: IProps) => {
         action={() => {
           finish();
         }}
+        allowCancel={false}
       />
     </div>
   );

@@ -326,6 +326,7 @@ export const AddCard = (props: IProps) => {
         steps={steps}
         currentStep={step}
         action={cancelUpload}
+        allowCancel={true}
       />
     </>
   );
