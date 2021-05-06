@@ -135,6 +135,7 @@ export const AppHead = (props: IProps) => {
   const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
   const [complete] = useGlobal('progress');
   const [downloadAlert, setDownloadAlert] = React.useState(false);
+  const [updateTipOpen, setUpdateTipOpen] = useState(false);
 
   const handleUserMenuAction = (
     what: string,
@@ -245,6 +246,14 @@ export const AppHead = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updates, version]);
 
+  useEffect(() => {
+    console.log(pathname);
+    setUpdateTipOpen(pathname === '/');
+  }, [pathname]);
+
+  const handleUpdateOpen = () => setUpdateTipOpen(true);
+  const handleUpdateClose = () => setUpdateTipOpen(pathname === '/');
+
   const handleDownloadClick = (event: React.MouseEvent<HTMLElement>) => {
     if (shell)
       shell.openExternal('https://software.sil.org/siltranscriber/download/');
@@ -283,6 +292,10 @@ export const AppHead = (props: IProps) => {
           )}
           {latestVersion !== '' && latestVersion !== version && isElectron && (
             <Tooltip
+              arrow
+              open={updateTipOpen}
+              onOpen={handleUpdateOpen}
+              onClose={handleUpdateClose}
               title={t.updateAvailable
                 .replace('{0}', latestVersion)
                 .replace('{1}', latestRelease)}
