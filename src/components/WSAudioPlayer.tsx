@@ -291,7 +291,7 @@ function WSAudioPlayer(props: IProps) {
       {
         key: END_KEY,
         cb: () => {
-          wsGoto(durationRef.current);
+          gotoEnd();
           return true;
         },
       },
@@ -435,6 +435,14 @@ function WSAudioPlayer(props: IProps) {
   const handleGotoEv = (place: number) => () => wsGoto(place);
   const handleToggleLoop = () => () => {
     setLooping(wsLoopRegion(!looping));
+  };
+  const gotoEnd = () => {
+    wsPause();
+    setPlaying(false);
+    wsGoto(durationRef.current);
+  };
+  const handleGoToEnd = () => () => {
+    gotoEnd();
   };
   const handleSendProgress = () => {
     if (onSaveProgressRef.current) {
@@ -711,7 +719,7 @@ function WSAudioPlayer(props: IProps) {
                   <span>
                     <IconButton
                       id="wsAudioEnd"
-                      onClick={handleGotoEv(duration)}
+                      onClick={handleGoToEnd()}
                       disabled={!ready || recording}
                     >
                       <SkipNextIcon />{' '}
