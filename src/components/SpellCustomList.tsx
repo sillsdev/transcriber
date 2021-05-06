@@ -30,7 +30,7 @@ export function SpellCustomList() {
   };
 
   React.useEffect(() => {
-    ipc?.invoke('customList').then((list) => {
+    ipc?.invoke('customList').then((list: string[]) => {
       setList(list);
     });
   }, [refresh]);

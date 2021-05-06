@@ -273,10 +273,10 @@ export function Access(props: IProps) {
 
   useEffect(() => {
     if (isElectron && selectedUser === '') {
-      ipc?.invoke('get-profile').then((result) => {
+      ipc?.invoke('get-profile').then((result: any) => {
         if (result) {
           // Even tho async, this executes first b/c users takes time to load
-          ipc?.invoke('get-token').then((accessToken) => {
+          ipc?.invoke('get-token').then((accessToken: any) => {
             const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
             setConnected(true);
             if (offline && loggedIn) setOffline(false);

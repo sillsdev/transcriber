@@ -68,11 +68,11 @@ export const SpellLanguagePicker = (props: IProps) => {
   };
 
   React.useEffect(() => {
-    ipc?.invoke('availSpellLangs').then((list) => {
+    ipc?.invoke('availSpellLangs').then((list: string[]) => {
       setCodes(list);
     });
 
-    ipc?.invoke('getSpellLangs').then((list) => {
+    ipc?.invoke('getSpellLangs').then((list: string[]) => {
       setChecked(list);
     });
 
