@@ -38,10 +38,11 @@ interface IProps extends IStateProps {
   steps?: string[];
   currentStep?: number;
   action?: (choice: string) => void;
+  allowCancel?: boolean;
 }
 
 export function UploadProgress(props: IProps) {
-  const { open, title, progress, action, t } = props;
+  const { open, title, progress, action, allowCancel, t } = props;
   const { steps, currentStep } = props;
   const classes = useStyles();
   const cancelRef = React.useRef(false);
@@ -81,16 +82,18 @@ export function UploadProgress(props: IProps) {
           {cancelRef.current && <Typography>{t.canceling}</Typography>}
         </div>
       </DialogContent>
-      <DialogActions>
-        <Button
-          id="uploadProgCancel"
-          onClick={handleChoice('Cancel')}
-          color="primary"
-          disabled={cancelRef.current}
-        >
-          {t.cancel}
-        </Button>
-      </DialogActions>
+      {allowCancel && (
+        <DialogActions>
+          <Button
+            id="uploadProgCancel"
+            onClick={handleChoice('Cancel')}
+            color="primary"
+            disabled={cancelRef.current}
+          >
+            {t.cancel}
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 }

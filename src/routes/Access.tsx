@@ -287,7 +287,7 @@ export function Access(props: IProps) {
       });
     }
     const userId = localStorage.getItem('online-user-id');
-    if (isElectron && userId && !curUser) {
+    if (isElectron && userId && !curUser && auth.isAuthenticated()) {
       const thisUser = users.filter(
         (u) => u.id === userId && Boolean(u?.keys?.remoteId)
       );
