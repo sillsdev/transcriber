@@ -46,6 +46,7 @@ export const translateParatextError = (
   err: IAxiosStatus,
   t: ISharedStrings
 ): string | JSX.Element => {
+  console.log(err.errMsg);
   if (err.errStatus === 401) return t.expiredToken;
   if (err.errStatus === 500) {
     if (err.errMsg.includes('401') || err.errMsg.includes('400'))
@@ -55,6 +56,6 @@ export const translateParatextError = (
       return translateParatextReferenceError(err, t);
     }
   }
-  if (err.errMsg === 'no range') return t.referenceNotFound;
+  if (err.errMsg.includes('no range')) return t.referenceNotFound;
   return err.errMsg;
 };

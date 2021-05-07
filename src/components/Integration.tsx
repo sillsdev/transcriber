@@ -323,7 +323,8 @@ export function IntegrationPanel(props: IProps) {
       auth,
       remoteIdNum('project', project, memory.keyMap),
       errorReporter,
-      t.syncPending
+      t.syncPending,
+      t.syncComplete
     );
   };
   const handleLocalSync = async () => {

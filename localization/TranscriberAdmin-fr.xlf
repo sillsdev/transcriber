@@ -2936,6 +2936,12 @@
    			<target>Médias attachés</target>
    		</segment>
    	</unit>
+       <unit id="shared.mediaDetached">
+         <segment>
+            <source>Audio Detached</source>
+            <target>Médias Désassocier</target>
+         </segment>
+      </unit>
    	<unit id="shared.part">
    		<segment>
    			<source>Part {0}</source>

@@ -3431,6 +3431,13 @@
       			<context context-type="sourcefile">useMediaAttach.ts</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="shared.mediaDetached">
+      		<source>Audio Detached</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useMediaAttach.ts</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="shared.part">
       		<source>Part {0}</source>
       		<target/>

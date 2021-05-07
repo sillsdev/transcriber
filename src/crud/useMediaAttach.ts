@@ -91,7 +91,7 @@ export const useMediaAttach = (props: IProps) => {
       mediaRec?.attributes?.versionNumber === 1
         ? ActivityStates.NoMedia
         : ActivityStates.TranscribeReady,
-      'Media Detached',
+      ts.mediaDetached,
       user,
       tb,
       ops,
