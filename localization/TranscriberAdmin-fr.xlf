@@ -297,8 +297,8 @@
       </unit>
       <unit id="audioDownload.downloadMedia">
          <segment>
-            <source>Download Media</source>
-         	<target>Télécharger le média</target>
+            <source>Download Audio</source>
+         	<target>Télécharger le audio</target>
          </segment>
       </unit>
    	<unit id="cards.add">
@@ -357,7 +357,7 @@
       </unit>
       <unit id="cards.mediaUploaded">
          <segment>
-            <source>Media Uploaded</source>
+            <source>Audio Uploaded</source>
             <target>Fichier audio téléchargé</target>
          </segment>
       </unit>
@@ -1576,7 +1576,7 @@
       </unit>
       <unit id="main.media">
          <segment>
-            <source>Media</source>
+            <source>Audio</source>
             <target>Fichiers audio</target>
          </segment>
       </unit>
@@ -2200,8 +2200,8 @@
       </unit>
       <unit id="planTabs.media">
          <segment>
-            <source>Media</source>
-            <target>Fichiers médias</target>
+            <source>Audio</source>
+            <target>Fichiers audio</target>
          </segment>
       </unit>
       <unit id="planTabs.mediaStatus">
@@ -2926,14 +2926,14 @@
       </unit>
    	<unit id="shared.importMediaSingular">
    		<segment>
-   			<source>Import Media</source>
-   			<target>Importer des médias</target>
+   			<source>Import Audio</source>
+   			<target>Importer des audio</target>
    		</segment>
    	</unit>
    	<unit id="shared.mediaAttached">
    		<segment>
-   			<source>Media Attached</source>
-   			<target>Médias attachés</target>
+   			<source>Audio Attached</source>
+   			<target>Audio attachés</target>
    		</segment>
    	</unit>
        <unit id="shared.mediaDetached">
@@ -3529,8 +3529,8 @@
       </unit>
    	<unit id="transcriptionTab.incompletePlan">
    		<segment>
-   			<source>Plan is incomplete: attach media to passages.</source>
-   			<target>Le plan est incomplet : joindre les médias aux passages.</target>
+   			<source>Plan is incomplete: attach audio to passages.</source>
+   			<target>Le plan est incomplet : joindre l'audio aux passages.</target>
    		</segment>
    	</unit>
    	<unit id="treeChart.contributions">

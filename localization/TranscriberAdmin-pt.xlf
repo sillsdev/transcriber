@@ -291,8 +291,8 @@
       </unit>
    	<unit id="audioDownload.downloadMedia">
    		<segment>
-   			<source>Download Media</source>
-   			<target>Descarregar Media</target>
+   			<source>Download Audio</source>
+   			<target>Descarregar Áudio</target>
    		</segment>
    	</unit>
    	<unit id="cards.add">
@@ -351,8 +351,8 @@
       </unit>
       <unit id="cards.mediaUploaded">
          <segment>
-            <source>Media Uploaded</source>
-            <target/>
+            <source>Audio Uploaded</source>
+         	<target>Áudio Uploaded</target>
          </segment>
       </unit>
       <unit id="cards.members">
@@ -1497,8 +1497,8 @@
       </unit>
       <unit id="main.media">
          <segment>
-            <source>Media</source>
-            <target>Mídia</target>
+            <source>Audio</source>
+         	<target>Áudio</target>
          </segment>
       </unit>
       <unit id="main.myAccount">
@@ -1749,8 +1749,8 @@
       </unit>
       <unit id="mediaTab.mediaAssociations">
          <segment>
-            <source>Media Associations</source>
-            <target/>
+            <source>Audio Associations</source>
+         	<target>Associações de áudio</target>
          </segment>
       </unit>
       <unit id="mediaTab.noMatch">
@@ -1929,8 +1929,8 @@
       </unit>
       <unit id="mediaUpload.title">
          <segment>
-            <source>Upload Media</source>
-            <target>Carregar Mídia</target>
+            <source>Upload Audio</source>
+         	<target>Upload de áudio</target>
          </segment>
       </unit>
       <unit id="mediaUpload.upload">
@@ -2085,14 +2085,14 @@
       </unit>
       <unit id="planTabs.media">
          <segment>
-            <source>Media</source>
-            <target>Mídia</target>
+            <source>Audio</source>
+         	<target>Áudio</target>
          </segment>
       </unit>
       <unit id="planTabs.mediaStatus">
          <segment>
-            <source>{1} of {2} media files</source>
-            <target/>
+            <source>{1} of {2} audio files</source>
+         	<target>{1} de {2} arquivos de áudio</target>
          </segment>
       </unit>
       <unit id="planTabs.passageStatus">
@@ -2697,14 +2697,14 @@
       </unit>
       <unit id="shared.uploadMediaPlural">
          <segment>
-            <source>Upload Media</source>
-            <target>Carregar Mídia</target>
+            <source>Upload Audio</source>
+         	<target>Upload de áudio</target>
          </segment>
       </unit>
       <unit id="shared.uploadMediaSingular">
          <segment>
-            <source>Upload Media</source>
-            <target>Carregar Mídia</target>
+            <source>Upload Audio</source>
+         	<target>Upload de áudio</target>
          </segment>
       </unit>
       <unit id="taskItem.assign">
