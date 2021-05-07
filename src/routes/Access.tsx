@@ -106,7 +106,11 @@ export const goOnline = () => {
   ipc?.invoke('login');
   electronremote?.getCurrentWindow().close();
 };
-
+export const doLogout = () => {
+  localStorage.removeItem('online-user-id');
+  forceLogin();
+  ipc?.invoke('logout');
+};
 export function Access(props: IProps) {
   const {
     auth,
@@ -243,9 +247,7 @@ export function Access(props: IProps) {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('online-user-id');
-    forceLogin();
-    ipc?.invoke('logout');
+    doLogout();
     setView('Logout');
   };
 
@@ -298,7 +300,9 @@ export function Access(props: IProps) {
   }, [users]);
 
   if (auth?.accessToken && !auth?.emailVerified()) {
-    return <Redirect to="/emailunverified" />;
+    if (localStorage.getItem('isLoggedIn') === 'true')
+      return <Redirect to="/emailunverified" />;
+    else doLogout();
   } else if (
     (!isElectron && auth?.isAuthenticated()) ||
     offlineOnly ||
