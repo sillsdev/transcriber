@@ -622,6 +622,7 @@ const initialState = {
 			"uploadMediaSingular": "Upload Audio",
 			"importMediaSingular": "Import Audio",
 			"mediaAttached": "Audio Attached",
+			"mediaDetached": "Audio Detached",
 			"part": "Part {0}",
 		}
 	}),

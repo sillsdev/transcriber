@@ -2876,7 +2876,13 @@
 				<target>Медиа-Адаптированный</target>
 			</segment>
 		</unit>
-		<unit id="shared.part">
+        <unit id="shared.mediaDetached">
+         <segment>
+            <source>Audio Detached</source>
+            <target>Медиа Диссоциировать</target>
+         </segment>
+        </unit>
+      	<unit id="shared.part">
 			<segment>
 				<source>Part {0}</source>
 				<target>Часть {0}</target>

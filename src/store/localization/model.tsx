@@ -585,6 +585,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "uploadMediaSingular": string;
     "importMediaSingular": string;
     "mediaAttached": string;
+    "mediaDetached": string;
     "part": string;
 };
 

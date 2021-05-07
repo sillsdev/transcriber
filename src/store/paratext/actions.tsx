@@ -331,7 +331,8 @@ export const syncProject = (
   auth: Auth,
   projectId: number,
   errorReporter: any,
-  pendingmsg: string
+  pendingmsg: string,
+  successmsg: string
 ) => (dispatch: any) => {
   dispatch({ payload: pendingStatus(pendingmsg), type: SYNC_PENDING });
 
@@ -341,7 +342,7 @@ export const syncProject = (
     },
   })
     .then((response) => {
-      dispatch({ payload: response.data, type: SYNC_SUCCESS });
+      dispatch({ payload: successmsg, type: SYNC_SUCCESS });
       getCount(auth, projectId, errorReporter, '');
     })
     .catch((err) => {
