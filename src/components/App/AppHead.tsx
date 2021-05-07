@@ -34,6 +34,7 @@ import { usePlan } from '../../crud';
 import Busy from '../Busy';
 import StickyRedirect from '../StickyRedirect';
 import CloudOffIcon from '@material-ui/icons/CloudOff';
+import ProjectDownloadAlert from '../ProjectDownloadAlert';
 import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
 
@@ -80,7 +81,7 @@ const ProjectName = ({ setView }: INameProps) => {
 
   return (
     <>
-      <IconButton onClick={checkSavedAndGoHome}>
+      <IconButton id="home" onClick={checkSavedAndGoHome}>
         <HomeIcon />
       </IconButton>
       <Typography variant="h6" noWrap>
@@ -124,15 +125,17 @@ export const AppHead = (props: IProps) => {
   const [isChanged] = useGlobal('changed');
   const [exitAlert, setExitAlert] = React.useState(false);
   const [dosave, setDoSave] = useGlobal('doSave');
-  const isMounted = useMounted();
+  const isMounted = useMounted('apphead');
   const [pathDescription, setPathDescription] = React.useState('');
   const [version, setVersion] = useState('');
   const [updates] = useState(
-    isElectron && (localStorage.getItem('updates') || 'true') === 'true'
+    (localStorage.getItem('updates') || 'true') === 'true'
   );
   const [latestVersion, setLatestVersion] = useGlobal('latestVersion');
   const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
   const [complete] = useGlobal('progress');
+  const [downloadAlert, setDownloadAlert] = React.useState(false);
+  const [updateTipOpen, setUpdateTipOpen] = useState(false);
 
   const handleUserMenuAction = (
     what: string,
@@ -152,7 +155,7 @@ export const AppHead = (props: IProps) => {
           () => !remote || !connected || remote.requestQueue.length === 0,
           () => false,
           20
-        ).then(() => setView('Logout'));
+        ).then(() => setDownloadAlert(true));
       });
       return;
     }
@@ -180,10 +183,15 @@ export const AppHead = (props: IProps) => {
     handleUserMenuAction(what, pathname, setView, resetRequests);
   };
 
+  const downDone = () => {
+    setDownloadAlert(false);
+    setView('Logout');
+  };
+
   React.useEffect(() => {
     const handleUnload = (e: any) => {
       if (pathname === '/') return true;
-      if (!exitAlert && isElectron && isMounted.current) setExitAlert(true);
+      if (!exitAlert && isElectron && isMounted()) setExitAlert(true);
       if (!globalStore.enableOffsite) {
         e.preventDefault();
         e.returnValue = '';
@@ -200,7 +208,9 @@ export const AppHead = (props: IProps) => {
   useEffect(() => {
     if (exitAlert)
       if (!isChanged) {
-        if (isMounted.current) setView('Logout');
+        if (isMounted()) {
+          setDownloadAlert(true);
+        }
       } else if (!dosave) setDoSave(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exitAlert, isChanged, dosave]);
@@ -211,8 +221,8 @@ export const AppHead = (props: IProps) => {
       pathname !== '/' &&
       pathname.indexOf('team') < 0 &&
       `${pathname && pathname.indexOf('work') > 0 ? t.transcribe : t.admin} - `;
-    isMounted.current && setPathDescription(description || '');
-    isMounted.current && setVersion(require('../../../package.json').version);
+    isMounted() && setPathDescription(description || '');
+    isMounted() && setVersion(require('../../../package.json').version);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, t.admin, t.transcribe, isMounted]);
 
@@ -236,6 +246,14 @@ export const AppHead = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updates, version]);
 
+  useEffect(() => {
+    console.log(pathname);
+    setUpdateTipOpen(pathname === '/');
+  }, [pathname]);
+
+  const handleUpdateOpen = () => setUpdateTipOpen(true);
+  const handleUpdateClose = () => setUpdateTipOpen(pathname === '/');
+
   const handleDownloadClick = (event: React.MouseEvent<HTMLElement>) => {
     if (shell)
       shell.openExternal('https://software.sil.org/siltranscriber/download/');
@@ -253,8 +271,11 @@ export const AppHead = (props: IProps) => {
       <>
         {complete === 0 || complete === 100 || (
           <div className={classes.progress}>
-            <LinearProgress variant="determinate" value={complete} />
+            <LinearProgress id="prog" variant="determinate" value={complete} />
           </div>
+        )}
+        {(!busy && !doSave) || complete !== 0 || (
+          <LinearProgress id="busy" variant="indeterminate" />
         )}
         <Toolbar>
           {projRole !== '' && <ProjectName setView={setView} />}
@@ -269,13 +290,17 @@ export const AppHead = (props: IProps) => {
           {(isOffline || orbitStatus !== undefined || !connected) && (
             <CloudOffIcon className={classes.spacing} color="action" />
           )}
-          {latestVersion !== '' && latestVersion !== version && (
+          {latestVersion !== '' && latestVersion !== version && isElectron && (
             <Tooltip
+              arrow
+              open={updateTipOpen}
+              onOpen={handleUpdateOpen}
+              onClose={handleUpdateClose}
               title={t.updateAvailable
                 .replace('{0}', latestVersion)
                 .replace('{1}', latestRelease)}
             >
-              <IconButton onClick={handleDownloadClick}>
+              <IconButton id="systemUpdate" onClick={handleDownloadClick}>
                 <SystemUpdateIcon color="primary" />
               </IconButton>
             </Tooltip>
@@ -284,7 +309,7 @@ export const AppHead = (props: IProps) => {
           {pathname !== '/' && <UserMenu action={handleUserMenu} auth={auth} />}
         </Toolbar>
         {!importexportBusy || <Busy />}
-        {(!busy && !doSave) || <LinearProgress variant="indeterminate" />}
+        {downloadAlert && <ProjectDownloadAlert auth={auth} cb={downDone} />}
       </>
     </AppBar>
   );

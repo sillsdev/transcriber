@@ -20,6 +20,7 @@ import {
   ILanguagePickerStrings,
   ISharedStrings,
   IProjButtonsStrings,
+  INewProjectStrings,
   BookNameMap,
   BookName,
 } from '../model';
@@ -60,6 +61,7 @@ interface IStateProps {
   vProjectStrings: IVProjectStrings;
   pickerStrings: ILanguagePickerStrings;
   projButtonStrings: IProjButtonsStrings;
+  newProjectStrings: INewProjectStrings;
   ts: ISharedStrings;
   bookSuggestions: OptionType[];
   bookMap: BookNameMap;
@@ -74,6 +76,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   vProjectStrings: localStrings(state, { layout: 'vProject' }),
   pickerStrings: localStrings(state, { layout: 'languagePicker' }),
   projButtonStrings: localStrings(state, { layout: 'projButtons' }),
+  newProjectStrings: localStrings(state, { layout: 'newProject' }),
   ts: localStrings(state, { layout: 'shared' }),
   bookSuggestions: state.books.suggestions,
   bookMap: state.books.map,
@@ -152,6 +155,7 @@ const initState = {
   vProjectStrings: {} as IVProjectStrings,
   pickerStrings: {} as ILanguagePickerStrings,
   projButtonStrings: {} as IProjButtonsStrings,
+  newProjectStrings: {} as INewProjectStrings,
   importOpen: false,
   setImportOpen: (val: boolean) => {},
   importProject: undefined as any,
@@ -193,6 +197,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       vProjectStrings,
       pickerStrings,
       projButtonStrings,
+      newProjectStrings,
       bookSuggestions,
       bookMap,
       allBookData,
@@ -220,6 +225,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       vProjectStrings,
       pickerStrings,
       projButtonStrings,
+      newProjectStrings,
     });
     const vProjectCreate = useVProjectCreate();
     const vProjectUpdate = useVProjectUpdate();

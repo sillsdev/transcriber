@@ -19,7 +19,7 @@ export function PrivateRoute({ auth, children, ...rest }: IProps) {
         if (offline || auth.isAuthenticated()) return children;
         if (typeof location?.pathname === 'string')
           localStorage.setItem(
-            localUserKey(LocalKey.url, memory),
+            localUserKey(LocalKey.deeplink, memory),
             location?.pathname
           );
         return (

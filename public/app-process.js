@@ -1,10 +1,11 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, ipcMain, BrowserWindow, Menu, MenuItem } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const { shell } = require('electron');
 require('@electron/remote/main').initialize();
 
 let mainWindow;
+let localString = { addToDict: 'Add to dictionary' };
 
 function createAppWindow() {
   mainWindow = new BrowserWindow({
@@ -15,6 +16,7 @@ function createAppWindow() {
       webSecurity: false,
       nodeIntegration: true,
       enableRemoteModule: true,
+      spellcheck: true,
     },
   });
 
@@ -139,8 +141,40 @@ function createAppWindow() {
   mainWindow.loadURL(
     isDev
       ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../build/index.html')}`
+      : `file://${path.join(__dirname, '../build/index.html')}`,
+    { userAgent: 'Chrome' }
   );
+
+  mainWindow.webContents.on('context-menu', (event, params) => {
+    const menu = new Menu();
+
+    // Add each spelling suggestion
+    const addSuggestion = (suggestion) => () =>
+      mainWindow.webContents.replaceMisspelling(suggestion);
+    for (const suggestion of params.dictionarySuggestions) {
+      menu.append(
+        new MenuItem({
+          label: suggestion,
+          click: addSuggestion(suggestion),
+        })
+      );
+    }
+
+    // Allow users to add the misspelled word to the dictionary
+    if (params.misspelledWord) {
+      menu.append(
+        new MenuItem({
+          label: localString.addToDict,
+          click: () =>
+            mainWindow.webContents.session.addWordToSpellCheckerDictionary(
+              params.misspelledWord
+            ),
+        })
+      );
+    }
+
+    if (params.misspelledWord) menu.popup();
+  });
 
   if (isDev) {
     mainWindow.webContents.openDevTools();
@@ -148,5 +182,9 @@ function createAppWindow() {
 
   mainWindow.on('closed', () => (mainWindow = null));
 }
+
+ipcMain.handle('setAddToDict', async (event, str) => {
+  localString.addToDict = str;
+});
 
 module.exports = createAppWindow;

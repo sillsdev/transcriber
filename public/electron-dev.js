@@ -1,9 +1,10 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, session } = require('electron');
 
 const createAppWindow = require('./app-process');
 const { createAuthWindow, createLogoutWindow } = require('./auth-process');
 const authService = require('./auth-service');
 const electronExtensions = require('./electronExtensions.js');
+const fileReadProtocol = require('./file-read-protocol');
 
 //ToDo: Remove thiss and follow instructions here:
 //https://github.com/electron/electron/blob/master/docs/tutorial/security.md#electron-security-warnings
@@ -11,6 +12,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 async function showWindow() {
   electronExtensions(BrowserWindow);
+  fileReadProtocol();
   return createAppWindow();
 }
 
@@ -26,6 +28,30 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin' && !isLogingIn) {
     app.quit();
   }
+});
+
+ipcMain.handle('availSpellLangs', async () => {
+  return session.defaultSession.availableSpellCheckerLanguages;
+});
+
+ipcMain.handle('getSpellLangs', async () => {
+  return session.defaultSession.getSpellCheckerLanguages();
+});
+
+ipcMain.handle('setSpellLangs', async (event, langs) => {
+  session.defaultSession.setSpellCheckerLanguages(langs);
+});
+
+ipcMain.handle('customList', async () => {
+  return session.defaultSession.listWordsInSpellCheckerDictionary();
+});
+
+ipcMain.handle('customRemove', async (event, word) => {
+  session.defaultSession.removeWordFromSpellCheckerDictionary(word);
+});
+
+ipcMain.handle('customAdd', async (event, word) => {
+  session.defaultSession.addWordToSpellCheckerDictionary(word);
 });
 
 ipcMain.handle('temp', async () => {

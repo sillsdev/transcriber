@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import ReactPlayer from 'react-player';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
-import keycode from 'keycode';
-import moment from 'moment-timezone';
 import {
   MediaFile,
   Project,
   ActivityStates,
   Passage,
-  PassageStateChange,
   Section,
-  User,
   IState,
   Integration,
   ProjectIntegration,
@@ -26,25 +21,12 @@ import {
   Typography,
   Button,
   IconButton,
-  LinearProgress,
   TextareaAutosize,
-  Tooltip,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
 } from '@material-ui/core';
 import useTodo from '../context/useTodo';
 import PullIcon from '@material-ui/icons/GetAppOutlined';
-import SkipBackIcon from '@material-ui/icons/FastRewind';
-import PlayIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import SkipAheadIcon from '@material-ui/icons/FastForward';
 import HistoryIcon from '@material-ui/icons/History';
-import TimerIcon from '@material-ui/icons/AccessTime';
-import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
-import { Duration, formatTime } from '../control';
-import UserAvatar from './UserAvatar';
+import { formatTime, LightTooltip } from '../control';
 import TranscribeReject from './TranscribeReject';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
@@ -54,11 +36,9 @@ import {
   FontData,
   getFontData,
   UpdatePassageStateOps,
-  remoteIdGuid,
   remoteIdNum,
 } from '../crud';
 import {
-  relMouseCoords,
   insertAtCursor,
   useRemoteSave,
   logError,
@@ -67,10 +47,14 @@ import {
   getParatextDataPath,
   camel2Title,
   refMatch,
+  waitForIt,
+  loadBlob,
 } from '../utils';
+import { isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
 import { TaskItemWidth } from '../components/TaskTable';
+import { AllDone } from './AllDone';
 import { LastEdit } from '../control';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
 import { withData } from '../mods/react-orbitjs';
@@ -79,18 +63,13 @@ import * as action from '../store';
 import { bindActionCreators } from 'redux';
 import { translateParatextError } from '../utils/translateParatextError';
 import TranscribeAddNote from './TranscribeAddNote';
+import WSAudioPlayer from './WSAudioPlayer';
+import PassageHistory from './PassageHistory';
+import { HotKeyContext } from '../context/HotKeyContext';
+import Spelling from './Spelling';
 
-const MIN_SPEED = 0.5;
-const MAX_SPEED = 2.0;
-const SPEED_STEP = 0.1;
-const PLAY_PAUSE_KEY = 'ESC';
-const BACK_KEY = 'F2';
-const AHEAD_KEY = 'F3';
-const SLOWER_KEY = 'F4';
-const FASTER_KEY = 'F5';
-const HISTORY_KEY = 'F6';
-const TIMER_KEY = 'F7';
-const NON_BOX_HEIGHT = 304;
+const HISTORY_KEY = 'F7,CTRL+7';
+const NON_BOX_HEIGHT = 360;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -105,11 +84,6 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: 'hidden',
       textOverflow: 'ellipsis',
     },
-    progress: {
-      flexGrow: 1,
-      margin: theme.spacing(2),
-      cursor: 'pointer',
-    },
     row: {
       alignItems: 'center',
       whiteSpace: 'nowrap',
@@ -117,22 +91,9 @@ const useStyles = makeStyles((theme: Theme) =>
     padRow: {
       paddingTop: '16px',
     },
-    comment: {
-      paddingTop: '16px',
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      overflow: 'auto',
-    },
-    history: {
-      overflow: 'auto',
-    },
     button: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-    },
-    player: {
-      display: 'none',
     },
   })
 );
@@ -197,7 +158,6 @@ export function Transcriber(props: IProps) {
     rowData,
     index,
     transcriberStr,
-    activityStateStr,
     sharedStr,
     mediaUrl,
     fetchMediaUrl,
@@ -205,6 +165,7 @@ export function Transcriber(props: IProps) {
     selected,
     playing,
     setPlaying,
+    allDone,
   } = useTodo();
   const {
     section,
@@ -224,7 +185,7 @@ export function Transcriber(props: IProps) {
     role: '',
   };
   const classes = useStyles();
-  const [lang] = useGlobal('lang');
+
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
@@ -239,15 +200,9 @@ export function Transcriber(props: IProps) {
   const [doSave] = useGlobal('doSave');
   const [projData, setProjData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
-  const [playSpeed, setPlaySpeed] = useState(1);
-  // playedSeconds is needed to update progress bar
-  const [playedSeconds, setPlayedSeconds] = useState(0);
-  // playedSecsRef is needed for autosave
   const playedSecsRef = React.useRef<number>(0);
   const stateRef = React.useRef<string>(state);
   const [totalSeconds, setTotalSeconds] = useState(duration);
-  const [seeking, setSeeking] = useState(false);
-  const [jump] = useState(2);
   const [transcribing] = useState(
     state === ActivityStates.Transcribing ||
       state === ActivityStates.TranscribeReady
@@ -257,34 +212,65 @@ export function Transcriber(props: IProps) {
   const [width, setWidth] = useState(window.innerWidth);
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
-  const [defaultPosition, setDefaultPosition] = useState(0.0);
+  const [, setDefaultPosition] = useState(0.0);
   const { showMessage } = useSnackBar();
-  const [showHistory, setShowHistory] = useState(false);
-  const [historyContent, setHistoryContent] = useState<any[]>();
+  const showHistoryRef = useRef(false);
+  const [showHistory, setShowHistoryx] = useState(false);
   const [rejectVisible, setRejectVisible] = useState(false);
   const [addNoteVisible, setAddNoteVisible] = useState(false);
   const [hasParatextName, setHasParatextName] = useState(false);
   const [paratextProject, setParatextProject] = React.useState('');
   const [paratextIntegration, setParatextIntegration] = React.useState('');
+  const [connected] = useGlobal('connected');
+  const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator.getSource('remote');
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
   const [, saveCompleted] = useRemoteSave();
-
-  const playerRef = React.useRef<any>();
-  const progressRef = React.useRef<any>();
+  const [audioBlob, setAudioBlob] = useState<Blob>();
   const transcriptionRef = React.useRef<any>();
+  const playingRef = useRef<Boolean>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
+  const { subscribe, unsubscribe, localizeHotKey } = useContext(
+    HotKeyContext
+  ).state;
   const t = transcriberStr;
-  const ta = activityStateStr;
 
   useEffect(() => {
+    playingRef.current = playing;
+  }, [playing]);
+
+  useEffect(() => {
+    setAudioBlob(undefined);
+    loadBlob(mediaUrl, !isElectron || !offline, (b) => {
+      //not sure what this intermediary file is, but causes console errors
+      if (b.type !== 'text/html') setAudioBlob(b);
+    });
+  }, [mediaUrl, offline]);
+
+  useEffect(() => {
+    const getParatextIntegration = () => {
+      const intfind = integrations.findIndex(
+        (i) =>
+          i.attributes &&
+          i.attributes.name === (offline ? 'paratextLocal' : 'paratext') &&
+          Boolean(i.keys?.remoteId) !== offline
+      );
+      if (intfind > -1) setParatextIntegration(integrations[intfind].id);
+    };
+
+    getParatextIntegration();
+
     setDimensions();
     const handleResize = debounce(() => {
       setDimensions();
     }, 100);
+    const keys = [{ key: HISTORY_KEY, cb: handleShowHistory }];
+    keys.forEach((k) => subscribe(k.key, k.cb));
 
     window.addEventListener('resize', handleResize);
     return () => {
+      keys.forEach((k) => unsubscribe(k.key));
       window.removeEventListener('resize', handleResize);
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -393,12 +379,10 @@ export function Transcriber(props: IProps) {
   }, [project]);
 
   useEffect(() => {
-    if (passage?.id && !saving.current) {
-      loadHistory();
-    }
     const newAssigned = rowData[index]?.assigned;
     if (newAssigned !== assigned) setAssigned(newAssigned);
     stateRef.current = rowData[index]?.state;
+    focusOnTranscription();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [index, rowData]);
 
@@ -413,7 +397,6 @@ export function Transcriber(props: IProps) {
           t.replaceAttribute(oldRec[0], 'duration', Math.ceil(totalSeconds))
         );
       console.log(`update duration to ${Math.ceil(totalSeconds)}`);
-      transcriptionRef.current.firstChild.focus();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration, totalSeconds]);
@@ -428,71 +411,26 @@ export function Transcriber(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_username, paratext_usernameStatus]);
 
+  const focusOnTranscription = () => {
+    if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
+  };
   const handleChange = (e: any) => {
     setTextValue(e.target.value);
     if (!changed) setChanged(true);
   };
-  const handlePlayStatus = (status: boolean) => () => setPlaying(status);
   const loadStatus = (status: string) => {
     setFontStatus(status);
   };
-  const handleReady = () => {
-    if (defaultPosition > 0) {
-      playerRef.current.seekTo(defaultPosition);
-      setDefaultPosition(0);
-    }
-  };
-  const handleProgress = (ctrl: any) => {
-    if (!seeking) {
-      if (!totalSeconds || totalSeconds < ctrl.loadedSeconds) {
-        setTotalSeconds(Math.ceil(ctrl.loadedSeconds));
-      } else {
-        setTotalSeconds(duration);
-      }
-      setPlayedSeconds(Math.ceil(ctrl.playedSeconds));
-      playedSecsRef.current = ctrl.playedSeconds;
-    }
-  };
-  const handleMouseDown = () => {
-    setSeeking(true);
-  };
-  const handleMouseUp = (e: React.MouseEvent) => {
-    setSeeking(false);
-    if (progressRef.current && playerRef.current) {
-      const clientWidth = progressRef.current.clientWidth;
-      const { x } = relMouseCoords(e, progressRef.current);
-      playerRef.current.seekTo(x / clientWidth);
-    }
-  };
-  const handleJumpFn = (amount: number) => {
-    if (!playerRef.current) return;
-    var newPosition =
-      amount > 0
-        ? Math.min(playedSeconds + amount, totalSeconds)
-        : Math.max(playedSeconds + amount, 0);
 
-    playerRef.current.seekTo(newPosition);
+  const setShowHistory = (value: boolean) => {
+    showHistoryRef.current = value;
+    setShowHistoryx(value);
   };
-  const handleJumpEv = (amount: number) => () => handleJumpFn(amount);
-  const rnd1 = (val: number) => Math.round(val * 10) / 10;
-  const handleSlower = () => {
-    if (playSpeed > MIN_SPEED) setPlaySpeed(rnd1(playSpeed - SPEED_STEP));
-  };
-  const handleFaster = () => {
-    if (playSpeed < MAX_SPEED) setPlaySpeed(rnd1(playSpeed + SPEED_STEP));
+  const handleShowHistory = () => {
+    setShowHistory(!showHistoryRef.current);
+    return true;
   };
 
-  const handleShowHistory = () => setShowHistory(!showHistory);
-  const handleTimer = () => {
-    if (transcriptionRef.current) {
-      transcriptionRef.current.firstChild.focus();
-      const timeStamp = '(' + formatTime(playedSeconds) + ')';
-      const textArea = transcriptionRef.current
-        .firstChild as HTMLTextAreaElement;
-      insertAtCursor(textArea, timeStamp);
-      setTextValue(textArea.value);
-    }
-  };
   const handlePullParatext = () => {
     if (
       !refMatch(passage?.attributes?.reference || 'Err') ||
@@ -691,7 +629,6 @@ export function Transcriber(props: IProps) {
         .update(ops)
         .then(() => {
           //we come here before we get an error because we're non-blocking
-          loadHistory();
           saveCompleted('');
           setLastSaved(currentDateTime());
           saving.current = false;
@@ -722,11 +659,7 @@ export function Transcriber(props: IProps) {
     synced: ActivityStates.TranscribeReady,
   };
 
-  const handleReopen = async () => {
-    if (busy) {
-      showMessage(t.saving);
-      return;
-    }
+  const doReopen = async () => {
     if (previous.hasOwnProperty(state)) {
       await memory.update(
         UpdatePassageStateOps(
@@ -744,44 +677,13 @@ export function Transcriber(props: IProps) {
       setLastSaved(currentDateTime());
     }
   };
-
-  const handleKey = (e: React.KeyboardEvent) => {
-    const PlayPauseKey = keycode(PLAY_PAUSE_KEY);
-    const JumpBackKey = keycode(BACK_KEY);
-    const JumpAheadKey = keycode(AHEAD_KEY);
-    const SlowerKey = keycode(SLOWER_KEY);
-    const FasterKey = keycode(FASTER_KEY);
-    const HistoryKey = keycode(HISTORY_KEY);
-    const TimerKey = keycode(TIMER_KEY);
-    switch (e.keyCode) {
-      case PlayPauseKey:
-        setPlaying(!playing);
-        e.preventDefault();
-        return;
-      case JumpBackKey:
-        handleJumpFn(-1 * jump);
-        e.preventDefault();
-        return;
-      case JumpAheadKey:
-        handleJumpFn(jump);
-        e.preventDefault();
-        return;
-      case SlowerKey:
-        handleSlower();
-        e.preventDefault();
-        return;
-      case FasterKey:
-        handleFaster();
-        e.preventDefault();
-        return;
-      case HistoryKey:
-        handleShowHistory();
-        e.preventDefault();
-        return;
-      case TimerKey:
-        handleTimer();
-        e.preventDefault();
-    }
+  const handleReopen = async () => {
+    await waitForIt(
+      'busy before reopen',
+      () => !remote || !connected || remote.requestQueue.length === 0,
+      () => false,
+      20
+    ).then(() => doReopen());
   };
 
   const setDimensions = () => {
@@ -809,17 +711,16 @@ export function Transcriber(props: IProps) {
     //focus on player
     if (transcriptionRef.current) {
       transcriptionRef.current.firstChild.value = val.transcription;
-      transcriptionRef.current.firstChild.focus();
+      focusOnTranscription();
     }
     setLastSaved(passage.attributes?.dateUpdated || '');
     setTotalSeconds(duration);
-    if (mediaRemoteId && mediaRemoteId !== '') {
-      fetchMediaUrl(mediaRemoteId, memory, offline, auth);
-    }
+    fetchMediaUrl(mediaRemoteId, memory, offline, auth);
   };
 
   const handleAutosave = async () => {
     if (
+      !playingRef.current &&
       !saving.current &&
       transcriptionRef.current &&
       transcriptionIn.current !== undefined
@@ -849,366 +750,226 @@ export function Transcriber(props: IProps) {
   };
 
   const paperStyle = { width: width - 36 };
-  const historyStyle = { height: boxHeight };
 
-  moment.locale(lang);
-  const curZone = moment.tz.guess();
-  const userFromId = (psc: PassageStateChange): User => {
-    var id = related(psc, 'lastModifiedByUser');
-    if (!id) {
-      id = remoteIdGuid(
-        'user',
-        psc.attributes.lastModifiedBy.toString(),
-        memory.keyMap
-      );
-    }
-    if (!id) {
-      return {
-        id: '',
-        attributes: { avatarUrl: null, name: 'Unknown', familyName: '' },
-      } as any;
-    }
-    const user = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'user', id })
-    ) as User;
-    return user;
-  };
-  const nameFromId = (psc: PassageStateChange) => {
-    const user = userFromId(psc);
-    return user ? user.attributes.name : '';
-  };
-  const historyItem = (
-    psc: PassageStateChange,
-    comment: JSX.Element | string
-  ) => {
-    return (
-      <ListItem key={`${psc.id}-${comment}`}>
-        <ListItemIcon>
-          <UserAvatar {...props} userRec={userFromId(psc)} />
-        </ListItemIcon>
-        <ListItemText
-          primary={
-            <>
-              <Typography variant="h6" component="span">
-                {nameFromId(psc)}
-              </Typography>
-              {'\u00A0\u00A0 '}
-              <Typography component="span">
-                {moment
-                  .tz(moment.tz(psc.attributes.dateCreated, 'utc'), curZone)
-                  .calendar()}
-              </Typography>
-            </>
-          }
-          secondary={comment}
-        />
-      </ListItem>
-    );
-  };
-
-  const historyList = (passageStateChanges: PassageStateChange[]) => {
-    const results: Array<JSX.Element> = [];
-    let curState: ActivityStates;
-    let curComment = '';
-    passageStateChanges
-      .sort((i, j) =>
-        i.attributes.dateCreated < j.attributes.dateCreated ? -1 : 1
-      )
-      .forEach((psc) => {
-        const comment = psc.attributes.comments;
-        if (comment && comment !== '' && comment !== curComment) {
-          curComment = comment;
-          results.push(
-            historyItem(psc, <span style={{ color: 'black' }}>{comment}</span>)
-          );
-        }
-        if (psc.attributes.state !== curState) {
-          curState = psc.attributes.state;
-          results.push(historyItem(psc, ta.getString(curState)));
-        }
-      });
-    return results;
-  };
-
-  const loadHistory = async () => {
-    const recs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('passagestatechange')
-    ) as PassageStateChange[];
-    if (recs && passage?.id) {
-      const curStateChanges = recs.filter(
-        (r) => related(r, 'passage') === passage.id
-      );
-      setHistoryContent(historyList(curStateChanges));
+  const onProgress = (progress: number) => (playedSecsRef.current = progress);
+  const onSaveProgress = (progress: number) => {
+    if (transcriptionRef.current) {
+      focusOnTranscription();
+      const timeStamp = '(' + formatTime(progress) + ')';
+      const textArea = transcriptionRef.current
+        .firstChild as HTMLTextAreaElement;
+      insertAtCursor(textArea, timeStamp);
+      setTextValue(textArea.value);
     }
   };
 
+  const onPlayStatus = (newPlaying: boolean) => {
+    setPlaying(newPlaying);
+    playingRef.current = newPlaying;
+  };
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper} onKeyDown={handleKey} style={paperStyle}>
-        <Grid container direction="column">
-          <Grid container direction="row" className={classes.row}>
-            <Grid item xs={9} className={classes.description}>
-              {sectionDescription(section)}
-            </Grid>
-            <Grid item>{passageDescription(passage, allBookData)}</Grid>
-          </Grid>
-          <Grid container direction="row" className={classes.row}>
-            <Grid item>
-              <Typography>
-                <Duration seconds={playedSeconds} /> {' / '}
-                <Duration seconds={totalSeconds} />
-              </Typography>
-            </Grid>
-            <Grid item xs>
-              <div className={classes.progress}>
-                <LinearProgress
-                  ref={progressRef}
-                  variant="determinate"
-                  value={Math.min((playedSeconds * 100) / totalSeconds, 100)}
-                  onMouseDown={handleMouseDown}
-                  onMouseUp={handleMouseUp}
-                />
-              </div>
-            </Grid>
-          </Grid>
-          <Grid container direction="row" className={classes.row}>
-            {role === 'transcriber' && hasParatextName && paratextProject && (
-              <Grid item>
-                <Tooltip title={t.pullParatextTip}>
-                  <span>
-                    <IconButton
-                      onClick={handlePullParatext}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <PullIcon />{' '}
-                        <Typography>{t.pullParatextCaption}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
+      <Paper className={classes.paper} style={paperStyle}>
+        {allDone ? (
+          <AllDone />
+        ) : (
+          <Grid container direction="column">
+            <Grid container direction="row" className={classes.row}>
+              <Grid item xs={9} className={classes.description}>
+                {sectionDescription(section)}
               </Grid>
-            )}
-            <Grid item xs>
-              <Grid container justify="center">
-                <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
-                  <span>
-                    <IconButton
-                      onClick={handleJumpEv(-1 * jump)}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Tooltip
-                  title={(playing ? t.playTip : t.pauseTip).replace(
-                    '{0}',
-                    PLAY_PAUSE_KEY
-                  )}
-                >
-                  <span>
-                    <IconButton
-                      onClick={handlePlayStatus(!playing)}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        {playing ? <PauseIcon /> : <PlayIcon />}{' '}
-                        <Typography>{PLAY_PAUSE_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
-                  <span>
-                    <IconButton
-                      onClick={handleJumpEv(jump)}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
-                  <span>
-                    <IconButton
-                      onClick={handleSlower}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <FaAngleDoubleDown />{' '}
-                        <Typography>{SLOWER_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
-                  <span>
-                    <IconButton
-                      onClick={handleFaster}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <FaAngleDoubleUp />{' '}
-                        <Typography>{FASTER_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
+              <Grid item>{passageDescription(passage, allBookData)}</Grid>
+            </Grid>
+            <Grid container direction="row" className={classes.row}>
+              {role === 'transcriber' && hasParatextName && paratextProject && (
+                <Grid item>
+                  <LightTooltip title={t.pullParatextTip}>
+                    <span>
+                      <IconButton
+                        id="transcriber.pullParatext"
+                        onClick={handlePullParatext}
+                        disabled={selected === ''}
+                      >
+                        <>
+                          <PullIcon />{' '}
+                          <Typography>{t.pullParatextCaption}</Typography>
+                        </>
+                      </IconButton>
+                    </span>
+                  </LightTooltip>
+                </Grid>
+              )}
+              <Grid item xs>
+                <Grid container justify="center">
+                  <WSAudioPlayer
+                    allowRecord={false}
+                    blob={audioBlob}
+                    onProgress={onProgress}
+                    onPlayStatus={onPlayStatus}
+                    onSaveProgress={
+                      selected === '' || role === 'view'
+                        ? undefined
+                        : onSaveProgress
+                    }
+                  />
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item>
-              <Button
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleShowAddNote}
-                disabled={selected === ''}
+            <Grid item xs={12} sm container>
+              <Grid
+                ref={transcriptionRef}
+                item
+                xs={showHistory ? 6 : 12}
+                container
+                direction="column"
               >
-                {t.addNote}
-              </Button>
-
-              <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
-                <span>
-                  <IconButton
-                    onClick={handleShowHistory}
-                    disabled={historyContent === undefined}
+                {projData && !fontStatus?.endsWith('active') ? (
+                  <WebFontLoader
+                    config={projData.fontConfig}
+                    onStatus={loadStatus}
                   >
-                    <>
-                      <HistoryIcon /> <Typography>{HISTORY_KEY}</Typography>
-                    </>
-                  </IconButton>
-                </span>
-              </Tooltip>
-
-              <Tooltip title={t.timerTip.replace('{0}', TIMER_KEY)}>
-                <span>
-                  <IconButton
-                    onClick={handleTimer}
-                    disabled={selected === '' || role === 'view' || playing}
-                  >
-                    <>
-                      <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
-                    </>
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} sm container>
-            <Grid
-              ref={transcriptionRef}
-              item
-              xs={showHistory ? 6 : 12}
-              container
-              direction="column"
-            >
-              {projData && !fontStatus?.endsWith('active') ? (
-                <WebFontLoader
-                  config={projData.fontConfig}
-                  onStatus={loadStatus}
-                >
+                    <TextareaAutosize
+                      autoFocus
+                      id="transcriber.text"
+                      value={textValue}
+                      readOnly={selected === '' || role === 'view'}
+                      style={textAreaStyle}
+                      onChange={handleChange}
+                      lang={projData?.langTag || 'en'}
+                      spellCheck={projData?.spellCheck}
+                    />
+                  </WebFontLoader>
+                ) : (
                   <TextareaAutosize
+                    autoFocus
+                    id="transcriber.text"
                     value={textValue}
                     readOnly={selected === '' || role === 'view'}
                     style={textAreaStyle}
                     onChange={handleChange}
+                    lang={projData?.langTag || 'en'}
+                    spellCheck={projData?.spellCheck}
                   />
-                </WebFontLoader>
-              ) : (
-                <TextareaAutosize
-                  value={textValue}
-                  readOnly={selected === '' || role === 'view'}
-                  style={textAreaStyle}
-                  onChange={handleChange}
-                />
+                )}
+              </Grid>
+              {showHistory && (
+                <Grid item xs={6} container direction="column">
+                  <PassageHistory
+                    passageId={passage?.id}
+                    boxHeight={boxHeight}
+                  />
+                </Grid>
               )}
             </Grid>
-            {showHistory && (
-              <Grid item xs={6} container direction="column">
-                <List style={historyStyle} className={classes.history}>
-                  {historyContent}
-                </List>
+            <Grid container direction="row" className={classes.padRow}>
+              <Grid item>
+                <Button
+                  id="transcriber.showNote"
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleShowAddNote}
+                  disabled={selected === ''}
+                >
+                  {t.addNote}
+                </Button>
+
+                <LightTooltip
+                  title={t.historyTip.replace(
+                    '{0}',
+                    localizeHotKey(HISTORY_KEY)
+                  )}
+                >
+                  <span>
+                    <IconButton
+                      id="transcriber.showHistory"
+                      onClick={handleShowHistory}
+                    >
+                      <>
+                        <HistoryIcon />
+                      </>
+                    </IconButton>
+                  </span>
+                </LightTooltip>
+                {isElectron && <Spelling />}
               </Grid>
-            )}
-          </Grid>
-          <Grid container direction="row" className={classes.padRow}>
-            <Grid item xs>
-              <Grid container justify="flex-end">
-                <div>
-                  <LastEdit when={lastSaved} t={sharedStr} />
-                  {role !== 'view' ? (
-                    <>
+              <Grid item xs>
+                <Grid container justify="flex-end">
+                  <div>
+                    <LastEdit when={lastSaved} t={sharedStr} />
+                    {role !== 'view' ? (
+                      <>
+                        <Button
+                          id="transcriber.reject"
+                          variant="outlined"
+                          color="primary"
+                          className={classes.button}
+                          onClick={handleReject}
+                          disabled={selected === '' || playing}
+                        >
+                          {t.reject}
+                        </Button>
+                        <LightTooltip
+                          title={transcribing ? t.saveTip : t.saveReviewTip}
+                        >
+                          <span>
+                            <Button
+                              id="transcriber.save"
+                              variant="outlined"
+                              color="primary"
+                              className={classes.button}
+                              onClick={handleSaveButton}
+                              disabled={selected === '' || playing}
+                            >
+                              {t.save}
+                            </Button>
+                          </span>
+                        </LightTooltip>
+                        <LightTooltip
+                          title={
+                            transcribing
+                              ? t.submitTranscriptionTip
+                              : t.submitReviewTip
+                          }
+                        >
+                          <span>
+                            <Button
+                              id="transcriber.submit"
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                              onClick={handleSubmit}
+                              disabled={selected === '' || playing}
+                            >
+                              {t.submit}
+                            </Button>
+                          </span>
+                        </LightTooltip>
+                      </>
+                    ) : (
                       <Button
+                        id="transcriber.reopen"
                         variant="outlined"
                         color="primary"
                         className={classes.button}
-                        onClick={handleReject}
-                        disabled={selected === '' || playing}
-                      >
-                        {t.reject}
-                      </Button>
-                      <Tooltip
-                        title={transcribing ? t.saveTip : t.saveReviewTip}
-                      >
-                        <span>
-                          <Button
-                            variant="outlined"
-                            color="primary"
-                            className={classes.button}
-                            onClick={handleSaveButton}
-                            disabled={selected === '' || playing}
-                          >
-                            {t.save}
-                          </Button>
-                        </span>
-                      </Tooltip>
-                      <Tooltip
-                        title={
-                          transcribing
-                            ? t.submitTranscriptionTip
-                            : t.submitReviewTip
+                        onClick={handleReopen}
+                        disabled={
+                          selected === '' ||
+                          !previous.hasOwnProperty(state) ||
+                          playing ||
+                          (user !== related(section, 'transcriber') &&
+                            !/admin/i.test(projRole))
                         }
                       >
-                        <span>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            className={classes.button}
-                            onClick={handleSubmit}
-                            disabled={selected === '' || playing}
-                          >
-                            {t.submit}
-                          </Button>
-                        </span>
-                      </Tooltip>
-                    </>
-                  ) : (
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleReopen}
-                      disabled={
-                        selected === '' ||
-                        !previous.hasOwnProperty(state) ||
-                        playing ||
-                        (user !== related(section, 'transcriber') &&
-                          !/admin/i.test(projRole))
-                      }
-                    >
-                      {t.reopen}
-                    </Button>
-                  )}
-                </div>
+                        {t.reopen}
+                      </Button>
+                    )}
+                  </div>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        )}
         <TranscribeReject
           visible={rejectVisible}
           passageIn={passage}
@@ -1218,22 +979,10 @@ export function Transcriber(props: IProps) {
         <TranscribeAddNote
           visible={addNoteVisible}
           passageIn={passage}
-          editMethod={handleAddNote}
+          addMethod={handleAddNote}
           cancelMethod={handleAddNoteCancel}
         />
       </Paper>
-      <div className={classes.player}>
-        <ReactPlayer
-          ref={playerRef}
-          url={mediaUrl}
-          controls={true}
-          onEnded={handlePlayStatus(false)}
-          playbackRate={playSpeed}
-          playing={playing}
-          onProgress={handleProgress}
-          onReady={handleReady}
-        />
-      </div>
     </div>
   );
 }

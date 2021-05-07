@@ -204,7 +204,7 @@ export function AssignmentTable(props: IProps) {
       if (!work) {
         showMessage(t.selectRowsToRemove);
       } else {
-        setConfirmAction(t.delete + '? (' + check.length + ')');
+        setConfirmAction(t.removeSec + '? (' + check.length + ')');
       }
     }
   };
@@ -221,27 +221,26 @@ export function AssignmentTable(props: IProps) {
     return selected;
   };
 
-  const handleRemoveAssignmentsConfirmed = () => {
+  const RemoveOneAssignment = async (s: Section) => {
+    await memory.update((t: TransformBuilder) => [
+      t.replaceRelatedRecord({ type: 'section', id: s.id }, 'transcriber', {
+        type: 'user',
+        id: '',
+      }),
+      t.replaceRelatedRecord({ type: 'section', id: s.id }, 'editor', {
+        type: 'user',
+        id: '',
+      }),
+      ...UpdateLastModifedBy(t, s, user),
+      ...UpdateLastModifedBy(t, { type: 'plan', id: related(s, 'plan') }, user),
+    ]);
+  };
+
+  const handleRemoveAssignmentsConfirmed = async () => {
     setConfirmAction('');
     let sections = getSelectedSections();
-    sections.forEach(async (s) => {
-      await memory.update((t: TransformBuilder) => [
-        t.replaceRelatedRecord({ type: 'section', id: s.id }, 'transcriber', {
-          type: 'user',
-          id: '',
-        }),
-        t.replaceRelatedRecord({ type: 'section', id: s.id }, 'editor', {
-          type: 'user',
-          id: '',
-        }),
-        ...UpdateLastModifedBy(t, s, user),
-        ...UpdateLastModifedBy(
-          t,
-          { type: 'plan', id: related(s, 'plan') },
-          user
-        ),
-      ]);
-    });
+    for (let i = 0; i < sections.length; i += 1)
+      await RemoveOneAssignment(sections[i]);
   };
   const handleRemoveAssignmentsRefused = () => setConfirmAction('');
 
@@ -272,6 +271,7 @@ export function AssignmentTable(props: IProps) {
             {projRole === 'admin' && (
               <>
                 <Button
+                  id="assignAdd"
                   key="assign"
                   aria-label={t.assignSec}
                   variant="outlined"
@@ -283,6 +283,7 @@ export function AssignmentTable(props: IProps) {
                   {t.assignSec.replace('{0}', organizedBy)}
                 </Button>
                 <Button
+                  id="assignRem"
                   key="remove"
                   aria-label={t.removeSec}
                   variant="outlined"
@@ -297,6 +298,7 @@ export function AssignmentTable(props: IProps) {
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
             <Button
+              id="assignFilt"
               key="filter"
               aria-label={t.filter}
               variant="outlined"

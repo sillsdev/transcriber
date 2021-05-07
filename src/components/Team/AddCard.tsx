@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Card, CardContent, Button } from '@material-ui/core';
+import { Card, CardContent } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { VProject, DialogMode, OptionType } from '../../model';
 import { ProjectDialog, IProjectDialog, ProjectType } from './ProjectDialog';
@@ -13,6 +13,7 @@ import { waitForRemoteId, remoteId, useOrganizedBy } from '../../crud';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
+import NewProject from './NewProject';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,6 +49,7 @@ const initLang = {
   bcp47: 'und',
   languageName: '',
   font: '',
+  spellCheck: false,
 };
 
 interface IProps {
@@ -65,7 +67,6 @@ export const AddCard = (props: IProps) => {
     cardStrings,
     auth,
     flatAdd,
-    sharedStrings,
     vProjectStrings,
     bookSuggestions,
     teamProjects,
@@ -73,7 +74,6 @@ export const AddCard = (props: IProps) => {
   } = ctx.state;
   const t = cardStrings;
   const { showMessage } = useSnackBar();
-  const [show, setShow] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [inProgress, setInProgress] = React.useState(false);
   const [uploadVisible, setUploadVisible] = React.useState(false);
@@ -90,31 +90,56 @@ export const AddCard = (props: IProps) => {
   const [step, setStep] = React.useState(0);
   const [status] = React.useState({ ...statusInit });
   const [, setPlan] = useGlobal('plan');
+  const [pickOpen, setPickOpen] = React.useState(false);
+  const preventBoth = React.useRef(false);
   const [view, setView] = React.useState('');
+  const [forceType, setForceType] = React.useState(false);
+  const [recordAudio, setRecordAudio] = React.useState(false);
 
   useEffect(() => {
     if (status.canceled) {
       setInProgress(false);
-      //get ready for next time
-      status.canceled = false;
+      setTimeout(() => {
+        // Allow time for everyone to notice canceled
+        status.canceled = false;
+      }, 500);
     }
-  }, [status, status.canceled]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status.canceled]);
 
   useEffect(() => {
-    setType('');
     setLanguage(initLang);
     setBook(null);
   }, [uploadVisible]);
 
-  const handleShow = () => {
-    if (!open) setShow(!show);
+  const handleForceType = (type: string) => {
+    setType(type);
+    setForceType(true);
   };
 
-  const handleOpen = (val: boolean) => {
+  const handleSolutionShow = () => {
+    if (!preventBoth.current) setPickOpen(true);
+    preventBoth.current = false;
+  };
+
+  const handleSolutionHide = () => {
+    setPickOpen(false);
+    preventBoth.current = true;
+  };
+
+  const handleProject = (val: boolean) => {
     setOpen(val);
+    handleSolutionHide();
   };
 
-  const handleUpload = (team: TeamIdType) => (e: any) => {
+  const handleUpload = () => {
+    setRecordAudio(false);
+    setUploadVisible(true);
+    setInProgress(true);
+  };
+
+  const handleRecord = () => {
+    setRecordAudio(true);
     setUploadVisible(true);
     setInProgress(true);
   };
@@ -130,6 +155,8 @@ export const AddCard = (props: IProps) => {
 
   const handleClickOpen = (e: React.MouseEvent) => {
     setOpen(true);
+    setPickOpen(false);
+    preventBoth.current = true;
     e.stopPropagation();
   };
 
@@ -145,6 +172,7 @@ export const AddCard = (props: IProps) => {
       description,
       type,
       languageName,
+      spellCheck,
       rtl,
       tags,
       organizedBy,
@@ -157,6 +185,7 @@ export const AddCard = (props: IProps) => {
           type,
           language: values.bcp47,
           languageName,
+          spellCheck,
           defaultFont: values.font,
           defaultFontSize: values.fontSize,
           rtl,
@@ -180,6 +209,7 @@ export const AddCard = (props: IProps) => {
           type,
           language: language.bcp47,
           languageName: language.languageName,
+          spellCheck: language.spellCheck,
           defaultFont: language.font,
           defaultFontSize: 'large',
           rtl: false,
@@ -228,7 +258,7 @@ export const AddCard = (props: IProps) => {
     () => {
       return (
         <>
-          <ProjectType type={type} onChange={setType} />
+          {forceType || <ProjectType type={type} onChange={setType} />}
           {type.toLowerCase() === 'scripture' && (
             <BookCombobox
               value={book}
@@ -241,48 +271,41 @@ export const AddCard = (props: IProps) => {
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [bookSuggestions, language, type, book]
+    [bookSuggestions, language, type, book, forceType]
   );
 
   if (view !== '') return <StickyRedirect to={view} />;
 
   return (
     <>
-      <Card className={classes.root} onClick={handleShow}>
+      <Card
+        id={`teamAdd-${team}`}
+        className={classes.root}
+        onClick={handleSolutionShow}
+      >
         <CardContent className={classes.content}>
-          {show ? (
-            <div className={classes.buttons}>
-              <Button variant="contained" onClick={handleUpload(team)}>
-                {sharedStrings.uploadMediaPlural}
-              </Button>
-              <Button
-                variant="contained"
-                color="default"
-                onClick={handleClickOpen}
-              >
-                {t.newProject}
-              </Button>
-              {/* TODO: revisit in the future
-              <Button variant="contained" onClick={handleConnect(team)}>
-                {t.connectParatext}
-              </Button>
-              */}
-              <ProjectDialog
-                mode={DialogMode.add}
-                isOpen={open}
-                onOpen={handleOpen}
-                onCommit={handleCommit}
-                nameInUse={nameInUse}
-              />
-            </div>
-          ) : (
-            <div className={classes.icon}>
-              <AddIcon fontSize="large" />
-            </div>
-          )}
+          <div className={classes.icon}>
+            <AddIcon fontSize="large" />
+            <NewProject
+              open={pickOpen && !open && !uploadVisible}
+              onOpen={handleSolutionHide}
+              doUpload={handleUpload}
+              doRecord={handleRecord}
+              doNewProj={handleClickOpen}
+              setType={handleForceType}
+            />
+            <ProjectDialog
+              mode={DialogMode.add}
+              isOpen={open}
+              onOpen={handleProject}
+              onCommit={handleCommit}
+              nameInUse={nameInUse}
+            />
+          </div>
         </CardContent>
       </Card>
       <Uploader
+        recordAudio={recordAudio}
         auth={auth}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
@@ -294,6 +317,7 @@ export const AddCard = (props: IProps) => {
         createProject={createProject}
         finish={makeSectionsAndPassages}
         status={status}
+        defaultFilename={book?.value}
       />
       <Progress
         title={t.uploadProgress}
@@ -302,6 +326,7 @@ export const AddCard = (props: IProps) => {
         steps={steps}
         currentStep={step}
         action={cancelUpload}
+        allowCancel={true}
       />
     </>
   );

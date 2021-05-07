@@ -125,6 +125,7 @@ export function Loading(props: IProps) {
   const [user, setUser] = useGlobal('user');
   const [, setOrganization] = useGlobal('organization');
   const [globalStore] = useGlobal();
+  const [, setLang] = useGlobal('lang');
   const [, setOrbitRetries] = useGlobal('orbitRetries');
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [, setLoadComplete] = useGlobal('loadComplete');
@@ -215,6 +216,7 @@ export function Loading(props: IProps) {
       setUser,
       setProjectsLoaded,
       setOrbitRetries,
+      setLang,
       globalStore,
       getOfflineProject
     );
@@ -246,6 +248,14 @@ export function Loading(props: IProps) {
     }
   }, [doSync, importOpen, setBusy]);
 
+  const getGotoUrl = () => {
+    let fromUrl = localStorage.getItem(localUserKey(LocalKey.deeplink, memory));
+    if (fromUrl) {
+      localStorage.removeItem(localUserKey(LocalKey.deeplink, memory));
+      return fromUrl;
+    }
+    return localStorage.getItem(localUserKey(LocalKey.url, memory));
+  };
   const LoadComplete = () => {
     setCompleted(100);
     setLoadComplete(true);
@@ -260,7 +270,7 @@ export function Loading(props: IProps) {
       setView('/profile');
       return;
     }
-    let fromUrl = localStorage.getItem(localUserKey(LocalKey.url, memory));
+    let fromUrl = getGotoUrl();
     if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
     if (fromUrl) {
       const m = /^\/[workplan]+\/([0-9a-f-]+)/.exec(fromUrl);
@@ -283,7 +293,7 @@ export function Loading(props: IProps) {
       remote
         .pull((q) => q.findRecords('currentuser'))
         .then((tr) => {
-          const user = (tr[0].operations[0] as any).record;
+          const user = (tr[0].operations[0] as any).record as User;
           InviteUser(remote, user?.attributes?.email || 'neverhere').then(
             () => {
               setCompleted(10);

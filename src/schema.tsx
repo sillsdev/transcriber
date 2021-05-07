@@ -201,6 +201,7 @@ const schemaDefinition: SchemaSettings = {
         defaultFont: { type: 'string' },
         defaultFontSize: { type: 'string' },
         rtl: { type: 'boolean' },
+        spellCheck: { type: 'boolean' },
         allowClaim: { type: 'boolean' },
         isPublic: { type: 'boolean' },
         dateCreated: { type: 'date-time' },

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IState, ITreeChartStrings } from '../model';
+import { IGridStrings, IState, ITreeChartStrings } from '../model';
 import Paper from '@material-ui/core/Paper';
 import { RowDetailState } from '@devexpress/dx-react-grid';
 import { scaleBand } from '@devexpress/dx-chart-core';
@@ -26,6 +26,7 @@ import {
 import { Typography } from '@material-ui/core';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
+import { localizeGrid } from '../utils';
 
 const detailContainerStyles = (theme: Theme) =>
   createStyles({
@@ -219,14 +220,15 @@ interface IStateProps {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'treeChart' }),
+  tg: localStrings(state, { layout: 'grid' }),
 });
 
 const NoDataCell = connect(mapStateToProps)(
-  ({ value, style, t, ...restProps }: any) => {
+  ({ value, style, tg, ...restProps }: any) => {
     return (
       <Table.Cell {...restProps} style={{ ...style }} value>
         <Typography variant="h6" align="center">
-          {t.noData}
+          {tg.noData}
         </Typography>
       </Table.Cell>
     );
@@ -257,6 +259,7 @@ const useStyles = makeStyles({
 });
 interface IStateProps {
   t: ITreeChartStrings;
+  tg: IGridStrings;
 }
 interface IProps extends IStateProps {
   rows: Array<IPlanRow>;
@@ -265,16 +268,20 @@ interface IProps extends IStateProps {
 }
 
 export const TreeChart = (props: IProps) => {
-  const { t, rows, data1, data2 } = props;
+  const { t, tg, rows, data1, data2 } = props;
   const classes = useStyles();
   const [columns] = React.useState([{ name: 'plan', title: 'Plan' }]);
+  const { localizeTableMessages } = localizeGrid(tg);
 
   return (
     <Paper id="TreeChart" className={classes.root}>
       <Grid rows={rows} columns={columns}>
         {/* <RowDetailState defaultExpandedRowIds={[1]} /> */}
         <RowDetailState expandedRowIds={rows.map((v, i) => i)} />
-        <Table noDataCellComponent={NoDataCell} />
+        <Table
+          noDataCellComponent={NoDataCell}
+          messages={localizeTableMessages}
+        />
         <TableHeaderRow />
         <TableRowDetail
           contentComponent={gridDetailContainer(t, data1, data2)}

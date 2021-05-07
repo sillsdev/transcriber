@@ -1,14 +1,16 @@
-const { app, ipcMain } = require('electron');
+const { app, ipcMain, session } = require('electron');
 
 const createAppWindow = require('./app-process');
 const { createAuthWindow, createLogoutWindow } = require('./auth-process');
 const authService = require('./auth-service');
+const fileReadProtocol = require('./file-read-protocol');
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
 }
 
 async function showWindow() {
+  fileReadProtocol();
   return createAppWindow();
 }
 
@@ -31,6 +33,30 @@ app.on('window-all-closed', () => {
 //     createWindow();
 //   }
 // });
+
+ipcMain.handle('availSpellLangs', async () => {
+  return session.defaultSession.availableSpellCheckerLanguages;
+});
+
+ipcMain.handle('getSpellLangs', async () => {
+  return session.defaultSession.getSpellCheckerLanguages();
+});
+
+ipcMain.handle('setSpellLangs', async (event, langs) => {
+  session.defaultSession.setSpellCheckerLanguages(langs);
+});
+
+ipcMain.handle('customList', async () => {
+  return session.defaultSession.listWordsInSpellCheckerDictionary();
+});
+
+ipcMain.handle('customRemove', async (event, word) => {
+  session.defaultSession.removeWordFromSpellCheckerDictionary(word);
+});
+
+ipcMain.handle('customAdd', async (event, word) => {
+  session.defaultSession.addWordToSpellCheckerDictionary(word);
+});
 
 ipcMain.handle('temp', async () => {
   return app.getPath('temp');

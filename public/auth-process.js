@@ -42,12 +42,15 @@ function createAuthWindow() {
   ]);
   Menu.setApplicationMenu(menu);
 
-  win.loadURL(authService.getAuthenticationURL()).catch((error) => {
-    if (error.code === 'ERR_NAME_NOT_RESOLVED') {
-      // allow working offline
-      return workOffline();
-    }
-  });
+  // Full userAgent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
+  win
+    .loadURL(authService.getAuthenticationURL(), { userAgent: 'Chrome' })
+    .catch((error) => {
+      if (error.code === 'ERR_NAME_NOT_RESOLVED') {
+        // allow working offline
+        return workOffline();
+      }
+    });
 
   const {
     session: { webRequest },
@@ -79,11 +82,19 @@ function destroyAuthWin() {
 }
 
 function createLogoutWindow() {
-  const logoutWindow = new BrowserWindow({
-    show: false,
+  const googleLogoutWindow = new BrowserWindow({ show: false });
+
+  googleLogoutWindow.loadURL(authService.getGoogleLogOutUrl(), {
+    userAgent: 'Chrome',
   });
 
-  logoutWindow.loadURL(authService.getLogOutUrl());
+  googleLogoutWindow.on('ready-to-show', () => {
+    googleLogoutWindow.close();
+  });
+
+  const logoutWindow = new BrowserWindow({ show: false });
+
+  logoutWindow.loadURL(authService.getLogOutUrl(), { userAgent: 'Chrome' });
 
   logoutWindow.on('ready-to-show', async () => {
     logoutWindow.close();

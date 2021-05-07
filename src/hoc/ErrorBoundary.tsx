@@ -130,6 +130,7 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
             <div className={classes.modalActions}>
               {orbitStatus !== 401 && (
                 <Button
+                  id="errCont"
                   variant="contained"
                   className={classes.button}
                   onClick={this.continue}
@@ -138,6 +139,7 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
                 </Button>
               )}
               <Button
+                id="errLogout"
                 variant="contained"
                 className={classes.button}
                 onClick={this.logout}

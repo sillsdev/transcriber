@@ -1,18 +1,21 @@
 import Memory from '@orbit/memory';
 import { isElectron } from '../api-variable';
-import { remoteId } from '../crud';
 
 export enum LocalKey {
   time = 'lastTime',
   url = 'fromUrl',
+  deeplink = 'deeplink',
 }
 
 export const localUserKey = (id: LocalKey, memory: Memory) => {
-  var userRemoteId: string;
-  if (isElectron && id === LocalKey.time) userRemoteId = 'electron';
-  else {
-    const userId = localStorage.getItem('user-id') || '';
-    userRemoteId = remoteId('user', userId, memory.keyMap) || userId;
+  var userId = '';
+  switch (id) {
+    case LocalKey.time:
+      if (isElectron) userId = 'electron';
+      break;
+    case LocalKey.deeplink:
+      userId = 'any';
   }
-  return `${userRemoteId}-${id}`;
+  if (!userId) userId = localStorage.getItem('user-id') || '';
+  return `${userId}-${id}`;
 };

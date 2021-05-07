@@ -32,6 +32,7 @@ interface IProps extends IStateProps {
   noResponse: () => {};
   yesResponse: () => {};
   noOnLeft?: boolean;
+  isDelete?: boolean;
 }
 
 function AlertDialog(props: IProps) {
@@ -44,6 +45,7 @@ function AlertDialog(props: IProps) {
     yesResponse,
     noResponse,
     noOnLeft,
+    isDelete,
     t,
   } = props;
   const classes = useStyles();
@@ -73,24 +75,25 @@ function AlertDialog(props: IProps) {
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        aria-labelledby="alertDlg"
+        aria-describedby="alertDesc"
       >
-        <DialogTitle id="alert-dialog-title">
-          {title || t.confirmation}
+        <DialogTitle id="alertDlg">
+          {title || (isDelete ? t.delete : t.confirmation)}
         </DialogTitle>
         <DialogContent>
-          <DialogContent id="alert-dialog-jsx">{jsx}</DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContent id="alertJsx">{jsx}</DialogContent>
+          <DialogContentText id="alertDesc">
             {text || t.areYouSure}
           </DialogContentText>
         </DialogContent>
         <DialogActions className={clsx({ [classes.actions]: noOnLeft })}>
-          <Button onClick={handleNo} color="primary">
+          <Button id="alertNo" onClick={handleNo} color="primary">
             {no || t.no}
           </Button>
           {yes !== '' && (
             <Button
+              id="alertYes"
               onClick={handleYes}
               variant="contained"
               color="primary"

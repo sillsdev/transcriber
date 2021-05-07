@@ -11,7 +11,6 @@ import {
   TextField,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import { TeamContext } from '../context/TeamContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,6 +43,7 @@ interface IProps extends IStateProps {
   options: string[];
   onChange: (option: string) => void;
   addOption?: (option: string) => boolean;
+  otherLabel?: string;
   decorations?: IDecorations;
   required?: boolean;
 }
@@ -58,10 +58,9 @@ const OptionCtrl = (props: IProps) => {
     tc,
     decorations,
     required,
+    otherLabel,
   } = props;
   const classes = useStyles();
-  const ctx = React.useContext(TeamContext);
-  const t = ctx.state.vProjectStrings;
   const [other, setOther] = React.useState<string | null>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,7 +130,7 @@ const OptionCtrl = (props: IProps) => {
                 id="other-option"
                 margin="dense"
                 className={classes.otherBox}
-                label={t.other}
+                label={otherLabel}
                 value={other}
                 onChange={handleOther}
                 onKeyDown={handleKeyDown}

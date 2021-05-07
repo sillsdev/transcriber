@@ -14,7 +14,7 @@ import moment from 'moment';
 import { VProject, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import ProjectMenu from './ProjectMenu';
-import { BigDialog } from '../../hoc/BigDialog';
+import BigDialog from '../../hoc/BigDialog';
 import IntegrationTab from '../Integration';
 import ExportTab from '../TranscriptionTab';
 import Visualize from '../Visualize';
@@ -194,6 +194,7 @@ export const ProjectCard = (props: IProps) => {
       description,
       type,
       languageName,
+      spellCheck,
       rtl,
       tags,
       organizedBy,
@@ -207,6 +208,7 @@ export const ProjectCard = (props: IProps) => {
         type,
         language: values.bcp47,
         languageName,
+        spellCheck,
         defaultFont: values.font,
         defaultFontSize: values.fontSize,
         rtl,
@@ -236,6 +238,7 @@ export const ProjectCard = (props: IProps) => {
       book: '',
       bcp47: attr.language,
       languageName: attr.languageName || '',
+      spellCheck: attr.spellCheck || false,
       font: attr.defaultFont || '',
       rtl: attr.rtl,
       fontSize: attr.defaultFontSize || '',
@@ -253,7 +256,11 @@ export const ProjectCard = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <Card className={classes.card} onClick={handleSelect(project)}>
+      <Card
+        id={`card-${project.id}`}
+        className={classes.card}
+        onClick={handleSelect(project)}
+      >
         <CardContent className={classes.content}>
           <div className={classes.firstLine}>
             <Typography variant="h6" component="h2" className={classes.name}>

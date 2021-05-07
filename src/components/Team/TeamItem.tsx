@@ -5,7 +5,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import GroupIcon from '@material-ui/icons/Group';
 import { Organization, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
-import { BigDialog, BigDialogBp } from '../../hoc/BigDialog';
+import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
 import GroupTabs from '../GroupTabs';
 import { ProjectCard, AddCard } from '.';
 import TeamDialog from './TeamDialog';
@@ -109,13 +109,21 @@ export const TeamItem = (props: IProps) => {
         </Typography>
         <div>
           {canModify(offline, team, offlineOnly) && (
-            <Button variant="contained" onClick={handleMembers(team)}>
+            <Button
+              id="teamMembers"
+              variant="contained"
+              onClick={handleMembers(team)}
+            >
               {t.members.replace('{0}', teamMembers(team.id).toString())}
             </Button>
           )}
           {' \u00A0'}
           {canModify(offline, team, offlineOnly) && (
-            <Button variant="contained" onClick={handleSettings(team)}>
+            <Button
+              id="teamSettings"
+              variant="contained"
+              onClick={handleSettings(team)}
+            >
               {t.settings}
             </Button>
           )}

@@ -15,7 +15,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AppBar, Tabs, Tab } from '@material-ui/core';
 import grey from '@material-ui/core/colors/grey';
 import ScriptureTable from '../components/ScriptureTable';
-import MediaTab from '../components/MediaTab';
+import AudioTab from '../components/AudioTab/AudioTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import StickyRedirect from './StickyRedirect';
@@ -27,9 +27,8 @@ import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
 export enum tabs {
   sectionPassage = 0,
   media = 1,
-  associate = 2,
-  assignment = 3,
-  transcription = 4,
+  assignment = 2,
+  transcription = 3,
 }
 export const TabHeight = 52;
 export const ActionHeight = 38;
@@ -158,12 +157,15 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           variant="scrollable"
           scrollButtons="auto"
         >
-          <Tab label={t.sectionsPassages.replace('{0}', organizedBy)} />
-          <Tab label={t.media} />
           <Tab
+            id="secPass"
+            label={t.sectionsPassages.replace('{0}', organizedBy)}
+          />
+          <Tab
+            id="audio"
             label={
               <Title
-                text={t.associations}
+                text={t.media}
                 status={statusMessage(
                   t.mediaStatus,
                   attached.length,
@@ -171,9 +173,9 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
                 )}
               />
             }
-            disabled={isOffline && !offlineOnly}
           />
           <Tab
+            id="assignments"
             label={
               <Title
                 text={t.assignments}
@@ -187,6 +189,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
             disabled={isOffline && !offlineOnly}
           />
           <Tab
+            id="transcriptions"
             label={
               <Title
                 text={t.transcriptions}
@@ -231,16 +234,9 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           </>
         )}
         {tab === tabs.media && (
-          <MediaTab
+          <AudioTab
             {...props}
             projectplans={plans.filter((p) => p.id === plan)}
-          />
-        )}
-        {tab === tabs.associate && (
-          <MediaTab
-            {...props}
-            projectplans={plans.filter((p) => p.id === plan)}
-            attachTool={true}
           />
         )}
         {tab === tabs.assignment && <AssignmentTable {...props} />}

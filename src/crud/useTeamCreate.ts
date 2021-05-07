@@ -15,6 +15,7 @@ import Coordinator from '@orbit/coordinator';
 import { TransformBuilder, RecordIdentity } from '@orbit/data';
 import { setDefaultProj, allUsersRec } from '.';
 import { AddRecord } from '../model/baseModel';
+import { useTeamApiPull } from './useTeamApiPull';
 
 interface IStateProps {
   ts: ISharedStrings;
@@ -30,29 +31,11 @@ export const useTeamCreate = (props: IProps) => {
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
   const [, setConnected] = useGlobal('connected');
+  const [, offlineOnly] = useGlobal('offlineOnly');
   const { showMessage } = useSnackBar();
   const { setProjectType } = useProjectType();
   const { getRoleRec } = useRole();
-
-  // const ReloadOrgTables = async (coordinator: Coordinator) => {
-  //   const memory = coordinator.getSource('memory') as Memory;
-  //   const remote = coordinator.getSource('remote') as JSONAPISource;
-  //   await remote
-  //     .pull((q) => q.findRecords('organization'))
-  //     .then((transform) => memory.sync(transform));
-  //   await remote
-  //     .pull((q) => q.findRecords('organizationmembership'))
-  //     .then((transform) => memory.sync(transform));
-  //   await remote
-  //     .pull((q) => q.findRecords('group'))
-  //     .then((transform) => memory.sync(transform));
-  //   await remote
-  //     .pull((q) => q.findRecords('groupmembership'))
-  //     .then((transform) => memory.sync(transform));
-  //   await remote
-  //     .pull((q) => q.findRecords('user'))
-  //     .then((transform) => memory.sync(transform));
-  // };
+  const teamApiPull = useTeamApiPull();
 
   const OrgRelated = async (
     coordinator: Coordinator,
@@ -116,6 +99,7 @@ export const useTeamCreate = (props: IProps) => {
       ...AddRecord(t, orgRec, user, memory),
       t.replaceRelatedRecord(orgRec, 'owner', userRecId),
     ]);
+    if (!offlineOnly) await teamApiPull(orgRec.id); // Update slug value
     await OrgRelated(coordinator, orgRec, userRecId);
 
     setOrganization(orgRec.id);
@@ -136,7 +120,7 @@ export const useTeamCreate = (props: IProps) => {
       type: 'organization',
       attributes: {
         name,
-        slug: cleanFileName(name),
+        slug: cleanFileName(name), // real slugs are created by API
         description,
         websiteUrl,
         logoUrl,

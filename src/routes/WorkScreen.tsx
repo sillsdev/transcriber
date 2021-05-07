@@ -15,6 +15,7 @@ import Transcriber from '../components/Transcriber';
 import StickyRedirect from '../components/StickyRedirect';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { useProjectType, useRole, useUrlContext } from '../crud';
+import { forceLogin, localUserKey, LocalKey } from '../utils';
 import Auth from '../auth/Auth';
 import { HeadHeight } from '../App';
 
@@ -69,6 +70,7 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const setUrlContext = useUrlContext();
   const [projRole] = useGlobal('projRole');
   const [projType] = useGlobal('projType');
+  const [memory] = useGlobal('memory');
   const { setProjectType } = useProjectType();
   const [topFilter, setTopFilter] = React.useState(false);
   const { setMyProjRole } = useRole();
@@ -95,7 +97,13 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
 
   React.useEffect(() => {
     const projectId = setUrlContext(prjId);
-    if (projRole === '') setMyProjRole(projectId);
+    if (projRole === '')
+      if (setMyProjRole(projectId) === '') {
+        // If after proj role set there is none, force reload
+        localStorage.removeItem(localUserKey(LocalKey.url, memory));
+        forceLogin();
+        setView('/logout');
+      }
     if (projType === '') setProjectType(projectId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

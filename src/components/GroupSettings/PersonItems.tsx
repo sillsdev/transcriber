@@ -53,13 +53,14 @@ function PersonItems(props: IProps) {
     <>
       {users
         .filter(
-          u => u.attributes && ids.map(id => id.user).indexOf(u.id) !== -1
+          (u) => u.attributes && ids.map((id) => id.user).indexOf(u.id) !== -1
         )
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-        .map(u => (
+        .map((u) => (
           <ListItem
+            key={u.id}
             disabled={
-              !detail && !ids.filter(id => id.user === u.id)[0].canDelete
+              !detail && !ids.filter((id) => id.user === u.id)[0].canDelete
             }
           >
             <ListItemAvatar className={classes.avatar}>
@@ -71,10 +72,11 @@ function PersonItems(props: IProps) {
             />
             {!detail &&
               orgRole === 'admin' &&
-              ids.filter(id => id.user === u.id)[0].canDelete &&
+              ids.filter((id) => id.user === u.id)[0].canDelete &&
               !allUsers && (
                 <ListItemSecondaryAction>
                   <IconButton
+                    id={`persDel-${u.id}`}
                     edge="end"
                     aria-label="Delete"
                     disabled={allUsers}
@@ -86,12 +88,12 @@ function PersonItems(props: IProps) {
               )}
             {!detail &&
               orgRole === 'admin' &&
-              (!ids.filter(id => id.user === u.id)[0].canDelete ||
+              (!ids.filter((id) => id.user === u.id)[0].canDelete ||
                 allUsers) && (
                 <ListItemSecondaryAction>
                   <Tooltip
                     title={
-                      !ids.filter(id => id.user === u.id)[0].canDelete
+                      !ids.filter((id) => id.user === u.id)[0].canDelete
                         ? noDeleteInfo || ''
                         : noDeleteAllUsersInfo || ''
                     }

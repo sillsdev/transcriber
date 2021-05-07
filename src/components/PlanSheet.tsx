@@ -16,9 +16,8 @@ import Confirm from './AlertDialog';
 import BookSelect from './BookSelect';
 import { ProjButtons, LastEdit } from '../control';
 import 'react-datasheet/lib/react-datasheet.css';
-import { Online, refMatch } from '../utils';
+import { refMatch } from '../utils';
 import { useOrganizedBy } from '../crud';
-import { useInterval } from '../utils/useInterval';
 import { useRemoteSave } from '../utils/useRemoteSave';
 import TaskAvatar from './TaskAvatar';
 import MediaPlayer from './MediaPlayer';
@@ -28,6 +27,7 @@ import { IRowInfo } from './ScriptureTable';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import PlanActions from './PlanActions';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
+import PlanAudioActions from './PlanAudioActions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -142,7 +142,7 @@ interface IProps extends IStateProps {
   lastSaved?: string;
   updateData: (rows: string[][]) => void;
   paste: (rows: string[][]) => string[][];
-  action: (what: string, where: number[]) => boolean;
+  action: (what: string, where: number[]) => Promise<boolean>;
   addPassage: (i?: number, before?: boolean) => void;
   addSection: (i?: number) => void;
   lookupBook: (book: string) => string;
@@ -151,6 +151,7 @@ interface IProps extends IStateProps {
   onTranscribe: (i: number) => void;
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
+  onRecord: (i: number) => void;
   auth: Auth;
 }
 
@@ -178,7 +179,7 @@ export function PlanSheet(props: IProps) {
   } = props;
   const classes = useStyles();
   const ctx = React.useContext(PlanContext);
-  const { projButtonStr } = ctx.state;
+  const { projButtonStr, connected, readonly } = ctx.state;
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [global] = useGlobal();
@@ -196,7 +197,6 @@ export function PlanSheet(props: IProps) {
   const suggestionRef = useRef<Array<OptionType>>();
   const saveTimer = React.useRef<NodeJS.Timeout>();
   const [doSave] = useGlobal('doSave');
-  const [connected, setConnected] = useGlobal('connected');
   const [changed, setChanged] = useGlobal('changed');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [pasting, setPasting] = useState(false);
@@ -209,10 +209,8 @@ export function PlanSheet(props: IProps) {
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
   const [startSave] = useRemoteSave();
   const [srcMediaId, setSrcMediaId] = useState('');
-  const [readonly, setReadOnly] = useState(
-    (isOffline && !offlineOnly) || projRole !== 'admin'
-  );
   const [warning, setWarning] = useState<string>();
+  const [deleting, setDeleting] = useState(false);
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = bookCol > 0 ? 6 : 5;
@@ -234,7 +232,7 @@ export function PlanSheet(props: IProps) {
     return data
       .filter((row, rowIndex) => rowIndex > 0)
       .map((row) =>
-        row.filter((row, rowIndex) => rowIndex > 1).map((col) => col.value)
+        row.filter((row, rowIndex) => rowIndex > 2).map((col) => col.value)
       );
   };
 
@@ -269,9 +267,11 @@ export function PlanSheet(props: IProps) {
 
   const handleActionConfirmed = () => {
     if (action != null) {
-      if (action(confirmAction, check)) {
+      setDeleting(true);
+      action(confirmAction, check).then((result) => {
         setCheck(Array<number>());
-      }
+        setDeleting(false);
+      });
     }
     setConfirmAction('');
   };
@@ -301,10 +301,9 @@ export function PlanSheet(props: IProps) {
     );
   };
 
-  const numCol = [2, 4]; // Section num = col 2, Passage num = col 4
+  const numCol = [3, 5]; // Section num = col 2, Passage num = col 4
   const handleCellsChanged = (changes: Array<IChange>) => {
     if (readonly) return; //readonly
-
     const grid = data.map((row: Array<ICell>) => [...row]);
     changes.forEach(({ cell, row, col, value }: IChange) => {
       if (row !== 0 && numCol.includes(col) && value && !isNum(value)) {
@@ -423,17 +422,6 @@ export function PlanSheet(props: IProps) {
     }, 1000 * 30);
   };
 
-  const tryOnline = () =>
-    Online((result) => {
-      setConnected(result);
-    }, auth);
-
-  useEffect(() => {
-    const newValue = (isOffline && !offlineOnly) || projRole !== 'admin';
-    if (readonly !== newValue) setReadOnly(newValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projRole]);
-
   useEffect(() => {
     if (changed) {
       if (saveTimer.current === undefined) startSaveTimer();
@@ -471,6 +459,11 @@ export function PlanSheet(props: IProps) {
             value: <TranscriberIcon />,
             readOnly: true,
           } as ICell,
+          {
+            value: t.audio,
+            readOnly: true,
+            width: projRole === 'admin' ? 50 : 20,
+          } as ICell,
         ].concat(
           columns.map((col) => {
             return { ...col, readOnly: true };
@@ -498,6 +491,39 @@ export function PlanSheet(props: IProps) {
               className: section ? 'set' + (passage ? 'p' : '') : 'pass',
             } as ICell,
           ]
+            .concat(
+              passage
+                ? [
+                    {
+                      value: (
+                        <PlanAudioActions
+                          {...props}
+                          rowIndex={rowIndex}
+                          isPassage={passage}
+                          mediaId={rowInfo[rowIndex].mediaId}
+                          onPlayStatus={handlePlayStatus}
+                          online={connected || offlineOnly}
+                          readonly={readonly}
+                          isPlaying={
+                            rowInfo[rowIndex].mediaId !== '' &&
+                            srcMediaId === rowInfo[rowIndex].mediaId
+                          }
+                        />
+                      ),
+                      readOnly: true,
+                      className: section
+                        ? 'set' + (passage ? 'p' : ' ')
+                        : 'pass',
+                    } as ICell,
+                  ]
+                : [
+                    {
+                      value: <></>,
+                      readOnly: true,
+                      className: 'set',
+                    } as ICell,
+                  ]
+            )
             .concat(
               row.slice(0, LastCol).map((e, cellIndex) => {
                 return cellIndex === bookCol && passage
@@ -537,17 +563,12 @@ export function PlanSheet(props: IProps) {
                     isSection={section}
                     isPassage={passage}
                     mediaId={rowInfo[rowIndex].mediaId}
-                    onPlayStatus={handlePlayStatus}
                     onDelete={handleConfirmDelete}
                     onTranscribe={handleTranscribe}
-                    online={connected || offlineOnly}
                     readonly={readonly}
                     canAssign={projRole === 'admin'}
                     canDelete={projRole === 'admin'}
-                    isPlaying={
-                      rowInfo[rowIndex].mediaId !== '' &&
-                      srcMediaId === rowInfo[rowIndex].mediaId
-                    }
+                    noDeleteNow={deleting}
                   />
                 ),
                 readOnly: true,
@@ -568,7 +589,6 @@ export function PlanSheet(props: IProps) {
       }
       if (refErr && !warning) setWarning(t.refErr);
       else if (!refErr && warning) setWarning(undefined);
-
       setData(data);
     }
 
@@ -607,12 +627,9 @@ export function PlanSheet(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doSave, busy, savingGrid]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => tryOnline(), []);
-
-  //do this every 30 seconds to warn they can't save
-  useInterval(() => tryOnline(), 1000 * 30);
-
+  const playEnded = () => {
+    setSrcMediaId('');
+  };
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
@@ -621,6 +638,7 @@ export function PlanSheet(props: IProps) {
             <div className={classes.actions}>
               <>
                 <Button
+                  id="planSheetAddSec"
                   key="addSection"
                   aria-label={t.addSection}
                   variant="outlined"
@@ -634,6 +652,7 @@ export function PlanSheet(props: IProps) {
                 </Button>
                 {!inlinePassages && (
                   <Button
+                    id="planSheetAddPass"
                     key="addPassage"
                     aria-label={t.addPassage}
                     variant="outlined"
@@ -647,6 +666,7 @@ export function PlanSheet(props: IProps) {
                   </Button>
                 )}
                 <Button
+                  id="planSheetImp"
                   key="importExcel"
                   aria-label={t.tablePaste}
                   variant="outlined"
@@ -658,6 +678,7 @@ export function PlanSheet(props: IProps) {
                   {t.tablePaste}
                 </Button>
                 <Button
+                  id="planSheetReseq"
                   key="resequence"
                   aria-label={t.resequence}
                   variant="outlined"
@@ -678,6 +699,7 @@ export function PlanSheet(props: IProps) {
                 <div className={classes.grow}>{'\u00A0'}</div>
                 <LastEdit when={lastSaved} t={ts} />
                 <Button
+                  id="planSheetSave"
                   key="save"
                   aria-label={t.save}
                   variant="contained"
@@ -717,13 +739,13 @@ export function PlanSheet(props: IProps) {
           }
         >
           {position.i > 0 && isSection(rowData[position.i - 1]) && (
-            <MenuItem onClick={handleSectionAbove}>
+            <MenuItem id="secAbove" onClick={handleSectionAbove}>
               {t.sectionAbove.replace('{0}', organizedBy)}
             </MenuItem>
           )}
 
           {!inlinePassages && (
-            <MenuItem onClick={handlePassageBelow}>
+            <MenuItem id="passBelow" onClick={handlePassageBelow}>
               {t.passageBelow.replace(
                 '{0}',
                 position.i > 0
@@ -745,7 +767,7 @@ export function PlanSheet(props: IProps) {
       ) : (
         <></>
       )}
-      <MediaPlayer auth={auth} srcMediaId={srcMediaId} />
+      <MediaPlayer auth={auth} srcMediaId={srcMediaId} onEnded={playEnded} />
     </div>
   );
 }

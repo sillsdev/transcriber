@@ -7,6 +7,7 @@ import {
   Invitation,
   IInviteStrings,
   ISharedStrings,
+  IGroupSettingsStrings,
   Group,
   RoleNames,
   User,
@@ -33,7 +34,7 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import { related, useRole, getUserById } from '../crud';
-import { validateEmail } from '../utils';
+import { localizeRole, localizeRoleDetail, validateEmail } from '../utils';
 import { API_CONFIG } from '../api-variable';
 import { AddRecord } from '../model/baseModel';
 
@@ -53,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IStateProps {
   t: IInviteStrings;
   ts: ISharedStrings;
+  tg: IGroupSettingsStrings;
 }
 
 interface IRecordProps {
@@ -82,6 +84,7 @@ function Invite(props: IProps) {
   const {
     t,
     ts,
+    tg,
     visible,
     roles,
     groups,
@@ -303,10 +306,10 @@ function Invite(props: IProps) {
       <Dialog
         open={open}
         onClose={handleCancel}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby="inviteDlg"
         maxWidth="lg"
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id="inviteDlg">
           {inviteIn ? t.editInvite : t.addInvite}
         </DialogTitle>
         <DialogContent>
@@ -377,7 +380,7 @@ function Invite(props: IProps) {
                   )
                   .map((option: Role) => (
                     <MenuItem key={option.id} value={option.id}>
-                      {t.getString(option.attributes.roleName.toLowerCase())}
+                      {localizeRole(option.attributes.roleName, ts)}
                     </MenuItem>
                   ))}
               </TextField>
@@ -416,11 +419,15 @@ function Invite(props: IProps) {
                   .map((option: Role) => (
                     <ListItem key={option.id} value={option.id}>
                       <ListItemText
-                        primary={ts.getString(
-                          option.attributes.roleName.toLowerCase()
+                        primary={localizeRole(
+                          option.attributes.roleName,
+                          ts,
+                          true
                         )}
-                        secondary={t.getString(
-                          option.attributes.roleName.toLowerCase() + 'Detail'
+                        secondary={localizeRoleDetail(
+                          option.attributes.roleName,
+                          tg,
+                          true
                         )}
                       />
                     </ListItem>
@@ -437,10 +444,16 @@ function Invite(props: IProps) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel} variant="outlined" color="primary">
+          <Button
+            id="inviteCancel"
+            onClick={handleCancel}
+            variant="outlined"
+            color="primary"
+          >
             {t.cancel}
           </Button>
           <Button
+            id="inviteSave"
             onClick={handleAddOrSave}
             variant="contained"
             color="primary"
@@ -462,6 +475,7 @@ function Invite(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'invite' }),
   ts: localStrings(state, { layout: 'shared' }),
+  tg: localStrings(state, { layout: 'groupSettings' }),
 });
 
 const mapRecordsToProps = {

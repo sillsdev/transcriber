@@ -133,6 +133,8 @@ const initState = {
   rowData: Array<IRowData>(),
   expandedGroups: Array<string>(),
   playItem: '',
+  allDone: false,
+  setAllDone: (val: boolean) => {},
   allBookData: Array<BookName>(),
   taskItemStr: {} as ITaskItemStrings,
   activityStateStr: {} as IActivityStateStrings,
@@ -216,6 +218,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const setPlaying = (playing: boolean) => {
       setState((state: ICtxState) => {
         return { ...state, playing };
+      });
+    };
+
+    const setAllDone = (val: boolean) => {
+      setState((state: ICtxState) => {
+        return { ...state, allDone: val };
       });
     };
 
@@ -475,6 +483,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       if (role !== '') {
         selectTasks(true, rowList, playItem); // assigned
         selectTasks(false, rowList, playItem); // unassigned
+        if (rowList.length === 0) {
+          setAllDone(true);
+        }
         // ALL OTHERS
         addTasks('', 'view', rowList, false, playItem);
       }
@@ -588,7 +599,14 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     return (
       <TranscriberContext.Provider
         value={{
-          state: { ...state, hasUrl, mediaUrl, setSelected, setPlaying },
+          state: {
+            ...state,
+            hasUrl,
+            mediaUrl,
+            setSelected,
+            setPlaying,
+            setAllDone,
+          },
           setState,
         }}
       >

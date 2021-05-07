@@ -86,6 +86,7 @@ export const useSnackBar = () => {
         message={<span id="message-id">{message}</span>}
         action={[
           <IconButton
+            id="msgClose"
             key="close"
             aria-label="Close"
             color="inherit"

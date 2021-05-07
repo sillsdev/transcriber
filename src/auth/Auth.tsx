@@ -87,9 +87,6 @@ export default class Auth {
   }
 
   setDesktopSession(idTokenPayload: any, accessToken: any) {
-    // Set isLoggedIn flag in localStorage
-    localStorage.setItem('isLoggedIn', 'true');
-
     // Set the time that the access token will expire at
     this.accessToken = accessToken;
     this.profile = idTokenPayload;

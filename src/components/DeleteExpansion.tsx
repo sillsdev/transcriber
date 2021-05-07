@@ -93,6 +93,7 @@ export function DeleteExpansion(props: IProps) {
             <div className={classes.grow}>{'\u00A0'}</div>
             <div className={classes.deletePos}>
               <Button
+                id="deleteExpand"
                 key="delete"
                 color="secondary"
                 aria-label={t.delete}

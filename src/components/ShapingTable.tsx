@@ -44,9 +44,11 @@ import {
   TableSummaryRow,
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import { IState, IShapingTableStrings } from '../model';
-import localStrings from '../selector/localize';
+import { IGridStrings, IState } from '../model';
+import { useEffect } from 'reactn';
+import { localizeGrid } from '../utils';
 import { connect } from 'react-redux';
+import localStrings from '../selector/localize';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -136,8 +138,11 @@ const SizeTypeProvider: React.ComponentType<DataTypeProviderProps> = (
   />
 );
 interface IStateProps {
-  t: IShapingTableStrings;
+  tg: IGridStrings;
 }
+const mapStateToProps = (state: IState): IStateProps => ({
+  tg: localStrings(state, { layout: 'grid' }),
+});
 interface IProps extends IStateProps {
   columns: Array<Column>;
   columnWidths?: Array<TableColumnWidthInfo>;
@@ -165,9 +170,9 @@ interface IProps extends IStateProps {
   summaryItems?: SummaryItem[];
 }
 
-export function ShapingTable(props: IProps) {
+function ShapingTable(props: IProps) {
   const {
-    t,
+    tg,
     columns,
     columnWidths,
     columnFormatting,
@@ -193,7 +198,16 @@ export function ShapingTable(props: IProps) {
     bandHeader,
     summaryItems,
   } = props;
+
   const [myGroups, setMyGroups] = React.useState<string[]>();
+  const [currentFilters, setCurrentFilters] = React.useState(filters || []);
+  const {
+    localizeFilter,
+    localizeGroupingPanel,
+    localizePaging,
+    localizeRowSummary,
+    localizeTableMessages,
+  } = localizeGrid(tg);
 
   const handleExpGrp = (groups: string[]) => {
     setMyGroups(groups);
@@ -205,17 +219,12 @@ export function ShapingTable(props: IProps) {
     }
   };
   const noRow = () => <></>;
-  const noCols = () => <span>{t.noColumns}</span>;
-  const tableMessages = {
-    noData: t.noData,
-  };
-  const tableSummaryRowMessages = {
-    avg: t.avg,
-    count: t.count,
-    max: t.max,
-    min: t.min,
-    sum: t.sum,
-  };
+  const noCols = () => <span>{tg.noColumns}</span>;
+
+  useEffect(() => {
+    setCurrentFilters(filters || []);
+  }, [filters]);
+
   return (
     <Grid rows={rows} columns={columns}>
       {onFiltersChange /* when set filter looses focus on typing */ ? (
@@ -227,7 +236,8 @@ export function ShapingTable(props: IProps) {
       ) : (
         <FilteringState
           columnExtensions={filteringEnabled || []}
-          defaultFilters={filters || []}
+          filters={currentFilters}
+          onFiltersChange={setCurrentFilters}
         />
       )}
 
@@ -264,35 +274,41 @@ export function ShapingTable(props: IProps) {
 
       {dataCell && noDataCell && !columnFormatting ? (
         <Table
-          messages={tableMessages}
+          messages={localizeTableMessages}
           cellComponent={dataCell}
           noDataCellComponent={noDataCell}
         />
       ) : dataCell && !noDataCell && !columnFormatting ? (
-        <Table messages={tableMessages} cellComponent={dataCell} />
+        <Table messages={localizeTableMessages} cellComponent={dataCell} />
       ) : !dataCell && noDataCell && !columnFormatting ? (
-        <Table messages={tableMessages} noDataCellComponent={noDataCell} />
+        <Table
+          messages={localizeTableMessages}
+          noDataCellComponent={noDataCell}
+        />
       ) : dataCell && noDataCell && columnFormatting ? (
         <Table
-          messages={tableMessages}
+          messages={localizeTableMessages}
           cellComponent={dataCell}
           noDataCellComponent={noDataCell}
           columnExtensions={columnFormatting}
         />
       ) : dataCell && !noDataCell && columnFormatting ? (
         <Table
-          messages={tableMessages}
+          messages={localizeTableMessages}
           cellComponent={dataCell}
           columnExtensions={columnFormatting}
         />
       ) : !dataCell && noDataCell && columnFormatting ? (
         <Table
-          messages={tableMessages}
+          messages={localizeTableMessages}
           noDataCellComponent={noDataCell}
           columnExtensions={columnFormatting}
         />
       ) : !dataCell && !noDataCell && columnFormatting ? (
-        <Table messages={tableMessages} columnExtensions={columnFormatting} />
+        <Table
+          messages={localizeTableMessages}
+          columnExtensions={columnFormatting}
+        />
       ) : (
         <Table />
       )}
@@ -318,18 +334,26 @@ export function ShapingTable(props: IProps) {
       <TableHeaderRow showSortingControls={true} />
 
       {shaping !== null && !shaping ? (
-        <TableFilterRow showFilterSelector={true} rowComponent={noRow} />
+        <TableFilterRow
+          showFilterSelector={true}
+          messages={localizeFilter}
+          rowComponent={noRow}
+        />
       ) : filterCell ? (
-        <TableFilterRow showFilterSelector={true} cellComponent={filterCell} />
+        <TableFilterRow
+          showFilterSelector={true}
+          messages={localizeFilter}
+          cellComponent={filterCell}
+        />
       ) : (
-        <TableFilterRow showFilterSelector={true} />
+        <TableFilterRow showFilterSelector={true} messages={localizeFilter} />
       )}
       {pageSizes && pageSizes.length > 0 && (
-        <PagingPanel pageSizes={pageSizes} />
+        <PagingPanel pageSizes={pageSizes} messages={localizePaging} />
       )}
 
       <TableGroupRow />
-      {summaryItems && <TableSummaryRow messages={tableSummaryRowMessages} />}
+      {summaryItems && <TableSummaryRow messages={localizeRowSummary} />}
       {bandHeader && <TableBandHeader columnBands={bandHeader} />}
       {(shaping !== null && !shaping) || expandedGroups ? (
         <Toolbar rootComponent={noRow} />
@@ -340,6 +364,7 @@ export function ShapingTable(props: IProps) {
         <GroupingPanel
           showSortingControls={true}
           emptyMessageComponent={noRow}
+          messages={localizeGroupingPanel}
         />
       ) : (
         !expandedGroups && <GroupingPanel showSortingControls={true} />
@@ -347,8 +372,4 @@ export function ShapingTable(props: IProps) {
     </Grid>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'shapingTable' }),
-});
-
 export default (connect(mapStateToProps)(ShapingTable) as any) as any;

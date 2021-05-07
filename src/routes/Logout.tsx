@@ -1,17 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-  IState,
-  MediaFile,
-  IAccessStrings,
-  OfflineProject,
-  Project,
-} from '../model';
-import localStrings from '../selector/localize';
 import * as action from '../store';
-import { withData } from '../mods/react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -19,16 +9,11 @@ import Typography from '@material-ui/core/Typography';
 import Auth from '../auth/Auth';
 import { isElectron } from '../api-variable';
 import { Redirect } from 'react-router-dom';
-import { dataPath, PathType, localeDefault } from '../utils';
+import { localeDefault } from '../utils';
 import { useGlobal } from 'reactn';
-import Alert from '../components/AlertDialog';
-import ProjectDownload from '../components/ProjectDownload';
-import { related, useProjectPlans, getMediaInPlans } from '../crud';
 import { LogLevel } from '@orbit/coordinator';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
-
-const ipc = isElectron ? require('electron').ipcRenderer : null;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,76 +34,25 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface PlanProject {
-  [planId: string]: string;
-}
-
-interface IStateProps {
-  t: IAccessStrings;
-}
-
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
 }
 
-interface IRecordProps {
-  offlineProjects: Array<OfflineProject>;
-  projects: Array<Project>;
-  mediafiles: Array<MediaFile>;
-}
-
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps extends IDispatchProps {
   auth: Auth;
 }
 
 export function Logout(props: IProps) {
-  const { auth, t } = props;
+  const { auth } = props;
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
-  const { offlineProjects, mediafiles, projects } = props;
   const [coordinator] = useGlobal('coordinator');
   const [, setUser] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
   const [, setIsOffline] = useGlobal('offline');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
   const [view, setView] = React.useState('');
-  const [alert, setAlert] = React.useState(false);
-  const [downloadSize, setDownloadSize] = React.useState(0);
-  const [needyIds, setNeedyIds] = React.useState<string[]>([]);
-  const [downloadOpen, setDownloadOpen] = React.useState(false);
-  const projectPlans = useProjectPlans();
-
-  const getNeedyRemoteIds = () => {
-    const ops = offlineProjects.filter((op) => op.attributes.offlineAvailable);
-    let planIds = Array<string>();
-    const planProject: PlanProject = {};
-    ops.forEach((offlineProjRec) => {
-      var projectId = related(offlineProjRec, 'project');
-      const project = projects.find((pr) => pr.id === projectId);
-      if (project?.keys?.remoteId) {
-        projectPlans(projectId).forEach((pl) => {
-          planIds.push(pl.id);
-          planProject[pl.id] = projectId;
-        });
-      }
-    });
-    const mediaRecs = getMediaInPlans(planIds, mediafiles);
-    const needyProject = new Set<string>();
-    let totalSize = 0;
-    mediaRecs.forEach((m) => {
-      if (related(m, 'passage')) {
-        var local = { localname: '' };
-        var curpath = dataPath(m.attributes.audioUrl, PathType.MEDIA, local);
-        if (curpath !== local.localname) {
-          needyProject.add(planProject[related(m, 'plan')]);
-          totalSize += m?.attributes?.filesize || 0;
-        }
-      }
-    });
-    if (downloadSize !== totalSize) setDownloadSize(totalSize);
-    return Array.from(needyProject);
-  };
 
   const handleLogout = async () => {
     if (offlineOnly) setOfflineOnly(false);
@@ -138,16 +72,8 @@ export function Logout(props: IProps) {
         await coordinator.activate({ logLevel: LogLevel.Warnings });
       }
       auth.logout();
-      ipc?.invoke('logout').then(() => {
-        setView('Access');
-      });
-    } else {
-      setView('Access');
     }
-  };
-
-  const handleDownload = () => {
-    setDownloadOpen(true);
+    setView('Access');
   };
 
   useEffect(() => {
@@ -155,12 +81,6 @@ export function Logout(props: IProps) {
     fetchLocalization();
     if (!isElectron) {
       auth.logout();
-    } else if (auth.accessToken) {
-      const projRemIds = getNeedyRemoteIds();
-      if (projRemIds.length > 0) {
-        setNeedyIds(projRemIds);
-        setAlert(true);
-      } else handleLogout();
     } else handleLogout();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
@@ -182,32 +102,9 @@ export function Logout(props: IProps) {
           {buildDate}
         </div>
       </AppBar>
-      {alert && (
-        <Alert
-          title={t.download}
-          text={t.downloadMb.replace(
-            '{0}',
-            Math.ceil(downloadSize / 1000 + 0.5).toString()
-          )}
-          yesResponse={handleDownload}
-          no={t.downloadLater}
-          noResponse={handleLogout}
-          noOnLeft={true}
-        />
-      )}
-      <ProjectDownload
-        open={downloadOpen}
-        auth={auth}
-        projectIds={needyIds}
-        finish={handleLogout}
-      />
     </div>
   );
 }
-
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'access' }),
-});
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
@@ -219,12 +116,4 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ),
 });
 
-const mapRecordsToProps = {
-  offlineProjects: (q: QueryBuilder) => q.findRecords('offlineproject'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Logout) as any
-) as any;
+export default connect(null, mapDispatchToProps)(Logout) as any;

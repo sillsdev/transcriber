@@ -76,7 +76,7 @@ const ParatextReducers = function (
     case type.SYNC_SUCCESS:
       return {
         ...state,
-        syncStatus: successStatus('Sync Complete'),
+        syncStatus: successStatus(action.payload),
       };
     case type.SYNC_ERROR:
       return {

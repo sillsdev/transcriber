@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { IState, Passage, ITranscribeAddNoteStrings } from '../model';
+import {
+  IState,
+  Passage,
+  ITranscribeAddNoteStrings,
+  PassageStateChange,
+} from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -34,14 +39,24 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps {
-  passageIn: Passage;
+  passageIn?: Passage;
+  pscIn?: PassageStateChange;
   visible: boolean;
-  editMethod?: (passageRec: Passage) => void;
+  addMethod?: (passageRec: Passage) => void;
+  editMethod?: (psc: PassageStateChange) => void;
   cancelMethod?: () => void;
 }
 
 function TranscribeAddNote(props: IProps) {
-  const { t, visible, editMethod, cancelMethod, passageIn } = props;
+  const {
+    t,
+    visible,
+    addMethod,
+    editMethod,
+    cancelMethod,
+    passageIn,
+    pscIn,
+  } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(visible);
   const [comment, setComment] = useState('');
@@ -53,18 +68,23 @@ function TranscribeAddNote(props: IProps) {
   const handleCommentChange = (e: any) => setComment(e.target.value);
   const doAddOrSave = async () => {
     setInProcess(true);
-    if (comment !== '') {
+
+    if (pscIn) {
+      pscIn.attributes.comments = comment;
+      if (editMethod) editMethod(pscIn);
+    } else if (comment !== '') {
       let passage = {
         ...passageIn,
         attributes: {
-          ...passageIn.attributes,
+          ...passageIn?.attributes,
           lastComment: comment,
         },
       } as Passage;
-      if (editMethod) {
-        editMethod(passage);
+      if (addMethod) {
+        addMethod(passage);
       }
     }
+
     setOpen(false);
     setInProcess(false);
   };
@@ -78,19 +98,16 @@ function TranscribeAddNote(props: IProps) {
 
   useEffect(() => {
     setOpen(visible);
-    setComment('');
-  }, [visible]);
+    setComment(pscIn?.attributes.comments || '');
+  }, [visible, pscIn]);
 
   return (
     <div>
-      <Dialog
-        open={open}
-        onClose={handleCancel}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">{t.addNoteTitle}</DialogTitle>
+      <Dialog open={open} onClose={handleCancel} aria-labelledby="transAddDlg">
+        <DialogTitle id="transAddDlg">{t.addNoteTitle}</DialogTitle>
         <DialogContent>
           <TextField
+            id="transcriberNote.text"
             variant="filled"
             multiline
             rowsMax={5}
@@ -101,10 +118,16 @@ function TranscribeAddNote(props: IProps) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel} variant="outlined" color="primary">
+          <Button
+            id="transcriberNote.cancel"
+            onClick={handleCancel}
+            variant="outlined"
+            color="primary"
+          >
             {t.cancel}
           </Button>
           <Button
+            id="transcriberNote.save"
             onClick={handleSave}
             variant="contained"
             color="primary"

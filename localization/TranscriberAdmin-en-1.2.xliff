@@ -30,8 +30,22 @@
       			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="access.goOnline">
+      		<source>Go Online</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="access.logIn">
       		<source>Log In</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.logout">
+      		<source>Log Out</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
@@ -197,6 +211,13 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="alert.delete">
+            <source>Continue with Delete?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="alert.confirmation">
             <source>Confirmation</source>
             <target/>
@@ -323,7 +344,14 @@
                <context context-type="sourcefile">AssignSection.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="cards.add">
+      	<trans-unit id="audioDownload.downloadMedia">
+      		<source>Download Audio</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudioDownload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="cards.add">
             <source>Add</source>
             <target/>
             <context-group>
@@ -387,7 +415,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="cards.mediaUploaded">
-            <source>Media Uploaded</source>
+            <source>Audio Uploaded</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AddCard.tsx</context>
@@ -1087,7 +1115,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="integration.invalidReferences">
-      		<source>{0} passages have invalid references</source>
+      		<source>{0} passages have invalid book or reference.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">integration.tsx</context>
@@ -1359,13 +1387,6 @@
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="invite.admin">
-      		<source>Admin</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">Invite.tsx</context>
-      		</context-group>
-      	</trans-unit>
       	<trans-unit id="invite.allUsersProjects">
             <source>Projects</source>
             <target/>
@@ -1382,6 +1403,13 @@
          </trans-unit>
          <trans-unit id="invite.cancel">
             <source>Cancel</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Invite.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="invite.detail">
+            <source>{0} Detail</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -1465,7 +1493,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="invite.noProjects">
-            <source>No Projects are associated with this group.</source>
+            <source>No projects are associated with this group.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -1507,14 +1535,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="invite.selectProjectRole">
-            <source>Select project role</source>
+            <source>Select project role.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="invite.selectTeamRole">
-            <source>Select Team Role</source>
+            <source>Select team role.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -1801,7 +1829,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.media">
-            <source>Media</source>
+            <source>Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">drawer.tsx</context>
@@ -1982,6 +2010,48 @@
       			<context context-type="sourcefile">AboutDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="mediaActions.attach">
+      		<source>Associate</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.detach">
+      		<source>Disassociate</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.download">
+      		<source>Download</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.delete">
+      		<source>Delete</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.play">
+      		<source>Play</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.stop">
+      		<source>Stop</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="mediaTab.action">
             <source>Action</source>
             <target/>
@@ -2031,7 +2101,14 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.detach">
+      	<trans-unit id="mediaTab.deleteConfirm">
+      		<source>Delete {0}? Are you sure?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.detach">
             <source>Detach</source>
             <target/>
             <context-group>
@@ -2052,7 +2129,21 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.fileName">
+      	<trans-unit id="mediaTab.actions">
+      		<source>Actions</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.choosePassage">
+      		<source>Choose Passage</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.fileName">
             <source>File Name</source>
             <target/>
             <context-group>
@@ -2081,7 +2172,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="mediaTab.mediaAssociations">
-            <source>Media Associations</source>
+            <source>Audio Associations</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaTab.tsx</context>
@@ -2136,7 +2227,21 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.save">
+      	<trans-unit id="mediaTab.associated">
+      		<source>Associated</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.alreadyAssociated">
+            <source>Show Passages Already Associated</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+      	<trans-unit id="mediaTab.save">
             <source>Save</source>
             <target/>
             <context-group>
@@ -2206,7 +2311,14 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.viewAssociations">
+      	<trans-unit id="mediaTab.versionHistory">
+      		<source>Version History</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.viewAssociations">
             <source>View Associations</source>
             <target/>
             <context-group>
@@ -2277,7 +2389,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="mediaUpload.title">
-            <source>Upload Media</source>
+            <source>Upload Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>
@@ -2312,7 +2424,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planActions.playpause">
-            <source>Play / Pause</source>
+            <source>Play/Pause</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+          <trans-unit id="planActions.recordAudio">
+            <source>Record/Edit Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -2327,6 +2446,13 @@
          </trans-unit>
          <trans-unit id="planSheet.action">
             <source>Action</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.audio">
+            <source>Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -2452,14 +2578,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planTabs.media">
-            <source>Media</source>
+            <source>Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanTabs.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="planTabs.mediaStatus">
-            <source>{1} of {2} media files</source>
+            <source>{1} of {2} associations</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanTabs.tsx</context>
@@ -2759,7 +2885,147 @@
                <context context-type="sourcefile">ProjButtons.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="scriptureTable.action">
+      	<trans-unit id="newProject.newProject">
+      		<source>New Project</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.audioProduct">
+      		<source>Audio Product</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.textProduct">
+      		<source>Text Product</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.other">
+      		<source>Other</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.general">
+      		<source>General Transcription</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.generalTip">
+      		<source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.obt">
+      		<source>Oral Bible Translation - OBT</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.obtTip">
+      		<source>Oral Bible translation produces an audio product using oral methods.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.storying">
+      		<source>Storying</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.storyingTip">
+      		<source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.adaptation">
+      		<source>Oral Adaptation</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.adaptationTip">
+      		<source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.drafting">
+      		<source>Oral Drafting for Scripture</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.draftingTip">
+      		<source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.blank">
+      		<source>Blank Project</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.paratextIntegration">
+      		<source>Integrated with Paratext</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.oneStoryIntegration">
+      		<source>Integrated with OneStory Editor</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.configure">
+      		<source>Configure</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.uploadAudio">
+      		<source>Upload Audio</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.startRecording">
+      		<source>Start Recording</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="scriptureTable.action">
             <source>Action</source>
             <target/>
             <context-group>
@@ -2850,62 +3116,188 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.avg">
+         <trans-unit id="grid.avg">
             <source>Avg</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.count">
+         <trans-unit id="grid.count">
             <source>Count</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.max">
+         <trans-unit id="grid.max">
             <source>Max</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.min">
+         <trans-unit id="grid.min">
             <source>Min</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.noColumns">
+         <trans-unit id="grid.noColumns">
             <source>No columns visible</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.noData">
+         <trans-unit id="grid.noData">
             <source>No data</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.sum">
+         <trans-unit id="grid.sum">
             <source>Sum</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shared.admin">
-            <source>Owner</source>
+         <trans-unit id="grid.groupByColumn">
+            <source>Drag a column header here to group by that column</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.filterPlaceholder">
+            <source>Filter...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">grid.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.contains">
+            <source>Contains</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.notcontains">
+            <source>Does not containxyz</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.startsWith">
+            <source>Starts with</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.endsWith">
+            <source>Ends with</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.equal">
+            <source>Equals</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.notEqual">
+            <source>Does not equal</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.greaterThan">
+            <source>Greater than</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.greaterThanOrEqual">
+            <source>Greater than or equal to</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.lessThan">
+            <source>Less than</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.lessThanOrEqual">
+            <source>Less than or equal to</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.all">
+            <source>All</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.rowsPerPage">
+            <source>Rows per Page</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="grid.pageInfo">
+            <source>Rows {from} to {to} ({count} Rows)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.yes">
+            <source>Yes</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.no">
+            <source>No</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Access.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.admin">
+            <source>Admin</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Access.tsx</context>
+            </context-group>
+         </trans-unit>
+      	<trans-unit id="shared.cancel">
+      		<source>Cancel</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="shared.editor">
             <source>Editor</source>
             <target/>
@@ -2948,6 +3340,13 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.referenceNotFound">
+            <source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.BookNotSet">
             <source>Book was not set for Section {0} Passage {1}</source>
             <target/>
@@ -2976,36 +3375,64 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="shared.transcriber">
-            <source>Transcriber</source>
+         <trans-unit id="shared.owner">
+            <source>Owner</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.member">
+            <source>Member</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+       	<trans-unit id="shared.save">
+            <source>Save</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
-         </trans-unit>
+      	</trans-unit>
+      	<trans-unit id="shared.transcriber">
+      		<source>Transcriber</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="shared.uploadMediaPlural">
-            <source>Upload Media</source>
+            <source>Upload Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="shared.uploadMediaSingular">
-            <source>Upload Media</source>
+            <source>Upload Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
       	<trans-unit id="shared.importMediaSingular">
-      		<source>Import Media</source>
+      		<source>Import Audio</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PlanSheet.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="shared.mediaAttached">
-      		<source>Media Attached</source>
+      		<source>Audio Attached</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useMediaAttach.ts</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="shared.mediaDetached">
+      		<source>Audio Detached</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">useMediaAttach.ts</context>
@@ -3214,20 +3641,6 @@
                <context context-type="sourcefile">ToDoTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriber.aheadTip">
-            <source>Skip ahead ({0})</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Transcriber.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="transcriber.backTip">
-            <source>Skip back ({0})</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Transcriber.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="transcriber.comment">
             <source>Comment</source>
             <target/>
@@ -3242,15 +3655,8 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriber.fasterTip">
-            <source>Faster ({0})</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Transcriber.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="transcriber.historyTip">
-            <source>History ({0})</source>
+            <source>History [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
@@ -3293,20 +3699,6 @@
          </trans-unit>
          <trans-unit id="transcriber.noMedia">
             <source>Created task</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Transcriber.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="transcriber.pauseTip">
-            <source>Play ({0})</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Transcriber.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="transcriber.playTip">
-            <source>Pause ({0})</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
@@ -3389,13 +3781,6 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriber.slowerTip">
-            <source>Slower ({0})</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Transcriber.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="transcriber.submit">
             <source>Submit</source>
             <target/>
@@ -3417,13 +3802,6 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriber.timerTip">
-            <source>Timestamp ({0})</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Transcriber.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="transcriber.transcribing">
             <source>Started to transcribe</source>
             <target/>
@@ -3438,7 +3816,21 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcribeAddNote.cancel">
+      	<trans-unit id="transcriber.congratulation">
+      		<source>Congratulations</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AllDone.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="transcriber.noMoreTasks">
+      		<source>You have no more tasks to work on!</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AllDone.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="transcribeAddNote.cancel">
             <source>Cancel</source>
             <target/>
             <context-group>
@@ -3580,7 +3972,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="transcriptionTab.elan">
-            <source>Elan</source>
+            <source>ELAN</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
@@ -3713,7 +4105,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="transcriptionTab.incompletePlan">
-      		<source>Plan is incomplete: attach media to passages.</source>
+      		<source>Plan is incomplete: attach audio to passages.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TranscriptionTab.tsx</context>
@@ -3943,7 +4335,14 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="vProject.font">
+      	<trans-unit id="vProject.spellCheck">
+      		<source>Spell Check</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">addCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="vProject.font">
             <source>Font</source>
             <target/>
             <context-group>
@@ -3985,8 +4384,8 @@
       			<context context-type="sourcefile">ProjectName.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="vProject.new">
-            <source>New</source>
+      	<trans-unit id="vProject.configure">
+            <source>Configure</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
@@ -4118,6 +4517,293 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="wsAudioPlayer.aheadTip">
+            <source>Ahead {jump} {1} [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.backTip">
+            <source>Rewind {jump} {1} [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.beginningTip">
+            <source>Go to Beginning [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.deleteRegion">
+            <source>Delete Region</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.endTip">
+            <source>Go to End [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.fasterTip">
+            <source>Faster [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.insertoverwrite">
+            <source>Insert/Overwrite</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.loopoff">
+            <source>Loop Off</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.loopon">
+            <source>Loop On</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.pauseTip">
+            <source>Pause [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.pauseRecord">
+            <source>Pause</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.playTip">
+            <source>Play [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.record">
+            <source>Record [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.resume">
+            <source>Resume</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.seconds">
+            <source>Seconds</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.silence">
+            <source>Silence</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.slowerTip">
+            <source>Slower [{0}])</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.stop">
+            <source>Stop [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.timerTip">
+            <source>Timestamp [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageRecord.fileName">
+            <source>Name</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageRecord.fileType">
+            <source>File Type</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageRecord.loadfile">
+            <source>Load Existing File</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageRecord.loading">
+            <source>Loading...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageRecord.save">
+            <source>Save</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageRecord.cancel">
+            <source>Cancel</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
+        <trans-unit id="passageRecord.title">
+            <source>Record/Edit Audio</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
+        <trans-unit id="passageRecord.defaultFilename">
+            <source>MyRecording</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.altKey">
+            <source>Alt</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.ctrlKey">
+            <source>Ctrl</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.endKey">
+            <source>End</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.homeKey">
+            <source>Home</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.or">
+            <source>or</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.spaceKey">
+            <source>Space</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+      	<trans-unit id="spelling.spellingLangsTip">
+      		<source>Choose spell checking languages</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Spelling.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="spelling.spellingLangs">
+      		<source>Spell Checking Languages</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Spelling.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="spelling.restart">
+      		<source>To load or unload dictionaries requires this app to be restarted. Loading dictionaries that have not been loaded before will require this device to have a connection to the Internet. Do you want to restart this desktop app now?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Spelling.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="spelling.restartApp">
+      		<source>Restart</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Spelling.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="spelling.close">
+      		<source>Close</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Spelling.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="spelling.dictionaries">
+      		<source>Dictionaries</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">SpellingTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="spelling.custom">
+      		<source>Custom</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">SpellingTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="spelling.addToDict">
+      		<source>Add to dictionary</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">SpellingTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
       </body>
    </file>
 </xliff>

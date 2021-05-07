@@ -31,8 +31,20 @@ import {
   TableGroupRow,
   DragDropProvider,
 } from '@devexpress/dx-react-grid-material-ui';
+import { localizeGrid } from '../utils';
+import { IGridStrings, IState } from '../model';
+import localStrings from '../selector/localize';
+import { connect } from 'react-redux';
 
-interface IProps {
+interface IStateProps {
+  tg: IGridStrings;
+}
+
+const mapStateToProps = (state: IState): IStateProps => ({
+  tg: localStrings(state, { layout: 'grid' }),
+});
+
+interface IProps extends IStateProps {
   rows: Array<any>;
   columns: Array<Column>;
   columnWidths: Array<TableColumnWidthInfo>;
@@ -53,8 +65,9 @@ interface IProps {
   getChildRows: (row: any, rootRows: any[]) => any[] | null;
 }
 
-export default function TreeGrid(props: IProps) {
+function TreeGrid(props: IProps) {
   const {
+    tg,
     columns,
     columnWidths,
     rows,
@@ -73,9 +86,15 @@ export default function TreeGrid(props: IProps) {
     dataCell,
     noDataCell,
   } = props;
+  const {
+    localizeFilter,
+    localizeGroupingPanel,
+    localizePaging,
+    localizeTableMessages,
+  } = localizeGrid(tg);
   const handleSelect = (checks: Array<string | number>) => {
     if (select) {
-      select(checks.map(c => (typeof c === 'string' ? parseInt(c) : c)));
+      select(checks.map((c) => (typeof c === 'string' ? parseInt(c) : c)));
     }
   };
   const noRow = () => <></>;
@@ -112,29 +131,42 @@ export default function TreeGrid(props: IProps) {
         <IntegratedGrouping />
 
         {dataCell && noDataCell && !tableColumnExtensions ? (
-          <Table cellComponent={dataCell} noDataCellComponent={noDataCell} />
+          <Table
+            messages={localizeTableMessages}
+            cellComponent={dataCell}
+            noDataCellComponent={noDataCell}
+          />
         ) : dataCell && !noDataCell && !tableColumnExtensions ? (
-          <Table cellComponent={dataCell} />
+          <Table messages={localizeTableMessages} cellComponent={dataCell} />
         ) : !dataCell && noDataCell && !tableColumnExtensions ? (
-          <Table noDataCellComponent={noDataCell} />
+          <Table
+            messages={localizeTableMessages}
+            noDataCellComponent={noDataCell}
+          />
         ) : dataCell && noDataCell && tableColumnExtensions ? (
           <Table
+            messages={localizeTableMessages}
             cellComponent={dataCell}
             noDataCellComponent={noDataCell}
             columnExtensions={tableColumnExtensions}
           />
         ) : dataCell && !noDataCell && tableColumnExtensions ? (
           <Table
+            messages={localizeTableMessages}
             cellComponent={dataCell}
             columnExtensions={tableColumnExtensions}
           />
         ) : !dataCell && noDataCell && tableColumnExtensions ? (
           <Table
+            messages={localizeTableMessages}
             noDataCellComponent={noDataCell}
             columnExtensions={tableColumnExtensions}
           />
         ) : !dataCell && !noDataCell && tableColumnExtensions ? (
-          <Table columnExtensions={tableColumnExtensions} />
+          <Table
+            messages={localizeTableMessages}
+            columnExtensions={tableColumnExtensions}
+          />
         ) : (
           <Table />
         )}
@@ -147,9 +179,13 @@ export default function TreeGrid(props: IProps) {
         <TableColumnResizing defaultColumnWidths={columnWidths} />
         <TableHeaderRow showSortingControls />
         {showfilters !== null && !showfilters ? (
-          <TableFilterRow showFilterSelector={true} rowComponent={noRow} />
+          <TableFilterRow
+            messages={localizeFilter}
+            showFilterSelector={true}
+            rowComponent={noRow}
+          />
         ) : (
-          <TableFilterRow showFilterSelector={true} />
+          <TableFilterRow messages={localizeFilter} showFilterSelector={true} />
         )}
         {showSelection !== false && cellComponent ? (
           <TableTreeColumn
@@ -171,13 +207,16 @@ export default function TreeGrid(props: IProps) {
         )}
         {pageSizes.length > 0 && (
           <>
-            <PagingPanel pageSizes={pageSizes} />
+            <PagingPanel messages={localizePaging} pageSizes={pageSizes} />
           </>
         )}
         {showgroups !== null && showgroups ? <Toolbar /> : <></>}
         {showgroups !== null && showgroups ? <TableGroupRow /> : <></>}
         {showgroups !== null && showgroups ? (
-          <GroupingPanel showGroupingControls />
+          <GroupingPanel
+            messages={localizeGroupingPanel}
+            showGroupingControls
+          />
         ) : (
           <></>
         )}
@@ -185,3 +224,4 @@ export default function TreeGrid(props: IProps) {
     </Paper>
   );
 }
+export default (connect(mapStateToProps)(TreeGrid) as any) as any;

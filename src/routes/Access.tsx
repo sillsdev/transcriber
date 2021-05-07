@@ -17,7 +17,7 @@ import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Button, Paper } from '@material-ui/core';
 import Auth from '../auth/Auth';
-import { Online, localeDefault } from '../utils';
+import { Online, localeDefault, forceLogin } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
@@ -28,6 +28,7 @@ import Confirm from '../components/AlertDialog';
 import UserList from '../control/UserList';
 import { useSnackBar } from '../hoc/SnackBar';
 import AppHead from '../components/App/AppHead';
+import { UserListItem } from '../control';
 const noop = {} as any;
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 const electronremote = isElectron ? require('@electron/remote') : noop;
@@ -101,10 +102,15 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 }
 export const goOnline = () => {
   localStorage.removeItem('auth-id');
+  localStorage.setItem('isLoggedIn', 'true');
   ipc?.invoke('login');
   electronremote?.getCurrentWindow().close();
 };
-
+export const doLogout = () => {
+  localStorage.removeItem('online-user-id');
+  forceLogin();
+  ipc?.invoke('logout');
+};
 export function Access(props: IProps) {
   const {
     auth,
@@ -125,6 +131,8 @@ export function Access(props: IProps) {
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
   const [importOpen, setImportOpen] = useState(false);
   const handleLogin = () => auth.login();
+  const [view, setView] = useState('');
+  const [curUser, setCurUser] = useState<User>();
   const [selectedUser, setSelectedUser] = useState('');
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
@@ -143,6 +151,8 @@ export function Access(props: IProps) {
     const selected = users.filter((u) => u.id === uId);
     if (selected.length > 0) {
       if (selected[0]?.keys?.remoteId === undefined) setOfflineOnly(true);
+      setOffline(true);
+      auth.logout();
       localStorage.setItem('user-id', selected[0].id);
       setSelectedUser(uId);
     }
@@ -152,7 +162,7 @@ export function Access(props: IProps) {
     setImportOpen(true);
   };
 
-  const handleGoOnline = (event: React.MouseEvent<HTMLElement>) => {
+  const handleGoOnline = () => {
     Online(
       (online) => {
         if (online) {
@@ -179,7 +189,8 @@ export function Access(props: IProps) {
   };
 
   const handleCreateUser = async () => {
-    console.log('create user');
+    setOffline(true);
+    auth.logout();
     await offlineSetup();
     setOfflineOnly(true);
     setEditId('Add');
@@ -235,6 +246,11 @@ export function Access(props: IProps) {
       if (isOfflineUserWithProjects(users[i]?.id)) return true;
   };
 
+  const handleLogout = () => {
+    doLogout();
+    setView('Logout');
+  };
+
   useEffect(() => {
     if (isElectron) persistData();
     setLanguage(localeDefault(isDeveloper));
@@ -259,29 +275,44 @@ export function Access(props: IProps) {
 
   useEffect(() => {
     if (isElectron && selectedUser === '') {
-      ipc?.invoke('get-profile').then((result) => {
+      ipc?.invoke('get-profile').then((result: any) => {
         if (result) {
           // Even tho async, this executes first b/c users takes time to load
-          ipc?.invoke('get-token').then((accessToken) => {
+          ipc?.invoke('get-token').then((accessToken: any) => {
+            const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
             setConnected(true);
-            if (offline) setOffline(false);
+            if (offline && loggedIn) setOffline(false);
             if (auth) auth.setDesktopSession(result, accessToken);
-            if (selectedUser === '') setSelectedUser('unknownUser');
+            if (selectedUser === '' && loggedIn) setSelectedUser('unknownUser');
           });
         }
       });
+    }
+    const userId = localStorage.getItem('online-user-id');
+    if (isElectron && userId && !curUser) {
+      const thisUser = users.filter(
+        (u) => u.id === userId && Boolean(u?.keys?.remoteId)
+      );
+      setCurUser(thisUser[0]);
+      setLanguage(thisUser[0]?.attributes?.locale || 'en');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users]);
 
   if (auth?.accessToken && !auth?.emailVerified()) {
-    return <Redirect to="/emailunverified" />;
+    if (localStorage.getItem('isLoggedIn') === 'true')
+      return <Redirect to="/emailunverified" />;
+    else doLogout();
   } else if (
     (!isElectron && auth?.isAuthenticated()) ||
     offlineOnly ||
     (isElectron && selectedUser !== '')
-  )
+  ) {
     return <Redirect to="/loading" />;
+  }
+  if (/Logout/i.test(view)) {
+    return <Redirect to="/logout" />;
+  }
 
   return (
     <div className={classes.root}>
@@ -295,14 +326,47 @@ export function Access(props: IProps) {
             <Typography className={classes.sectionHead}>
               {t.withInternet}
             </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={handleGoOnline}
-            >
-              {t.logIn}
-            </Button>
+            {curUser ? (
+              <>
+                <div className={classes.actions}>
+                  <UserListItem
+                    u={curUser}
+                    users={users}
+                    onSelect={handleGoOnline}
+                  />
+                </div>
+                <div className={classes.actions}>
+                  <Button
+                    id="accessLogin"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleGoOnline}
+                  >
+                    {t.goOnline}
+                  </Button>
+                  <Button
+                    id="accessLogin"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleLogout}
+                  >
+                    {t.logout}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <Button
+                id="accessLogin"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleGoOnline}
+              >
+                {t.logIn}
+              </Button>
+            )}
             <Typography className={classes.sectionHead}>
               {t.withoutInternet}
             </Typography>
@@ -322,6 +386,7 @@ export function Access(props: IProps) {
             )}
             <div className={classes.actions}>
               <Button
+                id="accessCreateUser"
                 variant="contained"
                 color="primary"
                 className={classes.button}
@@ -330,6 +395,7 @@ export function Access(props: IProps) {
                 {t.createUser}
               </Button>
               <Button
+                id="accessImport"
                 variant="contained"
                 color="primary"
                 className={classes.button}

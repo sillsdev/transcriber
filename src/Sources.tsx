@@ -2,6 +2,7 @@ import {
   IApiError,
   Role,
   Plan,
+  User,
   OfflineProject,
   VProject,
   ExportType,
@@ -33,6 +34,7 @@ export const Sources = async (
   setProjectsLoaded: (valud: string[]) => void,
   orbitError: (ex: IApiError) => void,
   setOrbitRetries: (r: number) => void,
+  setLang: (locale: string) => void,
   globalStore: any,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
 ) => {
@@ -284,8 +286,11 @@ export const Sources = async (
   /* set the user from the token - must be done after the backup is loaded and after changes to offline are recorded */
   if (!offline) {
     var tr = await remote.pull((q) => q.findRecords('currentuser'));
-    const user = (tr[0].operations[0] as any).record;
+    const user = (tr[0].operations[0] as any).record as User;
+    const locale = user?.attributes?.locale || 'en';
+    setLang(locale);
     localStorage.setItem('user-id', user.id);
+    localStorage.setItem('online-user-id', user.id);
   }
   setUser(localStorage.getItem('user-id') as string);
   return { syncBuffer, syncFile, goRemote };

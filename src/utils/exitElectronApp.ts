@@ -11,4 +11,16 @@ export const exitElectronApp = () => {
   }
 };
 
+export const relaunchApp = () => {
+  if (isElectron) {
+    electronremote.app.relaunch();
+  }
+};
+
+export const exitApp = () => {
+  if (isElectron) {
+    electronremote.app.exit();
+  }
+};
+
 export default exitElectronApp;

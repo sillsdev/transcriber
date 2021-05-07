@@ -16,6 +16,7 @@ import {
   PathType,
   Severity,
   createPathFolder,
+  removeExtension,
 } from '../../utils';
 var fs = require('fs');
 var path = require('path');
@@ -26,7 +27,39 @@ export const uploadFiles = (files: File[]) => (dispatch: any) => {
     type: UPLOAD_LIST,
   });
 };
+const nextVersion = (fileName: string) => {
+  var { name, ext } = removeExtension(fileName);
+  var { name: origName, ext: version } = removeExtension(name);
+  if (version && version.length > 3 && version.startsWith('ver')) {
+    var ver = Number(version.substring(3)) + 1;
+    return `${origName}.ver${ver.toString().padStart(2, '0')}.${ext}`;
+  }
+  return `${name}.ver02.${ext}`;
+};
 
+export const writeFileLocal = (file: File, remoteName?: string) => {
+  var local = { localname: '' };
+  dataPath(
+    remoteName ? remoteName : `http://${file.path}`,
+    PathType.MEDIA,
+    local
+  );
+  var fullName = local.localname;
+  if (!remoteName && file.path === '') fullName += path.sep + file.name;
+  createPathFolder(fullName);
+  while (fs.existsSync(fullName)) {
+    fullName = nextVersion(fullName);
+  }
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    fs.writeFileSync(fullName, evt?.target?.result, {
+      encoding: 'binary',
+      flag: 'wx', //write - fail if file exists
+    });
+  };
+  reader.readAsBinaryString(file);
+  return path.join(PathType.MEDIA, fullName.split(path.sep).pop());
+};
 export const nextUpload = (
   record: any,
   files: File[],
@@ -36,7 +69,7 @@ export const nextUpload = (
   cb?: (n: number, success: boolean, data?: any) => void
 ) => (dispatch: any) => {
   dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
-  const acceptExtPat = /\.wav$|\.mp3$|\.m4a$|\.ogg$/i;
+  const acceptExtPat = /\.wav$|\.mp3$|\.m4a$|\.ogg$|\.webm$/i;
   if (!acceptExtPat.test(record.originalFile)) {
     dispatch({
       payload: {
@@ -50,16 +83,8 @@ export const nextUpload = (
   }
   if (!auth.accessToken) {
     // offlineOnly
-    var local = { localname: '' };
-    dataPath(`http://${files[n].path}`, PathType.MEDIA, local);
     try {
-      const fullName = local.localname;
-      createPathFolder(fullName);
-      fs.copyFileSync(files[n].path, fullName);
-      const filename = path.join(
-        PathType.MEDIA,
-        files[n].path.split(path.sep).pop()
-      );
+      var filename = writeFileLocal(files[n]);
       if (cb) cb(n, true, { ...record, audioUrl: filename });
     } catch (err) {
       if (cb) cb(n, false);
@@ -77,12 +102,8 @@ export const nextUpload = (
       const xhr = new XMLHttpRequest();
       xhr.open('PUT', response.data.audioUrl, true);
       if (isElectron) {
-        var local = { localname: '' };
-        dataPath(response.data.audioUrl, PathType.MEDIA, local);
         try {
-          const fullName = local.localname;
-          createPathFolder(fullName);
-          fs.copyFileSync(files[n].path, fullName);
+          writeFileLocal(files[n], response.data.audioUrl);
         } catch (err) {
           console.log(err);
         }

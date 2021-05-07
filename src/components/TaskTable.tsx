@@ -12,7 +12,7 @@ import useTodo from '../context/useTodo';
 import ShapingTable from './ShapingTable';
 import TaskHead from './TaskHead';
 import TaskItem from './TaskItem';
-import { BigDialog } from '../hoc/BigDialog';
+import BigDialog from '../hoc/BigDialog';
 import IntegrationTab from './Integration';
 import ExportTab from './TranscriptionTab';
 import ImportTab from './ImportTab';
@@ -365,6 +365,7 @@ export function TaskTable(props: IProps) {
   const PlayCell = ({ value, style, mediaId, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
       <IconButton
+        id={`audio-${mediaId}`}
         key={'audio-' + mediaId}
         aria-label={'audio-' + mediaId}
         color="primary"
@@ -410,7 +411,9 @@ export function TaskTable(props: IProps) {
       return <Table.Cell {...props} />;
     }
   };
-
+  const playEnded = () => {
+    setPlayItem('');
+  };
   return (
     <div
       id="TaskTable"
@@ -435,7 +438,7 @@ export function TaskTable(props: IProps) {
               project={projectId}
             />
             {filter && (
-              <IconButton onClick={handleToggleFilter}>
+              <IconButton id="taskFiltClose" onClick={handleToggleFilter}>
                 <CloseIcon />
               </IconButton>
             )}
@@ -459,7 +462,7 @@ export function TaskTable(props: IProps) {
           />
         </div>
       </div>
-      <MediaPlayer auth={auth} srcMediaId={playItem} />
+      <MediaPlayer auth={auth} srcMediaId={playItem} onEnded={playEnded} />
       <BigDialog
         title={tpb.integrationsTitle.replace('{0}', planName)}
         isOpen={openIntegration}

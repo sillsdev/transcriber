@@ -9,6 +9,7 @@ import { Avatar } from '@material-ui/core';
 import { makeAbbr } from '../utils';
 import { dataPath, PathType } from '../utils/dataPath';
 import { remoteId } from '../crud';
+import { isElectron } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,15 +50,23 @@ export function UserAvatar(props: IProps) {
     ? curUserRec[0]
     : { id: '', attributes: { avatarUrl: null, name: '', familyName: '' } };
 
-  return curUser.attributes && curUser.attributes.avatarUrl ? (
+  var src =
+    curUser.attributes && curUser.attributes.avatarUrl
+      ? dataPath(curUser.attributes.avatarUrl, PathType.AVATARS, {
+          localname:
+            remoteId('user', curUser.id, memory.keyMap) +
+            curUser.attributes.familyName +
+            '.png',
+        })
+      : '';
+  if (src && isElectron && !src.startsWith('http')) {
+    const url = new URL(src).toString().slice(8);
+    src = `transcribe-safe://${url}`;
+  }
+  return src ? (
     <Avatar
       alt={curUser.attributes.name}
-      src={dataPath(curUser.attributes.avatarUrl, PathType.AVATARS, {
-        localname:
-          remoteId('user', curUser.id, memory.keyMap) +
-          curUser.attributes.familyName +
-          '.png',
-      })}
+      src={src}
       className={small ? classes.small : classes.medium}
     />
   ) : curUser.attributes && curUser.attributes.name !== '' ? (

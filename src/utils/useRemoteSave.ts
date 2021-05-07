@@ -18,6 +18,7 @@ export const useRemoteSave = (): [
   }, [saveResult]);
 
   const startSave = () => {
+    saveErr.current = undefined;
     setSaveResult(undefined);
     setDoSave(true);
   };
@@ -26,9 +27,9 @@ export const useRemoteSave = (): [
     if (err === '') {
       setChanged(false);
     }
-    setSaveResult(err);
     setDoSave(false);
     setComplete(0);
+    setSaveResult(err);
   };
   const saveError = () => saveErr.current || '';
 

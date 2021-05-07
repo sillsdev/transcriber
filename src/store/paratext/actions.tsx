@@ -65,11 +65,12 @@ export const getParatextText = (
     );
     dispatch({ payload: response.data, type: TEXT_SUCCESS });
   } catch (err) {
-    logError(
-      Severity.info,
-      errorReporter,
-      infoMsg(err, 'Paratext Text failed')
-    );
+    if (err.errMsg !== 'no range')
+      logError(
+        Severity.info,
+        errorReporter,
+        infoMsg(err, 'Paratext Text failed')
+      );
     dispatch({ payload: errStatus(err), type: TEXT_ERROR });
   }
 };
@@ -95,11 +96,12 @@ export const getParatextTextLocal = (
         type: TEXT_ERROR,
       });
   } catch (err) {
-    logError(
-      Severity.info,
-      errorReporter,
-      infoMsg(err, 'Paratext Text failed')
-    );
+    if (err.errMsg !== 'no range')
+      logError(
+        Severity.info,
+        errorReporter,
+        infoMsg(err, 'Paratext Text failed')
+      );
     dispatch({ payload: errStatus(err), type: TEXT_ERROR });
   }
 };
@@ -329,7 +331,8 @@ export const syncProject = (
   auth: Auth,
   projectId: number,
   errorReporter: any,
-  pendingmsg: string
+  pendingmsg: string,
+  successmsg: string
 ) => (dispatch: any) => {
   dispatch({ payload: pendingStatus(pendingmsg), type: SYNC_PENDING });
 
@@ -339,7 +342,7 @@ export const syncProject = (
     },
   })
     .then((response) => {
-      dispatch({ payload: response.data, type: SYNC_SUCCESS });
+      dispatch({ payload: successmsg, type: SYNC_SUCCESS });
       getCount(auth, projectId, errorReporter, '');
     })
     .catch((err) => {

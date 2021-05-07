@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { ISharedStrings } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import moment from 'moment-timezone';
+import { dateOrTime } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,11 +34,9 @@ export const LastEdit = (props: IProps) => {
     console.log(`display history`);
   };
 
-  moment.locale(lang);
-  const curZone = moment.tz.guess();
-
   return when ? (
     <Button
+      id="editHist"
       key="last-edit"
       aria-label={t.lastEdit}
       variant="text"
@@ -46,10 +44,7 @@ export const LastEdit = (props: IProps) => {
       className={classes.button}
       onClick={handleHistory}
     >
-      {t.lastEdit.replace(
-        '{0}',
-        moment.tz(moment.tz(when, 'utc'), curZone).calendar()
-      )}
+      {t.lastEdit.replace('{0}', dateOrTime(when, lang))}
     </Button>
   ) : (
     <></>

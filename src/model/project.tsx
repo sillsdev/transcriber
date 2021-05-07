@@ -11,6 +11,7 @@ export interface Project extends Record {
     defaultFont: string | null;
     defaultFontSize: string | null;
     rtl: boolean;
+    spellCheck: boolean;
     allowClaim: boolean;
     isPublic: boolean;
     dateCreated: string;

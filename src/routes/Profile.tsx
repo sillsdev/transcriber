@@ -46,6 +46,7 @@ import {
   makeAbbr,
   uiLang,
   uiLangDev,
+  langName,
   localeDefault,
   useRemoteSave,
   getParatextDataPath,
@@ -53,16 +54,6 @@ import {
 } from '../utils';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
-import en from '../assets/en.json';
-import fr from '../assets/fr.json';
-import ar from '../assets/ar.json';
-import es from '../assets/es.json';
-import ha from '../assets/ha.json';
-import id from '../assets/id.json';
-import ru from '../assets/ru.json';
-import sw from '../assets/sw.json';
-import pt from '../assets/pt.json';
-import ta from '../assets/ta.json';
 import {
   AddRecord,
   UpdateRecord,
@@ -71,23 +62,6 @@ import {
 import AppHead from '../components/App/AppHead';
 import StickyRedirect from '../components/StickyRedirect';
 import { useSnackBar } from '../hoc/SnackBar';
-
-interface ILangDes {
-  type: string;
-  content: string;
-}
-interface ILdml {
-  [loc: string]: {
-    ldml: {
-      localeDisplayNames: {
-        languages: {
-          language: Array<ILangDes>;
-        };
-      };
-    };
-  };
-}
-const ldml: ILdml = { en, fr, ar, es, ha, id, ru, sw, pt, ta };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -199,6 +173,7 @@ export function Profile(props: IProps) {
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
   const [user, setUser] = useGlobal('user');
+  const [, setLang] = useGlobal('lang');
   const [orgRole] = useGlobal('orgRole');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
@@ -347,6 +322,7 @@ export function Profile(props: IProps) {
           )
         // we aren't allowing them to change owner oraganization currently
       );
+      setLang(locale);
       const newRoleRec = getRoleRec(role, true);
       const mbrRec = getMbrRoleRec(
         'organization',
@@ -465,12 +441,6 @@ export function Profile(props: IProps) {
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');
-  };
-
-  const langName = (loc: string, opt: string): string => {
-    return ldml[loc].ldml.localeDisplayNames.languages.language
-      .filter((d) => d.type === opt)
-      .map((d) => d.content)[0];
   };
 
   interface IBigAvatarProps {
@@ -640,7 +610,7 @@ export function Profile(props: IProps) {
                   <FormControlLabel
                     control={
                       <TextField
-                        id="name"
+                        id="profileName"
                         label={t.name}
                         className={classes.textField}
                         value={name}
@@ -829,6 +799,7 @@ export function Profile(props: IProps) {
                     currentUser.attributes?.name !==
                       currentUser.attributes?.email)) && (
                   <Button
+                    id="profileCancel"
                     key="cancel"
                     aria-label={t.cancel}
                     variant="outlined"
@@ -840,6 +811,7 @@ export function Profile(props: IProps) {
                   </Button>
                 )}
                 <Button
+                  id="profileSave"
                   key="add"
                   aria-label={t.add}
                   variant="contained"

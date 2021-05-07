@@ -28,9 +28,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="access.goOnline">
+         <segment>
+            <source>Go Online</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.logIn">
          <segment>
             <source>Log In</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.logout">
+         <segment>
+            <source>Log Out</source>
             <target/>
          </segment>
       </unit>
@@ -172,6 +184,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="alert.delete">
+         <segment>
+            <source>Continue with Delete?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="alert.confirmation">
          <segment>
             <source>Confirmation</source>
@@ -280,6 +298,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="audioDownload.downloadMedia">
+         <segment>
+            <source>Download Audio</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.add">
          <segment>
             <source>Add</source>
@@ -336,7 +360,7 @@
       </unit>
       <unit id="cards.mediaUploaded">
          <segment>
-            <source>Media Uploaded</source>
+            <source>Audio Uploaded</source>
             <target/>
          </segment>
       </unit>
@@ -936,7 +960,7 @@
       </unit>
       <unit id="integration.invalidReferences">
          <segment>
-            <source>{0} passages have invalid references</source>
+            <source>{0} passages have invalid book or reference.</source>
             <target/>
          </segment>
       </unit>
@@ -1168,12 +1192,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.admin">
-         <segment>
-            <source>Admin</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="invite.allUsersProjects">
          <segment>
             <source>Projects</source>
@@ -1189,6 +1207,12 @@
       <unit id="invite.cancel">
          <segment>
             <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.detail">
+         <segment>
+            <source>{0} Detail</source>
             <target/>
          </segment>
       </unit>
@@ -1260,7 +1284,7 @@
       </unit>
       <unit id="invite.noProjects">
          <segment>
-            <source>No Projects are associated with this group.</source>
+            <source>No projects are associated with this group.</source>
             <target/>
          </segment>
       </unit>
@@ -1296,13 +1320,13 @@
       </unit>
       <unit id="invite.selectProjectRole">
          <segment>
-            <source>Select project role</source>
+            <source>Select project role.</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.selectTeamRole">
          <segment>
-            <source>Select Team Role</source>
+            <source>Select team role.</source>
             <target/>
          </segment>
       </unit>
@@ -1548,7 +1572,7 @@
       </unit>
       <unit id="main.media">
          <segment>
-            <source>Media</source>
+            <source>Audio</source>
             <target/>
          </segment>
       </unit>
@@ -1702,6 +1726,42 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaActions.attach">
+         <segment>
+            <source>Associate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.detach">
+         <segment>
+            <source>Disassociate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.download">
+         <segment>
+            <source>Download</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.play">
+         <segment>
+            <source>Play</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.stop">
+         <segment>
+            <source>Stop</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.action">
          <segment>
             <source>Action</source>
@@ -1744,6 +1804,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.deleteConfirm">
+         <segment>
+            <source>Delete {0}? Are you sure?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.detach">
          <segment>
             <source>Detach</source>
@@ -1759,6 +1825,18 @@
       <unit id="mediaTab.fileAttached">
          <segment>
             <source>File already attached</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.actions">
+         <segment>
+            <source>Actions</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.choosePassage">
+         <segment>
+            <source>Choose Passage</source>
             <target/>
          </segment>
       </unit>
@@ -1788,7 +1866,7 @@
       </unit>
       <unit id="mediaTab.mediaAssociations">
          <segment>
-            <source>Media Associations</source>
+            <source>Audio Associations</source>
             <target/>
          </segment>
       </unit>
@@ -1831,6 +1909,18 @@
       <unit id="mediaTab.reference">
          <segment>
             <source>Reference</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.associated">
+         <segment>
+            <source>Associated</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.alreadyAssociated">
+         <segment>
+            <source>Show Passages Already Associated</source>
             <target/>
          </segment>
       </unit>
@@ -1891,6 +1981,12 @@
       <unit id="mediaTab.version">
          <segment>
             <source>Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.versionHistory">
+         <segment>
+            <source>Version History</source>
             <target/>
          </segment>
       </unit>
@@ -1956,7 +2052,7 @@
       </unit>
       <unit id="mediaUpload.title">
          <segment>
-            <source>Upload Media</source>
+            <source>Upload Audio</source>
             <target/>
          </segment>
       </unit>
@@ -1986,7 +2082,13 @@
       </unit>
       <unit id="planActions.playpause">
          <segment>
-            <source>Play / Pause</source>
+            <source>Play/Pause</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planActions.recordAudio">
+         <segment>
+            <source>Record/Edit Audio</source>
             <target/>
          </segment>
       </unit>
@@ -1999,6 +2101,12 @@
       <unit id="planSheet.action">
          <segment>
             <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.audio">
+         <segment>
+            <source>Audio</source>
             <target/>
          </segment>
       </unit>
@@ -2106,13 +2214,13 @@
       </unit>
       <unit id="planTabs.media">
          <segment>
-            <source>Media</source>
+            <source>Audio</source>
             <target/>
          </segment>
       </unit>
       <unit id="planTabs.mediaStatus">
          <segment>
-            <source>{1} of {2} media files</source>
+            <source>{1} of {2} associations</source>
             <target/>
          </segment>
       </unit>
@@ -2368,6 +2476,126 @@
             <target/>
          </segment>
       </unit>
+      <unit id="newProject.newProject">
+         <segment>
+            <source>New Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.audioProduct">
+         <segment>
+            <source>Audio Product</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.textProduct">
+         <segment>
+            <source>Text Product</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.other">
+         <segment>
+            <source>Other</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.general">
+         <segment>
+            <source>General Transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.generalTip">
+         <segment>
+            <source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.obt">
+         <segment>
+            <source>Oral Bible Translation - OBT</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.obtTip">
+         <segment>
+            <source>Oral Bible translation produces an audio product using oral methods.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.storying">
+         <segment>
+            <source>Storying</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.storyingTip">
+         <segment>
+            <source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.adaptation">
+         <segment>
+            <source>Oral Adaptation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.adaptationTip">
+         <segment>
+            <source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.drafting">
+         <segment>
+            <source>Oral Drafting for Scripture</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.draftingTip">
+         <segment>
+            <source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.blank">
+         <segment>
+            <source>Blank Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.paratextIntegration">
+         <segment>
+            <source>Integrated with Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.oneStoryIntegration">
+         <segment>
+            <source>Integrated with OneStory Editor</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.configure">
+         <segment>
+            <source>Configure</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.uploadAudio">
+         <segment>
+            <source>Upload Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.startRecording">
+         <segment>
+            <source>Start Recording</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.action">
          <segment>
             <source>Action</source>
@@ -2446,51 +2674,159 @@
             <target/>
          </segment>
       </unit>
-      <unit id="shapingTable.avg">
+      <unit id="grid.avg">
          <segment>
             <source>Avg</source>
             <target/>
          </segment>
       </unit>
-      <unit id="shapingTable.count">
+      <unit id="grid.count">
          <segment>
             <source>Count</source>
             <target/>
          </segment>
       </unit>
-      <unit id="shapingTable.max">
+      <unit id="grid.max">
          <segment>
             <source>Max</source>
             <target/>
          </segment>
       </unit>
-      <unit id="shapingTable.min">
+      <unit id="grid.min">
          <segment>
             <source>Min</source>
             <target/>
          </segment>
       </unit>
-      <unit id="shapingTable.noColumns">
+      <unit id="grid.noColumns">
          <segment>
             <source>No columns visible</source>
             <target/>
          </segment>
       </unit>
-      <unit id="shapingTable.noData">
+      <unit id="grid.noData">
          <segment>
             <source>No data</source>
             <target/>
          </segment>
       </unit>
-      <unit id="shapingTable.sum">
+      <unit id="grid.sum">
          <segment>
             <source>Sum</source>
             <target/>
          </segment>
       </unit>
+      <unit id="grid.groupByColumn">
+         <segment>
+            <source>Drag a column header here to group by that column</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.filterPlaceholder">
+         <segment>
+            <source>Filter...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.contains">
+         <segment>
+            <source>Contains</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.notcontains">
+         <segment>
+            <source>Does not containxyz</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.startsWith">
+         <segment>
+            <source>Starts with</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.endsWith">
+         <segment>
+            <source>Ends with</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.equal">
+         <segment>
+            <source>Equals</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.notEqual">
+         <segment>
+            <source>Does not equal</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.greaterThan">
+         <segment>
+            <source>Greater than</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.greaterThanOrEqual">
+         <segment>
+            <source>Greater than or equal to</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.lessThan">
+         <segment>
+            <source>Less than</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.lessThanOrEqual">
+         <segment>
+            <source>Less than or equal to</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.all">
+         <segment>
+            <source>All</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.rowsPerPage">
+         <segment>
+            <source>Rows per Page</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.pageInfo">
+         <segment>
+            <source>Rows {from} to {to} ({count} Rows)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.yes">
+         <segment>
+            <source>Yes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.no">
+         <segment>
+            <source>No</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.admin">
          <segment>
-            <source>Owner</source>
+            <source>Admin</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.cancel">
+         <segment>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
@@ -2530,6 +2866,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.referenceNotFound">
+         <segment>
+            <source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.BookNotSet">
          <segment>
             <source>Book was not set for Section {0} Passage {1}</source>
@@ -2554,6 +2896,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.owner">
+         <segment>
+            <source>Owner</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.member">
+         <segment>
+            <source>Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.transcriber">
          <segment>
             <source>Transcriber</source>
@@ -2562,25 +2922,31 @@
       </unit>
       <unit id="shared.uploadMediaPlural">
          <segment>
-            <source>Upload Media</source>
+            <source>Upload Audio</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.uploadMediaSingular">
          <segment>
-            <source>Upload Media</source>
+            <source>Upload Audio</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.importMediaSingular">
          <segment>
-            <source>Import Media</source>
+            <source>Import Audio</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.mediaAttached">
          <segment>
-            <source>Media Attached</source>
+            <source>Audio Attached</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.mediaDetached">
+         <segment>
+            <source>Audio Detached</source>
             <target/>
          </segment>
       </unit>
@@ -2758,18 +3124,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.aheadTip">
-         <segment>
-            <source>Skip ahead ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.backTip">
-         <segment>
-            <source>Skip back ({0})</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriber.comment">
          <segment>
             <source>Comment</source>
@@ -2782,15 +3136,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.fasterTip">
-         <segment>
-            <source>Faster ({0})</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriber.historyTip">
          <segment>
-            <source>History ({0})</source>
+            <source>History [{0}]</source>
             <target/>
          </segment>
       </unit>
@@ -2827,18 +3175,6 @@
       <unit id="transcriber.noMedia">
          <segment>
             <source>Created task</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.pauseTip">
-         <segment>
-            <source>Play ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.playTip">
-         <segment>
-            <source>Pause ({0})</source>
             <target/>
          </segment>
       </unit>
@@ -2908,12 +3244,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.slowerTip">
-         <segment>
-            <source>Slower ({0})</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriber.submit">
          <segment>
             <source>Submit</source>
@@ -2932,12 +3262,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.timerTip">
-         <segment>
-            <source>Timestamp ({0})</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriber.transcribing">
          <segment>
             <source>Started to transcribe</source>
@@ -2947,6 +3271,18 @@
       <unit id="transcriber.updateByOther">
          <segment>
             <source>Transcription updated by another person or process.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.congratulation">
+         <segment>
+            <source>Congratulations</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.noMoreTasks">
+         <segment>
+            <source>You have no more tasks to work on!</source>
             <target/>
          </segment>
       </unit>
@@ -3072,7 +3408,7 @@
       </unit>
       <unit id="transcriptionTab.elan">
          <segment>
-            <source>Elan</source>
+            <source>ELAN</source>
             <target/>
          </segment>
       </unit>
@@ -3186,7 +3522,7 @@
       </unit>
       <unit id="transcriptionTab.incompletePlan">
          <segment>
-            <source>Plan is incomplete: attach media to passages.</source>
+            <source>Plan is incomplete: attach audio to passages.</source>
             <target/>
          </segment>
       </unit>
@@ -3382,6 +3718,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.spellCheck">
+         <segment>
+            <source>Spell Check</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.font">
          <segment>
             <source>Font</source>
@@ -3418,9 +3760,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.new">
+      <unit id="vProject.configure">
          <segment>
-            <source>New</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -3529,6 +3871,252 @@
       <unit id="vProject.type">
          <segment>
             <source>Project Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aheadTip">
+         <segment>
+            <source>Ahead {jump} {1} [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.backTip">
+         <segment>
+            <source>Rewind {jump} {1} [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.beginningTip">
+         <segment>
+            <source>Go to Beginning [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.deleteRegion">
+         <segment>
+            <source>Delete Region</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.endTip">
+         <segment>
+            <source>Go to End [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.fasterTip">
+         <segment>
+            <source>Faster [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.insertoverwrite">
+         <segment>
+            <source>Insert/Overwrite</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.loopoff">
+         <segment>
+            <source>Loop Off</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.loopon">
+         <segment>
+            <source>Loop On</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.pauseTip">
+         <segment>
+            <source>Pause [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.pauseRecord">
+         <segment>
+            <source>Pause</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.playTip">
+         <segment>
+            <source>Play [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.record">
+         <segment>
+            <source>Record [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.resume">
+         <segment>
+            <source>Resume</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.seconds">
+         <segment>
+            <source>Seconds</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.silence">
+         <segment>
+            <source>Silence</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.slowerTip">
+         <segment>
+            <source>Slower [{0}])</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.stop">
+         <segment>
+            <source>Stop [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.timerTip">
+         <segment>
+            <source>Timestamp [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageRecord.fileName">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageRecord.fileType">
+         <segment>
+            <source>File Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageRecord.loadfile">
+         <segment>
+            <source>Load Existing File</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageRecord.loading">
+         <segment>
+            <source>Loading...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageRecord.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageRecord.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageRecord.title">
+         <segment>
+            <source>Record/Edit Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageRecord.defaultFilename">
+         <segment>
+            <source>MyRecording</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.altKey">
+         <segment>
+            <source>Alt</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.ctrlKey">
+         <segment>
+            <source>Ctrl</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.endKey">
+         <segment>
+            <source>End</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.homeKey">
+         <segment>
+            <source>Home</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.or">
+         <segment>
+            <source>or</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.spaceKey">
+         <segment>
+            <source>Space</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="spelling.spellingLangsTip">
+         <segment>
+            <source>Choose spell checking languages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="spelling.spellingLangs">
+         <segment>
+            <source>Spell Checking Languages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="spelling.restart">
+         <segment>
+            <source>To load or unload dictionaries requires this app to be restarted. Loading dictionaries that have not been loaded before will require this device to have a connection to the Internet. Do you want to restart this desktop app now?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="spelling.restartApp">
+         <segment>
+            <source>Restart</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="spelling.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="spelling.dictionaries">
+         <segment>
+            <source>Dictionaries</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="spelling.custom">
+         <segment>
+            <source>Custom</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="spelling.addToDict">
+         <segment>
+            <source>Add to dictionary</source>
             <target/>
          </segment>
       </unit>

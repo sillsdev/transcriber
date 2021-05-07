@@ -54,6 +54,7 @@ export function TaskItem(props: IProps) {
     taskItemStr,
     activityStateStr,
     setSelected,
+    setAllDone,
     allBookData,
   } = useTodo();
   const uctx = React.useContext(UnsavedContext);
@@ -65,6 +66,7 @@ export function TaskItem(props: IProps) {
   const t = taskItemStr;
 
   const handleSelect = (selected: string) => () => {
+    setAllDone(false);
     checkSavedFn(() => setSelected(selected));
   };
 
@@ -82,7 +84,11 @@ export function TaskItem(props: IProps) {
 
   return (
     <List className={classes.root}>
-      <ListItem alignItems="flex-start" onClick={handleSelect(passage.id)}>
+      <ListItem
+        id="taskSelect"
+        alignItems="flex-start"
+        onClick={handleSelect(passage.id)}
+      >
         <ListItemAvatar className={classes.listAvatar}>
           <TaskAvatar assigned={assigned} />
         </ListItemAvatar>

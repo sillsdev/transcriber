@@ -14,6 +14,7 @@ import JSONAPISource from '@orbit/jsonapi';
 import { currentDateTime } from '../utils';
 import { TransformBuilder } from '@orbit/data';
 import { AddRecord } from '../model/baseModel';
+import PassageRecord from './PassageRecord';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,6 +41,8 @@ interface IDispatchProps {
 
 interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
+  recordAudio: boolean;
+  defaultFilename?: string;
   isOpen: boolean;
   onOpen: (visible: boolean) => void;
   showMessage: (msg: string | JSX.Element) => void;
@@ -50,10 +53,22 @@ interface IProps extends IStateProps, IDispatchProps {
   createProject?: (file: File[]) => Promise<any>;
   status: typeof statusInit;
   multiple?: boolean;
+  mediaId?: string;
 }
 
 export const Uploader = (props: IProps) => {
-  const { auth, t, isOpen, onOpen, showMessage, status, multiple } = props;
+  const {
+    auth,
+    mediaId,
+    recordAudio,
+    defaultFilename,
+    t,
+    isOpen,
+    onOpen,
+    showMessage,
+    status,
+    multiple,
+  } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
   const { uploadComplete, setComplete, finish } = props;
@@ -69,7 +84,7 @@ export const Uploader = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const planIdRef = React.useRef<string>();
+  const planIdRef = React.useRef<string>(plan);
   const successCount = React.useRef<number>(0);
   const fileList = React.useRef<File[]>();
   const authRef = React.useRef<Auth>(auth);
@@ -87,13 +102,13 @@ export const Uploader = (props: IProps) => {
       setComplete(0);
       setBusy(false);
       if (successCount.current > 0 && finish)
-        finish(planIdRef.current || plan, mediaIdRef.current);
+        finish(planIdRef.current, mediaIdRef.current);
       else if (status) status.canceled = true;
     }, 1000);
   };
 
   const getPlanId = () =>
-    remoteIdNum('plan', planIdRef.current || plan, memory.keyMap);
+    remoteIdNum('plan', planIdRef.current, memory.keyMap) || planIdRef.current;
 
   const pullPlanMedia = async () => {
     const planId = getPlanId();
@@ -114,9 +129,9 @@ export const Uploader = (props: IProps) => {
     const uploadList = fileList.current;
     if (!uploadList) return; // This should never happen
     if (data?.stringId) mediaIdRef.current.push(data?.stringId);
-    else {
+    else if (success && data) {
       // offlineOnly
-      const planRecId = { type: 'plan', id: planIdRef.current || plan };
+      const planRecId = { type: 'plan', id: planIdRef.current };
       if (planRecId.id) {
         var media = getMediaInPlans(
           [planRecId.id],
@@ -190,6 +205,7 @@ export const Uploader = (props: IProps) => {
   };
 
   const uploadMedia = async (files: File[]) => {
+    successCount.current = 0;
     if (!files || files.length === 0) {
       showMessage(t.selectFiles);
       return;
@@ -197,7 +213,6 @@ export const Uploader = (props: IProps) => {
     setBusy(true);
     if (createProject) planIdRef.current = await createProject(files);
     uploadFiles(files);
-    successCount.current = 0;
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
     authRef.current = auth;
@@ -229,15 +244,32 @@ export const Uploader = (props: IProps) => {
   }, [uploadError]);
 
   return (
-    <MediaUpload
-      visible={isOpen}
-      uploadType={UploadType.Media}
-      multiple={multiple}
-      uploadMethod={uploadMedia}
-      cancelMethod={uploadCancel}
-      metaData={metaData}
-      ready={ready}
-    />
+    <div>
+      {recordAudio && (
+        <PassageRecord
+          visible={isOpen}
+          mediaId={mediaId}
+          auth={auth}
+          multiple={multiple}
+          uploadMethod={uploadMedia}
+          cancelMethod={uploadCancel}
+          metaData={metaData}
+          ready={ready}
+          defaultFilename={defaultFilename}
+        />
+      )}
+      {!recordAudio && (
+        <MediaUpload
+          visible={isOpen}
+          uploadType={UploadType.Media}
+          multiple={multiple}
+          uploadMethod={uploadMedia}
+          cancelMethod={uploadCancel}
+          metaData={metaData}
+          ready={ready}
+        />
+      )}
+    </div>
   );
 };
 

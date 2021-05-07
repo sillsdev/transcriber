@@ -30,6 +30,7 @@ import {
   cleanFileName,
   currentDateTime,
   PathType,
+  createFolder,
 } from '../../utils';
 import IndexedDBSource from '@orbit/indexeddb';
 
@@ -203,12 +204,13 @@ export async function electronExport(
     };
 
     const AddFonts = () => {
-      const dir = dataPath('fonts');
+      const dir = dataPath(PathType.FONTS);
+      createFolder(dir);
       var items = fs.readdirSync(dir);
       for (var i = 0; i < items.length; i++) {
         var fontfile = path.join(dir, items[i]);
         if (fs.existsSync(fontfile))
-          zip.addLocalFile(fontfile, 'fonts', items[i]);
+          zip.addLocalFile(fontfile, PathType.FONTS, items[i]);
       }
     };
     const GroupMemberships = (project: Project) => {

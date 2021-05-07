@@ -38,10 +38,11 @@ interface IProps extends IStateProps {
   steps?: string[];
   currentStep?: number;
   action?: (choice: string) => void;
+  allowCancel?: boolean;
 }
 
 export function UploadProgress(props: IProps) {
-  const { open, title, progress, action, t } = props;
+  const { open, title, progress, action, allowCancel, t } = props;
   const { steps, currentStep } = props;
   const classes = useStyles();
   const cancelRef = React.useRef(false);
@@ -57,12 +58,9 @@ export function UploadProgress(props: IProps) {
     <Dialog
       open={open}
       onClose={handleChoice('Close')}
-      aria-labelledby="upload-progress-title"
-      aria-describedby="upload-progress-description"
+      aria-labelledby="uploadProgDlg"
     >
-      <DialogTitle id="upload-progress-title">
-        {title || t.progressTitle}
-      </DialogTitle>
+      <DialogTitle id="uploadProgDlg">{title || t.progressTitle}</DialogTitle>
       <DialogContent>
         {steps && currentStep !== undefined && (
           <List dense component="div">
@@ -84,15 +82,18 @@ export function UploadProgress(props: IProps) {
           {cancelRef.current && <Typography>{t.canceling}</Typography>}
         </div>
       </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={handleChoice('Cancel')}
-          color="primary"
-          disabled={cancelRef.current}
-        >
-          {t.cancel}
-        </Button>
-      </DialogActions>
+      {allowCancel && (
+        <DialogActions>
+          <Button
+            id="uploadProgCancel"
+            onClick={handleChoice('Cancel')}
+            color="primary"
+            disabled={cancelRef.current}
+          >
+            {t.cancel}
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 }

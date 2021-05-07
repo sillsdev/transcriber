@@ -37,18 +37,15 @@ import {
   AppBar,
 } from '@material-ui/core';
 // import CopyIcon from '@material-ui/icons/FileCopy';
-import SoundIcon from '@material-ui/icons/Audiotrack';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
-import moment from 'moment-timezone';
 import { useSnackBar } from '../hoc/SnackBar';
 import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
 import Auth from '../auth/Auth';
 import {
-  remoteId,
   related,
   sectionNumber,
   sectionEditorName,
@@ -64,8 +61,9 @@ import {
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
-import { logError, Severity } from '../utils';
+import { logError, Severity, dateOrTime } from '../utils';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
+import AudioDownload from './AudioDownload';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -102,10 +100,12 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 16,
     },
     link: {},
+    downloadButtons: {
+      display: 'flex',
+      alignItems: 'center',
+    },
   })
 );
-
-const curZone = moment.tz.guess();
 
 interface IRow {
   id: string;
@@ -138,22 +138,16 @@ const getReference = (passage: Passage, bookData: BookName[] = []) => {
   return passageDescription(passage, bookData);
 };
 
-const calendar = (date: string) =>
-  moment.tz(moment.tz(date, 'utc'), curZone).calendar();
-
 interface IStateProps {
   t: ITranscriptionTabStrings;
   ts: ISharedStrings;
   activityState: IActivityStateStrings;
-  hasUrl: boolean;
-  mediaUrl: string;
   exportFile: FileResponse;
   exportStatus: IAxiosStatus | undefined;
   allBookData: BookName[];
 }
 
 interface IDispatchProps {
-  fetchMediaUrl: typeof actions.fetchMediaUrl;
   exportProject: typeof actions.exportProject;
   exportComplete: typeof actions.exportComplete;
 }
@@ -171,7 +165,6 @@ interface IProps
     IDispatchProps,
     IRecordProps,
     WithDataProps {
-  action?: (what: string, where: number[]) => boolean;
   auth: Auth;
   projectPlans: Plan[];
   planColumn?: boolean;
@@ -190,9 +183,6 @@ export function TranscriptionTab(props: IProps) {
     roles,
     projectPlans,
     planColumn,
-    hasUrl,
-    mediaUrl,
-    fetchMediaUrl,
     exportProject,
     exportComplete,
     exportStatus,
@@ -216,9 +206,6 @@ export function TranscriptionTab(props: IProps) {
   const eafAnchor = React.useRef<HTMLAnchorElement>(null);
   const [dataUrl, setDataUrl] = useState<string | undefined>();
   const [dataName, setDataName] = useState('');
-  const audAnchor = React.useRef<HTMLAnchorElement>(null);
-  const [audUrl, setAudUrl] = useState<string | undefined>();
-  const [audName, setAudName] = useState('');
   const exportAnchor = React.useRef<HTMLAnchorElement>(null);
   const [exportUrl, setExportUrl] = useState<string | undefined>();
   const [exportName, setExportName] = useState('');
@@ -254,8 +241,6 @@ export function TranscriptionTab(props: IProps) {
     string[]
   >([]);
   const [filter, setFilter] = useState(false);
-
-  moment.locale(lang);
 
   const handleFilter = () => setFilter(!filter);
   const translateError = (err: IAxiosStatus): string => {
@@ -397,20 +382,6 @@ export function TranscriptionTab(props: IProps) {
     logError(Severity.info, globalStore.errorReporter, `name=${name}`);
     setDataUrl('data:text/xml;base64,' + eafCode);
     setDataName(name + '.eaf');
-    handleAudioFn(passageId);
-  };
-
-  const handleAudio = (passageId: string) => () => handleAudioFn(passageId);
-  const handleAudioFn = (passageId: string) => {
-    logError(Severity.info, globalStore.errorReporter, `handleAudioFn`);
-    const mediaRec = getMediaRec(passageId, memory);
-    const id =
-      remoteId('mediafile', mediaRec ? mediaRec.id : '', memory.keyMap) ||
-      mediaRec?.id;
-    logError(Severity.info, globalStore.errorReporter, `rem Media Id=${id}`);
-    const name = getMediaName(mediaRec, memory);
-    if (id) fetchMediaUrl(id, memory, offline, auth, globalStore.errorReporter);
-    setAudName(name);
   };
 
   useEffect(() => {
@@ -471,35 +442,7 @@ export function TranscriptionTab(props: IProps) {
   }, [exportStatus]);
 
   useEffect(() => {
-    if (audUrl && audName !== '') {
-      if (audAnchor?.current) {
-        logError(
-          Severity.info,
-          globalStore.errorReporter,
-          `audName=${audName}, audUrl=${audUrl}, audAnchor=${audAnchor?.current}`
-        );
-        audAnchor.current.click();
-        setAudUrl(undefined);
-        setAudName('');
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [audUrl, audName]);
-
-  useEffect(() => {
-    if (audName !== '' && !audUrl && mediaUrl && mediaUrl !== '') {
-      logError(
-        Severity.info,
-        globalStore.errorReporter,
-        `audName=${audName}, audUrl=${audUrl} mediaUrl=${mediaUrl}`
-      );
-      setAudUrl(mediaUrl);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasUrl, mediaUrl, audName]);
-
-  useEffect(() => {
-    logError(Severity.info, globalStore.errorReporter, `planColumn useEffect`);
+    // logError(Severity.info, globalStore.errorReporter, `planColumn useEffect`);
     if (planColumn) {
       if (defaultHiddenColumnNames.length > 0)
         //assume planName is only one
@@ -508,7 +451,8 @@ export function TranscriptionTab(props: IProps) {
       if (plan === '') {
         setPlan(projectPlans[0].id); //set the global plan
       }
-      setDefaultHiddenColumnNames(['planName']);
+      if (defaultHiddenColumnNames.length !== 1)
+        setDefaultHiddenColumnNames(['planName']);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projectPlans, plan, planColumn]);
@@ -538,7 +482,7 @@ export function TranscriptionTab(props: IProps) {
             editor: sectionEditorName(section, users),
             transcriber: sectionTranscriberName(section, users),
             passages: sectionpassages.length.toString(),
-            updated: calendar(section?.attributes?.dateUpdated),
+            updated: dateOrTime(section?.attributes?.dateUpdated, lang),
             action: '',
             parentId: '',
           });
@@ -555,7 +499,7 @@ export function TranscriptionTab(props: IProps) {
               editor: '',
               transcriber: '',
               passages: '',
-              updated: calendar(passage.attributes.dateUpdated),
+              updated: dateOrTime(passage.attributes.dateUpdated, lang),
               action: passage.id,
               parentId: section.id,
             } as IRow);
@@ -592,6 +536,7 @@ export function TranscriptionTab(props: IProps) {
   interface ICell {
     value: string;
     style?: React.CSSProperties;
+    mediaId: string;
     row: IRow;
     column: any;
     tableRow: any;
@@ -614,31 +559,24 @@ export function TranscriptionTab(props: IProps) {
     </Table.Cell>
   );
 
-  const ActionCell = ({ value, style, ...restProps }: ICell) => (
+  const ActionCell = ({ value, style, mediaId, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
-      <IconButton
-        id={'eaf-' + value}
-        key={'eaf-' + value}
-        aria-label={'eaf-' + value}
-        color="default"
-        className={classes.actionWords}
-        onClick={handleEaf(value)}
-        disabled={!hasTranscription(value)}
-      >
-        {t.elan}
-        <br />
-        {t.export}
-      </IconButton>
-      <IconButton
-        id={'aud-' + value}
-        key={'aud-' + value}
-        aria-label={'aud-' + value}
-        color="default"
-        className={classes.actionIcon}
-        onClick={handleAudio(value)}
-      >
-        <SoundIcon />
-      </IconButton>
+      <div className={classes.downloadButtons}>
+        <IconButton
+          id={'eaf-' + value}
+          key={'eaf-' + value}
+          aria-label={'eaf-' + value}
+          color="default"
+          className={classes.actionWords}
+          onClick={handleEaf(value)}
+          disabled={!hasTranscription(value)}
+        >
+          {t.elan}
+          <br />
+          {t.export}
+        </IconButton>
+        <AudioDownload auth={auth} mediaId={mediaId} />
+      </div>
     </Table.Cell>
   );
 
@@ -668,7 +606,7 @@ export function TranscriptionTab(props: IProps) {
             .filter({ relation: 'passage', record: passRec })
         ) as MediaFile[];
         if (state !== ActivityStates.NoMedia && media.length > 0)
-          return <ActionCell {...props} />;
+          return <ActionCell {...props} mediaId={media[0].id} />;
         else return <td className="MuiTableCell-root" />;
       }
     }
@@ -692,23 +630,23 @@ export function TranscriptionTab(props: IProps) {
       <Dialog
         open={openExport}
         onClose={closeNoChoice}
-        aria-labelledby="which-export-title"
-        aria-describedby="which-export-description"
+        aria-labelledby="transExpDlg"
+        aria-describedby="transExpDesc"
       >
-        <DialogTitle id="which-export-title">{t.exportType}</DialogTitle>
+        <DialogTitle id="transExpDlg">{t.exportType}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id="transExpDesc">
             {t.exportExplanation}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeNoChoice} color="default">
+          <Button id="expCancel" onClick={closeNoChoice} color="default">
             {t.cancel}
           </Button>
-          <Button onClick={doPTF} color="primary">
+          <Button id="expPtf" onClick={doPTF} color="primary">
             {t.exportPTFtype}
           </Button>
-          <Button onClick={doITF} color="primary" autoFocus>
+          <Button id="expItf" onClick={doITF} color="primary" autoFocus>
             {t.exportITFtype}
           </Button>
         </DialogActions>
@@ -729,6 +667,7 @@ export function TranscriptionTab(props: IProps) {
           <div className={classes.actions}>
             {planColumn && (
               <Button
+                id="transExp"
                 key="export"
                 aria-label={t.exportProject}
                 variant="contained"
@@ -742,6 +681,7 @@ export function TranscriptionTab(props: IProps) {
               </Button>
             )}
             <Button
+              id="transCopy"
               key="copy"
               aria-label={t.copyTranscriptions}
               variant="contained"
@@ -754,6 +694,7 @@ export function TranscriptionTab(props: IProps) {
             </Button>
             {planColumn && offline && projects.length > 1 && (
               <Button
+                id="transBackup"
                 key="backup"
                 aria-label={t.electronBackup}
                 variant="contained"
@@ -767,6 +708,7 @@ export function TranscriptionTab(props: IProps) {
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
             <Button
+              id="transFilt"
               key="filter"
               aria-label={t.filter}
               variant="outlined"
@@ -814,27 +756,18 @@ export function TranscriptionTab(props: IProps) {
         </div>
       </div>
 
-      {passageId !== '' ? (
+      {passageId !== '' && (
         <TranscriptionShow
-          passageId={passageId}
+          id={passageId}
           visible={passageId !== ''}
           closeMethod={handleCloseTranscription}
         />
-      ) : (
-        <></>
       )}
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a ref={exportAnchor} href={exportUrl} download={exportName} />
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a ref={eafAnchor} href={dataUrl} download={dataName} />
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
-      <a
-        ref={audAnchor}
-        href={audUrl}
-        download={audName}
-        target="_blank"
-        rel="noopener noreferrer"
-      />
       <WhichExportDlg />
     </div>
   );
@@ -844,8 +777,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'transcriptionTab' }),
   ts: localStrings(state, { layout: 'shared' }),
   activityState: localStrings(state, { layout: 'activityState' }),
-  hasUrl: state.media.loaded,
-  mediaUrl: state.media.url,
   exportFile: state.importexport.exportFile,
   exportStatus: state.importexport.importexportStatus,
   allBookData: state.books.bookData,
@@ -854,7 +785,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
-      fetchMediaUrl: actions.fetchMediaUrl,
       exportProject: actions.exportProject,
       exportComplete: actions.exportComplete,
     },

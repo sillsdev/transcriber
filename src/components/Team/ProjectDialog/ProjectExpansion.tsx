@@ -139,6 +139,7 @@ export function ProjectExpansion(props: IProjectDialogState) {
             options={options}
             onChange={handleOrgByChange}
             addOption={options.length === 5 ? handleAddOption : undefined}
+            otherLabel={t.other}
             decorations={decoration}
           />
         </AccordionDetails>

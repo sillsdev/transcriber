@@ -39,6 +39,7 @@ const initState = {
   book: '',
   bcp47: 'und',
   languageName: '',
+  spellCheck: false,
   font: '',
   rtl: false,
   fontSize: 'large',
@@ -95,10 +96,10 @@ export function ProjectDialog(props: IProps) {
       open={isOpen}
       className={classes.root}
       onClose={handleClose}
-      aria-labelledby="add-project-dialog-title"
+      aria-labelledby="projectDlg"
     >
-      <DialogTitle id="add-project-dialog-title">
-        {t.newProject.replace('{0}', mode === Mode.add ? t.new : t.edit)}
+      <DialogTitle id="projectDlg">
+        {t.newProject.replace('{0}', mode === Mode.add ? t.configure : t.edit)}
       </DialogTitle>
       <DialogContent>
         <ProjectName state={state} setState={setState} inUse={nameInUse} />
@@ -109,10 +110,11 @@ export function ProjectDialog(props: IProps) {
         <ProjectExpansion state={state} setState={setState} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button id="projCancel" onClick={handleClose} color="primary">
           {t.cancel}
         </Button>
         <Button
+          id="projAdd"
           onClick={handleAdd}
           color="primary"
           disabled={

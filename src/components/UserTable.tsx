@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation } from 'react-router-dom';
-import { LocalKey, localUserKey } from '../utils';
+import { localizeRole, LocalKey, localUserKey } from '../utils';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
@@ -13,6 +13,7 @@ import {
   Group,
   GroupMembership,
   Invitation,
+  ISharedStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -87,7 +88,8 @@ const getMedia = (
   users: Array<User>,
   roles: Array<Role>,
   organizationMemberships: Array<OrganizationMembership>,
-  t: IUsertableStrings
+  t: IUsertableStrings,
+  ts: ISharedStrings
 ) => {
   const members = organizationMemberships
     .filter((om) => related(om, 'organization') === organization)
@@ -105,7 +107,10 @@ const getMedia = (
           locale: u.attributes.locale ? u.attributes.locale : '',
           // phone: u.attributes.phone ? u.attributes.phone : '',
           timezone: u.attributes.timezone ? u.attributes.timezone : '',
-          role: role.length === 1 ? role[0].attributes.roleName : '',
+          role: localizeRole(
+            role.length > 0 ? role[0].attributes.roleName : 'member',
+            ts
+          ),
           action: u.id,
           id: { type: 'user', id: u.id },
         } as IRow);
@@ -117,6 +122,7 @@ const getMedia = (
 
 interface IStateProps {
   t: IUsertableStrings;
+  ts: ISharedStrings;
 }
 
 interface IDispatchProps {}
@@ -130,7 +136,7 @@ interface IRecordProps {
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
 
 export function UserTable(props: IProps) {
-  const { t, users, roles, organizationMemberships } = props;
+  const { t, ts, users, roles, organizationMemberships } = props;
   const classes = useStyles();
   const { pathname } = useLocation();
   const [organization] = useGlobal('organization');
@@ -266,7 +272,9 @@ export function UserTable(props: IProps) {
   const isCurrentUser = (userId: string) => userId === user;
 
   useEffect(() => {
-    setData(getMedia(organization, users, roles, organizationMemberships, t));
+    setData(
+      getMedia(organization, users, roles, organizationMemberships, t, ts)
+    );
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [organization, users, roles, organizationMemberships]);
 
@@ -409,6 +417,7 @@ export function UserTable(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'usertable' }),
+  ts: localStrings(state, { layout: 'shared' }),
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

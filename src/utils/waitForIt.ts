@@ -4,6 +4,9 @@ export const waitForIt = async (
   cancelIf: () => boolean,
   waitCount: number
 ): Promise<any> => {
+  if (testIt()) {
+    return;
+  }
   while (!cancelIf() && waitCount > 0) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     if (testIt()) {

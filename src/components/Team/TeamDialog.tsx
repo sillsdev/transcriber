@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
@@ -12,6 +13,7 @@ import {
 import { Organization, IDialog, DialogMode } from '../../model';
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
+import { useTeamApiPull } from '../../crud';
 
 interface IRecordProps {
   organizations: Array<Organization>;
@@ -35,15 +37,17 @@ export function TeamDialog(props: IProps) {
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
   const t = cardStrings;
+  const teamApiPull = useTeamApiPull();
+  const [offlineOnly] = useGlobal('offlineOnly');
 
   const handleClose = () => {
     onOpen && onOpen(false);
   };
 
-  const handleCommit = () => {
+  const handleCommit = async () => {
     const current =
       mode === DialogMode.edit && values
-        ? { ...values }
+        ? values
         : ({ attributes: {} } as Organization);
     if (current.hasOwnProperty('relationships')) delete current?.relationships;
     const team = {
@@ -72,23 +76,30 @@ export function TeamDialog(props: IProps) {
   };
 
   useEffect(() => {
-    setName(values?.attributes?.name || '');
+    if (isOpen && !name) {
+      setName(values?.attributes?.name || '');
+      if (!offlineOnly && values) teamApiPull(values.id);
+    } else if (!isOpen) {
+      setName('');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, isOpen]);
 
   return (
     <Dialog
+      id="teamDialog"
       open={isOpen}
       onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      aria-labelledby="teamDlg"
     >
-      <DialogTitle id="form-dialog-title">
+      <DialogTitle id="teamDlg">
         {mode === DialogMode.add ? t.addTeam : t.teamSettings}
       </DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin="dense"
-          id="name"
+          id="teamName"
           label={t.teamName}
           value={name}
           helperText={nameInUse(name) && t.nameInUse}
@@ -104,10 +115,11 @@ export function TeamDialog(props: IProps) {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button id="teamCancel" onClick={handleClose} color="primary">
           {t.cancel}
         </Button>
         <Button
+          id="teamCommit"
           onClick={handleCommit}
           color="primary"
           disabled={name === '' || nameInUse(name)}

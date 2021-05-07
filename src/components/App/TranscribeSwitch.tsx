@@ -32,6 +32,7 @@ export const TranscribeSwitch = (props: IProps) => {
     <div className={classes.navButton}>
       <Typography>{t.switchTo + '\u00A0'}</Typography>
       <Button
+        id="switch"
         variant="contained"
         color="primary"
         onClick={handleSwitch}

@@ -2,7 +2,8 @@
 export interface IMediaState {
   url: string;
   loaded: boolean;
-  trackedTask: string;
+  urlMediaId: string; //this is the media id
+  trackedTask: string; //this is the passage id
 }
 
 // Describing the different ACTION NAMES available
@@ -12,6 +13,7 @@ export const SET_SELECTED = 'SET_SELECTED';
 
 interface FetchMediaUrlPending {
   type: typeof FETCH_AUDIO_URL_PENDING;
+  payload: string; //mediaId;
 }
 
 interface FetchAudioUrl {

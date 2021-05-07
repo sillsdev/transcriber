@@ -8,7 +8,7 @@ import { Redirect } from 'react-router';
 import { API_CONFIG, isElectron } from '../api-variable';
 import Axios from 'axios';
 import Auth from '../auth/Auth';
-import { goOnline } from './Access';
+import { doLogout, goOnline } from './Access';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,10 +64,13 @@ export const EmailUnverified = (props: IProps) => {
   };
 
   const handleVerified = (e: any) => {
-    if (isElectron) goOnline();
-    else setView('Logout');
+    if (isElectron) {
+      doLogout();
+      goOnline();
+    } else setView('Logout');
   };
   const handleLogout = (e: any) => {
+    doLogout();
     setView('Logout');
   };
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
@@ -91,6 +94,7 @@ export const EmailUnverified = (props: IProps) => {
       >
         <div className={classes.actions}>
           <Button
+            id="emailResent"
             variant="contained"
             color="primary"
             className={classes.button}
@@ -101,6 +105,7 @@ export const EmailUnverified = (props: IProps) => {
         </div>
         <div className={classes.actions}>
           <Button
+            id="emailVerified"
             variant="contained"
             color="primary"
             className={classes.button}
@@ -111,6 +116,7 @@ export const EmailUnverified = (props: IProps) => {
         </div>
         <div className={classes.actions}>
           <Button
+            id="emailLogout"
             variant="contained"
             color="primary"
             className={classes.button}

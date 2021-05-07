@@ -472,6 +472,7 @@ const removeOverlappingVerses = (doc: Document, p: Passage) => {
 };
 const getPassageVerses = (doc: Document, p: Passage) => {
   const existing = getExistingVerses(doc, p, true);
+  if (existing.allVerses.length === 0) throw new Error('no range');
   var transcription = '';
   existing.allVerses.forEach((v) => {
     if (isVerse(v))
@@ -507,19 +508,16 @@ const getChapter = async (
 ) => {
   const temp = await ipc?.invoke('temp');
   if (!temp) throw new Error('Unable to find temp directory.'); //this is app.getPath('temp')
-  try {
-    const { stdout } = await paths.program([
-      '-r',
-      ptProjName,
-      paths.book,
-      paths.chapter,
-      paths.chapterFile,
-      '-x',
-    ]);
-    if (stdout) console.log(stdout);
-  } catch (error) {
-    console.log(error);
-  }
+  const { stdout } = await paths.program([
+    '-r',
+    ptProjName,
+    paths.book,
+    paths.chapter,
+    paths.chapterFile,
+    '-x',
+  ]);
+  if (stdout) console.log(stdout);
+
   const usx: string = fs.readFileSync(paths.chapterFile, 'utf-8');
   return domParser.parseFromString(usx);
 };
@@ -636,7 +634,10 @@ export const localSync = async (
         addNumberToSection
       );
     } catch (error) {
-      return error.stdout;
+      return error.stdout.replace(
+        'Missing Localizer implementation. English text will be used instead.',
+        ''
+      );
     }
   }
   return '';
