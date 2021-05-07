@@ -1,3 +1,95 @@
+sil-transcriber (2.12.1.0)  experimental; urgency=high
+
+  * TT-2303 download data to desktop on exit
+  * TT-2297 display currently logged in user
+  * Fix Google client not secure error
+  * TT-2019 localize dates
+  * TT-2268 don't save while playing (#198)
+  * TT-2278 Restarting App when spelling dictionaries change
+  * TT-2019c use localized in treeGrids (#192)
+  * TT-2269 multiple passage delete (#190)
+  * TT-2267 desktop spelling (#189)
+  * add suggestion and add to dictionary context menu
+  * Localized spell checking dictionary choices
+  * Fall back to English if no name in language
+  * Restart when changing dictionary choices
+  * Custom word removal option (#191)
+  * TT-2019 Localize filter and misc missing strings (#187)
+  * Localize filter and misc missing table strings
+  * TT-2214 focus on transcription when index or data changes. (#186)
+  * Auto focus is the magic to actually go there and seems to force spell check
+  * TT-2210 TT-2265 team delete fix (#184)
+  * TT-1718 update section card count on delete (#183)
+  * TT-1766 no save during delete (#181)
+  * TT-2254 detach reverses attach (#180)
+  * TT-2259 wait on audio load to refresh (#179)
+  * notice failure on upload
+  * TT-2249 pretty download name (#178)
+  * use CTRL and ALT in key event (#177)
+  * TT-2212 change Elan to ELAN (#175)
+  * TT-2211 disable most controls while recording (#174)
+  * TT-2248 Only delete selected version (#173)
+  * TT-2260 get create spell check right (#172)
+  * TT-2204 Spell check off check box in project settings (#170)
+  * TT-2112 version history dialog (#166)
+  * Show Transcription
+  * TT-2113 font and avatar local safe URL-schema. (#165)
+  * TT-2106 add ids to buttons and dialogs (for automation) (#164)
+  * TT-2107 detachPassage saves everything so nothing is left changed (#162)
+  * TT-2103 only pull team record if on line
+  * TT-2095 Decode filename on desktop (#161)
+  * TT-2096 fileName versions (#160)
+  * defaultFilename from Passage/sections
+  * set defaultName to book from new project
+  * once user types in fileName, don't update it
+  * add version to local fileName
+  * don't up the version number if it's already attached to the correct passage
+  * TT-2085 New Project dialog (#159)
+  * TT-2103 set team name (#158)
+  * TT-2105 Attach to latest upload (#156)
+  * TT-2095 Read blob from Electron on line (#155)
+  * TT-2104 keep track of progress and duration in state so they update display (#154)
+  * update duration when editing
+  * TT-2109 Logic for isolating team audio files with slugs (#153)
+  * TT-2012 New player shortcut keys (#150)
+  * TT-2104 empty player while reloading new file (#148)
+  * TT-2102 check audio permissions (#147)
+  * make sure only one audio player requested
+  * TT-2055 confirm on delete of passage note (#145)
+  * Light background tool tips
+  * TT-2076 shortcut key Provider (#143)
+  * TT-2074 click outside closes new project dialog (#142)
+  * No busy on small passage save
+  * TT-2070 Refresh attached passages (#140)
+  * TT-2058 associating one item (#139)
+  * TT-2048 Team Edit (#138)
+  * TT-2072 on delete media, refresh page (#136)
+  * TT-2073 Allow transcriber download
+  * TT-2078 use fetch media URL (#132)
+  * TT-2068 All Done message (#134)
+  * TT-2091b Reload data is missing (#133)
+  * TT-2093 fix the slider position again (#131)
+  * check media id for correct existing file
+  * TT-2083 TT-1891f Fix edit recording save (#130)
+  * TT-2052 Show Assignment (#129)
+  * allow reset
+  * fix nested button error report
+  * TT-2060 clear list when delete refused
+  * TT-2091 Avoid missing home button
+  * TT-2092 Adjust Transcriber box height default
+  * TT-2090 Remove OneStory and Render Integration
+  * TT-2065 Save b4 select and load blob in electron (#128)
+  * TT-2063 Auto load occasional (#127)
+  * TT-2081 Change Media to Audio (#124)
+  * TT-1891f fix audio player so transcriber window can be narrower (#123)
+  * TT-2047 download media on Transcription tab too
+  * TT-2047 re-factor association (#113)
+  * TT-2025 improve editing history item (#111)
+  * TT-2038 indicate possible missing book (#109)
+  * TC133 wait for not busy before reopening (#108)
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 7 May 2021 14:39:00 -0600
+
 sil-transcriber (2.11.4.0)  experimental; urgency=high
 
   * Updated localization strings

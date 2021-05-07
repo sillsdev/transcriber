@@ -41,7 +41,6 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
-import moment from 'moment-timezone';
 import { useSnackBar } from '../hoc/SnackBar';
 import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
@@ -242,8 +241,6 @@ export function TranscriptionTab(props: IProps) {
     string[]
   >([]);
   const [filter, setFilter] = useState(false);
-
-  moment.locale(lang);
 
   const handleFilter = () => setFilter(!filter);
   const translateError = (err: IAxiosStatus): string => {
