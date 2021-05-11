@@ -83,7 +83,8 @@
     "deploySetup": "amplify init && git checkout amplify && git checkout .gitignore",
     "dev": "amplify env checkout appdev && node env-config/changeEnv.js dev && git checkout amplify\\#current-cloud-backend",
     "qa": "amplify env checkout appqa && node env-config/changeEnv.js qa && git checkout amplify\\#current-cloud-backend",
-    "prod": "amplify env checkout appprod && node env-config/changeEnv.js prod && git checkout amplify\\#current-cloud-backend"
+    "prod": "amplify env checkout appprod && node env-config/changeEnv.js prod && git checkout amplify\\#current-cloud-backend",
+    "silid": "node env-config/changeEnv.js silid"
   },
   "prettier": {
     "trailingComma": "es5"
