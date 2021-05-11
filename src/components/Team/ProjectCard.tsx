@@ -277,6 +277,7 @@ export const ProjectCard = (props: IProps) => {
               action={handleProjectAction}
               isOwner={isOwner(project)}
               project={project}
+              inProject={false}
             />
           </div>
           <Typography className={classes.pos}>
