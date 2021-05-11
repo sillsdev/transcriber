@@ -130,7 +130,7 @@ export function ImportTab(props: IProps) {
   const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
   const [user] = useGlobal('user');
-
+  const [isOffline] = useGlobal('offline');
   const { showMessage } = useSnackBar();
   const [changeData, setChangeData] = useState(Array<IRow>());
   const [importTitle, setImportTitle] = useState('');
@@ -276,7 +276,10 @@ export function ImportTab(props: IProps) {
     setChangeData([]);
     if (isElectron) {
       if (syncFile && syncBuffer) uploadSyncITF(syncBuffer, syncFile);
-      else electronImport();
+      //or do I want isLoggedIn...or are they the same???
+      //if offline they should actually get to choose between replacing the project, or uploading someone else's changes...TODO
+      else if (isOffline) electronImport();
+      else setUploadVisible(true); //I'm online so allow upload of ITF
     } else setUploadVisible(true);
   }, []);
 
