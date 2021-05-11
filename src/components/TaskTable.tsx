@@ -15,7 +15,6 @@ import TaskItem from './TaskItem';
 import BigDialog from '../hoc/BigDialog';
 import IntegrationTab from './Integration';
 import ExportTab from './TranscriptionTab';
-import ImportTab from './ImportTab';
 import Visualize from './Visualize';
 import ProjectMenu from './Team/ProjectMenu';
 import { formatTime } from '../control';
@@ -151,7 +150,6 @@ export function TaskTable(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const projectPlans = useProjectPlans();
   const [openIntegration, setOpenIntegration] = React.useState(false);
-  const [openImport, setOpenImport] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openReports, setOpenReports] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
@@ -217,8 +215,6 @@ export function TaskTable(props: IProps) {
       offlineAvailableToggle(offlineProjectRead(projectId));
     } else if (what === 'integration') {
       setOpenIntegration(true);
-    } else if (what === 'import') {
-      setOpenImport(true);
     } else if (what === 'export') {
       setOpenExport(true);
     } else if (what === 'reports') {
@@ -489,17 +485,6 @@ export function TaskTable(props: IProps) {
       >
         <Visualize selectedPlan={planId} />
       </BigDialog>
-
-      {openImport && (
-        <ImportTab
-          {...props}
-          auth={auth}
-          isOpen={openImport}
-          onOpen={setOpenImport}
-          planName={planName}
-          project={projectId}
-        />
-      )}
     </div>
   );
 }
