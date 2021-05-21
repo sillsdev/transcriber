@@ -43,8 +43,6 @@ export const ProjButtons = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [project] = useGlobal('project');
   const [projType] = useGlobal('projType');
-  const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
   const projectPlans = useProjectPlans();
   const [actionMenuItem, setActionMenuItem] = React.useState(null);
   const [openIntegration, setOpenIntegration] = React.useState(false);
