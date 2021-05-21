@@ -72,6 +72,7 @@
     "test": "craco test --config env-config/craco.config.js",
     "eject": "DON'T craco eject",
     "dist": "electron-builder --publish never",
+    "dist-32": "electron-builder --publish never --ia32",
     "electron-dev-mac": "concurrently \"BROWSER=none craco start --config env-config/craco.config.js\" \"wait-on http://localhost:3000 && electron .\"",
     "electron-dev": "node env-config/edPackage.js -dev && env-cmd -f .env.electron concurrently \"craco start --config env-config/craco.config.js \" \"wait-on http://localhost:3000 && electron .\"",
     "electron-debug": "node env-config/edPackage.js -dev && env-cmd -f .env.electron craco start --config env-config/craco.config.js",
@@ -154,7 +155,7 @@
   "build": {
     "appId": "sil.lsdev.sil-transcriber-electron",
     "productName": "SIL Transcriber Desktop",
-    "copyright": "Copyright © 2020 ${author}",
+    "copyright": "Copyright © 2020-2021 ${author}",
     "win": {
       "icon": "public/favicon.png"
     },
@@ -193,5 +194,7 @@
         "filter": "resetData.*"
       }
     ]
-  }
+  },
+  "main": "public/electron.js",
+  "homepage": "./"
 }
