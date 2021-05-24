@@ -295,7 +295,49 @@
             <target>Membres</target>
          </segment>
       </unit>
-      <unit id="audioDownload.downloadMedia">
+   	<unit id="audacitySetup.audacitySetup">
+   		<segment>
+   			<source>Audacity Setup</source>
+   			<target>Configuration d'Audacity</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacitySetup.close">
+   		<segment>
+   			<source>Close</source>
+   			<target>Fermer</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacitySetup.audacityInstalled">
+   		<segment>
+   			<source>Audacity Installed</source>
+   			<target>Audacity installé</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacitySetup.getInstaller">
+   		<segment>
+   			<source>Get Installer</source>
+   			<target>Obtenir l'installateur</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacitySetup.scriptingEnabled">
+   		<segment>
+   			<source>Scripting Enabled</source>
+   			<target>Scripts activés</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacitySetup.enable">
+   		<segment>
+   			<source>Enable</source>
+   			<target>Activer</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacitySetup.pythonInstalled">
+   		<segment>
+   			<source>Python Installed</source>
+   			<target>Python installé</target>
+   		</segment>
+   	</unit>
+   	<unit id="audioDownload.downloadMedia">
          <segment>
             <source>Download Audio</source>
          	<target>Télécharger le audio</target>

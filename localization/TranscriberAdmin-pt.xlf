@@ -289,6 +289,48 @@
             <target>Membros</target>
          </segment>
       </unit>
+   	<unit id="audacitySetup.audacitySetup">
+   		<segment>
+   			<source>Audacity Setup</source>
+   			<target>Audacity Setup</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacitySetup.close">
+   		<segment>
+   			<source>Close</source>
+   			<target>Fechar</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacitySetup.audacityInstalled">
+   		<segment>
+   			<source>Audacity Installed</source>
+   			<target>Audacidade Instalada</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacitySetup.getInstaller">
+   		<segment>
+   			<source>Get Installer</source>
+   			<target>Obter instalador</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacitySetup.scriptingEnabled">
+   		<segment>
+   			<source>Scripting Enabled</source>
+   			<target>Scripting Habilitar</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacitySetup.enable">
+   		<segment>
+   			<source>Enable</source>
+   			<target>Habilitar</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacitySetup.pythonInstalled">
+   		<segment>
+   			<source>Python Installed</source>
+   			<target>Python Instalado</target>
+   		</segment>
+   	</unit>
    	<unit id="audioDownload.downloadMedia">
    		<segment>
    			<source>Download Audio</source>

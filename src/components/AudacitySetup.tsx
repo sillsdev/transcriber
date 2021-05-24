@@ -1,4 +1,8 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
+import { connect } from 'react-redux';
+import { IState, IAudacitySetupStrings } from '../model';
+import localStrings from '../selector/localize';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -16,6 +20,12 @@ import {
 import CheckIcon from '@material-ui/icons/Check';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import AudacityLogo from '../control/AudacityLogo';
+import {
+  hasAudacity,
+  hasAuacityScripts,
+  hasPython,
+  enableAudacityScripts,
+} from '../utils';
 
 const useStyles = makeStyles({
   root: {
@@ -43,41 +53,80 @@ interface StepType {
   item: Step;
   choice: string;
   action: string;
+  url: string | (() => Promise<void>);
   help?: boolean;
+  testIt: () => Promise<boolean>;
 }
 
-export interface AudacitySetupProps {
+interface IStateProps {
+  t: IAudacitySetupStrings;
+}
+
+export interface AudacitySetupProps extends IStateProps {
   open: boolean;
   onClose: () => void;
 }
 
 function AudacitySetup(props: AudacitySetupProps) {
+  const { t } = props;
   const classes = useStyles();
   const { onClose, open } = props;
+  const [allAudacity, setAllAdudacity] = useGlobal('allAudacity');
+  const [satisfied, setSatisfied] = React.useState<boolean[]>([
+    false,
+    false,
+    false,
+  ]);
   const steps: StepType[] = [
     {
       item: Step.Audacity,
-      choice: 'Audacity Installed',
-      action: 'Get Installer',
+      choice: t.audacityInstalled,
+      action: t.getInstaller,
+      url: 'https://www.audacityteam.org/download/',
+      testIt: hasAudacity,
     },
     {
       item: Step.Scripting,
-      choice: 'Scripting Enabled',
-      action: 'Enable',
+      choice: t.scriptingEnabled,
+      action: t.enable,
+      url: enableAudacityScripts,
       help: true,
+      testIt: hasAuacityScripts,
     },
-    { item: Step.Python, choice: 'Python Installed', action: 'Get Installer' },
+    {
+      item: Step.Python,
+      choice: t.pythonInstalled,
+      action: t.getInstaller,
+      url: 'https://www.python.org/downloads/',
+      testIt: hasPython,
+    },
   ];
 
   const handleClose = () => {
     onClose();
   };
 
-  const handleListItemClick = (value: string) => () => {
-    onClose();
+  const doEval = async () => {
+    hasAudacity().then((r) => setSatisfied((a) => [r, a[1], a[2]]));
+    hasAuacityScripts().then((r) => setSatisfied((a) => [a[0], r, a[2]]));
+    hasPython().then((r) => setSatisfied((a) => [a[0], a[1], r]));
   };
 
-  const ifCond = (s: Step) => true;
+  const handleEval = () => doEval();
+
+  React.useEffect(() => {
+    doEval();
+  }, []);
+
+  React.useEffect(() => {
+    if (satisfied[0] && satisfied[1] && satisfied[2] && !allAudacity)
+      setAllAdudacity(true);
+    else if (!satisfied[0] || !satisfied[1] || !satisfied[2])
+      if (allAudacity) setAllAdudacity(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [satisfied]);
+
+  const textDecoration = { textDecoration: 'none' };
 
   return (
     <Dialog
@@ -89,8 +138,8 @@ function AudacitySetup(props: AudacitySetupProps) {
       <DialogTitle id="audacity-setup-title">
         {
           <div className={classes.title}>
-            {'Audacity Setup'}
-            <IconButton>
+            {t.audacitySetup}
+            <IconButton onClick={handleEval}>
               <RefreshIcon />
             </IconButton>
           </div>
@@ -101,27 +150,43 @@ function AudacitySetup(props: AudacitySetupProps) {
           <ListItem key={i}>
             <ListItemAvatar>
               <Avatar className={classes.avatar}>
-                {ifCond(steps.item) && <CheckIcon />}
+                {satisfied[i] && <CheckIcon />}
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary={steps.choice} />
-            <ListItemSecondaryAction>
-              <Button onClick={handleListItemClick(steps.choice)}>
-                {steps.action}
-              </Button>
-            </ListItemSecondaryAction>
+            {!satisfied[i] && (
+              <ListItemSecondaryAction>
+                {typeof steps.url === 'string' ? (
+                  <a
+                    id={`action-${i}`}
+                    style={textDecoration}
+                    href={steps.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button>{steps.action}</Button>
+                  </a>
+                ) : (
+                  <Button id={`action-${i}`} onClick={steps.url}>
+                    {steps.action}
+                  </Button>
+                )}
+              </ListItemSecondaryAction>
+            )}
           </ListItem>
         ))}
       </List>
       <DialogActions>
-        <Button onClick={handleClose}>{'Close'}</Button>
+        <Button onClick={handleClose}>{t.close}</Button>
       </DialogActions>
     </Dialog>
   );
 }
 
-export default function AudacitySetupButton() {
+export function AudacitySetupButton(props: IStateProps) {
+  const { t } = props;
   const [open, setOpen] = React.useState(false);
+  const [allAudacity] = useGlobal('allAudacity');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -133,11 +198,21 @@ export default function AudacitySetupButton() {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        <AudacityLogo />
-        {'Audacity Setup'}
+      <Button
+        variant="outlined"
+        color={allAudacity ? 'primary' : 'default'}
+        onClick={handleClickOpen}
+      >
+        <AudacityLogo disabled={!allAudacity} />
+        {t.audacitySetup}
       </Button>
-      <AudacitySetup open={open} onClose={handleClose} />
+      <AudacitySetup open={open} onClose={handleClose} t={t} />
     </div>
   );
 }
+
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, { layout: 'audacitySetup' }),
+});
+
+export default connect(mapStateToProps)(AudacitySetupButton) as any;
