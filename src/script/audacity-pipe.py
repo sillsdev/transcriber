@@ -18,7 +18,7 @@ import re
 if (len(sys.argv) < 2):
     print("Usage: python audacity-pipe.py <fullpath>")
     sys.exit(-1)
-prefs = os.path.join('C:\\Users\\Trihus\\AppData\\Roaming', 'audacity', 'audacity.cfg')
+prefs = os.path.join(os.getenv('AppData'), 'audacity', 'audacity.cfg')
 if (not os.path.exists(prefs)):
     print("Please Install Audacity")
     sys.exit(-2)

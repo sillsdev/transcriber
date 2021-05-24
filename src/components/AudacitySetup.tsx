@@ -44,9 +44,9 @@ const useStyles = makeStyles({
 });
 
 enum Step {
-  Audacity,
-  Scripting,
-  Python,
+  Audacity = 0,
+  Scripting = 1,
+  Python = 2,
 }
 
 interface StepType {
@@ -107,9 +107,9 @@ function AudacitySetup(props: AudacitySetupProps) {
   };
 
   const doEval = async () => {
-    hasAudacity().then((r) => setSatisfied((a) => [r, a[1], a[2]]));
-    hasAuacityScripts().then((r) => setSatisfied((a) => [a[0], r, a[2]]));
-    hasPython().then((r) => setSatisfied((a) => [a[0], a[1], r]));
+    Promise.all([hasAudacity(), hasAuacityScripts(), hasPython()]).then((r) =>
+      setSatisfied(r)
+    );
   };
 
   const handleEval = () => doEval();
@@ -119,9 +119,18 @@ function AudacitySetup(props: AudacitySetupProps) {
   }, []);
 
   React.useEffect(() => {
-    if (satisfied[0] && satisfied[1] && satisfied[2] && !allAudacity)
+    if (
+      satisfied[Step.Audacity] &&
+      satisfied[Step.Scripting] &&
+      satisfied[Step.Python] &&
+      !allAudacity
+    )
       setAllAdudacity(true);
-    else if (!satisfied[0] || !satisfied[1] || !satisfied[2])
+    else if (
+      !satisfied[Step.Audacity] ||
+      !satisfied[Step.Scripting] ||
+      !satisfied[Step.Python]
+    )
       if (allAudacity) setAllAdudacity(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [satisfied]);
