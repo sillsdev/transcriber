@@ -344,6 +344,55 @@
                <context context-type="sourcefile">AssignSection.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="audacitySetup.audacitySetup">
+      		<source>Audacity Setup</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacitySetup.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacitySetup.close">
+      		<source>Close</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacitySetup.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacitySetup.audacityInstalled">
+      		<source>Audacity Installed</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacitySetup.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacitySetup.getInstaller">
+      		<source>Get Installer</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacitySetup.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacitySetup.scriptingEnabled">
+      		<source>Scripting Enabled</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacitySetup.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacitySetup.enable">
+      		<source>Enable</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacitySetup.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacitySetup.pythonInstalled">
+      		<source>Python Installed</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacitySetup.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="audioDownload.downloadMedia">
       		<source>Download Audio</source>
       		<target/>

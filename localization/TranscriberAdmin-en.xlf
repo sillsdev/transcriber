@@ -298,6 +298,48 @@
             <target/>
          </segment>
       </unit>
+      <unit id="audacitySetup.audacitySetup">
+         <segment>
+            <source>Audacity Setup</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="audacitySetup.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="audacitySetup.audacityInstalled">
+         <segment>
+            <source>Audacity Installed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="audacitySetup.getInstaller">
+         <segment>
+            <source>Get Installer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="audacitySetup.scriptingEnabled">
+         <segment>
+            <source>Scripting Enabled</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="audacitySetup.enable">
+         <segment>
+            <source>Enable</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="audacitySetup.pythonInstalled">
+         <segment>
+            <source>Python Installed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="audioDownload.downloadMedia">
          <segment>
             <source>Download Audio</source>

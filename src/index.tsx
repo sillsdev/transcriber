@@ -49,13 +49,15 @@ export async function restoreBackup() {
     await memory.sync(await backup.pull((q) => q.findRecords()));
 
     const loadedplans = new Set(
-      (memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('section')
-      ) as Section[]).map((s) => related(s, 'plan') as string)
+      (
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('section')
+        ) as Section[]
+      ).map((s) => related(s, 'plan') as string)
     );
-    const plans = (memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('plan')
-    ) as Plan[]).filter((p) => loadedplans.has(p.id));
+    const plans = (
+      memory.cache.query((q: QueryBuilder) => q.findRecords('plan')) as Plan[]
+    ).filter((p) => loadedplans.has(p.id));
     const projs = new Set(plans.map((p) => related(p, 'project') as string));
     var ret = Array.from(projs);
     return ret;
@@ -139,6 +141,7 @@ Promise.all(promises)
       latestVersion: '',
       releaseDate: '',
       progress: 0,
+      allAudacity: false,
     });
     ReactDOM.render(<Root />, document.getElementById('root'));
   })
