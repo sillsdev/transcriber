@@ -75,6 +75,17 @@ const initialState = {
 			"users": "Members",
 		}
 	}),
+	"audacitySetup": new LocalizedStrings({
+		"en": {
+			"audacitySetup": "Audacity Setup",
+			"close": "Close",
+			"audacityInstalled": "Audacity Installed",
+			"getInstaller": "Get Installer",
+			"scriptingEnabled": "Scripting Enabled",
+			"enable": "Enable",
+			"pythonInstalled": "Python Installed",
+		}
+	}),
 	"audioDownload": new LocalizedStrings({
 		"en": {
 			"downloadMedia": "Download Audio",
@@ -897,6 +908,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"alert" : new LocalizedStrings(action.payload.data.alert),
 				"assignmentTable" : new LocalizedStrings(action.payload.data.assignmentTable),
 				"assignSection" : new LocalizedStrings(action.payload.data.assignSection),
+				"audacitySetup" : new LocalizedStrings(action.payload.data.audacitySetup),
 				"audioDownload" : new LocalizedStrings(action.payload.data.audioDownload),
 				"cards" : new LocalizedStrings(action.payload.data.cards),
 				"control" : new LocalizedStrings(action.payload.data.control),

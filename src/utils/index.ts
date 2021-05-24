@@ -43,3 +43,7 @@ export * from './localizeRole';
 export * from './langName';
 export * from './localizeGrid';
 export * from './dateOrTime';
+export * from './getRegVal';
+export * from './hasAuacity';
+export * from './hasAudacityScripts';
+export * from './hasPython';

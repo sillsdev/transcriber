@@ -65,6 +65,16 @@ export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods 
     "users": string;
 };
 
+export interface IAudacitySetupStrings extends Localize.LocalizedStringsMethods {
+    "audacitySetup": string;
+    "close": string;
+    "audacityInstalled": string;
+    "getInstaller": string;
+    "scriptingEnabled": string;
+    "enable": string;
+    "pythonInstalled": string;
+};
+
 export interface IAudioDownloadStrings extends Localize.LocalizedStringsMethods {
     "downloadMedia": string;
 };
@@ -839,6 +849,7 @@ export interface ILocalizedStrings {
 	alert: IAlertStrings;
 	assignmentTable: IAssignmentTableStrings;
 	assignSection: IAssignSectionStrings;
+	audacitySetup: IAudacitySetupStrings;
 	audioDownload: IAudioDownloadStrings;
 	cards: ICardsStrings;
 	control: IControlStrings;
