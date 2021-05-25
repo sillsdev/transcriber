@@ -88,12 +88,13 @@ function PassageRecord(props: IProps) {
   const mimeTypeRef = useRef('audio/wav');
   const { showMessage } = useSnackBar();
   const extensions = useMemo(
-    () => ['mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'],
+    () => ['mp3', 'mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'],
     []
   );
   const mimes = useMemo(
     () => [
       'audio/mpeg',
+      'audio/mp3',
       'audio/webm;codecs=opus',
       'audio/webm;codecs=pcm',
       'audio/x-m4a',
@@ -121,12 +122,14 @@ function PassageRecord(props: IProps) {
   }, [userHasSetName, defaultFilename, t.defaultFilename]);
 
   const setMimeType = (mimeType: string) => {
+    console.log(mimeType);
     mimeTypeRef.current = mimeType;
     setExtension();
   };
   const setExtension = () => {
     if (mimeTypeRef.current) {
       var i = mimes.findIndex((m) => m === mimeTypeRef.current);
+      console.log(i);
       setFiletype(extensions[i]);
     }
   };
