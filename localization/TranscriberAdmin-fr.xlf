@@ -337,6 +337,12 @@
    			<target>Python installé</target>
    		</segment>
    	</unit>
+   	<unit id="audacitySetup.versions">
+   		<segment>
+   			<source>NB: Audacity integration was last tested with version {0} of Audacity and the scripting was last tested with version {1} of Python.</source>
+   			<target>NB : L'intégration d'Audacity a été testée pour la dernière fois avec la version {0} d'Audacity et le script a été testé pour la dernière fois avec la version {1} de Python.</target>
+   		</segment>
+   	</unit>
    	<unit id="audioDownload.downloadMedia">
          <segment>
             <source>Download Audio</source>
