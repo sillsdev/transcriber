@@ -20,12 +20,13 @@ import {
 import { NextAction } from './TaskFlag';
 import TaskAvatar from './TaskAvatar';
 import { UnsavedContext } from '../context/UnsavedContext';
+import { TaskItemWidth } from './TaskTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      minWidth: 360,
+      minWidth: `${TaskItemWidth}px`,
     },
     detail: {
       display: 'flex',
@@ -44,26 +45,20 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IProps {
   item: number;
   organizedBy: string;
+  flat: boolean;
 }
 
 export function TaskItem(props: IProps) {
-  const { organizedBy } = props;
+  const { flat } = props;
   const classes = useStyles();
-  const {
-    rowData,
-    taskItemStr,
-    activityStateStr,
-    setSelected,
-    setAllDone,
-    allBookData,
-  } = useTodo();
+  const { rowData, activityStateStr, setSelected, setAllDone, allBookData } =
+    useTodo();
   const uctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = uctx.state;
 
   // TT-1749 during refresh the index went out of range.
   if (props.item >= rowData.length) return <></>;
   const { passage, section, duration } = rowData[props.item];
-  const t = taskItemStr;
 
   const handleSelect = (selected: string) => () => {
     setAllDone(false);
@@ -104,12 +99,13 @@ export function TaskItem(props: IProps) {
             <div className={classes.detailAlign}>
               <Duration seconds={duration} />
             </div>
-            <div className={classes.detailAlign}>
-              {t.section
-                .replace('{0}', organizedBy)
-                .replace('{1}', sectionNumber(section))
-                .replace('{2}', passageNumber(passage).trim())}
-            </div>
+            {!flat && (
+              <div className={classes.detailAlign}>
+                {'{1}.{2}'
+                  .replace('{1}', sectionNumber(section))
+                  .replace('{2}', passageNumber(passage).trim())}
+              </div>
+            )}
           </div>
         </ListItemSecondaryAction>
       </ListItem>
