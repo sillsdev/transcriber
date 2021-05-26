@@ -393,6 +393,13 @@
       			<context context-type="sourcefile">AudacitySetup.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="audacitySetup.versions">
+      		<source>NB: Audacity integration was last tested with version {0} of Audacity and the scripting was last tested with version {1} of Python.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacitySetup.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="audioDownload.downloadMedia">
       		<source>Download Audio</source>
       		<target/>
