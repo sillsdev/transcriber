@@ -14,7 +14,7 @@ const getAllPref = async (prefs: string) => {
 };
 
 const getScriptPref = async (content: string) => {
-  return /mod-script-pipe=([01])/.exec(content);
+  return /mod-script-pipe=([01234])/.exec(content);
 };
 
 export const hasAuacityScripts = async () => {

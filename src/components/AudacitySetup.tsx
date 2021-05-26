@@ -16,6 +16,7 @@ import {
   DialogTitle,
   Dialog,
   DialogActions,
+  DialogContentText,
 } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import RefreshIcon from '@material-ui/icons/Refresh';
@@ -27,6 +28,9 @@ import {
   enableAudacityScripts,
 } from '../utils';
 
+const AudacityVersion = '3.0.2';
+const PythonVersion = '2.7.18';
+
 const useStyles = makeStyles({
   root: {
     '& .MuiDialog-paper': {
@@ -37,6 +41,10 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  intro: {
+    padding: '0px 20px',
+    fontSize: 'small',
   },
   avatar: {
     color: 'green',
@@ -53,7 +61,7 @@ interface StepType {
   item: Step;
   choice: string;
   action: string;
-  url: string | (() => Promise<void>);
+  url: string | (() => void);
   help?: boolean;
   testIt: () => Promise<boolean>;
 }
@@ -77,6 +85,19 @@ function AudacitySetup(props: AudacitySetupProps) {
     false,
     false,
   ]);
+
+  const doEval = async () => {
+    Promise.all([hasAudacity(), hasAuacityScripts(), hasPython()]).then((r) =>
+      setSatisfied(r)
+    );
+  };
+
+  const handleScripting = () => {
+    enableAudacityScripts().then(() => {
+      doEval();
+    });
+  };
+
   const steps: StepType[] = [
     {
       item: Step.Audacity,
@@ -89,7 +110,7 @@ function AudacitySetup(props: AudacitySetupProps) {
       item: Step.Scripting,
       choice: t.scriptingEnabled,
       action: t.enable,
-      url: enableAudacityScripts,
+      url: handleScripting,
       help: true,
       testIt: hasAuacityScripts,
     },
@@ -104,12 +125,6 @@ function AudacitySetup(props: AudacitySetupProps) {
 
   const handleClose = () => {
     onClose();
-  };
-
-  const doEval = async () => {
-    Promise.all([hasAudacity(), hasAuacityScripts(), hasPython()]).then((r) =>
-      setSatisfied(r)
-    );
   };
 
   const handleEval = () => doEval();
@@ -185,6 +200,11 @@ function AudacitySetup(props: AudacitySetupProps) {
           </ListItem>
         ))}
       </List>
+      <DialogContentText className={classes.intro}>
+        {t.versions
+          .replace('{0}', AudacityVersion)
+          .replace('{1}', PythonVersion)}
+      </DialogContentText>
       <DialogActions>
         <Button onClick={handleClose}>{t.close}</Button>
       </DialogActions>

@@ -73,6 +73,7 @@ export interface IAudacitySetupStrings extends Localize.LocalizedStringsMethods 
     "scriptingEnabled": string;
     "enable": string;
     "pythonInstalled": string;
+    "versions": string;
 };
 
 export interface IAudioDownloadStrings extends Localize.LocalizedStringsMethods {
