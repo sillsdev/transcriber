@@ -412,13 +412,16 @@ export function IntegrationPanel(props: IProps) {
       resetProjects();
       resetCount();
       setMyProject(project);
+      getLocalCount(passages, project, memory, errorReporter, t);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
 
   useEffect(() => {
     resetCount();
-  }, [passages, resetCount]);
+    getLocalCount(passages, project, memory, errorReporter, t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [passages]);
 
   /* do this once */
   useEffect(() => {
@@ -430,16 +433,17 @@ export function IntegrationPanel(props: IProps) {
   }, [integrations, paratextIntegration]);
 
   useEffect(() => {
-    if (!paratext_countStatus) {
-      getLocalCount(passages, project, memory, errorReporter, t);
-    } else if (paratext_countStatus.errStatus)
-      showTitledMessage(
-        t.countError,
-        translateParatextError(paratext_countStatus, ts)
-      );
-
+    if (paratext_countStatus) {
+      if (paratext_countStatus.errStatus) {
+        showTitledMessage(
+          t.countError,
+          translateParatextError(paratext_countStatus, ts)
+        );
+        resetCount();
+      } else if (paratext_countStatus.complete) resetCount();
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [paratext_count, paratext_countStatus]);
+  }, [paratext_countStatus]);
 
   useEffect(() => {
     if (!offline) {
@@ -674,15 +678,13 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="ready">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {paratext_count === 0 || <CheckIcon />}
+                  {paratext_count <= 0 || <CheckIcon />}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={t.countReady}
                 secondary={
-                  paratext_countStatus && paratext_countStatus.complete
-                    ? paratext_count
-                    : t.countPending
+                  paratext_count >= 0 ? paratext_count : t.countPending
                 }
               />
             </ListItem>
