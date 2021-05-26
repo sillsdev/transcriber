@@ -34,14 +34,14 @@ import { useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
 import MediaPlayer from './MediaPlayer';
 
-export const TaskItemWidth = 370;
+export const TaskItemWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
       '&[data-list="true"] table': {
-        minWidth: '372px !important',
+        minWidth: `${TaskItemWidth}px !important`,
       },
       '&[data-list="true"] thead': {
         display: 'none',
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) =>
         width: '1px !important',
       },
       '&[data-list="true"] colgroup col:nth-child(2)': {
-        width: '370px !important',
+        width: `${TaskItemWidth}px !important`,
       },
       '& tbody > tr:first-child': {
         display: 'none',
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     dialogHeader: theme.mixins.gutters({
-      width: '340px',
+      width: `${TaskItemWidth - 30}px`,
       paddingTop: '8px',
       paddingBottom: '8px',
       display: 'flex',
@@ -141,7 +141,7 @@ export function TaskTable(props: IProps) {
   const classes = useStyles();
   const [user] = useGlobal('user');
   const [width, setWidth] = useState(window.innerWidth);
-  const { getPlanName } = usePlan();
+  const { getPlan, getPlanName } = usePlan();
   const offlineProjectRead = useOfflnProjRead();
   const offlineAvailableToggle = useOfflineAvailToggle();
   const [planId] = useGlobal('plan');
@@ -154,6 +154,7 @@ export function TaskTable(props: IProps) {
   const [openReports, setOpenReports] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
+  const [inlinePassage, setInlinePassage] = useState(false);
   const [columns] = useState([
     { name: 'composite', title: '\u00A0' },
     { name: 'play', title: '\u00A0' },
@@ -259,7 +260,10 @@ export function TaskTable(props: IProps) {
 
   useEffect(() => {
     setPlanName(getPlanName(planId));
-  }, [getPlanName, planId]);
+    const planRec = getPlan(planId);
+    setInlinePassage(Boolean(planRec?.attributes?.flat));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [planId]);
 
   useEffect(() => {
     if (!filter) {
@@ -324,7 +328,7 @@ export function TaskTable(props: IProps) {
         r.state === '' ? (
           <TaskHead item={i} />
         ) : (
-          <TaskItem item={i} organizedBy={organizedBy} />
+          <TaskItem item={i} organizedBy={organizedBy} flat={inlinePassage} />
         ),
       play: r.playItem,
       plan: r.planName,
