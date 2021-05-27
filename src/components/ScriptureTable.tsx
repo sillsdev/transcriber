@@ -56,6 +56,8 @@ import Uploader, { statusInit } from './Uploader';
 import { useMediaAttach } from '../crud/useMediaAttach';
 import { keyMap } from '../schema';
 import { AddRecord, UpdateRecord } from '../model/baseModel';
+import { BigDialog } from '../hoc/BigDialog';
+import PassageDetail from './Passage/PassageDetail';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -200,6 +202,7 @@ export function ScriptureTable(props: IProps) {
   const [status] = useState(statusInit);
   const [uploadRow, setUploadRow] = useState<number>();
   const [defaultFilename, setDefaultFilename] = useState('');
+  const [detailRow, setDetailRow] = useState<number>();
   const showBook = (cols: ICols) => cols.Book >= 0;
   const { getPlan } = usePlan();
   const [attachPassage, detachPassage] = useMediaAttach({
@@ -725,6 +728,14 @@ export function ScriptureTable(props: IProps) {
       startSave();
       waitForSave(() => setView(`/work/${prjId}/${passageRemoteId}`), 100);
     } else setView(`/work/${prjId}/${passageRemoteId}`);
+  };
+
+  const handleDetail = (i: number) => {
+    setDetailRow(i);
+  };
+
+  const handleNoDetail = () => {
+    setDetailRow(undefined);
   };
 
   const doAssign = (where: number[]) => {
@@ -1363,6 +1374,7 @@ export function ScriptureTable(props: IProps) {
         resequence={handleResequence}
         inlinePassages={inlinePassages}
         onTranscribe={handleTranscribe}
+        onDetail={handleDetail}
         onAssign={handleAssign}
         onUpload={handleUpload}
         onRecord={handleRecord}
@@ -1371,6 +1383,22 @@ export function ScriptureTable(props: IProps) {
         t={s}
         ts={ts}
       />
+      <BigDialog
+        title={'Passage Detail'}
+        isOpen={detailRow !== undefined}
+        onOpen={handleNoDetail}
+        ts={ts}
+      >
+        <PassageDetail
+          id={passageId(detailRow || 0)}
+          row={detailRow || 0}
+          onTranscribe={handleTranscribe}
+          onAssign={handleAssign}
+          onUpload={handleUpload}
+          onRecord={handleRecord}
+          bookSuggestions={bookSuggestions}
+        />
+      </BigDialog>
       <AssignSection
         sections={getSections(assignSections)}
         visible={assignSectionVisible}

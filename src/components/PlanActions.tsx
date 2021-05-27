@@ -3,6 +3,7 @@ import { ISharedStrings, IPlanActionsStrings, IState } from '../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
+import DetailIcon from '@material-ui/icons/Details';
 import TranscribeIcon from '@material-ui/icons/EditOutlined';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
@@ -34,6 +35,7 @@ interface IProps extends IStateProps {
   canDelete: boolean;
   noDeleteNow: boolean;
   onTranscribe: (i: number) => () => void;
+  onDetail: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
 }
@@ -52,6 +54,7 @@ export function PlanActions(props: IProps) {
     canAssign,
     canDelete,
     noDeleteNow,
+    onDetail,
   } = props;
   const classes = useStyles();
 
@@ -78,7 +81,17 @@ export function PlanActions(props: IProps) {
           <TranscribeIcon />
         </IconButton>
       )}
-      {canDelete && !readonly && (
+      {!readonly && isPassage && (
+        <IconButton
+          id="passDetail"
+          className={classes.actionButton}
+          title={'Details'}
+          onClick={onDetail(rowIndex)}
+        >
+          <DetailIcon />
+        </IconButton>
+      )}
+      {canDelete && !readonly && !isPassage && (
         <IconButton
           id="planActDel"
           className={classes.actionButton}
@@ -96,4 +109,4 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'planActions' }),
   ts: localStrings(state, { layout: 'shared' }),
 });
-export default (connect(mapStateToProps)(PlanActions) as any) as any;
+export default connect(mapStateToProps)(PlanActions) as any as any;

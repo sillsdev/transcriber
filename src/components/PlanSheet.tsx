@@ -149,6 +149,7 @@ interface IProps extends IStateProps {
   resequence: () => void;
   inlinePassages: boolean;
   onTranscribe: (i: number) => void;
+  onDetail: (i: number) => void;
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
   onRecord: (i: number) => void;
@@ -176,6 +177,7 @@ export function PlanSheet(props: IProps) {
     inlinePassages,
     auth,
     onTranscribe,
+    onDetail,
   } = props;
   const classes = useStyles();
   const ctx = React.useContext(PlanContext);
@@ -185,12 +187,13 @@ export function PlanSheet(props: IProps) {
   const [global] = useGlobal();
   const [busy] = useGlobal('remoteBusy');
   const { showMessage } = useSnackBar();
-  const [position, setPosition] = useState<{
-    mouseX: null | number;
-    mouseY: null | number;
-    i: number;
-    j: number;
-  }>(initialPosition);
+  const [position, setPosition] =
+    useState<{
+      mouseX: null | number;
+      mouseY: null | number;
+      i: number;
+      j: number;
+    }>(initialPosition);
   const [data, setData] = useState(Array<Array<ICell>>());
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
@@ -287,6 +290,11 @@ export function PlanSheet(props: IProps) {
   const handleTranscribe = (i: number) => () => {
     setSrcMediaId('');
     onTranscribe(i);
+  };
+
+  const handleDetail = (i: number) => () => {
+    setSrcMediaId('');
+    onDetail(i);
   };
 
   const doUpdate = (grid: ICell[][]) => {
@@ -569,6 +577,7 @@ export function PlanSheet(props: IProps) {
                     canAssign={projRole === 'admin'}
                     canDelete={projRole === 'admin'}
                     noDeleteNow={deleting}
+                    onDetail={handleDetail}
                   />
                 ),
                 readOnly: true,
@@ -756,7 +765,7 @@ export function PlanSheet(props: IProps) {
           )}
         </Menu>
       </div>
-      {confirmAction !== '' ? (
+      {confirmAction !== '' && (
         <Confirm
           text={t.confirm
             .replace('{0}', confirmAction)
@@ -764,8 +773,6 @@ export function PlanSheet(props: IProps) {
           yesResponse={handleActionConfirmed}
           noResponse={handleActionRefused}
         />
-      ) : (
-        <></>
       )}
       <MediaPlayer auth={auth} srcMediaId={srcMediaId} onEnded={playEnded} />
     </div>
