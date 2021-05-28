@@ -504,7 +504,7 @@ export function ScriptureTable(props: IProps) {
       }
       await deleteOrbitRow(rowInfo[rowIndex].sectionId as RecordIdentity);
     }
-    if (modified) updateLastModified();
+    if (modified) await updateLastModified();
     setData(
       resequence(data.filter((row, rowIndex) => !where.includes(rowIndex)))
     );
@@ -798,7 +798,6 @@ export function ScriptureTable(props: IProps) {
           UpdateRecord(t, planRec, user)
         );
       }
-
       setLastSaved(planRec.attributes.dateUpdated);
     }
   };
@@ -1065,7 +1064,7 @@ export function ScriptureTable(props: IProps) {
       }
     }
     //update plan section count and lastmodified
-    updateLastModified();
+    await updateLastModified();
   };
 
   useEffect(() => {
