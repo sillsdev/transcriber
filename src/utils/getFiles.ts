@@ -1,7 +1,9 @@
+import { isElectron } from '../api-variable';
 // See also: https://qwtel.com/posts/software/async-generators-in-the-wild
 // See also: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-3.html#async-generators
 const { resolve } = require('path');
-const { readdir, stat } = require('fs').promises;
+const readdir = isElectron ? require('fs').promises.readdir : null;
+const stat = isElectron ? require('fs').promises.stat : null;
 
 export async function* getFiles(rootPath: string): AsyncGenerator<string> {
   try {
