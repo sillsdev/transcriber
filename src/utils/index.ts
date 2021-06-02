@@ -47,3 +47,5 @@ export * from './getRegVal';
 export * from './hasAuacity';
 export * from './hasAudacityScripts';
 export * from './hasPython';
+export * from './getWhereis';
+export * from './getFiles';
