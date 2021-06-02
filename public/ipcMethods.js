@@ -32,6 +32,10 @@ const ipcMethods = () => {
     return app.getPath('temp');
   });
 
+  ipcMain.handle('home', async () => {
+    return app.getPath('home');
+  });
+
   ipcMain.handle('appData', () => {
     return process.env.AppData;
   });
