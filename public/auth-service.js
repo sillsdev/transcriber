@@ -1,4 +1,3 @@
-import { AUTH_CONFIG } from './auth0-variables';
 const jwtDecode = require('jwt-decode');
 const axios = require('axios');
 const url = require('url');
@@ -9,6 +8,10 @@ const redirectUri = 'http://localhost/callback';
 
 const keytarService = 'electron-openid-oauth';
 const keytarAccount = os.userInfo().username;
+
+const auth0Domain = process.env.REACT_APP_DOMAIN||'';
+const desktopId = process.env.REACT_APP_DESKTOPID||'';
+const apiIdentifier = process.env.REACT_APP_AUDIENCE||'';
 
 let accessToken = null;
 let profile = null;
@@ -25,15 +28,15 @@ function getProfile() {
 function getAuthenticationURL() {
   return (
     'https://' +
-    AUTH_CONFIG.auth0Domain +
+    auth0Domain +
     '/authorize?' +
     'audience=' +
-    AUTH_CONFIG.apiIdentifier +
+    apiIdentifier +
     '&' +
     'scope=openid email profile offline_access&' +
     'response_type=code&' +
     'client_id=' +
-    AUTH_CONFIG.desktopId +
+    desktopId +
     '&' +
     'redirect_uri=' +
     redirectUri
@@ -46,11 +49,11 @@ async function refreshTokens() {
   if (refreshToken) {
     const refreshOptions = {
       method: 'POST',
-      url: `https://${AUTH_CONFIG.auth0Domain}/oauth/token`,
+      url: `https://${auth0Domain}/oauth/token`,
       headers: { 'content-type': 'application/json' },
       data: {
         grant_type: 'refresh_token',
-        client_id: AUTH_CONFIG.desktopId,
+        client_id: desktopId,
         refresh_token: refreshToken,
       },
       timeout: 5000,
@@ -77,14 +80,14 @@ async function loadTokens(callbackURL) {
 
   const exchangeOptions = {
     grant_type: 'authorization_code',
-    client_id: AUTH_CONFIG.desktopId,
+    client_id: desktopId,
     code: query.code,
     redirect_uri: redirectUri,
   };
 
   const options = {
     method: 'POST',
-    url: `https://${AUTH_CONFIG.auth0Domain}/oauth/token`,
+    url: `https://${auth0Domain}/oauth/token`,
     headers: {
       'content-type': 'application/json',
     },
@@ -116,7 +119,7 @@ async function logout() {
 }
 
 function getLogOutUrl() {
-  return `https://${AUTH_CONFIG.auth0Domain}/v2/logout`;
+  return `https://${auth0Domain}/v2/logout`;
 }
 
 function getGoogleLogOutUrl() {
