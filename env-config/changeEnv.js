@@ -22,18 +22,6 @@ fs.copyFile(
 
 // destination.txt will be created or overwritten by default.
 fs.copyFile(
-  `env-config/env-variables-${argEnv}.json`,
-  'public/env-variables.json',
-  (err) => {
-    if (err) throw err;
-    console.log(
-      `env-config/env-variables-${argEnv}.json was copied to public/env-variables.json`
-    );
-  }
-);
-
-// destination.txt will be created or overwritten by default.
-fs.copyFile(
   'amplify/' + argEnv + '/amplify-meta.json',
   'amplify/backend/amplify-meta.json',
   (err) => {

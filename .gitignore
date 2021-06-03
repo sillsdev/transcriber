@@ -33,7 +33,6 @@ localization/.vs
 buildDate.json
 /public/fonts
 /public/electronExtensions.js
-env-variables*.json
 env-config/env-files*.zip
 
 npm-debug.log*

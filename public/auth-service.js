@@ -1,11 +1,9 @@
+import { AUTH_CONFIG } from './auth0-variables';
 const jwtDecode = require('jwt-decode');
 const axios = require('axios');
 const url = require('url');
-const envVariables = require('./env-variables');
 const keytar = require('keytar');
 const os = require('os');
-
-const { apiIdentifier, auth0Domain, desktopId } = envVariables;
 
 const redirectUri = 'http://localhost/callback';
 
@@ -27,15 +25,15 @@ function getProfile() {
 function getAuthenticationURL() {
   return (
     'https://' +
-    auth0Domain +
+    AUTH_CONFIG.auth0Domain +
     '/authorize?' +
     'audience=' +
-    apiIdentifier +
+    AUTH_CONFIG.apiIdentifier +
     '&' +
     'scope=openid email profile offline_access&' +
     'response_type=code&' +
     'client_id=' +
-    desktopId +
+    AUTH_CONFIG.desktopId +
     '&' +
     'redirect_uri=' +
     redirectUri
@@ -48,11 +46,11 @@ async function refreshTokens() {
   if (refreshToken) {
     const refreshOptions = {
       method: 'POST',
-      url: `https://${auth0Domain}/oauth/token`,
+      url: `https://${AUTH_CONFIG.auth0Domain}/oauth/token`,
       headers: { 'content-type': 'application/json' },
       data: {
         grant_type: 'refresh_token',
-        client_id: desktopId,
+        client_id: AUTH_CONFIG.desktopId,
         refresh_token: refreshToken,
       },
       timeout: 5000,
@@ -79,14 +77,14 @@ async function loadTokens(callbackURL) {
 
   const exchangeOptions = {
     grant_type: 'authorization_code',
-    client_id: desktopId,
+    client_id: AUTH_CONFIG.desktopId,
     code: query.code,
     redirect_uri: redirectUri,
   };
 
   const options = {
     method: 'POST',
-    url: `https://${auth0Domain}/oauth/token`,
+    url: `https://${AUTH_CONFIG.auth0Domain}/oauth/token`,
     headers: {
       'content-type': 'application/json',
     },
@@ -118,7 +116,7 @@ async function logout() {
 }
 
 function getLogOutUrl() {
-  return `https://${auth0Domain}/v2/logout`;
+  return `https://${AUTH_CONFIG.auth0Domain}/v2/logout`;
 }
 
 function getGoogleLogOutUrl() {

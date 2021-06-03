@@ -17,7 +17,7 @@ export default class Auth {
     redirectUri: AUTH_CONFIG.callbackUrl,
     responseType: 'token id_token',
     scope: 'openid email profile',
-    audience: 'https://transcriber_api',
+    audience: AUTH_CONFIG.apiIdentifier,
     leeway: 300,
   });
 
