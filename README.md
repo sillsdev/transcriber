@@ -82,14 +82,11 @@ Three files are needed to create _dev_ environment configurations:
 
 - _env-config/.env.dev.development.local_
 - _env-config/.env.dev.local_
-
+- _env-config/.auth0-variables.dev.json_
+  
 Example _env-config/.env.dev.development.local_:
 
 ```
-REACT_APP_DOMAIN= (url of auth0 domain)
-REACT_APP_CLIENTID= (auth0 client id)
-REACT_APP_DESKTOPID = (auth0 desktop client id)
-REACT_APP_AUDIENCE = (auth0 api audience)
 REACT_APP_ENDPOINT= (url of app)
 REACT_APP_HOST= (url of host api)
 REACT_APP_HELP= (url of help online)
@@ -110,10 +107,6 @@ REACT_APP_SITE_TITLE=SIL Transcriber DEV
 Example _env-config/.env.dev.local_:
 
 ```
-REACT_APP_DOMAIN= (url of auth0 domain)
-REACT_APP_CLIENTID= (auth0 client id)
-REACT_APP_DESKTOPID = (auth0 desktop client id)
-REACT_APP_AUDIENCE = (auth0 api audience)
 REACT_APP_CALLBACK= (url of app followed by /callback)
 REACT_APP_ENDPOINT= (url of app)
 REACT_APP_HOST= (url of host api)
@@ -127,10 +120,19 @@ REACT_APP_SITE_TITLE= (title for browser tab)
 REACT_APP_SNAGID=(bugsnag client id)
 REACT_APP_BIGSAVE_THRESHOLD=(number of changes to force a full save vs row by row)
 ```
+Example _env-config/auth0-variables.dev.json_
 
+```
+{
+  "apiIdentifier": "(auth0 api audience)",
+  "auth0Domain": "(url of auth0 domain)",
+  "desktopId": "(auth0 desktop extension -- native client id)",
+  "webClientId": "(auth0 spa client id)"
+}
+```
 ### Generate dev configuration files
 
-Having created or obtained the _.env.\*_ files listed above, generate the environment-appropriate _.env.development.local_, _.env.local_ and files by executing the following:
+Having created or obtained the _.env.\*_ files listed above, generate the environment-appropriate _.env.development.local_, _.env.local_ and auth0-variables.json files by executing the following:
 
 - `npm run dev`
 
