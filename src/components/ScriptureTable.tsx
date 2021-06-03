@@ -504,7 +504,7 @@ export function ScriptureTable(props: IProps) {
       }
       await deleteOrbitRow(rowInfo[rowIndex].sectionId as RecordIdentity);
     }
-    if (modified) await updateLastModified();
+    if (modified) updateLastModified();
     setData(
       resequence(data.filter((row, rowIndex) => !where.includes(rowIndex)))
     );
