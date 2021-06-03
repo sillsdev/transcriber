@@ -1,8 +1,12 @@
 import history from '../history';
 import auth0 from 'auth0-js';
 import jwtDecode from 'jwt-decode';
-import { AUTH_CONFIG } from './auth0-variables';
 import { isElectron } from '../api-variable';
+import {
+  apiIdentifier,
+  auth0Domain,
+  webClientId,
+} from './auth0-variables.json';
 import { localeDefault } from '../utils';
 
 export default class Auth {
@@ -12,12 +16,12 @@ export default class Auth {
   email_verified: boolean;
 
   auth0 = new auth0.WebAuth({
-    domain: AUTH_CONFIG.domain,
-    clientID: AUTH_CONFIG.clientId,
-    redirectUri: AUTH_CONFIG.callbackUrl,
+    domain: auth0Domain,
+    clientID: webClientId,
+    redirectUri: process.env.REACT_APP_CALLBACK,
     responseType: 'token id_token',
     scope: 'openid email profile',
-    audience: AUTH_CONFIG.apiIdentifier,
+    audience: apiIdentifier,
     leeway: 300,
   });
 

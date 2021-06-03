@@ -1,3 +1,4 @@
+const envVariables = require('./auth0-variables');
 const jwtDecode = require('jwt-decode');
 const axios = require('axios');
 const url = require('url');
@@ -8,10 +9,7 @@ const redirectUri = 'http://localhost/callback';
 
 const keytarService = 'electron-openid-oauth';
 const keytarAccount = os.userInfo().username;
-
-const auth0Domain = process.env.REACT_APP_DOMAIN||'';
-const desktopId = process.env.REACT_APP_DESKTOPID||'';
-const apiIdentifier = process.env.REACT_APP_AUDIENCE||'';
+const { apiIdentifier, auth0Domain, desktopId } = envVariables;
 
 let accessToken = null;
 let profile = null;

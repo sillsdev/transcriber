@@ -28,6 +28,8 @@ localization/tl/*
 .DS_Store
 .env.local
 .env.*.local
+.auth0*
+auth0-variables.json
 localization/.vscode
 localization/.vs
 buildDate.json
