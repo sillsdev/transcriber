@@ -19,19 +19,26 @@ fs.copyFile(
     );
   }
 );
-
-// destination.txt will be created or overwritten by default.
 fs.copyFile(
-  `env-config/env-variables-${argEnv}.json`,
-  'public/env-variables.json',
+  `env-config/.auth0-variables.${argEnv}.json`,
+  `src/auth/auth0-variables.json`,
   (err) => {
     if (err) throw err;
     console.log(
-      `env-config/env-variables-${argEnv}.json was copied to public/env-variables.json`
+      `env-config/.auth0-variables.${argEnv}.json was copied to src/auth/auth0-variables.json`
     );
   }
 );
-
+fs.copyFile(
+  `env-config/.auth0-variables.${argEnv}.json`,
+  `public/auth0-variables.json`,
+  (err) => {
+    if (err) throw err;
+    console.log(
+      `env-config/.auth0-variables.${argEnv}.json was copied to public/auth0-variables.json`
+    );
+  }
+);
 // destination.txt will be created or overwritten by default.
 fs.copyFile(
   'amplify/' + argEnv + '/amplify-meta.json',
