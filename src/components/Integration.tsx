@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import * as actions from '../store';
-import { useGlobal } from 'reactn';
+import { useGlobal, useState } from 'reactn';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -171,22 +171,23 @@ export function IntegrationPanel(props: IProps) {
   const { projectintegrations, integrations, projects, passages } = props;
   const classes = useStyles();
   const [connected, setConnected] = useGlobal('connected');
-  const [hasPtProj, setHasPtProj] = React.useState(false);
-  const [ptProj, setPtProj] = React.useState(-1);
-  const [ptProjName, setPtProjName] = React.useState('');
-  const [ptShortName, setPtShortName] = React.useState('');
-  const [hasParatext, setHasParatext] = React.useState(false);
-  const [hasPermission, setHasPermission] = React.useState(false);
-  const [ptPermission, setPtPermission] = React.useState('None');
-  const [myProject, setMyProject] = React.useState('');
+  const [hasPtProj, setHasPtProj] = useState(false);
+  const [ptProj, setPtProj] = useState(-1);
+  const [ptProjName, setPtProjName] = useState('');
+  const [ptShortName, setPtShortName] = useState('');
+  const [hasParatext, setHasParatext] = useState(false);
+  const [hasPermission, setHasPermission] = useState(false);
+  const [ptPermission, setPtPermission] = useState('None');
+  const [myProject, setMyProject] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
   const [projectsLoaded] = useGlobal('projectsLoaded');
   const getOfflineProject = useOfflnProjRead();
   const [offline] = useGlobal('offline');
+  const [count, setCount] = useState(-1);
 
-  const [paratextIntegration, setParatextIntegration] = React.useState('');
-  const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
+  const [paratextIntegration, setParatextIntegration] = useState('');
+  const [confirmItem, setConfirmItem] = useState<string | null>(null);
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const [plan] = useGlobal('plan');
@@ -195,7 +196,7 @@ export function IntegrationPanel(props: IProps) {
   const [errorReporter] = useGlobal('errorReporter');
   const { showMessage, showTitledMessage } = useSnackBar();
   const [busy] = useGlobal('remoteBusy');
-  const [ptPath, setPtPath] = React.useState('');
+  const [ptPath, setPtPath] = useState('');
   const syncing = React.useRef<boolean>(false);
   const setSyncing = (state: boolean) => (syncing.current = state);
 
@@ -380,6 +381,7 @@ export function IntegrationPanel(props: IProps) {
   const canEditParatextText = (role: string): boolean => {
     return role === 'pt_administrator' || role === 'pt_translator';
   };
+
   const formatWithLanguage = (replLang: string): string => {
     let proj = getProject();
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
@@ -440,7 +442,10 @@ export function IntegrationPanel(props: IProps) {
           translateParatextError(paratext_countStatus, ts)
         );
         resetCount();
-      } else if (paratext_countStatus.complete) resetCount();
+      } else if (paratext_countStatus.complete) {
+        setCount(paratext_count);
+        resetCount();
+      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_countStatus]);
@@ -678,14 +683,12 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="ready">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {paratext_count <= 0 || <CheckIcon />}
+                  {count <= 0 || <CheckIcon />}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={t.countReady}
-                secondary={
-                  paratext_count >= 0 ? paratext_count : t.countPending
-                }
+                secondary={count >= 0 ? count : t.countPending}
               />
             </ListItem>
           </List>
@@ -811,16 +814,12 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="localReady">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {paratext_count === 0 || <CheckIcon />}
+                  {count <= 0 || <CheckIcon />}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={t.countReady}
-                secondary={
-                  paratext_countStatus && paratext_countStatus.complete
-                    ? paratext_count
-                    : t.countPending
-                }
+                secondary={count >= 0 ? count : t.countPending}
               />
             </ListItem>
           </List>

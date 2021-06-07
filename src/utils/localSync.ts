@@ -422,7 +422,7 @@ const removeVerse = (v: Element) => {
       if (rem) v.parentNode?.removeChild(rem);
     } else if (isPara(next) && !isSection(next) && !isVerse(next.firstChild)) {
       next = next.nextSibling;
-      (rem as Element).remove();
+      if (rem) v.parentNode?.removeChild(rem);
     } else if (isNote(next)) next = next.nextSibling;
     //don't remove the note
     else next = null;
@@ -634,7 +634,7 @@ export const localSync = async (
         addNumberToSection
       );
     } catch (error) {
-      return error.stdout.replace(
+      return error.message.replace(
         'Missing Localizer implementation. English text will be used instead.',
         ''
       );
