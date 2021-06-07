@@ -248,7 +248,7 @@ export function DataChanges(props: IProps) {
     } else if (checkBusy !== busy) setBusy(checkBusy);
   };
   const updateData = () => {
-    if (!busy && !doSave) {
+    if (!busy && !doSave && auth?.isAuthenticated()) {
       doDataChanges(
         auth,
         coordinator,
