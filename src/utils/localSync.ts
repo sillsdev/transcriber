@@ -407,26 +407,42 @@ const removeSection = (v: Element) => v.parentNode?.removeChild(v);
 
 const removeVerse = (v: Element) => {
   if (!isVerse(v)) return;
+  var parent = v.parentNode;
+
   var removeParent =
-    v.parentNode !== null &&
-    isPara(v.parentNode) &&
-    getVerses(v.parentNode).length === 1
-      ? v.parentNode
+    parent !== null && isPara(parent) && getVerses(parent).length === 1
+      ? parent
       : null;
 
   var next = v.nextSibling;
   var rem = next;
   while (next != null) {
-    if (isText(next)) {
-      next = next.nextSibling;
-      if (rem) v.parentNode?.removeChild(rem);
-    } else if (isPara(next) && !isSection(next) && !isVerse(next.firstChild)) {
-      next = next.nextSibling;
-      if (rem) v.parentNode?.removeChild(rem);
-    } else if (isNote(next)) next = next.nextSibling;
-    //don't remove the note
-    else next = null;
-    rem = next;
+    while (next != null) {
+      if (isText(next)) {
+        next = next.nextSibling;
+        if (rem) parent?.removeChild(rem);
+      } else if (
+        isPara(next) &&
+        !isSection(next) &&
+        !isVerse(next.firstChild)
+      ) {
+        next = next.nextSibling;
+        if (rem) parent?.removeChild(rem);
+      } else if (isNote(next)) next = next.nextSibling;
+      //don't remove the note
+      else next = null;
+      rem = next;
+    }
+    console.log(parent?.nextSibling);
+    if (
+      parent?.nextSibling &&
+      !isSection(parent?.nextSibling) &&
+      !isVerse(parent?.nextSibling.firstChild)
+    ) {
+      next = parent?.nextSibling;
+      parent = next.parentNode;
+      rem = next;
+    }
   }
   v.parentNode?.removeChild(v);
   if (removeParent != null) removeParent.parentNode?.removeChild(removeParent);
