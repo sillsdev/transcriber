@@ -14,6 +14,7 @@ import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AppBar, Tabs, Tab } from '@material-ui/core';
 import grey from '@material-ui/core/colors/grey';
+import TaskList from '../components/TaskList';
 import ScriptureTable from '../components/ScriptureTable';
 import AudioTab from '../components/AudioTab/AudioTab';
 import AssignmentTable from './AssignmentTable';
@@ -25,10 +26,11 @@ import { withData } from '../mods/react-orbitjs';
 import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
 
 export enum tabs {
-  sectionPassage = 0,
-  media = 1,
-  assignment = 2,
-  transcription = 3,
+  taskList = 0,
+  sectionPassage = 1,
+  media = 2,
+  assignment = 3,
+  transcription = 4,
 }
 export const TabHeight = 52;
 export const ActionHeight = 38;
@@ -90,15 +92,8 @@ interface ParamTypes {
   tabNm: string;
 }
 const ScrollableTabsButtonAuto = (props: IProps) => {
-  const {
-    t,
-    bookCol,
-    checkSaved,
-    plans,
-    sections,
-    passages,
-    mediafiles,
-  } = props;
+  const { t, bookCol, checkSaved, plans, sections, passages, mediafiles } =
+    props;
   const classes = useStyles();
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -157,6 +152,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           variant="scrollable"
           scrollButtons="auto"
         >
+          <Tab id="taskList" label="Task List" />
           <Tab
             id="secPass"
             label={t.sectionsPassages.replace('{0}', organizedBy)}
@@ -204,6 +200,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
         </Tabs>
       </AppBar>
       <div className={classes.content}>
+        {tab === tabs.taskList && <TaskList />}
         {tab === tabs.sectionPassage && (
           <>
             {bookCol !== -1 ? (
