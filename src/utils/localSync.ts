@@ -56,7 +56,13 @@ const isVerse = (v: Node | null) => {
   if (v == null || v.nodeType !== Node.ELEMENT_NODE) return false;
   return (v as Element).nodeName === 'verse';
 };
-
+const hasVerse = (v: Node) => {
+  if (isVerse(v)) return true;
+  var child = v.firstChild;
+  while (child && !isVerse(child)) child = child.nextSibling;
+  if (child) return true;
+  return false;
+};
 const firstVerse = (para: Node) => {
   var verse = para.firstChild;
   while (verse && !isVerse(verse)) verse = verse?.nextSibling;
@@ -407,42 +413,28 @@ const removeSection = (v: Element) => v.parentNode?.removeChild(v);
 
 const removeVerse = (v: Element) => {
   if (!isVerse(v)) return;
-  var parent = v.parentNode;
+  var checkparent = v.parentNode;
 
   var removeParent =
-    parent !== null && isPara(parent) && getVerses(parent).length === 1
-      ? parent
+    checkparent !== null &&
+    isPara(checkparent) &&
+    getVerses(checkparent).length === 1
+      ? checkparent
       : null;
 
   var next = v.nextSibling;
   var rem = next;
   while (next != null) {
-    while (next != null) {
-      if (isText(next)) {
-        next = next.nextSibling;
-        if (rem) parent?.removeChild(rem);
-      } else if (
-        isPara(next) &&
-        !isSection(next) &&
-        !isVerse(next.firstChild)
-      ) {
-        next = next.nextSibling;
-        if (rem) parent?.removeChild(rem);
-      } else if (isNote(next)) next = next.nextSibling;
+    if (isText(next)) {
+      next = next.nextSibling;
+      if (rem) rem.parentNode?.removeChild(rem);
+    } else if (isPara(next) && !isSection(next) && !hasVerse(next)) {
+      next = next.nextSibling;
+      if (rem) rem.parentNode?.removeChild(rem);
       //don't remove the note
-      else next = null;
-      rem = next;
-    }
-    console.log(parent?.nextSibling);
-    if (
-      parent?.nextSibling &&
-      !isSection(parent?.nextSibling) &&
-      !isVerse(parent?.nextSibling.firstChild)
-    ) {
-      next = parent?.nextSibling;
-      parent = next.parentNode;
-      rem = next;
-    }
+    } else if (isNote(next)) next = next.nextSibling;
+    else next = v.parentNode?.nextSibling ? v.parentNode?.nextSibling : null;
+    rem = next;
   }
   v.parentNode?.removeChild(v);
   if (removeParent != null) removeParent.parentNode?.removeChild(removeParent);
