@@ -413,13 +413,12 @@ const removeSection = (v: Element) => v.parentNode?.removeChild(v);
 
 const removeVerse = (v: Element) => {
   if (!isVerse(v)) return;
-  var checkparent = v.parentNode;
 
   var removeParent =
-    checkparent !== null &&
-    isPara(checkparent) &&
-    getVerses(checkparent).length === 1
-      ? checkparent
+    v.parentNode !== null &&
+    isPara(v.parentNode) &&
+    getVerses(v.parentNode).length === 1
+      ? v.parentNode
       : null;
 
   var next = v.nextSibling;
