@@ -310,6 +310,18 @@ const findNodeAfterVerse = (
   });
   if (after) {
     after = moveToPara(doc, after);
+    if (after.getAttribute('style') === 'q2') {
+      //we don't want to put our stuff in between the q1 and q2
+      //find the q1 - I'd expect it to be my parent...but it's a previous sibling...
+      if (
+        after.parentNode &&
+        (after.parentNode as Element).getAttribute('style') === 'q1'
+      )
+        after = after.parentNode as Element;
+      else after = after.previousSibling as Element;
+      while (after.previousSibling && after.getAttribute('style') !== 'q1')
+        after = after.previousSibling as Element;
+    }
     //skip section if there
     if (isAfterSection(after)) {
       return isAfterSection(after);
@@ -407,7 +419,6 @@ const removeSection = (v: Element) => v.parentNode?.removeChild(v);
 
 const removeVerse = (v: Element) => {
   if (!isVerse(v)) return;
-
   var removeParent =
     v.parentNode !== null &&
     isEmptyPara(v.parentNode) &&
