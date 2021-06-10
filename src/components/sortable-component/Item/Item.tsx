@@ -1,9 +1,9 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import classNames from 'classnames';
-import {DraggableSyntheticListeners} from '@dnd-kit/core';
-import {Transform} from '@dnd-kit/utilities';
+import { DraggableSyntheticListeners } from '@dnd-kit/core';
+import { Transform } from '@dnd-kit/utilities';
 
-import {Handle, Remove} from './components';
+import { Handle, Remove } from './components';
 
 import styles from './Item.module.css';
 
@@ -135,12 +135,12 @@ export const Item = React.memo(
             {...props}
             tabIndex={!handle ? 0 : undefined}
           >
+            {handle ? <Handle {...listeners} /> : null}
             {value}
             <span className={styles.Actions}>
               {onRemove ? (
                 <Remove className={styles.Remove} onClick={onRemove} />
               ) : null}
-              {handle ? <Handle {...listeners} /> : null}
             </span>
           </div>
         </li>

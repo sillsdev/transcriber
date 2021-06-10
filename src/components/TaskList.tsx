@@ -21,7 +21,6 @@ import {
   Props as SortableProps,
 } from './sortable-component/Sortable';
 import { related } from '../crud';
-import { createRange } from '../utils';
 
 enum CommentStatus {
   Open,
@@ -205,14 +204,19 @@ export const TaskList = (props: IProps) => {
   //   );
   // };
 
-  const field = (v: string | number, w: number) => {
-    const val = `${v}`;
-    const arr = createRange(w - val.length, () => '\u00A0');
-    return val + arr.join('');
+  const indent = (n: number) => {
+    let str = '';
+    while (n) {
+      str += '\u00A0\u00A0\u00A0';
+      n -= 1;
+    }
+    return str;
   };
 
   const values = (i: ITask) =>
-    `${field(i.id, 5)} ${i.title} ${i.book || ''} ${i.ref || ''}`;
+    `${indent(i.id.split('.').length)}${i.id} ${i.title} ${i.book || ''} ${
+      i.ref || ''
+    }`;
 
   return (
     <Sortable
