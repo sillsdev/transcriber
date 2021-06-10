@@ -21,6 +21,9 @@ import {
   Props as SortableProps,
 } from './sortable-component/Sortable';
 import { related } from '../crud';
+import { FaMinusSquare, FaPlusSquare } from 'react-icons/fa';
+import { IconButton } from '@material-ui/core';
+import { LightTooltip } from '../control';
 
 enum CommentStatus {
   Open,
@@ -85,7 +88,10 @@ interface ITask {
   comment: Comment[];
   start: number | undefined;
   finish: number | undefined;
+  show: boolean;
 }
+
+const showDefault = true;
 
 interface IStateProps {
   t: IPlanTabsStrings;
@@ -104,8 +110,21 @@ export const TaskList = (props: IProps) => {
   const { plans, sections, passages } = props;
   const [plan] = useGlobal('plan');
   const [item, setItem] = useState<ITask[]>([]);
+  const [expand, setExpand] = useState(showDefault);
   const getItemStyle = () => {
     return { padding: '0' };
+  };
+
+  const taskHead = (i: TaskType) =>
+    [TaskType.Section, TaskType.Passage, TaskType.Flat].includes(i);
+
+  const handleExpandToggle = () => {
+    setItem((item) =>
+      item.map((i) => {
+        return { ...i, show: taskHead(i.taskType) ? true : !expand };
+      })
+    );
+    setExpand(!expand);
   };
 
   const addTasks = (id: string, items: ITask[]) => {
@@ -119,6 +138,7 @@ export const TaskList = (props: IProps) => {
         comment: Array<Comment>(),
         start: undefined,
         finish: undefined,
+        show: showDefault,
       } as ITask);
     });
   };
@@ -150,6 +170,7 @@ export const TaskList = (props: IProps) => {
           comment: Array<Comment>(),
           start: Date.now(),
           finish: undefined,
+          show: true,
         } as ITask);
       }
       const pasRecs = passages
@@ -171,6 +192,7 @@ export const TaskList = (props: IProps) => {
             comment: Array<Comment>(),
             start: Date.now(),
             finish: undefined,
+            show: true,
           } as ITask);
         } else {
           id = `${sAttr?.sequencenum}.${pAttr?.sequencenum}`;
@@ -185,6 +207,7 @@ export const TaskList = (props: IProps) => {
             comment: Array<Comment>(),
             start: Date.now(),
             finish: undefined,
+            show: true,
           } as ITask);
         }
         addTasks(id, items);
@@ -219,14 +242,24 @@ export const TaskList = (props: IProps) => {
     }`;
 
   return (
-    <Sortable
-      // renderItem={TaskItem}
-      getItemStyles={getItemStyle}
-      {...props}
-      items={item.map((i) => values(i))}
-      handle
-      modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
-    />
+    <div>
+      <LightTooltip
+        title={expand ? 'Collapse All' : 'Expand All'}
+        placement="left"
+      >
+        <IconButton onClick={handleExpandToggle}>
+          {expand ? <FaMinusSquare /> : <FaPlusSquare />}
+        </IconButton>
+      </LightTooltip>
+      <Sortable
+        // renderItem={TaskItem}
+        getItemStyles={getItemStyle}
+        {...props}
+        items={item.filter((i) => i.show).map((i) => values(i))}
+        handle
+        modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+      />
+    </div>
   );
 };
 
