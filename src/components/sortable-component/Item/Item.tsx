@@ -24,6 +24,7 @@ export interface Props {
   wrapperStyle?: React.CSSProperties;
   value: React.ReactNode;
   onRemove?(): void;
+  renderObj?(args: any): React.ReactElement;
   renderItem?(args: {
     dragOverlay: boolean;
     dragging: boolean;
@@ -53,6 +54,7 @@ export const Item = React.memo(
         index,
         listeners,
         onRemove,
+        renderObj,
         renderItem,
         sorting,
         style,
@@ -136,7 +138,7 @@ export const Item = React.memo(
             tabIndex={!handle ? 0 : undefined}
           >
             {handle ? <Handle {...listeners} /> : null}
-            {value}
+            {!renderObj ? value : renderObj(value)}
             <span className={styles.Actions}>
               {onRemove ? (
                 <Remove className={styles.Remove} onClick={onRemove} />

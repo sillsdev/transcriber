@@ -45,6 +45,7 @@ export interface Props {
   handle?: boolean;
   layoutMeasuring?: Partial<LayoutMeasuring>;
   modifiers?: Modifiers;
+  renderObj?(args: any): React.ReactElement;
   renderItem?: any;
   removable?: boolean;
   strategy?: SortingStrategy;
@@ -92,6 +93,7 @@ export function Sortable({
   layoutMeasuring,
   modifiers,
   removable,
+  renderObj,
   renderItem,
   strategy = rectSortingStrategy,
   useDragOverlay = true,
@@ -110,7 +112,12 @@ export function Sortable({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-  const getIndex = items.indexOf.bind(items);
+  const getIndex = (id: string) => {
+    for (let i = 0; i < items.length; i += 1) {
+      if (items[i]?.id === id || items[i] === id) return i;
+    }
+    return -1;
+  };
   const getPosition = (id: string) => getIndex(id) + 1;
   const activeIndex = activeId ? getIndex(activeId) : -1;
   const handleRemove = removable
@@ -188,6 +195,7 @@ export function Sortable({
                 style={getItemStyles}
                 wrapperStyle={wrapperStyle}
                 disabled={isDisabled(value)}
+                renderObj={renderObj}
                 renderItem={renderItem}
                 onRemove={handleRemove}
                 animateLayoutChanges={animateLayoutChanges}
@@ -208,6 +216,7 @@ export function Sortable({
                 <Item
                   value={items[activeIndex]}
                   handle={handle}
+                  renderObj={renderObj}
                   renderItem={renderItem}
                   wrapperStyle={wrapperStyle({
                     index: activeIndex,
@@ -242,6 +251,7 @@ interface SortableItemProps {
   useDragOverlay?: boolean;
   onRemove?(id: string): void;
   style(values: any): React.CSSProperties;
+  renderObj?(args: any): React.ReactElement;
   renderItem?(args: any): React.ReactElement;
   wrapperStyle({
     index,
@@ -261,6 +271,7 @@ export function SortableItem({
   id,
   index,
   handle,
+  renderObj,
   onRemove,
   style,
   renderItem,
@@ -291,6 +302,7 @@ export function SortableItem({
       dragging={isDragging}
       sorting={isSorting}
       handle={handle}
+      renderObj={renderObj}
       renderItem={renderItem}
       index={index}
       style={style({

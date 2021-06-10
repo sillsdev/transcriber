@@ -21,7 +21,7 @@ import {
   Props as SortableProps,
 } from './sortable-component/Sortable';
 import { related } from '../crud';
-import { FaMinusSquare, FaPlusSquare } from 'react-icons/fa';
+import { FaRegMinusSquare, FaRegPlusSquare } from 'react-icons/fa';
 import { IconButton } from '@material-ui/core';
 import { LightTooltip } from '../control';
 
@@ -89,6 +89,8 @@ interface ITask {
   start: number | undefined;
   finish: number | undefined;
   show: boolean;
+  completed: number | undefined;
+  total: number | undefined;
 }
 
 const showDefault = true;
@@ -115,13 +117,21 @@ export const TaskList = (props: IProps) => {
     return { padding: '0' };
   };
 
-  const taskHead = (i: TaskType) =>
-    [TaskType.Section, TaskType.Passage, TaskType.Flat].includes(i);
+  const hasTasks = (i: TaskType) =>
+    [TaskType.Passage, TaskType.Flat].includes(i);
 
   const handleExpandToggle = () => {
     setItem((item) =>
       item.map((i) => {
-        return { ...i, show: taskHead(i.taskType) ? true : !expand };
+        return {
+          ...i,
+          show:
+            i.taskType === TaskType.Section
+              ? true
+              : hasTasks(i.taskType)
+              ? expand
+              : !expand,
+        };
       })
     );
     setExpand(!expand);
@@ -192,7 +202,9 @@ export const TaskList = (props: IProps) => {
             comment: Array<Comment>(),
             start: Date.now(),
             finish: undefined,
-            show: true,
+            show: false,
+            completed: 0,
+            total: 3,
           } as ITask);
         } else {
           id = `${sAttr?.sequencenum}.${pAttr?.sequencenum}`;
@@ -207,7 +219,9 @@ export const TaskList = (props: IProps) => {
             comment: Array<Comment>(),
             start: Date.now(),
             finish: undefined,
-            show: true,
+            show: false,
+            completed: 0,
+            total: 3,
           } as ITask);
         }
         addTasks(id, items);
@@ -215,17 +229,6 @@ export const TaskList = (props: IProps) => {
     });
     setItem(items);
   }, [passages, plan, plans, sections]);
-
-  // const TaskItem = (props: any) => {
-  //   return (
-  //     <div {...props}>
-  //       <span>{props.value.id}</span>
-  //       <span>{props.value.title}</span>
-  //       <span>{props.value.book || ''}</span>
-  //       <span>{props.value.ref}</span>
-  //     </div>
-  //   );
-  // };
 
   const indent = (n: number) => {
     let str = '';
@@ -236,10 +239,45 @@ export const TaskList = (props: IProps) => {
     return str;
   };
 
-  const values = (i: ITask) =>
-    `${indent(i.id.split('.').length)}${i.id} ${i.title} ${i.book || ''} ${
-      i.ref || ''
-    }`;
+  const isHead = (i: TaskType) =>
+    [TaskType.Section, TaskType.Passage, TaskType.Flat].includes(i);
+
+  const expandOne = (id: string) => () => {
+    let i = 0;
+    for (; i < item.length; i += 1) {
+      if (item[i]?.id === id) break;
+    }
+    if (i === item.length) return;
+    let j = i + 1;
+    for (; j < item.length; j += 1) {
+      if (isHead(item[j]?.taskType)) break;
+    }
+    setItem((item) =>
+      item.map((it, ind) => {
+        return {
+          ...it,
+          show:
+            ind < i ? it.show : ind === i ? false : ind < j ? true : it.show,
+        };
+      })
+    );
+  };
+
+  const TaskObj = (props: ITask) => {
+    const { id, title, book, ref, show, completed, total } = props;
+    return (
+      <div>
+        <span>{indent(id.split('.').length)}</span>
+        <span>{`${id} `}</span>
+        <span>{title}</span>
+        {book && <span>{`${book} `}</span>}
+        <span>{`${ref} `}</span>
+        {total && show && (
+          <button onClick={expandOne(id)}>{`${completed} / ${total}`}</button>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -248,14 +286,16 @@ export const TaskList = (props: IProps) => {
         placement="left"
       >
         <IconButton onClick={handleExpandToggle}>
-          {expand ? <FaMinusSquare /> : <FaPlusSquare />}
+          {expand ? <FaRegMinusSquare /> : <FaRegPlusSquare />}
         </IconButton>
       </LightTooltip>
       <Sortable
         // renderItem={TaskItem}
         getItemStyles={getItemStyle}
         {...props}
-        items={item.filter((i) => i.show).map((i) => values(i))}
+        // items={item.filter((i) => i.show).map((i) => values(i))}
+        items={item.filter((i) => i.show || i.total)}
+        renderObj={TaskObj}
         handle
         modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
       />
