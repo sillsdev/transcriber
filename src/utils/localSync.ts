@@ -37,6 +37,13 @@ const isText = (v: Node | null) => v?.nodeType === Node.TEXT_NODE;
 const isPara = (v: Node | null) =>
   v?.nodeType === Node.ELEMENT_NODE && v?.nodeName === 'para';
 
+const isEmptyPara = (v: Node | null) =>
+  v !== null &&
+  isPara(v) &&
+  (v?.firstChild === null ||
+    (isText(v.firstChild) &&
+      (v?.firstChild.nodeValue as string).trimEnd() === ''));
+
 const isSection = (v: Node) =>
   isPara(v) && (v as Element)?.getAttribute('style') === 's';
 
@@ -56,36 +63,25 @@ const isVerse = (v: Node | null) => {
   if (v == null || v.nodeType !== Node.ELEMENT_NODE) return false;
   return (v as Element).nodeName === 'verse';
 };
-const hasVerse = (v: Node) => {
-  if (isVerse(v)) return true;
-  var child = v.firstChild;
-  while (child && !isVerse(child)) child = child.nextSibling;
-  if (child) return true;
-  return false;
-};
+
 const firstVerse = (para: Node) => {
   var verse = para.firstChild;
   while (verse && !isVerse(verse)) verse = verse?.nextSibling;
-  return verse;
+  return verse as Element;
 };
 
 const verseText = (v: Element) => {
-  var next: Node | undefined | null = v.nextSibling;
+  var next: Node | undefined | null =
+    v.firstChild || v.nextSibling || v.parentNode?.nextSibling;
   var text = '';
   while (next) {
-    if (isText(next)) {
+    if (isSection(next) || isVerse(next)) next = null;
+    else if (isText(next)) {
       text += next.nodeValue;
-      if (next.nextSibling) next = next.nextSibling;
-      else next = next.parentNode?.nextSibling;
-    } else if (isPara(next)) {
-      if (isSection(next) || firstVerse(next)) next = null;
-      else if (next.firstChild && isText(next.firstChild))
-        next = next.firstChild;
-      else next = next.nextSibling;
-    } else if (isVerse(next)) next = null;
-    //note
-    else if (next.nextSibling) next = next.nextSibling;
-    else next = next.parentNode?.nextSibling;
+    }
+    if (next)
+      next =
+        next.firstChild || next.nextSibling || next.parentNode?.nextSibling;
   }
   return text;
 };
@@ -227,33 +223,31 @@ const addParatextVerse = (
 
   return first;
 };
-const RemoveText = (next: ChildNode | undefined | null) => {
-  var rem = next;
-  while (next) {
-    rem = next;
-    if (isText(next)) {
-      RemoveText(next.nextSibling);
-      next = next.parentNode?.nextSibling;
-      var removeParent =
-        rem.parentNode?.childNodes.length === 1 ? rem.parentNode : null;
-      rem.parentNode?.removeChild(rem);
-      if (removeParent) removeParent.parentNode?.removeChild(removeParent);
-    } else if (isPara(next)) {
-      if (isSection(next) || firstVerse(next)) next = null;
-      else if (next.firstChild && isText(next.firstChild))
-        next = next.firstChild;
-      else next = next.nextSibling;
-    } else if (isVerse(next)) next = null;
-    //note
-    else if (next.nextSibling) next = next.nextSibling;
-    else next = next.parentNode?.nextSibling;
+const RemoveText = (v: Element) => {
+  if (!isVerse(v)) return;
+  var next = v.firstChild || v.nextSibling || v.parentNode?.nextSibling;
+  var rem;
+  var remParent;
+  while (next != null) {
+    rem = null;
+    if (isSection(next) || isVerse(next)) next = null;
+    else if (!isNote(next) && !next.firstChild)
+      //don't remove the note or anything with children (yet)
+      rem = next;
+    if (next) {
+      remParent =
+        rem && rem.parentNode?.childNodes.length === 1 ? rem.parentNode : null;
+      next = next =
+        next.firstChild || next.nextSibling || next.parentNode?.nextSibling;
+    }
+    if (rem) rem.parentNode?.removeChild(rem);
+    if (remParent) remParent.parentNode?.removeChild(remParent);
   }
 };
 const ReplaceText = (doc: Document, para: Element, transcript: string) => {
   //remove text
   var verse = firstVerse(para);
-  var next = verse?.nextSibling;
-  RemoveText(next);
+  RemoveText(verse);
   var lines: string[] = removeTimestamps(transcript).split('\n');
   var last = addAfter(doc, verse, doc.createTextNode(lines[0]));
   //var last = para;
@@ -328,7 +322,7 @@ const ParseTranscription = (currentPassage: Passage, transcription: string) => {
   var pattern = /(\\v\s*[1-9+]-*[1-9+]*)/g;
   var internalverses = Array.from(transcription.matchAll(pattern));
   // Get all matches
-  if (internalverses.length <= 1) {
+  if (internalverses.length < 1) {
     currentPassage.attributes.lastComment = transcription.trimEnd();
     return [currentPassage];
   }
@@ -416,25 +410,11 @@ const removeVerse = (v: Element) => {
 
   var removeParent =
     v.parentNode !== null &&
-    isPara(v.parentNode) &&
+    isEmptyPara(v.parentNode) &&
     getVerses(v.parentNode).length === 1
       ? v.parentNode
       : null;
-
-  var next = v.nextSibling;
-  var rem = next;
-  while (next != null) {
-    if (isText(next)) {
-      next = next.nextSibling;
-      if (rem) rem.parentNode?.removeChild(rem);
-    } else if (isPara(next) && !isSection(next) && !hasVerse(next)) {
-      next = next.nextSibling;
-      if (rem) rem.parentNode?.removeChild(rem);
-      //don't remove the note
-    } else if (isNote(next)) next = next.nextSibling;
-    else next = v.parentNode?.nextSibling ? v.parentNode?.nextSibling : null;
-    rem = next;
-  }
+  RemoveText(v);
   v.parentNode?.removeChild(v);
   if (removeParent != null) removeParent.parentNode?.removeChild(removeParent);
 };
