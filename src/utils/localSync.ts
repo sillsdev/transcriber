@@ -310,17 +310,31 @@ const findNodeAfterVerse = (
   });
   if (after) {
     after = moveToPara(doc, after);
-    if (after.getAttribute('style') === 'q2') {
-      //we don't want to put our stuff in between the q1 and q2
-      //find the q1 - I'd expect it to be my parent...but it's a previous sibling...
-      if (
-        after.parentNode &&
-        (after.parentNode as Element).getAttribute('style') === 'q1'
-      )
-        after = after.parentNode as Element;
-      else after = after.previousSibling as Element;
-      while (after.previousSibling && after.getAttribute('style') !== 'q1')
-        after = after.previousSibling as Element;
+    var style = after.getAttribute('style');
+    if (style && style.startsWith('q')) {
+      var level = parseInt(style.substring(1)) || 0;
+      while (level > 1) {
+        if (
+          after.parentNode &&
+          (after.parentNode as Element).getAttribute('style') &&
+          (after.parentNode as Element).getAttribute('style')?.startsWith('q')
+        )
+          //we don't want to put our stuff in between q levels
+          //find the q1 - I'd expect it to be my parent...but it's a previous sibling...
+          after = after.parentNode as Element;
+        else after = after.previousSibling as Element;
+        while (
+          !(after.getAttribute('style') || '').startsWith('q') &&
+          after.previousSibling
+        )
+          after = after.previousSibling as Element;
+
+        style = after.getAttribute('style');
+        if (style && style.startsWith('q'))
+          level = parseInt(style.substring(1));
+        //give up
+        else level = 0;
+      }
     }
     //skip section if there
     if (isAfterSection(after)) {
