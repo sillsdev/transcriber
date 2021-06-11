@@ -1,9 +1,7 @@
 // https://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element
-export function relMouseCoords(event: React.MouseEvent, elem: HTMLElement) {
+export function elemOffset(elem: HTMLElement) {
   let totalOffsetX = 0;
   let totalOffsetY = 0;
-  let canvasX = 0;
-  let canvasY = 0;
   let currentElement: HTMLElement | null = elem;
 
   do {
@@ -12,11 +10,12 @@ export function relMouseCoords(event: React.MouseEvent, elem: HTMLElement) {
   } while (
     (currentElement = currentElement.offsetParent as HTMLElement | null)
   );
+  return { x: totalOffsetX, y: totalOffsetY };
+}
 
-  canvasX = event.pageX - totalOffsetX;
-  canvasY = event.pageY - totalOffsetY;
-
-  return { x: canvasX, y: canvasY };
+export function relMouseCoords(event: React.MouseEvent, elem: HTMLElement) {
+  const { x, y } = elemOffset(elem);
+  return { x: event.pageX - x, y: event.pageY - y };
 }
 
 export default relMouseCoords;
