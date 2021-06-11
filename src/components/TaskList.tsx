@@ -91,6 +91,7 @@ interface ITask {
   show: boolean;
   completed: number | undefined;
   total: number | undefined;
+  list: ITask[];
 }
 
 const showDefault = false;
@@ -205,6 +206,7 @@ export const TaskList = (props: IProps) => {
             show: !showDefault,
             completed: 0,
             total: 3,
+            list: [],
           } as ITask);
         } else {
           id = `${sAttr?.sequencenum}.${pAttr?.sequencenum}`;
@@ -222,9 +224,10 @@ export const TaskList = (props: IProps) => {
             show: !showDefault,
             completed: 0,
             total: 3,
+            list: [],
           } as ITask);
         }
-        addTasks(id, items);
+        addTasks(id, items[items.length - 1].list);
       }
     });
     setItem(items);
@@ -264,7 +267,7 @@ export const TaskList = (props: IProps) => {
   };
 
   const TaskObj = (props: ITask) => {
-    const { id, title, book, ref, show, completed, total } = props;
+    const { id, title, book, ref, show, completed, total, list } = props;
     return (
       <div>
         <span>{indent(id.split('.').length)}</span>
@@ -272,9 +275,20 @@ export const TaskList = (props: IProps) => {
         <span>{`${title} `}</span>
         {book && <span>{`${book} `}</span>}
         <span>{`${ref || ''} `}</span>
-        {total && show && (
-          <button onClick={expandOne(id)}>{`${completed} / ${total}`}</button>
-        )}
+        {total &&
+          (show ? (
+            <button onClick={expandOne(id)}>{`${completed} / ${total}`}</button>
+          ) : (
+            list.length > 0 && (
+              <Sortable
+                getItemStyles={getItemStyle}
+                items={list}
+                renderObj={TaskObj}
+                handle
+                modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+              />
+            )
+          ))}
       </div>
     );
   };
@@ -294,7 +308,7 @@ export const TaskList = (props: IProps) => {
         getItemStyles={getItemStyle}
         {...props}
         // items={item.filter((i) => i.show).map((i) => values(i))}
-        items={item.filter((i) => i.show || i.total)}
+        items={item}
         renderObj={TaskObj}
         handle
         modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}

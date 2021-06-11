@@ -8,7 +8,7 @@
   padding-bottom: 0;
   margin: 10px;
   border-radius: 5px;
-  min-height: 200px;
+  /* min-height: 200px; */
   transition: background-color 350ms ease;
   grid-template-columns: repeat(var(--columns, 1), 1fr);
 
