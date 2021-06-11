@@ -93,7 +93,7 @@ interface ITask {
   total: number | undefined;
 }
 
-const showDefault = true;
+const showDefault = false;
 
 interface IStateProps {
   t: IPlanTabsStrings;
@@ -194,7 +194,7 @@ export const TaskList = (props: IProps) => {
           items.push({
             id,
             assignTo: undefined,
-            title: pAttr?.title,
+            title: pAttr?.title || sAttr?.name,
             book: pAttr?.book,
             ref: pAttr?.reference,
             status: pMap[pAttr?.state] ?? TaskStatus.Created,
@@ -202,7 +202,7 @@ export const TaskList = (props: IProps) => {
             comment: Array<Comment>(),
             start: Date.now(),
             finish: undefined,
-            show: false,
+            show: !showDefault,
             completed: 0,
             total: 3,
           } as ITask);
@@ -219,7 +219,7 @@ export const TaskList = (props: IProps) => {
             comment: Array<Comment>(),
             start: Date.now(),
             finish: undefined,
-            show: false,
+            show: !showDefault,
             completed: 0,
             total: 3,
           } as ITask);
@@ -269,9 +269,9 @@ export const TaskList = (props: IProps) => {
       <div>
         <span>{indent(id.split('.').length)}</span>
         <span>{`${id} `}</span>
-        <span>{title}</span>
+        <span>{`${title} `}</span>
         {book && <span>{`${book} `}</span>}
-        <span>{`${ref} `}</span>
+        <span>{`${ref || ''} `}</span>
         {total && show && (
           <button onClick={expandOne(id)}>{`${completed} / ${total}`}</button>
         )}
