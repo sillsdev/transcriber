@@ -54,7 +54,7 @@ $focused-outline-color: #4c9ffe;
   position: relative;
   display: flex;
   flex-grow: 1;
-  align-items: center;
+  /* align-items: center; */
   padding: 18px 20px;
   background-color: $background-color;
   box-shadow: $box-shadow;

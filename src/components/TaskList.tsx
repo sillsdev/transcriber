@@ -234,34 +234,13 @@ export const TaskList = (props: IProps) => {
   }, [passages, plan, plans, sections]);
 
   const indent = (n: number) => {
-    let str = '';
-    while (n) {
-      str += '\u00A0\u00A0\u00A0';
-      n -= 1;
-    }
-    return str;
+    return n > 1 ? '\u00A0\u00A0\u00A0' : '';
   };
 
-  const isHead = (i: TaskType) =>
-    [TaskType.Section, TaskType.Passage, TaskType.Flat].includes(i);
-
-  const expandOne = (id: string) => () => {
-    let i = 0;
-    for (; i < item.length; i += 1) {
-      if (item[i]?.id === id) break;
-    }
-    if (i === item.length) return;
-    let j = i + 1;
-    for (; j < item.length; j += 1) {
-      if (isHead(item[j]?.taskType)) break;
-    }
+  const expandOne = (id: string, show: boolean) => () => {
     setItem((item) =>
-      item.map((it, ind) => {
-        return {
-          ...it,
-          show:
-            ind < i ? it.show : ind === i ? false : ind < j ? true : it.show,
-        };
+      item.map((it) => {
+        return { ...it, show: it.id === id ? !show : it.show };
       })
     );
   };
@@ -270,25 +249,25 @@ export const TaskList = (props: IProps) => {
     const { id, title, book, ref, show, completed, total, list } = props;
     return (
       <div>
-        <span>{indent(id.split('.').length)}</span>
+        <span>{indent(id.replace('.0', '').split('.').length)}</span>
         <span>{`${id} `}</span>
         <span>{`${title} `}</span>
         {book && <span>{`${book} `}</span>}
         <span>{`${ref || ''} `}</span>
-        {total &&
-          (show ? (
-            <button onClick={expandOne(id)}>{`${completed} / ${total}`}</button>
-          ) : (
-            list.length > 0 && (
-              <Sortable
-                getItemStyles={getItemStyle}
-                items={list}
-                renderObj={TaskObj}
-                handle
-                modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
-              />
-            )
-          ))}
+        {total && (
+          <button
+            onClick={expandOne(id, show)}
+          >{`${completed} / ${total}`}</button>
+        )}
+        {total && !show && list.length > 0 && (
+          <Sortable
+            getItemStyles={getItemStyle}
+            items={list}
+            renderObj={TaskObj}
+            handle
+            modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+          />
+        )}
       </div>
     );
   };
@@ -304,10 +283,8 @@ export const TaskList = (props: IProps) => {
         </IconButton>
       </LightTooltip>
       <Sortable
-        // renderItem={TaskItem}
         getItemStyles={getItemStyle}
         {...props}
-        // items={item.filter((i) => i.show).map((i) => values(i))}
         items={item}
         renderObj={TaskObj}
         handle
