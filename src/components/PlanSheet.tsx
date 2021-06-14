@@ -28,6 +28,7 @@ import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import PlanActions from './PlanActions';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 import PlanAudioActions from './PlanAudioActions';
+import MoreMenu from '../hoc/MoreMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -185,12 +186,13 @@ export function PlanSheet(props: IProps) {
   const [global] = useGlobal();
   const [busy] = useGlobal('remoteBusy');
   const { showMessage } = useSnackBar();
-  const [position, setPosition] = useState<{
-    mouseX: null | number;
-    mouseY: null | number;
-    i: number;
-    j: number;
-  }>(initialPosition);
+  const [position, setPosition] =
+    useState<{
+      mouseX: null | number;
+      mouseY: null | number;
+      i: number;
+      j: number;
+    }>(initialPosition);
   const [data, setData] = useState(Array<Array<ICell>>());
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
@@ -557,19 +559,21 @@ export function PlanSheet(props: IProps) {
             .concat([
               {
                 value: (
-                  <PlanActions
-                    {...props}
-                    rowIndex={rowIndex}
-                    isSection={section}
-                    isPassage={passage}
-                    mediaId={rowInfo[rowIndex].mediaId}
-                    onDelete={handleConfirmDelete}
-                    onTranscribe={handleTranscribe}
-                    readonly={readonly}
-                    canAssign={projRole === 'admin'}
-                    canDelete={projRole === 'admin'}
-                    noDeleteNow={deleting}
-                  />
+                  <MoreMenu>
+                    <PlanActions
+                      {...props}
+                      rowIndex={rowIndex}
+                      isSection={section}
+                      isPassage={passage}
+                      mediaId={rowInfo[rowIndex].mediaId}
+                      onDelete={handleConfirmDelete}
+                      onTranscribe={handleTranscribe}
+                      readonly={readonly}
+                      canAssign={projRole === 'admin'}
+                      canDelete={projRole === 'admin'}
+                      noDeleteNow={deleting}
+                    />
+                  </MoreMenu>
                 ),
                 readOnly: true,
                 className: section ? 'set' + (passage ? 'p' : ' ') : 'pass',
