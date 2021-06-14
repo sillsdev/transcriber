@@ -187,7 +187,6 @@ export function ScriptureTable(props: IProps) {
     { value: t.reference, readOnly: true, width: 180 },
     { value: t.description, readOnly: true, width: 280 },
   ]);
-  const [projRole] = useGlobal('projRole');
   const [data, setData] = useState(Array<Array<any>>());
   const [inData, setInData] = useState(Array<Array<any>>());
   const [, setComplete] = useGlobal('progress');
@@ -1319,7 +1318,7 @@ export function ScriptureTable(props: IProps) {
       {
         value: t.action,
         readOnly: true,
-        width: projRole === 'admin' ? (inlinePassages ? 150 : 100) : 50,
+        width: 50,
       },
     ]);
     if (
