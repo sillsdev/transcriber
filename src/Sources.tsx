@@ -92,7 +92,6 @@ export const Sources = async (
     };
 
     if (!coordinator.sourceNames.includes('remote')) {
-      if (coordinator.activated) await coordinator.deactivate();
       coordinator.addSource(remote);
     }
 
