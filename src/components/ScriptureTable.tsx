@@ -798,6 +798,7 @@ export function ScriptureTable(props: IProps) {
           UpdateRecord(t, planRec, user)
         );
       }
+
       setLastSaved(planRec.attributes.dateUpdated);
     }
   };
@@ -1058,12 +1059,13 @@ export function ScriptureTable(props: IProps) {
             await memory.update(ops);
           }
           //update section last modified
-          await updateSection(lastSec);
+          //TT-2469 this causes any new passages to forget about their section
+          //await updateSection(lastSec);
         }
       }
     }
     //update plan section count and lastmodified
-    await updateLastModified();
+    updateLastModified();
   };
 
   useEffect(() => {
