@@ -32,7 +32,7 @@
     "electron-is-dev": "^1.2.0",
     "execa": "^4.0.2",
     "fingerprintjs2": "^2.1.0",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^10.0.0",
     "js-base64": "^2.6.2",
     "jwt-decode": "^2.2.0",
     "keycode": "^2.2.0",
