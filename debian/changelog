@@ -1,3 +1,31 @@
+sil-transcriber (2.12.2.0)  experimental; urgency=high
+
+  * TT-2469 remove section update after passage update (#243)
+  * don't wait for update of plan so delete buttons reenable faster
+  * TT-2463 Paratext sync (#241)
+  * - do siblings of paragraph
+  * - check parent siblings for part of verse
+  * - simplify - just keep trucking until we hit a verse or section
+  * - don't insert between q2 and q1
+  * - handle more q levels
+  * don't send auth info for userversion - prevent creation of new user (#240)
+  * Only do data change when token is good
+  * TC159, TT-1755 allow for missing user in history
+  * TC19, TT-1606 wait for team delete
+  * fix the local count status (#239)
+  * - handle non-text, non-notes correctly
+  * TT-2446 save delete (#237)
+  * - on sections save without waiting for remote update
+  * TT-1523 wait for remote before updating plan (#235)
+  * getCount on project or passage change (#233)
+  * - reset status after complete or error
+  * keytar uses 7.6.x
+  * - keytar 7.7.x and on doesn't provide prebuilt binaries for electron.
+  * TT-2352 Online Desktop should act like online web (#230)
+  * - Offline should always be allowed to import ptf (not from task table)
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 17 Jun 2021 10:18:00 -0600
+
 sil-transcriber (2.12.1.0)  experimental; urgency=high
 
   * TT-2303 download data to desktop on exit
