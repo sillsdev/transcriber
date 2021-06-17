@@ -35,11 +35,13 @@ const ParatextReducers = function (
         usernameStatus: action.payload,
       };
     case type.COUNT_PENDING:
-      return {
-        ...state,
-        count: 0,
-        countStatus: action.payload,
-      };
+      return action.payload
+        ? {
+            ...state,
+            count: -1, //pending
+            countStatus: action.payload,
+          }
+        : { ...state, countStatus: action.payload }; //reset status;
     case type.COUNT_SUCCESS:
       return {
         ...state,
@@ -49,6 +51,7 @@ const ParatextReducers = function (
     case type.COUNT_ERROR:
       return {
         ...state,
+        count: 0,
         countStatus: action.payload,
       };
     case type.PROJECTS_PENDING:

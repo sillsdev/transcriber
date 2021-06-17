@@ -98,15 +98,20 @@ export function PassageHistory(props: IProps) {
             memory.keyMap
           );
         }
+        let user = {
+          id: '',
+          attributes: { avatarUrl: null, name: 'Unknown', familyName: '' },
+        } as any;
         if (!id) {
-          return {
-            id: '',
-            attributes: { avatarUrl: null, name: 'Unknown', familyName: '' },
-          } as any;
+          return user;
         }
-        const user = memory.cache.query((q: QueryBuilder) =>
-          q.findRecord({ type: 'user', id })
-        ) as User;
+        try {
+          user = memory.cache.query((q: QueryBuilder) =>
+            q.findRecord({ type: 'user', id })
+          ) as User;
+        } catch (error) {
+          // leave default user data
+        }
         return user;
       };
 

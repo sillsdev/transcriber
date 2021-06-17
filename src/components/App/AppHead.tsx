@@ -230,7 +230,7 @@ export const AppHead = (props: IProps) => {
     if (latestVersion === '' && version !== '' && updates) {
       var bodyFormData = new FormData();
       bodyFormData.append('env', navigator.userAgent);
-      axiosPost('userversions/2/' + version, bodyFormData, auth).then(
+      axiosPost('userversions/2/' + version, bodyFormData).then(
         (response) => {
           var lv = response?.data['desktopVersion'];
           var lr = response?.data['dateUpdated'];

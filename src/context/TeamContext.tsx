@@ -141,7 +141,7 @@ const initState = {
   projectDelete: (project: VProject) => {},
   teamCreate: (team: Organization) => {},
   teamUpdate: (team: Organization) => {},
-  teamDelete: (team: Organization) => {},
+  teamDelete: async (team: Organization) => {},
   isAdmin: (team: Organization) => false,
   isProjectAdmin: (team: Organization) => false,
   flatAdd: (

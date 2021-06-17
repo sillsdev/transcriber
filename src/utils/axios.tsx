@@ -14,7 +14,7 @@ export const axiosGet = async (api: string, params?: any, auth?: Auth) => {
       : {},
   });
 };
-export const axiosPost = async (api: string, data: any, auth: Auth) => {
+export const axiosPost = async (api: string, data: any, auth?: Auth) => {
   var fp = await getFingerprint();
   return await Axios.post(API_CONFIG.host + '/api/' + api, data, {
     headers: auth

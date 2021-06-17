@@ -16,6 +16,7 @@ import {
   MediaFile,
   OptionType,
   ActivityStates,
+  Plan,
 } from '../model';
 import localStrings from '../selector/localize';
 import * as actions from '../store';
@@ -773,20 +774,31 @@ export function ScriptureTable(props: IProps) {
     } else showUpload(i, true);
   };
   const updateLastModified = async () => {
-    var planRec = getPlan(plan);
+    var planRec = getPlan(plan) as Plan;
     if (planRec !== null) {
       //don't use sections here, it hasn't been updated yet
       var plansections = memory.cache.query((qb) =>
         qb.findRecords('section')
       ) as Section[];
+
       planRec.attributes.sectionCount = plansections.filter(
         (s) => related(s, 'plan') === plan
       ).length;
+      try {
+        if (remote)
+          await waitForIt(
+            'priorsave',
+            () => remote.requestQueue.length === 0,
+            () => false,
+            200
+          );
+      } finally {
+        //do this even if the wait above failed
+        await memory.update((t: TransformBuilder) =>
+          UpdateRecord(t, planRec, user)
+        );
+      }
 
-      const myplan = planRec; //assure typescript that the plan isn't null :/
-      await memory.update((t: TransformBuilder) =>
-        UpdateRecord(t, myplan, user)
-      );
       setLastSaved(planRec.attributes.dateUpdated);
     }
   };
@@ -1047,7 +1059,8 @@ export function ScriptureTable(props: IProps) {
             await memory.update(ops);
           }
           //update section last modified
-          await updateSection(lastSec);
+          //TT-2469 this causes any new passages to forget about their section
+          //await updateSection(lastSec);
         }
       }
     }

@@ -55,13 +55,8 @@ export const TeamItem = (props: IProps) => {
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteItem, setDeleteItem] = React.useState<Organization>();
   const ctx = React.useContext(TeamContext);
-  const {
-    teamProjects,
-    teamMembers,
-    teamUpdate,
-    teamDelete,
-    isAdmin,
-  } = ctx.state;
+  const { teamProjects, teamMembers, teamUpdate, teamDelete, isAdmin } =
+    ctx.state;
   const t = ctx.state.cardStrings;
   const [openMember, setOpenMember] = React.useState(false);
   const { setMyOrgRole } = useRole();
@@ -88,8 +83,8 @@ export const TeamItem = (props: IProps) => {
   };
 
   const handleDeleteConfirmed = async () => {
-    setEditOpen(false);
     deleteItem && (await teamDelete(deleteItem));
+    setEditOpen(false);
   };
 
   const handleDeleteRefused = () => setDeleteItem(undefined);
