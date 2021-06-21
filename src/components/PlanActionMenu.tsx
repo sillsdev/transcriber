@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { ISharedStrings, IPlanActionsStrings, IState } from '../model';
 import localStrings from '../selector/localize';
@@ -68,6 +69,7 @@ export function PlanActionMenu(props: IProps) {
   } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [hover, setHover] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
 
   const handleToggle = () => {
@@ -95,6 +97,28 @@ export function PlanActionMenu(props: IProps) {
     }
   }
 
+  const handleOver = () => {
+    setHover(true);
+  };
+
+  const handleOut = () => {
+    setHover(false);
+  };
+
+  React.useEffect(() => {
+    if (anchorRef.current) {
+      anchorRef.current.addEventListener('mouseover', handleOver);
+      anchorRef.current.addEventListener('mouseout', handleOut);
+    }
+    return () => {
+      if (anchorRef.current) {
+        anchorRef.current.removeEventListener('mouseover', handleOver);
+        anchorRef.current.removeEventListener('mouseout', handleOut);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(open);
   React.useEffect(() => {
@@ -109,6 +133,7 @@ export function PlanActionMenu(props: IProps) {
     <div className={classes.root}>
       <div>
         <Button
+          id="planMore"
           ref={anchorRef}
           aria-controls={open ? 'menu-list-grow' : undefined}
           aria-haspopup="true"
@@ -117,7 +142,7 @@ export function PlanActionMenu(props: IProps) {
           <MoreIcon className={classes.action} />
         </Button>
         <Popper
-          open={open}
+          open={open || hover}
           anchorEl={anchorRef.current}
           placement="right"
           role={undefined}
