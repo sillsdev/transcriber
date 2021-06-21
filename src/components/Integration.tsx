@@ -199,6 +199,7 @@ export function IntegrationPanel(props: IProps) {
   const [ptPath, setPtPath] = useState('');
   const syncing = React.useRef<boolean>(false);
   const setSyncing = (state: boolean) => (syncing.current = state);
+  const [, setDataChangeCount] = useGlobal('dataChangeCount');
 
   const getProject = () => {
     const projfind: Project[] = projects.filter((p) => p.id === project);
@@ -532,7 +533,8 @@ export function IntegrationPanel(props: IProps) {
           getOfflineProject,
           errorReporter,
           user,
-          setLanguage
+          setLanguage,
+          setDataChangeCount
         );
       }
     }

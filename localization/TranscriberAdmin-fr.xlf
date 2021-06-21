@@ -1742,7 +1742,13 @@
    			<target>À propos de</target>
    		</segment>
    	</unit>
-   	<unit id="main.version">
+      <unit id="main.dataChanges">
+         <segment>
+            <source>Updating from online data...your data may be out of date.</source>
+            <target>Mise à jour à partir des données en ligne... vos données peuvent être obsolètes.</target>
+         </segment>
+      </unit>
+      <unit id="main.version">
    		<segment>
    			<source>Version: {0} - {1}</source>
    			<target>Version : {0} - {1}</target>

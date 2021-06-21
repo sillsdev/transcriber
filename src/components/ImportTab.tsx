@@ -142,10 +142,10 @@ export function ImportTab(props: IProps) {
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
   const { getOrganizedBy } = useOrganizedBy();
   const [projectsLoaded] = useGlobal('projectsLoaded');
+  const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const getOfflineProject = useOfflnProjRead();
-  const { handleElectronImport, getElectronImportData } = useElectronImport(
-    importComplete
-  );
+  const { handleElectronImport, getElectronImportData } =
+    useElectronImport(importComplete);
   const handleFilter = () => setFilter(!filter);
   const headerRow = () =>
     t.plan +
@@ -716,7 +716,8 @@ export function ImportTab(props: IProps) {
               getOfflineProject,
               errorReporter,
               user,
-              setLanguage
+              setLanguage,
+              setDataChangeCount
             );
           else SetUserLanguage(memory, user, setLanguage);
 
