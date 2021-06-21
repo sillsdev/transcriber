@@ -25,10 +25,9 @@ import { PlanContext } from '../context/PlanContext';
 import Auth from '../auth/Auth';
 import { IRowInfo } from './ScriptureTable';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
-import PlanActions from './PlanActions';
+import PlanActionMenu from './PlanActionMenu';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 import PlanAudioActions from './PlanAudioActions';
-import MoreMenu from '../hoc/MoreMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -559,21 +558,19 @@ export function PlanSheet(props: IProps) {
             .concat([
               {
                 value: (
-                  <MoreMenu rowData={rowData}>
-                    <PlanActions
-                      {...props}
-                      rowIndex={rowIndex}
-                      isSection={section}
-                      isPassage={passage}
-                      mediaId={rowInfo[rowIndex].mediaId}
-                      onDelete={handleConfirmDelete}
-                      onTranscribe={handleTranscribe}
-                      readonly={readonly}
-                      canAssign={projRole === 'admin'}
-                      canDelete={projRole === 'admin'}
-                      noDeleteNow={deleting}
-                    />
-                  </MoreMenu>
+                  <PlanActionMenu
+                    {...props}
+                    rowIndex={rowIndex}
+                    isSection={section}
+                    isPassage={passage}
+                    mediaId={rowInfo[rowIndex].mediaId}
+                    onDelete={handleConfirmDelete}
+                    onTranscribe={handleTranscribe}
+                    readonly={readonly}
+                    canAssign={projRole === 'admin'}
+                    canDelete={projRole === 'admin'}
+                    noDeleteNow={deleting}
+                  />
                 ),
                 readOnly: true,
                 className: section ? 'set' + (passage ? 'p' : ' ') : 'pass',

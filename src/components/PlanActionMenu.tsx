@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       marginRight: theme.spacing(2),
     },
+    list: {
+      display: 'flex',
+    },
   })
 );
 
@@ -80,9 +83,12 @@ export function PlanActionMenu(props: IProps) {
   };
 
   function handleListKeyDown(event: React.KeyboardEvent) {
+    console.log(event.key);
     if (event.key === 'Tab') {
       event.preventDefault();
       setOpen(false);
+    } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.stopPropagation();
     }
   }
 
@@ -120,7 +126,7 @@ export function PlanActionMenu(props: IProps) {
               {...TransitionProps}
               style={{
                 transformOrigin:
-                  placement === 'bottom' ? 'center top' : 'center bottom',
+                  placement === 'right' ? 'middle left' : 'middle right',
               }}
             >
               <Paper>
@@ -129,6 +135,7 @@ export function PlanActionMenu(props: IProps) {
                     autoFocusItem={open}
                     id="menu-list-grow"
                     onKeyDown={handleListKeyDown}
+                    className={classes.list}
                   >
                     {isSection && canAssign && !readonly && (
                       <MenuItem
