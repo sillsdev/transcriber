@@ -283,7 +283,7 @@ export const AppHead = (props: IProps) => {
             <LinearProgress id="prog" variant="determinate" value={complete} />
           </div>
         )}
-        {(!busy && !doSave) || dataChangeCount !== 0 || (
+        {(!busy && !doSave) || complete !== 0 || (
           <LinearProgress id="busy" variant="indeterminate" />
         )}
         <Toolbar>
