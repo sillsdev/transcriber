@@ -559,7 +559,7 @@ export function PlanSheet(props: IProps) {
             .concat([
               {
                 value: (
-                  <MoreMenu>
+                  <MoreMenu rowData={rowData}>
                     <PlanActions
                       {...props}
                       rowIndex={rowIndex}
