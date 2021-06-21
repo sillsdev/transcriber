@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     moreMenu: {
       '&:hover #icon': {
-        display: 'none',
+        visibility: 'hidden',
       },
       '&:hover #items': {
         visibility: 'visible',
@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
       '& #items': {
         visibility: 'hidden',
         position: 'absolute',
+        backgroundColor: theme.palette.background.paper,
       },
     },
   })
