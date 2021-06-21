@@ -15,6 +15,7 @@ async function makeInfo(path) {
     if (['exe', 'deb', 'snap'].indexOf(ext) === -1) continue;
     // const path = require('path');
     const filePath = join(__dirname, dist, dirent.name);
+    const is32 = dirent.name.indexOf('-32-') !== -1;
     fs.open(filePath, 'r', (err, fd) => {
       if (err) throw err;
       fs.fstat(fd, async (err, stat) => {
@@ -30,7 +31,7 @@ async function makeInfo(path) {
           edition: '',
           platform: isWin ? 'win' : 'linux',
           platform_version: isWin ? '10' : ext.toUpperCase(),
-          architecture: isWin ? 'x86_32' : 'x86_64',
+          architecture: isWin & is32 ? 'x86_32' : 'x86_64',
           stability: 'stable',
           nature: 'ver2',
           file: dirent.name,
