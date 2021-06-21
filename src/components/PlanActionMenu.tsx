@@ -15,6 +15,7 @@ import MoreIcon from '@material-ui/icons/MoreHoriz';
 import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import TranscribeIcon from '@material-ui/icons/EditOutlined';
+import { elemOffset } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,7 +71,10 @@ export function PlanActionMenu(props: IProps) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [hover, setHover] = React.useState(false);
+  const top = React.useRef<number>(0);
+  const height = React.useRef<number>(0);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const menuRef = React.useRef<HTMLDivElement>(null);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -88,7 +92,6 @@ export function PlanActionMenu(props: IProps) {
   };
 
   function handleListKeyDown(event: React.KeyboardEvent) {
-    console.log(event.key);
     if (event.key === 'Tab') {
       event.preventDefault();
       setOpen(false);
@@ -97,24 +100,33 @@ export function PlanActionMenu(props: IProps) {
     }
   }
 
-  const handleOver = () => {
-    setHover(true);
+  const handleMove = (event: MouseEvent) => {
+    const y = event.pageY;
+    if (y < top.current || y > top.current + height.current) {
+      setHover(false);
+      window.removeEventListener('mouseover', handleMove);
+    }
   };
 
-  const handleOut = () => {
-    setHover(false);
+  const handleOver = () => {
+    setHover(true);
+    if (menuRef.current) {
+      const { y } = elemOffset(menuRef.current);
+      top.current = y;
+      height.current = menuRef.current?.clientHeight;
+      window.addEventListener('mouseover', handleMove);
+    }
   };
 
   React.useEffect(() => {
     if (anchorRef.current) {
       anchorRef.current.addEventListener('mouseover', handleOver);
-      anchorRef.current.addEventListener('mouseout', handleOut);
     }
     return () => {
       if (anchorRef.current) {
         anchorRef.current.removeEventListener('mouseover', handleOver);
-        anchorRef.current.removeEventListener('mouseout', handleOut);
       }
+      window.removeEventListener('mouseover', handleMove);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -130,7 +142,7 @@ export function PlanActionMenu(props: IProps) {
   }, [open]);
 
   return (
-    <div className={classes.root}>
+    <div ref={menuRef} className={classes.root}>
       <div>
         <Button
           id="planMore"
