@@ -194,5 +194,7 @@
         "filter": "resetData.*"
       }
     ]
-  }
+  },
+  "main": "public/electron.js",
+  "homepage": "./"
 }
