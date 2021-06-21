@@ -30,7 +30,8 @@ async function makeInfo(path) {
           date: stat.ctime.toISOString().split('T')[0],
           edition: '',
           platform: isWin ? 'win' : 'linux',
-          platform_version: isWin ? '10' : ext.toUpperCase(),
+          platform_version:
+            isWin & !is32 ? '10' : isWin & is32 ? '7' : ext.toUpperCase(),
           architecture: isWin & is32 ? 'x86_32' : 'x86_64',
           stability: 'stable',
           nature: 'ver2',
@@ -38,7 +39,7 @@ async function makeInfo(path) {
           md5: hash.toUpperCase(),
           type: ext,
           build: '',
-          compatible: 'Paratext>=8.x',
+          compatible: 'Paratext>=9.x',
         };
         // console.log(info);
         fs.writeFileSync(
