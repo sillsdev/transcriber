@@ -348,6 +348,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "UnsavedData": string;
     "updateAvailable": string;
     "about": string;
+    "dataChanges": string;
     "version": string;
     "copyClipboard": string;
     "team": string;

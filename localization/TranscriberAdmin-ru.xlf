@@ -1507,7 +1507,13 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="main.deletedInvitation">
+      <unit id="main.dataChanges">
+         <segment>
+            <source>Updating from online data...your data may be out of date.</source>
+            <target>Обновление из онлайн-данных ... возможно, ваши данные устарели.</target>
+         </segment>
+      </unit>
+      	<unit id="main.deletedInvitation">
 			<segment>
 				<source>Invitation is no longer valid.</source>
 				<target/>

@@ -17,6 +17,7 @@ declare module 'reactn/default' {
     coordinator: Coordinator;
     memory: Memory;
     remoteBusy: boolean;
+    dataChangeCount: int;
     doSave: boolean;
     saveResult: string | undefined;
     snackMessage: JSX.Element;
