@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme: Theme) =>
     list: {
       display: 'flex',
     },
+    action: {
+      color: theme.palette.primary.light,
+    },
   })
 );
 
@@ -111,7 +114,7 @@ export function PlanActionMenu(props: IProps) {
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          <MoreIcon />
+          <MoreIcon className={classes.action} />
         </Button>
         <Popper
           open={open}
@@ -143,7 +146,7 @@ export function PlanActionMenu(props: IProps) {
                         title={t.assign}
                         onClick={onAssign([rowIndex])}
                       >
-                        <AssignIcon />
+                        <AssignIcon className={classes.action} />
                       </MenuItem>
                     )}
                     {isPassage && (
@@ -153,7 +156,7 @@ export function PlanActionMenu(props: IProps) {
                         onClick={onTranscribe(rowIndex)}
                         disabled={(mediaId || '') === ''}
                       >
-                        <TranscribeIcon />
+                        <TranscribeIcon className={classes.action} />
                       </MenuItem>
                     )}
                     {canDelete && !readonly && (
@@ -163,7 +166,7 @@ export function PlanActionMenu(props: IProps) {
                         onClick={onDelete(rowIndex)}
                         disabled={noDeleteNow}
                       >
-                        <DeleteIcon />
+                        <DeleteIcon className={classes.action} />
                       </MenuItem>
                     )}
                   </MenuList>
