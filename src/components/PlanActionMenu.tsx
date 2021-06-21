@@ -49,6 +49,7 @@ interface IProps extends IStateProps {
   canAssign: boolean;
   canDelete: boolean;
   noDeleteNow: boolean;
+  active: boolean;
   onTranscribe: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
@@ -67,6 +68,7 @@ export function PlanActionMenu(props: IProps) {
     canAssign,
     canDelete,
     noDeleteNow,
+    active,
   } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -97,6 +99,9 @@ export function PlanActionMenu(props: IProps) {
       setOpen(false);
     } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       event.stopPropagation();
+    } else if (event.key === 'Escape') {
+      setHover(false);
+      setOpen(false);
     }
   }
 
@@ -140,6 +145,10 @@ export function PlanActionMenu(props: IProps) {
 
     prevOpen.current = open;
   }, [open]);
+
+  React.useEffect(() => {
+    if (active) setOpen(true);
+  }, [active]);
 
   return (
     <div ref={menuRef} className={classes.root}>

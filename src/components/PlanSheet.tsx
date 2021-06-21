@@ -212,6 +212,7 @@ export function PlanSheet(props: IProps) {
   const [srcMediaId, setSrcMediaId] = useState('');
   const [warning, setWarning] = useState<string>();
   const [deleting, setDeleting] = useState(false);
+  const [active, setActive] = useState(-1);
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = bookCol > 0 ? 6 : 5;
@@ -394,6 +395,15 @@ export function PlanSheet(props: IProps) {
     preventSave.current = val;
   };
 
+  const ActivateCell = (props: any) => {
+    React.useEffect(() => {
+      setActive(currentRow.current);
+      props.onCommit();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props]);
+    return <></>;
+  };
+
   const bookEditor = (props: any) => {
     if (readonly) return <></>;
     return (
@@ -570,10 +580,12 @@ export function PlanSheet(props: IProps) {
                     canAssign={projRole === 'admin'}
                     canDelete={projRole === 'admin'}
                     noDeleteNow={deleting}
+                    active={active - 1 === rowIndex}
                   />
                 ),
-                readOnly: true,
+                // readOnly: true,
                 className: section ? 'set' + (passage ? 'p' : ' ') : 'pass',
+                dataEditor: ActivateCell,
               } as ICell,
             ]);
         })
