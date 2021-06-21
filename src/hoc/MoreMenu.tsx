@@ -34,9 +34,10 @@ interface IStateProps {
 
 interface IProps extends IStateProps {
   children: JSX.Element;
+  rowData: Array<Array<any>>;
 }
 
-export function MoreMenu({ children, ts }: IProps) {
+export function MoreMenu({ children, rowData, ts }: IProps) {
   const classes = useStyles();
   const iconRef = React.useRef<any>();
   const itemsRef = React.useRef<any>();
@@ -50,19 +51,25 @@ export function MoreMenu({ children, ts }: IProps) {
     setTop(y - 9);
   };
 
+  const handleResize = debounce(() => {
+    setLocation();
+  }, 100);
+
   React.useEffect(() => {
     setWidth(itemsRef.current.clientWidth);
 
     setLocation();
-    const handleResize = debounce(() => {
-      setLocation();
-    }, 100);
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  React.useEffect(() => {
+    handleResize();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowData]);
 
   return (
     <div className={classes.moreMenu}>
