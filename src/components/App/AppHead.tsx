@@ -37,6 +37,7 @@ import CloudOffIcon from '@material-ui/icons/CloudOff';
 import ProjectDownloadAlert from '../ProjectDownloadAlert';
 import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
+import { useSnackBar } from '../../hoc/SnackBar';
 
 const shell = isElectron ? require('electron').shell : null;
 
@@ -119,6 +120,8 @@ export const AppHead = (props: IProps) => {
   const { checkSavedFn } = ctx.state;
   const [view, setView] = useState('');
   const [busy] = useGlobal('remoteBusy');
+  const [dataChangeCount] = useGlobal('dataChangeCount');
+  const [showDataChange, setShowDataChange] = useState(0);
   const [importexportBusy] = useGlobal('importexportBusy');
   const [doSave] = useGlobal('doSave');
   const [globalStore] = useGlobal();
@@ -136,6 +139,7 @@ export const AppHead = (props: IProps) => {
   const [complete] = useGlobal('progress');
   const [downloadAlert, setDownloadAlert] = React.useState(false);
   const [updateTipOpen, setUpdateTipOpen] = useState(false);
+  const { showMessage } = useSnackBar();
 
   const handleUserMenuAction = (
     what: string,
@@ -188,7 +192,14 @@ export const AppHead = (props: IProps) => {
     setView('Logout');
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (dataChangeCount > showDataChange && dataChangeCount > 5)
+      showMessage(t.dataChanges);
+    setShowDataChange(dataChangeCount);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataChangeCount]);
+
+  useEffect(() => {
     const handleUnload = (e: any) => {
       if (pathname === '/') return true;
       if (!exitAlert && isElectron && isMounted()) setExitAlert(true);
@@ -230,18 +241,16 @@ export const AppHead = (props: IProps) => {
     if (latestVersion === '' && version !== '' && updates) {
       var bodyFormData = new FormData();
       bodyFormData.append('env', navigator.userAgent);
-      axiosPost('userversions/2/' + version, bodyFormData).then(
-        (response) => {
-          var lv = response?.data['desktopVersion'];
-          var lr = response?.data['dateUpdated'];
-          if (!lr.endsWith('Z')) lr += 'Z';
-          lr = moment(lr)
-            .locale(Intl.NumberFormat().resolvedOptions().locale)
-            .format('L');
-          setLatestVersion(lv);
-          setLatestRelease(lr);
-        }
-      );
+      axiosPost('userversions/2/' + version, bodyFormData).then((response) => {
+        var lv = response?.data['desktopVersion'];
+        var lr = response?.data['dateUpdated'];
+        if (!lr.endsWith('Z')) lr += 'Z';
+        lr = moment(lr)
+          .locale(Intl.NumberFormat().resolvedOptions().locale)
+          .format('L');
+        setLatestVersion(lv);
+        setLatestRelease(lr);
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updates, version]);
@@ -274,7 +283,7 @@ export const AppHead = (props: IProps) => {
             <LinearProgress id="prog" variant="determinate" value={complete} />
           </div>
         )}
-        {(!busy && !doSave) || complete !== 0 || (
+        {(!busy && !doSave) || dataChangeCount !== 0 || (
           <LinearProgress id="busy" variant="indeterminate" />
         )}
         <Toolbar>

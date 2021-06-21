@@ -1738,6 +1738,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.dataChanges">
+         <segment>
+            <source>Updating from online data...your data may be out of date.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.version">
          <segment>
             <source>Version: {0} - {1}</source>

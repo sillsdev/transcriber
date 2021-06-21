@@ -1477,6 +1477,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.dataChanges">
+         <segment>
+            <source>Updating from online data...your data may be out of date.</source>
+            <target>Atualizando de dados online ... seus dados podem estar desatualizados.</target>
+         </segment>
+      </unit>
       <unit id="main.developer">
          <segment>
             <source>Developer mode</source>

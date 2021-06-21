@@ -60,7 +60,8 @@ export const doDataChanges = async (
   getOfflineProject: (plan: string | Plan | VProject) => OfflineProject,
   errorReporter: any,
   user: string,
-  setLanguage: typeof actions.setLanguage
+  setLanguage: typeof actions.setLanguage,
+  setDataChangeCount: (value: number) => void
 ) => {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -127,6 +128,8 @@ export const doDataChanges = async (
     });
     var data = response.data.data as DataChange;
     const changes = data?.attributes?.changes;
+    const deletes = data.attributes.deleted;
+    setDataChangeCount(changes.length + deletes.length);
     changes.forEach((table) => {
       if (table.ids.length > 0) {
         remote
@@ -167,7 +170,7 @@ export const doDataChanges = async (
           });
       }
     });
-    const deletes = data.attributes.deleted;
+    setDataChangeCount(deletes.length);
     var tb: TransformBuilder = new TransformBuilder();
 
     for (var ix = 0; ix < deletes.length; ix++) {
@@ -184,6 +187,7 @@ export const doDataChanges = async (
         await memory.update(operations);
       }
     }
+    setDataChangeCount(0);
     localStorage.setItem(userLastTimeKey, nextTime);
     if (isElectron) await updateSnapshotDates();
   } catch (e) {
@@ -199,6 +203,7 @@ export function DataChanges(props: IProps) {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [loadComplete] = useGlobal('loadComplete');
   const [busy, setBusy] = useGlobal('remoteBusy');
+  const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const [connected, setConnected] = useGlobal('connected');
   const [user] = useGlobal('user');
   const [doSave] = useGlobal('doSave');
@@ -206,6 +211,7 @@ export function DataChanges(props: IProps) {
   const [errorReporter] = useGlobal('errorReporter');
   const [busyDelay, setBusyDelay] = useState<number | null>(null);
   const [dataDelay, setDataDelay] = useState<number | null>(null);
+  const [firstRun, setFirstRun] = useState(true);
   const [project] = useGlobal('project');
   const [projectsLoaded] = useGlobal('projectsLoaded');
   const [orbitRetries, setOrbitRetries] = useGlobal('orbitRetries');
@@ -226,11 +232,12 @@ export function DataChanges(props: IProps) {
     );
     setDataDelay(
       connected && loadComplete && remote && auth?.isAuthenticated()
-        ? defaultDataDelay
+        ? firstRun
+          ? 1
+          : defaultDataDelay
         : null
     );
-  }, [remote, auth, loadComplete, connected, setBusy]);
-
+  }, [remote, auth, loadComplete, connected, setBusy, firstRun]);
   const updateBusy = () => {
     const checkBusy =
       user === '' || (remote && remote.requestQueue.length !== 0);
@@ -249,6 +256,7 @@ export function DataChanges(props: IProps) {
   };
   const updateData = () => {
     if (!busy && !doSave && auth?.isAuthenticated()) {
+      setFirstRun(false);
       doDataChanges(
         auth,
         coordinator,
@@ -257,7 +265,8 @@ export function DataChanges(props: IProps) {
         getOfflineProject,
         errorReporter,
         user,
-        setLanguage
+        setLanguage,
+        setDataChangeCount
       );
     }
   };
