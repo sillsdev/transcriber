@@ -1,5 +1,6 @@
 // https://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element
 export function elemOffset(elem: HTMLElement) {
+  if (!elem) return { x: 0, y: 0 };
   let totalOffsetX = 0;
   let totalOffsetY = 0;
   let currentElement: HTMLElement | null = elem;
