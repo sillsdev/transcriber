@@ -50,7 +50,7 @@ import {
   cleanFileName,
 } from '../utils';
 import { debounce } from 'lodash';
-import AudacityConfigure from './AudacityConfigure';
+import AudacityManager from './AudacityManager';
 import AssignSection from './AssignSection';
 import StickyRedirect from './StickyRedirect';
 import Auth from '../auth/Auth';
@@ -1418,7 +1418,7 @@ export function ScriptureTable(props: IProps) {
         status={status}
       />
       {audacityOpen && rowInfo[audacityItem].passageId && (
-        <AudacityConfigure
+        <AudacityManager
           open={audacityOpen}
           onClose={handleAudacityClose}
           passageId={rowInfo[audacityItem].passageId as RecordIdentity}

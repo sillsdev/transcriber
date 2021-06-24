@@ -55,7 +55,7 @@ export interface ConfigureDialogProps {
   onClose: () => void;
 }
 
-function AudacityConfigure(props: ConfigureDialogProps) {
+function AudacityManager(props: ConfigureDialogProps) {
   const classes = useStyles();
   const { passageId, mediaId, onClose, open } = props;
   const audUpdate = useAudacityProjUpdate();
@@ -126,8 +126,8 @@ function AudacityConfigure(props: ConfigureDialogProps) {
   }, [passageId, name]);
 
   return (
-    <Dialog onClose={handleClose} aria-labelledby="configure-title" open={open}>
-      <DialogTitle id="configure-title">Audacity Configure</DialogTitle>
+    <Dialog onClose={handleClose} aria-labelledby="manager-title" open={open}>
+      <DialogTitle id="manager-title">Audacity Manager</DialogTitle>
       <Grid container className={classes.grid}>
         <Grid item xs={9}>
           <Grid container justify="center">
@@ -174,4 +174,4 @@ function AudacityConfigure(props: ConfigureDialogProps) {
   );
 }
 
-export default AudacityConfigure;
+export default AudacityManager;
