@@ -130,7 +130,8 @@ function AudacitySetup(props: AudacitySetupProps) {
   const handleEval = () => doEval();
 
   React.useEffect(() => {
-    doEval();
+    if (!allAudacity) doEval();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
