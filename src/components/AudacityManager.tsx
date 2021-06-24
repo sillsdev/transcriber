@@ -123,16 +123,24 @@ function AudacityManager(props: ConfigureDialogProps) {
     }
   };
 
+  const getMediaUrl = (mediaId: string) => {
+    console.log(mediaId);
+    let mediaUrl = '';
+    if (mediaId !== '') {
+      const mediaRec = memory.cache.query((q) =>
+        q.findRecord({ type: 'mediafile', id: mediaId })
+      ) as MediaFile;
+      mediaUrl = mediaRec?.attributes?.audioUrl || '';
+    }
+    return mediaUrl;
+  };
+
   const handleOpen = () => {
     if (changed) {
       showMessage('Save before editing');
       return;
     }
-    console.log(mediaId);
-    const mediaRec = memory.cache.query((q) =>
-      q.findRecord({ type: 'mediafile', id: mediaId })
-    ) as MediaFile;
-    launchAudacity(exists ? name : mediaRec?.attributes?.audioUrl || '');
+    launchAudacity(exists ? name : getMediaUrl(mediaId));
   };
 
   const handleImport = () => {};
