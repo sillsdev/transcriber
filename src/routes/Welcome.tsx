@@ -6,13 +6,7 @@ import { IState, IAccessStrings, User } from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import {
-  Typography,
-  Button,
-  Paper,
-  IconButton,
-  Tooltip,
-} from '@material-ui/core';
+import { Typography, Button, Paper, IconButton } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
 import { isElectron } from '../api-variable';
@@ -25,6 +19,7 @@ import { IAxiosStatus } from '../store/AxiosStatus';
 import OfflineIcon from '@material-ui/icons/CloudOff';
 import OnlineIcon from '@material-ui/icons/CloudQueue';
 import { connect } from 'react-redux';
+import { LightTooltip } from '../control';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -186,7 +181,7 @@ export function Welcome(props: IProps) {
                     <OnlineIcon className={classes.icon} />
                     {'For Online or Occassionally Connected Projects'}
                   </Button>
-                  <Tooltip title="All project administration must be done online.  Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline can be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.">
+                  <LightTooltip title="All project administration must be done online.  Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline can be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.">
                     <IconButton
                       id="adminonlinehelp"
                       className={classes.helpIcon}
@@ -196,7 +191,7 @@ export function Welcome(props: IProps) {
                     >
                       <HelpIcon fontSize="small" />
                     </IconButton>
-                  </Tooltip>
+                  </LightTooltip>
                 </div>
                 <div>
                   <Button
@@ -209,7 +204,7 @@ export function Welcome(props: IProps) {
                     <OfflineIcon className={classes.icon} />
                     {'For Offline Single User Projects'}
                   </Button>
-                  <Tooltip title="The project is stored on your computer. You cannot set up a team.  You can export the project and import it on to another computer, but all changes will be done under your user.  Changes can be exported and them imported on to the master computer.">
+                  <LightTooltip title="The project is stored on your computer. You cannot set up a team.  You can export the project and import it on to another computer, but all changes will be done under your user.  Changes can be exported and then imported on to the master computer.">
                     <IconButton
                       id="adminofflinehelp"
                       className={classes.helpIcon}
@@ -219,7 +214,7 @@ export function Welcome(props: IProps) {
                     >
                       <HelpIcon fontSize="small" />
                     </IconButton>
-                  </Tooltip>
+                  </LightTooltip>
                 </div>
               </Paper>
               <Paper>
@@ -237,7 +232,7 @@ export function Welcome(props: IProps) {
                     <OnlineIcon className={classes.icon} />
                     {'For Projects Available Online'}
                   </Button>
-                  <Tooltip title="Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline can be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.">
+                  <LightTooltip title="Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline can be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.">
                     <IconButton
                       id="memberonlinehelp"
                       className={classes.helpIcon}
@@ -247,7 +242,7 @@ export function Welcome(props: IProps) {
                     >
                       <HelpIcon fontSize="small" />
                     </IconButton>
-                  </Tooltip>
+                  </LightTooltip>
                 </div>
                 {hasOfflineUsers && (
                   <div>
@@ -261,7 +256,7 @@ export function Welcome(props: IProps) {
                       <OfflineIcon className={classes.icon} />
                       {'For Projects Only Available Online'}
                     </Button>
-                    <Tooltip title="admin online. collaboration etc etc">
+                    <LightTooltip title="Changes must be exported and imported to the master computer.">
                       <IconButton
                         id="memberofflinehelp"
                         className={classes.helpIcon}
@@ -271,7 +266,7 @@ export function Welcome(props: IProps) {
                       >
                         <HelpIcon fontSize="small" />
                       </IconButton>
-                    </Tooltip>
+                    </LightTooltip>
                   </div>
                 )}
                 <div>
@@ -284,7 +279,7 @@ export function Welcome(props: IProps) {
                   >
                     {'For projects with an available import file'}
                   </Button>
-                  <Tooltip title="Either Online or Offline Projects can be imported to be worked on offline.  If the project was created online, changes made offline can be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.  If the project was started offline, changed must be exported and imported to the master computer.">
+                  <LightTooltip title="Either Online or Offline Projects can be imported to be worked on offline.  If the project was created online, changes made offline can be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.  If the project was started offline, changes must be exported and imported to the master computer.">
                     <IconButton
                       id="memberimporthelp"
                       className={classes.helpIcon}
@@ -294,7 +289,7 @@ export function Welcome(props: IProps) {
                     >
                       <HelpIcon fontSize="small" />
                     </IconButton>
-                  </Tooltip>
+                  </LightTooltip>
                 </div>
               </Paper>
               <Paper>
@@ -312,7 +307,7 @@ export function Welcome(props: IProps) {
                     <OnlineIcon className={classes.icon} />
                     {'With Online Access'}
                   </Button>
-                  <Tooltip title="After login, you will choose a project type, upload or record audio, and start transcribing as soon as possible.  Your audio will be stored online.">
+                  <LightTooltip title="After login, you will choose a project type, upload or record audio, and start transcribing as soon as possible.  Your audio will be stored online.">
                     <IconButton
                       id="quickonlinehelp"
                       className={classes.helpIcon}
@@ -322,7 +317,7 @@ export function Welcome(props: IProps) {
                     >
                       <HelpIcon fontSize="small" />
                     </IconButton>
-                  </Tooltip>
+                  </LightTooltip>
                 </div>
                 <div>
                   <Button
@@ -335,7 +330,7 @@ export function Welcome(props: IProps) {
                     <OfflineIcon className={classes.icon} />
                     {'Offline Only Access'}
                   </Button>
-                  <Tooltip title="We will create a default user, you will choose a project type, import or record audio, and start transcribing as soon as possible.  Your audio will be stored on your computer.">
+                  <LightTooltip title="We will create a default user, you will choose a project type, import or record audio, and start transcribing as soon as possible.  Your audio will be stored on your computer.">
                     <IconButton
                       id="quickofflinehelp"
                       className={classes.helpIcon}
@@ -345,7 +340,7 @@ export function Welcome(props: IProps) {
                     >
                       <HelpIcon fontSize="small" />
                     </IconButton>
-                  </Tooltip>
+                  </LightTooltip>
                 </div>
               </Paper>
             </div>

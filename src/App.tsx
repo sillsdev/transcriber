@@ -21,7 +21,6 @@ import DataChanges from './hoc/DataChanges';
 import { UnsavedProvider } from './context/UnsavedContext';
 import SnackBarProvider from './hoc/SnackBar';
 import { HotKeyProvider } from './context/HotKeyContext';
-import DecideAccess from './routes/DecideAccess';
 import Access from './routes/Access';
 import Welcome from './routes/Welcome';
 
