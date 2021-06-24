@@ -11,8 +11,15 @@ import {
   TextField,
 } from '@material-ui/core';
 import AudacityLogo from '../control/AudacityLogo';
+import {
+  useAudacityProjUpdate,
+  useAudacityProjRead,
+  useAudacityProjDelete,
+} from '../crud';
 // import { useSnackBar } from '../hoc/SnackBar';
 import { isElectron } from '../api-variable';
+import { debounce } from 'lodash';
+import { RecordIdentity } from '@orbit/data';
 
 const fs = require('fs');
 const ipc = isElectron ? require('electron').ipcRenderer : null;
@@ -41,13 +48,17 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export interface ConfigureDialogProps {
+  passageId: RecordIdentity;
   open: boolean;
   onClose: () => void;
 }
 
 function ConfigureDialog(props: ConfigureDialogProps) {
   const classes = useStyles();
-  const { onClose, open } = props;
+  const { passageId, onClose, open } = props;
+  const audUpdate = useAudacityProjUpdate();
+  const audRead = useAudacityProjRead();
+  const audDelete = useAudacityProjDelete();
   const [exists, setExists] = React.useState(false);
   const [name, setName] = React.useState('');
   // const { showMessage } = useSnackBar();
@@ -62,16 +73,41 @@ function ConfigureDialog(props: ConfigureDialogProps) {
 
   const handleBrowse = () => {
     ipc?.invoke('audacityOpen').then((fullName: string[]) => {
-      // showMessage(`${JSON.stringify(fullName)} selected`);
       setName(fullName[0]);
     });
   };
 
+  const handleUnlink = () => {
+    audDelete(passageId.id);
+  };
+
+  const handleDelete = () => {
+    const audRec = audRead(passageId.id);
+    fs.unlinkSync(audRec?.attributes?.audacityName);
+    audDelete(passageId.id);
+  };
+
+  const nameUpdate = debounce(() => {
+    audUpdate(passageId.id, name);
+  }, 100);
+
+  React.useEffect(() => {
+    if (name === '' && (passageId?.id || '') !== '') {
+      const audRec = audRead(passageId.id);
+      if (audRec?.attributes?.audacityName) {
+        setName(audRec?.attributes?.audacityName);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   React.useEffect(() => {
     if (name) {
       setExists(fs.existsSync(name));
+      nameUpdate();
     }
-  }, [name]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [passageId, name]);
 
   return (
     <Dialog onClose={handleClose} aria-labelledby="configure-title" open={open}>
@@ -100,8 +136,8 @@ function ConfigureDialog(props: ConfigureDialogProps) {
         <Grid item xs={3}>
           {exists && name !== '' ? (
             <div className={classes.actions}>
-              <Button>Unlink</Button>
-              <Button>Delete</Button>
+              <Button onClick={handleUnlink}>Unlink</Button>
+              <Button onClick={handleDelete}>Delete</Button>
             </div>
           ) : (
             <div className={classes.actions}>
@@ -118,7 +154,11 @@ function ConfigureDialog(props: ConfigureDialogProps) {
   );
 }
 
-function AudacityConfigure() {
+interface IProps {
+  passageId: RecordIdentity;
+}
+
+function AudacityConfigure({ passageId }: IProps) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -139,7 +179,11 @@ function AudacityConfigure() {
       >
         <AudacityLogo />
       </IconButton>
-      <ConfigureDialog open={open} onClose={handleClose} />
+      <ConfigureDialog
+        open={open}
+        onClose={handleClose}
+        passageId={passageId}
+      />
     </div>
   );
 }

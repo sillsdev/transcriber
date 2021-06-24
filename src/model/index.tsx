@@ -35,3 +35,4 @@ export * from './dialogMode';
 export * from './Dialog';
 export * from './optionType';
 export * from './offlineProject';
+export * from './audacityProject';

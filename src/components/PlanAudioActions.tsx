@@ -29,6 +29,7 @@ interface IProps extends IStateProps {
   rowIndex: number;
   isSection: boolean;
   isPassage: boolean;
+  passageId: RecordIdentity;
   mediaId: string;
   online: boolean;
   readonly: boolean;
@@ -49,6 +50,7 @@ export function PlanAudioActions(props: IProps) {
     ts,
     rowIndex,
     isPassage,
+    passageId,
     mediaId,
     online,
     readonly,
@@ -112,4 +114,4 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'planActions' }),
   ts: localStrings(state, { layout: 'shared' }),
 });
-export default (connect(mapStateToProps)(PlanAudioActions) as any) as any;
+export default connect(mapStateToProps)(PlanAudioActions) as any as any;
