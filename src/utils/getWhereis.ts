@@ -13,5 +13,5 @@ export const getWhereis = async (key: string) => {
   } catch (err) {
     if (err.code !== 'ENOENT') throw err;
   }
-  return val && val.length > 0 ? val : '';
+  return val ? val : '';
 };

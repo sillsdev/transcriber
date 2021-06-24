@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
+import { MediaFile } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   IconButton,
@@ -17,10 +18,11 @@ import {
   useAudacityProjRead,
   useAudacityProjDelete,
 } from '../crud';
-// import { useSnackBar } from '../hoc/SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import { isElectron } from '../api-variable';
 import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
+import { launchAudacity } from '../utils';
 
 const fs = require('fs');
 const ipc = isElectron ? require('electron').ipcRenderer : null;
@@ -50,19 +52,22 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export interface ConfigureDialogProps {
   passageId: RecordIdentity;
+  mediaId: string;
   open: boolean;
   onClose: () => void;
 }
 
 function ConfigureDialog(props: ConfigureDialogProps) {
   const classes = useStyles();
-  const { passageId, onClose, open } = props;
+  const { passageId, mediaId, onClose, open } = props;
   const audUpdate = useAudacityProjUpdate();
   const audRead = useAudacityProjRead();
   const audDelete = useAudacityProjDelete();
   const [exists, setExists] = React.useState(false);
   const [name, setName] = React.useState('');
-  // const { showMessage } = useSnackBar();
+  const [memory] = useGlobal('memory');
+  const [changed] = useGlobal('changed');
+  const { showMessage } = useSnackBar();
 
   const handleClose = () => {
     onClose();
@@ -76,6 +81,18 @@ function ConfigureDialog(props: ConfigureDialogProps) {
     ipc?.invoke('audacityOpen').then((fullName: string[]) => {
       setName(fullName[0]);
     });
+  };
+
+  const handleLaunch = () => {
+    if (changed) {
+      showMessage('Save before editing');
+      return;
+    }
+    console.log(mediaId);
+    const mediaRec = memory.cache.query((q) =>
+      q.findRecord({ type: 'mediafile', id: mediaId })
+    ) as MediaFile;
+    launchAudacity(mediaRec?.attributes?.audioUrl || '');
   };
 
   const handleUnlink = () => {
@@ -128,7 +145,11 @@ function ConfigureDialog(props: ConfigureDialogProps) {
               />
             </FormControl>
             {exists && (
-              <Button variant="contained" color="primary">
+              <Button
+                onClick={handleLaunch}
+                variant="contained"
+                color="primary"
+              >
                 Launch
               </Button>
             )}
@@ -157,9 +178,10 @@ function ConfigureDialog(props: ConfigureDialogProps) {
 
 interface IProps {
   passageId: RecordIdentity;
+  mediaId: string;
 }
 
-function AudacityConfigure({ passageId }: IProps) {
+function AudacityConfigure({ passageId, mediaId }: IProps) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [allAudacity] = useGlobal('allAudacity');
@@ -185,6 +207,7 @@ function AudacityConfigure({ passageId }: IProps) {
         open={open}
         onClose={handleClose}
         passageId={passageId}
+        mediaId={mediaId}
       />
     </div>
   );
