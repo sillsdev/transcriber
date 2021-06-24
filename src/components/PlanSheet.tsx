@@ -404,7 +404,7 @@ export function PlanSheet(props: IProps) {
   const ActivateCell = (props: any) => {
     React.useEffect(() => {
       setActive(currentRow.current);
-      props.onCommit();
+      props.onRevert();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props]);
     return <></>;
