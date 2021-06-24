@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   IconButton,
@@ -161,6 +162,7 @@ interface IProps {
 function AudacityConfigure({ passageId }: IProps) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [allAudacity] = useGlobal('allAudacity');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -177,7 +179,7 @@ function AudacityConfigure({ passageId }: IProps) {
         onClick={handleClickOpen}
         title={'Audacity Edit'}
       >
-        <AudacityLogo />
+        <AudacityLogo disabled={!allAudacity} />
       </IconButton>
       <ConfigureDialog
         open={open}
