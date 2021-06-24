@@ -194,6 +194,11 @@ function AudacityManager(props: ConfigureDialogProps) {
                 className={classes.name}
                 value={name}
                 onChange={handleAudacityName}
+                helperText={
+                  exists
+                    ? null
+                    : 'Missing file. Use Browse to search for it or Create to make a new file.'
+                }
               />
             </FormControl>
           </Grid>
