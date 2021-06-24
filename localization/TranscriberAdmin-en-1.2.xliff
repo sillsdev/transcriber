@@ -2024,13 +2024,6 @@
                <context context-type="sourcefile">apphead.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.dataChanges">
-            <source>Updating from online data...your data may be out of date.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">apphead.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="main.version">
       		<source>Version: {0} - {1}</source>
       		<target/>

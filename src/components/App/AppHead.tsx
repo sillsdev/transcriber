@@ -37,7 +37,6 @@ import CloudOffIcon from '@material-ui/icons/CloudOff';
 import ProjectDownloadAlert from '../ProjectDownloadAlert';
 import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
-import { useSnackBar } from '../../hoc/SnackBar';
 
 const shell = isElectron ? require('electron').shell : null;
 
@@ -121,7 +120,6 @@ export const AppHead = (props: IProps) => {
   const [view, setView] = useState('');
   const [busy] = useGlobal('remoteBusy');
   const [dataChangeCount] = useGlobal('dataChangeCount');
-  const [showDataChange, setShowDataChange] = useState(0);
   const [importexportBusy] = useGlobal('importexportBusy');
   const [doSave] = useGlobal('doSave');
   const [globalStore] = useGlobal();
@@ -139,7 +137,6 @@ export const AppHead = (props: IProps) => {
   const [complete] = useGlobal('progress');
   const [downloadAlert, setDownloadAlert] = React.useState(false);
   const [updateTipOpen, setUpdateTipOpen] = useState(false);
-  const { showMessage } = useSnackBar();
 
   const handleUserMenuAction = (
     what: string,
@@ -191,13 +188,6 @@ export const AppHead = (props: IProps) => {
     setDownloadAlert(false);
     setView('Logout');
   };
-
-  useEffect(() => {
-    if (dataChangeCount > showDataChange && dataChangeCount > 5)
-      showMessage(t.dataChanges);
-    setShowDataChange(dataChangeCount);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataChangeCount]);
 
   useEffect(() => {
     const handleUnload = (e: any) => {
@@ -268,13 +258,11 @@ export const AppHead = (props: IProps) => {
       shell.openExternal('https://software.sil.org/siltranscriber/download/');
     // remote?.getCurrentWindow().close();
   };
-
   if (view === 'Error') return <Redirect to="/error" />;
   if (view === 'Profile') return <StickyRedirect to="/profile" />;
   if (view === 'Logout') return <Redirect to="/logout" />;
   if (view === 'Access') return <Redirect to="/" />;
   if (view === 'Home') return <StickyRedirect to="/team" />;
-
   return (
     <AppBar position="fixed" className={classes.appBar} color="inherit">
       <>
@@ -283,7 +271,7 @@ export const AppHead = (props: IProps) => {
             <LinearProgress id="prog" variant="determinate" value={complete} />
           </div>
         )}
-        {(!busy && !doSave) || complete !== 0 || (
+        {(!busy && !doSave && !dataChangeCount) || complete !== 0 || (
           <LinearProgress id="busy" variant="indeterminate" />
         )}
         <Toolbar>
