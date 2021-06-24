@@ -93,7 +93,7 @@ function AudacityManager(props: ConfigureDialogProps) {
     const mediaRec = memory.cache.query((q) =>
       q.findRecord({ type: 'mediafile', id: mediaId })
     ) as MediaFile;
-    launchAudacity(mediaRec?.attributes?.audioUrl || '');
+    launchAudacity(exists ? name : mediaRec?.attributes?.audioUrl || '');
   };
 
   const handleImport = () => {};
