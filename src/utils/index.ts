@@ -50,3 +50,4 @@ export * from './hasPython';
 export * from './getWhereis';
 export * from './getFiles';
 export * from './launchAudacity';
+export * from './launchAudacityExport';

@@ -22,7 +22,12 @@ import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
 import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
-import { launchAudacity, cleanFileName } from '../utils';
+import {
+  launchAudacity,
+  launchAudacityExport,
+  cleanFileName,
+  loadBlob,
+} from '../utils';
 
 const fs = require('fs');
 const ipc = isElectron ? require('electron').ipcRenderer : null;
@@ -52,16 +57,19 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export interface ConfigureDialogProps {
+export interface IProps {
+  item: number;
   passageId: RecordIdentity;
   mediaId: string;
   open: boolean;
   onClose: () => void;
+  onImport: (i: number, list: File[]) => void;
 }
 
-function AudacityManager(props: ConfigureDialogProps) {
+function AudacityManager(props: IProps) {
   const classes = useStyles();
   const { passageId, mediaId, onClose, open } = props;
+  const { item, onImport } = props;
   const audUpdate = useAudacityProjUpdate();
   const audRead = useAudacityProjRead();
   const audDelete = useAudacityProjDelete();
@@ -143,7 +151,26 @@ function AudacityManager(props: ConfigureDialogProps) {
     launchAudacity(exists ? name : getMediaUrl(mediaId));
   };
 
-  const handleImport = () => {};
+  const handleImport = async () => {
+    if (name.indexOf('.aup3') === -1) {
+      showMessage('Invalid Audacity project name');
+      return;
+    }
+    const mp3Name = name.replace('.aup3', '.mp3').split(path.sep).pop();
+    if (!mp3Name) {
+      showMessage('Expected full Audacity project path name');
+      return;
+    }
+    const docs = await ipc?.invoke('getPath', 'documents');
+    const mp3FullName = path.join(docs, 'Audacity', 'macro-output', mp3Name);
+    await launchAudacityExport(name, () => {
+      console.log(`exported ${mp3FullName}`);
+      const unused = false;
+      loadBlob(mp3FullName, unused, (b) => {
+        onImport(item, [new File([b], mp3Name, { type: 'audio/mp3' })]);
+      });
+    });
+  };
 
   const handleUnlink = () => {
     audDelete(passageId.id);

@@ -200,8 +200,9 @@ export function ScriptureTable(props: IProps) {
   const [assignSections, setAssignSections] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [recordAudio, setRecordAudio] = useState(true);
+  const [importList, setImportList] = useState<File[]>();
   const [status] = useState(statusInit);
-  const [uploadRow, setUploadRow] = useState<number>();
+  const uploadRow = useRef<number>();
   const [defaultFilename, setDefaultFilename] = useState('');
   const showBook = (cols: ICols) => cols.Book >= 0;
   const { getPlan } = usePlan();
@@ -464,7 +465,7 @@ export function ScriptureTable(props: IProps) {
 
   const handleDelete = async (what: string, where: number[]) => {
     if (what === 'Delete') {
-      setUploadRow(undefined);
+      uploadRow.current = undefined;
       await doDelete(where);
       return true;
     } else {
@@ -771,15 +772,22 @@ export function ScriptureTable(props: IProps) {
   };
   const showUpload = (i: number, record: boolean) => {
     setFilename(i);
-    setUploadRow(i);
+    uploadRow.current = i;
     setRecordAudio(record);
     setUploadVisible(true);
+  };
+  const handleUploadVisible = (v: boolean) => {
+    setUploadVisible(v);
   };
   const handleUpload = (i: number) => () => {
     if (passageId(i) === '') {
       startSave();
       waitForSave(() => showUpload(i, false), 100);
     } else showUpload(i, false);
+  };
+  const handleAudacityImport = (i: number, list: File[]) => {
+    setImportList(list);
+    showUpload(i, false);
   };
   const handleRecord = (i: number) => {
     if (passageId(i) === '') {
@@ -1352,12 +1360,13 @@ export function ScriptureTable(props: IProps) {
     if (
       mediaRemoteIds &&
       mediaRemoteIds.length > 0 &&
-      uploadRow !== undefined
+      uploadRow.current !== undefined
     ) {
+      const passId = passageId(uploadRow.current);
       await attachPassage(
-        passageId(uploadRow),
+        passId,
         related(
-          passages.find((p) => p.id === passageId(uploadRow)),
+          passages.find((p) => p.id === passId),
           'section'
         ),
         plan,
@@ -1365,7 +1374,11 @@ export function ScriptureTable(props: IProps) {
           mediaRemoteIds[0]
       );
     }
-    setUploadRow(undefined);
+    uploadRow.current = undefined;
+    if (importList) {
+      setImportList(undefined);
+      setUploadVisible(false);
+    }
   };
 
   const handleLookupBook = (book: string) =>
@@ -1408,9 +1421,14 @@ export function ScriptureTable(props: IProps) {
         recordAudio={recordAudio}
         defaultFilename={defaultFilename}
         auth={auth}
-        mediaId={uploadRow !== undefined ? rowInfo[uploadRow].mediaId : ''}
+        mediaId={
+          uploadRow.current !== undefined
+            ? rowInfo[uploadRow.current].mediaId
+            : ''
+        }
+        importList={importList}
         isOpen={uploadVisible}
-        onOpen={setUploadVisible}
+        onOpen={handleUploadVisible}
         showMessage={showMessage}
         setComplete={setComplete}
         multiple={false}
@@ -1419,10 +1437,12 @@ export function ScriptureTable(props: IProps) {
       />
       {audacityOpen && rowInfo[audacityItem].passageId && (
         <AudacityManager
+          item={audacityItem}
           open={audacityOpen}
           onClose={handleAudacityClose}
           passageId={rowInfo[audacityItem].passageId as RecordIdentity}
           mediaId={rowInfo[audacityItem].mediaId || ''}
+          onImport={handleAudacityImport}
         />
       )}
     </div>
