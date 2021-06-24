@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { MediaFile } from '../model';
+import { MediaFile, Passage, Section, Plan } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
@@ -12,18 +12,21 @@ import {
   TextField,
 } from '@material-ui/core';
 import {
+  related,
   useAudacityProjUpdate,
   useAudacityProjRead,
   useAudacityProjDelete,
+  usePlan,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { isElectron } from '../api-variable';
 import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
-import { launchAudacity } from '../utils';
+import { launchAudacity, cleanFileName } from '../utils';
 
 const fs = require('fs');
 const ipc = isElectron ? require('electron').ipcRenderer : null;
+const path = require('path');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -67,6 +70,7 @@ function AudacityManager(props: ConfigureDialogProps) {
   const [memory] = useGlobal('memory');
   const [changed] = useGlobal('changed');
   const { showMessage } = useSnackBar();
+  const { getPlan } = usePlan();
 
   const handleClose = () => {
     onClose();
@@ -82,7 +86,41 @@ function AudacityManager(props: ConfigureDialogProps) {
     });
   };
 
-  const handleCreate = () => {};
+  const makeSlug = (rec: Plan | null) => {
+    return (
+      rec?.attributes?.slug ||
+      cleanFileName(rec?.attributes?.name || '')
+        .replace(' ', '')
+        .slice(0, 6) + rec?.id.split('-')[0]
+    );
+  };
+
+  const handleCreate = async () => {
+    if ((passageId?.id || '') !== '') {
+      const passRec = memory.cache.query((q) =>
+        q.findRecord(passageId)
+      ) as Passage;
+      const secId = related(passRec, 'section');
+      const secRec = memory.cache.query((q) =>
+        q.findRecord({ type: 'section', id: secId })
+      ) as Section;
+      const planRec = getPlan(related(secRec, 'plan'));
+      const docs = await ipc?.invoke('getPath', 'documents');
+      const fullName = path.join(
+        docs,
+        'Audacity',
+        makeSlug(planRec),
+        passRec?.attributes?.book,
+        cleanFileName(passRec?.attributes?.reference),
+        `${makeSlug(planRec)}-${passRec?.attributes?.book}-${cleanFileName(
+          passRec?.attributes?.reference
+        )}.aup3`
+      );
+      setName(fullName);
+      console.log(`creating ${fullName}`);
+      launchAudacity(fullName);
+    }
+  };
 
   const handleOpen = () => {
     if (changed) {

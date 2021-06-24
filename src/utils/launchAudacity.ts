@@ -15,7 +15,7 @@ export const launchAudacity = async (mediaName: string) => {
     shell: true,
     detached: true,
     cwd: API_CONFIG.resourcePath,
-    env: { ...{ ...process }.env, DISPLAY: ':0' },
+    env: { ...{ ...process }.env },
   })
     .then((res: IExeca) => {
       console.log(res);
