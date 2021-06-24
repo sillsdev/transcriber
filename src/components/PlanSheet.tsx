@@ -574,6 +574,7 @@ export function PlanSheet(props: IProps) {
                     isSection={section}
                     isPassage={passage}
                     mediaId={rowInfo[rowIndex].mediaId}
+                    passageRecId={rowInfo[rowIndex].passageId}
                     onDelete={handleConfirmDelete}
                     onTranscribe={handleTranscribe}
                     readonly={readonly}

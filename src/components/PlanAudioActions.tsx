@@ -29,7 +29,6 @@ interface IProps extends IStateProps {
   rowIndex: number;
   isSection: boolean;
   isPassage: boolean;
-  passageId: RecordIdentity;
   mediaId: string;
   online: boolean;
   readonly: boolean;
@@ -50,7 +49,6 @@ export function PlanAudioActions(props: IProps) {
     ts,
     rowIndex,
     isPassage,
-    passageId,
     mediaId,
     online,
     readonly,
