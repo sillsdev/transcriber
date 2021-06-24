@@ -177,12 +177,12 @@ function AudacityManager(props: IProps) {
     setName('');
   };
 
-  const handleDelete = () => {
-    const audRec = audRead(passageId.id);
-    fs.unlinkSync(audRec?.attributes?.audacityName);
-    audDelete(passageId.id);
-    setName('');
-  };
+  // const handleDelete = () => {
+  //   const audRec = audRead(passageId.id);
+  //   fs.unlinkSync(audRec?.attributes?.audacityName);
+  //   audDelete(passageId.id);
+  //   setName('');
+  // };
 
   const nameUpdate = debounce(() => {
     audUpdate(passageId.id, name);
@@ -236,7 +236,7 @@ function AudacityManager(props: IProps) {
               <Button onClick={handleOpen}>Open</Button>
               <Button onClick={handleImport}>Import</Button>
               <Button onClick={handleUnlink}>Unlink</Button>
-              <Button onClick={handleDelete}>Delete</Button>
+              {/* <Button onClick={handleDelete}>Delete</Button> */}
             </div>
           ) : (
             <div className={classes.actions}>
