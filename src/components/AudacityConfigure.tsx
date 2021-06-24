@@ -3,7 +3,6 @@ import { useGlobal } from 'reactn';
 import { MediaFile } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
-  IconButton,
   Button,
   Dialog,
   DialogTitle,
@@ -12,7 +11,6 @@ import {
   FormControl,
   TextField,
 } from '@material-ui/core';
-import AudacityLogo from '../control/AudacityLogo';
 import {
   useAudacityProjUpdate,
   useAudacityProjRead,
@@ -57,7 +55,7 @@ export interface ConfigureDialogProps {
   onClose: () => void;
 }
 
-function ConfigureDialog(props: ConfigureDialogProps) {
+function AudacityConfigure(props: ConfigureDialogProps) {
   const classes = useStyles();
   const { passageId, mediaId, onClose, open } = props;
   const audUpdate = useAudacityProjUpdate();
@@ -173,43 +171,6 @@ function ConfigureDialog(props: ConfigureDialogProps) {
         <Button onClick={handleClose}>Close</Button>
       </DialogActions>
     </Dialog>
-  );
-}
-
-interface IProps {
-  passageId: RecordIdentity;
-  mediaId: string;
-}
-
-function AudacityConfigure({ passageId, mediaId }: IProps) {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [allAudacity] = useGlobal('allAudacity');
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <div className={classes.root}>
-      <IconButton
-        id="planActAud"
-        onClick={handleClickOpen}
-        title={'Audacity Edit'}
-      >
-        <AudacityLogo disabled={!allAudacity} />
-      </IconButton>
-      <ConfigureDialog
-        open={open}
-        onClose={handleClose}
-        passageId={passageId}
-        mediaId={mediaId}
-      />
-    </div>
   );
 }
 

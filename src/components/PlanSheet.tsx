@@ -149,6 +149,7 @@ interface IProps extends IStateProps {
   resequence: () => void;
   inlinePassages: boolean;
   onTranscribe: (i: number) => void;
+  onAudacity: (i: number) => void;
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
   onRecord: (i: number) => void;
@@ -176,6 +177,7 @@ export function PlanSheet(props: IProps) {
     inlinePassages,
     auth,
     onTranscribe,
+    onAudacity,
   } = props;
   const classes = useStyles();
   const ctx = React.useContext(PlanContext);
@@ -289,6 +291,10 @@ export function PlanSheet(props: IProps) {
   const handleTranscribe = (i: number) => () => {
     setSrcMediaId('');
     onTranscribe(i);
+  };
+
+  const handleAudacity = (i: number) => () => {
+    onAudacity(i);
   };
 
   const doUpdate = (grid: ICell[][]) => {
@@ -574,9 +580,9 @@ export function PlanSheet(props: IProps) {
                     isSection={section}
                     isPassage={passage}
                     mediaId={rowInfo[rowIndex].mediaId}
-                    passageRecId={rowInfo[rowIndex].passageId}
                     onDelete={handleConfirmDelete}
                     onTranscribe={handleTranscribe}
+                    onAudacity={handleAudacity}
                     readonly={readonly}
                     canAssign={projRole === 'admin'}
                     canDelete={projRole === 'admin'}

@@ -50,6 +50,7 @@ import {
   cleanFileName,
 } from '../utils';
 import { debounce } from 'lodash';
+import AudacityConfigure from './AudacityConfigure';
 import AssignSection from './AssignSection';
 import StickyRedirect from './StickyRedirect';
 import Auth from '../auth/Auth';
@@ -191,6 +192,8 @@ export function ScriptureTable(props: IProps) {
   const [inData, setInData] = useState(Array<Array<any>>());
   const [, setComplete] = useGlobal('progress');
   const [view, setView] = useState('');
+  const [audacityItem, setAudacityItem] = React.useState(0);
+  const [audacityOpen, setAudacityOpen] = React.useState(false);
   const [lastSaved, setLastSaved] = React.useState<string>();
   const [startSave, saveCompleted, waitForSave] = useRemoteSave();
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
@@ -725,6 +728,18 @@ export function ScriptureTable(props: IProps) {
       startSave();
       waitForSave(() => setView(`/work/${prjId}/${passageRemoteId}`), 100);
     } else setView(`/work/${prjId}/${passageRemoteId}`);
+  };
+
+  const handleAudacity = (i: number) => {
+    setAudacityItem(i);
+    if (changed) {
+      startSave();
+      waitForSave(() => setAudacityOpen(true), 100);
+    } else setAudacityOpen(true);
+  };
+
+  const handleAudacityClose = () => {
+    setAudacityOpen(false);
   };
 
   const doAssign = (where: number[]) => {
@@ -1375,6 +1390,7 @@ export function ScriptureTable(props: IProps) {
         resequence={handleResequence}
         inlinePassages={inlinePassages}
         onTranscribe={handleTranscribe}
+        onAudacity={handleAudacity}
         onAssign={handleAssign}
         onUpload={handleUpload}
         onRecord={handleRecord}
@@ -1401,6 +1417,14 @@ export function ScriptureTable(props: IProps) {
         finish={afterUpload}
         status={status}
       />
+      {audacityOpen && rowInfo[audacityItem].passageId && (
+        <AudacityConfigure
+          open={audacityOpen}
+          onClose={handleAudacityClose}
+          passageId={rowInfo[audacityItem].passageId as RecordIdentity}
+          mediaId={rowInfo[audacityItem].mediaId || ''}
+        />
+      )}
     </div>
   );
 }

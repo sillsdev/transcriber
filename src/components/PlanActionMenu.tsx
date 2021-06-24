@@ -18,8 +18,7 @@ import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import TranscribeIcon from '@material-ui/icons/EditOutlined';
 import { elemOffset } from '../utils';
 import { isElectron } from '../api-variable';
-import { RecordIdentity } from '@orbit/data';
-import AudacityConfigure from './AudacityConfigure';
+import { AudacityLogo } from '../control';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,7 +46,6 @@ interface IProps extends IStateProps {
   isSection: boolean;
   isPassage: boolean;
   mediaId: string;
-  passageRecId: RecordIdentity;
   online: boolean;
   readonly: boolean;
   isPlaying: boolean;
@@ -56,6 +54,7 @@ interface IProps extends IStateProps {
   noDeleteNow: boolean;
   active: boolean;
   onTranscribe: (i: number) => () => void;
+  onAudacity: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
 }
@@ -66,9 +65,9 @@ export function PlanActionMenu(props: IProps) {
     isSection,
     isPassage,
     mediaId,
-    passageRecId,
     readonly,
     onTranscribe,
+    onAudacity,
     onAssign,
     onDelete,
     canAssign,
@@ -213,10 +212,13 @@ export function PlanActionMenu(props: IProps) {
                       </MenuItem>
                     )}
                     {isElectron && allAudacity && (
-                      <AudacityConfigure
-                        passageId={passageRecId}
-                        mediaId={mediaId}
-                      />
+                      <MenuItem
+                        id="planActAud"
+                        title={'Launch Audacity'}
+                        onClick={onAudacity(rowIndex)}
+                      >
+                        <AudacityLogo />
+                      </MenuItem>
                     )}
                     {canDelete && !readonly && (
                       <MenuItem
