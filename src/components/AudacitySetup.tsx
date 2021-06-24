@@ -80,11 +80,9 @@ function AudacitySetup(props: AudacitySetupProps) {
   const classes = useStyles();
   const { onClose, open } = props;
   const [allAudacity, setAllAdudacity] = useGlobal('allAudacity');
-  const [satisfied, setSatisfied] = React.useState<boolean[]>([
-    false,
-    false,
-    false,
-  ]);
+  const [satisfied, setSatisfied] = React.useState<boolean[]>(
+    allAudacity ? [true, true, true] : [false, false, false]
+  );
 
   const doEval = async () => {
     Promise.all([hasAudacity(), hasAuacityScripts(), hasPython()]).then((r) =>
