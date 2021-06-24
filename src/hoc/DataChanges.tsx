@@ -224,20 +224,22 @@ export function DataChanges(props: IProps) {
     const defaultBusyDelay = 1000;
     const defaultDataDelay = 1000 * 100;
 
+    setFirstRun(dataDelay === null);
+    var newDelay =
+      connected && loadComplete && remote && auth?.isAuthenticated()
+        ? dataDelay === null
+          ? 10
+          : defaultDataDelay
+        : null;
+    setDataDelay(newDelay);
     if (!remote) setBusy(false);
     setBusyDelay(
       remote && auth?.isAuthenticated()
         ? defaultBusyDelay * (connected ? 1 : 10)
         : null
     );
-    setDataDelay(
-      connected && loadComplete && remote && auth?.isAuthenticated()
-        ? firstRun
-          ? 1
-          : defaultDataDelay
-        : null
-    );
-  }, [remote, auth, loadComplete, connected, setBusy, firstRun]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remote, auth, loadComplete, connected, firstRun]);
   const updateBusy = () => {
     const checkBusy =
       user === '' || (remote && remote.requestQueue.length !== 0);
@@ -256,6 +258,7 @@ export function DataChanges(props: IProps) {
   };
   const updateData = () => {
     if (!busy && !doSave && auth?.isAuthenticated()) {
+      setBusy(true); //attempt to prevent double calls
       setFirstRun(false);
       doDataChanges(
         auth,

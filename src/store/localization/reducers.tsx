@@ -373,7 +373,6 @@ const initialState = {
 			"UnsavedData": "Unsaved Data",
 			"updateAvailable": "Update available: Version {0} was released {1}",
 			"about": "About",
-			"dataChanges": "Updating from online data...your data may be out of date.",
 			"version": "Version: {0} - {1}",
 			"copyClipboard": "Copy Version to Clipboard",
 			"team": "Team",
