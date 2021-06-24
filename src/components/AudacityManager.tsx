@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       padding: theme.spacing(2),
+      marginLeft: theme.spacing(1),
       '& .MuiButton-label': {
         justifyContent: 'flex-end',
       },
@@ -81,7 +82,9 @@ function AudacityManager(props: ConfigureDialogProps) {
     });
   };
 
-  const handleLaunch = () => {
+  const handleCreate = () => {};
+
+  const handleOpen = () => {
     if (changed) {
       showMessage('Save before editing');
       return;
@@ -93,14 +96,18 @@ function AudacityManager(props: ConfigureDialogProps) {
     launchAudacity(mediaRec?.attributes?.audioUrl || '');
   };
 
+  const handleImport = () => {};
+
   const handleUnlink = () => {
     audDelete(passageId.id);
+    setName('');
   };
 
   const handleDelete = () => {
     const audRec = audRead(passageId.id);
     fs.unlinkSync(audRec?.attributes?.audacityName);
     audDelete(passageId.id);
+    setName('');
   };
 
   const nameUpdate = debounce(() => {
@@ -142,27 +149,20 @@ function AudacityManager(props: ConfigureDialogProps) {
                 onChange={handleAudacityName}
               />
             </FormControl>
-            {exists && (
-              <Button
-                onClick={handleLaunch}
-                variant="contained"
-                color="primary"
-              >
-                Launch
-              </Button>
-            )}
           </Grid>
         </Grid>
         <Grid item xs={3}>
           {exists && name !== '' ? (
             <div className={classes.actions}>
+              <Button onClick={handleOpen}>Open</Button>
+              <Button onClick={handleImport}>Import</Button>
               <Button onClick={handleUnlink}>Unlink</Button>
               <Button onClick={handleDelete}>Delete</Button>
             </div>
           ) : (
             <div className={classes.actions}>
               <Button onClick={handleBrowse}>Browse</Button>
-              <Button>Create</Button>
+              <Button onClick={handleCreate}>Create</Button>
             </div>
           )}
         </Grid>
