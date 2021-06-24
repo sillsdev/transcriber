@@ -19,7 +19,7 @@ import {
   usePlan,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
-import { isElectron } from '../api-variable';
+import { API_CONFIG, isElectron } from '../api-variable';
 import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
 import { launchAudacity, cleanFileName } from '../utils';
@@ -117,7 +117,8 @@ function AudacityManager(props: ConfigureDialogProps) {
         )}.aup3`
       );
       setName(fullName);
-      console.log(`creating ${fullName}`);
+      fs.mkdirSync(path.dirname(fullName), { recursive: true });
+      fs.copyFileSync(path.join(API_CONFIG.resourcePath, 'new.aup3'), fullName);
       launchAudacity(fullName);
     }
   };
