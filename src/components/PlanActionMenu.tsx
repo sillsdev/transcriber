@@ -211,7 +211,7 @@ export function PlanActionMenu(props: IProps) {
                         <TranscribeIcon className={classes.action} />
                       </MenuItem>
                     )}
-                    {isElectron && allAudacity && isPassage && (
+                    {isElectron && allAudacity && isPassage && !readonly && (
                       <MenuItem
                         id="planActAud"
                         title={'Launch Audacity'}
