@@ -295,6 +295,78 @@
    			<target>Audacity Setup</target>
    		</segment>
    	</unit>
+   	<unit id="audacityManager.audacityProject">
+   		<segment>
+   			<source>Audacity Project</source>
+   			<target>Projeto Audacity</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacityManager.badProjName">
+   		<segment>
+   			<source>Invalid Audacity project name</source>
+   			<target>Nome do projeto Audacity Invalid Audacity</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacityManager.badProjPath">
+   		<segment>
+   			<source>Expected full Audacity project path name</source>
+   			<target>Nome completo esperado do caminho do projeto Audacity</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacityManager.browse">
+   		<segment>
+   			<source>Browse</source>
+   			<target>Navegue</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacityManager.close">
+   		<segment>
+   			<source>Close</source>
+   			<target>Fechar</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacityManager.create">
+   		<segment>
+   			<source>Create</source>
+   			<target>Criar</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacityManager.import">
+   		<segment>
+   			<source>Import</source>
+   			<target>Importação</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacityManager.missingProject">
+   		<segment>
+   			<source>Missing file. Use Browse to search for it or Create to make a new file.</source>
+   			<target>Arquivo em falta. Use Browse para procurá-lo ou Create para fazer um novo arquivo.</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacityManager.open">
+   		<segment>
+   			<source>Open</source>
+   			<target>Aberto</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacityManager.saveFirst">
+   		<segment>
+   			<source>Save before editing</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="audacityManager.title">
+   		<segment>
+   			<source>Audacity Manager</source>
+   			<target>Gerente de audácia</target>
+   		</segment>
+   	</unit>
+   	<unit id="audacityManager.unlink">
+   		<segment>
+   			<source>Unlink</source>
+   			<target>Desbloqueio</target>
+   		</segment>
+   	</unit>
    	<unit id="audacitySetup.close">
    		<segment>
    			<source>Close</source>
@@ -2005,6 +2077,12 @@
             <target>Excluir</target>
          </segment>
       </unit>
+	  <unit id="planActions.launchAudacity">
+	  	<segment>
+	  		<source>Launch Audacity</source>
+	  		<target>Audácia de lançamento</target>
+	  	</segment>
+	  </unit>
       <unit id="planActions.playpause">
          <segment>
             <source>Play / Pause</source>

@@ -1,6 +1,8 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { MediaFile } from '../model';
+import { connect } from 'react-redux';
+import { IState, IAudacityManagerStrings, MediaFile } from '../model';
+import localStrings from '../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
@@ -51,7 +53,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export interface IProps {
+interface IStateProps {
+  t: IAudacityManagerStrings;
+}
+
+export interface IProps extends IStateProps {
   item: number;
   passageId: RecordIdentity;
   mediaId: string;
@@ -62,7 +68,7 @@ export interface IProps {
 
 function AudacityManager(props: IProps) {
   const classes = useStyles();
-  const { passageId, mediaId, onClose, open } = props;
+  const { passageId, mediaId, onClose, open, t } = props;
   const { item, onImport } = props;
   const audUpdate = useAudacityProjUpdate();
   const audRead = useAudacityProjRead();
@@ -111,7 +117,7 @@ function AudacityManager(props: IProps) {
 
   const handleOpen = () => {
     if (changed) {
-      showMessage('Save before editing');
+      showMessage(t.saveFirst);
       return;
     }
     launchAudacity(name);
@@ -119,12 +125,12 @@ function AudacityManager(props: IProps) {
 
   const handleImport = async () => {
     if (name.indexOf('.aup3') === -1) {
-      showMessage('Invalid Audacity project name');
+      showMessage(t.badProjName);
       return;
     }
     const mp3Name = name.replace('.aup3', '.mp3').split(path.sep).pop();
     if (!mp3Name) {
-      showMessage('Expected full Audacity project path name');
+      showMessage(t.badProjPath);
       return;
     }
     const docs = await ipc?.invoke('getPath', 'documents');
@@ -174,7 +180,7 @@ function AudacityManager(props: IProps) {
 
   return (
     <Dialog onClose={handleClose} aria-labelledby="manager-title" open={open}>
-      <DialogTitle id="manager-title">Audacity Manager</DialogTitle>
+      <DialogTitle id="manager-title">{t.title}</DialogTitle>
       <Grid container className={classes.grid}>
         <Grid item xs={9}>
           <Grid container justify="center">
@@ -183,15 +189,11 @@ function AudacityManager(props: IProps) {
                 id="audacity-project"
                 autoFocus
                 required
-                label={'Audacity Project'}
+                label={t.audacityProject}
                 className={classes.name}
                 value={name}
                 onChange={handleAudacityName}
-                helperText={
-                  exists || name === ''
-                    ? null
-                    : 'Missing file. Use Browse to search for it or Create to make a new file.'
-                }
+                helperText={exists || name === '' ? null : t.missingProject}
               />
             </FormControl>
           </Grid>
@@ -199,24 +201,28 @@ function AudacityManager(props: IProps) {
         <Grid item xs={3}>
           {exists && name !== '' ? (
             <div className={classes.actions}>
-              <Button onClick={handleOpen}>Open</Button>
-              <Button onClick={handleImport}>Import</Button>
-              <Button onClick={handleUnlink}>Unlink</Button>
+              <Button onClick={handleOpen}>{t.open}</Button>
+              <Button onClick={handleImport}>{t.import}</Button>
+              <Button onClick={handleUnlink}>{t.unlink}</Button>
               {/* <Button onClick={handleDelete}>Delete</Button> */}
             </div>
           ) : (
             <div className={classes.actions}>
-              <Button onClick={handleBrowse}>Browse</Button>
-              <Button onClick={handleCreate}>Create</Button>
+              <Button onClick={handleBrowse}>{t.browse}</Button>
+              <Button onClick={handleCreate}>{t.create}</Button>
             </div>
           )}
         </Grid>
       </Grid>
       <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
+        <Button onClick={handleClose}>{t.close}</Button>
       </DialogActions>
     </Dialog>
   );
 }
 
-export default AudacityManager;
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, { layout: 'audacitySetup' }),
+});
+
+export default connect(mapStateToProps)(AudacityManager) as any;

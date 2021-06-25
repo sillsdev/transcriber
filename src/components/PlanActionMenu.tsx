@@ -214,7 +214,7 @@ export function PlanActionMenu(props: IProps) {
                     {isElectron && allAudacity && isPassage && !readonly && (
                       <MenuItem
                         id="planActAud"
-                        title={'Launch Audacity'}
+                        title={t.launchAudacity}
                         onClick={onAudacity(rowIndex)}
                       >
                         <AudacityLogo />

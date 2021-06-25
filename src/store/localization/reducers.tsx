@@ -75,6 +75,22 @@ const initialState = {
 			"users": "Members",
 		}
 	}),
+	"audacityManager": new LocalizedStrings({
+		"en": {
+			"audacityProject": "Audacity Project",
+			"badProjName": "Invalid Audacity project name",
+			"badProjPath": "Expected full Audacity project path name",
+			"browse": "Browse",
+			"close": "Close",
+			"create": "Create",
+			"import": "Import",
+			"missingProject": "Missing file. Use Browse to search for it or Create to make a new file.",
+			"open": "Open",
+			"saveFirst": "Save before editing",
+			"title": "Audacity Manager",
+			"unlink": "Unlink",
+		}
+	}),
 	"audacitySetup": new LocalizedStrings({
 		"en": {
 			"audacitySetup": "Audacity Setup",
@@ -458,6 +474,7 @@ const initialState = {
 		"en": {
 			"assign": "Assign",
 			"delete": "Delete",
+			"launchAudacity": "Launch Audacity",
 			"playpause": "Play/Pause",
 			"recordAudio": "Record/Edit Audio",
 			"transcribe": "Transcribe",
@@ -909,6 +926,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"alert" : new LocalizedStrings(action.payload.data.alert),
 				"assignmentTable" : new LocalizedStrings(action.payload.data.assignmentTable),
 				"assignSection" : new LocalizedStrings(action.payload.data.assignSection),
+				"audacityManager" : new LocalizedStrings(action.payload.data.audacityManager),
 				"audacitySetup" : new LocalizedStrings(action.payload.data.audacitySetup),
 				"audioDownload" : new LocalizedStrings(action.payload.data.audioDownload),
 				"cards" : new LocalizedStrings(action.payload.data.cards),
