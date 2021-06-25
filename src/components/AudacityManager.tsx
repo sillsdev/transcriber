@@ -222,7 +222,7 @@ function AudacityManager(props: IProps) {
                 value={name}
                 onChange={handleAudacityName}
                 helperText={
-                  exists
+                  exists || name === ''
                     ? null
                     : 'Missing file. Use Browse to search for it or Create to make a new file.'
                 }
