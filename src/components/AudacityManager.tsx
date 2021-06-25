@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { MediaFile, Passage, Section, Plan } from '../model';
+import { MediaFile } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
@@ -12,22 +12,16 @@ import {
   TextField,
 } from '@material-ui/core';
 import {
-  related,
   useAudacityProjUpdate,
   useAudacityProjRead,
   useAudacityProjDelete,
-  usePlan,
+  useAudProjName,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
 import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
-import {
-  launchAudacity,
-  launchAudacityExport,
-  cleanFileName,
-  loadBlob,
-} from '../utils';
+import { launchAudacity, launchAudacityExport, loadBlob } from '../utils';
 
 const fs = require('fs');
 const ipc = isElectron ? require('electron').ipcRenderer : null;
@@ -78,7 +72,7 @@ function AudacityManager(props: IProps) {
   const [memory] = useGlobal('memory');
   const [changed] = useGlobal('changed');
   const { showMessage } = useSnackBar();
-  const { getPlan } = usePlan();
+  const getProjName = useAudProjName();
 
   const handleClose = () => {
     onClose();
@@ -94,36 +88,9 @@ function AudacityManager(props: IProps) {
     });
   };
 
-  const makeSlug = (rec: Plan | null) => {
-    return (
-      rec?.attributes?.slug ||
-      cleanFileName(rec?.attributes?.name || '')
-        .replace(' ', '')
-        .slice(0, 6) + rec?.id.split('-')[0]
-    );
-  };
-
   const handleCreate = async () => {
     if ((passageId?.id || '') !== '') {
-      const passRec = memory.cache.query((q) =>
-        q.findRecord(passageId)
-      ) as Passage;
-      const secId = related(passRec, 'section');
-      const secRec = memory.cache.query((q) =>
-        q.findRecord({ type: 'section', id: secId })
-      ) as Section;
-      const planRec = getPlan(related(secRec, 'plan'));
-      const docs = await ipc?.invoke('getPath', 'documents');
-      const fullName = path.join(
-        docs,
-        'Audacity',
-        makeSlug(planRec),
-        passRec?.attributes?.book,
-        cleanFileName(passRec?.attributes?.reference),
-        `${makeSlug(planRec)}-${passRec?.attributes?.book}-${cleanFileName(
-          passRec?.attributes?.reference
-        )}.aup3`
-      );
+      const fullName = await getProjName(passageId);
       setName(fullName);
       fs.mkdirSync(path.dirname(fullName), { recursive: true });
       fs.copyFileSync(path.join(API_CONFIG.resourcePath, 'new.aup3'), fullName);

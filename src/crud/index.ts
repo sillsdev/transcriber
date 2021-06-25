@@ -52,3 +52,4 @@ export * from './useAudacityProjCreate';
 export * from './useAudacityProjRead';
 export * from './useAudacityProjDelete';
 export * from './useAudacityProjUpdate';
+export * from './useAudProjName';
