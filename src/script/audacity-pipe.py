@@ -104,5 +104,7 @@ def main():
     if (myProc == 'none'):
         do_command('New:')
     do_command('OpenProject2:Filename="' + sys.argv[1] + '"')
+    if (len(sys.argv) > 2):
+        do_command('Import2:Filename="' + sys.argv[2] + '"')
 
 main()

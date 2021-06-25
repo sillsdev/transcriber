@@ -88,18 +88,7 @@ function AudacityManager(props: IProps) {
     });
   };
 
-  const handleCreate = async () => {
-    if ((passageId?.id || '') !== '') {
-      const fullName = await getProjName(passageId);
-      setName(fullName);
-      fs.mkdirSync(path.dirname(fullName), { recursive: true });
-      fs.copyFileSync(path.join(API_CONFIG.resourcePath, 'new.aup3'), fullName);
-      launchAudacity(fullName);
-    }
-  };
-
   const getMediaUrl = (mediaId: string) => {
-    console.log(mediaId);
     let mediaUrl = '';
     if (mediaId !== '') {
       const mediaRec = memory.cache.query((q) =>
@@ -110,12 +99,22 @@ function AudacityManager(props: IProps) {
     return mediaUrl;
   };
 
+  const handleCreate = async () => {
+    if ((passageId?.id || '') !== '') {
+      const fullName = await getProjName(passageId);
+      setName(fullName);
+      fs.mkdirSync(path.dirname(fullName), { recursive: true });
+      fs.copyFileSync(path.join(API_CONFIG.resourcePath, 'new.aup3'), fullName);
+      launchAudacity(fullName, getMediaUrl(mediaId));
+    }
+  };
+
   const handleOpen = () => {
     if (changed) {
       showMessage('Save before editing');
       return;
     }
-    launchAudacity(exists ? name : getMediaUrl(mediaId));
+    launchAudacity(name);
   };
 
   const handleImport = async () => {
