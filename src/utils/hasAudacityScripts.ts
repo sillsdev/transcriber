@@ -26,6 +26,10 @@ const getScriptPref = (content: string) => {
   return /mod-script-pipe=([01234])/.exec(content);
 };
 
+const getRecordChannels = (content: string) => {
+  return /RecordChannels=([12])/.exec(content);
+};
+
 export const hasAuacityScripts = async () => {
   const prefs = await prefsName();
   if (prefs === undefined) return false;
@@ -34,14 +38,28 @@ export const hasAuacityScripts = async () => {
   return Boolean(m && m[1] === '1');
 };
 
+const changeValue = (data: string, m: RegExpExecArray) => {
+  const pos = data.indexOf(m[0]) + m[0].length - 1;
+  return data.slice(0, pos) + '1' + data.slice(pos + 1);
+};
+
 export const enableAudacityScripts = async () => {
   const prefs = await prefsName();
   if (prefs === undefined) return false;
   const content = await getAllPref(prefs);
   if (!content) return;
+  let changed = false;
   const m = getScriptPref(content);
-  if (!m) return;
-  const pos = content.indexOf(m[0]) + m[0].length - 1;
-  const data = content.slice(0, pos) + '1' + content.slice(pos + 1);
+  let data = content;
+  if (m) {
+    changed = true;
+    data = changeValue(data, m);
+  }
+  const m1 = getRecordChannels(data);
+  if (m1) {
+    changed = true;
+    data = changeValue(data, m1);
+  }
+  if (!changed) return;
   fs.writeFileSync(prefs, data);
 };

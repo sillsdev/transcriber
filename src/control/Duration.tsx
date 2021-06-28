@@ -1,21 +1,20 @@
 import * as React from 'react';
-
-const pad = (text: number) => ('0' + text).slice(-2);
+import { pad2 } from '../utils';
 
 export function formatTime(seconds: number, direction?: string) {
   if (typeof seconds !== 'number') return '';
   const date = new Date(seconds * 1000);
   const hh = date.getUTCHours();
   const mm = date.getUTCMinutes();
-  const ss = pad(date.getUTCSeconds());
+  const ss = pad2(date.getUTCSeconds());
   if (direction && direction === 'rtl') {
     if (hh) {
-      return `${ss}:${pad(mm)}:${hh}`;
+      return `${ss}:${pad2(mm)}:${hh}`;
     }
     return `${ss}:${mm}`;
   }
   if (hh) {
-    return `${hh}:${pad(mm)}:${ss}`;
+    return `${hh}:${pad2(mm)}:${ss}`;
   }
   return `${mm}:${ss}`;
 }

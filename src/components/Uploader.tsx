@@ -54,6 +54,7 @@ interface IProps extends IStateProps, IDispatchProps {
   status: typeof statusInit;
   multiple?: boolean;
   mediaId?: string;
+  importList?: File[];
 }
 
 export const Uploader = (props: IProps) => {
@@ -68,6 +69,7 @@ export const Uploader = (props: IProps) => {
     showMessage,
     status,
     multiple,
+    importList,
   } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
@@ -243,9 +245,20 @@ export const Uploader = (props: IProps) => {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [uploadError]);
 
+  React.useEffect(() => {
+    if (importList) {
+      uploadMedia(importList);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [importList]);
+
+  React.useEffect(() => {
+    if (plan !== '') planIdRef.current = plan;
+  }, [plan]);
+
   return (
     <div>
-      {recordAudio && (
+      {recordAudio && !importList && (
         <PassageRecord
           visible={isOpen}
           mediaId={mediaId}
@@ -258,7 +271,7 @@ export const Uploader = (props: IProps) => {
           defaultFilename={defaultFilename}
         />
       )}
-      {!recordAudio && (
+      {!recordAudio && !importList && (
         <MediaUpload
           visible={isOpen}
           uploadType={UploadType.Media}

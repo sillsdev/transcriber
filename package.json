@@ -191,7 +191,11 @@
       {
         "from": "src/script",
         "to": "resources",
-        "filter": "resetData.*"
+        "filter": [
+          "resetData.*",
+          "*.py",
+          "*.aup3"
+        ]
       }
     ]
   }

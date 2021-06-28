@@ -344,6 +344,90 @@
                <context context-type="sourcefile">AssignSection.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="audacityManager.audacityProject">
+      		<source>Audacity Project</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.badProjName">
+      		<source>Invalid Audacity project name</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.badProjPath">
+      		<source>Expected full Audacity project path name</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.browse">
+      		<source>Browse</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.close">
+      		<source>Close</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.create">
+      		<source>Create</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.import">
+      		<source>Import</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.missingProject">
+      		<source>Missing file. Use Browse to search for it or Create to make a new file.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.open">
+      		<source>Open</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.saveFirst">
+      		<source>Save before editing</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.title">
+      		<source>Audacity Manager</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.unlink">
+      		<source>Unlink</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="audacitySetup.audacitySetup">
       		<source>Audacity Setup</source>
       		<target/>
@@ -2479,6 +2563,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="planActions.launchAudacity">
+      		<source>Launch Audacity</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="planActions.playpause">
             <source>Play/Pause</source>
             <target/>

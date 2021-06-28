@@ -65,6 +65,21 @@ export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods 
     "users": string;
 };
 
+export interface IAudacityManagerStrings extends Localize.LocalizedStringsMethods {
+    "audacityProject": string;
+    "badProjName": string;
+    "badProjPath": string;
+    "browse": string;
+    "close": string;
+    "create": string;
+    "import": string;
+    "missingProject": string;
+    "open": string;
+    "saveFirst": string;
+    "title": string;
+    "unlink": string;
+};
+
 export interface IAudacitySetupStrings extends Localize.LocalizedStringsMethods {
     "audacitySetup": string;
     "close": string;
@@ -428,6 +443,7 @@ export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
 export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
     "assign": string;
     "delete": string;
+    "launchAudacity": string;
     "playpause": string;
     "recordAudio": string;
     "transcribe": string;
@@ -850,6 +866,7 @@ export interface ILocalizedStrings {
 	alert: IAlertStrings;
 	assignmentTable: IAssignmentTableStrings;
 	assignSection: IAssignSectionStrings;
+	audacityManager: IAudacityManagerStrings;
 	audacitySetup: IAudacitySetupStrings;
 	audioDownload: IAudioDownloadStrings;
 	cards: ICardsStrings;
