@@ -226,7 +226,7 @@ function AudacityManager(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'audacitySetup' }),
+  t: localStrings(state, { layout: 'audacityManager' }),
 });
 
 export default connect(mapStateToProps)(AudacityManager) as any;
