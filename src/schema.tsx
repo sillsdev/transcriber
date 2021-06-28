@@ -577,6 +577,19 @@ backup.cache.migrateDB = function (db, event) {
   if (isElectron && event.newVersion === 2) {
     SaveOfflineProjectInfo(backup, memory);
   }
+  if (event.newVersion === 3) {
+    //Summer 2021
+    // Add missing `relatedIdentity` index. This is required.
+    // https://github.com/orbitjs/orbit/pull/825
+    const transaction = (event.target as any).transaction;
+    if (transaction) {
+      const objectStore = transaction.objectStore('__inverseRels__');
+      if (!objectStore.indexNames.contains('relatedIdentity'))
+        objectStore.createIndex('relatedIdentity', 'relatedIdentity', {
+          unique: false,
+        });
+    }
+  }
 };
 
 export const coordinator = new Coordinator();
