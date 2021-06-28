@@ -252,6 +252,10 @@ export const Uploader = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importList]);
 
+  React.useEffect(() => {
+    if (plan !== '') planIdRef.current = plan;
+  }, [plan]);
+
   return (
     <div>
       {recordAudio && !importList && (
