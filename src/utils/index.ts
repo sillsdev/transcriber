@@ -49,3 +49,6 @@ export * from './hasAudacityScripts';
 export * from './hasPython';
 export * from './getWhereis';
 export * from './getFiles';
+export * from './launchAudacity';
+export * from './launchAudacityExport';
+export * from './pad2';

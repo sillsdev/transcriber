@@ -16,7 +16,7 @@ import time
 import re
 
 if (len(sys.argv) < 2):
-    print("Usage: python audacity-pipe.py <fullpath>")
+    print("Usage: python audacity-pipe.py <project-path>")
     sys.exit(-1)
 prefs = os.path.join(os.getenv('AppData'), 'audacity', 'audacity.cfg')
 if (not os.path.exists(prefs)):
@@ -101,10 +101,15 @@ def do_command(command):
 
 def main():
     """Example list of commands."""
-    if (myProc == 'none'):
-        do_command('New:')
-    do_command('OpenProject2:Filename="' + sys.argv[1] + '"')
-    if (len(sys.argv) > 2):
-        do_command('Import2:Filename="' + sys.argv[2] + '"')
+    if (myProc != 'none'):
+        do_command('OpenProject2: Filename="' + sys.argv[1] + '"')
+    time.sleep(1)
+    ## do_command('UnmuteAllTracks:')
+    ## time.sleep(1)
+    ## do_command('Export2: Filename="' + sys.argv[2] + '" NumChannels=1')
+    ## time.sleep(2)
+    do_command('Export:') # Exports to macro-output folder
+    if (myProc != 'none'):
+       do_command('Exit:')
 
 main()

@@ -112,4 +112,4 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'planActions' }),
   ts: localStrings(state, { layout: 'shared' }),
 });
-export default (connect(mapStateToProps)(PlanAudioActions) as any) as any;
+export default connect(mapStateToProps)(PlanAudioActions) as any as any;

@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
+import { useGlobal } from 'reactn';
 import { ISharedStrings, IPlanActionsStrings, IState } from '../model';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
@@ -16,6 +17,8 @@ import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import TranscribeIcon from '@material-ui/icons/EditOutlined';
 import { elemOffset } from '../utils';
+import { isElectron } from '../api-variable';
+import { AudacityLogo } from '../control';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,6 +54,7 @@ interface IProps extends IStateProps {
   noDeleteNow: boolean;
   active: boolean;
   onTranscribe: (i: number) => () => void;
+  onAudacity: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
 }
@@ -63,6 +67,7 @@ export function PlanActionMenu(props: IProps) {
     mediaId,
     readonly,
     onTranscribe,
+    onAudacity,
     onAssign,
     onDelete,
     canAssign,
@@ -71,6 +76,7 @@ export function PlanActionMenu(props: IProps) {
     active,
   } = props;
   const classes = useStyles();
+  const [allAudacity] = useGlobal('allAudacity');
   const [open, setOpen] = React.useState(false);
   const [hover, setHover] = React.useState(false);
   const top = React.useRef<number>(0);
@@ -203,6 +209,15 @@ export function PlanActionMenu(props: IProps) {
                         disabled={(mediaId || '') === ''}
                       >
                         <TranscribeIcon className={classes.action} />
+                      </MenuItem>
+                    )}
+                    {isElectron && allAudacity && isPassage && !readonly && (
+                      <MenuItem
+                        id="planActAud"
+                        title={t.launchAudacity}
+                        onClick={onAudacity(rowIndex)}
+                      >
+                        <AudacityLogo />
                       </MenuItem>
                     )}
                     {canDelete && !readonly && (
