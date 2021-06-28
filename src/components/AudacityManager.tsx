@@ -110,7 +110,7 @@ function AudacityManager(props: IProps) {
       const fullName = await getProjName(passageId);
       setName(fullName);
       fs.mkdirSync(path.dirname(fullName), { recursive: true });
-      if (!fs.exists(fullName))
+      if (!fs.existsSync(fullName))
         fs.copyFileSync(
           path.join(API_CONFIG.resourcePath, 'new.aup3'),
           fullName
