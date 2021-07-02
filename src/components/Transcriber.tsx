@@ -166,24 +166,18 @@ export function Transcriber(props: IProps) {
     playing,
     setPlaying,
     allDone,
+    refresh,
   } = useTodo();
-  const {
-    section,
-    passage,
-    duration,
-    mediaRemoteId,
-    mediaId,
-    state,
-    role,
-  } = rowData[index] || {
-    section: {} as Section,
-    passage: {} as Passage,
-    duration: 0,
-    mediaRemoteId: '',
-    mediaId: '',
-    state: '',
-    role: '',
-  };
+  const { section, passage, duration, mediaRemoteId, mediaId, state, role } =
+    rowData[index] || {
+      section: {} as Section,
+      passage: {} as Passage,
+      duration: 0,
+      mediaRemoteId: '',
+      mediaId: '',
+      state: '',
+      role: '',
+    };
   const classes = useStyles();
 
   const [memory] = useGlobal('memory');
@@ -231,9 +225,8 @@ export function Transcriber(props: IProps) {
   const transcriptionRef = React.useRef<any>();
   const playingRef = useRef<Boolean>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
-  const { subscribe, unsubscribe, localizeHotKey } = useContext(
-    HotKeyContext
-  ).state;
+  const { subscribe, unsubscribe, localizeHotKey } =
+    useContext(HotKeyContext).state;
   const t = transcriberStr;
 
   useEffect(() => {
@@ -387,15 +380,19 @@ export function Transcriber(props: IProps) {
   }, [index, rowData]);
 
   useEffect(() => {
-    if (totalSeconds && (!duration || duration !== Math.ceil(totalSeconds))) {
+    if (totalSeconds && (!duration || duration !== Math.floor(totalSeconds))) {
       const mediaRecs = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('mediafile')
       ) as MediaFile[];
       const oldRec = mediaRecs.filter((m) => m.id === mediaId);
       if (oldRec.length > 0)
-        memory.update((t: TransformBuilder) =>
-          t.replaceAttribute(oldRec[0], 'duration', Math.ceil(totalSeconds))
-        );
+        memory
+          .update((t: TransformBuilder) =>
+            t.replaceAttribute(oldRec[0], 'duration', Math.floor(totalSeconds))
+          )
+          .then(() => {
+            refresh();
+          });
       console.log(`update duration to ${Math.ceil(totalSeconds)}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -751,6 +748,10 @@ export function Transcriber(props: IProps) {
 
   const paperStyle = { width: width - 36 };
 
+  const onDuration = (value: number) => {
+    setTotalSeconds(value);
+  };
+
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {
@@ -806,6 +807,7 @@ export function Transcriber(props: IProps) {
                     blob={audioBlob}
                     onProgress={onProgress}
                     onPlayStatus={onPlayStatus}
+                    onDuration={onDuration}
                     onSaveProgress={
                       selected === '' || role === 'view'
                         ? undefined
