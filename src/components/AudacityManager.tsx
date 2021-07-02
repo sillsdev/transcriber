@@ -144,6 +144,7 @@ function AudacityManager(props: IProps) {
       const unused = false;
       loadBlob(mp3FullName, unused, (b) => {
         onImport(item, [new File([b], mp3Name, { type: 'audio/mp3' })]);
+        onClose();
       });
     });
   };
