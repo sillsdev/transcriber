@@ -24,6 +24,7 @@ import { API_CONFIG, isElectron } from '../api-variable';
 import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
 import { launchAudacity, launchAudacityExport, loadBlob } from '../utils';
+import { dataPath, PathType } from '../utils';
 
 const fs = require('fs');
 const ipc = isElectron ? require('electron').ipcRenderer : null;
@@ -107,6 +108,12 @@ function AudacityManager(props: IProps) {
 
   const handleCreate = async () => {
     if ((passageId?.id || '') !== '') {
+      const url = getMediaUrl(mediaId);
+      const mediaName = dataPath(url, PathType.MEDIA);
+      if (!fs.existsSync(mediaName)) {
+        showMessage('Exit to download media file before creating Audacity');
+        return;
+      }
       const fullName = await getProjName(passageId);
       setName(fullName);
       fs.mkdirSync(path.dirname(fullName), { recursive: true });
