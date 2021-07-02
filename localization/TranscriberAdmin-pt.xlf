@@ -319,6 +319,12 @@
    			<target>Navegue</target>
    		</segment>
    	</unit>
+   	<unit id="audacityManager.checkDownload">
+   		<segment>
+   			<source>Exit to download media file before creating Audacity</source>
+   			<target>Sair para baixar o arquivo de mídia antes de criar Audacity</target>
+   		</segment>
+   	</unit>
    	<unit id="audacityManager.close">
    		<segment>
    			<source>Close</source>

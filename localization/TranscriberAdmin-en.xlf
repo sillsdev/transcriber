@@ -322,6 +322,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="audacityManager.checkDownload">
+         <segment>
+            <source>Exit to download media file before creating Audacity</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="audacityManager.close">
          <segment>
             <source>Close</source>

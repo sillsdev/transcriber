@@ -111,7 +111,7 @@ function AudacityManager(props: IProps) {
       const url = getMediaUrl(mediaId);
       const mediaName = dataPath(url, PathType.MEDIA);
       if (!fs.existsSync(mediaName)) {
-        showMessage('Exit to download media file before creating Audacity');
+        showMessage(t.checkDownload);
         return;
       }
       const fullName = await getProjName(passageId);
