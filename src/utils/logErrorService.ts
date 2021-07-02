@@ -102,12 +102,14 @@ interface IStatErr {
 }
 
 export function logFile() {
-  const logName = `log-${moment().format('DD')}.log`;
+  const loc = Intl.NumberFormat().resolvedOptions().locale;
+  console.log(`logfile locale=${loc}`);
+  const logName = `log-${moment().locale(loc).format('DD')}.log`;
   const logFullName = join(LogFolder, logName);
   fs.stat(logFullName, (err: IStatErr, stats: Stats) => {
     if (err?.code === 'ENOENT') {
       createFolder(LogFolder);
-      logFileHeader(err.path);
+      logFileHeader(logFullName);
     } else if (err) {
       console.log(JSON.stringify(err));
     } else {
