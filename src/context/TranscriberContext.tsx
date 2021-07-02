@@ -135,6 +135,7 @@ const initState = {
   playItem: '',
   allDone: false,
   setAllDone: (val: boolean) => {},
+  refresh: () => {},
   allBookData: Array<BookName>(),
   taskItemStr: {} as ITaskItemStrings,
   activityStateStr: {} as IActivityStateStrings,
@@ -188,6 +189,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [devPlan] = useGlobal('plan');
     const [projRole] = useGlobal('projRole');
     const view = React.useRef('');
+    const [refreshed, setRefreshed] = useState(0);
     const [state, setState] = useState({
       ...initState,
       selected: '',
@@ -254,6 +256,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           break;
         }
       }
+    };
+
+    const refresh = () => {
+      setRefreshed((refreshed) => {
+        return refreshed + 1;
+      });
     };
 
     let curSec = '';
@@ -514,7 +522,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       }
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [role, project, trackedTask, sections]);
+    }, [role, project, trackedTask, sections, refreshed]);
 
     const actor: { [key: string]: string } = {
       [ActivityStates.TranscribeReady]: 'transcriber',
@@ -606,6 +614,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
             setSelected,
             setPlaying,
             setAllDone,
+            refresh,
           },
           setState,
         }}

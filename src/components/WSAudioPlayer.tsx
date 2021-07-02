@@ -172,6 +172,7 @@ interface IProps extends IStateProps {
   setBlobReady?: (ready: boolean) => void;
   setChanged?: (changed: boolean) => void;
   onSaveProgress?: (progress: number) => void; //user initiated
+  onDuration?: (duration: number) => void;
 }
 function valuetext(value: number) {
   return `${Math.floor(value)}%`;
@@ -204,6 +205,7 @@ function WSAudioPlayer(props: IProps) {
     setBlobReady,
     setChanged,
     onSaveProgress,
+    onDuration,
   } = props;
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
@@ -231,9 +233,8 @@ function WSAudioPlayer(props: IProps) {
   const { showMessage } = useSnackBar();
   //const isMounted = useMounted('wsaudioplayer');
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
-  const { subscribe, unsubscribe, localizeHotKey } = useContext(
-    HotKeyContext
-  ).state;
+  const { subscribe, unsubscribe, localizeHotKey } =
+    useContext(HotKeyContext).state;
   const {
     wsLoad,
     wsClear,
@@ -410,6 +411,7 @@ function WSAudioPlayer(props: IProps) {
   const setDuration = (value: number) => {
     durationRef.current = value;
     setDurationx(value);
+    if (onDuration) onDuration(value);
   };
   const setReady = (value: boolean) => {
     setReadyx(value);
