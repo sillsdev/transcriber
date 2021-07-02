@@ -57,12 +57,12 @@ else:
     FROMNAME = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
     EOL = '\n'
 
-print("Write to  \"" + TONAME +"\"")
+print("Write to  \"" + TONAME + "\"")
 if not os.path.exists(TONAME):
     print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
     sys.exit(-4)
 
-print("Read from \"" + FROMNAME +"\"")
+print("Read from \"" + FROMNAME + "\"")
 if not os.path.exists(FROMNAME):
     print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
     sys.exit(-5)
@@ -81,6 +81,7 @@ def send_command(command):
     TOFILE.write(command + EOL)
     TOFILE.flush()
 
+
 def get_response():
     """Return the command response."""
     result = ''
@@ -92,6 +93,7 @@ def get_response():
             break
     return result
 
+
 def do_command(command):
     """Send one command, and return the response."""
     send_command(command)
@@ -99,17 +101,15 @@ def do_command(command):
     print("Rcvd: <<< \n" + response)
     return response
 
+
 def main():
     """Example list of commands."""
     if (myProc != 'none'):
         do_command('OpenProject2: Filename="' + sys.argv[1] + '"')
     time.sleep(1)
-    ## do_command('UnmuteAllTracks:')
-    ## time.sleep(1)
-    ## do_command('Export2: Filename="' + sys.argv[2] + '" NumChannels=1')
-    ## time.sleep(2)
-    do_command('Export:') # Exports to macro-output folder
+    do_command('Export:')  # Exports to macro-output folder
     if (myProc != 'none'):
-       do_command('Exit:')
+        do_command('Exit:')
+
 
 main()

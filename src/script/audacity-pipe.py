@@ -57,12 +57,12 @@ else:
     FROMNAME = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
     EOL = '\n'
 
-print("Write to  \"" + TONAME +"\"")
+print("Write to  \"" + TONAME + "\"")
 if not os.path.exists(TONAME):
     print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
     sys.exit(-4)
 
-print("Read from \"" + FROMNAME +"\"")
+print("Read from \"" + FROMNAME + "\"")
 if not os.path.exists(FROMNAME):
     print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
     sys.exit(-5)
@@ -81,6 +81,7 @@ def send_command(command):
     TOFILE.write(command + EOL)
     TOFILE.flush()
 
+
 def get_response():
     """Return the command response."""
     result = ''
@@ -92,12 +93,14 @@ def get_response():
             break
     return result
 
+
 def do_command(command):
     """Send one command, and return the response."""
     send_command(command)
     response = get_response()
     print("Rcvd: <<< \n" + response)
     return response
+
 
 def main():
     """Example list of commands."""
@@ -106,5 +109,6 @@ def main():
     do_command('OpenProject2:Filename="' + sys.argv[1] + '"')
     if (len(sys.argv) > 2):
         do_command('Import2:Filename="' + sys.argv[2] + '"')
+
 
 main()
