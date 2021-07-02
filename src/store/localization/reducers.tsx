@@ -81,6 +81,7 @@ const initialState = {
 			"badProjName": "Invalid Audacity project name",
 			"badProjPath": "Expected full Audacity project path name",
 			"browse": "Browse",
+			"checkDownload": "Exit to download media file before creating Audacity",
 			"close": "Close",
 			"create": "Create",
 			"import": "Import",

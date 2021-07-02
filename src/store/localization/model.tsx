@@ -70,6 +70,7 @@ export interface IAudacityManagerStrings extends Localize.LocalizedStringsMethod
     "badProjName": string;
     "badProjPath": string;
     "browse": string;
+    "checkDownload": string;
     "close": string;
     "create": string;
     "import": string;

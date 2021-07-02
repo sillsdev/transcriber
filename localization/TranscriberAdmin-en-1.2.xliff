@@ -372,6 +372,13 @@
       			<context context-type="sourcefile">AudacityManager.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="audacityManager.checkDownload">
+      		<source>Exit to download media file before creating Audacity</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="audacityManager.close">
       		<source>Close</source>
       		<target/>

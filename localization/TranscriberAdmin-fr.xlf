@@ -319,6 +319,12 @@
    			<target>Parcourir</target>
    		</segment>
    	</unit>
+   	<unit id="audacityManager.checkDownload">
+   		<segment>
+   			<source>Exit to download media file before creating Audacity</source>
+   			<target>Quitter pour télécharger le fichier média avant de créer Audacity</target>
+   		</segment>
+   	</unit>
    	<unit id="audacityManager.close">
    		<segment>
    			<source>Close</source>

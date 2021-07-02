@@ -319,6 +319,12 @@
 				<target>Просмотреть</target>
 			</segment>
 		</unit>
+		<unit id="audacityManager.checkDownload">
+			<segment>
+				<source>Exit to download media file before creating Audacity</source>
+				<target>Выход для загрузки медиафайла перед созданием Audacity</target>
+			</segment>
+		</unit>
 		<unit id="audacityManager.close">
 			<segment>
 				<source>Close</source>
