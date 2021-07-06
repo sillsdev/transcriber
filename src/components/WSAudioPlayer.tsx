@@ -40,6 +40,7 @@ import {
   FaDotCircle,
   FaStopCircle,
 } from 'react-icons/fa';
+
 //import { createWaveSurfer } from './WSAudioRegion';
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
 import { useWaveSurfer } from '../crud/useWaveSurfer';
@@ -47,6 +48,8 @@ import { Duration, LightTooltip } from '../control';
 import { connect } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
+import { WSAudioPlayerZoom } from './WSAudioPlayerZoom';
+import { WSAudioPlayerSegment } from './WSAudioPlayerSegment';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -155,6 +158,7 @@ const IOSSlider = withStyles({
     backgroundColor: 'currentColor',
   },
 })(Slider);
+
 interface IStateProps {
   t: IWsAudioPlayerStrings;
 }
@@ -250,6 +254,12 @@ function WSAudioPlayer(props: IProps) {
     wsRegionDelete,
     wsInsertAudio,
     wsInsertSilence,
+    wsZoom,
+    wsAutoSegment,
+    wsGetRegions,
+    wsNextRegion,
+    wsSplitRegion,
+    wsSetHeight,
   } = useWaveSurfer(
     waveformRef.current,
     onWSReady,
@@ -258,6 +268,7 @@ function WSAudioPlayer(props: IProps) {
     onWSStop,
     () => {},
     allowRecord ? 150 : 50,
+    allowRecord,
     timelineRef.current
   );
   //because we have to call hooks consistently, call this even if we aren't going to record
@@ -378,7 +389,7 @@ function WSAudioPlayer(props: IProps) {
   }
   function onWSRegion(region: boolean) {
     setHasRegion(region);
-    setLooping(wsLoopRegion(region && !allowRecord));
+    console.log(wsGetRegions());
     //forceUpdate(1);
   }
   function onWSStop() {
@@ -438,6 +449,7 @@ function WSAudioPlayer(props: IProps) {
   const handleToggleLoop = () => () => {
     setLooping(wsLoopRegion(!looping));
   };
+
   const gotoEnd = () => {
     wsPause();
     setPlaying(false);
@@ -605,10 +617,44 @@ function WSAudioPlayer(props: IProps) {
               <div className={classes.grow}>{'\u00A0'}</div>
             </Grid>
           )}
-          <Typography>
-            <Duration id="wsAudioPosition" seconds={progress} /> {' / '}
-            <Duration id="wsAudioDuration" seconds={duration} />
-          </Typography>
+          <Grid container className={classes.toolbar}>
+            <Grid item>
+              <Typography>
+                <Duration id="wsAudioPosition" seconds={progress} /> {' / '}
+                <Duration id="wsAudioDuration" seconds={duration} />
+              </Typography>
+            </Grid>
+            <Divider
+              id="wsAudioDiv3"
+              className={classes.divider}
+              orientation="vertical"
+              flexItem
+            />
+            <Grid item>
+              <WSAudioPlayerZoom
+                startBig={allowRecord || false}
+                ready={ready}
+                wsSetHeight={wsSetHeight}
+                wsZoom={wsZoom}
+                t={t}
+              ></WSAudioPlayerZoom>
+            </Grid>
+            <Divider
+              id="wsAudioDiv3"
+              className={classes.divider}
+              orientation="vertical"
+              flexItem
+            />
+            {allowRecord || (
+              <WSAudioPlayerSegment
+                ready={ready}
+                wsAutoSegment={wsAutoSegment}
+                wsNextRegion={wsNextRegion}
+                wsSplitRegion={wsSplitRegion}
+                t={t}
+              />
+            )}
+          </Grid>
           <div id="wsAudioTimeline" ref={timelineRef} />
           <div id="wsAudioWaveform" ref={waveformRef} />
           <Grid container className={classes.toolbar}>
