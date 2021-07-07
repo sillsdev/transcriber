@@ -5,13 +5,20 @@ interface Iexeca {
   stdout: string;
 }
 
-export const getWhereis = async (key: string) => {
+export const getWhereis = async (key: string, scall?: any) => {
   let val: string | undefined = undefined;
   try {
-    const { stdout } = (await execa('whereis', [key])) as Iexeca;
+    const { stdout } = (await (scall || execa)('whereis', [key])) as Iexeca;
     val = stdout;
   } catch (err) {
     if (err.code !== 'ENOENT') throw err;
   }
-  return val ? val : '';
+  const res = val ? val : '';
+  const opts = res.split(' ');
+  for (let item of opts) {
+    if (item === '') continue;
+    const itemName = item.split('/').pop();
+    if (itemName === key) return item;
+  }
+  return undefined;
 };
