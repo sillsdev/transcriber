@@ -79,7 +79,7 @@ export function useWaveSurfer(
         if (onRegion) onRegion(true);
       });
       ws.on('region-update-end', function (r: any) {
-        console.log('region-update-end', currentRegionRef.current);
+        console.log('region-update-end', r, currentRegionRef.current);
         if (singleRegionRef.current) {
           wsGoto(currentRegionRef.current.start);
           keepRegion.current = false;
@@ -94,9 +94,17 @@ export function useWaveSurfer(
       });
       ws.on('region-in', function (r: any) {
         console.log('region-in');
+        currentRegionRef.current = r;
       });
       ws.on('region-out', function (r: any) {
         console.log('region-out');
+      });
+      ws.on('region-click', function (r: any) {
+        console.log('region-click', r);
+        currentRegionRef.current = r;
+      });
+      ws.on('region-dblclick', function (r: any) {
+        console.log('region-dblclick', r);
       });
 
       return ws;
@@ -159,9 +167,9 @@ export function useWaveSurfer(
           playingRef.current = false;
           onStop();
         }
-        currentRegionRef.current = findRegion(value);
+        //currentRegionRef.current = findRegion(value);
       }
-    } else currentRegionRef.current = findRegion(value);
+    } // else currentRegionRef.current = findRegion(value);
   };
 
   const setPlaying = (value: boolean) => {
