@@ -14,6 +14,9 @@ const prefsName = async () => {
     for await (const fullName of getFiles(path.join(home, 'snap'))) {
       if (fullName.indexOf('audacity.cfg') > 0) return fullName;
     }
+    for await (const fullName of getFiles(path.join(home, '.audacity-data'))) {
+      if (fullName.indexOf('audacity.cfg') > 0) return fullName;
+    }
   }
 };
 

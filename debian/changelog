@@ -1,3 +1,9 @@
+sil-transcriber (2.12.2.1)  experimental; urgency=high
+
+  * tests for getWhereis
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 28 Jun 2021 14:23:00 -0600
+
 sil-transcriber (2.12.2.0)  experimental; urgency=high
 
   * TT-2469 remove section update after passage update (#243)
