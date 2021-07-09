@@ -28,6 +28,9 @@ import {
   LocalKey,
   useMounted,
   waitForIt,
+  logError,
+  Severity,
+  infoMsg,
 } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
 import { usePlan } from '../../crud';
@@ -110,6 +113,7 @@ export const AppHead = (props: IProps) => {
   const { auth, resetRequests, SwitchTo, t, orbitStatus } = props;
   const classes = useStyles();
   const { pathname } = useLocation();
+  const [errorReporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const [isOffline] = useGlobal('offline');
@@ -231,16 +235,24 @@ export const AppHead = (props: IProps) => {
     if (latestVersion === '' && version !== '' && updates) {
       var bodyFormData = new FormData();
       bodyFormData.append('env', navigator.userAgent);
-      axiosPost('userversions/2/' + version, bodyFormData).then((response) => {
-        var lv = response?.data['desktopVersion'];
-        var lr = response?.data['dateUpdated'];
-        if (!lr.endsWith('Z')) lr += 'Z';
-        lr = moment(lr)
-          .locale(Intl.NumberFormat().resolvedOptions().locale)
-          .format('L');
-        setLatestVersion(lv);
-        setLatestRelease(lr);
-      });
+      axiosPost('userversions/2/' + version, bodyFormData)
+        .then((response) => {
+          var lv = response?.data['desktopVersion'];
+          var lr = response?.data['dateUpdated'];
+          if (!lr.endsWith('Z')) lr += 'Z';
+          lr = moment(lr)
+            .locale(Intl.NumberFormat().resolvedOptions().locale)
+            .format('L');
+          setLatestVersion(lv);
+          setLatestRelease(lr);
+        })
+        .catch((err) => {
+          logError(
+            Severity.error,
+            errorReporter,
+            infoMsg(err, 'userversions failed ' + navigator.userAgent)
+          );
+        });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updates, version]);
