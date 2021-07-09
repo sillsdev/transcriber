@@ -68,8 +68,7 @@ export const doDataChanges = async (
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const userLastTimeKey = localUserKey(LocalKey.time, memory);
   if (!remote) return;
-  let lastTime = localStorage.getItem(userLastTimeKey);
-  if (!lastTime) lastTime = currentDateTime(); // should not happen
+  let lastTime = localStorage.getItem(userLastTimeKey) || currentDateTime(); // should not happen
   let nextTime = currentDateTime();
 
   const updateSnapshotDates = async () => {
@@ -102,96 +101,115 @@ export const doDataChanges = async (
     );
   };
 
+  const processDataChanges = async (api: string, params: any) => {
+    try {
+      var response = await Axios.get(api, {
+        params: params,
+        headers: {
+          Authorization: 'Bearer ' + auth.accessToken,
+        },
+      });
+      var data = response.data.data as DataChange;
+      const changes = data?.attributes?.changes;
+      const deletes = data.attributes.deleted;
+      setDataChangeCount(changes.length + deletes.length);
+      changes.forEach((table) => {
+        if (table.ids.length > 0) {
+          remote
+            .pull((q: QueryBuilder) =>
+              q
+                .findRecords(table.type)
+                .filter({ attribute: 'id-list', value: table.ids.join('|') })
+            )
+            .then((t: Transform[]) => {
+              memory.sync(t);
+              t.forEach((tr) => {
+                var tb = new TransformBuilder();
+                var newOps: Operation[] = [];
+                tr.operations.forEach((o) => {
+                  if (o.op === 'updateRecord') {
+                    var upRec = o as UpdateRecordOperation;
+                    switch (upRec.record.type) {
+                      case 'section':
+                        if (
+                          upRec.record.relationships?.transcriber === undefined
+                        )
+                          resetRelated(newOps, tb, 'transcriber', upRec);
+
+                        if (upRec.record.relationships?.editor === undefined)
+                          resetRelated(newOps, tb, 'editor', upRec);
+
+                        break;
+                      case 'mediafile':
+                        if (upRec.record.relationships?.passage === undefined)
+                          resetRelated(newOps, tb, 'passage', upRec);
+                        break;
+                      case 'user':
+                        SetUserLanguage(memory, user, setLanguage);
+                        break;
+                    }
+                  }
+                });
+                if (newOps.length > 0) memory.update(() => newOps);
+              });
+            });
+        }
+      });
+      setDataChangeCount(deletes.length);
+      var tb: TransformBuilder = new TransformBuilder();
+
+      for (var ix = 0; ix < deletes.length; ix++) {
+        var table = deletes[ix];
+        let operations: Operation[] = [];
+        // eslint-disable-next-line no-loop-func
+        table.ids.forEach((r) => {
+          const localId = remoteIdGuid(table.type, r.toString(), memory.keyMap);
+          if (localId) {
+            operations.push(tb.removeRecord({ type: table.type, id: localId }));
+          }
+        });
+        if (operations.length > 0) {
+          await memory.update(operations);
+        }
+      }
+      setDataChangeCount(0);
+      return true;
+    } catch (e) {
+      logError(Severity.error, errorReporter, e);
+      return false;
+    }
+  };
+
   var api = API_CONFIG.host + '/api/datachanges/';
-  var params;
   if (isElectron) {
-    api += 'projects/' + fingerprint;
     var records: { id: string; since: string }[] = [];
     projectsLoaded.forEach((p) => {
       var op = getOfflineProject(p);
-      if (op.attributes && op.attributes.snapshotDate)
+      if (
+        op?.attributes &&
+        op.attributes.snapshotDate &&
+        Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
+      )
         records.push({
           id: remoteId('project', p, memory.keyMap),
           since: op.attributes.snapshotDate,
         });
     });
-    params = new URLSearchParams([['projlist', JSON.stringify(records)]]);
-  } else {
-    api += 'since/' + lastTime + '?origin=' + fingerprint;
-  }
-  try {
-    var response = await Axios.get(api, {
-      params: params,
-      headers: {
-        Authorization: 'Bearer ' + auth.accessToken,
-      },
-    });
-    var data = response.data.data as DataChange;
-    const changes = data?.attributes?.changes;
-    const deletes = data.attributes.deleted;
-    setDataChangeCount(changes.length + deletes.length);
-    changes.forEach((table) => {
-      if (table.ids.length > 0) {
-        remote
-          .pull((q: QueryBuilder) =>
-            q
-              .findRecords(table.type)
-              .filter({ attribute: 'id-list', value: table.ids.join('|') })
-          )
-          .then((t: Transform[]) => {
-            memory.sync(t);
-            t.forEach((tr) => {
-              var tb = new TransformBuilder();
-              var newOps: Operation[] = [];
-              tr.operations.forEach((o) => {
-                if (o.op === 'updateRecord') {
-                  var upRec = o as UpdateRecordOperation;
-                  switch (upRec.record.type) {
-                    case 'section':
-                      if (upRec.record.relationships?.transcriber === undefined)
-                        resetRelated(newOps, tb, 'transcriber', upRec);
-
-                      if (upRec.record.relationships?.editor === undefined)
-                        resetRelated(newOps, tb, 'editor', upRec);
-
-                      break;
-                    case 'mediafile':
-                      if (upRec.record.relationships?.passage === undefined)
-                        resetRelated(newOps, tb, 'passage', upRec);
-                      break;
-                    case 'user':
-                      SetUserLanguage(memory, user, setLanguage);
-                      break;
-                  }
-                }
-              });
-              if (newOps.length > 0) memory.update(() => newOps);
-            });
-          });
-      }
-    });
-    setDataChangeCount(deletes.length);
-    var tb: TransformBuilder = new TransformBuilder();
-
-    for (var ix = 0; ix < deletes.length; ix++) {
-      var table = deletes[ix];
-      let operations: Operation[] = [];
-      // eslint-disable-next-line no-loop-func
-      table.ids.forEach((r) => {
-        const localId = remoteIdGuid(table.type, r.toString(), memory.keyMap);
-        if (localId) {
-          operations.push(tb.removeRecord({ type: table.type, id: localId }));
-        }
-      });
-      if (operations.length > 0) {
-        await memory.update(operations);
-      }
+    if (records.length) {
+      await processDataChanges(
+        api + 'projects/' + fingerprint,
+        new URLSearchParams([['projlist', JSON.stringify(records)]])
+      );
     }
-    setDataChangeCount(0);
-    localStorage.setItem(userLastTimeKey, nextTime);
+  }
+  if (
+    await processDataChanges(
+      api + 'since/' + lastTime + '?origin=' + fingerprint,
+      undefined
+    )
+  ) {
     if (isElectron) await updateSnapshotDates();
-  } catch (e) {
-    logError(Severity.error, errorReporter, e);
+    localStorage.setItem(userLastTimeKey, nextTime);
   }
 };
 
