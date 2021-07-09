@@ -18,8 +18,8 @@ import re
 if (len(sys.argv) < 2):
     print("Usage: python audacity-pipe.py <fullpath>")
     sys.exit(-1)
-    
-if sys.platform == 'win32':    
+
+if sys.platform == 'win32':
     prefs = os.path.join(os.getenv('AppData'), 'audacity', 'audacity.cfg')
     if (not os.path.exists(prefs)):
         print("Please Install Audacity")
@@ -62,6 +62,8 @@ if sys.platform == 'win32':
     #     print ln
 else:
     print("pipe-test.py, running on linux or mac")
+    if (not os.access('/tmp/snap.audacity', os.X_OK)):
+        os.system('pkexec /bin/chmod o+x /tmp/snap.audacity')
     TONAME = '/tmp/snap.audacity/tmp/audacity_script_pipe.to.' + str(os.getuid())
     FROMNAME = '/tmp/snap.audacity/tmp/audacity_script_pipe.from.' + str(os.getuid())
     EOL = '\n'

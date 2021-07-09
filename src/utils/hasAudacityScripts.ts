@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import { isElectron } from '../api-variable';
-import { getFiles } from '.';
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 const os = require('os');
 
@@ -11,12 +10,17 @@ const prefsName = async () => {
     return path.join(appData, 'audacity', 'audacity.cfg');
   } else {
     const home = await ipc?.invoke('home');
-    for await (const fullName of getFiles(path.join(home, 'snap'))) {
-      if (fullName.indexOf('audacity.cfg') > 0) return fullName;
-    }
-    for await (const fullName of getFiles(path.join(home, '.audacity-data'))) {
-      if (fullName.indexOf('audacity.cfg') > 0) return fullName;
-    }
+    const snapName = path.join(
+      home,
+      'snap',
+      'audacity',
+      'current',
+      '.audacity-data',
+      'audacity.cfg'
+    );
+    if (fs.existsSync(snapName)) return snapName;
+    // const debName = path.join(home, '.audacity-data', 'audacity.cfg');
+    // if (fs.existsSync(debName)) return debName;
   }
 };
 
