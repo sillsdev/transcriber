@@ -420,7 +420,7 @@
       </unit>
       <unit id="audacitySetup.versions">
          <segment>
-            <source>NB: Audacity integration was last tested with version {0} of Audacity and the scripting was last tested with version {1} of Python.</source>
+            <source>NB: Audacity integration was last tested with version {0} of Audacity and Linux requires the snap package.</source>
             <target/>
          </segment>
       </unit>
