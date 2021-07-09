@@ -417,8 +417,8 @@
 		</unit>
 		<unit id="audacitySetup.versions">
 			<segment>
-				<source>NB: Audacity integration was last tested with version {0} of Audacity and the scripting was last tested with version {1} of Python.</source>
-				<target>NB: Интеграция Audacity последний раз тестировалась с версией {0} Audacity, а сценарии последний раз тестировались с версией {1} Python.</target>
+				<source>NB: Audacity integration was last tested with version {0} of Audacity and Linux requires the snap package.</source>
+				<target>NB: Интеграция Audacity была в последний раз протестирована с версией {0} Audacity, а для Linux требуется пакет snap.</target>
 			</segment>
 		</unit>
 		<unit id="audioDownload.downloadMedia">

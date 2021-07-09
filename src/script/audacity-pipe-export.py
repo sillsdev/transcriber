@@ -18,30 +18,38 @@ import re
 if (len(sys.argv) < 2):
     print("Usage: python audacity-pipe.py <project-path>")
     sys.exit(-1)
-prefs = os.path.join(os.getenv('AppData'), 'audacity', 'audacity.cfg')
-if (not os.path.exists(prefs)):
-    print("Please Install Audacity")
-    sys.exit(-2)
-prefFile = open(prefs, 'r')
-prefData = prefFile.read()
-prefFile.close()
-m = re.search('mod-script-pipe=([01])', prefData)
-if (m):
-    print("mod-script-pipe value=" + m.group(1))
-    if (m.group(1) != '1'):
-        print("Enable scripting!")
-        sys.exit(-3)
+if sys.platform == 'win32':
+    prefs = os.path.join(os.getenv('AppData'), 'audacity', 'audacity.cfg')
+    if (not os.path.exists(prefs)):
+        print("Please Install Audacity")
+        sys.exit(-2)
+    prefFile = open(prefs, 'r')
+    prefData = prefFile.read()
+    prefFile.close()
+    m = re.search('mod-script-pipe=([01])', prefData)
+    if (m):
+        print("mod-script-pipe value=" + m.group(1))
+        if (m.group(1) != '1'):
+            print("Enable scripting!")
+            sys.exit(-3)
 
 # Check for Audacity running
 myProc = 'none'
-output = os.popen('wmic process get Description').read()
+if sys.platform == 'win32':
+    output = os.popen('wmic process get Description').read()
+else:
+    output = os.popen('ps -a').read()
 if (output.find('audacity') < 0):
     # if not running, launch it
-    myDir = os.getcwd()
-    os.chdir('C:\\Program Files (x86)\\Audacity')
-    myProc = os.popen('audacity.exe')
-    os.chdir(myDir)
-    time.sleep(8)
+    if sys.platform == 'win32':
+        myDir = os.getcwd()
+        os.chdir('C:\\Program Files (x86)\\Audacity')
+        myProc = os.popen('audacity.exe')
+        os.chdir(myDir)
+        time.sleep(8)
+    else:
+        myProc = os.popen('audacity')
+        time.sleep(10)
 
 if sys.platform == 'win32':
     print("pipe-test.py, running on windows")
@@ -53,8 +61,10 @@ if sys.platform == 'win32':
     #     print ln
 else:
     print("pipe-test.py, running on linux or mac")
-    TONAME = '/tmp/audacity_script_pipe.to.' + str(os.getuid())
-    FROMNAME = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
+    if (not os.access('/tmp/snap.audacity', os.X_OK)):
+        os.system('pkexec /bin/chmod o+x /tmp/snap.audacity')
+    TONAME = '/tmp/snap.audacity/tmp/audacity_script_pipe.to.' + str(os.getuid())
+    FROMNAME = '/tmp/snap.audacity/tmp/audacity_script_pipe.from.' + str(os.getuid())
     EOL = '\n'
 
 print("Write to  \"" + TONAME + "\"")

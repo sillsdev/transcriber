@@ -101,7 +101,7 @@ const initialState = {
 			"scriptingEnabled": "Scripting Enabled",
 			"enable": "Enable",
 			"pythonInstalled": "Python Installed",
-			"versions": "NB: Audacity integration was last tested with version {0} of Audacity and the scripting was last tested with version {1} of Python.",
+			"versions": "NB: Audacity integration was last tested with version {0} of Audacity and Linux requires the snap package.",
 		}
 	}),
 	"audioDownload": new LocalizedStrings({

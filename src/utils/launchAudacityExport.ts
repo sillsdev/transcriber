@@ -1,5 +1,5 @@
 import { IExeca } from '../model';
-import { getRegVal } from '.';
+import { getPythonExe } from '.';
 import { API_CONFIG } from '../api-variable';
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 const execa = isElectron ? require('execa') : null;
@@ -8,9 +8,7 @@ export const launchAudacityExport = async (
   projPath: string,
   cb: () => void
 ) => {
-  const key = 'HKCR\\Python.CompiledFile\\shell\\open\\command';
-  const python = await getRegVal(key, '');
-  const pythonExe = python?.split(' ')[0].split('"')[0];
+  const pythonExe = await getPythonExe();
   await execa(pythonExe, ['audacity-pipe-export.py', `"${projPath}"`], {
     shell: true,
     detached: true,

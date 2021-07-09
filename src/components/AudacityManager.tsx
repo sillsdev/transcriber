@@ -23,7 +23,7 @@ import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
 import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
-import { launchAudacity, launchAudacityExport, loadBlob } from '../utils';
+import { launchAudacity, getMacroOutputName, launchAudacityExport, loadBlob } from '../utils';
 import { dataPath, PathType } from '../utils';
 
 const fs = require('fs');
@@ -144,8 +144,7 @@ function AudacityManager(props: IProps) {
       showMessage(t.badProjPath);
       return;
     }
-    const docs = await ipc?.invoke('getPath', 'documents');
-    const mp3FullName = path.join(docs, 'Audacity', 'macro-output', mp3Name);
+    const mp3FullName = await getMacroOutputName(mp3Name);
     await launchAudacityExport(name, () => {
       console.log(`exported ${mp3FullName}`);
       const unused = false;
