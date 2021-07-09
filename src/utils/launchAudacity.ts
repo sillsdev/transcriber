@@ -1,13 +1,17 @@
 import { IExeca } from '../model';
 import { dataPath, PathType, getRegVal } from '.';
 import { API_CONFIG } from '../api-variable';
+const os = require('os');
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 const execa = isElectron ? require('execa') : null;
 
 export const launchAudacity = async (proj: string, mediaName?: string) => {
-  const key = 'HKCR\\Python.CompiledFile\\shell\\open\\command';
-  const python = await getRegVal(key, '');
-  const pythonExe = python?.split(' ')[0].split('"')[0];
+  let pythonExe: string | undefined = 'python3';
+  if (os.platform() === 'win32') {
+    const key = 'HKCR\\Python.CompiledFile\\shell\\open\\command';
+    const python = await getRegVal(key, '');
+    pythonExe = python?.split(' ')[0].split('"')[0];
+  }
   const args = ['audacity-pipe.py', `"${proj}"`];
   if (mediaName && mediaName !== '') {
     const curPath = dataPath(mediaName, PathType.MEDIA);
