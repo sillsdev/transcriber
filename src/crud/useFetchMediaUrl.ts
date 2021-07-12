@@ -7,6 +7,7 @@ import { remoteIdGuid, remoteId } from '../crud';
 import { dataPath, PathType } from '../utils/dataPath';
 import { MediaFile } from '../model';
 import { infoMsg, logError, Severity } from '../utils';
+const os = require('os');
 // See: https://www.smashingmagazine.com/2020/07/custom-react-hook-fetch-cache-data/
 
 export enum MediaSt {
@@ -103,7 +104,8 @@ export const useFetchMediaUrl = (reporter?: any) => {
             const path = dataPath(audioUrl, PathType.MEDIA);
             logError(Severity.info, reporter, `fetching=${path}`);
             if (!path.startsWith('http')) {
-              const url = new URL(path).toString().slice(8);
+              const start = os.platform() === 'win32' ? 8 : 7;
+              const url = new URL(`file://${path}`).toString().slice(start);
               const safeUrl = `transcribe-safe://${url}`;
               if (cancelRequest) return;
               dispatch({ payload: safeUrl, type: MediaSt.FETCHED });
