@@ -78,8 +78,27 @@ export function useWaveSurfer(
         currentRegionRef.current = r;
         if (onRegion) onRegion(true);
       });
+      ws.on('region-updated', function (r: any) {
+        console.log(
+          'region-updated',
+          r.drag,
+          r.resize,
+          r.isDragging,
+          r.start,
+          r.end
+        );
+        currentRegionRef.current = r;
+        if (r.drag) {
+          var next = findNextRegion();
+          if (next) next.start = r.end;
+          var prev = findPrevRegion();
+          if (prev) prev.end = r.start;
+          console.log(prev?.end, next?.start);
+        }
+      });
       ws.on('region-update-end', function (r: any) {
-        console.log('region-update-end', r, currentRegionRef.current);
+        console.log('region-update-end', r.start, r.end);
+        wsRef.current?.zoom(wsRef.current?.params.minPxPerSec);
         if (singleRegionRef.current) {
           wsGoto(currentRegionRef.current.start);
           keepRegion.current = false;
@@ -105,6 +124,7 @@ export function useWaveSurfer(
       });
       ws.on('region-dblclick', function (r: any) {
         console.log('region-dblclick', r);
+        currentRegionRef.current = r;
       });
 
       return ws;
@@ -140,20 +160,57 @@ export function useWaveSurfer(
   const isInRegion = (r: any, value: number) => {
     return value <= r.end && value >= r.start;
   };
+
   const findRegion = (value: number) => {
     if (currentRegionRef.current && isInRegion(currentRegionRef.current, value))
       return currentRegionRef.current;
-    var foundIt = undefined;
+    var foundIt: any = undefined;
+    console.log('findRegion for', value);
     Object.keys(wsRef.current?.regions.list).forEach(function (id) {
       let r = wsRef.current?.regions.list[id];
+      console.log(r.start, r.end, r.start <= value, r.end >= value);
       if (r.start <= value && r.end >= value) {
+        console.log('foundIt', r.start, r.end);
         foundIt = r;
       }
     });
+    console.log('findRegion', foundIt);
     return foundIt;
   };
+  const findNextRegion = () => {
+    return currentRegionRef.current.attributes.nextRegion;
+    /*
+    var foundIt: any = undefined;
+    Object.keys(wsRef.current?.regions.list).forEach(function (id) {
+      let r = wsRef.current?.regions.list[id];
+      if (r.start >= currentRegionRef.current.end) {
+        if (foundIt && foundIt.end > r.end) foundIt = r;
+        if (!foundIt) foundIt = r;
+      }
+    });
+
+    return foundIt; */
+  };
+  const findPrevRegion = () => {
+    return currentRegionRef.current.attributes.prevRegion;
+    /*
+    var foundIt: any = undefined;
+    Object.keys(wsRef.current?.regions.list).forEach(function (id) {
+      let r = wsRef.current?.regions.list[id];
+      if (r.end <= currentRegionRef.current.start) {
+        if (foundIt && foundIt.start < r.start) foundIt = r;
+        if (!foundIt) foundIt = r;
+      }
+    });
+    return foundIt; */
+  };
   const setProgress = (value: number) => {
-    console.log('setProgress', value, currentRegionRef.current);
+    console.log(
+      'setProgress',
+      value,
+      currentRegionRef.current.start,
+      currentRegionRef.current.end
+    );
     progressRef.current = value;
     onProgress(value);
     if (currentRegionRef.current) {
@@ -167,9 +224,8 @@ export function useWaveSurfer(
           playingRef.current = false;
           onStop();
         }
-        //currentRegionRef.current = findRegion(value);
       }
-    } // else currentRegionRef.current = findRegion(value);
+    }
   };
 
   const setPlaying = (value: boolean) => {
@@ -204,22 +260,85 @@ export function useWaveSurfer(
   };
   const wsNextRegion = () => {
     if (currentRegionRef.current) {
-      console.log(currentRegionRef.current);
+      var r = findNextRegion();
+      if (r) r.playLoop();
     }
   };
+  const saveRegions = () => {
+    return JSON.stringify(
+      Object.keys(wsRef.current?.regions.list).map(function (id) {
+        let region = wsRef.current?.regions.list[id];
+        let attributes = region.attributes;
+        var next = attributes.nextRegion;
+        var prev = attributes.prevRegion;
+        if (next) attributes.nextRegion = { s: next.start, e: next.end };
+        if (prev) attributes.prevRegion = { s: prev.start, e: prev.end };
+        return {
+          start: region.start,
+          end: region.end,
+          attributes: attributes,
+          data: region.data,
+        };
+      })
+    );
+  };
+  const getSortedIds = () => {
+    var sortedIds: string[] = [];
+    var ids = Object.keys(wsRef.current?.regions.list).map((id) => id);
+    if (ids.length > 0) {
+      var next: string | undefined = ids[0];
+      while (next) {
+        sortedIds.push(next);
+        var r: any = wsRef.current?.regions.list[next];
+        if (r.attributes.nextRegion) next = r.attributes.nextRegion.id;
+        else next = undefined;
+      }
+    }
+    return sortedIds;
+  };
   const wsSplitRegion = () => {
-    console.log(progressRef.current);
-    console.log(currentRegionRef.current.start, currentRegionRef.current.end);
-
+    var sortedIds: string[] = getSortedIds();
     if (currentRegionRef.current) {
+      var lastRegion =
+        currentRegionRef.current.attributes.nextRegion === undefined;
       var region = {
         start: progressRef.current,
         end: currentRegionRef.current.end,
         color: randomColor(0.1),
       };
+      var curIndex = sortedIds.findIndex(
+        (s) => s === currentRegionRef.current.id
+      );
       currentRegionRef.current.end = progressRef.current;
-      wsRef.current?.addRegion(region);
-      console.log(currentRegionRef.current.start, currentRegionRef.current.end);
+      var newRegion = wsRef.current?.addRegion(region);
+      var newSorted = sortedIds.slice(0, curIndex + 1).concat(newRegion.id);
+      if (!lastRegion)
+        newSorted = newSorted.concat(sortedIds.slice(curIndex + 1));
+      setPrevNext(newSorted);
+      console.log(saveRegions());
+    }
+  };
+  const wsRemoveSplitRegion = () => {
+    console.log(progressRef.current);
+    console.log(currentRegionRef.current.start, currentRegionRef.current.end);
+    if (currentRegionRef.current) {
+      if (
+        currentRegionRef.current.end - progressRef.current <
+        progressRef.current - currentRegionRef.current.start
+      ) {
+        //find next region
+        var next = findNextRegion();
+        if (next) {
+          currentRegionRef.current.end = next.end;
+          next.remove();
+        }
+      } else {
+        var prev = findPrevRegion();
+        if (prev) {
+          currentRegionRef.current.start = prev.start;
+          prev.remove();
+        }
+      }
     }
   };
   const wsPlay = () => setPlaying(true);
@@ -232,6 +351,8 @@ export function useWaveSurfer(
   const wsPosition = () => progressRef.current;
 
   const wsGoto = (position: number) => {
+    currentRegionRef.current = findRegion(position);
+    console.log('wsGoTo', position, currentRegionRef.current);
     if (position && durationRef.current)
       position = position / durationRef.current;
     keepRegion.current = true;
@@ -455,26 +576,31 @@ export function useWaveSurfer(
     });
   }
   function wsAutoSegment() {
+    var wavesurfer = wsRef.current;
+    if (!wavesurfer) return '';
+    wavesurfer.regions.clear();
     var regions = extractRegions();
     loadRegions(regions);
+    setPrevNext(Object.keys(wsRef.current?.regions.list).map((id) => id));
     if (regions.length) wsGoto(regions[0].start);
   }
   function wsGetRegions() {
     var wavesurfer = wsRef.current;
     if (!wavesurfer) return '';
-    return JSON.stringify(
-      Object.keys(wavesurfer?.regions.list).map(function (id) {
-        let region = wavesurfer?.regions.list[id];
-        return {
-          start: region.start,
-          end: region.end,
-          attributes: region.attributes,
-          data: region.data,
-        };
-      })
-    );
+    return saveRegions();
   }
 
+  const setPrevNext = (sortedIds: string[]) => {
+    var prev: any = undefined;
+    sortedIds.forEach(function (id) {
+      let r = wsRef.current?.regions.list[id];
+      if (prev) {
+        prev.attributes.nextRegion = r;
+        r.attributes.prevRegion = prev;
+      }
+      prev = r;
+    });
+  };
   const extractRegions = () => {
     // Silence params
     const minValue = 0.0025;
@@ -525,6 +651,8 @@ export function useWaveSurfer(
         end: firstCluster[firstCluster.length - 1],
       });
     }
+    //include the initial silence in the first region
+    //regions[0].start = 0;
 
     // Filter regions by minimum length
     var fRegions = regions.filter(function (reg) {
@@ -588,5 +716,6 @@ export function useWaveSurfer(
     wsAutoSegment,
     wsNextRegion,
     wsSplitRegion,
+    wsRemoveSplitRegion,
   };
 }

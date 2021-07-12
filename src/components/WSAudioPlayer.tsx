@@ -259,6 +259,7 @@ function WSAudioPlayer(props: IProps) {
     wsGetRegions,
     wsNextRegion,
     wsSplitRegion,
+    wsRemoveSplitRegion,
     wsSetHeight,
   } = useWaveSurfer(
     waveformRef.current,
@@ -389,7 +390,6 @@ function WSAudioPlayer(props: IProps) {
   }
   function onWSRegion(region: boolean) {
     setHasRegion(region);
-    console.log(wsGetRegions());
     //forceUpdate(1);
   }
   function onWSStop() {
@@ -651,6 +651,7 @@ function WSAudioPlayer(props: IProps) {
                 wsAutoSegment={wsAutoSegment}
                 wsNextRegion={wsNextRegion}
                 wsSplitRegion={wsSplitRegion}
+                wsRemoveSplitRegion={wsRemoveSplitRegion}
                 t={t}
               />
             )}

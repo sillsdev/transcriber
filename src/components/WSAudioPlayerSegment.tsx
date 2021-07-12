@@ -45,17 +45,28 @@ interface IProps {
   ready: boolean;
   wsAutoSegment: () => void;
   wsSplitRegion: () => void;
+  wsRemoveSplitRegion: () => void;
   wsNextRegion: () => void;
 }
 export function WSAudioPlayerSegment(props: IProps) {
   const classes = useStyles();
-  const { t, ready, wsAutoSegment, wsSplitRegion, wsNextRegion } = props;
+  const {
+    t,
+    ready,
+    wsAutoSegment,
+    wsSplitRegion,
+    wsRemoveSplitRegion,
+    wsNextRegion,
+  } = props;
 
   const handleAutoSegment = () => {
     wsAutoSegment();
   };
   const handleSplit = () => {
     wsSplitRegion();
+  };
+  const handleRemoveSplit = () => {
+    wsRemoveSplitRegion();
   };
   const handleNextSegment = () => {
     wsNextRegion();
@@ -78,14 +89,14 @@ export function WSAudioPlayerSegment(props: IProps) {
           <LightTooltip id="wsSplitTip" title={'todo:SplitSegment'}>
             <span>
               <IconButton id="wsSplit" onClick={handleSplit}>
-                <FaHandScissors className={classes.rotate90} />
+                <FaHandScissors />
               </IconButton>
             </span>
           </LightTooltip>
           <LightTooltip id="wsJoinTip" title={'todo:Remove Break'}>
             <span>
-              <IconButton id="wsJoin" onClick={handleSplit}>
-                <ClearIcon className={classes.rotate90} />
+              <IconButton id="wsJoin" onClick={handleRemoveSplit}>
+                <ClearIcon />
               </IconButton>
             </span>
           </LightTooltip>
