@@ -205,14 +205,9 @@ export function useWaveSurfer(
     return foundIt; */
   };
   const setProgress = (value: number) => {
-    console.log(
-      'setProgress',
-      value,
-      currentRegionRef.current.start,
-      currentRegionRef.current.end
-    );
     progressRef.current = value;
     onProgress(value);
+    /*
     if (currentRegionRef.current) {
       if (
         value >= currentRegionRef.current.end - 0.01 ||
@@ -225,7 +220,7 @@ export function useWaveSurfer(
           onStop();
         }
       }
-    }
+    } */
   };
 
   const setPlaying = (value: boolean) => {
@@ -564,9 +559,9 @@ export function useWaveSurfer(
     durationRef.current = wavesurfer.getDuration();
     return emptySegment;
   };
-  const getPeaks = () => {
+  const getPeaks = (num: number = 512) => {
     if (!peaksRef.current && wsRef.current)
-      peaksRef.current = wsRef.current.backend.getPeaks(512);
+      peaksRef.current = wsRef.current.backend.getPeaks(num);
     return peaksRef.current;
   };
   function loadRegions(regions: any[]) {
@@ -603,19 +598,24 @@ export function useWaveSurfer(
   };
   const extractRegions = () => {
     // Silence params
-    const minValue = 0.0025;
-    const minSeconds = 0.1;
-    const peaks = getPeaks();
+    const minValue = 0.0015;
+    const minSeconds = 0.05;
+    const numPeaks = Math.floor(durationRef.current / minSeconds);
+    const peaks = getPeaks(512);
     if (!peaks) return [];
 
     var length = peaks.length;
+    console.log('numPeaks', length);
+    console.log('duration', durationRef.current);
     var coef = durationRef.current / length;
-    var minLen = minSeconds / coef;
+    console.log('coef', coef);
+    var minLen = Math.ceil(minSeconds / coef);
+    console.log('minLen', minLen);
 
     // Gather silence indeces
     var silences: number[] = [];
     Array.prototype.forEach.call(peaks, function (val, index) {
-      if (val < minValue) {
+      if (Math.abs(val) < minValue) {
         silences.push(index);
       }
     });
@@ -629,11 +629,12 @@ export function useWaveSurfer(
         clusters.push([val]);
       }
     });
-
+    console.log('before min len filter', clusters.length);
     // Filter silence clusters by minimum length
     var fClusters = clusters.filter(function (cluster) {
       return cluster.length >= minLen;
     });
+    console.log('after min len filter', fClusters);
 
     // Create regions on the edges of silences
     var regions = fClusters.map(function (cluster, index) {
@@ -643,6 +644,7 @@ export function useWaveSurfer(
         end: next ? next[0] : length - 1,
       };
     });
+
     // Add an initial region if the audio doesn't start with silence
     var firstCluster = fClusters[0];
     if (firstCluster && firstCluster[0] !== 0) {
@@ -654,13 +656,14 @@ export function useWaveSurfer(
     //include the initial silence in the first region
     //regions[0].start = 0;
 
-    // Filter regions by minimum length
-    var fRegions = regions.filter(function (reg) {
-      return reg.end - reg.start >= minLen;
-    });
-
     // Return time-based regions
-    var tRegions = fRegions.map(function (reg) {
+    var tRegions = regions.map(function (reg) {
+      console.log({
+        rstart: reg.start,
+        start: Math.round(reg.start * coef * 10) / 10,
+        rend: reg.end,
+        end: Math.round(reg.end * coef * 10) / 10,
+      });
       return {
         start: Math.round(reg.start * coef * 10) / 10,
         end: Math.round(reg.end * coef * 10) / 10,
