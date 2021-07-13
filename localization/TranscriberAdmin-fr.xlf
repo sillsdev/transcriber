@@ -129,8 +129,8 @@
       </unit>
       <unit id="access.noOnlineUsers2">
          <segment>
-            <source>Log in and select "Offline Available" in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
-            <target>Connectez-vous et sélectionnez "Offline Available" dans le menu de la carte de projet, puis déconnectez-vous. Ou, cliquez sur IMPORTER UN PROJET pour importer un projet que votre administrateur a exporté.</target>
+            <source>Log in and select Offline Available in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
+            <target>Connectez-vous et sélectionnez Hors ligne disponible dans le menu de la carte de projet, puis déconnectez-vous. Ou, cliquez sur IMPORTER UN PROJET pour importer un projet que votre administrateur a exporté.</target>
          </segment>
       </unit>
       <unit id="access.importProject">

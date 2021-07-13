@@ -150,7 +150,7 @@
       		</context-group>
       	</trans-unit>
          <trans-unit id="access.noOnlineUsers2">
-      		<source>Log in and select "Offline Available" in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
+      		<source>Log in and select Offline Available in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>

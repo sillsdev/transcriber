@@ -132,7 +132,7 @@
       </unit>
       <unit id="access.noOnlineUsers2">
          <segment>
-            <source>Log in and select "Offline Available" in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
+            <source>Log in and select Offline Available in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
             <target/>
          </segment>
       </unit>

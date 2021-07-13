@@ -29,7 +29,7 @@ const initialState = {
 			"back": "Back",
 			"chooseAnother": "To choose another user, Log out...",
 			"noOnlineUsers1": "To allow offline use:",
-			"noOnlineUsers2": "Log in and select "Offline Available" in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.",
+			"noOnlineUsers2": "Log in and select Offline Available in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.",
 			"importProject": "ImportProject",
 			"download": "Download?",
 			"downloadLater": "Download Later",
