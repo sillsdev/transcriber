@@ -394,8 +394,9 @@ export function Access(props: IProps) {
                 </Typography>
                 {!hasOnlineUser() && (
                   <div>
-                    To allow offline use, mark your project as "Available
-                    Offline" in your project settings.
+                    To allow offline use, while online mark your project as
+                    "Available Offline" in your project settings, or Import a
+                    Project that your admin has exported.
                   </div>
                 )}
                 {importStatus?.complete !== false && hasOnlineUser() && (
