@@ -7,7 +7,7 @@ import { IState, IAccessStrings } from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Typography, Button, Paper, FormLabel } from '@material-ui/core';
+import { Typography, Button, Paper, FormLabel, Box } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
 import { isElectron } from '../api-variable';
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      transform: 'translateZ(0px)',
       widith: '80%',
     },
     sectionHead: {
@@ -41,6 +40,17 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       margin: theme.spacing(3),
       minWidth: theme.spacing(20),
+    },
+    icon: {
+      marginRight: theme.spacing(1),
+    },
+    iconlabel: {
+      marginBottom: '5px',
+      marginTop: '8px',
+    },
+    col: {
+      display: 'flex',
+      flexDirection: 'column',
     },
   })
 );
@@ -102,17 +112,23 @@ export function DecideAccess(props: IProps) {
       <AppHead {...props} />
       {isElectron && (
         <div className={classes.container}>
-          <Typography className={classes.sectionHead}>
-            Hello I'm under the AppHead
-          </Typography>
+          <Typography className={classes.sectionHead}>Filler</Typography>
           <Paper className={classes.paper}>
-            <FormLabel>
-              <OnlineIcon />
-              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{t.onlineAdminDesc}
-              <br />
-              <OnlineIcon /> <OfflineIcon />
-              &nbsp; {t.onlineWorkDesc}
-            </FormLabel>
+            <Box display="flex">
+              <Box>
+                <OnlineIcon className={classes.icon} />
+                <br />
+                <OnlineIcon /> <OfflineIcon className={classes.icon} />
+              </Box>
+              <Box className={classes.col}>
+                <FormLabel className={classes.iconlabel}>
+                  {t.onlineAdminDesc}
+                </FormLabel>
+                <FormLabel className={classes.iconlabel}>
+                  {t.onlineWorkDesc}
+                </FormLabel>
+              </Box>
+            </Box>
             <Button
               id="accessLogin"
               variant="contained"
@@ -123,9 +139,9 @@ export function DecideAccess(props: IProps) {
               {t.onlineAdmin}
             </Button>
             <FormLabel>
-              <OfflineIcon /> {t.offlineAdminDesc}
+              <OfflineIcon className={classes.icon} /> {t.offlineAdminDesc}
               <br />
-              <OfflineIcon /> {t.offlineWorkDesc}
+              <OfflineIcon className={classes.icon} /> {t.offlineWorkDesc}
             </FormLabel>
             <Button
               id="accessLogin"

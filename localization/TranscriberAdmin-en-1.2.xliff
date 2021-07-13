@@ -142,28 +142,20 @@
       			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
-         <trans-unit id="access.noOnlineUsers1">
-      		<source>To allow offline use, while online mark your project as 'Available Offline' in your project card menu.</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">access.tsx</context>
-      		</context-group>
-      	</trans-unit>
-         <trans-unit id="access.or">
-      		<source>or</source>
+          <trans-unit id="access.noOnlineUsers1">
+      		<source>To allow offline use:</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
          <trans-unit id="access.noOnlineUsers2">
-      		<source>Import a Project that your admin has exported.</source>
+      		<source>While online mark your project as 'Available Offline' in your project card menu <br/> or Import a Project that your admin has exported.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
-
       	<trans-unit id="access.importProject">
             <source>ImportProject</source>
             <target/>

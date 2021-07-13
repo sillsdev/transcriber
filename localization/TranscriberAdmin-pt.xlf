@@ -123,20 +123,14 @@
       </unit>
       <unit id="access.noOnlineUsers1">
          <segment>
-            <source>To allow offline use, while online mark your project as 'Available Offline' in your project settings.</source>
-            <target>Para permitir o uso off-line, enquanto estiver on-line, marque seu projeto como 'Disponível off-line' no menu do cartão do projeto.</target>
-         </segment>
-      </unit>
-      <unit id="access.or">
-         <segment>
-            <source>or</source>
-            <target>ou</target>
+            <source>To allow offline use:</source>
+            <target>Para permitir o uso off-line:</target>
          </segment>
       </unit>
       <unit id="access.noOnlineUsers2">
          <segment>
-            <source>Import a Project that your admin has exported.</source>
-            <target>Importe um projeto que seu administrador exportou.</target>
+            <source>While online mark your project as 'Available Offline' in your project card menu  or Import a Project that your admin has exported.</source>
+            <target>Para permitir o uso off-line, enquanto estiver on-line, marque seu projeto como 'Disponível off-line' no menu do cartão do projeto ou Importe um projeto que seu administrador exportou.</target>
          </segment>
       </unit>
       <unit id="access.importProject">

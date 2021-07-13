@@ -123,20 +123,14 @@
       </unit>
       <unit id="access.noOnlineUsers1">
          <segment>
-            <source>To allow offline use, while online mark your project as 'Available Offline' in your project settings.</source>
-            <target>Чтобы разрешить использование в автономном режиме, при подключении к сети отметьте свой проект как «Доступный в автономном режиме» в меню карточки проекта.</target>
-         </segment>
-      </unit>
-      <unit id="access.or">
-         <segment>
-            <source>or</source>
-            <target>или же</target>
+            <source>To allow offline use:</source>
+            <target>Чтобы разрешить автономное использование:</target>
          </segment>
       </unit>
       <unit id="access.noOnlineUsers2">
          <segment>
-            <source>Import a Project that your admin has exported.</source>
-            <target>Импортируйте проект, который экспортировал ваш администратор.</target>
+            <source>While online mark your project as 'Available Offline' in your project card menu or Import a Project that your admin has exported.</source>
+            <target>Находясь в сети, отметьте свой проект как «Доступный в автономном режиме» в меню карточки проекта или «Импортируйте проект, экспортированный администратором».</target>
          </segment>
       </unit>
       <unit id="access.importProject">

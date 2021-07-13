@@ -23,7 +23,6 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "back": string;
     "chooseAnother": string;
     "noOnlineUsers1": string;
-    "or": string;
     "noOnlineUsers2": string;
     "importProject": string;
     "download": string;

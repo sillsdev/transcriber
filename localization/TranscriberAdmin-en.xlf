@@ -126,19 +126,13 @@
       </unit>
       <unit id="access.noOnlineUsers1">
          <segment>
-            <source>To allow offline use, while online mark your project as 'Available Offline' in your project card menu.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="access.or">
-         <segment>
-            <source>or</source>
+            <source>To allow offline use:</source>
             <target/>
          </segment>
       </unit>
       <unit id="access.noOnlineUsers2">
          <segment>
-            <source>Import a Project that your admin has exported.</source>
+            <source>While online mark your project as 'Available Offline' in your project card menu  or Import a Project that your admin has exported.</source>
             <target/>
          </segment>
       </unit>

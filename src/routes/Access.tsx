@@ -29,7 +29,7 @@ import UserList from '../control/UserList';
 import { useSnackBar } from '../hoc/SnackBar';
 import AppHead from '../components/App/AppHead';
 import { UserListItem } from '../control';
-
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 const noop = {} as any;
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 const electronremote = isElectron ? require('@electron/remote') : noop;
@@ -320,7 +320,7 @@ export function Access(props: IProps) {
             Hello I'm under the AppHead
           </Typography>
           <Button id="back" color="primary" onClick={handleBack}>
-            {'<-'}
+            <ArrowBackIcon />
             {t.back}
           </Button>
           <Paper className={classes.paper}>
@@ -366,7 +366,6 @@ export function Access(props: IProps) {
                 {!hasOnlineUser() && (
                   <Paper className={classes.paper}>
                     <Box>{t.noOnlineUsers1}</Box>
-                    <Box>{t.or}</Box>
                     <Box>{t.noOnlineUsers2}</Box>
                   </Paper>
                 )}
