@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -15,16 +15,7 @@ import {
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import {
-  Typography,
-  Button,
-  Paper,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  Box,
-  FormLabel,
-} from '@material-ui/core';
+import { Typography, Button, Paper } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault, forceLogin } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
@@ -38,10 +29,10 @@ import UserList from '../control/UserList';
 import { useSnackBar } from '../hoc/SnackBar';
 import AppHead from '../components/App/AppHead';
 import { UserListItem } from '../control';
-import OfflineIcon from '@material-ui/icons/CloudOff';
-import OnlineIcon from '@material-ui/icons/CloudQueue';
+
 const noop = {} as any;
 const ipc = isElectron ? require('electron').ipcRenderer : null;
+const Menu = isElectron ? require('electron').Menu : undefined;
 const electronremote = isElectron ? require('@electron/remote') : noop;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -74,6 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
       minWidth: theme.spacing(20),
     },
+
     formControl: {
       margin: theme.spacing(3),
     },
@@ -128,6 +120,7 @@ export function Access(props: IProps) {
     plans,
     sections,
   } = props;
+  const { pathname } = useLocation();
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
   const [offline, setOffline] = useGlobal('offline');
@@ -139,6 +132,9 @@ export function Access(props: IProps) {
   const handleLogin = () => auth.login();
   const [view, setView] = useState('');
   const [curUser, setCurUser] = useState<User>();
+  const [whichUsers, setWhichUsers] = useState(
+    pathname.substring('/access/'.length)
+  );
   const [selectedUser, setSelectedUser] = useState('');
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
@@ -148,10 +144,10 @@ export function Access(props: IProps) {
   const offlineProjRead = useOfflnProjRead();
   const offlineSetup = useOfflineSetup();
   const { showMessage } = useSnackBar();
-  const [whichUsers, setWhichUsers] = useState('online');
   const [goOnlineConfirmation, setGoOnlineConfirmation] =
     useState<React.MouseEvent<HTMLElement>>();
 
+  console.log('Access', pathname, whichUsers);
   const handleSelect = (uId: string) => {
     const selected = users.filter((u) => u.id === uId);
     if (selected.length > 0) {
@@ -256,6 +252,11 @@ export function Access(props: IProps) {
     setView('Logout');
   };
 
+  const handleBack = () => {
+    localStorage.removeItem('offlineAdmin');
+    setWhichUsers('');
+  };
+
   useEffect(() => {
     if (isElectron) persistData();
     setLanguage(localeDefault(isDeveloper));
@@ -268,11 +269,7 @@ export function Access(props: IProps) {
     setPlan('');
     setProjRole('');
     setProjType('');
-    setWhichUsers(
-      localStorage.getItem('hasOfflineProjects') === 'true'
-        ? 'offline'
-        : 'online'
-    );
+
     if (!auth?.isAuthenticated()) {
       if (!offline && !isElectron) {
         setConnected(true);
@@ -322,49 +319,18 @@ export function Access(props: IProps) {
   if (/Logout/i.test(view)) {
     return <Redirect to="/logout" />;
   }
-  const handleOfflineChange = (event: any) => {
-    setWhichUsers(event.target.value);
-    localStorage.setItem(
-      'hasOfflineProjects',
-      event.target.value === 'offline' ? 'true' : 'false'
-    );
-  };
+  if (whichUsers === '') return <Redirect to="/" />;
 
   return (
     <div className={classes.root}>
       <AppHead {...props} />
       {isElectron && (
         <div className={classes.container}>
-          <Typography className={classes.sectionHead}>Filler 1</Typography>{' '}
+          <Typography className={classes.sectionHead}>Filler 1</Typography>
+          <Button id="back" color="primary" onClick={handleBack}>
+            {'<-Back'}
+          </Button>
           <Paper className={classes.paper}>
-            <Box className={classes.box}>
-              <RadioGroup
-                aria-label="offline"
-                name="offlineprojects"
-                value={whichUsers}
-                onChange={handleOfflineChange}
-              >
-                <div>
-                  <Radio value="online" id="onlineradio" />
-                  <FormLabel>
-                    Project Admin is online.&nbsp; <OnlineIcon />
-                    <br />
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Transcription can be done
-                    online or offline.&nbsp;
-                    <OnlineIcon /> <OfflineIcon />
-                  </FormLabel>
-                </div>
-                <div>
-                  <Radio value="offline" id="offlineradio" />
-                  <FormLabel>
-                    Project Admin is offline.&nbsp; <OfflineIcon /> <br />
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; All work will always be
-                    done offline.&nbsp;
-                    <OfflineIcon />
-                  </FormLabel>
-                </div>
-              </RadioGroup>
-            </Box>
             {whichUsers === 'online' && (
               <div>
                 <Typography className={classes.sectionHead}>

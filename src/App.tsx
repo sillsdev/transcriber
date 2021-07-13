@@ -2,7 +2,7 @@ import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Route, Redirect } from 'react-router-dom';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core';
-import Access from './routes/Access';
+
 import Logout from './routes/Logout';
 import Loading from './routes/Loading';
 import Profile from './routes/Profile';
@@ -21,6 +21,8 @@ import DataChanges from './hoc/DataChanges';
 import { UnsavedProvider } from './context/UnsavedContext';
 import SnackBarProvider from './hoc/SnackBar';
 import { HotKeyProvider } from './context/HotKeyContext';
+import DecideAccess from './routes/DecideAccess';
+import Access from './routes/Access';
 
 export const HeadHeight = 64;
 
@@ -83,6 +85,12 @@ class App extends React.Component {
                         localStorage.removeItem('inviteId');
                         return <LogoutRequired />;
                       }
+                      return <DecideAccess auth={auth} {...props} />;
+                    }}
+                  />
+                  <Route
+                    path="/access/:users"
+                    render={(props) => {
                       return <Access auth={auth} {...props} />;
                     }}
                   />
