@@ -49,7 +49,7 @@ if (output.find('audacity') < 0):
         time.sleep(8)
     else:
         myProc = os.popen('audacity')
-        time.sleep(10)
+        time.sleep(6)
 
 if sys.platform == 'win32':
     print("pipe-test.py, running on windows")
@@ -63,8 +63,10 @@ else:
     print("pipe-test.py, running on linux or mac")
     if (not os.access('/tmp/snap.audacity', os.X_OK)):
         os.system('pkexec /bin/chmod o+x /tmp/snap.audacity')
-    TONAME = '/tmp/snap.audacity/tmp/audacity_script_pipe.to.' + str(os.getuid())
-    FROMNAME = '/tmp/snap.audacity/tmp/audacity_script_pipe.from.' + str(os.getuid())
+    TONAME = '/tmp/snap.audacity/tmp/audacity_script_pipe.to.' + \
+        str(os.getuid())
+    FROMNAME = '/tmp/snap.audacity/tmp/audacity_script_pipe.from.' + \
+        str(os.getuid())
     EOL = '\n'
 
 print("Write to  \"" + TONAME + "\"")

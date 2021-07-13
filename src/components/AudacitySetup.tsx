@@ -29,7 +29,6 @@ import {
 } from '../utils';
 
 const AudacityVersion = '3.0.2';
-const PythonVersion = '2.7.18';
 
 const useStyles = makeStyles({
   root: {
@@ -187,10 +186,14 @@ function AudacitySetup(props: AudacitySetupProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Button>{steps.action}</Button>
+                    <Button variant="outlined">{steps.action}</Button>
                   </a>
                 ) : (
-                  <Button id={`action-${i}`} onClick={steps.url}>
+                  <Button
+                    id={`action-${i}`}
+                    onClick={steps.url}
+                    variant="outlined"
+                  >
                     {steps.action}
                   </Button>
                 )}
@@ -200,12 +203,12 @@ function AudacitySetup(props: AudacitySetupProps) {
         ))}
       </List>
       <DialogContentText className={classes.intro}>
-        {t.versions
-          .replace('{0}', AudacityVersion)
-          .replace('{1}', PythonVersion)}
+        {t.versions.replace('{0}', AudacityVersion)}
       </DialogContentText>
       <DialogActions>
-        <Button onClick={handleClose}>{t.close}</Button>
+        <Button onClick={handleClose} variant="contained" color="primary">
+          {t.close}
+        </Button>
       </DialogActions>
     </Dialog>
   );

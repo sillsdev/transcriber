@@ -23,7 +23,12 @@ import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
 import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
-import { launchAudacity, getMacroOutputName, launchAudacityExport, loadBlob } from '../utils';
+import {
+  launchAudacity,
+  getMacroOutputName,
+  launchAudacityExport,
+  loadBlob,
+} from '../utils';
 import { dataPath, PathType } from '../utils';
 
 const fs = require('fs');
@@ -47,9 +52,12 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       padding: theme.spacing(2),
       marginLeft: theme.spacing(1),
-      '& .MuiButton-label': {
-        justifyContent: 'flex-end',
+      '& .MuiButton-root': {
+        marginBottom: theme.spacing(2),
       },
+      // '& .MuiButton-label': {
+      //   justifyContent: 'flex-end',
+      // },
     },
   })
 );
@@ -212,21 +220,33 @@ function AudacityManager(props: IProps) {
         <Grid item xs={3}>
           {exists && name !== '' ? (
             <div className={classes.actions}>
-              <Button onClick={handleOpen}>{t.open}</Button>
-              <Button onClick={handleImport}>{t.import}</Button>
-              <Button onClick={handleUnlink}>{t.unlink}</Button>
+              <Button onClick={handleOpen} variant="outlined">
+                {t.open}
+              </Button>
+              <Button onClick={handleImport} variant="outlined">
+                {t.import}
+              </Button>
+              <Button onClick={handleUnlink} variant="outlined">
+                {t.unlink}
+              </Button>
               {/* <Button onClick={handleDelete}>Delete</Button> */}
             </div>
           ) : (
             <div className={classes.actions}>
-              <Button onClick={handleBrowse}>{t.browse}</Button>
-              <Button onClick={handleCreate}>{t.create}</Button>
+              <Button onClick={handleBrowse} variant="outlined">
+                {t.browse}
+              </Button>
+              <Button onClick={handleCreate} variant="outlined">
+                {t.create}
+              </Button>
             </div>
           )}
         </Grid>
       </Grid>
       <DialogActions>
-        <Button onClick={handleClose}>{t.close}</Button>
+        <Button onClick={handleClose} variant="contained" color="primary">
+          {t.close}
+        </Button>
       </DialogActions>
     </Dialog>
   );

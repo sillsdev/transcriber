@@ -1,16 +1,9 @@
 import React from 'react';
 import { User } from '../model';
-import { makeStyles } from '@material-ui/core/styles';
 import { List } from '@material-ui/core';
 import { UserListItem } from '.';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
-
-const useStyles = makeStyles({
-  listHead: {
-    fontWeight: 'bold',
-  },
-});
 
 interface IRecordProps {
   users: Array<User>;
@@ -19,12 +12,10 @@ interface IRecordProps {
 interface IProps extends IRecordProps {
   isSelected: (userId: string) => boolean;
   select: (userId: string) => void;
-  title?: string;
 }
 
 export const UserList = (props: IProps) => {
-  const { users, isSelected, select, title } = props;
-  const classes = useStyles();
+  const { users, isSelected, select } = props;
 
   return (
     <>
