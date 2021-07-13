@@ -75,8 +75,8 @@
    	</unit>
       <unit id="access.onlineAdmin">
          <segment>
-            <source>Online Admin</source>
-            <target>Admin Online</target>
+            <source>Online Admin/Offline Available</source>
+            <target>Administração online / disponível offline</target>
          </segment>
       </unit>
       <unit id="access.onlineAdminDesc">

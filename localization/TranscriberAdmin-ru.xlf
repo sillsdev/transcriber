@@ -75,8 +75,8 @@
 		</unit>
       <unit id="access.onlineAdmin">
          <segment>
-            <source>Online Admin</source>
-            <target>Интернет-администратор</target>
+            <source>Online Admin/Offline Available</source>
+            <target>Онлайн-администрирование/Доступен офлайн</target>
          </segment>
       </unit>
       <unit id="access.onlineAdminDesc">

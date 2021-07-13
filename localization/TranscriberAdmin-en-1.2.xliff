@@ -87,7 +87,7 @@
       		</context-group>
       	</trans-unit>
          <trans-unit id="access.onlineAdmin">
-      		<source>Online Admin</source>
+      		<source>Online Admin/Offline Available</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>

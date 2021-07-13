@@ -20,7 +20,7 @@ const initialState = {
 			"withInternet": "With an Internet connection",
 			"withoutInternet": "Without an Internet connection",
 			"mustBeOnline": "You must be connected to the Internet to Log In!",
-			"onlineAdmin": "Online Admin",
+			"onlineAdmin": "Online Admin/Offline Available",
 			"onlineAdminDesc": "Project Admin is online.",
 			"offlineAdmin": "Always Offline",
 			"offlineAdminDesc": "Project Admin is offline.",
