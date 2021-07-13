@@ -10,9 +10,6 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Button, Paper, FormLabel } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
-import { IAxiosStatus } from '../store/AxiosStatus';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
 import { isElectron } from '../api-variable';
 import AppHead from '../components/App/AppHead';
 import OfflineIcon from '@material-ui/icons/CloudOff';
@@ -50,7 +47,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: IAccessStrings;
-  importStatus: IAxiosStatus | undefined;
 }
 
 interface IDispatchProps {
@@ -149,7 +145,6 @@ export function DecideAccess(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'access' }),
-  importStatus: state.importexport.importexportStatus,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
@@ -161,14 +156,8 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     dispatch
   ),
 });
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
-  plans: (q: QueryBuilder) => q.findRecords('plan'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-};
 
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(DecideAccess) as any
-) as any;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DecideAccess) as any;
