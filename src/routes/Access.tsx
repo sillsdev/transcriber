@@ -15,7 +15,15 @@ import {
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Typography, Button, Paper } from '@material-ui/core';
+import {
+  Typography,
+  Button,
+  Paper,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Box,
+} from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault, forceLogin } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
@@ -36,39 +44,25 @@ const electronremote = isElectron ? require('@electron/remote') : noop;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      display: 'block',
       width: '100%',
     },
-    grow: {
-      flexGrow: 1,
-    },
     container: {
-      display: 'flex',
+      display: 'block',
       justifyContent: 'center',
-    },
-    appBar: theme.mixins.gutters({
-      display: 'flex',
-      flexDirection: 'row',
-      boxShadow: 'none',
-    }) as any,
-    version: {
-      alignSelf: 'center',
     },
     paper: {
       padding: theme.spacing(3),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-    },
-    screenHead: {
-      fontSize: '14pt',
+      transform: 'translateZ(0px)',
+      widith: '80%',
     },
     sectionHead: {
       fontSize: '16pt',
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(2),
-    },
-    listHead: {
-      fontWeight: 'bold',
     },
     actions: {
       paddingTop: theme.spacing(2),
@@ -76,6 +70,15 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       marginRight: theme.spacing(1),
       minWidth: theme.spacing(20),
+    },
+    formControl: {
+      margin: theme.spacing(3),
+    },
+    box: {
+      display: 'flex',
+      justifyContent: 'center',
+      padding: theme.spacing(3),
+      border: 1,
     },
   })
 );
@@ -142,10 +145,9 @@ export function Access(props: IProps) {
   const offlineProjRead = useOfflnProjRead();
   const offlineSetup = useOfflineSetup();
   const { showMessage } = useSnackBar();
-
-  const [goOnlineConfirmation, setGoOnlineConfirmation] = useState<
-    React.MouseEvent<HTMLElement>
-  >();
+  const [whichUsers, setWhichUsers] = useState('online');
+  const [goOnlineConfirmation, setGoOnlineConfirmation] =
+    useState<React.MouseEvent<HTMLElement>>();
 
   const handleSelect = (uId: string) => {
     const selected = users.filter((u) => u.id === uId);
@@ -263,7 +265,11 @@ export function Access(props: IProps) {
     setPlan('');
     setProjRole('');
     setProjType('');
-
+    setWhichUsers(
+      localStorage.getItem('hasOfflineProjects') === 'true'
+        ? 'offline'
+        : 'online'
+    );
     if (!auth?.isAuthenticated()) {
       if (!offline && !isElectron) {
         setConnected(true);
@@ -313,29 +319,66 @@ export function Access(props: IProps) {
   if (/Logout/i.test(view)) {
     return <Redirect to="/logout" />;
   }
+  const handleOfflineChange = (event: any) => {
+    setWhichUsers(event.target.value);
+    localStorage.setItem(
+      'hasOfflineProjects',
+      event.target.value === 'offline' ? 'true' : 'false'
+    );
+  };
 
   return (
     <div className={classes.root}>
       <AppHead {...props} />
       {isElectron && (
         <div className={classes.container}>
+          <Typography className={classes.sectionHead}>Filler 1</Typography>{' '}
           <Paper className={classes.paper}>
-            <Typography className={classes.screenHead}>
-              {t.screenTitle}
-            </Typography>
-            <Typography className={classes.sectionHead}>
-              {t.withInternet}
-            </Typography>
-            {curUser ? (
-              <>
-                <div className={classes.actions}>
-                  <UserListItem
-                    u={curUser}
-                    users={users}
-                    onSelect={handleGoOnline}
-                  />
-                </div>
-                <div className={classes.actions}>
+            <Box className={classes.box}>
+              <RadioGroup
+                aria-label="offline"
+                name="offlineprojects"
+                value={whichUsers}
+                onChange={handleOfflineChange}
+              >
+                <FormControlLabel
+                  value="online"
+                  control={<Radio />}
+                  label="Project Admin is online.  Transcription can be done online or offline."
+                />
+                <FormControlLabel
+                  value="offline"
+                  control={<Radio />}
+                  label="Project Admin and all work will always be done offline."
+                />
+              </RadioGroup>
+            </Box>
+            {whichUsers === 'online' && (
+              <div>
+                <Typography className={classes.sectionHead}>
+                  {t.withInternet}
+                </Typography>
+                {curUser ? (
+                  <>
+                    <div className={classes.actions}>
+                      <UserListItem
+                        u={curUser}
+                        users={users}
+                        onSelect={handleGoOnline}
+                      />
+                    </div>
+                    <div>To choose another user, Log out...</div>
+                    <Button
+                      id="accessLogin"
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleLogout}
+                    >
+                      {t.logout}
+                    </Button>
+                  </>
+                ) : (
                   <Button
                     id="accessLogin"
                     variant="contained"
@@ -343,57 +386,50 @@ export function Access(props: IProps) {
                     className={classes.button}
                     onClick={handleGoOnline}
                   >
-                    {t.goOnline}
+                    {t.logIn}
                   </Button>
+                )}
+                <Typography className={classes.sectionHead}>
+                  {t.withoutInternet}
+                </Typography>
+                {!hasOnlineUser() && (
+                  <div>
+                    To allow offline use, mark your project as "Available
+                    Offline" in your project settings.
+                  </div>
+                )}
+                {importStatus?.complete !== false && hasOnlineUser() && (
+                  <UserList
+                    isSelected={isOnlineUserWithOfflineProjects}
+                    select={handleSelect}
+                    title={t.availableOnlineUsers}
+                  />
+                )}
+              </div>
+            )}
+            {whichUsers === 'offline' && (
+              <div>
+                {importStatus?.complete !== false && hasOfflineUser() && (
+                  <UserList
+                    isSelected={isOfflineUserWithProjects}
+                    select={handleSelect}
+                    title={t.availableOfflineUsers}
+                  />
+                )}
+                <div className={classes.actions}>
                   <Button
-                    id="accessLogin"
+                    id="accessCreateUser"
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    onClick={handleLogout}
+                    onClick={handleCreateUser}
                   >
-                    {t.logout}
+                    {t.createUser}
                   </Button>
                 </div>
-              </>
-            ) : (
-              <Button
-                id="accessLogin"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleGoOnline}
-              >
-                {t.logIn}
-              </Button>
-            )}
-            <Typography className={classes.sectionHead}>
-              {t.withoutInternet}
-            </Typography>
-            {importStatus?.complete !== false && hasOnlineUser() && (
-              <UserList
-                isSelected={isOnlineUserWithOfflineProjects}
-                select={handleSelect}
-                title={t.availableOnlineUsers}
-              />
-            )}
-            {importStatus?.complete !== false && hasOfflineUser() && (
-              <UserList
-                isSelected={isOfflineUserWithProjects}
-                select={handleSelect}
-                title={t.availableOfflineUsers}
-              />
+              </div>
             )}
             <div className={classes.actions}>
-              <Button
-                id="accessCreateUser"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleCreateUser}
-              >
-                {t.createUser}
-              </Button>
               <Button
                 id="accessImport"
                 variant="contained"

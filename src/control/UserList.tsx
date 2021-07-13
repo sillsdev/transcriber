@@ -28,7 +28,6 @@ export const UserList = (props: IProps) => {
 
   return (
     <>
-      {title && <div className={classes.listHead}>{title}</div>}
       <List>
         {users
           .filter((u) => isSelected(u.id))
