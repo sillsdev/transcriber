@@ -32,26 +32,27 @@ import { UserListItem } from '../control';
 
 const noop = {} as any;
 const ipc = isElectron ? require('electron').ipcRenderer : null;
-const Menu = isElectron ? require('electron').Menu : undefined;
 const electronremote = isElectron ? require('@electron/remote') : noop;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      display: 'block',
       width: '100%',
     },
-    container: {
+    page: {
       display: 'block',
+    },
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
       justifyContent: 'center',
+      alignItems: 'center',
     },
     paper: {
       padding: theme.spacing(3),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      transform: 'translateZ(0px)',
-      widith: '80%',
     },
     sectionHead: {
       fontSize: '16pt',
@@ -64,16 +65,6 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       marginRight: theme.spacing(1),
       minWidth: theme.spacing(20),
-    },
-
-    formControl: {
-      margin: theme.spacing(3),
-    },
-    box: {
-      display: 'flex',
-      justifyContent: 'center',
-      padding: theme.spacing(3),
-      border: 1,
     },
   })
 );
@@ -147,7 +138,6 @@ export function Access(props: IProps) {
   const [goOnlineConfirmation, setGoOnlineConfirmation] =
     useState<React.MouseEvent<HTMLElement>>();
 
-  console.log('Access', pathname, whichUsers);
   const handleSelect = (uId: string) => {
     const selected = users.filter((u) => u.id === uId);
     if (selected.length > 0) {
@@ -325,14 +315,16 @@ export function Access(props: IProps) {
     <div className={classes.root}>
       <AppHead {...props} />
       {isElectron && (
-        <div className={classes.container}>
-          <Typography className={classes.sectionHead}>Filler 1</Typography>
+        <div className={classes.page}>
+          <Typography className={classes.sectionHead}>
+            Hello I'm under the AppHead
+          </Typography>
           <Button id="back" color="primary" onClick={handleBack}>
             {'<-Back'}
           </Button>
           <Paper className={classes.paper}>
             {whichUsers === 'online' && (
-              <div>
+              <div className={classes.container}>
                 <Typography className={classes.sectionHead}>
                   {t.withInternet}
                 </Typography>
