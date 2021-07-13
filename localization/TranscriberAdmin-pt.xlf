@@ -129,8 +129,8 @@
       </unit>
       <unit id="access.noOnlineUsers2">
          <segment>
-            <source>While online mark your project as 'Available Offline' in your project card menu  or Import a Project that your admin has exported.</source>
-            <target>Para permitir o uso off-line, enquanto estiver on-line, marque seu projeto como 'Disponível off-line' no menu do cartão do projeto ou Importe um projeto que seu administrador exportou.</target>
+            <source>Log in and select "Offline Available" in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
+            <target>Faça login e selecione "Offline disponível" no menu do cartão do projeto e, em seguida, faça logout. Ou clique em IMPORTAR PROJETO para importar um projeto exportado pelo administrador.</target>
          </segment>
       </unit>
       <unit id="access.importProject">

@@ -129,8 +129,8 @@
       </unit>
       <unit id="access.noOnlineUsers2">
          <segment>
-            <source>While online mark your project as 'Available Offline' in your project card menu or Import a Project that your admin has exported.</source>
-            <target>Находясь в сети, отметьте свой проект как «Доступный в автономном режиме» в меню карточки проекта или «Импортируйте проект, экспортированный администратором».</target>
+            <source>Log in and select "Offline Available" in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
+            <target>Войдите в систему и выберите «Доступен в автономном режиме» в меню карточки проекта, а затем выйдите из системы. Или щелкните ИМПОРТ ПРОЕКТА, чтобы импортировать проект, экспортированный администратором.</target>
          </segment>
       </unit>
       <unit id="access.importProject">
