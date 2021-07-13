@@ -73,7 +73,73 @@
    			<target/>
    		</segment>
    	</unit>
-   	<unit id="access.importProject">
+      <unit id="access.onlineAdmin">
+         <segment>
+            <source>Online Admin</source>
+            <target>Admin Online</target>
+         </segment>
+      </unit>
+      <unit id="access.onlineAdminDesc">
+         <segment>
+            <source>Project Admin is online.</source>
+            <target>O Project Admin está online.</target>
+         </segment>
+      </unit>
+      <unit id="access.offlineAdmin">
+         <segment>
+            <source>Always Offline</source>
+            <target>Sempre offline</target>
+         </segment>
+      </unit>
+      <unit id="access.offlineAdminDesc">
+         <segment>
+            <source>Project Admin is offline.</source>
+            <target>O administrador do projeto está offline.</target>
+      </segment>
+      </unit>
+      <unit id="access.onlineWorkDesc">
+         <segment>
+            <source>Transcription can be done online or offline.</source>
+            <target>A transcrição pode ser feita online ou offline.</target>
+      </segment>
+      </unit>
+      <unit id="access.offlineWorkDesc">
+         <segment>
+            <source>All work is always done offline.</source>
+            <target>Todo o trabalho é sempre feito offline.</target>
+       </segment>
+      </unit>
+      <unit id="access.back">
+         <segment>
+            <source>Back</source>
+            <target>Voltar</target>
+      </segment>
+      </unit>
+      <unit id="access.chooseAnother">
+         <segment>
+            <source>To choose another user, Log out...</source>
+            <target>Para escolher outro usuário, saia ...</target>
+      </segment>
+      </unit>
+      <unit id="access.noOnlineUsers1">
+         <segment>
+            <source>To allow offline use, while online mark your project as 'Available Offline' in your project settings.</source>
+            <target>Para permitir o uso off-line, enquanto estiver on-line, marque seu projeto como 'Disponível off-line' no menu do cartão do projeto.</target>
+         </segment>
+      </unit>
+      <unit id="access.or">
+         <segment>
+            <source>or</source>
+            <target>ou</target>
+         </segment>
+      </unit>
+      <unit id="access.noOnlineUsers2">
+         <segment>
+            <source>Import a Project that your admin has exported.</source>
+            <target>Importe um projeto que seu administrador exportou.</target>
+         </segment>
+      </unit>
+      <unit id="access.importProject">
    		<segment>
    			<source>ImportProject</source>
    			<target/>

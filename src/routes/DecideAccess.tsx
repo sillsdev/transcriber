@@ -7,26 +7,16 @@ import { IState, IAccessStrings } from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import {
-  Typography,
-  Button,
-  Paper,
-  Radio,
-  RadioGroup,
-  Box,
-  FormLabel,
-} from '@material-ui/core';
+import { Typography, Button, Paper, FormLabel } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { isElectron } from '../api-variable';
-import { useSnackBar } from '../hoc/SnackBar';
 import AppHead from '../components/App/AppHead';
 import OfflineIcon from '@material-ui/icons/CloudOff';
 import OnlineIcon from '@material-ui/icons/CloudQueue';
-import Access from './Access';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,21 +41,9 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(2),
     },
-    actions: {
-      paddingTop: theme.spacing(2),
-    },
     button: {
       margin: theme.spacing(3),
       minWidth: theme.spacing(20),
-    },
-    formControl: {
-      margin: theme.spacing(3),
-    },
-    box: {
-      display: 'block',
-      justifyContent: 'center',
-      padding: theme.spacing(3),
-      border: 1,
     },
   })
 );
@@ -90,7 +68,6 @@ export function DecideAccess(props: IProps) {
   const { fetchLocalization, setLanguage } = props;
   const [isDeveloper] = useGlobal('developer');
   const [, setConnected] = useGlobal('connected');
-  const { showMessage } = useSnackBar();
   const [whichUsers, setWhichUsers] = useState<string | null>(null);
 
   useEffect(() => {
@@ -120,8 +97,8 @@ export function DecideAccess(props: IProps) {
       target === 'offline' ? 'true' : 'false'
     );
   };
-  console.log('DecideAccess', whichUsers);
-  if (whichUsers !== null) {
+
+  if (!isElectron || whichUsers !== null) {
     return <Redirect to={'/access/' + whichUsers} />;
   }
   return (
@@ -129,14 +106,16 @@ export function DecideAccess(props: IProps) {
       <AppHead {...props} />
       {isElectron && (
         <div className={classes.container}>
-          <Typography className={classes.sectionHead}>Filler 1</Typography>{' '}
+          <Typography className={classes.sectionHead}>
+            Hello I'm under the AppHead
+          </Typography>
           <Paper className={classes.paper}>
             <FormLabel>
               <OnlineIcon />
-              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Project Admin is online.
+              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{t.onlineAdminDesc}
               <br />
               <OnlineIcon /> <OfflineIcon />
-              &nbsp; Transcription can be done online or offline.&nbsp;
+              &nbsp; {t.onlineWorkDesc}
             </FormLabel>
             <Button
               id="accessLogin"
@@ -145,11 +124,12 @@ export function DecideAccess(props: IProps) {
               className={classes.button}
               onClick={handleGoOnline}
             >
-              {'online'}
+              {t.onlineAdmin}
             </Button>
             <FormLabel>
-              <OfflineIcon /> Project Admin is offline.&nbsp; <br />
-              <OfflineIcon /> All work will always be done offline.&nbsp;
+              <OfflineIcon /> {t.offlineAdminDesc}
+              <br />
+              <OfflineIcon /> {t.offlineWorkDesc}
             </FormLabel>
             <Button
               id="accessLogin"
@@ -158,7 +138,7 @@ export function DecideAccess(props: IProps) {
               className={classes.button}
               onClick={handleGoOffline}
             >
-              {'always offline'}
+              {t.offlineAdmin}
             </Button>
           </Paper>
         </div>

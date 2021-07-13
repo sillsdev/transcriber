@@ -15,9 +15,9 @@ import {
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Typography, Button, Paper } from '@material-ui/core';
+import { Typography, Button, Paper, Box } from '@material-ui/core';
 import Auth from '../auth/Auth';
-import { Online, localeDefault, forceLogin } from '../utils';
+import { Online, forceLogin } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
@@ -63,8 +63,14 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: theme.spacing(2),
     },
     button: {
-      marginRight: theme.spacing(1),
+      margin: theme.spacing(1),
       minWidth: theme.spacing(20),
+    },
+    box: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   })
 );
@@ -113,9 +119,8 @@ export function Access(props: IProps) {
   } = props;
   const { pathname } = useLocation();
   const classes = useStyles();
-  const { fetchLocalization, setLanguage } = props;
+  const { setLanguage } = props;
   const [offline, setOffline] = useGlobal('offline');
-  const [isDeveloper] = useGlobal('developer');
   const [, setConnected] = useGlobal('connected');
   const [, setEditId] = useGlobal('editUserId');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
@@ -249,11 +254,6 @@ export function Access(props: IProps) {
 
   useEffect(() => {
     if (isElectron) persistData();
-    setLanguage(localeDefault(isDeveloper));
-    fetchLocalization();
-    Online((connected) => {
-      setConnected(connected);
-    }, auth);
     setOrganization('');
     setProject('');
     setPlan('');
@@ -320,7 +320,8 @@ export function Access(props: IProps) {
             Hello I'm under the AppHead
           </Typography>
           <Button id="back" color="primary" onClick={handleBack}>
-            {'<-Back'}
+            {'<-'}
+            {t.back}
           </Button>
           <Paper className={classes.paper}>
             {whichUsers === 'online' && (
@@ -329,7 +330,7 @@ export function Access(props: IProps) {
                   {t.withInternet}
                 </Typography>
                 {curUser ? (
-                  <>
+                  <Paper className={classes.paper}>
                     <div className={classes.actions}>
                       <UserListItem
                         u={curUser}
@@ -337,7 +338,7 @@ export function Access(props: IProps) {
                         onSelect={handleGoOnline}
                       />
                     </div>
-                    <div>To choose another user, Log out...</div>
+                    <div>{t.chooseAnother}</div>
                     <Button
                       id="accessLogin"
                       variant="contained"
@@ -347,7 +348,7 @@ export function Access(props: IProps) {
                     >
                       {t.logout}
                     </Button>
-                  </>
+                  </Paper>
                 ) : (
                   <Button
                     id="accessLogin"
@@ -363,18 +364,20 @@ export function Access(props: IProps) {
                   {t.withoutInternet}
                 </Typography>
                 {!hasOnlineUser() && (
-                  <div>
-                    To allow offline use, while online mark your project as
-                    "Available Offline" in your project settings, or Import a
-                    Project that your admin has exported.
-                  </div>
+                  <Paper className={classes.paper}>
+                    <Box>{t.noOnlineUsers1}</Box>
+                    <Box>{t.or}</Box>
+                    <Box>{t.noOnlineUsers2}</Box>
+                  </Paper>
                 )}
                 {importStatus?.complete !== false && hasOnlineUser() && (
-                  <UserList
-                    isSelected={isOnlineUserWithOfflineProjects}
-                    select={handleSelect}
-                    title={t.availableOnlineUsers}
-                  />
+                  <Paper className={classes.paper}>
+                    <UserList
+                      isSelected={isOnlineUserWithOfflineProjects}
+                      select={handleSelect}
+                      title={t.availableOnlineUsers}
+                    />
+                  </Paper>
                 )}
               </div>
             )}

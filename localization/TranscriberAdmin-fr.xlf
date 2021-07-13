@@ -73,6 +73,72 @@
    			<target>Vous devez être connecté à Internet pour vous connecter !</target>
    		</segment>
    	</unit>
+      <unit id="access.onlineAdmin">
+         <segment>
+            <source>Online Admin</source>
+            <target>L'administration en ligne</target>
+         </segment>
+      </unit>
+      <unit id="access.onlineAdminDesc">
+         <segment>
+            <source>Project Admin is online.</source>
+            <target>L'administration du projet est en ligne.</target>
+         </segment>
+      </unit>
+      <unit id="access.offlineAdmin">
+         <segment>
+            <source>Always Offline</source>
+            <target>Toujours hors ligne</target>
+         </segment>
+      </unit>
+      <unit id="access.offlineAdminDesc">
+         <segment>
+            <source>Project Admin is offline.</source>
+               <target>L'administration du projet est hors ligne.</target>
+      </segment>
+      </unit>
+      <unit id="access.onlineWorkDesc">
+         <segment>
+            <source>Transcription can be done online or offline.</source>
+            <target>La transcription peut être effectuée en ligne ou hors ligne.</target>
+      </segment>
+      </unit>
+      <unit id="access.offlineWorkDesc">
+         <segment>
+            <source>All work is always done offline.</source>
+            <target>Tout le travail est toujours effectué hors ligne.</target>
+       </segment>
+      </unit>
+      <unit id="access.back">
+         <segment>
+            <source>Back</source>
+            <target>Dos</target>
+      </segment>
+      </unit>
+      <unit id="access.chooseAnother">
+         <segment>
+            <source>To choose another user, Log out...</source>
+            <target>Pour choisir un autre utilisateur, Déconnectez-vous...</target>
+      </segment>
+      </unit>
+      <unit id="access.noOnlineUsers1">
+         <segment>
+            <source>To allow offline use, while online mark your project as 'Available Offline' in your project card menu.</source>
+            <target>Pour permettre une utilisation hors ligne, en ligne, marquez votre projet comme « Disponible hors ligne » dans le menu de votre carte de projet.</target>
+         </segment>
+      </unit>
+      <unit id="access.or">
+         <segment>
+            <source>or</source>
+            <target>ou alors</target>
+         </segment>
+      </unit>
+      <unit id="access.noOnlineUsers2">
+         <segment>
+            <source>Import a Project that your admin has exported.</source>
+            <target>Importez un projet que votre administrateur a exporté.</target>
+         </segment>
+      </unit>
    	<unit id="access.importProject">
          <segment>
             <source>Import Project</source>

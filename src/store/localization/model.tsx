@@ -14,6 +14,17 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "withInternet": string;
     "withoutInternet": string;
     "mustBeOnline": string;
+    "onlineAdmin": string;
+    "onlineAdminDesc": string;
+    "offlineAdmin": string;
+    "offlineAdminDesc": string;
+    "onlineWorkDesc": string;
+    "offlineWorkDesc": string;
+    "back": string;
+    "chooseAnother": string;
+    "noOnlineUsers1": string;
+    "or": string;
+    "noOnlineUsers2": string;
     "importProject": string;
     "download": string;
     "downloadLater": string;

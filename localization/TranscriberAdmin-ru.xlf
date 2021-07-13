@@ -73,7 +73,73 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="access.importProject">
+      <unit id="access.onlineAdmin">
+         <segment>
+            <source>Online Admin</source>
+            <target>Интернет-администратор</target>
+         </segment>
+      </unit>
+      <unit id="access.onlineAdminDesc">
+         <segment>
+            <source>Project Admin is online.</source>
+            <target>Администратор проекта в сети.</target>
+         </segment>
+      </unit>
+      <unit id="access.offlineAdmin">
+         <segment>
+            <source>Always Offline</source>
+            <target>Всегда в автономном режиме</target>
+         </segment>
+      </unit>
+      <unit id="access.offlineAdminDesc">
+         <segment>
+            <source>Project Admin is offline.</source>
+            <target>Администратор проекта не в сети.</target>
+      </segment>
+      </unit>
+      <unit id="access.onlineWorkDesc">
+         <segment>
+            <source>Transcription can be done online or offline.</source>
+            <target>Транскрипция может быть сделана онлайн или офлайн.</target>
+      </segment>
+      </unit>
+      <unit id="access.offlineWorkDesc">
+         <segment>
+            <source>All work is always done offline.</source>
+            <target>Вся работа всегда выполняется офлайн.</target>
+       </segment>
+      </unit>
+      <unit id="access.back">
+         <segment>
+            <source>Back</source>
+            <target>Назад</target>
+      </segment>
+      </unit>
+      <unit id="access.chooseAnother">
+         <segment>
+            <source>To choose another user, Log out...</source>
+            <target>Чтобы выбрать другого пользователя, выйдите из системы ...</target>
+      </segment>
+      </unit>
+      <unit id="access.noOnlineUsers1">
+         <segment>
+            <source>To allow offline use, while online mark your project as 'Available Offline' in your project settings.</source>
+            <target>Чтобы разрешить использование в автономном режиме, при подключении к сети отметьте свой проект как «Доступный в автономном режиме» в меню карточки проекта.</target>
+         </segment>
+      </unit>
+      <unit id="access.or">
+         <segment>
+            <source>or</source>
+            <target>или же</target>
+         </segment>
+      </unit>
+      <unit id="access.noOnlineUsers2">
+         <segment>
+            <source>Import a Project that your admin has exported.</source>
+            <target>Импортируйте проект, который экспортировал ваш администратор.</target>
+         </segment>
+      </unit>
+      <unit id="access.importProject">
 			<segment>
 				<source>ImportProject</source>
 				<target/>

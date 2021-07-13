@@ -86,6 +86,84 @@
       			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="access.onlineAdmin">
+      		<source>Online Admin</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="access.onlineAdminDesc">
+      		<source>Project Admin is online.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="access.offlineAdmin">
+      		<source>Always Offline</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="access.offlineAdminDesc">
+      		<source>Project Admin is offline.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="access.onlineWorkDesc">
+      		<source>Transcription can be done online or offline.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="access.offlineWorkDesc">
+      		<source>All work is always done offline.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="access.back">
+      		<source>Back</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="access.chooseAnother">
+      		<source>To choose another user, Log out...</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="access.noOnlineUsers1">
+      		<source>To allow offline use, while online mark your project as 'Available Offline' in your project card menu.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="access.or">
+      		<source>or</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="access.noOnlineUsers2">
+      		<source>Import a Project that your admin has exported.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+
       	<trans-unit id="access.importProject">
             <source>ImportProject</source>
             <target/>
