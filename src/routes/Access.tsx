@@ -23,6 +23,7 @@ import {
   Radio,
   RadioGroup,
   Box,
+  FormLabel,
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault, forceLogin } from '../utils';
@@ -37,6 +38,8 @@ import UserList from '../control/UserList';
 import { useSnackBar } from '../hoc/SnackBar';
 import AppHead from '../components/App/AppHead';
 import { UserListItem } from '../control';
+import OfflineIcon from '@material-ui/icons/CloudOff';
+import OnlineIcon from '@material-ui/icons/CloudQueue';
 const noop = {} as any;
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 const electronremote = isElectron ? require('@electron/remote') : noop;
@@ -341,16 +344,25 @@ export function Access(props: IProps) {
                 value={whichUsers}
                 onChange={handleOfflineChange}
               >
-                <FormControlLabel
-                  value="online"
-                  control={<Radio />}
-                  label="Project Admin is online.  Transcription can be done online or offline."
-                />
-                <FormControlLabel
-                  value="offline"
-                  control={<Radio />}
-                  label="Project Admin and all work will always be done offline."
-                />
+                <div>
+                  <Radio value="online" id="onlineradio" />
+                  <FormLabel>
+                    Project Admin is online.&nbsp; <OnlineIcon />
+                    <br />
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Transcription can be done
+                    online or offline.&nbsp;
+                    <OnlineIcon /> <OfflineIcon />
+                  </FormLabel>
+                </div>
+                <div>
+                  <Radio value="offline" id="offlineradio" />
+                  <FormLabel>
+                    Project Admin is offline.&nbsp; <OfflineIcon /> <br />
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; All work will always be
+                    done offline.&nbsp;
+                    <OfflineIcon />
+                  </FormLabel>
+                </div>
               </RadioGroup>
             </Box>
             {whichUsers === 'online' && (
