@@ -196,6 +196,7 @@ export const AppHead = (props: IProps) => {
   useEffect(() => {
     const handleUnload = (e: any) => {
       if (pathname === '/') return true;
+      if (pathname.startsWith('/access')) return true;
       if (!exitAlert && isElectron && isMounted()) setExitAlert(true);
       if (!globalStore.enableOffsite) {
         e.preventDefault();
@@ -224,6 +225,7 @@ export const AppHead = (props: IProps) => {
     const description =
       pathname &&
       pathname !== '/' &&
+      !pathname.startsWith('/access') &&
       pathname.indexOf('team') < 0 &&
       `${pathname && pathname.indexOf('work') > 0 ? t.transcribe : t.admin} - `;
     isMounted() && setPathDescription(description || '');
@@ -315,7 +317,9 @@ export const AppHead = (props: IProps) => {
             </Tooltip>
           )}
           <HelpMenu online={!isOffline} />
-          {pathname !== '/' && <UserMenu action={handleUserMenu} auth={auth} />}
+          {pathname !== '/' && !pathname.startsWith('/access') && (
+            <UserMenu action={handleUserMenu} auth={auth} />
+          )}
         </Toolbar>
         {!importexportBusy || <Busy />}
         {downloadAlert && <ProjectDownloadAlert auth={auth} cb={downDone} />}

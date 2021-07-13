@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -15,9 +15,9 @@ import {
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Typography, Button, Paper } from '@material-ui/core';
+import { Typography, Button, Paper, Box } from '@material-ui/core';
 import Auth from '../auth/Auth';
-import { Online, localeDefault, forceLogin } from '../utils';
+import { Online, forceLogin } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
@@ -29,6 +29,7 @@ import UserList from '../control/UserList';
 import { useSnackBar } from '../hoc/SnackBar';
 import AppHead from '../components/App/AppHead';
 import { UserListItem } from '../control';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 const noop = {} as any;
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 const electronremote = isElectron ? require('@electron/remote') : noop;
@@ -38,20 +39,14 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       width: '100%',
     },
-    grow: {
-      flexGrow: 1,
+    page: {
+      display: 'block',
     },
     container: {
       display: 'flex',
+      flexDirection: 'column',
       justifyContent: 'center',
-    },
-    appBar: theme.mixins.gutters({
-      display: 'flex',
-      flexDirection: 'row',
-      boxShadow: 'none',
-    }) as any,
-    version: {
-      alignSelf: 'center',
+      alignItems: 'center',
     },
     paper: {
       padding: theme.spacing(3),
@@ -59,23 +54,23 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       alignItems: 'center',
     },
-    screenHead: {
-      fontSize: '14pt',
-    },
     sectionHead: {
       fontSize: '16pt',
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(2),
     },
-    listHead: {
-      fontWeight: 'bold',
-    },
     actions: {
       paddingTop: theme.spacing(2),
     },
     button: {
-      marginRight: theme.spacing(1),
+      margin: theme.spacing(1),
       minWidth: theme.spacing(20),
+    },
+    box: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   })
 );
@@ -122,10 +117,10 @@ export function Access(props: IProps) {
     plans,
     sections,
   } = props;
+  const { pathname } = useLocation();
   const classes = useStyles();
-  const { fetchLocalization, setLanguage } = props;
+  const { setLanguage } = props;
   const [offline, setOffline] = useGlobal('offline');
-  const [isDeveloper] = useGlobal('developer');
   const [, setConnected] = useGlobal('connected');
   const [, setEditId] = useGlobal('editUserId');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
@@ -133,6 +128,9 @@ export function Access(props: IProps) {
   const handleLogin = () => auth.login();
   const [view, setView] = useState('');
   const [curUser, setCurUser] = useState<User>();
+  const [whichUsers, setWhichUsers] = useState(
+    pathname.substring('/access/'.length)
+  );
   const [selectedUser, setSelectedUser] = useState('');
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
@@ -142,10 +140,8 @@ export function Access(props: IProps) {
   const offlineProjRead = useOfflnProjRead();
   const offlineSetup = useOfflineSetup();
   const { showMessage } = useSnackBar();
-
-  const [goOnlineConfirmation, setGoOnlineConfirmation] = useState<
-    React.MouseEvent<HTMLElement>
-  >();
+  const [goOnlineConfirmation, setGoOnlineConfirmation] =
+    useState<React.MouseEvent<HTMLElement>>();
 
   const handleSelect = (uId: string) => {
     const selected = users.filter((u) => u.id === uId);
@@ -251,13 +247,13 @@ export function Access(props: IProps) {
     setView('Logout');
   };
 
+  const handleBack = () => {
+    localStorage.removeItem('offlineAdmin');
+    setWhichUsers('');
+  };
+
   useEffect(() => {
     if (isElectron) persistData();
-    setLanguage(localeDefault(isDeveloper));
-    fetchLocalization();
-    Online((connected) => {
-      setConnected(connected);
-    }, auth);
     setOrganization('');
     setProject('');
     setPlan('');
@@ -313,29 +309,47 @@ export function Access(props: IProps) {
   if (/Logout/i.test(view)) {
     return <Redirect to="/logout" />;
   }
+  if (whichUsers === '') return <Redirect to="/" />;
 
   return (
     <div className={classes.root}>
       <AppHead {...props} />
       {isElectron && (
-        <div className={classes.container}>
+        <div className={classes.page}>
+          <Typography className={classes.sectionHead}>
+            Hello I'm under the AppHead
+          </Typography>
+          <Button id="back" color="primary" onClick={handleBack}>
+            <ArrowBackIcon />
+            {t.back}
+          </Button>
           <Paper className={classes.paper}>
-            <Typography className={classes.screenHead}>
-              {t.screenTitle}
-            </Typography>
-            <Typography className={classes.sectionHead}>
-              {t.withInternet}
-            </Typography>
-            {curUser ? (
-              <>
-                <div className={classes.actions}>
-                  <UserListItem
-                    u={curUser}
-                    users={users}
-                    onSelect={handleGoOnline}
-                  />
-                </div>
-                <div className={classes.actions}>
+            {whichUsers === 'online' && (
+              <div className={classes.container}>
+                <Typography className={classes.sectionHead}>
+                  {t.withInternet}
+                </Typography>
+                {curUser ? (
+                  <Paper className={classes.paper}>
+                    <div className={classes.actions}>
+                      <UserListItem
+                        u={curUser}
+                        users={users}
+                        onSelect={handleGoOnline}
+                      />
+                    </div>
+                    <div>{t.chooseAnother}</div>
+                    <Button
+                      id="accessLogin"
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleLogout}
+                    >
+                      {t.logout}
+                    </Button>
+                  </Paper>
+                ) : (
                   <Button
                     id="accessLogin"
                     variant="contained"
@@ -343,57 +357,52 @@ export function Access(props: IProps) {
                     className={classes.button}
                     onClick={handleGoOnline}
                   >
-                    {t.goOnline}
+                    {t.logIn}
                   </Button>
+                )}
+                <Typography className={classes.sectionHead}>
+                  {t.withoutInternet}
+                </Typography>
+                {!hasOnlineUser() && (
+                  <Paper className={classes.paper}>
+                    <Box>{t.noOnlineUsers1}</Box>
+                    <Box>{t.noOnlineUsers2}</Box>
+                  </Paper>
+                )}
+                {importStatus?.complete !== false && hasOnlineUser() && (
+                  <Paper className={classes.paper}>
+                    <UserList
+                      isSelected={isOnlineUserWithOfflineProjects}
+                      select={handleSelect}
+                      title={t.availableOnlineUsers}
+                    />
+                  </Paper>
+                )}
+              </div>
+            )}
+            {whichUsers === 'offline' && (
+              <div>
+                {importStatus?.complete !== false && hasOfflineUser() && (
+                  <UserList
+                    isSelected={isOfflineUserWithProjects}
+                    select={handleSelect}
+                    title={t.availableOfflineUsers}
+                  />
+                )}
+                <div className={classes.actions}>
                   <Button
-                    id="accessLogin"
+                    id="accessCreateUser"
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    onClick={handleLogout}
+                    onClick={handleCreateUser}
                   >
-                    {t.logout}
+                    {t.createUser}
                   </Button>
                 </div>
-              </>
-            ) : (
-              <Button
-                id="accessLogin"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleGoOnline}
-              >
-                {t.logIn}
-              </Button>
-            )}
-            <Typography className={classes.sectionHead}>
-              {t.withoutInternet}
-            </Typography>
-            {importStatus?.complete !== false && hasOnlineUser() && (
-              <UserList
-                isSelected={isOnlineUserWithOfflineProjects}
-                select={handleSelect}
-                title={t.availableOnlineUsers}
-              />
-            )}
-            {importStatus?.complete !== false && hasOfflineUser() && (
-              <UserList
-                isSelected={isOfflineUserWithProjects}
-                select={handleSelect}
-                title={t.availableOfflineUsers}
-              />
+              </div>
             )}
             <div className={classes.actions}>
-              <Button
-                id="accessCreateUser"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleCreateUser}
-              >
-                {t.createUser}
-              </Button>
               <Button
                 id="accessImport"
                 variant="contained"

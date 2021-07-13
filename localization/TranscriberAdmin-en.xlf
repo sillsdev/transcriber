@@ -76,6 +76,66 @@
             <target/>
          </segment>
       </unit>
+      <unit id="access.onlineAdmin">
+         <segment>
+            <source>Online Admin</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.onlineAdminDesc">
+         <segment>
+            <source>Project Admin is online.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.offlineAdmin">
+         <segment>
+            <source>Always Offline</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.offlineAdminDesc">
+         <segment>
+            <source>Project Admin is offline.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.onlineWorkDesc">
+         <segment>
+            <source>Transcription can be done online or offline.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.offlineWorkDesc">
+         <segment>
+            <source>All work is always done offline.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.back">
+         <segment>
+            <source>Back</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.chooseAnother">
+         <segment>
+            <source>To choose another user, Log out...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.noOnlineUsers1">
+         <segment>
+            <source>To allow offline use:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.noOnlineUsers2">
+         <segment>
+            <source>While online mark your project as 'Available Offline' in your project card menu  or Import a Project that your admin has exported.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.importProject">
          <segment>
             <source>ImportProject</source>
