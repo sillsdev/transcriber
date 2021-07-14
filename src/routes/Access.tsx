@@ -15,7 +15,14 @@ import {
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Typography, Button, Paper, Box } from '@material-ui/core';
+import {
+  Typography,
+  Button,
+  Paper,
+  Box,
+  Tooltip,
+  IconButton,
+} from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, forceLogin } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
@@ -30,6 +37,7 @@ import { useSnackBar } from '../hoc/SnackBar';
 import AppHead from '../components/App/AppHead';
 import { UserListItem } from '../control';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import HelpIcon from '@material-ui/icons/Help';
 const noop = {} as any;
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 const electronremote = isElectron ? require('@electron/remote') : noop;
@@ -71,6 +79,13 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    helpIcon: {
+      paddingLeft: '1px',
     },
   })
 );
@@ -248,7 +263,8 @@ export function Access(props: IProps) {
   };
 
   const handleBack = () => {
-    localStorage.removeItem('offlineAdmin');
+    //localStorage.removeItem('offlineAdmin');
+    localStorage.setItem('offlineAdmin', 'choose');
     setWhichUsers('');
   };
 
@@ -327,6 +343,9 @@ export function Access(props: IProps) {
             {whichUsers === 'online' && (
               <div className={classes.container}>
                 <Typography className={classes.sectionHead}>
+                  {t.screenTitle}
+                </Typography>
+                <Typography className={classes.sectionHead}>
                   {t.withInternet}
                 </Typography>
                 {curUser ? (
@@ -360,9 +379,20 @@ export function Access(props: IProps) {
                     {t.logIn}
                   </Button>
                 )}
-                <Typography className={classes.sectionHead}>
-                  {t.withoutInternet}
-                </Typography>
+                <Box className={classes.row}>
+                  <Typography className={classes.sectionHead}>
+                    {t.withoutInternet}
+                  </Typography>
+                  <Tooltip title="no admin etc todo">
+                    <IconButton
+                      className={classes.helpIcon}
+                      color="primary"
+                      aria-label="helponlineadmin"
+                    >
+                      <HelpIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
                 {!hasOnlineUser() && (
                   <Paper className={classes.paper}>
                     <Box>{t.noOnlineUsers1}</Box>
@@ -382,6 +412,9 @@ export function Access(props: IProps) {
             )}
             {whichUsers === 'offline' && (
               <div>
+                <Typography className={classes.sectionHead}>
+                  {'Offline Users'}
+                </Typography>
                 {importStatus?.complete !== false && hasOfflineUser() && (
                   <UserList
                     isSelected={isOfflineUserWithProjects}
