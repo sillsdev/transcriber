@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { IState, IAccessStrings, User } from '../model';
 import localStrings from '../selector/localize';
@@ -23,6 +22,9 @@ import { QueryBuilder } from '@orbit/data';
 import MemorySource from '@orbit/memory';
 import ImportTab from '../components/ImportTab';
 import { IAxiosStatus } from '../store/AxiosStatus';
+import OfflineIcon from '@material-ui/icons/CloudOff';
+import OnlineIcon from '@material-ui/icons/CloudQueue';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -165,88 +167,186 @@ export function Welcome(props: IProps) {
         <div className={classes.container}>
           <Typography className={classes.sectionHead}>Filler</Typography>
           <Paper className={classes.paper}>
-            <Typography className={classes.sectionHead}>Welcome</Typography>
+            <Typography id="welcome" className={classes.sectionHead}>
+              Welcome
+            </Typography>
             <div>
               <Paper>
-                <Typography className={classes.sectionHead}>
-                  I'm an administrator
+                <Typography id="admin" className={classes.sectionHead}>
+                  I'm an Administrator
                 </Typography>
-                <Button
-                  id="accessLogin"
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleGoOnline}
-                >
-                  {'Create/Manage an Online project'}
-                </Button>
-                <Tooltip title="admin online. collaboration etc etc">
-                  <IconButton
-                    className={classes.helpIcon}
-                    color="primary"
-                    aria-label="helponlineadmin"
-                    onClick={handleHelpOnlineAdmin}
-                  >
-                    <HelpIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-                <Button
-                  id="accessLogin"
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleGoOffline}
-                >
-                  {'Create/Manage an offline project'}
-                </Button>
-              </Paper>
-              <Paper>
-                <Typography className={classes.sectionHead}>
-                  I'm a transcriber/editor
-                </Typography>
-                <Button
-                  id="accessLogin"
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleGoOnline}
-                >
-                  {'I have an online login'}
-                </Button>
-                {hasOfflineUsers && (
+                <div>
                   <Button
-                    id="accessLogin"
+                    id="adminonline"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleGoOnline}
+                  >
+                    <OnlineIcon className={classes.icon} />
+                    {'For Online or Occassionally Connected Projects'}
+                  </Button>
+                  <Tooltip title="All project administration must be done online.  Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline can be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.">
+                    <IconButton
+                      id="adminonlinehelp"
+                      className={classes.helpIcon}
+                      color="primary"
+                      aria-label="helponlineadmin"
+                      onClick={handleHelpOnlineAdmin}
+                    >
+                      <HelpIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+                <div>
+                  <Button
+                    id="adminoffline"
                     variant="contained"
                     color="primary"
                     className={classes.button}
                     onClick={handleGoOffline}
                   >
-                    {'I already have an offline project'}
+                    <OfflineIcon className={classes.icon} />
+                    {'For Offline Single User Projects'}
                   </Button>
-                )}
-                <Button
-                  id="accessLogin"
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleImport}
-                >
-                  {'My admin gave me a project to import'}
-                </Button>
+                  <Tooltip title="The project is stored on your computer. You cannot set up a team.  You can export the project and import it on to another computer, but all changes will be done under your user.  Changes can be exported and them imported on to the master computer.">
+                    <IconButton
+                      id="adminofflinehelp"
+                      className={classes.helpIcon}
+                      color="primary"
+                      aria-label="helponlineadmin"
+                      onClick={handleHelpOnlineAdmin}
+                    >
+                      <HelpIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </div>
               </Paper>
               <Paper>
                 <Typography className={classes.sectionHead}>
-                  I just want to transcribe something
+                  I'm a Team Member
                 </Typography>
-                <Button
-                  id="accessLogin"
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleGoOffline}
-                >
-                  {'Auto setup and Go'}
-                </Button>
+                <div>
+                  <Button
+                    id="memberonline"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleGoOnline}
+                  >
+                    <OnlineIcon className={classes.icon} />
+                    {'For Projects Available Online'}
+                  </Button>
+                  <Tooltip title="Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline can be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.">
+                    <IconButton
+                      id="memberonlinehelp"
+                      className={classes.helpIcon}
+                      color="primary"
+                      aria-label="helponlineadmin"
+                      onClick={handleHelpOnlineAdmin}
+                    >
+                      <HelpIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+                {hasOfflineUsers && (
+                  <div>
+                    <Button
+                      id="memberoffline"
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleGoOffline}
+                    >
+                      <OfflineIcon className={classes.icon} />
+                      {'For Projects Only Available Online'}
+                    </Button>
+                    <Tooltip title="admin online. collaboration etc etc">
+                      <IconButton
+                        id="memberofflinehelp"
+                        className={classes.helpIcon}
+                        color="primary"
+                        aria-label="helponlineadmin"
+                        onClick={handleHelpOnlineAdmin}
+                      >
+                        <HelpIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
+                )}
+                <div>
+                  <Button
+                    id="memberimport"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleImport}
+                  >
+                    {'For projects with an available import file'}
+                  </Button>
+                  <Tooltip title="Either Online or Offline Projects can be imported to be worked on offline.  If the project was created online, changes made offline can be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.  If the project was started offline, changed must be exported and imported to the master computer.">
+                    <IconButton
+                      id="memberimporthelp"
+                      className={classes.helpIcon}
+                      color="primary"
+                      aria-label="helponlineadmin"
+                      onClick={handleHelpOnlineAdmin}
+                    >
+                      <HelpIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              </Paper>
+              <Paper>
+                <Typography className={classes.sectionHead}>
+                  Quick Transcribe
+                </Typography>
+                <div>
+                  <Button
+                    id="quickonline"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleGoOffline}
+                  >
+                    <OnlineIcon className={classes.icon} />
+                    {'With Online Access'}
+                  </Button>
+                  <Tooltip title="After login, you will choose a project type, upload or record audio, and start transcribing as soon as possible.  Your audio will be stored online.">
+                    <IconButton
+                      id="quickonlinehelp"
+                      className={classes.helpIcon}
+                      color="primary"
+                      aria-label="helponlineadmin"
+                      onClick={handleHelpOnlineAdmin}
+                    >
+                      <HelpIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+                <div>
+                  <Button
+                    id="quickoffline"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleGoOffline}
+                  >
+                    <OfflineIcon className={classes.icon} />
+                    {'Offline Only Access'}
+                  </Button>
+                  <Tooltip title="We will create a default user, you will choose a project type, import or record audio, and start transcribing as soon as possible.  Your audio will be stored on your computer.">
+                    <IconButton
+                      id="quickofflinehelp"
+                      className={classes.helpIcon}
+                      color="primary"
+                      aria-label="helponlineadmin"
+                      onClick={handleHelpOnlineAdmin}
+                    >
+                      <HelpIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </div>
               </Paper>
             </div>
           </Paper>
