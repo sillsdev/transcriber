@@ -21,8 +21,8 @@ import DataChanges from './hoc/DataChanges';
 import { UnsavedProvider } from './context/UnsavedContext';
 import SnackBarProvider from './hoc/SnackBar';
 import { HotKeyProvider } from './context/HotKeyContext';
-import DecideAccess from './routes/DecideAccess';
 import Access from './routes/Access';
+import Welcome from './routes/Welcome';
 
 export const HeadHeight = 64;
 
@@ -85,7 +85,7 @@ class App extends React.Component {
                         localStorage.removeItem('inviteId');
                         return <LogoutRequired />;
                       }
-                      return <DecideAccess auth={auth} {...props} />;
+                      return <Welcome auth={auth} {...props} />;
                     }}
                   />
                   <Route
