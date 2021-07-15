@@ -31,6 +31,7 @@ import LoopIcon from '@material-ui/icons/Loop';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SilenceIcon from '@material-ui/icons/SpaceBar';
 import TimerIcon from '@material-ui/icons/AccessTime';
+import NextSegmentIcon from '@material-ui/icons/ArrowRightAlt';
 
 import localStrings from '../selector/localize';
 import { IState, IWsAudioPlayerStrings } from '../model';
@@ -446,8 +447,11 @@ function WSAudioPlayer(props: IProps) {
   };
   const handleJumpEv = (amount: number) => () => handleJumpFn(amount);
   const handleGotoEv = (place: number) => () => wsGoto(place);
-  const handleToggleLoop = () => () => {
+  const handleToggleLoop = () => {
     setLooping(wsLoopRegion(!looping));
+  };
+  const handleNextRegion = () => {
+    wsNextRegion();
   };
 
   const gotoEnd = () => {
@@ -649,7 +653,6 @@ function WSAudioPlayer(props: IProps) {
               <WSAudioPlayerSegment
                 ready={ready}
                 wsAutoSegment={wsAutoSegment}
-                wsNextRegion={wsNextRegion}
                 wsSplitRegion={wsSplitRegion}
                 wsRemoveSplitRegion={wsRemoveSplitRegion}
                 t={t}
@@ -672,11 +675,22 @@ function WSAudioPlayer(props: IProps) {
                         className={classes.togglebutton}
                         value="loop"
                         selected={looping}
-                        onChange={handleToggleLoop()}
+                        onChange={handleToggleLoop}
                         disabled={!hasRegion}
                       >
                         <LoopIcon />
                       </ToggleButton>
+                    </span>
+                  </LightTooltip>
+                  <LightTooltip id="wsNextTip" title={'todo:NextSegment'}>
+                    <span>
+                      <IconButton
+                        disabled={!hasRegion}
+                        id="wsNext"
+                        onClick={handleNextRegion}
+                      >
+                        <NextSegmentIcon />
+                      </IconButton>
                     </span>
                   </LightTooltip>
                 </Grid>

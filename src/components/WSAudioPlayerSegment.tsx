@@ -4,14 +4,17 @@ import {
   createStyles,
   IconButton,
   Grid,
+  Slider,
+  Box,
+  Typography,
 } from '@material-ui/core';
-import React from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { LightTooltip } from '../control';
 import { IWsAudioPlayerStrings } from '../model';
 import { FaGripLinesVertical, FaHandScissors } from 'react-icons/fa';
 import ClearIcon from '@material-ui/icons/Clear';
+import SettingsIcon from '@material-ui/icons/Settings';
 
-import NextSegmentIcon from '@material-ui/icons/ArrowRightAlt';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -43,24 +46,21 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IProps {
   t: IWsAudioPlayerStrings;
   ready: boolean;
-  wsAutoSegment: () => void;
+  wsAutoSegment: (silenceThreshold?: number, timeThreshold?: number) => void;
   wsSplitRegion: () => void;
   wsRemoveSplitRegion: () => void;
-  wsNextRegion: () => void;
 }
 export function WSAudioPlayerSegment(props: IProps) {
   const classes = useStyles();
-  const {
-    t,
-    ready,
-    wsAutoSegment,
-    wsSplitRegion,
-    wsRemoveSplitRegion,
-    wsNextRegion,
-  } = props;
-
+  const { t, ready, wsAutoSegment, wsSplitRegion, wsRemoveSplitRegion } = props;
+  const [silenceValue, setSilenceValue] = useState(2);
+  const [timeValue, setTimeValue] = useState(5);
+  const [showSettings, setShowSettings] = useState(false);
   const handleAutoSegment = () => {
-    wsAutoSegment();
+    wsAutoSegment(silenceValue / 1000, timeValue / 100);
+  };
+  const handleShowSettings = () => {
+    setShowSettings(!showSettings);
   };
   const handleSplit = () => {
     wsSplitRegion();
@@ -68,8 +68,20 @@ export function WSAudioPlayerSegment(props: IProps) {
   const handleRemoveSplit = () => {
     wsRemoveSplitRegion();
   };
-  const handleNextSegment = () => {
-    wsNextRegion();
+  const handleSilenceChange = (
+    event: ChangeEvent<{}>,
+    value: number | number[]
+  ) => {
+    if (Array.isArray(value)) value = value[0];
+    console.log(value);
+    setSilenceValue(value);
+  };
+  const handleTimeChange = (
+    event: ChangeEvent<{}>,
+    value: number | number[]
+  ) => {
+    if (Array.isArray(value)) value = value[0];
+    setTimeValue(value);
   };
   return (
     <div className={classes.root}>
@@ -86,6 +98,44 @@ export function WSAudioPlayerSegment(props: IProps) {
               </IconButton>
             </span>
           </LightTooltip>
+          <LightTooltip id="wsSettingsTip" title={'TODO:Segment parameters'}>
+            <span>
+              <IconButton id="wsSegmentSettings" onClick={handleShowSettings}>
+                <SettingsIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </LightTooltip>
+
+          {showSettings && (
+            <Box display="flex" flexDirection="column">
+              <Typography id="silence-slider-label" gutterBottom>
+                Silence threshold (1000ths)
+              </Typography>
+              <Slider
+                min={1}
+                max={50}
+                step={1}
+                marks
+                value={silenceValue}
+                valueLabelDisplay="auto"
+                onChange={handleSilenceChange}
+                aria-labelledby="silence-slider"
+              />
+              <Typography id="silence-slider-label" gutterBottom>
+                Length of Silence threshold (100ths of second)
+              </Typography>
+              <Slider
+                step={1}
+                marks
+                min={1}
+                max={9}
+                value={timeValue}
+                valueLabelDisplay="auto"
+                onChange={handleTimeChange}
+                aria-labelledby="time-slider"
+              />
+            </Box>
+          )}
           <LightTooltip id="wsSplitTip" title={'todo:SplitSegment'}>
             <span>
               <IconButton id="wsSplit" onClick={handleSplit}>
@@ -97,13 +147,6 @@ export function WSAudioPlayerSegment(props: IProps) {
             <span>
               <IconButton id="wsJoin" onClick={handleRemoveSplit}>
                 <ClearIcon />
-              </IconButton>
-            </span>
-          </LightTooltip>
-          <LightTooltip id="wsNextTip" title={'todo:NextSegment'}>
-            <span>
-              <IconButton id="wsNext" onClick={handleNextSegment}>
-                <NextSegmentIcon />
               </IconButton>
             </span>
           </LightTooltip>
