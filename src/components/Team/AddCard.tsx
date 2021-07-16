@@ -97,6 +97,14 @@ export const AddCard = (props: IProps) => {
   const [recordAudio, setRecordAudio] = React.useState(false);
 
   useEffect(() => {
+    if (localStorage.getItem('autoaddProject') !== null && team === null) {
+      setPickOpen(true);
+      localStorage.removeItem('autoaddProject');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (status.canceled) {
       setInProgress(false);
       setTimeout(() => {

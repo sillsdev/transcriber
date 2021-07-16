@@ -12,7 +12,7 @@ import { Online, localeDefault } from '../utils';
 import { isElectron } from '../api-variable';
 import AppHead from '../components/App/AppHead';
 import HelpIcon from '@material-ui/icons/Help';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import MemorySource from '@orbit/memory';
 import ImportTab from '../components/ImportTab';
 import { IAxiosStatus } from '../store/AxiosStatus';
@@ -20,6 +20,8 @@ import OfflineIcon from '@material-ui/icons/CloudOff';
 import OnlineIcon from '@material-ui/icons/CloudQueue';
 import { connect } from 'react-redux';
 import { LightTooltip } from '../control';
+import moment from 'moment';
+import { AddRecord } from '../model/baseModel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -82,6 +84,7 @@ export function Welcome(props: IProps) {
   const { auth, t, importStatus } = props;
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
+  const [user, setUser] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
   const [, setConnected] = useGlobal('connected');
   const [whichUsers, setWhichUsers] = useState<string | null>(null);
@@ -95,12 +98,6 @@ export function Welcome(props: IProps) {
     ) as User[];
     var onlineUsers = users.filter((u) => u.keys?.remoteId !== undefined);
     var offlineUsers = users.filter((u) => u.keys?.remoteId === undefined);
-    console.log(
-      'onlineUsers',
-      onlineUsers.length,
-      'offlineUsers',
-      offlineUsers.length
-    );
     setHasOfflineUsers(offlineUsers.length > 0);
     //if we're supposed to choose and we only have one choice...go
     if (
@@ -140,6 +137,57 @@ export function Welcome(props: IProps) {
 
   const handleGoOffline = () => {
     handleOfflineChange('offline');
+  };
+  const handleQuickOnline = () => {
+    localStorage.setItem('autoaddProject', 'true');
+    handleGoOnline();
+  };
+  const addQuickUser = async () => {
+    let userRec: User = {
+      type: 'user',
+      attributes: {
+        name: 'Quick User',
+        givenName: 'Quick', //todo
+        familyName: 'User',
+        email: '',
+        phone: '',
+        timezone: moment.tz.guess(),
+        locale: localeDefault(isDeveloper),
+        isLocked: false,
+        uilanguagebcp47: '',
+        digestPreference: false,
+        newsPreference: false,
+      },
+    } as any;
+    await memory.update((t: TransformBuilder) =>
+      AddRecord(t, userRec, user, memory)
+    );
+    return userRec.id;
+  };
+  const handleQuickOffline = () => {
+    localStorage.setItem('autoaddProject', 'true');
+
+    if (hasOfflineUsers) {
+      const users = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('user')
+      ) as User[];
+      var quickUsers = users.filter(
+        (u) =>
+          u.keys?.remoteId === undefined &&
+          u.attributes?.givenName === 'Quick' &&
+          u.attributes?.familyName === 'User'
+      ); //todo: localize this
+
+      if (quickUsers.length === 0) {
+        addQuickUser().then((id) => {
+          setUser(id);
+          handleGoOffline();
+        });
+      } else {
+        setUser(quickUsers[0].id);
+        handleGoOffline();
+      }
+    }
   };
   const handleOfflineChange = (target: string) => {
     console.log(target);
@@ -181,7 +229,7 @@ export function Welcome(props: IProps) {
                     <OnlineIcon className={classes.icon} />
                     {'For Online or Occassionally Connected Projects'}
                   </Button>
-                  <LightTooltip title="All project administration must be done online.  Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline can be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.">
+                  <LightTooltip title="All project administration must be done online.  Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.">
                     <IconButton
                       id="adminonlinehelp"
                       className={classes.helpIcon}
@@ -232,7 +280,7 @@ export function Welcome(props: IProps) {
                     <OnlineIcon className={classes.icon} />
                     {'For Projects Available Online'}
                   </Button>
-                  <LightTooltip title="Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline can be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.">
+                  <LightTooltip title="Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.">
                     <IconButton
                       id="memberonlinehelp"
                       className={classes.helpIcon}
@@ -254,7 +302,7 @@ export function Welcome(props: IProps) {
                       onClick={handleGoOffline}
                     >
                       <OfflineIcon className={classes.icon} />
-                      {'For Projects Only Available Online'}
+                      {'For Projects Only Available Offline'}
                     </Button>
                     <LightTooltip title="Changes must be exported and imported to the master computer.">
                       <IconButton
@@ -279,7 +327,7 @@ export function Welcome(props: IProps) {
                   >
                     {'For projects with an available import file'}
                   </Button>
-                  <LightTooltip title="Either Online or Offline Projects can be imported to be worked on offline.  If the project was created online, changes made offline can be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.  If the project was started offline, changes must be exported and imported to the master computer.">
+                  <LightTooltip title="Either Online or Offline Projects can be imported to be worked on offline.  If the project was created online, changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.  If the project was started offline, changes must be exported and imported to the master computer.">
                     <IconButton
                       id="memberimporthelp"
                       className={classes.helpIcon}
@@ -302,7 +350,7 @@ export function Welcome(props: IProps) {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    onClick={handleGoOffline}
+                    onClick={handleQuickOnline}
                   >
                     <OnlineIcon className={classes.icon} />
                     {'With Online Access'}
@@ -325,7 +373,7 @@ export function Welcome(props: IProps) {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    onClick={handleGoOffline}
+                    onClick={handleQuickOffline}
                   >
                     <OfflineIcon className={classes.icon} />
                     {'Offline Only Access'}
