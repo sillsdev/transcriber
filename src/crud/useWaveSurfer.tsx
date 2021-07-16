@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
 import { useMounted } from '../utils';
@@ -22,7 +22,7 @@ export function useWaveSurfer(
 ) {
   const isMounted = useMounted('wavesurfer');
   const progressRef = useRef(0);
-  const wsRef = useRef<WaveSurfer>();
+  const [wavesurfer, setWaveSurfer] = useState<WaveSurfer>();
   const blobToLoad = useRef<Blob>();
   const blobTypeRef = useRef('');
   const playingRef = useRef(false);
@@ -39,7 +39,6 @@ export function useWaveSurfer(
   const updatingRef = useRef(false);
   const isNear = (position: number) =>
     Math.abs(position - progressRef.current) < 2;
-
   const playing = () => playingRef.current;
   const regionIsPlaying = () => regionPlayingRef.current;
   const setRegionIsPlaying = (val: boolean) => (regionPlayingRef.current = val);
@@ -54,7 +53,7 @@ export function useWaveSurfer(
   useEffect(() => {
     function create(container: any, height: number, singleRegion: boolean) {
       var ws = createWaveSurfer(container, height, timelineContainer);
-      wsRef.current = ws;
+      setWaveSurfer(ws);
       singleRegionRef.current = singleRegion;
       ws.on('ready', function () {
         durationRef.current = ws.getDuration();
@@ -115,7 +114,7 @@ export function useWaveSurfer(
       });
       ws.on('region-update-end', function (r: any) {
         console.log('region-update-end', r.start, r.end);
-        wsRef.current?.zoom(wsRef.current?.params.minPxPerSec);
+        wavesurfer?.zoom(wavesurfer?.params.minPxPerSec);
         if (singleRegionRef.current) {
           wsGoto(currentRegion().start);
           keepRegion.current = false;
@@ -151,7 +150,7 @@ export function useWaveSurfer(
       return ws;
     }
 
-    if (container && !wsRef.current) {
+    if (container && !wavesurfer) {
       create(container, height, singleRegion);
       if (blobToLoad.current) {
         wsLoad(blobToLoad.current);
@@ -170,10 +169,9 @@ export function useWaveSurfer(
   useEffect(() => {
     // Removes events, elements and disconnects Web Audio nodes on component unmount
     return () => {
-      if (wsRef.current) {
-        wsRef.current.unAll();
-        wsRef.current.destroy();
-        wsRef.current = undefined;
+      if (wavesurfer) {
+        wavesurfer.unAll();
+        wavesurfer.destroy();
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -181,9 +179,9 @@ export function useWaveSurfer(
 
   useEffect(() => {
     if (!isMounted()) return;
-    if (wsRef.current?.isReady && playing()) setPlaying(true);
+    if (wavesurfer?.isReady && playing()) setPlaying(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wsRef.current?.isReady]);
+  }, [wavesurfer?.isReady]);
 
   const isInRegion = (r: any, value: number) => {
     return value <= r.end && value >= r.start;
@@ -193,8 +191,8 @@ export function useWaveSurfer(
     if (currentRegion() && isInRegion(currentRegion(), value))
       return currentRegion();
     var foundIt: any = undefined;
-    Object.keys(wsRef.current?.regions.list).forEach(function (id) {
-      let r = wsRef.current?.regions.list[id];
+    Object.keys(wavesurfer?.regions.list).forEach(function (id) {
+      let r = wavesurfer?.regions.list[id];
       if (r.start <= value && r.end >= value) {
         foundIt = r;
       }
@@ -205,8 +203,8 @@ export function useWaveSurfer(
     return currentRegion()?.attributes.nextRegion;
     /*
     var foundIt: any = undefined;
-    Object.keys(wsRef.current?.regions.list).forEach(function (id) {
-      let r = wsRef.current?.regions.list[id];
+    Object.keys(wavesurfer?.regions.list).forEach(function (id) {
+      let r = wavesurfer?.regions.list[id];
       if (r.start >= currentRegionRef.current.end) {
         if (foundIt && foundIt.end > r.end) foundIt = r;
         if (!foundIt) foundIt = r;
@@ -219,8 +217,8 @@ export function useWaveSurfer(
     return currentRegion()?.attributes.prevRegion;
     /*
     var foundIt: any = undefined;
-    Object.keys(wsRef.current?.regions.list).forEach(function (id) {
-      let r = wsRef.current?.regions.list[id];
+    Object.keys(wavesurfer?.regions.list).forEach(function (id) {
+      let r = wavesurfer?.regions.list[id];
       if (r.end <= currentRegionRef.current.start) {
         if (foundIt && foundIt.start < r.start) foundIt = r;
         if (!foundIt) foundIt = r;
@@ -248,8 +246,8 @@ export function useWaveSurfer(
 
   const setPlaying = (value: boolean) => {
     playingRef.current = value;
-    if (playingRef.current) {
-      if (wsRef.current?.isReady) {
+    if (value) {
+      if (wavesurfer?.isReady) {
         if (
           currentRegion() &&
           !currentRegion().loop &&
@@ -261,14 +259,14 @@ export function useWaveSurfer(
           currentRegion().play(progressRef.current);
         } else {
           //default play (which will loop region if looping is on)
-          wsRef.current?.play(progressRef.current);
+          wavesurfer?.play(progressRef.current);
         }
       }
-    } else if (wsRef.current?.isPlaying()) wsRef.current?.pause();
+    } else if (wavesurfer?.isPlaying()) wavesurfer?.pause();
   };
-  const wsClear = () => wsRef.current?.empty();
+  const wsClear = () => wavesurfer?.empty();
 
-  const wsIsReady = () => wsRef.current?.isReady || false;
+  const wsIsReady = () => wavesurfer?.isReady || false;
 
   const wsIsPlaying = () => playingRef.current;
 
@@ -290,8 +288,8 @@ export function useWaveSurfer(
   };
   const saveRegions = () => {
     return JSON.stringify(
-      Object.keys(wsRef.current?.regions.list).map(function (id) {
-        let region = wsRef.current?.regions.list[id];
+      Object.keys(wavesurfer?.regions.list).map(function (id) {
+        let region = wavesurfer?.regions.list[id];
         console.log(region);
         let attributes = { ...region.attributes };
         var next = attributes.nextRegion;
@@ -309,13 +307,13 @@ export function useWaveSurfer(
   };
   const getSortedIds = () => {
     var sortedIds: string[] = [];
-    var ids = Object.keys(wsRef.current?.regions.list).map((id) => id);
+    var ids = Object.keys(wavesurfer?.regions.list).map((id) => id);
     if (ids.length > 0) {
       var next: string | undefined = ids[0];
       while (next) {
         console.log(next);
         sortedIds.push(next);
-        var r: any = wsRef.current?.regions.list[next];
+        var r: any = wavesurfer?.regions.list[next];
         if (r.attributes.nextRegion) next = r.attributes.nextRegion.id;
         else next = undefined;
       }
@@ -334,7 +332,7 @@ export function useWaveSurfer(
       };
       var curIndex = sortedIds.findIndex((s) => s === currentRegion().id);
       updateRegion(currentRegion(), { end: progressRef.current });
-      var newRegion = wsRef.current?.addRegion(region);
+      var newRegion = wavesurfer?.addRegion(region);
       var newSorted = sortedIds.slice(0, curIndex + 1).concat(newRegion.id);
       if (!lastRegion)
         newSorted = newSorted.concat(sortedIds.slice(curIndex + 1));
@@ -372,7 +370,7 @@ export function useWaveSurfer(
   const wsPause = () => setPlaying(false);
 
   const wsDuration = () =>
-    durationRef.current || wsRef.current?.getDuration() || 0;
+    durationRef.current || wavesurfer?.getDuration() || 0;
 
   const wsPosition = () => progressRef.current;
 
@@ -382,16 +380,15 @@ export function useWaveSurfer(
     if (position && durationRef.current)
       position = position / durationRef.current;
     keepRegion.current = true;
-    wsRef.current?.seekAndCenter(position);
+    wavesurfer?.seekAndCenter(position);
     if (singleRegionRef.current) keepRegion.current = false;
   };
-  const wsSetPlaybackRate = (rate: number) =>
-    wsRef.current?.setPlaybackRate(rate);
+  const wsSetPlaybackRate = (rate: number) => wavesurfer?.setPlaybackRate(rate);
 
   const wsZoom = (zoom: number) => {
-    wsRef.current?.zoom(zoom);
-    console.log('zoom', zoom, wsRef.current?.params.minPxPerSec);
-    return wsRef.current?.params.minPxPerSec;
+    wavesurfer?.zoom(zoom);
+    console.log('zoom', zoom, wavesurfer?.params.minPxPerSec);
+    return wavesurfer?.params.minPxPerSec;
   };
 
   const wsLoad = (
@@ -403,13 +400,12 @@ export function useWaveSurfer(
     durationRef.current = 0;
     if (regions) inputRegionsRef.current = JSON.parse(regions);
     autoSegRef.current = autoSegment;
-    if (!wsRef.current) blobToLoad.current = blob;
-    else wsRef.current?.loadBlob(blob);
+    if (!wavesurfer) blobToLoad.current = blob;
+    else wavesurfer?.loadBlob(blob);
     blobTypeRef.current = mimeType;
   };
 
   const wsBlob = async () => {
-    var wavesurfer = wsRef.current;
     var backend = wavesurfer?.backend as any;
     if (backend) {
       var originalBuffer = backend.buffer;
@@ -432,9 +428,9 @@ export function useWaveSurfer(
     }
     return undefined;
   };
-  const wsSkip = (amt: number) => wsRef.current?.skip(amt);
+  const wsSkip = (amt: number) => wavesurfer?.skip(amt);
 
-  const wsSetHeight = (height: number) => wsRef.current?.setHeight(height);
+  const wsSetHeight = (height: number) => wavesurfer?.setHeight(height);
 
   const wsHasRegion = () => currentRegionRef.current !== undefined;
 
@@ -450,7 +446,7 @@ export function useWaveSurfer(
     return ((val * dec) >> 0) / dec;
   };
   function loadDecoded(new_buffer: any) {
-    wsRef.current?.loadDecodedBuffer(new_buffer);
+    wavesurfer?.loadDecodedBuffer(new_buffer);
   }
 
   const insertBuffer = (
@@ -458,8 +454,7 @@ export function useWaveSurfer(
     startposition: number,
     endposition?: number
   ) => {
-    if (!wsRef.current) return 0;
-    var wavesurfer = wsRef.current;
+    if (!wavesurfer) return 0;
     var backend = wavesurfer?.backend as any;
     var originalBuffer = backend.buffer;
 
@@ -515,8 +510,7 @@ export function useWaveSurfer(
     overwriteToPosition?: number,
     mimeType?: string
   ) => {
-    if (!wsRef.current) return;
-    var wavesurfer = wsRef.current;
+    if (!wavesurfer) return;
     var backend = wavesurfer?.backend as any;
     if (!backend) return; //throw?
     var originalBuffer = backend.buffer;
@@ -527,15 +521,14 @@ export function useWaveSurfer(
     var buffer = await blob.arrayBuffer();
 
     return await new Promise<number>((resolve, reject) => {
-      if (!wsRef.current?.backend) return; //closed while we were working on the blob
+      if (!wavesurfer?.backend) return; //closed while we were working on the blob
       wavesurfer.decodeArrayBuffer(buffer, function (newBuffer: any) {
         resolve(insertBuffer(newBuffer, position, overwriteToPosition));
       });
     });
   };
   const wsInsertSilence = (seconds: number, position: number) => {
-    if (!wsRef.current) return;
-    var wavesurfer = wsRef.current;
+    if (!wavesurfer) return;
     var backend = wavesurfer.backend as any;
     var originalBuffer = backend.buffer;
     var new_len = ((seconds / 1.0) * originalBuffer.sampleRate) >> 0;
@@ -548,8 +541,7 @@ export function useWaveSurfer(
   };
   //delete the audio in the current region
   const wsRegionDelete = () => {
-    if (!currentRegionRef.current || !wsRef.current) return;
-    var wavesurfer = wsRef.current;
+    if (!currentRegionRef.current || !wavesurfer) return;
     var start = trimTo(currentRegionRef.current.start, 3);
     var end = trimTo(currentRegionRef.current.end, 3);
     var len = end - start;
@@ -582,7 +574,7 @@ export function useWaveSurfer(
     }
 
     loadDecoded(uberSegment);
-    wsRef.current?.regions.clear();
+    wavesurfer?.regions.clear();
     onRegion(false);
     var tmp = start - 0.03;
     if (tmp < 0) tmp = 0;
@@ -591,28 +583,26 @@ export function useWaveSurfer(
     return emptySegment;
   };
   const getPeaks = (num: number = 512) => {
-    if (!peaksRef.current && wsRef.current)
-      peaksRef.current = wsRef.current.backend.getPeaks(num);
+    if (!peaksRef.current && wavesurfer)
+      peaksRef.current = wavesurfer.backend.getPeaks(num);
     return peaksRef.current;
   };
   function loadRegions(regions: any[]) {
     regions.forEach(function (region) {
       region.color = randomColor(0.1);
       region.drag = false;
-      wsRef.current?.addRegion(region);
+      wavesurfer?.addRegion(region);
     });
   }
   function wsAutoSegment(silenceThreshold?: number, timeThreshold?: number) {
-    var wavesurfer = wsRef.current;
     if (!wavesurfer) return '';
     wavesurfer.regions.clear();
     var regions = extractRegions(silenceThreshold, timeThreshold);
     loadRegions(regions);
-    setPrevNext(Object.keys(wsRef.current?.regions.list).map((id) => id));
+    setPrevNext(Object.keys(wavesurfer?.regions.list).map((id) => id));
     if (regions.length) wsGoto(regions[0].start);
   }
   function wsGetRegions() {
-    var wavesurfer = wsRef.current;
     if (!wavesurfer) return '';
     return saveRegions();
   }
@@ -620,7 +610,7 @@ export function useWaveSurfer(
   const setPrevNext = (sortedIds: string[]) => {
     var prev: any = undefined;
     sortedIds.forEach(function (id) {
-      let r = wsRef.current?.regions.list[id];
+      let r = wavesurfer?.regions.list[id];
       if (prev) {
         prev.attributes.nextRegion = r;
         r.attributes.prevRegion = prev;
