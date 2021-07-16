@@ -178,16 +178,16 @@ export function Welcome(props: IProps) {
           u.attributes?.familyName === 'User'
       ); //todo: localize this
 
-      if (quickUsers.length === 0) {
-        addQuickUser().then((id) => {
-          setUser(id);
-          handleGoOffline();
-        });
-      } else {
+      if (quickUsers.length !== 0) {
         setUser(quickUsers[0].id);
         handleGoOffline();
+        return;
       }
     }
+    addQuickUser().then((id) => {
+      setUser(id);
+      handleGoOffline();
+    });
   };
   const handleOfflineChange = (target: string) => {
     console.log(target);
