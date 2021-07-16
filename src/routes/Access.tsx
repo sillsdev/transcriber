@@ -136,6 +136,7 @@ export function Access(props: IProps) {
   const classes = useStyles();
   const { setLanguage } = props;
   const [offline, setOffline] = useGlobal('offline');
+  const [user] = useGlobal('user');
   const [, setConnected] = useGlobal('connected');
   const [, setEditId] = useGlobal('editUserId');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
@@ -146,6 +147,7 @@ export function Access(props: IProps) {
   const [whichUsers, setWhichUsers] = useState(
     pathname.substring('/access/'.length)
   );
+  const [autoAdd] = useState(localStorage.getItem('autoaddProject') !== null);
   const [selectedUser, setSelectedUser] = useState('');
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
@@ -275,13 +277,13 @@ export function Access(props: IProps) {
     setPlan('');
     setProjRole('');
     setProjType('');
-
     if (!auth?.isAuthenticated()) {
       if (!offline && !isElectron) {
         setConnected(true);
         handleLogin();
       }
     }
+    if (user) handleSelect(user); //set by Quick Transcribe
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
@@ -379,34 +381,49 @@ export function Access(props: IProps) {
                     {t.logIn}
                   </Button>
                 )}
-                <Box className={classes.row}>
-                  <Typography className={classes.sectionHead}>
-                    {t.withoutInternet}
-                  </Typography>
-                  <Tooltip title="no admin etc todo">
-                    <IconButton
-                      className={classes.helpIcon}
-                      color="primary"
-                      aria-label="helponlineadmin"
-                    >
-                      <HelpIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-                {!hasOnlineUser() && (
-                  <Paper className={classes.paper}>
-                    <Box>{t.noOnlineUsers1}</Box>
-                    <Box>{t.noOnlineUsers2}</Box>
-                  </Paper>
-                )}
-                {importStatus?.complete !== false && hasOnlineUser() && (
-                  <Paper className={classes.paper}>
-                    <UserList
-                      isSelected={isOnlineUserWithOfflineProjects}
-                      select={handleSelect}
-                      title={t.availableOnlineUsers}
-                    />
-                  </Paper>
+                {!autoAdd && (
+                  <div>
+                    <Box className={classes.row}>
+                      <Typography className={classes.sectionHead}>
+                        {t.withoutInternet}
+                      </Typography>
+                      <Tooltip title="no admin etc todo">
+                        <IconButton
+                          className={classes.helpIcon}
+                          color="primary"
+                          aria-label="helponlineadmin"
+                        >
+                          <HelpIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                    <Paper className={classes.paper}>
+                      {!hasOnlineUser() && (
+                        <div>
+                          <Box>{t.noOnlineUsers1}</Box>
+                          <Box>{t.noOnlineUsers2}</Box>
+                        </div>
+                      )}
+                      {importStatus?.complete !== false && hasOnlineUser() && (
+                        <UserList
+                          isSelected={isOnlineUserWithOfflineProjects}
+                          select={handleSelect}
+                          title={t.availableOnlineUsers}
+                        />
+                      )}
+                      <div className={classes.actions}>
+                        <Button
+                          id="accessImport"
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          onClick={handleImport}
+                        >
+                          {t.importSnapshot}
+                        </Button>
+                      </div>
+                    </Paper>
+                  </div>
                 )}
               </div>
             )}
@@ -433,19 +450,19 @@ export function Access(props: IProps) {
                     {t.createUser}
                   </Button>
                 </div>
+                <div className={classes.actions}>
+                  <Button
+                    id="accessImport"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleImport}
+                  >
+                    {t.importSnapshot}
+                  </Button>
+                </div>
               </div>
             )}
-            <div className={classes.actions}>
-              <Button
-                id="accessImport"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleImport}
-              >
-                {t.importSnapshot}
-              </Button>
-            </div>
           </Paper>
           {importOpen && (
             <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
