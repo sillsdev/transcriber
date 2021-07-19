@@ -57,7 +57,7 @@ export function WSAudioPlayerZoom(props: IProps) {
   const [zoom, setZoom] = useState(50);
 
   const handleToggleHeight = () => {
-    wsSetHeight(bigWave ? 50 : 150);
+    wsSetHeight(bigWave ? 50 : 200);
     setBigWave(!bigWave);
   };
   const handleZoomIn = () => {

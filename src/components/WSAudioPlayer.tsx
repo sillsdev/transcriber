@@ -269,7 +269,7 @@ function WSAudioPlayer(props: IProps) {
     onWSRegion,
     onWSStop,
     () => {},
-    allowRecord ? 150 : 50,
+    allowRecord ? 200 : 50,
     allowRecord,
     timelineRef.current
   );
