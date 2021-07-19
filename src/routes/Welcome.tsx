@@ -22,6 +22,7 @@ import { connect } from 'react-redux';
 import { LightTooltip } from '../control';
 import moment from 'moment';
 import { AddRecord } from '../model/baseModel';
+import { useOfflineSetup } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -83,6 +84,7 @@ interface IProps extends IStateProps, IDispatchProps {
 export function Welcome(props: IProps) {
   const { auth, t, importStatus } = props;
   const classes = useStyles();
+  const offlineSetup = useOfflineSetup();
   const { fetchLocalization, setLanguage } = props;
   const [user, setUser] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
@@ -162,6 +164,7 @@ export function Welcome(props: IProps) {
     await memory.update((t: TransformBuilder) =>
       AddRecord(t, userRec, user, memory)
     );
+    await offlineSetup();
     return userRec.id;
   };
   const handleQuickOffline = () => {
@@ -216,7 +219,7 @@ export function Welcome(props: IProps) {
             <div>
               <Paper>
                 <Typography id="admin" className={classes.sectionHead}>
-                  I'm an Administrator
+                  I'm a Project Administrator (Owner)
                 </Typography>
                 <div>
                   <Button
@@ -229,7 +232,7 @@ export function Welcome(props: IProps) {
                     <OnlineIcon className={classes.icon} />
                     {'For Online or Occassionally Connected Projects'}
                   </Button>
-                  <LightTooltip title="All project administration must be done online.  Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.">
+                  <LightTooltip title="All project administration must be done online.  Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to offline computers of team members.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.">
                     <IconButton
                       id="adminonlinehelp"
                       className={classes.helpIcon}
@@ -280,7 +283,7 @@ export function Welcome(props: IProps) {
                     <OnlineIcon className={classes.icon} />
                     {'For Projects Available Online'}
                   </Button>
-                  <LightTooltip title="Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.">
+                  <LightTooltip title="Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.">
                     <IconButton
                       id="memberonlinehelp"
                       className={classes.helpIcon}
@@ -327,7 +330,7 @@ export function Welcome(props: IProps) {
                   >
                     {'For projects with an available import file'}
                   </Button>
-                  <LightTooltip title="Either Online or Offline Projects can be imported to be worked on offline.  If the project was created online, changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported by the online Admin.  If the project was started offline, changes must be exported and imported to the master computer.">
+                  <LightTooltip title="Either Online or Offline Projects can be imported to be worked on offline.  If the project was created online, changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.  If the project was created offline, changes must be exported and imported to the master computer.  Team members must be added to the project before export.">
                     <IconButton
                       id="memberimporthelp"
                       className={classes.helpIcon}
