@@ -39,12 +39,15 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      widith: '80%',
+      width: '100%',
     },
     sectionHead: {
       fontSize: '16pt',
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(2),
+    },
+    innerpaper: {
+      padding: theme.spacing(3),
     },
     button: {
       marginRight: '0px',
@@ -217,7 +220,7 @@ export function Welcome(props: IProps) {
               Welcome
             </Typography>
             <div>
-              <Paper>
+              <Paper className={classes.innerpaper}>
                 <Typography id="admin" className={classes.sectionHead}>
                   I'm a Project Administrator (Owner)
                 </Typography>
@@ -268,7 +271,7 @@ export function Welcome(props: IProps) {
                   </LightTooltip>
                 </div>
               </Paper>
-              <Paper>
+              <Paper className={classes.innerpaper}>
                 <Typography className={classes.sectionHead}>
                   I'm a Team Member
                 </Typography>
@@ -343,7 +346,7 @@ export function Welcome(props: IProps) {
                   </LightTooltip>
                 </div>
               </Paper>
-              <Paper>
+              <Paper className={classes.innerpaper}>
                 <Typography className={classes.sectionHead}>
                   Quick Transcribe
                 </Typography>
