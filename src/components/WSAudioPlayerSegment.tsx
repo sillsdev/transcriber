@@ -53,8 +53,8 @@ interface IProps {
 export function WSAudioPlayerSegment(props: IProps) {
   const classes = useStyles();
   const { t, ready, wsAutoSegment, wsSplitRegion, wsRemoveSplitRegion } = props;
-  const [silenceValue, setSilenceValue] = useState(2);
-  const [timeValue, setTimeValue] = useState(5);
+  const [silenceValue, setSilenceValue] = useState(4);
+  const [timeValue, setTimeValue] = useState(2);
   const [showSettings, setShowSettings] = useState(false);
   const handleAutoSegment = () => {
     wsAutoSegment(silenceValue / 1000, timeValue / 100);
@@ -128,7 +128,7 @@ export function WSAudioPlayerSegment(props: IProps) {
                 step={1}
                 marks
                 min={1}
-                max={9}
+                max={10}
                 value={timeValue}
                 valueLabelDisplay="auto"
                 onChange={handleTimeChange}

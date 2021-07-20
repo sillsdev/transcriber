@@ -209,6 +209,7 @@ function PassageRecord(props: IProps) {
           )}
         <WSAudioPlayer
           allowRecord={true}
+          size={350}
           blob={originalBlob}
           setMimeType={setMimeType}
           onBlobReady={onBlobReady}

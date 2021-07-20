@@ -168,6 +168,7 @@ interface IProps extends IStateProps {
   visible: boolean;
   blob?: Blob;
   allowRecord?: boolean;
+  size: number;
   metaData?: JSX.Element;
   setMimeType?: (type: string) => void;
   setAcceptedMimes?: (types: MimeInfo[]) => void;
@@ -201,6 +202,7 @@ function WSAudioPlayer(props: IProps) {
     t,
     blob,
     allowRecord,
+    size,
     metaData,
     setMimeType,
     setAcceptedMimes,
@@ -257,7 +259,6 @@ function WSAudioPlayer(props: IProps) {
     wsInsertSilence,
     wsZoom,
     wsAutoSegment,
-    wsGetRegions,
     wsNextRegion,
     wsSplitRegion,
     wsRemoveSplitRegion,
@@ -268,8 +269,8 @@ function WSAudioPlayer(props: IProps) {
     onWSProgress,
     onWSRegion,
     onWSStop,
-    () => {},
-    allowRecord ? 200 : 50,
+    () => {}, //on error...probably should report?
+    size - 150,
     allowRecord,
     timelineRef.current
   );
@@ -322,6 +323,10 @@ function WSAudioPlayer(props: IProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    wsSetHeight(size - 150);
+  }, [size, wsSetHeight]);
 
   useEffect(() => {
     onSaveProgressRef.current = onSaveProgress;

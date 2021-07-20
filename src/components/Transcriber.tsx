@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
+import SplitPane, { Pane } from 'react-split-pane';
+import styled from 'styled-components';
 import {
   MediaFile,
   Project,
@@ -97,6 +99,61 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+const Wrapper = styled.div`
+  .Resizer {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    background: #000;
+    opacity: 0.2;
+    z-index: 1;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding;
+    background-clip: padding-box;
+  }
+
+  .Resizer:hover {
+    -webkit-transition: all 2s ease;
+    transition: all 2s ease;
+  }
+
+  .Resizer.horizontal {
+    height: 11px;
+    margin: -5px 0;
+    border-top: 5px solid rgba(255, 255, 255, 0);
+    border-bottom: 5px solid rgba(255, 255, 255, 0);
+    cursor: row-resize;
+    width: 100%;
+  }
+
+  .Resizer.horizontal:hover {
+    border-top: 5px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+  }
+
+  .Resizer.vertical {
+    width: 11px;
+    margin: 0 -5px;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+    border-right: 5px solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
+  }
+
+  .Resizer.vertical:hover {
+    border-left: 5px solid rgba(0, 0, 0, 0.5);
+    border-right: 5px solid rgba(0, 0, 0, 0.5);
+  }
+  .Pane1 {
+    // background-color: blue;
+    display: flex;
+    min-height: 0;
+  }
+  .Pane2 {
+    // background-color: red;
+    display: flex;
+    min-height: 0;
+  }
+`;
 interface IRecordProps {
   mediafiles: MediaFile[];
   integrations: Integration[];
@@ -228,7 +285,7 @@ export function Transcriber(props: IProps) {
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
   const t = transcriberStr;
-
+  const [playerSize, setPlayerSize] = useState(180);
   useEffect(() => {
     playingRef.current = playing;
   }, [playing]);
@@ -763,11 +820,16 @@ export function Transcriber(props: IProps) {
       setTextValue(textArea.value);
     }
   };
+  const handleSplitSize = debounce((e: any) => {
+    console.log(e);
+    setPlayerSize(e);
+  }, 100);
 
   const onPlayStatus = (newPlaying: boolean) => {
     setPlaying(newPlaying);
     playingRef.current = newPlaying;
   };
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
@@ -782,86 +844,108 @@ export function Transcriber(props: IProps) {
               <Grid item>{passageDescription(passage, allBookData)}</Grid>
             </Grid>
             <Grid container direction="row" className={classes.row}>
-              {role === 'transcriber' && hasParatextName && paratextProject && (
-                <Grid item>
-                  <LightTooltip title={t.pullParatextTip}>
-                    <span>
-                      <IconButton
-                        id="transcriber.pullParatext"
-                        onClick={handlePullParatext}
-                        disabled={selected === ''}
+              <Wrapper>
+                <SplitPane
+                  defaultSize={180}
+                  minSize={180}
+                  style={{ position: 'static' }}
+                  split="horizontal"
+                  onChange={handleSplitSize}
+                >
+                  <Pane>
+                    <Grid container direction="row" className={classes.row}>
+                      {role === 'transcriber' &&
+                        hasParatextName &&
+                        paratextProject && (
+                          <Grid item>
+                            <LightTooltip title={t.pullParatextTip}>
+                              <span>
+                                <IconButton
+                                  id="transcriber.pullParatext"
+                                  onClick={handlePullParatext}
+                                  disabled={selected === ''}
+                                >
+                                  <>
+                                    <PullIcon />{' '}
+                                    <Typography>
+                                      {t.pullParatextCaption}
+                                    </Typography>
+                                  </>
+                                </IconButton>
+                              </span>
+                            </LightTooltip>
+                          </Grid>
+                        )}
+                      <Grid item xs>
+                        <Grid container justify="center">
+                          <WSAudioPlayer
+                            id="audioPlayer"
+                            allowRecord={false}
+                            size={playerSize}
+                            blob={audioBlob}
+                            onProgress={onProgress}
+                            onPlayStatus={onPlayStatus}
+                            onDuration={onDuration}
+                            onSaveProgress={
+                              selected === '' || role === 'view'
+                                ? undefined
+                                : onSaveProgress
+                            }
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Pane>
+                  <Pane>
+                    <Grid item xs={12} sm container>
+                      <Grid
+                        ref={transcriptionRef}
+                        item
+                        xs={showHistory ? 6 : 12}
+                        container
+                        direction="column"
                       >
-                        <>
-                          <PullIcon />{' '}
-                          <Typography>{t.pullParatextCaption}</Typography>
-                        </>
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
-                </Grid>
-              )}
-              <Grid item xs>
-                <Grid container justify="center">
-                  <WSAudioPlayer
-                    allowRecord={false}
-                    blob={audioBlob}
-                    onProgress={onProgress}
-                    onPlayStatus={onPlayStatus}
-                    onDuration={onDuration}
-                    onSaveProgress={
-                      selected === '' || role === 'view'
-                        ? undefined
-                        : onSaveProgress
-                    }
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} sm container>
-              <Grid
-                ref={transcriptionRef}
-                item
-                xs={showHistory ? 6 : 12}
-                container
-                direction="column"
-              >
-                {projData && !fontStatus?.endsWith('active') ? (
-                  <WebFontLoader
-                    config={projData.fontConfig}
-                    onStatus={loadStatus}
-                  >
-                    <TextareaAutosize
-                      autoFocus
-                      id="transcriber.text"
-                      value={textValue}
-                      readOnly={selected === '' || role === 'view'}
-                      style={textAreaStyle}
-                      onChange={handleChange}
-                      lang={projData?.langTag || 'en'}
-                      spellCheck={projData?.spellCheck}
-                    />
-                  </WebFontLoader>
-                ) : (
-                  <TextareaAutosize
-                    autoFocus
-                    id="transcriber.text"
-                    value={textValue}
-                    readOnly={selected === '' || role === 'view'}
-                    style={textAreaStyle}
-                    onChange={handleChange}
-                    lang={projData?.langTag || 'en'}
-                    spellCheck={projData?.spellCheck}
-                  />
-                )}
-              </Grid>
-              {showHistory && (
-                <Grid item xs={6} container direction="column">
-                  <PassageHistory
-                    passageId={passage?.id}
-                    boxHeight={boxHeight}
-                  />
-                </Grid>
-              )}
+                        {projData && !fontStatus?.endsWith('active') ? (
+                          <WebFontLoader
+                            config={projData.fontConfig}
+                            onStatus={loadStatus}
+                          >
+                            <TextareaAutosize
+                              autoFocus
+                              id="transcriber.text"
+                              value={textValue}
+                              readOnly={selected === '' || role === 'view'}
+                              style={textAreaStyle}
+                              onChange={handleChange}
+                              lang={projData?.langTag || 'en'}
+                              spellCheck={projData?.spellCheck}
+                            />
+                          </WebFontLoader>
+                        ) : (
+                          <TextareaAutosize
+                            autoFocus
+                            id="transcriber.text"
+                            value={textValue}
+                            readOnly={selected === '' || role === 'view'}
+                            style={textAreaStyle}
+                            onChange={handleChange}
+                            lang={projData?.langTag || 'en'}
+                            spellCheck={projData?.spellCheck}
+                          />
+                        )}
+                      </Grid>
+                      {showHistory && (
+                        <Grid item xs={6} container direction="column">
+                          <PassageHistory
+                            passageId={passage?.id}
+                            boxHeight={boxHeight}
+                          />
+                        </Grid>
+                      )}
+                    </Grid>
+                  </Pane>
+                </SplitPane>
+              </Wrapper>
             </Grid>
             <Grid container direction="row" className={classes.padRow}>
               <Grid item>

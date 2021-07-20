@@ -5,14 +5,12 @@ import {
   IconButton,
   Grid,
 } from '@material-ui/core';
-import ToggleButton from '@material-ui/lab/ToggleButton';
 import React, { useState } from 'react';
 import { LightTooltip } from '../control';
 import { IWsAudioPlayerStrings } from '../model';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import ZoomWidthIcon from '@material-ui/icons/Pageview';
-import HeightIcon from '@material-ui/icons/Height';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,14 +50,9 @@ export function WSAudioPlayerZoom(props: IProps) {
   const zoomMin = 2;
   const zoomMax = 1000;
 
-  const { startBig, ready, wsSetHeight, wsZoom } = props;
-  const [bigWave, setBigWave] = useState(startBig);
+  const { ready, wsZoom } = props;
   const [zoom, setZoom] = useState(50);
 
-  const handleToggleHeight = () => {
-    wsSetHeight(bigWave ? 50 : 200);
-    setBigWave(!bigWave);
-  };
   const handleZoomIn = () => {
     setZoom(wsZoom(Math.min(zoom * 2, zoomMax)));
   };
@@ -73,20 +66,6 @@ export function WSAudioPlayerZoom(props: IProps) {
     <div className={classes.root}>
       <Grid container className={classes.toolbar}>
         <Grid item>
-          <LightTooltip id="wsHeightTip" title={'todo:toggleheight'}>
-            <span>
-              <ToggleButton
-                id="wstoggleheight"
-                className={classes.togglebutton}
-                value="height"
-                selected={bigWave}
-                onChange={handleToggleHeight}
-                disabled={!ready}
-              >
-                <HeightIcon />
-              </ToggleButton>
-            </span>
-          </LightTooltip>
           <LightTooltip id="wszoominTip" title={'TODO:Zoom In'}>
             <span>
               <IconButton
