@@ -62,8 +62,13 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       alignItems: 'center',
     },
-    sectionHead: {
+    title: {
       fontSize: '16pt',
+      paddingTop: theme.spacing(4),
+      paddingBottom: theme.spacing(2),
+    },
+    sectionHead: {
+      fontSize: '14pt',
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(2),
     },
@@ -341,6 +346,9 @@ export function Access(props: IProps) {
             <ArrowBackIcon />
             {t.back}
           </Button>
+          <div className={classes.container}>
+            <Typography className={classes.title}>User List</Typography>
+          </div>
           <Paper className={classes.paper}>
             {whichUsers === 'online' && (
               <div className={classes.container}>
@@ -382,12 +390,12 @@ export function Access(props: IProps) {
                   </Button>
                 )}
                 {!autoAdd && (
-                  <div>
+                  <div className={classes.container}>
                     <Box className={classes.row}>
                       <Typography className={classes.sectionHead}>
                         {t.withoutInternet}
                       </Typography>
-                      <Tooltip title="no admin etc todo">
+                      <Tooltip title="Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project">
                         <IconButton
                           className={classes.helpIcon}
                           color="primary"
@@ -428,7 +436,7 @@ export function Access(props: IProps) {
               </div>
             )}
             {whichUsers === 'offline' && (
-              <div>
+              <div className={classes.container}>
                 <Typography className={classes.sectionHead}>
                   {'Offline Users'}
                 </Typography>
