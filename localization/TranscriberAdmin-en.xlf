@@ -2722,51 +2722,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="newProject.obt">
+      <unit id="newProject.scripture">
          <segment>
-            <source>Oral Bible Translation - OBT</source>
+            <source>Scripture Transcription</source>
             <target/>
          </segment>
       </unit>
-      <unit id="newProject.obtTip">
+      <unit id="newProject.scriptureTip">
          <segment>
-            <source>Oral Bible translation produces an audio product using oral methods.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.storying">
-         <segment>
-            <source>Storying</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.storyingTip">
-         <segment>
-            <source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.adaptation">
-         <segment>
-            <source>Oral Adaptation</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.adaptationTip">
-         <segment>
-            <source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.drafting">
-         <segment>
-            <source>Oral Drafting for Scripture</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.draftingTip">
-         <segment>
-            <source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
+            <source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
             <target/>
          </segment>
       </unit>
@@ -2779,12 +2743,6 @@
       <unit id="newProject.paratextIntegration">
          <segment>
             <source>Integrated with Paratext</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.oneStoryIntegration">
-         <segment>
-            <source>Integrated with OneStory Editor</source>
             <target/>
          </segment>
       </unit>
