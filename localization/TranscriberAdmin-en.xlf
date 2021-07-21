@@ -46,9 +46,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="access.screenTitle">
+      <unit id="access.title">
+         <segment>
+            <source>User List</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.onlineScreenTitle">
          <segment>
             <source>I want to work...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.offlineScreenTitle">
+         <segment>
+            <source>Offline Users</source>
             <target/>
          </segment>
       </unit>
@@ -67,6 +79,12 @@
       <unit id="access.withoutInternet">
          <segment>
             <source>Without an Internet connection</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.withoutInternetTip">
+         <segment>
+            <source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user does not appear here, you must login online and mark your project as Offline Available and then Exit, or Import a project that has been exported while online.</source>
             <target/>
          </segment>
       </unit>
@@ -4309,6 +4327,114 @@
       <unit id="spelling.addToDict">
          <segment>
             <source>Add to dictionary</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.title">
+         <segment>
+            <source>Welcome</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.admin">
+         <segment>
+            <source>I'm a Project Administrator (Owner)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.onlineAdmin">
+         <segment>
+            <source>For Online or Occassionally Connected Projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.onlineAdminTip">
+         <segment>
+            <source>All project administration must be done online.  Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to offline computers of team members.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.offlineAdmin">
+         <segment>
+            <source>For Offline Single User Projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.offlineAdminTip">
+         <segment>
+            <source>The project is stored on your computer. You cannot set up a team.  You can export the project and import it on to another computer, but all changes will be done under your user.  Changes can be exported and then imported on to the master computer.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.teamMember">
+         <segment>
+            <source>I'm a Team Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.teamOnline">
+         <segment>
+            <source>For Projects Available Online</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.teamOnlineTip">
+         <segment>
+            <source>Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.teamOffline">
+         <segment>
+            <source>For Projects Only Available Offline</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.teamOfflineTip">
+         <segment>
+            <source>Changes must be exported and imported to the master computer.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.import">
+         <segment>
+            <source>For projects with an available import file</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.importTip">
+         <segment>
+            <source>Either Online or Offline Projects can be imported to be worked on offline.  If the project was created online, changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.  If the project was created offline, changes must be exported and imported to the master computer.  Team members must be added to the project before export.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.quick">
+         <segment>
+            <source>Quick Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.quickOnline">
+         <segment>
+            <source>With Online Access</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.quickOnlineTip">
+         <segment>
+            <source>After login, you will choose a project type, upload or record audio, and start transcribing as soon as possible.  Your audio will be stored online.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.quickOffline">
+         <segment>
+            <source>Offline Only Access</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.quickOfflineTip">
+         <segment>
+            <source>We will create a default user, you will choose a project type, import or record audio, and start transcribing as soon as possible.  Your audio will be stored on your computer.</source>
             <target/>
          </segment>
       </unit>

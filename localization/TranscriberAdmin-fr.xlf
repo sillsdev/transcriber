@@ -43,12 +43,24 @@
    			<target>Déconnexion</target>
    		</segment>
    	</unit>
-   	<unit id="access.screenTitle">
+      <unit id="access.title">
+         <segment>
+            <source>User List</source>
+   			<target>Liste d'utilisateur</target>
+         </segment>
+      </unit>
+   	<unit id="access.onlineScreenTitle">
    		<segment>
    			<source>I want to work...</source>
    			<target>Je veux travailler...</target>
    		</segment>
    	</unit>
+      <unit id="access.offlineScreenTitle">
+         <segment>
+            <source>Offline Users</source>
+   			<target>Utilisateurs hors ligne</target>
+         </segment>
+      </unit>
    	<unit id="access.importSnapshot">
    		<segment>
    			<source>Import Project</source>
@@ -67,6 +79,12 @@
    			<target>Sans connexion Internet</target>
    		</segment>
    	</unit>
+      <unit id="access.withoutInternetTip">
+         <segment>
+            <source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user does not appear here, you must login online and mark your project as Offline Available and then Exit, or Import a project that has been exported while online.</source>
+   			<target>Le projet doit être mis en place en ligne. Les modifications apportées hors ligne seront automatiquement synchronisées avec le projet en ligne si un utilisateur de cet ordinateur se connecte en ligne, ou les modifications peuvent être exportées puis importées dans le projet en ligne. Si votre utilisateur n'apparaît pas ici, vous devez vous connecter en ligne et marquer votre projet comme disponible hors connexion, puis quitter, ou importer un projet qui a été exporté en ligne.</target>
+         </segment>
+      </unit>
    	<unit id="access.mustBeOnline">
    		<segment>
    			<source>You must be connected to the Internet to Log In!</source>
@@ -4313,5 +4331,113 @@
    			<target>Ajouter au dictionnaire</target>
    		</segment>
    	</unit>
+      <unit id="welcome.title">
+         <segment>
+            <source>Welcome</source>
+            <target>Bienvenu</target>
+         </segment>
+      </unit>
+      <unit id="welcome.admin">
+         <segment>
+            <source>I'm a Project Administrator (Owner)</source>
+            <target>Je suis administrateur de projet (propriétaire)</target>
+         </segment>
+      </unit>
+      <unit id="welcome.onlineAdmin">
+         <segment>
+            <source>For Online or Occassionally Connected Projects</source>
+            <target>Pour les projets en ligne ou occasionnellement connectés</target>
+         </segment>
+      </unit>
+      <unit id="welcome.onlineAdminTip">
+         <segment>
+            <source>All project administration must be done online.  Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to offline computers of team members.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.</source>
+            <target>Toute l'administration du projet doit être effectuée en ligne. Les projets peuvent être travaillés en ligne, marqués comme « disponibles hors ligne » lorsqu'ils sont en ligne et téléchargés, ou exportés vers un fichier et importés sur les ordinateurs hors ligne des membres de l'équipe. Les modifications apportées hors ligne seront automatiquement synchronisées si l'ordinateur est en ligne, ou les modifications peuvent être exportées et importées dans le projet en ligne.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.offlineAdmin">
+         <segment>
+            <source>For Offline Single User Projects</source>
+            <target>Pour les projets d'utilisateur unique hors ligne</target>
+         </segment>
+      </unit>
+      <unit id="welcome.offlineAdminTip">
+         <segment>
+            <source>The project is stored on your computer. You cannot set up a team.  You can export the project and import it on to another computer, but all changes will be done under your user.  Changes can be exported and then imported on to the master computer.</source>
+            <target>Le projet est stocké sur votre ordinateur. Vous ne pouvez pas créer une équipe. Vous pouvez exporter le projet et l'importer sur un autre ordinateur, mais toutes les modifications seront effectuées sous votre utilisateur. Les modifications peuvent être exportées puis importées sur l'ordinateur maître.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.teamMember">
+         <segment>
+            <source>I'm a Team Member</source>
+            <target>Je suis membre de l'équipe</target>
+         </segment>
+      </unit>
+      <unit id="welcome.teamOnline">
+         <segment>
+            <source>For Projects Available Online</source>
+            <target>Pour les projets disponibles en ligne</target>
+         </segment>
+      </unit>
+      <unit id="welcome.teamOnlineTip">
+         <segment>
+            <source>Projects can be worked on online, marked as 'Available Offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.</source>
+            <target>Les projets peuvent être travaillés en ligne, marqués comme « Disponible hors ligne » lorsqu'ils sont en ligne et téléchargés, ou exportés vers un fichier et importés sur un ordinateur hors ligne. Les modifications apportées hors ligne seront automatiquement synchronisées si l'ordinateur est en ligne, ou les modifications peuvent être exportées et importées dans le projet en ligne.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.teamOffline">
+         <segment>
+            <source>For Projects Only Available Offline</source>
+            <target>Pour les projets uniquement disponibles hors ligne</target>
+         </segment>
+      </unit>
+      <unit id="welcome.teamOfflineTip">
+         <segment>
+            <source>Changes must be exported and imported to the master computer.</source>
+            <target>Les modifications doivent être exportées et importées vers l'ordinateur maître.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.import">
+         <segment>
+            <source>For projects with an available import file</source>
+            <target>Pour les projets avec un fichier d'importation disponible</target>
+         </segment>
+      </unit>
+      <unit id="welcome.importTip">
+         <segment>
+            <source>Either Online or Offline Projects can be imported to be worked on offline.  If the project was created online, changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.  If the project was created offline, changes must be exported and imported to the master computer.  Team members must be added to the project before export.</source>
+            <target>Les projets en ligne ou hors ligne peuvent être importés pour être travaillés hors ligne. Si le projet a été créé en ligne, les modifications apportées hors ligne seront automatiquement synchronisées si l'ordinateur est en ligne, ou les modifications peuvent être exportées et importées dans le projet en ligne. Si le projet a été créé hors ligne, les modifications doivent être exportées et importées sur l'ordinateur maître. Les membres de l'équipe doivent être ajoutés au projet avant l'exportation.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quick">
+         <segment>
+            <source>Quick Transcribe</source>
+            <target>Transcription rapide</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickOnline">
+         <segment>
+            <source>With Online Access</source>
+            <target>Avec accès en ligne</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickOnlineTip">
+         <segment>
+            <source>After login, you will choose a project type, upload or record audio, and start transcribing as soon as possible.  Your audio will be stored online.</source>
+            <target>Après vous être connecté, vous choisirez un type de projet, téléchargerez ou enregistrerez de l'audio et commencerez à transcrire dès que possible. Votre audio sera stocké en ligne.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickOffline">
+         <segment>
+            <source>Offline Only Access</source>
+            <target>Accès hors ligne uniquement</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickOfflineTip">
+         <segment>
+            <source>We will create a default user, you will choose a project type, import or record audio, and start transcribing as soon as possible.  Your audio will be stored on your computer.</source>
+            <target>Nous allons créer un utilisateur par défaut, vous choisirez un type de projet, importerez ou enregistrerez de l'audio, et commencerez à transcrire dès que possible. Votre audio sera stocké sur votre ordinateur.</target>
+         </segment>
+      </unit>
    </file>
 </xliff>

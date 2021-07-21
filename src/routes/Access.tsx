@@ -347,13 +347,13 @@ export function Access(props: IProps) {
             {t.back}
           </Button>
           <div className={classes.container}>
-            <Typography className={classes.title}>User List</Typography>
+            <Typography className={classes.title}>{t.title}</Typography>
           </div>
           <Paper className={classes.paper}>
             {whichUsers === 'online' && (
               <div className={classes.container}>
                 <Typography className={classes.sectionHead}>
-                  {t.screenTitle}
+                  {t.onlineScreenTitle}
                 </Typography>
                 <Typography className={classes.sectionHead}>
                   {t.withInternet}
@@ -395,7 +395,7 @@ export function Access(props: IProps) {
                       <Typography className={classes.sectionHead}>
                         {t.withoutInternet}
                       </Typography>
-                      <Tooltip title="Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project">
+                      <Tooltip title={t.withoutInternetTip}>
                         <IconButton
                           className={classes.helpIcon}
                           color="primary"
@@ -438,7 +438,7 @@ export function Access(props: IProps) {
             {whichUsers === 'offline' && (
               <div className={classes.container}>
                 <Typography className={classes.sectionHead}>
-                  {'Offline Users'}
+                  {t.offlineScreenTitle}
                 </Typography>
                 {importStatus?.complete !== false && hasOfflineUser() && (
                   <UserList

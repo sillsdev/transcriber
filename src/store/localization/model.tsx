@@ -9,10 +9,13 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "goOnline": string;
     "logIn": string;
     "logout": string;
-    "screenTitle": string;
+    "title": string;
+    "onlineScreenTitle": string;
+    "offlineScreenTitle": string;
     "importSnapshot": string;
     "withInternet": string;
     "withoutInternet": string;
+    "withoutInternetTip": string;
     "mustBeOnline": string;
     "onlineAdmin": string;
     "onlineAdminDesc": string;
@@ -869,6 +872,27 @@ export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
     "addToDict": string;
 };
 
+export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
+    "title": string;
+    "admin": string;
+    "onlineAdmin": string;
+    "onlineAdminTip": string;
+    "offlineAdmin": string;
+    "offlineAdminTip": string;
+    "teamMember": string;
+    "teamOnline": string;
+    "teamOnlineTip": string;
+    "teamOffline": string;
+    "teamOfflineTip": string;
+    "import": string;
+    "importTip": string;
+    "quick": string;
+    "quickOnline": string;
+    "quickOnlineTip": string;
+    "quickOffline": string;
+    "quickOfflineTip": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -922,5 +946,6 @@ export interface ILocalizedStrings {
 	passageRecord: IPassageRecordStrings;
 	hotKey: IHotKeyStrings;
 	spelling: ISpellingStrings;
+	welcome: IWelcomeStrings;
 	[key: string]: any;
 };
