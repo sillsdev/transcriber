@@ -15,10 +15,13 @@ const initialState = {
 			"goOnline": "Go Online",
 			"logIn": "Log In",
 			"logout": "Log Out",
-			"screenTitle": "I want to work...",
+			"title": "User List",
+			"onlineScreenTitle": "I want to work...",
+			"offlineScreenTitle": "Offline Users",
 			"importSnapshot": "Import Project",
 			"withInternet": "With an Internet connection",
 			"withoutInternet": "Without an Internet connection",
+			"withoutInternetTip": "Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user does not appear here, you must login online and mark your project as Offline Available and then Exit, or Import a project that has been exported while online.",
 			"mustBeOnline": "You must be connected to the Internet to Log In!",
 			"onlineAdmin": "Online Admin/Offline Available",
 			"onlineAdminDesc": "Project Admin is online.",
@@ -924,6 +927,28 @@ const initialState = {
 			"addToDict": "Add to dictionary",
 		}
 	}),
+	"welcome": new LocalizedStrings({
+		"en": {
+			"title": "Welcome",
+			"admin": "I'm a Project Administrator (Owner)",
+			"onlineAdmin": "For Online or Occassionally Connected Projects",
+			"onlineAdminTip": "All project administration must be done online.  Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to offline computers of team members.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.",
+			"offlineAdmin": "For Offline Single User Projects",
+			"offlineAdminTip": "The project is stored on your computer. You cannot set up a team.  You can export the project and import it on to another computer, but all changes will be done under your user.  Changes can be exported and then imported on to the master computer.",
+			"teamMember": "I'm a Team Member",
+			"teamOnline": "For Projects Available Online",
+			"teamOnlineTip": "Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.",
+			"teamOffline": "For Projects Only Available Offline",
+			"teamOfflineTip": "Changes must be exported and imported to the master computer.",
+			"import": "For projects with an available import file",
+			"importTip": "Either Online or Offline Projects can be imported to be worked on offline.  If the project was created online, changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.  If the project was created offline, changes must be exported and imported to the master computer.  Team members must be added to the project before export.",
+			"quick": "Quick Transcribe",
+			"quickOnline": "With Online Access",
+			"quickOnlineTip": "After login, you will choose a project type, upload or record audio, and start transcribing as soon as possible.  Your audio will be stored online.",
+			"quickOffline": "Offline Only Access",
+			"quickOfflineTip": "We will create a default user, you will choose a project type, import or record audio, and start transcribing as soon as possible.  Your audio will be stored on your computer.",
+		}
+	}),
 };
 
 const localizationReducer = function (state = initialState, action: any): ILocalizedStrings {
@@ -982,6 +1007,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),
 				"hotKey" : new LocalizedStrings(action.payload.data.hotKey),
 				"spelling" : new LocalizedStrings(action.payload.data.spelling),
+				"welcome" : new LocalizedStrings(action.payload.data.welcome),
 			};
 		case SET_LANGUAGE:
 			return {

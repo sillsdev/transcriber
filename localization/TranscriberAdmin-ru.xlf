@@ -43,12 +43,25 @@
 				<target>Выход из системы</target>
 			</segment>
 		</unit>
-		<unit id="access.screenTitle">
-			<segment>
-				<source>I want to work...</source>
-				<target/>
-			</segment>
-		</unit>
+      <unit id="access.title">
+         <segment>
+            <source>User List</source>
+   			<target>Список пользователей</target>
+         </segment>
+      </unit>
+   	<unit id="access.onlineScreenTitle">
+   		<segment>
+   			<source>I want to work...</source>
+   			<target>я хочу работать...</target>
+   		</segment>
+   	</unit>
+      <unit id="access.offlineScreenTitle">
+         <segment>
+            <source>Offline Users</source>
+   			<target>Автономные пользователи</target>
+         </segment>
+      </unit>
+
 		<unit id="access.importSnapshot">
 			<segment>
 				<source>Import Project</source>
@@ -67,7 +80,13 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="access.mustBeOnline">
+      <unit id="access.withoutInternetTip">
+         <segment>
+            <source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user does not appear here, you must login online and mark your project as Offline Available and then Exit, or Import a project that has been exported while online.</source>
+   			<target>Проект должен быть настроен онлайн. Изменения, внесенные в автономном режиме, будут автоматически синхронизироваться с онлайн-проектом, если пользователь на этом компьютере входит в онлайн-систему, или изменения могут быть экспортированы, а затем импортированы в онлайн-проект. Если ваш пользователь не отображается здесь, вы должны войти в систему и пометить свой проект как доступный в автономном режиме, а затем выйти или импортировать проект, который был экспортирован в интерактивном режиме.Проект должен быть настроен онлайн. Изменения, внесенные в автономном режиме, будут автоматически синхронизироваться с онлайн-проектом, если пользователь на этом компьютере входит в онлайн-систему, или изменения могут быть экспортированы, а затем импортированы в онлайн-проект. Если ваш пользователь не отображается здесь, вы должны войти в систему и пометить свой проект как доступный в автономном режиме, а затем выйти или импортировать проект, который был экспортирован в интерактивном режиме.</target>
+         </segment>
+      </unit>
+      	<unit id="access.mustBeOnline">
 			<segment>
 				<source>You must be connected to the Internet to Log In!</source>
 				<target/>
@@ -4256,5 +4275,113 @@
 				<target>Добавить в словарь</target>
 			</segment>
 		</unit>
+      <unit id="welcome.title">
+         <segment>
+            <source>Welcome</source>
+            <target>Добро пожаловать</target>
+         </segment>
+      </unit>
+      <unit id="welcome.admin">
+         <segment>
+            <source>I'm a Project Administrator (Owner)</source>
+            <target>Я администратор проекта (владелец)</target>
+         </segment>
+      </unit>
+      <unit id="welcome.onlineAdmin">
+         <segment>
+            <source>For Online or Occassionally Connected Projects</source>
+            <target>Для онлайн-проектов или проектов с нерегулярным подключением</target>
+         </segment>
+      </unit>
+      <unit id="welcome.onlineAdminTip">
+         <segment>
+            <source>All project administration must be done online.  Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to offline computers of team members.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.</source>
+            <target>Все администрирование проекта должно осуществляться онлайн. Над проектами можно работать в интерактивном режиме, помечать их как «доступные в автономном режиме» в интерактивном режиме и загружать, или экспортировать в файл и импортировать на автономные компьютеры членов группы. Изменения, внесенные в автономном режиме, будут автоматически синхронизированы, если компьютер подключается к сети, или изменения можно экспортировать и импортировать в онлайн-проект.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.offlineAdmin">
+         <segment>
+            <source>For Offline Single User Projects</source>
+            <target>Для автономных однопользовательских проектов</target>
+         </segment>
+      </unit>
+      <unit id="welcome.offlineAdminTip">
+         <segment>
+            <source>The project is stored on your computer. You cannot set up a team.  You can export the project and import it on to another computer, but all changes will be done under your user.  Changes can be exported and then imported on to the master computer.</source>
+            <target>Проект хранится на вашем компьютере. Вы не можете создать команду. Вы можете экспортировать проект и импортировать его на другой компьютер, но все изменения будут производиться под вашим пользователем. Изменения можно экспортировать, а затем импортировать на главный компьютер.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.teamMember">
+         <segment>
+            <source>I'm a Team Member</source>
+            <target>Я член команды</target>
+         </segment>
+      </unit>
+      <unit id="welcome.teamOnline">
+         <segment>
+            <source>For Projects Available Online</source>
+            <target>Для проектов, доступных в Интернете</target>
+         </segment>
+      </unit>
+      <unit id="welcome.teamOnlineTip">
+         <segment>
+            <source>Projects can be worked on online, marked as 'Available Offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.</source>
+            <target>Над проектами можно работать в сети, отмечать их как «Доступные в автономном режиме» в интерактивном режиме и загружать, или экспортировать в файл и импортировать на автономный компьютер. Изменения, внесенные в автономном режиме, будут автоматически синхронизированы, если компьютер подключается к сети, или изменения можно экспортировать и импортировать в онлайн-проект.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.teamOffline">
+         <segment>
+            <source>For Projects Only Available Offline</source>
+            <target>Для проектов, доступных только в автономном режиме</target>
+         </segment>
+      </unit>
+      <unit id="welcome.teamOfflineTip">
+         <segment>
+            <source>Changes must be exported and imported to the master computer.</source>
+            <target>Изменения необходимо экспортировать и импортировать на главный компьютер.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.import">
+         <segment>
+            <source>For projects with an available import file</source>
+            <target>Для проектов с доступным файлом импорта</target>
+         </segment>
+      </unit>
+      <unit id="welcome.importTip">
+         <segment>
+            <source>Either Online or Offline Projects can be imported to be worked on offline.  If the project was created online, changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.  If the project was created offline, changes must be exported and imported to the master computer.  Team members must be added to the project before export.</source>
+            <target>Для работы в автономном режиме можно импортировать как онлайн-проекты, так и автономные. Если проект был создан в интерактивном режиме, изменения, внесенные в автономном режиме, будут автоматически синхронизированы, если компьютер подключается к сети, или изменения можно экспортировать и импортировать в интерактивный проект. Если проект был создан в автономном режиме, изменения необходимо экспортировать и импортировать на главный компьютер. Члены команды должны быть добавлены в проект перед экспортом.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quick">
+         <segment>
+            <source>Quick Transcribe</source>
+            <target>Быстрая расшифровка</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickOnline">
+         <segment>
+            <source>With Online Access</source>
+            <target>С доступом онлайн</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickOnlineTip">
+         <segment>
+            <source>After login, you will choose a project type, upload or record audio, and start transcribing as soon as possible.  Your audio will be stored online.</source>
+            <target>После входа в систему вы выберете тип проекта, загрузите или запишете аудио и начнете расшифровку как можно скорее. Ваш звук будет храниться в Интернете.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickOffline">
+         <segment>
+            <source>Offline Only Access</source>
+            <target>Автономный доступ</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickOfflineTip">
+         <segment>
+            <source>We will create a default user, you will choose a project type, import or record audio, and start transcribing as soon as possible.  Your audio will be stored on your computer.</source>
+            <target>Мы создадим пользователя по умолчанию, вы выберете тип проекта, импортируете или запишете аудио и начнете расшифровку как можно скорее. Ваш звук будет храниться на вашем компьютере.</target>
+         </segment>
+      </unit>
 	</file>
 </xliff>
