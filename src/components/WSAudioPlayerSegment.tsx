@@ -49,10 +49,12 @@ interface IProps {
   wsAutoSegment: (silenceThreshold?: number, timeThreshold?: number) => void;
   wsSplitRegion: () => void;
   wsRemoveSplitRegion: () => void;
+  wsAddOrRemoveRegion: () => void;
 }
 export function WSAudioPlayerSegment(props: IProps) {
   const classes = useStyles();
-  const { t, ready, wsAutoSegment, wsSplitRegion, wsRemoveSplitRegion } = props;
+  const { t, ready, wsAutoSegment, wsRemoveSplitRegion, wsAddOrRemoveRegion } =
+    props;
   const [silenceValue, setSilenceValue] = useState(4);
   const [timeValue, setTimeValue] = useState(2);
   const [showSettings, setShowSettings] = useState(false);
@@ -63,7 +65,7 @@ export function WSAudioPlayerSegment(props: IProps) {
     setShowSettings(!showSettings);
   };
   const handleSplit = () => {
-    wsSplitRegion();
+    wsAddOrRemoveRegion();
   };
   const handleRemoveSplit = () => {
     wsRemoveSplitRegion();
