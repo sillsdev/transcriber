@@ -21,7 +21,7 @@ const initialState = {
 			"importSnapshot": "Import Project",
 			"withInternet": "With an Internet connection",
 			"withoutInternet": "Without an Internet connection",
-			"withoutInternetTip": "Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user does not appear here, you must login online and mark your project as Offline Available and then Exit, or Import a project that has been exported while online.",
+			"withoutInternetTip": "Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user avatar does not appear here, you must login online and mark your project as Offline Available and then exit, or import a project that has been exported while online.",
 			"mustBeOnline": "You must be connected to the Internet to Log In!",
 			"onlineAdmin": "Online Admin/Offline Available",
 			"onlineAdminDesc": "Project Admin is online.",
@@ -945,6 +945,8 @@ const initialState = {
 			"quickOnlineTip": "After login, you will choose a project type, upload or record audio, and start transcribing as soon as possible.  Your audio will be stored online.",
 			"quickOffline": "Offline Only Access",
 			"quickOfflineTip": "We will create a default user, you will choose a project type, import or record audio, and start transcribing as soon as possible.  Your audio will be stored on your computer.",
+			"quickGiven": "Quick",
+			"quickFamily": "User",
 		}
 	}),
 };

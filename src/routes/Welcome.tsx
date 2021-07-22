@@ -151,9 +151,9 @@ export function Welcome(props: IProps) {
     let userRec: User = {
       type: 'user',
       attributes: {
-        name: 'Quick User',
-        givenName: 'Quick', //todo
-        familyName: 'User',
+        name: t.quickGiven + ' ' + t.quickFamily,
+        givenName: t.quickGiven,
+        familyName: t.quickFamily,
         email: '',
         phone: '',
         timezone: moment.tz.guess(),
@@ -180,9 +180,9 @@ export function Welcome(props: IProps) {
       var quickUsers = users.filter(
         (u) =>
           u.keys?.remoteId === undefined &&
-          u.attributes?.givenName === 'Quick' &&
-          u.attributes?.familyName === 'User'
-      ); //todo: localize this
+          u.attributes?.givenName === t.quickGiven &&
+          u.attributes?.familyName === t.quickFamily
+      );
 
       if (quickUsers.length !== 0) {
         setUser(quickUsers[0].id);

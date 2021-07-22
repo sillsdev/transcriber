@@ -81,7 +81,7 @@
    	</unit>
       <unit id="access.withoutInternetTip">
          <segment>
-            <source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user does not appear here, you must login online and mark your project as Offline Available and then Exit, or Import a project that has been exported while online.</source>
+            <source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user avatar does not appear here, you must login online and mark your project as Offline Available and then Exit, or Import a project that has been exported while online.</source>
    			<target>O projeto deve ser configurado online. As alterações feitas off-line serão sincronizadas automaticamente com o projeto on-line se um usuário neste computador fizer login on-line, ou as alterações podem ser exportadas e depois importadas para o projeto on-line. Se o seu usuário não aparecer aqui, você deve fazer o login online e marcar o seu projeto como Disponível offline e, em seguida, Sair ou Importar um projeto que foi exportado enquanto estava online.</target>
          </segment>
       </unit>
