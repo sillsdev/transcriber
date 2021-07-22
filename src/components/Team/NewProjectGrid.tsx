@@ -1,6 +1,8 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Button, Typography, Tooltip } from '@material-ui/core';
+import { List, ListItem, ListSubheader, ListItemIcon } from '@material-ui/core';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import BigDialog from '../../hoc/BigDialog';
 import { TeamContext } from '../../context/TeamContext';
 import { ParatextLogo } from '../../control';
@@ -9,10 +11,17 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      '& .MuiListSubheader-root': {
+        lineHeight: 'unset',
+      },
+      '& .MuiListItemIcon-root': {
+        minWidth: '30px',
+      },
     },
     action: {
       padding: theme.spacing(2),
       textAlign: 'center',
+      alignSelf: 'center',
     },
     button: {
       margin: theme.spacing(1),
@@ -73,12 +82,7 @@ export function NewProjectGrid(props: IProps) {
   const spacer = '\u00A0';
 
   return (
-    <BigDialog
-      title={t.newProject}
-      isOpen={open}
-      onOpen={handleCancel}
-      // onCancel={handleCancel}
-    >
+    <BigDialog title={t.newProject} isOpen={open} onOpen={handleCancel}>
       <div className={classes.root}>
         <Grid container spacing={3}>
           <Grid item xs={8}>
@@ -91,7 +95,32 @@ export function NewProjectGrid(props: IProps) {
                 </span>
               </Tooltip>
             </Typography>
-            <Typography className={classes.notes}>{t.scriptureTip}</Typography>
+            <Grid container spacing={1}>
+              <Grid item xs={6}>
+                <Typography className={classes.notes}>
+                  {t.scriptureTip}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <List
+                  dense
+                  subheader={<ListSubheader>Key Factors</ListSubheader>}
+                >
+                  <ListItem>
+                    <ListItemIcon>
+                      <ChevronRightIcon />
+                    </ListItemIcon>
+                    Uses Scripture Referencing: book, chapter, and verse
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      <ChevronRightIcon />
+                    </ListItemIcon>
+                    Workflow syncs with Paratext for checking
+                  </ListItem>
+                </List>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item xs={4} className={classes.action}>
             <Button onClick={handleUpload(integration.pt)} variant="outlined">
@@ -107,7 +136,32 @@ export function NewProjectGrid(props: IProps) {
           </Grid>
           <Grid item xs={8}>
             <Typography variant="h6">{t.general}</Typography>
-            <Typography className={classes.notes}>{t.generalTip}</Typography>
+            <Grid container spacing={1}>
+              <Grid item xs={6}>
+                <Typography className={classes.notes}>
+                  {t.generalTip}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <List
+                  dense
+                  subheader={<ListSubheader>Key Factors</ListSubheader>}
+                >
+                  <ListItem>
+                    <ListItemIcon>
+                      <ChevronRightIcon />
+                    </ListItemIcon>
+                    Freeform references
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      <ChevronRightIcon />
+                    </ListItemIcon>
+                    No Paratext sync expected or allowed
+                  </ListItem>
+                </List>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item xs={4} className={classes.action}>
             <Button onClick={handleUpload(integration.none)} variant="outlined">
