@@ -4094,6 +4094,17 @@
             <target>Criaremos um usuário padrão, você escolherá um tipo de projeto, importará ou gravará áudio e começará a transcrever o mais rápido possível. Seu áudio será armazenado em seu computador.</target>
          </segment>
       </unit>
-
+      <unit id="welcome.quickGiven">
+         <segment>
+            <source>Quick</source>
+            <target>Rápida</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickFamily">
+         <segment>
+            <source>User</source>
+            <target>Usuário</target>
+         </segment>
+      </unit>
    </file>
 </xliff>

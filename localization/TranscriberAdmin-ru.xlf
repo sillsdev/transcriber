@@ -4377,5 +4377,17 @@
             <target>Мы создадим пользователя по умолчанию, вы выберете тип проекта, импортируете или запишете аудио и начнете расшифровку как можно скорее. Ваш звук будет храниться на вашем компьютере.</target>
          </segment>
       </unit>
+      <unit id="welcome.quickGiven">
+         <segment>
+            <source>Quick</source>
+            <target>Быстро</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickFamily">
+         <segment>
+            <source>User</source>
+            <target>Пользователь</target>
+         </segment>
+      </unit>
 	</file>
 </xliff>

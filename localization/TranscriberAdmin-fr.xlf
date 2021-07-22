@@ -4433,5 +4433,17 @@
             <target>Nous allons créer un utilisateur par défaut, vous choisirez un type de projet, importerez ou enregistrerez de l'audio, et commencerez à transcrire dès que possible. Votre audio sera stocké sur votre ordinateur.</target>
          </segment>
       </unit>
+      <unit id="welcome.quickGiven">
+         <segment>
+            <source>Quick</source>
+            <target>Rapide</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickFamily">
+         <segment>
+            <source>User</source>
+            <target>Utilisateur</target>
+         </segment>
+      </unit>
    </file>
 </xliff>
