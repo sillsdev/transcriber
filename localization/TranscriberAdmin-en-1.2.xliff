@@ -3173,57 +3173,50 @@
       			<context context-type="sourcefile">NewProject.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="newProject.obt">
-      		<source>Oral Bible Translation - OBT</source>
+      	<trans-unit id="newProject.generalFactor1">
+      		<source>Freeform references</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">NewProject.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="newProject.obtTip">
-      		<source>Oral Bible translation produces an audio product using oral methods.</source>
+      	<trans-unit id="newProject.generalFactor2">
+      		<source>No Paratext sync expected or allowed</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">NewProject.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="newProject.storying">
-      		<source>Storying</source>
+      	<trans-unit id="newProject.keyFactors">
+      		<source>Key Factors</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">NewProject.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="newProject.storyingTip">
-      		<source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
+      	<trans-unit id="newProject.scriptureFactor1">
+      		<source>Uses Scripture Referencing: book, chapter, and verse</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">NewProject.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="newProject.adaptation">
-      		<source>Oral Adaptation</source>
+      	<trans-unit id="newProject.scriptureFactor2">
+      		<source>Workflow syncs with Paratext for checking</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">NewProject.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="newProject.adaptationTip">
-      		<source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
+      	<trans-unit id="newProject.scripture">
+      		<source>Scripture Transcription</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">NewProject.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="newProject.drafting">
-      		<source>Oral Drafting for Scripture</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">NewProject.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="newProject.draftingTip">
-      		<source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
+      	<trans-unit id="newProject.scriptureTip">
+      		<source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">NewProject.tsx</context>
@@ -3238,13 +3231,6 @@
       	</trans-unit>
       	<trans-unit id="newProject.paratextIntegration">
       		<source>Integrated with Paratext</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">NewProject.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="newProject.oneStoryIntegration">
-      		<source>Integrated with OneStory Editor</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">NewProject.tsx</context>

@@ -2714,52 +2714,46 @@
    			<target>La transcription générale peut couvrir un large éventail de scénarios de travail et de solutions de produits.</target>
    		</segment>
    	</unit>
-   	<unit id="newProject.obt">
+   	<unit id="newProject.generalFactor1">
    		<segment>
-   			<source>Oral Bible Translation - OBT</source>
-   			<target>Traduction orale de la Bible</target>
+   			<source>Freeform references</source>
+   			<target>Références Freeform</target>
    		</segment>
    	</unit>
-   	<unit id="newProject.obtTip">
+   	<unit id="newProject.generalFactor2">
    		<segment>
-   			<source>Oral Bible translation produces an audio product using oral methods.</source>
-   			<target>La traduction orale de la Bible produit un produit audio en utilisant des méthodes orales.</target>
+   			<source>No Paratext sync expected or allowed</source>
+   			<target>Aucune synchronisation du paratexte n'est attendue ou autorisée</target>
    		</segment>
    	</unit>
-   	<unit id="newProject.storying">
+   	<unit id="newProject.keyFactors">
    		<segment>
-   			<source>Storying</source>
-   			<target>Histoire narrative</target>
+   			<source>Key Factors</source>
+   			<target>Facteurs clés</target>
    		</segment>
    	</unit>
-   	<unit id="newProject.storyingTip">
+   	<unit id="newProject.scriptureFactor1">
    		<segment>
-   			<source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
-   			<target>L'histoire narrative restructure le contenu de l'Écriture pour en faire un produit plus facile à retenir et à comprendre.</target>
+   			<source>Uses Scripture Referencing: book, chapter, and verse</source>
+   			<target>Utilise la référence aux Écritures : livre, chapitre et verset.</target>
    		</segment>
    	</unit>
-   	<unit id="newProject.adaptation">
+   	<unit id="newProject.scriptureFactor2">
    		<segment>
-   			<source>Oral Adaptation</source>
-   			<target>Adaptation orale</target>
+   			<source>Workflow syncs with Paratext for checking</source>
+   			<target>Synchronisation du flux de travail avec Paratext pour vérification</target>
    		</segment>
    	</unit>
-   	<unit id="newProject.adaptationTip">
+   	<unit id="newProject.scripture">
    		<segment>
-   			<source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
-   			<target>La solution d'adaptation est un hybride entre la rédaction orale et une solution d'adaptation traditionnelle basée sur le texte.</target>
+   			<source>Scripture Transcription</source>
+   			<target>Transcription des Écritures</target>
    		</segment>
    	</unit>
-   	<unit id="newProject.drafting">
+   	<unit id="newProject.scriptureTip">
    		<segment>
-   			<source>Oral Drafting for Scripture</source>
-   			<target>Rédaction orale pour créer un produit scriptural</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.draftingTip">
-   		<segment>
-   			<source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
-   			<target>La rédaction orale utilise des enregistrements audio pour obtenir une traduction écrite au son naturel.</target>
+   			<source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
+   			<target>Le produit final peut être de l'audio ou du texte et le type de contenu peut être une traduction, des histoires, une rédaction ou une adaptation.</target>
    		</segment>
    	</unit>
    	<unit id="newProject.blank">

@@ -13,7 +13,7 @@ import { waitForRemoteId, remoteId, useOrganizedBy } from '../../crud';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
-import NewProject from './NewProject';
+import NewProjectGrid from './NewProjectGrid';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -294,7 +294,7 @@ export const AddCard = (props: IProps) => {
         <CardContent className={classes.content}>
           <div className={classes.icon}>
             <AddIcon fontSize="large" />
-            <NewProject
+            <NewProjectGrid
               open={pickOpen && !open && !uploadVisible}
               onOpen={handleSolutionHide}
               doUpload={handleUpload}

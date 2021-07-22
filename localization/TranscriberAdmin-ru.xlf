@@ -2708,52 +2708,46 @@
 				<target>Общая транскрипция может охватывать широкий спектр рабочих сценариев и продуктовых решений.</target>
 			</segment>
 		</unit>
-		<unit id="newProject.obt">
+		<unit id="newProject.generalFactor1">
 			<segment>
-				<source>Oral Bible Translation - OBT</source>
-				<target>Перевод устной Библии</target>
+				<source>Freeform references</source>
+				<target>Ссылки в свободной форме</target>
 			</segment>
 		</unit>
-		<unit id="newProject.obtTip">
+		<unit id="newProject.generalFactor2">
 			<segment>
-				<source>Oral Bible translation produces an audio product using oral methods.</source>
-				<target>При переводе устной Библии создается аудио-продукт с использованием устных методов.</target>
+				<source>No Paratext sync expected or allowed</source>
+				<target>Синхронизация паратекста не ожидается и не допускается</target>
 			</segment>
 		</unit>
-		<unit id="newProject.storying">
+		<unit id="newProject.keyFactors">
 			<segment>
-				<source>Storying</source>
-				<target>История</target>
+				<source>Key Factors</source>
+				<target>Ключевые факторы</target>
 			</segment>
 		</unit>
-		<unit id="newProject.storyingTip">
+		<unit id="newProject.scriptureFactor1">
 			<segment>
-				<source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
-				<target>История будет реструктурировать содержимое Писания, чтобы создать продукт, который легче запомнить и недооценить ...</target>
+				<source>Uses Scripture Referencing: book, chapter, and verse</source>
+				<target>Использует ссылки на Писание: книга, глава и стих</target>
 			</segment>
 		</unit>
-		<unit id="newProject.adaptation">
+		<unit id="newProject.scriptureFactor2">
 			<segment>
-				<source>Oral Adaptation</source>
-				<target>Устная адаптация</target>
+				<source>Workflow syncs with Paratext for checking</source>
+				<target>Рабочий процесс синхронизируется с Paratext для проверки</target>
 			</segment>
 		</unit>
-		<unit id="newProject.adaptationTip">
+		<unit id="newProject.scripture">
 			<segment>
-				<source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
-				<target>Адаптационное решение представляет собой гибрид устной речи и традиционного текстового адаптационного решения ...</target>
+				<source>Scripture Transcription</source>
+				<target>Транскрипция Писания</target>
 			</segment>
 		</unit>
-		<unit id="newProject.drafting">
+		<unit id="newProject.scriptureTip">
 			<segment>
-				<source>Oral Drafting for Scripture</source>
-				<target>Устный проект для Священного Писания</target>
-			</segment>
-		</unit>
-		<unit id="newProject.draftingTip">
-			<segment>
-				<source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
-				<target>В устной редакции используются аудиозаписи для достижения естественного звучания письменного перевода.</target>
+				<source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
+				<target>Конечным продуктом может быть аудио или текст, а типом контента - перевод, рассказы, составление или адаптация.</target>
 			</segment>
 		</unit>
 		<unit id="newProject.blank">

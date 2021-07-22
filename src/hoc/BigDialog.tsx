@@ -123,12 +123,17 @@ export function BigDialog({
       {(onCancel || onSave) && (
         <DialogActions>
           {onCancel && (
-            <Button id="bigCancel" onClick={onCancel} color="primary">
+            <Button
+              id="bigCancel"
+              onClick={onCancel}
+              color="default"
+              variant="outlined"
+            >
               {ts.cancel}
             </Button>
           )}
           {onSave && (
-            <Button color="primary" onClick={onSave}>
+            <Button color="primary" onClick={onSave} variant="outlined">
               {ts.save}
             </Button>
           )}
