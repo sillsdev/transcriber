@@ -6,6 +6,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import BigDialog from '../../hoc/BigDialog';
 import { TeamContext } from '../../context/TeamContext';
 import { ParatextLogo } from '../../control';
+import { ReactElement } from 'react-transition-group/node_modules/@types/react';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,22 +50,22 @@ export function NewProjectGrid(props: IProps) {
   const { newProjectStrings } = ctx.state;
   const t = newProjectStrings;
 
-  enum integration {
+  enum Integration {
     none,
     pt,
   }
 
-  const doSetType = (kind: integration) => {
-    setType(kind === integration.pt ? 'scripture' : 'other');
+  const doSetType = (kind: Integration) => {
+    setType(kind === Integration.pt ? 'scripture' : 'other');
   };
 
-  const handleUpload = (kind: integration) => (e: React.MouseEvent) => {
+  const handleUpload = (kind: Integration) => (e: React.MouseEvent) => {
     doSetType(kind);
     doUpload(e);
     onOpen(false);
   };
 
-  const handleRecord = (kind: integration) => (e: React.MouseEvent) => {
+  const handleRecord = (kind: Integration) => (e: React.MouseEvent) => {
     doSetType(kind);
     doRecord(e);
     onOpen(false);
@@ -79,109 +80,117 @@ export function NewProjectGrid(props: IProps) {
     onOpen(false);
   };
 
+  const Prose = ({ text }: { text: string }) => (
+    <Typography className={classes.notes}>{text}</Typography>
+  );
+
   const spacer = '\u00A0';
+
+  const ParatextDecoration = () => (
+    <>
+      {spacer}
+      <Tooltip title={t.paratextIntegration}>
+        <span>
+          <ParatextLogo />
+        </span>
+      </Tooltip>
+    </>
+  );
+
+  const KindHead = (props: { text: string; decorate?: ReactElement }) => (
+    <Typography variant="h6">
+      {props.text}
+      {props.decorate}
+    </Typography>
+  );
+
+  const ActionButtons = ({ kind }: { kind: Integration }) => (
+    <>
+      <Button onClick={handleUpload(kind)} variant="outlined">
+        {t.uploadAudio}
+      </Button>
+      <Button
+        onClick={handleRecord(kind)}
+        variant="outlined"
+        className={classes.button}
+      >
+        {t.startRecording}
+      </Button>
+    </>
+  );
+
+  const ConfigureAction = () => (
+    <Button onClick={handleNewProj} variant="outlined">
+      {t.configure}
+    </Button>
+  );
+
+  const KeyFactorsHead = () => <ListSubheader>Key Factors</ListSubheader>;
+
+  const Bullet = () => (
+    <ListItemIcon>
+      <ChevronRightIcon />
+    </ListItemIcon>
+  );
+
+  const KeyFactorsList = ({ factors }: { factors: string[] }) => (
+    <List dense subheader={<KeyFactorsHead />}>
+      {factors.map((f, i) => (
+        <ListItem key={i}>
+          <Bullet />
+          {f}
+        </ListItem>
+      ))}
+    </List>
+  );
+
+  const scriptureFactors = [
+    'Uses Scripture Referencing: book, chapter, and verse',
+    'Workflow syncs with Paratext for checking',
+  ];
+
+  const generalFactors = [
+    'Freeform references',
+    'No Paratext sync expected or allowed',
+  ];
 
   return (
     <BigDialog title={t.newProject} isOpen={open} onOpen={handleCancel}>
       <div className={classes.root}>
         <Grid container spacing={3}>
           <Grid item xs={8}>
-            <Typography variant="h6">
-              {t.scripture}
-              {spacer}
-              <Tooltip title={t.paratextIntegration}>
-                <span>
-                  <ParatextLogo />
-                </span>
-              </Tooltip>
-            </Typography>
+            <KindHead text={t.scripture} decorate={<ParatextDecoration />} />
             <Grid container spacing={1}>
               <Grid item xs={6}>
-                <Typography className={classes.notes}>
-                  {t.scriptureTip}
-                </Typography>
+                <Prose text={t.scriptureTip} />
               </Grid>
               <Grid item xs={6}>
-                <List
-                  dense
-                  subheader={<ListSubheader>Key Factors</ListSubheader>}
-                >
-                  <ListItem>
-                    <ListItemIcon>
-                      <ChevronRightIcon />
-                    </ListItemIcon>
-                    Uses Scripture Referencing: book, chapter, and verse
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <ChevronRightIcon />
-                    </ListItemIcon>
-                    Workflow syncs with Paratext for checking
-                  </ListItem>
-                </List>
+                <KeyFactorsList factors={scriptureFactors} />
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={4} className={classes.action}>
-            <Button onClick={handleUpload(integration.pt)} variant="outlined">
-              {t.uploadAudio}
-            </Button>
-            <Button
-              onClick={handleRecord(integration.pt)}
-              variant="outlined"
-              className={classes.button}
-            >
-              {t.startRecording}
-            </Button>
+            <ActionButtons kind={Integration.pt} />
           </Grid>
           <Grid item xs={8}>
-            <Typography variant="h6">{t.general}</Typography>
+            <KindHead text={t.general} />
             <Grid container spacing={1}>
               <Grid item xs={6}>
-                <Typography className={classes.notes}>
-                  {t.generalTip}
-                </Typography>
+                <Prose text={t.generalTip} />
               </Grid>
               <Grid item xs={6}>
-                <List
-                  dense
-                  subheader={<ListSubheader>Key Factors</ListSubheader>}
-                >
-                  <ListItem>
-                    <ListItemIcon>
-                      <ChevronRightIcon />
-                    </ListItemIcon>
-                    Freeform references
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <ChevronRightIcon />
-                    </ListItemIcon>
-                    No Paratext sync expected or allowed
-                  </ListItem>
-                </List>
+                <KeyFactorsList factors={generalFactors} />
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={4} className={classes.action}>
-            <Button onClick={handleUpload(integration.none)} variant="outlined">
-              {t.uploadAudio}
-            </Button>
-            <Button
-              onClick={handleRecord(integration.none)}
-              variant="outlined"
-              className={classes.button}
-            >
-              {t.startRecording}
-            </Button>
+            <ActionButtons kind={Integration.none} />
           </Grid>
           <Grid item xs={8}>
-            <Typography variant="h6">{t.blank}</Typography>
+            <KindHead text={t.blank} />
           </Grid>
           <Grid item xs={4} className={classes.action}>
-            <Button onClick={handleNewProj} variant="outlined">
-              {t.configure}
-            </Button>
+            <ConfigureAction />
           </Grid>
         </Grid>
       </div>
