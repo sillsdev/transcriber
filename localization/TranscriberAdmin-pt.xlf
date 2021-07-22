@@ -81,7 +81,7 @@
    	</unit>
       <unit id="access.withoutInternetTip">
          <segment>
-            <source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user does not appear here, you must login online and mark your project as Offline Available and then Exit, or Import a project that has been exported while online.</source>
+            <source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user avatar does not appear here, you must login online and mark your project as Offline Available and then Exit, or Import a project that has been exported while online.</source>
    			<target>O projeto deve ser configurado online. As alterações feitas off-line serão sincronizadas automaticamente com o projeto on-line se um usuário neste computador fizer login on-line, ou as alterações podem ser exportadas e depois importadas para o projeto on-line. Se o seu usuário não aparecer aqui, você deve fazer o login online e marcar o seu projeto como Disponível offline e, em seguida, Sair ou Importar um projeto que foi exportado enquanto estava online.</target>
          </segment>
       </unit>
@@ -1641,8 +1641,8 @@
       </unit>
       <unit id="main.exit">
          <segment>
-            <source>Exit</source>
-            <target>Sair</target>
+            <source>Switch User</source>
+            <target>Mudar de utilizador</target>
          </segment>
       </unit>
       <unit id="main.export">
@@ -4094,6 +4094,17 @@
             <target>Criaremos um usuário padrão, você escolherá um tipo de projeto, importará ou gravará áudio e começará a transcrever o mais rápido possível. Seu áudio será armazenado em seu computador.</target>
          </segment>
       </unit>
-
+      <unit id="welcome.quickGiven">
+         <segment>
+            <source>Quick</source>
+            <target>Rápida</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickFamily">
+         <segment>
+            <source>User</source>
+            <target>Usuário</target>
+         </segment>
+      </unit>
    </file>
 </xliff>

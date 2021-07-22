@@ -15,14 +15,7 @@ import {
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import {
-  Typography,
-  Button,
-  Paper,
-  Box,
-  Tooltip,
-  IconButton,
-} from '@material-ui/core';
+import { Typography, Button, Paper, Box, IconButton } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, forceLogin } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
@@ -35,7 +28,7 @@ import Confirm from '../components/AlertDialog';
 import UserList from '../control/UserList';
 import { useSnackBar } from '../hoc/SnackBar';
 import AppHead from '../components/App/AppHead';
-import { UserListItem } from '../control';
+import { LightTooltip, UserListItem } from '../control';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import HelpIcon from '@material-ui/icons/Help';
 const noop = {} as any;
@@ -265,6 +258,7 @@ export function Access(props: IProps) {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('user-id');
     doLogout();
     setView('Logout');
   };
@@ -395,7 +389,7 @@ export function Access(props: IProps) {
                       <Typography className={classes.sectionHead}>
                         {t.withoutInternet}
                       </Typography>
-                      <Tooltip title={t.withoutInternetTip}>
+                      <LightTooltip title={t.withoutInternetTip}>
                         <IconButton
                           className={classes.helpIcon}
                           color="primary"
@@ -403,7 +397,7 @@ export function Access(props: IProps) {
                         >
                           <HelpIcon fontSize="small" />
                         </IconButton>
-                      </Tooltip>
+                      </LightTooltip>
                     </Box>
                     <Paper className={classes.paper}>
                       {!hasOnlineUser() && (

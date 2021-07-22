@@ -82,7 +82,7 @@
 		</unit>
       <unit id="access.withoutInternetTip">
          <segment>
-            <source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user does not appear here, you must login online and mark your project as Offline Available and then Exit, or Import a project that has been exported while online.</source>
+            <source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user avatar does not appear here, you must login online and mark your project as 'Offline Available' and then exit, or import a project that has been exported while online.</source>
    			<target>Проект должен быть настроен онлайн. Изменения, внесенные в автономном режиме, будут автоматически синхронизироваться с онлайн-проектом, если пользователь на этом компьютере входит в онлайн-систему, или изменения могут быть экспортированы, а затем импортированы в онлайн-проект. Если ваш пользователь не отображается здесь, вы должны войти в систему и пометить свой проект как доступный в автономном режиме, а затем выйти или импортировать проект, который был экспортирован в интерактивном режиме.Проект должен быть настроен онлайн. Изменения, внесенные в автономном режиме, будут автоматически синхронизироваться с онлайн-проектом, если пользователь на этом компьютере входит в онлайн-систему, или изменения могут быть экспортированы, а затем импортированы в онлайн-проект. Если ваш пользователь не отображается здесь, вы должны войти в систему и пометить свой проект как доступный в автономном режиме, а затем выйти или импортировать проект, который был экспортирован в интерактивном режиме.</target>
          </segment>
       </unit>
@@ -1678,8 +1678,8 @@
 		</unit>
 		<unit id="main.exit">
 			<segment>
-				<source>Exit</source>
-				<target/>
+				<source>Switch User</source>
+				<target>Поменять пользователя</target>
 			</segment>
 		</unit>
 		<unit id="main.export">
@@ -4375,6 +4375,18 @@
          <segment>
             <source>We will create a default user, you will choose a project type, import or record audio, and start transcribing as soon as possible.  Your audio will be stored on your computer.</source>
             <target>Мы создадим пользователя по умолчанию, вы выберете тип проекта, импортируете или запишете аудио и начнете расшифровку как можно скорее. Ваш звук будет храниться на вашем компьютере.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickGiven">
+         <segment>
+            <source>Quick</source>
+            <target>Быстро</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickFamily">
+         <segment>
+            <source>User</source>
+            <target>Пользователь</target>
          </segment>
       </unit>
 	</file>

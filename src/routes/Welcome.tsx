@@ -97,13 +97,36 @@ export function Welcome(props: IProps) {
   const memory = coordinator.getSource('memory') as MemorySource;
   const [importOpen, setImportOpen] = useState(false);
   const [hasOfflineUsers, setHasOfflineUsers] = useState(false);
-  const checkUsers = (autoGo: boolean) => {
+  const checkUsers = (autoGo: boolean, prevChoice?: string) => {
     const users = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('user')
     ) as User[];
-    var onlineUsers = users.filter((u) => u.keys?.remoteId !== undefined);
     var offlineUsers = users.filter((u) => u.keys?.remoteId === undefined);
     setHasOfflineUsers(offlineUsers.length > 0);
+
+    const lastUserId = localStorage.getItem('user-id');
+    console.log('lastUserId', lastUserId);
+
+    if (lastUserId !== null) {
+      const selected = users.filter((u) => u.id === lastUserId);
+      console.log('lastUserId', lastUserId, selected.length, autoGo);
+      if (selected.length > 0) {
+        setUser(lastUserId);
+        if (autoGo) {
+          setWhichUsers(
+            selected[0]?.keys?.remoteId !== undefined ? 'online' : 'offline'
+          );
+          return;
+        }
+      }
+    }
+    //I don't have a user id, but I do have a list to go to...
+    if (prevChoice) {
+      setWhichUsers(prevChoice);
+      return;
+    }
+    //I don't have a previous choice, but I may only have one choice...
+    var onlineUsers = users.filter((u) => u.keys?.remoteId !== undefined);
     //if we're supposed to choose and we only have one choice...go
     if (
       autoGo &&
@@ -121,10 +144,10 @@ export function Welcome(props: IProps) {
     }, auth);
     const choice = localStorage.getItem('offlineAdmin');
     console.log('already had a choice', choice);
-    if (choice !== null)
+    if (choice !== null) {
       if (choice === 'choose') checkUsers(false);
-      else setWhichUsers(choice === 'true' ? 'offline' : 'online');
-    else {
+      else checkUsers(true, choice === 'true' ? 'offline' : 'online');
+    } else {
       checkUsers(true);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -151,9 +174,9 @@ export function Welcome(props: IProps) {
     let userRec: User = {
       type: 'user',
       attributes: {
-        name: 'Quick User',
-        givenName: 'Quick', //todo
-        familyName: 'User',
+        name: t.quickGiven + ' ' + t.quickFamily,
+        givenName: t.quickGiven,
+        familyName: t.quickFamily,
         email: '',
         phone: '',
         timezone: moment.tz.guess(),
@@ -180,9 +203,9 @@ export function Welcome(props: IProps) {
       var quickUsers = users.filter(
         (u) =>
           u.keys?.remoteId === undefined &&
-          u.attributes?.givenName === 'Quick' &&
-          u.attributes?.familyName === 'User'
-      ); //todo: localize this
+          u.attributes?.givenName === t.quickGiven &&
+          u.attributes?.familyName === t.quickFamily
+      );
 
       if (quickUsers.length !== 0) {
         setUser(quickUsers[0].id);

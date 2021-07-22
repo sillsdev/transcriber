@@ -94,7 +94,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="access.withoutInternetTip">
-      		<source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user does not appear here, you must login online and mark your project as Offline Available and then Exit, or Import a project that has been exported while online.</source>
+      		<source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user avatar does not appear here, you must login online and mark your project as Offline Available and then exit, or import a project that has been exported while online.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
@@ -1956,7 +1956,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.exit">
-            <source>Exit</source>
+            <source>Switch User</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TokenCheck.tsx</context>
@@ -5157,6 +5157,20 @@
       	</trans-unit>
       	<trans-unit id="welcome.quickOfflineTip">
       		<source>We will create a default user, you will choose a project type, import or record audio, and start transcribing as soon as possible.  Your audio will be stored on your computer.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="welcome.quickGiven">
+      		<source>Quick</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="welcome.quickFamily">
+      		<source>User</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>

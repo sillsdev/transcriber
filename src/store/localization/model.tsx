@@ -889,6 +889,8 @@ export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
     "quickOnlineTip": string;
     "quickOffline": string;
     "quickOfflineTip": string;
+    "quickGiven": string;
+    "quickFamily": string;
 };
 
 export interface ILocalizedStrings {
