@@ -1680,7 +1680,7 @@
       </unit>
       <unit id="main.exit">
          <segment>
-            <source>Exit</source>
+            <source>Switch User</source>
             <target/>
          </segment>
       </unit>

@@ -367,7 +367,7 @@ const initialState = {
 			"crashMessage": "Something went wrong. The developers need to address this issue.",
 			"deletedInvitation": "Invitation is no longer valid.",
 			"developer": "Developer mode",
-			"exit": "Exit",
+			"exit": "Switch User",
 			"export": "Export",
 			"helpCenter": "Help Center",
 			"helpSpreadsheet": "View spreadsheet convention",

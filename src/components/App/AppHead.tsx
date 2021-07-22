@@ -31,6 +31,7 @@ import {
   logError,
   Severity,
   infoMsg,
+  exitApp,
 } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
 import { usePlan } from '../../crud';
@@ -154,6 +155,7 @@ export const AppHead = (props: IProps) => {
     }
     const remote = coordinator.getSource('remote');
     if (isElectron && /Logout/i.test(what)) {
+      localStorage.removeItem('user-id');
       checkSavedFn(async () => {
         waitForIt(
           'logout after user delete',
@@ -190,7 +192,8 @@ export const AppHead = (props: IProps) => {
 
   const downDone = () => {
     setDownloadAlert(false);
-    setView('Logout');
+    if (localStorage.getItem('user-id')) exitApp();
+    else setView('Logout');
   };
 
   useEffect(() => {

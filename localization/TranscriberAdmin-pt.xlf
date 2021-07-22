@@ -1641,8 +1641,8 @@
       </unit>
       <unit id="main.exit">
          <segment>
-            <source>Exit</source>
-            <target>Sair</target>
+            <source>Switch User</source>
+            <target>Mudar de utilizador</target>
          </segment>
       </unit>
       <unit id="main.export">

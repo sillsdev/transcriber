@@ -1956,7 +1956,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.exit">
-            <source>Exit</source>
+            <source>Switch User</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TokenCheck.tsx</context>

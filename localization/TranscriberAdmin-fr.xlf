@@ -1684,8 +1684,8 @@
       </unit>
       <unit id="main.exit">
          <segment>
-            <source>Exit</source>
-            <target>Sortir</target>
+            <source>Switch User</source>
+            <target>Changer d'utilisateur</target>
          </segment>
       </unit>
       <unit id="main.export">
