@@ -2714,6 +2714,36 @@
    			<target>La transcription générale peut couvrir un large éventail de scénarios de travail et de solutions de produits.</target>
    		</segment>
    	</unit>
+   	<unit id="newProject.generalFactor1">
+   		<segment>
+   			<source>Freeform references</source>
+   			<target>Références Freeform</target>
+   		</segment>
+   	</unit>
+   	<unit id="newProject.generalFactor2">
+   		<segment>
+   			<source>No Paratext sync expected or allowed</source>
+   			<target>Aucune synchronisation du paratexte n'est attendue ou autorisée</target>
+   		</segment>
+   	</unit>
+   	<unit id="newProject.keyFactors">
+   		<segment>
+   			<source>Key Factors</source>
+   			<target>Facteurs clés</target>
+   		</segment>
+   	</unit>
+   	<unit id="newProject.scriptureFactor1">
+   		<segment>
+   			<source>Uses Scripture Referencing: book, chapter, and verse</source>
+   			<target>Utilise la référence aux Écritures : livre, chapitre et verset.</target>
+   		</segment>
+   	</unit>
+   	<unit id="newProject.scriptureFactor2">
+   		<segment>
+   			<source>Workflow syncs with Paratext for checking</source>
+   			<target>Synchronisation du flux de travail avec Paratext pour vérification</target>
+   		</segment>
+   	</unit>
    	<unit id="newProject.scripture">
    		<segment>
    			<source>Scripture Transcription</source>

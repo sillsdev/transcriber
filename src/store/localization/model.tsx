@@ -545,6 +545,11 @@ export interface INewProjectStrings extends Localize.LocalizedStringsMethods {
     "other": string;
     "general": string;
     "generalTip": string;
+    "generalFactor1": string;
+    "generalFactor2": string;
+    "keyFactors": string;
+    "scriptureFactor1": string;
+    "scriptureFactor2": string;
     "scripture": string;
     "scriptureTip": string;
     "blank": string;

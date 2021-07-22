@@ -3173,6 +3173,41 @@
       			<context context-type="sourcefile">NewProject.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="newProject.generalFactor1">
+      		<source>Freeform references</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.generalFactor2">
+      		<source>No Paratext sync expected or allowed</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.keyFactors">
+      		<source>Key Factors</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.scriptureFactor1">
+      		<source>Uses Scripture Referencing: book, chapter, and verse</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.scriptureFactor2">
+      		<source>Workflow syncs with Paratext for checking</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="newProject.scripture">
       		<source>Scripture Transcription</source>
       		<target/>

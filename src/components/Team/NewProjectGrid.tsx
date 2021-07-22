@@ -125,7 +125,7 @@ export function NewProjectGrid(props: IProps) {
     </Button>
   );
 
-  const KeyFactorsHead = () => <ListSubheader>Key Factors</ListSubheader>;
+  const KeyFactorsHead = () => <ListSubheader>{t.keyFactors}</ListSubheader>;
 
   const Bullet = () => (
     <ListItemIcon>
@@ -144,15 +144,9 @@ export function NewProjectGrid(props: IProps) {
     </List>
   );
 
-  const scriptureFactors = [
-    'Uses Scripture Referencing: book, chapter, and verse',
-    'Workflow syncs with Paratext for checking',
-  ];
+  const scriptureFactors = [t.scriptureFactor1, t.scriptureFactor2];
 
-  const generalFactors = [
-    'Freeform references',
-    'No Paratext sync expected or allowed',
-  ];
+  const generalFactors = [t.generalFactor1, t.generalFactor2];
 
   return (
     <BigDialog title={t.newProject} isOpen={open} onOpen={handleCancel}>

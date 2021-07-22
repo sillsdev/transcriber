@@ -2708,6 +2708,36 @@
 				<target>Общая транскрипция может охватывать широкий спектр рабочих сценариев и продуктовых решений.</target>
 			</segment>
 		</unit>
+		<unit id="newProject.generalFactor1">
+			<segment>
+				<source>Freeform references</source>
+				<target>Ссылки в свободной форме</target>
+			</segment>
+		</unit>
+		<unit id="newProject.generalFactor2">
+			<segment>
+				<source>No Paratext sync expected or allowed</source>
+				<target>Синхронизация паратекста не ожидается и не допускается</target>
+			</segment>
+		</unit>
+		<unit id="newProject.keyFactors">
+			<segment>
+				<source>Key Factors</source>
+				<target>Ключевые факторы</target>
+			</segment>
+		</unit>
+		<unit id="newProject.scriptureFactor1">
+			<segment>
+				<source>Uses Scripture Referencing: book, chapter, and verse</source>
+				<target>Использует ссылки на Писание: книга, глава и стих</target>
+			</segment>
+		</unit>
+		<unit id="newProject.scriptureFactor2">
+			<segment>
+				<source>Workflow syncs with Paratext for checking</source>
+				<target>Рабочий процесс синхронизируется с Paratext для проверки</target>
+			</segment>
+		</unit>
 		<unit id="newProject.scripture">
 			<segment>
 				<source>Scripture Transcription</source>
