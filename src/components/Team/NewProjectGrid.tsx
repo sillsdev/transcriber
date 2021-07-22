@@ -77,7 +77,7 @@ export function NewProjectGrid(props: IProps) {
       title={t.newProject}
       isOpen={open}
       onOpen={handleCancel}
-      onCancel={handleCancel}
+      // onCancel={handleCancel}
     >
       <div className={classes.root}>
         <Grid container spacing={3}>
