@@ -104,12 +104,20 @@ export function NewProjectGrid(props: IProps) {
     </Typography>
   );
 
+  const actId = (kind: Integration, act: string) =>
+    `addProj${act}-${kind === Integration.pt ? 'aud' : 'oth'}-0`;
+
   const ActionButtons = ({ kind }: { kind: Integration }) => (
     <>
-      <Button onClick={handleUpload(kind)} variant="outlined">
+      <Button
+        id={actId(kind, 'Up')}
+        onClick={handleUpload(kind)}
+        variant="outlined"
+      >
         {t.uploadAudio}
       </Button>
       <Button
+        id={actId(kind, 'Rec')}
         onClick={handleRecord(kind)}
         variant="outlined"
         className={classes.button}
@@ -120,7 +128,7 @@ export function NewProjectGrid(props: IProps) {
   );
 
   const ConfigureAction = () => (
-    <Button onClick={handleNewProj} variant="outlined">
+    <Button id="config" onClick={handleNewProj} variant="outlined">
       {t.configure}
     </Button>
   );
