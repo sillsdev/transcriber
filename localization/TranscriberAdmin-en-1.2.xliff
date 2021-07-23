@@ -3159,6 +3159,34 @@
       			<context context-type="sourcefile">NewProject.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="newProject.likeTemplate">
+      		<source>These options present different templates for getting started. Choices made here can be changed in the Edit Project Settings dialog box.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.blankTip">
+      		<source>All settings are manually chosen.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.blankFactor1">
+      		<source>Best option if multiple pre-recorded audio files are available</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.blankFactor2">
+      		<source>Best option if passage list is availble in a spreadsheet</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="newProject.general">
       		<source>General Transcription</source>
       		<target/>
@@ -3167,7 +3195,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="newProject.generalTip">
-      		<source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
+      		<source>General transcription can cover a wide range of working scenarios and product solutions.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">NewProject.tsx</context>
@@ -4624,7 +4652,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="vProject.newProject">
-            <source>{0} Project</source>
+            <source>{0} Project Settings</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>

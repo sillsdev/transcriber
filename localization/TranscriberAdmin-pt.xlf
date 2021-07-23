@@ -2575,6 +2575,30 @@
    			<target>Outros</target>
    		</segment>
    	</unit>
+   	<unit id="newProject.likeTemplate">
+   		<segment>
+   			<source>These options present different templates for getting started. Choices made here can be changed in the Edit Project Settings dialog box.</source>
+   			<target>Estas opções apresentam diferentes modelos para começar. As escolhas feitas aqui podem ser alteradas na caixa de diálogo Editar Configurações do Projeto.</target>
+   		</segment>
+   	</unit>
+   	<unit id="newProject.blankTip">
+   		<segment>
+   			<source>All settings are manually chosen.</source>
+   			<target>Todas as configurações são escolhidas manualmente.</target>
+   		</segment>
+   	</unit>
+   	<unit id="newProject.blankFactor1">
+   		<segment>
+   			<source>Best option if multiple pre-recorded audio files are available</source>
+   			<target>Melhor opção se vários arquivos de áudio pré-gravados estiverem disponíveis</target>
+   		</segment>
+   	</unit>
+   	<unit id="newProject.blankFactor2">
+   		<segment>
+   			<source>Best option if passage list is availble in a spreadsheet</source>
+   			<target>Melhor opção se a lista de passagens estiver disponível em uma planilha</target>
+   		</segment>
+   	</unit>
    	<unit id="newProject.general">
    		<segment>
    			<source>General Transcription</source>
@@ -2583,8 +2607,8 @@
    	</unit>
    	<unit id="newProject.generalTip">
    		<segment>
-   			<source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
-   			<target>A Transcrição Geral pode cobrir uma vasta gama de cenários de trabalho e soluções de produtos.</target>
+   			<source>General transcription can cover a wide range of working scenarios and product solutions.</source>
+   			<target>A transcrição Geral pode cobrir uma vasta gama de cenários de trabalho e soluções de produtos.</target>
    		</segment>
    	</unit>
    	<unit id="newProject.generalFactor1">
@@ -3628,8 +3652,8 @@
       </unit>
       <unit id="vProject.newProject">
          <segment>
-            <source>{0} Project</source>
-            <target/>
+            <source>{0} Project Settings</source>
+         	<target>{0} Configurações do Projeto</target>
          </segment>
       </unit>
    	<unit id="vProject.configure">

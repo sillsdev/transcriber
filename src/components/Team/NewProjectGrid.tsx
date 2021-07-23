@@ -113,6 +113,7 @@ export function NewProjectGrid(props: IProps) {
         id={actId(kind, 'Up')}
         onClick={handleUpload(kind)}
         variant="outlined"
+        color="primary"
       >
         {t.uploadAudio}
       </Button>
@@ -121,6 +122,7 @@ export function NewProjectGrid(props: IProps) {
         onClick={handleRecord(kind)}
         variant="outlined"
         className={classes.button}
+        color="primary"
       >
         {t.startRecording}
       </Button>
@@ -128,7 +130,12 @@ export function NewProjectGrid(props: IProps) {
   );
 
   const ConfigureAction = () => (
-    <Button id="config" onClick={handleNewProj} variant="outlined">
+    <Button
+      id="config"
+      onClick={handleNewProj}
+      variant="outlined"
+      color="primary"
+    >
       {t.configure}
     </Button>
   );
@@ -156,40 +163,48 @@ export function NewProjectGrid(props: IProps) {
 
   const generalFactors = [t.generalFactor1, t.generalFactor2];
 
+  const blankFactors = [t.blankFactor1, t.blankFactor2];
+
+  interface Explain {
+    tip: string;
+    factors: string[];
+  }
+
+  const KindExplain = ({ tip, factors }: Explain) => (
+    <Grid container spacing={1}>
+      <Grid item md={6} xs={12}>
+        <Prose text={tip} />
+      </Grid>
+      <Grid item md={6} xs={12}>
+        <KeyFactorsList factors={factors} />
+      </Grid>
+    </Grid>
+  );
+
   return (
     <BigDialog title={t.newProject} isOpen={open} onOpen={handleCancel}>
       <div className={classes.root}>
+        <Typography align="center" className={classes.notes}>
+          {t.likeTemplate}
+        </Typography>
         <Grid container spacing={3}>
           <Grid item xs={8}>
             <KindHead text={t.scripture} decorate={<ParatextDecoration />} />
-            <Grid container spacing={1}>
-              <Grid item xs={6}>
-                <Prose text={t.scriptureTip} />
-              </Grid>
-              <Grid item xs={6}>
-                <KeyFactorsList factors={scriptureFactors} />
-              </Grid>
-            </Grid>
+            <KindExplain tip={t.scriptureTip} factors={scriptureFactors} />
           </Grid>
           <Grid item xs={4} className={classes.action}>
             <ActionButtons kind={Integration.pt} />
           </Grid>
           <Grid item xs={8}>
             <KindHead text={t.general} />
-            <Grid container spacing={1}>
-              <Grid item xs={6}>
-                <Prose text={t.generalTip} />
-              </Grid>
-              <Grid item xs={6}>
-                <KeyFactorsList factors={generalFactors} />
-              </Grid>
-            </Grid>
+            <KindExplain tip={t.generalTip} factors={generalFactors} />
           </Grid>
           <Grid item xs={4} className={classes.action}>
             <ActionButtons kind={Integration.none} />
           </Grid>
           <Grid item xs={8}>
             <KindHead text={t.blank} />
+            <KindExplain tip={t.blankTip} factors={blankFactors} />
           </Grid>
           <Grid item xs={4} className={classes.action}>
             <ConfigureAction />

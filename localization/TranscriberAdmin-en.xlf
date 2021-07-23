@@ -2710,6 +2710,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="newProject.likeTemplate">
+         <segment>
+            <source>These options present different templates for getting started. Choices made here can be changed in the Edit Project Settings dialog box.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.blankTip">
+         <segment>
+            <source>All settings are manually chosen.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.blankFactor1">
+         <segment>
+            <source>Best option if multiple pre-recorded audio files are available</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.blankFactor2">
+         <segment>
+            <source>Best option if passage list is availble in a spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="newProject.general">
          <segment>
             <source>General Transcription</source>
@@ -2718,7 +2742,7 @@
       </unit>
       <unit id="newProject.generalTip">
          <segment>
-            <source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
+            <source>General transcription can cover a wide range of working scenarios and product solutions.</source>
             <target/>
          </segment>
       </unit>
@@ -3966,7 +3990,7 @@
       </unit>
       <unit id="vProject.newProject">
          <segment>
-            <source>{0} Project</source>
+            <source>{0} Project Settings</source>
             <target/>
          </segment>
       </unit>

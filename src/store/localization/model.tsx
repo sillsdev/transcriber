@@ -543,6 +543,10 @@ export interface INewProjectStrings extends Localize.LocalizedStringsMethods {
     "audioProduct": string;
     "textProduct": string;
     "other": string;
+    "likeTemplate": string;
+    "blankTip": string;
+    "blankFactor1": string;
+    "blankFactor2": string;
     "general": string;
     "generalTip": string;
     "generalFactor1": string;
