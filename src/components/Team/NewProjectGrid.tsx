@@ -160,9 +160,7 @@ export function NewProjectGrid(props: IProps) {
   );
 
   const scriptureFactors = [t.scriptureFactor1, t.scriptureFactor2];
-
   const generalFactors = [t.generalFactor1, t.generalFactor2];
-
   const blankFactors = [t.blankFactor1, t.blankFactor2];
 
   interface Explain {
@@ -182,11 +180,15 @@ export function NewProjectGrid(props: IProps) {
   );
 
   return (
-    <BigDialog title={t.newProject} isOpen={open} onOpen={handleCancel}>
+    <BigDialog
+      title={t.newProject}
+      isOpen={open}
+      onOpen={handleCancel}
+      description={
+        <Typography className={classes.notes}>{t.likeTemplate}</Typography>
+      }
+    >
       <div className={classes.root}>
-        <Typography align="center" className={classes.notes}>
-          {t.likeTemplate}
-        </Typography>
         <Grid container spacing={3}>
           <Grid item xs={8}>
             <KindHead text={t.scripture} decorate={<ParatextDecoration />} />
