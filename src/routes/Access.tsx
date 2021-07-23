@@ -364,7 +364,7 @@ export function Access(props: IProps) {
                     <div>{t.chooseAnother}</div>
                     <Button
                       id="accessLogin"
-                      variant="contained"
+                      variant="outlined"
                       color="primary"
                       className={classes.button}
                       onClick={handleLogout}
@@ -416,7 +416,7 @@ export function Access(props: IProps) {
                       <div className={classes.actions}>
                         <Button
                           id="accessImport"
-                          variant="contained"
+                          variant="outlined"
                           color="primary"
                           className={classes.button}
                           onClick={handleImport}
@@ -444,7 +444,7 @@ export function Access(props: IProps) {
                 <div className={classes.actions}>
                   <Button
                     id="accessCreateUser"
-                    variant="contained"
+                    variant="outlined"
                     color="primary"
                     className={classes.button}
                     onClick={handleCreateUser}
@@ -455,7 +455,7 @@ export function Access(props: IProps) {
                 <div className={classes.actions}>
                   <Button
                     id="accessImport"
-                    variant="contained"
+                    variant="outlined"
                     color="primary"
                     className={classes.button}
                     onClick={handleImport}

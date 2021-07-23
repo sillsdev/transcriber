@@ -342,6 +342,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "deletedInvitation": string;
     "developer": string;
     "exit": string;
+    "switchUser": string;
     "export": string;
     "helpCenter": string;
     "helpSpreadsheet": string;
