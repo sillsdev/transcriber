@@ -168,7 +168,7 @@ export function UserMenu(props: IProps) {
           <ListItemIcon>
             <ExitIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText primary={isElectron ? t.exit : t.logout} />
+          <ListItemText primary={isElectron ? t.switchUser : t.logout} />
         </StyledMenuItem>
       </StyledMenu>
     </div>

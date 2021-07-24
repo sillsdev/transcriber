@@ -6,12 +6,11 @@ import { IState, IWelcomeStrings, User } from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Typography, Button, Paper, IconButton } from '@material-ui/core';
+import { Typography, Button, Paper, Grid } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
 import { isElectron } from '../api-variable';
 import AppHead from '../components/App/AppHead';
-import HelpIcon from '@material-ui/icons/Help';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import MemorySource from '@orbit/memory';
 import ImportTab from '../components/ImportTab';
@@ -19,20 +18,22 @@ import { IAxiosStatus } from '../store/AxiosStatus';
 import OfflineIcon from '@material-ui/icons/CloudOff';
 import OnlineIcon from '@material-ui/icons/CloudQueue';
 import { connect } from 'react-redux';
-import { LightTooltip } from '../control';
 import moment from 'moment';
 import { AddRecord } from '../model/baseModel';
 import { useOfflineSetup } from '../crud';
+import { ChoiceHead } from '../control/ChoiceHead';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      display: 'block',
       width: '100%',
-    },
-    container: {
-      display: 'block',
-      justifyContent: 'center',
+      flexGrow: 1,
+      '& .MuiListSubheader-root': {
+        lineHeight: 'unset',
+      },
+      '& .MuiListItemIcon-root': {
+        minWidth: '30px',
+      },
     },
     paper: {
       padding: theme.spacing(3),
@@ -46,26 +47,17 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(2),
     },
-    innerpaper: {
-      padding: theme.spacing(3),
-    },
     button: {
-      marginRight: '0px',
-      minWidth: theme.spacing(20),
+      marginRight: '10px',
+      marginBottom: '5px',
     },
     icon: {
       marginRight: theme.spacing(1),
     },
-    helpIcon: {
-      paddingLeft: '1px',
-    },
-    iconlabel: {
-      marginBottom: '5px',
-      marginTop: '8px',
-    },
-    col: {
-      display: 'flex',
-      flexDirection: 'column',
+    action: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      alignSelf: 'center',
     },
   })
 );
@@ -136,6 +128,7 @@ export function Welcome(props: IProps) {
       setWhichUsers(onlineUsers.length > 0 ? 'online' : 'offline');
     }
   };
+
   useEffect(() => {
     setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
@@ -157,7 +150,6 @@ export function Welcome(props: IProps) {
     if (importStatus?.complete) checkUsers(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importStatus]);
-  const handleHelpOnlineAdmin = () => {};
 
   const handleGoOnline = () => {
     handleOfflineChange('online');
@@ -219,7 +211,6 @@ export function Welcome(props: IProps) {
     });
   };
   const handleOfflineChange = (target: string) => {
-    console.log(target);
     setWhichUsers(target);
     localStorage.setItem(
       'offlineAdmin',
@@ -229,200 +220,122 @@ export function Welcome(props: IProps) {
   const handleImport = () => {
     setImportOpen(true);
   };
+
+  const t2 = {
+    admin: 'Setup up a team project',
+    adminTip:
+      'Setup the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.',
+    team: 'Work in a team project',
+    teamTip:
+      'A project has been setup online.  Transcribers and editors can work online, offline by downloading the project, or offline by importing it.',
+    keyFactor: 'Key Factor',
+    online: 'Work Online',
+    offline: 'Work Offline',
+    import: 'Import Project',
+    alone: 'Work alone',
+  };
+  const adminFactors = ['Requires Internet connection'];
+  const teamFactors = ['Project has been set up online'];
+  const quickFactors = ['Projects cannot be changed to team projects later'];
+
+  const OnlineButton = ({
+    id,
+    onClick,
+  }: {
+    id: string;
+    onClick: () => void;
+  }) => (
+    <Button
+      id={id}
+      variant="outlined"
+      color="primary"
+      className={classes.button}
+      onClick={onClick}
+    >
+      <OnlineIcon className={classes.icon} />
+      {t2.online}
+    </Button>
+  );
+  const OfflineButton = ({
+    id,
+    onClick,
+    txt,
+  }: {
+    id: string;
+    onClick: () => void;
+    txt?: string;
+  }) => (
+    <Button
+      id={id}
+      variant="outlined"
+      color="primary"
+      className={classes.button}
+      onClick={onClick}
+    >
+      <OfflineIcon className={classes.icon} />
+      {txt ? txt : t2.offline}
+    </Button>
+  );
+
   if (!isElectron || whichUsers !== null) {
     return <Redirect to={'/access/' + whichUsers} />;
   }
+
   return (
     <div className={classes.root}>
       <AppHead {...props} />
+      <Typography className={classes.sectionHead}>Filler</Typography>
+
       {isElectron && (
-        <div className={classes.container}>
-          <Typography className={classes.sectionHead}>Filler</Typography>
-          <Paper className={classes.paper}>
-            <Typography id="welcome" className={classes.sectionHead}>
-              {t.title}
-            </Typography>
-            <div>
-              <Paper className={classes.innerpaper}>
-                <Typography id="admin" className={classes.sectionHead}>
-                  {t.admin}
-                </Typography>
-                <div>
-                  <Button
-                    id="adminonline"
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleGoOnline}
-                  >
-                    <OnlineIcon className={classes.icon} />
-                    {t.onlineAdmin}
-                  </Button>
-                  <LightTooltip title={t.onlineAdminTip}>
-                    <IconButton
-                      id="adminonlinehelp"
-                      className={classes.helpIcon}
-                      color="primary"
-                      aria-label="helponlineadmin"
-                      onClick={handleHelpOnlineAdmin}
-                    >
-                      <HelpIcon fontSize="small" />
-                    </IconButton>
-                  </LightTooltip>
-                </div>
-                <div>
-                  <Button
-                    id="adminoffline"
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleGoOffline}
-                  >
-                    <OfflineIcon className={classes.icon} />
-                    {t.offlineAdmin}
-                  </Button>
-                  <LightTooltip title={t.offlineAdminTip}>
-                    <IconButton
-                      id="adminofflinehelp"
-                      className={classes.helpIcon}
-                      color="primary"
-                      aria-label="helponlineadmin"
-                      onClick={handleHelpOnlineAdmin}
-                    >
-                      <HelpIcon fontSize="small" />
-                    </IconButton>
-                  </LightTooltip>
-                </div>
-              </Paper>
-              <Paper className={classes.innerpaper}>
-                <Typography className={classes.sectionHead}>
-                  {t.teamMember}
-                </Typography>
-                <div>
-                  <Button
-                    id="memberonline"
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleGoOnline}
-                  >
-                    <OnlineIcon className={classes.icon} />
-                    {t.teamOnline}
-                  </Button>
-                  <LightTooltip title={t.teamOnlineTip}>
-                    <IconButton
-                      id="memberonlinehelp"
-                      className={classes.helpIcon}
-                      color="primary"
-                      aria-label="helponlineadmin"
-                      onClick={handleHelpOnlineAdmin}
-                    >
-                      <HelpIcon fontSize="small" />
-                    </IconButton>
-                  </LightTooltip>
-                </div>
-                {hasOfflineUsers && (
-                  <div>
-                    <Button
-                      id="memberoffline"
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleGoOffline}
-                    >
-                      <OfflineIcon className={classes.icon} />
-                      {t.teamOffline}
-                    </Button>
-                    <LightTooltip title={t.teamOfflineTip}>
-                      <IconButton
-                        id="memberofflinehelp"
-                        className={classes.helpIcon}
-                        color="primary"
-                        aria-label="helponlineadmin"
-                        onClick={handleHelpOnlineAdmin}
-                      >
-                        <HelpIcon fontSize="small" />
-                      </IconButton>
-                    </LightTooltip>
-                  </div>
-                )}
-                <div>
-                  <Button
-                    id="memberimport"
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleImport}
-                  >
-                    {t.import}
-                  </Button>
-                  <LightTooltip title={t.importTip}>
-                    <IconButton
-                      id="memberimporthelp"
-                      className={classes.helpIcon}
-                      color="primary"
-                      aria-label="helponlineadmin"
-                      onClick={handleHelpOnlineAdmin}
-                    >
-                      <HelpIcon fontSize="small" />
-                    </IconButton>
-                  </LightTooltip>
-                </div>
-              </Paper>
-              <Paper className={classes.innerpaper}>
-                <Typography className={classes.sectionHead}>
-                  {t.quick}
-                </Typography>
-                <div>
-                  <Button
-                    id="quickonline"
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleQuickOnline}
-                  >
-                    <OnlineIcon className={classes.icon} />
-                    {t.quickOnline}
-                  </Button>
-                  <LightTooltip title={t.quickOnlineTip}>
-                    <IconButton
-                      id="quickonlinehelp"
-                      className={classes.helpIcon}
-                      color="primary"
-                      aria-label="helponlineadmin"
-                      onClick={handleHelpOnlineAdmin}
-                    >
-                      <HelpIcon fontSize="small" />
-                    </IconButton>
-                  </LightTooltip>
-                </div>
-                <div>
-                  <Button
-                    id="quickoffline"
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleQuickOffline}
-                  >
-                    <OfflineIcon className={classes.icon} />
-                    {t.quickOffline}
-                  </Button>
-                  <LightTooltip title={t.quickOfflineTip}>
-                    <IconButton
-                      id="quickofflinehelp"
-                      className={classes.helpIcon}
-                      color="primary"
-                      aria-label="helponlineadmin"
-                      onClick={handleHelpOnlineAdmin}
-                    >
-                      <HelpIcon fontSize="small" />
-                    </IconButton>
-                  </LightTooltip>
-                </div>
-              </Paper>
-            </div>
-          </Paper>
-        </div>
+        <Paper className={classes.paper}>
+          <Typography id="welcome" className={classes.sectionHead}>
+            {t.title}
+          </Typography>
+          <Grid container spacing={3}>
+            <Grid item xs={8}>
+              <ChoiceHead
+                title={t2.admin}
+                prose={t2.adminTip}
+                keyFactorTitle={t2.keyFactor}
+                factors={adminFactors}
+              />
+            </Grid>
+            <Grid item xs={4} className={classes.action}>
+              <OnlineButton id="adminonline" onClick={handleGoOnline} />
+            </Grid>
+            <Grid item xs={8}>
+              <ChoiceHead
+                title={t2.team}
+                prose={t2.teamTip}
+                keyFactorTitle={t2.keyFactor}
+                factors={teamFactors}
+              />
+            </Grid>
+            <Grid item xs={4} className={classes.action}>
+              <OnlineButton id="teamonline" onClick={handleGoOnline} />
+              {hasOfflineUsers && (
+                <OfflineButton id="teamoffline" onClick={handleGoOffline} />
+              )}
+              <OfflineButton
+                id="teamimport"
+                onClick={handleImport}
+                txt={t2.import}
+              />
+            </Grid>
+            <Grid item xs={8}>
+              <ChoiceHead
+                title={t2.alone}
+                prose={''}
+                keyFactorTitle={t2.keyFactor}
+                factors={quickFactors}
+              />
+            </Grid>
+            <Grid item xs={4} className={classes.action}>
+              <OnlineButton id="aloneonline" onClick={handleQuickOnline} />
+              <OfflineButton id="aloneoffline" onClick={handleQuickOffline} />
+            </Grid>
+          </Grid>
+        </Paper>
       )}
       {importOpen && (
         <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
