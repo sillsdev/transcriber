@@ -1956,6 +1956,13 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.exit">
+            <source>Exit</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TokenCheck.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.switchUser">
             <source>Switch User</source>
             <target/>
             <context-group>
