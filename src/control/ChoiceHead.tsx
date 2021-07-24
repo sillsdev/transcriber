@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IProps {
   title: string;
+  decorate?: ReactElement;
   prose: string;
   keyFactorTitle: string;
   factors: string[];
@@ -68,10 +69,10 @@ export const KeyFactorsList = ({
 };
 
 export const ChoiceHead = (props: IProps) => {
-  const { title, prose, keyFactorTitle, factors } = props;
+  const { title, decorate, prose, keyFactorTitle, factors } = props;
   return (
     <>
-      <KindHead text={title} />
+      <KindHead text={title} decorate={decorate} />
       <Grid container spacing={1}>
         <Grid item md={6} xs={12}>
           <Prose text={prose} />

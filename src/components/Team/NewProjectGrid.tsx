@@ -1,12 +1,10 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Button, Typography, Tooltip } from '@material-ui/core';
-import { List, ListItem, ListSubheader, ListItemIcon } from '@material-ui/core';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import BigDialog from '../../hoc/BigDialog';
 import { TeamContext } from '../../context/TeamContext';
 import { ParatextLogo } from '../../control';
-import { ReactElement } from 'react-transition-group/node_modules/@types/react';
+import { ChoiceHead } from '../../control/ChoiceHead';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -80,10 +78,6 @@ export function NewProjectGrid(props: IProps) {
     onOpen(false);
   };
 
-  const Prose = ({ text }: { text: string }) => (
-    <Typography className={classes.notes}>{text}</Typography>
-  );
-
   const spacer = '\u00A0';
 
   const ParatextDecoration = () => (
@@ -95,13 +89,6 @@ export function NewProjectGrid(props: IProps) {
         </span>
       </Tooltip>
     </>
-  );
-
-  const KindHead = (props: { text: string; decorate?: ReactElement }) => (
-    <Typography variant="h6">
-      {props.text}
-      {props.decorate}
-    </Typography>
   );
 
   const actId = (kind: Integration, act: string) =>
@@ -140,44 +127,9 @@ export function NewProjectGrid(props: IProps) {
     </Button>
   );
 
-  const KeyFactorsHead = () => <ListSubheader>{t.keyFactors}</ListSubheader>;
-
-  const Bullet = () => (
-    <ListItemIcon>
-      <ChevronRightIcon />
-    </ListItemIcon>
-  );
-
-  const KeyFactorsList = ({ factors }: { factors: string[] }) => (
-    <List dense subheader={<KeyFactorsHead />}>
-      {factors.map((f, i) => (
-        <ListItem key={i}>
-          <Bullet />
-          {f}
-        </ListItem>
-      ))}
-    </List>
-  );
-
   const scriptureFactors = [t.scriptureFactor1, t.scriptureFactor2];
   const generalFactors = [t.generalFactor1, t.generalFactor2];
   const blankFactors = [t.blankFactor1, t.blankFactor2];
-
-  interface Explain {
-    tip: string;
-    factors: string[];
-  }
-
-  const KindExplain = ({ tip, factors }: Explain) => (
-    <Grid container spacing={1}>
-      <Grid item md={6} xs={12}>
-        <Prose text={tip} />
-      </Grid>
-      <Grid item md={6} xs={12}>
-        <KeyFactorsList factors={factors} />
-      </Grid>
-    </Grid>
-  );
 
   return (
     <BigDialog
@@ -191,22 +143,35 @@ export function NewProjectGrid(props: IProps) {
       <div className={classes.root}>
         <Grid container spacing={3}>
           <Grid item xs={8}>
-            <KindHead text={t.scripture} decorate={<ParatextDecoration />} />
-            <KindExplain tip={t.scriptureTip} factors={scriptureFactors} />
+            <ChoiceHead
+              title={t.scripture}
+              decorate={<ParatextDecoration />}
+              keyFactorTitle={t.keyFactors}
+              prose={t.scriptureTip}
+              factors={scriptureFactors}
+            />
           </Grid>
           <Grid item xs={4} className={classes.action}>
             <ActionButtons kind={Integration.pt} />
           </Grid>
           <Grid item xs={8}>
-            <KindHead text={t.general} />
-            <KindExplain tip={t.generalTip} factors={generalFactors} />
+            <ChoiceHead
+              title={t.general}
+              keyFactorTitle={t.keyFactors}
+              prose={t.generalTip}
+              factors={generalFactors}
+            />
           </Grid>
           <Grid item xs={4} className={classes.action}>
             <ActionButtons kind={Integration.none} />
           </Grid>
           <Grid item xs={8}>
-            <KindHead text={t.blank} />
-            <KindExplain tip={t.blankTip} factors={blankFactors} />
+            <ChoiceHead
+              title={t.blank}
+              keyFactorTitle={t.keyFactors}
+              prose={t.blankTip}
+              factors={blankFactors}
+            />
           </Grid>
           <Grid item xs={4} className={classes.action}>
             <ConfigureAction />
