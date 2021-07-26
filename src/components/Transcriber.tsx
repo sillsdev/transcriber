@@ -856,87 +856,74 @@ export function Transcriber(props: IProps) {
               </Grid>
               <Grid item>{passageDescription(passage, allBookData)}</Grid>
             </Grid>
-            <Grid container direction="row" className={classes.row}>
-              <Wrapper>
-                <SplitPane
-                  defaultSize={180}
-                  minSize={180}
-                  style={{ position: 'static' }}
-                  split="horizontal"
-                  onChange={handleSplitSize}
-                >
-                  <Pane className={classes.pane}>
-                    <Grid container direction="row" className={classes.row}>
-                      {role === 'transcriber' &&
-                        hasParatextName &&
-                        paratextProject && (
-                          <Grid item>
-                            <LightTooltip title={t.pullParatextTip}>
-                              <span>
-                                <IconButton
-                                  id="transcriber.pullParatext"
-                                  onClick={handlePullParatext}
-                                  disabled={selected === ''}
-                                >
-                                  <>
-                                    <PullIcon />{' '}
-                                    <Typography>
-                                      {t.pullParatextCaption}
-                                    </Typography>
-                                  </>
-                                </IconButton>
-                              </span>
-                            </LightTooltip>
-                          </Grid>
-                        )}
-                      <Grid item xs>
-                        <Grid container justify="center">
-                          <WSAudioPlayer
-                            id="audioPlayer"
-                            allowRecord={false}
-                            size={playerSize}
-                            blob={audioBlob}
-                            segments={segmentsRef.current}
-                            onProgress={onProgress}
-                            onSegmentChange={onSegmentChange}
-                            onPlayStatus={onPlayStatus}
-                            onDuration={onDuration}
-                            onSaveProgress={
-                              selected === '' || role === 'view'
-                                ? undefined
-                                : onSaveProgress
-                            }
-                          />
+            <Wrapper>
+              <SplitPane
+                defaultSize={180}
+                minSize={180}
+                style={{ position: 'static' }}
+                split="horizontal"
+                onChange={handleSplitSize}
+              >
+                <Pane className={classes.pane}>
+                  <Grid container direction="row" className={classes.row}>
+                    {role === 'transcriber' &&
+                      hasParatextName &&
+                      paratextProject && (
+                        <Grid item>
+                          <LightTooltip title={t.pullParatextTip}>
+                            <span>
+                              <IconButton
+                                id="transcriber.pullParatext"
+                                onClick={handlePullParatext}
+                                disabled={selected === ''}
+                              >
+                                <>
+                                  <PullIcon />{' '}
+                                  <Typography>
+                                    {t.pullParatextCaption}
+                                  </Typography>
+                                </>
+                              </IconButton>
+                            </span>
+                          </LightTooltip>
                         </Grid>
+                      )}
+                    <Grid item xs>
+                      <Grid container justify="center">
+                        <WSAudioPlayer
+                          id="audioPlayer"
+                          allowRecord={false}
+                          size={playerSize}
+                          blob={audioBlob}
+                          segments={segmentsRef.current}
+                          onProgress={onProgress}
+                          onSegmentChange={onSegmentChange}
+                          onPlayStatus={onPlayStatus}
+                          onDuration={onDuration}
+                          onSaveProgress={
+                            selected === '' || role === 'view'
+                              ? undefined
+                              : onSaveProgress
+                          }
+                        />
                       </Grid>
                     </Grid>
-                  </Pane>
-                  <Pane className={classes.pane}>
-                    <Grid item xs={12} sm container>
-                      <Grid
-                        ref={transcriptionRef}
-                        item
-                        xs={showHistory ? 6 : 12}
-                        container
-                        direction="column"
-                      >
-                        {projData && !fontStatus?.endsWith('active') ? (
-                          <WebFontLoader
-                            config={projData.fontConfig}
-                            onStatus={loadStatus}
-                          >
-                            <TextareaAutosize
-                              autoFocus
-                              id="transcriber.text"
-                              value={textValue}
-                              readOnly={selected === '' || role === 'view'}
-                              style={textAreaStyle}
-                              onChange={handleChange}
-                              lang={projData?.langTag || 'en'}
-                              spellCheck={projData?.spellCheck}
-                            />
-                          </WebFontLoader>
-                        ) : (
+                  </Grid>
+                </Pane>
+                <Pane className={classes.pane}>
+                  <Grid item xs={12} sm container>
+                    <Grid
+                      ref={transcriptionRef}
+                      item
+                      xs={showHistory ? 6 : 12}
+                      container
+                      direction="column"
+                    >
+                      {projData && !fontStatus?.endsWith('active') ? (
+                        <WebFontLoader
+                          config={projData.fontConfig}
+                          onStatus={loadStatus}
+                        >
                           <TextareaAutosize
                             autoFocus
                             id="transcriber.text"
@@ -947,21 +934,33 @@ export function Transcriber(props: IProps) {
                             lang={projData?.langTag || 'en'}
                             spellCheck={projData?.spellCheck}
                           />
-                        )}
-                      </Grid>
-                      {showHistory && (
-                        <Grid item xs={6} container direction="column">
-                          <PassageHistory
-                            passageId={passage?.id}
-                            boxHeight={boxHeight}
-                          />
-                        </Grid>
+                        </WebFontLoader>
+                      ) : (
+                        <TextareaAutosize
+                          autoFocus
+                          id="transcriber.text"
+                          value={textValue}
+                          readOnly={selected === '' || role === 'view'}
+                          style={textAreaStyle}
+                          onChange={handleChange}
+                          lang={projData?.langTag || 'en'}
+                          spellCheck={projData?.spellCheck}
+                        />
                       )}
                     </Grid>
-                  </Pane>
-                </SplitPane>
-              </Wrapper>
-            </Grid>
+                    {showHistory && (
+                      <Grid item xs={6} container direction="column">
+                        <PassageHistory
+                          passageId={passage?.id}
+                          boxHeight={boxHeight}
+                        />
+                      </Grid>
+                    )}
+                  </Grid>
+                </Pane>
+              </SplitPane>
+            </Wrapper>
+
             <Grid container direction="row" className={classes.padRow}>
               <Grid item>
                 <Button

@@ -400,8 +400,8 @@ function WSAudioPlayer(props: IProps) {
     setProgress(progress);
     if (onProgress) onProgress(progress);
   }
-  function onWSRegion(region: boolean) {
-    setHasRegion(region);
+  function onWSRegion(count: number) {
+    setHasRegion(count > 0);
     if (onSegmentChange) onSegmentChange(wsGetRegions());
   }
 
