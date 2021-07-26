@@ -4299,119 +4299,95 @@
             <target>Добро пожаловать</target>
          </segment>
       </unit>
-      <unit id="welcome.admin">
-         <segment>
-            <source>I'm a Project Administrator (Owner)</source>
-            <target>Я администратор проекта (владелец)</target>
-         </segment>
-      </unit>
-      <unit id="welcome.onlineAdmin">
-         <segment>
-            <source>For Online or Occassionally Connected Projects</source>
-            <target>Для онлайн-проектов или проектов с нерегулярным подключением</target>
-         </segment>
-      </unit>
-      <unit id="welcome.onlineAdminTip">
-         <segment>
-            <source>All project administration must be done online.  Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to offline computers of team members.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.</source>
-            <target>Все администрирование проекта должно осуществляться онлайн. Над проектами можно работать в интерактивном режиме, помечать их как «доступные в автономном режиме» в интерактивном режиме и загружать, или экспортировать в файл и импортировать на автономные компьютеры членов группы. Изменения, внесенные в автономном режиме, будут автоматически синхронизированы, если компьютер подключается к сети, или изменения можно экспортировать и импортировать в онлайн-проект.</target>
-         </segment>
-      </unit>
-      <unit id="welcome.offlineAdmin">
-         <segment>
-            <source>For Offline Single User Projects</source>
-            <target>Для автономных однопользовательских проектов</target>
-         </segment>
-      </unit>
-      <unit id="welcome.offlineAdminTip">
-         <segment>
-            <source>The project is stored on your computer. You cannot set up a team.  You can export the project and import it on to another computer, but all changes will be done under your user.  Changes can be exported and then imported on to the master computer.</source>
-            <target>Проект хранится на вашем компьютере. Вы не можете создать команду. Вы можете экспортировать проект и импортировать его на другой компьютер, но все изменения будут производиться под вашим пользователем. Изменения можно экспортировать, а затем импортировать на главный компьютер.</target>
-         </segment>
-      </unit>
-      <unit id="welcome.teamMember">
-         <segment>
-            <source>I'm a Team Member</source>
-            <target>Я член команды</target>
-         </segment>
-      </unit>
-      <unit id="welcome.teamOnline">
-         <segment>
-            <source>For Projects Available Online</source>
-            <target>Для проектов, доступных в Интернете</target>
-         </segment>
-      </unit>
-      <unit id="welcome.teamOnlineTip">
-         <segment>
-            <source>Projects can be worked on online, marked as 'Available Offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.</source>
-            <target>Над проектами можно работать в сети, отмечать их как «Доступные в автономном режиме» в интерактивном режиме и загружать, или экспортировать в файл и импортировать на автономный компьютер. Изменения, внесенные в автономном режиме, будут автоматически синхронизированы, если компьютер подключается к сети, или изменения можно экспортировать и импортировать в онлайн-проект.</target>
-         </segment>
-      </unit>
-      <unit id="welcome.teamOffline">
-         <segment>
-            <source>For Projects Only Available Offline</source>
-            <target>Для проектов, доступных только в автономном режиме</target>
-         </segment>
-      </unit>
-      <unit id="welcome.teamOfflineTip">
-         <segment>
-            <source>Changes must be exported and imported to the master computer.</source>
-            <target>Изменения необходимо экспортировать и импортировать на главный компьютер.</target>
-         </segment>
-      </unit>
-      <unit id="welcome.import">
-         <segment>
-            <source>For projects with an available import file</source>
-            <target>Для проектов с доступным файлом импорта</target>
-         </segment>
-      </unit>
-      <unit id="welcome.importTip">
-         <segment>
-            <source>Either Online or Offline Projects can be imported to be worked on offline.  If the project was created online, changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.  If the project was created offline, changes must be exported and imported to the master computer.  Team members must be added to the project before export.</source>
-            <target>Для работы в автономном режиме можно импортировать как онлайн-проекты, так и автономные. Если проект был создан в интерактивном режиме, изменения, внесенные в автономном режиме, будут автоматически синхронизированы, если компьютер подключается к сети, или изменения можно экспортировать и импортировать в интерактивный проект. Если проект был создан в автономном режиме, изменения необходимо экспортировать и импортировать на главный компьютер. Члены команды должны быть добавлены в проект перед экспортом.</target>
-         </segment>
-      </unit>
-      <unit id="welcome.quick">
-         <segment>
-            <source>Quick Transcribe</source>
-            <target>Быстрая расшифровка</target>
-         </segment>
-      </unit>
-      <unit id="welcome.quickOnline">
-         <segment>
-            <source>With Online Access</source>
-            <target>С доступом онлайн</target>
-         </segment>
-      </unit>
-      <unit id="welcome.quickOnlineTip">
-         <segment>
-            <source>After login, you will choose a project type, upload or record audio, and start transcribing as soon as possible.  Your audio will be stored online.</source>
-            <target>После входа в систему вы выберете тип проекта, загрузите или запишете аудио и начнете расшифровку как можно скорее. Ваш звук будет храниться в Интернете.</target>
-         </segment>
-      </unit>
-      <unit id="welcome.quickOffline">
-         <segment>
-            <source>Offline Only Access</source>
-            <target>Автономный доступ</target>
-         </segment>
-      </unit>
-      <unit id="welcome.quickOfflineTip">
-         <segment>
-            <source>We will create a default user, you will choose a project type, import or record audio, and start transcribing as soon as possible.  Your audio will be stored on your computer.</source>
-            <target>Мы создадим пользователя по умолчанию, вы выберете тип проекта, импортируете или запишете аудио и начнете расшифровку как можно скорее. Ваш звук будет храниться на вашем компьютере.</target>
-         </segment>
-      </unit>
-      <unit id="welcome.quickGiven">
-         <segment>
-            <source>Quick</source>
-            <target>Быстро</target>
-         </segment>
-      </unit>
-      <unit id="welcome.quickFamily">
-         <segment>
+		<unit id="welcome.setupTeam">
+			<segment>
+				<source>Set up a team project</source>
+				<target>Создайте командный проект</target>
+			</segment>
+		</unit>
+		<unit id="welcome.setupTeamTip">
+			<segment>
+				<source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
+				<target>Настройте проект, разделив работу на отрывки, которые можно поручить различным транскрибаторам и редакторам.  Транскрибаторы и редакторы могут работать онлайн или офлайн, загружая или импортируя проект.</target>
+			</segment>
+		</unit>
+		<unit id="welcome.setupFactor">
+			<segment>
+				<source>Requires Internet connection</source>
+				<target>Требуется подключение к Интернету</target>
+			</segment>
+		</unit>
+		<unit id="welcome.team">
+			<segment>
+				<source>Work in a team project</source>
+				<target>Работа в командном проекте</target>
+			</segment>
+		</unit>
+		<unit id="welcome.teamTip">
+			<segment>
+				<source>A project has been set up online.  Transcribers and editors can work online, offline by downloading the project, or offline by importing it.</source>
+				<target>Проект был создан в режиме онлайн.  Транскрайберы и редакторы могут работать онлайн, офлайн, загрузив проект, или офлайн, импортировав его.</target>
+			</segment>
+		</unit>
+		<unit id="welcome.teamFactor">
+			<segment>
+				<source>Project has been set up online</source>
+				<target>Проект был создан в режиме онлайн</target>
+			</segment>
+		</unit>
+		<unit id="welcome.keyFactor">
+			<segment>
+				<source>Key Factor</source>
+				<target>Ключевой фактор</target>
+			</segment>
+		</unit>
+		<unit id="welcome.online">
+			<segment>
+				<source>Work Online</source>
+				<target>Работа в Интернете</target>
+			</segment>
+		</unit>
+		<unit id="welcome.offline">
+			<segment>
+				<source>Work Offline</source>
+				<target>Работа в автономном режиме</target>
+			</segment>
+		</unit>
+		<unit id="welcome.import">
+			<segment>
+				<source>Import Project</source>
+				<target>Импорт проекта</target>
+			</segment>
+		</unit>
+		<unit id="welcome.alone">
+			<segment>
+				<source>Work Alone</source>
+				<target>Работа в одиночку</target>
+			</segment>
+		</unit>
+		<unit id="welcome.aloneFactor">
+			<segment>
+				<source>Projects cannot be changed to team projects later</source>
+				<target>Проекты не могут быть изменены на командные проекты позже</target>
+			</segment>
+		</unit>
+		<unit id="welcome.quickGiven">
+			<segment>
+				<source>Initial</source>
+				<target>Первоначальный</target>
+			</segment>
+		</unit>
+        <unit id="welcome.quickFamily">
+          <segment>
             <source>User</source>
             <target>Пользователь</target>
-         </segment>
-      </unit>
+          </segment>
+        </unit>
+		<unit id="welcome.quickName">
+			<segment>
+				<source>Initial User</source>
+				<target>Первоначальный пользователь</target>
+			</segment>
+		</unit>
 	</file>
 </xliff>

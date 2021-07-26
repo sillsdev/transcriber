@@ -198,7 +198,7 @@ export function Welcome(props: IProps) {
     let userRec: User = {
       type: 'user',
       attributes: {
-        name: t.quickGiven + ' ' + t.quickFamily,
+        name: t.quickName,
         givenName: t.quickGiven,
         familyName: t.quickFamily,
         email: '',
@@ -254,22 +254,9 @@ export function Welcome(props: IProps) {
     setImportOpen(true);
   };
 
-  const t2 = {
-    admin: 'Set up a team project',
-    adminTip:
-      'Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.',
-    team: 'Work in a team project',
-    teamTip:
-      'A project has been set up online.  Transcribers and editors can work online, offline by downloading the project, or offline by importing it.',
-    keyFactor: 'Key Factor',
-    online: 'Work Online',
-    offline: 'Work Offline',
-    import: 'Import Project',
-    alone: 'Work alone',
-  };
-  const adminFactors = ['Requires Internet connection'];
-  const teamFactors = ['Project has been set up online'];
-  const quickFactors = ['Projects cannot be changed to team projects later'];
+  const setupFactors = [t.setupFactor];
+  const teamFactors = [t.teamFactor];
+  const aloneFactors = [t.aloneFactor];
 
   const OnlineButton = ({
     id,
@@ -286,7 +273,7 @@ export function Welcome(props: IProps) {
       onClick={onClick}
     >
       <OnlineIcon className={classes.icon} />
-      {t2.online}
+      {t.online}
     </Button>
   );
 
@@ -307,7 +294,7 @@ export function Welcome(props: IProps) {
       onClick={onClick}
     >
       <OfflineIcon className={classes.icon} />
-      {txt ? txt : t2.offline}
+      {txt ? txt : t.offline}
     </Button>
   );
 
@@ -328,10 +315,10 @@ export function Welcome(props: IProps) {
           <Grid container spacing={3}>
             <Grid item xs={8}>
               <ChoiceHead
-                title={t2.admin}
-                prose={t2.adminTip}
-                keyFactorTitle={t2.keyFactor}
-                factors={adminFactors}
+                title={t.setupTeam}
+                prose={t.setupTeamTip}
+                keyFactorTitle={t.keyFactor}
+                factors={setupFactors}
               />
             </Grid>
             <Grid item xs={4} className={classes.action}>
@@ -339,9 +326,9 @@ export function Welcome(props: IProps) {
             </Grid>
             <Grid item xs={8}>
               <ChoiceHead
-                title={t2.team}
-                prose={t2.teamTip}
-                keyFactorTitle={t2.keyFactor}
+                title={t.team}
+                prose={t.teamTip}
+                keyFactorTitle={t.keyFactor}
                 factors={teamFactors}
               />
             </Grid>
@@ -353,15 +340,15 @@ export function Welcome(props: IProps) {
               <OfflineButton
                 id="teamimport"
                 onClick={handleImport}
-                txt={t2.import}
+                txt={t.import}
               />
             </Grid>
             <Grid item xs={8}>
               <ChoiceHead
-                title={t2.alone}
+                title={t.alone}
                 prose={''}
-                keyFactorTitle={t2.keyFactor}
-                factors={quickFactors}
+                keyFactorTitle={t.keyFactor}
+                factors={aloneFactors}
               />
             </Grid>
             <Grid item xs={4} className={classes.action}>
