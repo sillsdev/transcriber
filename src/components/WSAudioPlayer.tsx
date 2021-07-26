@@ -169,11 +169,13 @@ interface IProps extends IStateProps {
   blob?: Blob;
   allowRecord?: boolean;
   size: number;
+  segments: string;
   metaData?: JSX.Element;
   setMimeType?: (type: string) => void;
   setAcceptedMimes?: (types: MimeInfo[]) => void;
   onPlayStatus?: (playing: boolean) => void;
   onProgress?: (progress: number) => void;
+  onSegmentChange?: (segments: string) => void;
   onBlobReady?: (blob: Blob) => void;
   setBlobReady?: (ready: boolean) => void;
   setChanged?: (changed: boolean) => void;
@@ -203,10 +205,12 @@ function WSAudioPlayer(props: IProps) {
     blob,
     allowRecord,
     size,
+    segments,
     metaData,
     setMimeType,
     setAcceptedMimes,
     onProgress,
+    onSegmentChange,
     onPlayStatus,
     onBlobReady,
     setBlobReady,
@@ -253,6 +257,7 @@ function WSAudioPlayer(props: IProps) {
     wsSetPlaybackRate,
     wsSkip,
     wsGoto,
+    wsGetRegions,
     wsLoopRegion,
     wsRegionDelete,
     wsInsertAudio,
@@ -326,7 +331,7 @@ function WSAudioPlayer(props: IProps) {
   }, []);
 
   useEffect(() => {
-    wsSetHeight(size - 150);
+    wsSetHeight(size - 150); //does this need to be smarter?
   }, [size, wsSetHeight]);
 
   useEffect(() => {
@@ -340,7 +345,7 @@ function WSAudioPlayer(props: IProps) {
 
   useEffect(() => {
     setDuration(0);
-    if (blob) wsLoad(blob);
+    if (blob) wsLoad(blob, undefined, segments);
     else wsClear();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blob]); //passed in by user
@@ -397,8 +402,9 @@ function WSAudioPlayer(props: IProps) {
   }
   function onWSRegion(region: boolean) {
     setHasRegion(region);
-    //forceUpdate(1);
+    if (onSegmentChange) onSegmentChange(wsGetRegions());
   }
+
   function onWSStop() {
     setPlaying(false);
     if (onPlayStatus) onPlayStatus(false);

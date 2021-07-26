@@ -14,6 +14,7 @@ import { IWsAudioPlayerStrings } from '../model';
 import { FaGripLinesVertical, FaHandScissors } from 'react-icons/fa';
 import ClearIcon from '@material-ui/icons/Clear';
 import SettingsIcon from '@material-ui/icons/Settings';
+import BigDialog from '../hoc/BigDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -109,34 +110,40 @@ export function WSAudioPlayerSegment(props: IProps) {
           </LightTooltip>
 
           {showSettings && (
-            <Box display="flex" flexDirection="column">
-              <Typography id="silence-slider-label" gutterBottom>
-                Silence threshold (1000ths)
-              </Typography>
-              <Slider
-                min={1}
-                max={50}
-                step={1}
-                marks
-                value={silenceValue}
-                valueLabelDisplay="auto"
-                onChange={handleSilenceChange}
-                aria-labelledby="silence-slider"
-              />
-              <Typography id="silence-slider-label" gutterBottom>
-                Length of Silence threshold (100ths of second)
-              </Typography>
-              <Slider
-                step={1}
-                marks
-                min={1}
-                max={10}
-                value={timeValue}
-                valueLabelDisplay="auto"
-                onChange={handleTimeChange}
-                aria-labelledby="time-slider"
-              />
-            </Box>
+            <BigDialog
+              title={'Segment Settings'}
+              isOpen={showSettings}
+              onOpen={setShowSettings}
+            >
+              <Box display="flex" flexDirection="column">
+                <Typography id="silence-slider-label" gutterBottom>
+                  Silence threshold (1000ths)
+                </Typography>
+                <Slider
+                  min={1}
+                  max={50}
+                  step={1}
+                  marks
+                  value={silenceValue}
+                  valueLabelDisplay="auto"
+                  onChange={handleSilenceChange}
+                  aria-labelledby="silence-slider"
+                />
+                <Typography id="silence-slider-label" gutterBottom>
+                  Length of Silence threshold (100ths of second)
+                </Typography>
+                <Slider
+                  step={1}
+                  marks
+                  min={1}
+                  max={10}
+                  value={timeValue}
+                  valueLabelDisplay="auto"
+                  onChange={handleTimeChange}
+                  aria-labelledby="time-slider"
+                />
+              </Box>
+            </BigDialog>
           )}
           <LightTooltip id="wsSplitTip" title={'todo:SplitSegment'}>
             <span>

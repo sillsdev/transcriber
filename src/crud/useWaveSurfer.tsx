@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
-import { useMounted } from '../utils';
+//import { useMounted } from '../utils';
 //import { convertToMP3 } from '../utils/mp3';
 import { convertToWav } from '../utils/wav';
 
@@ -20,7 +20,7 @@ export function useWaveSurfer(
   singleRegion: boolean = false,
   timelineContainer?: any
 ) {
-  const isMounted = useMounted('wavesurfer');
+  //const isMounted = useMounted('wavesurfer');
   const progressRef = useRef(0);
   const wavesurferRef = useRef<WaveSurfer>();
   const blobToLoad = useRef<Blob>();
@@ -63,7 +63,7 @@ export function useWaveSurfer(
         if (inputRegionsRef.current) {
           loadRegions(inputRegionsRef.current);
         } else if (autoSegRef.current) wsAutoSegment();
-
+        if (playingRef.current) setPlaying(true);
         /* ws.enableDragSelection({
           color: randomColor(0.1),
         });*/
@@ -191,12 +191,6 @@ export function useWaveSurfer(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (!isMounted()) return;
-    if (wavesurfer()?.isReady && playingRef.current) setPlaying(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wavesurfer()?.isReady]);
-
   const isInRegion = (r: any, value: number) => {
     return value <= r.end && value >= r.start;
   };
@@ -310,16 +304,18 @@ export function useWaveSurfer(
       Object.keys(wavesurfer()?.regions.list).map(function (id) {
         let region = wavesurfer()?.regions.list[id];
         console.log(region);
+        /*
         let attributes = { ...region.attributes };
         var next = attributes.nextRegion;
         var prev = attributes.prevRegion;
         if (next) attributes.nextRegion = { s: next.start, e: next.end };
         if (prev) attributes.prevRegion = { s: prev.start, e: prev.end };
+        */
         return {
           start: region.start,
           end: region.end,
-          attributes: attributes,
-          data: region.data,
+          //attributes: attributes,
+          //data: region.data,
         };
       })
     );
@@ -629,6 +625,7 @@ export function useWaveSurfer(
     setPrevNext(Object.keys(wavesurfer()?.regions.list).map((id) => id));
     if (regions.length) wsGoto(regions[0].start);
   }
+
   function wsGetRegions() {
     if (!wavesurfer()) return '';
     return saveRegions();
@@ -700,22 +697,11 @@ export function useWaveSurfer(
       };
     });
 
-    // Add an initial region if the audio doesn't start with silence
-    var firstCluster = fClusters[0];
-    if (firstCluster && firstCluster[0] !== 0) {
-      regions.unshift({
-        start: 0,
-        end: firstCluster[firstCluster.length - 1] - 1,
-      });
-    }
-    //include the initial silence in the first region
-    //regions[0].start = 0;
-
     // Filter regions by minimum length
     let fRegions = regions.filter(function (reg) {
       return reg.end - reg.start >= minLenRegion;
     });
-    fRegions.forEach((r, index) => console.log(index, r.end - r.start));
+
     // Return time-based regions
     var tRegions = fRegions.map(function (reg) {
       console.log({
@@ -729,6 +715,16 @@ export function useWaveSurfer(
         end: Math.round(reg.end * coef * 10) / 10,
       };
     });
+    if (tRegions.length > 0) {
+      //add a region at zero if not there
+      var firstRegion = tRegions[0];
+      if (firstRegion.start !== 0) {
+        tRegions.unshift({
+          start: 0,
+          end: firstRegion.start,
+        });
+      }
+    }
     // Combine the regions so the silence is included at the end of the region
     return tRegions.map(function (reg, index) {
       var next = tRegions[index + 1];

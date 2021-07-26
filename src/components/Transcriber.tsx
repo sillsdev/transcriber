@@ -97,6 +97,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
+    pane: {},
   })
 );
 const Wrapper = styled.div`
@@ -251,8 +252,9 @@ export function Transcriber(props: IProps) {
   const [doSave] = useGlobal('doSave');
   const [projData, setProjData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
-  const playedSecsRef = React.useRef<number>(0);
-  const stateRef = React.useRef<string>(state);
+  const playedSecsRef = useRef<number>(0);
+  const segmentsRef = useRef('');
+  const stateRef = useRef<string>(state);
   const [totalSeconds, setTotalSeconds] = useState(duration);
   const [transcribing] = useState(
     state === ActivityStates.Transcribing ||
@@ -397,7 +399,12 @@ export function Transcriber(props: IProps) {
         position: 0,
       });
       setChanged(true);
-      save(passage.attributes.state, 0, t.pullParatextStatus);
+      save(
+        passage.attributes.state,
+        0,
+        segmentsRef.current,
+        t.pullParatextStatus
+      );
       resetParatextText();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -577,7 +584,7 @@ export function Transcriber(props: IProps) {
         projType.toLowerCase() !== 'scripture'
       )
         nextState = ActivityStates.Done;
-      await save(nextState, 0, '');
+      await save(nextState, 0, segmentsRef.current, '');
     } else {
       logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
     }
@@ -635,6 +642,7 @@ export function Transcriber(props: IProps) {
     await save(
       nextOnSave[stateRef.current] ?? stateRef.current,
       playedSecsRef.current,
+      segmentsRef.current,
       undefined
     );
   };
@@ -642,6 +650,7 @@ export function Transcriber(props: IProps) {
   const save = async (
     nextState: string,
     newPosition: number,
+    segments: string,
     thiscomment: string | undefined
   ) => {
     if (transcriptionRef.current) {
@@ -672,8 +681,9 @@ export function Transcriber(props: IProps) {
             attributes: {
               transcription: transcription,
               position: newPosition,
+              segments: segments,
             },
-          } as MediaFile,
+          } as any as MediaFile,
           user
         )
       );
@@ -749,6 +759,7 @@ export function Transcriber(props: IProps) {
     const mediaRec = mediafiles.filter((m) => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
+      segmentsRef.current = attr.segments || '';
       return {
         transcription: attr.transcription ? attr.transcription : '',
         position: attr.position,
@@ -762,6 +773,7 @@ export function Transcriber(props: IProps) {
     transcriptionIn.current = val.transcription;
     setTextValue(val.transcription);
     setDefaultPosition(val.position);
+
     //focus on player
     if (transcriptionRef.current) {
       transcriptionRef.current.firstChild.value = val.transcription;
@@ -810,6 +822,8 @@ export function Transcriber(props: IProps) {
   };
 
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
+  const onSegmentChange = (segments: string) =>
+    (segmentsRef.current = segments);
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {
       focusOnTranscription();
@@ -821,7 +835,6 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleSplitSize = debounce((e: any) => {
-    console.log(e);
     setPlayerSize(e);
   }, 100);
 
@@ -852,7 +865,7 @@ export function Transcriber(props: IProps) {
                   split="horizontal"
                   onChange={handleSplitSize}
                 >
-                  <Pane>
+                  <Pane className={classes.pane}>
                     <Grid container direction="row" className={classes.row}>
                       {role === 'transcriber' &&
                         hasParatextName &&
@@ -883,7 +896,9 @@ export function Transcriber(props: IProps) {
                             allowRecord={false}
                             size={playerSize}
                             blob={audioBlob}
+                            segments={segmentsRef.current}
                             onProgress={onProgress}
+                            onSegmentChange={onSegmentChange}
                             onPlayStatus={onPlayStatus}
                             onDuration={onDuration}
                             onSaveProgress={
@@ -896,7 +911,7 @@ export function Transcriber(props: IProps) {
                       </Grid>
                     </Grid>
                   </Pane>
-                  <Pane>
+                  <Pane className={classes.pane}>
                     <Grid item xs={12} sm container>
                       <Grid
                         ref={transcriptionRef}
