@@ -335,12 +335,10 @@ export function Access(props: IProps) {
           <Typography className={classes.sectionHead}>
             Hello I'm under the AppHead
           </Typography>
-          <div>
-            <Button id="back" color="primary" onClick={handleBack}>
-              <ArrowBackIcon />
-              {t.back}
-            </Button>
-          </div>
+          <Button id="back" color="primary" onClick={handleBack}>
+            <ArrowBackIcon />
+            {t.back}
+          </Button>
           <div className={classes.container}>
             <Typography className={classes.title}>{t.title}</Typography>
           </div>

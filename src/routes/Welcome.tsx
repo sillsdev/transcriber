@@ -93,13 +93,13 @@ export function Welcome(props: IProps) {
   const [hasOfflineUsers, setHasOfflineUsers] = useState(false);
   const [hasOnlineUsers, setHasOnlineUsers] = useState(false);
   const [hasOfflineProjects, setHasOfflineProjects] = useState(false);
+  const [hasProjects, setHasProjects] = useState(false);
+
+  const recOfType = (recType: string) =>
+    memory.cache.query((q: QueryBuilder) => q.findRecords(recType)) as Record[];
 
   const hasRecs = (recType: string, iRecs?: Record[], offline?: Boolean) => {
-    const recs =
-      iRecs ||
-      (memory.cache.query((q: QueryBuilder) =>
-        q.findRecords(recType)
-      ) as Record[]);
+    const recs = iRecs || recOfType(recType);
     const offlineRecs = recs.filter((u) =>
       u.keys?.remoteId === undefined ? !offline : offline
     );
@@ -107,14 +107,14 @@ export function Welcome(props: IProps) {
   };
 
   const checkUsers = (autoGo: boolean, prevChoice?: string) => {
-    const users = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('user')
-    ) as User[];
+    const users = recOfType('user') as User[];
     const offlineUsers = hasRecs('user', users);
     setHasOfflineUsers(offlineUsers);
     const onlineUsers = hasRecs('user', users, true);
     setHasOnlineUsers(onlineUsers);
     setHasOfflineProjects(hasRecs('offlineproject'));
+    const projects = recOfType('project') as Record[];
+    setHasProjects(projects.length > 0);
 
     const lastUserId = localStorage.getItem('user-id');
     console.log('lastUserId', lastUserId);
@@ -182,7 +182,7 @@ export function Welcome(props: IProps) {
   };
 
   const handleQuickOnline = () => {
-    if (!hasOfflineProjects) localStorage.setItem('autoaddProject', 'true');
+    if (!hasProjects) localStorage.setItem('autoaddProject', 'true');
     handleGoOnlineCloud();
   };
 
@@ -217,7 +217,8 @@ export function Welcome(props: IProps) {
   };
 
   const handleQuickOffline = () => {
-    if (!hasOfflineUsers) localStorage.setItem('autoaddProject', 'true');
+    if (!hasOfflineProjects || !hasOfflineUsers)
+      localStorage.setItem('autoaddProject', 'true');
 
     if (hasOfflineUsers) {
       const users = memory.cache.query((q: QueryBuilder) =>
