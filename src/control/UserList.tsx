@@ -28,8 +28,8 @@ export const UserList = (props: IProps) => {
               ? -1
               : 1
           )
-          .map((u) => (
-            <UserListItem u={u} users={users} onSelect={select} />
+          .map((u, i) => (
+            <UserListItem u={u} key={i} users={users} onSelect={select} />
           ))}
       </List>
     </>

@@ -877,25 +877,21 @@ export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
 
 export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
     "title": string;
-    "admin": string;
-    "onlineAdmin": string;
-    "onlineAdminTip": string;
-    "offlineAdmin": string;
-    "offlineAdminTip": string;
-    "teamMember": string;
-    "teamOnline": string;
-    "teamOnlineTip": string;
-    "teamOffline": string;
-    "teamOfflineTip": string;
+    "setupTeam": string;
+    "setupTeamTip": string;
+    "setupFactor": string;
+    "team": string;
+    "teamTip": string;
+    "teamFactor": string;
+    "keyFactor": string;
+    "online": string;
+    "offline": string;
     "import": string;
-    "importTip": string;
-    "quick": string;
-    "quickOnline": string;
-    "quickOnlineTip": string;
-    "quickOffline": string;
-    "quickOfflineTip": string;
+    "alone": string;
+    "aloneFactor": string;
     "quickGiven": string;
     "quickFamily": string;
+    "quickName": string;
 };
 
 export interface ILocalizedStrings {

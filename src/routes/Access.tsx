@@ -57,7 +57,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       fontSize: '16pt',
-      paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(2),
     },
     sectionHead: {
@@ -344,46 +343,50 @@ export function Access(props: IProps) {
             <Typography className={classes.title}>{t.title}</Typography>
           </div>
           <Paper className={classes.paper}>
-            {whichUsers === 'online' && (
+            {whichUsers.startsWith('online') && (
               <div className={classes.container}>
                 <Typography className={classes.sectionHead}>
                   {t.onlineScreenTitle}
                 </Typography>
-                <Typography className={classes.sectionHead}>
-                  {t.withInternet}
-                </Typography>
-                {curUser ? (
-                  <Paper className={classes.paper}>
-                    <div className={classes.actions}>
-                      <UserListItem
-                        u={curUser}
-                        users={users}
-                        onSelect={handleGoOnline}
-                      />
-                    </div>
-                    <div>{t.chooseAnother}</div>
-                    <Button
-                      id="accessLogin"
-                      variant="outlined"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleLogout}
-                    >
-                      {t.logout}
-                    </Button>
-                  </Paper>
-                ) : (
-                  <Button
-                    id="accessLogin"
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleGoOnline}
-                  >
-                    {t.logIn}
-                  </Button>
+                {whichUsers !== 'online-local' && (
+                  <>
+                    <Typography className={classes.sectionHead}>
+                      {t.withInternet}
+                    </Typography>
+                    {curUser ? (
+                      <Paper className={classes.paper}>
+                        <div className={classes.actions}>
+                          <UserListItem
+                            u={curUser}
+                            users={users}
+                            onSelect={handleGoOnline}
+                          />
+                        </div>
+                        <div>{t.chooseAnother}</div>
+                        <Button
+                          id="accessLogin"
+                          variant="outlined"
+                          color="primary"
+                          className={classes.button}
+                          onClick={handleLogout}
+                        >
+                          {t.logout}
+                        </Button>
+                      </Paper>
+                    ) : (
+                      <Button
+                        id="accessLogin"
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        onClick={handleGoOnline}
+                      >
+                        {t.logIn}
+                      </Button>
+                    )}
+                  </>
                 )}
-                {!autoAdd && (
+                {!autoAdd && whichUsers !== 'online-cloud' && (
                   <div className={classes.container}>
                     <Box className={classes.row}>
                       <Typography className={classes.sectionHead}>

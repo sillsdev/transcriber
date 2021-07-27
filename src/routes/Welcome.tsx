@@ -3,6 +3,7 @@ import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { IState, IWelcomeStrings, User } from '../model';
+import { Record } from '@orbit/data';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -22,11 +23,12 @@ import moment from 'moment';
 import { AddRecord } from '../model/baseModel';
 import { useOfflineSetup } from '../crud';
 import { ChoiceHead } from '../control/ChoiceHead';
+import { backup } from '../schema';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: '100%',
+      width: '95%',
       flexGrow: 1,
       '& .MuiListSubheader-root': {
         lineHeight: 'unset',
@@ -89,12 +91,30 @@ export function Welcome(props: IProps) {
   const memory = coordinator.getSource('memory') as MemorySource;
   const [importOpen, setImportOpen] = useState(false);
   const [hasOfflineUsers, setHasOfflineUsers] = useState(false);
+  const [hasOnlineUsers, setHasOnlineUsers] = useState(false);
+  const [hasOfflineProjects, setHasOfflineProjects] = useState(false);
+  const [hasProjects, setHasProjects] = useState(false);
+
+  const recOfType = (recType: string) =>
+    memory.cache.query((q: QueryBuilder) => q.findRecords(recType)) as Record[];
+
+  const hasRecs = (recType: string, iRecs?: Record[], offline?: Boolean) => {
+    const recs = iRecs || recOfType(recType);
+    const offlineRecs = recs.filter((u) =>
+      u.keys?.remoteId === undefined ? !offline : offline
+    );
+    return offlineRecs.length > 0;
+  };
+
   const checkUsers = (autoGo: boolean, prevChoice?: string) => {
-    const users = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('user')
-    ) as User[];
-    var offlineUsers = users.filter((u) => u.keys?.remoteId === undefined);
-    setHasOfflineUsers(offlineUsers.length > 0);
+    const users = recOfType('user') as User[];
+    const offlineUsers = hasRecs('user', users);
+    setHasOfflineUsers(offlineUsers);
+    const onlineUsers = hasRecs('user', users, true);
+    setHasOnlineUsers(onlineUsers);
+    setHasOfflineProjects(hasRecs('offlineproject'));
+    const projects = recOfType('project') as Record[];
+    setHasProjects(projects.length > 0);
 
     const lastUserId = localStorage.getItem('user-id');
     console.log('lastUserId', lastUserId);
@@ -117,15 +137,13 @@ export function Welcome(props: IProps) {
       setWhichUsers(prevChoice);
       return;
     }
-    //I don't have a previous choice, but I may only have one choice...
-    var onlineUsers = users.filter((u) => u.keys?.remoteId !== undefined);
     //if we're supposed to choose and we only have one choice...go
     if (
       autoGo &&
-      (onlineUsers.length > 0 || offlineUsers.length > 0) &&
-      !(onlineUsers.length > 0 && offlineUsers.length > 0)
+      (onlineUsers || offlineUsers) &&
+      !(onlineUsers && offlineUsers)
     ) {
-      setWhichUsers(onlineUsers.length > 0 ? 'online' : 'offline');
+      setWhichUsers(onlineUsers ? 'online' : 'offline');
     }
   };
 
@@ -151,22 +169,36 @@ export function Welcome(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importStatus]);
 
-  const handleGoOnline = () => {
-    handleOfflineChange('online');
+  const handleGoOnlineCloud = () => {
+    handleOfflineChange('online-cloud');
+  };
+
+  const handleGoOnlineLocal = () => {
+    handleOfflineChange('online-local');
   };
 
   const handleGoOffline = () => {
     handleOfflineChange('offline');
   };
+
   const handleQuickOnline = () => {
-    localStorage.setItem('autoaddProject', 'true');
-    handleGoOnline();
+    if (!hasProjects) localStorage.setItem('autoaddProject', 'true');
+    handleGoOnlineCloud();
   };
+
+  const AddUserLocalOnly = async (userRec: User) => {
+    await memory.sync(
+      await backup.push((t: TransformBuilder) =>
+        AddRecord(t, userRec, user, memory)
+      )
+    );
+  };
+
   const addQuickUser = async () => {
     let userRec: User = {
       type: 'user',
       attributes: {
-        name: t.quickGiven + ' ' + t.quickFamily,
+        name: t.quickName,
         givenName: t.quickGiven,
         familyName: t.quickFamily,
         email: '',
@@ -179,14 +211,14 @@ export function Welcome(props: IProps) {
         newsPreference: false,
       },
     } as any;
-    await memory.update((t: TransformBuilder) =>
-      AddRecord(t, userRec, user, memory)
-    );
+    await AddUserLocalOnly(userRec);
     await offlineSetup();
     return userRec.id;
   };
+
   const handleQuickOffline = () => {
-    localStorage.setItem('autoaddProject', 'true');
+    if (!hasOfflineProjects || !hasOfflineUsers)
+      localStorage.setItem('autoaddProject', 'true');
 
     if (hasOfflineUsers) {
       const users = memory.cache.query((q: QueryBuilder) =>
@@ -210,6 +242,7 @@ export function Welcome(props: IProps) {
       handleGoOffline();
     });
   };
+
   const handleOfflineChange = (target: string) => {
     setWhichUsers(target);
     localStorage.setItem(
@@ -217,26 +250,14 @@ export function Welcome(props: IProps) {
       target === 'offline' ? 'true' : 'false'
     );
   };
+
   const handleImport = () => {
     setImportOpen(true);
   };
 
-  const t2 = {
-    admin: 'Setup up a team project',
-    adminTip:
-      'Setup the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.',
-    team: 'Work in a team project',
-    teamTip:
-      'A project has been setup online.  Transcribers and editors can work online, offline by downloading the project, or offline by importing it.',
-    keyFactor: 'Key Factor',
-    online: 'Work Online',
-    offline: 'Work Offline',
-    import: 'Import Project',
-    alone: 'Work alone',
-  };
-  const adminFactors = ['Requires Internet connection'];
-  const teamFactors = ['Project has been set up online'];
-  const quickFactors = ['Projects cannot be changed to team projects later'];
+  const setupFactors = [t.setupFactor];
+  const teamFactors = [t.teamFactor];
+  const aloneFactors = [t.aloneFactor];
 
   const OnlineButton = ({
     id,
@@ -253,9 +274,10 @@ export function Welcome(props: IProps) {
       onClick={onClick}
     >
       <OnlineIcon className={classes.icon} />
-      {t2.online}
+      {t.online}
     </Button>
   );
+
   const OfflineButton = ({
     id,
     onClick,
@@ -273,7 +295,7 @@ export function Welcome(props: IProps) {
       onClick={onClick}
     >
       <OfflineIcon className={classes.icon} />
-      {txt ? txt : t2.offline}
+      {txt ? txt : t.offline}
     </Button>
   );
 
@@ -294,40 +316,40 @@ export function Welcome(props: IProps) {
           <Grid container spacing={3}>
             <Grid item xs={8}>
               <ChoiceHead
-                title={t2.admin}
-                prose={t2.adminTip}
-                keyFactorTitle={t2.keyFactor}
-                factors={adminFactors}
+                title={t.setupTeam}
+                prose={t.setupTeamTip}
+                keyFactorTitle={t.keyFactor}
+                factors={setupFactors}
               />
             </Grid>
             <Grid item xs={4} className={classes.action}>
-              <OnlineButton id="adminonline" onClick={handleGoOnline} />
+              <OnlineButton id="adminonline" onClick={handleGoOnlineCloud} />
             </Grid>
             <Grid item xs={8}>
               <ChoiceHead
-                title={t2.team}
-                prose={t2.teamTip}
-                keyFactorTitle={t2.keyFactor}
+                title={t.team}
+                prose={t.teamTip}
+                keyFactorTitle={t.keyFactor}
                 factors={teamFactors}
               />
             </Grid>
             <Grid item xs={4} className={classes.action}>
-              <OnlineButton id="teamonline" onClick={handleGoOnline} />
-              {hasOfflineUsers && (
-                <OfflineButton id="teamoffline" onClick={handleGoOffline} />
+              <OnlineButton id="teamonline" onClick={handleGoOnlineCloud} />
+              {hasOfflineProjects && hasOnlineUsers && (
+                <OfflineButton id="teamoffline" onClick={handleGoOnlineLocal} />
               )}
               <OfflineButton
                 id="teamimport"
                 onClick={handleImport}
-                txt={t2.import}
+                txt={t.import}
               />
             </Grid>
             <Grid item xs={8}>
               <ChoiceHead
-                title={t2.alone}
+                title={t.alone}
                 prose={''}
-                keyFactorTitle={t2.keyFactor}
-                factors={quickFactors}
+                keyFactorTitle={t.keyFactor}
+                factors={aloneFactors}
               />
             </Grid>
             <Grid item xs={4} className={classes.action}>

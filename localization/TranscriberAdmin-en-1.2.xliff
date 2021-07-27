@@ -5078,134 +5078,106 @@
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.admin">
-      		<source>I'm a Project Administrator (Owner)</source>
+      	<trans-unit id="welcome.setupTeam">
+      		<source>Set up a team project</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.onlineAdmin">
-      		<source>For Online or Occassionally Connected Projects</source>
+      	<trans-unit id="welcome.setupTeamTip">
+      		<source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.onlineAdminTip">
-      		<source>All project administration must be done online.  Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to offline computers of team members.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.</source>
+      	<trans-unit id="welcome.setupFactor">
+      		<source>Requires Internet connection</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.offlineAdmin">
-      		<source>For Offline Single User Projects</source>
+      	<trans-unit id="welcome.team">
+      		<source>Work in a team project</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.offlineAdminTip">
-      		<source>The project is stored on your computer. You cannot set up a team.  You can export the project and import it on to another computer, but all changes will be done under your user.  Changes can be exported and then imported on to the master computer.</source>
+      	<trans-unit id="welcome.teamTip">
+      		<source>A project has been set up online.  Transcribers and editors can work online, offline by downloading the project, or offline by importing it.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.teamMember">
-      		<source>I'm a Team Member</source>
+      	<trans-unit id="welcome.teamFactor">
+      		<source>Project has been set up online</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.teamOnline">
-      		<source>For Projects Available Online</source>
+      	<trans-unit id="welcome.keyFactor">
+      		<source>Key Factor</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.teamOnlineTip">
-      		<source>Projects can be worked on online, marked as 'available offline' while online and downloaded, or exported to a file and imported on to an offline computer.  Changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.</source>
+      	<trans-unit id="welcome.online">
+      		<source>Work Online</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.teamOffline">
-      		<source>For Projects Only Available Offline</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">welcome.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="welcome.teamOfflineTip">
-      		<source>Changes must be exported and imported to the master computer.</source>
+      	<trans-unit id="welcome.offline">
+      		<source>Work Offline</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="welcome.import">
-      		<source>For projects with an available import file</source>
+      		<source>Import Project</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.importTip">
-      		<source>Either Online or Offline Projects can be imported to be worked on offline.  If the project was created online, changes made offline will be automatically synced if the computer comes online, or changes can be exported and imported to the online project.  If the project was created offline, changes must be exported and imported to the master computer.  Team members must be added to the project before export.</source>
+      	<trans-unit id="welcome.alone">
+      		<source>Work Alone</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.quick">
-      		<source>Quick Transcribe</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">welcome.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="welcome.quickOnline">
-      		<source>With Online Access</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">welcome.tsx</context>
-      		</context-group>
-      	</trans-unit>
-         <trans-unit id="welcome.quickOnlineTip">
-      		<source>After login, you will choose a project type, upload or record audio, and start transcribing as soon as possible.  Your audio will be stored online.</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">welcome.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="welcome.quickOffline">
-      		<source>Offline Only Access</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">welcome.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="welcome.quickOfflineTip">
-      		<source>We will create a default user, you will choose a project type, import or record audio, and start transcribing as soon as possible.  Your audio will be stored on your computer.</source>
+      	<trans-unit id="welcome.aloneFactor">
+      		<source>Projects cannot be changed to team projects later</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="welcome.quickGiven">
-      		<source>Quick</source>
+      		<source>Initial</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-         <trans-unit id="welcome.quickFamily">
+      	<trans-unit id="welcome.quickFamily">
       		<source>User</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="welcome.quickName">
+      		<source>Initial User</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
