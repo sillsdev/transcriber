@@ -4034,6 +4034,18 @@
    			<target>Requer conexão à Internet</target>
    		</segment>
    	</unit>
+   	<unit id="welcome.setupFactor2">
+   		<segment>
+   			<source>Supports projects that are offline available</source>
+   			<target>Apoia projetos que estão disponíveis offline</target>
+   		</segment>
+   	</unit>
+   	<unit id="welcome.setupFactor2Help">
+   		<segment>
+   			<source>Projects are Made Available Offline on the three dot More Menu on each Project Card.</source>
+   			<target>Os projetos estão disponíveis off-line no Menu Mais três pontos em cada Cartão de Projeto.</target>
+   		</segment>
+   	</unit>
    	<unit id="welcome.team">
    		<segment>
    			<source>Work in a team project</source>

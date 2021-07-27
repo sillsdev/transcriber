@@ -880,6 +880,8 @@ export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
     "setupTeam": string;
     "setupTeamTip": string;
     "setupFactor": string;
+    "setupFactor2": string;
+    "setupFactor2Help": string;
     "team": string;
     "teamTip": string;
     "teamFactor": string;

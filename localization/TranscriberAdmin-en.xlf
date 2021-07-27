@@ -4372,6 +4372,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="welcome.setupFactor2">
+         <segment>
+            <source>Supports projects that are offline available</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.setupFactor2Help">
+         <segment>
+            <source>Projects are Made Available Offline on the three dot More Menu on each Project Card.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="welcome.team">
          <segment>
             <source>Work in a team project</source>
@@ -4392,7 +4404,7 @@
       </unit>
       <unit id="welcome.keyFactor">
          <segment>
-            <source>Key Factor</source>
+            <source>Key Factor(s)</source>
             <target/>
          </segment>
       </unit>

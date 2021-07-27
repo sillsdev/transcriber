@@ -19,12 +19,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+export interface FactorDecorate {
+  [key: string]: ReactElement;
+}
+
 interface IProps {
   title: string;
   decorate?: ReactElement;
   prose: string;
   keyFactorTitle: string;
   factors: string[];
+  factorDecorate?: FactorDecorate;
 }
 
 const KindHead = (props: { text: string; decorate?: ReactElement }) => (
@@ -52,9 +57,11 @@ const Bullet = () => (
 export const KeyFactorsList = ({
   keyFactorTitle,
   factors,
+  decorator,
 }: {
   keyFactorTitle: string;
   factors: string[];
+  decorator?: FactorDecorate;
 }) => {
   return (
     <List dense subheader={<KeyFactorsHead title={keyFactorTitle} />}>
@@ -62,6 +69,7 @@ export const KeyFactorsList = ({
         <ListItem key={i}>
           <Bullet />
           {f}
+          {decorator && decorator[f]}
         </ListItem>
       ))}
     </List>
@@ -69,7 +77,8 @@ export const KeyFactorsList = ({
 };
 
 export const ChoiceHead = (props: IProps) => {
-  const { title, decorate, prose, keyFactorTitle, factors } = props;
+  const { title, decorate, prose, keyFactorTitle, factors, factorDecorate } =
+    props;
   return (
     <>
       <KindHead text={title} decorate={decorate} />
@@ -78,7 +87,11 @@ export const ChoiceHead = (props: IProps) => {
           <Prose text={prose} />
         </Grid>
         <Grid item md={6} xs={12}>
-          <KeyFactorsList keyFactorTitle={keyFactorTitle} factors={factors} />
+          <KeyFactorsList
+            keyFactorTitle={keyFactorTitle}
+            factors={factors}
+            decorator={factorDecorate}
+          />
         </Grid>
       </Grid>
     </>
