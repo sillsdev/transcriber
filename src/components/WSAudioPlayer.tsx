@@ -31,6 +31,7 @@ import LoopIcon from '@material-ui/icons/Loop';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SilenceIcon from '@material-ui/icons/SpaceBar';
 import TimerIcon from '@material-ui/icons/AccessTime';
+import NextSegmentIcon from '@material-ui/icons/ArrowRightAlt';
 
 import localStrings from '../selector/localize';
 import { IState, IWsAudioPlayerStrings } from '../model';
@@ -40,6 +41,7 @@ import {
   FaDotCircle,
   FaStopCircle,
 } from 'react-icons/fa';
+
 //import { createWaveSurfer } from './WSAudioRegion';
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
 import { useWaveSurfer } from '../crud/useWaveSurfer';
@@ -47,6 +49,8 @@ import { Duration, LightTooltip } from '../control';
 import { connect } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
+import { WSAudioPlayerZoom } from './WSAudioPlayerZoom';
+import { WSAudioPlayerSegment } from './WSAudioPlayerSegment';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -155,6 +159,7 @@ const IOSSlider = withStyles({
     backgroundColor: 'currentColor',
   },
 })(Slider);
+
 interface IStateProps {
   t: IWsAudioPlayerStrings;
 }
@@ -163,11 +168,14 @@ interface IProps extends IStateProps {
   visible: boolean;
   blob?: Blob;
   allowRecord?: boolean;
+  size: number;
+  segments: string;
   metaData?: JSX.Element;
   setMimeType?: (type: string) => void;
   setAcceptedMimes?: (types: MimeInfo[]) => void;
   onPlayStatus?: (playing: boolean) => void;
   onProgress?: (progress: number) => void;
+  onSegmentChange?: (segments: string) => void;
   onBlobReady?: (blob: Blob) => void;
   setBlobReady?: (ready: boolean) => void;
   setChanged?: (changed: boolean) => void;
@@ -196,10 +204,13 @@ function WSAudioPlayer(props: IProps) {
     t,
     blob,
     allowRecord,
+    size,
+    segments,
     metaData,
     setMimeType,
     setAcceptedMimes,
     onProgress,
+    onSegmentChange,
     onPlayStatus,
     onBlobReady,
     setBlobReady,
@@ -246,18 +257,27 @@ function WSAudioPlayer(props: IProps) {
     wsSetPlaybackRate,
     wsSkip,
     wsGoto,
+    wsGetRegions,
     wsLoopRegion,
     wsRegionDelete,
     wsInsertAudio,
     wsInsertSilence,
+    wsZoom,
+    wsAutoSegment,
+    wsNextRegion,
+    wsSplitRegion,
+    wsRemoveSplitRegion,
+    wsAddOrRemoveRegion,
+    wsSetHeight,
   } = useWaveSurfer(
     waveformRef.current,
     onWSReady,
     onWSProgress,
     onWSRegion,
     onWSStop,
-    () => {},
-    allowRecord ? 150 : 50,
+    () => {}, //on error...probably should report?
+    size - 150,
+    allowRecord,
     timelineRef.current
   );
   //because we have to call hooks consistently, call this even if we aren't going to record
@@ -311,6 +331,10 @@ function WSAudioPlayer(props: IProps) {
   }, []);
 
   useEffect(() => {
+    wsSetHeight(size - 150); //does this need to be smarter?
+  }, [size, wsSetHeight]);
+
+  useEffect(() => {
     onSaveProgressRef.current = onSaveProgress;
   }, [onSaveProgress]);
 
@@ -321,7 +345,7 @@ function WSAudioPlayer(props: IProps) {
 
   useEffect(() => {
     setDuration(0);
-    if (blob) wsLoad(blob);
+    if (blob) wsLoad(blob, undefined, segments);
     else wsClear();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blob]); //passed in by user
@@ -376,11 +400,11 @@ function WSAudioPlayer(props: IProps) {
     setProgress(progress);
     if (onProgress) onProgress(progress);
   }
-  function onWSRegion(region: boolean) {
-    setHasRegion(region);
-    setLooping(wsLoopRegion(region && !allowRecord));
-    //forceUpdate(1);
+  function onWSRegion(count: number) {
+    setHasRegion(count > 0);
+    if (onSegmentChange) onSegmentChange(wsGetRegions());
   }
+
   function onWSStop() {
     setPlaying(false);
     if (onPlayStatus) onPlayStatus(false);
@@ -435,9 +459,13 @@ function WSAudioPlayer(props: IProps) {
   };
   const handleJumpEv = (amount: number) => () => handleJumpFn(amount);
   const handleGotoEv = (place: number) => () => wsGoto(place);
-  const handleToggleLoop = () => () => {
+  const handleToggleLoop = () => {
     setLooping(wsLoopRegion(!looping));
   };
+  const handleNextRegion = () => {
+    wsNextRegion();
+  };
+
   const gotoEnd = () => {
     wsPause();
     setPlaying(false);
@@ -605,10 +633,45 @@ function WSAudioPlayer(props: IProps) {
               <div className={classes.grow}>{'\u00A0'}</div>
             </Grid>
           )}
-          <Typography>
-            <Duration id="wsAudioPosition" seconds={progress} /> {' / '}
-            <Duration id="wsAudioDuration" seconds={duration} />
-          </Typography>
+          <Grid container className={classes.toolbar}>
+            <Grid item>
+              <Typography>
+                <Duration id="wsAudioPosition" seconds={progress} /> {' / '}
+                <Duration id="wsAudioDuration" seconds={duration} />
+              </Typography>
+            </Grid>
+            <Divider
+              id="wsAudioDiv3"
+              className={classes.divider}
+              orientation="vertical"
+              flexItem
+            />
+            <Grid item>
+              <WSAudioPlayerZoom
+                startBig={allowRecord || false}
+                ready={ready}
+                wsSetHeight={wsSetHeight}
+                wsZoom={wsZoom}
+                t={t}
+              ></WSAudioPlayerZoom>
+            </Grid>
+            <Divider
+              id="wsAudioDiv3"
+              className={classes.divider}
+              orientation="vertical"
+              flexItem
+            />
+            {allowRecord || (
+              <WSAudioPlayerSegment
+                ready={ready}
+                wsAutoSegment={wsAutoSegment}
+                wsSplitRegion={wsSplitRegion}
+                wsRemoveSplitRegion={wsRemoveSplitRegion}
+                wsAddOrRemoveRegion={wsAddOrRemoveRegion}
+                t={t}
+              />
+            )}
+          </Grid>
           <div id="wsAudioTimeline" ref={timelineRef} />
           <div id="wsAudioWaveform" ref={waveformRef} />
           <Grid container className={classes.toolbar}>
@@ -625,11 +688,22 @@ function WSAudioPlayer(props: IProps) {
                         className={classes.togglebutton}
                         value="loop"
                         selected={looping}
-                        onChange={handleToggleLoop()}
+                        onChange={handleToggleLoop}
                         disabled={!hasRegion}
                       >
                         <LoopIcon />
                       </ToggleButton>
+                    </span>
+                  </LightTooltip>
+                  <LightTooltip id="wsNextTip" title={'todo:NextSegment'}>
+                    <span>
+                      <IconButton
+                        disabled={!hasRegion}
+                        id="wsNext"
+                        onClick={handleNextRegion}
+                      >
+                        <NextSegmentIcon />
+                      </IconButton>
                     </span>
                   </LightTooltip>
                 </Grid>

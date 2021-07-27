@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
+import SplitPane, { Pane } from 'react-split-pane';
+import styled from 'styled-components';
 import {
   MediaFile,
   Project,
@@ -95,8 +97,64 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
+    pane: {},
   })
 );
+const Wrapper = styled.div`
+  .Resizer {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    background: #000;
+    opacity: 0.2;
+    z-index: 1;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding;
+    background-clip: padding-box;
+  }
+
+  .Resizer:hover {
+    -webkit-transition: all 2s ease;
+    transition: all 2s ease;
+  }
+
+  .Resizer.horizontal {
+    height: 11px;
+    margin: -5px 0;
+    border-top: 5px solid rgba(255, 255, 255, 0);
+    border-bottom: 5px solid rgba(255, 255, 255, 0);
+    cursor: row-resize;
+    width: 100%;
+  }
+
+  .Resizer.horizontal:hover {
+    border-top: 5px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+  }
+
+  .Resizer.vertical {
+    width: 11px;
+    margin: 0 -5px;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+    border-right: 5px solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
+  }
+
+  .Resizer.vertical:hover {
+    border-left: 5px solid rgba(0, 0, 0, 0.5);
+    border-right: 5px solid rgba(0, 0, 0, 0.5);
+  }
+  .Pane1 {
+    // background-color: blue;
+    display: flex;
+    min-height: 0;
+  }
+  .Pane2 {
+    // background-color: red;
+    display: flex;
+    min-height: 0;
+  }
+`;
 interface IRecordProps {
   mediafiles: MediaFile[];
   integrations: Integration[];
@@ -194,8 +252,9 @@ export function Transcriber(props: IProps) {
   const [doSave] = useGlobal('doSave');
   const [projData, setProjData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
-  const playedSecsRef = React.useRef<number>(0);
-  const stateRef = React.useRef<string>(state);
+  const playedSecsRef = useRef<number>(0);
+  const segmentsRef = useRef('');
+  const stateRef = useRef<string>(state);
   const [totalSeconds, setTotalSeconds] = useState(duration);
   const [transcribing] = useState(
     state === ActivityStates.Transcribing ||
@@ -228,7 +287,7 @@ export function Transcriber(props: IProps) {
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
   const t = transcriberStr;
-
+  const [playerSize, setPlayerSize] = useState(180);
   useEffect(() => {
     playingRef.current = playing;
   }, [playing]);
@@ -340,7 +399,12 @@ export function Transcriber(props: IProps) {
         position: 0,
       });
       setChanged(true);
-      save(passage.attributes.state, 0, t.pullParatextStatus);
+      save(
+        passage.attributes.state,
+        0,
+        segmentsRef.current,
+        t.pullParatextStatus
+      );
       resetParatextText();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -520,7 +584,7 @@ export function Transcriber(props: IProps) {
         projType.toLowerCase() !== 'scripture'
       )
         nextState = ActivityStates.Done;
-      await save(nextState, 0, '');
+      await save(nextState, 0, segmentsRef.current, '');
     } else {
       logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
     }
@@ -578,6 +642,7 @@ export function Transcriber(props: IProps) {
     await save(
       nextOnSave[stateRef.current] ?? stateRef.current,
       playedSecsRef.current,
+      segmentsRef.current,
       undefined
     );
   };
@@ -585,6 +650,7 @@ export function Transcriber(props: IProps) {
   const save = async (
     nextState: string,
     newPosition: number,
+    segments: string,
     thiscomment: string | undefined
   ) => {
     if (transcriptionRef.current) {
@@ -615,8 +681,9 @@ export function Transcriber(props: IProps) {
             attributes: {
               transcription: transcription,
               position: newPosition,
+              segments: segments,
             },
-          } as MediaFile,
+          } as any as MediaFile,
           user
         )
       );
@@ -692,6 +759,7 @@ export function Transcriber(props: IProps) {
     const mediaRec = mediafiles.filter((m) => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
+      segmentsRef.current = attr.segments || '';
       return {
         transcription: attr.transcription ? attr.transcription : '',
         position: attr.position,
@@ -705,6 +773,7 @@ export function Transcriber(props: IProps) {
     transcriptionIn.current = val.transcription;
     setTextValue(val.transcription);
     setDefaultPosition(val.position);
+
     //focus on player
     if (transcriptionRef.current) {
       transcriptionRef.current.firstChild.value = val.transcription;
@@ -753,6 +822,8 @@ export function Transcriber(props: IProps) {
   };
 
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
+  const onSegmentChange = (segments: string) =>
+    (segmentsRef.current = segments);
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {
       focusOnTranscription();
@@ -763,11 +834,15 @@ export function Transcriber(props: IProps) {
       setTextValue(textArea.value);
     }
   };
+  const handleSplitSize = debounce((e: any) => {
+    setPlayerSize(e);
+  }, 100);
 
   const onPlayStatus = (newPlaying: boolean) => {
     setPlaying(newPlaying);
     playingRef.current = newPlaying;
   };
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
@@ -781,88 +856,111 @@ export function Transcriber(props: IProps) {
               </Grid>
               <Grid item>{passageDescription(passage, allBookData)}</Grid>
             </Grid>
-            <Grid container direction="row" className={classes.row}>
-              {role === 'transcriber' && hasParatextName && paratextProject && (
-                <Grid item>
-                  <LightTooltip title={t.pullParatextTip}>
-                    <span>
-                      <IconButton
-                        id="transcriber.pullParatext"
-                        onClick={handlePullParatext}
-                        disabled={selected === ''}
-                      >
-                        <>
-                          <PullIcon />{' '}
-                          <Typography>{t.pullParatextCaption}</Typography>
-                        </>
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
-                </Grid>
-              )}
-              <Grid item xs>
-                <Grid container justify="center">
-                  <WSAudioPlayer
-                    allowRecord={false}
-                    blob={audioBlob}
-                    onProgress={onProgress}
-                    onPlayStatus={onPlayStatus}
-                    onDuration={onDuration}
-                    onSaveProgress={
-                      selected === '' || role === 'view'
-                        ? undefined
-                        : onSaveProgress
-                    }
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} sm container>
-              <Grid
-                ref={transcriptionRef}
-                item
-                xs={showHistory ? 6 : 12}
-                container
-                direction="column"
+            <Wrapper>
+              <SplitPane
+                defaultSize={180}
+                minSize={180}
+                style={{ position: 'static' }}
+                split="horizontal"
+                onChange={handleSplitSize}
               >
-                {projData && !fontStatus?.endsWith('active') ? (
-                  <WebFontLoader
-                    config={projData.fontConfig}
-                    onStatus={loadStatus}
-                  >
-                    <TextareaAutosize
-                      autoFocus
-                      id="transcriber.text"
-                      value={textValue}
-                      readOnly={selected === '' || role === 'view'}
-                      style={textAreaStyle}
-                      onChange={handleChange}
-                      lang={projData?.langTag || 'en'}
-                      spellCheck={projData?.spellCheck}
-                    />
-                  </WebFontLoader>
-                ) : (
-                  <TextareaAutosize
-                    autoFocus
-                    id="transcriber.text"
-                    value={textValue}
-                    readOnly={selected === '' || role === 'view'}
-                    style={textAreaStyle}
-                    onChange={handleChange}
-                    lang={projData?.langTag || 'en'}
-                    spellCheck={projData?.spellCheck}
-                  />
-                )}
-              </Grid>
-              {showHistory && (
-                <Grid item xs={6} container direction="column">
-                  <PassageHistory
-                    passageId={passage?.id}
-                    boxHeight={boxHeight}
-                  />
-                </Grid>
-              )}
-            </Grid>
+                <Pane className={classes.pane}>
+                  <Grid container direction="row" className={classes.row}>
+                    {role === 'transcriber' &&
+                      hasParatextName &&
+                      paratextProject && (
+                        <Grid item>
+                          <LightTooltip title={t.pullParatextTip}>
+                            <span>
+                              <IconButton
+                                id="transcriber.pullParatext"
+                                onClick={handlePullParatext}
+                                disabled={selected === ''}
+                              >
+                                <>
+                                  <PullIcon />{' '}
+                                  <Typography>
+                                    {t.pullParatextCaption}
+                                  </Typography>
+                                </>
+                              </IconButton>
+                            </span>
+                          </LightTooltip>
+                        </Grid>
+                      )}
+                    <Grid item xs>
+                      <Grid container justify="center">
+                        <WSAudioPlayer
+                          id="audioPlayer"
+                          allowRecord={false}
+                          size={playerSize}
+                          blob={audioBlob}
+                          segments={segmentsRef.current}
+                          onProgress={onProgress}
+                          onSegmentChange={onSegmentChange}
+                          onPlayStatus={onPlayStatus}
+                          onDuration={onDuration}
+                          onSaveProgress={
+                            selected === '' || role === 'view'
+                              ? undefined
+                              : onSaveProgress
+                          }
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Pane>
+                <Pane className={classes.pane}>
+                  <Grid item xs={12} sm container>
+                    <Grid
+                      ref={transcriptionRef}
+                      item
+                      xs={showHistory ? 6 : 12}
+                      container
+                      direction="column"
+                    >
+                      {projData && !fontStatus?.endsWith('active') ? (
+                        <WebFontLoader
+                          config={projData.fontConfig}
+                          onStatus={loadStatus}
+                        >
+                          <TextareaAutosize
+                            autoFocus
+                            id="transcriber.text"
+                            value={textValue}
+                            readOnly={selected === '' || role === 'view'}
+                            style={textAreaStyle}
+                            onChange={handleChange}
+                            lang={projData?.langTag || 'en'}
+                            spellCheck={projData?.spellCheck}
+                          />
+                        </WebFontLoader>
+                      ) : (
+                        <TextareaAutosize
+                          autoFocus
+                          id="transcriber.text"
+                          value={textValue}
+                          readOnly={selected === '' || role === 'view'}
+                          style={textAreaStyle}
+                          onChange={handleChange}
+                          lang={projData?.langTag || 'en'}
+                          spellCheck={projData?.spellCheck}
+                        />
+                      )}
+                    </Grid>
+                    {showHistory && (
+                      <Grid item xs={6} container direction="column">
+                        <PassageHistory
+                          passageId={passage?.id}
+                          boxHeight={boxHeight}
+                        />
+                      </Grid>
+                    )}
+                  </Grid>
+                </Pane>
+              </SplitPane>
+            </Wrapper>
+
             <Grid container direction="row" className={classes.padRow}>
               <Grid item>
                 <Button
