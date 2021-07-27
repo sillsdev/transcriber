@@ -3188,7 +3188,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="newProject.blankFactor2">
-      		<source>Best option if passage list is availble in a spreadsheet</source>
+      		<source>Best option if passage list is available in a spreadsheet</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">NewProject.tsx</context>
@@ -3209,7 +3209,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="newProject.generalFactor1">
-      		<source>Freeform references</source>
+      		<source>Free-form references</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">NewProject.tsx</context>

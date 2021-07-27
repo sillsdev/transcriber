@@ -2716,7 +2716,7 @@
 		</unit>
 		<unit id="newProject.blankFactor2">
 			<segment>
-				<source>Best option if passage list is availble in a spreadsheet</source>
+				<source>Best option if passage list is available in a spreadsheet</source>
 				<target>Лучший вариант, если список проходов доступен в электронной таблице</target>
 			</segment>
 		</unit>
@@ -2734,7 +2734,7 @@
 		</unit>
 		<unit id="newProject.generalFactor1">
 			<segment>
-				<source>Freeform references</source>
+				<source>Free-form references</source>
 				<target>Ссылки в свободной форме</target>
 			</segment>
 		</unit>
