@@ -5071,6 +5071,27 @@
       			<context context-type="sourcefile">SpellingTabs.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="userListMode.switchUser">
+      		<source>Switch User</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="userListMode.workOffline">
+      		<source>Work Offline</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="userListMode.logOut">
+      		<source>Log Out</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="welcome.title">
       		<source>Welcome</source>
       		<target/>

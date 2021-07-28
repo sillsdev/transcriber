@@ -68,8 +68,10 @@ export const KeyFactorsList = ({
       {factors.map((f, i) => (
         <ListItem key={i}>
           <Bullet />
-          {f}
-          {decorator && decorator[f]}
+          <span>
+            {f}
+            {decorator && decorator[f]}
+          </span>
         </ListItem>
       ))}
     </List>

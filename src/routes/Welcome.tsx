@@ -18,7 +18,7 @@ import ImportTab from '../components/ImportTab';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import OfflineIcon from '@material-ui/icons/CloudOff';
 import OnlineIcon from '@material-ui/icons/CloudQueue';
-import InfoIcon from '@material-ui/icons/Info';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { AddRecord } from '../model/baseModel';
@@ -64,7 +64,8 @@ const useStyles = makeStyles((theme: Theme) =>
       alignSelf: 'center',
     },
     helpIcon: {
-      color: theme.palette.info.light,
+      fontSize: 'small',
+      color: theme.palette.text.secondary,
     },
   })
 );

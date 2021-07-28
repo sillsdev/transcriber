@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
+import clsx from 'clsx';
 import { Redirect, useLocation } from 'react-router-dom';
 import { IState, IMainStrings } from '../../model';
 import { connect } from 'react-redux';
@@ -57,6 +58,12 @@ const useStyles = makeStyles({
   },
   spacing: {
     padding: '12px',
+  },
+  twoIcon: {
+    minWidth: `calc(${48 * 2}px)`,
+  },
+  threeIcon: {
+    minWidth: `calc(${48 * 3}px)`,
   },
 });
 
@@ -293,6 +300,18 @@ export const AppHead = (props: IProps) => {
         )}
         <Toolbar>
           {projRole !== '' && <ProjectName setView={setView} />}
+          {projRole === '' && (
+            <span
+              className={clsx(classes.twoIcon, {
+                [classes.threeIcon]:
+                  latestVersion !== '' &&
+                  latestVersion !== version &&
+                  isElectron,
+              })}
+            >
+              {'\u00A0'}
+            </span>
+          )}
           <div className={classes.grow}>{'\u00A0'}</div>
           <Typography variant="h6" noWrap>
             {pathDescription}

@@ -4348,6 +4348,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="userListMode.switchUser">
+         <segment>
+            <source>Switch User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="userListMode.workOffline">
+         <segment>
+            <source>Work Offline</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="userListMode.logOut">
+         <segment>
+            <source>Log Out</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="welcome.title">
          <segment>
             <source>Welcome</source>

@@ -15,7 +15,13 @@ import {
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Typography, Button, Paper, Box, IconButton } from '@material-ui/core';
+import {
+  Typography,
+  Button,
+  Paper,
+  Box,
+  // IconButton
+} from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, forceLogin } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
@@ -28,9 +34,10 @@ import Confirm from '../components/AlertDialog';
 import UserList from '../control/UserList';
 import { useSnackBar } from '../hoc/SnackBar';
 import AppHead from '../components/App/AppHead';
-import { LightTooltip, UserListItem } from '../control';
+import { UserListItem } from '../control';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import HelpIcon from '@material-ui/icons/Help';
+// import HelpIcon from '@material-ui/icons/Help';
+import UserListMode, { ListMode } from '../control/userListMode';
 const noop = {} as any;
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 const electronremote = isElectron ? require('@electron/remote') : noop;
@@ -42,6 +49,15 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     page: {
       display: 'block',
+    },
+    listHead: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      paddingTop: theme.spacing(4),
+      paddingBottom: 0,
+    },
+    hidden: {
+      visibility: 'hidden',
     },
     container: {
       display: 'flex',
@@ -57,12 +73,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       fontSize: '16pt',
-      paddingBottom: theme.spacing(2),
     },
     sectionHead: {
       fontSize: '14pt',
-      paddingTop: theme.spacing(4),
-      paddingBottom: theme.spacing(2),
+      paddingTop: theme.spacing(2),
     },
     actions: {
       paddingTop: theme.spacing(2),
@@ -86,6 +100,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
 interface IRecordProps {
   users: Array<User>;
   groupMemberships: Array<GroupMembership>;
@@ -113,10 +128,16 @@ export const goOnline = () => {
   ipc?.invoke('login');
   electronremote?.getCurrentWindow().close();
 };
-export const doLogout = () => {
+export const doLogout = async () => {
   localStorage.removeItem('online-user-id');
   forceLogin();
-  ipc?.invoke('logout');
+  await ipc?.invoke('logout');
+};
+export const switchUser = async () => {
+  await doLogout();
+  setTimeout(() => {
+    goOnline();
+  }, 1500);
 };
 export function Access(props: IProps) {
   const {
@@ -154,8 +175,15 @@ export function Access(props: IProps) {
   const offlineProjRead = useOfflnProjRead();
   const offlineSetup = useOfflineSetup();
   const { showMessage } = useSnackBar();
+  const [listMode, setListMode] = useState<ListMode>(
+    whichUsers === 'online-local' ? ListMode.WorkOffline : ListMode.SwitchUser
+  );
   const [goOnlineConfirmation, setGoOnlineConfirmation] =
     useState<React.MouseEvent<HTMLElement>>();
+
+  const handleModeChange = (mode: ListMode) => {
+    setListMode(mode);
+  };
 
   const handleSelect = (uId: string) => {
     const selected = users.filter((u) => u.id === uId);
@@ -172,6 +200,18 @@ export function Access(props: IProps) {
     setImportOpen(true);
   };
 
+  const handleGoOnlineConfirmed = () => {
+    if (isElectron) {
+      if (!goOnlineConfirmation?.shiftKey) {
+        goOnline();
+      } else ipc?.invoke('logout');
+    }
+    setGoOnlineConfirmation(undefined);
+  };
+  const handleGoOnlineRefused = () => {
+    setGoOnlineConfirmation(undefined);
+  };
+
   const handleGoOnline = () => {
     Online(
       (online) => {
@@ -186,16 +226,20 @@ export function Access(props: IProps) {
       true
     );
   };
-  const handleGoOnlineConfirmed = () => {
-    if (isElectron) {
-      if (!goOnlineConfirmation?.shiftKey) {
-        goOnline();
-      } else ipc?.invoke('logout');
-    }
-    setGoOnlineConfirmation(undefined);
-  };
-  const handleGoOnlineRefused = () => {
-    setGoOnlineConfirmation(undefined);
+
+  const handleSwitchUser = () => {
+    Online(
+      (online) => {
+        if (online) {
+          //setGoOnlineConfirmation(event);
+          switchUser();
+        } else {
+          showMessage(t.mustBeOnline);
+        }
+      },
+      auth,
+      true
+    );
   };
 
   const handleCreateUser = async () => {
@@ -327,6 +371,20 @@ export function Access(props: IProps) {
   }
   if (whichUsers === '') return <Redirect to="/" />;
 
+  const CurrentUser = ({ curUser }: { curUser: User }) => (
+    <>
+      <Typography className={classes.sectionHead}>{t2.currentUser}</Typography>
+      <div className={classes.actions}>
+        <UserListItem u={curUser} users={users} onSelect={handleGoOnline} />
+      </div>
+    </>
+  );
+
+  const t2 = {
+    currentUser: 'Current User',
+    otherUsers: 'Other User(s)',
+  };
+
   return (
     <div className={classes.root}>
       <AppHead {...props} />
@@ -335,73 +393,36 @@ export function Access(props: IProps) {
           <Typography className={classes.sectionHead}>
             Hello I'm under the AppHead
           </Typography>
-          <Button id="back" color="primary" onClick={handleBack}>
-            <ArrowBackIcon />
-            {t.back}
-          </Button>
-          <div className={classes.container}>
+          <div className={classes.listHead}>
+            <Button id="back" color="primary" onClick={handleBack}>
+              <ArrowBackIcon />
+              {t.back}
+            </Button>
             <Typography className={classes.title}>{t.title}</Typography>
+            <Button className={classes.hidden}>
+              <ArrowBackIcon />
+              {t.back}
+            </Button>
           </div>
-          <Paper className={classes.paper}>
-            {whichUsers.startsWith('online') && (
-              <div className={classes.container}>
-                <Typography className={classes.sectionHead}>
-                  {t.onlineScreenTitle}
-                </Typography>
-                {whichUsers !== 'online-local' && (
-                  <>
-                    <Typography className={classes.sectionHead}>
-                      {t.withInternet}
-                    </Typography>
-                    {curUser ? (
-                      <Paper className={classes.paper}>
-                        <div className={classes.actions}>
-                          <UserListItem
-                            u={curUser}
-                            users={users}
-                            onSelect={handleGoOnline}
-                          />
-                        </div>
-                        <div>{t.chooseAnother}</div>
-                        <Button
-                          id="accessLogin"
-                          variant="outlined"
-                          color="primary"
-                          className={classes.button}
-                          onClick={handleLogout}
-                        >
-                          {t.logout}
-                        </Button>
-                      </Paper>
-                    ) : (
-                      <Button
-                        id="accessLogin"
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        onClick={handleGoOnline}
-                      >
-                        {t.logIn}
-                      </Button>
-                    )}
-                  </>
-                )}
-                {!autoAdd && whichUsers !== 'online-cloud' && (
+
+          {!autoAdd && whichUsers.startsWith('online') && (
+            <div className={classes.container}>
+              <>
+                <UserListMode
+                  mode={listMode}
+                  onMode={handleModeChange}
+                  loggedIn={Boolean(curUser)}
+                />
+                {listMode === ListMode.SwitchUser ? (
                   <div className={classes.container}>
-                    <Box className={classes.row}>
-                      <Typography className={classes.sectionHead}>
-                        {t.withoutInternet}
-                      </Typography>
-                      <LightTooltip title={t.withoutInternetTip}>
-                        <IconButton
-                          className={classes.helpIcon}
-                          color="primary"
-                          aria-label="helponlineadmin"
-                        >
-                          <HelpIcon fontSize="small" />
-                        </IconButton>
-                      </LightTooltip>
-                    </Box>
+                    {curUser && (
+                      <>
+                        <CurrentUser curUser={curUser} />
+                        <Typography className={classes.sectionHead}>
+                          {t2.otherUsers}
+                        </Typography>
+                      </>
+                    )}
                     <Paper className={classes.paper}>
                       {!hasOnlineUser() && (
                         <div>
@@ -412,63 +433,82 @@ export function Access(props: IProps) {
                       {importStatus?.complete !== false && hasOnlineUser() && (
                         <UserList
                           isSelected={isOnlineUserWithOfflineProjects}
-                          select={handleSelect}
-                          title={t.availableOnlineUsers}
+                          curId={curUser?.id}
                         />
                       )}
                       <div className={classes.actions}>
                         <Button
-                          id="accessImport"
-                          variant="outlined"
+                          id="accessLogin"
+                          variant="contained"
                           color="primary"
                           className={classes.button}
-                          onClick={handleImport}
+                          onClick={handleSwitchUser}
                         >
-                          {t.importSnapshot}
+                          {t.logIn}
                         </Button>
                       </div>
                     </Paper>
                   </div>
-                )}
-              </div>
-            )}
-            {whichUsers === 'offline' && (
-              <div className={classes.container}>
-                <Typography className={classes.sectionHead}>
-                  {t.offlineScreenTitle}
-                </Typography>
-                {importStatus?.complete !== false && hasOfflineUser() && (
+                ) : listMode === ListMode.WorkOffline ? (
                   <UserList
-                    isSelected={isOfflineUserWithProjects}
+                    isSelected={isOnlineUserWithOfflineProjects}
                     select={handleSelect}
-                    title={t.availableOfflineUsers}
                   />
+                ) : (
+                  curUser && (
+                    <>
+                      <CurrentUser curUser={curUser} />
+                      <Button
+                        id="accessLogin"
+                        variant="outlined"
+                        color="primary"
+                        className={classes.button}
+                        onClick={handleLogout}
+                      >
+                        {t.logout}
+                      </Button>
+                    </>
+                  )
                 )}
-                <div className={classes.actions}>
-                  <Button
-                    id="accessCreateUser"
-                    variant="outlined"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleCreateUser}
-                  >
-                    {t.createUser}
-                  </Button>
-                </div>
-                <div className={classes.actions}>
-                  <Button
-                    id="accessImport"
-                    variant="outlined"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleImport}
-                  >
-                    {t.importSnapshot}
-                  </Button>
-                </div>
+              </>
+            </div>
+          )}
+          {whichUsers === 'offline' && (
+            <div className={classes.container}>
+              <Typography className={classes.sectionHead}>
+                {t.offlineScreenTitle}
+              </Typography>
+              {importStatus?.complete !== false && hasOfflineUser() && (
+                <UserList
+                  isSelected={isOfflineUserWithProjects}
+                  select={handleSelect}
+                  title={t.availableOfflineUsers}
+                />
+              )}
+              <div className={classes.actions}>
+                <Button
+                  id="accessCreateUser"
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleCreateUser}
+                >
+                  {t.createUser}
+                </Button>
               </div>
-            )}
-          </Paper>
+              <div className={classes.actions}>
+                <Button
+                  id="accessImport"
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleImport}
+                >
+                  {t.importSnapshot}
+                </Button>
+              </div>
+            </div>
+          )}
           {importOpen && (
             <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
           )}

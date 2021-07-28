@@ -930,6 +930,13 @@ const initialState = {
 			"addToDict": "Add to dictionary",
 		}
 	}),
+	"userListMode": new LocalizedStrings({
+		"en": {
+			"switchUser": "Switch User",
+			"workOffline": "Work Offline",
+			"logOut": "Log Out",
+		}
+	}),
 	"welcome": new LocalizedStrings({
 		"en": {
 			"title": "Welcome",
@@ -1010,6 +1017,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),
 				"hotKey" : new LocalizedStrings(action.payload.data.hotKey),
 				"spelling" : new LocalizedStrings(action.payload.data.spelling),
+				"userListMode" : new LocalizedStrings(action.payload.data.userListMode),
 				"welcome" : new LocalizedStrings(action.payload.data.welcome),
 			};
 		case SET_LANGUAGE:

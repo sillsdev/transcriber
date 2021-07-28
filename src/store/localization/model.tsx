@@ -875,6 +875,12 @@ export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
     "addToDict": string;
 };
 
+export interface IUserListModeStrings extends Localize.LocalizedStringsMethods {
+    "switchUser": string;
+    "workOffline": string;
+    "logOut": string;
+};
+
 export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
     "title": string;
     "setupTeam": string;
@@ -949,6 +955,7 @@ export interface ILocalizedStrings {
 	passageRecord: IPassageRecordStrings;
 	hotKey: IHotKeyStrings;
 	spelling: ISpellingStrings;
+	userListMode: IUserListModeStrings;
 	welcome: IWelcomeStrings;
 	[key: string]: any;
 };
