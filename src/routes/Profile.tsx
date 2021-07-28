@@ -582,7 +582,7 @@ export function Profile(props: IProps) {
         <div className={classes.paper}>
           <Grid container>
             <StyledGrid item xs={12} md={5}>
-              <BigAvatar avatarUrl={avatarUrl} name={name} />
+              <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               {name !== email && (
                 <Typography variant="h6" className={classes.caption}>
                   {name || ''}

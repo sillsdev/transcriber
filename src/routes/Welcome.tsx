@@ -18,12 +18,14 @@ import ImportTab from '../components/ImportTab';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import OfflineIcon from '@material-ui/icons/CloudOff';
 import OnlineIcon from '@material-ui/icons/CloudQueue';
+import InfoIcon from '@material-ui/icons/Info';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { AddRecord } from '../model/baseModel';
 import { useOfflineSetup } from '../crud';
-import { ChoiceHead } from '../control/ChoiceHead';
+import { ChoiceHead, FactorDecorate } from '../control/ChoiceHead';
 import { backup } from '../schema';
+import { LightTooltip } from '../control';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,6 +62,9 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       textAlign: 'center',
       alignSelf: 'center',
+    },
+    helpIcon: {
+      color: theme.palette.info.light,
     },
   })
 );
@@ -255,9 +260,19 @@ export function Welcome(props: IProps) {
     setImportOpen(true);
   };
 
-  const setupFactors = [t.setupFactor];
+  const setupFactors = [t.setupFactor, t.setupFactor2];
   const teamFactors = [t.teamFactor];
   const aloneFactors = [t.aloneFactor];
+  const factorDecorate: FactorDecorate = {
+    [t.setupFactor2]: (
+      <>
+        {`\u00A0`}
+        <LightTooltip title={t.setupFactor2Help}>
+          <InfoIcon className={classes.helpIcon} />
+        </LightTooltip>
+      </>
+    ),
+  };
 
   const OnlineButton = ({
     id,
@@ -320,6 +335,7 @@ export function Welcome(props: IProps) {
                 prose={t.setupTeamTip}
                 keyFactorTitle={t.keyFactor}
                 factors={setupFactors}
+                factorDecorate={factorDecorate}
               />
             </Grid>
             <Grid item xs={4} className={classes.action}>

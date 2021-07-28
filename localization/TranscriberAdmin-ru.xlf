@@ -4317,6 +4317,18 @@
 				<target>Требуется подключение к Интернету</target>
 			</segment>
 		</unit>
+		<unit id="welcome.setupFactor2">
+			<segment>
+				<source>Supports projects that are offline available</source>
+				<target>Поддерживает проекты, доступные в автономном режиме</target>
+			</segment>
+		</unit>
+		<unit id="welcome.setupFactor2Help">
+			<segment>
+				<source>Projects are Made Available Offline on the three dot More Menu on each Project Card.</source>
+				<target>Проекты доступны в автономном режиме через меню "Больше" с тремя точками на каждой карточке проекта.</target>
+			</segment>
+		</unit>
 		<unit id="welcome.team">
 			<segment>
 				<source>Work in a team project</source>

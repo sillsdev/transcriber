@@ -5099,6 +5099,20 @@
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="welcome.setupFactor2">
+      		<source>Supports projects that are offline available</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="welcome.setupFactor2Help">
+      		<source>Projects are Made Available Offline on the three dot More Menu on each Project Card.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="welcome.team">
       		<source>Work in a team project</source>
       		<target/>
@@ -5121,7 +5135,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="welcome.keyFactor">
-      		<source>Key Factor</source>
+      		<source>Key Factor(s)</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
