@@ -8,13 +8,15 @@ import {
   Box,
   Typography,
 } from '@material-ui/core';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { LightTooltip } from '../control';
 import { IWsAudioPlayerStrings } from '../model';
-import { FaGripLinesVertical, FaHandScissors } from 'react-icons/fa';
+import { FaGripLinesVertical } from 'react-icons/fa';
 import ClearIcon from '@material-ui/icons/Clear';
 import SettingsIcon from '@material-ui/icons/Settings';
-import BigDialog from '../hoc/BigDialog';
+import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
+import { HotKeyContext } from '../context/HotKeyContext';
+import PlusMinusLogo from '../control/PlusMinus';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,9 +51,10 @@ interface IProps {
   ready: boolean;
   wsAutoSegment: (silenceThreshold?: number, timeThreshold?: number) => void;
   wsSplitRegion: () => void;
-  wsRemoveSplitRegion: () => void;
+  wsRemoveSplitRegion: (next?: boolean) => void;
   wsAddOrRemoveRegion: () => void;
 }
+
 export function WSAudioPlayerSegment(props: IProps) {
   const classes = useStyles();
   const { t, ready, wsAutoSegment, wsRemoveSplitRegion, wsAddOrRemoveRegion } =
@@ -59,18 +62,41 @@ export function WSAudioPlayerSegment(props: IProps) {
   const [silenceValue, setSilenceValue] = useState(4);
   const [timeValue, setTimeValue] = useState(2);
   const [showSettings, setShowSettings] = useState(false);
+  const { subscribe, unsubscribe, localizeHotKey } =
+    useContext(HotKeyContext).state;
+
+  const DELREG_KEY = 'CTRL+ALT+X';
+  const ADDREMSEG_KEY = 'CTRL+ARROWDOWN';
+
+  useEffect(() => {
+    const keys = [
+      { key: ADDREMSEG_KEY, cb: handleSplit },
+      { key: DELREG_KEY, cb: handleRemoveNextSplit },
+    ];
+    keys.forEach((k) => subscribe(k.key, k.cb));
+
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      keys.forEach((k) => unsubscribe(k.key));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const handleAutoSegment = () => {
     wsAutoSegment(silenceValue / 1000, timeValue / 100);
+    return true;
   };
   const handleShowSettings = () => {
     setShowSettings(!showSettings);
   };
   const handleSplit = () => {
     wsAddOrRemoveRegion();
+    return true;
   };
-  const handleRemoveSplit = () => {
-    wsRemoveSplitRegion();
+  const handleRemoveNextSplit = () => {
+    wsRemoveSplitRegion(true);
+    return true;
   };
+
   const handleSilenceChange = (
     event: ChangeEvent<{}>,
     value: number | number[]
@@ -86,22 +112,34 @@ export function WSAudioPlayerSegment(props: IProps) {
     if (Array.isArray(value)) value = value[0];
     setTimeValue(value);
   };
+
+  const t2 = {
+    AutoSegment: 'Segment {0}',
+    SegmentSettings: 'Segment parameters',
+    SilenceThreshold: 'Silence threshold',
+    SilenceLength: 'Length of Silence (100ths of second)',
+    SplitSegment: 'Add/Remove Split {0}',
+    RemoveSegment: 'Remove Next Split {0}',
+  };
   return (
     <div className={classes.root}>
       <Grid container className={classes.toolbar}>
         <Grid item>
-          <LightTooltip id="wsSegmentTip" title={'TODO:Segment'}>
+          <LightTooltip
+            id="wsSegmentTip"
+            title={t2.AutoSegment.replace('{0}', '')}
+          >
             <span>
               <IconButton
                 id="wsSegment"
                 onClick={handleAutoSegment}
                 disabled={!ready}
               >
-                <FaGripLinesVertical className={classes.rotate90} />
+                <FaGripLinesVertical />
               </IconButton>
             </span>
           </LightTooltip>
-          <LightTooltip id="wsSettingsTip" title={'TODO:Segment parameters'}>
+          <LightTooltip id="wsSettingsTip" title={t2.SegmentSettings}>
             <span>
               <IconButton id="wsSegmentSettings" onClick={handleShowSettings}>
                 <SettingsIcon fontSize="small" />
@@ -111,13 +149,14 @@ export function WSAudioPlayerSegment(props: IProps) {
 
           {showSettings && (
             <BigDialog
-              title={'Segment Settings'}
+              title={t2.SegmentSettings}
               isOpen={showSettings}
               onOpen={setShowSettings}
+              bp={BigDialogBp.md}
             >
               <Box display="flex" flexDirection="column">
                 <Typography id="silence-slider-label" gutterBottom>
-                  Silence threshold (1000ths)
+                  {t2.SilenceThreshold}
                 </Typography>
                 <Slider
                   min={1}
@@ -130,7 +169,7 @@ export function WSAudioPlayerSegment(props: IProps) {
                   aria-labelledby="silence-slider"
                 />
                 <Typography id="silence-slider-label" gutterBottom>
-                  Length of Silence threshold (100ths of second)
+                  {t2.SilenceLength}
                 </Typography>
                 <Slider
                   step={1}
@@ -145,16 +184,25 @@ export function WSAudioPlayerSegment(props: IProps) {
               </Box>
             </BigDialog>
           )}
-          <LightTooltip id="wsSplitTip" title={'todo:SplitSegment'}>
+          <LightTooltip
+            id="wsSplitTip"
+            title={t2.SplitSegment.replace(
+              '{0}',
+              localizeHotKey(ADDREMSEG_KEY)
+            )}
+          >
             <span>
               <IconButton id="wsSplit" onClick={handleSplit}>
-                <FaHandScissors />
+                <PlusMinusLogo disabled={!ready} />
               </IconButton>
             </span>
           </LightTooltip>
-          <LightTooltip id="wsJoinTip" title={'todo:Remove Break'}>
+          <LightTooltip
+            id="wsJoinTip"
+            title={t2.RemoveSegment.replace('{0}', localizeHotKey(DELREG_KEY))}
+          >
             <span>
-              <IconButton id="wsJoin" onClick={handleRemoveSplit}>
+              <IconButton id="wsJoin" onClick={handleRemoveNextSplit}>
                 <ClearIcon />
               </IconButton>
             </span>
