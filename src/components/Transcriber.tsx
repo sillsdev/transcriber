@@ -71,7 +71,7 @@ import { HotKeyContext } from '../context/HotKeyContext';
 import Spelling from './Spelling';
 
 const HISTORY_KEY = 'F7,CTRL+7';
-const NON_BOX_HEIGHT = 360;
+const INIT_PLAYER_HEIGHT = 180;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -98,6 +98,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
     },
     pane: {},
+    textarea: { resize: 'none' },
   })
 );
 const Wrapper = styled.div`
@@ -261,7 +262,9 @@ export function Transcriber(props: IProps) {
       state === ActivityStates.TranscribeReady
   );
   const [height, setHeight] = useState(window.innerHeight);
-  const [boxHeight, setBoxHeight] = useState(height - NON_BOX_HEIGHT);
+  const [boxHeight, setBoxHeight] = useState(
+    height - (INIT_PLAYER_HEIGHT + 200)
+  );
   const [width, setWidth] = useState(window.innerWidth);
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
@@ -287,7 +290,7 @@ export function Transcriber(props: IProps) {
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
   const t = transcriberStr;
-  const [playerSize, setPlayerSize] = useState(180);
+  const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
   useEffect(() => {
     playingRef.current = playing;
   }, [playing]);
@@ -351,9 +354,9 @@ export function Transcriber(props: IProps) {
   }, [doSave]);
 
   useEffect(() => {
-    const newBoxHeight = height - NON_BOX_HEIGHT;
+    const newBoxHeight = height - (playerSize + 200);
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
-  }, [height, boxHeight]);
+  }, [height, boxHeight, playerSize]);
 
   useEffect(() => {
     if (!saving.current) showTranscription(getTranscription());
@@ -838,7 +841,7 @@ export function Transcriber(props: IProps) {
   };
   const handleSplitSize = debounce((e: any) => {
     setPlayerSize(e);
-  }, 100);
+  }, 50);
 
   const onPlayStatus = (newPlaying: boolean) => {
     setPlaying(newPlaying);
@@ -927,6 +930,7 @@ export function Transcriber(props: IProps) {
                           onStatus={loadStatus}
                         >
                           <TextareaAutosize
+                            className={classes.textarea}
                             autoFocus
                             id="transcriber.text"
                             value={textValue}
@@ -939,6 +943,7 @@ export function Transcriber(props: IProps) {
                         </WebFontLoader>
                       ) : (
                         <TextareaAutosize
+                          className={classes.textarea}
                           autoFocus
                           id="transcriber.text"
                           value={textValue}
