@@ -653,7 +653,6 @@ export function Transcriber(props: IProps) {
     segments: string,
     thiscomment: string | undefined
   ) => {
-    console.log('segments:', segments);
     if (transcriptionRef.current) {
       saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;
