@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
+import { waitForIt } from '../utils';
 //import { useMounted } from '../utils';
 //import { convertToMP3 } from '../utils/mp3';
 import { convertToWav } from '../utils/wav';
@@ -9,6 +10,12 @@ import { convertToWav } from '../utils/wav';
 const noop = () => {};
 const noop1 = (x: any) => {};
 
+export interface IRegionChange {
+  start: number;
+  end: number;
+  newStart: number;
+  newEnd: number;
+}
 export function useWaveSurfer(
   container: any,
   onReady: () => void = noop,
@@ -39,7 +46,6 @@ export function useWaveSurfer(
   const resizingRef = useRef(false);
   const progress = () => progressRef.current;
   const isNear = (position: number) => {
-    console.log('isNear', position, progressRef.current);
     return Math.abs(position - progressRef.current) < 0.3;
   };
   const regionIsPlaying = () => regionPlayingRef.current;
@@ -48,7 +54,6 @@ export function useWaveSurfer(
   const setCurrentRegion = (r: any) => (currentRegionRef.current = r);
   const updateRegion = (r: any, params: any) => {
     updatingRef.current = true;
-    console.log('update', r, params);
     r.update(params);
     updatingRef.current = false;
   };
@@ -63,6 +68,7 @@ export function useWaveSurfer(
         durationRef.current = ws.getDuration();
         if (inputRegionsRef.current) {
           loadRegions(inputRegionsRef.current);
+          inputRegionsRef.current = undefined;
         } else if (autoSegRef.current) wsAutoSegment();
         if (playingRef.current) setPlaying(true);
         /* ws.enableDragSelection({
@@ -77,11 +83,9 @@ export function useWaveSurfer(
         }, 150)
       );
       ws.on('seek', function (e: number) {
-        console.log('seek', e, e * wsDuration(), keepRegion.current);
         if (!keepRegion.current && currentRegion()) {
           currentRegion().remove();
           setCurrentRegion(undefined);
-          console.log('removing my region');
           if (onRegion) onRegion(0);
         }
         setProgress(e * wsDuration());
@@ -92,7 +96,7 @@ export function useWaveSurfer(
         onStop();
       });
       ws.on('region-created', function (r: any) {
-        console.log('region-created');
+        console.log('region-created', r.start, r.end);
         if (singleRegion) {
           r.drag = true;
           if (currentRegion()) currentRegion().remove();
@@ -100,18 +104,37 @@ export function useWaveSurfer(
           r.drag = false;
         }
         setCurrentRegion(r);
-        if (onRegion)
-          onRegion(Object.keys(wavesurfer()?.regions.list).length + 1);
+        if (onRegion && !inputRegionsRef.current) {
+          //wait for it to show up in this list
+          waitForIt(
+            'new region',
+            () => wavesurfer()?.regions.list[r.id] !== undefined,
+            () => false,
+            200
+          ).then(() =>
+            onRegion(Object.keys(wavesurfer()?.regions.list).length)
+          );
+        }
       });
       ws.on('region-removed', function (r: any) {
-        console.log('remove', r.start, r.end);
+        console.log('region-removed', r.start, r.end);
         if (r.attributes?.prevRegion)
           r.attributes.prevRegion.attributes.nextRegion =
             r.attributes?.nextRegion;
         if (r.attributes.nextRegion)
           r.attributes.nextRegion.attributes.prevRegion =
             r.attributes.prevRegion;
-        if (onRegion) onRegion(Object.keys(wavesurfer()?.regions.list).length);
+        if (onRegion) {
+          //wait for it to be removed from this list
+          waitForIt(
+            'new region',
+            () => wavesurfer()?.regions.list[r.id] === undefined,
+            () => false,
+            200
+          ).then(() =>
+            onRegion(Object.keys(wavesurfer()?.regions.list).length)
+          );
+        }
       });
       ws.on('region-updated', function (r: any) {
         resizingRef.current = r.isResizing;
@@ -125,16 +148,13 @@ export function useWaveSurfer(
           resizingRef.current
         );
         wavesurfer()?.zoom(wavesurfer()?.params.minPxPerSec);
-        console.log(singleRegion);
         if (singleRegion) {
           wsGoto(currentRegion().start);
           keepRegion.current = false;
         } else if (!updatingRef.current && resizingRef.current) {
           resizingRef.current = false;
           var next = findNextRegion(r, false);
-          console.log('next', next?.start);
           var prev = findPrevRegion(r);
-          console.log('prev', prev?.end);
           if (prev) {
             if (prev.end !== r.start) {
               updateRegion(prev, { end: r.start });
@@ -153,7 +173,6 @@ export function useWaveSurfer(
             updateRegion(r, { end: durationRef.current });
             wsGoto(durationRef.current);
           }
-          console.log(prev?.end, next?.start);
           if (onRegion)
             onRegion(Object.keys(wavesurfer()?.regions.list).length);
         }
@@ -179,8 +198,6 @@ export function useWaveSurfer(
       });
       ws.on('region-dblclick', function (r: any) {
         console.log('region-dblclick', r);
-        setCurrentRegion(r);
-        console.log(progress(), r.start, r.end);
         if (!singleRegion) {
           wsAddOrRemoveRegion();
         }
@@ -190,7 +207,6 @@ export function useWaveSurfer(
     }
 
     if (container && !wavesurfer()) {
-      console.log('creating a wavesurfer');
       create(container, height, singleRegion);
       if (blobToLoad.current) {
         wsLoad(blobToLoad.current);
@@ -203,10 +219,7 @@ export function useWaveSurfer(
   useEffect(() => {
     // Removes events, elements and disconnects Web Audio nodes on component unmount
     return () => {
-      console.log('cleanup wavesurfer', wavesurferRef.current);
-
       if (wavesurferRef.current) {
-        console.log('cleanup wavesurfer');
         if (wavesurferRef.current.isPlaying()) wavesurferRef.current.stop();
         wavesurferRef.current.unAll();
         wavesurferRef.current.destroy();
@@ -234,33 +247,11 @@ export function useWaveSurfer(
   const findNextRegion = (r: any, selfIfAtStart: boolean) => {
     if (!r) return undefined;
     if (selfIfAtStart && isNear(r.start)) return r;
-    console.log('nextRegion', r.attributes.nextRegion?.start);
     return r.attributes.nextRegion;
-    /*
-    var foundIt: any = undefined;
-    Object.keys(wavesurfer()?.regions.list).forEach(function (id) {
-      let r = wavesurfer()?.regions.list[id];
-      if (r.start >= currentRegion().end) {
-        if (foundIt && foundIt.end > r.end) foundIt = r;
-        if (!foundIt) foundIt = r;
-      }
-    });
-
-    return foundIt; */
   };
   const findPrevRegion = (r: any) => {
     if (!r) return undefined;
     return r.attributes.prevRegion;
-    /*
-    var foundIt: any = undefined;
-    Object.keys(wavesurfer()?.regions.list).forEach(function (id) {
-      let r = wavesurfer()?.regions.list[id];
-      if (r.end <= currentRegion().start) {
-        if (foundIt && foundIt.start < r.start) foundIt = r;
-        if (!foundIt) foundIt = r;
-      }
-    });
-    return foundIt; */
   };
   const setProgress = (value: number) => {
     progressRef.current = value;
@@ -326,13 +317,6 @@ export function useWaveSurfer(
     return JSON.stringify(
       Object.keys(wavesurfer()?.regions.list).map(function (id) {
         let region = wavesurfer()?.regions.list[id];
-        /*
-        let attributes = { ...region.attributes };
-        var next = attributes.nextRegion;
-        var prev = attributes.prevRegion;
-        if (next) attributes.nextRegion = { s: next.start, e: next.end };
-        if (prev) attributes.prevRegion = { s: prev.start, e: prev.end };
-        */
         return {
           start: region.start,
           end: region.end,
@@ -342,7 +326,6 @@ export function useWaveSurfer(
   };
   const getSortedIds = () => {
     var sortedIds: string[] = [];
-    console.log(wavesurfer()?.regions);
     var ids = Object.keys(wavesurfer()?.regions?.list).map((id) => id);
     if (ids.length > 0) {
       var next: string | undefined = ids[0];
@@ -360,52 +343,68 @@ export function useWaveSurfer(
   const wsAddOrRemoveRegion = () => {
     console.log('add or remove');
     if (isNear(currentRegion().start) || isNear(currentRegion().end))
-      wsRemoveSplitRegion(false);
-    else wsSplitRegion();
+      return wsRemoveSplitRegion(false);
+    else return wsSplitRegion();
   };
   const wsSplitRegion = () => {
     var sortedIds: string[] = getSortedIds();
-    if (currentRegion()) {
+    var r = currentRegion();
+    if (r) {
       var split = progress();
-      var lastRegion = currentRegion().attributes.nextRegion === undefined;
+      var ret: IRegionChange = {
+        start: r.start,
+        end: r.end,
+        newStart: r.start,
+        newEnd: split,
+      };
+
+      var lastRegion = r.attributes.nextRegion === undefined;
       var region = {
         start: split,
-        end: currentRegion().end,
+        end: r.end,
         drag: false,
         color: randomColor(0.1),
       };
-      var curIndex = sortedIds.findIndex((s) => s === currentRegion().id);
-      updateRegion(currentRegion(), { end: split });
+      var curIndex = sortedIds.findIndex((s) => s === r.id);
+      updateRegion(r, { end: split });
       var newRegion = wavesurfer()?.addRegion(region);
       var newSorted = sortedIds.slice(0, curIndex + 1).concat(newRegion.id);
       if (!lastRegion)
         newSorted = newSorted.concat(sortedIds.slice(curIndex + 1));
       setPrevNext(newSorted);
+      return ret;
     }
   };
   const wsRemoveSplitRegion = (forceNext?: boolean) => {
     console.log('removesplit', progress(), forceNext);
-    console.log(currentRegion().start, currentRegion().end);
-    if (currentRegion()) {
-      var r = currentRegion();
-      if (forceNext !== true) {
-        var prev = findPrevRegion(r);
-        console.log('do I have prev?', prev);
-        if (isNear(r.start) && prev) {
-          console.log('remove prev');
-          updateRegion(r, { start: prev.start });
-          prev.remove();
-          return;
-        }
-      }
-      console.log('remove next');
-      //find next region
-      var next = findNextRegion(r, false);
-      if (next) {
-        updateRegion(r, { end: next.end });
-        next.remove();
+    var r = currentRegion();
+    if (!r) r = findRegion(progress());
+    var ret: IRegionChange = {
+      start: r.start,
+      end: r.end,
+      newStart: r.start,
+      newEnd: r.end,
+    };
+    if (forceNext !== true) {
+      var prev = findPrevRegion(r);
+      console.log('do I have prev?', prev);
+      if (isNear(r.start) && prev) {
+        console.log('remove prev');
+        updateRegion(r, { start: prev.start });
+        ret.newStart = prev.start;
+        prev.remove();
+        return;
       }
     }
+    console.log('remove next');
+    //find next region
+    var next = findNextRegion(r, false);
+    if (next) {
+      updateRegion(r, { end: next.end });
+      ret.newEnd = next.end;
+      next.remove();
+    }
+    return ret;
   };
   const wsPlay = () => setPlaying(true);
 
@@ -418,10 +417,9 @@ export function useWaveSurfer(
 
   const wsGoto = (position: number) => {
     setCurrentRegion(findRegion(position));
-    console.log('wsGoTo', position, currentRegion());
+    console.log('wsGoTo', position);
     if (position && wsDuration()) position = position / wsDuration();
     keepRegion.current = true;
-    console.log('seekAndCenter', position);
     wavesurfer()?.seekAndCenter(position);
     if (singleRegion) keepRegion.current = false;
   };
@@ -430,7 +428,6 @@ export function useWaveSurfer(
 
   const wsZoom = (zoom: number) => {
     wavesurfer()?.zoom(zoom);
-    console.log('zoom', zoom, wavesurfer()?.params.minPxPerSec);
     return wavesurfer()?.params.minPxPerSec;
   };
 
@@ -440,7 +437,6 @@ export function useWaveSurfer(
     regions: string = '',
     autoSegment: boolean = false
   ) => {
-    console.log('load playing?', wavesurfer()?.isPlaying());
     durationRef.current = 0;
     if (regions) inputRegionsRef.current = JSON.parse(regions);
     autoSegRef.current = autoSegment;
@@ -479,7 +475,6 @@ export function useWaveSurfer(
   const wsHasRegion = () => currentRegionRef.current !== undefined;
 
   const wsLoopRegion = (loop: boolean) => {
-    console.log('turn loop', loop);
     Object.keys(wavesurfer()?.regions.list).forEach(function (id) {
       let r = wavesurfer()?.regions.list[id];
       r.loop = loop;
@@ -723,12 +718,6 @@ export function useWaveSurfer(
 
     // Return time-based regions
     var tRegions = fRegions.map(function (reg) {
-      console.log({
-        rstart: reg.start,
-        start: Math.round(reg.start * coef * 10) / 10,
-        rend: reg.end,
-        end: Math.round(reg.end * coef * 10) / 10,
-      });
       return {
         start: Math.round(reg.start * coef * 10) / 10,
         end: Math.round(reg.end * coef * 10) / 10,
@@ -749,7 +738,7 @@ export function useWaveSurfer(
       var next = tRegions[index + 1];
       return {
         start: reg.start,
-        end: next ? next.start : reg.end,
+        end: next ? next.start : wsDuration(),
       };
     });
   };

@@ -17,6 +17,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 import { HotKeyContext } from '../context/HotKeyContext';
 import PlusMinusLogo from '../control/PlusMinus';
+import { IRegionChange } from '../crud/useWaveSurfer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,16 +50,22 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IProps {
   t: IWsAudioPlayerStrings;
   ready: boolean;
+  onSplit: (split: IRegionChange) => void;
   wsAutoSegment: (silenceThreshold?: number, timeThreshold?: number) => void;
-  wsSplitRegion: () => void;
-  wsRemoveSplitRegion: (next?: boolean) => void;
-  wsAddOrRemoveRegion: () => void;
+  wsRemoveSplitRegion: (next?: boolean) => IRegionChange | undefined;
+  wsAddOrRemoveRegion: () => IRegionChange | undefined;
 }
 
 export function WSAudioPlayerSegment(props: IProps) {
   const classes = useStyles();
-  const { t, ready, wsAutoSegment, wsRemoveSplitRegion, wsAddOrRemoveRegion } =
-    props;
+  const {
+    t,
+    ready,
+    onSplit,
+    wsAutoSegment,
+    wsRemoveSplitRegion,
+    wsAddOrRemoveRegion,
+  } = props;
   const [silenceValue, setSilenceValue] = useState(4);
   const [timeValue, setTimeValue] = useState(2);
   const [showSettings, setShowSettings] = useState(false);
@@ -89,11 +96,14 @@ export function WSAudioPlayerSegment(props: IProps) {
     setShowSettings(!showSettings);
   };
   const handleSplit = () => {
-    wsAddOrRemoveRegion();
+    var result = wsAddOrRemoveRegion();
+    console.log('split result', result);
+    if (result && onSplit) onSplit(result);
     return true;
   };
   const handleRemoveNextSplit = () => {
-    wsRemoveSplitRegion(true);
+    var result = wsRemoveSplitRegion(true);
+    if (result && onSplit) onSplit(result);
     return true;
   };
 

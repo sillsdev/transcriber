@@ -822,8 +822,10 @@ export function Transcriber(props: IProps) {
   };
 
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
-  const onSegmentChange = (segments: string) =>
-    (segmentsRef.current = segments);
+  const onSegmentChange = (segments: string) => {
+    segmentsRef.current = segments;
+    setChanged(true);
+  };
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {
       focusOnTranscription();
@@ -1015,7 +1017,7 @@ export function Transcriber(props: IProps) {
                           <span>
                             <Button
                               id="transcriber.save"
-                              variant="outlined"
+                              variant={changed ? 'contained' : 'outlined'}
                               color="primary"
                               className={classes.button}
                               onClick={handleSaveButton}

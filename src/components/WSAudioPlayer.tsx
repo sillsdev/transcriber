@@ -43,7 +43,7 @@ import {
 
 //import { createWaveSurfer } from './WSAudioRegion';
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
-import { useWaveSurfer } from '../crud/useWaveSurfer';
+import { IRegionChange, useWaveSurfer } from '../crud/useWaveSurfer';
 import { Duration, LightTooltip } from '../control';
 import { connect } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -267,7 +267,6 @@ function WSAudioPlayer(props: IProps) {
     wsZoom,
     wsAutoSegment,
     wsNextRegion,
-    wsSplitRegion,
     wsRemoveSplitRegion,
     wsAddOrRemoveRegion,
     wsSetHeight,
@@ -530,10 +529,11 @@ function WSAudioPlayer(props: IProps) {
     e.persist();
     setSilence(e.target.value);
   };
-  const handleKey = (e: React.KeyboardEvent) => {
-    console.log('audio player key: ', e);
+  const onSplit = (split: IRegionChange) => {
+    //I'm looping, and I added a split, so I want to go to the beginning of my original region
+    if (looping && playingRef.current && split.newEnd < split.end)
+      wsGoto(split.start);
   };
-
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
@@ -659,8 +659,8 @@ function WSAudioPlayer(props: IProps) {
             {allowRecord || (
               <WSAudioPlayerSegment
                 ready={ready}
+                onSplit={onSplit}
                 wsAutoSegment={wsAutoSegment}
-                wsSplitRegion={wsSplitRegion}
                 wsRemoveSplitRegion={wsRemoveSplitRegion}
                 wsAddOrRemoveRegion={wsAddOrRemoveRegion}
                 t={t}
@@ -668,7 +668,7 @@ function WSAudioPlayer(props: IProps) {
             )}
           </Grid>
           <div id="wsAudioTimeline" ref={timelineRef} />
-          <div id="wsAudioWaveform" onKeyDown={handleKey} ref={waveformRef} />
+          <div id="wsAudioWaveform" ref={waveformRef} />
           <Grid container className={classes.toolbar}>
             <>
               {allowRecord || (
