@@ -9,7 +9,6 @@ import {
   Slider,
   InputLabel,
   Divider,
-  Switch,
   Input,
   Grid,
 } from '@material-ui/core';
@@ -44,7 +43,7 @@ import {
 
 //import { createWaveSurfer } from './WSAudioRegion';
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
-import { useWaveSurfer } from '../crud/useWaveSurfer';
+import { IRegionChange, useWaveSurfer } from '../crud/useWaveSurfer';
 import { Duration, LightTooltip } from '../control';
 import { connect } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -106,6 +105,9 @@ const useStyles = makeStyles((theme: Theme) =>
     divider: {
       marginLeft: '5px',
       orientation: 'vertical', //this doesn't work - has to be below
+    },
+    duration: {
+      margin: '5px',
     },
   })
 );
@@ -198,6 +200,7 @@ const SLOWER_KEY = 'F4,CTRL+4';
 const FASTER_KEY = 'F5,CTRL+5';
 const TIMER_KEY = 'F6,CTRL+6';
 const RECORD_KEY = 'F9,CTRL+9';
+const RIGHT_KEY = 'ARROWRIGHT';
 
 function WSAudioPlayer(props: IProps) {
   const {
@@ -232,7 +235,6 @@ function WSAudioPlayer(props: IProps) {
   const recordStartPosition = useRef(0);
   const recordOverwritePosition = useRef<number | undefined>(undefined);
   const overwriteRef = useRef(false);
-  const [overwrite, setOverwrite] = useState(false);
   const recordingRef = useRef(false);
   const [recording, setRecordingx] = useState(false);
   const readyRef = useRef(false);
@@ -265,7 +267,6 @@ function WSAudioPlayer(props: IProps) {
     wsZoom,
     wsAutoSegment,
     wsNextRegion,
-    wsSplitRegion,
     wsRemoveSplitRegion,
     wsAddOrRemoveRegion,
     wsSetHeight,
@@ -320,6 +321,7 @@ function WSAudioPlayer(props: IProps) {
       { key: AHEAD_KEY, cb: handleJumpForward },
       { key: TIMER_KEY, cb: handleSendProgress },
       { key: RECORD_KEY, cb: handleRecorder },
+      { key: RIGHT_KEY, cb: handleNextRegion },
     ];
     keys.forEach((k) => subscribe(k.key, k.cb));
 
@@ -353,10 +355,6 @@ function WSAudioPlayer(props: IProps) {
   useEffect(() => {
     if (setAcceptedMimes) setAcceptedMimes(acceptedMimes);
   }, [acceptedMimes, setAcceptedMimes]);
-
-  useEffect(() => {
-    overwriteRef.current = overwrite;
-  }, [overwrite]);
 
   useEffect(() => {
     wsSetPlaybackRate(playbackRate);
@@ -464,6 +462,8 @@ function WSAudioPlayer(props: IProps) {
   };
   const handleNextRegion = () => {
     wsNextRegion();
+    setPlaying(true);
+    return true;
   };
 
   const gotoEnd = () => {
@@ -480,10 +480,6 @@ function WSAudioPlayer(props: IProps) {
       return true;
     }
     return false;
-  };
-
-  const handleInsertOverwrite = () => {
-    setOverwrite(!overwrite);
   };
 
   const setRecording = (value: boolean) => {
@@ -525,123 +521,61 @@ function WSAudioPlayer(props: IProps) {
     wsInsertSilence(silence, wsPosition());
     handleChanged();
   };
-
+  const t2 = {
+    NextSegment: 'Next Segment {0}',
+  };
   const handleChangeSilence = (e: any) => {
     //check if its a number
     e.persist();
     setSilence(e.target.value);
   };
+  const onSplit = (split: IRegionChange) => {
+    //I'm looping, and I added a split, so I want to go to the beginning of my original region
+    if (looping && playingRef.current && split.newEnd < split.end)
+      wsGoto(split.start);
+  };
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
         <div className={classes.main}>
-          {allowRecord && (
-            <Grid container className={classes.toolbar}>
-              <LightTooltip
-                id="wsAudioRecordTip"
-                title={(recording ? t.stop : t.record).replace(
-                  '{0}',
-                  RECORD_KEY
-                )}
-              >
-                <span>
-                  <IconButton
-                    id="wsAudioRecord"
-                    className={classes.record}
-                    onClick={handleRecorder}
-                  >
-                    {recording ? <FaStopCircle /> : <FaDotCircle />}
-                  </IconButton>
-                </span>
-              </LightTooltip>
-              <div className={classes.labeledControl}>
-                <InputLabel
-                  id="wsAudioInsertOverwriteLabel"
-                  className={classes.smallFont}
-                >
-                  {t.insertoverwrite}
-                </InputLabel>
-                <Switch
-                  id="wsAudioInsertOverwrite"
-                  checked={overwrite}
-                  onChange={handleInsertOverwrite}
-                  name="insertoverwrite"
-                />
-              </div>
-              <Divider
-                id="wsAudioDiv1"
-                className={classes.divider}
-                orientation="vertical"
-                flexItem
-              />
-              <div className={classes.labeledControl}>
-                <InputLabel
-                  id="wsAudioAddSilenceLabel"
-                  className={classes.smallFont}
-                >
-                  {t.silence}
-                </InputLabel>
-                <LightTooltip id="wsAudioAddSilenceTip" title={t.silence}>
-                  <span>
-                    <IconButton
-                      id="wsAudioAddSilence"
-                      className={classes.togglebutton}
-                      onClick={handleAddSilence()}
-                      disabled={!ready || recording}
-                    >
-                      <SilenceIcon />
-                    </IconButton>
-                  </span>
-                </LightTooltip>
-              </div>
-              <div className={classes.labeledControl}>
-                <InputLabel
-                  id="wsAudioSilenceLabel"
-                  className={classes.smallFont}
-                >
-                  {t.seconds}
-                </InputLabel>
-                <Input
-                  id="wsAudioSilence"
-                  className={classes.formControl}
-                  type="number"
-                  inputProps={{ min: '0.1', step: '0.1' }}
-                  value={silence}
-                  onChange={handleChangeSilence}
-                />
-              </div>
-              <Divider
-                id="wsAudioDiv2"
-                className={classes.divider}
-                orientation="vertical"
-                flexItem
-              />
-              {hasRegion && (
-                <LightTooltip
-                  id="wsAudioDeleteRegionTip"
-                  title={t.deleteRegion}
-                >
-                  <IconButton
-                    id="wsAudioDeleteRegion"
-                    onClick={handleDeleteRegion()}
-                    disabled={recording}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </LightTooltip>
-              )}
-              <div className={classes.grow}>{'\u00A0'}</div>
-            </Grid>
-          )}
           <Grid container className={classes.toolbar}>
+            {allowRecord && (
+              <>
+                <Grid item>
+                  <LightTooltip
+                    id="wsAudioRecordTip"
+                    title={(recording ? t.stop : t.record).replace(
+                      '{0}',
+                      RECORD_KEY
+                    )}
+                  >
+                    <span>
+                      <IconButton
+                        id="wsAudioRecord"
+                        className={classes.record}
+                        onClick={handleRecorder}
+                      >
+                        {recording ? <FaStopCircle /> : <FaDotCircle />}
+                      </IconButton>
+                    </span>
+                  </LightTooltip>
+                </Grid>
+                <Divider
+                  id="wsAudioDiv1"
+                  className={classes.divider}
+                  orientation="vertical"
+                  flexItem
+                />
+              </>
+            )}
             <Grid item>
-              <Typography>
+              <Typography className={classes.duration}>
                 <Duration id="wsAudioPosition" seconds={progress} /> {' / '}
                 <Duration id="wsAudioDuration" seconds={duration} />
               </Typography>
             </Grid>
             <Divider
-              id="wsAudioDiv3"
+              id="wsAudioDiv2"
               className={classes.divider}
               orientation="vertical"
               flexItem
@@ -661,11 +595,72 @@ function WSAudioPlayer(props: IProps) {
               orientation="vertical"
               flexItem
             />
+            {allowRecord && (
+              <>
+                <div className={classes.labeledControl}>
+                  <InputLabel
+                    id="wsAudioAddSilenceLabel"
+                    className={classes.smallFont}
+                  >
+                    {t.silence}
+                  </InputLabel>
+                  <LightTooltip id="wsAudioAddSilenceTip" title={t.silence}>
+                    <span>
+                      <IconButton
+                        id="wsAudioAddSilence"
+                        className={classes.togglebutton}
+                        onClick={handleAddSilence()}
+                        disabled={!ready || recording}
+                      >
+                        <SilenceIcon />
+                      </IconButton>
+                    </span>
+                  </LightTooltip>
+                </div>
+                <div className={classes.labeledControl}>
+                  <InputLabel
+                    id="wsAudioSilenceLabel"
+                    className={classes.smallFont}
+                  >
+                    {t.seconds}
+                  </InputLabel>
+                  <Input
+                    id="wsAudioSilence"
+                    className={classes.formControl}
+                    type="number"
+                    inputProps={{ min: '0.1', step: '0.1' }}
+                    value={silence}
+                    onChange={handleChangeSilence}
+                  />
+                </div>
+                <Divider
+                  id="wsAudioDiv2"
+                  className={classes.divider}
+                  orientation="vertical"
+                  flexItem
+                />
+                {hasRegion && (
+                  <LightTooltip
+                    id="wsAudioDeleteRegionTip"
+                    title={t.deleteRegion}
+                  >
+                    <IconButton
+                      id="wsAudioDeleteRegion"
+                      onClick={handleDeleteRegion()}
+                      disabled={recording}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </LightTooltip>
+                )}
+                <div className={classes.grow}>{'\u00A0'}</div>
+              </>
+            )}
             {allowRecord || (
               <WSAudioPlayerSegment
                 ready={ready}
+                onSplit={onSplit}
                 wsAutoSegment={wsAutoSegment}
-                wsSplitRegion={wsSplitRegion}
                 wsRemoveSplitRegion={wsRemoveSplitRegion}
                 wsAddOrRemoveRegion={wsAddOrRemoveRegion}
                 t={t}
@@ -695,7 +690,13 @@ function WSAudioPlayer(props: IProps) {
                       </ToggleButton>
                     </span>
                   </LightTooltip>
-                  <LightTooltip id="wsNextTip" title={'todo:NextSegment'}>
+                  <LightTooltip
+                    id="wsNextTip"
+                    title={t2.NextSegment.replace(
+                      '{0}',
+                      localizeHotKey(RIGHT_KEY)
+                    )}
+                  >
                     <span>
                       <IconButton
                         disabled={!hasRegion}

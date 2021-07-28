@@ -253,7 +253,7 @@ export function Transcriber(props: IProps) {
   const [projData, setProjData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
   const playedSecsRef = useRef<number>(0);
-  const segmentsRef = useRef('');
+  const segmentsRef = useRef('[]');
   const stateRef = useRef<string>(state);
   const [totalSeconds, setTotalSeconds] = useState(duration);
   const [transcribing] = useState(
@@ -759,7 +759,7 @@ export function Transcriber(props: IProps) {
     const mediaRec = mediafiles.filter((m) => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
-      segmentsRef.current = attr.segments || '';
+      segmentsRef.current = attr.segments || '[]';
       return {
         transcription: attr.transcription ? attr.transcription : '',
         position: attr.position,
@@ -822,8 +822,10 @@ export function Transcriber(props: IProps) {
   };
 
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
-  const onSegmentChange = (segments: string) =>
-    (segmentsRef.current = segments);
+  const onSegmentChange = (segments: string) => {
+    segmentsRef.current = segments;
+    setChanged(true);
+  };
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {
       focusOnTranscription();
@@ -1015,7 +1017,7 @@ export function Transcriber(props: IProps) {
                           <span>
                             <Button
                               id="transcriber.save"
-                              variant="outlined"
+                              variant={changed ? 'contained' : 'outlined'}
                               color="primary"
                               className={classes.button}
                               onClick={handleSaveButton}

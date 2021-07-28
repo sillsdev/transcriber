@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       '& .MuiDialog-paper': {
         maxWidth: '90%',
-        minWidth: '60%',
+        minWidth: '90%',
       },
     },
     paper: {
