@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     icon: {
       marginRight: theme.spacing(1),
+      fontSize: 'small',
     },
     action: {
       padding: theme.spacing(2),
@@ -179,6 +180,10 @@ export function Welcome(props: IProps) {
     handleOfflineChange('online-cloud');
   };
 
+  const handleGoOnlineTeam = () => {
+    handleOfflineChange('online-team');
+  };
+
   const handleGoOnlineLocal = () => {
     handleOfflineChange('online-local');
   };
@@ -189,7 +194,7 @@ export function Welcome(props: IProps) {
 
   const handleQuickOnline = () => {
     if (!hasProjects) localStorage.setItem('autoaddProject', 'true');
-    handleGoOnlineCloud();
+    handleOfflineChange('online-alone');
   };
 
   const AddUserLocalOnly = async (userRec: User) => {
@@ -351,7 +356,7 @@ export function Welcome(props: IProps) {
               />
             </Grid>
             <Grid item xs={4} className={classes.action}>
-              <OnlineButton id="teamonline" onClick={handleGoOnlineCloud} />
+              <OnlineButton id="teamonline" onClick={handleGoOnlineTeam} />
               {hasOfflineProjects && hasOnlineUsers && (
                 <OfflineButton id="teamoffline" onClick={handleGoOnlineLocal} />
               )}

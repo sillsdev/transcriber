@@ -165,7 +165,6 @@ export function Access(props: IProps) {
   const [whichUsers, setWhichUsers] = useState(
     pathname.substring('/access/'.length)
   );
-  const [autoAdd] = useState(localStorage.getItem('autoaddProject') !== null);
   const [selectedUser, setSelectedUser] = useState('');
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
@@ -345,12 +344,16 @@ export function Access(props: IProps) {
       });
     }
     const userId = localStorage.getItem('online-user-id');
+    console.log(`access whichUsers=${whichUsers}`);
     if (isElectron && userId && !curUser) {
       const thisUser = users.filter(
         (u) => u.id === userId && Boolean(u?.keys?.remoteId)
       );
       setCurUser(thisUser[0]);
       setLanguage(thisUser[0]?.attributes?.locale || 'en');
+    } else if (isElectron && !userId && whichUsers.startsWith('online-cloud')) {
+      localStorage.setItem('online-user-id', 'unknown');
+      handleGoOnline();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users]);
@@ -373,17 +376,12 @@ export function Access(props: IProps) {
 
   const CurrentUser = ({ curUser }: { curUser: User }) => (
     <>
-      <Typography className={classes.sectionHead}>{t2.currentUser}</Typography>
+      <Typography className={classes.sectionHead}>{t.currentUser}</Typography>
       <div className={classes.actions}>
         <UserListItem u={curUser} users={users} onSelect={handleGoOnline} />
       </div>
     </>
   );
-
-  const t2 = {
-    currentUser: 'Current User',
-    otherUsers: 'Other User(s)',
-  };
 
   return (
     <div className={classes.root}>
@@ -405,13 +403,14 @@ export function Access(props: IProps) {
             </Button>
           </div>
 
-          {!autoAdd && whichUsers.startsWith('online') && (
+          {whichUsers.startsWith('online') && (
             <div className={classes.container}>
               <>
                 <UserListMode
                   mode={listMode}
                   onMode={handleModeChange}
                   loggedIn={Boolean(curUser)}
+                  allowOffline={hasOnlineUser()}
                 />
                 {listMode === ListMode.SwitchUser ? (
                   <div className={classes.container}>
@@ -419,15 +418,21 @@ export function Access(props: IProps) {
                       <>
                         <CurrentUser curUser={curUser} />
                         <Typography className={classes.sectionHead}>
-                          {t2.otherUsers}
+                          {t.availableUsers}
                         </Typography>
                       </>
                     )}
                     <Paper className={classes.paper}>
-                      {!hasOnlineUser() && (
+                      {!hasOnlineUser() && whichUsers === 'online-team' && (
                         <div>
                           <Box>{t.noOnlineUsers1}</Box>
                           <Box>{t.noOnlineUsers2}</Box>
+                        </div>
+                      )}
+                      {!hasOnlineUser() && whichUsers === 'online-alone' && (
+                        <div>
+                          <Box>{t.noOnlineUsers3}</Box>
+                          <Box>{t.noOnlineUsers4}</Box>
                         </div>
                       )}
                       {importStatus?.complete !== false && hasOnlineUser() && (
@@ -476,13 +481,13 @@ export function Access(props: IProps) {
           {whichUsers === 'offline' && (
             <div className={classes.container}>
               <Typography className={classes.sectionHead}>
-                {t.offlineScreenTitle}
+                {t.offlineUsers}
               </Typography>
               {importStatus?.complete !== false && hasOfflineUser() && (
                 <UserList
                   isSelected={isOfflineUserWithProjects}
                   select={handleSelect}
-                  title={t.availableOfflineUsers}
+                  title={t.offlineUsers}
                 />
               )}
               <div className={classes.actions}>

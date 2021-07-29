@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   IState,
   MediaFile,
-  IAccessStrings,
+  IProjectDownloadStrings,
   OfflineProject,
   Project,
 } from '../model';
@@ -22,7 +22,7 @@ interface PlanProject {
 }
 
 interface IStateProps {
-  t: IAccessStrings;
+  t: IProjectDownloadStrings;
 }
 
 interface IRecordProps {
@@ -117,7 +117,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
 };
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'access' }),
+  t: localStrings(state, { layout: 'projectDownload' }),
 });
 
 const mapRecordsToProps = {

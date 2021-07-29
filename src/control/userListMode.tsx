@@ -39,10 +39,11 @@ interface IProps extends IStateProps {
   mode: ListMode;
   onMode: (mode: ListMode) => void;
   loggedIn: boolean;
+  allowOffline: boolean;
 }
 
 export function UserListMode(props: IProps) {
-  const { onMode, loggedIn, t } = props;
+  const { onMode, loggedIn, allowOffline, t } = props;
   const classes = useStyles();
   const [listMode, setListMode] = useState<ListMode>(props.mode);
 
@@ -53,23 +54,27 @@ export function UserListMode(props: IProps) {
 
   return (
     <div className={classes.actionToggle}>
-      <Button
-        className={clsx({
-          [classes.modeSelect]: listMode === ListMode.SwitchUser,
-        })}
-        onClick={handleMode(ListMode.SwitchUser)}
-      >
-        {t.switchUser}
-      </Button>
-      <span className={classes.bar}>|</span>
-      <Button
-        className={clsx({
-          [classes.modeSelect]: listMode === ListMode.WorkOffline,
-        })}
-        onClick={handleMode(ListMode.WorkOffline)}
-      >
-        {t.workOffline}
-      </Button>
+      {allowOffline && (
+        <>
+          <Button
+            className={clsx({
+              [classes.modeSelect]: listMode === ListMode.SwitchUser,
+            })}
+            onClick={handleMode(ListMode.SwitchUser)}
+          >
+            {t.switchUser}
+          </Button>
+          <span className={classes.bar}>|</span>
+          <Button
+            className={clsx({
+              [classes.modeSelect]: listMode === ListMode.WorkOffline,
+            })}
+            onClick={handleMode(ListMode.WorkOffline)}
+          >
+            {t.workOffline}
+          </Button>
+        </>
+      )}
       {loggedIn && (
         <>
           <span className={classes.bar}>|</span>
