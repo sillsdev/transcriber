@@ -2898,7 +2898,7 @@
       </unit>
       <unit id="grid.notcontains">
          <segment>
-            <source>Does not containxyz</source>
+            <source>Does not contain</source>
             <target/>
          </segment>
       </unit>
@@ -3349,19 +3349,19 @@
       <unit id="transcriber.pullParatextStart">
          <segment>
             <source>Getting transcription from Paratext</source>
-            <target>Obtenir la transcription de Paratext</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.pullParatextStatus">
          <segment>
             <source>Transcription pulled from Paratext</source>
-            <target>Transcription obtenue à partir de Paratext</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.pullParatextTip">
          <segment>
             <source>Pull transcription from Paratext</source>
-            <target>Obtenir la transcription de Paratext</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.reject">
@@ -4134,7 +4134,7 @@
       </unit>
       <unit id="wsAudioPlayer.slowerTip">
          <segment>
-            <source>Slower [{0}])</source>
+            <source>Slower [{0}]</source>
             <target/>
          </segment>
       </unit>
@@ -4300,21 +4300,57 @@
             <target/>
          </segment>
       </unit>
-      <unit id="welcome.title">
+      <unit id="welcome.alone">
          <segment>
-            <source>Welcome</source>
+            <source>Work Alone</source>
             <target/>
          </segment>
       </unit>
-      <unit id="welcome.setupTeam">
+      <unit id="welcome.aloneFactor">
          <segment>
-            <source>Set up a team project</source>
+            <source>Projects cannot be changed to team projects later</source>
             <target/>
          </segment>
       </unit>
-      <unit id="welcome.setupTeamTip">
+      <unit id="welcome.import">
          <segment>
-            <source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
+            <source>Import Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.keyFactor">
+         <segment>
+            <source>Key Factor(s)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.offline">
+         <segment>
+            <source>Work Offline</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.online">
+         <segment>
+            <source>Work Online</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.quickFamily">
+         <segment>
+            <source>User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.quickGiven">
+         <segment>
+            <source>Initial</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.quickName">
+         <segment>
+            <source>Initial User</source>
             <target/>
          </segment>
       </unit>
@@ -4336,15 +4372,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="welcome.team">
+      <unit id="welcome.setupTeam">
          <segment>
-            <source>Work in a team project</source>
+            <source>Set up a team project</source>
             <target/>
          </segment>
       </unit>
-      <unit id="welcome.teamTip">
+      <unit id="welcome.setupTeamTip">
          <segment>
-            <source>A project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the project card menu, or offline by importing it.</source>
+            <source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.team">
+         <segment>
+            <source>Work in a team project</source>
             <target/>
          </segment>
       </unit>
@@ -4354,57 +4396,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="welcome.keyFactor">
+      <unit id="welcome.teamTip">
          <segment>
-            <source>Key Factor(s)</source>
+            <source>A project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the project card menu, or offline by importing it.</source>
             <target/>
          </segment>
       </unit>
-      <unit id="welcome.online">
+      <unit id="welcome.title">
          <segment>
-            <source>Work Online</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="welcome.offline">
-         <segment>
-            <source>Work Offline</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="welcome.import">
-         <segment>
-            <source>Import Project</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="welcome.alone">
-         <segment>
-            <source>Work Alone</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="welcome.aloneFactor">
-         <segment>
-            <source>Projects cannot be changed to team projects later</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="welcome.quickGiven">
-         <segment>
-            <source>Initial</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="welcome.quickFamily">
-         <segment>
-            <source>User</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="welcome.quickName">
-         <segment>
-            <source>Initial User</source>
+            <source>Welcome</source>
             <target/>
          </segment>
       </unit>

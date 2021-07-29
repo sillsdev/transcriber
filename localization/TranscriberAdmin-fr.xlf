@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xlf">
-   	<unit id="access.availableOfflineUsers">
+   	<unit id="access.availableUsers">
    		<segment>
-   			<source>Available Offline Users</source>
-   			<target>Utilisateurs hors ligne disponibles</target>
+   			<source>Available Users</source>
+   			<target>Utilisateurs disponibles</target>
    		</segment>
    	</unit>
-   	<unit id="access.availableOnlineUsers">
+   	<unit id="access.back">
    		<segment>
-   			<source>Available Online Users</source>
-   			<target>Utilisateurs en ligne disponibles</target>
+   			<source>Back</source>
+   			<target>Dos</target>
    		</segment>
    	</unit>
    	<unit id="access.cancel">
@@ -19,16 +19,22 @@
    			<target>Annuler</target>
    		</segment>
    	</unit>
-      <unit id="access.createUser">
+   	<unit id="access.createUser">
    		<segment>
    			<source>Add a new user</source>
    			<target>Ajouter un nouvel utilisateur</target>
    		</segment>
    	</unit>
-      <unit id="access.goOnline">
+	<unit id="access.currentUser">
+         <segment>
+            <source>Current User</source>
+            <target/>
+         </segment>
+      </unit>
+   	<unit id="access.importSnapshot">
    		<segment>
-   			<source>Go Online</source>
-   			<target>Aller en ligne</target>
+   			<source>Import Project</source>
+   			<target>Importer un projet</target>
    		</segment>
    	</unit>
    	<unit id="access.logIn">
@@ -43,136 +49,46 @@
    			<target>Déconnexion</target>
    		</segment>
    	</unit>
-      <unit id="access.title">
-         <segment>
-            <source>User List</source>
-   			<target>Liste d'utilisateur</target>
-         </segment>
-      </unit>
-   	<unit id="access.onlineScreenTitle">
-   		<segment>
-   			<source>I want to work...</source>
-   			<target>Je veux travailler...</target>
-   		</segment>
-   	</unit>
-      <unit id="access.offlineScreenTitle">
-         <segment>
-            <source>Offline Users</source>
-   			<target>Utilisateurs hors ligne</target>
-         </segment>
-      </unit>
-   	<unit id="access.importSnapshot">
-   		<segment>
-   			<source>Import Project</source>
-   			<target>Importer un projet</target>
-   		</segment>
-   	</unit>
-      <unit id="access.withInternet">
-   		<segment>
-   			<source>With an Internet connection</source>
-   			<target>Avec une connexion Internet</target>
-   		</segment>
-   	</unit>
-   	<unit id="access.withoutInternet">
-   		<segment>
-   			<source>Without an Internet connection</source>
-   			<target>Sans connexion Internet</target>
-   		</segment>
-   	</unit>
-      <unit id="access.withoutInternetTip">
-         <segment>
-            <source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user avatar does not appear here, you must login online and mark your project as Offline Available and then Exit, or Import a project that has been exported while online.</source>
-   			<target>Le projet doit être mis en place en ligne. Les modifications apportées hors ligne seront automatiquement synchronisées avec le projet en ligne si un utilisateur de cet ordinateur se connecte en ligne, ou les modifications peuvent être exportées puis importées dans le projet en ligne. Si votre utilisateur n'apparaît pas ici, vous devez vous connecter en ligne et marquer votre projet comme disponible hors connexion, puis quitter, ou importer un projet qui a été exporté en ligne.</target>
-         </segment>
-      </unit>
    	<unit id="access.mustBeOnline">
    		<segment>
    			<source>You must be connected to the Internet to Log In!</source>
    			<target>Vous devez être connecté à Internet pour vous connecter !</target>
    		</segment>
    	</unit>
-      <unit id="access.onlineAdmin">
-         <segment>
-            <source>Online Admin/Offline Available</source>
-            <target>L'administration en ligne/hors ligne disponible</target>
-         </segment>
-      </unit>
-      <unit id="access.onlineAdminDesc">
-         <segment>
-            <source>Project Admin is online.</source>
-            <target>L'administration du projet est en ligne.</target>
-         </segment>
-      </unit>
-      <unit id="access.offlineAdmin">
-         <segment>
-            <source>Always Offline</source>
-            <target>Toujours hors ligne</target>
-         </segment>
-      </unit>
-      <unit id="access.offlineAdminDesc">
-         <segment>
-            <source>Project Admin is offline.</source>
-               <target>L'administration du projet est hors ligne.</target>
-      </segment>
-      </unit>
-      <unit id="access.onlineWorkDesc">
-         <segment>
-            <source>Transcription can be done online or offline.</source>
-            <target>La transcription peut être effectuée en ligne ou hors ligne.</target>
-      </segment>
-      </unit>
-      <unit id="access.offlineWorkDesc">
-         <segment>
-            <source>All work is always done offline.</source>
-            <target>Tout le travail est toujours effectué hors ligne.</target>
-       </segment>
-      </unit>
-      <unit id="access.back">
-         <segment>
-            <source>Back</source>
-            <target>Dos</target>
-      </segment>
-      </unit>
-      <unit id="access.chooseAnother">
-         <segment>
-            <source>To choose another user, Log out...</source>
-            <target>Pour choisir un autre utilisateur, Déconnectez-vous...</target>
-      </segment>
-      </unit>
-      <unit id="access.noOnlineUsers1">
-         <segment>
-            <source>To allow offline use:</source>
-            <target>Pour permettre une utilisation hors ligne:</target>
-         </segment>
-      </unit>
-      <unit id="access.noOnlineUsers2">
-         <segment>
-            <source>Log in and select Offline Available in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
-            <target>Connectez-vous et sélectionnez Hors ligne disponible dans le menu de la carte de projet, puis déconnectez-vous. Ou, cliquez sur IMPORTER UN PROJET pour importer un projet que votre administrateur a exporté.</target>
-         </segment>
-      </unit>
-      <unit id="access.importProject">
-         <segment>
-            <source>Import Project</source>
-         	<target>Importer un projet</target>
-         </segment>
-      </unit>
-   	<unit id="access.download">
+   	<unit id="access.noOnlineUsers1">
    		<segment>
-   			<source>Download?</source>
-   			<target>Télécharger ?</target>
+   			<source>To allow offline use:</source>
+   			<target>Pour permettre une utilisation hors ligne:</target>
    		</segment>
    	</unit>
-   	<unit id="access.downloadLater">
+   	<unit id="access.noOnlineUsers2">
    		<segment>
-   			<source>Download Later</source>
-   			<target>Télécharger plus tard</target>
+   			<source>Log in and select Offline Available in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
+   			<target>Connectez-vous et sélectionnez Hors ligne disponible dans le menu de la carte de projet, puis déconnectez-vous. Ou, cliquez sur IMPORTER UN PROJET pour importer un projet que votre administrateur a exporté.</target>
    		</segment>
    	</unit>
-   	<unit id="access.downloadMb">
+      <unit id="access.noOnlineUsers3">
+         <segment>
+            <source>To create an online project for working alone:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.noOnlineUsers4">
+         <segment>
+            <source>Create a personal project.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.offlineUsers">
+         <segment>
+            <source>Offline Users</source>
+            <target/>
+         </segment>
+      </unit>
+   	<unit id="access.title">
    		<segment>
-   			<source>Download {0}MB of offline project files?</source>
-   			<target>Télécharger {0}MB de fichiers de projets hors ligne ?</target>
+   			<source>User List</source>
+   			<target>Liste d'utilisateur</target>
    		</segment>
    	</unit>
    	<unit id="activityState.approved">
@@ -241,16 +157,16 @@
             <target>Transcrite</target>
          </segment>
       </unit>
-      <unit id="activityState.transcribing">
-         <segment>
-            <source>Transcribing</source>
-            <target>Transcrire</target>
-         </segment>
-      </unit>
       <unit id="activityState.transcribeReady">
          <segment>
             <source>Ready to Transcribe</source>
             <target>Prêt à transcrire</target>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribing">
+         <segment>
+            <source>Transcribing</source>
+            <target>Transcrire</target>
          </segment>
       </unit>
       <unit id="alert.areYouSure">
@@ -735,15 +651,14 @@
       </unit>
       <unit id="electronImport.userWontSeeProject">
          <segment>
-            <source>You are not a member of this project group. This project will not be accessible after import.</source>
-            <target>Vous n'êtes pas membre de ce groupe de projet. Ce projet ne sera pas accessible après l'importation.</target>
+            <source>You are not a member of this project team. This project will not be accessible after import.</source>
+            <target>Vous n'êtes pas membre de l'équipe de ce projet. Ce projet ne sera pas accessible après l'importation.</target>
          </segment>
       </unit>
       <unit id="electronImport.importProject">
          <segment>
             <source>Import Project</source>
-            <target>Importer un projet
-                </target>
+            <target>Importer un projet</target>
          </segment>
       </unit>
       <unit id="electronImport.invalidProject">
@@ -760,8 +675,8 @@
       </unit>
       <unit id="electronImport.neverExported">
          <segment>
-            <source>Current data in project {name0} has never been exported.</source>
-            <target>Les données actuelles du projet {name0} n'ont jamais été exportées.</target>
+            <source>Current data in project {name0} has never been exported to an itf file to preserve changes.</source>
+            <target>Les données actuelles du projet {nom0} n'ont jamais été exportées vers un fichier itf pour préserver les changements.</target>
          </segment>
       </unit>
       <unit id="electronImport.projectImported">
@@ -874,8 +789,8 @@
       </unit>
       <unit id="groupSettings.noDeleteAllUsersInfo">
          <segment>
-            <source>Cannot delete users from the All Members group</source>
-            <target>Impossible de supprimer des membres du groupe Tous les utilisateurs</target>
+            <source>Cannot delete members from the All Members group</source>
+            <target>Impossible de supprimer des membres du groupe "Tous les membres".</target>
          </segment>
       </unit>
       <unit id="groupSettings.noDeleteInfo">
@@ -886,8 +801,8 @@
       </unit>
       <unit id="groupSettings.owners">
          <segment>
-            <source>Owner(s)</source>
-            <target>Maître(s)</target>
+            <source>Owners</source>
+            <target>Maîtres</target>
          </segment>
       </unit>
       <unit id="groupSettings.ownersDetail">
@@ -966,12 +881,6 @@
          <segment>
             <source>Copy Failed</source>
             <target>La copie a échoué</target>
-         </segment>
-      </unit>
-      <unit id="import.email">
-         <segment>
-            <source>Email</source>
-            <target>Courriel</target>
          </segment>
       </unit>
       <unit id="import.error">
@@ -1054,7 +963,7 @@
       </unit>
       <unit id="import.locale">
          <segment>
-            <source>Preferred language</source>
+            <source>Preferred Language</source>
             <target>Langue préférée</target>
          </segment>
       </unit>
@@ -1144,7 +1053,7 @@
       </unit>
       <unit id="import.username">
          <segment>
-            <source>Full Name</source>
+            <source>Name</source>
             <target>Nom et prénom</target>
          </segment>
       </unit>
@@ -1182,12 +1091,6 @@
          <segment>
             <source>Passage {0}.{1}: Book is missing.</source>
             <target>Passage {0}.{1}: Livre manquant.</target>
-         </segment>
-      </unit>
-      <unit id="integration.invalidReference">
-         <segment>
-            <source>Passage {0}.{1} {2}: Invalid Reference</source>
-            <target>Passage {0}.{1} {2}: Référence non valide</target>
          </segment>
       </unit>
       <unit id="integration.no">
@@ -1456,8 +1359,8 @@
       </unit>
       <unit id="invite.groups">
          <segment>
-            <source>Projects</source>
-            <target>Projets</target>
+            <source>Project</source>
+            <target>Projet</target>
          </segment>
       </unit>
       <unit id="invite.instructions">
@@ -1500,6 +1403,12 @@
          <segment>
             <source>No projects are associated with this group.</source>
             <target>Aucun projet n'est associé à ce groupe.</target>
+         </segment>
+      </unit>
+      <unit id="invite.organization">
+         <segment>
+            <source>Team</source>
+            <target>Équipe</target>
          </segment>
       </unit>
       <unit id="invite.questions">
@@ -1688,6 +1597,12 @@
             <target>Changer d'utilisateur</target>
          </segment>
       </unit>
+      <unit id="main.switchUser">
+         <segment>
+            <source>Switch User</source>
+            <target>Changer d'utilisateur</target>
+         </segment>
+      </unit>
       <unit id="main.export">
          <segment>
             <source>Export</source>
@@ -1708,8 +1623,8 @@
    	</unit>
    	<unit id="main.flatSample">
    		<segment>
-   			<source>Scripture Flat sample spreadsheet</source>
-   			<target>Feuille de calcul de l'échantillon plat d'écritures</target>
+   			<source>Scripture flat sample spreadsheet</source>
+   			<target>Feuille de calcul type pour l'écriture à plat</target>
    		</segment>
    	</unit>
    	<unit id="main.hierarchicalSample">
@@ -1720,11 +1635,11 @@
    	</unit>
    	<unit id="main.genFlatSample">
    		<segment>
-   			<source>General Flat sample spreadsheet</source>
-   			<target>Général Feuille de calcul de l'échantillon plat</target>
+   			<source>General flat sample spreadsheet</source>
+   			<target>Feuille de calcul type pour les plats généraux</target>
    		</segment>
    	</unit>
-   	<unit id="main.GenHierarchicalSample">
+   	<unit id="main.genHierarchicalSample">
    		<segment>
    			<source>General hierarchical sample spreadsheet</source>
    			<target>Exemple de tableur hiérarchique général</target>
@@ -1732,7 +1647,7 @@
    	</unit>
    	<unit id="main.reportWhenOnline">
    		<segment>
-   			<source>You must be online to report a problem.</source>
+   			<source>You must be online to report an problem.</source>
    			<target>Vous devez être en ligne pour signaler un problème.</target>
    		</segment>
    	</unit>
@@ -2072,6 +1987,12 @@
             <target>Correspondance terminée : {0} nouvelles associations</target>
          </segment>
       </unit>
+      <unit id="mediaTab.mediaAssociations">
+         <segment>
+            <source>Audio Associations</source>
+            <target>Associations audio</target>
+         </segment>
+      </unit>
       <unit id="mediaTab.noMatch">
          <segment>
             <source>Match complete: no new associations</source>
@@ -2204,16 +2125,16 @@
             <target>annuler</target>
          </segment>
       </unit>
+      <unit id="mediaUpload.dragDropMultiple">
+         <segment>
+            <source>Drag and drop files here, or click here to browse for the files.</source>
+            <target>Faites glisser et déposez les fichiers ici, ou cliquez ici pour rechercher les fichiers.</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.dragDropSingle">
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file.</source>
             <target>Glissez et déposez un fichier ici, ou cliquez ici pour rechercher le fichier.</target>
-         </segment>
-      </unit>
-            <unit id="mediaUpload.dragDropMultiple">
-         <segment>
-            <source>Drag and drop files here, or click here to browse for the files.</source>
-            <target>Faites glisser et déposez les fichiers ici, ou cliquez ici pour rechercher les fichiers.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.invalidFile">
@@ -2230,14 +2151,14 @@
       </unit>
       <unit id="mediaUpload.ITFtitle">
          <segment>
-            <source>Upload Change Data from the Desktop app.</source>
-            <target>Télécharger les données de modification depuis l'application de bureau.</target>
+            <source>Upload Change Data from Desktop app.</source>
+            <target>Téléchargez les données de modification à partir de l'application Desktop.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.PTFtask">
          <segment>
-            <source>Upload a Portable Transcriber File (ptf file).</source>
-            <target>Téléchargez un fichier transcripteur portable (fichier ptf).</target>
+            <source>Upload a Portable Transcriber File (ptf).</source>
+            <target>Téléchargez un fichier de transcription portable (ptf).</target>
          </segment>
       </unit>
       <unit id="mediaUpload.PTFtitle">
@@ -2306,6 +2227,18 @@
             <target>Transcrire</target>
          </segment>
       </unit>
+      <unit id="planSheet.action">
+         <segment>
+            <source>Action</source>
+            <target>Action</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.audio">
+         <segment>
+            <source>Audio</source>
+            <target>Audio</target>
+         </segment>
+      </unit>
       <unit id="planSheet.addPassage">
          <segment>
             <source>Add Passage</source>
@@ -2338,8 +2271,8 @@
       </unit>
       <unit id="planSheet.passageBelow">
          <segment>
-            <source>Insert passage below</source>
-            <target>Insérer passage ci-dessous</target>
+            <source>Insert passage below {0}</source>
+            <target>Insérer le passage ci-dessous {0}</target>
          </segment>
       </unit>
       <unit id="planSheet.pasting">
@@ -2368,7 +2301,7 @@
       </unit>
       <unit id="planSheet.saving">
          <segment>
-            <source>Saving</source>
+            <source>Saving...</source>
             <target>Épargner...</target>
          </segment>
       </unit>
@@ -2462,16 +2395,16 @@
             <target>Annuler</target>
          </segment>
       </unit>
-      <unit id="profile.nameNotEmail">
-         <segment>
-            <source>Please choose a name other than your email address.</source>
-            <target>Veuillez choisir un nom autre que votre adresse e-mail.</target>
-         </segment>
-      </unit>
       <unit id="profile.checkingParatext">
          <segment>
             <source>Checking for Paratext account...</source>
             <target>Vérification du compte Paratext...</target>
+         </segment>
+      </unit>
+      <unit id="profile.nameNotEmail">
+         <segment>
+            <source>Please choose a name other than your email address.</source>
+            <target>Veuillez choisir un nom autre que votre adresse e-mail.</target>
          </segment>
       </unit>
    	<unit id="profile.notLinked">
@@ -2536,7 +2469,7 @@
       </unit>
       <unit id="profile.locale">
          <segment>
-            <source>Preferred language</source>
+            <source>Preferred Language</source>
             <target>Langue préférée</target>
          </segment>
       </unit>
@@ -2602,7 +2535,7 @@
       </unit>
       <unit id="profile.sendDigest">
          <segment>
-            <source>Receive daily digest</source>
+            <source>Receive daily digests</source>
             <target>Recevoir les résumés quotidiens</target>
          </segment>
       </unit>
@@ -2620,7 +2553,7 @@
       </unit>
       <unit id="profile.userProfile">
          <segment>
-            <source>User Profile</source>
+            <source>User profile</source>
             <target>Profil du utilisateur</target>
          </segment>
       </unit>
@@ -2672,13 +2605,7 @@
             <target>Rapports de {0}</target>
          </segment>
       </unit>
-      <unit id="projButtons.sync">
-         <segment>
-            <source>Sync ({0})</source>
-            <target>Sync ({0})</target>
-         </segment>
-      </unit>
-   	<unit id="newProject.newProject">
+      <unit id="newProject.newProject">
    		<segment>
    			<source>New Project</source>
    			<target>Nouveau projet</target>
@@ -2740,7 +2667,7 @@
    	</unit>
    	<unit id="newProject.generalFactor1">
    		<segment>
-   			<source>Freeform references</source>
+   			<source>Free-form references</source>
    			<target>Références libres</target>
    		</segment>
    	</unit>
@@ -2792,12 +2719,6 @@
    			<target>Intégré avec Paratext</target>
    		</segment>
    	</unit>
-   	<unit id="newProject.oneStoryIntegration">
-   		<segment>
-   			<source>Integrated with OneStory Editor</source>
-   			<target>Intégré à l'éditeur OneStory</target>
-   		</segment>
-   	</unit>
    	<unit id="newProject.configure">
    		<segment>
    			<source>Configure</source>
@@ -2814,6 +2735,24 @@
    		<segment>
    			<source>Start Recording</source>
    			<target>Démarrer l'enregistrement</target>
+   		</segment>
+   	</unit>
+	<unit id="projectDownload.download">
+   		<segment>
+   			<source>Download?</source>
+   			<target>Télécharger ?</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectDownload.downloadLater">
+   		<segment>
+   			<source>Download Later</source>
+   			<target>Télécharger plus tard</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectDownload.downloadMb">
+   		<segment>
+   			<source>Download {0}MB of offline project files?</source>
+   			<target>Télécharger {0}MB de fichiers de projets hors ligne ?</target>
    		</segment>
    	</unit>
    	<unit id="scriptureTable.action">
@@ -3040,8 +2979,8 @@
       </unit>
       <unit id="shared.admin">
          <segment>
-            <source>Owner</source>
-            <target>Maître</target>
+            <source>Admin</source>
+            <target>Admin</target>
          </segment>
       </unit>
    	<unit id="shared.cancel">
@@ -3182,22 +3121,10 @@
             <target>Assigner {0}</target>
          </segment>
       </unit>
-      <unit id="taskItem.review">
-         <segment>
-            <source>Review</source>
-            <target>Examiner</target>
-         </segment>
-      </unit>
       <unit id="taskItem.section">
          <segment>
             <source>{0} {1}.{2}</source>
             <target>{0} {1}.{2}</target>
-         </segment>
-      </unit>
-      <unit id="taskItem.transcribe">
-         <segment>
-            <source>Transcribe</source>
-            <target>Transcrire</target>
          </segment>
       </unit>
       <unit id="taskItem.unassign">
@@ -3304,7 +3231,7 @@
       </unit>
       <unit id="toDoTable.no">
          <segment>
-            <source>no</source>
+            <source>No</source>
             <target>Non</target>
          </segment>
       </unit>
@@ -3411,7 +3338,6 @@
             <target>Tâche créée</target>
          </segment>
       </unit>
-
       <unit id="transcriber.pullParatextCaption">
          <segment>
             <source>Paratext</source>
@@ -3427,7 +3353,7 @@
       <unit id="transcriber.pullParatextStatus">
          <segment>
             <source>Transcription pulled from Paratext</source>
-            <target>Transcription obtenue Ã  partir de Paratext</target>
+            <target>Transcription obtenue à partir de Paratext</target>
          </segment>
       </unit>
       <unit id="transcriber.pullParatextTip">
@@ -3487,7 +3413,7 @@
       </unit>
       <unit id="transcriber.submitReviewTip">
          <segment>
-            <source>Submit as complete.</source>
+            <source>Submit as complete</source>
             <target>Soumettre comme complet</target>
          </segment>
       </unit>
@@ -3533,7 +3459,7 @@
             <target>Sauvegarder</target>
          </segment>
       </unit>
-      <unit id="transcribeAddNote.AddNoteTitle">
+      <unit id="transcribeAddNote.addNoteTitle">
          <segment>
             <source>Add Note</source>
             <target>Ajouter une note</target>
@@ -3559,13 +3485,13 @@
       </unit>
       <unit id="transcribeReject.needsAudio">
          <segment>
-            <source>Needs New Audio</source>
+            <source>Recording Needed</source>
             <target>Besoin d'un nouveau enregistrement</target>
          </segment>
       </unit>
       <unit id="transcribeReject.needsCorrection">
          <segment>
-            <source>Needs Corrections</source>
+            <source>Correction Needed</source>
             <target>Nécessite des corrections</target>
          </segment>
       </unit>
@@ -3577,8 +3503,8 @@
       </unit>
       <unit id="transcribeReject.rejectReason">
          <segment>
-            <source>Reject Reasons</source>
-            <target>Raisons du rejet</target>
+            <source>Reject Reason</source>
+            <target>Raison du rejet</target>
          </segment>
       </unit>
       <unit id="transcribeReject.rejectTitle">
@@ -3649,14 +3575,14 @@
       </unit>
       <unit id="transcriptionTab.electronBackup">
          <segment>
-            <source>Backup All Projects</source>
+            <source>Back up All Projects</source>
             <target>Sauvegarder tous les projets</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.error">
          <segment>
-            <source>Error</source>
-            <target>Erreur</target>
+            <source>Export Error</source>
+            <target>Erreur d'exportation</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.export">
@@ -3923,6 +3849,12 @@
             <target>Annuler</target>
          </segment>
       </unit>
+      <unit id="vProject.correctformat">
+         <segment>
+            <source>Please enter in the format: singular/plural</source>
+            <target>Veuillez entrer dans le format : singulier/pluriel</target>
+         </segment>
+      </unit>
       <unit id="vProject.description">
          <segment>
             <source>Description</source>
@@ -4015,7 +3947,7 @@
       </unit>
       <unit id="vProject.pericopes">
          <segment>
-            <source>cd /Pericopes</source>
+            <source>Pericope/Pericopes</source>
             <target>Péricope/Péricopes</target>
          </segment>
       </unit>
@@ -4117,8 +4049,8 @@
       </unit>
       <unit id="wsAudioPlayer.beginningTip">
          <segment>
-            <source>Go to beginning</source>
-            <target>Début</target>
+            <source>Go to Beginning [{0}]</source>
+            <target>Aller au début [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.deleteRegion">
@@ -4129,8 +4061,8 @@
       </unit>
       <unit id="wsAudioPlayer.endTip">
          <segment>
-            <source>Go to End</source>
-           <target>Finir</target>
+            <source>Go to End [{0}]</source>
+           <target>Aller à la fin [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.fasterTip">
@@ -4201,7 +4133,7 @@
       </unit>
       <unit id="wsAudioPlayer.slowerTip">
          <segment>
-            <source>Slower [{0}]</source>
+            <source>Slower [{0}])</source>
             <target>Plus lente [{0}]</target>
          </segment>
       </unit>
@@ -4292,7 +4224,7 @@
       <unit id="hotKey.or">
          <segment>
             <source>or</source>
-            <target>or</target>
+            <target>ou</target>
          </segment>
       </unit>
       <unit id="hotKey.spaceKey">
@@ -4331,7 +4263,7 @@
    			<target>Fermer</target>
    		</segment>
    	</unit>
-   	<unit id="spelling.Dictionnaires">
+   	<unit id="spelling.dictionaries">
    		<segment>
    			<source>Dictionaries</source>
    			<target>Dictionaries</target>
@@ -4349,22 +4281,76 @@
    			<target>Ajouter au dictionnaire</target>
    		</segment>
    	</unit>
-      <unit id="welcome.title">
+   	  <unit id="userListMode.switchUser">
          <segment>
-            <source>Welcome</source>
-            <target>Bienvenu</target>
+            <source>Switch User</source>
+            <target>Changer d'utilisateur</target>
          </segment>
       </unit>
-   	<unit id="welcome.setupTeam">
+      <unit id="userListMode.workOffline">
+         <segment>
+            <source>Work Offline</source>
+         	<target>Travailler hors ligne</target>
+         </segment>
+      </unit>
+      <unit id="userListMode.logOut">
+         <segment>
+            <source>Log Out</source>
+         	<target>Déconnexion</target>
+         </segment>
+      </unit>
+      <unit id="welcome.alone">
    		<segment>
-   			<source>Set up a team project</source>
-   			<target>Mettre en place un projet d'équipe</target>
+   			<source>Work Alone</source>
+   			<target>Travailler seul</target>
    		</segment>
    	</unit>
-   	<unit id="welcome.setupTeamTip">
+   	<unit id="welcome.aloneFactor">
    		<segment>
-   			<source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
-   			<target>Configurez le projet, en divisant le travail en passages qui peuvent être attribués à différents transcripteurs et éditeurs.  Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet.</target>
+   			<source>Projects cannot be changed to team projects later</source>
+   			<target>Les projets ne peuvent pas être transformés ultérieurement en projets d'équipe</target>
+   		</segment>
+   	</unit>
+   	<unit id="welcome.import">
+   		<segment>
+   			<source>Import Project</source>
+   			<target>Importer le projet</target>
+   		</segment>
+   	</unit>
+   	<unit id="welcome.keyFactor">
+   		<segment>
+   			<source>Key Factor(s)</source>
+   			<target>Facteur clé</target>
+   		</segment>
+   	</unit>
+   	<unit id="welcome.offline">
+   		<segment>
+   			<source>Work Offline</source>
+   			<target>Travailler hors ligne</target>
+   		</segment>
+   	</unit>
+   	<unit id="welcome.online">
+   		<segment>
+   			<source>Work Online</source>
+   			<target>Travail en ligne</target>
+   		</segment>
+   	</unit>
+   	<unit id="welcome.quickFamily">
+   		<segment>
+   			<source>User</source>
+   			<target>Utilisateur</target>
+   		</segment>
+   	</unit>
+   	<unit id="welcome.quickGiven">
+   		<segment>
+   			<source>Initial</source>
+   			<target>Initial</target>
+   		</segment>
+   	</unit>
+   	<unit id="welcome.quickName">
+   		<segment>
+   			<source>Initial User</source>
+   			<target>Utilisateur initial</target>
    		</segment>
    	</unit>
    	<unit id="welcome.setupFactor">
@@ -4381,8 +4367,20 @@
    	</unit>
    	<unit id="welcome.setupFactor2Help">
    		<segment>
-   			<source>Projects are Made Available Offline on the three dot More Menu on each Project Card.</source>
-   			<target>Les projets sont mis à disposition hors ligne dans le menu "More" à trois points de chaque fiche de projet.</target>
+   			<source>Select the Offline Available option on the project card menu.</source>
+   			<target>Sélectionnez l'option Disponible hors ligne dans le menu de la fiche de projet.</target>
+   		</segment>
+   	</unit>
+   	<unit id="welcome.setupTeam">
+   		<segment>
+   			<source>Set up a team project</source>
+   			<target>Mettre en place un projet d'équipe</target>
+   		</segment>
+   	</unit>
+   	<unit id="welcome.setupTeamTip">
+   		<segment>
+   			<source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
+   			<target>Configurez le projet, en divisant le travail en passages qui peuvent être attribués à différents transcripteurs et éditeurs.  Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet.</target>
    		</segment>
    	</unit>
    	<unit id="welcome.team">
@@ -4391,70 +4389,22 @@
    			<target>Travailler dans un projet d'équipe</target>
    		</segment>
    	</unit>
-   	<unit id="welcome.teamTip">
-   		<segment>
-   			<source>A project has been set up online.  Transcribers and editors can work online, offline by downloading the project, or offline by importing it.</source>
-   			<target>Un projet a été mis en ligne.  Les transcripteurs et les éditeurs peuvent travailler en ligne, hors ligne en téléchargeant le projet, ou hors ligne en l'important.</target>
-   		</segment>
-   	</unit>
    	<unit id="welcome.teamFactor">
    		<segment>
    			<source>Project has been set up online</source>
    			<target>Le projet a été mis en ligne</target>
    		</segment>
    	</unit>
-   	<unit id="welcome.keyFactor">
+   	<unit id="welcome.teamTip">
    		<segment>
-   			<source>Key Factor</source>
-   			<target>Facteur clé</target>
+   			<source>A project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the project card menu, or offline by importing it.</source>
+   			<target>Un projet a été mis en place en ligne.  Les transcripteurs et les éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la fiche projet, ou hors ligne en l'important.</target>
    		</segment>
    	</unit>
-   	<unit id="welcome.online">
+   	<unit id="welcome.title">
    		<segment>
-   			<source>Work Online</source>
-   			<target>Travail en ligne</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.offline">
-   		<segment>
-   			<source>Work Offline</source>
-   			<target>Travailler hors ligne</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.import">
-   		<segment>
-   			<source>Import Project</source>
-   			<target>Importer le projet</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.alone">
-   		<segment>
-   			<source>Work Alone</source>
-   			<target>Travailler seul</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.aloneFactor">
-   		<segment>
-   			<source>Projects cannot be changed to team projects later</source>
-   			<target>Les projets ne peuvent pas être transformés ultérieurement en projets d'équipe</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.quickGiven">
-   		<segment>
-   			<source>Initial</source>
-   			<target>Initial</target>
-   		</segment>
-   	</unit>
-    <unit id="welcome.quickFamily">
-       <segment>
-          <source>User</source>
-          <target>Utilisateur</target>
-       </segment>
-    </unit>
-   	<unit id="welcome.quickName">
-   		<segment>
-   			<source>Initial User</source>
-   			<target>Utilisateur initial</target>
+   			<source>Welcome</source>
+   			<target>Bienvenu</target>
    		</segment>
    	</unit>
    </file>

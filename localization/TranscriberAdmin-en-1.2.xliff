@@ -3376,7 +3376,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="grid.notcontains">
-            <source>Does not containxyz</source>
+            <source>Does not contain</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
@@ -3902,21 +3902,21 @@
          </trans-unit>
          <trans-unit id="transcriber.pullParatextStart">
             <source>Getting transcription from Paratext</source>
-            <target>Obtenir la transcription de Paratext</target>
+            <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="transcriber.pullParatextStatus">
             <source>Transcription pulled from Paratext</source>
-            <target>Transcription obtenue à partir de Paratext</target>
+            <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="transcriber.pullParatextTip">
             <source>Pull transcription from Paratext</source>
-            <target>Obtenir la transcription de Paratext</target>
+            <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
@@ -4819,7 +4819,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.slowerTip">
-            <source>Slower [{0}])</source>
+            <source>Slower [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -5014,22 +5014,64 @@
       			<context context-type="sourcefile">UserListMode.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.title">
-      		<source>Welcome</source>
+      	<trans-unit id="welcome.alone">
+      		<source>Work Alone</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.setupTeam">
-      		<source>Set up a team project</source>
+      	<trans-unit id="welcome.aloneFactor">
+      		<source>Projects cannot be changed to team projects later</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.setupTeamTip">
-      		<source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
+      	<trans-unit id="welcome.import">
+      		<source>Import Project</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="welcome.keyFactor">
+      		<source>Key Factor(s)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="welcome.offline">
+      		<source>Work Offline</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="welcome.online">
+      		<source>Work Online</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="welcome.quickFamily">
+      		<source>User</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="welcome.quickGiven">
+      		<source>Initial</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="welcome.quickName">
+      		<source>Initial User</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
@@ -5056,15 +5098,22 @@
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.team">
-      		<source>Work in a team project</source>
+      	<trans-unit id="welcome.setupTeam">
+      		<source>Set up a team project</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.teamTip">
-      		<source>A project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the project card menu, or offline by importing it.</source>
+      	<trans-unit id="welcome.setupTeamTip">
+      		<source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">welcome.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="welcome.team">
+      		<source>Work in a team project</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
@@ -5077,64 +5126,15 @@
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.keyFactor">
-      		<source>Key Factor(s)</source>
+      	<trans-unit id="welcome.teamTip">
+      		<source>A project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the project card menu, or offline by importing it.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="welcome.online">
-      		<source>Work Online</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">welcome.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="welcome.offline">
-      		<source>Work Offline</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">welcome.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="welcome.import">
-      		<source>Import Project</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">welcome.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="welcome.alone">
-      		<source>Work Alone</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">welcome.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="welcome.aloneFactor">
-      		<source>Projects cannot be changed to team projects later</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">welcome.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="welcome.quickGiven">
-      		<source>Initial</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">welcome.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="welcome.quickFamily">
-      		<source>User</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">welcome.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="welcome.quickName">
-      		<source>Initial User</source>
+      	<trans-unit id="welcome.title">
+      		<source>Welcome</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">welcome.tsx</context>

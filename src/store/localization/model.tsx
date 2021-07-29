@@ -874,24 +874,24 @@ export interface IUserListModeStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
-    "title": string;
-    "setupTeam": string;
-    "setupTeamTip": string;
+    "alone": string;
+    "aloneFactor": string;
+    "import": string;
+    "keyFactor": string;
+    "offline": string;
+    "online": string;
+    "quickFamily": string;
+    "quickGiven": string;
+    "quickName": string;
     "setupFactor": string;
     "setupFactor2": string;
     "setupFactor2Help": string;
+    "setupTeam": string;
+    "setupTeamTip": string;
     "team": string;
-    "teamTip": string;
     "teamFactor": string;
-    "keyFactor": string;
-    "online": string;
-    "offline": string;
-    "import": string;
-    "alone": string;
-    "aloneFactor": string;
-    "quickGiven": string;
-    "quickFamily": string;
-    "quickName": string;
+    "teamTip": string;
+    "title": string;
 };
 
 export interface ILocalizedStrings {

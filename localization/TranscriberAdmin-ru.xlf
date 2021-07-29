@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xliff srcLang="en" trgLang="en" version="1.0" xmlns="urn:oasis:names:tc:xliff:document:2.0">
 	<file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
-		<unit id="access.availableOfflineUsers">
+		<unit id="access.availableUsers">
+         <segment>
+            <source>Available Users</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.back">
 			<segment>
-				<source>Available Offline Users</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="access.availableOnlineUsers">
-			<segment>
-				<source>Available Online Users</source>
-				<target/>
+				<source>Back</source>
+				<target>Назад</target>
 			</segment>
 		</unit>
 		<unit id="access.cancel">
@@ -25,10 +25,16 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="access.goOnline">
+      <unit id="access.currentUser">
+         <segment>
+            <source>Current User</source>
+            <target/>
+         </segment>
+      </unit>
+		<unit id="access.importSnapshot">
 			<segment>
-				<source>Go Online</source>
-				<target>Перейти на сайт</target>
+				<source>Import Project</source>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="access.logIn">
@@ -43,137 +49,46 @@
 				<target>Выход из системы</target>
 			</segment>
 		</unit>
-      <unit id="access.title">
-         <segment>
-            <source>User List</source>
-   			<target>Список пользователей</target>
-         </segment>
-      </unit>
-   	<unit id="access.onlineScreenTitle">
-   		<segment>
-   			<source>I want to work...</source>
-   			<target>я хочу работать...</target>
-   		</segment>
-   	</unit>
-      <unit id="access.offlineScreenTitle">
-         <segment>
-            <source>Offline Users</source>
-   			<target>Автономные пользователи</target>
-         </segment>
-      </unit>
-
-		<unit id="access.importSnapshot">
-			<segment>
-				<source>Import Project</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="access.withInternet">
-			<segment>
-				<source>With an Internet connection</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="access.withoutInternet">
-			<segment>
-				<source>Without an Internet connection</source>
-				<target/>
-			</segment>
-		</unit>
-      <unit id="access.withoutInternetTip">
-         <segment>
-            <source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user avatar does not appear here, you must login online and mark your project as 'Offline Available' and then exit, or import a project that has been exported while online.</source>
-   			<target>Проект должен быть настроен онлайн. Изменения, внесенные в автономном режиме, будут автоматически синхронизироваться с онлайн-проектом, если пользователь на этом компьютере входит в онлайн-систему, или изменения могут быть экспортированы, а затем импортированы в онлайн-проект. Если ваш пользователь не отображается здесь, вы должны войти в систему и пометить свой проект как доступный в автономном режиме, а затем выйти или импортировать проект, который был экспортирован в интерактивном режиме.Проект должен быть настроен онлайн. Изменения, внесенные в автономном режиме, будут автоматически синхронизироваться с онлайн-проектом, если пользователь на этом компьютере входит в онлайн-систему, или изменения могут быть экспортированы, а затем импортированы в онлайн-проект. Если ваш пользователь не отображается здесь, вы должны войти в систему и пометить свой проект как доступный в автономном режиме, а затем выйти или импортировать проект, который был экспортирован в интерактивном режиме.</target>
-         </segment>
-      </unit>
-      	<unit id="access.mustBeOnline">
+		<unit id="access.mustBeOnline">
 			<segment>
 				<source>You must be connected to the Internet to Log In!</source>
 				<target/>
 			</segment>
 		</unit>
-      <unit id="access.onlineAdmin">
-         <segment>
-            <source>Online Admin/Offline Available</source>
-            <target>Онлайн-администрирование/Доступен офлайн</target>
-         </segment>
-      </unit>
-      <unit id="access.onlineAdminDesc">
-         <segment>
-            <source>Project Admin is online.</source>
-            <target>Администратор проекта в сети.</target>
-         </segment>
-      </unit>
-      <unit id="access.offlineAdmin">
-         <segment>
-            <source>Always Offline</source>
-            <target>Всегда в автономном режиме</target>
-         </segment>
-      </unit>
-      <unit id="access.offlineAdminDesc">
-         <segment>
-            <source>Project Admin is offline.</source>
-            <target>Администратор проекта не в сети.</target>
-      </segment>
-      </unit>
-      <unit id="access.onlineWorkDesc">
-         <segment>
-            <source>Transcription can be done online or offline.</source>
-            <target>Транскрипция может быть сделана онлайн или офлайн.</target>
-      </segment>
-      </unit>
-      <unit id="access.offlineWorkDesc">
-         <segment>
-            <source>All work is always done offline.</source>
-            <target>Вся работа всегда выполняется офлайн.</target>
-       </segment>
-      </unit>
-      <unit id="access.back">
-         <segment>
-            <source>Back</source>
-            <target>Назад</target>
-      </segment>
-      </unit>
-      <unit id="access.chooseAnother">
-         <segment>
-            <source>To choose another user, Log out...</source>
-            <target>Чтобы выбрать другого пользователя, выйдите из системы ...</target>
-      </segment>
-      </unit>
-      <unit id="access.noOnlineUsers1">
-         <segment>
-            <source>To allow offline use:</source>
-            <target>Чтобы разрешить автономное использование:</target>
-         </segment>
-      </unit>
-      <unit id="access.noOnlineUsers2">
-         <segment>
-            <source>Log in and select Offline Available in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
-            <target>Войдите в систему и выберите «Доступен в автономном режиме» в меню карточки проекта, а затем выйдите из системы. Или щелкните ИМПОРТ ПРОЕКТА, чтобы импортировать проект, экспортированный администратором.</target>
-         </segment>
-      </unit>
-      <unit id="access.importProject">
+		<unit id="access.noOnlineUsers1">
 			<segment>
-				<source>ImportProject</source>
-				<target/>
+				<source>To allow offline use:</source>
+				<target>Чтобы разрешить автономное использование:</target>
 			</segment>
 		</unit>
-		<unit id="access.download">
+		<unit id="access.noOnlineUsers2">
 			<segment>
-				<source>Download?</source>
-				<target/>
+				<source>Log in and select Offline Available in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
+				<target>Войдите в систему и выберите «Доступен в автономном режиме» в меню карточки проекта, а затем выйдите из системы. Или щелкните ИМПОРТ ПРОЕКТА, чтобы импортировать проект, экспортированный администратором.</target>
 			</segment>
 		</unit>
-		<unit id="access.downloadLater">
+      <unit id="access.noOnlineUsers3">
+         <segment>
+            <source>To create an online project for working alone:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.noOnlineUsers4">
+         <segment>
+            <source>Create a personal project.</source>
+            <target/>
+         </segment>
+      </unit>
+		<unit id="access.offlineUsers">
 			<segment>
-				<source>Download Later</source>
-				<target/>
+				<source>Offline Users</source>
+				<target>Автономные пользователи</target>
 			</segment>
 		</unit>
-		<unit id="access.downloadMb">
+		<unit id="access.title">
 			<segment>
-				<source>Download {0}MB of offline project files?</source>
-				<target/>
+				<source>User List</source>
+				<target>Список пользователей</target>
 			</segment>
 		</unit>
 		<unit id="activityState.approved">
@@ -1678,11 +1593,17 @@
 		</unit>
 		<unit id="main.exit">
 			<segment>
-				<source>Switch User</source>
-				<target>Поменять пользователя</target>
+				<source>Exit</source>
+				<target>Выход</target>
 			</segment>
 		</unit>
-		<unit id="main.export">
+		<unit id="main.switchUser">
+         <segment>
+            <source>Switch User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.export">
 			<segment>
 				<source>Export</source>
 				<target/>
@@ -1988,12 +1909,6 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="mediaTab.choosePassage">
-			<segment>
-				<source>Choose Passage</source>
-				<target>Выберите Проход</target>
-			</segment>
-		</unit>
 		<unit id="mediaTab.book">
 			<segment>
 				<source>Book</source>
@@ -2036,7 +1951,19 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="mediaTab.fileName">
+		<unit id="mediaTab.actions">
+         <segment>
+            <source>Actions</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.choosePassage">
+         <segment>
+            <source>Choose Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.fileName">
 			<segment>
 				<source>File Name</source>
 				<target/>
@@ -2062,7 +1989,7 @@
 		</unit>
 		<unit id="mediaTab.mediaAssociations">
 			<segment>
-				<source>Media Associations</source>
+				<source>Audio Associations</source>
 				<target>Аудио ассоциации</target>
 			</segment>
 		</unit>
@@ -2284,7 +2211,7 @@
 		</unit>
 		<unit id="planActions.playpause">
 			<segment>
-				<source>Play / Pause</source>
+				<source>Play/Pause</source>
 				<target>Играть / Пауза</target>
 			</segment>
 		</unit>
@@ -2306,7 +2233,13 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="planSheet.addPassage">
+		<unit id="planSheet.audio">
+         <segment>
+            <source>Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.addPassage">
 			<segment>
 				<source>Add Passage</source>
 				<target/>
@@ -2416,8 +2349,8 @@
 		</unit>
 		<unit id="planTabs.mediaStatus">
 			<segment>
-				<source>{1} of {2} media files</source>
-				<target>{1} из {2} медиафайлов</target>
+				<source>{1} of {2} associations</source>
+				<target>{1} из {2} ассоциаций</target>
 			</segment>
 		</unit>
 		<unit id="planTabs.passageStatus">
@@ -2786,12 +2719,6 @@
 				<target>Интеграция с Paratext</target>
 			</segment>
 		</unit>
-		<unit id="newProject.oneStoryIntegration">
-			<segment>
-				<source>Integrated with OneStory Editor</source>
-				<target>Интеграция с редактором OneStory</target>
-			</segment>
-		</unit>
 		<unit id="newProject.configure">
 			<segment>
 				<source>Configure</source>
@@ -2808,6 +2735,24 @@
 			<segment>
 				<source>Start Recording</source>
 				<target>Начать запись</target>
+			</segment>
+		</unit>
+		<unit id="projectDownload.download">
+			<segment>
+				<source>Download?</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="projectDownload.downloadLater">
+			<segment>
+				<source>Download Later</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="projectDownload.downloadMb">
+			<segment>
+				<source>Download {0}MB of offline project files?</source>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="scriptureTable.action">
@@ -3063,10 +3008,64 @@
 				<target/>
 			</segment>
 		</unit>
-     <unit id="shared.referenceNotFound">
+     <unit id="shared.bookNotInParatext">
+         <segment>
+            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.paratextchapterSpan">
+         <segment>
+            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.invalidReference">
+         <segment>
+            <source>Passage {0}.{1} {2}: Invalid Reference</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.referenceNotFound">
          <segment>
             <source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
             <target>Ссылка не существует в главе Паратекста, или ссылка находится в пределах большего диапазона стихов.</target>
+         </segment>
+      </unit>
+      <unit id="shared.BookNotSet">
+         <segment>
+            <source>Book was not set for Section {0} Passage {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.expiredParatextToken">
+         <segment>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.expiredToken">
+         <segment>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.invalidParatextLogin">
+         <segment>
+            <source>You must login with a valid paratext login.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.owner">
+         <segment>
+            <source>Owner</source>
+            <target>Maître</target>
+         </segment>
+      </unit>
+      <unit id="shared.member">
+         <segment>
+            <source>Member</source>
+            <target>Membres</target>
          </segment>
       </unit>
       <unit id="shared.save">
@@ -3117,18 +3116,6 @@
 				<target>Часть {0}</target>
 			</segment>
 		</unit>
-      <unit id="shared.owner">
-         <segment>
-            <source>Owner</source>
-            <target>Maître</target>
-         </segment>
-      </unit>
-      <unit id="shared.member">
-         <segment>
-            <source>Member</source>
-            <target>Membres</target>
-         </segment>
-      </unit>
     <unit id="taskItem.assign">
 			<segment>
 				<source>Assign {0}</source>
@@ -3325,12 +3312,6 @@
 			<segment>
 				<source>Book or Reference is invalid.</source>
 				<target>Книга или справочник недействительны.</target>
-			</segment>
-		</unit>
-		<unit id="transcriber.makeComment">
-			<segment>
-				<source>Make Comment</source>
-				<target/>
 			</segment>
 		</unit>
 		<unit id="transcriber.addNote">
@@ -4055,20 +4036,20 @@
 		</unit>
 		<unit id="wsAudioPlayer.aheadTip">
 			<segment>
-				<source>Skip ahead {jump} {1} [{0}]</source>
+				<source>Ahead {jump} {1} [{0}]</source>
 				<target>Перейти вперед {jump} {1} [{0}]</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.backTip">
 			<segment>
-				<source>Skip back {jump} {1} [{0}]</source>
+				<source>Rewind {jump} {1} [{0}]</source>
 				<target>Перейти назад {jump} {1} [{0}]</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.beginningTip">
 			<segment>
-				<source>Beginning</source>
-				<target>SНачало</target>
+				<source>Go to Beginning [{0}]</source>
+				<target>SНачало [{0}]</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.deleteRegion">
@@ -4079,8 +4060,8 @@
 		</unit>
 		<unit id="wsAudioPlayer.endTip">
 			<segment>
-				<source>End</source>
-				<target>Конец</target>
+				<source>Go to End [{0}]</source>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.fasterTip">
@@ -4133,8 +4114,8 @@
 		</unit>
 		<unit id="wsAudioPlayer.resume">
 			<segment>
-				<source>Resume [{0}]</source>
-				<target>Продолжить[{0}]</target>
+				<source>Resume</source>
+				<target>Продолжить</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.seconds">
@@ -4169,7 +4150,7 @@
 		</unit>
 		<unit id="passageRecord.fileName">
 			<segment>
-				<source>Filename</source>
+				<source>Name</source>
 				<target>Имя</target>
 			</segment>
 		</unit>
@@ -4215,6 +4196,12 @@
 				<target>МоеAудио</target>
 			</segment>
 		</unit>
+      <unit id="hotKey.altKey">
+         <segment>
+            <source>Alt</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="hotKey.ctrlKey">
          <segment>
             <source>Ctrl</source>
@@ -4293,22 +4280,76 @@
 				<target>Добавить в словарь</target>
 			</segment>
 		</unit>
-      <unit id="welcome.title">
+		<unit id="userListMode.switchUser">
          <segment>
-            <source>Welcome</source>
-            <target>Добро пожаловать</target>
+            <source>Switch User</source>
+         	<target>Изменить пользователя</target>
          </segment>
       </unit>
-		<unit id="welcome.setupTeam">
+      <unit id="userListMode.workOffline">
+         <segment>
+            <source>Work Offline</source>
+         	<target>Работа в автономном режиме</target>
+         </segment>
+      </unit>
+      <unit id="userListMode.logOut">
+         <segment>
+            <source>Log Out</source>
+         	<target>Выйти из системы</target>
+         </segment>
+      </unit>
+      <unit id="welcome.alone">
 			<segment>
-				<source>Set up a team project</source>
-				<target>Создайте командный проект</target>
+				<source>Work Alone</source>
+				<target>Работа в одиночку</target>
 			</segment>
 		</unit>
-		<unit id="welcome.setupTeamTip">
+		<unit id="welcome.aloneFactor">
 			<segment>
-				<source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
-				<target>Настройте проект, разделив работу на отрывки, которые можно поручить различным транскрибаторам и редакторам.  Транскрибаторы и редакторы могут работать онлайн или офлайн, загружая или импортируя проект.</target>
+				<source>Projects cannot be changed to team projects later</source>
+				<target>Проекты не могут быть изменены на командные проекты позже</target>
+			</segment>
+		</unit>
+		<unit id="welcome.import">
+			<segment>
+				<source>Import Project</source>
+				<target>Импорт проекта</target>
+			</segment>
+		</unit>
+		<unit id="welcome.keyFactor">
+			<segment>
+				<source>Key Factor(s)</source>
+				<target>Ключевой фактор(ы)</target>
+			</segment>
+		</unit>
+		<unit id="welcome.offline">
+			<segment>
+				<source>Work Offline</source>
+				<target>Работа в автономном режиме</target>
+			</segment>
+		</unit>
+		<unit id="welcome.online">
+			<segment>
+				<source>Work Online</source>
+				<target>Работа в Интернете</target>
+			</segment>
+		</unit>
+		<unit id="welcome.quickFamily">
+			<segment>
+				<source>User</source>
+				<target>Пользователь</target>
+			</segment>
+		</unit>
+		<unit id="welcome.quickGiven">
+			<segment>
+				<source>Initial</source>
+				<target>Первоначальный</target>
+			</segment>
+		</unit>
+		<unit id="welcome.quickName">
+			<segment>
+				<source>Initial User</source>
+				<target>Первоначальный пользователь</target>
 			</segment>
 		</unit>
 		<unit id="welcome.setupFactor">
@@ -4325,8 +4366,20 @@
 		</unit>
 		<unit id="welcome.setupFactor2Help">
 			<segment>
-				<source>Projects are Made Available Offline on the three dot More Menu on each Project Card.</source>
-				<target>Проекты доступны в автономном режиме через меню "Больше" с тремя точками на каждой карточке проекта.</target>
+				<source>Select the Offline Available option on the project card menu.</source>
+				<target>Выберите опцию Offline Available в меню карточки проекта.</target>
+			</segment>
+		</unit>
+		<unit id="welcome.setupTeam">
+			<segment>
+				<source>Set up a team project</source>
+				<target>Создайте командный проект</target>
+			</segment>
+		</unit>
+		<unit id="welcome.setupTeamTip">
+			<segment>
+				<source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
+				<target>Настройте проект, разделив работу на отрывки, которые можно поручить различным транскрибаторам и редакторам.  Транскрибаторы и редакторы могут работать онлайн или офлайн, загружая или импортируя проект.</target>
 			</segment>
 		</unit>
 		<unit id="welcome.team">
@@ -4335,70 +4388,22 @@
 				<target>Работа в командном проекте</target>
 			</segment>
 		</unit>
-		<unit id="welcome.teamTip">
-			<segment>
-				<source>A project has been set up online.  Transcribers and editors can work online, offline by downloading the project, or offline by importing it.</source>
-				<target>Проект был создан в режиме онлайн.  Транскрайберы и редакторы могут работать онлайн, офлайн, загрузив проект, или офлайн, импортировав его.</target>
-			</segment>
-		</unit>
 		<unit id="welcome.teamFactor">
 			<segment>
 				<source>Project has been set up online</source>
 				<target>Проект был создан в режиме онлайн</target>
 			</segment>
 		</unit>
-		<unit id="welcome.keyFactor">
+		<unit id="welcome.teamTip">
 			<segment>
-				<source>Key Factor</source>
-				<target>Ключевой фактор</target>
+				<source>A project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the project card menu, or offline by importing it.</source>
+				<target>Проект был создан в режиме онлайн.  Транскриберы и редакторы могут работать онлайн, офлайн, выбрав опцию Offline Available в меню карточки проекта, или офлайн, импортировав его.</target>
 			</segment>
 		</unit>
-		<unit id="welcome.online">
+		<unit id="welcome.title">
 			<segment>
-				<source>Work Online</source>
-				<target>Работа в Интернете</target>
-			</segment>
-		</unit>
-		<unit id="welcome.offline">
-			<segment>
-				<source>Work Offline</source>
-				<target>Работа в автономном режиме</target>
-			</segment>
-		</unit>
-		<unit id="welcome.import">
-			<segment>
-				<source>Import Project</source>
-				<target>Импорт проекта</target>
-			</segment>
-		</unit>
-		<unit id="welcome.alone">
-			<segment>
-				<source>Work Alone</source>
-				<target>Работа в одиночку</target>
-			</segment>
-		</unit>
-		<unit id="welcome.aloneFactor">
-			<segment>
-				<source>Projects cannot be changed to team projects later</source>
-				<target>Проекты не могут быть изменены на командные проекты позже</target>
-			</segment>
-		</unit>
-		<unit id="welcome.quickGiven">
-			<segment>
-				<source>Initial</source>
-				<target>Первоначальный</target>
-			</segment>
-		</unit>
-        <unit id="welcome.quickFamily">
-          <segment>
-            <source>User</source>
-            <target>Пользователь</target>
-          </segment>
-        </unit>
-		<unit id="welcome.quickName">
-			<segment>
-				<source>Initial User</source>
-				<target>Первоначальный пользователь</target>
+				<source>Welcome</source>
+				<target>Добро пожаловать</target>
 			</segment>
 		</unit>
 	</file>
