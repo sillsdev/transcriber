@@ -18,7 +18,7 @@ import ImportTab from '../components/ImportTab';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import OfflineIcon from '@material-ui/icons/CloudOff';
 import OnlineIcon from '@material-ui/icons/CloudQueue';
-import InfoIcon from '@material-ui/icons/Info';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { AddRecord } from '../model/baseModel';
@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     icon: {
       marginRight: theme.spacing(1),
+      fontSize: 'small',
     },
     action: {
       padding: theme.spacing(2),
@@ -64,7 +65,8 @@ const useStyles = makeStyles((theme: Theme) =>
       alignSelf: 'center',
     },
     helpIcon: {
-      color: theme.palette.info.light,
+      fontSize: 'small',
+      color: theme.palette.text.secondary,
     },
   })
 );
@@ -178,6 +180,10 @@ export function Welcome(props: IProps) {
     handleOfflineChange('online-cloud');
   };
 
+  const handleGoOnlineTeam = () => {
+    handleOfflineChange('online-team');
+  };
+
   const handleGoOnlineLocal = () => {
     handleOfflineChange('online-local');
   };
@@ -188,7 +194,7 @@ export function Welcome(props: IProps) {
 
   const handleQuickOnline = () => {
     if (!hasProjects) localStorage.setItem('autoaddProject', 'true');
-    handleGoOnlineCloud();
+    handleOfflineChange('online-alone');
   };
 
   const AddUserLocalOnly = async (userRec: User) => {
@@ -350,7 +356,7 @@ export function Welcome(props: IProps) {
               />
             </Grid>
             <Grid item xs={4} className={classes.action}>
-              <OnlineButton id="teamonline" onClick={handleGoOnlineCloud} />
+              <OnlineButton id="teamonline" onClick={handleGoOnlineTeam} />
               {hasOfflineProjects && hasOnlineUsers && (
                 <OfflineButton id="teamoffline" onClick={handleGoOnlineLocal} />
               )}

@@ -2,35 +2,21 @@
 import * as Localize from 'react-localization';
 
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
-    "availableOfflineUsers": string;
-    "availableOnlineUsers": string;
+    "availableUsers": string;
+    "back": string;
     "cancel": string;
     "createUser": string;
-    "goOnline": string;
+    "currentUser": string;
+    "importSnapshot": string;
     "logIn": string;
     "logout": string;
-    "title": string;
-    "onlineScreenTitle": string;
-    "offlineScreenTitle": string;
-    "importSnapshot": string;
-    "withInternet": string;
-    "withoutInternet": string;
-    "withoutInternetTip": string;
     "mustBeOnline": string;
-    "onlineAdmin": string;
-    "onlineAdminDesc": string;
-    "offlineAdmin": string;
-    "offlineAdminDesc": string;
-    "onlineWorkDesc": string;
-    "offlineWorkDesc": string;
-    "back": string;
-    "chooseAnother": string;
     "noOnlineUsers1": string;
     "noOnlineUsers2": string;
-    "importProject": string;
-    "download": string;
-    "downloadLater": string;
-    "downloadMb": string;
+    "noOnlineUsers3": string;
+    "noOnlineUsers4": string;
+    "offlineUsers": string;
+    "title": string;
 };
 
 export interface IActivityStateStrings extends Localize.LocalizedStringsMethods {
@@ -564,6 +550,12 @@ export interface INewProjectStrings extends Localize.LocalizedStringsMethods {
     "startRecording": string;
 };
 
+export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethods {
+    "download": string;
+    "downloadLater": string;
+    "downloadMb": string;
+};
+
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "book": string;
@@ -875,6 +867,12 @@ export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
     "addToDict": string;
 };
 
+export interface IUserListModeStrings extends Localize.LocalizedStringsMethods {
+    "switchUser": string;
+    "workOffline": string;
+    "logOut": string;
+};
+
 export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
     "title": string;
     "setupTeam": string;
@@ -930,6 +928,7 @@ export interface ILocalizedStrings {
 	profile: IProfileStrings;
 	projButtons: IProjButtonsStrings;
 	newProject: INewProjectStrings;
+	projectDownload: IProjectDownloadStrings;
 	scriptureTable: IScriptureTableStrings;
 	grid: IGridStrings;
 	shared: ISharedStrings;
@@ -949,6 +948,7 @@ export interface ILocalizedStrings {
 	passageRecord: IPassageRecordStrings;
 	hotKey: IHotKeyStrings;
 	spelling: ISpellingStrings;
+	userListMode: IUserListModeStrings;
 	welcome: IWelcomeStrings;
 	[key: string]: any;
 };
