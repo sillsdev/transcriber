@@ -124,12 +124,12 @@ export function WSAudioPlayerSegment(props: IProps) {
   };
 
   const t2 = {
-    AutoSegment: 'Segment {0}',
-    SegmentSettings: 'Segment parameters',
+    AutoSegment: 'Auto Segment {0}',
+    SegmentSettings: 'Segment Parameters',
     SilenceThreshold: 'Silence threshold',
     SilenceLength: 'Length of Silence (100ths of second)',
-    SplitSegment: 'Add/Remove Split {0}',
-    RemoveSegment: 'Remove Next Split {0}',
+    SplitSegment: 'Add/Remove Boundary {0}',
+    RemoveSegment: 'Remove Next Boundary {0}',
   };
   return (
     <div className={classes.root}>
