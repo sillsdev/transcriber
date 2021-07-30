@@ -2,6 +2,7 @@ import React from 'react';
 import { User } from '../model';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import UserAvatar from '../components/UserAvatar';
+import { useOfflineTeamList } from '../crud';
 
 interface IProps {
   u: User;
@@ -10,6 +11,7 @@ interface IProps {
 }
 export const UserListItem = (props: IProps) => {
   const { u, users, onSelect } = props;
+  const teams = useOfflineTeamList();
 
   const handleSelect = (user: string) => () => {
     onSelect && onSelect(user);
@@ -20,7 +22,7 @@ export const UserListItem = (props: IProps) => {
       <ListItemIcon>
         <UserAvatar {...props} users={users} userRec={u} />
       </ListItemIcon>
-      <ListItemText primary={u?.attributes?.name || ''} />
+      <ListItemText primary={u?.attributes?.name || ''} secondary={teams(u)} />
     </>
   );
 

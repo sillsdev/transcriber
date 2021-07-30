@@ -22,7 +22,7 @@ import InfoIcon from '@material-ui/icons/InfoOutlined';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { AddRecord } from '../model/baseModel';
-import { useOfflineSetup } from '../crud';
+import { useOfflineSetup, useRecOfType } from '../crud';
 import { ChoiceHead, FactorDecorate } from '../control/ChoiceHead';
 import { backup } from '../schema';
 import { LightTooltip } from '../control';
@@ -95,15 +95,13 @@ export function Welcome(props: IProps) {
   const [, setConnected] = useGlobal('connected');
   const [whichUsers, setWhichUsers] = useState<string | null>(null);
   const [coordinator] = useGlobal('coordinator');
+  const recOfType = useRecOfType();
   const memory = coordinator.getSource('memory') as MemorySource;
   const [importOpen, setImportOpen] = useState(false);
   const [hasOfflineUsers, setHasOfflineUsers] = useState(false);
   const [hasOnlineUsers, setHasOnlineUsers] = useState(false);
   const [hasOfflineProjects, setHasOfflineProjects] = useState(false);
   const [hasProjects, setHasProjects] = useState(false);
-
-  const recOfType = (recType: string) =>
-    memory.cache.query((q: QueryBuilder) => q.findRecords(recType)) as Record[];
 
   const hasRecs = (recType: string, iRecs?: Record[], offline?: Boolean) => {
     const recs = iRecs || recOfType(recType);

@@ -18,7 +18,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Typography,
   Button,
-  Paper,
+  // Paper,
   Box,
   // IconButton
 } from '@material-ui/core';
@@ -374,11 +374,21 @@ export function Access(props: IProps) {
   }
   if (whichUsers === '') return <Redirect to="/" />;
 
-  const CurrentUser = ({ curUser }: { curUser: User }) => (
+  const CurrentUser = ({
+    curUser,
+    action,
+  }: {
+    curUser: User;
+    action?: () => void;
+  }) => (
     <>
       <Typography className={classes.sectionHead}>{t.currentUser}</Typography>
       <div className={classes.actions}>
-        <UserListItem u={curUser} users={users} onSelect={handleGoOnline} />
+        <UserListItem
+          u={curUser}
+          users={users}
+          onSelect={action ? action : handleGoOnline}
+        />
       </div>
     </>
   );
@@ -422,37 +432,37 @@ export function Access(props: IProps) {
                         </Typography>
                       </>
                     )}
-                    <Paper className={classes.paper}>
-                      {!hasOnlineUser() && whichUsers === 'online-team' && (
-                        <div>
-                          <Box>{t.noOnlineUsers1}</Box>
-                          <Box>{t.noOnlineUsers2}</Box>
-                        </div>
-                      )}
-                      {!hasOnlineUser() && whichUsers === 'online-alone' && (
-                        <div>
-                          <Box>{t.noOnlineUsers3}</Box>
-                          <Box>{t.noOnlineUsers4}</Box>
-                        </div>
-                      )}
-                      {importStatus?.complete !== false && hasOnlineUser() && (
+                    {/* <Paper className={classes.paper}> */}
+                    {!hasOnlineUser() && whichUsers === 'online-team' && (
+                      <div>
+                        <Box>{t.noOnlineUsers1}</Box>
+                        <Box>{t.noOnlineUsers2}</Box>
+                      </div>
+                    )}
+                    {!hasOnlineUser() && whichUsers === 'online-alone' && (
+                      <div>
+                        <Box>{t.noOnlineUsers3}</Box>
+                        <Box>{t.noOnlineUsers4}</Box>
+                      </div>
+                    )}
+                    {/* {importStatus?.complete !== false && hasOnlineUser() && (
                         <UserList
                           isSelected={isOnlineUserWithOfflineProjects}
                           curId={curUser?.id}
                         />
-                      )}
-                      <div className={classes.actions}>
-                        <Button
-                          id="accessLogin"
-                          variant="contained"
-                          color="primary"
-                          className={classes.button}
-                          onClick={handleSwitchUser}
-                        >
-                          {t.logIn}
-                        </Button>
-                      </div>
-                    </Paper>
+                      )} */}
+                    <div className={classes.actions}>
+                      <Button
+                        id="accessLogin"
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        onClick={handleSwitchUser}
+                      >
+                        {t.logIn}
+                      </Button>
+                    </div>
+                    {/* </Paper> */}
                   </div>
                 ) : listMode === ListMode.WorkOffline ? (
                   <UserList
@@ -462,7 +472,7 @@ export function Access(props: IProps) {
                 ) : (
                   curUser && (
                     <>
-                      <CurrentUser curUser={curUser} />
+                      <CurrentUser curUser={curUser} action={handleLogout} />
                       <Button
                         id="accessLogin"
                         variant="outlined"
