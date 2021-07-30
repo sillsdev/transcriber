@@ -43,9 +43,9 @@
     "mui-language-picker": "^1.1.12",
     "node-html-encoder": "0.0.2",
     "original-fs": "^1.1.0",
-    "react": "^16.13.1",
+    "react": "^17.0.2",
     "react-datasheet": "1.4.9",
-    "react-dom": "^16.13.1",
+    "react-dom": "^17.0.2",
     "react-hot-loader": "^4.13.0",
     "react-icons": "^3.10.0",
     "react-localization": "^1.0.15",
@@ -62,6 +62,7 @@
     "reselect": "^4.0.0",
     "styled-components": "^5.3.0",
     "wavesurfer.js": "^4.5.0",
+    "web-vitals": "^1.1.2",
     "xml-js": "^1.6.11",
     "xmldom": "^0.5.0",
     "xpath": "0.0.27"
@@ -92,7 +93,10 @@
     "trailingComma": "es5"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -110,20 +114,20 @@
     "@aws-amplify/pubsub": "^1.2.4",
     "@craco/craco": "^5.7.0",
     "@hot-loader/react-dom": "^16.12.0",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "9.3.2",
-    "@testing-library/user-event": "7.1.2",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
     "@types/adm-zip": "^0.4.33",
     "@types/auth0-js": "^9.14.0",
     "@types/dom-mediacapture-record": "^1.0.7",
     "@types/fingerprintjs2": "^2.0.0",
-    "@types/jest": "24.0.0",
+    "@types/jest": "^26.0.24",
     "@types/js-base64": "^2.3.2",
     "@types/jwt-decode": "^2.2.1",
     "@types/lodash": "^4.14.161",
-    "@types/node": "^15.0.2",
-    "@types/react": "^16.8.0",
-    "@types/react-dom": "16.9.0",
+    "@types/node": "^12.0.17",
+    "@types/react": "^17.0.15",
+    "@types/react-dom": "^17.0.9",
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.6",
     "@types/react-select": "^3.0.21",
@@ -146,7 +150,7 @@
     "redux-devtools-extension": "^2.13.8",
     "rimraf": "^3.0.2",
     "source-map-explorer": "^2.5.0",
-    "typescript": "^3.9.3",
+    "typescript": "^4.3.5",
     "wait-on": "^4.0.2",
     "write": "^2.0.0"
   },
