@@ -1,72 +1,72 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="pt" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
-   	<unit id="access.availableUsers">
+      <unit id="access.availableUsers">
          <segment>
-            <source>Available Users</source>
+            <source>Other Users</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="access.back">
-   		<segment>
-   			<source>Back</source>
-   			<target>Voltar</target>
-   		</segment>
-   	</unit>
-   	<unit id="access.cancel">
-   		<segment>
-   			<source>Cancel</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="access.createUser">
-   		<segment>
-   			<source>Add a new user</source>
-   			<target/>
-   		</segment>
-   	</unit>
+      <unit id="access.back">
+         <segment>
+            <source>Back</source>
+            <target>Voltar</target>
+         </segment>
+      </unit>
+      <unit id="access.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.createUser">
+         <segment>
+            <source>Add a new user</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.currentUser">
          <segment>
             <source>Current User</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="access.importSnapshot">
-   		<segment>
-   			<source>Import Project</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="access.logIn">
-   		<segment>
-   			<source>Log In</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="access.logout">
-   		<segment>
-   			<source>Log Out</source>
-   			<target>Sair</target>
-   		</segment>
-   	</unit>
-   	<unit id="access.mustBeOnline">
-   		<segment>
-   			<source>You must be connected to the Internet to Log In!</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="access.noOnlineUsers1">
-   		<segment>
-   			<source>To allow offline use:</source>
-   			<target>Para permitir o uso off-line:</target>
-   		</segment>
-   	</unit>
-   	<unit id="access.noOnlineUsers2">
-   		<segment>
-   			<source>Log in and select Offline Available in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
-   			<target>Faça login e selecione Offline disponível no menu do cartão do projeto e, em seguida, faça logout. Ou clique em IMPORTAR PROJETO para importar um projeto exportado pelo administrador.</target>
-   		</segment>
-   	</unit>
+      <unit id="access.importSnapshot">
+         <segment>
+            <source>Import Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.logIn">
+         <segment>
+            <source>Log In</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.logout">
+         <segment>
+            <source>Log Out</source>
+            <target>Sair</target>
+         </segment>
+      </unit>
+      <unit id="access.mustBeOnline">
+         <segment>
+            <source>You must be connected to the Internet to Log In!</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.noOnlineUsers1">
+         <segment>
+            <source>To allow offline use:</source>
+            <target>Para permitir o uso off-line:</target>
+         </segment>
+      </unit>
+      <unit id="access.noOnlineUsers2">
+         <segment>
+            <source>Log in and select Offline Available in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
+            <target>Faça login e selecione Offline disponível no menu do cartão do projeto e, em seguida, faça logout. Ou clique em IMPORTAR PROJETO para importar um projeto exportado pelo administrador.</target>
+         </segment>
+      </unit>
       <unit id="access.noOnlineUsers3">
          <segment>
             <source>To create an online project for working alone:</source>
@@ -79,19 +79,19 @@
             <target/>
          </segment>
       </unit>
-   	<unit id="access.offlineUsers">
-   		<segment>
-   			<source>Offline Users</source>
-   			<target>Usuários offline</target>
-   		</segment>
-   	</unit>
-   	<unit id="access.title">
-   		<segment>
-   			<source>User List</source>
-   			<target>Lista de usuários</target>
-   		</segment>
-   	</unit>
-   	<unit id="activityState.approved">
+      <unit id="access.offlineUsers">
+         <segment>
+            <source>Offline Users</source>
+            <target>Usuários offline</target>
+         </segment>
+      </unit>
+      <unit id="access.title">
+         <segment>
+            <source>User List</source>
+            <target>Lista de usuários</target>
+         </segment>
+      </unit>
+      <unit id="activityState.approved">
          <segment>
             <source>Ready to Sync</source>
             <target/>
@@ -175,16 +175,16 @@
             <target>Você tem certeza?</target>
          </segment>
       </unit>
-      <unit id="alert.delete">
-         <segment>
-            <source>Continue with Delete?</source>
-            <target>Continuar com Excluir?</target>
-         </segment>
-      </unit>
       <unit id="alert.confirmation">
          <segment>
             <source>Confirmation</source>
             <target>Confirmação</target>
+         </segment>
+      </unit>
+      <unit id="alert.delete">
+         <segment>
+            <source>Continue with Delete?</source>
+            <target>Continuar com Excluir?</target>
          </segment>
       </unit>
       <unit id="alert.no">
@@ -289,139 +289,139 @@
             <target>Membros</target>
          </segment>
       </unit>
-   	<unit id="audacityManager.audacityProject">
-   		<segment>
-   			<source>Audacity Project</source>
-   			<target>Projeto Audacity</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacityManager.badProjName">
-   		<segment>
-   			<source>Invalid Audacity project name</source>
-   			<target>Nome do projeto Audacity Invalid Audacity</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacityManager.badProjPath">
-   		<segment>
-   			<source>Expected full Audacity project path name</source>
-   			<target>Nome completo esperado do caminho do projeto Audacity</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacityManager.browse">
-   		<segment>
-   			<source>Browse</source>
-   			<target>Navegue</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacityManager.checkDownload">
-   		<segment>
-   			<source>Exit to download media file before creating Audacity</source>
-   			<target>Sair para baixar o arquivo de mídia antes de criar Audacity</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacityManager.close">
-   		<segment>
-   			<source>Close</source>
-   			<target>Fechar</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacityManager.create">
-   		<segment>
-   			<source>Create</source>
-   			<target>Criar</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacityManager.import">
-   		<segment>
-   			<source>Import</source>
-   			<target>Importação</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacityManager.missingProject">
-   		<segment>
-   			<source>Missing file. Use Browse to search for it or Create to make a new file.</source>
-   			<target>Arquivo em falta. Use Browse para procurá-lo ou Create para fazer um novo arquivo.</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacityManager.open">
-   		<segment>
-   			<source>Open</source>
-   			<target>Aberto</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacityManager.saveFirst">
-   		<segment>
-   			<source>Save before editing</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="audacityManager.title">
-   		<segment>
-   			<source>Audacity Manager</source>
-   			<target>Gerente de audácia</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacityManager.unlink">
-   		<segment>
-   			<source>Unlink</source>
-   			<target>Desbloqueio</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacitySetup.audacitySetup">
+      <unit id="audacityManager.audacityProject">
+         <segment>
+            <source>Audacity Project</source>
+            <target>Projeto Audacity</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.badProjName">
+         <segment>
+            <source>Invalid Audacity project name</source>
+            <target>Nome do projeto Audacity Invalid Audacity</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.badProjPath">
+         <segment>
+            <source>Expected full Audacity project path name</source>
+            <target>Nome completo esperado do caminho do projeto Audacity</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.browse">
+         <segment>
+            <source>Browse</source>
+            <target>Navegue</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.checkDownload">
+         <segment>
+            <source>Exit to download media file before creating Audacity</source>
+            <target>Sair para baixar o arquivo de mídia antes de criar Audacity</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.close">
+         <segment>
+            <source>Close</source>
+            <target>Fechar</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.create">
+         <segment>
+            <source>Create</source>
+            <target>Criar</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.import">
+         <segment>
+            <source>Import</source>
+            <target>Importação</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.missingProject">
+         <segment>
+            <source>Missing file. Use Browse to search for it or Create to make a new file.</source>
+            <target>Arquivo em falta. Use Browse para procurá-lo ou Create para fazer um novo arquivo.</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.open">
+         <segment>
+            <source>Open</source>
+            <target>Aberto</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.saveFirst">
+         <segment>
+            <source>Save before editing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="audacityManager.title">
+         <segment>
+            <source>Audacity Manager</source>
+            <target>Gerente de audácia</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.unlink">
+         <segment>
+            <source>Unlink</source>
+            <target>Desbloqueio</target>
+         </segment>
+      </unit>
+      <unit id="audacitySetup.audacityInstalled">
+         <segment>
+            <source>Audacity Installed</source>
+            <target>Audacidade Instalada</target>
+         </segment>
+      </unit>
+      <unit id="audacitySetup.audacitySetup">
          <segment>
             <source>Audacity Setup</source>
             <target/>
          </segment>
       </unit>
       <unit id="audacitySetup.close">
-   		<segment>
-   			<source>Close</source>
-   			<target>Fechar</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacitySetup.audacityInstalled">
-   		<segment>
-   			<source>Audacity Installed</source>
-   			<target>Audacidade Instalada</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacitySetup.getInstaller">
-   		<segment>
-   			<source>Get Installer</source>
-   			<target>Obter instalador</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacitySetup.scriptingEnabled">
-   		<segment>
-   			<source>Scripting Enabled</source>
-   			<target>Scripting Habilitar</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacitySetup.enable">
-   		<segment>
-   			<source>Enable</source>
-   			<target>Habilitar</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacitySetup.pythonInstalled">
-   		<segment>
-   			<source>Python Installed</source>
-   			<target>Python Instalado</target>
-   		</segment>
-   	</unit>
-   	<unit id="audacitySetup.versions">
-   		<segment>
-   			<source>NB: Audacity integration was last tested with version {0} of Audacity and Linux requires the snap package.</source>
-   			<target>NB: A integração do Audacity foi testada pela última vez com a versão {0} do Audacity e o Linux requer o pacote snap.</target>
-   		</segment>
-   	</unit>
-   	<unit id="audioDownload.downloadMedia">
-   		<segment>
-   			<source>Download Audio</source>
-   			<target>Descarregar Áudio</target>
-   		</segment>
-   	</unit>
-   	<unit id="cards.add">
+         <segment>
+            <source>Close</source>
+            <target>Fechar</target>
+         </segment>
+      </unit>
+      <unit id="audacitySetup.enable">
+         <segment>
+            <source>Enable</source>
+            <target>Habilitar</target>
+         </segment>
+      </unit>
+      <unit id="audacitySetup.getInstaller">
+         <segment>
+            <source>Get Installer</source>
+            <target>Obter instalador</target>
+         </segment>
+      </unit>
+      <unit id="audacitySetup.pythonInstalled">
+         <segment>
+            <source>Python Installed</source>
+            <target>Python Instalado</target>
+         </segment>
+      </unit>
+      <unit id="audacitySetup.scriptingEnabled">
+         <segment>
+            <source>Scripting Enabled</source>
+            <target>Scripting Habilitar</target>
+         </segment>
+      </unit>
+      <unit id="audacitySetup.versions">
+         <segment>
+            <source>NB: Audacity integration was last tested with version {0} of Audacity and Linux requires the snap package.</source>
+            <target>NB: A integração do Audacity foi testada pela última vez com a versão {0} do Audacity e o Linux requer o pacote snap.</target>
+         </segment>
+      </unit>
+      <unit id="audioDownload.downloadMedia">
+         <segment>
+            <source>Download Audio</source>
+            <target>Descarregar Áudio</target>
+         </segment>
+      </unit>
+      <unit id="cards.add">
          <segment>
             <source>Add</source>
             <target>Adicionar</target>
@@ -478,7 +478,7 @@
       <unit id="cards.mediaUploaded">
          <segment>
             <source>Audio Uploaded</source>
-         	<target>Áudio Uploaded</target>
+            <target>Áudio Uploaded</target>
          </segment>
       </unit>
       <unit id="cards.members">
@@ -487,9 +487,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.nameInUse">
+         <segment>
+            <source>Name in use</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.newProject">
          <segment>
             <source>New Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.offline">
+         <segment>
+            <source>Offline</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.offlineAvail">
+         <segment>
+            <source>Offline Available</source>
             <target/>
          </segment>
       </unit>
@@ -517,12 +535,6 @@
             <target>Salvar</target>
          </segment>
       </unit>
-      <unit id="cards.nameInUse">
-         <segment>
-            <source>Name in use</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="cards.sectionStatus">
          <segment>
             <source>{0} {1}</source>
@@ -533,18 +545,6 @@
          <segment>
             <source>Settings</source>
             <target>Configurações</target>
-         </segment>
-      </unit>
-      <unit id="cards.offlineAvail">
-         <segment>
-            <source>Offline Available</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="cards.offline">
-         <segment>
-            <source>Offline</source>
-            <target/>
          </segment>
       </unit>
       <unit id="cards.sync">
@@ -637,24 +637,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="electronImport.project">
-         <segment>
-            <source>Project</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="electronImport.members">
-         <segment>
-            <source>Members</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="electronImport.userWontSeeProject">
-         <segment>
-            <source>You are not a member of this project team. This project will not be accessible after import.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="electronImport.importProject">
          <segment>
             <source>Import Project</source>
@@ -673,9 +655,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="electronImport.members">
+         <segment>
+            <source>Members</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="electronImport.neverExported">
          <segment>
             <source>Current data in project {name0} has never been exported to an itf file to preserve changes.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.project">
+         <segment>
+            <source>Project</source>
             <target/>
          </segment>
       </unit>
@@ -688,6 +682,12 @@
       <unit id="electronImport.ptfError">
          <segment>
             <source>Not a valid Portable Transcriber File</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.userWontSeeProject">
+         <segment>
+            <source>You are not a member of this project team. This project will not be accessible after import.</source>
             <target/>
          </segment>
       </unit>
@@ -718,6 +718,138 @@
       <unit id="emailUnverified.verify">
          <segment>
             <source>Please verify by clicking on the link in the authorization email sent to your account.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.all">
+         <segment>
+            <source>All</source>
+            <target>Tudo</target>
+         </segment>
+      </unit>
+      <unit id="grid.avg">
+         <segment>
+            <source>Avg</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.contains">
+         <segment>
+            <source>Contains</source>
+            <target>Contém</target>
+         </segment>
+      </unit>
+      <unit id="grid.count">
+         <segment>
+            <source>Count</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.endsWith">
+         <segment>
+            <source>Ends with</source>
+            <target>Termina com</target>
+         </segment>
+      </unit>
+      <unit id="grid.equal">
+         <segment>
+            <source>Equals</source>
+            <target>É igual a</target>
+         </segment>
+      </unit>
+      <unit id="grid.filterPlaceholder">
+         <segment>
+            <source>Filter...</source>
+            <target>Filtro...</target>
+         </segment>
+      </unit>
+      <unit id="grid.greaterThan">
+         <segment>
+            <source>Greater than</source>
+            <target>Maior que</target>
+         </segment>
+      </unit>
+      <unit id="grid.greaterThanOrEqual">
+         <segment>
+            <source>Greater than or equal to</source>
+            <target>Melhor que ou igual a</target>
+         </segment>
+      </unit>
+      <unit id="grid.groupByColumn">
+         <segment>
+            <source>Drag a column header here to group by that column</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.lessThan">
+         <segment>
+            <source>Less than</source>
+            <target>Menor que</target>
+         </segment>
+      </unit>
+      <unit id="grid.lessThanOrEqual">
+         <segment>
+            <source>Less than or equal to</source>
+            <target>Menos que ou igual a</target>
+         </segment>
+      </unit>
+      <unit id="grid.max">
+         <segment>
+            <source>Max</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.min">
+         <segment>
+            <source>Min</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.noColumns">
+         <segment>
+            <source>No columns visible</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.noData">
+         <segment>
+            <source>No data</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.notcontains">
+         <segment>
+            <source>Does not contain</source>
+            <target>Não contém</target>
+         </segment>
+      </unit>
+      <unit id="grid.notEqual">
+         <segment>
+            <source>Does not equal</source>
+            <target>Não é igual</target>
+         </segment>
+      </unit>
+      <unit id="grid.pageInfo">
+         <segment>
+            <source>Rows {from} to {to} ({count} Rows)</source>
+            <target>Linhas de {from} a {to} ({count} linhas)</target>
+         </segment>
+      </unit>
+      <unit id="grid.rowsPerPage">
+         <segment>
+            <source>Rows per Page</source>
+            <target>Linhas por página</target>
+         </segment>
+      </unit>
+      <unit id="grid.startsWith">
+         <segment>
+            <source>Starts with</source>
+            <target>Começa com</target>
+         </segment>
+      </unit>
+      <unit id="grid.sum">
+         <segment>
+            <source>Sum</source>
             <target/>
          </segment>
       </unit>
@@ -857,6 +989,42 @@
          <segment>
             <source>Members</source>
             <target>Membros</target>
+         </segment>
+      </unit>
+      <unit id="hotKey.altKey">
+         <segment>
+            <source>Alt</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.ctrlKey">
+         <segment>
+            <source>Ctrl</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.endKey">
+         <segment>
+            <source>End</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.homeKey">
+         <segment>
+            <source>Home</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.or">
+         <segment>
+            <source>or</source>
+            <target>or</target>
+         </segment>
+      </unit>
+      <unit id="hotKey.spaceKey">
+         <segment>
+            <source>Space</source>
+            <target/>
          </segment>
       </unit>
       <unit id="import.close">
@@ -1075,13 +1243,7 @@
             <target>Consultando contagem...</target>
          </segment>
       </unit>
-   	<unit id="integration.invalidReferences">
-   		<segment>
-   			<source>{0} passages have invalid references</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="integration.countReady">
+      <unit id="integration.countReady">
          <segment>
             <source>Passages ready to sync: </source>
             <target>Passagens prontas para sincronizar: </target>
@@ -1090,6 +1252,12 @@
       <unit id="integration.emptyBook">
          <segment>
             <source>Passage {0}.{1}: Book is missing.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.invalidReferences">
+         <segment>
+            <source>{0} passages have invalid references</source>
             <target/>
          </segment>
       </unit>
@@ -1459,40 +1627,10 @@
             <target>SIL Internacional</target>
          </segment>
       </unit>
-      <unit id="languagePicker.font">
+      <unit id="languagePicker.cancel">
          <segment>
-            <source>Font</source>
-            <target>Fonte</target>
-         </segment>
-      </unit>
-      <unit id="languagePicker.script">
-         <segment>
-            <source>Script</source>
-            <target>Script</target>
-         </segment>
-      </unit>
-      <unit id="languagePicker.language">
-         <segment>
-            <source>Language</source>
-            <target>Idioma</target>
-         </segment>
-      </unit>
-   	<unit id="languagePicker.phonetic">
-   		<segment>
-   			<source>Phonetic</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="languagePicker.selectLanguage">
-         <segment>
-            <source>Choose Language Details</source>
-            <target>Escolher Detalhes do Idioma</target>
-         </segment>
-      </unit>
-      <unit id="languagePicker.findALanguage">
-         <segment>
-            <source>Find a language by name, code, or country</source>
-            <target>Encontrar um idioma por nome, código ou país</target>
+            <source>Cancel</source>
+            <target>Cancelar</target>
          </segment>
       </unit>
       <unit id="languagePicker.codeExplained">
@@ -1501,22 +1639,22 @@
             <target>Código Explicado</target>
          </segment>
       </unit>
-      <unit id="languagePicker.subtags">
-         <segment>
-            <source>Subtags</source>
-            <target>Subtags</target>
-         </segment>
-      </unit>
       <unit id="languagePicker.details">
          <segment>
             <source>Details</source>
             <target>Detalhes</target>
          </segment>
       </unit>
-      <unit id="languagePicker.languageOf">
+      <unit id="languagePicker.findALanguage">
          <segment>
-            <source>A Language of $1$2.</source>
-            <target>Um idioma de $1$2.</target>
+            <source>Find a language by name, code, or country</source>
+            <target>Encontrar um idioma por nome, código ou país</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.font">
+         <segment>
+            <source>Font</source>
+            <target>Fonte</target>
          </segment>
       </unit>
       <unit id="languagePicker.inScript">
@@ -1525,16 +1663,52 @@
             <target> no script $1</target>
          </segment>
       </unit>
+      <unit id="languagePicker.language">
+         <segment>
+            <source>Language</source>
+            <target>Idioma</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.languageOf">
+         <segment>
+            <source>A Language of $1$2.</source>
+            <target>Um idioma de $1$2.</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.phonetic">
+         <segment>
+            <source>Phonetic</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.script">
+         <segment>
+            <source>Script</source>
+            <target>Script</target>
+         </segment>
+      </unit>
       <unit id="languagePicker.select">
          <segment>
             <source>Save</source>
             <target>Salvar</target>
          </segment>
       </unit>
-      <unit id="languagePicker.cancel">
+      <unit id="languagePicker.selectLanguage">
          <segment>
-            <source>Cancel</source>
-            <target>Cancelar</target>
+            <source>Choose Language Details</source>
+            <target>Escolher Detalhes do Idioma</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.subtags">
+         <segment>
+            <source>Subtags</source>
+            <target>Subtags</target>
+         </segment>
+      </unit>
+      <unit id="main.about">
+         <segment>
+            <source>About</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.admin">
@@ -1555,6 +1729,12 @@
             <target>Cancelar</target>
          </segment>
       </unit>
+      <unit id="main.cantCopy">
+         <segment>
+            <source>Unable to copy to clipboard</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.clearCache">
          <segment>
             <source>Clear cache</source>
@@ -1571,6 +1751,12 @@
          <segment>
             <source>Continue</source>
             <target>Continuar</target>
+         </segment>
+      </unit>
+      <unit id="main.copyClipboard">
+         <segment>
+            <source>Copy Version to Clipboard</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.crashMessage">
@@ -1597,39 +1783,15 @@
             <target>Saída</target>
          </segment>
       </unit>
-      <unit id="main.switchUser">
-         <segment>
-            <source>Switch User</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="main.export">
          <segment>
             <source>Export</source>
             <target>Exportar</target>
          </segment>
       </unit>
-      <unit id="main.helpCenter">
-         <segment>
-            <source>Help Center</source>
-            <target>Central de Ajuda</target>
-         </segment>
-      </unit>
-      <unit id="main.helpSpreadsheet">
-         <segment>
-            <source>View spreadsheet convention</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="main.flatSample">
          <segment>
             <source>Scripture flat sample spreadsheet</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="main.hierarchicalSample">
-         <segment>
-            <source>Scripture hierarchical sample spreadsheet</source>
             <target/>
          </segment>
       </unit>
@@ -1645,9 +1807,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.reportWhenOnline">
+      <unit id="main.helpCenter">
          <segment>
-            <source>You must be online to report an problem.</source>
+            <source>Help Center</source>
+            <target>Central de Ajuda</target>
+         </segment>
+      </unit>
+      <unit id="main.helpSpreadsheet">
+         <segment>
+            <source>View spreadsheet convention</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.hierarchicalSample">
+         <segment>
+            <source>Scripture hierarchical sample spreadsheet</source>
             <target/>
          </segment>
       </unit>
@@ -1696,7 +1870,7 @@
       <unit id="main.media">
          <segment>
             <source>Audio</source>
-         	<target>Áudio</target>
+            <target>Áudio</target>
          </segment>
       </unit>
       <unit id="main.myAccount">
@@ -1735,6 +1909,12 @@
             <target>Função no Projeto:</target>
          </segment>
       </unit>
+      <unit id="main.reliesOn">
+         <segment>
+            <source>{0} relies on other works</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.reportIssue">
          <segment>
             <source>Report an Issue</source>
@@ -1745,6 +1925,12 @@
          <segment>
             <source>Reports</source>
             <target>Relatórios</target>
+         </segment>
+      </unit>
+      <unit id="main.reportWhenOnline">
+         <segment>
+            <source>You must be online to report an problem.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.saveFirst">
@@ -1783,10 +1969,28 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.switchUser">
+         <segment>
+            <source>Switch User</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.tasks">
          <segment>
             <source>Tasks</source>
             <target>Tarefas</target>
+         </segment>
+      </unit>
+      <unit id="main.team">
+         <segment>
+            <source>Team</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.thanks">
+         <segment>
+            <source>Thanks to</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.transcribe">
@@ -1807,94 +2011,76 @@
             <target>Atualização disponível: Versão {0} foi lançada {1}</target>
          </segment>
       </unit>
-   	<unit id="main.about">
-         <segment>
-            <source>About</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="main.version">
          <segment>
             <source>Version: {0} - {1}</source>
             <target/>
          </segment>
       </unit>
-      <unit id="main.copyClipboard">
-         <segment>
-            <source>Copy Version to Clipboard</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="main.team">
-         <segment>
-            <source>Team</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="main.reliesOn">
-         <segment>
-            <source>{0} relies on other works</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="main.thanks">
-         <segment>
-            <source>Thanks to</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="main.cantCopy">
-         <segment>
-            <source>Unable to copy to clipboard</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="mediaActions.attach">
-   		<segment>
-   			<source>Associate</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="mediaActions.detach">
-   		<segment>
-   			<source>Disassociate</source>
-   			<target>Desassociar</target>
-   		</segment>
-   	</unit>
-   	<unit id="mediaActions.download">
-   		<segment>
-   			<source>Download</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="mediaActions.delete">
-   		<segment>
-   			<source>Delete</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="mediaActions.play">
-   		<segment>
-   			<source>Play</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="mediaActions.stop">
-   		<segment>
-   			<source>Stop</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="mediaTab.action">
+         <segment>
+            <source>Associate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.detach">
+         <segment>
+            <source>Disassociate</source>
+            <target>Desassociar</target>
+         </segment>
+      </unit>
+      <unit id="mediaActions.download">
+         <segment>
+            <source>Download</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.play">
+         <segment>
+            <source>Play</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.stop">
+         <segment>
+            <source>Stop</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.action">
          <segment>
             <source>Action</source>
             <target>Ação</target>
+         </segment>
+      </unit>
+      <unit id="mediaTab.actions">
+         <segment>
+            <source>Actions</source>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.all">
          <segment>
             <source>All</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.alreadyAssociated">
+         <segment>
+            <source>Show Passages Already Associated</source>
+            <target>Mostrar passagens já associadas</target>
+         </segment>
+      </unit>
+      <unit id="mediaTab.associated">
+         <segment>
+            <source>Associated</source>
+            <target>Associado</target>
          </segment>
       </unit>
       <unit id="mediaTab.autoMatch">
@@ -1915,6 +2101,12 @@
             <target>Livro</target>
          </segment>
       </unit>
+      <unit id="mediaTab.choosePassage">
+         <segment>
+            <source>Choose Passage</source>
+            <target>Escolha a Passagem</target>
+         </segment>
+      </unit>
       <unit id="mediaTab.date">
          <segment>
             <source>Date</source>
@@ -1927,13 +2119,13 @@
             <target>Excluir</target>
          </segment>
       </unit>
-   	<unit id="mediaTab.deleteConfirm">
-   		<segment>
-   			<source>Delete {0}? Are you sure?</source>
-   			<target>Eliminar {0}? Tem a certeza?</target>
-   		</segment>
-   	</unit>
-   	<unit id="mediaTab.detach">
+      <unit id="mediaTab.deleteConfirm">
+         <segment>
+            <source>Delete {0}? Are you sure?</source>
+            <target>Eliminar {0}? Tem a certeza?</target>
+         </segment>
+      </unit>
+      <unit id="mediaTab.detach">
          <segment>
             <source>Detach</source>
             <target/>
@@ -1951,19 +2143,7 @@
             <target/>
          </segment>
       </unit>
-   	<unit id="mediaTab.actions">
-   		<segment>
-   			<source>Actions</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="mediaTab.choosePassage">
-   		<segment>
-   			<source>Choose Passage</source>
-   			<target>Escolha a Passagem</target>
-   		</segment>
-   	</unit>
-   	<unit id="mediaTab.fileName">
+      <unit id="mediaTab.fileName">
          <segment>
             <source>File Name</source>
             <target>Nome do Arquivo</target>
@@ -1990,7 +2170,7 @@
       <unit id="mediaTab.mediaAssociations">
          <segment>
             <source>Audio Associations</source>
-         	<target>Associações de áudio</target>
+            <target>Associações de áudio</target>
          </segment>
       </unit>
       <unit id="mediaTab.noMatch">
@@ -2033,18 +2213,6 @@
          <segment>
             <source>Reference</source>
             <target>Referência</target>
-         </segment>
-      </unit>
-   	<unit id="mediaTab.associated">
-   		<segment>
-   			<source>Associated</source>
-   			<target>Associado</target>
-   		</segment>
-   	</unit>
-       <unit id="mediaTab.alreadyAssociated">
-         <segment>
-            <source>Show Passages Already Associated</source>
-            <target>Mostrar passagens já associadas</target>
          </segment>
       </unit>
       <unit id="mediaTab.save">
@@ -2107,13 +2275,13 @@
             <target>Versão</target>
          </segment>
       </unit>
-   	<unit id="mediaTab.versionHistory">
-   		<segment>
-   			<source>Version History</source>
-   			<target>Histórico de versões</target>
-   		</segment>
-   	</unit>
-   	<unit id="mediaTab.viewAssociations">
+      <unit id="mediaTab.versionHistory">
+         <segment>
+            <source>Version History</source>
+            <target>Histórico de versões</target>
+         </segment>
+      </unit>
+      <unit id="mediaTab.viewAssociations">
          <segment>
             <source>View Associations</source>
             <target/>
@@ -2176,7 +2344,7 @@
       <unit id="mediaUpload.title">
          <segment>
             <source>Upload Audio</source>
-         	<target>Upload de áudio</target>
+            <target>Upload de áudio</target>
          </segment>
       </unit>
       <unit id="mediaUpload.upload">
@@ -2185,10 +2353,190 @@
             <target>Carregar</target>
          </segment>
       </unit>
+      <unit id="newProject.audioProduct">
+         <segment>
+            <source>Audio Product</source>
+            <target>Produto áudio</target>
+         </segment>
+      </unit>
+      <unit id="newProject.blank">
+         <segment>
+            <source>Blank Project</source>
+            <target>Projecto em branco</target>
+         </segment>
+      </unit>
+      <unit id="newProject.blankFactor1">
+         <segment>
+            <source>Best option if multiple pre-recorded audio files are available</source>
+            <target>Melhor opção se vários arquivos de áudio pré-gravados estiverem disponíveis</target>
+         </segment>
+      </unit>
+      <unit id="newProject.blankFactor2">
+         <segment>
+            <source>Best option if passage list is available in a spreadsheet</source>
+            <target>Melhor opção se a lista de passagens estiver disponível em uma planilha</target>
+         </segment>
+      </unit>
+      <unit id="newProject.blankTip">
+         <segment>
+            <source>All settings are manually chosen.</source>
+            <target>Todas as configurações são escolhidas manualmente.</target>
+         </segment>
+      </unit>
+      <unit id="newProject.configure">
+         <segment>
+            <source>Configure</source>
+            <target>Configurar</target>
+         </segment>
+      </unit>
+      <unit id="newProject.general">
+         <segment>
+            <source>General Transcription</source>
+            <target>Transcrição geral</target>
+         </segment>
+      </unit>
+      <unit id="newProject.generalFactor1">
+         <segment>
+            <source>Free-form references</source>
+            <target>Referências de forma livre</target>
+         </segment>
+      </unit>
+      <unit id="newProject.generalFactor2">
+         <segment>
+            <source>No Paratext sync expected or allowed</source>
+            <target>Não se espera ou é permitida a sincronização com o Paratext</target>
+         </segment>
+      </unit>
+      <unit id="newProject.generalTip">
+         <segment>
+            <source>General transcription can cover a wide range of working scenarios and product solutions.</source>
+            <target>A transcrição Geral pode cobrir uma vasta gama de cenários de trabalho e soluções de produtos.</target>
+         </segment>
+      </unit>
+      <unit id="newProject.keyFactors">
+         <segment>
+            <source>Key Factors</source>
+            <target>Fatores chave</target>
+         </segment>
+      </unit>
+      <unit id="newProject.likeTemplate">
+         <segment>
+            <source>These options present different templates for getting started. Choices made here can be changed in the Edit Project Settings dialog box.</source>
+            <target>Estas opções apresentam diferentes modelos para começar. As escolhas feitas aqui podem ser alteradas na caixa de diálogo Editar Configurações do Projeto.</target>
+         </segment>
+      </unit>
+      <unit id="newProject.newProject">
+         <segment>
+            <source>New Project</source>
+            <target>Novo projeto</target>
+         </segment>
+      </unit>
+      <unit id="newProject.other">
+         <segment>
+            <source>Other</source>
+            <target>Outros</target>
+         </segment>
+      </unit>
+      <unit id="newProject.paratextIntegration">
+         <segment>
+            <source>Integrated with Paratext</source>
+            <target>Integrado com Paratext</target>
+         </segment>
+      </unit>
+      <unit id="newProject.scripture">
+         <segment>
+            <source>Scripture Transcription</source>
+            <target>Transcrição das Escrituras</target>
+         </segment>
+      </unit>
+      <unit id="newProject.scriptureFactor1">
+         <segment>
+            <source>Uses Scripture Referencing: book, chapter, and verse</source>
+            <target>Utiliza Referências Bíblicas: livro, capítulo e verso</target>
+         </segment>
+      </unit>
+      <unit id="newProject.scriptureFactor2">
+         <segment>
+            <source>Workflow syncs with Paratext for checking</source>
+            <target>Sincronização do fluxo de trabalho com Paratext para verificação</target>
+         </segment>
+      </unit>
+      <unit id="newProject.scriptureTip">
+         <segment>
+            <source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
+            <target>O produto final pode ser áudio ou texto e o tipo de conteúdo pode ser tradução, estórias, redação ou adaptação.</target>
+         </segment>
+      </unit>
+      <unit id="newProject.startRecording">
+         <segment>
+            <source>Start Recording</source>
+            <target>Iniciar Gravação</target>
+         </segment>
+      </unit>
+      <unit id="newProject.textProduct">
+         <segment>
+            <source>Text Product</source>
+            <target>Texto Produto</target>
+         </segment>
+      </unit>
+      <unit id="newProject.uploadAudio">
+         <segment>
+            <source>Upload Audio</source>
+            <target>Carregar Áudio</target>
+         </segment>
+      </unit>
       <unit id="passageMedia.close">
          <segment>
             <source>Close</source>
             <target>Fechar</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target>Cancelar</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.defaultFilename">
+         <segment>
+            <source>MyRecording</source>
+            <target>MeuAudio</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.fileName">
+         <segment>
+            <source>Name</source>
+            <target>Nome</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.fileType">
+         <segment>
+            <source>File Type</source>
+            <target>Tipo de arquivo</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.loadfile">
+         <segment>
+            <source>Load Existing File</source>
+            <target>Carregar Arquivo Existente</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.loading">
+         <segment>
+            <source>Loading...</source>
+            <target>Carregando...</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.save">
+         <segment>
+            <source>Save</source>
+            <target>Salve </target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.title">
+         <segment>
+            <source>Record/Edit Audio</source>
+            <target>Gravar / editar áudio</target>
          </segment>
       </unit>
       <unit id="planActions.assign">
@@ -2203,12 +2551,12 @@
             <target>Excluir</target>
          </segment>
       </unit>
-	  <unit id="planActions.launchAudacity">
-	  	<segment>
-	  		<source>Launch Audacity</source>
-	  		<target>Audácia de lançamento</target>
-	  	</segment>
-	  </unit>
+      <unit id="planActions.launchAudacity">
+         <segment>
+            <source>Launch Audacity</source>
+            <target>Audácia de lançamento</target>
+         </segment>
+      </unit>
       <unit id="planActions.playpause">
          <segment>
             <source>Play/Pause</source>
@@ -2219,7 +2567,7 @@
          <segment>
             <source>Record/Edit Audio</source>
             <target>Gravar/Editar audio</target>
-          </segment>
+         </segment>
       </unit>
       <unit id="planActions.transcribe">
          <segment>
@@ -2233,12 +2581,6 @@
             <target>Ação</target>
          </segment>
       </unit>
-      <unit id="planSheet.audio">
-         <segment>
-            <source>Audio</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="planSheet.addPassage">
          <segment>
             <source>Add Passage</source>
@@ -2248,6 +2590,12 @@
       <unit id="planSheet.addSection">
          <segment>
             <source>Add {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.audio">
+         <segment>
+            <source>Audio</source>
             <target/>
          </segment>
       </unit>
@@ -2344,13 +2692,13 @@
       <unit id="planTabs.media">
          <segment>
             <source>Audio</source>
-         	<target>Áudio</target>
+            <target>Áudio</target>
          </segment>
       </unit>
       <unit id="planTabs.mediaStatus">
          <segment>
             <source>{1} of {2} associations</source>
-         	<target>das associações {1} de {2} associações</target>
+            <target>das associações {1} de {2} associações</target>
          </segment>
       </unit>
       <unit id="planTabs.passageStatus">
@@ -2398,18 +2746,6 @@
       <unit id="profile.checkingParatext">
          <segment>
             <source>Checking for Paratext account...</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="profile.nameNotEmail">
-         <segment>
-            <source>Please choose a name other than your email address.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="profile.notLinked">
-         <segment>
-            <source>Not linked to Paratext</source>
             <target/>
          </segment>
       </unit>
@@ -2491,10 +2827,22 @@
             <target>Nome Completo</target>
          </segment>
       </unit>
+      <unit id="profile.nameNotEmail">
+         <segment>
+            <source>Please choose a name other than your email address.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.next">
          <segment>
             <source>Next</source>
             <target>Próximo</target>
+         </segment>
+      </unit>
+      <unit id="profile.notLinked">
+         <segment>
+            <source>Not linked to Paratext</source>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.paratextLinked">
@@ -2605,157 +2953,25 @@
             <target/>
          </segment>
       </unit>
-   	<unit id="newProject.newProject">
-   		<segment>
-   			<source>New Project</source>
-   			<target>Novo projeto</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.audioProduct">
-   		<segment>
-   			<source>Audio Product</source>
-   			<target>Produto áudio</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.textProduct">
-   		<segment>
-   			<source>Text Product</source>
-   			<target>Texto Produto</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.other">
-   		<segment>
-   			<source>Other</source>
-   			<target>Outros</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.likeTemplate">
-   		<segment>
-   			<source>These options present different templates for getting started. Choices made here can be changed in the Edit Project Settings dialog box.</source>
-   			<target>Estas opções apresentam diferentes modelos para começar. As escolhas feitas aqui podem ser alteradas na caixa de diálogo Editar Configurações do Projeto.</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.blankTip">
-   		<segment>
-   			<source>All settings are manually chosen.</source>
-   			<target>Todas as configurações são escolhidas manualmente.</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.blankFactor1">
-   		<segment>
-   			<source>Best option if multiple pre-recorded audio files are available</source>
-   			<target>Melhor opção se vários arquivos de áudio pré-gravados estiverem disponíveis</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.blankFactor2">
-   		<segment>
-   			<source>Best option if passage list is available in a spreadsheet</source>
-   			<target>Melhor opção se a lista de passagens estiver disponível em uma planilha</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.general">
-   		<segment>
-   			<source>General Transcription</source>
-   			<target>Transcrição geral</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.generalTip">
-   		<segment>
-   			<source>General transcription can cover a wide range of working scenarios and product solutions.</source>
-   			<target>A transcrição Geral pode cobrir uma vasta gama de cenários de trabalho e soluções de produtos.</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.generalFactor1">
-   		<segment>
-   			<source>Free-form references</source>
-   			<target>Referências de forma livre</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.generalFactor2">
-   		<segment>
-   			<source>No Paratext sync expected or allowed</source>
-   			<target>Não se espera ou é permitida a sincronização com o Paratext</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.keyFactors">
-   		<segment>
-   			<source>Key Factors</source>
-   			<target>Fatores chave</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.scriptureFactor1">
-   		<segment>
-   			<source>Uses Scripture Referencing: book, chapter, and verse</source>
-   			<target>Utiliza Referências Bíblicas: livro, capítulo e verso</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.scriptureFactor2">
-   		<segment>
-   			<source>Workflow syncs with Paratext for checking</source>
-   			<target>Sincronização do fluxo de trabalho com Paratext para verificação</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.scripture">
-   		<segment>
-   			<source>Scripture Transcription</source>
-   			<target>Transcrição das Escrituras</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.scriptureTip">
-   		<segment>
-   			<source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
-   			<target>O produto final pode ser áudio ou texto e o tipo de conteúdo pode ser tradução, estórias, redação ou adaptação.</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.blank">
-   		<segment>
-   			<source>Blank Project</source>
-   			<target>Projecto em branco</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.paratextIntegration">
-   		<segment>
-   			<source>Integrated with Paratext</source>
-   			<target>Integrado com Paratext</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.configure">
-   		<segment>
-   			<source>Configure</source>
-   			<target>Configurar</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.uploadAudio">
-   		<segment>
-   			<source>Upload Audio</source>
-   			<target>Carregar Áudio</target>
-   		</segment>
-   	</unit>
-   	<unit id="newProject.startRecording">
-   		<segment>
-   			<source>Start Recording</source>
-   			<target>Iniciar Gravação</target>
-   		</segment>
-   	</unit>
-   	<unit id="projectDownload.download">
-   		<segment>
-   			<source>Download?</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="projectDownload.downloadLater">
-   		<segment>
-   			<source>Download Later</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="projectDownload.downloadMb">
-   		<segment>
-   			<source>Download {0}MB of offline project files?</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="scriptureTable.action">
+      <unit id="projectDownload.download">
+         <segment>
+            <source>Download?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.downloadLater">
+         <segment>
+            <source>Download Later</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.downloadMb">
+         <segment>
+            <source>Download {0}MB of offline project files?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.action">
          <segment>
             <source>Action</source>
             <target>Ação</target>
@@ -2833,207 +3049,33 @@
             <target>Título</target>
          </segment>
       </unit>
-      <unit id="grid.avg">
-         <segment>
-            <source>Avg</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="grid.count">
-         <segment>
-            <source>Count</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="grid.max">
-         <segment>
-            <source>Max</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="grid.min">
-         <segment>
-            <source>Min</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="grid.noColumns">
-         <segment>
-            <source>No columns visible</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="grid.noData">
-         <segment>
-            <source>No data</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="grid.sum">
-         <segment>
-            <source>Sum</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="grid.groupByColumn">
-         <segment>
-            <source>Drag a column header here to group by that column</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="grid.filterPlaceholder">
-         <segment>
-            <source>Filter...</source>
-            <target>Filtro...</target>
-         </segment>
-      </unit>
-      <unit id="grid.contains">
-         <segment>
-            <source>Contains</source>
-            <target>Contém</target>
-         </segment>
-      </unit>
-      <unit id="grid.notcontains">
-         <segment>
-            <source>Does not contain</source>
-            <target>Não contém</target>
-         </segment>
-      </unit>
-      <unit id="grid.startsWith">
-         <segment>
-            <source>Starts with</source>
-            <target>Começa com</target>
-         </segment>
-      </unit>
-      <unit id="grid.endsWith">
-         <segment>
-            <source>Ends with</source>
-            <target>Termina com</target>
-         </segment>
-      </unit>
-      <unit id="grid.equal">
-         <segment>
-            <source>Equals</source>
-            <target>É igual a</target>
-         </segment>
-      </unit>
-      <unit id="grid.notEqual">
-         <segment>
-            <source>Does not equal</source>
-            <target>Não é igual</target>
-         </segment>
-      </unit>
-      <unit id="grid.greaterThan">
-         <segment>
-            <source>Greater than</source>
-            <target>Maior que</target>
-         </segment>
-      </unit>
-      <unit id="grid.greaterThanOrEqual">
-         <segment>
-            <source>Greater than or equal to</source>
-            <target>Melhor que ou igual a</target>
-         </segment>
-      </unit>
-      <unit id="grid.lessThan">
-         <segment>
-            <source>Less than</source>
-            <target>Menor que</target>
-         </segment>
-      </unit>
-      <unit id="grid.lessThanOrEqual">
-         <segment>
-            <source>Less than or equal to</source>
-            <target>Menos que ou igual a</target>
-         </segment>
-      </unit>
-      <unit id="grid.all">
-         <segment>
-            <source>All</source>
-            <target>Tudo</target>
-         </segment>
-      </unit>
-      <unit id="grid.rowsPerPage">
-         <segment>
-            <source>Rows per Page</source>
-            <target>Linhas por página</target>
-         </segment>
-      </unit>
-      <unit id="grid.pageInfo">
-         <segment>
-            <source>Rows {from} to {to} ({count} Rows)</source>
-            <target>Linhas de {from} a {to} ({count} linhas)</target>
-         </segment>
-      </unit>
-      <unit id="shared.yes">
-         <segment>
-            <source>Yes</source>
-            <target>Sim</target>
-         </segment>
-      </unit>
-      <unit id="shared.no">
-         <segment>
-            <source>No</source>
-            <target>Não</target>
-         </segment>
-      </unit>
       <unit id="shared.admin">
          <segment>
             <source>Admin</source>
             <target>Admin</target>
          </segment>
       </unit>
-   	<unit id="shared.cancel">
-   		<segment>
-   			<source>Cancel</source>
-   			<target>Cancelar</target>
-   		</segment>
-   	</unit>
-      <unit id="shared.editor">
-         <segment>
-            <source>Editor</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="shared.lastEdit">
-         <segment>
-            <source>Last save {0}</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="shared.NoSaveOffline">
-         <segment>
-            <source>Unable to save while offline.</source>
-            <target/>
-         </segment>
-      </unit>
-     <unit id="shared.bookNotInParatext">
+      <unit id="shared.bookNotInParatext">
          <segment>
             <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
             <target/>
          </segment>
       </unit>
-      <unit id="shared.paratextchapterSpan">
-         <segment>
-            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="shared.invalidReference">
-         <segment>
-            <source>Passage {0}.{1} {2}: Invalid Reference</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="shared.referenceNotFound">
-         <segment>
-            <source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
-            <target>A referência não existe no capítulo do Paratexto ou a referência está dentro de um intervalo maior de versos.</target>
-         </segment>
-      </unit>
       <unit id="shared.BookNotSet">
          <segment>
             <source>Book was not set for Section {0} Passage {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target>Cancelar</target>
+         </segment>
+      </unit>
+      <unit id="shared.editor">
+         <segment>
+            <source>Editor</source>
             <target/>
          </segment>
       </unit>
@@ -3049,51 +3091,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.importMediaSingular">
+         <segment>
+            <source>Import Audio</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.invalidParatextLogin">
          <segment>
             <source>You must login with a valid paratext login.</source>
             <target/>
          </segment>
       </unit>
-      <unit id="shared.owner">
+      <unit id="shared.invalidReference">
          <segment>
-            <source>Owner</source>
+            <source>Passage {0}.{1} {2}: Invalid Reference</source>
             <target/>
          </segment>
       </unit>
-      <unit id="shared.member">
+      <unit id="shared.lastEdit">
          <segment>
-            <source>Member</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="shared.save">
-	   		<segment>
-	   			<source>Save</source>
-	   			<target>Salvar</target>
-	   		</segment>
-	   	</unit>
-      <unit id="shared.transcriber">
-         <segment>
-            <source>Transcriber</source>
-            <target>Transcritor</target>
-         </segment>
-      </unit>
-      <unit id="shared.uploadMediaPlural">
-         <segment>
-            <source>Upload Audio</source>
-         	<target>Upload de áudio</target>
-         </segment>
-      </unit>
-      <unit id="shared.uploadMediaSingular">
-         <segment>
-            <source>Upload Audio</source>
-         	<target>Upload de áudio</target>
-         </segment>
-      </unit>
-      <unit id="shared.importMediaSingular">
-         <segment>
-            <source>Import Audio</source>
+            <source>Last save {0}</source>
             <target/>
          </segment>
       </unit>
@@ -3109,10 +3127,124 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.member">
+         <segment>
+            <source>Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.no">
+         <segment>
+            <source>No</source>
+            <target>Não</target>
+         </segment>
+      </unit>
+      <unit id="shared.NoSaveOffline">
+         <segment>
+            <source>Unable to save while offline.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.owner">
+         <segment>
+            <source>Owner</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.paratextchapterSpan">
+         <segment>
+            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.part">
          <segment>
             <source>Part {0}</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="shared.referenceNotFound">
+         <segment>
+            <source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
+            <target>A referência não existe no capítulo do Paratexto ou a referência está dentro de um intervalo maior de versos.</target>
+         </segment>
+      </unit>
+      <unit id="shared.save">
+         <segment>
+            <source>Save</source>
+            <target>Salvar</target>
+         </segment>
+      </unit>
+      <unit id="shared.transcriber">
+         <segment>
+            <source>Transcriber</source>
+            <target>Transcritor</target>
+         </segment>
+      </unit>
+      <unit id="shared.uploadMediaPlural">
+         <segment>
+            <source>Upload Audio</source>
+            <target>Upload de áudio</target>
+         </segment>
+      </unit>
+      <unit id="shared.uploadMediaSingular">
+         <segment>
+            <source>Upload Audio</source>
+            <target>Upload de áudio</target>
+         </segment>
+      </unit>
+      <unit id="shared.yes">
+         <segment>
+            <source>Yes</source>
+            <target>Sim</target>
+         </segment>
+      </unit>
+      <unit id="spelling.addToDict">
+         <segment>
+            <source>Add to dictionary</source>
+            <target>Adicionar ao dicionário</target>
+         </segment>
+      </unit>
+      <unit id="spelling.close">
+         <segment>
+            <source>Close</source>
+            <target>Fechar</target>
+         </segment>
+      </unit>
+      <unit id="spelling.custom">
+         <segment>
+            <source>Custom</source>
+            <target>Personalizado</target>
+         </segment>
+      </unit>
+      <unit id="spelling.dictionaries">
+         <segment>
+            <source>Dictionaries</source>
+            <target>Dicionários</target>
+         </segment>
+      </unit>
+      <unit id="spelling.restart">
+         <segment>
+            <source>To load or unload dictionaries requires this app to be restarted. Loading dictionaries that have not been loaded before will require this device to have a connection to the Internet. Do you want to restart this desktop app now?</source>
+            <target>Para carregar ou descarregar dicionários, este aplicativo deve ser reiniciado. O carregamento de dicionários que não tenham sido carregados antes exigirá que este dispositivo tenha uma conexão com a Internet. Você deseja reiniciar este aplicativo desktop agora?</target>
+         </segment>
+      </unit>
+      <unit id="spelling.restartApp">
+         <segment>
+            <source>Restart</source>
+            <target>Reinicie</target>
+         </segment>
+      </unit>
+      <unit id="spelling.spellingLangs">
+         <segment>
+            <source>Spell Checking Languages</source>
+            <target>Idiomas de verificação ortográfica</target>
+         </segment>
+      </unit>
+      <unit id="spelling.spellingLangsTip">
+         <segment>
+            <source>Choose spell checking languages</source>
+            <target>Escolher idiomas de verificação ortográfica</target>
          </segment>
       </unit>
       <unit id="taskItem.assign">
@@ -3283,11 +3415,40 @@
             <target>Sim</target>
          </segment>
       </unit>
-
+      <unit id="transcribeAddNote.addNoteTitle">
+         <segment>
+            <source>Add Note</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcribeAddNote.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target>Cancelar</target>
+         </segment>
+      </unit>
+      <unit id="transcribeAddNote.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.addNote">
+         <segment>
+            <source>Add Note</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriber.comment">
          <segment>
             <source>Comment</source>
             <target>Comentário</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.congratulation">
+         <segment>
+            <source>Congratulations</source>
+            <target>Parabéns</target>
          </segment>
       </unit>
       <unit id="transcriber.done">
@@ -3314,12 +3475,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.addNote">
-         <segment>
-            <source>Add Note</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriber.needsNewRecording">
          <segment>
             <source>Rejected recording</source>
@@ -3336,6 +3491,12 @@
          <segment>
             <source>Created task</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.noMoreTasks">
+         <segment>
+            <source>You have no more tasks to work on!</source>
+            <target>Você não tem mais tarefas para trabalhar!</target>
          </segment>
       </unit>
       <unit id="transcriber.pullParatextCaption">
@@ -3431,36 +3592,6 @@
       <unit id="transcriber.updateByOther">
          <segment>
             <source>Transcription updated by another person or process.</source>
-            <target/>
-         </segment>
-      </unit>
-   	<unit id="transcriber.congratulation">
-   		<segment>
-   			<source>Congratulations</source>
-   			<target>Parabéns</target>
-   		</segment>
-   	</unit>
-   	<unit id="transcriber.noMoreTasks">
-   		<segment>
-   			<source>You have no more tasks to work on!</source>
-   			<target>Você não tem mais tarefas para trabalhar!</target>
-   		</segment>
-   	</unit>
-   	<unit id="transcribeAddNote.cancel">
-         <segment>
-            <source>Cancel</source>
-            <target>Cancelar</target>
-         </segment>
-      </unit>
-      <unit id="transcribeAddNote.save">
-         <segment>
-            <source>Save</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcribeAddNote.addNoteTitle">
-         <segment>
-            <source>Add Note</source>
             <target/>
          </segment>
       </unit>
@@ -3566,6 +3697,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.downloadingProject">
+         <segment>
+            <source>Downloading...{0}%</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.downloadProject">
+         <segment>
+            <source>Download Project</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.elan">
          <segment>
             <source>ELAN</source>
@@ -3602,12 +3745,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriptionTab.downloadingProject">
-         <segment>
-            <source>Downloading...{0}%</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriptionTab.exportITFtype">
          <segment>
             <source>Incremental Changes (itf)</source>
@@ -3618,12 +3755,6 @@
          <segment>
             <source>Export Project</source>
             <target>Exportar Projeto</target>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.downloadProject">
-         <segment>
-            <source>Download Project</source>
-            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportPTFtype">
@@ -3648,6 +3779,12 @@
          <segment>
             <source>Filter</source>
             <target>Filtrar</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.incompletePlan">
+         <segment>
+            <source>Plan is incomplete: attach audio to passages.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.passages">
@@ -3677,12 +3814,6 @@
       <unit id="transcriptionTab.updated">
          <segment>
             <source>Updated</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.incompletePlan">
-         <segment>
-            <source>Plan is incomplete: attach audio to passages.</source>
             <target/>
          </segment>
       </unit>
@@ -3722,10 +3853,34 @@
             <target/>
          </segment>
       </unit>
+      <unit id="userListMode.logOut">
+         <segment>
+            <source>Log Out</source>
+            <target>Sair</target>
+         </segment>
+      </unit>
+      <unit id="userListMode.switchUser">
+         <segment>
+            <source>Switch User</source>
+            <target>Modificar usuário</target>
+         </segment>
+      </unit>
+      <unit id="userListMode.workOffline">
+         <segment>
+            <source>Work Offline</source>
+            <target>Trabalho fora de linha</target>
+         </segment>
+      </unit>
       <unit id="usertable.action">
          <segment>
             <source>Action</source>
             <target>Ação</target>
+         </segment>
+      </unit>
+      <unit id="usertable.addNewUser">
+         <segment>
+            <source>Add New User</source>
+            <target/>
          </segment>
       </unit>
       <unit id="usertable.cancel">
@@ -3782,18 +3937,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="usertable.addNewUser">
-         <segment>
-            <source>Add New User</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="usertable.selectUser">
-         <segment>
-            <source>Select User</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="usertable.phone">
          <segment>
             <source>Phone</source>
@@ -3810,6 +3953,12 @@
          <segment>
             <source>Please select row(s) to {0}.</source>
             <target>Por favor, selecione linha(s) para {0}.</target>
+         </segment>
+      </unit>
+      <unit id="usertable.selectUser">
+         <segment>
+            <source>Select User</source>
+            <target/>
          </segment>
       </unit>
       <unit id="usertable.showHideFilter">
@@ -3848,6 +3997,12 @@
             <target>Cancelar</target>
          </segment>
       </unit>
+      <unit id="vProject.configure">
+         <segment>
+            <source>Configure</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.correctformat">
          <segment>
             <source>Please enter in the format: singular/plural</source>
@@ -3878,13 +4033,7 @@
             <target/>
          </segment>
       </unit>
-   	<unit id="vProject.spellCheck">
-   		<segment>
-   			<source>Spell Check</source>
-   			<target>Verificação ortográfica</target>
-   		</segment>
-   	</unit>
-   	<unit id="vProject.font">
+      <unit id="vProject.font">
          <segment>
             <source>Font</source>
             <target>Fonte</target>
@@ -3917,12 +4066,6 @@
       <unit id="vProject.nameInUse">
          <segment>
             <source>Name in use</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="vProject.configure">
-         <segment>
-            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -4004,6 +4147,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.spellCheck">
+         <segment>
+            <source>Spell Check</source>
+            <target>Verificação ortográfica</target>
+         </segment>
+      </unit>
       <unit id="vProject.stories">
          <segment>
             <source>Story/Stories</source>
@@ -4034,6 +4183,114 @@
             <target>Tipo de Projeto</target>
          </segment>
       </unit>
+      <unit id="welcome.alone">
+         <segment>
+            <source>Work Alone</source>
+            <target>Trabalhe Sozinho</target>
+         </segment>
+      </unit>
+      <unit id="welcome.aloneFactor">
+         <segment>
+            <source>Projects cannot be changed to team projects later</source>
+            <target>Os projetos não podem ser mudados para projetos de equipe mais tarde</target>
+         </segment>
+      </unit>
+      <unit id="welcome.import">
+         <segment>
+            <source>Import Project</source>
+            <target>Projeto de importação</target>
+         </segment>
+      </unit>
+      <unit id="welcome.keyFactor">
+         <segment>
+            <source>Key Factor(s)</source>
+            <target>Fator(es) Chave(s)</target>
+         </segment>
+      </unit>
+      <unit id="welcome.offline">
+         <segment>
+            <source>Work Offline</source>
+            <target>Trabalho fora de linha</target>
+         </segment>
+      </unit>
+      <unit id="welcome.online">
+         <segment>
+            <source>Work Online</source>
+            <target>Trabalho Online</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickFamily">
+         <segment>
+            <source>User</source>
+            <target>Usuário</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickGiven">
+         <segment>
+            <source>Initial</source>
+            <target>Inicial</target>
+         </segment>
+      </unit>
+      <unit id="welcome.quickName">
+         <segment>
+            <source>Initial User</source>
+            <target>Usuário inicial</target>
+         </segment>
+      </unit>
+      <unit id="welcome.setupFactor">
+         <segment>
+            <source>Requires Internet connection</source>
+            <target>Requer conexão à Internet</target>
+         </segment>
+      </unit>
+      <unit id="welcome.setupFactor2">
+         <segment>
+            <source>Supports projects that are offline available</source>
+            <target>Apoia projetos que estão disponíveis offline</target>
+         </segment>
+      </unit>
+      <unit id="welcome.setupFactor2Help">
+         <segment>
+            <source>Select the Offline Available option on the project card menu.</source>
+            <target>Selecione a opção Disponível Offline no menu do cartão do projeto.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.setupTeam">
+         <segment>
+            <source>Set up a team project</source>
+            <target>Estabelecer um projeto de equipe</target>
+         </segment>
+      </unit>
+      <unit id="welcome.setupTeamTip">
+         <segment>
+            <source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
+            <target>Configurar o projeto, dividindo o trabalho em passagens que podem ser atribuídas a vários transcriptores e editores.  Transcriptores e editores podem trabalhar on-line ou off-line, baixando ou importando o projeto.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.team">
+         <segment>
+            <source>Work in a team project</source>
+            <target>Trabalhar em um projeto de equipe</target>
+         </segment>
+      </unit>
+      <unit id="welcome.teamFactor">
+         <segment>
+            <source>Project has been set up online</source>
+            <target>O projeto foi criado on-line</target>
+         </segment>
+      </unit>
+      <unit id="welcome.teamTip">
+         <segment>
+            <source>A project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the project card menu, or offline by importing it.</source>
+            <target>Um projeto foi criado on-line.  Transcriptores e editores podem trabalhar online, offline baixando o projeto, ou offline importando-o.</target>
+         </segment>
+      </unit>
+      <unit id="welcome.title">
+         <segment>
+            <source>Welcome</source>
+            <target>Receber</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.aheadTip">
          <segment>
             <source>Ahead {jump} {1} [{0}]</source>
@@ -4056,12 +4313,12 @@
          <segment>
             <source>Delete Region</source>
             <target>Excluir região</target>
-        </segment>
+         </segment>
       </unit>
       <unit id="wsAudioPlayer.endTip">
          <segment>
             <source>Go to End [{0}]</source>
-           <target>Ir para o fim [{0}]</target>
+            <target>Ir para o fim [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.fasterTip">
@@ -4088,19 +4345,19 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.pauseRecord">
+         <segment>
+            <source>Pause</source>
+            <target>Pausa</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.pauseTip">
          <segment>
             <source>Pause [{0}]</source>
             <target>Pausa [{0}]</target>
          </segment>
       </unit>
-       <unit id="wsAudioPlayer.pauseRecord">
-         <segment>
-            <source>Pause</source>
-            <target>Pausa</target>
-         </segment>
-      </unit>
-     <unit id="wsAudioPlayer.playTip">
+      <unit id="wsAudioPlayer.playTip">
          <segment>
             <source>Play [{0}]</source>
             <target>Toque [{0}]</target>
@@ -4109,7 +4366,7 @@
       <unit id="wsAudioPlayer.record">
          <segment>
             <source>Record [{0}]</source>
-             <target>Registro [{0}]</target>
+            <target>Registro [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.resume">
@@ -4122,13 +4379,13 @@
          <segment>
             <source>Seconds</source>
             <target>Segundas</target>
-        </segment>
+         </segment>
       </unit>
       <unit id="wsAudioPlayer.silence">
          <segment>
             <source>Silence</source>
             <target>Silêncio</target>
-        </segment>
+         </segment>
       </unit>
       <unit id="wsAudioPlayer.slowerTip">
          <segment>
@@ -4148,263 +4405,5 @@
             <target/>
          </segment>
       </unit>
-      <unit id="passageRecord.fileName">
-         <segment>
-            <source>Name</source>
-            <target>Nome</target>
-         </segment>
-      </unit>
-      <unit id="passageRecord.fileType">
-         <segment>
-            <source>File Type</source>
-            <target>Tipo de arquivo</target>
-         </segment>
-      </unit>
-      <unit id="passageRecord.loadfile">
-         <segment>
-            <source>Load Existing File</source>
-            <target>Carregar Arquivo Existente</target>
-         </segment>
-      </unit>
-      <unit id="passageRecord.loading">
-         <segment>
-            <source>Loading...</source>
-            <target>Carregando...</target>
-         </segment>
-      </unit>
-      <unit id="passageRecord.save">
-         <segment>
-            <source>Save</source>
-            <target>Salve </target>
-         </segment>
-      </unit>
-      <unit id="passageRecord.cancel">
-         <segment>
-            <source>Cancel</source>
-            <target>Cancelar</target>
-         </segment>
-      </unit>
-      <unit id="passageRecord.title">
-         <segment>
-            <source>Record/Edit Audio</source>
-            <target>Gravar / editar áudio</target>
-         </segment>
-      </unit>
-      <unit id="passageRecord.defaultFilename">
-         <segment>
-            <source>MyRecording</source>
-            <target>MeuAudio</target>
-         </segment>
-      </unit>
-      <unit id="hotKey.altKey">
-         <segment>
-            <source>Alt</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="hotKey.ctrlKey">
-         <segment>
-            <source>Ctrl</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="hotKey.endKey">
-         <segment>
-            <source>End</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="hotKey.homeKey">
-         <segment>
-            <source>Home</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="hotKey.or">
-         <segment>
-            <source>or</source>
-            <target>or</target>
-         </segment>
-      </unit>
-      <unit id="hotKey.spaceKey">
-         <segment>
-            <source>Space</source>
-            <target/>
-         </segment>
-      </unit>
-   	<unit id="spelling.spellingLangsTip">
-   		<segment>
-   			<source>Choose spell checking languages</source>
-   			<target>Escolher idiomas de verificação ortográfica</target>
-   		</segment>
-   	</unit>
-   	<unit id="spelling.spellingLangs">
-   		<segment>
-   			<source>Spell Checking Languages</source>
-   			<target>Idiomas de verificação ortográfica</target>
-   		</segment>
-   	</unit>
-   	<unit id="spelling.restart">
-   		<segment>
-   			<source>To load or unload dictionaries requires this app to be restarted. Loading dictionaries that have not been loaded before will require this device to have a connection to the Internet. Do you want to restart this desktop app now?</source>
-   			<target>Para carregar ou descarregar dicionários, este aplicativo deve ser reiniciado. O carregamento de dicionários que não tenham sido carregados antes exigirá que este dispositivo tenha uma conexão com a Internet. Você deseja reiniciar este aplicativo desktop agora?</target>
-   		</segment>
-   	</unit>
-   	<unit id="spelling.restartApp">
-   		<segment>
-   			<source>Restart</source>
-   			<target>Reinicie</target>
-   		</segment>
-   	</unit>
-   	<unit id="spelling.close">
-   		<segment>
-   			<source>Close</source>
-   			<target>Fechar</target>
-   		</segment>
-   	</unit>
-   	<unit id="spelling.dictionaries">
-   		<segment>
-   			<source>Dictionaries</source>
-   			<target>Dicionários</target>
-   		</segment>
-   	</unit>
-   	<unit id="spelling.custom">
-   		<segment>
-   			<source>Custom</source>
-   			<target>Personalizado</target>
-   		</segment>
-   	</unit>
-   	<unit id="spelling.addToDict">
-   		<segment>
-   			<source>Add to dictionary</source>
-   			<target>Adicionar ao dicionário</target>
-   		</segment>
-   	</unit>
-   	<unit id="userListMode.switchUser">
-         <segment>
-            <source>Switch User</source>
-         	<target>Modificar usuário</target>
-         </segment>
-      </unit>
-      <unit id="userListMode.workOffline">
-         <segment>
-            <source>Work Offline</source>
-         	<target>Trabalho fora de linha</target>
-         </segment>
-      </unit>
-      <unit id="userListMode.logOut">
-         <segment>
-            <source>Log Out</source>
-         	<target>Sair</target>
-         </segment>
-      </unit>
-      <unit id="welcome.alone">
-   		<segment>
-   			<source>Work Alone</source>
-   			<target>Trabalhe Sozinho</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.aloneFactor">
-   		<segment>
-   			<source>Projects cannot be changed to team projects later</source>
-   			<target>Os projetos não podem ser mudados para projetos de equipe mais tarde</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.import">
-   		<segment>
-   			<source>Import Project</source>
-   			<target>Projeto de importação</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.keyFactor">
-   		<segment>
-   			<source>Key Factor(s)</source>
-   			<target>Fator(es) Chave(s)</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.offline">
-   		<segment>
-   			<source>Work Offline</source>
-   			<target>Trabalho fora de linha</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.online">
-   		<segment>
-   			<source>Work Online</source>
-   			<target>Trabalho Online</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.quickFamily">
-   		<segment>
-   			<source>User</source>
-   			<target>Usuário</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.quickGiven">
-   		<segment>
-   			<source>Initial</source>
-   			<target>Inicial</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.quickName">
-   		<segment>
-   			<source>Initial User</source>
-   			<target>Usuário inicial</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.setupFactor">
-   		<segment>
-   			<source>Requires Internet connection</source>
-   			<target>Requer conexão à Internet</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.setupFactor2">
-   		<segment>
-   			<source>Supports projects that are offline available</source>
-   			<target>Apoia projetos que estão disponíveis offline</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.setupFactor2Help">
-   		<segment>
-   			<source>Select the Offline Available option on the project card menu.</source>
-   			<target>Selecione a opção Disponível Offline no menu do cartão do projeto.</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.setupTeam">
-   		<segment>
-   			<source>Set up a team project</source>
-   			<target>Estabelecer um projeto de equipe</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.setupTeamTip">
-   		<segment>
-   			<source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
-   			<target>Configurar o projeto, dividindo o trabalho em passagens que podem ser atribuídas a vários transcriptores e editores.  Transcriptores e editores podem trabalhar on-line ou off-line, baixando ou importando o projeto.</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.team">
-   		<segment>
-   			<source>Work in a team project</source>
-   			<target>Trabalhar em um projeto de equipe</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.teamFactor">
-   		<segment>
-   			<source>Project has been set up online</source>
-   			<target>O projeto foi criado on-line</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.teamTip">
-   		<segment>
-   			<source>A project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the project card menu, or offline by importing it.</source>
-   			<target>Um projeto foi criado on-line.  Transcriptores e editores podem trabalhar online, offline baixando o projeto, ou offline importando-o.</target>
-   		</segment>
-   	</unit>
-   	<unit id="welcome.title">
-   		<segment>
-   			<source>Welcome</source>
-   			<target>Receber</target>
-   		</segment>
-   	</unit>
    </file>
 </xliff>
