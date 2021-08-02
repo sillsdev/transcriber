@@ -90,6 +90,8 @@ export function Welcome(props: IProps) {
   const classes = useStyles();
   const offlineSetup = useOfflineSetup();
   const { fetchLocalization, setLanguage } = props;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_busy, setBusy] = useGlobal('importexportBusy');
   const [user, setUser] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
   const [, setConnected] = useGlobal('connected');
@@ -170,7 +172,10 @@ export function Welcome(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (importStatus?.complete) checkUsers(true);
+    if (importStatus?.complete) {
+      setBusy(false);
+      checkUsers(true, 'online-local');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importStatus]);
 
