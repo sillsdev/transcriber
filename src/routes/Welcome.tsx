@@ -79,6 +79,7 @@ interface IStateProps {
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
+  importComplete: typeof action.importComplete;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -86,7 +87,7 @@ interface IProps extends IStateProps, IDispatchProps {
 }
 
 export function Welcome(props: IProps) {
-  const { auth, t, importStatus } = props;
+  const { auth, t, importStatus, importComplete } = props;
   const classes = useStyles();
   const offlineSetup = useOfflineSetup();
   const { fetchLocalization, setLanguage } = props;
@@ -113,16 +114,21 @@ export function Welcome(props: IProps) {
     return offlineRecs.length > 0;
   };
 
-  const checkUsers = (autoGo: boolean, prevChoice?: string) => {
+  const userTypes = () => {
     const users = recOfType('user') as User[];
     const offlineUsers = hasRecs('user', users);
     setHasOfflineUsers(offlineUsers);
     const onlineUsers = hasRecs('user', users, true);
     setHasOnlineUsers(onlineUsers);
+    return { users, offlineUsers, onlineUsers };
+  };
+
+  const checkUsers = (autoGo: boolean, prevChoice?: string) => {
     setHasOfflineProjects(hasRecs('offlineproject'));
     const projects = recOfType('project') as Record[];
     setHasProjects(projects.length > 0);
 
+    const { users, onlineUsers, offlineUsers } = userTypes();
     const lastUserId = localStorage.getItem('user-id');
     console.log('lastUserId', lastUserId);
 
@@ -173,11 +179,21 @@ export function Welcome(props: IProps) {
 
   useEffect(() => {
     if (importStatus?.complete) {
+      importComplete();
       setBusy(false);
-      checkUsers(true, 'online-local');
+      const { onlineUsers } = userTypes();
+      checkUsers(true, onlineUsers ? 'online-local' : 'offline');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importStatus]);
+
+  const handleOfflineChange = (target: string) => {
+    setWhichUsers(target);
+    localStorage.setItem(
+      'offlineAdmin',
+      target === 'offline' ? 'true' : 'false'
+    );
+  };
 
   const handleGoOnlineCloud = () => {
     handleOfflineChange('online-cloud');
@@ -255,14 +271,6 @@ export function Welcome(props: IProps) {
       setUser(id);
       handleGoOffline();
     });
-  };
-
-  const handleOfflineChange = (target: string) => {
-    setWhichUsers(target);
-    localStorage.setItem(
-      'offlineAdmin',
-      target === 'offline' ? 'true' : 'false'
-    );
   };
 
   const handleImport = () => {
@@ -401,6 +409,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
+      importComplete: action.importComplete,
     },
     dispatch
   ),
