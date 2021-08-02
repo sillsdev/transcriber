@@ -39,12 +39,12 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
-    actions: theme.mixins.gutters({
+    actions: {
       paddingBottom: 16,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
-    }) as any,
+    },
     grow: {
       flexGrow: 1,
     },

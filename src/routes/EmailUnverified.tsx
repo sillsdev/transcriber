@@ -27,12 +27,12 @@ const useStyles = makeStyles((theme: Theme) =>
       variant: 'outlined',
       color: 'primary',
     },
-    actions: theme.mixins.gutters({
+    actions: {
       paddingBottom: 16,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
-    }) as any,
+    },
   })
 );
 

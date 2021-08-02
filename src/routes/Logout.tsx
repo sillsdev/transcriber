@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as action from '../store';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -15,24 +15,22 @@ import { LogLevel } from '@orbit/coordinator';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    appBar: theme.mixins.gutters({
-      display: 'flex',
-      flexDirection: 'row',
-      boxShadow: 'none',
-    }) as any,
-    version: {
-      alignSelf: 'center',
-    },
-  })
-);
+const useStyles = makeStyles({
+  root: {
+    width: '100%',
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  appBar: {
+    display: 'flex',
+    flexDirection: 'row',
+    boxShadow: 'none',
+  },
+  version: {
+    alignSelf: 'center',
+  },
+});
 
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;

@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { TeamContext } from '../../../context/TeamContext';
 import {
   ProjectName,
@@ -21,16 +21,14 @@ import {
 import Mode from '../../../model/dialogMode';
 import { IDialog } from '../../../model';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      '& .MuiDialog-paper': {
-        maxWidth: '850px',
-        minWidth: '535px',
-      },
+const useStyles = makeStyles({
+  root: {
+    '& .MuiDialog-paper': {
+      maxWidth: '850px',
+      minWidth: '535px',
     },
-  })
-);
+  },
+});
 
 const initState = {
   name: '',

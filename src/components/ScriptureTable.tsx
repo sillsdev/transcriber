@@ -69,12 +69,12 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
     },
     paper: {},
-    actions: theme.mixins.gutters({
+    actions: {
       paddingBottom: 16,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
-    }) as any,
+    },
     button: {
       margin: theme.spacing(1),
     },

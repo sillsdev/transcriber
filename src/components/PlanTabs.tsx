@@ -50,12 +50,12 @@ export const tabActions = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: theme.mixins.gutters({
+    root: {
       flexGrow: 1,
       width: '100%',
       backgroundColor: theme.palette.background.paper,
       flexDirection: 'column',
-    }) as any,
+    },
     bar: {
       top: `${HeadHeight}px`,
       height: `${TabHeight}px`,
@@ -90,15 +90,8 @@ interface ParamTypes {
   tabNm: string;
 }
 const ScrollableTabsButtonAuto = (props: IProps) => {
-  const {
-    t,
-    bookCol,
-    checkSaved,
-    plans,
-    sections,
-    passages,
-    mediafiles,
-  } = props;
+  const { t, bookCol, checkSaved, plans, sections, passages, mediafiles } =
+    props;
   const classes = useStyles();
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');

@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
     progress: {
       width: '100%',
     },
-    actions: theme.mixins.gutters(tabActions) as any,
+    actions: tabActions,
     grow: {
       flexGrow: 1,
     },

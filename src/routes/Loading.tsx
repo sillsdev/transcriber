@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       boxShadow: 'none',
     },
-    paper: theme.mixins.gutters({
+    paper: {
       paddingTop: 16,
       paddingBottom: 16,
       marginTop: theme.spacing(10),
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('md')]: {
         width: '100%',
       },
-    }) as any,
+    },
     button: {},
     icon: {
       alignSelf: 'center',

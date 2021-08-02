@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
@@ -14,7 +14,7 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
   Dialog,
@@ -48,22 +48,20 @@ import {
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import { UpdateLastModifedBy, UpdateRelatedRecord } from '../model/baseModel';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    gridRoot: {
-      margin: 'auto',
-    },
-    paper: {},
-    headerCell: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    grids: { minWidth: 650 },
-    avatar: {
-      margin: 10,
-    },
-  })
-);
+const useStyles = makeStyles({
+  gridRoot: {
+    margin: 'auto',
+  },
+  paper: {},
+  headerCell: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  grids: { minWidth: 650 },
+  avatar: {
+    margin: 10,
+  },
+});
 
 interface IStateProps {
   t: IAssignSectionStrings;
