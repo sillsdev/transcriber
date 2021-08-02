@@ -7,7 +7,7 @@ export const createFolder = (folder: string) => {
   try {
     fs.statSync(folder);
   } catch (err) {
-    if (err.code === 'ENOENT') fs.mkdirSync(folder);
+    if (err.code === 'ENOENT') fs.mkdirSync(folder, { recursive: true });
   }
 };
 
