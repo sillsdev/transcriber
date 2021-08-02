@@ -109,11 +109,11 @@ const useStyles = makeStyles((theme: Theme) =>
     menu: {
       width: 200,
     },
-    actions: theme.mixins.gutters({
+    actions: {
       paddingBottom: 16,
       display: 'flex',
       flexDirection: 'row',
-    }) as any,
+    },
     button: {
       margin: theme.spacing(1),
     },

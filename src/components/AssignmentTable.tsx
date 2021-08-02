@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
     },
-    actions: theme.mixins.gutters(tabActions) as any,
+    actions: tabActions,
     grow: {
       flexGrow: 1,
     },

@@ -1,23 +1,21 @@
 import React from 'react';
 import { Section } from '../model';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { sectionNumber } from '../crud';
 import { Typography } from '@material-ui/core';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    number: {
-      width: '2em',
-    },
-    name: {
-      whiteSpace: 'normal',
-    },
-  })
-);
+const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  number: {
+    width: '2em',
+  },
+  name: {
+    whiteSpace: 'normal',
+  },
+});
 
 interface IProps {
   section: Section;

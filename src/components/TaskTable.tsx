@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
     },
-    paper: theme.mixins.gutters({
+    paper: {
       display: 'flex',
       flexDirection: 'column',
       alignContent: 'center',
@@ -74,18 +74,18 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingLeft: 0,
         paddingRight: 0,
       },
-    }) as any,
+    },
     grow: {
       flexGrow: 1,
     },
-    dialogHeader: theme.mixins.gutters({
+    dialogHeader: {
       width: `${TaskItemWidth - 30}px`,
       paddingTop: '8px',
       paddingBottom: '8px',
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-    }) as any,
+    },
     filterHeader: {
       width: 'auto',
     },

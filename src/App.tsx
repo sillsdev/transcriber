@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Route, Redirect } from 'react-router-dom';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core';
+import { ThemeProvider, createTheme } from '@material-ui/core';
 
 import Logout from './routes/Logout';
 import Loading from './routes/Loading';
@@ -53,7 +53,7 @@ const handleNewOrg = (props: any) => {
   return <Redirect to="/loading" />;
 };
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#005CB9',

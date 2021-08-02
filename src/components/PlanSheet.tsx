@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme: Theme) =>
         justifyContent: 'center',
       },
     },
-    actions: theme.mixins.gutters(tabActions) as any,
+    actions: tabActions,
     text: {},
     grow: {
       flexGrow: 1,
@@ -187,13 +187,12 @@ export function PlanSheet(props: IProps) {
   const [global] = useGlobal();
   const [busy] = useGlobal('remoteBusy');
   const { showMessage } = useSnackBar();
-  const [position, setPosition] =
-    useState<{
-      mouseX: null | number;
-      mouseY: null | number;
-      i: number;
-      j: number;
-    }>(initialPosition);
+  const [position, setPosition] = useState<{
+    mouseX: null | number;
+    mouseY: null | number;
+    i: number;
+    j: number;
+  }>(initialPosition);
   const [data, setData] = useState(Array<Array<ICell>>());
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');

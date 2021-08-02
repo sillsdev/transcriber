@@ -218,12 +218,12 @@ export function ImportTab(props: IProps) {
         margin: theme.spacing(4),
       },
       paper: {},
-      actions: theme.mixins.gutters({
+      actions: {
         paddingBottom: 16,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-start',
-      }) as any,
+      },
       button: {
         margin: theme.spacing(1),
         variant: 'outlined',
@@ -243,11 +243,11 @@ export function ImportTab(props: IProps) {
       grow: {
         flexGrow: 1,
       },
-      dialogHeader: theme.mixins.gutters({
+      dialogHeader: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
-      }) as any,
+      },
       progress: {
         top: `calc(${HeadHeight}px - ${theme.spacing(1)}px)`,
         zIndex: 100,
@@ -483,8 +483,10 @@ export function ImportTab(props: IProps) {
                         type: 'user',
                         id: remoteIdGuid(
                           'user',
-                          (section?.relationships?.editor
-                            .data as RecordIdentity).id,
+                          (
+                            section?.relationships?.editor
+                              .data as RecordIdentity
+                          ).id,
                           memory.keyMap
                         ),
                       })
@@ -512,8 +514,10 @@ export function ImportTab(props: IProps) {
                 oldsection.relationships?.transcriber?.data &&
                 (section.relationships?.transcriber?.data as RecordIdentity)
                   ?.id !==
-                  (oldsection.relationships?.transcriber
-                    ?.data as RecordIdentity)?.id
+                  (
+                    oldsection.relationships?.transcriber
+                      ?.data as RecordIdentity
+                  )?.id
               ) {
                 var transcriber = section.relationships?.transcriber?.data
                   ? (memory.cache.query((q: QueryBuilder) =>
@@ -521,8 +525,10 @@ export function ImportTab(props: IProps) {
                         type: 'user',
                         id: remoteIdGuid(
                           'user',
-                          (section?.relationships?.transcriber
-                            .data as RecordIdentity).id,
+                          (
+                            section?.relationships?.transcriber
+                              .data as RecordIdentity
+                          ).id,
                           memory.keyMap
                         ),
                       })
@@ -533,8 +539,10 @@ export function ImportTab(props: IProps) {
                     type: 'user',
                     id: remoteIdGuid(
                       'user',
-                      (oldsection?.relationships?.transcriber
-                        .data as RecordIdentity).id,
+                      (
+                        oldsection?.relationships?.transcriber
+                          .data as RecordIdentity
+                      ).id,
                       memory.keyMap
                     ),
                   })

@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, ITranscriptionShowStrings } from '../model';
 import localStrings from '../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -22,14 +22,12 @@ import { FaCopy } from 'react-icons/fa';
 import { useSnackBar } from '../hoc/SnackBar';
 import { getMediaProjRec, getMediaRec, FontData, getFontData } from '../crud';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    actions: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-  })
-);
+const useStyles = makeStyles({
+  actions: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+});
 
 interface IStateProps {
   t: ITranscriptionShowStrings;

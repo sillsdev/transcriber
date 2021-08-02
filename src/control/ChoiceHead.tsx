@@ -5,19 +5,15 @@ import {
   ListItemIcon,
   Typography,
   makeStyles,
-  Theme,
-  createStyles,
   Grid,
 } from '@material-ui/core';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import React, { ReactElement } from 'react';
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    notes: {
-      fontSize: 'small',
-    },
-  })
-);
+import { ReactElement } from 'react';
+const useStyles = makeStyles({
+  notes: {
+    fontSize: 'small',
+  },
+});
 
 export interface FactorDecorate {
   [key: string]: ReactElement;
