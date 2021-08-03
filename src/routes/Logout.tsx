@@ -83,7 +83,7 @@ export function Logout(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
-  if (/Access/i.test(view)) return <Redirect to="/" />;
+  if (/Access/i.test(view)) return <Redirect to="/access/online" />;
 
   return (
     <div className={classes.root}>
