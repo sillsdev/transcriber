@@ -3985,6 +3985,18 @@
             <target/>
          </segment>
       </unit>
+   	<unit id="viewMode.audioProject">
+   		<segment>
+   			<source>Audio Project</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="viewMode.transcribe">
+   		<segment>
+   			<source>Transcribe</source>
+   			<target/>
+   		</segment>
+   	</unit>
       <unit id="vProject.add">
          <segment>
             <source/>

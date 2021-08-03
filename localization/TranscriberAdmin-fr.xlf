@@ -3985,6 +3985,18 @@
             <target>Fuseau horaire</target>
          </segment>
       </unit>
+   	<unit id="viewMode.audioProject">
+   		<segment>
+   			<source>Audio Project</source>
+   			<target>Projet audio</target>
+   		</segment>
+   	</unit>
+   	<unit id="viewMode.transcribe">
+   		<segment>
+   			<source>Transcribe</source>
+   			<target>Transcrire</target>
+   		</segment>
+   	</unit>
       <unit id="vProject.add">
          <segment>
             <source>Add</source>

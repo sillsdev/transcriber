@@ -2,14 +2,11 @@ import React from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { useLocation, useParams } from 'react-router-dom';
-import { IState, IMainStrings } from '../model';
-import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import AppHead from '../components/App/AppHead';
 import { TranscriberProvider } from '../context/TranscriberContext';
 import { TaskItemWidth } from '../components/TaskTable';
-import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
+import ViewMode, { ViewOption } from '../control/ViewMode';
 import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
 import StickyRedirect from '../components/StickyRedirect';
@@ -47,21 +44,14 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IStateProps {
-  t: IMainStrings;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'main' }),
-});
-
-interface IProps extends IStateProps {
+interface IProps {
   auth: Auth;
 }
 interface ParamTypes {
   prjId: string;
 }
-export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
-  const { auth, t } = props;
+export const WorkScreen = (props: IProps) => {
+  const { auth } = props;
   const classes = useStyles();
   const { pathname } = useLocation();
   const { prjId } = useParams<ParamTypes>();
@@ -85,10 +75,9 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const SwitchTo = () => {
     //if (projRole !== 'admin') return <></>;
     return (
-      <TranscribeSwitch
-        label={t.admin}
-        switchTo={() => checkSavedFn(handleSwitchTo)}
-        t={t}
+      <ViewMode
+        mode={ViewOption.Transcribe}
+        onMode={() => checkSavedFn(handleSwitchTo)}
       />
     );
   };
@@ -136,6 +125,6 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
       </TranscriberProvider>
     </div>
   );
-});
+};
 
 export default WorkScreen;

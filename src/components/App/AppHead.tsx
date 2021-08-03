@@ -140,7 +140,6 @@ export const AppHead = (props: IProps) => {
   const [exitAlert, setExitAlert] = React.useState(false);
   const [dosave, setDoSave] = useGlobal('doSave');
   const isMounted = useMounted('apphead');
-  const [pathDescription, setPathDescription] = React.useState('');
   const [version, setVersion] = useState('');
   const [updates] = useState(
     (localStorage.getItem('updates') || 'true') === 'true'
@@ -234,16 +233,9 @@ export const AppHead = (props: IProps) => {
   }, [exitAlert, isChanged, dosave]);
 
   useEffect(() => {
-    const description =
-      pathname &&
-      pathname !== '/' &&
-      !pathname.startsWith('/access') &&
-      pathname.indexOf('team') < 0 &&
-      `${pathname && pathname.indexOf('work') > 0 ? t.transcribe : t.admin} - `;
-    isMounted() && setPathDescription(description || '');
     isMounted() && setVersion(require('../../../package.json').version);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, t.admin, t.transcribe, isMounted]);
+  }, [isMounted]);
 
   useEffect(() => {
     if (latestVersion === '' && version !== '' && updates) {
@@ -328,11 +320,14 @@ export const AppHead = (props: IProps) => {
             </span>
           )}
           <div className={classes.grow}>{'\u00A0'}</div>
-          <Typography variant="h6" noWrap>
-            {pathDescription}
-            {API_CONFIG.productName}
-          </Typography>
-          <div className={classes.grow}>{'\u00A0'}</div>
+          {(pathname === '/' || pathname.startsWith('/access')) && (
+            <>
+              <Typography variant="h6" noWrap>
+                {API_CONFIG.productName}
+              </Typography>
+              <div className={classes.grow}>{'\u00A0'}</div>
+            </>
+          )}
           {SwitchTo && <SwitchTo />}
           {'\u00A0'}
           {(isOffline || orbitStatus !== undefined || !connected) && (
