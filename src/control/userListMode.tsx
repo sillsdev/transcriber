@@ -54,16 +54,18 @@ export function UserListMode(props: IProps) {
 
   return (
     <div className={classes.actionToggle}>
+      {(allowOffline || loggedIn) && (
+        <Button
+          className={clsx({
+            [classes.modeSelect]: listMode === ListMode.SwitchUser,
+          })}
+          onClick={handleMode(ListMode.SwitchUser)}
+        >
+          {t.switchUser}
+        </Button>
+      )}
       {allowOffline && (
         <>
-          <Button
-            className={clsx({
-              [classes.modeSelect]: listMode === ListMode.SwitchUser,
-            })}
-            onClick={handleMode(ListMode.SwitchUser)}
-          >
-            {t.switchUser}
-          </Button>
           <span className={classes.bar}>|</span>
           <Button
             className={clsx({
