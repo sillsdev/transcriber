@@ -894,7 +894,7 @@ export function Transcriber(props: IProps) {
                         </Grid>
                       )}
                     <Grid item xs>
-                      <Grid container justify="center">
+                      <Grid container justifyContent="center">
                         <WSAudioPlayer
                           id="audioPlayer"
                           allowRecord={false}
@@ -1001,7 +1001,7 @@ export function Transcriber(props: IProps) {
                 {isElectron && <Spelling />}
               </Grid>
               <Grid item xs>
-                <Grid container justify="flex-end">
+                <Grid container justifyContent="flex-end">
                   <div>
                     <LastEdit when={lastSaved} t={sharedStr} />
                     {role !== 'view' ? (

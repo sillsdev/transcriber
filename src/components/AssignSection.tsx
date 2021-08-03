@@ -245,7 +245,7 @@ function AssignSection(props: IProps) {
           <Grid
             container
             spacing={2}
-            justify="center"
+            justifyContent="center"
             alignItems="flex-start"
             className={classes.gridRoot}
           >
@@ -275,7 +275,7 @@ function AssignSection(props: IProps) {
           <Grid
             container
             spacing={2}
-            justify="center"
+            justifyContent="center"
             alignItems="flex-start"
             className={classes.gridRoot}
           >
