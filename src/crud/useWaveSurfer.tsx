@@ -2,29 +2,24 @@ import _ from 'lodash';
 import { useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
-import { waitForIt } from '../utils';
 //import { useMounted } from '../utils';
 //import { convertToMP3 } from '../utils/mp3';
 import { convertToWav } from '../utils/wav';
+import { useWaveSurferRegions } from './useWavesurferRegions';
 
 const noop = () => {};
 const noop1 = (x: any) => {};
 
-export interface IRegionChange {
-  start: number;
-  end: number;
-  newStart: number;
-  newEnd: number;
-}
 export function useWaveSurfer(
   container: any,
   onReady: () => void = noop,
   onProgress: (progress: number) => void = noop1,
-  onRegion: (count: number) => void = noop1,
+  onRegion: (count: number, newRegion: boolean) => void = noop1,
   onStop: () => void = noop,
+  onInteraction: () => void = noop,
   onError: (e: any) => void = noop,
   height: number = 128,
-  singleRegion: boolean = false,
+  singleRegionOnly: boolean = false,
   timelineContainer?: any
 ) {
   //const isMounted = useMounted('wavesurfer');
@@ -33,43 +28,79 @@ export function useWaveSurfer(
   const blobToLoad = useRef<Blob>();
   const blobTypeRef = useRef('');
   const playingRef = useRef(false);
-  const currentRegionRef = useRef<any>();
-  const regionPlayingRef = useRef(false);
-  const keepRegion = useRef(false);
   const durationRef = useRef(0);
-  const peaksRef = useRef<
-    ReadonlyArray<number> | ReadonlyArray<ReadonlyArray<number>>
-  >();
+  const userInteractionRef = useRef(true);
+
   const inputRegionsRef = useRef<{ start: number; end: number }[]>();
-  const autoSegRef = useRef(false);
-  const updatingRef = useRef(false);
-  const resizingRef = useRef(false);
-  const progress = () => progressRef.current;
+
   const isNear = (position: number) => {
     return Math.abs(position - progressRef.current) < 0.3;
   };
-  const regionIsPlaying = () => regionPlayingRef.current;
-  const setRegionIsPlaying = (val: boolean) => (regionPlayingRef.current = val);
-  const currentRegion = () => currentRegionRef.current;
-  const setCurrentRegion = (r: any) => (currentRegionRef.current = r);
-  const updateRegion = (r: any, params: any) => {
-    updatingRef.current = true;
-    r.update(params);
-    updatingRef.current = false;
+  const wsDuration = () =>
+    durationRef.current || wavesurfer()?.getDuration() || 0;
+
+  const wsGoto = (position: number) => {
+    console.log('wsGoTo', position);
+    onRegionGoTo(position);
+    if (position && wsDuration()) position = position / wsDuration();
+    userInteractionRef.current = false;
+    wavesurfer()?.seekAndCenter(position);
+    userInteractionRef.current = true;
   };
+  const progress = () => progressRef.current;
+  const setPlaying = (value: boolean) => {
+    playingRef.current = value;
+    if (value) {
+      if (wavesurfer()?.isReady) {
+        //play region once if single region
+        if (!justPlayRegion(progress())) {
+          //default play (which will loop region if looping is on)
+          wavesurfer()?.play(progress());
+        }
+      }
+    } else if (wavesurfer()?.isPlaying()) wavesurfer()?.pause();
+  };
+
+  const {
+    wsAutoSegment,
+    wsSplitRegion,
+    wsRemoveSplitRegion,
+    wsAddOrRemoveRegion,
+    wsNextRegion,
+    loadRegions,
+    wsGetRegions,
+    wsLoopRegion,
+    justPlayRegion,
+    onRegionSeek,
+    onRegionProgress,
+    onRegionGoTo,
+    currentRegion,
+    setWaveSurfer,
+  } = useWaveSurferRegions(
+    singleRegionOnly,
+    onRegion,
+    onStop,
+    wsDuration,
+    isNear,
+    wsGoto,
+    progress,
+    setPlaying
+  );
+
   const wavesurfer = () => wavesurferRef.current;
 
   useEffect(() => {
     function create(container: any, height: number, singleRegion: boolean) {
       var ws = createWaveSurfer(container, height, timelineContainer);
       wavesurferRef.current = ws;
-      //setSingleRegion(singleRegion);
+      console.log('setting wavesurfer', ws);
+      setWaveSurfer(ws);
       ws.on('ready', function () {
+        console.log('ready');
         durationRef.current = ws.getDuration();
-        if (inputRegionsRef.current) {
-          loadRegions(inputRegionsRef.current);
-          inputRegionsRef.current = undefined;
-        } else if (autoSegRef.current) wsAutoSegment();
+        console.log('loading regions');
+        loadRegions(inputRegionsRef.current, false);
+        inputRegionsRef.current = undefined;
         if (playingRef.current) setPlaying(true);
         /* ws.enableDragSelection({
           color: randomColor(0.1),
@@ -83,11 +114,7 @@ export function useWaveSurfer(
         }, 150)
       );
       ws.on('seek', function (e: number) {
-        if (!keepRegion.current && currentRegion()) {
-          currentRegion().remove();
-          setCurrentRegion(undefined);
-          if (onRegion) onRegion(0);
-        }
+        onRegionSeek(e, !userInteractionRef.current);
         setProgress(e * wsDuration());
       });
       ws.on('finish', function () {
@@ -95,119 +122,19 @@ export function useWaveSurfer(
         setPlaying(false);
         onStop();
       });
-      ws.on('region-created', function (r: any) {
-        console.log('region-created', r.start, r.end);
-        if (singleRegion) {
-          r.drag = true;
-          if (currentRegion()) currentRegion().remove();
-        } else {
-          r.drag = false;
-        }
-        setCurrentRegion(r);
-        if (onRegion && !inputRegionsRef.current) {
-          //wait for it to show up in this list
-          waitForIt(
-            'new region',
-            () => wavesurfer()?.regions.list[r.id] !== undefined,
-            () => false,
-            200
-          ).then(() =>
-            onRegion(Object.keys(wavesurfer()?.regions.list).length)
-          );
-        }
+      ws.on('interaction', function () {
+        console.log('interaction');
+        if (onInteraction) onInteraction();
       });
-      ws.on('region-removed', function (r: any) {
-        console.log('region-removed', r.start, r.end);
-        if (r.attributes?.prevRegion)
-          r.attributes.prevRegion.attributes.nextRegion =
-            r.attributes?.nextRegion;
-        if (r.attributes.nextRegion)
-          r.attributes.nextRegion.attributes.prevRegion =
-            r.attributes.prevRegion;
-        if (onRegion) {
-          //wait for it to be removed from this list
-          waitForIt(
-            'new region',
-            () => wavesurfer()?.regions.list[r.id] === undefined,
-            () => false,
-            200
-          ).then(() =>
-            onRegion(Object.keys(wavesurfer()?.regions.list).length)
-          );
-        }
-      });
-      ws.on('region-updated', function (r: any) {
-        resizingRef.current = r.isResizing;
-      });
-      ws.on('region-update-end', function (r: any) {
-        console.log(
-          'region-update-end',
-          r.start,
-          r.end,
-          updatingRef.current,
-          resizingRef.current
-        );
-        wavesurfer()?.zoom(wavesurfer()?.params.minPxPerSec);
-        if (singleRegion) {
-          wsGoto(currentRegion().start);
-          keepRegion.current = false;
-        } else if (!updatingRef.current && resizingRef.current) {
-          resizingRef.current = false;
-          var next = findNextRegion(r, false);
-          var prev = findPrevRegion(r);
-          if (prev) {
-            if (prev.end !== r.start) {
-              updateRegion(prev, { end: r.start });
-              wsGoto(r.start);
-            }
-          } else if (r.start !== 0) {
-            updateRegion(r, { start: 0 });
-            wsGoto(0);
-          }
-          if (next) {
-            if (next.start !== r.end) {
-              updateRegion(next, { start: r.end });
-              wsGoto(r.end);
-            }
-          } else if (r.end !== durationRef.current) {
-            updateRegion(r, { end: durationRef.current });
-            wsGoto(durationRef.current);
-          }
-          if (onRegion)
-            onRegion(Object.keys(wavesurfer()?.regions.list).length);
-        }
-      });
-      /* other potentially useful messages
-      ws.on('loading', function (progress) {
-        console.log('loading', progress);
-      });
-      ws.on('region-play', function (r: any) {
-        console.log('region-play', r.start, r.loop);
-      });*/
-      ws.on('region-in', function (r: any) {
-        console.log('region-in', r.start, r.loop);
-        setCurrentRegion(r);
-      });
-      ws.on('region-out', function (r: any) {
-        console.log('region-out', r.start, r.loop);
-      });
-      ws.on('region-click', function (r: any) {
-        console.log('region-click', r, currentRegion());
-        keepRegion.current = true;
-        setCurrentRegion(r);
-      });
-      ws.on('region-dblclick', function (r: any) {
-        console.log('region-dblclick', r);
-        if (!singleRegion) {
-          wsAddOrRemoveRegion();
-        }
+      ws.drawer.on('click', (event: any, progress: number) => {
+        console.log('Clicking now', progress);
       });
 
       return ws;
     }
 
     if (container && !wavesurfer()) {
-      create(container, height, singleRegion);
+      create(container, height, singleRegionOnly);
       if (blobToLoad.current) {
         wsLoad(blobToLoad.current);
         blobToLoad.current = undefined;
@@ -228,72 +155,12 @@ export function useWaveSurfer(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const isInRegion = (r: any, value: number) => {
-    return value <= r.end && value >= r.start;
-  };
-
-  const findRegion = (value: number) => {
-    if (currentRegion() && isInRegion(currentRegion(), value))
-      return currentRegion();
-    var foundIt: any = undefined;
-    Object.keys(wavesurfer()?.regions.list).forEach(function (id) {
-      let r = wavesurfer()?.regions.list[id];
-      if (r.start <= value && r.end >= value) {
-        foundIt = r;
-      }
-    });
-    return foundIt;
-  };
-  const findNextRegion = (r: any, selfIfAtStart: boolean) => {
-    if (!r) return undefined;
-    if (selfIfAtStart && isNear(r.start)) return r;
-    return r.attributes.nextRegion;
-  };
-  const findPrevRegion = (r: any) => {
-    if (!r) return undefined;
-    return r.attributes.prevRegion;
-  };
   const setProgress = (value: number) => {
     progressRef.current = value;
+    onRegionProgress(value);
     onProgress(value);
-    if (currentRegion()) {
-      if (
-        value >= currentRegion().end - 0.01 ||
-        value <= currentRegion().start
-      ) {
-        if (regionIsPlaying()) {
-          //turning off region play
-          setRegionIsPlaying(false);
-          if (singleRegion) {
-            setPlaying(false);
-            onStop();
-          }
-        }
-      }
-    }
   };
 
-  const setPlaying = (value: boolean) => {
-    playingRef.current = value;
-    if (value) {
-      if (wavesurfer()?.isReady) {
-        if (
-          singleRegion &&
-          currentRegion() &&
-          !currentRegion().loop &&
-          currentRegion().start <= progress() &&
-          currentRegion().end > progress() + 0.01
-        ) {
-          //play region once
-          setRegionIsPlaying(true);
-          currentRegion().play(progress());
-        } else {
-          //default play (which will loop region if looping is on)
-          wavesurfer()?.play(progress());
-        }
-      }
-    } else if (wavesurfer()?.isPlaying()) wavesurfer()?.pause();
-  };
   const wsClear = () => wavesurfer()?.empty();
 
   const wsIsReady = () => wavesurfer()?.isReady || false;
@@ -304,125 +171,13 @@ export function useWaveSurfer(
     setPlaying(!playingRef.current);
     return playingRef.current;
   };
-  const wsNextRegion = () => {
-    if (currentRegion()) {
-      var r = findNextRegion(currentRegion(), true);
-      if (r) {
-        wsGoto(r.start);
-        setPlaying(true);
-      } else wsGoto(durationRef.current);
-    }
-  };
-  const saveRegions = () => {
-    return JSON.stringify(
-      Object.keys(wavesurfer()?.regions.list).map(function (id) {
-        let region = wavesurfer()?.regions.list[id];
-        return {
-          start: region.start,
-          end: region.end,
-        };
-      })
-    );
-  };
-  const getSortedIds = () => {
-    var sortedIds: string[] = [];
-    var ids = Object.keys(wavesurfer()?.regions?.list).map((id) => id);
-    if (ids.length > 0) {
-      var next: string | undefined = ids[0];
-      while (next) {
-        var r: any = wavesurfer()?.regions.list[next];
-        if (r) {
-          sortedIds.push(next);
-          if (r.attributes.nextRegion) next = r.attributes.nextRegion.id;
-          else next = undefined;
-        } else next = undefined;
-      }
-    }
-    return sortedIds;
-  };
-  const wsAddOrRemoveRegion = () => {
-    console.log('add or remove');
-    if (isNear(currentRegion().start) || isNear(currentRegion().end))
-      return wsRemoveSplitRegion(false);
-    else return wsSplitRegion();
-  };
-  const wsSplitRegion = () => {
-    var sortedIds: string[] = getSortedIds();
-    var r = currentRegion();
-    if (r) {
-      var split = progress();
-      var ret: IRegionChange = {
-        start: r.start,
-        end: r.end,
-        newStart: r.start,
-        newEnd: split,
-      };
 
-      var lastRegion = r.attributes.nextRegion === undefined;
-      var region = {
-        start: split,
-        end: r.end,
-        drag: false,
-        color: randomColor(0.1),
-      };
-      var curIndex = sortedIds.findIndex((s) => s === r.id);
-      updateRegion(r, { end: split });
-      var newRegion = wavesurfer()?.addRegion(region);
-      var newSorted = sortedIds.slice(0, curIndex + 1).concat(newRegion.id);
-      if (!lastRegion)
-        newSorted = newSorted.concat(sortedIds.slice(curIndex + 1));
-      setPrevNext(newSorted);
-      return ret;
-    }
-  };
-  const wsRemoveSplitRegion = (forceNext?: boolean) => {
-    console.log('removesplit', progress(), forceNext);
-    var r = currentRegion();
-    if (!r) r = findRegion(progress());
-    var ret: IRegionChange = {
-      start: r.start,
-      end: r.end,
-      newStart: r.start,
-      newEnd: r.end,
-    };
-    if (forceNext !== true) {
-      var prev = findPrevRegion(r);
-      console.log('do I have prev?', prev);
-      if (isNear(r.start) && prev) {
-        console.log('remove prev');
-        updateRegion(r, { start: prev.start });
-        ret.newStart = prev.start;
-        prev.remove();
-        return;
-      }
-    }
-    console.log('remove next');
-    //find next region
-    var next = findNextRegion(r, false);
-    if (next) {
-      updateRegion(r, { end: next.end });
-      ret.newEnd = next.end;
-      next.remove();
-    }
-    return ret;
-  };
   const wsPlay = () => setPlaying(true);
 
   const wsPause = () => setPlaying(false);
 
-  const wsDuration = () =>
-    durationRef.current || wavesurfer()?.getDuration() || 0;
-
   const wsPosition = () => progressRef.current;
 
-  const wsGoto = (position: number) => {
-    setCurrentRegion(findRegion(position));
-    console.log('wsGoTo', position);
-    if (position && wsDuration()) position = position / wsDuration();
-    keepRegion.current = true;
-    wavesurfer()?.seekAndCenter(position);
-    if (singleRegion) keepRegion.current = false;
-  };
   const wsSetPlaybackRate = (rate: number) =>
     wavesurfer()?.setPlaybackRate(rate);
 
@@ -434,12 +189,11 @@ export function useWaveSurfer(
   const wsLoad = (
     blob: Blob,
     mimeType: string = blob.type,
-    regions: string = '',
-    autoSegment: boolean = false
+    regions: string = ''
   ) => {
     durationRef.current = 0;
+    console.log('wsLoad', regions);
     if (regions) inputRegionsRef.current = JSON.parse(regions);
-    autoSegRef.current = autoSegment;
     if (!wavesurfer()) blobToLoad.current = blob;
     else wavesurfer()?.loadBlob(blob);
     blobTypeRef.current = mimeType;
@@ -471,16 +225,6 @@ export function useWaveSurfer(
   const wsSkip = (amt: number) => wavesurfer()?.skip(amt);
 
   const wsSetHeight = (height: number) => wavesurfer()?.setHeight(height);
-
-  const wsHasRegion = () => currentRegionRef.current !== undefined;
-
-  const wsLoopRegion = (loop: boolean) => {
-    Object.keys(wavesurfer()?.regions.list).forEach(function (id) {
-      let r = wavesurfer()?.regions.list[id];
-      r.loop = loop;
-    });
-    return loop;
-  };
 
   const trimTo = (val: number, places: number) => {
     var dec = places > 0 ? 10 ** places : 1;
@@ -580,11 +324,12 @@ export function useWaveSurfer(
     );
     insertBuffer(newBuffer, position, position);
   };
+
   //delete the audio in the current region
   const wsRegionDelete = () => {
-    if (!currentRegionRef.current || !wavesurfer()) return;
-    var start = trimTo(currentRegionRef.current.start, 3);
-    var end = trimTo(currentRegionRef.current.end, 3);
+    if (!currentRegion() || !wavesurfer()) return;
+    var start = trimTo(currentRegion().start, 3);
+    var end = trimTo(currentRegion().end, 3);
     var len = end - start;
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
@@ -616,148 +361,14 @@ export function useWaveSurfer(
 
     loadDecoded(uberSegment);
     wavesurfer()?.regions.clear();
-    onRegion(0);
+    onRegion(0, true);
     var tmp = start - 0.03;
     if (tmp < 0) tmp = 0;
     wsGoto(tmp);
     durationRef.current = wavesurfer()?.getDuration() || 0;
     return emptySegment;
   };
-  const getPeaks = (num: number = 512) => {
-    if (!peaksRef.current && wavesurfer())
-      peaksRef.current = wavesurfer()?.backend.getPeaks(num);
-    return peaksRef.current;
-  };
-  function loadRegions(regions: any[]) {
-    regions.forEach(function (region) {
-      region.color = randomColor(0.1);
-      region.drag = false;
-      wavesurfer()?.addRegion(region);
-    });
-    setPrevNext(Object.keys(wavesurfer()?.regions.list).map((id) => id));
-  }
-  function wsAutoSegment(silenceThreshold?: number, timeThreshold?: number) {
-    if (!wavesurfer()) return '';
-    wavesurfer()?.regions.clear();
-    var regions = extractRegions(silenceThreshold, timeThreshold);
-    loadRegions(regions);
-    if (regions.length) wsGoto(regions[0].start);
-  }
 
-  function wsGetRegions() {
-    if (!wavesurfer()) return '';
-    return saveRegions();
-  }
-
-  const setPrevNext = (sortedIds: string[]) => {
-    var prev: any = undefined;
-    sortedIds.forEach(function (id) {
-      let r = wavesurfer()?.regions.list[id];
-      console.log(r.start);
-      if (prev) {
-        prev.attributes.nextRegion = r;
-        r.attributes.prevRegion = prev;
-      }
-      prev = r;
-    });
-  };
-  const extractRegions = (
-    silenceThreshold?: number,
-    timeThreshold?: number
-  ) => {
-    // Silence params
-    const minValue = silenceThreshold || 0.002;
-    const minSeconds = timeThreshold || 0.05;
-    const minRegionLenSeconds = 0.7;
-    var numPeaks = Math.floor(wsDuration() / minSeconds);
-    numPeaks = Math.min(Math.max(numPeaks, 512), 512 * 16);
-    const peaks = getPeaks(numPeaks);
-    if (!peaks) return [];
-
-    var length = peaks.length;
-    var coef = wsDuration() / length;
-    var minLenSilence = Math.ceil(minSeconds / coef);
-    var minLenRegion = Math.ceil(minRegionLenSeconds / coef);
-
-    // Gather silence indeces
-    var silences: number[] = [];
-    Array.prototype.forEach.call(peaks, function (val, index) {
-      if (Math.abs(val) < minValue) {
-        silences.push(index);
-      }
-    });
-
-    // Cluster silence values
-    var clusters: number[][] = [];
-    silences.forEach(function (val, index) {
-      if (clusters.length && val === silences[index - 1] + 1) {
-        clusters[clusters.length - 1].push(val);
-      } else {
-        clusters.push([val]);
-      }
-    });
-
-    // Filter silence clusters by minimum length
-    var fClusters = clusters.filter(function (cluster) {
-      return cluster.length >= minLenSilence;
-    });
-
-    // Create regions on the edges of silences
-    var regions = fClusters.map(function (cluster, index) {
-      var next = fClusters[index + 1];
-      return {
-        start: cluster[cluster.length - 1] + 1,
-        end: next ? next[0] - 1 : length - 1,
-      };
-    });
-
-    // Filter regions by minimum length
-    let fRegions = regions.filter(function (reg) {
-      return reg.end - reg.start >= minLenRegion;
-    });
-
-    // Return time-based regions
-    var tRegions = fRegions.map(function (reg) {
-      return {
-        start: Math.round(reg.start * coef * 10) / 10,
-        end: Math.round(reg.end * coef * 10) / 10,
-      };
-    });
-    if (tRegions.length > 0) {
-      //add a region at zero if not there
-      var firstRegion = tRegions[0];
-      if (firstRegion.start !== 0) {
-        tRegions.unshift({
-          start: 0,
-          end: firstRegion.start,
-        });
-      }
-    }
-    // Combine the regions so the silence is included at the end of the region
-    return tRegions.map(function (reg, index) {
-      var next = tRegions[index + 1];
-      return {
-        start: reg.start,
-        end: next ? next.start : wsDuration(),
-      };
-    });
-  };
-
-  /**
-   * Random RGBA color.
-   */
-  function randomColor(seed: number) {
-    return (
-      'rgba(' +
-      [
-        ~~(Math.random() * 255),
-        ~~(Math.random() * 255),
-        ~~(Math.random() * 255),
-        seed || 1,
-      ] +
-      ')'
-    );
-  }
   return {
     wsLoad,
     wsBlob,
@@ -773,7 +384,6 @@ export function useWaveSurfer(
     wsPosition,
     wsSkip,
     wsSetHeight,
-    wsHasRegion,
     wsLoopRegion,
     wsRegionDelete,
     wsInsertAudio,

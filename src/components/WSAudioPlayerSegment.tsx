@@ -10,14 +10,17 @@ import {
 } from '@material-ui/core';
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { LightTooltip } from '../control';
-import { IWsAudioPlayerStrings } from '../model';
+import { IWsAudioPlayerSegmentStrings, IState } from '../model';
 import { FaGripLinesVertical } from 'react-icons/fa';
 import ClearIcon from '@material-ui/icons/Clear';
 import SettingsIcon from '@material-ui/icons/Settings';
 import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 import { HotKeyContext } from '../context/HotKeyContext';
 import PlusMinusLogo from '../control/PlusMinus';
-import { IRegionChange } from '../crud/useWaveSurfer';
+import { IRegionChange } from '../crud/useWavesurferRegions';
+import { useGlobal } from 'reactn';
+import { connect } from 'react-redux';
+import localStrings from '../selector/localize';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,26 +49,35 @@ const useStyles = makeStyles((theme: Theme) =>
     rotate90: { rotate: '90' },
   })
 );
-
-interface IProps {
-  t: IWsAudioPlayerStrings;
+interface IStateProps {
+  t: IWsAudioPlayerSegmentStrings;
+}
+interface IProps extends IStateProps {
   ready: boolean;
+  loop: boolean;
   onSplit: (split: IRegionChange) => void;
-  wsAutoSegment: (silenceThreshold?: number, timeThreshold?: number) => void;
+  wsAutoSegment: (
+    loop: boolean,
+    silenceThreshold?: number,
+    timeThreshold?: number
+  ) => void;
   wsRemoveSplitRegion: (next?: boolean) => IRegionChange | undefined;
   wsAddOrRemoveRegion: () => IRegionChange | undefined;
 }
 
-export function WSAudioPlayerSegment(props: IProps) {
+function WSAudioPlayerSegment(props: IProps) {
   const classes = useStyles();
   const {
     t,
     ready,
+    loop,
     onSplit,
     wsAutoSegment,
     wsRemoveSplitRegion,
     wsAddOrRemoveRegion,
   } = props;
+  const [, setBusy] = useGlobal('importexportBusy');
+
   const [silenceValue, setSilenceValue] = useState(4);
   const [timeValue, setTimeValue] = useState(2);
   const [showSettings, setShowSettings] = useState(false);
@@ -89,7 +101,9 @@ export function WSAudioPlayerSegment(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleAutoSegment = () => {
-    wsAutoSegment(silenceValue / 1000, timeValue / 100);
+    setBusy(true);
+    wsAutoSegment(loop, silenceValue / 1000, timeValue / 100);
+    setBusy(false);
     return true;
   };
   const handleShowSettings = () => {
@@ -97,7 +111,6 @@ export function WSAudioPlayerSegment(props: IProps) {
   };
   const handleSplit = () => {
     var result = wsAddOrRemoveRegion();
-    console.log('split result', result);
     if (result && onSplit) onSplit(result);
     return true;
   };
@@ -123,21 +136,13 @@ export function WSAudioPlayerSegment(props: IProps) {
     setTimeValue(value);
   };
 
-  const t2 = {
-    AutoSegment: 'Auto Segment {0}',
-    SegmentSettings: 'Segment Parameters',
-    SilenceThreshold: 'Silence threshold',
-    SilenceLength: 'Length of Silence (100ths of second)',
-    SplitSegment: 'Add/Remove Boundary {0}',
-    RemoveSegment: 'Remove Next Boundary {0}',
-  };
   return (
     <div className={classes.root}>
       <Grid container className={classes.toolbar}>
         <Grid item>
           <LightTooltip
             id="wsSegmentTip"
-            title={t2.AutoSegment.replace('{0}', '')}
+            title={t.autoSegment.replace('[{0}]', '')}
           >
             <span>
               <IconButton
@@ -149,7 +154,7 @@ export function WSAudioPlayerSegment(props: IProps) {
               </IconButton>
             </span>
           </LightTooltip>
-          <LightTooltip id="wsSettingsTip" title={t2.SegmentSettings}>
+          <LightTooltip id="wsSettingsTip" title={t.segmentSettings}>
             <span>
               <IconButton id="wsSegmentSettings" onClick={handleShowSettings}>
                 <SettingsIcon fontSize="small" />
@@ -159,14 +164,14 @@ export function WSAudioPlayerSegment(props: IProps) {
 
           {showSettings && (
             <BigDialog
-              title={t2.SegmentSettings}
+              title={t.segmentSettings}
               isOpen={showSettings}
               onOpen={setShowSettings}
               bp={BigDialogBp.md}
             >
               <Box display="flex" flexDirection="column">
                 <Typography id="silence-slider-label" gutterBottom>
-                  {t2.SilenceThreshold}
+                  {t.silenceThreshold}
                 </Typography>
                 <Slider
                   min={1}
@@ -179,7 +184,7 @@ export function WSAudioPlayerSegment(props: IProps) {
                   aria-labelledby="silence-slider"
                 />
                 <Typography id="silence-slider-label" gutterBottom>
-                  {t2.SilenceLength}
+                  {t.silenceLength}
                 </Typography>
                 <Slider
                   step={1}
@@ -196,10 +201,7 @@ export function WSAudioPlayerSegment(props: IProps) {
           )}
           <LightTooltip
             id="wsSplitTip"
-            title={t2.SplitSegment.replace(
-              '{0}',
-              localizeHotKey(ADDREMSEG_KEY)
-            )}
+            title={t.splitSegment.replace('{0}', localizeHotKey(ADDREMSEG_KEY))}
           >
             <span>
               <IconButton id="wsSplit" onClick={handleSplit}>
@@ -209,7 +211,7 @@ export function WSAudioPlayerSegment(props: IProps) {
           </LightTooltip>
           <LightTooltip
             id="wsJoinTip"
-            title={t2.RemoveSegment.replace('{0}', localizeHotKey(DELREG_KEY))}
+            title={t.removeSegment.replace('{0}', localizeHotKey(DELREG_KEY))}
           >
             <span>
               <IconButton id="wsJoin" onClick={handleRemoveNextSplit}>
@@ -222,3 +224,8 @@ export function WSAudioPlayerSegment(props: IProps) {
     </div>
   );
 }
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, { layout: 'wsAudioPlayerSegment' }),
+});
+
+export default connect(mapStateToProps)(WSAudioPlayerSegment) as any;

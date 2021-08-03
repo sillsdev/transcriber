@@ -1006,6 +1006,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="hotKey.downArrow">
+         <segment>
+            <source>Down Arrow</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="hotKey.endKey">
          <segment>
             <source>End</source>
@@ -1021,6 +1027,12 @@
       <unit id="hotKey.or">
          <segment>
             <source>or</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.rightArrow">
+         <segment>
+            <source>Right Arrow</source>
             <target/>
          </segment>
       </unit>
@@ -1314,7 +1326,7 @@
       </unit>
       <unit id="integration.projectsPending">
          <segment>
-            <source>Querying audio projects...</source>
+            <source>Querying Paratext projects...</source>
             <target/>
          </segment>
       </unit>
@@ -1350,7 +1362,7 @@
       </unit>
       <unit id="integration.removeProject">
          <segment>
-            <source>Remove Audio Project Association</source>
+            <source>Remove Paratext Project Association</source>
             <target/>
          </segment>
       </unit>
@@ -4380,7 +4392,7 @@
       </unit>
       <unit id="wsAudioPlayer.seconds">
          <segment>
-            <source>Seconds</source>
+            <source>seconds</source>
             <target/>
          </segment>
       </unit>
@@ -4405,6 +4417,60 @@
       <unit id="wsAudioPlayer.timerTip">
          <segment>
             <source>Timestamp [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.autoSegment">
+         <segment>
+            <source>Auto Segment [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.removeSegment">
+         <segment>
+            <source>Remove Next Boundary [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.segmentSettings">
+         <segment>
+            <source>Auto Segment Parameters</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.silenceLength">
+         <segment>
+            <source>Length of Silence (100ths of second)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.silenceThreshold">
+         <segment>
+            <source>Silence threshold</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.splitSegment">
+         <segment>
+            <source>Add/Remove Boundary [Double Click/{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerZoom.fitToWidth">
+         <segment>
+            <source>Fit to Width</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerZoom.zoomIn">
+         <segment>
+            <source>Zoom In [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerZoom.zoomOut">
+         <segment>
+            <source>Zoom Out [{0}]</source>
             <target/>
          </segment>
       </unit>

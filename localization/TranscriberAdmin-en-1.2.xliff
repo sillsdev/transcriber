@@ -1161,11 +1161,18 @@
             <source>Alt</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+               <context context-type="sourcefile">hotKeyContext.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="hotKey.ctrlKey">
             <source>Ctrl</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">hotKeyContext.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.downArrow">
+            <source>Down Arrow</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -1175,18 +1182,25 @@
             <source>End</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+               <context context-type="sourcefile">hotKeyContext.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="hotKey.homeKey">
             <source>Home</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+               <context context-type="sourcefile">hotKeyContext.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="hotKey.or">
             <source>or</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">hotKeyContext.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.rightArrow">
+            <source>Right Arrow</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -1196,7 +1210,7 @@
             <source>Space</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+               <context context-type="sourcefile">hotKeyContext.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="import.close">
@@ -1529,7 +1543,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="integration.projectsPending">
-            <source>Querying audio projects...</source>
+            <source>Querying Paratext projects...</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">integration.tsx</context>
@@ -1571,7 +1585,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="integration.removeProject">
-            <source>Remove Audio Project Association</source>
+            <source>Remove Paratext Project Association</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">integration.tsx</context>
@@ -5106,7 +5120,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.seconds">
-            <source>Seconds</source>
+            <source>seconds</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -5135,6 +5149,69 @@
          </trans-unit>
          <trans-unit id="wsAudioPlayer.timerTip">
             <source>Timestamp [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.autoSegment">
+            <source>Auto Segment [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.removeSegment">
+            <source>Remove Next Boundary [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.segmentSettings">
+            <source>Auto Segment Parameters</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.silenceLength">
+            <source>Length of Silence (100ths of second)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.silenceThreshold">
+            <source>Silence threshold</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.splitSegment">
+            <source>Add/Remove Boundary [Double Click/{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerZoom.fitToWidth">
+            <source>Fit to Width</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerZoom.zoomIn">
+            <source>Zoom In [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerZoom.zoomOut">
+            <source>Zoom Out [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

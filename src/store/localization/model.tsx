@@ -217,9 +217,11 @@ export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {
 export interface IHotKeyStrings extends Localize.LocalizedStringsMethods {
     "altKey": string;
     "ctrlKey": string;
+    "downArrow": string;
     "endKey": string;
     "homeKey": string;
     "or": string;
+    "rightArrow": string;
     "spaceKey": string;
 };
 
@@ -894,6 +896,21 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "timerTip": string;
 };
 
+export interface IWsAudioPlayerSegmentStrings extends Localize.LocalizedStringsMethods {
+    "autoSegment": string;
+    "removeSegment": string;
+    "segmentSettings": string;
+    "silenceLength": string;
+    "silenceThreshold": string;
+    "splitSegment": string;
+};
+
+export interface IWsAudioPlayerZoomStrings extends Localize.LocalizedStringsMethods {
+    "fitToWidth": string;
+    "zoomIn": string;
+    "zoomOut": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -950,5 +967,7 @@ export interface ILocalizedStrings {
 	vProject: IVProjectStrings;
 	welcome: IWelcomeStrings;
 	wsAudioPlayer: IWsAudioPlayerStrings;
+	wsAudioPlayerSegment: IWsAudioPlayerSegmentStrings;
+	wsAudioPlayerZoom: IWsAudioPlayerZoomStrings;
 	[key: string]: any;
 };

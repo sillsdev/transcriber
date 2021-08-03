@@ -823,6 +823,9 @@ export function Transcriber(props: IProps) {
   const onDuration = (value: number) => {
     setTotalSeconds(value);
   };
+  const onInteraction = () => {
+    focusOnTranscription();
+  };
 
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
   const onSegmentChange = (segments: string) => {
@@ -905,6 +908,7 @@ export function Transcriber(props: IProps) {
                           onSegmentChange={onSegmentChange}
                           onPlayStatus={onPlayStatus}
                           onDuration={onDuration}
+                          onInteraction={onInteraction}
                           onSaveProgress={
                             selected === '' || role === 'view'
                               ? undefined
