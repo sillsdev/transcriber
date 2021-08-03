@@ -56,6 +56,7 @@ export function UserListMode(props: IProps) {
     <div className={classes.actionToggle}>
       {(allowOffline || loggedIn) && (
         <Button
+          id="switchUserMode"
           className={clsx({
             [classes.modeSelect]: listMode === ListMode.SwitchUser,
           })}
@@ -68,6 +69,7 @@ export function UserListMode(props: IProps) {
         <>
           <span className={classes.bar}>|</span>
           <Button
+            id="workOfflineMode"
             className={clsx({
               [classes.modeSelect]: listMode === ListMode.WorkOffline,
             })}
@@ -81,6 +83,7 @@ export function UserListMode(props: IProps) {
         <>
           <span className={classes.bar}>|</span>
           <Button
+            id="logOutMode"
             className={clsx({
               [classes.modeSelect]: listMode === ListMode.LogOut,
             })}

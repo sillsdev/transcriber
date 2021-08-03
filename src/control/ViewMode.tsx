@@ -52,6 +52,7 @@ export function ViewMode(props: IProps) {
   return (
     <div className={classes.actionToggle}>
       <Button
+        id="audioProjectMode"
         className={clsx({
           [classes.modeSelect]: viewOption === ViewOption.AudioProject,
         })}
@@ -61,6 +62,7 @@ export function ViewMode(props: IProps) {
       </Button>
       <span className={classes.bar}>|</span>
       <Button
+        id="transcribeMode"
         className={clsx({
           [classes.modeSelect]: viewOption === ViewOption.Transcribe,
         })}
