@@ -7,7 +7,7 @@ import { Record } from '@orbit/data';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Typography, Button, Paper, Grid } from '@material-ui/core';
+import { Typography, Button, Grid } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
 import { isElectron } from '../api-variable';
@@ -341,7 +341,7 @@ export function Welcome(props: IProps) {
       <Typography className={classes.sectionHead}>Filler</Typography>
 
       {isElectron && (
-        <Paper className={classes.paper}>
+        <div className={classes.paper}>
           <Typography id="welcome" className={classes.sectionHead}>
             {t.title}
           </Typography>
@@ -390,7 +390,7 @@ export function Welcome(props: IProps) {
               <OfflineButton id="aloneoffline" onClick={handleQuickOffline} />
             </Grid>
           </Grid>
-        </Paper>
+        </div>
       )}
       {importOpen && (
         <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />

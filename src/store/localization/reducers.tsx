@@ -928,7 +928,7 @@ const initialState = {
 			"team": "Work in a team audio project",
 			"teamFactor": "Audio Project has been set up online",
 			"teamTip": "A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.",
-			"title": "Welcome",
+			"title": "Getting Started",
 		}
 	}),
 	"wsAudioPlayer": new LocalizedStrings({
