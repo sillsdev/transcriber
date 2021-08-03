@@ -5015,7 +5015,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="welcome.title">
-            <source>Welcome</source>
+            <source>Getting Started</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">welcome.tsx</context>

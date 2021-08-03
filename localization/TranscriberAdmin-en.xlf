@@ -4302,7 +4302,7 @@
       </unit>
       <unit id="welcome.title">
          <segment>
-            <source>Welcome</source>
+            <source>Getting Started</source>
             <target/>
          </segment>
       </unit>

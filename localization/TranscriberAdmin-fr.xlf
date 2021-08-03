@@ -4299,8 +4299,8 @@
       </unit>
       <unit id="welcome.title">
          <segment>
-            <source>Welcome</source>
-            <target>Bienvenu</target>
+            <source>Getting Started</source>
+         	<target>Démarrage</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.aheadTip">
