@@ -289,6 +289,13 @@ export function Access(props: IProps) {
     return false;
   };
 
+  const countWorkOfflineUsers = () => {
+    var count = 0;
+    for (let i = users.length; i >= 0; i -= 1)
+      if (isOnlineUserWithOfflineProjects(users[i]?.id)) count += 1;
+    return count;
+  };
+
   const isOfflineUserWithProjects = (userId: string) => {
     const userRec = users.filter((u) => u.id === userId);
     return userRec.length > 0 && userRec[0]?.keys?.remoteId === undefined;
@@ -393,6 +400,10 @@ export function Access(props: IProps) {
     </>
   );
 
+  const handleCurUser = () => {
+    handleSelect(curUser?.id || '');
+  };
+
   return (
     <div className={classes.root}>
       <AppHead {...props} />
@@ -432,7 +443,6 @@ export function Access(props: IProps) {
                         </Typography>
                       </>
                     )}
-                    {/* <Paper className={classes.paper}> */}
                     {!hasOnlineUser() && whichUsers === 'online-team' && (
                       <div>
                         <Box>{t.noOnlineUsers1}</Box>
@@ -445,12 +455,6 @@ export function Access(props: IProps) {
                         <Box>{t.noOnlineUsers4}</Box>
                       </div>
                     )}
-                    {/* {importStatus?.complete !== false && hasOnlineUser() && (
-                        <UserList
-                          isSelected={isOnlineUserWithOfflineProjects}
-                          curId={curUser?.id}
-                        />
-                      )} */}
                     <div className={classes.actions}>
                       <Button
                         id="accessLogin"
@@ -465,10 +469,23 @@ export function Access(props: IProps) {
                     {/* </Paper> */}
                   </div>
                 ) : listMode === ListMode.WorkOffline ? (
-                  <UserList
-                    isSelected={isOnlineUserWithOfflineProjects}
-                    select={handleSelect}
-                  />
+                  <>
+                    {curUser && (
+                      <>
+                        <CurrentUser curUser={curUser} action={handleCurUser} />
+                        {countWorkOfflineUsers() > 1 && (
+                          <Typography className={classes.sectionHead}>
+                            {t.availableUsers}
+                          </Typography>
+                        )}
+                      </>
+                    )}
+                    <UserList
+                      isSelected={isOnlineUserWithOfflineProjects}
+                      select={handleSelect}
+                      curId={curUser?.id}
+                    />
+                  </>
                 ) : (
                   curUser && (
                     <>
