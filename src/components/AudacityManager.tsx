@@ -202,7 +202,7 @@ function AudacityManager(props: IProps) {
       <DialogTitle id="manager-title">{t.title}</DialogTitle>
       <Grid container className={classes.grid}>
         <Grid item xs={9}>
-          <Grid container justify="center">
+          <Grid container justifyContent="center">
             <FormControl>
               <TextField
                 id="audacity-project"

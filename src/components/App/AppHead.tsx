@@ -42,6 +42,7 @@ import CloudOffIcon from '@material-ui/icons/CloudOff';
 import ProjectDownloadAlert from '../ProjectDownloadAlert';
 import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
+import { useSnackBar, AlertSeverity } from '../../hoc/SnackBar';
 
 const shell = isElectron ? require('electron').shell : null;
 
@@ -149,6 +150,7 @@ export const AppHead = (props: IProps) => {
   const [complete] = useGlobal('progress');
   const [downloadAlert, setDownloadAlert] = React.useState(false);
   const [updateTipOpen, setUpdateTipOpen] = useState(false);
+  const { showMessage } = useSnackBar();
 
   const handleUserMenuAction = (
     what: string,
@@ -257,6 +259,19 @@ export const AppHead = (props: IProps) => {
             .format('L');
           setLatestVersion(lv);
           setLatestRelease(lr);
+          showMessage(
+            <span>
+              {t.updateAvailable.replace('{0}', lv).replace('{1}', lr)}
+              <IconButton
+                id="systemUpdate"
+                onClick={handleDownloadClick}
+                component="span"
+              >
+                <SystemUpdateIcon color="primary" />
+              </IconButton>
+            </span>,
+            AlertSeverity.Warning
+          );
         })
         .catch((err) => {
           logError(
