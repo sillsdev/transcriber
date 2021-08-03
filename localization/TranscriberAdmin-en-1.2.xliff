@@ -4650,6 +4650,20 @@
                <context context-type="sourcefile">UserTable.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="viewMode.audioProject">
+      		<source>Audio Project</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ViewMode.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="viewMode.transcribe">
+      		<source>Transcribe</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ViewMode.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="vProject.add">
             <source>Add</source>
             <target/>

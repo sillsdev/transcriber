@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { IState, IUserListModeStrings } from '../model';

@@ -815,6 +815,11 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "timezone": string;
 };
 
+export interface IViewModeStrings extends Localize.LocalizedStringsMethods {
+    "audioProject": string;
+    "transcribe": string;
+};
+
 export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "add": string;
     "advanced": string;
@@ -964,6 +969,7 @@ export interface ILocalizedStrings {
 	uploadProgress: IUploadProgressStrings;
 	userListMode: IUserListModeStrings;
 	usertable: IUsertableStrings;
+	viewMode: IViewModeStrings;
 	vProject: IVProjectStrings;
 	welcome: IWelcomeStrings;
 	wsAudioPlayer: IWsAudioPlayerStrings;

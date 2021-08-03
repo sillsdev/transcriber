@@ -870,6 +870,12 @@ const initialState = {
 			"timezone": "Timezone",
 		}
 	}),
+	"viewMode": new LocalizedStrings({
+		"en": {
+			"audioProject": "Audio Project",
+			"transcribe": "Transcribe",
+		}
+	}),
 	"vProject": new LocalizedStrings({
 		"en": {
 			"add": "Add",
@@ -1029,6 +1035,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"uploadProgress" : new LocalizedStrings(action.payload.data.uploadProgress),
 				"userListMode" : new LocalizedStrings(action.payload.data.userListMode),
 				"usertable" : new LocalizedStrings(action.payload.data.usertable),
+				"viewMode" : new LocalizedStrings(action.payload.data.viewMode),
 				"vProject" : new LocalizedStrings(action.payload.data.vProject),
 				"welcome" : new LocalizedStrings(action.payload.data.welcome),
 				"wsAudioPlayer" : new LocalizedStrings(action.payload.data.wsAudioPlayer),
