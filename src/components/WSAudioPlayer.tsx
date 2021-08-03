@@ -43,13 +43,14 @@ import {
 
 //import { createWaveSurfer } from './WSAudioRegion';
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
-import { IRegionChange, useWaveSurfer } from '../crud/useWaveSurfer';
+import { useWaveSurfer } from '../crud/useWaveSurfer';
 import { Duration, LightTooltip } from '../control';
 import { connect } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
-import { WSAudioPlayerZoom } from './WSAudioPlayerZoom';
-import { WSAudioPlayerSegment } from './WSAudioPlayerSegment';
+import WSAudioPlayerZoom from './WSAudioPlayerZoom';
+import { IRegionChange } from '../crud/useWavesurferRegions';
+import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -183,6 +184,7 @@ interface IProps extends IStateProps {
   setChanged?: (changed: boolean) => void;
   onSaveProgress?: (progress: number) => void; //user initiated
   onDuration?: (duration: number) => void;
+  onInteraction?: () => void;
 }
 function valuetext(value: number) {
   return `${Math.floor(value)}%`;
@@ -200,7 +202,7 @@ const SLOWER_KEY = 'F4,CTRL+4';
 const FASTER_KEY = 'F5,CTRL+5';
 const TIMER_KEY = 'F6,CTRL+6';
 const RECORD_KEY = 'F9,CTRL+9';
-const RIGHT_KEY = 'ARROWRIGHT';
+const RIGHT_KEY = 'CTRL+ARROWRIGHT';
 
 function WSAudioPlayer(props: IProps) {
   const {
@@ -220,6 +222,7 @@ function WSAudioPlayer(props: IProps) {
     setChanged,
     onSaveProgress,
     onDuration,
+    onInteraction,
   } = props;
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
@@ -230,7 +233,8 @@ function WSAudioPlayer(props: IProps) {
   const [playbackRate, setPlaybackRatex] = useState(1);
   const playingRef = useRef(false);
   const [playing, setPlayingx] = useState(false);
-  const [looping, setLooping] = useState(false);
+  const loopingRef = useRef(false);
+  const [looping, setLoopingx] = useState(false);
   const [hasRegion, setHasRegion] = useState(false);
   const recordStartPosition = useRef(0);
   const recordOverwritePosition = useRef<number | undefined>(undefined);
@@ -276,6 +280,7 @@ function WSAudioPlayer(props: IProps) {
     onWSProgress,
     onWSRegion,
     onWSStop,
+    onInteraction,
     () => {}, //on error...probably should report?
     size - 150,
     allowRecord,
@@ -398,9 +403,9 @@ function WSAudioPlayer(props: IProps) {
     setProgress(progress);
     if (onProgress) onProgress(progress);
   }
-  function onWSRegion(count: number) {
+  function onWSRegion(count: number, newRegion: boolean) {
     setHasRegion(count > 0);
-    if (onSegmentChange) onSegmentChange(wsGetRegions());
+    if (onSegmentChange && newRegion) onSegmentChange(wsGetRegions());
   }
 
   function onWSStop() {
@@ -423,7 +428,10 @@ function WSAudioPlayer(props: IProps) {
     playingRef.current = value;
     setPlayingx(value);
   };
-
+  const setLooping = (value: boolean) => {
+    loopingRef.current = value;
+    setLoopingx(value);
+  };
   const setPlaybackRate = (value: number) => {
     var newVal = parseFloat(value.toFixed(2));
     playbackRef.current = newVal;
@@ -529,11 +537,8 @@ function WSAudioPlayer(props: IProps) {
     e.persist();
     setSilence(e.target.value);
   };
-  const onSplit = (split: IRegionChange) => {
-    //I'm looping, and I added a split, so I want to go to the beginning of my original region
-    if (looping && playingRef.current && split.newEnd < split.end)
-      wsGoto(split.start);
-  };
+  const onSplit = (split: IRegionChange) => {};
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
@@ -660,6 +665,7 @@ function WSAudioPlayer(props: IProps) {
               <WSAudioPlayerSegment
                 ready={ready}
                 onSplit={onSplit}
+                loop={loopingRef.current || false}
                 wsAutoSegment={wsAutoSegment}
                 wsRemoveSplitRegion={wsRemoveSplitRegion}
                 wsAddOrRemoveRegion={wsAddOrRemoveRegion}

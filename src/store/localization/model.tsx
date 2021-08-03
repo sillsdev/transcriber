@@ -221,6 +221,8 @@ export interface IHotKeyStrings extends Localize.LocalizedStringsMethods {
     "homeKey": string;
     "or": string;
     "spaceKey": string;
+    "rightArrow": string;
+    "downArrow": string;
 };
 
 export interface IImportStrings extends Localize.LocalizedStringsMethods {
@@ -879,6 +881,7 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "deleteRegion": string;
     "endTip": string;
     "fasterTip": string;
+    "seconds": string;
     "insertoverwrite": string;
     "loopoff": string;
     "loopon": string;
@@ -887,11 +890,25 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "playTip": string;
     "record": string;
     "resume": string;
-    "seconds": string;
     "silence": string;
     "slowerTip": string;
     "stop": string;
     "timerTip": string;
+};
+
+export interface IWsAudioPlayerSegmentStrings extends Localize.LocalizedStringsMethods {
+    "autoSegment": string;
+    "segmentSettings": string;
+    "silenceThreshold": string;
+    "silenceLength": string;
+    "splitSegment": string;
+    "removeSegment": string;
+};
+
+export interface IWsAudioPlayerZoomStrings extends Localize.LocalizedStringsMethods {
+    "fitToWidth": string;
+    "zoomIn": string;
+    "zoomOut": string;
 };
 
 export interface ILocalizedStrings {
@@ -950,5 +967,7 @@ export interface ILocalizedStrings {
 	vProject: IVProjectStrings;
 	welcome: IWelcomeStrings;
 	wsAudioPlayer: IWsAudioPlayerStrings;
+	wsAudioPlayerSegment: IWsAudioPlayerSegmentStrings;
+	wsAudioPlayerZoom: IWsAudioPlayerZoomStrings;
 	[key: string]: any;
 };

@@ -2,112 +2,112 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd" version="1.2">
    <file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
       <body>
-         <trans-unit id="access.availableUsers">
-            <source>Other Users</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.back">
-            <source>Back</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.cancel">
-            <source>Cancel</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.createUser">
-            <source>Add a new user</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.currentUser">
-            <source>Current User</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.importSnapshot">
-            <source>Import Audio Project</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.logIn">
-            <source>Log In</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.logout">
-            <source>Log Out</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.mustBeOnline">
-            <source>You must be connected to the Internet to Log In!</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.noOnlineUsers1">
-            <source>To allow offline use:</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.noOnlineUsers2">
+      	<trans-unit id="access.availableUsers">
+      		<source>Other Users</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.back">
+      		<source>Back</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.cancel">
+      		<source>Cancel</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.createUser">
+      		<source>Add a new user</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.currentUser">
+      		<source>Current User</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.importSnapshot">
+      		<source>Import Audio Project</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.logIn">
+      		<source>Log In</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.logout">
+      		<source>Log Out</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.mustBeOnline">
+      		<source>You must be connected to the Internet to Log In!</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.noOnlineUsers1">
+      		<source>To allow offline use:</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.noOnlineUsers2">
             <source>Log in and select Offline Available in the audio project card menu and then log out. Or, click IMPORT AUDIO PROJECT to import an audio project your admin exported.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.noOnlineUsers3">
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.noOnlineUsers3">
             <source>To create an online audio project for working alone:</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.noOnlineUsers4">
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.noOnlineUsers4">
             <source>Create a personal audio project.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.offlineUsers">
-            <source>Offline Users</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.title">
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.offlineUsers">
+      		<source>Offline Users</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.title">
             <source>User List</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="activityState.approved">
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="activityState.approved">
             <source>Ready to Sync</source>
             <target/>
             <context-group>
@@ -1161,39 +1161,53 @@
             <source>Alt</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+               <context context-type="sourcefile">hotKeyContext.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="hotKey.ctrlKey">
             <source>Ctrl</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+               <context context-type="sourcefile">hotKeyContext.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="hotKey.endKey">
             <source>End</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+               <context context-type="sourcefile">hotKeyContext.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="hotKey.homeKey">
             <source>Home</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+               <context context-type="sourcefile">hotKeyContext.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="hotKey.or">
             <source>or</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+               <context context-type="sourcefile">hotKeyContext.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="hotKey.spaceKey">
             <source>Space</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">hotKeyContext.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.rightArrow">
+            <source>Right Arrow</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.downArrow">
+            <source>Down Arrow</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -5049,6 +5063,76 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="wsAudioPlayer.seconds">
+            <source>seconds</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.autoSegment">
+            <source>Auto Segment [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.segmentSettings">
+            <source>Auto Segment Parameters</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.silenceThreshold">
+            <source>Silence threshold</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.silenceLength">
+            <source>Length of Silence (100ths of second)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.splitSegment">
+            <source>Add/Remove Boundary [Double Click/{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.removeSegment">
+            <source>Remove Next Boundary [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerZoom.fitToWidth">
+            <source>Fit to Width</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerZoom.zoomIn">
+            <source>Zoom In [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerZoom.zoomOut">
+            <source>Zoom Out [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="wsAudioPlayer.insertoverwrite">
             <source>Insert/Overwrite</source>
             <target/>
@@ -5100,13 +5184,6 @@
          </trans-unit>
          <trans-unit id="wsAudioPlayer.resume">
             <source>Resume</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="wsAudioPlayer.seconds">
-            <source>Seconds</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

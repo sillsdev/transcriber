@@ -1027,6 +1027,19 @@
             <target/>
          </segment>
       </unit>
+      <unit id="hotKey.rightArrow">
+         <segment>
+            <source>Right Arrow</source>
+            <target>Seta direita</target>
+         </segment>
+      </unit>
+      <unit id="hotKey.downArrow">
+         <segment>
+            <source>Down Arrow</source>
+            <target>Seta para baixo</target>
+         </segment>
+      </unit>
+
       <unit id="import.close">
          <segment>
             <source>Close</source>
@@ -3550,7 +3563,7 @@
       <unit id="transcriber.saveReviewTip">
          <segment>
             <source>Save position and comment</source>
-            <target/>
+            <target>Salvar posição e comentar</target>
          </segment>
       </unit>
       <unit id="transcriber.saveTip">
@@ -4403,6 +4416,60 @@
          <segment>
             <source>Timestamp [{0}]</source>
             <target/>
+         </segment>
+      </unit>
+            <unit id="wsAudioPlayerSegment.autoSegment">
+         <segment>
+            <source>Auto Segment [{0}]</source>
+            <target>Segmento Automóvel [{0}]</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.segmentSettings">
+         <segment>
+            <source>Auto Segment Parameters</source>
+            <target>Parâmetros de segmento automóvel</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.silenceThreshold">
+         <segment>
+            <source>Silence threshold</source>
+            <target>Limiar de silêncio</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.silenceLength">
+         <segment>
+            <source>Length of Silence (100ths of second)</source>
+            <target>Duração do silêncio (centésimos de segundo)</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.splitSegment">
+         <segment>
+            <source>Add/Remove Boundary [Double Click/{0}]</source>
+            <target>Adicionar/Remover Limite [Clique Duplo/{0}]</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.removeSegment">
+         <segment>
+            <source>Remove Next Boundary [{0}]</source>
+            <target>Remover o próximo limite [{0}]</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerZoom.fitToWidth">
+         <segment>
+            <source>Fit to Width</source>
+            <target>Ajustar à largura</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerZoom.zoomIn">
+         <segment>
+            <source>Zoom In [{0}]</source>
+            <target>Ampliar [{0}]</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerZoom.zoomOut">
+         <segment>
+            <source>Zoom Out [{0}]</source>
+            <target>Diminuir zoom [{0}]</target>
          </segment>
       </unit>
    </file>

@@ -243,6 +243,8 @@ const initialState = {
 			"homeKey": "Home",
 			"or": "or",
 			"spaceKey": "Space",
+			"rightArrow": "Right Arrow",
+			"downArrow": "Down Arrow",
 		}
 	}),
 	"import": new LocalizedStrings({
@@ -937,6 +939,7 @@ const initialState = {
 			"deleteRegion": "Delete Region",
 			"endTip": "Go to End [{0}]",
 			"fasterTip": "Faster [{0}]",
+			"seconds": "seconds",
 			"insertoverwrite": "Insert/Overwrite",
 			"loopoff": "Loop Off",
 			"loopon": "Loop On",
@@ -945,11 +948,27 @@ const initialState = {
 			"playTip": "Play [{0}]",
 			"record": "Record [{0}]",
 			"resume": "Resume",
-			"seconds": "Seconds",
 			"silence": "Silence",
 			"slowerTip": "Slower [{0}]",
 			"stop": "Stop [{0}]",
 			"timerTip": "Timestamp [{0}]",
+		}
+	}),
+	"wsAudioPlayerSegment": new LocalizedStrings({
+		"en": {
+			"autoSegment": "Auto Segment [{0}]",
+			"segmentSettings": "Auto Segment Parameters",
+			"silenceThreshold": "Silence threshold",
+			"silenceLength": "Length of Silence (100ths of second)",
+			"splitSegment": "Add/Remove Boundary [Double Click/{0}]",
+			"removeSegment": "Remove Next Boundary [{0}]",
+		}
+	}),
+	"wsAudioPlayerZoom": new LocalizedStrings({
+		"en": {
+			"fitToWidth": "Fit to Width",
+			"zoomIn": "Zoom In [{0}]",
+			"zoomOut": "Zoom Out [{0}]",
 		}
 	}),
 };
@@ -1013,6 +1032,8 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"vProject" : new LocalizedStrings(action.payload.data.vProject),
 				"welcome" : new LocalizedStrings(action.payload.data.welcome),
 				"wsAudioPlayer" : new LocalizedStrings(action.payload.data.wsAudioPlayer),
+				"wsAudioPlayerSegment" : new LocalizedStrings(action.payload.data.wsAudioPlayerSegment),
+				"wsAudioPlayerZoom" : new LocalizedStrings(action.payload.data.wsAudioPlayerZoom),
 			};
 		case SET_LANGUAGE:
 			return {
