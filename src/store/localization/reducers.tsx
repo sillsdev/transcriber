@@ -239,12 +239,12 @@ const initialState = {
 		"en": {
 			"altKey": "Alt",
 			"ctrlKey": "Ctrl",
+			"downArrow": "Down Arrow",
 			"endKey": "End",
 			"homeKey": "Home",
 			"or": "or",
-			"spaceKey": "Space",
 			"rightArrow": "Right Arrow",
-			"downArrow": "Down Arrow",
+			"spaceKey": "Space",
 		}
 	}),
 	"import": new LocalizedStrings({
@@ -300,13 +300,13 @@ const initialState = {
 			"paratextAssociation": "Paratext association",
 			"paratextLocal": "Paratext Local",
 			"projectError": "Audio Project Query error:",
-			"projectsPending": "Querying audio projects...",
+			"projectsPending": "Querying Paratext projects...",
 			"questionAccount": "Do you have a Paratext Account?",
 			"questionInstalled": "Is Paratext installed locally?",
 			"questionOnline": "Are you connected to the Internet?",
 			"questionPermission": "Do you have permission to edit the Paratext project text?",
 			"questionProject": "Are you connected to a {lang0} Paratext project?",
-			"removeProject": "Remove Audio Project Association",
+			"removeProject": "Remove Paratext Project Association",
 			"render": "Render",
 			"selectProject": "Select Paratext Project",
 			"showHideFilter": "Show/Hide filter rows",
@@ -939,7 +939,6 @@ const initialState = {
 			"deleteRegion": "Delete Region",
 			"endTip": "Go to End [{0}]",
 			"fasterTip": "Faster [{0}]",
-			"seconds": "seconds",
 			"insertoverwrite": "Insert/Overwrite",
 			"loopoff": "Loop Off",
 			"loopon": "Loop On",
@@ -948,6 +947,7 @@ const initialState = {
 			"playTip": "Play [{0}]",
 			"record": "Record [{0}]",
 			"resume": "Resume",
+			"seconds": "seconds",
 			"silence": "Silence",
 			"slowerTip": "Slower [{0}]",
 			"stop": "Stop [{0}]",
@@ -957,11 +957,11 @@ const initialState = {
 	"wsAudioPlayerSegment": new LocalizedStrings({
 		"en": {
 			"autoSegment": "Auto Segment [{0}]",
-			"segmentSettings": "Auto Segment Parameters",
-			"silenceThreshold": "Silence threshold",
-			"silenceLength": "Length of Silence (100ths of second)",
-			"splitSegment": "Add/Remove Boundary [Double Click/{0}]",
 			"removeSegment": "Remove Next Boundary [{0}]",
+			"segmentSettings": "Auto Segment Parameters",
+			"silenceLength": "Length of Silence (100ths of second)",
+			"silenceThreshold": "Silence threshold",
+			"splitSegment": "Add/Remove Boundary [Double Click/{0}]",
 		}
 	}),
 	"wsAudioPlayerZoom": new LocalizedStrings({

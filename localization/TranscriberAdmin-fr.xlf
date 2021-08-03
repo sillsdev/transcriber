@@ -28,13 +28,13 @@
       <unit id="access.currentUser">
          <segment>
             <source>Current User</source>
-            <target/>
+            <target>Utilisateur actuel</target>
          </segment>
       </unit>
       <unit id="access.importSnapshot">
          <segment>
-            <source>Import Project</source>
-            <target>Importer un projet</target>
+            <source>Import Audio Project</source>
+            <target>Importer un projet audio</target>
          </segment>
       </unit>
       <unit id="access.logIn">
@@ -63,8 +63,8 @@
       </unit>
       <unit id="access.noOnlineUsers2">
          <segment>
-            <source>Log in and select Offline Available in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
-            <target>Connectez-vous et sélectionnez Hors ligne disponible dans le menu de la carte de projet, puis déconnectez-vous. Ou, cliquez sur IMPORTER UN PROJET pour importer un projet que votre administrateur a exporté.</target>
+            <source>Log in and select Offline Available in the audio project card menu and then log out. Or, click IMPORT AUDIO PROJECT to import an audio project your admin exported.</source>
+            <target>Connectez-vous et sélectionnez Offline Available dans le menu de la fiche du projet audio, puis déconnectez-vous. Ou bien, cliquez sur IMPORTER UN PROJET AUDIO pour importer un projet audio exporté par votre administrateur.</target>
          </segment>
       </unit>
       <unit id="access.noOnlineUsers3">
@@ -82,7 +82,7 @@
       <unit id="access.offlineUsers">
          <segment>
             <source>Offline Users</source>
-            <target/>
+            <target>Utilisateurs hors ligne</target>
          </segment>
       </unit>
       <unit id="access.title">
@@ -459,14 +459,14 @@
       </unit>
       <unit id="cards.explainTeamDelete">
          <segment>
-            <source>Deleting the team will delete all projects of the team.</source>
-            <target>La suppression de l'équipe supprimera tous les projets de l'équipe.</target>
+            <source>Deleting the team will delete all audio projects of the team.</source>
+            <target>La suppression de l'équipe entraîne la suppression de tous les projets audio de l'équipe.</target>
          </segment>
       </unit>
       <unit id="cards.import">
          <segment>
-            <source>Import Project</source>
-            <target>Importer un projet</target>
+            <source>Import Audio Project</source>
+            <target>Importer un projet audio</target>
          </segment>
       </unit>
       <unit id="cards.language">
@@ -495,8 +495,8 @@
       </unit>
       <unit id="cards.newProject">
          <segment>
-            <source>New Project</source>
-            <target>Nouveau projet</target>
+            <source>New Audio Project</source>
+            <target>Nouveau projet audio</target>
          </segment>
       </unit>
       <unit id="cards.offline">
@@ -519,14 +519,14 @@
       </unit>
       <unit id="cards.personalProjects">
          <segment>
-            <source>Personal Projects</source>
-            <target>Projets personnels</target>
+            <source>Personal Audio Projects</source>
+            <target>Projets audio personnels</target>
          </segment>
       </unit>
       <unit id="cards.projectCreated">
          <segment>
-            <source>Project Created</source>
-            <target>Projet créé</target>
+            <source>Audio Project Created</source>
+            <target>Création d'un projet audio</target>
          </segment>
       </unit>
       <unit id="cards.save">
@@ -639,20 +639,20 @@
       </unit>
       <unit id="electronImport.importProject">
          <segment>
-            <source>Import Project</source>
-            <target>Importer un projet</target>
+            <source>Import Audio Project</source>
+            <target>Importer un projet audio</target>
          </segment>
       </unit>
       <unit id="electronImport.invalidProject">
          <segment>
-            <source>Import File does not contain current project.</source>
-            <target>Le fichier Importation ne contient pas le projet en cours.</target>
+            <source>Import File does not contain current audio project.</source>
+            <target>Le fichier d'importation ne contient pas le projet audio actuel.</target>
          </segment>
       </unit>
       <unit id="electronImport.lastExported">
          <segment>
-            <source>Current data in project {name0} was last exported {date0}.</source>
-            <target>Les données actuelles du projet {name0} ont été exportées pour la dernière fois {date0}.</target>
+            <source>Current data in audio project {name0} was last exported {date0}.</source>
+            <target>Les données actuelles du projet audio {nom0} ont été exportées pour la dernière fois {date0}.</target>
          </segment>
       </unit>
       <unit id="electronImport.members">
@@ -663,20 +663,20 @@
       </unit>
       <unit id="electronImport.neverExported">
          <segment>
-            <source>Current data in project {name0} has never been exported to an itf file to preserve changes.</source>
-            <target>Les données actuelles du projet {nom0} n'ont jamais été exportées vers un fichier itf pour préserver les changements.</target>
+            <source>Current data in audio project {name0} has never been exported to an itf file to preserve changes.</source>
+            <target>Les données actuelles du projet audio {nom0} n'ont jamais été exportées vers un fichier itf pour préserver les modifications.</target>
          </segment>
       </unit>
       <unit id="electronImport.project">
          <segment>
-            <source>Project</source>
-            <target>Projet</target>
+            <source>Audio Project</source>
+            <target>Projet audio</target>
          </segment>
       </unit>
       <unit id="electronImport.projectImported">
          <segment>
-            <source>Project {name0} was previously imported with a newer file: {date1} </source>
-            <target>Le projet {name0} a été précédemment importé avec un fichier plus récent: {date1}</target>
+            <source>Audio Project {name0} was previously imported with a newer file: {date1}</source>
+            <target>Le projet audio {nom0} a été précédemment importé avec un fichier plus récent : {date1}</target>
          </segment>
       </unit>
       <unit id="electronImport.ptfError">
@@ -687,8 +687,8 @@
       </unit>
       <unit id="electronImport.userWontSeeProject">
          <segment>
-            <source>You are not a member of this project team. This project will not be accessible after import.</source>
-            <target>Vous n'êtes pas membre de l'équipe de ce projet. Ce projet ne sera pas accessible après l'importation.</target>
+            <source>You are not a member of this audio project team. This audio project will not be accessible after import.</source>
+            <target>Vous n'êtes pas membre de l'équipe de ce projet audio. Ce projet audio ne sera pas accessible après l'importation.</target>
          </segment>
       </unit>
       <unit id="emailUnverified.emailUnverified">
@@ -867,8 +867,8 @@
       </unit>
       <unit id="groupSettings.addMemberInstruction">
          <segment>
-            <source>Choose a person who will act as a {0} for projects in this group.</source>
-            <target>Choisissez une personne qui agira à titre d(e) {0} pour les projets de ce groupe.</target>
+            <source>Choose a person who will act as a {0} for audio projects in this group.</source>
+            <target>Choisissez une personne qui servira de {0} pour les projets audio de ce groupe.</target>
          </segment>
       </unit>
       <unit id="groupSettings.allReviewersCanTranscribe">
@@ -945,8 +945,8 @@
       </unit>
       <unit id="groupSettings.projectPlans">
          <segment>
-            <source>Project Plans</source>
-            <target>Programme du project</target>
+            <source>Audio Project Plans</source>
+            <target>Plans de projets audio</target>
          </segment>
       </unit>
       <unit id="groupSettings.save">
@@ -1003,6 +1003,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="hotKey.downArrow">
+         <segment>
+            <source>Down Arrow</source>
+            <target>Flèche vers le bas</target>
+         </segment>
+      </unit>
       <unit id="hotKey.endKey">
          <segment>
             <source>End</source>
@@ -1021,22 +1027,16 @@
             <target>ou</target>
          </segment>
       </unit>
-      <unit id="hotKey.spaceKey">
-         <segment>
-            <source>Space</source>
-            <target/>
-         </segment>
-      </unit>
-       <unit id="hotKey.rightArrow">
+      <unit id="hotKey.rightArrow">
          <segment>
             <source>Right Arrow</source>
             <target>Flèche droite</target>
          </segment>
       </unit>
-      <unit id="hotKey.downArrow">
+      <unit id="hotKey.spaceKey">
          <segment>
-            <source>Down Arrow</source>
-            <target>Flèche vers le bas</target>
+            <source>Space</source>
+            <target/>
          </segment>
       </unit>
       <unit id="import.close">
@@ -1119,8 +1119,8 @@
       </unit>
       <unit id="import.importProject">
          <segment>
-            <source>Import Project</source>
-            <target>Importer un projet</target>
+            <source>Import Audio Project</source>
+            <target>Importer un projet audio</target>
          </segment>
       </unit>
       <unit id="import.importSync">
@@ -1137,8 +1137,8 @@
       </unit>
       <unit id="import.invalidProject">
          <segment>
-            <source>Import File does not contain current project.</source>
-            <target>Le fichier Importation ne contient pas le projet en cours.</target>
+            <source>Import File does not contain current audio project.</source>
+            <target>Le fichier d'importation ne contient pas le projet audio actuel.</target>
          </segment>
       </unit>
       <unit id="import.locale">
@@ -1185,20 +1185,20 @@
       </unit>
       <unit id="import.plan">
          <segment>
-            <source>Project</source>
-            <target>Projet</target>
+            <source>Audio Project</source>
+            <target>Projet audio</target>
          </segment>
       </unit>
       <unit id="import.projectDeleted">
          <segment>
-            <source>Project {0} has been deleted online.</source>
-            <target>Le projet {0} a été supprimé en ligne.</target>
+            <source>Audio Project {0} has been deleted online.</source>
+            <target>Le projet audio {0} a été supprimé en ligne.</target>
          </segment>
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current project.  It contains project {0}.</source>
-            <target>Le fichier ITF ne contient pas le projet en cours. Il contient le projet {0}.</target>
+            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
+            <target>L'ITF ne contient pas le projet audio actuel.  Il contient le projet audio {0}.</target>
          </segment>
       </unit>
       <unit id="import.showHideFilter">
@@ -1317,14 +1317,14 @@
       </unit>
       <unit id="integration.projectError">
          <segment>
-            <source>Project Query error:</source>
-            <target>Erreur de requête de projet:</target>
+            <source>Paratext Project Query error:</source>
+            <target>Erreur d'interrogation du projet Paratext :</target>
          </segment>
       </unit>
       <unit id="integration.projectsPending">
          <segment>
-            <source>Querying projects...</source>
-            <target>Requête de projets ...</target>
+            <source>Querying Paratext projects...</source>
+            <target>Interroger les projets Paratext...</target>
          </segment>
       </unit>
       <unit id="integration.questionAccount">
@@ -1359,8 +1359,8 @@
       </unit>
       <unit id="integration.removeProject">
          <segment>
-            <source>Remove Project Association</source>
-            <target>Supprimer l'association de projet</target>
+            <source>Remove Paratext Project Association</source>
+            <target>Supprimer l'association de projet Paratext</target>
          </segment>
       </unit>
       <unit id="integration.render">
@@ -1491,8 +1491,8 @@
       </unit>
       <unit id="invite.allUsersProjects">
          <segment>
-            <source>Projects</source>
-            <target>Projets</target>
+            <source>Audio Projects</source>
+            <target>Projets audio</target>
          </segment>
       </unit>
       <unit id="invite.alreadyInvited">
@@ -1533,14 +1533,14 @@
       </unit>
       <unit id="invite.groupRole">
          <segment>
-            <source>Project Role</source>
-            <target>Rôle du projet</target>
+            <source>Audio Project Role</source>
+            <target>Rôle du projet audio</target>
          </segment>
       </unit>
       <unit id="invite.groups">
          <segment>
-            <source>Project</source>
-            <target>Projet</target>
+            <source>Audio Project</source>
+            <target>Projet audio</target>
          </segment>
       </unit>
       <unit id="invite.instructions">
@@ -1581,8 +1581,8 @@
       </unit>
       <unit id="invite.noProjects">
          <segment>
-            <source>No projects are associated with this group.</source>
-            <target>Aucun projet n'est associé à ce groupe.</target>
+            <source>No audio projects are associated with this group.</source>
+            <target>Aucun projet audio n'est associé à ce groupe.</target>
          </segment>
       </unit>
       <unit id="invite.organization">
@@ -1617,8 +1617,8 @@
       </unit>
       <unit id="invite.selectProjectRole">
          <segment>
-            <source>Select project role.</source>
-            <target>Choisir le rôle du projet.</target>
+            <source>Select audio project role.</source>
+            <target>Choisir le rôle du projet audio.</target>
          </segment>
       </unit>
       <unit id="invite.selectTeamRole">
@@ -1785,14 +1785,14 @@
       </unit>
       <unit id="main.developer">
          <segment>
-            <source>Developer Mode</source>
+            <source>Developer mode</source>
             <target>Mode développeur</target>
          </segment>
       </unit>
       <unit id="main.exit">
          <segment>
-            <source>Switch User</source>
-            <target>Changer d'utilisateur</target>
+            <source>Exit</source>
+            <target>Sortie</target>
          </segment>
       </unit>
       <unit id="main.export">
@@ -1893,8 +1893,8 @@
       </unit>
       <unit id="main.NoLoadOffline">
          <segment>
-            <source>Unable to load project data offline.</source>
-            <target>Impossible de charger les données du projet hors ligne.</target>
+            <source>Unable to load audio project data offline.</source>
+            <target>Impossible de charger les données du projet audio hors ligne.</target>
          </segment>
       </unit>
       <unit id="main.owner">
@@ -1911,14 +1911,14 @@
       </unit>
       <unit id="main.project">
          <segment>
-            <source>Project</source>
-            <target>Project</target>
+            <source>Audio Project</source>
+            <target>Project audio</target>
          </segment>
       </unit>
       <unit id="main.projRole">
          <segment>
-            <source>Role in Project:</source>
-            <target>Rôle dans le projet</target>
+            <source>Role in Audio Project:</source>
+            <target>Rôle dans le projet audio</target>
          </segment>
       </unit>
       <unit id="main.reliesOn">
@@ -2343,8 +2343,8 @@
       </unit>
       <unit id="mediaUpload.PTFtitle">
          <segment>
-            <source>Upload complete Project Data from PTF</source>
-            <target>Télécharger des données de projet complètes depuis PTF</target>
+            <source>Upload complete Audio Project Data from PTF</source>
+            <target>Télécharger des données de projet audio complètes depuis PTF</target>
          </segment>
       </unit>
       <unit id="mediaUpload.task">
@@ -2373,8 +2373,8 @@
       </unit>
       <unit id="newProject.blank">
          <segment>
-            <source>Blank Project</source>
-            <target>Projet vierge</target>
+            <source>Blank Audio Project</source>
+            <target>Projet audio vierge</target>
          </segment>
       </unit>
       <unit id="newProject.blankFactor1">
@@ -2433,14 +2433,14 @@
       </unit>
       <unit id="newProject.likeTemplate">
          <segment>
-            <source>These options present different templates for getting started. Choices made here can be changed in the Edit Project Settings dialog box.</source>
-            <target>Ces options présentent différents modèles pour commencer. Les choix effectués ici peuvent être modifiés dans la boîte de dialogue Modifier les paramètres du projet.</target>
+            <source>These options present different templates for getting started. Choices made here can be changed in the Edit Audio Project Settings dialog.</source>
+            <target>Ces options présentent différents modèles pour commencer. Les choix effectués ici peuvent être modifiés dans la boîte de dialogue Edit Audio Project Settings.</target>
          </segment>
       </unit>
       <unit id="newProject.newProject">
          <segment>
-            <source>New Project</source>
-            <target>Nouveau projet</target>
+            <source>New Audio Project</source>
+            <target>Nouveau projet audio</target>
          </segment>
       </unit>
       <unit id="newProject.other">
@@ -2643,8 +2643,8 @@
       </unit>
       <unit id="planSheet.refErr">
          <segment>
-            <source>This project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
-            <target>Ce projet contient des références non valables et ne se synchronise pas correctement avec Paratext. (Une référence valide serait 3:2-5 ou similaire).</target>
+            <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
+            <target>Ce projet audio contient des références invalides et ne sera pas synchronisé correctement avec le Paratext. (Une référence valide serait 3:2-5 ou similaire).</target>
          </segment>
       </unit>
       <unit id="planSheet.resequence">
@@ -2979,8 +2979,8 @@
       </unit>
       <unit id="projectDownload.downloadMb">
          <segment>
-            <source>Download {0}MB of offline project files?</source>
-            <target>Télécharger {0}MB de fichiers de projets hors ligne ?</target>
+            <source>Download {0}MB of offline audio project files?</source>
+            <target>Télécharger {0}MB de fichiers de projets audio hors ligne ?</target>
          </segment>
       </unit>
       <unit id="scriptureTable.action">
@@ -3393,8 +3393,8 @@
       </unit>
       <unit id="toDoTable.project">
          <segment>
-            <source>Project</source>
-            <target>Project</target>
+            <source>Audio Project</source>
+            <target>Project audio</target>
          </segment>
       </unit>
       <unit id="toDoTable.state">
@@ -3477,8 +3477,8 @@
       </unit>
       <unit id="transcriber.incomplete">
          <segment>
-            <source>Incomplete transcription</source>
-            <target>Transcription incomplètes</target>
+            <source>Incomplete transcripiton</source>
+            <target>Transcription incomplète</target>
          </segment>
       </unit>
       <unit id="transcriber.invalidReference">
@@ -3562,7 +3562,7 @@
       <unit id="transcriber.saveReviewTip">
          <segment>
             <source>Save transcription, regions and position</source>
-            <target>Enregistrer la transcription, les régions et la position</target>
+            <target>Sauvegarder la transcription, les régions et la position</target>
          </segment>
       </unit>
       <unit id="transcriber.saveTip">
@@ -3717,8 +3717,8 @@
       </unit>
       <unit id="transcriptionTab.downloadProject">
          <segment>
-            <source>Download Project</source>
-            <target>Télécharger le projet</target>
+            <source>Download Audio Project</source>
+            <target>Télécharger le projet audio</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.elan">
@@ -3747,8 +3747,8 @@
       </unit>
       <unit id="transcriptionTab.exportExplanation">
          <segment>
-            <source>Export the full project to store locally or share with another offline member. Export incremental file to import changes into online app.</source>
-            <target>Exportez le projet complet pour le stocker localement ou le partager avec un autre membre hors ligne. Exportez le fichier incrémentiel pour importer les modifications dans l'application en ligne.</target>
+            <source>Export the full audio project to store locally or share with another offline member. Export incremental file to import changes into online app.</source>
+            <target>Exportez le projet audio complet pour le stocker localement ou le partager avec un autre membre hors ligne. Exportez le fichier incrémentiel pour importer les modifications dans l'application en ligne.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportingProject">
@@ -3765,20 +3765,20 @@
       </unit>
       <unit id="transcriptionTab.exportProject">
          <segment>
-            <source>Export Project</source>
-            <target>Exporter une projet</target>
+            <source>Export Audio Project</source>
+            <target>Exporter une projet audio</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportPTFtype">
          <segment>
-            <source>Export Project (ptf)</source>
-            <target>Projet d'exportation (ptf)</target>
+            <source>Export Audio Project (ptf)</source>
+            <target>Projet audio d'exportation (ptf)</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The project cannot be exported.  The export file is too large.</source>
-            <target>Le projet ne peut pas être exporté. Le fichier d'exportation est trop volumineux.</target>
+            <source>The audio project cannot be exported.  The export file is too large.</source>
+            <target>Le projet audio ne peut pas être exporté. Le fichier d'exportation est trop volumineux.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportType">
@@ -4009,7 +4009,7 @@
             <target>Annuler</target>
          </segment>
       </unit>
-      <unit id="vProject.Configure">
+      <unit id="vProject.configure">
          <segment>
             <source>Configure</source>
             <target>Configurer</target>
@@ -4083,8 +4083,8 @@
       </unit>
       <unit id="vProject.newProject">
          <segment>
-            <source>{0} Project Settings</source>
-            <target>{0} les paramètres du projet</target>
+            <source>{0} Audio Project Settings</source>
+            <target>{0} les paramètres du projet audio</target>
          </segment>
       </unit>
       <unit id="vProject.organizedBy">
@@ -4113,7 +4113,7 @@
       </unit>
       <unit id="vProject.projectName">
          <segment>
-            <source>Project Name</source>
+            <source>Audio Project Name</source>
             <target>Nom du projet</target>
          </segment>
       </unit>
@@ -4191,8 +4191,8 @@
       </unit>
       <unit id="vProject.type">
          <segment>
-            <source>Project Type</source>
-            <target>Type de projet</target>
+            <source>Audio Project Type</source>
+            <target>Type de projet audio</target>
          </segment>
       </unit>
       <unit id="welcome.alone">
@@ -4203,14 +4203,14 @@
       </unit>
       <unit id="welcome.aloneFactor">
          <segment>
-            <source>Projects cannot be changed to team projects later</source>
-            <target>Les projets ne peuvent pas être transformés ultérieurement en projets d'équipe</target>
+            <source>Audio Projects cannot be changed to team audio projects later</source>
+            <target>Les projets audio ne peuvent pas être transformés ultérieurement en projets audio d'équipe</target>
          </segment>
       </unit>
       <unit id="welcome.import">
          <segment>
-            <source>Import Project</source>
-            <target>Importer le projet</target>
+            <source>Import Audio Project</source>
+            <target>Importer le projet audio</target>
          </segment>
       </unit>
       <unit id="welcome.keyFactor">
@@ -4257,44 +4257,44 @@
       </unit>
       <unit id="welcome.setupFactor2">
          <segment>
-            <source>Supports projects that are offline available</source>
-            <target>Prend en charge les projets qui sont disponibles hors ligne</target>
+            <source>Supports audio projects that are offline available</source>
+            <target>Prend en charge les projets audio qui sont disponibles hors ligne</target>
          </segment>
       </unit>
       <unit id="welcome.setupFactor2Help">
          <segment>
-            <source>Select the Offline Available option on the project card menu.</source>
-            <target>Sélectionnez l'option Disponible hors ligne dans le menu de la fiche de projet.</target>
+            <source>Select the Offline Available option on the audio project card menu.</source>
+            <target>Sélectionnez l'option Disponible hors ligne dans le menu de la fiche de projet audio.</target>
          </segment>
       </unit>
       <unit id="welcome.setupTeam">
          <segment>
-            <source>Set up a team project</source>
-            <target>Mettre en place un projet d'équipe</target>
+            <source>Set up a team audio project</source>
+            <target>Mettre en place un projet audio d'équipe</target>
          </segment>
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
-            <target>Configurez le projet, en divisant le travail en passages qui peuvent être attribués à différents transcripteurs et éditeurs.  Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet.</target>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <target>Configurez le projet audio, en divisant le travail en passages qui peuvent être attribués à différents transcripteurs et éditeurs.  Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
          </segment>
       </unit>
       <unit id="welcome.team">
          <segment>
-            <source>Work in a team project</source>
-            <target>Travailler dans un projet d'équipe</target>
+            <source>Work in a team audio project</source>
+            <target>Travailler dans un projet audio d'équipe</target>
          </segment>
       </unit>
       <unit id="welcome.teamFactor">
          <segment>
-            <source>Project has been set up online</source>
-            <target>Le projet a été mis en ligne</target>
+            <source>Audio Project has been set up online</source>
+            <target>Le projet audio a été mis en ligne</target>
          </segment>
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the project card menu, or offline by importing it.</source>
-            <target>Un projet a été mis en place en ligne.  Les transcripteurs et les éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la fiche projet, ou hors ligne en l'important.</target>
+            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <target>Un projet audio a été mis en place en ligne.  Les transcripteurs et les éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la fiche projet audio, ou hors ligne en l'important.</target>
          </segment>
       </unit>
       <unit id="welcome.title">
@@ -4389,8 +4389,8 @@
       </unit>
       <unit id="wsAudioPlayer.seconds">
          <segment>
-            <source>Seconds</source>
-            <target>Seconds</target>
+            <source>seconds</source>
+            <target>seconds</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.silence">
@@ -4401,7 +4401,7 @@
       </unit>
       <unit id="wsAudioPlayer.slowerTip">
          <segment>
-            <source>Slower [{0}])</source>
+            <source>Slower [{0}]</source>
             <target>Plus lente [{0}]</target>
          </segment>
       </unit>
@@ -4417,11 +4417,16 @@
             <target>Horodatage [{0}]</target>
          </segment>
       </unit>
-
       <unit id="wsAudioPlayerSegment.autoSegment">
          <segment>
             <source>Auto Segment [{0}]</source>
             <target>Segment automatique [{0}]</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.removeSegment">
+         <segment>
+            <source>Remove Next Boundary [{0}]</source>
+            <target>Supprimer la limite suivante [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.segmentSettings">
@@ -4430,28 +4435,22 @@
             <target>Paramètres de segment automatique</target>
          </segment>
       </unit>
-      <unit id="wsAudioPlayerSegment.silenceThreshold">
-         <segment>
-            <source>Silence threshold</source>
-            <target>Seuil de silence</target>
-         </segment>
-      </unit>
       <unit id="wsAudioPlayerSegment.silenceLength">
          <segment>
             <source>Length of Silence (100ths of second)</source>
             <target>Durée du silence (100e de seconde)</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayerSegment.silenceThreshold">
+         <segment>
+            <source>Silence threshold</source>
+            <target>Seuil de silence</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayerSegment.splitSegment">
          <segment>
             <source>Add/Remove Boundary [Double Click/{0}]</source>
             <target>Ajouter/Supprimer une limite [Double-clic/{0}]</target>
-         </segment>
-      </unit>
-      <unit id="wsAudioPlayerSegment.removeSegment">
-         <segment>
-            <source>Remove Next Boundary [{0}]</source>
-            <target>Supprimer la limite suivante [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayerZoom.fitToWidth">
