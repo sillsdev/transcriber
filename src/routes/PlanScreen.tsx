@@ -70,7 +70,9 @@ export const PlanScreen = (props: IProps) => {
     return (
       <ViewMode
         mode={ViewOption.AudioProject}
-        onMode={() => checkSavedFn(handleSwitchTo)}
+        onMode={(mode: ViewOption) =>
+          mode === ViewOption.Transcribe && checkSavedFn(handleSwitchTo)
+        }
       />
     );
   };

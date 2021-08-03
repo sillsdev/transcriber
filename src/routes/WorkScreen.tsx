@@ -77,7 +77,9 @@ export const WorkScreen = (props: IProps) => {
     return (
       <ViewMode
         mode={ViewOption.Transcribe}
-        onMode={() => checkSavedFn(handleSwitchTo)}
+        onMode={(mode: ViewOption) =>
+          mode === ViewOption.AudioProject && checkSavedFn(handleSwitchTo)
+        }
       />
     );
   };
