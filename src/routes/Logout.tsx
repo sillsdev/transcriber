@@ -53,6 +53,7 @@ export function Logout(props: IProps) {
   const [view, setView] = React.useState('');
 
   const handleLogout = async () => {
+    const wasOfflineOnly = offlineOnly;
     if (offlineOnly) setOfflineOnly(false);
     setUser('');
 
@@ -71,7 +72,7 @@ export function Logout(props: IProps) {
       }
       auth.logout();
     }
-    setView('Access');
+    setView(wasOfflineOnly ? 'offline' : 'online');
   };
 
   useEffect(() => {
@@ -83,7 +84,7 @@ export function Logout(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
-  if (/Access/i.test(view)) return <Redirect to="/access/online" />;
+  if (/online|offline/i.test(view)) return <Redirect to={`/access/${view}`} />;
 
   return (
     <div className={classes.root}>
