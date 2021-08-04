@@ -238,7 +238,6 @@ function WSAudioPlayer(props: IProps) {
   const [hasRegion, setHasRegion] = useState(false);
   const recordStartPosition = useRef(0);
   const recordOverwritePosition = useRef<number | undefined>(undefined);
-  const overwriteRef = useRef(false);
   const recordingRef = useRef(false);
   const [recording, setRecordingx] = useState(false);
   const readyRef = useRef(false);
@@ -374,12 +373,12 @@ function WSAudioPlayer(props: IProps) {
 
   function onRecordStart() {}
   async function onRecordStop(blob: Blob) {
-    var newPos = await wsInsertAudio(
+    await wsInsertAudio(
       blob,
       recordStartPosition.current,
-      recordOverwritePosition.current
+      recordOverwritePosition.current || recordStartPosition.current
     );
-    if (!overwriteRef.current) recordOverwritePosition.current = newPos;
+    recordOverwritePosition.current = undefined;
     handleChanged();
   }
 
@@ -390,10 +389,10 @@ function WSAudioPlayer(props: IProps) {
     var newPos = await wsInsertAudio(
       blob,
       recordStartPosition.current,
-      recordOverwritePosition.current,
+      recordOverwritePosition.current || recordStartPosition.current,
       e.type
     );
-    if (!overwriteRef.current) recordOverwritePosition.current = newPos;
+    recordOverwritePosition.current = newPos;
   }
   function onWSReady() {
     setReady(true);
@@ -499,9 +498,6 @@ function WSAudioPlayer(props: IProps) {
     if (!recordingRef.current) {
       wsPause(); //stop if playing
       recordStartPosition.current = wsPosition();
-      recordOverwritePosition.current = overwriteRef.current
-        ? undefined
-        : recordStartPosition.current;
       startRecording(300);
     } else {
       stopRecording();
