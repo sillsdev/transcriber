@@ -93,12 +93,10 @@ export function useWaveSurfer(
     function create(container: any, height: number, singleRegion: boolean) {
       var ws = createWaveSurfer(container, height, timelineContainer);
       wavesurferRef.current = ws;
-      console.log('setting wavesurfer', ws);
       setWaveSurfer(ws);
       ws.on('ready', function () {
         console.log('ready');
         durationRef.current = ws.getDuration();
-        console.log('loading regions');
         loadRegions(inputRegionsRef.current, false);
         inputRegionsRef.current = undefined;
         if (playingRef.current) setPlaying(true);
@@ -126,9 +124,11 @@ export function useWaveSurfer(
         console.log('interaction');
         if (onInteraction) onInteraction();
       });
+      /*
       ws.drawer.on('click', (event: any, progress: number) => {
         console.log('Clicking now', progress);
       });
+      */
 
       return ws;
     }
@@ -237,43 +237,33 @@ export function useWaveSurfer(
   const insertBuffer = (
     newBuffer: any,
     startposition: number,
-    endposition?: number
+    endposition: number
   ) => {
     if (!wavesurfer()) return 0;
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
 
-    if (
-      startposition === 0 &&
-      endposition === undefined &&
-      newBuffer.length > (originalBuffer?.length | 0)
-    ) {
+    if (startposition === 0 && (originalBuffer?.length | 0) === 0) {
       loadDecoded(newBuffer);
       return newBuffer.length / originalBuffer.sampleRate;
     }
     var start_offset = ((startposition / 1) * originalBuffer.sampleRate) >> 0;
-
-    var after_len = 0;
-    var after_offset = 0;
-
-    if (endposition !== undefined) {
-      after_offset = (endposition * originalBuffer.sampleRate) >> 0;
-    } else {
-      after_offset = start_offset + newBuffer.length;
-    }
-    after_len = originalBuffer.length - after_offset;
+    var after_offset = ((endposition / 1) * originalBuffer.sampleRate) >> 0;
+    var after_len = originalBuffer.length - after_offset;
     if (after_len < 0) after_len = 0;
     var new_len = start_offset + newBuffer.length + after_len;
+
     var uberSegment = null;
     uberSegment = backend.ac.createBuffer(
       originalBuffer.numberOfChannels,
       new_len,
       originalBuffer.sampleRate
     );
-
     for (var ix = 0; ix < originalBuffer.numberOfChannels; ++ix) {
       var chan_data = originalBuffer.getChannelData(ix);
-      var new_data = newBuffer.getChannelData(0); //we're not recording in stereo currently
+      var new_data = newBuffer.getChannelData(
+        ix < newBuffer.numChannels ? ix : newBuffer.numberOfChannels - 1
+      );
       var uber_chan_data = uberSegment.getChannelData(ix);
 
       uber_chan_data.set(chan_data.slice(0, start_offset));
@@ -292,7 +282,7 @@ export function useWaveSurfer(
   const wsInsertAudio = async (
     blob: Blob,
     position: number,
-    overwriteToPosition?: number,
+    overwriteToPosition: number,
     mimeType?: string
   ) => {
     if (!wavesurfer()) return;
@@ -312,6 +302,7 @@ export function useWaveSurfer(
       });
     });
   };
+
   const wsInsertSilence = (seconds: number, position: number) => {
     if (!wavesurfer()) return;
     var backend = wavesurfer()?.backend as any;
