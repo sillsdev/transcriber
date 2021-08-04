@@ -204,6 +204,12 @@ export const AppHead = (props: IProps) => {
     else setView('Logout');
   };
 
+  const handleDownloadClick = (event: React.MouseEvent<HTMLElement>) => {
+    if (shell)
+      shell.openExternal('https://software.sil.org/siltranscriber/download/');
+    // remote?.getCurrentWindow().close();
+  };
+
   useEffect(() => {
     const handleUnload = (e: any) => {
       if (pathname === '/') return true;
@@ -251,19 +257,20 @@ export const AppHead = (props: IProps) => {
             .format('L');
           setLatestVersion(lv);
           setLatestRelease(lr);
-          showMessage(
-            <span>
-              {t.updateAvailable.replace('{0}', lv).replace('{1}', lr)}
-              <IconButton
-                id="systemUpdate"
-                onClick={handleDownloadClick}
-                component="span"
-              >
-                <SystemUpdateIcon color="primary" />
-              </IconButton>
-            </span>,
-            AlertSeverity.Warning
-          );
+          if (isElectron)
+            showMessage(
+              <span>
+                {t.updateAvailable.replace('{0}', lv).replace('{1}', lr)}
+                <IconButton
+                  id="systemUpdate"
+                  onClick={handleDownloadClick}
+                  component="span"
+                >
+                  <SystemUpdateIcon color="primary" />
+                </IconButton>
+              </span>,
+              AlertSeverity.Warning
+            );
         })
         .catch((err) => {
           logError(
@@ -284,11 +291,6 @@ export const AppHead = (props: IProps) => {
   const handleUpdateOpen = () => setUpdateTipOpen(true);
   const handleUpdateClose = () => setUpdateTipOpen(pathname === '/');
 
-  const handleDownloadClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (shell)
-      shell.openExternal('https://software.sil.org/siltranscriber/download/');
-    // remote?.getCurrentWindow().close();
-  };
   if (view === 'Error') return <Redirect to="/error" />;
   if (view === 'Profile') return <StickyRedirect to="/profile" />;
   if (view === 'Logout') return <Redirect to="/logout" />;
