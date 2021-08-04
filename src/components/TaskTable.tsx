@@ -80,7 +80,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     dialogHeader: {
       width: `${TaskItemWidth - 30}px`,
-      paddingTop: '8px',
+      paddingLeft: theme.spacing(2),
+      paddingTop: theme.spacing(1),
       paddingBottom: '8px',
       display: 'flex',
       flexDirection: 'row',
