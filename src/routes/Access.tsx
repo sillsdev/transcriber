@@ -331,7 +331,8 @@ export function Access(props: IProps) {
         handleLogin();
       }
     }
-    if (user) handleSelect(user); //set by Quick Transcribe
+    if (user && localStorage.getItem('isLoggedIn') !== 'true')
+      handleSelect(user); //set by Quick Transcribe
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
