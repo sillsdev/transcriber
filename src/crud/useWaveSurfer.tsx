@@ -108,7 +108,7 @@ export function useWaveSurfer(
       ws.on(
         'audioprocess',
         _.throttle(function (e: number) {
-          setProgress(e);
+          if (wavesurfer()?.isPlaying()) setProgress(e);
         }, 150)
       );
       ws.on('seek', function (e: number) {
