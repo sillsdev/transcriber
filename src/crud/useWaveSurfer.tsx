@@ -40,7 +40,6 @@ export function useWaveSurfer(
     durationRef.current || wavesurfer()?.getDuration() || 0;
 
   const wsGoto = (position: number) => {
-    console.log('wsGoTo', position);
     onRegionGoTo(position);
     if (position && wsDuration()) position = position / wsDuration();
     userInteractionRef.current = false;
@@ -95,10 +94,11 @@ export function useWaveSurfer(
       wavesurferRef.current = ws;
       setWaveSurfer(ws);
       ws.on('ready', function () {
-        console.log('ready');
         durationRef.current = ws.getDuration();
-        loadRegions(inputRegionsRef.current, false);
-        inputRegionsRef.current = undefined;
+        if (!singleRegionOnly) {
+          loadRegions(inputRegionsRef.current, false);
+          inputRegionsRef.current = undefined;
+        }
         if (playingRef.current) setPlaying(true);
         /* ws.enableDragSelection({
           color: randomColor(0.1),
@@ -116,12 +116,10 @@ export function useWaveSurfer(
         setProgress(e * wsDuration());
       });
       ws.on('finish', function () {
-        console.log('finish');
         setPlaying(false);
         onStop();
       });
       ws.on('interaction', function () {
-        console.log('interaction');
         if (onInteraction) onInteraction();
       });
       /*
@@ -192,7 +190,6 @@ export function useWaveSurfer(
     regions: string = ''
   ) => {
     durationRef.current = 0;
-    console.log('wsLoad', regions);
     if (regions) inputRegionsRef.current = JSON.parse(regions);
     if (!wavesurfer()) blobToLoad.current = blob;
     else wavesurfer()?.loadBlob(blob);
@@ -242,13 +239,12 @@ export function useWaveSurfer(
     if (!wavesurfer()) return 0;
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
-
     if (startposition === 0 && (originalBuffer?.length | 0) === 0) {
       loadDecoded(newBuffer);
-      return newBuffer.length / originalBuffer.sampleRate;
+      return newBuffer.length / newBuffer.sampleRate;
     }
-    var start_offset = ((startposition / 1) * originalBuffer.sampleRate) >> 0;
-    var after_offset = ((endposition / 1) * originalBuffer.sampleRate) >> 0;
+    var start_offset = (startposition * originalBuffer.sampleRate) >> 0;
+    var after_offset = (endposition * originalBuffer.sampleRate) >> 0;
     var after_len = originalBuffer.length - after_offset;
     if (after_len < 0) after_len = 0;
     var new_len = start_offset + newBuffer.length + after_len;
@@ -288,11 +284,6 @@ export function useWaveSurfer(
     if (!wavesurfer()) return;
     var backend = wavesurfer()?.backend as any;
     if (!backend) return; //throw?
-    var originalBuffer = backend.buffer;
-    if (!originalBuffer) {
-      wsLoad(blob, mimeType);
-      return;
-    }
     var buffer = await blob.arrayBuffer();
 
     return await new Promise<number>((resolve, reject) => {

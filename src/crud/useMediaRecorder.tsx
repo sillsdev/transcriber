@@ -3,13 +3,13 @@ import { useGlobal } from 'reactn';
 import { useState, useEffect } from 'react';
 import { useUserMedia } from './useUserMedia';
 import { useSnackBar } from '../hoc/SnackBar';
-import { logError, Severity } from '../utils';
+import { logError, Severity, waitForIt } from '../utils';
 
 const CAPTURE_OPTIONS = {
   audio: true,
   video: false,
 };
-const noop = () => {};
+const noop = async () => {};
 export interface MimeInfo {
   mimeType: string;
   extension: string;
@@ -19,7 +19,7 @@ export function useMediaRecorder(
   onStart: () => void = noop,
   onStop: (blob: Blob) => void = noop,
   onError: (e: any) => void = noop,
-  onDataAvailable: (e: any, blob: Blob) => void = noop
+  onDataAvailable: (e: any, blob: Blob) => Promise<void> = noop
 ) {
   const mediaChunks = useRef<any>([]);
   const [playerUrl, setPlayerUrl] = useState('');
@@ -31,6 +31,7 @@ export function useMediaRecorder(
   const [acceptedMimes, setAcceptedMimes] = useState<MimeInfo[]>([]);
   const [reporter] = useGlobal('errorReporter');
   const { showMessage } = useSnackBar();
+  const lastSendDoneRef = useRef(true);
 
   useEffect(() => {
     const acceptextension = ['mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'];
@@ -53,9 +54,7 @@ export function useMediaRecorder(
     }
     setAcceptedMimes(mimes);
     return () => {
-      console.log('cleanup recorder');
       mediaStreamRef.current?.getTracks().forEach((track) => {
-        console.log('stop track');
         track.stop();
       });
     };
@@ -85,17 +84,28 @@ export function useMediaRecorder(
     setMediaBlob(blob);
     return blob;
   }
+
   function handleDataAvailable(e: any) {
     if (e.data.size) {
       mediaChunks.current.push(e.data);
-      onDataAvailable(e.data, createBlob());
+      if (lastSendDoneRef.current) {
+        lastSendDoneRef.current = false;
+        onDataAvailable(e.data, createBlob()).then(() => {
+          lastSendDoneRef.current = true;
+        });
+      }
     }
   }
 
   function handleStopped() {
     const blob = createBlob();
     mediaChunks.current = [];
-    onStop(blob);
+    waitForIt(
+      'last send',
+      () => lastSendDoneRef.current,
+      () => false,
+      200
+    ).then(() => onStop(blob));
   }
   function handleError(e: any) {
     console.log(e.error);

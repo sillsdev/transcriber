@@ -51,11 +51,9 @@ export function useWaveSurferRegions(
   };
 
   useEffect(() => {
-    console.log('wavesurfer useEffect', ws);
     wavesurferRef.current = ws;
     if (ws) {
       ws.on('region-created', function (r: any) {
-        console.log('region-created', r.start, r.end);
         if (singleRegionRef.current) {
           r.drag = true;
           if (currentRegion()) currentRegion().remove();
@@ -70,7 +68,6 @@ export function useWaveSurferRegions(
         }
       });
       ws.on('region-removed', function (r: any) {
-        console.log('region-removed', r.start, r.end);
         if (r.attributes?.prevRegion)
           r.attributes.prevRegion.attributes.nextRegion =
             r.attributes?.nextRegion;
@@ -89,13 +86,6 @@ export function useWaveSurferRegions(
         resizingRef.current = r.isResizing;
       });
       ws.on('region-update-end', function (r: any) {
-        console.log(
-          'region-update-end',
-          r.start,
-          r.end,
-          updatingRef.current,
-          resizingRef.current
-        );
         if (singleRegionRef.current) {
           goto(r.start);
         } else if (!updatingRef.current && resizingRef.current) {
@@ -134,24 +124,22 @@ export function useWaveSurferRegions(
       ws.on('region-out', function (r: any) {
         console.log('region-out', r.start, r.loop, playRegionRef.current);
         //help it in case it forgot -- unless the user clicked out
+        //here is where we could add a pause possibly
         if (r.loop && r === loopingRegionRef.current) goto(r.start);
         if (playRegionRef.current && !r.loop) {
           onStop();
         }
       });
       ws.on('region-click', function (r: any) {
-        console.log('region-click', r, currentRegion());
         setCurrentRegion(r);
         loopingRegionRef.current = r;
       });
       ws.on('region-dblclick', function (r: any) {
-        console.log('region-dblclick', r);
         if (!singleRegionOnly) {
           wsAddOrRemoveRegion();
         }
       });
       ws.drawer.on('dblclick', (event: any, progress: number) => {
-        console.log('dblclick now', progress);
         if (!singleRegionOnly) {
           wsAddOrRemoveRegion();
         }
@@ -273,10 +261,8 @@ export function useWaveSurferRegions(
   const setPrevNext = (sortedIds: string[]) => {
     if (!wavesurferRef.current || sortedIds.length === 0) return;
     var prev: any = undefined;
-    console.log('sorted:');
     sortedIds.forEach(function (id) {
       let r = region(id);
-      console.log(r.start);
       if (prev) {
         prev.attributes.nextRegion = r;
         r.attributes.prevRegion = prev;
@@ -302,7 +288,6 @@ export function useWaveSurferRegions(
       region.loop = loop;
       wavesurferRef.current?.addRegion(region);
     });
-    console.log('loadRegions', regions);
     waitForIt(
       'wait for last region',
       () => numRegions() === regions.length,
@@ -360,7 +345,6 @@ export function useWaveSurferRegions(
       newSorted.push(newRegion.id);
     }
     setPrevNext(newSorted);
-    console.log(r, ret);
     if (r && r.loop && ret.newEnd < ret.end)
       //&& playing
       goto(ret.start + 0.01);
@@ -369,7 +353,6 @@ export function useWaveSurferRegions(
 
   const wsRemoveSplitRegion = (forceNext?: boolean) => {
     var r = currentRegion();
-    console.log('removesplit', r, forceNext, r.attributes);
 
     var ret: IRegionChange = {
       start: r.start,
@@ -379,16 +362,13 @@ export function useWaveSurferRegions(
     };
     if (forceNext !== true) {
       var prev = findPrevRegion(r);
-      console.log('do I have prev?', prev);
       if (isNear(r.start) && prev) {
-        console.log('remove prev');
         updateRegion(r, { start: prev.start });
         ret.newStart = prev.start;
         prev.remove();
         return;
       }
     }
-    console.log('remove next');
     //find next region
     var next = findNextRegion(r, false);
     if (next) {
@@ -422,7 +402,6 @@ export function useWaveSurferRegions(
   };
 
   const wsAddOrRemoveRegion = () => {
-    console.log('add or remove');
     if (
       currentRegion() &&
       (isNear(currentRegion().start) || isNear(currentRegion().end))

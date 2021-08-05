@@ -247,6 +247,7 @@ function WSAudioPlayer(props: IProps) {
   const durationRef = useRef(0);
   const [duration, setDurationx] = useState(0);
   const justPlayButton = allowRecord;
+  const processRecordRef = useRef(false);
   const { showMessage } = useSnackBar();
   //const isMounted = useMounted('wsaudioplayer');
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
@@ -373,6 +374,7 @@ function WSAudioPlayer(props: IProps) {
   };
 
   function onRecordStart() {}
+
   async function onRecordStop(blob: Blob) {
     await wsInsertAudio(
       blob,
@@ -380,6 +382,7 @@ function WSAudioPlayer(props: IProps) {
       recordOverwritePosition.current || recordStartPosition.current
     );
     recordOverwritePosition.current = undefined;
+    processRecordRef.current = false;
     handleChanged();
   }
 
@@ -499,8 +502,10 @@ function WSAudioPlayer(props: IProps) {
     if (!recordingRef.current) {
       wsPause(); //stop if playing
       recordStartPosition.current = wsPosition();
-      startRecording(300);
+      recordOverwritePosition.current = recordStartPosition.current;
+      startRecording(500);
     } else {
+      processRecordRef.current = true;
       stopRecording();
     }
     setRecording(!recordingRef.current);
@@ -556,6 +561,7 @@ function WSAudioPlayer(props: IProps) {
                         id="wsAudioRecord"
                         className={classes.record}
                         onClick={handleRecorder}
+                        disabled={processRecordRef.current}
                       >
                         {recording ? <FaStopCircle /> : <FaDotCircle />}
                       </IconButton>
