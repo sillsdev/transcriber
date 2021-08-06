@@ -23,7 +23,7 @@ import {
   // IconButton
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
-import { Online, forceLogin } from '../utils';
+import { Online, forceLogin, waitForIt } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
@@ -331,8 +331,23 @@ export function Access(props: IProps) {
         handleLogin();
       }
     }
-    if (user && localStorage.getItem('isLoggedIn') !== 'true')
-      handleSelect(user); //set by Quick Transcribe
+    if (user) {
+      if (localStorage.getItem('isLoggedIn') !== 'true') {
+        handleSelect(user); //set by Quick Transcribe
+      } else {
+        waitForIt(
+          'check if token is set',
+          () => auth !== undefined,
+          () => false,
+          200
+        ).then(() => {
+          if (!localStorage.getItem('goingOnline')) {
+            localStorage.setItem('goingOnline', 'true');
+            handleGoOnline();
+          }
+        });
+      }
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
