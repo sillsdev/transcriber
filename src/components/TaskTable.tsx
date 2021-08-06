@@ -155,7 +155,7 @@ export function TaskTable(props: IProps) {
   const [openReports, setOpenReports] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
-  const [inlinePassage, setInlinePassage] = useState(false);
+  const isInline = useRef(false);
   const [columns] = useState([
     { name: 'composite', title: '\u00A0' },
     { name: 'play', title: '\u00A0' },
@@ -262,7 +262,7 @@ export function TaskTable(props: IProps) {
   useEffect(() => {
     setPlanName(getPlanName(planId));
     const planRec = getPlan(planId);
-    setInlinePassage(Boolean(planRec?.attributes?.flat));
+    isInline.current = Boolean(planRec?.attributes?.flat);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planId]);
 
@@ -329,7 +329,11 @@ export function TaskTable(props: IProps) {
         r.state === '' ? (
           <TaskHead item={i} />
         ) : (
-          <TaskItem item={i} organizedBy={organizedBy} flat={inlinePassage} />
+          <TaskItem
+            item={i}
+            organizedBy={organizedBy}
+            flat={isInline.current}
+          />
         ),
       play: r.playItem,
       plan: r.planName,
