@@ -183,6 +183,7 @@ export function Welcome(props: IProps) {
       setBusy(false);
       const { onlineUsers } = userTypes();
       checkUsers(true, onlineUsers ? 'online-local' : 'offline');
+      localStorage.setItem('offlineAdmin', 'false');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importStatus]);
