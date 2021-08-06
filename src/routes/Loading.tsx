@@ -290,6 +290,7 @@ export function Loading(props: IProps) {
 
   useEffect(() => {
     const finishRemoteLoad = () => {
+      localStorage.removeItem('goingOnline');
       remote
         .pull((q) => q.findRecords('currentuser'))
         .then((tr) => {
