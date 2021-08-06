@@ -335,7 +335,7 @@ export function TaskTable(props: IProps) {
             flat={isInline.current}
           />
         ),
-      play: r.playItem,
+      play: playItem,
       plan: r.planName,
       section: Number(sectionNumber(r.section)),
       sectPass: r.sectPass,
@@ -355,7 +355,7 @@ export function TaskTable(props: IProps) {
     }));
     setRows(newRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData]);
+  }, [rowData, playItem]);
 
   interface ICell {
     value: any;
@@ -410,8 +410,13 @@ export function TaskTable(props: IProps) {
     } else {
       if (column.name === 'composite') {
         return <td>{'\u00a0'}</td>;
-      } else if (column.name === 'play' && row.length !== '') {
-        return <PlayCell {...props} mediaId={row.mediaRemoteId} />;
+      } else if (column.name === 'play') {
+        // if there is no audio file to play put nothing in the play column
+        return row.length !== '' ? (
+          <PlayCell {...props} mediaId={row.mediaRemoteId || props.mediaId} />
+        ) : (
+          <Table.Cell {...props} value="" />
+        );
       }
       return <Table.Cell {...props} />;
     }
