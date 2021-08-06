@@ -359,8 +359,10 @@ export function Access(props: IProps) {
           ipc?.invoke('get-token').then((accessToken: any) => {
             const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
             setConnected(true);
-            if (offline && loggedIn) setOffline(false);
-            if (auth) auth.setDesktopSession(result, accessToken);
+            if (loggedIn) {
+              if (offline) setOffline(false);
+              if (auth) auth.setDesktopSession(result, accessToken);
+            }
             if (selectedUser === '' && loggedIn) setSelectedUser('unknownUser');
           });
         }
