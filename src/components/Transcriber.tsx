@@ -268,7 +268,7 @@ export function Transcriber(props: IProps) {
   const [width, setWidth] = useState(window.innerWidth);
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
-  const [, setDefaultPosition] = useState(0.0);
+  const [defaultPosition, setDefaultPosition] = useState(0.0);
   const { showMessage } = useSnackBar();
   const showHistoryRef = useRef(false);
   const [showHistory, setShowHistoryx] = useState(false);
@@ -903,6 +903,7 @@ export function Transcriber(props: IProps) {
                           allowRecord={false}
                           size={playerSize}
                           blob={audioBlob}
+                          initialposition={defaultPosition}
                           segments={segmentsRef.current}
                           onProgress={onProgress}
                           onSegmentChange={onSegmentChange}

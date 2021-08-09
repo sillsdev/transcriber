@@ -170,6 +170,7 @@ interface IStateProps {
 interface IProps extends IStateProps {
   visible: boolean;
   blob?: Blob;
+  initialposition?: number;
   allowRecord?: boolean;
   size: number;
   segments: string;
@@ -208,6 +209,7 @@ function WSAudioPlayer(props: IProps) {
   const {
     t,
     blob,
+    initialposition,
     allowRecord,
     size,
     segments,
@@ -243,7 +245,7 @@ function WSAudioPlayer(props: IProps) {
   const readyRef = useRef(false);
   const [ready, setReadyx] = useState(false);
   const [silence, setSilence] = useState(0.5);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(initialposition || 0);
   const durationRef = useRef(0);
   const [duration, setDurationx] = useState(0);
   const justPlayButton = allowRecord;
@@ -401,6 +403,7 @@ function WSAudioPlayer(props: IProps) {
   function onWSReady() {
     setReady(true);
     setDuration(wsDuration());
+    if (initialposition) wsGoto(initialposition || 0);
   }
   function onWSProgress(progress: number) {
     setProgress(progress);
@@ -472,8 +475,7 @@ function WSAudioPlayer(props: IProps) {
     setLooping(wsLoopRegion(!looping));
   };
   const handleNextRegion = () => {
-    wsNextRegion();
-    setPlaying(true);
+    setPlaying(wsNextRegion());
     return true;
   };
 
