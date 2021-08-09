@@ -425,11 +425,16 @@ export function useWaveSurferRegions(
 
   const wsNextRegion = () => {
     var r = findNextRegion(currentRegion(), true);
+    var newPlay = true;
     if (r) {
       goto(r.start);
-      setPlaying(true);
       loopingRegionRef.current = r;
-    } else goto(duration());
+    } else {
+      goto(duration());
+      newPlay = false;
+    }
+    setPlaying(newPlay);
+    return newPlay;
   };
 
   const wsGetRegions = () => {

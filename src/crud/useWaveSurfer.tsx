@@ -57,7 +57,10 @@ export function useWaveSurfer(
           wavesurfer()?.play(progress());
         }
       }
-    } else if (wavesurfer()?.isPlaying()) wavesurfer()?.pause();
+    } else {
+      if (wavesurfer()?.isPlaying()) wavesurfer()?.pause();
+      if (onStop) onStop();
+    }
   };
 
   const {
