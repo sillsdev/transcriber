@@ -179,6 +179,9 @@ export const Uploader = (props: IProps) => {
     }
     setComplete(Math.min((n * 100) / uploadList.length, 100));
     const next = n + 1;
+    console.log(
+      `Uploader: next=${next} listLen=${uploadList.length} status=${status.canceled} offlineOnly=${offlineOnly}`
+    );
     if (next < uploadList.length && !status.canceled) {
       doUpload(next);
     } else if (!offlineOnly) {
