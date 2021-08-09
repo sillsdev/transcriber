@@ -80,6 +80,7 @@ export const AudioTable = (props: IProps) => {
       columnName: onAttach ? 'fileName' : 'version',
       direction: onAttach ? 'asc' : 'desc',
     },
+    { columnName: 'date', direction: 'desc' },
   ] as Sorting[];
   const columnSorting = [
     { columnName: 'duration', compare: numCompare },
