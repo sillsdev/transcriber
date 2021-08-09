@@ -139,7 +139,7 @@ export function AudioTab(props: IProps) {
   const [filter, setFilter] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [status] = useState(statusInit);
-  const [, setComplete] = useGlobal('progress');
+  const [complete, setComplete] = useGlobal('progress');
   const [autoMatch, setAutoMatch] = useState(false);
   const [playItem, setPlayItem] = useState('');
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
@@ -237,6 +237,10 @@ export function AudioTab(props: IProps) {
     }
   };
   const handleFilter = () => setFilter(!filter);
+
+  const handleUploadCancel = () => {
+    status.canceled = true;
+  };
 
   useEffect(() => {
     if (urlOpen) {
@@ -384,6 +388,18 @@ export function AudioTab(props: IProps) {
               </>
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
+            {complete !== 0 && complete !== 100 && (
+              <Button
+                id="uploadCancel"
+                aria-label={ts.cancel}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleUploadCancel}
+              >
+                {ts.cancel}
+              </Button>
+            )}
             <Button
               id="audFilt"
               key="filter"
