@@ -83,10 +83,11 @@ interface IProps extends IStateProps {
   isOwner?: boolean;
   project: string;
   action?: (what: string) => void;
+  stopPlayer?: () => void;
 }
 
 export function ProjectMenu(props: IProps) {
-  const { inProject, action, t, tpb, td, isOwner, project } = props;
+  const { inProject, action, t, tpb, td, isOwner, project, stopPlayer } = props;
   const classes = useStyles();
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -97,6 +98,7 @@ export function ProjectMenu(props: IProps) {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
+    if (stopPlayer) stopPlayer();
   };
 
   useEffect(() => {

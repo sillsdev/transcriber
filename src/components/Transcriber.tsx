@@ -905,6 +905,7 @@ export function Transcriber(props: IProps) {
                           blob={audioBlob}
                           initialposition={defaultPosition}
                           segments={segmentsRef.current}
+                          isPlaying={playing}
                           onProgress={onProgress}
                           onSegmentChange={onSegmentChange}
                           onPlayStatus={onPlayStatus}

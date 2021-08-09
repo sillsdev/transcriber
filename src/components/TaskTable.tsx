@@ -135,6 +135,8 @@ export function TaskTable(props: IProps) {
     selected,
     expandedGroups,
     filter,
+    playing,
+    setPlaying,
     setFilter,
   } = useTodo();
   const t = todoStr;
@@ -210,6 +212,10 @@ export function TaskTable(props: IProps) {
   const handleToggleFilter = () => {
     if (onFilter) onFilter(!filter);
     setFilter(!filter);
+  };
+
+  const handleStopPlayer = () => {
+    if (playing) setPlaying(false);
   };
 
   const handleProjectMenu = (what: string) => {
@@ -443,6 +449,7 @@ export function TaskTable(props: IProps) {
             <div className={classes.grow}>{'\u00A0'}</div>
             <ProjectMenu
               action={handleProjectMenu}
+              stopPlayer={handleStopPlayer}
               inProject={true}
               isOwner={projRole === 'admin'}
               project={projectId}
