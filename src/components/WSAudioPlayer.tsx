@@ -175,6 +175,7 @@ interface IProps extends IStateProps {
   size: number;
   segments: string;
   metaData?: JSX.Element;
+  isPlaying?: boolean;
   setMimeType?: (type: string) => void;
   setAcceptedMimes?: (types: MimeInfo[]) => void;
   onPlayStatus?: (playing: boolean) => void;
@@ -214,6 +215,7 @@ function WSAudioPlayer(props: IProps) {
     size,
     segments,
     metaData,
+    isPlaying,
     setMimeType,
     setAcceptedMimes,
     onProgress,
@@ -372,8 +374,14 @@ function WSAudioPlayer(props: IProps) {
   const handlePlayStatus = () => {
     const playing = wsTogglePlay();
     setPlaying(playing);
-    if (onPlayStatus) onPlayStatus(playing);
+    if (onPlayStatus && isPlaying !== undefined && playing !== isPlaying)
+      onPlayStatus(playing);
   };
+
+  useEffect(() => {
+    if (playing !== isPlaying) handlePlayStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying]);
 
   function onRecordStart() {}
 
