@@ -123,9 +123,10 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   auth: Auth;
 }
 export const goOnline = () => {
+  const lastTime = localStorage.getItem('electron-lastTime');
   localStorage.removeItem('auth-id');
   localStorage.setItem('isLoggedIn', 'true');
-  ipc?.invoke('login');
+  ipc?.invoke('login', lastTime !== null);
   electronremote?.getCurrentWindow().close();
 };
 export const doLogout = async () => {

@@ -23,21 +23,15 @@ function getProfile() {
   return profile;
 }
 
-function getAuthenticationURL() {
+function getAuthenticationURL(hasUsed) {
   return (
-    'https://' +
-    auth0Domain +
-    '/authorize?' +
-    'audience=' +
-    apiIdentifier +
-    '&' +
+    `https://${auth0Domain}/authorize?` +
+    `audience=${apiIdentifier}&` +
     'scope=openid email profile offline_access&' +
     'response_type=code&' +
-    'client_id=' +
-    desktopId +
-    '&' +
-    'redirect_uri=' +
-    redirectUri
+    (!hasUsed ? 'login_hint=signUp&' : '') +
+    `client_id=${desktopId}&` +
+    `redirect_uri=${redirectUri}`
   );
 }
 
