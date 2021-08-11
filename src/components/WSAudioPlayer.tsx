@@ -284,7 +284,7 @@ function WSAudioPlayer(props: IProps) {
     onWSReady,
     onWSProgress,
     onWSRegion,
-    onWSStop,
+    onWSPlayStatus,
     onInteraction,
     () => {}, //on error...probably should report?
     size - 150,
@@ -422,9 +422,9 @@ function WSAudioPlayer(props: IProps) {
     if (onSegmentChange && newRegion) onSegmentChange(wsGetRegions());
   }
 
-  function onWSStop() {
-    setPlaying(false);
-    if (onPlayStatus) onPlayStatus(false);
+  function onWSPlayStatus(status: boolean) {
+    setPlaying(status);
+    if (onPlayStatus) onPlayStatus(status);
   }
 
   const handleSliderChange = (

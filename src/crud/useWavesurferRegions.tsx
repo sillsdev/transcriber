@@ -12,7 +12,7 @@ export interface IRegionChange {
 export function useWaveSurferRegions(
   singleRegionOnly: boolean,
   onRegion: (count: number, newRegion: boolean) => void,
-  onStop: () => void,
+  onPlayStatus: (playing: boolean) => void,
   duration: () => number,
   isNear: (test: number) => boolean,
   goto: (position: number) => void,
@@ -127,7 +127,7 @@ export function useWaveSurferRegions(
         //here is where we could add a pause possibly
         if (r.loop && r === loopingRegionRef.current) goto(r.start);
         if (playRegionRef.current && !r.loop) {
-          onStop();
+          onPlayStatus(false);
         }
       });
       ws.on('region-click', function (r: any) {
