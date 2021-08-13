@@ -845,7 +845,7 @@ const initialState = {
 	"userListMode": new LocalizedStrings({
 		"en": {
 			"logOut": "Log Out",
-			"switchUser": "Switch User",
+			"switchUser": "Work Online",
 			"workOffline": "Work Offline",
 		}
 	}),

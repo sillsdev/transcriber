@@ -4518,7 +4518,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="userListMode.switchUser">
-            <source>Switch User</source>
+            <source>Work Online</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">UserListMode.tsx</context>
