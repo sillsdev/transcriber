@@ -10,7 +10,7 @@
       <unit id="access.back">
          <segment>
             <source>Back</source>
-            <target>Dos</target>
+         	<target>Retour</target>
          </segment>
       </unit>
       <unit id="access.cancel">
@@ -3873,8 +3873,8 @@
       </unit>
       <unit id="userListMode.switchUser">
          <segment>
-            <source>Switch User</source>
-            <target>Changer d'utilisateur</target>
+            <source>Work Online</source>
+         	<target>Travail en ligne</target>
          </segment>
       </unit>
       <unit id="userListMode.workOffline">
