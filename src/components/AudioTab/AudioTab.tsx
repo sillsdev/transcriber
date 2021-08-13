@@ -326,11 +326,15 @@ export function AudioTab(props: IProps) {
 
   const afterUpload = (planId: string, mediaRemoteIds?: string[]) => {
     if (mediaRemoteIds && mediaRemoteIds.length === 1) {
-      setUploadMedia(
-        remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ||
-          mediaRemoteIds[0]
-      );
-      setAttachVisible(true);
+      if (!status.canceled) {
+        setUploadMedia(
+          remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ||
+            mediaRemoteIds[0]
+        );
+        setAttachVisible(true);
+      } else {
+        status.canceled = false;
+      }
     }
   };
 
