@@ -4,6 +4,7 @@
   "description": "transcribe audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
+    "@auth0/auth0-react": "^1.6.0",
     "@bugsnag/js": "^6.5.2",
     "@bugsnag/plugin-react": "^6.5.0",
     "@devexpress/dx-react-chart": "^2.7.2",
@@ -26,7 +27,6 @@
     "adm-zip": "^0.4.16",
     "asar": "^2.1.0",
     "audio-recorder-polyfill": "^0.4.1",
-    "auth0-js": "^9.14.0",
     "aws-amplify": "^3.3.16",
     "axios": "^0.21.1",
     "electron-is-dev": "^1.2.0",
@@ -118,7 +118,6 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "@types/adm-zip": "^0.4.33",
-    "@types/auth0-js": "^9.14.0",
     "@types/dom-mediacapture-record": "^1.0.7",
     "@types/fingerprintjs2": "^2.0.0",
     "@types/jest": "^26.0.24",

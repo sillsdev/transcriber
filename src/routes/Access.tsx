@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect, useLocation } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -154,13 +155,13 @@ export function Access(props: IProps) {
   const { pathname } = useLocation();
   const classes = useStyles();
   const { setLanguage } = props;
+  const { loginWithRedirect, isAuthenticated } = useAuth0();
   const [offline, setOffline] = useGlobal('offline');
   const [user] = useGlobal('user');
   const [, setConnected] = useGlobal('connected');
   const [, setEditId] = useGlobal('editUserId');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
   const [importOpen, setImportOpen] = useState(false);
-  const handleLogin = () => auth.login();
   const [view, setView] = useState('');
   const [curUser, setCurUser] = useState<User>();
   const [whichUsers, setWhichUsers] = useState(
@@ -326,10 +327,15 @@ export function Access(props: IProps) {
     setPlan('');
     setProjRole('');
     setProjType('');
-    if (!auth?.isAuthenticated()) {
+    if (!auth?.isAuthenticated() && !isAuthenticated) {
       if (!offline && !isElectron) {
         setConnected(true);
-        handleLogin();
+        const hasUsed = localStorage.key(1) !== null;
+        if (hasUsed) {
+          loginWithRedirect();
+        } else {
+          loginWithRedirect({ login_hint: 'signUp' });
+        }
       }
     }
     if (user) {

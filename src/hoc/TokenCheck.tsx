@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import { IState } from '../model';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -28,6 +29,7 @@ interface IProps extends IStateProps, IDispatchProps {
 
 function TokenCheck(props: IProps) {
   const { auth, children, expireAt, setExpireAt } = props;
+  const { getAccessTokenSilently, logout } = useAuth0();
   const [modalOpen, setModalOpen] = React.useState(false);
   const [secondsToExpire, setSecondsToExpire] = React.useState(0);
   const [offline] = useGlobal('offline');
@@ -35,18 +37,22 @@ function TokenCheck(props: IProps) {
   const view = React.useRef<any>('');
   const timer = React.useRef<NodeJS.Timeout>();
 
+  const resetExpiresAt = () => {
+    getAccessTokenSilently()
+      .then((token) => {
+        const decodedToken: any = jwtDecode(token);
+        setExpireAt(decodedToken.exp);
+      })
+      .catch((e: Error) => {
+        view.current = 'Logout';
+        logError(Severity.error, errorReporter, e);
+      });
+  };
+
   React.useEffect(() => {
     if (!offline) {
       if (localStorage.getItem('isLoggedIn') === 'true') {
-        auth
-          .renewSession()
-          .then(() => {
-            const decodedToken: any = jwtDecode(auth.getAccessToken());
-            setExpireAt(decodedToken.exp);
-          })
-          .catch((err) => {
-            view.current = 'Logout';
-          });
+        resetExpiresAt();
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -57,6 +63,7 @@ function TokenCheck(props: IProps) {
       if (localStorage.getItem('isLoggedIn') !== 'true' && auth.accessToken) {
         auth.logout();
         view.current = 'loggedOut';
+        logout();
       }
       if (expireAt) {
         const currentUnix = moment().format('X');
@@ -78,16 +85,7 @@ function TokenCheck(props: IProps) {
     if (value < 0) {
       view.current = 'Logout';
     } else {
-      auth
-        .renewSession()
-        .then(() => {
-          const decodedToken: any = jwtDecode(auth.getAccessToken());
-          setExpireAt(decodedToken.exp);
-        })
-        .catch((e: any) => {
-          view.current = 'Logout';
-          logError(Severity.error, errorReporter, e);
-        });
+      resetExpiresAt();
     }
   };
 
@@ -95,6 +93,7 @@ function TokenCheck(props: IProps) {
     if (secondsToExpire < Expires) {
       if (timer.current) clearInterval(timer.current);
       auth.logout();
+      logout();
       view.current = 'loggedOut';
     }
     return (
@@ -106,6 +105,7 @@ function TokenCheck(props: IProps) {
     );
   } else if (view.current === 'Logout') {
     auth.logout();
+    logout();
     view.current = 'loggedOut';
   }
 

@@ -1,5 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Auth0Provider } from '@auth0/auth0-react';
+import {
+  auth0Domain,
+  webClientId,
+  apiIdentifier,
+} from './auth/auth0-variables.json';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -94,7 +100,14 @@ const errorManagedApp = bugsnagClient ? (
 const router = isElectron ? (
   <HashRouter>{errorManagedApp}</HashRouter>
 ) : (
-  <Router history={history}>{errorManagedApp}</Router>
+  <Auth0Provider
+    domain={auth0Domain}
+    clientId={webClientId}
+    audience={apiIdentifier}
+    redirectUri={process.env.REACT_APP_CALLBACK}
+  >
+    <Router history={history}>{errorManagedApp}</Router>
+  </Auth0Provider>
 );
 
 const Root = () => (
