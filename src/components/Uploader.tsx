@@ -103,9 +103,8 @@ export const Uploader = (props: IProps) => {
       uploadComplete();
       setComplete(0);
       setBusy(false);
-      if (successCount.current > 0 && finish)
-        finish(planIdRef.current, mediaIdRef.current);
-      else if (status) status.canceled = true;
+      status.canceled = successCount.current <= 0;
+      finish && finish(planIdRef.current, mediaIdRef.current);
     }, 1000);
   };
 
