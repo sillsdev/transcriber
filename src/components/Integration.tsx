@@ -390,10 +390,13 @@ export function IntegrationPanel(props: IProps) {
   };
 
   useEffect(() => {
-    Online((result) => {
-      setConnected(result);
-    }, auth);
-    if (offline) getParatextDataPath().then((val) => setPtPath(val));
+    if (offline) {
+      getParatextDataPath().then((val) => setPtPath(val));
+    } else {
+      Online((result) => {
+        setConnected(result);
+      }, auth);
+    }
     resetProjects();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
