@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { IState, IWelcomeStrings, User } from '../model';
+import { IState, IWelcomeStrings, User, OfflineProject } from '../model';
 import { Record } from '@orbit/data';
 import localStrings from '../selector/localize';
 import * as action from '../store';
@@ -124,7 +124,10 @@ export function Welcome(props: IProps) {
   };
 
   const checkUsers = (autoGo: boolean, prevChoice?: string) => {
-    setHasOfflineProjects(hasRecs('offlineproject'));
+    const offlineProj = (
+      recOfType('offlineproject') as OfflineProject[]
+    ).filter((p) => p.attributes.offlineAvailable);
+    setHasOfflineProjects(offlineProj.length > 0);
     const projects = recOfType('project') as Record[];
     setHasProjects(projects.length > 0);
 
