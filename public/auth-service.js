@@ -24,12 +24,17 @@ function getProfile() {
 }
 
 function getAuthenticationURL(hasUsed) {
+  const dev = envVariables.auth0Domain.indexOf('-dev') > 0;
   return (
     `https://${auth0Domain}/authorize?` +
     `audience=${apiIdentifier}&` +
     'scope=openid email profile offline_access&' +
     'response_type=code&' +
-    (!hasUsed ? 'login_hint=signUp&' : '') +
+    (!hasUsed && dev
+      ? 'login_hint=signUp&'
+      : !hasUsed && !dev
+      ? 'mode=signUp&'
+      : '') +
     `client_id=${desktopId}&` +
     `redirect_uri=${redirectUri}`
   );
