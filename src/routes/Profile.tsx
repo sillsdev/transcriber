@@ -185,7 +185,9 @@ export function Profile(props: IProps) {
   const [given, setGiven] = useState<string | null>(null);
   const [family, setFamily] = useState<string | null>(null);
   const [email, setEmail] = useState('');
-  const [timezone, setTimezone] = useState<string | null>(moment.tz.guess());
+  const [timezone, setTimezone] = useState<string | null>(
+    moment.tz.guess() || ''
+  );
   const [role, setRole] = useState('member');
   const [locale, setLocale] = useState<string>(localeDefault(isDeveloper));
   const [news, setNews] = useState<boolean | null>(null);
@@ -538,7 +540,7 @@ export function Profile(props: IProps) {
   useEffect(() => {
     if (timezone === null) {
       const myZone = moment.tz.guess();
-      setTimezone(myZone);
+      setTimezone(myZone || '');
       setChanged(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

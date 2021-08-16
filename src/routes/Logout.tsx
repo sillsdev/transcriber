@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as action from '../store';
@@ -43,6 +44,7 @@ interface IProps extends IDispatchProps {
 
 export function Logout(props: IProps) {
   const { auth } = props;
+  const { logout } = useAuth0();
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
   const [coordinator] = useGlobal('coordinator');
@@ -71,6 +73,7 @@ export function Logout(props: IProps) {
         await coordinator.activate({ logLevel: LogLevel.Warnings });
       }
       auth.logout();
+      !isElectron && logout();
     }
     setView(wasOfflineOnly ? 'offline' : 'online');
   };
@@ -80,6 +83,7 @@ export function Logout(props: IProps) {
     fetchLocalization();
     if (!isElectron) {
       auth.logout();
+      !isElectron && logout();
     } else handleLogout();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);

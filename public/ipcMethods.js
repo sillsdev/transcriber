@@ -60,7 +60,7 @@ const ipcMethods = () => {
     }
   });
 
-  ipcMain.handle('login', async () => {
+  ipcMain.handle('login', async (event, hasUsed) => {
     isLogingIn = true;
     isLogOut = false;
     try {
@@ -69,7 +69,7 @@ const ipcMethods = () => {
       return createAppWindow();
     } catch (err) {
       isLogingIn = false;
-      createAuthWindow();
+      createAuthWindow(hasUsed);
     }
   });
 
