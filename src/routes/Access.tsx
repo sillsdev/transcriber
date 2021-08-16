@@ -29,7 +29,7 @@ import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
-import { isElectron } from '../api-variable';
+import { API_CONFIG, isElectron } from '../api-variable';
 import ImportTab from '../components/ImportTab';
 import Confirm from '../components/AlertDialog';
 import UserList from '../control/UserList';
@@ -334,7 +334,11 @@ export function Access(props: IProps) {
         if (hasUsed) {
           loginWithRedirect();
         } else {
-          loginWithRedirect({ login_hint: 'signUp' });
+          const opts =
+            API_CONFIG.snagId !== ''
+              ? { mode: 'signUp' }
+              : { login_hint: 'signUp' };
+          loginWithRedirect(opts);
         }
       }
     }
