@@ -353,6 +353,7 @@ export function useWaveSurferRegions(
 
   const wsRemoveSplitRegion = (forceNext?: boolean) => {
     var r = currentRegion();
+    if (!r) return undefined;
 
     var ret: IRegionChange = {
       start: r.start,
