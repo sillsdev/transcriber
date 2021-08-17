@@ -35,6 +35,7 @@ interface IStateProps {}
 
 interface IDispatchProps {
   setLanguage: typeof actions.setLanguage;
+  resetOrbitError: typeof actions.resetOrbitError;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -47,6 +48,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       setLanguage: actions.setLanguage,
+      resetOrbitError: actions.resetOrbitError,
     },
     dispatch
   ),
@@ -214,7 +216,7 @@ export const doDataChanges = async (
 };
 
 export function DataChanges(props: IProps) {
-  const { auth, children, setLanguage } = props;
+  const { auth, children, setLanguage, resetOrbitError } = props;
   const [isOffline] = useGlobal('offline');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
@@ -261,11 +263,13 @@ export function DataChanges(props: IProps) {
   const updateBusy = () => {
     const checkBusy =
       user === '' || (remote && remote.requestQueue.length !== 0);
-    if (checkBusy && orbitRetries < OrbitNetworkErrorRetries) {
+    //we know we're offline, or we've retried something so maybe we're offline
+    if (!connected || (checkBusy && orbitRetries < OrbitNetworkErrorRetries)) {
       Online((result) => {
         if (connected !== result) {
           setConnected(result);
           if (result) {
+            resetOrbitError();
             setOrbitRetries(OrbitNetworkErrorRetries);
             remote.requestQueue.retry();
           }

@@ -1137,22 +1137,29 @@ export function ScriptureTable(props: IProps) {
       await saveFn(changedRows, anyNew);
       setBusy(false);
     };
-
+    const save = () => {
+      setSaving(true);
+      showMessage(t.saving);
+      handleSave().then(() => {
+        saveCompleted('');
+        setSaving(false);
+      });
+    };
     if (doSave && !saving) {
-      Online((online) => {
-        setConnected(online);
-        if (!online && !offlineOnly) {
-          saveCompleted(ts.NoSaveOffline);
-          setSaving(false);
-        } else {
-          setSaving(true);
-          showMessage(t.saving);
-          handleSave().then(() => {
-            saveCompleted('');
+      if (offlineOnly) {
+        save();
+      } else {
+        Online((online) => {
+          setConnected(online);
+          if (!online) {
+            saveCompleted(ts.NoSaveOffline);
+            showMessage(ts.NoSaveOffline);
             setSaving(false);
-          });
-        }
-      }, auth);
+          } else {
+            save();
+          }
+        }, auth);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doSave, saving, data, inData, rowInfo]);
