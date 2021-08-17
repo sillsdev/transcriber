@@ -125,9 +125,10 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 }
 export const goOnline = () => {
   const lastTime = localStorage.getItem('electron-lastTime');
+  const emailVerfied = localStorage.getItem('email_verified');
   localStorage.removeItem('auth-id');
   localStorage.setItem('isLoggedIn', 'true');
-  ipc?.invoke('login', lastTime !== null);
+  ipc?.invoke('login', lastTime !== null || emailVerfied !== null);
   electronremote?.getCurrentWindow().close();
 };
 export const doLogout = async () => {
@@ -330,7 +331,7 @@ export function Access(props: IProps) {
     if (!auth?.isAuthenticated() && !isAuthenticated) {
       if (!offline && !isElectron) {
         setConnected(true);
-        const hasUsed = localStorage.key(1) !== null;
+        const hasUsed = localStorage.key(0) !== null;
         if (hasUsed) {
           loginWithRedirect();
         } else {
@@ -372,7 +373,7 @@ export function Access(props: IProps) {
             setConnected(true);
             if (loggedIn) {
               if (offline) setOffline(false);
-              if (auth) auth.setDesktopSession(result, accessToken);
+              if (auth) auth.setAuthSession(result, accessToken);
             }
             if (selectedUser === '' && loggedIn) setSelectedUser('unknownUser');
           });

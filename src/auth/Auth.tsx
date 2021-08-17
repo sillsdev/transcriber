@@ -22,7 +22,7 @@ export default class Auth {
     return this.profile;
   }
 
-  setDesktopSession(
+  setAuthSession(
     idTokenPayload: User | undefined,
     accessToken: string,
     expire?: number

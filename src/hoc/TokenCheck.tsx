@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { IState } from '../model';
+import { IState, IToken } from '../model';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
@@ -40,7 +40,7 @@ function TokenCheck(props: IProps) {
   const resetExpiresAt = () => {
     getAccessTokenSilently()
       .then((token) => {
-        const decodedToken: any = jwtDecode(token);
+        const decodedToken = jwtDecode(token) as IToken;
         setExpireAt(decodedToken.exp);
       })
       .catch((e: Error) => {
