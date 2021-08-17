@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
   IState,
+  IToken,
   IMainStrings,
   Invitation,
   User,
@@ -203,7 +204,7 @@ export function Loading(props: IProps) {
   useEffect(() => {
     if (!offline && !auth?.isAuthenticated()) return;
     if (!offline) {
-      const decodedToken: any = jwtDecode(auth.getAccessToken());
+      const decodedToken = jwtDecode(auth.getAccessToken()) as IToken;
       setExpireAt(decodedToken.exp);
     }
     setLanguage(localeDefault(isDeveloper));

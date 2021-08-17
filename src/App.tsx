@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { useAuth0, User } from '@auth0/auth0-react';
+import { useAuth0 } from '@auth0/auth0-react';
 import JwtDecode from 'jwt-decode';
+import { IToken } from './model';
 import { hot } from 'react-hot-loader';
 import { Route, Redirect } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@material-ui/core';
@@ -68,8 +69,8 @@ function App() {
     (async () => {
       if (isAuthenticated) {
         const token = await getAccessTokenSilently();
-        const decodedToken: User = JwtDecode(token);
-        auth.setDesktopSession(user, token, decodedToken.exp);
+        const decodedToken = JwtDecode(token) as IToken;
+        auth.setAuthSession(user, token, decodedToken.exp);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps

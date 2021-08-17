@@ -37,3 +37,4 @@ export * from './optionType';
 export * from './offlineProject';
 export * from './audacityProject';
 export * from './execa';
+export * from './token';
