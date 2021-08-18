@@ -247,8 +247,10 @@ function WSAudioPlayer(props: IProps) {
   const readyRef = useRef(false);
   const [ready, setReadyx] = useState(false);
   const [silence, setSilence] = useState(0.5);
-  const [progress, setProgress] = useState(initialposition || 0);
+  const [progress, setProgress] = useState(0);
   const durationRef = useRef(0);
+  const initialPosRef = useRef(initialposition);
+  const segmentsRef = useRef(segments);
   const [duration, setDurationx] = useState(0);
   const justPlayButton = allowRecord;
   const processRecordRef = useRef(false);
@@ -268,6 +270,7 @@ function WSAudioPlayer(props: IProps) {
     wsSetPlaybackRate,
     wsSkip,
     wsGoto,
+    wsLoadRegions,
     wsGetRegions,
     wsLoopRegion,
     wsRegionDelete,
@@ -347,6 +350,14 @@ function WSAudioPlayer(props: IProps) {
   }, [size, wsSetHeight]);
 
   useEffect(() => {
+    initialPosRef.current = initialposition;
+  }, [initialposition]);
+
+  useEffect(() => {
+    segmentsRef.current = segments;
+  }, [segments]);
+
+  useEffect(() => {
     onSaveProgressRef.current = onSaveProgress;
   }, [onSaveProgress]);
 
@@ -357,7 +368,7 @@ function WSAudioPlayer(props: IProps) {
 
   useEffect(() => {
     setDuration(0);
-    if (blob) wsLoad(blob, undefined, segments);
+    if (blob) wsLoad(blob, undefined);
     else wsClear();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blob]); //passed in by user
@@ -411,7 +422,8 @@ function WSAudioPlayer(props: IProps) {
   function onWSReady() {
     setReady(true);
     setDuration(wsDuration());
-    if (initialposition) wsGoto(initialposition || 0);
+    if (segmentsRef.current?.length > 2) wsLoadRegions(segmentsRef.current);
+    if (initialPosRef.current) wsGoto(initialPosRef.current || 0);
   }
   function onWSProgress(progress: number) {
     setProgress(progress);

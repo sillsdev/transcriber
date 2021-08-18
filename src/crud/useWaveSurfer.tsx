@@ -164,7 +164,7 @@ export function useWaveSurfer(
       setWaveSurfer(ws);
       ws.on('ready', function () {
         durationRef.current = ws.getDuration();
-        if (!singleRegionOnly) {
+        if (!singleRegionOnly && inputRegionsRef.current) {
           loadRegions(inputRegionsRef.current, false);
           inputRegionsRef.current = undefined;
         }
@@ -268,6 +268,11 @@ export function useWaveSurfer(
     if (!wavesurfer()) blobToLoad.current = blob;
     else wavesurfer()?.loadBlob(blob);
     blobTypeRef.current = mimeType;
+  };
+
+  const wsLoadRegions = (regions: string) => {
+    if (wavesurfer()?.isReady) loadRegions(JSON.parse(regions), true);
+    else inputRegionsRef.current = JSON.parse(regions);
   };
 
   const wsBlob = async () => {
@@ -440,6 +445,7 @@ export function useWaveSurfer(
     wsPosition,
     wsSkip,
     wsSetHeight,
+    wsLoadRegions,
     wsLoopRegion,
     wsRegionDelete,
     wsInsertAudio,
