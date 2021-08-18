@@ -295,7 +295,6 @@ export function useWaveSurferRegions(
       200
     ).then(() => {
       setPrevNext(regionIds());
-      goto(0);
       onRegion(regions.length, newRegions);
       loadingRef.current = false;
     });
