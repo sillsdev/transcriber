@@ -390,7 +390,7 @@ function WSAudioPlayer(props: IProps) {
   };
 
   useEffect(() => {
-    if (playing !== isPlaying) handlePlayStatus();
+    if (isPlaying !== undefined && playing !== isPlaying) handlePlayStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying]);
 
@@ -583,7 +583,9 @@ function WSAudioPlayer(props: IProps) {
                         id="wsAudioRecord"
                         className={classes.record}
                         onClick={handleRecorder}
-                        disabled={processRecordRef.current}
+                        disabled={
+                          playingRef.current || processRecordRef.current
+                        }
                       >
                         {recording ? <FaStopCircle /> : <FaDotCircle />}
                       </IconButton>
