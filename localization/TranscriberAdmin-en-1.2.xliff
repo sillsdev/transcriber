@@ -5056,6 +5056,20 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="wsAudioPlayer.prevRegion">
+            <source>Previous Region [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.nextRegion">
+            <source>Next Region [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="wsAudioPlayer.deleteRegion">
             <source>Delete Region</source>
             <target/>

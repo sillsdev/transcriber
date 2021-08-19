@@ -422,7 +422,19 @@ export function useWaveSurferRegions(
     loadRegions(regions, loop, true);
     if (regions.length) goto(regions[0].start);
   }
-
+  const wsPrevRegion = () => {
+    var r = findPrevRegion(currentRegion());
+    var newPlay = true;
+    if (r) {
+      goto(r.start);
+      loopingRegionRef.current = r;
+    } else {
+      goto(0);
+      newPlay = false;
+    }
+    setPlaying(newPlay);
+    return newPlay;
+  };
   const wsNextRegion = () => {
     var r = findNextRegion(currentRegion(), true);
     var newPlay = true;
@@ -515,6 +527,7 @@ export function useWaveSurferRegions(
     wsSplitRegion,
     wsRemoveSplitRegion,
     wsAddOrRemoveRegion,
+    wsPrevRegion,
     wsNextRegion,
     wsGetRegions,
     wsLoopRegion,

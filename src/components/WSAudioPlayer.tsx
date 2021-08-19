@@ -110,6 +110,9 @@ const useStyles = makeStyles((theme: Theme) =>
     duration: {
       margin: '5px',
     },
+    flipIcon: {
+      transform: 'rotate(180deg)',
+    },
   })
 );
 
@@ -204,6 +207,7 @@ const SLOWER_KEY = 'F4,CTRL+4';
 const FASTER_KEY = 'F5,CTRL+5';
 const TIMER_KEY = 'F6,CTRL+6';
 const RECORD_KEY = 'F9,CTRL+9';
+const LEFT_KEY = 'CTRL+ARROWLEFT';
 const RIGHT_KEY = 'CTRL+ARROWRIGHT';
 
 function WSAudioPlayer(props: IProps) {
@@ -278,6 +282,7 @@ function WSAudioPlayer(props: IProps) {
     wsInsertSilence,
     wsZoom,
     wsAutoSegment,
+    wsPrevRegion,
     wsNextRegion,
     wsRemoveSplitRegion,
     wsAddOrRemoveRegion,
@@ -334,10 +339,10 @@ function WSAudioPlayer(props: IProps) {
       { key: AHEAD_KEY, cb: handleJumpForward },
       { key: TIMER_KEY, cb: handleSendProgress },
       { key: RECORD_KEY, cb: handleRecorder },
+      { key: LEFT_KEY, cb: handlePrevRegion },
       { key: RIGHT_KEY, cb: handleNextRegion },
     ];
     keys.forEach((k) => subscribe(k.key, k.cb));
-
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       keys.forEach((k) => unsubscribe(k.key));
@@ -494,6 +499,10 @@ function WSAudioPlayer(props: IProps) {
   const handleToggleLoop = () => {
     setLooping(wsLoopRegion(!looping));
   };
+  const handlePrevRegion = () => {
+    setPlaying(wsPrevRegion());
+    return true;
+  };
   const handleNextRegion = () => {
     setPlaying(wsNextRegion());
     return true;
@@ -553,16 +562,13 @@ function WSAudioPlayer(props: IProps) {
     wsInsertSilence(silence, wsPosition());
     handleChanged();
   };
-  const t2 = {
-    NextSegment: 'Next Segment {0}',
-  };
+
   const handleChangeSilence = (e: any) => {
     //check if its a number
     e.persist();
     setSilence(e.target.value);
   };
   const onSplit = (split: IRegionChange) => {};
-
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
@@ -742,11 +748,22 @@ function WSAudioPlayer(props: IProps) {
                   </span>
                 </LightTooltip>
                 <LightTooltip
+                  id="wsPrevTip"
+                  title={t.prevRegion.replace('{0}', localizeHotKey(LEFT_KEY))}
+                >
+                  <span>
+                    <IconButton
+                      disabled={!hasRegion}
+                      id="wsNext"
+                      onClick={handlePrevRegion}
+                    >
+                      <NextSegmentIcon className={classes.flipIcon} />
+                    </IconButton>
+                  </span>
+                </LightTooltip>
+                <LightTooltip
                   id="wsNextTip"
-                  title={t2.NextSegment.replace(
-                    '{0}',
-                    localizeHotKey(RIGHT_KEY)
-                  )}
+                  title={t.nextRegion.replace('{0}', localizeHotKey(RIGHT_KEY))}
                 >
                   <span>
                     <IconButton

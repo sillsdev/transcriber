@@ -4333,6 +4333,18 @@
             <target>Ir para Início [{0}]</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.prevRegion">
+         <segment>
+            <source>Previous Region [{0}]</source>
+            <target>Região Anterior [{0}]</target>
+          </segment>
+      </unit>
+      <unit id="wsAudioPlayer.nextRegion">
+         <segment>
+            <source>Next Region [{0}]</source>
+            <target>Próximo região [{0}]</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.deleteRegion">
          <segment>
             <source>Delete Region</source>

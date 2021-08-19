@@ -942,6 +942,8 @@ const initialState = {
 			"aheadTip": "Ahead {jump} {1} [{0}]",
 			"backTip": "Rewind {jump} {1} [{0}]",
 			"beginningTip": "Go to Beginning [{0}]",
+			"prevRegion": "Previous Region [{0}]",
+			"nextRegion": "Next Region [{0}]",
 			"deleteRegion": "Delete Region",
 			"endTip": "Go to End [{0}]",
 			"fasterTip": "Faster [{0}]",
