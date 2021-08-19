@@ -359,7 +359,7 @@ export function Transcriber(props: IProps) {
   }, [height, boxHeight, playerSize]);
 
   useEffect(() => {
-    if (!saving.current) showTranscription(getTranscription());
+    if (!saving.current && selected) showTranscription(getTranscription());
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [selected]);
 

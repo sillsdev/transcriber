@@ -883,6 +883,8 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "aheadTip": string;
     "backTip": string;
     "beginningTip": string;
+    "prevRegion": string;
+    "nextRegion": string;
     "deleteRegion": string;
     "endTip": string;
     "fasterTip": string;
