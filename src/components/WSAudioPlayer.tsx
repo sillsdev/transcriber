@@ -457,9 +457,7 @@ function WSAudioPlayer(props: IProps) {
     setPlaybackRate(value / 100);
   };
   const handleSlower = () => {
-    console.log(progress);
     setPlaybackRate(Math.max(MIN_SPEED, playbackRef.current - SPEED_STEP));
-    console.log(progress);
     return true;
   };
   const setPlaying = (value: boolean) => {
