@@ -274,6 +274,7 @@ function WSAudioPlayer(props: IProps) {
     wsSetPlaybackRate,
     wsSkip,
     wsGoto,
+    wsIsReady,
     wsLoadRegions,
     wsGetRegions,
     wsLoopRegion,
@@ -355,7 +356,11 @@ function WSAudioPlayer(props: IProps) {
   }, [size, wsSetHeight]);
 
   useEffect(() => {
-    initialPosRef.current = initialposition;
+    if (initialposition !== initialPosRef.current) {
+      if (wsIsReady()) wsGoto(initialposition || 0);
+      initialPosRef.current = initialposition;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialposition]);
 
   useEffect(() => {
