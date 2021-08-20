@@ -54,7 +54,7 @@ import AudacityManager from './AudacityManager';
 import AssignSection from './AssignSection';
 import StickyRedirect from './StickyRedirect';
 import Auth from '../auth/Auth';
-import Uploader, { statusInit } from './Uploader';
+import Uploader, { IStatus } from './Uploader';
 import { useMediaAttach } from '../crud/useMediaAttach';
 import { keyMap } from '../schema';
 import { AddRecord, UpdateRecord } from '../model/baseModel';
@@ -201,7 +201,7 @@ export function ScriptureTable(props: IProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [recordAudio, setRecordAudio] = useState(true);
   const [importList, setImportList] = useState<File[]>();
-  const [status] = useState(statusInit);
+  const [status] = useState<IStatus>({ canceled: false });
   const uploadRow = useRef<number>();
   const [defaultFilename, setDefaultFilename] = useState('');
   const showBook = (cols: ICols) => cols.Book >= 0;

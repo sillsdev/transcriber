@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import { useMounted } from '../utils';
 
 const Alert = (props: AlertProps) => {
   return <MuiAlert elevation={6} {...props} />;
@@ -73,6 +74,7 @@ export const useSnackBar = () => {
   }
 
   function SimpleSnackbar(props: ISBProps) {
+    const isMounted = useMounted('snackbar');
     const { message } = props;
     const [alert] = useGlobal('snackAlert');
     const classes = useStyles();
@@ -103,29 +105,31 @@ export const useSnackBar = () => {
       </IconButton>
     );
 
-    return open && !alert ? (
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        ContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-        message={<span id="message-id">{message}</span>}
-        action={CloseButton()}
-      />
-    ) : open && alert ? (
-      <Snackbar open={open} onClose={handleClose} autoHideDuration={30000}>
-        <div className={classes.bar}>
-          <Alert severity={alert} action={CloseButton()}>
-            {message}
-          </Alert>
-        </div>
-      </Snackbar>
+    return isMounted() && open ? (
+      !alert ? (
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">{message}</span>}
+          action={CloseButton()}
+        />
+      ) : (
+        <Snackbar open={open} onClose={handleClose} autoHideDuration={30000}>
+          <div className={classes.bar}>
+            <Alert severity={alert} action={CloseButton()}>
+              {message}
+            </Alert>
+          </div>
+        </Snackbar>
+      )
     ) : (
       <></>
     );
