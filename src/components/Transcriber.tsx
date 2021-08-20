@@ -578,7 +578,10 @@ export function Transcriber(props: IProps) {
     transcribed: ActivityStates.Approved,
     needsNewTranscription: ActivityStates.Transcribed,
   };
-
+  const forcePosition = (position: number) => {
+    setDefaultPosition(playedSecsRef.current || 0);
+    setDefaultPosition(position);
+  };
   const handleSubmit = async () => {
     if (next.hasOwnProperty(state)) {
       let nextState = next[state];
@@ -588,6 +591,7 @@ export function Transcriber(props: IProps) {
       )
         nextState = ActivityStates.Done;
       await save(nextState, 0, segmentsRef.current, '');
+      forcePosition(0);
     } else {
       logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
     }
