@@ -25,7 +25,7 @@ import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
 import { useSnackBar } from '../../hoc/SnackBar';
 import BigDialog from '../../hoc/BigDialog';
 import AudioTable from './AudioTable';
-import Uploader, { statusInit } from '../Uploader';
+import Uploader, { IStatus } from '../Uploader';
 import Auth from '../../auth/Auth';
 import { getMediaInPlans, usePlan, remoteIdGuid } from '../../crud';
 import { useGlobal } from 'reactn';
@@ -138,7 +138,7 @@ export function AudioTab(props: IProps) {
   const [pcheck, setPCheck] = useState(-1);
   const [filter, setFilter] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
-  const [status] = useState(statusInit);
+  const [status] = useState<IStatus>({ canceled: false });
   const [complete, setComplete] = useGlobal('progress');
   const [autoMatch, setAutoMatch] = useState(false);
   const [playItem, setPlayItem] = useState('');
@@ -332,8 +332,6 @@ export function AudioTab(props: IProps) {
             mediaRemoteIds[0]
         );
         setAttachVisible(true);
-      } else {
-        status.canceled = false;
       }
     }
   };

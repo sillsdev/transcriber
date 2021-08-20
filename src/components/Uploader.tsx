@@ -24,7 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const statusInit = { canceled: false };
+export interface IStatus {
+  canceled: boolean;
+}
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -51,7 +53,7 @@ interface IProps extends IStateProps, IDispatchProps {
   metaData?: JSX.Element; // component embeded in dialog
   ready?: () => boolean; // if false control is disabled
   createProject?: (file: File[]) => Promise<any>;
-  status: typeof statusInit;
+  status: IStatus;
   multiple?: boolean;
   mediaId?: string;
   importList?: File[];
@@ -203,6 +205,7 @@ export const Uploader = (props: IProps) => {
       uploadList,
       currentlyLoading,
       authRef.current,
+      offlineOnly,
       errorReporter,
       itemComplete
     );
@@ -227,6 +230,7 @@ export const Uploader = (props: IProps) => {
   const uploadCancel = () => {
     onOpen(false);
     if (status) status.canceled = true;
+    //what is this???
     document.getElementsByTagName('body')[0].removeAttribute('style');
   };
 

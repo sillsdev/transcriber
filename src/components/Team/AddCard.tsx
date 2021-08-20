@@ -6,7 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { VProject, DialogMode, OptionType } from '../../model';
 import { ProjectDialog, IProjectDialog, ProjectType } from './ProjectDialog';
 import { Language, ILanguage } from '../../control';
-import Uploader, { statusInit } from '../Uploader';
+import Uploader, { IStatus } from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
 import { waitForRemoteId, remoteId, useOrganizedBy } from '../../crud';
@@ -88,7 +88,7 @@ export const AddCard = (props: IProps) => {
   ]);
   const { fromLocalizedOrganizedBy } = useOrganizedBy();
   const [step, setStep] = React.useState(0);
-  const [status] = React.useState({ ...statusInit });
+  const [status] = React.useState<IStatus>({ canceled: false });
   const [, setPlan] = useGlobal('plan');
   const [pickOpen, setPickOpen] = React.useState(false);
   const preventBoth = React.useRef(false);
