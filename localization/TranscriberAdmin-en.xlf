@@ -1030,6 +1030,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="hotKey.leftArrow">
+         <segment>
+            <source>Left Arrow</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="hotKey.rightArrow">
          <segment>
             <source>Right Arrow</source>

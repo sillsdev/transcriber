@@ -243,6 +243,7 @@ const initialState = {
 			"endKey": "End",
 			"homeKey": "Home",
 			"or": "or",
+			"leftArrow": "Left Arrow",
 			"rightArrow": "Right Arrow",
 			"spaceKey": "Space",
 		}
