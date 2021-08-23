@@ -6,7 +6,6 @@ import { createWaveSurfer } from '../components/WSAudioPlugins';
 //import { convertToMP3 } from '../utils/mp3';
 import { convertToWav } from '../utils/wav';
 import { useWaveSurferRegions } from './useWavesurferRegions';
-import { SimpleFilter, SoundTouch } from '../utils/soundtouch';
 
 const noop = () => {};
 const noop1 = (x: any) => {};
@@ -31,10 +30,6 @@ export function useWaveSurfer(
   const playingRef = useRef(false);
   const durationRef = useRef(0);
   const userInteractionRef = useRef(true);
-  const soundtouchRef = useRef<SoundTouch>();
-  const soundtouchSourceRef = useRef<any>();
-  const soundtouchNodeRef = useRef<ScriptProcessorNode>();
-  const seekingPositionRef = useRef<number>();
 
   const inputRegionsRef = useRef<{ start: number; end: number }[]>();
 
@@ -65,7 +60,6 @@ export function useWaveSurfer(
         }
       } else {
         if (wavesurfer()?.isPlaying()) wavesurfer()?.pause();
-        soundtouchNodeRef.current && soundtouchNodeRef.current.disconnect();
       }
       if (onPlayStatus) onPlayStatus(playingRef.current);
     }
@@ -100,64 +94,6 @@ export function useWaveSurfer(
 
   const wavesurfer = () => wavesurferRef.current;
 
-  const setSoundTouchSource = () => {
-    if (wavesurferRef.current) {
-      var backend = wavesurferRef.current.backend as any;
-      var buffer = backend.buffer;
-      soundtouchRef.current = new SoundTouch(buffer.sampleRate);
-      let channels = buffer.numberOfChannels;
-      let l = buffer.getChannelData(0);
-      let r = channels > 1 ? buffer.getChannelData(1) : l;
-      let length = buffer.length;
-
-      soundtouchSourceRef.current = {
-        extract: function (target: any, numFrames: number, position: number) {
-          let seekingDiff = 0;
-          if (seekingPositionRef.current) {
-            seekingDiff = seekingPositionRef.current - position;
-            seekingPositionRef.current = undefined;
-          }
-
-          position += seekingDiff;
-
-          for (let i = 0; i < numFrames; i++) {
-            target[i * 2] = l[i + position];
-            target[i * 2 + 1] = r[i + position];
-          }
-
-          return Math.min(numFrames, length - position);
-        },
-      };
-    }
-  };
-  const setSoundTouchFilter = () => {
-    if (soundtouchRef.current && wavesurferRef.current) {
-      soundtouchRef.current.tempo = wavesurferRef.current.getPlaybackRate();
-      var backend = wavesurferRef.current.backend as any;
-
-      if (soundtouchRef.current.tempo === 1) {
-        backend.disconnectFilters();
-      } else {
-        if (!soundtouchNodeRef.current) {
-          let filter = new SimpleFilter(
-            soundtouchSourceRef.current,
-            soundtouchRef.current
-          );
-          soundtouchNodeRef.current = soundtouchRef.current.getWebAudioNode(
-            backend.ac,
-            filter
-          );
-        }
-        backend.setFilter(soundtouchNodeRef.current);
-      }
-    }
-  };
-  const setSeekingPos = () => {
-    var backend = wavesurferRef.current?.backend as any;
-    seekingPositionRef.current = Math.trunc(
-      backend.getPlayedPercents() * backend.buffer.length
-    );
-  };
   useEffect(() => {
     function create(container: any, height: number, singleRegion: boolean) {
       var ws = createWaveSurfer(container, height, timelineContainer);
@@ -169,7 +105,6 @@ export function useWaveSurfer(
           loadRegions(inputRegionsRef.current, false);
           inputRegionsRef.current = undefined;
         }
-        setSoundTouchSource();
         if (playingRef.current) setPlaying(true);
         onReady();
       });
@@ -179,12 +114,9 @@ export function useWaveSurfer(
           if (wavesurfer()?.isPlaying()) setProgress(e);
         }, 150)
       );
-      ws.on('play', function () {
-        setSeekingPos();
-        setSoundTouchFilter();
-      });
+      //ws.on('play', function () {
+      //});
       ws.on('seek', function (e: number) {
-        setSeekingPos();
         onRegionSeek(e, !userInteractionRef.current);
         setProgress(e * wsDuration());
       });
@@ -251,7 +183,6 @@ export function useWaveSurfer(
   const wsSetPlaybackRate = (rate: number) => {
     if (rate !== wavesurfer()?.getPlaybackRate()) {
       wavesurfer()?.setPlaybackRate(rate);
-      if (playingRef.current) setSoundTouchFilter();
     }
   };
   const wsZoom = (zoom: number) => {
