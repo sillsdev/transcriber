@@ -32,6 +32,7 @@ export function useWaveSurfer(
   const userInteractionRef = useRef(true);
 
   const inputRegionsRef = useRef<{ start: number; end: number }[]>();
+  const regionsLoadedRef = useRef(false);
 
   const isNear = (position: number) => {
     return Math.abs(position - progressRef.current) < 0.3;
@@ -95,15 +96,17 @@ export function useWaveSurfer(
   const wavesurfer = () => wavesurferRef.current;
 
   useEffect(() => {
-    function create(container: any, height: number, singleRegion: boolean) {
+    function create(container: any, height: number) {
       var ws = createWaveSurfer(container, height, timelineContainer);
       wavesurferRef.current = ws;
       setWaveSurfer(ws);
       ws.on('ready', function () {
+        console.log('ready');
         durationRef.current = ws.getDuration();
-        if (!singleRegionOnly && inputRegionsRef.current) {
+        if (!regionsLoadedRef.current) {
+          //we need to call this even if undefined to setup regions variables
           loadRegions(inputRegionsRef.current, false);
-          inputRegionsRef.current = undefined;
+          regionsLoadedRef.current = true;
         }
         if (playingRef.current) setPlaying(true);
         onReady();
@@ -136,7 +139,7 @@ export function useWaveSurfer(
     }
 
     if (container && !wavesurfer()) {
-      create(container, height, singleRegionOnly);
+      create(container, height);
       if (blobToLoad.current) {
         wsLoad(blobToLoad.current);
         blobToLoad.current = undefined;
@@ -197,14 +200,20 @@ export function useWaveSurfer(
   ) => {
     durationRef.current = 0;
     if (regions) inputRegionsRef.current = JSON.parse(regions);
+    regionsLoadedRef.current = false;
     if (!wavesurfer()) blobToLoad.current = blob;
     else wavesurfer()?.loadBlob(blob);
     blobTypeRef.current = mimeType;
   };
 
   const wsLoadRegions = (regions: string) => {
-    if (wavesurfer()?.isReady) loadRegions(JSON.parse(regions), true);
-    else inputRegionsRef.current = JSON.parse(regions);
+    if (wavesurfer()?.isReady) {
+      loadRegions(JSON.parse(regions), true);
+      regionsLoadedRef.current = true;
+    } else {
+      inputRegionsRef.current = JSON.parse(regions);
+      regionsLoadedRef.current = false;
+    }
   };
 
   const wsBlob = async () => {
