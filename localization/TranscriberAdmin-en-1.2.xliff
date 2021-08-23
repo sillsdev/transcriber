@@ -1199,6 +1199,13 @@
                <context context-type="sourcefile">hotKeyContext.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="hotKey.leftArrow">
+            <source>Left Arrow</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="hotKey.rightArrow">
             <source>Right Arrow</source>
             <target/>

@@ -221,6 +221,7 @@ export interface IHotKeyStrings extends Localize.LocalizedStringsMethods {
     "endKey": string;
     "homeKey": string;
     "or": string;
+    "leftArrow": string;
     "rightArrow": string;
     "spaceKey": string;
 };

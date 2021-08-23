@@ -1027,6 +1027,12 @@
             <target>ou</target>
          </segment>
       </unit>
+      <unit id="hotKey.leftArrow">
+         <segment>
+            <source>Left Arrow</source>
+            <target>Flèche gauche</target>
+         </segment>
+      </unit>
       <unit id="hotKey.rightArrow">
          <segment>
             <source>Right Arrow</source>
