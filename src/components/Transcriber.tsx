@@ -284,6 +284,7 @@ export function Transcriber(props: IProps) {
   const saving = React.useRef(false);
   const [, saveCompleted] = useRemoteSave();
   const [audioBlob, setAudioBlob] = useState<Blob>();
+  const blobLoadedForRef = useRef('');
   const transcriptionRef = React.useRef<any>();
   const playingRef = useRef<Boolean>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
@@ -296,11 +297,14 @@ export function Transcriber(props: IProps) {
   }, [playing]);
 
   useEffect(() => {
-    setAudioBlob(undefined);
-    loadBlob(mediaUrl, !isElectron || !offline, (b) => {
-      //not sure what this intermediary file is, but causes console errors
-      if (b.type !== 'text/html') setAudioBlob(b);
-    });
+    if (blobLoadedForRef.current !== mediaUrl)
+      loadBlob(mediaUrl, !isElectron || !offline, (b) => {
+        //not sure what this intermediary file is, but causes console errors
+        if (b.type !== 'text/html') {
+          setAudioBlob(b);
+          blobLoadedForRef.current = mediaUrl;
+        }
+      });
   }, [mediaUrl, offline]);
 
   useEffect(() => {
@@ -460,7 +464,7 @@ export function Transcriber(props: IProps) {
           .then(() => {
             refresh();
           });
-      console.log(`update duration to ${Math.ceil(totalSeconds)}`);
+      console.log(`update duration to ${Math.floor(totalSeconds)}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration, totalSeconds]);

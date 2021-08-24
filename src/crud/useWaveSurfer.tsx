@@ -26,7 +26,7 @@ export function useWaveSurfer(
   const progressRef = useRef(0);
   const wavesurferRef = useRef<WaveSurfer>();
   const blobToLoad = useRef<Blob>();
-  const blobTypeRef = useRef('');
+  const loadRequests = useRef(0);
   const playingRef = useRef(false);
   const durationRef = useRef(0);
   const userInteractionRef = useRef(true);
@@ -102,14 +102,20 @@ export function useWaveSurfer(
       setWaveSurfer(ws);
       ws.on('ready', function () {
         console.log('ready');
-        durationRef.current = ws.getDuration();
-        if (!regionsLoadedRef.current) {
-          //we need to call this even if undefined to setup regions variables
-          loadRegions(inputRegionsRef.current, false);
-          regionsLoadedRef.current = true;
+        loadRequests.current--;
+        if (!loadRequests.current) {
+          durationRef.current = ws.getDuration();
+          if (!regionsLoadedRef.current) {
+            //we need to call this even if undefined to setup regions variables
+            loadRegions(inputRegionsRef.current, false);
+            regionsLoadedRef.current = true;
+          }
+          if (playingRef.current) setPlaying(true);
+          onReady();
+        } else {
+          //requesting load of blob that came in while this one was loading
+          wsLoad();
         }
-        if (playingRef.current) setPlaying(true);
-        onReady();
       });
       ws.on(
         'audioprocess',
@@ -141,8 +147,7 @@ export function useWaveSurfer(
     if (container && !wavesurfer()) {
       create(container, height);
       if (blobToLoad.current) {
-        wsLoad(blobToLoad.current);
-        blobToLoad.current = undefined;
+        wsLoad();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -166,7 +171,10 @@ export function useWaveSurfer(
     onProgress(value);
   };
 
-  const wsClear = () => wavesurfer()?.empty();
+  const wsClear = () => {
+    console.log('wsClear');
+    wavesurfer()?.empty();
+  };
 
   const wsIsReady = () => wavesurfer()?.isReady || false;
 
@@ -193,22 +201,30 @@ export function useWaveSurfer(
     return wavesurfer()?.params.minPxPerSec;
   };
 
-  const wsLoad = (
-    blob: Blob,
-    mimeType: string = blob.type,
-    regions: string = ''
-  ) => {
+  const wsLoad = (blob?: Blob, regions: string = '') => {
     durationRef.current = 0;
     if (regions) inputRegionsRef.current = JSON.parse(regions);
     regionsLoadedRef.current = false;
-    if (!wavesurfer()) blobToLoad.current = blob;
-    else wavesurfer()?.loadBlob(blob);
-    blobTypeRef.current = mimeType;
+    if (!wavesurfer()) {
+      blobToLoad.current = blob;
+      loadRequests.current = 1;
+    } else if (blob) {
+      if (loadRequests.current) {
+        blobToLoad.current = blob;
+        loadRequests.current = 2; //if there was another, we'll bypass it
+      } else {
+        wavesurfer()?.loadBlob(blob);
+        loadRequests.current++;
+      }
+    } else if (blobToLoad.current) {
+      wavesurfer()?.loadBlob(blobToLoad.current);
+      blobToLoad.current = undefined;
+    }
   };
 
   const wsLoadRegions = (regions: string) => {
     if (wavesurfer()?.isReady) {
-      loadRegions(JSON.parse(regions), true);
+      loadRegions(JSON.parse(regions), false);
       regionsLoadedRef.current = true;
     } else {
       inputRegionsRef.current = JSON.parse(regions);
