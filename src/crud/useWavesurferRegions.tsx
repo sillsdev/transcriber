@@ -171,9 +171,9 @@ export function useWaveSurferRegions(
   };
 
   const getPeaks = (num: number = 512) => {
-    if (peaksRef.current) return peaksRef.current;
-    if (!wavesurferRef.current) return;
-    peaksRef.current = wavesurferRef.current.backend.getPeaks(num);
+    if (!peaksRef.current && wavesurferRef.current)
+      peaksRef.current = wavesurferRef.current.backend.getPeaks(num);
+    return peaksRef.current;
   };
 
   const extractRegions = (
@@ -276,6 +276,7 @@ export function useWaveSurferRegions(
     loop: boolean,
     newRegions: boolean = false
   ) {
+    if (!newRegions) peaksRef.current = undefined; //because I know this is a new wave
     if (!wavesurferRef.current || !regions || regions.length === 0) {
       singleRegionRef.current = true;
       return;
@@ -419,6 +420,7 @@ export function useWaveSurferRegions(
 
     wavesurferRef.current.regions.clear();
     var regions = extractRegions(silenceThreshold, timeThreshold);
+
     loadRegions(regions, loop, true);
     if (regions.length) goto(regions[0].start);
   }
