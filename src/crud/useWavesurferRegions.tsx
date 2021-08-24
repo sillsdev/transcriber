@@ -54,6 +54,7 @@ export function useWaveSurferRegions(
     wavesurferRef.current = ws;
     if (ws) {
       ws.on('region-created', function (r: any) {
+        console.log('region-created');
         if (singleRegionRef.current) {
           r.drag = true;
           if (currentRegion()) currentRegion().remove();
@@ -293,7 +294,7 @@ export function useWaveSurferRegions(
       'wait for last region',
       () => numRegions() === regions.length,
       () => false,
-      200
+      400
     ).then(() => {
       setPrevNext(regionIds());
       onRegion(regions.length, newRegions);
@@ -438,7 +439,10 @@ export function useWaveSurferRegions(
     return newPlay;
   };
   const wsNextRegion = () => {
-    var r = findNextRegion(currentRegion(), true);
+    //TT-2825 changing selfIfAtStart to false
+    //but I coded that in there for this call, so
+    //wonder what case I was handling then????
+    var r = findNextRegion(currentRegion(), false);
     var newPlay = true;
     if (r) {
       goto(r.start);
