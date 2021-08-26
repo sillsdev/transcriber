@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) =>
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-      width: 300,
+      width: 600,
     },
     //style for font size
     formTextInput: {
@@ -379,10 +379,6 @@ export function IntegrationPanel(props: IProps) {
     return <span>{translateParatextError(err, ts)}</span>;
   };
 
-  const canEditParatextText = (role: string): boolean => {
-    return role === 'pt_administrator' || role === 'pt_translator';
-  };
-
   const formatWithLanguage = (replLang: string): string => {
     let proj = getProject();
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
@@ -550,8 +546,8 @@ export function IntegrationPanel(props: IProps) {
     if (ptProj >= 0 && paratext_projects && paratext_projects.length > ptProj) {
       setPtPermission(paratext_projects[ptProj].CurrentUserRole);
       setHasPermission(
-        paratext_projects[ptProj].IsConnectable &&
-          canEditParatextText(paratext_projects[ptProj].CurrentUserRole)
+        paratext_projects[ptProj].IsConnectable //&& built in to isConnectable
+        //canEditParatextText(paratext_projects[ptProj].CurrentUserRole)
       );
     } else {
       setHasPermission(false);
@@ -623,15 +619,10 @@ export function IntegrationPanel(props: IProps) {
                     required={true}
                   >
                     {paratext_projects
-                      .sort((i, j) => (i.Name < j.Name ? -1 : 1))
+                      .sort((i, j) => (i.ShortName < j.ShortName ? -1 : 1))
                       .map((option: ParatextProject) => (
                         <MenuItem key={option.ParatextId} value={option.Name}>
-                          {option.Name +
-                            ' (' +
-                            option.LanguageName +
-                            '-' +
-                            option.LanguageTag +
-                            ')'}
+                          {`${option.ShortName}/${option.Name} (${option.LanguageName}-${option.LanguageTag})`}
                         </MenuItem>
                       ))
                       .concat(
@@ -791,15 +782,10 @@ export function IntegrationPanel(props: IProps) {
                     required={true}
                   >
                     {paratext_projects
-                      .sort((i, j) => (i.Name < j.Name ? -1 : 1))
+                      .sort((i, j) => (i.ShortName < j.ShortName ? -1 : 1))
                       .map((option: ParatextProject) => (
                         <MenuItem key={option.ParatextId} value={option.Name}>
-                          {option.Name +
-                            ' (' +
-                            option.LanguageName +
-                            '-' +
-                            option.LanguageTag +
-                            ')'}
+                          {`${option.ShortName}/${option.Name} (${option.LanguageName}-${option.LanguageTag})`}
                         </MenuItem>
                       ))
                       .concat(
