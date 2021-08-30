@@ -124,7 +124,6 @@ export function Loading(props: IProps) {
   const [offline] = useGlobal('offline');
   const [fingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
-  const [, setOrganization] = useGlobal('organization');
   const [globalStore] = useGlobal();
   const [, setLang] = useGlobal('lang');
   const [, setOrbitRetries] = useGlobal('orbitRetries');
@@ -194,9 +193,6 @@ export function Loading(props: IProps) {
       if (inviteError !== '') {
         localStorage.setItem('inviteError', inviteError);
         showMessage(localStorage.getItem('inviteError') || '');
-      } else if (invite) {
-        const orgId = related(invite, 'organization');
-        setOrganization(orgId);
       }
     }
   };
@@ -272,6 +268,7 @@ export function Loading(props: IProps) {
       return;
     }
     let fromUrl = getGotoUrl();
+    console.log('LoadComplete fromUrl: ', fromUrl);
     if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
     if (fromUrl) {
       const m = /^\/[workplan]+\/([0-9a-f-]+)/.exec(fromUrl);
