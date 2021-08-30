@@ -96,13 +96,6 @@ function App() {
                   exact={true}
                   render={(props) => {
                     handleParameters(props);
-                    if (
-                      localStorage.getItem('inviteId') &&
-                      localStorage.getItem('isLoggedIn')
-                    ) {
-                      localStorage.removeItem('inviteId');
-                      return <LogoutRequired />;
-                    }
                     return <Welcome auth={auth} {...props} />;
                   }}
                 />
