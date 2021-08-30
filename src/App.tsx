@@ -112,6 +112,7 @@ function App() {
                       localStorage.removeItem('inviteId');
                       return <LogoutRequired />;
                     }
+
                     return <Welcome auth={auth} {...props} />;
                   }}
                 />
