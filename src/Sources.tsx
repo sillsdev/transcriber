@@ -284,6 +284,8 @@ export const Sources = async (
   }
   /* set the user from the token - must be done after the backup is loaded and after changes to offline are recorded */
   if (!offline) {
+    console.log('pulling currentuser in sources');
+
     var tr = await remote.pull((q) => q.findRecords('currentuser'));
     const user = (tr[0].operations[0] as any).record as User;
     const locale = user?.attributes?.locale || 'en';
