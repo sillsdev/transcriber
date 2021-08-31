@@ -137,6 +137,7 @@ export const AppHead = (props: IProps) => {
   const [doSave] = useGlobal('doSave');
   const [globalStore] = useGlobal();
   const [isChanged] = useGlobal('changed');
+  const [lang] = useGlobal('lang');
   const [exitAlert, setExitAlert] = React.useState(false);
   const [dosave, setDoSave] = useGlobal('doSave');
   const isMounted = useMounted('apphead');
@@ -252,9 +253,7 @@ export const AppHead = (props: IProps) => {
           var lv = response?.data['desktopVersion'];
           var lr = response?.data['dateUpdated'];
           if (!lr.endsWith('Z')) lr += 'Z';
-          lr = moment(lr)
-            .locale(Intl.NumberFormat().resolvedOptions().locale)
-            .format('L');
+          lr = moment(lr).locale(lang).format('L');
           setLatestVersion(lv);
           setLatestRelease(lr);
           if (isElectron)
@@ -281,7 +280,7 @@ export const AppHead = (props: IProps) => {
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updates, version]);
+  }, [updates, version, lang]);
 
   useEffect(() => {
     console.log(pathname);

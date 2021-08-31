@@ -51,7 +51,7 @@ const logFileHeader = (logFullName: string) => {
     if (err) throw err;
     fs.writeFile(
       fd,
-      `Log for ${moment().format('L LT Z')}\n`,
+      `Log for ${moment().locale('en').format('L LT Z')}\n`,
       (err: IStatErr) => {
         fs.close(fd, (err: IStatErr) => {
           if (err) throw err;
