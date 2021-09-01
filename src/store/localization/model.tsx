@@ -363,6 +363,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "clearCache": string;
     "clearLogout": string;
     "continue": string;
+    "continueCurrentUser": string;
+    "loginInvited": string;
     "copyClipboard": string;
     "crashMessage": string;
     "deletedInvitation": string;

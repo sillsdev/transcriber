@@ -2067,6 +2067,20 @@
                <context context-type="sourcefile">TokenCheck.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="main.continueCurrentUser">
+            <source>Continue as current user</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">loading.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.loginInvited">
+            <source>Login as invited user</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">loading.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="main.copyClipboard">
             <source>Copy Version to Clipboard</source>
             <target/>

@@ -147,8 +147,7 @@ export function Loading(props: IProps) {
   //remote is passed in because it wasn't always available in global
   const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
     const inviteId = localStorage.getItem('inviteId');
-    localStorage.removeItem('inviteId');
-    var inviteError = '';
+    var inviteErr = '';
 
     //filter will be passed to api which will lowercase the email before comparison
     var allinvites: Invitation[] = (await newremote.query((q: QueryBuilder) =>
@@ -261,6 +260,10 @@ export function Loading(props: IProps) {
     setCompleted(100);
     setLoadComplete(true);
     orbitComplete();
+    //state inviteError not set yet...so use this
+    if (localStorage.getItem('inviteError')) {
+      return;
+    }
     const userRec: User = GetUser(memory, user);
     if (
       !userRec?.attributes?.givenName ||

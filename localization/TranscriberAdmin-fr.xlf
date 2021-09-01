@@ -1771,6 +1771,18 @@
             <target>Continuer</target>
          </segment>
       </unit>
+      <unit id="main.continueCurrentUser">
+         <segment>
+            <source>Continue as current user</source>
+            <target>Continuer en tant qu'utilisateur actuel</target>
+         </segment>
+      </unit>
+      <unit id="main.loginInvited">
+         <segment>
+            <source>Login as invited user</source>
+            <target>Connectez-vous en tant qu'utilisateur invité</target>
+         </segment>
+      </unit>
       <unit id="main.copyClipboard">
          <segment>
             <source>Copy Version to Clipboard</source>

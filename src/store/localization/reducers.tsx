@@ -391,6 +391,8 @@ const initialState = {
 			"clearCache": "Clear cache",
 			"clearLogout": "Log Out and Force Data Reload",
 			"continue": "Continue",
+			"continueCurrentUser": "Continue as current user",
+			"loginInvited": "Login as invited user",
 			"copyClipboard": "Copy Version to Clipboard",
 			"crashMessage": "Something went wrong. The developers need to address this issue.",
 			"deletedInvitation": "Invitation is no longer valid.",
