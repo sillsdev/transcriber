@@ -487,7 +487,7 @@ export function Access(props: IProps) {
                     )}
                     <div className={classes.actions}>
                       <Button
-                        id="accessLogin"
+                        id="accessSwitchUser"
                         variant="contained"
                         color="primary"
                         className={classes.button}
@@ -521,7 +521,7 @@ export function Access(props: IProps) {
                     <>
                       <CurrentUser curUser={curUser} action={handleLogout} />
                       <Button
-                        id="accessLogin"
+                        id="logout"
                         variant="outlined"
                         color="primary"
                         className={classes.button}
