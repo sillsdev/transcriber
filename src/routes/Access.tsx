@@ -343,7 +343,7 @@ export function Access(props: IProps) {
         }
       }
     }
-    if (user) {
+    if (user && auth?.expiresAt !== -1) {
       if (localStorage.getItem('isLoggedIn') !== 'true') {
         handleSelect(user); //set by Quick Transcribe
       } else {

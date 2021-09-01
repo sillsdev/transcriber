@@ -83,6 +83,11 @@ const ipcMethods = () => {
     return authService.getAccessToken();
   });
 
+  ipcMain.handle('refresh-token', () => {
+    if (isLogOut) return null;
+    return authService.refreshTokens();
+  });
+
   ipcMain.handle('logout', () => {
     isLogingIn = false;
     isLogOut = true;
