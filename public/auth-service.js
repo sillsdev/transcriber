@@ -23,7 +23,7 @@ function getProfile() {
   return profile;
 }
 
-function getAuthenticationURL(hasUsed) {
+function getAuthenticationURL(hasUsed, email) {
   const dev = envVariables.auth0Domain.indexOf('-dev') > 0;
   return (
     `https://${auth0Domain}/authorize?` +
@@ -34,6 +34,8 @@ function getAuthenticationURL(hasUsed) {
       ? 'login_hint=signUp&'
       : !hasUsed && !dev
       ? 'mode=signUp&'
+      : hasUsed && email
+      ? `login_hint=${encodeURIComponent(email)}&`
       : '') +
     `client_id=${desktopId}&` +
     `redirect_uri=${redirectUri}`

@@ -9,6 +9,7 @@ import moment from 'moment';
 import Auth from '../auth/Auth';
 import jwtDecode from 'jwt-decode';
 import { useGlobal } from 'reactn';
+import { useUpdateOrbitToken } from '../crud';
 import { logError, Severity, useInterval } from '../utils';
 import { isElectron } from '../api-variable';
 const ipc = isElectron ? require('electron').ipcRenderer : null;
@@ -35,20 +36,27 @@ function TokenCheck(props: IProps) {
   const [secondsToExpire, setSecondsToExpire] = React.useState(0);
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
+  const updateOrbitToken = useUpdateOrbitToken();
   const view = React.useRef<any>('');
 
   const resetExpiresAt = () => {
     if (isElectron) {
       ipc?.invoke('refresh-token').then(async () => {
+        console.log(`Token check refreshed`);
         const myUser = await ipc?.invoke('get-profile');
+        console.log(JSON.stringify(myUser, null, 2));
         const myToken = await ipc?.invoke('get-token');
+        console.log(`new token=${myToken}`);
+        updateOrbitToken(myToken);
         const decodedToken = jwtDecode(myToken) as IToken;
+        console.log(JSON.stringify(decodedToken, null, 2));
         setExpireAt(decodedToken.exp);
         auth.setAuthSession(myUser, myToken, decodedToken.exp);
       });
     } else {
       getAccessTokenSilently()
         .then((token) => {
+          updateOrbitToken(token);
           const decodedToken = jwtDecode(token) as IToken;
           setExpireAt(decodedToken.exp);
           auth.setAuthSession(user, token, decodedToken.exp);
@@ -83,16 +91,17 @@ function TokenCheck(props: IProps) {
         const currentUnix = moment().locale('en').format('X');
         const expires = moment.unix(expireAt).locale('en').format('X');
         const secondsLeft = Number(expires) - Number(currentUnix);
+        console.log(`TokenCheck left=${secondsLeft} Expires=${Expires}`);
         if (secondsLeft < Expires + 30) {
           setSecondsToExpire(secondsLeft);
+          if (modalOpen) view.current = '';
           setModalOpen(true);
-        } else {
-          view.current = '';
         }
       }
     }
   };
 
+  console.log(`TokenCheck expireAt=${expireAt} offline=${offline}`);
   useInterval(checkTokenExpired, expireAt && !offline ? 1000 : null);
 
   const handleClose = (value: number) => {
