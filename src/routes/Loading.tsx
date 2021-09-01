@@ -16,7 +16,7 @@ import {
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { Typography, Paper } from '@material-ui/core';
+import { Typography, Paper, Button } from '@material-ui/core';
 import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
 import Memory from '@orbit/memory';
@@ -29,6 +29,7 @@ import {
   localUserKey,
   LocalKey,
   currentDateTime,
+  forceLogin,
 } from '../utils';
 import {
   related,
@@ -74,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) =>
         width: '100%',
       },
     },
-    button: {},
+    button: { margin: theme.spacing(1) },
     icon: {
       alignSelf: 'center',
       width: '256px',
@@ -124,12 +125,11 @@ export function Loading(props: IProps) {
   const [offline] = useGlobal('offline');
   const [fingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
-  const [, setOrganization] = useGlobal('organization');
   const [globalStore] = useGlobal();
   const [, setLang] = useGlobal('lang');
   const [, setOrbitRetries] = useGlobal('orbitRetries');
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
-  const [, setLoadComplete] = useGlobal('loadComplete');
+  const [loadComplete, setLoadComplete] = useGlobal('loadComplete');
   const [isDeveloper] = useGlobal('developer');
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [, setCompleted] = useGlobal('progress');
@@ -143,6 +143,7 @@ export function Loading(props: IProps) {
   const [, setBusy] = useGlobal('importexportBusy');
   const LoadProjData = useLoadProjectData(auth, t, doOrbitError);
   const [view, setView] = useState('');
+  const [inviteError, setInviteError] = useState('');
 
   //remote is passed in because it wasn't always available in global
   const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
@@ -163,6 +164,7 @@ export function Loading(props: IProps) {
         t.replaceAttribute(invitation, 'accepted', true)
       );
     });
+
     if (inviteId) {
       let invite = allinvites.find(
         (i) => i.attributes.silId === parseInt(inviteId)
@@ -182,20 +184,20 @@ export function Loading(props: IProps) {
             userEmail.toLowerCase()
           ) {
             /* they must have logged in with another email */
-            inviteError = t.inviteError;
+            inviteErr = t.inviteError;
           } else {
             invite = thisinvite[0];
           }
         } catch {
-          inviteError = t.deletedInvitation;
+          inviteErr = t.deletedInvitation;
         }
       }
-      if (inviteError !== '') {
-        localStorage.setItem('inviteError', inviteError);
-        showMessage(localStorage.getItem('inviteError') || '');
-      } else if (invite) {
-        const orgId = related(invite, 'organization');
-        setOrganization(orgId);
+      if (inviteErr !== '') {
+        setInviteError(inviteErr);
+        localStorage.setItem('inviteError', inviteErr);
+        showMessage(inviteErr);
+      } else {
+        localStorage.removeItem('inviteId');
       }
     }
   };
@@ -275,6 +277,7 @@ export function Loading(props: IProps) {
       return;
     }
     let fromUrl = getGotoUrl();
+    console.log('LoadComplete fromUrl: ', fromUrl);
     if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
     if (fromUrl) {
       const m = /^\/[workplan]+\/([0-9a-f-]+)/.exec(fromUrl);
@@ -295,6 +298,7 @@ export function Loading(props: IProps) {
   useEffect(() => {
     const finishRemoteLoad = () => {
       localStorage.removeItem('goingOnline');
+      console.log('pulling currentuser in finish');
       remote
         .pull((q) => q.findRecords('currentuser'))
         .then((tr) => {
@@ -328,6 +332,16 @@ export function Loading(props: IProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncComplete, orbitFetchResults]);
+  const continueWithCurrentUser = () => {
+    localStorage.removeItem('inviteError');
+    localStorage.removeItem('inviteId');
+    LoadComplete();
+  };
+
+  const logoutAndTryAgain = () => {
+    forceLogin();
+    setView('Logout');
+  };
 
   if (!offline && !auth?.isAuthenticated()) return <Redirect to="/" />;
   if (view !== '') return <Redirect to={view} />;
@@ -340,12 +354,33 @@ export function Loading(props: IProps) {
           <img src={logo} className={classes.icon} alt="logo" />
           <div>
             <Typography variant="h6" className={classes.message}>
-              {localStorage.getItem('inviteError') || ''}
+              {inviteError}
             </Typography>
             <Typography variant="h6" className={classes.message}>
               {t.loadingTranscriber.replace('{0}', API_CONFIG.productName)}
             </Typography>
           </div>
+          {loadComplete && inviteError && (
+            <div className={classes.container}>
+              <Button
+                id="errCont"
+                variant="contained"
+                className={classes.button}
+                onClick={continueWithCurrentUser}
+              >
+                {'continue with current user'}
+              </Button>
+
+              <Button
+                id="errLogout"
+                variant="contained"
+                className={classes.button}
+                onClick={logoutAndTryAgain}
+              >
+                {'logout and login with invited user'}
+              </Button>
+            </div>
+          )}
           {isElectron && importOpen && (
             <ImportTab
               syncBuffer={orbitFetchResults?.syncBuffer}
