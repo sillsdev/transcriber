@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useGlobal } from 'reactn';
 import { LocalKey, localUserKey } from '../utils';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Link, Typography } from '@material-ui/core';
 import AppHead from '../components/App/AppHead';
 import { TeamProvider } from '../context/TeamContext';
 import { TeamProjects } from '../components/Team';
@@ -18,6 +18,9 @@ const useStyles = makeStyles({
   teamScreen: {
     display: 'flex',
     paddingTop: '80px',
+  },
+  footerText: {
+    paddingLeft: '16px',
   },
 });
 
@@ -57,6 +60,10 @@ export const TeamScreen = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project, projRole, isOffline, plan]);
 
+  const handleTerms = () => {
+    setView('/terms');
+  };
+
   if (view !== '' && view !== pathname) {
     return <StickyRedirect to={view} />;
   }
@@ -70,6 +77,11 @@ export const TeamScreen = (props: IProps) => {
           <TeamProjects auth={auth} />
         </div>
       </TeamProvider>
+      <footer>
+        <Link href="#" onClick={handleTerms}>
+          <Typography className={classes.footerText}>Terms of use</Typography>
+        </Link>
+      </footer>
     </div>
   );
 };
