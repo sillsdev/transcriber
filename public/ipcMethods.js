@@ -60,7 +60,7 @@ const ipcMethods = () => {
     }
   });
 
-  ipcMain.handle('login', async (event, hasUsed) => {
+  ipcMain.handle('login', async (event, hasUsed, email) => {
     isLogingIn = true;
     isLogOut = false;
     try {
@@ -69,7 +69,7 @@ const ipcMethods = () => {
       return createAppWindow();
     } catch (err) {
       isLogingIn = false;
-      createAuthWindow(hasUsed);
+      createAuthWindow(hasUsed, email);
     }
   });
 
@@ -81,6 +81,11 @@ const ipcMethods = () => {
   ipcMain.handle('get-token', () => {
     if (isLogOut) return null;
     return authService.getAccessToken();
+  });
+
+  ipcMain.handle('refresh-token', () => {
+    if (isLogOut) return null;
+    return authService.refreshTokens();
   });
 
   ipcMain.handle('logout', () => {

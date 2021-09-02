@@ -4,7 +4,7 @@ const createAppWindow = require('./app-process');
 
 let win = null;
 
-function createAuthWindow(hasUsed) {
+function createAuthWindow(hasUsed, email) {
   destroyAuthWin();
 
   win = new BrowserWindow({
@@ -44,7 +44,9 @@ function createAuthWindow(hasUsed) {
 
   // Full userAgent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
   win
-    .loadURL(authService.getAuthenticationURL(hasUsed), { userAgent: 'Chrome' })
+    .loadURL(authService.getAuthenticationURL(hasUsed, email), {
+      userAgent: 'Chrome',
+    })
     .catch((error) => {
       if (error.code === 'ERR_NAME_NOT_RESOLVED') {
         // allow working offline

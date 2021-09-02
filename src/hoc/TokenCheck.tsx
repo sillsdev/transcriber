@@ -9,8 +9,10 @@ import moment from 'moment';
 import Auth from '../auth/Auth';
 import jwtDecode from 'jwt-decode';
 import { useGlobal } from 'reactn';
-import { logError, Severity } from '../utils';
-import { useInterval } from '../utils/useInterval';
+import { useUpdateOrbitToken } from '../crud';
+import { logError, Severity, useInterval } from '../utils';
+import { isElectron } from '../api-variable';
+const ipc = isElectron ? require('electron').ipcRenderer : null;
 
 const Expires = 0; // Set to 7110 to test 1:30 token
 
@@ -29,24 +31,43 @@ interface IProps extends IStateProps, IDispatchProps {
 
 function TokenCheck(props: IProps) {
   const { auth, children, expireAt, setExpireAt } = props;
-  const { getAccessTokenSilently, logout } = useAuth0();
+  const { getAccessTokenSilently, user } = useAuth0();
   const [modalOpen, setModalOpen] = React.useState(false);
   const [secondsToExpire, setSecondsToExpire] = React.useState(0);
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
+  const updateOrbitToken = useUpdateOrbitToken();
   const view = React.useRef<any>('');
-  const timer = React.useRef<NodeJS.Timeout>();
 
   const resetExpiresAt = () => {
-    getAccessTokenSilently()
-      .then((token) => {
-        const decodedToken = jwtDecode(token) as IToken;
-        setExpireAt(decodedToken.exp);
-      })
-      .catch((e: Error) => {
-        view.current = 'Logout';
-        logError(Severity.error, errorReporter, e);
-      });
+    if (isElectron) {
+      ipc
+        ?.invoke('refresh-token')
+        .then(async () => {
+          const myUser = await ipc?.invoke('get-profile');
+          const myToken = await ipc?.invoke('get-token');
+          updateOrbitToken(myToken);
+          const decodedToken = jwtDecode(myToken) as IToken;
+          setExpireAt(decodedToken.exp);
+          auth.setAuthSession(myUser, myToken, decodedToken.exp);
+        })
+        .catch((e: Error) => {
+          handleLogOut();
+          logError(Severity.error, errorReporter, e);
+        });
+    } else {
+      getAccessTokenSilently()
+        .then((token) => {
+          updateOrbitToken(token);
+          const decodedToken = jwtDecode(token) as IToken;
+          setExpireAt(decodedToken.exp);
+          auth.setAuthSession(user, token, decodedToken.exp);
+        })
+        .catch((e: Error) => {
+          handleLogOut();
+          logError(Severity.error, errorReporter, e);
+        });
+    }
   };
 
   React.useEffect(() => {
@@ -58,20 +79,30 @@ function TokenCheck(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
+  const handleLogOut = () => {
+    auth.expiresAt = -1;
+    view.current = 'loggedOut';
+    setModalOpen(false);
+  };
+
   const checkTokenExpired = () => {
     if (!offline) {
       if (localStorage.getItem('isLoggedIn') !== 'true' && auth.accessToken) {
-        auth.logout();
-        view.current = 'loggedOut';
-        logout();
+        handleLogOut();
       }
       if (expireAt) {
-        const currentUnix = moment().format('X');
-        const expires = moment.unix(expireAt).format('X');
+        const currentUnix = moment().locale('en').format('X');
+        const expires = moment.unix(expireAt).locale('en').format('X');
         const secondsLeft = Number(expires) - Number(currentUnix);
         if (secondsLeft < Expires + 30) {
           setSecondsToExpire(secondsLeft);
-          setModalOpen(true);
+          if (!modalOpen) {
+            setModalOpen(true);
+          } else {
+            view.current = '';
+          }
+        } else {
+          if (modalOpen) setModalOpen(false);
         }
       }
     }
@@ -81,20 +112,18 @@ function TokenCheck(props: IProps) {
 
   const handleClose = (value: number) => {
     setModalOpen(false);
-    if (timer.current) clearInterval(timer.current);
     if (value < 0) {
       view.current = 'Logout';
     } else {
       resetExpiresAt();
+      setExpireAt(expireAt ? expireAt + 10 : 0); // allow time for refresh
+      view.current = 'Continue';
     }
   };
 
   if (modalOpen && view.current === '') {
     if (secondsToExpire < Expires) {
-      if (timer.current) clearInterval(timer.current);
-      auth.logout();
-      logout();
-      view.current = 'loggedOut';
+      handleLogOut();
     }
     return (
       <TokenDialog
@@ -104,9 +133,7 @@ function TokenCheck(props: IProps) {
       />
     );
   } else if (view.current === 'Logout') {
-    auth.logout();
-    logout();
-    view.current = 'loggedOut';
+    handleLogOut();
   }
 
   // If there is no error just render the children component.

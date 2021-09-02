@@ -123,12 +123,13 @@ interface IDispatchProps {
 interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   auth: Auth;
 }
-export const goOnline = () => {
+export const goOnline = (email?: string) => {
   const lastTime = localStorage.getItem('electron-lastTime');
   const emailVerfied = localStorage.getItem('email_verified');
   localStorage.removeItem('auth-id');
   localStorage.setItem('isLoggedIn', 'true');
-  ipc?.invoke('login', lastTime !== null || emailVerfied !== null);
+  const hasUsed = lastTime !== null || emailVerfied !== null;
+  ipc?.invoke('login', hasUsed, email);
   electronremote?.getCurrentWindow().close();
 };
 export const doLogout = async () => {
@@ -205,7 +206,10 @@ export function Access(props: IProps) {
   const handleGoOnlineConfirmed = () => {
     if (isElectron) {
       if (!goOnlineConfirmation?.shiftKey) {
-        goOnline();
+        const email = curUser?.attributes?.auth0Id.startsWith('auth0|')
+          ? curUser?.attributes?.email
+          : undefined;
+        goOnline(email);
       } else ipc?.invoke('logout');
     }
     setGoOnlineConfirmation(undefined);
@@ -343,7 +347,7 @@ export function Access(props: IProps) {
         }
       }
     }
-    if (user) {
+    if (user && auth?.expiresAt !== -1) {
       if (localStorage.getItem('isLoggedIn') !== 'true') {
         handleSelect(user); //set by Quick Transcribe
       } else {
