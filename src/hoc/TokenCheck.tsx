@@ -44,14 +44,10 @@ function TokenCheck(props: IProps) {
       ipc
         ?.invoke('refresh-token')
         .then(async () => {
-          console.log(`Token check refreshed`);
           const myUser = await ipc?.invoke('get-profile');
-          console.log(JSON.stringify(myUser, null, 2));
           const myToken = await ipc?.invoke('get-token');
-          console.log(`new token=${myToken}`);
           updateOrbitToken(myToken);
           const decodedToken = jwtDecode(myToken) as IToken;
-          console.log(JSON.stringify(decodedToken, null, 2));
           setExpireAt(decodedToken.exp);
           auth.setAuthSession(myUser, myToken, decodedToken.exp);
         })
@@ -98,17 +94,20 @@ function TokenCheck(props: IProps) {
         const currentUnix = moment().locale('en').format('X');
         const expires = moment.unix(expireAt).locale('en').format('X');
         const secondsLeft = Number(expires) - Number(currentUnix);
-        console.log(`TokenCheck left=${secondsLeft} Expires=${Expires}`);
         if (secondsLeft < Expires + 30) {
           setSecondsToExpire(secondsLeft);
-          if (modalOpen) view.current = '';
-          setModalOpen(true);
+          if (!modalOpen) {
+            setModalOpen(true);
+          } else {
+            view.current = '';
+          }
+        } else {
+          if (modalOpen) setModalOpen(false);
         }
       }
     }
   };
 
-  console.log(`TokenCheck expireAt=${expireAt} offline=${offline}`);
   useInterval(checkTokenExpired, expireAt && !offline ? 1000 : null);
 
   const handleClose = (value: number) => {
@@ -117,6 +116,7 @@ function TokenCheck(props: IProps) {
       view.current = 'Logout';
     } else {
       resetExpiresAt();
+      setExpireAt(expireAt ? expireAt + 10 : 0); // allow time for refresh
       view.current = 'Continue';
     }
   };
