@@ -905,8 +905,12 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
 };
 
 export interface IWsAudioPlayerSegmentStrings extends Localize.LocalizedStringsMethods {
+    "apply": string;
     "autoSegment": string;
+    "close": string;
     "removeSegment": string;
+    "segmentsCreated": string;
+    "segmentLength": string;
     "segmentSettings": string;
     "silenceLength": string;
     "silenceThreshold": string;

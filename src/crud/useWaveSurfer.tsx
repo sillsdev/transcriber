@@ -5,7 +5,11 @@ import { createWaveSurfer } from '../components/WSAudioPlugins';
 //import { useMounted } from '../utils';
 //import { convertToMP3 } from '../utils/mp3';
 import { convertToWav } from '../utils/wav';
-import { useWaveSurferRegions } from './useWavesurferRegions';
+import {
+  IRegionParams,
+  IRegions,
+  useWaveSurferRegions,
+} from './useWavesurferRegions';
 
 const noop = () => {};
 const noop1 = (x: any) => {};
@@ -14,7 +18,11 @@ export function useWaveSurfer(
   container: any,
   onReady: () => void = noop,
   onProgress: (progress: number) => void = noop1,
-  onRegion: (count: number, newRegion: boolean) => void = noop1,
+  onRegion: (
+    count: number,
+    params: IRegionParams | undefined,
+    newRegion: boolean
+  ) => void = noop1,
   onPlayStatus: (playing: boolean) => void = noop,
   onInteraction: () => void = noop,
   onError: (e: any) => void = noop,
@@ -31,7 +39,7 @@ export function useWaveSurfer(
   const durationRef = useRef(0);
   const userInteractionRef = useRef(true);
 
-  const inputRegionsRef = useRef<{ start: number; end: number }[]>();
+  const inputRegionsRef = useRef<IRegions>();
   const regionsLoadedRef = useRef(false);
 
   const isNear = (position: number) => {
@@ -379,7 +387,7 @@ export function useWaveSurfer(
 
     loadDecoded(uberSegment);
     wavesurfer()?.regions.clear();
-    onRegion(0, true);
+    onRegion(0, undefined, true);
     var tmp = start - 0.03;
     if (tmp < 0) tmp = 0;
     wsGoto(tmp);

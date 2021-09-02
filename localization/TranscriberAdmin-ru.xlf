@@ -4447,6 +4447,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayerSegment.apply">
+         <segment>
+            <source>Apply</source>
+            <target>Подать заявление</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.close">
+         <segment>
+            <source>Close</source>
+             <target>Закрывать</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayerSegment.autoSegment">
          <segment>
             <source/>
@@ -4482,6 +4494,18 @@
             <source/>
             <target/>
          </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.segmentsCreated">
+         <segment>
+            <source>{0} segments created</source>
+            <target>Создано {0} сегментов</target>
+          </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.segmentLength">
+         <segment>
+            <source>Minimum segment length (sec)</source>
+            <target>Минимальная длина сегмента (секунды)</target>
+          </segment>
       </unit>
       <unit id="wsAudioPlayerZoom.fitToWidth">
          <segment>

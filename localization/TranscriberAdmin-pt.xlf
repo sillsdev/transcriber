@@ -4447,6 +4447,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayerSegment.apply">
+         <segment>
+            <source>Apply</source>
+            <target>Aplicar</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.close">
+         <segment>
+            <source>Close</source>
+             <target>Fechar</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayerSegment.autoSegment">
          <segment>
             <source>Auto Segment [{0}]</source>
@@ -4458,6 +4470,18 @@
             <source>Remove Next Boundary [{0}]</source>
             <target>Remover o próximo limite [{0}]</target>
          </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.segmentsCreated">
+         <segment>
+            <source>{0} segments created</source>
+            <target>{0} segmentos criados</target>
+          </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.segmentLength">
+         <segment>
+            <source>Minimum segment length (sec)</source>
+            <target>Comprimento mínimo do segmento (segundos)</target>
+          </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.segmentSettings">
          <segment>
@@ -4473,8 +4497,8 @@
       </unit>
       <unit id="wsAudioPlayerSegment.silenceThreshold">
          <segment>
-            <source>Silence threshold</source>
-            <target>Limiar de silêncio</target>
+            <source>Silence threshold (1000 dB)</source>
+            <target>Limiar de silêncio(1000 dB)</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.splitSegment">
