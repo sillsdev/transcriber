@@ -5189,6 +5189,13 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.apply">
+            <source>Apply</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="wsAudioPlayerSegment.autoSegment">
             <source>Auto Segment [{0}]</source>
             <target/>
@@ -5196,8 +5203,30 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+        <trans-unit id="wsAudioPlayerSegment.close">
+            <source>Close</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="wsAudioPlayerSegment.removeSegment">
             <source>Remove Next Boundary [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.segmentsCreated">
+            <source>{0} segments created</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+
+         <trans-unit id="wsAudioPlayerSegment.segmentLength">
+            <source>Minimum segment length (sec)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -5218,7 +5247,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayerSegment.silenceThreshold">
-            <source>Silence threshold</source>
+            <source>Silence threshold (1000th dB)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

@@ -49,7 +49,7 @@ import { connect } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
 import WSAudioPlayerZoom from './WSAudioPlayerZoom';
-import { IRegionChange } from '../crud/useWavesurferRegions';
+import { IRegionChange, IRegionParams } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -243,7 +243,8 @@ function WSAudioPlayer(props: IProps) {
   const [playing, setPlayingx] = useState(false);
   const loopingRef = useRef(false);
   const [looping, setLoopingx] = useState(false);
-  const [hasRegion, setHasRegion] = useState(false);
+  const [hasRegion, setHasRegion] = useState(0);
+  const [regionParams, setRegionParams] = useState<IRegionParams>();
   const recordStartPosition = useRef(0);
   const recordOverwritePosition = useRef<number | undefined>(undefined);
   const recordingRef = useRef(false);
@@ -432,15 +433,20 @@ function WSAudioPlayer(props: IProps) {
   function onWSReady() {
     setReady(true);
     setDuration(wsDuration());
-    if (segmentsRef.current?.length > 2) wsLoadRegions(segmentsRef.current);
+    if (segmentsRef.current?.length > 0) wsLoadRegions(segmentsRef.current);
     if (initialPosRef.current) wsGoto(initialPosRef.current || 0);
   }
   function onWSProgress(progress: number) {
     setProgress(progress);
     if (onProgress) onProgress(progress);
   }
-  function onWSRegion(count: number, newRegion: boolean) {
-    setHasRegion(count > 0);
+  function onWSRegion(
+    count: number,
+    params: IRegionParams | undefined,
+    newRegion: boolean
+  ) {
+    setHasRegion(count);
+    setRegionParams(params);
     if (onSegmentChange && newRegion) onSegmentChange(wsGetRegions());
   }
 
@@ -574,6 +580,7 @@ function WSAudioPlayer(props: IProps) {
     setSilence(e.target.value);
   };
   const onSplit = (split: IRegionChange) => {};
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
@@ -723,6 +730,8 @@ function WSAudioPlayer(props: IProps) {
                 ready={ready}
                 onSplit={onSplit}
                 loop={loopingRef.current || false}
+                currentNumRegions={hasRegion}
+                params={regionParams}
                 wsAutoSegment={wsAutoSegment}
                 wsRemoveSplitRegion={wsRemoveSplitRegion}
                 wsAddOrRemoveRegion={wsAddOrRemoveRegion}

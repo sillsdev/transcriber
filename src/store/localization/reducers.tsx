@@ -965,11 +965,15 @@ const initialState = {
 	}),
 	"wsAudioPlayerSegment": new LocalizedStrings({
 		"en": {
+			"apply": "Apply",
 			"autoSegment": "Auto Segment [{0}]",
+			"close": "Close",
 			"removeSegment": "Remove Next Boundary [{0}]",
+			"segmentsCreated": "{0} segments created",
+			"segmentLength": "Minimum segment length (sec)",
 			"segmentSettings": "Auto Segment Parameters",
 			"silenceLength": "Length of Silence (100ths of second)",
-			"silenceThreshold": "Silence threshold",
+			"silenceThreshold": "Silence threshold (1000th dBL)",
 			"splitSegment": "Add/Remove Boundary [Double Click/{0}]",
 		}
 	}),
