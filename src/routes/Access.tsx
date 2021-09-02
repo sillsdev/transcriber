@@ -206,7 +206,10 @@ export function Access(props: IProps) {
   const handleGoOnlineConfirmed = () => {
     if (isElectron) {
       if (!goOnlineConfirmation?.shiftKey) {
-        goOnline(curUser?.attributes?.email);
+        const email = curUser?.attributes?.auth0Id.startsWith('auth0|')
+          ? curUser?.attributes?.email
+          : undefined;
+        goOnline(email);
       } else ipc?.invoke('logout');
     }
     setGoOnlineConfirmation(undefined);

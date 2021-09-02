@@ -41,18 +41,24 @@ function TokenCheck(props: IProps) {
 
   const resetExpiresAt = () => {
     if (isElectron) {
-      ipc?.invoke('refresh-token').then(async () => {
-        console.log(`Token check refreshed`);
-        const myUser = await ipc?.invoke('get-profile');
-        console.log(JSON.stringify(myUser, null, 2));
-        const myToken = await ipc?.invoke('get-token');
-        console.log(`new token=${myToken}`);
-        updateOrbitToken(myToken);
-        const decodedToken = jwtDecode(myToken) as IToken;
-        console.log(JSON.stringify(decodedToken, null, 2));
-        setExpireAt(decodedToken.exp);
-        auth.setAuthSession(myUser, myToken, decodedToken.exp);
-      });
+      ipc
+        ?.invoke('refresh-token')
+        .then(async () => {
+          console.log(`Token check refreshed`);
+          const myUser = await ipc?.invoke('get-profile');
+          console.log(JSON.stringify(myUser, null, 2));
+          const myToken = await ipc?.invoke('get-token');
+          console.log(`new token=${myToken}`);
+          updateOrbitToken(myToken);
+          const decodedToken = jwtDecode(myToken) as IToken;
+          console.log(JSON.stringify(decodedToken, null, 2));
+          setExpireAt(decodedToken.exp);
+          auth.setAuthSession(myUser, myToken, decodedToken.exp);
+        })
+        .catch((e: Error) => {
+          handleLogOut();
+          logError(Severity.error, errorReporter, e);
+        });
     } else {
       getAccessTokenSilently()
         .then((token) => {
@@ -62,7 +68,7 @@ function TokenCheck(props: IProps) {
           auth.setAuthSession(user, token, decodedToken.exp);
         })
         .catch((e: Error) => {
-          view.current = 'Logout';
+          handleLogOut();
           logError(Severity.error, errorReporter, e);
         });
     }
@@ -80,6 +86,7 @@ function TokenCheck(props: IProps) {
   const handleLogOut = () => {
     auth.expiresAt = -1;
     view.current = 'loggedOut';
+    setModalOpen(false);
   };
 
   const checkTokenExpired = () => {
