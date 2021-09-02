@@ -4,6 +4,7 @@ import { useGlobal } from 'reactn';
 import { LocalKey, localUserKey } from '../utils';
 import { makeStyles, Link, Typography } from '@material-ui/core';
 import AppHead from '../components/App/AppHead';
+import TermsDialog from '../components/TermsDialog';
 import { TeamProvider } from '../context/TeamContext';
 import { TeamProjects } from '../components/Team';
 import StickyRedirect from '../components/StickyRedirect';
@@ -40,6 +41,7 @@ export const TeamScreen = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const [view, setView] = useState('');
+  const [showTerms, setShowTerms] = useState(false);
 
   useEffect(() => {
     if (project !== '' && projRole !== '') {
@@ -61,7 +63,11 @@ export const TeamScreen = (props: IProps) => {
   }, [project, projRole, isOffline, plan]);
 
   const handleTerms = () => {
-    setView('/terms');
+    setShowTerms(true);
+  };
+
+  const handleTermsClose = () => {
+    setShowTerms(false);
   };
 
   if (view !== '' && view !== pathname) {
@@ -77,8 +83,9 @@ export const TeamScreen = (props: IProps) => {
           <TeamProjects auth={auth} />
         </div>
       </TeamProvider>
+      <TermsDialog isOpen={showTerms} onClose={handleTermsClose} />
       <footer>
-        <Link href="#" onClick={handleTerms}>
+        <Link onClick={handleTerms}>
           <Typography className={classes.footerText}>Terms of use</Typography>
         </Link>
       </footer>
