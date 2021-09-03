@@ -73,7 +73,7 @@ export function Logout(props: IProps) {
         await coordinator.activate({ logLevel: LogLevel.Warnings });
       }
       auth.logout();
-      !isElectron && logout();
+      !isElectron && logout({ returnTo: window.origin });
     }
     setView(wasOfflineOnly ? 'offline' : 'online');
   };
@@ -83,7 +83,7 @@ export function Logout(props: IProps) {
     fetchLocalization();
     if (!isElectron) {
       auth.logout();
-      !isElectron && logout();
+      !isElectron && logout({ returnTo: window.origin });
     } else handleLogout();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
