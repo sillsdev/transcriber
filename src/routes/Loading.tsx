@@ -277,7 +277,7 @@ export function Loading(props: IProps) {
       return;
     }
     let fromUrl = getGotoUrl();
-    console.log('LoadComplete fromUrl: ', fromUrl);
+
     if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
     if (fromUrl) {
       const m = /^\/[workplan]+\/([0-9a-f-]+)/.exec(fromUrl);
@@ -298,7 +298,6 @@ export function Loading(props: IProps) {
   useEffect(() => {
     const finishRemoteLoad = () => {
       localStorage.removeItem('goingOnline');
-      console.log('pulling currentuser in finish');
       remote
         .pull((q) => q.findRecords('currentuser'))
         .then((tr) => {
