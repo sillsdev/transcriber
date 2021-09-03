@@ -1774,6 +1774,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.continueCurrentUser">
+         <segment>
+            <source>Continue as current user</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.copyClipboard">
          <segment>
             <source>Copy Version to Clipboard</source>
@@ -1879,12 +1885,6 @@
       <unit id="main.logout">
          <segment>
             <source>Log Out</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="main.logoutRequired">
-         <segment>
-            <source>Log out of other tab required</source>
             <target/>
          </segment>
       </unit>

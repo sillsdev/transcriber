@@ -2067,6 +2067,13 @@
                <context context-type="sourcefile">TokenCheck.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="main.continueCurrentUser">
+            <source>Continue as current user</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">loading.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="main.copyClipboard">
             <source>Copy Version to Clipboard</source>
             <target/>
@@ -2193,13 +2200,7 @@
                <context context-type="sourcefile">UserMenu.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.logoutRequired">
-            <source>Log out of other tab required</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Loading.tsx</context>
-            </context-group>
-         </trans-unit>
+
          <trans-unit id="main.media">
             <source>Audio</source>
             <target/>

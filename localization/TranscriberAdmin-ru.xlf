@@ -1771,6 +1771,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.continueCurrentUser">
+         <segment>
+            <source>Continue as current user</source>
+            <target>Продолжить как текущий пользователь</target>
+         </segment>
+      </unit>
       <unit id="main.copyClipboard">
          <segment>
             <source/>

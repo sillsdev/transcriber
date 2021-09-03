@@ -1771,6 +1771,12 @@
             <target>Continuer</target>
          </segment>
       </unit>
+      <unit id="main.continueCurrentUser">
+         <segment>
+            <source>Continue as current user</source>
+            <target>Continuer en tant qu'utilisateur actuel</target>
+         </segment>
+      </unit>
       <unit id="main.copyClipboard">
          <segment>
             <source>Copy Version to Clipboard</source>
@@ -1877,12 +1883,6 @@
          <segment>
             <source>Log Out</source>
             <target>Déconnexion</target>
-         </segment>
-      </unit>
-      <unit id="main.logoutRequired">
-         <segment>
-            <source>Log out of other tab required</source>
-            <target>Déconnexion de l'autre onglet nécessaire</target>
          </segment>
       </unit>
       <unit id="main.media">
