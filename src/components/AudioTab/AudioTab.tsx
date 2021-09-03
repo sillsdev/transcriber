@@ -169,6 +169,7 @@ export function AudioTab(props: IProps) {
   const handleAttachCancel = () => {
     setAttachVisible(false);
     setPCheck(-1);
+    setMCheck(-1);
   };
 
   const handleSave = async (argMap?: IAttachMap) => {
