@@ -11,7 +11,7 @@ export function useUserMedia(requestedMedia: MediaStreamConstraints) {
         );
         mediaStreamRef.current = stream;
         return stream;
-      } catch (err) {
+      } catch (err: any) {
         return err;
       }
   }

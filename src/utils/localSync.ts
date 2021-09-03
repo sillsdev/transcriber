@@ -645,7 +645,7 @@ export const localSync = async (
         userId,
         addNumberToSection
       );
-    } catch (error) {
+    } catch (error: any) {
       return error.message.replace(
         'Missing Localizer implementation. English text will be used instead.',
         ''

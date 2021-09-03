@@ -61,7 +61,7 @@ export const getParatextText =
         }
       );
       dispatch({ payload: response.data, type: TEXT_SUCCESS });
-    } catch (err) {
+    } catch (err: any) {
       if (err.errMsg !== 'no range')
         logError(
           Severity.info,
@@ -94,7 +94,7 @@ export const getParatextTextLocal =
           payload: errorStatus(undefined, 'No Local Project' + ptProjName),
           type: TEXT_ERROR,
         });
-    } catch (err) {
+    } catch (err: any) {
       if (err.errMsg !== 'no range')
         logError(
           Severity.info,
@@ -127,7 +127,7 @@ export const getUserName =
         );
         dispatch({ payload: response.data, type: USERNAME_SUCCESS });
         success = true;
-      } catch (err) {
+      } catch (err: any) {
         lasterr = err;
         logError(Severity.info, errorReporter, infoMsg(err, 'Username failed'));
         await new Promise((resolve) => setTimeout(resolve, 1000));

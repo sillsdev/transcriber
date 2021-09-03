@@ -112,7 +112,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
               return;
             }
           }
-        } catch (e) {
+        } catch (e: any) {
           if (cancelRequest) return;
           // we don't have it in our keymap?
           logError(Severity.error, reporter, infoMsg(e, ''));

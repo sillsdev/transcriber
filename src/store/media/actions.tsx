@@ -50,7 +50,7 @@ export const fetchMediaUrl =
             return;
           }
         }
-      } catch (ex) {
+      } catch (ex: any) {
         //we don't have it in our keymap?
         console.log(ex);
         logError(Severity.error, reporter, infoMsg(ex, ''));

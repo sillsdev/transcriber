@@ -70,7 +70,7 @@ export async function restoreBackup() {
     const projs = new Set(plans.map((p) => related(p, 'project') as string));
     var ret = Array.from(projs);
     return ret;
-  } catch (err) {
+  } catch (err: any) {
     logError(
       Severity.error,
       bugsnagClient,

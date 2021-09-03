@@ -6,7 +6,7 @@ export const createFolder = (folder: string) => {
   // Create folder if it doesn't exist
   try {
     fs.statSync(folder);
-  } catch (err) {
+  } catch (err: any) {
     if (err.code === 'ENOENT') fs.mkdirSync(folder, { recursive: true });
   }
 };

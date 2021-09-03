@@ -89,7 +89,7 @@ export async function insertData(
         q.findRecord({ type: item.type, id: id })
       );
     }
-  } catch (err) {
+  } catch (err: any) {
     if (err.constructor.name !== 'RecordNotFoundException') {
       orbitError(orbitInfo(err, item.keys ? item.keys['remoteId'] : ''));
     }
@@ -138,7 +138,7 @@ export async function insertData(
             isImport
           );
         }
-      } catch (err) {
+      } catch (err: any) {
         orbitError(orbitInfo(err, 'Add record error'));
       }
     }
@@ -210,7 +210,7 @@ async function processData(
       .sync(transform)
       .then((x) => console.log('backup sync complete'))
       .catch((err) => orbitError(orbitInfo(err, 'Backup sync failed'))); */
-  } catch (err) {
+  } catch (err: any) {
     orbitError(orbitInfo(err, 'Backup update error'));
   }
 }

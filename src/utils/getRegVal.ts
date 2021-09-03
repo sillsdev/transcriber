@@ -22,7 +22,7 @@ export const getRegVal = async (key: string, name: string) => {
             })
             .filter((r) => r)
         : [];
-  } catch (err) {
+  } catch (err: any) {
     if (err.code !== 'ENOENT') throw err;
   }
   return val.length > 0 ? val[0] : '';

@@ -176,7 +176,7 @@ export const doDataChanges = async (
       }
       setDataChangeCount(0);
       return true;
-    } catch (e) {
+    } catch (e: any) {
       logError(Severity.error, errorReporter, e);
       return false;
     }

@@ -258,7 +258,7 @@ export const useElectronImport = (
         //delete any old passagesection files
         try {
           fs.unlinkSync(path.join(where, 'data', 'H_passagesections.json'));
-        } catch (err) {
+        } catch (err: any) {
           if (err.errno !== -4058)
             orbitError(
               orbitInfo(err, `Delete failed for ${where} passage sections`)

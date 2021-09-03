@@ -9,7 +9,7 @@ export const getWhereis = async (key: string, scall?: any) => {
       env: { ...{ ...process }.env, DISPLAY: ':0' },
     })) as IExeca;
     if (typeof stdout === 'string') val = stdout;
-  } catch (err) {
+  } catch (err: any) {
     if (err.code !== 'ENOENT') throw err;
   }
   const res = val ? val : '';
