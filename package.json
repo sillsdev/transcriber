@@ -141,7 +141,6 @@
     "electron-debug": "^3.2.0",
     "electron-devtools-installer": "^3.1.1",
     "electron-react-devtools": "^0.5.3",
-    "electron-rebuild": "^2.3.5",
     "env-cmd": "^10.1.0",
     "md5-file": "^5.0.0",
     "npm-watch": "^0.10.0",
