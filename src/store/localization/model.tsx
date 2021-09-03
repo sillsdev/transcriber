@@ -364,7 +364,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "clearLogout": string;
     "continue": string;
     "continueCurrentUser": string;
-    "loginInvited": string;
     "copyClipboard": string;
     "crashMessage": string;
     "deletedInvitation": string;
@@ -383,7 +382,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "loadingTable": string;
     "loadingTranscriber": string;
     "logout": string;
-    "logoutRequired": string;
     "media": string;
     "myAccount": string;
     "NoLoadOffline": string;

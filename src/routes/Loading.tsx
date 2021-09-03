@@ -368,7 +368,7 @@ export function Loading(props: IProps) {
                 className={classes.button}
                 onClick={continueWithCurrentUser}
               >
-                {'continue with current user'}
+                {t.continueCurrentUser}
               </Button>
 
               <Button
@@ -377,7 +377,7 @@ export function Loading(props: IProps) {
                 className={classes.button}
                 onClick={logoutAndTryAgain}
               >
-                {'logout and login with invited user'}
+                {t.logout}
               </Button>
             </div>
           )}

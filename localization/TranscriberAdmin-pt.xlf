@@ -1777,12 +1777,6 @@
             <target>Continuar como usuário atual</target>
          </segment>
       </unit>
-      <unit id="main.loginInvited">
-         <segment>
-            <source>Login as invited user</source>
-            <target>Faça login como usuário convidado</target>
-         </segment>
-      </unit>
       <unit id="main.copyClipboard">
          <segment>
             <source>Copy Version to Clipboard</source>
@@ -1889,12 +1883,6 @@
          <segment>
             <source>Log Out</source>
             <target>Sair</target>
-         </segment>
-      </unit>
-      <unit id="main.logoutRequired">
-         <segment>
-            <source>Log out of other tab required</source>
-            <target/>
          </segment>
       </unit>
       <unit id="main.media">

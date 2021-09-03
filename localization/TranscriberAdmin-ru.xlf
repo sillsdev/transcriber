@@ -1777,12 +1777,6 @@
             <target>Продолжить как текущий пользователь</target>
          </segment>
       </unit>
-      <unit id="main.loginInvited">
-         <segment>
-            <source>Login as invited user</source>
-            <target>Войти как приглашенный пользователь</target>
-         </segment>
-      </unit>
       <unit id="main.copyClipboard">
          <segment>
             <source/>

@@ -13,7 +13,6 @@ import TeamScreen from './routes/TeamScreen';
 import PlanScreen from './routes/PlanScreen';
 import WorkScreen from './routes/WorkScreen';
 import Buggy from './routes/Buggy';
-import LogoutRequired from './routes/LogoutRequired';
 import EmailUnverified from './routes/EmailUnverified';
 import TokenCheck from './hoc/TokenCheck';
 import PrivateRoute from './hoc/PrivateRoute';
