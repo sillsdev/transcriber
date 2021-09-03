@@ -24,7 +24,6 @@ import SnackBarProvider from './hoc/SnackBar';
 import { HotKeyProvider } from './context/HotKeyContext';
 import Access from './routes/Access';
 import Welcome from './routes/Welcome';
-import { Terms } from './components/Terms';
 import { isElectron } from './api-variable';
 
 export const HeadHeight = 64;
@@ -116,7 +115,6 @@ function App() {
                   exact={true}
                   render={(props) => <Logout auth={auth} {...props} />}
                 />
-                <Route path="/terms" render={() => <Terms />} />
                 <PrivateRoute auth={auth} path="/loading">
                   <Loading auth={auth} />
                 </PrivateRoute>
