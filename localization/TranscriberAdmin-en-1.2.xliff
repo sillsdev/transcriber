@@ -2067,6 +2067,13 @@
                <context context-type="sourcefile">TokenCheck.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="main.continueCurrentUser">
+            <source>Continue as current user</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">loading.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="main.copyClipboard">
             <source>Copy Version to Clipboard</source>
             <target/>
@@ -2193,13 +2200,7 @@
                <context context-type="sourcefile">UserMenu.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.logoutRequired">
-            <source>Log out of other tab required</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Loading.tsx</context>
-            </context-group>
-         </trans-unit>
+
          <trans-unit id="main.media">
             <source>Audio</source>
             <target/>
@@ -5196,6 +5197,13 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.apply">
+            <source>Apply</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="wsAudioPlayerSegment.autoSegment">
             <source>Auto Segment [{0}]</source>
             <target/>
@@ -5203,8 +5211,30 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+        <trans-unit id="wsAudioPlayerSegment.close">
+            <source>Close</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="wsAudioPlayerSegment.removeSegment">
             <source>Remove Next Boundary [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.segmentsCreated">
+            <source>{0} segments created</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+
+         <trans-unit id="wsAudioPlayerSegment.segmentLength">
+            <source>Minimum segment length (sec)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -5225,7 +5255,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayerSegment.silenceThreshold">
-            <source>Silence threshold</source>
+            <source>Silence threshold (1000th dB)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

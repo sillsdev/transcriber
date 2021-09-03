@@ -69,6 +69,7 @@ import WSAudioPlayer from './WSAudioPlayer';
 import PassageHistory from './PassageHistory';
 import { HotKeyContext } from '../context/HotKeyContext';
 import Spelling from './Spelling';
+//import useRenderingTrace from '../utils/useRenderingTrace';
 
 const HISTORY_KEY = 'F7,CTRL+7';
 const INIT_PLAYER_HEIGHT = 180;
@@ -254,7 +255,7 @@ export function Transcriber(props: IProps) {
   const [projData, setProjData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
   const playedSecsRef = useRef<number>(0);
-  const segmentsRef = useRef('[]');
+  const segmentsRef = useRef('');
   const stateRef = useRef<string>(state);
   const [totalSeconds, setTotalSeconds] = useState(duration);
   const [transcribing] = useState(
@@ -269,6 +270,7 @@ export function Transcriber(props: IProps) {
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
   const [defaultPosition, setDefaultPosition] = useState(0.0);
+  const [initialSegments, setInitialSegments] = useState('');
   const { showMessage } = useSnackBar();
   const showHistoryRef = useRef(false);
   const [showHistory, setShowHistoryx] = useState(false);
@@ -292,6 +294,51 @@ export function Transcriber(props: IProps) {
     useContext(HotKeyContext).state;
   const t = transcriberStr;
   const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
+
+  /* debug what props are changing to force renders
+  useRenderingTrace(
+    'Transcriber',
+    {
+      ...props,
+      memory,
+      offline,
+      project,
+      projType,
+      plan,
+      user,
+      projRole,
+      errorReporter,
+      busy,
+      assigned,
+      changed,
+      doSave,
+      projData,
+      fontStatus,
+      totalSeconds,
+      transcribing,
+      height,
+      boxHeight,
+      width,
+      textValue,
+      lastSaved,
+      defaultPosition,
+      showHistory,
+      rejectVisible,
+      addNoteVisible,
+      hasParatextName,
+      paratextProject,
+      paratextIntegration,
+      connected,
+      coordinator,
+      audioBlob,
+      subscribe,
+      unsubscribe,
+      localizeHotKey,
+      playerSize,
+    },
+    'log'
+  ); */
+
   useEffect(() => {
     playingRef.current = playing;
   }, [playing]);
@@ -770,7 +817,8 @@ export function Transcriber(props: IProps) {
     const mediaRec = mediafiles.filter((m) => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
-      segmentsRef.current = attr.segments || '[]';
+      segmentsRef.current = attr.segments || '';
+      setInitialSegments(segmentsRef.current);
       return {
         transcription: attr.transcription ? attr.transcription : '',
         position: attr.position,
@@ -858,7 +906,6 @@ export function Transcriber(props: IProps) {
     setPlaying(newPlaying);
     playingRef.current = newPlaying;
   };
-
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
@@ -912,7 +959,7 @@ export function Transcriber(props: IProps) {
                           size={playerSize}
                           blob={audioBlob}
                           initialposition={defaultPosition}
-                          segments={segmentsRef.current}
+                          segments={initialSegments}
                           isPlaying={playing}
                           onProgress={onProgress}
                           onSegmentChange={onSegmentChange}

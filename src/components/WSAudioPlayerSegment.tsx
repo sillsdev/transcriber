@@ -4,24 +4,20 @@ import {
   createStyles,
   IconButton,
   Grid,
-  Slider,
-  Box,
-  Typography,
 } from '@material-ui/core';
-import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LightTooltip } from '../control';
 import { IWsAudioPlayerSegmentStrings, IState } from '../model';
 import { FaGripLinesVertical } from 'react-icons/fa';
 import ClearIcon from '@material-ui/icons/Clear';
 import SettingsIcon from '@material-ui/icons/Settings';
-import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 import { HotKeyContext } from '../context/HotKeyContext';
 import PlusMinusLogo from '../control/PlusMinus';
-import { IRegionChange } from '../crud/useWavesurferRegions';
-import { useGlobal } from 'reactn';
+import { IRegionChange, IRegionParams } from '../crud/useWavesurferRegions';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
-
+import WSSegmentParameters from './WSSegmentParameters';
+import { useSnackBar } from '../hoc/SnackBar';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -47,6 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 50,
     },
     rotate90: { rotate: '90' },
+    button: { margin: theme.spacing(1) },
   })
 );
 interface IStateProps {
@@ -55,12 +52,10 @@ interface IStateProps {
 interface IProps extends IStateProps {
   ready: boolean;
   loop: boolean;
+  currentNumRegions: number;
+  params: IRegionParams;
   onSplit: (split: IRegionChange) => void;
-  wsAutoSegment: (
-    loop: boolean,
-    silenceThreshold?: number,
-    timeThreshold?: number
-  ) => void;
+  wsAutoSegment: (loop: boolean, params: IRegionParams) => number;
   wsRemoveSplitRegion: (next?: boolean) => IRegionChange | undefined;
   wsAddOrRemoveRegion: () => IRegionChange | undefined;
 }
@@ -71,19 +66,22 @@ function WSAudioPlayerSegment(props: IProps) {
     t,
     ready,
     loop,
+    currentNumRegions,
+    params,
     onSplit,
     wsAutoSegment,
     wsRemoveSplitRegion,
     wsAddOrRemoveRegion,
   } = props;
-  const [, setBusy] = useGlobal('importexportBusy');
-
-  const [silenceValue, setSilenceValue] = useState(4);
-  const [timeValue, setTimeValue] = useState(2);
+  const [segParams, setSegParams] = useState<IRegionParams>({
+    silenceThreshold: 0.004,
+    timeThreshold: 0.02,
+    segLenThreshold: 0.5,
+  });
   const [showSettings, setShowSettings] = useState(false);
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
-
+  const { showMessage } = useSnackBar();
   const DELREG_KEY = 'CTRL+ALT+X';
   const ADDREMSEG_KEY = 'CTRL+ARROWDOWN';
 
@@ -100,10 +98,20 @@ function WSAudioPlayerSegment(props: IProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    setSegParams({
+      silenceThreshold: params?.silenceThreshold
+        ? params.silenceThreshold
+        : 0.004,
+      timeThreshold: params?.timeThreshold ? params.timeThreshold : 0.02,
+      segLenThreshold: params?.segLenThreshold || 0.5,
+    });
+  }, [params]);
+
   const handleAutoSegment = () => {
-    setBusy(true);
-    wsAutoSegment(loop, silenceValue / 1000, timeValue / 100);
-    setBusy(false);
+    var numRegions = wsAutoSegment(loop, segParams);
+    showMessage(t.segmentsCreated.replace('{0}', numRegions.toString()));
     return true;
   };
   const handleShowSettings = () => {
@@ -120,20 +128,16 @@ function WSAudioPlayerSegment(props: IProps) {
     return true;
   };
 
-  const handleSilenceChange = (
-    event: ChangeEvent<{}>,
-    value: number | number[]
+  const handleSegParamChange = (
+    silence: number,
+    silLen: number,
+    segLen: number
   ) => {
-    if (Array.isArray(value)) value = value[0];
-    console.log(value);
-    setSilenceValue(value);
-  };
-  const handleTimeChange = (
-    event: ChangeEvent<{}>,
-    value: number | number[]
-  ) => {
-    if (Array.isArray(value)) value = value[0];
-    setTimeValue(value);
+    setSegParams({
+      silenceThreshold: silence,
+      timeThreshold: silLen,
+      segLenThreshold: segLen,
+    });
   };
 
   return (
@@ -163,41 +167,15 @@ function WSAudioPlayerSegment(props: IProps) {
           </LightTooltip>
 
           {showSettings && (
-            <BigDialog
-              title={t.segmentSettings}
+            <WSSegmentParameters
+              loop={loop}
+              params={segParams}
+              currentNumRegions={currentNumRegions}
+              wsAutoSegment={wsAutoSegment}
               isOpen={showSettings}
               onOpen={setShowSettings}
-              bp={BigDialogBp.md}
-            >
-              <Box display="flex" flexDirection="column">
-                <Typography id="silence-slider-label" gutterBottom>
-                  {t.silenceThreshold}
-                </Typography>
-                <Slider
-                  min={1}
-                  max={50}
-                  step={1}
-                  marks
-                  value={silenceValue}
-                  valueLabelDisplay="auto"
-                  onChange={handleSilenceChange}
-                  aria-labelledby="silence-slider"
-                />
-                <Typography id="silence-slider-label" gutterBottom>
-                  {t.silenceLength}
-                </Typography>
-                <Slider
-                  step={1}
-                  marks
-                  min={1}
-                  max={10}
-                  value={timeValue}
-                  valueLabelDisplay="auto"
-                  onChange={handleTimeChange}
-                  aria-labelledby="time-slider"
-                />
-              </Box>
-            </BigDialog>
+              onSave={handleSegParamChange}
+            />
           )}
           <LightTooltip
             id="wsSplitTip"

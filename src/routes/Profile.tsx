@@ -568,7 +568,7 @@ export function Profile(props: IProps) {
     (locale || '') !== '';
 
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
-  if (/Access/i.test(view)) return <Redirect to="/" />;
+  if (/access/i.test(view)) return <Redirect to="/" />;
   if (/Team/i.test(view)) return <StickyRedirect to="/team" />;
 
   const orgRoles = ['Admin', 'Member'];

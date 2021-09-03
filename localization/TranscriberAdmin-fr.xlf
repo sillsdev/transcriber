@@ -1771,6 +1771,12 @@
             <target>Continuer</target>
          </segment>
       </unit>
+      <unit id="main.continueCurrentUser">
+         <segment>
+            <source>Continue as current user</source>
+            <target>Continuer en tant qu'utilisateur actuel</target>
+         </segment>
+      </unit>
       <unit id="main.copyClipboard">
          <segment>
             <source>Copy Version to Clipboard</source>
@@ -1877,12 +1883,6 @@
          <segment>
             <source>Log Out</source>
             <target>Déconnexion</target>
-         </segment>
-      </unit>
-      <unit id="main.logoutRequired">
-         <segment>
-            <source>Log out of other tab required</source>
-            <target>Déconnexion de l'autre onglet nécessaire</target>
          </segment>
       </unit>
       <unit id="main.media">
@@ -4453,6 +4453,18 @@
             <target>Horodatage [{0}]</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayerSegment.apply">
+         <segment>
+            <source>Apply</source>
+            <target>Appliquer</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.close">
+         <segment>
+            <source>Close</source>
+             <target>Proche</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayerSegment.autoSegment">
          <segment>
             <source>Auto Segment [{0}]</source>
@@ -4465,6 +4477,18 @@
             <target>Supprimer la limite suivante [{0}]</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayerSegment.segmentsCreated">
+         <segment>
+            <source>{0} segments created</source>
+            <target>{0} segments créés</target>
+          </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.segmentLength">
+         <segment>
+            <source>Minimum segment length (sec)</source>
+            <target>Longueur minimale du segment (secondes)</target>
+          </segment>
+      </unit>
       <unit id="wsAudioPlayerSegment.segmentSettings">
          <segment>
             <source>Auto Segment Parameters</source>
@@ -4473,14 +4497,14 @@
       </unit>
       <unit id="wsAudioPlayerSegment.silenceLength">
          <segment>
-            <source>Length of Silence (100ths of second)</source>
+            <source>Length of Silence (100th second)</source>
             <target>Durée du silence (100e de seconde)</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.silenceThreshold">
          <segment>
-            <source>Silence threshold</source>
-            <target>Seuil de silence</target>
+            <source>Silence threshold (1000th dB)</source>
+            <target>Seuil de silence (1000 dB)</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.splitSegment">
