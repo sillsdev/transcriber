@@ -2008,6 +2008,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.terms">
+         <segment>
+            <source>Terms of Use</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.thanks">
          <segment>
             <source>Thanks to</source>
