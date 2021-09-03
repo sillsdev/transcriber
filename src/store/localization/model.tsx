@@ -402,6 +402,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "switchUser": string;
     "tasks": string;
     "team": string;
+    "terms": string;
     "thanks": string;
     "transcribe": string;
     "UnsavedData": string;

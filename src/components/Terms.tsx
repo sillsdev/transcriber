@@ -22,15 +22,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type IItem = string | Array<string>;
 
-const ContentItem = ({ item }: { item: IItem }) => {
+const ContentItem = ({ item, key }: { item: IItem; key: number }) => {
   const classes = useStyles();
 
   return typeof item === 'string' ? (
     <Typography className={classes.text}>{item}</Typography>
   ) : (
-    <ul>
-      {item.map((each) => (
-        <li>{each}</li>
+    <ul key={key}>
+      {item.map((each, n) => (
+        <li key={n}>{each}</li>
       ))}
     </ul>
   );
@@ -63,8 +63,8 @@ const TermItem = ({ term }: { term: ITerm }) => {
         </Typography>
       </tr>
       <tr>
-        {term.content.map((i) => (
-          <ContentItem item={i} />
+        {term.content.map((i, n) => (
+          <ContentItem item={i} key={n} />
         ))}
       </tr>
     </>

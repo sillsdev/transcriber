@@ -430,6 +430,7 @@ const initialState = {
 			"switchUser": "Switch User",
 			"tasks": "Tasks",
 			"team": "Team",
+			"terms": "Terms of Use",
 			"thanks": "Thanks to",
 			"transcribe": "Transcribe",
 			"UnsavedData": "Unsaved Data",
