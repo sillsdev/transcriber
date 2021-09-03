@@ -13,6 +13,7 @@ import TeamScreen from './routes/TeamScreen';
 import PlanScreen from './routes/PlanScreen';
 import WorkScreen from './routes/WorkScreen';
 import Buggy from './routes/Buggy';
+import Busy from './components/Busy';
 import EmailUnverified from './routes/EmailUnverified';
 import TokenCheck from './hoc/TokenCheck';
 import PrivateRoute from './hoc/PrivateRoute';
@@ -62,8 +63,14 @@ const theme = createTheme({
 });
 
 function App() {
-  const { isLoading, isAuthenticated, error, user, getAccessTokenSilently } =
-    useAuth0();
+  const {
+    isLoading,
+    isAuthenticated,
+    error,
+    user,
+    getAccessTokenSilently,
+    loginWithRedirect,
+  } = useAuth0();
 
   React.useEffect(() => {
     (async () => {
@@ -77,11 +84,13 @@ function App() {
   }, [isAuthenticated]);
 
   if (isLoading && !isElectron) {
-    return <div>Loading...</div>;
+    return <Busy />;
   }
 
   if (error && !isElectron) {
-    return <Redirect to="/logout" />;
+    console.log(error);
+    loginWithRedirect({ redirectUri: window.origin });
+    return <Busy />;
   }
 
   return (
