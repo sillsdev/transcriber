@@ -122,6 +122,7 @@ const initState = {
   bookMap: {} as BookNameMap,
   allBookData: Array<BookName>(),
   planTypes: Array<PlanType>(),
+  isDeleting: false,
   teams: () => Array<Organization>(),
   personalProjects: () => Array<VProject>(),
   teamProjects: (teamId: string) => Array<VProject>(),
@@ -391,7 +392,9 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const teamDelete = async (team: Organization) => {
+      setState((state) => ({ ...state, isDeleting: true }));
       await orbitTeamDelete(team);
+      setState((state) => ({ ...state, isDeleting: false }));
     };
 
     interface IUniqueTypes {
