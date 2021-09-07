@@ -2348,6 +2348,13 @@
       			<context context-type="sourcefile">AboutDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="main.privacy">
+      		<source>Privacy Policy</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AboutDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="main.thanks">
             <source>Thanks to</source>
             <target/>

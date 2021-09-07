@@ -403,6 +403,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "tasks": string;
     "team": string;
     "terms": string;
+    "privacy": string;
     "thanks": string;
     "transcribe": string;
     "UnsavedData": string;
