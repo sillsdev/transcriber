@@ -37,7 +37,7 @@ const TeamActions = (props: IProps) => {
   const [openAdd, setOpenAdd] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const ctx = React.useContext(TeamContext);
-  const { teamCreate, cardStrings } = ctx.state;
+  const { teamCreate, cardStrings, isDeleting } = ctx.state;
   const t = cardStrings;
 
   const handleClickOpen = () => {
@@ -81,6 +81,7 @@ const TeamActions = (props: IProps) => {
         isOpen={openAdd}
         onOpen={setOpenAdd}
         onCommit={handleAdd}
+        disabled={isDeleting}
       />
       {isElectron && importOpen && (
         <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
