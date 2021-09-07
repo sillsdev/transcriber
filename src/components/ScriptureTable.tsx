@@ -173,8 +173,8 @@ export function ScriptureTable(props: IProps) {
   const [, setBusy] = useGlobal('importexportBusy');
   const [, setConnected] = useGlobal('connected');
 
-  const [saving, setSaving] = useState(false);
   const myChangedRef = useRef(false);
+  const savingRef = useRef(false);
   const [changed, setChangedx] = useGlobal('changed');
   const { showMessage } = useSnackBar();
   const [rowInfo, setRowInfo] = useState(Array<IRowInfo>());
@@ -293,7 +293,10 @@ export function ScriptureTable(props: IProps) {
       }
     }
     if (change) setChanged(true);
-    else if (!data.length) setChanged(false); //all rows deleted
+    else if (!data.length) {
+      //all rows deleted
+      setChanged(false);
+    }
 
     return change ? [...data] : data;
   };
@@ -446,6 +449,7 @@ export function ScriptureTable(props: IProps) {
       setInData([...myIndata]);
       setRowInfo([...myRowInfo]);
     }
+
     setChanged(true);
   };
   const movePassageDown = (rowdata: any[][], index: number) => {
@@ -517,7 +521,7 @@ export function ScriptureTable(props: IProps) {
     return true;
   };
 
-  const getSections = (where: number[]) => {
+  const getSectionsWhere = (where: number[]) => {
     let selected = Array<Section>();
     let one: any;
     where.forEach((c) => {
@@ -1137,6 +1141,7 @@ export function ScriptureTable(props: IProps) {
       await saveFn(changedRows, anyNew);
       setBusy(false);
     };
+    const setSaving = (value: boolean) => (savingRef.current = value);
     const save = () => {
       setSaving(true);
       showMessage(t.saving);
@@ -1145,7 +1150,7 @@ export function ScriptureTable(props: IProps) {
         setSaving(false);
       });
     };
-    if (doSave && !saving) {
+    if (doSave && !savingRef.current) {
       if (offlineOnly) {
         save();
       } else {
@@ -1162,7 +1167,7 @@ export function ScriptureTable(props: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave, saving, data, inData, rowInfo]);
+  }, [doSave, data, inData, rowInfo]);
 
   useEffect(() => {
     if (plan !== '') {
@@ -1301,7 +1306,7 @@ export function ScriptureTable(props: IProps) {
         }
       }
     };
-    if (!saving && !myChangedRef.current && plan) {
+    if (!savingRef.current && !myChangedRef.current && plan) {
       getSections(plan as string).then(() => {
         setData(initData);
         setInData(initData.map((row: Array<any>) => [...row]));
@@ -1310,7 +1315,7 @@ export function ScriptureTable(props: IProps) {
       });
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [plan, sections, passages, saving, inlinePassages]);
+  }, [plan, sections, passages, inlinePassages]);
 
   useEffect(() => {
     const colMx = data.reduce(
@@ -1419,7 +1424,7 @@ export function ScriptureTable(props: IProps) {
         ts={ts}
       />
       <AssignSection
-        sections={getSections(assignSections)}
+        sections={getSectionsWhere(assignSections)}
         visible={assignSectionVisible}
         closeMethod={handleAssignClose()}
       />
