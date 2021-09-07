@@ -433,7 +433,7 @@ function WSAudioPlayer(props: IProps) {
   function onWSReady() {
     setReady(true);
     setDuration(wsDuration());
-    if (segmentsRef.current?.length > 0) wsLoadRegions(segmentsRef.current);
+    if (segmentsRef.current?.length > 2) wsLoadRegions(segmentsRef.current);
     if (initialPosRef.current) wsGoto(initialPosRef.current || 0);
   }
   function onWSProgress(progress: number) {
