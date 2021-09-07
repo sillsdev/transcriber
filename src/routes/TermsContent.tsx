@@ -4,10 +4,10 @@ export const termsContent = `<div>
     The actual SIL International Language Software Terms of Use is
     available
     <a
-        href="https://software.sil.org/language-software-terms-of-use/"
-        rel="noopener noreferrer"
-        target="_blank"
-        >here</a>. It is copied below for your convenience.
+    href="https://software.sil.org/language-software-terms-of-use/"
+    rel="noopener noreferrer"
+    target="_blank"
+    >here</a>. It is copied below for your convenience.
 </p>
 
 <p>
@@ -44,7 +44,11 @@ export const termsContent = `<div>
     with your postal or email address, you will receive the information
     for which you provided us your address. Details about the data that
     we collect and how we treat that data can be found in our
-    <a href="/privacy/">privacy policy</a>.
+    <a
+    href="https://software.sil.org/language-software-privacy-policy/"
+    rel="noopener noreferrer"
+    target="_blank"
+    >privacy policy</a>.
 </p>
 <p>
     SIL investigates all reports of alleged copyright infringement and
@@ -105,7 +109,11 @@ export const termsContent = `<div>
     You will need one or more accounts in order to upload data. The
     treatment of your personally identifiable information associated
     with any accounts is described in our
-    <a href="/privacy/">Language Software Privacy Policy</a>.
+    <a
+    href="https://software.sil.org/language-software-privacy-policy/"
+    rel="noopener noreferrer"
+    target="_blank"
+    >Language Software Privacy Policy</a>.
 </p>
 <p>
     <strong>About open source software</strong><br />
