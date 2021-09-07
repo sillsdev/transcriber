@@ -6,7 +6,6 @@ import { IToken } from './model';
 import { hot } from 'react-hot-loader';
 import { Route, Redirect } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@material-ui/core';
-
 import Logout from './routes/Logout';
 import Loading from './routes/Loading';
 import Profile from './routes/Profile';
@@ -27,7 +26,9 @@ import SnackBarProvider from './hoc/SnackBar';
 import { HotKeyProvider } from './context/HotKeyContext';
 import Access from './routes/Access';
 import Welcome from './routes/Welcome';
-import { Terms } from './components/Terms';
+import { HTMLPage } from './components/HTMLPage';
+import { termsContent } from './routes/TermsContent';
+import { privacyContent } from './routes/privacyContent';
 import { isElectron } from './api-variable';
 
 export const HeadHeight = 64;
@@ -122,7 +123,14 @@ function App() {
                   exact={true}
                   render={(props) => <Logout auth={auth} {...props} />}
                 />
-                <Route path="/terms" render={() => <Terms />} />
+                <Route
+                  path="/terms"
+                  render={() => <HTMLPage text={termsContent} />}
+                />
+                <Route
+                  path="/privacy"
+                  render={() => <HTMLPage text={privacyContent} />}
+                />
                 <PrivateRoute auth={auth} path="/loading">
                   <Loading auth={auth} />
                 </PrivateRoute>
