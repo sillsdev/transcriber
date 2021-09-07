@@ -97,6 +97,12 @@ const errorManagedApp = bugsnagClient ? (
   </ErrorBoundary>
 );
 
+const onRedirectingCallbck = (appState: { returnTo?: string }) => {
+  history.push(
+    appState && appState.returnTo ? appState.returnTo : window.location.pathname
+  );
+};
+
 const router = isElectron ? (
   <HashRouter>{errorManagedApp}</HashRouter>
 ) : (
@@ -105,6 +111,8 @@ const router = isElectron ? (
     clientId={webClientId}
     audience={apiIdentifier}
     redirectUri={process.env.REACT_APP_CALLBACK}
+    useRefreshTokens={true}
+    onRedirectCallback={onRedirectingCallbck}
   >
     <Router history={history}>{errorManagedApp}</Router>
   </Auth0Provider>

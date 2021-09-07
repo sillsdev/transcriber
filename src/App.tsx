@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useGlobal } from 'reactn';
 import { useAuth0 } from '@auth0/auth0-react';
 import JwtDecode from 'jwt-decode';
 import { IToken } from './model';
@@ -15,6 +16,7 @@ import WorkScreen from './routes/WorkScreen';
 import Buggy from './routes/Buggy';
 import Busy from './components/Busy';
 import EmailUnverified from './routes/EmailUnverified';
+import { logError, Severity } from './utils';
 import TokenCheck from './hoc/TokenCheck';
 import PrivateRoute from './hoc/PrivateRoute';
 import Auth from './auth/Auth';
@@ -63,14 +65,9 @@ const theme = createTheme({
 });
 
 function App() {
-  const {
-    isLoading,
-    isAuthenticated,
-    error,
-    user,
-    getAccessTokenSilently,
-    loginWithRedirect,
-  } = useAuth0();
+  const { isLoading, isAuthenticated, error, user, getAccessTokenSilently } =
+    useAuth0();
+  const [errorReporter] = useGlobal('errorReporter');
 
   React.useEffect(() => {
     (async () => {
@@ -89,7 +86,7 @@ function App() {
 
   if (error && !isElectron) {
     console.log(error);
-    loginWithRedirect({ redirectUri: window.origin });
+    if (errorReporter) logError(Severity.error, errorReporter, error);
     return <Busy />;
   }
 

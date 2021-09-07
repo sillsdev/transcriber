@@ -7,10 +7,11 @@ export const useUpdateOrbitToken = () => {
 
   return (myToken: string) => {
     // Update the token in the orbit request processor
-    const reqHeaders = remote.requestProcessor.defaultFetchSettings?.headers;
-    remote.requestProcessor.defaultFetchSettings.headers = {
-      ...reqHeaders,
-      Authorization: 'Bearer ' + myToken,
-    };
+    const reqHeaders = remote?.requestProcessor.defaultFetchSettings?.headers;
+    if (reqHeaders)
+      remote.requestProcessor.defaultFetchSettings.headers = {
+        ...reqHeaders,
+        Authorization: 'Bearer ' + myToken,
+      };
   };
 };
