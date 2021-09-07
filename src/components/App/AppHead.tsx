@@ -43,7 +43,6 @@ import ProjectDownloadAlert from '../ProjectDownloadAlert';
 import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
 import { useSnackBar, AlertSeverity } from '../../hoc/SnackBar';
-import TermsDialog from '../TermsDialog';
 
 const shell = isElectron ? require('electron').shell : null;
 
@@ -151,7 +150,6 @@ export const AppHead = (props: IProps) => {
   const [complete] = useGlobal('progress');
   const [downloadAlert, setDownloadAlert] = React.useState(false);
   const [updateTipOpen, setUpdateTipOpen] = useState(false);
-  const [showTerms, setShowTerms] = useState(false);
   const { showMessage } = useSnackBar();
 
   const handleUserMenuAction = (
@@ -160,8 +158,8 @@ export const AppHead = (props: IProps) => {
     setView: (v: string) => void,
     resetRequests: () => Promise<void>
   ) => {
-    if (/terms/i.test(what)) {
-      setShowTerms(true);
+    if (/terms|privacy/i.test(what)) {
+      setView(what);
       return;
     }
     if (isElectron && /ClearLogout/i.test(what)) {
@@ -302,13 +300,14 @@ export const AppHead = (props: IProps) => {
 
   const handleUpdateOpen = () => setUpdateTipOpen(true);
   const handleUpdateClose = () => setUpdateTipOpen(pathname === '/');
-  const handleTermsClose = () => setShowTerms(false);
 
   if (view === 'Error') return <Redirect to="/error" />;
   if (view === 'Profile') return <StickyRedirect to="/profile" />;
   if (view === 'Logout') return <Redirect to="/logout" />;
   if (view === 'Access') return <Redirect to="/" />;
   if (view === 'Home') return <StickyRedirect to="/team" />;
+  if (view === 'Terms') return <Redirect to="/terms" />;
+  if (view === 'Privacy') return <Redirect to="/privacy" />;
   return (
     <AppBar position="fixed" className={classes.appBar} color="inherit">
       <>
@@ -370,7 +369,6 @@ export const AppHead = (props: IProps) => {
         </Toolbar>
         {!importexportBusy || <Busy />}
         {downloadAlert && <ProjectDownloadAlert auth={auth} cb={downDone} />}
-        <TermsDialog isOpen={showTerms} onClose={handleTermsClose} />
       </>
     </AppBar>
   );

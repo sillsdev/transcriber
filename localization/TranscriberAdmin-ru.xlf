@@ -2017,6 +2017,12 @@
    			<target/>
    		</segment>
    	</unit>
+   	<unit id="main.privacy">
+   		<segment>
+   			<source>Privacy Policy</source>
+   			<target/>
+   		</segment>
+   	</unit>
       <unit id="main.thanks">
          <segment>
             <source/>

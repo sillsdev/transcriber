@@ -431,6 +431,7 @@ const initialState = {
 			"tasks": "Tasks",
 			"team": "Team",
 			"terms": "Terms of Use",
+			"privacy": "Privacy Policy",
 			"thanks": "Thanks to",
 			"transcribe": "Transcribe",
 			"UnsavedData": "Unsaved Data",

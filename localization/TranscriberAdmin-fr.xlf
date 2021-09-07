@@ -2011,6 +2011,12 @@
    			<target>Conditions d'utilisation</target>
    		</segment>
    	</unit>
+   	<unit id="main.privacy">
+   		<segment>
+   			<source>Privacy Policy</source>
+   			<target>Politique de confidentialité</target>
+   		</segment>
+   	</unit>
       <unit id="main.thanks">
          <segment>
             <source>Thanks to</source>
