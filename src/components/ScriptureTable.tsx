@@ -1315,7 +1315,7 @@ export function ScriptureTable(props: IProps) {
       });
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [plan, sections, passages, inlinePassages]);
+  }, [plan, sections, passages, inlinePassages, savingRef.current]);
 
   useEffect(() => {
     const colMx = data.reduce(
