@@ -141,7 +141,7 @@ export const switchUser = async () => {
   await doLogout();
   setTimeout(() => {
     goOnline();
-  }, 1500);
+  }, 2000);
 };
 export function Access(props: IProps) {
   const {
