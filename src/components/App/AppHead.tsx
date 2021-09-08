@@ -43,6 +43,7 @@ import ProjectDownloadAlert from '../ProjectDownloadAlert';
 import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
 import { useSnackBar, AlertSeverity } from '../../hoc/SnackBar';
+import PolicyDialog from '../PolicyDialog';
 
 const shell = isElectron ? require('electron').shell : null;
 
@@ -150,6 +151,7 @@ export const AppHead = (props: IProps) => {
   const [complete] = useGlobal('progress');
   const [downloadAlert, setDownloadAlert] = React.useState(false);
   const [updateTipOpen, setUpdateTipOpen] = useState(false);
+  const [showTerms, setShowTerms] = useState('');
   const { showMessage } = useSnackBar();
 
   const handleUserMenuAction = (
@@ -159,7 +161,7 @@ export const AppHead = (props: IProps) => {
     resetRequests: () => Promise<void>
   ) => {
     if (/terms|privacy/i.test(what)) {
-      setView(what);
+      setShowTerms(what);
       return;
     }
     if (isElectron && /ClearLogout/i.test(what)) {
@@ -300,6 +302,7 @@ export const AppHead = (props: IProps) => {
 
   const handleUpdateOpen = () => setUpdateTipOpen(true);
   const handleUpdateClose = () => setUpdateTipOpen(pathname === '/');
+  const handleTermsClose = () => setShowTerms('');
 
   if (view === 'Error') return <Redirect to="/error" />;
   if (view === 'Profile') return <StickyRedirect to="/profile" />;
@@ -369,6 +372,11 @@ export const AppHead = (props: IProps) => {
         </Toolbar>
         {!importexportBusy || <Busy />}
         {downloadAlert && <ProjectDownloadAlert auth={auth} cb={downDone} />}
+        <PolicyDialog
+          isOpen={Boolean(showTerms)}
+          content={showTerms}
+          onClose={handleTermsClose}
+        />
       </>
     </AppBar>
   );

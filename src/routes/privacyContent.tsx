@@ -4,10 +4,10 @@ export const privacyContent = `<div>
     The actual SIL International Language Software Privacy Policy is
     available
     <a
-        href="https://software.sil.org/language-software-privacy-policy/"
-        rel="noopener noreferrer"
-        target="_blank"
-        >here</a>. It is copied below for your convenience.
+    href="https://software.sil.org/language-software-privacy-policy/"
+    rel="noopener noreferrer"
+    target="_blank"
+    >here</a>. It is copied below for your convenience.
 </p>
 
 <blockquote>
@@ -37,10 +37,10 @@ export const privacyContent = `<div>
     Language Forge, Language Depot, Dictionary App Builder and Webonary.
     Our software and services are described at
     <a
-        href="http://software.sil.org/products/"
-        rel="noopener noreferrer"
-        target="_blank"
-        >https://software.sil.org/products/</a>
+    href="http://software.sil.org/products/"
+    rel="noopener noreferrer"
+    target="_blank"
+    >https://software.sil.org/products/</a>
 </p>
 
 <h2>Two kinds of information</h2>
@@ -67,16 +67,16 @@ export const privacyContent = `<div>
     service to you. Examples of services that require an account are:
     the help community at
     <a
-        href="https://community.software.sil.org"
-        rel="noopener noreferrer"
-        target="_blank"
-        >community.software.sil.org</a>
+    href="https://community.software.sil.org"
+    rel="noopener noreferrer"
+    target="_blank"
+    >community.software.sil.org</a>
     or Language Forge at
     <a
-        href="https://app.siltranscriber.org"
-        rel="noopener noreferrer"
-        target="_blank"
-        >app.siltranscriber.org</a>
+    href="https://app.siltranscriber.org"
+    rel="noopener noreferrer"
+    target="_blank"
+    >app.siltranscriber.org</a>
 </p>
 <p>
     <strong>Content</strong><br />
@@ -85,7 +85,11 @@ export const privacyContent = `<div>
     that we share that data with others. For example, you enter data
     into Language Forge so that we can share it with other members of
     your team. Please refer to the SIL Language Software
-    <a href="/terms/">Terms of Use</a> for more detailed information.
+    <a
+    href="https://software.sil.org/language-software-terms-of-use/"
+    rel="noopener noreferrer"
+    target="_blank"
+    >Terms of Use</a> for more detailed information.
 </p>
 
 <h2>Information we collect</h2>
