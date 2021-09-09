@@ -175,6 +175,7 @@ export function ScriptureTable(props: IProps) {
 
   const myChangedRef = useRef(false);
   const savingRef = useRef(false);
+  const updateRef = useRef(false);
   const [changed, setChangedx] = useGlobal('changed');
   const { showMessage } = useSnackBar();
   const [rowInfo, setRowInfo] = useState(Array<IRowInfo>());
@@ -1146,14 +1147,16 @@ export function ScriptureTable(props: IProps) {
     };
     const setSaving = (value: boolean) => (savingRef.current = value);
     const save = () => {
-      setSaving(true);
-      showMessage(t.saving);
-      handleSave().then(() => {
-        saveCompleted('');
-        setSaving(false);
-      });
+      if (!savingRef.current && !updateRef.current) {
+        setSaving(true);
+        showMessage(t.saving);
+        handleSave().then(() => {
+          saveCompleted('');
+          setSaving(false);
+        });
+      }
     };
-    if (doSave && !savingRef.current) {
+    if (doSave) {
       if (offlineOnly) {
         save();
       } else {
@@ -1309,12 +1312,20 @@ export function ScriptureTable(props: IProps) {
         }
       }
     };
-    if (!savingRef.current && !myChangedRef.current && plan) {
+    const setUpdate = (value: boolean) => (updateRef.current = value);
+    if (
+      !savingRef.current &&
+      !myChangedRef.current &&
+      plan &&
+      !updateRef.current
+    ) {
+      setUpdate(true);
       getSections(plan as string).then(() => {
         setData(initData);
         setInData(initData.map((row: Array<any>) => [...row]));
         setRowInfo(rowInfo);
         getLastModified(plan);
+        setUpdate(false);
       });
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
