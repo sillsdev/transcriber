@@ -189,7 +189,9 @@ function WSSegmentParameters(props: IProps) {
             aria-labelledby="time-slider"
           />
           <Typography id="num-label" gutterBottom>
-            {numRegions !== undefined ? `${numRegions} regions` : ''}
+            {numRegions !== undefined
+              ? t.segmentNumber.replace('{0}', numRegions.toString())
+              : ''}
           </Typography>
         </Box>
       </DialogContent>
