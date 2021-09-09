@@ -51,8 +51,15 @@ interface IProps {
 export function TaskItem(props: IProps) {
   const { flat } = props;
   const classes = useStyles();
-  const { rowData, activityStateStr, setSelected, setAllDone, allBookData } =
-    useTodo();
+  const {
+    rowData,
+    activityStateStr,
+    selected,
+    setSelected,
+    refresh,
+    setAllDone,
+    allBookData,
+  } = useTodo();
   const uctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = uctx.state;
 
@@ -60,9 +67,12 @@ export function TaskItem(props: IProps) {
   if (props.item >= rowData.length) return <></>;
   const { passage, section, duration } = rowData[props.item];
 
-  const handleSelect = (selected: string) => () => {
+  const handleSelect = (select: string) => () => {
     setAllDone(false);
-    checkSavedFn(() => setSelected(selected));
+    checkSavedFn(() => {
+      if (select !== selected) setSelected(select);
+      else refresh();
+    });
   };
 
   let assigned: string | null = null;
