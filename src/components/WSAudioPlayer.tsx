@@ -703,12 +703,12 @@ function WSAudioPlayer(props: IProps) {
                   />
                 </div>
                 <Divider
-                  id="wsAudioDiv2"
+                  id="wsAudioDiv4"
                   className={classes.divider}
                   orientation="vertical"
                   flexItem
                 />
-                {hasRegion && (
+                {hasRegion !== 0 && (
                   <LightTooltip
                     id="wsAudioDeleteRegionTip"
                     title={t.deleteRegion}
@@ -791,7 +791,7 @@ function WSAudioPlayer(props: IProps) {
                 </LightTooltip>
               </Grid>
               <Divider
-                id="wsAudioDiv3"
+                id="wsAudioDiv5"
                 className={classes.divider}
                 orientation="vertical"
                 flexItem
@@ -885,7 +885,7 @@ function WSAudioPlayer(props: IProps) {
                 </>
               </Grid>
               <Divider
-                id="wsAudioDiv4"
+                id="wsAudioDiv6"
                 className={classes.divider}
                 orientation="vertical"
                 flexItem
@@ -947,7 +947,7 @@ function WSAudioPlayer(props: IProps) {
               {onSaveProgress && (
                 <>
                   <Divider
-                    id="wsAudioDiv5"
+                    id="wsAudioDiv7"
                     className={classes.divider}
                     orientation="vertical"
                     flexItem
