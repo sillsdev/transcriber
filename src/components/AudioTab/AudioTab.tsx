@@ -161,6 +161,7 @@ export function AudioTab(props: IProps) {
   };
 
   const handleUpload = () => {
+    status.canceled = false;
     setUploadVisible(true);
   };
 
