@@ -434,7 +434,7 @@ function WSAudioPlayer(props: IProps) {
     setReady(true);
     setDuration(wsDuration());
     if (segmentsRef.current?.length > 2) wsLoadRegions(segmentsRef.current);
-    if (initialPosRef.current) wsGoto(initialPosRef.current || 0);
+    wsGoto(initialPosRef.current || 0);
   }
   function onWSProgress(progress: number) {
     setProgress(progress);
