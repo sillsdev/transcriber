@@ -470,7 +470,10 @@ export function ScriptureTable(props: IProps) {
   const handleDelete = async (what: string, where: number[]) => {
     if (what === 'Delete') {
       uploadRow.current = undefined;
-      await doDelete(where);
+      if (changed || myChangedRef.current) {
+        startSave();
+        waitForSave(async () => await doDelete(where), 100);
+      } else await doDelete(where);
       return true;
     } else {
       showMessage(<span>{what}...</span>);
