@@ -729,7 +729,7 @@ export function ScriptureTable(props: IProps) {
   const handleTranscribe = (i: number) => {
     const id = passageId(i);
     const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
-    if (changed) {
+    if (changed || myChangedRef.current) {
       startSave();
       waitForSave(() => setView(`/work/${prjId}/${passageRemoteId}`), 100);
     } else setView(`/work/${prjId}/${passageRemoteId}`);
@@ -737,7 +737,7 @@ export function ScriptureTable(props: IProps) {
 
   const handleAudacity = (i: number) => {
     setAudacityItem(i);
-    if (changed) {
+    if (changed || myChangedRef.current) {
       startSave();
       waitForSave(() => setAudacityOpen(true), 100);
     } else setAudacityOpen(true);
@@ -752,7 +752,7 @@ export function ScriptureTable(props: IProps) {
     setAssignSectionVisible(true);
   };
   const handleAssign = (where: number[]) => () => {
-    if (changed) {
+    if (changed || myChangedRef.current) {
       startSave();
       waitForSave(() => doAssign(where), 100);
     } else doAssign(where);
