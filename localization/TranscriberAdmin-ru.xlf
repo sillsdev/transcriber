@@ -4525,6 +4525,12 @@
             <target>Минимальная длина сегмента (секунды)</target>
           </segment>
       </unit>
+      <unit id="wsAudioPlayerSegment.segmentNumber">
+         <segment>
+            <source>{0} segments</source>
+            <target>{0} сегментов</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayerZoom.fitToWidth">
          <segment>
             <source/>

@@ -4498,6 +4498,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayerSegment.segmentNumber">
+         <segment>
+            <source>{0} segments</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayerSegment.segmentSettings">
          <segment>
             <source>Auto Segment Parameters</source>

@@ -973,6 +973,7 @@ const initialState = {
 			"removeSegment": "Remove Next Boundary [{0}]",
 			"segmentsCreated": "{0} segments created",
 			"segmentLength": "Minimum segment length (sec)",
+			"segmentNumber": "{0} segments",
 			"segmentSettings": "Auto Segment Parameters",
 			"silenceLength": "Length of Silence (100ths of second)",
 			"silenceThreshold": "Silence threshold (1000th dB)",
