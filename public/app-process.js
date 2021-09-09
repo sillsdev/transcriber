@@ -82,8 +82,8 @@ function createAppWindow() {
     {
       label: 'View',
       submenu: [
-        { role: 'reload' },
-        { role: 'forceReload' },
+        // { role: 'reload' }, doesn't work with code auth
+        // { role: 'forceReload' }, doesn't work with code auth
         { role: 'toggleDevTools' },
         // { type: 'separator' },
         // { role: 'resetZoom' },
