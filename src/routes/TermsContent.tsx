@@ -55,7 +55,9 @@ export const termsContent = `<div>
     will terminate accounts of any repeat infringer, following the
     process set out in the
     <a href="https://www.copyright.gov/legislation/dmca.pdf"
-        >U.S. Digital Millennium Copyright Act</a>.
+    rel="noopener noreferrer"
+    target="_blank"
+    >U.S. Digital Millennium Copyright Act</a>.
 </p>
 <p>
     SIL will attempt to provide information and assistance to help
