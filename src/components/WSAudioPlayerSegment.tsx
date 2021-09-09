@@ -8,7 +8,7 @@ import {
 import React, { useContext, useEffect, useState } from 'react';
 import { LightTooltip } from '../control';
 import { IWsAudioPlayerSegmentStrings, IState } from '../model';
-import { FaGripLinesVertical } from 'react-icons/fa';
+import { IoMdBarcode } from 'react-icons/io';
 import ClearIcon from '@material-ui/icons/Clear';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { HotKeyContext } from '../context/HotKeyContext';
@@ -154,7 +154,7 @@ function WSAudioPlayerSegment(props: IProps) {
                 onClick={handleAutoSegment}
                 disabled={!ready}
               >
-                <FaGripLinesVertical />
+                <IoMdBarcode />
               </IconButton>
             </span>
           </LightTooltip>
