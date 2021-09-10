@@ -910,6 +910,7 @@ export interface IWsAudioPlayerSegmentStrings extends Localize.LocalizedStringsM
     "apply": string;
     "autoSegment": string;
     "close": string;
+    "removeAll": string;
     "removeSegment": string;
     "segmentsCreated": string;
     "segmentLength": string;

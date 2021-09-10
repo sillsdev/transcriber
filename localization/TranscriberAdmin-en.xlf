@@ -4480,6 +4480,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayerSegment.removeAll">
+         <segment>
+            <source>Clear Segments</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayerSegment.removeSegment">
          <segment>
             <source>Remove Next Boundary [{0}]</source>

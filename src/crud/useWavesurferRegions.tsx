@@ -289,7 +289,12 @@ export function useWaveSurferRegions(
       prev = r;
     });
   };
-
+  function clearRegions() {
+    if (!wavesurferRef.current) return;
+    loadingRef.current = true;
+    wavesurferRef.current.regions.clear();
+    loadingRef.current = false;
+  }
   function loadRegions(
     regions: IRegions | undefined,
     loop: boolean,
@@ -558,6 +563,7 @@ export function useWaveSurferRegions(
     wsNextRegion,
     wsGetRegions,
     wsLoopRegion,
+    clearRegions,
     loadRegions,
     justPlayRegion,
     onRegionSeek,

@@ -970,6 +970,7 @@ const initialState = {
 			"apply": "Apply",
 			"autoSegment": "Auto Segment [{0}]",
 			"close": "Close",
+			"removeAll": "Clear Segments",
 			"removeSegment": "Remove Next Boundary [{0}]",
 			"segmentsCreated": "{0} segments created",
 			"segmentLength": "Minimum segment length (sec)",

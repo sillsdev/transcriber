@@ -82,6 +82,7 @@ export function useWaveSurfer(
     wsPrevRegion,
     wsNextRegion,
     loadRegions,
+    clearRegions,
     wsGetRegions,
     wsLoopRegion,
     justPlayRegion,
@@ -241,7 +242,13 @@ export function useWaveSurfer(
       regionsLoadedRef.current = false;
     }
   };
-
+  const wsClearRegions = () => {
+    if (wavesurfer()?.isReady) {
+      clearRegions();
+    } else {
+      inputRegionsRef.current = undefined;
+    }
+  };
   const wsBlob = async () => {
     var backend = wavesurfer()?.backend as any;
     if (backend) {
@@ -413,6 +420,7 @@ export function useWaveSurfer(
     wsSkip,
     wsSetHeight,
     wsLoadRegions,
+    wsClearRegions,
     wsLoopRegion,
     wsRegionDelete,
     wsInsertAudio,

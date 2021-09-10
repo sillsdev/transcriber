@@ -4477,6 +4477,12 @@
             <target>Segment automatique [{0}]</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayerSegment.removeAll">
+         <segment>
+            <source>Clear Segments</source>
+            <target>Effacer les segments</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayerSegment.removeSegment">
          <segment>
             <source>Remove Next Boundary [{0}]</source>

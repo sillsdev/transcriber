@@ -4477,6 +4477,12 @@
             <target>Segmento Automóvel [{0}]</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayerSegment.removeAll">
+         <segment>
+            <source>Clear Segments</source>
+            <target>Limpar segmentos</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayerSegment.removeSegment">
          <segment>
             <source>Remove Next Boundary [{0}]</source>

@@ -4507,6 +4507,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayerSegment.removeAll">
+         <segment>
+            <source>Clear Segments</source>
+            <target>Очистить сегменты</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayerSegment.removeSegment">
          <segment>
             <source/>
