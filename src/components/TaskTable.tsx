@@ -138,6 +138,7 @@ export function TaskTable(props: IProps) {
     playing,
     setPlaying,
     setFilter,
+    loading,
   } = useTodo();
   const t = todoStr;
   const tpb = projButtonStr;
@@ -158,6 +159,7 @@ export function TaskTable(props: IProps) {
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const isInline = useRef(false);
+  const [busy] = useGlobal('remoteBusy');
   const [columns] = useState([
     { name: 'composite', title: '\u00A0' },
     { name: 'play', title: '\u00A0' },
@@ -203,6 +205,7 @@ export function TaskTable(props: IProps) {
   const [style, setStyle] = React.useState<CSSProperties>({
     height: window.innerHeight - 100,
     overflowY: 'auto',
+    cursor: busy || loading ? 'progress' : 'default',
   });
   const [playItem, setPlayItem] = useState('');
   const formRef = useRef<any>();
@@ -241,7 +244,11 @@ export function TaskTable(props: IProps) {
   };
 
   const setDimensions = () => {
-    setStyle({ height: window.innerHeight - 100, overflowY: 'auto' });
+    setStyle({
+      height: window.innerHeight - 100,
+      overflowY: 'auto',
+      cursor: busy || loading ? 'progress' : 'default',
+    });
     setWidth(window.innerWidth);
   };
 
@@ -258,6 +265,14 @@ export function TaskTable(props: IProps) {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    setStyle({
+      height: window.innerHeight - 100,
+      overflowY: 'auto',
+      cursor: busy || loading ? 'progress' : 'default',
+    });
+  }, [busy, loading]);
 
   useEffect(() => {
     if (formRef.current && selectedRef.current) {

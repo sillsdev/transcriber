@@ -10,18 +10,11 @@ import { infoMsg, logError, Severity } from '../../utils';
 const os = require('os');
 
 export const fetchMediaUrl =
-  (
-    id: string,
-    memory: MemorySource,
-    offline: boolean,
-    auth: Auth,
-    reporter?: any
-  ) =>
+  (id: string, memory: MemorySource, auth: Auth, reporter?: any) =>
   (dispatch: any) => {
     if (!id) return;
     var remoteid = id;
     if (!isNaN(Number(id))) id = remoteIdGuid('mediafile', id, memory.keyMap);
-    console.log('fetching url for mediaId', id);
     dispatch({ payload: id, type: type.FETCH_AUDIO_URL_PENDING });
 
     if (isElectron) {

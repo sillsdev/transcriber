@@ -51,6 +51,7 @@ import { HotKeyContext } from '../context/HotKeyContext';
 import WSAudioPlayerZoom from './WSAudioPlayerZoom';
 import { IRegionChange, IRegionParams } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
+import { useGlobal } from 'reactn';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,11 +77,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-    },
-    progress: {
-      flexGrow: 1,
-      margin: theme.spacing(2),
-      cursor: 'pointer',
     },
     slider: {
       width: '50px',
@@ -179,6 +175,7 @@ interface IProps extends IStateProps {
   segments: string;
   metaData?: JSX.Element;
   isPlaying?: boolean;
+  loading: boolean;
   setMimeType?: (type: string) => void;
   setAcceptedMimes?: (types: MimeInfo[]) => void;
   onPlayStatus?: (playing: boolean) => void;
@@ -220,6 +217,7 @@ function WSAudioPlayer(props: IProps) {
     segments,
     metaData,
     isPlaying,
+    loading,
     setMimeType,
     setAcceptedMimes,
     onProgress,
@@ -260,6 +258,7 @@ function WSAudioPlayer(props: IProps) {
   const justPlayButton = allowRecord;
   const processRecordRef = useRef(false);
   const { showMessage } = useSnackBar();
+  const [busy, setBusy] = useGlobal('remoteBusy');
   //const isMounted = useMounted('wsaudioplayer');
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
   const { subscribe, unsubscribe, localizeHotKey } =
@@ -379,8 +378,10 @@ function WSAudioPlayer(props: IProps) {
 
   useEffect(() => {
     setDuration(0);
-    if (blob) wsLoad(blob, undefined);
-    else wsClear();
+    if (blob) {
+      wsLoad(blob, undefined);
+      setBusy(true);
+    } else wsClear();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blob]); //passed in by user
 
@@ -434,6 +435,7 @@ function WSAudioPlayer(props: IProps) {
     setReady(true);
     setDuration(wsDuration());
     if (segmentsRef.current?.length > 2) wsLoadRegions(segmentsRef.current);
+    setBusy(false);
     wsGoto(initialPosRef.current || 0);
   }
   function onWSProgress(progress: number) {
@@ -584,7 +586,12 @@ function WSAudioPlayer(props: IProps) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
-        <div className={classes.main}>
+        <div
+          className={classes.main}
+          style={{
+            cursor: busy || loading ? 'progress' : 'default',
+          }}
+        >
           <Grid container className={classes.toolbar}>
             {allowRecord && (
               <>

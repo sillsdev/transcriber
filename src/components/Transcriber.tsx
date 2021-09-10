@@ -958,6 +958,7 @@ export function Transcriber(props: IProps) {
                           initialposition={defaultPosition}
                           segments={initialSegments}
                           isPlaying={playing}
+                          loading={loading}
                           onBusy={onBusy}
                           onProgress={onProgress}
                           onSegmentChange={onSegmentChange}
