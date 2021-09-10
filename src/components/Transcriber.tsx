@@ -50,7 +50,6 @@ import {
   camel2Title,
   refMatch,
   waitForIt,
-  loadBlob,
 } from '../utils';
 import { isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
@@ -219,25 +218,27 @@ export function Transcriber(props: IProps) {
     index,
     transcriberStr,
     sharedStr,
-    mediaUrl,
-    fetchMediaUrl,
     allBookData,
     selected,
     playing,
     setPlaying,
     allDone,
     refresh,
+    mediaUrl,
+    audioBlob,
+    loading,
   } = useTodo();
-  const { section, passage, duration, mediaRemoteId, mediaId, state, role } =
-    rowData[index] || {
-      section: {} as Section,
-      passage: {} as Passage,
-      duration: 0,
-      mediaRemoteId: '',
-      mediaId: '',
-      state: '',
-      role: '',
-    };
+
+  const { section, passage, duration, mediaId, state, role } = rowData[
+    index
+  ] || {
+    section: {} as Section,
+    passage: {} as Passage,
+    duration: 0,
+    mediaId: '',
+    state: '',
+    role: '',
+  };
   const classes = useStyles();
 
   const [memory] = useGlobal('memory');
@@ -248,7 +249,7 @@ export function Transcriber(props: IProps) {
   const [user] = useGlobal('user');
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
-  const [busy] = useGlobal('remoteBusy');
+  const [busy, setBusy] = useGlobal('remoteBusy');
   const [assigned, setAssigned] = useState('');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
@@ -285,8 +286,6 @@ export function Transcriber(props: IProps) {
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
   const [, saveCompleted] = useRemoteSave();
-  const [audioBlob, setAudioBlob] = useState<Blob>();
-  const blobLoadedForRef = useRef('');
   const transcriptionRef = React.useRef<any>();
   const playingRef = useRef<Boolean>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
@@ -294,6 +293,9 @@ export function Transcriber(props: IProps) {
     useContext(HotKeyContext).state;
   const t = transcriberStr;
   const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
+  const [style, setStyle] = useState({
+    cursor: busy || loading ? 'progress' : 'default',
+  });
 
   /* debug what props are changing to force renders
   useRenderingTrace(
@@ -344,15 +346,10 @@ export function Transcriber(props: IProps) {
   }, [playing]);
 
   useEffect(() => {
-    if (blobLoadedForRef.current !== mediaUrl)
-      loadBlob(mediaUrl, !isElectron || !offline, (b) => {
-        //not sure what this intermediary file is, but causes console errors
-        if (b.type !== 'text/html') {
-          setAudioBlob(b);
-          blobLoadedForRef.current = mediaUrl;
-        }
-      });
-  }, [mediaUrl, offline]);
+    setStyle({
+      cursor: busy || loading ? 'progress' : 'default',
+    });
+  }, [busy, loading]);
 
   useEffect(() => {
     const getParatextIntegration = () => {
@@ -503,7 +500,7 @@ export function Transcriber(props: IProps) {
         q.findRecords('mediafile')
       ) as MediaFile[];
       const oldRec = mediaRecs.filter((m) => m.id === mediaId);
-      if (oldRec.length > 0)
+      if (oldRec.length > 0 && mediaUrl === oldRec[0].attributes.audioUrl) {
         memory
           .update((t: TransformBuilder) =>
             t.replaceAttribute(oldRec[0], 'duration', Math.floor(totalSeconds))
@@ -511,7 +508,8 @@ export function Transcriber(props: IProps) {
           .then(() => {
             refresh();
           });
-      console.log(`update duration to ${Math.floor(totalSeconds)}`);
+        console.log(`update duration to ${Math.floor(totalSeconds)}`);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration, totalSeconds]);
@@ -840,7 +838,6 @@ export function Transcriber(props: IProps) {
     }
     setLastSaved(passage.attributes?.dateUpdated || '');
     setTotalSeconds(duration);
-    fetchMediaUrl(mediaRemoteId, memory, offline, auth);
   };
 
   const handleAutosave = async () => {
@@ -884,6 +881,9 @@ export function Transcriber(props: IProps) {
   };
 
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
+  const onBusy = (value: boolean) => {
+    setBusy(value);
+  };
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
     setChanged(true);
@@ -912,7 +912,7 @@ export function Transcriber(props: IProps) {
         {allDone ? (
           <AllDone />
         ) : (
-          <Grid container direction="column">
+          <Grid container direction="column" style={style}>
             <Grid container direction="row" className={classes.row}>
               <Grid item xs={9} className={classes.description}>
                 {sectionDescription(section)}
@@ -961,6 +961,8 @@ export function Transcriber(props: IProps) {
                           initialposition={defaultPosition}
                           segments={initialSegments}
                           isPlaying={playing}
+                          loading={loading}
+                          onBusy={onBusy}
                           onProgress={onProgress}
                           onSegmentChange={onSegmentChange}
                           onPlayStatus={onPlayStatus}

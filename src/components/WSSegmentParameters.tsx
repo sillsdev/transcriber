@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme: Theme) =>
     grow: {
       flexGrow: 1,
     },
+    movecursor: {
+      cursor: 'move',
+    },
   })
 );
 interface IStateProps {
@@ -133,7 +136,7 @@ function WSSegmentParameters(props: IProps) {
       PaperComponent={PaperComponent}
       aria-labelledby="draggable-dialog-title"
     >
-      <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+      <DialogTitle className={classes.movecursor} id="draggable-dialog-title">
         <div className={classes.row}>
           <div className={classes.grow}>{'\u00A0'}</div>{' '}
           <IconButton id="bigClose" onClick={handleClose}>

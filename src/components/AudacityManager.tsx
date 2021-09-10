@@ -155,8 +155,7 @@ function AudacityManager(props: IProps) {
     const mp3FullName = await getMacroOutputName(mp3Name);
     await launchAudacityExport(name, () => {
       console.log(`exported ${mp3FullName}`);
-      const unused = false;
-      loadBlob(mp3FullName, unused, (b) => {
+      loadBlob(mp3FullName, (url, b) => {
         onImport(item, [new File([b], mp3Name, { type: 'audio/mp3' })]);
         onClose();
       });
