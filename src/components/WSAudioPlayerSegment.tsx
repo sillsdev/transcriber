@@ -55,6 +55,7 @@ interface IProps extends IStateProps {
   loop: boolean;
   currentNumRegions: number;
   params: IRegionParams;
+  playing: boolean;
   onSplit: (split: IRegionChange) => void;
   wsAutoSegment: (loop: boolean, params: IRegionParams) => number;
   wsRemoveSplitRegion: (next?: boolean) => IRegionChange | undefined;
@@ -70,6 +71,7 @@ function WSAudioPlayerSegment(props: IProps) {
     loop,
     currentNumRegions,
     params,
+    playing,
     onSplit,
     wsAutoSegment,
     wsRemoveSplitRegion,
@@ -157,7 +159,7 @@ function WSAudioPlayerSegment(props: IProps) {
               <IconButton
                 id="wsSegment"
                 onClick={handleAutoSegment}
-                disabled={!ready}
+                disabled={!ready || playing}
               >
                 <IoMdBarcode />
               </IconButton>
@@ -165,7 +167,11 @@ function WSAudioPlayerSegment(props: IProps) {
           </LightTooltip>
           <LightTooltip id="wsSettingsTip" title={t.segmentSettings}>
             <span>
-              <IconButton id="wsSegmentSettings" onClick={handleShowSettings}>
+              <IconButton
+                id="wsSegmentSettings"
+                onClick={handleShowSettings}
+                disabled={playing}
+              >
                 <SettingsIcon fontSize="small" />
               </IconButton>
             </span>
