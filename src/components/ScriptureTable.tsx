@@ -176,9 +176,11 @@ export function ScriptureTable(props: IProps) {
   const myChangedRef = useRef(false);
   const savingRef = useRef(false);
   const updateRef = useRef(false);
+  const deleteRef = useRef(false);
+  const [needUpdate, setNeedUpdate] = useState(false);
   const [changed, setChangedx] = useGlobal('changed');
   const { showMessage } = useSnackBar();
-  const [rowInfo, setRowInfo] = useState(Array<IRowInfo>());
+  const rowInfo = useRef(Array<IRowInfo>());
   const inlinePassages = useRef(false);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState<string>(getOrganizedBy(true));
@@ -242,10 +244,14 @@ export function ScriptureTable(props: IProps) {
   const isPassageRow = (row: IRowInfo) => row.passageId !== undefined;
 
   const sectionId = (row: number) =>
-    row < rowInfo.length ? rowInfo[row].sectionId?.id || '' : '';
+    row < rowInfo.current.length
+      ? rowInfo.current[row].sectionId?.id || ''
+      : '';
 
   const passageId = (row: number) =>
-    row < rowInfo.length ? rowInfo[row].passageId?.id || '' : '';
+    row < rowInfo.current.length
+      ? rowInfo.current[row].passageId?.id || ''
+      : '';
 
   const resequencePassages = (data: any[][], sectionIndex: number) => {
     let pas = 1;
@@ -363,7 +369,7 @@ export function ScriptureTable(props: IProps) {
       newData,
       insertAt(inData, newRow, i),
       insertAt(
-        rowInfo,
+        rowInfo.current,
         { sectionId: newSectionId(sequencenum) } as IRowInfo,
         i
       ),
@@ -372,7 +378,7 @@ export function ScriptureTable(props: IProps) {
     );
   };
   const addPassage = (i?: number, before?: boolean) => {
-    addPassageTo(data, inData, rowInfo, i, before);
+    addPassageTo(data, inData, rowInfo.current, i, before);
   };
   const addPassageTo = (
     myData: any[][] /* may or may not already be a copy */,
@@ -412,7 +418,7 @@ export function ScriptureTable(props: IProps) {
       );
       rowinfo.mediaId = '';
       myRowInfo[index] = rowinfo;
-      setRowInfo([...myRowInfo]);
+      rowInfo.current = [...myRowInfo];
     } else {
       myData = insertAt(
         myData,
@@ -448,7 +454,7 @@ export function ScriptureTable(props: IProps) {
       while (!isSectionRow(myRowInfo[index])) index -= 1;
       setData(resequencePassages(myData, index));
       setInData([...myIndata]);
-      setRowInfo([...myRowInfo]);
+      rowInfo.current = [...myRowInfo];
     }
 
     setChanged(true);
@@ -471,10 +477,17 @@ export function ScriptureTable(props: IProps) {
   const handleDelete = async (what: string, where: number[]) => {
     if (what === 'Delete') {
       uploadRow.current = undefined;
-      if (changed || myChangedRef.current) {
-        startSave();
-        waitForSave(async () => await doDelete(where), 100);
-      } else await doDelete(where);
+      if (
+        !savingRef.current &&
+        !deleteRef.current &&
+        !updateRef.current &&
+        !needUpdate
+      )
+        if (changed || myChangedRef.current) {
+          startSave();
+          setTimeout(() => {}, 1000);
+          await doDelete(where);
+        } else await doDelete(where);
       return true;
     } else {
       showMessage(<span>{what}...</span>);
@@ -482,6 +495,7 @@ export function ScriptureTable(props: IProps) {
     }
   };
   const doDelete = async (where: number[]) => {
+    deleteRef.current = true;
     let modified = false;
     const deleteOrbitRow = async (id: RecordIdentity | undefined) => {
       if (id && id.id !== '') {
@@ -496,32 +510,40 @@ export function ScriptureTable(props: IProps) {
       rowListIndex -= 1
     ) {
       const rowIndex = where[rowListIndex];
-      if (rowInfo[rowIndex].passageId) {
+      if (rowInfo.current[rowIndex].passageId) {
         var attached = mediafiles.filter(
-          (m) => related(m, 'passage') === rowInfo[rowIndex].passageId?.id
+          (m) =>
+            related(m, 'passage') === rowInfo.current[rowIndex].passageId?.id
         );
         for (let ix = 0; ix < attached.length; ix++) {
           var passage = passages.find(
-            (p) => p.id === rowInfo[rowIndex].passageId?.id
+            (p) => p.id === rowInfo.current[rowIndex].passageId?.id
           );
           await detachPassage(
-            rowInfo[rowIndex].passageId?.id || '',
+            rowInfo.current[rowIndex].passageId?.id || '',
             related(passage, 'section'),
             plan,
             attached[ix].id
           );
         }
-        await deleteOrbitRow(rowInfo[rowIndex].passageId as RecordIdentity);
+        await deleteOrbitRow(
+          rowInfo.current[rowIndex].passageId as RecordIdentity
+        );
       }
-      await deleteOrbitRow(rowInfo[rowIndex].sectionId as RecordIdentity);
+      await deleteOrbitRow(
+        rowInfo.current[rowIndex].sectionId as RecordIdentity
+      );
     }
     if (modified) updateLastModified();
     setData(
       resequence(data.filter((row, rowIndex) => !where.includes(rowIndex)))
     );
-    setRowInfo(rowInfo.filter((row, rowIndex) => !where.includes(rowIndex)));
+    rowInfo.current = rowInfo.current.filter(
+      (row, rowIndex) => !where.includes(rowIndex)
+    );
     setInData(inData.filter((row, rowIndex) => !where.includes(rowIndex)));
-    if (myChangedRef.current) startSave(); //resequenced and for some reason the deletes stay disabled until saved.  Can't track down why right now so just save it.
+    deleteRef.current = false;
+    setNeedUpdate(true);
     return true;
   };
 
@@ -670,8 +692,8 @@ export function ScriptureTable(props: IProps) {
             )
         ),
       ]);
-      setRowInfo([
-        ...rowInfo.concat(
+      rowInfo.current = [
+        ...rowInfo.current.concat(
           rows
             .filter((row, rowIndex) => rowIndex >= startRow)
             .map((row) => {
@@ -696,7 +718,7 @@ export function ScriptureTable(props: IProps) {
               }
             })
         ),
-      ]);
+      ];
       setChanged(true);
       return Array<Array<string>>();
     }
@@ -867,8 +889,8 @@ export function ScriptureTable(props: IProps) {
   };
   const getChangedRecs = async (changedRows: boolean[]) => {
     let recs: IRecord[][] = [];
-    for (var index = 0; index < rowInfo.length; index++) {
-      var row = rowInfo[index];
+    for (var index = 0; index < rowInfo.current.length; index++) {
+      var row = rowInfo.current[index];
       var rec = [];
       if (isSectionRow(row)) {
         var id = row.sectionId?.id || '';
@@ -966,7 +988,7 @@ export function ScriptureTable(props: IProps) {
         if (rec !== undefined) {
           //outrecs is an array of arrays of IRecords
           var outrecs = JSON.parse(rec.attributes.data);
-          var newrowinfo = rowInfo.map((r) => {
+          var newrowinfo = rowInfo.current.map((r) => {
             return { ...r };
           }); // _.cloneDeep(r));
 
@@ -984,7 +1006,7 @@ export function ScriptureTable(props: IProps) {
                 memory.keyMap
               );
           });
-          setRowInfo(newrowinfo);
+          rowInfo.current = newrowinfo;
           setInData(data.map((row: Array<any>) => [...row]));
         }
       }
@@ -1109,7 +1131,7 @@ export function ScriptureTable(props: IProps) {
         if (!offlineOnly && numChanges > 10) await onlineSaveFn(recs, anyNew);
         else await localSaveFn(recs);
       };
-      let changedRows: boolean[] = rowInfo.map(
+      let changedRows: boolean[] = rowInfo.current.map(
         (row) => row.sectionId?.id === '' || row.passageId?.id === ''
       );
       const anyNew = changedRows.includes(true);
@@ -1150,12 +1172,14 @@ export function ScriptureTable(props: IProps) {
     };
     const setSaving = (value: boolean) => (savingRef.current = value);
     const save = () => {
-      if (!savingRef.current && !updateRef.current) {
+      if (!savingRef.current && !updateRef.current && !deleteRef.current) {
         setSaving(true);
+        setNeedUpdate(false); // if it's true we need it to toggle when done
         showMessage(t.saving);
         handleSave().then(() => {
           saveCompleted('');
           setSaving(false);
+          setNeedUpdate(true);
         });
       }
     };
@@ -1176,7 +1200,7 @@ export function ScriptureTable(props: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave, data, inData, rowInfo]);
+  }, [doSave, data, inData, rowInfo.current]);
 
   useEffect(() => {
     if (plan !== '') {
@@ -1194,7 +1218,7 @@ export function ScriptureTable(props: IProps) {
   useEffect(() => {
     if (showBook(cols) && allBookData.length === 0) fetchBooks(lang);
     let initData = Array<Array<any>>();
-    let rowInfo = Array<IRowInfo>();
+    let newRowInfo = Array<IRowInfo>();
     const getPassage = async (
       passage: Passage,
       list: (string | number)[][],
@@ -1253,15 +1277,20 @@ export function ScriptureTable(props: IProps) {
         });
         for (let psgIndex = 0; psgIndex < passageids.length; psgIndex += 1) {
           if (inlinePassages.current && psgIndex === 0) {
-            rowInfo[rowInfo.length - 1].passageId = ids[psgIndex];
-            for (let ix = 2; ix < initData[rowInfo.length - 1].length; ix += 1)
-              initData[rowInfo.length - 1][ix] = passageids[psgIndex][ix];
+            newRowInfo[newRowInfo.length - 1].passageId = ids[psgIndex];
+            for (
+              let ix = 2;
+              ix < initData[newRowInfo.length - 1].length;
+              ix += 1
+            )
+              initData[newRowInfo.length - 1][ix] = passageids[psgIndex][ix];
           } else {
-            rowInfo.push({ passageId: ids[psgIndex] } as IRowInfo);
+            newRowInfo.push({ passageId: ids[psgIndex] } as IRowInfo);
             initData.push(passageids[psgIndex]);
           }
           var rec = getMediaRec(ids[psgIndex].id, memory);
-          rowInfo[rowInfo.length - 1].mediaId = rec !== null ? rec.id : '';
+          newRowInfo[newRowInfo.length - 1].mediaId =
+            rec !== null ? rec.id : '';
           /*
           if (mf) {
 
@@ -1282,7 +1311,7 @@ export function ScriptureTable(props: IProps) {
         for (let secIndex = 0; secIndex < plansections.length; secIndex += 1) {
           let sec = plansections[secIndex] as Section;
           if (!sec.attributes) continue;
-          rowInfo.push({
+          newRowInfo.push({
             sectionId: {
               type: 'section',
               id: sec.id,
@@ -1320,19 +1349,21 @@ export function ScriptureTable(props: IProps) {
       !savingRef.current &&
       !myChangedRef.current &&
       plan &&
-      !updateRef.current
+      !updateRef.current &&
+      !deleteRef.current
     ) {
       setUpdate(true);
       getSections(plan as string).then(() => {
         setData(initData);
         setInData(initData.map((row: Array<any>) => [...row]));
-        setRowInfo(rowInfo);
+        rowInfo.current = newRowInfo;
         getLastModified(plan);
         setUpdate(false);
+        setNeedUpdate(false);
       });
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [plan, sections, passages, inlinePassages.current, savingRef.current]);
+  }, [plan, sections, passages, inlinePassages.current, needUpdate]);
 
   useEffect(() => {
     const colMx = data.reduce(
@@ -1418,7 +1449,7 @@ export function ScriptureTable(props: IProps) {
         {...props}
         columns={columns}
         rowData={data as Array<Array<any>>}
-        rowInfo={rowInfo as Array<IRowInfo>}
+        rowInfo={rowInfo.current as Array<IRowInfo>}
         bookCol={showBook(cols) ? cols.Book : -1}
         bookMap={bookMap}
         bookSuggestions={bookSuggestions}
@@ -1451,7 +1482,7 @@ export function ScriptureTable(props: IProps) {
         auth={auth}
         mediaId={
           uploadRow.current !== undefined
-            ? rowInfo[uploadRow.current].mediaId
+            ? rowInfo.current[uploadRow.current].mediaId
             : ''
         }
         importList={importList}
@@ -1463,13 +1494,13 @@ export function ScriptureTable(props: IProps) {
         finish={afterUpload}
         status={status}
       />
-      {audacityOpen && rowInfo[audacityItem].passageId && (
+      {audacityOpen && rowInfo.current[audacityItem].passageId && (
         <AudacityManager
           item={audacityItem}
           open={audacityOpen}
           onClose={handleAudacityClose}
-          passageId={rowInfo[audacityItem].passageId as RecordIdentity}
-          mediaId={rowInfo[audacityItem].mediaId || ''}
+          passageId={rowInfo.current[audacityItem].passageId as RecordIdentity}
+          mediaId={rowInfo.current[audacityItem].mediaId || ''}
           onImport={handleAudacityImport}
         />
       )}
