@@ -741,6 +741,7 @@ function WSAudioPlayer(props: IProps) {
                 ready={ready}
                 onSplit={onSplit}
                 loop={loopingRef.current || false}
+                playing={playing}
                 currentNumRegions={hasRegion}
                 params={regionParams}
                 wsAutoSegment={wsAutoSegment}
