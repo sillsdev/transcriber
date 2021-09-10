@@ -19,8 +19,8 @@ import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, AppBar } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import FilterIcon from '@material-ui/icons/FilterList';
-import SelectAllIcon from '@material-ui/icons/SelectAll';
+// import FilterIcon from '@material-ui/icons/FilterList';
+// import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
 import { useSnackBar } from '../../hoc/SnackBar';
 import BigDialog from '../../hoc/BigDialog';
@@ -136,7 +136,7 @@ export function AudioTab(props: IProps) {
   const [attachVisible, setAttachVisible] = useState(false);
   const [mcheck, setMCheck] = useState(-1);
   const [pcheck, setPCheck] = useState(-1);
-  const [filter, setFilter] = useState(false);
+  // const [filter, setFilter] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [status] = useState<IStatus>({ canceled: false });
   const [complete, setComplete] = useGlobal('progress');
@@ -238,7 +238,7 @@ export function AudioTab(props: IProps) {
       setMCheck(newCheck);
     }
   };
-  const handleFilter = () => setFilter(!filter);
+  // const handleFilter = () => setFilter(!filter);
 
   const handleUploadCancel = () => {
     status.canceled = true;
@@ -404,7 +404,7 @@ export function AudioTab(props: IProps) {
                 {ts.cancel}
               </Button>
             )}
-            <Button
+            {/* <Button
               id="audFilt"
               key="filter"
               aria-label={t.filter}
@@ -420,7 +420,7 @@ export function AudioTab(props: IProps) {
               ) : (
                 <FilterIcon className={classes.icon} />
               )}
-            </Button>
+            </Button> */}
           </div>
         </AppBar>
         <div className={classes.content}>
