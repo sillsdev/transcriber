@@ -109,7 +109,7 @@ export function useWaveSurfer(
       wavesurferRef.current = ws;
       setWaveSurfer(ws);
       ws.on('ready', function () {
-        console.log('ready');
+        //console.log('ready', loadRequests.current);
         loadRequests.current--;
         if (!loadRequests.current) {
           durationRef.current = ws.getDuration();
@@ -124,6 +124,9 @@ export function useWaveSurfer(
           //requesting load of blob that came in while this one was loading
           wsLoad();
         }
+      });
+      ws.on('destroy', function () {
+        wavesurferRef.current = undefined;
       });
       ws.on(
         'audioprocess',
@@ -180,7 +183,6 @@ export function useWaveSurfer(
   };
 
   const wsClear = () => {
-    console.log('wsClear');
     wavesurfer()?.empty();
   };
 
@@ -213,7 +215,7 @@ export function useWaveSurfer(
     durationRef.current = 0;
     if (regions) inputRegionsRef.current = JSON.parse(regions);
     regionsLoadedRef.current = false;
-    if (!wavesurfer()) {
+    if (!wavesurfer() || !wavesurfer()?.backend) {
       blobToLoad.current = blob;
       loadRequests.current = 1;
     } else if (blob) {

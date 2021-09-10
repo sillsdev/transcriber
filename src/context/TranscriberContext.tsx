@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
@@ -36,6 +36,8 @@ import {
   remoteIdGuid,
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
+import { loadBlob } from '../utils';
+import Auth from '../auth/Auth';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -144,7 +146,9 @@ const initState = {
   transcriberStr: {} as ITranscriberStrings,
   projButtonStr: {} as IProjButtonsStrings,
   hasUrl: false,
+  loading: true,
   mediaUrl: '',
+  audioBlob: undefined as Blob | undefined,
   fetchMediaUrl: actions.fetchMediaUrl,
 };
 
@@ -159,6 +163,7 @@ const TranscriberContext = React.createContext({} as IContext);
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   children: React.ReactElement;
+  auth: Auth;
 }
 interface ParamTypes {
   prjId: string;
@@ -190,6 +195,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [projRole] = useGlobal('projRole');
     const view = React.useRef('');
     const [refreshed, setRefreshed] = useState(0);
+    const mediaUrlRef = useRef('');
+
     const [state, setState] = useState({
       ...initState,
       selected: '',
@@ -244,12 +251,14 @@ const TranscriberProvider = withData(mapRecordsToProps)(
               view.current = `/work/${prjId}/${remId}`;
             }
             setTrackedTask(selected);
+            fetchMediaUrl(r.mediaRemoteId, memory, props.auth);
             setState((state: ICtxState) => {
               return {
                 ...state,
                 index: i,
                 selected,
                 playItem: r.mediaId,
+                loading: true,
               };
             });
           }
@@ -333,7 +342,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                       if (
                         nextSecId !== curSec &&
                         rowList.findIndex(
-                          (r) => r.sectPass === sectionNumber(secRecs[0]) + '.'
+                          (r) => r.sectPass === secNum + '.'
                         ) === -1
                       ) {
                         curSec = nextSecId;
@@ -343,7 +352,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                           section: { ...secRecs[0] },
                           passage: { ...p },
                           state: '',
-                          sectPass: sectionNumber(secRecs[0]) + '.',
+                          sectPass: secNum + '.',
                           mediaRemoteId: '',
                           mediaId: mediaRec.id,
                           playItem: '',
@@ -586,6 +595,24 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [passages]);
+
+    useEffect(() => {
+      if (mediaUrl) {
+        mediaUrlRef.current = mediaUrl;
+        loadBlob(mediaUrl, (url, b) => {
+          //not sure what this intermediary file is, but causes console errors
+          if (b.type !== 'text/html') {
+            //console.log('got the blob', url.substr(70, 50));
+            if (url === mediaUrlRef.current)
+              setState((state: ICtxState) => {
+                return { ...state, loading: false, audioBlob: b };
+              });
+            else console.log('not sending blob...newer request pending');
+          }
+        });
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mediaUrl]);
 
     useEffect(() => {
       if (!booksLoaded) {

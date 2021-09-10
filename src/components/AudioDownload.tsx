@@ -57,9 +57,8 @@ export const AudioDownload = (props: IProps) => {
 
   useEffect(() => {
     setBlobUrl('');
-    const unused = false;
     if (mediaState.status === MediaSt.FETCHED)
-      loadBlob(mediaState.url, unused, (b) => {
+      loadBlob(mediaState.url, (url, b) => {
         //not sure what this intermediary file is, but causes console errors
         if (b.type !== 'text/html') setBlobUrl(URL.createObjectURL(b));
       });
