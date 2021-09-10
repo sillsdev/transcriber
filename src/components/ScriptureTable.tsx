@@ -179,7 +179,7 @@ export function ScriptureTable(props: IProps) {
   const [changed, setChangedx] = useGlobal('changed');
   const { showMessage } = useSnackBar();
   const [rowInfo, setRowInfo] = useState(Array<IRowInfo>());
-  const [inlinePassages, setInlinePassages] = useState(false);
+  const inlinePassages = useRef(false);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState<string>(getOrganizedBy(true));
   const [columns, setColumns] = useState([
@@ -393,7 +393,7 @@ export function ScriptureTable(props: IProps) {
       newRow = ['', '', 0, '', ''];
     }
     if (
-      inlinePassages &&
+      inlinePassages.current &&
       isSectionRow(myRowInfo[index]) &&
       !isPassageRow(myRowInfo[index])
     ) {
@@ -620,7 +620,7 @@ export function ScriptureTable(props: IProps) {
   const handleTablePaste = (rows: string[][]) => {
     if (validTable(rows)) {
       const startRow = isBlankOrValidNumber(rows[0][cols.SectionSeq]) ? 0 : 1;
-      if (!inlinePassages) {
+      if (!inlinePassages.current) {
         while (
           rows.find(function (value: string[]) {
             return (
@@ -644,7 +644,7 @@ export function ScriptureTable(props: IProps) {
                 isValidNumber(row[cols.PassageSeq]) && colIndex === cols.Book
                   ? lookupBook({ book: col, allBookData, bookMap })
                   : isValidNumber(row[cols.SectionSeq])
-                  ? (inlinePassages &&
+                  ? (inlinePassages.current &&
                       isValidNumber(row[cols.PassageSeq]) &&
                       parseInt(row[cols.PassageSeq]) === 1) ||
                     colIndex < cols.PassageSeq
@@ -680,7 +680,10 @@ export function ScriptureTable(props: IProps) {
                   sectionId: newSectionId(parseInt(row[cols.SectionSeq])),
                   mediaId: '',
                 } as IRowInfo;
-                if (inlinePassages && isValidNumber(row[cols.PassageSeq]))
+                if (
+                  inlinePassages.current &&
+                  isValidNumber(row[cols.PassageSeq])
+                )
                   newid.passageId = newPassageId(
                     parseInt(row[cols.PassageSeq])
                   );
@@ -1183,7 +1186,7 @@ export function ScriptureTable(props: IProps) {
         return false;
       };
 
-      setInlinePassages(getFlat());
+      inlinePassages.current = getFlat();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plan]);
@@ -1249,7 +1252,7 @@ export function ScriptureTable(props: IProps) {
           return i.sequencenum - j.sequencenum;
         });
         for (let psgIndex = 0; psgIndex < passageids.length; psgIndex += 1) {
-          if (inlinePassages && psgIndex === 0) {
+          if (inlinePassages.current && psgIndex === 0) {
             rowInfo[rowInfo.length - 1].passageId = ids[psgIndex];
             for (let ix = 2; ix < initData[rowInfo.length - 1].length; ix += 1)
               initData[rowInfo.length - 1][ix] = passageids[psgIndex][ix];
@@ -1329,7 +1332,7 @@ export function ScriptureTable(props: IProps) {
       });
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [plan, sections, passages, inlinePassages, savingRef.current]);
+  }, [plan, sections, passages, inlinePassages.current, savingRef.current]);
 
   useEffect(() => {
     const colMx = data.reduce(
@@ -1426,7 +1429,7 @@ export function ScriptureTable(props: IProps) {
         paste={handleTablePaste}
         lookupBook={handleLookupBook}
         resequence={handleResequence}
-        inlinePassages={inlinePassages}
+        inlinePassages={inlinePassages.current}
         onTranscribe={handleTranscribe}
         onAudacity={handleAudacity}
         onAssign={handleAssign}
