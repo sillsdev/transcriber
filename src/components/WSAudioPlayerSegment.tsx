@@ -9,8 +9,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { LightTooltip } from '../control';
 import { IWsAudioPlayerSegmentStrings, IState } from '../model';
 import { IoMdBarcode } from 'react-icons/io';
-import ClearIcon from '@material-ui/icons/Clear';
+import RemoveOneIcon from '@material-ui/icons/Clear';
 import SettingsIcon from '@material-ui/icons/Settings';
+import ClearIcon from '@material-ui/icons/Delete';
 import { HotKeyContext } from '../context/HotKeyContext';
 import PlusMinusLogo from '../control/PlusMinus';
 import { IRegionChange, IRegionParams } from '../crud/useWavesurferRegions';
@@ -58,6 +59,7 @@ interface IProps extends IStateProps {
   wsAutoSegment: (loop: boolean, params: IRegionParams) => number;
   wsRemoveSplitRegion: (next?: boolean) => IRegionChange | undefined;
   wsAddOrRemoveRegion: () => IRegionChange | undefined;
+  wsClearRegions: () => void;
 }
 
 function WSAudioPlayerSegment(props: IProps) {
@@ -72,6 +74,7 @@ function WSAudioPlayerSegment(props: IProps) {
     wsAutoSegment,
     wsRemoveSplitRegion,
     wsAddOrRemoveRegion,
+    wsClearRegions,
   } = props;
   const [segParams, setSegParams] = useState<IRegionParams>({
     silenceThreshold: 0.004,
@@ -127,7 +130,10 @@ function WSAudioPlayerSegment(props: IProps) {
     if (result && onSplit) onSplit(result);
     return true;
   };
-
+  const handleClearSegments = () => {
+    wsClearRegions();
+    return true;
+  };
   const handleSegParamChange = (
     silence: number,
     silLen: number,
@@ -139,7 +145,6 @@ function WSAudioPlayerSegment(props: IProps) {
       segLenThreshold: segLen,
     });
   };
-
   return (
     <div className={classes.root}>
       <Grid container className={classes.toolbar}>
@@ -165,7 +170,6 @@ function WSAudioPlayerSegment(props: IProps) {
               </IconButton>
             </span>
           </LightTooltip>
-
           {showSettings && (
             <WSSegmentParameters
               loop={loop}
@@ -193,7 +197,14 @@ function WSAudioPlayerSegment(props: IProps) {
           >
             <span>
               <IconButton id="wsJoin" onClick={handleRemoveNextSplit}>
-                <ClearIcon />
+                <RemoveOneIcon />
+              </IconButton>
+            </span>
+          </LightTooltip>
+          <LightTooltip id="wsDeleteTip" title={t.removeAll}>
+            <span>
+              <IconButton id="wsSegmentSettings" onClick={handleClearSegments}>
+                <ClearIcon fontSize="small" />
               </IconButton>
             </span>
           </LightTooltip>

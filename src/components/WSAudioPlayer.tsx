@@ -277,6 +277,7 @@ function WSAudioPlayer(props: IProps) {
     wsGoto,
     wsIsReady,
     wsLoadRegions,
+    wsClearRegions,
     wsGetRegions,
     wsLoopRegion,
     wsRegionDelete,
@@ -735,6 +736,7 @@ function WSAudioPlayer(props: IProps) {
                 wsAutoSegment={wsAutoSegment}
                 wsRemoveSplitRegion={wsRemoveSplitRegion}
                 wsAddOrRemoveRegion={wsAddOrRemoveRegion}
+                wsClearRegions={wsClearRegions}
                 t={t}
               />
             )}
