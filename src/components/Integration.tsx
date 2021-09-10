@@ -141,6 +141,7 @@ interface IProps
     IRecordProps,
     WithDataProps {
   auth: Auth;
+  stopPlayer?: () => void;
 }
 
 export function IntegrationPanel(props: IProps) {
@@ -155,6 +156,7 @@ export function IntegrationPanel(props: IProps) {
     paratext_projects,
     paratext_projectsStatus,
     paratext_syncStatus,
+    stopPlayer,
   } = props;
   const {
     getUserName,
@@ -320,6 +322,7 @@ export function IntegrationPanel(props: IProps) {
     }
   };
   const handleSync = () => {
+    if (stopPlayer) stopPlayer();
     setSyncing(true);
     syncProject(
       auth,
@@ -330,6 +333,7 @@ export function IntegrationPanel(props: IProps) {
     );
   };
   const handleLocalSync = async () => {
+    if (stopPlayer) stopPlayer();
     setSyncing(true);
     showMessage(t.syncPending);
     var err = await localSync(plan, ptShortName, passages, memory, user);
