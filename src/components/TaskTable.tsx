@@ -500,7 +500,7 @@ export function TaskTable(props: IProps) {
         isOpen={openIntegration}
         onOpen={setOpenIntegration}
       >
-        <IntegrationTab {...props} auth={auth} />
+        <IntegrationTab {...props} auth={auth} stopPlayer={handleStopPlayer} />
       </BigDialog>
       <BigDialog
         title={tpb.exportTitle.replace('{0}', planName)}
