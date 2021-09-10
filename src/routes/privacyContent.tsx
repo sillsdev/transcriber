@@ -315,8 +315,8 @@ export const privacyContent = `<div>
 <p>
     <strong>Manage and export content</strong><br />
     Some of our services allow you to manage and export your content
-    through our software. E.g Manage data in FieldWorks and export from
-    Language Depot using Send/Receive.
+    through our software. E.g Manage data in SIL Transcriber and export from
+    AWS servers.
 </p>
 <p>
     <strong>Delete content</strong><br />
@@ -327,16 +327,16 @@ export const privacyContent = `<div>
     control any copies that other users may have made.
 </p>
 <p>
-    Data on Language Depot is usually used by a team and team members
-    cannot delete that data. One of the services that Language Depot
+    Data on our AWS account is usually used by a team and team members
+    cannot delete that data. One of the services that the AWS account
     provides is a backup of your data. We work hard to ensure that your
     data is never lost. If it is necessary to delete the data held in
-    Language Depot a team manager can email
+    our AWS account a team manager can
     <a
-        href="mailto:info@software.sil.org"
+        href="https://software.sil.org/siltranscriber/about/"
         rel="noopener noreferrer"
         target="_blank"
-        ><span>info@software.sil.org</span></a>
+        ><span>contact us</span></a>
     to request that the data is deleted. If you wish all backups of the
     data to be deleted that should be made explicit in the request.
 </p>
