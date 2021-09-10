@@ -259,7 +259,9 @@ function WSAudioPlayer(props: IProps) {
   const processRecordRef = useRef(false);
   const { showMessage } = useSnackBar();
   const [busy, setBusy] = useGlobal('remoteBusy');
-  //const isMounted = useMounted('wsaudioplayer');
+  const [style, setStyle] = useState({
+    cursor: busy || loading ? 'progress' : 'default',
+  });
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
@@ -393,6 +395,12 @@ function WSAudioPlayer(props: IProps) {
     wsSetPlaybackRate(playbackRate);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playbackRate]);
+
+  useEffect(() => {
+    setStyle({
+      cursor: busy || loading ? 'progress' : 'default',
+    });
+  }, [busy, loading]);
 
   const handlePlayStatus = () => {
     const playing = wsTogglePlay();
@@ -586,12 +594,7 @@ function WSAudioPlayer(props: IProps) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
-        <div
-          className={classes.main}
-          style={{
-            cursor: busy || loading ? 'progress' : 'default',
-          }}
-        >
+        <div className={classes.main} style={style}>
           <Grid container className={classes.toolbar}>
             {allowRecord && (
               <>

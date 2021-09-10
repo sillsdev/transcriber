@@ -293,6 +293,9 @@ export function Transcriber(props: IProps) {
     useContext(HotKeyContext).state;
   const t = transcriberStr;
   const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
+  const [style, setStyle] = useState({
+    cursor: busy || loading ? 'progress' : 'default',
+  });
 
   /* debug what props are changing to force renders
   useRenderingTrace(
@@ -341,6 +344,12 @@ export function Transcriber(props: IProps) {
   useEffect(() => {
     playingRef.current = playing;
   }, [playing]);
+
+  useEffect(() => {
+    setStyle({
+      cursor: busy || loading ? 'progress' : 'default',
+    });
+  }, [busy, loading]);
 
   useEffect(() => {
     const getParatextIntegration = () => {
@@ -903,13 +912,7 @@ export function Transcriber(props: IProps) {
         {allDone ? (
           <AllDone />
         ) : (
-          <Grid
-            container
-            direction="column"
-            style={{
-              cursor: busy || loading ? 'progress' : 'default',
-            }}
-          >
+          <Grid container direction="column" style={style}>
             <Grid container direction="row" className={classes.row}>
               <Grid item xs={9} className={classes.description}>
                 {sectionDescription(section)}
