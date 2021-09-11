@@ -690,7 +690,12 @@ function WSAudioPlayer(props: IProps) {
                         id="wsAudioAddSilence"
                         className={classes.togglebutton}
                         onClick={handleAddSilence()}
-                        disabled={!ready || recording}
+                        disabled={
+                          !ready ||
+                          recording ||
+                          playingRef.current ||
+                          processRecordRef.current
+                        }
                       >
                         <SilenceIcon />
                       </IconButton>
