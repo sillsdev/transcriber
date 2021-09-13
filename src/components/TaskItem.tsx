@@ -55,6 +55,7 @@ export function TaskItem(props: IProps) {
     rowData,
     activityStateStr,
     selected,
+    allDone,
     setSelected,
     refresh,
     setAllDone,
@@ -68,10 +69,10 @@ export function TaskItem(props: IProps) {
   const { passage, section, duration } = rowData[props.item];
 
   const handleSelect = (select: string) => () => {
-    setAllDone(false);
     checkSavedFn(() => {
       if (select !== selected) setSelected(select);
-      else refresh();
+      else if (!allDone) refresh();
+      else setAllDone(false);
     });
   };
 
