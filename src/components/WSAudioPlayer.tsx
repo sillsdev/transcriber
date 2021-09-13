@@ -427,6 +427,7 @@ function WSAudioPlayer(props: IProps) {
     );
     recordOverwritePosition.current = undefined;
     processRecordRef.current = false;
+    setReady(true);
     handleChanged();
   }
 
