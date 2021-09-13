@@ -35,13 +35,13 @@ import NextSegmentIcon from '@material-ui/icons/ArrowRightAlt';
 import localStrings from '../selector/localize';
 import { IState, IWsAudioPlayerStrings } from '../model';
 import {
+  FaHandScissors,
   FaAngleDoubleUp,
   FaAngleDoubleDown,
   FaDotCircle,
   FaStopCircle,
 } from 'react-icons/fa';
 
-//import { createWaveSurfer } from './WSAudioRegion';
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
 import { useWaveSurfer } from '../crud/useWaveSurfer';
 import { Duration, LightTooltip } from '../control';
@@ -52,6 +52,7 @@ import WSAudioPlayerZoom from './WSAudioPlayerZoom';
 import { IRegionChange, IRegionParams } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import { useGlobal } from 'reactn';
+import Confirm from './AlertDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -234,6 +235,7 @@ function WSAudioPlayer(props: IProps) {
   const timelineRef = useRef<any>();
 
   const classes = useStyles();
+  const [confirmAction, setConfirmAction] = useState<string | JSX.Element>('');
   const [jump] = useState(2);
   const playbackRef = useRef(1);
   const [playbackRate, setPlaybackRatex] = useState(1);
@@ -425,6 +427,7 @@ function WSAudioPlayer(props: IProps) {
     );
     recordOverwritePosition.current = undefined;
     processRecordRef.current = false;
+    setReady(true);
     handleChanged();
   }
 
@@ -439,6 +442,7 @@ function WSAudioPlayer(props: IProps) {
       e.type
     );
     recordOverwritePosition.current = newPos;
+    setDuration(wsDuration());
   }
   function onWSReady() {
     setReady(true);
@@ -575,10 +579,23 @@ function WSAudioPlayer(props: IProps) {
       setDuration(wsDuration());
     });
   };
-  const handleDeleteRegion = () => () => {
-    //var cutbuffer =
-    wsRegionDelete();
+  const handleActionConfirmed = () => {
+    if (confirmAction === t.deleteRecording) {
+      wsClear();
+    } else {
+      wsRegionDelete();
+    }
     handleChanged();
+    setConfirmAction('');
+  };
+  const handleActionRefused = () => {
+    setConfirmAction('');
+  };
+  const handleDelete = () => () => {
+    setConfirmAction(t.deleteRecording);
+  };
+  const handleDeleteRegion = () => () => {
+    setConfirmAction(t.deleteRegion);
   };
   const handleAddSilence = () => () => {
     wsInsertSilence(silence, wsPosition());
@@ -734,10 +751,20 @@ function WSAudioPlayer(props: IProps) {
                       onClick={handleDeleteRegion()}
                       disabled={recording}
                     >
-                      <DeleteIcon />
+                      <FaHandScissors />
                     </IconButton>
                   </LightTooltip>
                 )}
+                <LightTooltip id="wsAudioDeleteTip" title={t.deleteRecording}>
+                  <IconButton
+                    id="wsAudioDelete"
+                    onClick={handleDelete()}
+                    disabled={recording || duration === 0}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </LightTooltip>
+
                 <div className={classes.grow}>{'\u00A0'}</div>
               </>
             )}
@@ -997,6 +1024,14 @@ function WSAudioPlayer(props: IProps) {
                 {'\u00A0'}
               </Grid>
             </Grid>
+          )}
+          {confirmAction === '' || (
+            <Confirm
+              jsx={<span></span>}
+              text={confirmAction}
+              yesResponse={handleActionConfirmed}
+              noResponse={handleActionRefused}
+            />
           )}
         </div>
       </Paper>
