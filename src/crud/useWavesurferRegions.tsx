@@ -293,6 +293,8 @@ export function useWaveSurferRegions(
     if (!wavesurferRef.current) return;
     loadingRef.current = true;
     wavesurferRef.current.regions.clear();
+    currentRegionRef.current = undefined;
+    loopingRegionRef.current = undefined;
     loadingRef.current = false;
   }
   function loadRegions(
