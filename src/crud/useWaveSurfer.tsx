@@ -156,14 +156,14 @@ export function useWaveSurfer(
       return ws;
     }
 
-    if (container && !wavesurfer()) {
+    if (container && !wavesurferRef.current) {
       create(container, height);
       if (blobToLoad.current) {
         wsLoad();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [container]);
+  }, [container, wavesurferRef.current]);
 
   useEffect(() => {
     // Removes events, elements and disconnects Web Audio nodes on component unmount
@@ -184,7 +184,12 @@ export function useWaveSurfer(
   };
 
   const wsClear = () => {
-    wavesurfer()?.empty();
+    blobToLoad.current = undefined;
+    wavesurferRef.current?.unAll();
+    wavesurferRef.current?.destroy();
+    wavesurferRef.current = undefined;
+    durationRef.current = 0;
+    onProgress(0);
   };
 
   const wsIsReady = () => wavesurfer()?.isReady || false;

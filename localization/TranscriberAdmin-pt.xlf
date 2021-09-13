@@ -4363,6 +4363,12 @@
             <target>Próximo região [{0}]</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.deleteRecording">
+         <segment>
+            <source>Excluir toda a gravação</source>
+            <target>x</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.deleteRegion">
          <segment>
             <source>Delete Region</source>

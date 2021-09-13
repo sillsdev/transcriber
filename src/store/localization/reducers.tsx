@@ -947,6 +947,7 @@ const initialState = {
 			"beginningTip": "Go to Beginning [{0}]",
 			"prevRegion": "Previous Region [{0}]",
 			"nextRegion": "Next Region [{0}]",
+			"deleteRecording": "Delete Entire Recording",
 			"deleteRegion": "Delete Region",
 			"endTip": "Go to End [{0}]",
 			"fasterTip": "Faster [{0}]",

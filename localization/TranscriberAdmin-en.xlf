@@ -4366,6 +4366,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.deleteRecording">
+         <segment>
+            <source>Delete Entire Recording</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.deleteRegion">
          <segment>
             <source>Delete Region</source>

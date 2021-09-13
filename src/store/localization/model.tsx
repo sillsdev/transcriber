@@ -888,6 +888,7 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "beginningTip": string;
     "prevRegion": string;
     "nextRegion": string;
+    "deleteRecording": string;
     "deleteRegion": string;
     "endTip": string;
     "fasterTip": string;
