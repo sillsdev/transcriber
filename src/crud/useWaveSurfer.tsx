@@ -1,7 +1,9 @@
 import _ from 'lodash';
 import { useEffect, useRef } from 'react';
+import { useGlobal } from 'reactn';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
+import { logError, Severity } from '../utils';
 //import { useMounted } from '../utils';
 //import { convertToMP3 } from '../utils/mp3';
 import { convertToWav } from '../utils/wav';
@@ -31,11 +33,13 @@ export function useWaveSurfer(
   timelineContainer?: any
 ) {
   //const isMounted = useMounted('wavesurfer');
+  const [globalStore] = useGlobal();
   const progressRef = useRef(0);
   const wavesurferRef = useRef<WaveSurfer>();
   const blobToLoad = useRef<Blob>();
   const loadRequests = useRef(0);
   const playingRef = useRef(false);
+  const wavesurferPlayingRef = useRef(false); //don't trust ws.isPlaying()
   const durationRef = useRef(0);
   const userInteractionRef = useRef(true);
 
@@ -59,18 +63,27 @@ export function useWaveSurfer(
   const setPlaying = (value: boolean) => {
     if (value !== playingRef.current) {
       playingRef.current = value;
-      if (value) {
-        if (wavesurfer()?.isReady) {
-          //play region once if single region
-          if (!justPlayRegion(progress())) {
-            //default play (which will loop region if looping is on)
-            wavesurfer()?.play(progress());
+      try {
+        if (value) {
+          if (wavesurfer()?.isReady) {
+            //play region once if single region
+            if (!justPlayRegion(progress())) {
+              //default play (which will loop region if looping is on)
+              wavesurfer()?.play(progress());
+            }
+          }
+        } else {
+          try {
+            if (wavesurferPlayingRef.current) wavesurfer()?.pause();
+          } catch (e: any) {
+            //ignore
+            console.log('ignored');
           }
         }
-      } else {
-        if (wavesurfer()?.isPlaying()) wavesurfer()?.pause();
+        if (onPlayStatus) onPlayStatus(playingRef.current);
+      } catch (error: any) {
+        logError(Severity.error, globalStore.errorReporter, error);
       }
-      if (onPlayStatus) onPlayStatus(playingRef.current);
     }
   };
 
@@ -135,13 +148,18 @@ export function useWaveSurfer(
           if (wavesurfer()?.isPlaying()) setProgress(e);
         }, 150)
       );
-      //ws.on('play', function () {
-      //});
+      ws.on('play', function () {
+        wavesurferPlayingRef.current = true;
+      });
+      ws.on('pause', function () {
+        wavesurferPlayingRef.current = true;
+      });
       ws.on('seek', function (e: number) {
         onRegionSeek(e, !userInteractionRef.current);
         setProgress(e * wsDuration());
       });
       ws.on('finish', function () {
+        //we'll get a pause next, so don't set wavesurferPlayingRef here
         setPlaying(false);
       });
       ws.on('interaction', function () {
@@ -189,7 +207,7 @@ export function useWaveSurfer(
     wavesurferRef.current?.destroy();
     wavesurferRef.current = undefined;
     durationRef.current = 0;
-    onProgress(0);
+    setProgress(0);
   };
 
   const wsIsReady = () => wavesurfer()?.isReady || false;
