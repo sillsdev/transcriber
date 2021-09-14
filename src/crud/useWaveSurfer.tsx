@@ -234,6 +234,7 @@ export function useWaveSurfer(
     }
   };
   const wsZoom = (zoom: number) => {
+    console.log('Zoom', zoom);
     wavesurfer()?.zoom(zoom);
     return wavesurfer()?.params.minPxPerSec;
   };
