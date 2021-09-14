@@ -756,15 +756,16 @@ function WSAudioPlayer(props: IProps) {
                   </LightTooltip>
                 )}
                 <LightTooltip id="wsAudioDeleteTip" title={t.deleteRecording}>
-                  <IconButton
-                    id="wsAudioDelete"
-                    onClick={handleDelete()}
-                    disabled={recording || duration === 0}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      id="wsAudioDelete"
+                      onClick={handleDelete()}
+                      disabled={recording || duration === 0}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </span>
                 </LightTooltip>
-
                 <div className={classes.grow}>{'\u00A0'}</div>
               </>
             )}

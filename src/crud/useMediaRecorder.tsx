@@ -104,8 +104,10 @@ export function useMediaRecorder(
       'last send',
       () => lastSendDoneRef.current,
       () => false,
-      200
-    ).then(() => onStop(blob));
+      300
+    )
+      .then(() => onStop(blob))
+      .catch((e) => handleError(e));
   }
   function handleError(e: any) {
     console.log(e.error);
