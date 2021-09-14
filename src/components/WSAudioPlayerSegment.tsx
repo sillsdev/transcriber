@@ -176,17 +176,16 @@ function WSAudioPlayerSegment(props: IProps) {
               </IconButton>
             </span>
           </LightTooltip>
-          {showSettings && (
-            <WSSegmentParameters
-              loop={loop}
-              params={segParams}
-              currentNumRegions={currentNumRegions}
-              wsAutoSegment={wsAutoSegment}
-              isOpen={showSettings}
-              onOpen={setShowSettings}
-              onSave={handleSegParamChange}
-            />
-          )}
+          <WSSegmentParameters
+            loop={loop}
+            params={segParams}
+            currentNumRegions={currentNumRegions}
+            wsAutoSegment={wsAutoSegment}
+            isOpen={showSettings && !playing}
+            onOpen={setShowSettings}
+            onSave={handleSegParamChange}
+          />
+
           <LightTooltip
             id="wsSplitTip"
             title={t.splitSegment.replace('{0}', localizeHotKey(ADDREMSEG_KEY))}
