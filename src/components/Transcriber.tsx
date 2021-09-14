@@ -500,7 +500,12 @@ export function Transcriber(props: IProps) {
         q.findRecords('mediafile')
       ) as MediaFile[];
       const oldRec = mediaRecs.filter((m) => m.id === mediaId);
-      if (oldRec.length > 0 && mediaUrl === oldRec[0].attributes.audioUrl) {
+      var cut = mediaUrl.lastIndexOf('&Signature');
+      var check = cut > 0 ? mediaUrl.substr(0, cut) : mediaUrl;
+      if (
+        oldRec.length > 0 &&
+        check === oldRec[0].attributes.audioUrl.substr(0, cut)
+      ) {
         memory
           .update((t: TransformBuilder) =>
             t.replaceAttribute(oldRec[0], 'duration', Math.floor(totalSeconds))
