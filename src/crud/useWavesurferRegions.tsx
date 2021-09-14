@@ -146,6 +146,14 @@ export function useWaveSurferRegions(
         //console.log('region-out', r.start, r.loop, playRegionRef.current);
         //help it in case it forgot -- unless the user clicked out
         //here is where we could add a pause possibly
+        console.log(
+          r.loop,
+          'region out r',
+          r,
+          'looping',
+          loopingRegionRef.current,
+          r === loopingRegionRef.current
+        );
         if (r.loop && r === loopingRegionRef.current) goto(r.start);
         if (playRegionRef.current && !r.loop) {
           onPlayStatus(false);
