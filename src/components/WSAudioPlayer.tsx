@@ -267,6 +267,7 @@ function WSAudioPlayer(props: IProps) {
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
+
   const {
     wsLoad,
     wsClear,
@@ -287,6 +288,7 @@ function WSAudioPlayer(props: IProps) {
     wsInsertAudio,
     wsInsertSilence,
     wsZoom,
+    wsPctWidth,
     wsAutoSegment,
     wsPrevRegion,
     wsNextRegion,
@@ -681,8 +683,8 @@ function WSAudioPlayer(props: IProps) {
               <WSAudioPlayerZoom
                 startBig={allowRecord || false}
                 ready={ready}
-                wsSetHeight={wsSetHeight}
                 wsZoom={wsZoom}
+                wsPctWidth={wsPctWidth}
                 t={t}
               ></WSAudioPlayerZoom>
             </Grid>

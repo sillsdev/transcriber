@@ -45,6 +45,7 @@ export function useWaveSurfer(
 
   const inputRegionsRef = useRef<IRegions>();
   const regionsLoadedRef = useRef(false);
+  const widthRef = useRef(0);
 
   const isNear = (position: number) => {
     return Math.abs(position - progressRef.current) < 0.3;
@@ -165,12 +166,14 @@ export function useWaveSurfer(
       ws.on('interaction', function () {
         if (onInteraction) onInteraction();
       });
+      ws.on('redraw', function (peaks: any, width: number) {
+        widthRef.current = width;
+      });
       /*
       ws.drawer.on('click', (event: any, progress: number) => {
         console.log('Clicking now', progress);
       });
       */
-
       return ws;
     }
 
@@ -231,10 +234,16 @@ export function useWaveSurfer(
     }
   };
   const wsZoom = (zoom: number) => {
+    console.log('Zoom', zoom);
     wavesurfer()?.zoom(zoom);
     return wavesurfer()?.params.minPxPerSec;
   };
-
+  const wsPctWidth = () => {
+    return (
+      widthRef.current /
+      (container.clientWidth * wavesurfer()?.params.pixelRatio)
+    );
+  };
   const wsLoad = (blob?: Blob, regions: string = '') => {
     durationRef.current = 0;
     if (regions) inputRegionsRef.current = JSON.parse(regions);
@@ -449,6 +458,7 @@ export function useWaveSurfer(
     wsInsertAudio,
     wsInsertSilence,
     wsZoom,
+    wsPctWidth,
     wsGetRegions,
     wsAutoSegment,
     wsPrevRegion,

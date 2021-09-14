@@ -5,7 +5,7 @@ import {
   IconButton,
   Grid,
 } from '@material-ui/core';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { LightTooltip } from '../control';
 import { IState, IWsAudioPlayerZoomStrings } from '../model';
 import { HotKeyContext } from '../context/HotKeyContext';
@@ -47,40 +47,47 @@ interface IStateProps {
 interface IProps extends IStateProps {
   ready: boolean;
   wsZoom: (val: number) => number;
+  wsPctWidth: () => number;
 }
 function WSAudioPlayerZoom(props: IProps) {
   const classes = useStyles();
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
-  const zoomMin = 2;
-  const zoomMax = 1000;
+  const [zoomMin, setZoomMin] = useState(5);
+  const [zoom, setZoomx] = useState(20);
+  const zoomRef = useRef(20);
+  const zoomMax = 500;
 
-  const { t, ready, wsZoom } = props;
-  const zoomRef = useRef(50);
+  const { t, ready, wsZoom, wsPctWidth } = props;
 
   const ZOOMIN_KEY = 'CTRL+=';
   const ZOOMOUT_KEY = 'CTRL+-';
-
+  const setZoom = (value: number) => {
+    zoomRef.current = value;
+    setZoomx(value);
+  };
   const handleZoomIn = () => {
-    console.log('ZoomIn', zoomRef.current);
-    zoomRef.current = wsZoom(Math.min(zoomRef.current * 2, zoomMax));
+    setZoom(wsZoom(Math.min(zoomRef.current * 2, zoomMax)));
     return true;
   };
   const handleZoomOut = () => {
-    console.log('ZoomOut', zoomRef.current);
-    zoomRef.current = wsZoom(Math.max(zoomRef.current / 2, zoomMin));
+    var newZoom = wsZoom(Math.max(zoomRef.current / 2, zoomMin));
+    setZoom(newZoom);
+    if (wsPctWidth() === 1) setZoomMin(newZoom);
     return true;
   };
   const handleZoomFull = () => {
-    zoomRef.current = wsZoom(0);
+    wsZoom(0);
+    setZoom(zoomMin); //this isn't right...but I guess good enough...
+    return zoomRef.current;
   };
+
   useEffect(() => {
     const keys = [
       { key: ZOOMIN_KEY, cb: handleZoomIn },
       { key: ZOOMOUT_KEY, cb: handleZoomOut },
     ];
     keys.forEach((k) => subscribe(k.key, k.cb));
-
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       keys.forEach((k) => unsubscribe(k.key));
@@ -100,7 +107,7 @@ function WSAudioPlayerZoom(props: IProps) {
               <IconButton
                 id="wsZoomIn"
                 onClick={handleZoomIn}
-                disabled={!ready || zoomRef.current === zoomMax}
+                disabled={!ready || zoom === zoomMax}
               >
                 <ZoomInIcon />
               </IconButton>
@@ -114,7 +121,7 @@ function WSAudioPlayerZoom(props: IProps) {
               <IconButton
                 id="wsZoomOut"
                 onClick={handleZoomOut}
-                disabled={!ready || zoomRef.current === zoomMin}
+                disabled={!ready || zoom === zoomMin}
               >
                 <ZoomOutIcon />
               </IconButton>
