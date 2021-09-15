@@ -4506,7 +4506,7 @@
       </unit>
       <unit id="wsAudioPlayerSegment.segmentLength">
          <segment>
-            <source>Minimum segment length (sec)</source>
+            <source>Minimum Segment Length (sec)</source>
             <target/>
          </segment>
       </unit>
@@ -4524,13 +4524,13 @@
       </unit>
       <unit id="wsAudioPlayerSegment.silenceLength">
          <segment>
-            <source>Length of Silence (100ths of second)</source>
+            <source>Minimum Length of Silence (100ths second)</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.silenceThreshold">
          <segment>
-            <source>Silence threshold (1000th dB)</source>
+            <source>Silence Threshold (1000th dB)</source>
             <target/>
          </segment>
       </unit>

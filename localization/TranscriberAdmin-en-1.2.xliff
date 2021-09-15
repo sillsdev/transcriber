@@ -5254,7 +5254,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayerSegment.segmentLength">
-            <source>Minimum segment length (sec)</source>
+            <source>Minimum Segment Length (sec)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -5275,14 +5275,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayerSegment.silenceLength">
-            <source>Length of Silence (100ths of second)</source>
+            <source>Minimum Length of Silence (100ths second)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayerSegment.silenceThreshold">
-            <source>Silence threshold (1000th dB)</source>
+            <source>Silence Threshold (1000th dB)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
