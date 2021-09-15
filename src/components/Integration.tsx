@@ -629,7 +629,7 @@ export function IntegrationPanel(props: IProps) {
                         <MenuItem key={option.ParatextId} value={option.Name}>
                           {`${option.ShortName ? option.ShortName + '/' : ''}${
                             option.Name
-                          } (${option.LanguageName}-${option.LanguageTag})`}
+                          } (${option.LanguageTag})`}
                         </MenuItem>
                       ))
                       .concat(
