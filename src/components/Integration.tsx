@@ -204,6 +204,7 @@ export function IntegrationPanel(props: IProps) {
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
 
   const getProject = () => {
+    if (!project) return undefined;
     const projfind: Project[] = projects.filter((p) => p.id === project);
     return projfind.length > 0 ? projfind[0] : undefined;
   };
@@ -411,7 +412,7 @@ export function IntegrationPanel(props: IProps) {
   }, [resetUserName, connected, hasParatext]);
 
   useEffect(() => {
-    if (project !== myProject) {
+    if (project && project !== myProject) {
       setPtProj(-1);
       setPtProjName('');
       setPtShortName('');
@@ -425,9 +426,9 @@ export function IntegrationPanel(props: IProps) {
 
   useEffect(() => {
     resetCount();
-    getLocalCount(passages, project, memory, errorReporter, t);
+    if (project) getLocalCount(passages, project, memory, errorReporter, t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passages]);
+  }, [passages, project]);
 
   /* do this once */
   useEffect(() => {
@@ -511,9 +512,9 @@ export function IntegrationPanel(props: IProps) {
   }, [busy, paratext_projects, paratext_projectsStatus]);
 
   useEffect(() => {
-    findConnectedProject();
+    if (project) findConnectedProject();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectintegrations]);
+  }, [projectintegrations, project]);
 
   useEffect(() => {
     if (paratext_syncStatus) {
@@ -626,7 +627,9 @@ export function IntegrationPanel(props: IProps) {
                       .sort((i, j) => (i.ShortName < j.ShortName ? -1 : 1))
                       .map((option: ParatextProject) => (
                         <MenuItem key={option.ParatextId} value={option.Name}>
-                          {`${option.ShortName}/${option.Name} (${option.LanguageName}-${option.LanguageTag})`}
+                          {`${option.ShortName ? option.ShortName + '/' : ''}${
+                            option.Name
+                          } (${option.LanguageName}-${option.LanguageTag})`}
                         </MenuItem>
                       ))
                       .concat(
