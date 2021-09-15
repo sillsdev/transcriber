@@ -10,6 +10,7 @@ const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
       rec.transcriber = item.transcriber;
       rec.editor = item.editor;
       rec.title = item.title;
+      rec.deleted = item.deleted;
     }
 };
 
@@ -37,6 +38,7 @@ const wfPassageUpdate = (item: IWorkflow, rec: IWorkflow) => {
       rec.book = item.book;
       rec.reference = item.reference;
       rec.comment = item.comment;
+      rec.deleted = item.deleted;
     }
 };
 
@@ -101,6 +103,7 @@ export const getWorkflow = (
       item.transcriber = { ...userid, id: related(section, 'transcriber') };
       item.editor = { ...userid, id: related(section, 'editor') };
       item.sectionUpdated = section.attributes.dateUpdated;
+      item.deleted = false;
     }
     if (item.kind === IwfKind.Section) {
       sectionIndex = wfSectionAdd(myWork, item);
@@ -122,6 +125,7 @@ export const getWorkflow = (
         item.reference = passAttr.reference;
         item.comment = passAttr.title;
         item.passageUpdated = passage.attributes.dateUpdated;
+        item.deleted = false;
       }
       // console.log(`item ${JSON.stringify(item, null, 2)}`);
       wfPassageAdd(myWork, item, sectionIndex);

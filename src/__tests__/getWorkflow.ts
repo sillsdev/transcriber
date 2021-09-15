@@ -203,6 +203,7 @@ test('one section gives output', async () => {
       sectionUpdated: '2021-09-15',
       transcriber: { type: 'user', id: null },
       editor: { type: 'user', id: null },
+      deleted: false,
     },
   ]);
 });
@@ -218,6 +219,7 @@ test('one section and one passage gives output', async () => {
       sectionUpdated: '2021-09-15',
       transcriber: { type: 'user', id: null },
       editor: { type: 'user', id: null },
+      deleted: false,
     },
     {
       level: 1,
@@ -228,6 +230,7 @@ test('one section and one passage gives output', async () => {
       comment: 'salutation',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
+      deleted: false,
     },
   ]);
 });
@@ -243,6 +246,7 @@ test('one section and two passages gives output', async () => {
       sectionUpdated: '2021-09-15',
       transcriber: { type: 'user', id: null },
       editor: { type: 'user', id: null },
+      deleted: false,
     },
     {
       level: 1,
@@ -253,6 +257,7 @@ test('one section and two passages gives output', async () => {
       comment: 'salutation',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
+      deleted: false,
     },
     {
       level: 1,
@@ -263,6 +268,7 @@ test('one section and two passages gives output', async () => {
       comment: 'introducing John',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa2' },
+      deleted: false,
     },
   ]);
 });
@@ -278,6 +284,7 @@ test('one section and three passages gives output', async () => {
       sectionUpdated: '2021-09-15',
       transcriber: { type: 'user', id: null },
       editor: { type: 'user', id: null },
+      deleted: false,
     },
     {
       level: 1,
@@ -288,6 +295,7 @@ test('one section and three passages gives output', async () => {
       comment: 'salutation',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
+      deleted: false,
     },
     {
       level: 1,
@@ -298,6 +306,7 @@ test('one section and three passages gives output', async () => {
       comment: 'introducing John',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa2' },
+      deleted: false,
     },
     {
       level: 1,
@@ -308,6 +317,7 @@ test('one section and three passages gives output', async () => {
       comment: "John's call",
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa3' },
+      deleted: false,
     },
   ]);
 });
@@ -328,6 +338,7 @@ test('one flat section and with one passage gives output', async () => {
       passageUpdated: '2021-09-15',
       transcriber: { type: 'user', id: null },
       editor: { type: 'user', id: null },
+      deleted: false,
     },
   ]);
 });
@@ -348,6 +359,7 @@ test('two flat sections and one from another plan gives output', async () => {
       passageUpdated: '2021-09-15',
       transcriber: { type: 'user', id: null },
       editor: { type: 'user', id: null },
+      deleted: false,
     },
     {
       level: 0,
@@ -363,6 +375,7 @@ test('two flat sections and one from another plan gives output', async () => {
       passageUpdated: '2021-09-15',
       transcriber: { type: 'user', id: null },
       editor: { type: 'user', id: null },
+      deleted: false,
     },
   ]);
 });
@@ -380,6 +393,7 @@ test('two sections and passages with one from another plan', async () => {
       sectionUpdated: '2021-09-15',
       transcriber: { type: 'user', id: null },
       editor: { type: 'user', id: null },
+      deleted: false,
     },
     {
       level: 1,
@@ -390,6 +404,7 @@ test('two sections and passages with one from another plan', async () => {
       comment: 'salutation',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
+      deleted: false,
     },
     {
       level: 1,
@@ -400,6 +415,7 @@ test('two sections and passages with one from another plan', async () => {
       comment: 'introducing John',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa2' },
+      deleted: false,
     },
     {
       level: 1,
@@ -410,6 +426,7 @@ test('two sections and passages with one from another plan', async () => {
       comment: "John's call",
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa3' },
+      deleted: false,
     },
     {
       level: 0,
@@ -420,6 +437,7 @@ test('two sections and passages with one from another plan', async () => {
       sectionUpdated: '2021-09-15',
       transcriber: { type: 'user', id: null },
       editor: { type: 'user', id: null },
+      deleted: false,
     },
     {
       level: 1,
@@ -430,6 +448,7 @@ test('two sections and passages with one from another plan', async () => {
       comment: 'Zechariah at the temple',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa4' },
+      deleted: false,
     },
   ]);
 });
@@ -451,6 +470,7 @@ test('update one flat section to two flat section ignoring other plan', async ()
       passageUpdated: '2021-09-15',
       transcriber: { type: 'user', id: null },
       editor: { type: 'user', id: null },
+      deleted: false,
     },
   ]);
   const updated = getWorkflow(
@@ -475,6 +495,7 @@ test('update one flat section to two flat section ignoring other plan', async ()
       passageUpdated: '2021-09-15',
       transcriber: { type: 'user', id: null },
       editor: { type: 'user', id: null },
+      deleted: false,
     },
     {
       level: 0,
@@ -490,6 +511,7 @@ test('update one flat section to two flat section ignoring other plan', async ()
       passageUpdated: '2021-09-15',
       transcriber: { type: 'user', id: null },
       editor: { type: 'user', id: null },
+      deleted: false,
     },
   ]);
 });
