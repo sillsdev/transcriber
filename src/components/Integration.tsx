@@ -428,7 +428,7 @@ export function IntegrationPanel(props: IProps) {
     resetCount();
     if (project) getLocalCount(passages, project, memory, errorReporter, t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passages]);
+  }, [passages, project]);
 
   /* do this once */
   useEffect(() => {
@@ -514,7 +514,7 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     if (project) findConnectedProject();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectintegrations]);
+  }, [projectintegrations, project]);
 
   useEffect(() => {
     if (paratext_syncStatus) {
