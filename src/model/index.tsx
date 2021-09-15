@@ -38,3 +38,4 @@ export * from './offlineProject';
 export * from './audacityProject';
 export * from './execa';
 export * from './token';
+export * from './workflow';

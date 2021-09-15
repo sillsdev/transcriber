@@ -13,7 +13,7 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { related } from '../crud';
+import { related, usePlan } from '../crud';
 import { Online, useInterval } from '../utils';
 import Auth from '../auth/Auth';
 
@@ -40,6 +40,7 @@ const initState = {
   connected: false,
   projButtonStr: {} as IProjButtonsStrings,
   isScripture: () => false,
+  isFlat: (plan: string) => false,
 };
 
 export type ICtxState = typeof initState;
@@ -68,6 +69,7 @@ const PlanProvider = withData(mapRecordsToProps)(
     const [projRole] = useGlobal('projRole');
     const [isOffline] = useGlobal('offline');
     const [offlineOnly] = useGlobal('offlineOnly');
+    const { getPlan } = usePlan();
     const [readonly, setReadOnly] = useState(
       (isOffline && !offlineOnly) || projRole !== 'admin'
     );
@@ -77,14 +79,16 @@ const PlanProvider = withData(mapRecordsToProps)(
     });
 
     const isScripture = () => {
-      const planRecs = (memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('plan')
-      ) as Plan[]).filter((p) => p.id === plan);
+      const planRecs = (
+        memory.cache.query((q: QueryBuilder) => q.findRecords('plan')) as Plan[]
+      ).filter((p) => p.id === plan);
       if (planRecs.length > 0) {
         const typeId = related(planRecs[0], 'plantype');
-        const typeRecs = (memory.cache.query((q: QueryBuilder) =>
-          q.findRecords('plantype')
-        ) as PlanType[]).filter((pt) => pt.id === typeId);
+        const typeRecs = (
+          memory.cache.query((q: QueryBuilder) =>
+            q.findRecords('plantype')
+          ) as PlanType[]
+        ).filter((pt) => pt.id === typeId);
         if (typeRecs.length > 0) {
           return (
             typeRecs[0]?.attributes?.name
@@ -92,6 +96,14 @@ const PlanProvider = withData(mapRecordsToProps)(
               ?.indexOf('scripture') !== -1
           );
         }
+      }
+      return false;
+    };
+
+    const isFlat = (plan: string) => {
+      if (plan !== '') {
+        var planRec = getPlan(plan);
+        if (planRec !== null) return planRec.attributes?.flat;
       }
       return false;
     };
@@ -121,6 +133,7 @@ const PlanProvider = withData(mapRecordsToProps)(
             connected,
             readonly,
             isScripture,
+            isFlat,
           },
           setState,
         }}
