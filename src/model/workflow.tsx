@@ -11,16 +11,18 @@ export enum IwfKind {
 export interface IWorkflow {
   level: number;
   kind: IwfKind;
-  sequence: number;
+  sectionSeq: number;
   title?: string;
+  transcriber?: RecordIdentity;
+  editor?: RecordIdentity;
   sectionId?: RecordIdentity;
   sectionUpdated?: string;
-  passageId?: RecordIdentity;
-  passageUpdated?: string;
+  passageSeq: number;
   book?: string;
   reference?: string;
   comment?: string;
-  transcriber?: RecordIdentity;
-  editor?: RecordIdentity;
+  passageId?: RecordIdentity;
+  passageUpdated?: string;
+  mediaId?: RecordIdentity;
   deleted: boolean;
 }

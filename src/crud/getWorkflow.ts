@@ -1,12 +1,13 @@
 import { IWorkflow, IwfKind, Section, Passage } from '../model';
-import { related } from '.';
+import Memory from '@orbit/memory';
+import { related, getMediaRec } from '.';
 
 const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
   if (item.sectionUpdated && rec.sectionUpdated)
     if (item?.sectionUpdated > rec?.sectionUpdated) {
       rec.level = item.level;
       rec.kind = item.kind;
-      rec.sequence = item.sequence;
+      rec.sectionSeq = item.sectionSeq;
       rec.transcriber = item.transcriber;
       rec.editor = item.editor;
       rec.title = item.title;
@@ -33,7 +34,7 @@ const wfPassageUpdate = (item: IWorkflow, rec: IWorkflow) => {
     if (item.passageUpdated > rec.passageUpdated) {
       rec.level = item.level;
       rec.kind = item.kind;
-      rec.sequence = item.sequence;
+      rec.passageSeq = item.passageSeq;
       rec.passageId = item.passageId;
       rec.book = item.book;
       rec.reference = item.reference;
@@ -62,7 +63,7 @@ const wfPassageAdd = (
     while (indexAt < workflow.length) {
       if (
         item.kind !== IwfKind.Passage ||
-        item.sequence > workflow[indexAt].sequence
+        item.passageSeq > workflow[indexAt].passageSeq
       )
         break;
       indexAt += 1;
@@ -84,6 +85,7 @@ export const getWorkflow = (
   sections: Section[],
   passages: Passage[],
   flat: boolean,
+  memory: Memory,
   current?: IWorkflow[]
 ) => {
   const myWork = current || Array<IWorkflow>();
@@ -93,17 +95,24 @@ export const getWorkflow = (
   const userid = { type: 'user' };
   plansections.forEach((section) => {
     let item = { ...initItem };
+    let curSection = 1;
     let sectionIndex: number | undefined;
     if (section.attributes) {
       item.level = 0;
       item.kind = flat ? IwfKind.SectionPassage : IwfKind.Section;
       item.sectionId = { type: 'section', id: section.id };
-      item.sequence = section.attributes.sequencenum;
+      item.sectionSeq = section.attributes.sequencenum;
       item.title = section?.attributes?.name;
-      item.transcriber = { ...userid, id: related(section, 'transcriber') };
-      item.editor = { ...userid, id: related(section, 'editor') };
+      const transcriber = related(section, 'transcriber');
+      item.transcriber = transcriber
+        ? { ...userid, id: transcriber }
+        : undefined;
+      const editor = related(section, 'editor');
+      item.editor = editor ? { ...userid, id: editor } : undefined;
       item.sectionUpdated = section.attributes.dateUpdated;
+      item.passageSeq = 0;
       item.deleted = false;
+      curSection = item.sectionSeq;
     }
     if (item.kind === IwfKind.Section) {
       sectionIndex = wfSectionAdd(myWork, item);
@@ -118,13 +127,18 @@ export const getWorkflow = (
         if (!flat) {
           item.level = 1;
           item.kind = IwfKind.Passage;
-          item.sequence = passAttr.sequencenum;
         }
-        item.passageId = { type: 'passage', id: passage.id };
+        item.sectionSeq = curSection;
+        item.passageSeq = passAttr.sequencenum;
         item.book = passAttr.book;
         item.reference = passAttr.reference;
         item.comment = passAttr.title;
         item.passageUpdated = passage.attributes.dateUpdated;
+        item.passageId = { type: 'passage', id: passage.id };
+        const mediaRec = getMediaRec(passage.id, memory);
+        item.mediaId = mediaRec
+          ? { type: 'mediafile', id: mediaRec.id }
+          : undefined;
         item.deleted = false;
       }
       // console.log(`item ${JSON.stringify(item, null, 2)}`);

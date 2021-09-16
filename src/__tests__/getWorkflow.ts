@@ -1,7 +1,8 @@
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { Section, Passage } from '../model';
+import { Section, Passage, IWorkflow } from '../model';
 import { getWorkflow } from '../crud';
+import { memory } from '../schema';
 
 const s1: Section = {
   type: 'section',
@@ -181,50 +182,53 @@ const pa11: Passage = {
 afterEach(cleanup);
 
 test('empty input gives empty output', async () => {
-  expect(getWorkflow('', [], [], false)).toEqual([]);
+  expect(getWorkflow('', [], [], false, memory)).toEqual([]);
 });
 
 test('empty flat input gives empty output', async () => {
-  expect(getWorkflow('', [], [], false)).toEqual([]);
+  expect(getWorkflow('', [], [], true, memory)).toEqual([]);
 });
 
 test('empty input with plan id gives empty output', async () => {
-  expect(getWorkflow('pl1', [], [], false)).toEqual([]);
+  expect(getWorkflow('pl1', [], [], false, memory)).toEqual([]);
 });
 
 test('one section gives output', async () => {
-  expect(getWorkflow('pl1', [s1], [], false)).toEqual([
+  expect(getWorkflow('pl1', [s1], [], false, memory)).toEqual([
     {
       level: 0,
       kind: 0,
-      sequence: 1,
+      sectionSeq: 1,
       title: 'Intro',
+      passageSeq: 0,
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      transcriber: { type: 'user', id: null },
-      editor: { type: 'user', id: null },
+      transcriber: undefined,
+      editor: undefined,
       deleted: false,
     },
-  ]);
+  ] as IWorkflow[]);
 });
 
 test('one section and one passage gives output', async () => {
-  expect(getWorkflow('pl1', [s1], [pa1], false)).toEqual([
+  expect(getWorkflow('pl1', [s1], [pa1], false, memory)).toEqual([
     {
       level: 0,
       kind: 0,
-      sequence: 1,
+      sectionSeq: 1,
       title: 'Intro',
+      passageSeq: 0,
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      transcriber: { type: 'user', id: null },
-      editor: { type: 'user', id: null },
+      transcriber: undefined,
+      editor: undefined,
       deleted: false,
     },
     {
       level: 1,
       kind: 1,
-      sequence: 1,
+      sectionSeq: 1,
+      passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
@@ -232,26 +236,28 @@ test('one section and one passage gives output', async () => {
       passageId: { type: 'passage', id: 'pa1' },
       deleted: false,
     },
-  ]);
+  ] as IWorkflow[]);
 });
 
 test('one section and two passages gives output', async () => {
-  expect(getWorkflow('pl1', [s1], [pa1, pa2], false)).toEqual([
+  expect(getWorkflow('pl1', [s1], [pa1, pa2], false, memory)).toEqual([
     {
       level: 0,
       kind: 0,
-      sequence: 1,
+      sectionSeq: 1,
       title: 'Intro',
+      passageSeq: 0,
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      transcriber: { type: 'user', id: null },
-      editor: { type: 'user', id: null },
+      transcriber: undefined,
+      editor: undefined,
       deleted: false,
     },
     {
       level: 1,
       kind: 1,
-      sequence: 1,
+      sectionSeq: 1,
+      passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
@@ -262,7 +268,8 @@ test('one section and two passages gives output', async () => {
     {
       level: 1,
       kind: 1,
-      sequence: 2,
+      sectionSeq: 1,
+      passageSeq: 2,
       book: 'LUK',
       reference: '1:5-7',
       comment: 'introducing John',
@@ -270,26 +277,28 @@ test('one section and two passages gives output', async () => {
       passageId: { type: 'passage', id: 'pa2' },
       deleted: false,
     },
-  ]);
+  ] as IWorkflow[]);
 });
 
-test('one section and three passages gives output', async () => {
-  expect(getWorkflow('pl1', [s1], [pa3, pa1, pa2], false)).toEqual([
+test('one section and three passages out of order', async () => {
+  expect(getWorkflow('pl1', [s1], [pa3, pa1, pa2], false, memory)).toEqual([
     {
       level: 0,
       kind: 0,
-      sequence: 1,
+      sectionSeq: 1,
       title: 'Intro',
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      transcriber: { type: 'user', id: null },
-      editor: { type: 'user', id: null },
+      transcriber: undefined,
+      editor: undefined,
+      passageSeq: 0,
       deleted: false,
     },
     {
       level: 1,
       kind: 1,
-      sequence: 1,
+      sectionSeq: 1,
+      passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
@@ -300,7 +309,8 @@ test('one section and three passages gives output', async () => {
     {
       level: 1,
       kind: 1,
-      sequence: 2,
+      sectionSeq: 1,
+      passageSeq: 2,
       book: 'LUK',
       reference: '1:5-7',
       comment: 'introducing John',
@@ -311,7 +321,8 @@ test('one section and three passages gives output', async () => {
     {
       level: 1,
       kind: 1,
-      sequence: 3,
+      sectionSeq: 1,
+      passageSeq: 3,
       book: 'LUK',
       reference: '1:8-10',
       comment: "John's call",
@@ -319,16 +330,17 @@ test('one section and three passages gives output', async () => {
       passageId: { type: 'passage', id: 'pa3' },
       deleted: false,
     },
-  ]);
+  ] as IWorkflow[]);
 });
 
 test('one flat section and with one passage gives output', async () => {
-  expect(getWorkflow('pl1', [s1], [pa1], true)).toEqual([
+  expect(getWorkflow('pl1', [s1], [pa1], true, memory)).toEqual([
     {
       level: 0,
       kind: 2,
-      sequence: 1,
+      sectionSeq: 1,
       title: 'Intro',
+      passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
@@ -336,20 +348,23 @@ test('one flat section and with one passage gives output', async () => {
       sectionUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
       passageUpdated: '2021-09-15',
-      transcriber: { type: 'user', id: null },
-      editor: { type: 'user', id: null },
+      transcriber: undefined,
+      editor: undefined,
       deleted: false,
     },
-  ]);
+  ] as IWorkflow[]);
 });
 
 test('two flat sections and one from another plan gives output', async () => {
-  expect(getWorkflow('pl1', [s1, s2, s3], [pa1, pa4, pa11], true)).toEqual([
+  expect(
+    getWorkflow('pl1', [s1, s2, s3], [pa1, pa4, pa11], true, memory)
+  ).toEqual([
     {
       level: 0,
       kind: 2,
-      sequence: 1,
+      sectionSeq: 1,
       title: 'Intro',
+      passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
@@ -357,15 +372,16 @@ test('two flat sections and one from another plan gives output', async () => {
       sectionUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
       passageUpdated: '2021-09-15',
-      transcriber: { type: 'user', id: null },
-      editor: { type: 'user', id: null },
+      transcriber: undefined,
+      editor: undefined,
       deleted: false,
     },
     {
       level: 0,
       kind: 2,
-      sequence: 2,
+      sectionSeq: 2,
       title: 'Birth of John',
+      passageSeq: 1,
       book: 'LUK',
       reference: '1:11-14',
       comment: 'Zechariah at the temple',
@@ -373,32 +389,34 @@ test('two flat sections and one from another plan gives output', async () => {
       sectionUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa4' },
       passageUpdated: '2021-09-15',
-      transcriber: { type: 'user', id: null },
-      editor: { type: 'user', id: null },
+      transcriber: undefined,
+      editor: undefined,
       deleted: false,
     },
-  ]);
+  ] as IWorkflow[]);
 });
 
 test('two sections and passages with one from another plan', async () => {
   expect(
-    getWorkflow('pl1', [s1, s2, s3], [pa11, pa3, pa1, pa4, pa2], false)
+    getWorkflow('pl1', [s1, s2, s3], [pa11, pa3, pa1, pa4, pa2], false, memory)
   ).toEqual([
     {
       level: 0,
       kind: 0,
-      sequence: 1,
+      sectionSeq: 1,
       title: 'Intro',
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      transcriber: { type: 'user', id: null },
-      editor: { type: 'user', id: null },
+      transcriber: undefined,
+      editor: undefined,
+      passageSeq: 0,
       deleted: false,
     },
     {
       level: 1,
       kind: 1,
-      sequence: 1,
+      sectionSeq: 1,
+      passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
@@ -409,7 +427,8 @@ test('two sections and passages with one from another plan', async () => {
     {
       level: 1,
       kind: 1,
-      sequence: 2,
+      sectionSeq: 1,
+      passageSeq: 2,
       book: 'LUK',
       reference: '1:5-7',
       comment: 'introducing John',
@@ -420,7 +439,8 @@ test('two sections and passages with one from another plan', async () => {
     {
       level: 1,
       kind: 1,
-      sequence: 3,
+      sectionSeq: 1,
+      passageSeq: 3,
       book: 'LUK',
       reference: '1:8-10',
       comment: "John's call",
@@ -431,18 +451,20 @@ test('two sections and passages with one from another plan', async () => {
     {
       level: 0,
       kind: 0,
-      sequence: 2,
+      sectionSeq: 2,
       title: 'Birth of John',
       sectionId: { type: 'section', id: 's2' },
       sectionUpdated: '2021-09-15',
-      transcriber: { type: 'user', id: null },
-      editor: { type: 'user', id: null },
+      transcriber: undefined,
+      editor: undefined,
+      passageSeq: 0,
       deleted: false,
     },
     {
       level: 1,
       kind: 1,
-      sequence: 1,
+      sectionSeq: 2,
+      passageSeq: 1,
       book: 'LUK',
       reference: '1:11-14',
       comment: 'Zechariah at the temple',
@@ -450,17 +472,18 @@ test('two sections and passages with one from another plan', async () => {
       passageId: { type: 'passage', id: 'pa4' },
       deleted: false,
     },
-  ]);
+  ] as IWorkflow[]);
 });
 
 test('update one flat section to two flat section ignoring other plan', async () => {
-  const workflow = getWorkflow('pl1', [s1, s3], [pa1, pa11], true);
+  const workflow = getWorkflow('pl1', [s1, s3], [pa1, pa11], true, memory);
   expect(workflow).toEqual([
     {
       level: 0,
       kind: 2,
-      sequence: 1,
+      sectionSeq: 1,
       title: 'Intro',
+      passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
@@ -468,24 +491,26 @@ test('update one flat section to two flat section ignoring other plan', async ()
       sectionUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
       passageUpdated: '2021-09-15',
-      transcriber: { type: 'user', id: null },
-      editor: { type: 'user', id: null },
+      transcriber: undefined,
+      editor: undefined,
       deleted: false,
     },
-  ]);
+  ] as IWorkflow[]);
   const updated = getWorkflow(
     'pl1',
     [s1, s2, s3],
     [pa1, pa4, pa11],
     true,
+    memory,
     workflow
   );
   expect(updated).toEqual([
     {
       level: 0,
       kind: 2,
-      sequence: 1,
+      sectionSeq: 1,
       title: 'Intro',
+      passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
@@ -493,15 +518,16 @@ test('update one flat section to two flat section ignoring other plan', async ()
       sectionUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
       passageUpdated: '2021-09-15',
-      transcriber: { type: 'user', id: null },
-      editor: { type: 'user', id: null },
+      transcriber: undefined,
+      editor: undefined,
       deleted: false,
     },
     {
       level: 0,
       kind: 2,
-      sequence: 2,
+      sectionSeq: 2,
       title: 'Birth of John',
+      passageSeq: 1,
       book: 'LUK',
       reference: '1:11-14',
       comment: 'Zechariah at the temple',
@@ -509,9 +535,9 @@ test('update one flat section to two flat section ignoring other plan', async ()
       sectionUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa4' },
       passageUpdated: '2021-09-15',
-      transcriber: { type: 'user', id: null },
-      editor: { type: 'user', id: null },
+      transcriber: undefined,
+      editor: undefined,
       deleted: false,
     },
-  ]);
+  ] as IWorkflow[]);
 });

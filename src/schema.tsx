@@ -565,32 +565,33 @@ export const backup = window.indexedDB
     })
   : ({} as IndexedDBSource);
 
-backup.cache.migrateDB = function (db, event) {
-  console.log('migrateDb', event);
-  // Ensure that all models are registered
-  findMissingModels(this.schema, db).forEach((model) => {
-    console.log(
-      `Registering IndexedDB model at version ${event.newVersion}: ${model}`
-    );
-    this.registerModel(db, model);
-  });
-  if (isElectron && event.newVersion === 2) {
-    SaveOfflineProjectInfo(backup, memory);
-  }
-  if (event.newVersion === 3) {
-    //Summer 2021
-    // Add missing `relatedIdentity` index. This is required.
-    // https://github.com/orbitjs/orbit/pull/825
-    const transaction = (event.target as any).transaction;
-    if (transaction) {
-      const objectStore = transaction.objectStore('__inverseRels__');
-      if (!objectStore.indexNames.contains('relatedIdentity'))
-        objectStore.createIndex('relatedIdentity', 'relatedIdentity', {
-          unique: false,
-        });
+if (backup.cache)
+  backup.cache.migrateDB = function (db, event) {
+    console.log('migrateDb', event);
+    // Ensure that all models are registered
+    findMissingModels(this.schema, db).forEach((model) => {
+      console.log(
+        `Registering IndexedDB model at version ${event.newVersion}: ${model}`
+      );
+      this.registerModel(db, model);
+    });
+    if (isElectron && event.newVersion === 2) {
+      SaveOfflineProjectInfo(backup, memory);
     }
-  }
-};
+    if (event.newVersion === 3) {
+      //Summer 2021
+      // Add missing `relatedIdentity` index. This is required.
+      // https://github.com/orbitjs/orbit/pull/825
+      const transaction = (event.target as any).transaction;
+      if (transaction) {
+        const objectStore = transaction.objectStore('__inverseRels__');
+        if (!objectStore.indexNames.contains('relatedIdentity'))
+          objectStore.createIndex('relatedIdentity', 'relatedIdentity', {
+            unique: false,
+          });
+      }
+    }
+  };
 
 export const coordinator = new Coordinator();
 coordinator.addSource(memory);
