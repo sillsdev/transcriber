@@ -38,6 +38,7 @@ import {
 import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob } from '../utils';
 import Auth from '../auth/Auth';
+import { useSnackBar } from '../hoc/SnackBar';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -196,7 +197,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const view = React.useRef('');
     const [refreshed, setRefreshed] = useState(0);
     const mediaUrlRef = useRef('');
-
+    const { showMessage } = useSnackBar();
     const [state, setState] = useState({
       ...initState,
       selected: '',
@@ -599,17 +600,22 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     useEffect(() => {
       if (mediaUrl) {
         mediaUrlRef.current = mediaUrl;
-        loadBlob(mediaUrl, (url, b) => {
-          //not sure what this intermediary file is, but causes console errors
-          if (b.type !== 'text/html') {
-            //console.log('got the blob', url.substr(70, 50));
-            if (url === mediaUrlRef.current)
-              setState((state: ICtxState) => {
-                return { ...state, loading: false, audioBlob: b };
-              });
-            else console.log('not sending blob...newer request pending');
-          }
-        });
+        try {
+          loadBlob(mediaUrl, (url, b) => {
+            //not sure what this intermediary file is, but causes console errors
+            if (b.type !== 'text/html') {
+              //console.log('got the blob', url.substr(70, 50));
+              if (url === mediaUrlRef.current)
+                setState((state: ICtxState) => {
+                  return { ...state, loading: false, audioBlob: b };
+                });
+              else console.log('not sending blob...newer request pending');
+            }
+          });
+        } catch (e: any) {
+          console.log(e);
+          showMessage(e.message);
+        }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mediaUrl]);
