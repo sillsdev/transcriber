@@ -385,7 +385,6 @@ export function Access(props: IProps) {
       });
     }
     const userId = localStorage.getItem('online-user-id');
-    console.log(`access whichUsers=${whichUsers}`);
     if (isElectron && userId && !curUser) {
       const thisUser = users.filter(
         (u) => u.id === userId && Boolean(u?.keys?.remoteId)
@@ -418,9 +417,11 @@ export function Access(props: IProps) {
   const CurrentUser = ({
     curUser,
     action,
+    showTeams,
   }: {
     curUser: User;
     action?: () => void;
+    showTeams: boolean;
   }) => (
     <>
       <Typography className={classes.sectionHead}>{t.currentUser}</Typography>
@@ -429,6 +430,7 @@ export function Access(props: IProps) {
           u={curUser}
           users={users}
           onSelect={action ? action : handleGoOnline}
+          showTeams={showTeams}
         />
       </div>
     </>
@@ -471,7 +473,7 @@ export function Access(props: IProps) {
                   <div className={classes.container}>
                     {curUser && (
                       <>
-                        <CurrentUser curUser={curUser} />
+                        <CurrentUser curUser={curUser} showTeams={false} />
                         <Typography className={classes.sectionHead}>
                           {t.availableUsers}
                         </Typography>
@@ -506,7 +508,11 @@ export function Access(props: IProps) {
                   <>
                     {curUser && (
                       <>
-                        <CurrentUser curUser={curUser} action={handleCurUser} />
+                        <CurrentUser
+                          curUser={curUser}
+                          action={handleCurUser}
+                          showTeams={true}
+                        />
                         {countWorkOfflineUsers() > 1 && (
                           <Typography className={classes.sectionHead}>
                             {t.availableUsers}
@@ -518,12 +524,17 @@ export function Access(props: IProps) {
                       isSelected={isOnlineUserWithOfflineProjects}
                       select={handleSelect}
                       curId={curUser?.id}
+                      showTeams={true}
                     />
                   </>
                 ) : (
                   curUser && (
                     <>
-                      <CurrentUser curUser={curUser} action={handleLogout} />
+                      <CurrentUser
+                        curUser={curUser}
+                        action={handleLogout}
+                        showTeams={false}
+                      />
                       <Button
                         id="logout"
                         variant="outlined"
