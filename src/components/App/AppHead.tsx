@@ -107,10 +107,12 @@ const ProjectName = ({ setView }: INameProps) => {
 interface IStateProps {
   t: IMainStrings;
   orbitStatus: number | undefined;
+  orbitErrorMsg: string;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
   orbitStatus: state.orbit.status,
+  orbitErrorMsg: state.orbit.message,
 });
 
 interface IProps extends IStateProps {
@@ -120,7 +122,8 @@ interface IProps extends IStateProps {
 }
 
 export const AppHead = (props: IProps) => {
-  const { auth, resetRequests, SwitchTo, t, orbitStatus } = props;
+  const { auth, resetRequests, SwitchTo, t, orbitStatus, orbitErrorMsg } =
+    props;
   const classes = useStyles();
   const { pathname } = useLocation();
   const [errorReporter] = useGlobal('errorReporter');
@@ -299,6 +302,14 @@ export const AppHead = (props: IProps) => {
     console.log(pathname);
     setUpdateTipOpen(pathname === '/');
   }, [pathname]);
+
+  useEffect(() => {
+    if (orbitStatus) {
+      console.log(orbitErrorMsg);
+      showMessage(orbitErrorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orbitStatus, orbitErrorMsg]);
 
   const handleUpdateOpen = () => setUpdateTipOpen(true);
   const handleUpdateClose = () => setUpdateTipOpen(pathname === '/');
