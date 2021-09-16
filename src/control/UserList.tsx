@@ -17,10 +17,11 @@ interface IProps extends IRecordProps {
   isSelected: (userId: string) => boolean;
   curId: string | undefined;
   select?: (userId: string) => void;
+  showTeams: boolean;
 }
 
 export const UserList = (props: IProps) => {
-  const { users, isSelected, curId, select } = props;
+  const { users, isSelected, curId, select, showTeams } = props;
 
   return (
     <>
@@ -34,7 +35,13 @@ export const UserList = (props: IProps) => {
               : 1
           )
           .map((u, i) => (
-            <UserListItem u={u} key={i} users={users} onSelect={select} />
+            <UserListItem
+              u={u}
+              key={i}
+              users={users}
+              onSelect={select}
+              showTeams={showTeams}
+            />
           ))}
       </List>
     </>

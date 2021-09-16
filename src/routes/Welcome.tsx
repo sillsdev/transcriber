@@ -133,11 +133,9 @@ export function Welcome(props: IProps) {
 
     const { users, onlineUsers, offlineUsers } = userTypes();
     const lastUserId = localStorage.getItem('user-id');
-    console.log('lastUserId', lastUserId);
 
     if (lastUserId !== null) {
       const selected = users.filter((u) => u.id === lastUserId);
-      console.log('lastUserId', lastUserId, selected.length, autoGo);
       if (selected.length > 0) {
         setUser(lastUserId);
         if (autoGo) {
@@ -170,7 +168,7 @@ export function Welcome(props: IProps) {
       setConnected(connected);
     }, auth);
     const choice = localStorage.getItem('offlineAdmin');
-    console.log('already had a choice', choice);
+
     if (choice !== null) {
       if (choice === 'choose') checkUsers(false);
       else checkUsers(true, choice === 'true' ? 'offline' : 'online');
