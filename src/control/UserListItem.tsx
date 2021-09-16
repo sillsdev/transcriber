@@ -29,7 +29,7 @@ export const UserListItem = (props: IProps) => {
       />
     </>
   );
-  console.log(onSelect);
+
   return onSelect ? (
     <ListItem
       id={`user-${u.id}`}
