@@ -69,11 +69,14 @@ export function TaskItem(props: IProps) {
   const { passage, section, duration } = rowData[props.item];
 
   const handleSelect = (select: string) => () => {
-    checkSavedFn(() => {
-      if (select !== selected) setSelected(select);
-      else if (!allDone) refresh();
-      else setAllDone(false);
-    });
+    //if we're all done, we can't need to save
+    if (allDone && select === selected) {
+      setAllDone(false);
+    } else
+      checkSavedFn(() => {
+        if (select !== selected) setSelected(select);
+        else refresh();
+      });
   };
 
   let assigned: string | null = null;
