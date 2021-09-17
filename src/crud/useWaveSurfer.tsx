@@ -146,7 +146,7 @@ export function useWaveSurfer(
       ws.on(
         'audioprocess',
         _.throttle(function (e: number) {
-          if (wavesurfer()?.isPlaying()) setProgress(e);
+          if (wavesurferPlayingRef.current) setProgress(e);
         }, 150)
       );
       ws.on('play', function () {
@@ -190,7 +190,7 @@ export function useWaveSurfer(
     // Removes events, elements and disconnects Web Audio nodes on component unmount
     return () => {
       if (wavesurferRef.current) {
-        if (wavesurferRef.current.isPlaying()) wavesurferRef.current.stop();
+        if (wavesurferPlayingRef.current) wavesurferRef.current.stop();
         wavesurferRef.current.unAll();
         wavesurferRef.current.destroy();
       }

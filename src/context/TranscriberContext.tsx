@@ -215,7 +215,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
 
     const setRows = (rowData: IRowData[]) => {
       setState((state: ICtxState) => {
-        return { ...state, rowData };
+        return { ...state, rowData, playing: false };
       });
     };
 
@@ -258,6 +258,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                 ...state,
                 index: i,
                 selected,
+                playing: false,
                 playItem: r.mediaId,
                 loading: true,
               };
@@ -591,7 +592,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         }
       });
       if (changed) {
-        setState({ ...state, rowData, selected });
+        setState({ ...state, rowData, selected, playing: false });
         if (!state.playing) setTrackedTask('');
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -607,7 +608,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
               //console.log('got the blob', url.substr(70, 50));
               if (url === mediaUrlRef.current)
                 setState((state: ICtxState) => {
-                  return { ...state, loading: false, audioBlob: b };
+                  return {
+                    ...state,
+                    loading: false,
+                    audioBlob: b,
+                    playing: false,
+                  };
                 });
               else console.log('not sending blob...newer request pending');
             }
