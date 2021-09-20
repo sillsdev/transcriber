@@ -292,12 +292,17 @@ export function useWaveSurferRegions(
     });
   };
   function clearRegions() {
-    if (!wavesurferRef.current) return;
+    if (
+      !wavesurferRef.current ||
+      !Object.keys(wavesurferRef.current.regions.list).length
+    )
+      return;
     loadingRef.current = true;
     wavesurferRef.current.regions.clear();
     currentRegionRef.current = undefined;
     loopingRegionRef.current = undefined;
     loadingRef.current = false;
+    onRegion(0, paramsRef.current, true);
     setChanged(true);
   }
   function loadRegions(
@@ -490,7 +495,7 @@ export function useWaveSurferRegions(
   };
 
   const wsGetRegions = () => {
-    if (!wavesurferRef.current) return '[]';
+    if (!wavesurferRef.current) return '{}';
     var regions = JSON.stringify(
       Object.keys(wavesurferRef.current.regions.list).map(function (id) {
         let r = region(id);
