@@ -177,6 +177,7 @@ function PassageRecord(props: IProps) {
 
   const handleLoadAudio = () => {
     setLoading(true);
+    reset();
     loadBlob(mediaState.url, (url, b) => {
       setOriginalBlob(b);
       setLoading(false);
