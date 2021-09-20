@@ -125,6 +125,7 @@ export function InvitationTable(props: IProps) {
   const [filter, setFilter] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [dialogData, setDialogData] = useState(null as Invitation | null);
+  const [offline] = useGlobal('offline');
 
   const handleAdd = () => {
     setDialogData(null);
@@ -181,12 +182,12 @@ export function InvitationTable(props: IProps) {
   useEffect(() => {
     setData(getInvites(organization, roles, invitations, ts));
   }, [organization, roles, invitations, confirmAction, ts]);
-
+  const canEdit = () => orgRole === 'admin' && !offline;
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
         <div className={classes.actions}>
-          {orgRole === 'admin' && (
+          {canEdit() && (
             <>
               <Button
                 id="inviteAdd"

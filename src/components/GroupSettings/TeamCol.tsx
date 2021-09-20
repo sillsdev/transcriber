@@ -35,14 +35,18 @@ function TeamCol(props: IProps) {
   const { detail, people, add, del, allUsers, title, titledetail } = props;
   const classes = useStyles();
   const [orgRole] = useGlobal('orgRole');
+  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
 
+  const canEdit = () =>
+    !detail && orgRole === 'admin' && !allUsers && (!offline || offlineOnly);
   return (
     <Grid item xs={12} md={4}>
       <FormGroup className={classes.group}>
         <FormLabel className={classes.label}>
           {title} {titledetail}
           <div className={classes.grow}>{'\u00A0'}</div>
-          {!detail && orgRole === 'admin' && !allUsers && (
+          {canEdit() && (
             <IconButton
               id="teamColAdd"
               size="small"
