@@ -125,7 +125,8 @@ export function useWaveSurfer(
       setWaveSurfer(ws);
       ws.on('ready', function () {
         //console.log('ready', loadRequests.current);
-        loadRequests.current--;
+        //recording also sends ready
+        if (loadRequests.current > 0) loadRequests.current--;
         if (!loadRequests.current) {
           durationRef.current = ws.getDuration();
           if (!regionsLoadedRef.current) {
@@ -257,7 +258,7 @@ export function useWaveSurfer(
         loadRequests.current = 2; //if there was another, we'll bypass it
       } else {
         wavesurfer()?.loadBlob(blob);
-        loadRequests.current++;
+        loadRequests.current = 1;
       }
     } else if (blobToLoad.current) {
       wavesurfer()?.loadBlob(blobToLoad.current);
