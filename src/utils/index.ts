@@ -14,7 +14,7 @@ export * from './localeDefault';
 export * from './localSync';
 export * from './logErrorService';
 export * from './makeAbbr';
-export * from './online';
+export * from './useCheckOnline';
 export * from './paratextPath';
 export * from './parseQuery';
 export * from './relMouseCoords';

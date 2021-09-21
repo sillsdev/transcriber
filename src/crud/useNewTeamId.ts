@@ -17,7 +17,7 @@ interface IStateProps {
   ts: ISharedStrings;
 }
 interface IDispatchProps {
-  doOrbitError: typeof actions.doOrbitError;
+  resetOrbitError: typeof actions.resetOrbitError;
 }
 interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
@@ -42,7 +42,9 @@ export const useNewTeamId = (props: IProps) => {
     const orgs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('organization')
     ) as Organization[];
-    const orgRecs = orgs.filter((o) => related(o, 'owner') === user && o.attributes?.name === personalOrg);
+    const orgRecs = orgs.filter(
+      (o) => related(o, 'owner') === user && o.attributes?.name === personalOrg
+    );
     if (orgRecs.length > 0) {
       teamRef.current = orgRecs[0].id;
     } else
@@ -57,16 +59,18 @@ export const useNewTeamId = (props: IProps) => {
   };
 
   const getPersonalId = () => {
-    const memberIds = (memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('organizationmembership')
-    ) as OrganizationMembership[])
+    const memberIds = (
+      memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('organizationmembership')
+      ) as OrganizationMembership[]
+    )
       .filter((m) => related(m, 'user') === user)
       .map((m) => related(m, 'organization'));
-    const teamRecs = (memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('organization')
-    ) as Organization[]).filter(
-      (o) => isPersonal(o.id) && memberIds.includes(o.id)
-    );
+    const teamRecs = (
+      memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('organization')
+      ) as Organization[]
+    ).filter((o) => isPersonal(o.id) && memberIds.includes(o.id));
     return teamRecs.length > 0 ? teamRecs[0].id : null;
   };
 

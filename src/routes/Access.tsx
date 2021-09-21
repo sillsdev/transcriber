@@ -24,7 +24,7 @@ import {
   // IconButton
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
-import { Online, forceLogin, waitForIt } from '../utils';
+import { useCheckOnline, forceLogin, waitForIt } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
@@ -118,6 +118,7 @@ interface IStateProps {
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
+  resetOrbitError: typeof action.resetOrbitError;
 }
 
 interface IProps extends IRecordProps, IStateProps, IDispatchProps {
@@ -156,11 +157,11 @@ export function Access(props: IProps) {
   } = props;
   const { pathname } = useLocation();
   const classes = useStyles();
-  const { setLanguage } = props;
+  const { setLanguage, resetOrbitError } = props;
   const { loginWithRedirect, isAuthenticated } = useAuth0();
   const [offline, setOffline] = useGlobal('offline');
   const [user] = useGlobal('user');
-  const [, setConnected] = useGlobal('connected');
+
   const [, setEditId] = useGlobal('editUserId');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
   const [importOpen, setImportOpen] = useState(false);
@@ -183,7 +184,7 @@ export function Access(props: IProps) {
   );
   const [goOnlineConfirmation, setGoOnlineConfirmation] =
     useState<React.MouseEvent<HTMLElement>>();
-
+  const checkOnline = useCheckOnline(resetOrbitError);
   const handleModeChange = (mode: ListMode) => {
     setListMode(mode);
   };
@@ -219,33 +220,25 @@ export function Access(props: IProps) {
   };
 
   const handleGoOnline = () => {
-    Online(
-      (online) => {
-        if (online) {
-          //setGoOnlineConfirmation(event);
-          handleGoOnlineConfirmed();
-        } else {
-          showMessage(t.mustBeOnline);
-        }
-      },
-      auth,
-      true
-    );
+    checkOnline((online) => {
+      if (online) {
+        //setGoOnlineConfirmation(event);
+        handleGoOnlineConfirmed();
+      } else {
+        showMessage(t.mustBeOnline);
+      }
+    }, true);
   };
 
   const handleSwitchUser = () => {
-    Online(
-      (online) => {
-        if (online) {
-          //setGoOnlineConfirmation(event);
-          switchUser();
-        } else {
-          showMessage(t.mustBeOnline);
-        }
-      },
-      auth,
-      true
-    );
+    checkOnline((online) => {
+      if (online) {
+        //setGoOnlineConfirmation(event);
+        switchUser();
+      } else {
+        showMessage(t.mustBeOnline);
+      }
+    }, true);
   };
 
   const handleCreateUser = async () => {
@@ -332,9 +325,9 @@ export function Access(props: IProps) {
     setPlan('');
     setProjRole('');
     setProjType('');
+    checkOnline((online) => {}, true);
     if (!auth?.isAuthenticated() && !isAuthenticated) {
       if (!offline && !isElectron) {
-        setConnected(true);
         const hasUsed = localStorage.key(0) !== null;
         if (hasUsed) {
           loginWithRedirect();
@@ -374,7 +367,6 @@ export function Access(props: IProps) {
           // Even tho async, this executes first b/c users takes time to load
           ipc?.invoke('get-token').then((accessToken: any) => {
             const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            setConnected(true);
             if (loggedIn) {
               if (offline) setOffline(false);
               if (auth) auth.setAuthSession(result, accessToken);
@@ -613,6 +605,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
+      resetOrbitError: action.resetOrbitError,
     },
     dispatch
   ),

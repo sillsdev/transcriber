@@ -6,7 +6,7 @@ import {
   Group,
   GroupMembership,
 } from '../model';
-import { Online, cleanFileName } from '../utils';
+import { useCheckOnline, cleanFileName } from '../utils';
 import { offlineError, useProjectType, useRole } from '.';
 import { useSnackBar } from '../hoc/SnackBar';
 import Auth from '../auth/Auth';
@@ -16,27 +16,32 @@ import { TransformBuilder, RecordIdentity } from '@orbit/data';
 import { setDefaultProj, allUsersRec } from '.';
 import { AddRecord } from '../model/baseModel';
 import { useTeamApiPull } from './useTeamApiPull';
+import * as actions from '../store';
+
+interface IDispatchProps {
+  resetOrbitError: typeof actions.resetOrbitError;
+}
 
 interface IStateProps {
   ts: ISharedStrings;
 }
 
-interface IProps extends IStateProps {
+interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
 }
 
 export const useTeamCreate = (props: IProps) => {
+  const { resetOrbitError } = props;
   const [coordinator] = useGlobal('coordinator');
   const [user] = useGlobal('user');
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
-  const [, setConnected] = useGlobal('connected');
   const [, offlineOnly] = useGlobal('offlineOnly');
   const { showMessage } = useSnackBar();
   const { setProjectType } = useProjectType();
   const { getRoleRec } = useRole();
   const teamApiPull = useTeamApiPull();
-
+  const checkOnline = useCheckOnline(resetOrbitError);
   const OrgRelated = async (
     coordinator: Coordinator,
     orgRec: Organization,
@@ -108,13 +113,8 @@ export const useTeamCreate = (props: IProps) => {
   };
 
   return (organization: Organization, cb?: (org: string) => void) => {
-    const {
-      name,
-      description,
-      websiteUrl,
-      logoUrl,
-      publicByDefault,
-    } = organization?.attributes;
+    const { name, description, websiteUrl, logoUrl, publicByDefault } =
+      organization?.attributes;
 
     let orgRec = {
       type: 'organization',
@@ -128,13 +128,12 @@ export const useTeamCreate = (props: IProps) => {
       },
     } as Organization;
 
-    Online((online) => {
-      setConnected(online);
+    checkOnline((online) => {
       createOrg({ orgRec })
         .then((org: string) => {
           if (cb) cb(org);
         })
         .catch((err) => offlineError({ ...props, online, showMessage, err }));
-    }, props.auth);
+    });
   };
 };
