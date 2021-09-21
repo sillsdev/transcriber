@@ -47,6 +47,7 @@ export const translateParatextError = (
   t: ISharedStrings
 ): string | JSX.Element => {
   if (err.errStatus === 401) return t.expiredToken;
+  if (err.errStatus === 400) return t.invalidParatextLogin;
   if (err.errStatus === 500) {
     if (err.errMsg.includes('401') || err.errMsg.includes('400'))
       return t.expiredParatextToken;
