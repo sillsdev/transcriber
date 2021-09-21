@@ -41,7 +41,7 @@ import { useSnackBar } from '../hoc/SnackBar';
 import ParatextLogo from '../control/ParatextLogo';
 // import RenderLogo from '../control/RenderLogo';
 import { remoteIdNum, related, useOfflnProjRead, remoteId } from '../crud';
-import { Online, localSync, getParatextDataPath } from '../utils';
+import { localSync, getParatextDataPath, useCheckOnline } from '../utils';
 import Auth from '../auth/Auth';
 import { bindActionCreators } from 'redux';
 import ParatextProject from '../model/paratextProject';
@@ -128,6 +128,7 @@ interface IDispatchProps {
   resetProjects: typeof actions.resetProjects;
   resetUserName: typeof actions.resetUserName;
   setLanguage: typeof actions.setLanguage;
+  resetOrbitError: typeof actions.resetOrbitError;
 }
 interface IRecordProps {
   projectintegrations: Array<ProjectIntegration>;
@@ -169,10 +170,11 @@ export function IntegrationPanel(props: IProps) {
     resetProjects,
     resetUserName,
     setLanguage,
+    resetOrbitError,
   } = props;
   const { projectintegrations, integrations, projects, passages } = props;
   const classes = useStyles();
-  const [connected, setConnected] = useGlobal('connected');
+  const [connected] = useGlobal('connected');
   const [hasPtProj, setHasPtProj] = useState(false);
   const [ptProj, setPtProj] = useState(-1);
   const [ptProjName, setPtProjName] = useState('');
@@ -202,6 +204,7 @@ export function IntegrationPanel(props: IProps) {
   const syncing = React.useRef<boolean>(false);
   const setSyncing = (state: boolean) => (syncing.current = state);
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
+  const checkOnline = useCheckOnline(resetOrbitError);
 
   const getProject = () => {
     if (!project) return undefined;
@@ -394,9 +397,8 @@ export function IntegrationPanel(props: IProps) {
     if (offline) {
       getParatextDataPath().then((val) => setPtPath(val));
     } else {
-      Online((result) => {
-        setConnected(result);
-      }, auth);
+      //force a current check -- will set connected
+      checkOnline((result) => {});
     }
     resetProjects();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -912,6 +914,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       resetProjects: actions.resetProjects,
       resetUserName: actions.resetUserName,
       setLanguage: actions.setLanguage,
+      resetOrbitError: actions.resetOrbitError,
     },
     dispatch
   ),

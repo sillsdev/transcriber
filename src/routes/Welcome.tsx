@@ -9,7 +9,7 @@ import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Button, Grid } from '@material-ui/core';
 import Auth from '../auth/Auth';
-import { Online, localeDefault } from '../utils';
+import { useCheckOnline, localeDefault } from '../utils';
 import { isElectron } from '../api-variable';
 import AppHead from '../components/App/AppHead';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -80,6 +80,7 @@ interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
   importComplete: typeof action.importComplete;
+  resetOrbitError: typeof action.resetOrbitError;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -87,7 +88,7 @@ interface IProps extends IStateProps, IDispatchProps {
 }
 
 export function Welcome(props: IProps) {
-  const { auth, t, importStatus, importComplete } = props;
+  const { auth, t, importStatus, importComplete, resetOrbitError } = props;
   const classes = useStyles();
   const offlineSetup = useOfflineSetup();
   const { fetchLocalization, setLanguage } = props;
@@ -95,7 +96,6 @@ export function Welcome(props: IProps) {
   const [_busy, setBusy] = useGlobal('importexportBusy');
   const [user, setUser] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
-  const [, setConnected] = useGlobal('connected');
   const [whichUsers, setWhichUsers] = useState<string | null>(null);
   const [coordinator] = useGlobal('coordinator');
   const recOfType = useRecOfType();
@@ -105,6 +105,7 @@ export function Welcome(props: IProps) {
   const [hasOnlineUsers, setHasOnlineUsers] = useState(false);
   const [hasOfflineProjects, setHasOfflineProjects] = useState(false);
   const [hasProjects, setHasProjects] = useState(false);
+  const checkOnline = useCheckOnline(resetOrbitError);
 
   const hasRecs = (recType: string, iRecs?: Record[], offline?: Boolean) => {
     const recs = iRecs || recOfType(recType);
@@ -164,9 +165,7 @@ export function Welcome(props: IProps) {
   useEffect(() => {
     setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
-    Online((connected) => {
-      setConnected(connected);
-    }, auth);
+    checkOnline((connected) => {});
     const choice = localStorage.getItem('offlineAdmin');
 
     if (choice !== null) {
@@ -412,6 +411,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
       importComplete: action.importComplete,
+      resetOrbitError: action.resetOrbitError,
     },
     dispatch
   ),

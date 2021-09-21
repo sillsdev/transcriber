@@ -43,11 +43,11 @@ import {
   UpdatePassageStateOps,
 } from '../crud';
 import {
-  Online,
   useRemoteSave,
   lookupBook,
   waitForIt,
   cleanFileName,
+  useCheckOnline,
 } from '../utils';
 import { debounce } from 'lodash';
 import AudacityManager from './AudacityManager';
@@ -118,6 +118,7 @@ interface IStateProps {
 interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
   doOrbitError: typeof actions.doOrbitError;
+  resetOrbitError: typeof actions.resetOrbitError;
 }
 interface IRecordProps {
   passages: Array<Passage>;
@@ -155,6 +156,7 @@ export function ScriptureTable(props: IProps) {
     allBookData,
     fetchBooks,
     doOrbitError,
+    resetOrbitError,
     passages,
     sections,
     mediafiles,
@@ -171,7 +173,6 @@ export function ScriptureTable(props: IProps) {
   const [doSave] = useGlobal('doSave');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setBusy] = useGlobal('importexportBusy');
-  const [, setConnected] = useGlobal('connected');
 
   const myChangedRef = useRef(false);
   const savingRef = useRef(false);
@@ -214,6 +215,7 @@ export function ScriptureTable(props: IProps) {
     ts,
     doOrbitError,
   });
+  const checkOnline = useCheckOnline(resetOrbitError);
 
   const newSectionId = (sequenceNum: number) => {
     return {
@@ -1187,8 +1189,7 @@ export function ScriptureTable(props: IProps) {
       if (offlineOnly) {
         save();
       } else {
-        Online((online) => {
-          setConnected(online);
+        checkOnline((online) => {
           if (!online) {
             saveCompleted(ts.NoSaveOffline);
             showMessage(ts.NoSaveOffline);
@@ -1196,7 +1197,7 @@ export function ScriptureTable(props: IProps) {
           } else {
             save();
           }
-        }, auth);
+        });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1523,6 +1524,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       fetchBooks: actions.fetchBooks,
       doOrbitError: actions.doOrbitError,
+      resetOrbitError: actions.resetOrbitError,
     },
     dispatch
   ),

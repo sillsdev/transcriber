@@ -86,12 +86,14 @@ const mapStateToProps = (state: IState): IStateProps => ({
 interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
   doOrbitError: typeof actions.doOrbitError;
+  resetOrbitError: typeof actions.resetOrbitError;
 }
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       fetchBooks: actions.fetchBooks,
       doOrbitError: actions.doOrbitError,
+      resetOrbitError: actions.resetOrbitError,
     },
     dispatch
   ),
@@ -204,6 +206,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       allBookData,
       fetchBooks,
       doOrbitError,
+      resetOrbitError,
     } = props;
     const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
@@ -243,7 +246,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
     const { setProjectType } = useProjectType();
     const { getPlan } = usePlan();
-    const LoadData = useLoadProjectData(auth, t, doOrbitError);
+    const LoadData = useLoadProjectData(auth, t, doOrbitError, resetOrbitError);
 
     const setProjectParams = (plan: Plan) => {
       const projectId = related(plan, 'project');

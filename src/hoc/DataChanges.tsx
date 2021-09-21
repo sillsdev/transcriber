@@ -1,5 +1,5 @@
 import { useGlobal, useState, useEffect } from 'reactn';
-import { infoMsg, logError, Online, Severity } from '../utils';
+import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
 import { useInterval } from '../utils/useInterval';
 import Axios from 'axios';
 import {
@@ -198,10 +198,13 @@ export const doDataChanges = async (
         });
     });
     if (records.length) {
-      await processDataChanges(
-        api + 'projects/' + fingerprint,
-        new URLSearchParams([['projlist', JSON.stringify(records)]])
-      );
+      if (
+        await processDataChanges(
+          api + 'projects/' + fingerprint,
+          new URLSearchParams([['projlist', JSON.stringify(records)]])
+        )
+      )
+        await updateSnapshotDates();
     }
   }
   if (
@@ -210,8 +213,9 @@ export const doDataChanges = async (
       undefined
     )
   ) {
-    if (isElectron) await updateSnapshotDates();
     localStorage.setItem(userLastTimeKey, nextTime);
+  } else {
+    logError(Severity.info, errorReporter, 'Users last time not updated');
   }
 };
 
@@ -224,7 +228,7 @@ export function DataChanges(props: IProps) {
   const [loadComplete] = useGlobal('loadComplete');
   const [busy, setBusy] = useGlobal('remoteBusy');
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
-  const [connected, setConnected] = useGlobal('connected');
+  const [connected] = useGlobal('connected');
   const [user] = useGlobal('user');
   const [doSave] = useGlobal('doSave');
   const [fingerprint] = useGlobal('fingerprint');
@@ -234,9 +238,10 @@ export function DataChanges(props: IProps) {
   const [firstRun, setFirstRun] = useState(true);
   const [project] = useGlobal('project');
   const [projectsLoaded] = useGlobal('projectsLoaded');
-  const [orbitRetries, setOrbitRetries] = useGlobal('orbitRetries');
+  const [orbitRetries] = useGlobal('orbitRetries');
 
   const getOfflineProject = useOfflnProjRead();
+  const checkOnline = useCheckOnline(resetOrbitError);
 
   const defaultBackupDelay = isOffline ? 1000 * 60 * 30 : null; //30 minutes;
 
@@ -265,15 +270,7 @@ export function DataChanges(props: IProps) {
       user === '' || (remote && remote.requestQueue.length !== 0);
     //we know we're offline, or we've retried something so maybe we're offline
     if (!connected || (checkBusy && orbitRetries < OrbitNetworkErrorRetries)) {
-      Online((result) => {
-        if (connected !== result) {
-          setConnected(result);
-          if (result) {
-            resetOrbitError();
-            setOrbitRetries(OrbitNetworkErrorRetries);
-            remote.requestQueue.retry();
-          }
-        }
+      checkOnline((result) => {
         if ((checkBusy && result) !== busy) setBusy(checkBusy && result);
       });
     } else if (checkBusy !== busy) setBusy(checkBusy);

@@ -3,30 +3,29 @@ import * as actions from '../store';
 import { IMainStrings } from '../model';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
-import { Online, useProjectsLoaded } from '../utils';
+import { useCheckOnline, useProjectsLoaded } from '../utils';
 import { LoadProjectData } from '.';
 
 export const useLoadProjectData = (
   auth: Auth,
   t: IMainStrings,
-  doOrbitError: typeof actions.doOrbitError
+  doOrbitError: typeof actions.doOrbitError,
+  resetOrbitError: typeof actions.resetOrbitError
 ) => {
   const [coordinator] = useGlobal('coordinator');
-  const [, setConnected] = useGlobal('connected');
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [projectsLoaded] = useGlobal('projectsLoaded');
   const [, setBusy] = useGlobal('importexportBusy');
   const AddProjectLoaded = useProjectsLoaded();
   const { showMessage } = useSnackBar();
-
+  const checkOnline = useCheckOnline(resetOrbitError);
   return (projectId: string, cb?: () => void) => {
     if (projectsLoaded.includes(projectId) || offlineOnly) {
       if (cb) cb();
       return;
     }
-    Online((online) => {
-      setConnected(online);
+    checkOnline((online) => {
       LoadProjectData(
         projectId,
         coordinator,
@@ -43,6 +42,6 @@ export const useLoadProjectData = (
           if (!online) showMessage(t.NoLoadOffline);
           else showMessage(err.message);
         });
-    }, auth);
+    });
   };
 };

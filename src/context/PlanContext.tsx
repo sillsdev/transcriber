@@ -14,8 +14,9 @@ import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { related, usePlan } from '../crud';
-import { Online, useInterval } from '../utils';
+import { useCheckOnline, useInterval } from '../utils';
 import Auth from '../auth/Auth';
+import * as actions from '../store';
 
 interface IStateProps {
   projButtonStr: IProjButtonsStrings;
@@ -24,9 +25,11 @@ const mapStateToProps = (state: IState): IStateProps => ({
   projButtonStr: localStrings(state, { layout: 'projButtons' }),
 });
 
-interface IDispatchProps {}
+interface IDispatchProps {
+  resetOrbitError: typeof actions.resetOrbitError;
+}
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators({}, dispatch),
+  ...bindActionCreators({ resetOrbitError: actions.resetOrbitError }, dispatch),
 });
 
 interface IRecordProps {}
@@ -62,10 +65,10 @@ const PlanProvider = withData(mapRecordsToProps)(
     mapStateToProps,
     mapDispatchToProps
   )((props: IProps) => {
-    const { projButtonStr, auth } = props;
+    const { projButtonStr, resetOrbitError } = props;
     const [memory] = useGlobal('memory');
     const [plan] = useGlobal('plan');
-    const [connected, setConnected] = useGlobal('connected');
+    const [connected] = useGlobal('connected');
     const [projRole] = useGlobal('projRole');
     const [isOffline] = useGlobal('offline');
     const [offlineOnly] = useGlobal('offlineOnly');
@@ -77,7 +80,7 @@ const PlanProvider = withData(mapRecordsToProps)(
       ...initState,
       projButtonStr,
     });
-
+    const checkOnline = useCheckOnline(resetOrbitError);
     const isScripture = () => {
       const planRecs = (
         memory.cache.query((q: QueryBuilder) => q.findRecords('plan')) as Plan[]
@@ -114,16 +117,8 @@ const PlanProvider = withData(mapRecordsToProps)(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [projRole]);
 
-    const tryOnline = () =>
-      Online((result) => {
-        setConnected(result);
-      }, auth);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => tryOnline(), []);
-
     //do this every 30 seconds to warn they can't save
-    useInterval(() => tryOnline(), 1000 * 30);
+    useInterval(() => checkOnline((result: boolean) => {}), 1000 * 30);
 
     return (
       <PlanContext.Provider

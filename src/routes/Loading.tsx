@@ -101,6 +101,7 @@ interface IDispatchProps {
   setExpireAt: typeof action.setExpireAt;
   doOrbitError: typeof action.doOrbitError;
   orbitComplete: typeof action.orbitComplete;
+  resetOrbitError: typeof action.resetOrbitError;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -114,6 +115,7 @@ export function Loading(props: IProps) {
     fetchOrbitData,
     orbitComplete,
     doOrbitError,
+    resetOrbitError,
     fetchLocalization,
     setLanguage,
     setExpireAt,
@@ -141,7 +143,12 @@ export function Loading(props: IProps) {
   const [doSync, setDoSync] = useState(false);
   const [syncComplete, setSyncComplete] = useState(false);
   const [, setBusy] = useGlobal('importexportBusy');
-  const LoadProjData = useLoadProjectData(auth, t, doOrbitError);
+  const LoadProjData = useLoadProjectData(
+    auth,
+    t,
+    doOrbitError,
+    resetOrbitError
+  );
   const [view, setView] = useState('');
   const [inviteError, setInviteError] = useState('');
 
@@ -410,6 +417,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       setExpireAt: action.setExpireAt,
       doOrbitError: action.doOrbitError,
       orbitComplete: action.orbitComplete,
+      resetOrbitError: action.resetOrbitError,
     },
     dispatch
   ),
