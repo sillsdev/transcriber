@@ -213,6 +213,8 @@ export function TaskTable(props: IProps) {
   const notSelectedRef = useRef<any>();
 
   const handleToggleFilter = () => {
+    handleStopPlayer();
+    setPlayItem('');
     if (onFilter) onFilter(!filter);
     setFilter(!filter);
   };
