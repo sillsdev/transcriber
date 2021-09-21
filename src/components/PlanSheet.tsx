@@ -5,6 +5,7 @@ import {
   ISharedStrings,
   BookNameMap,
   OptionType,
+  IWorkflow,
 } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem, AppBar } from '@material-ui/core';
@@ -16,14 +17,13 @@ import Confirm from './AlertDialog';
 import BookSelect from './BookSelect';
 import { ProjButtons, LastEdit } from '../control';
 import 'react-datasheet/lib/react-datasheet.css';
-import { refMatch } from '../utils';
+import { isPassageRow, isSectionRow, refMatch } from '../utils';
 import { useOrganizedBy } from '../crud';
 import { useRemoteSave } from '../utils/useRemoteSave';
 import TaskAvatar from './TaskAvatar';
 import MediaPlayer from './MediaPlayer';
 import { PlanContext } from '../context/PlanContext';
 import Auth from '../auth/Auth';
-import { IRowInfo } from './ScriptureTable';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import PlanActionMenu from './PlanActionMenu';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
@@ -120,7 +120,7 @@ interface ICell {
   className?: string;
 }
 
-interface IChange {
+export interface ICellChange {
   cell: any;
   row: number;
   col: number;
@@ -135,12 +135,12 @@ interface IStateProps {
 interface IProps extends IStateProps {
   columns: Array<ICell>;
   rowData: Array<Array<string | number>>;
-  rowInfo: Array<IRowInfo>;
+  rowInfo: Array<IWorkflow>;
   bookCol: number;
   bookSuggestions?: OptionType[];
   bookMap?: BookNameMap;
   lastSaved?: string;
-  updateData: (rows: string[][]) => void;
+  updateData: (changes: ICellChange[]) => void;
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => Promise<boolean>;
   addPassage: (i?: number, before?: boolean) => void;
@@ -167,7 +167,6 @@ export function PlanSheet(props: IProps) {
     bookCol,
     bookSuggestions,
     bookMap,
-    lookupBook,
     updateData,
     action,
     addPassage,
@@ -205,38 +204,27 @@ export function PlanSheet(props: IProps) {
   const preventSave = useRef<boolean>(false);
   const currentRow = useRef<number>(-1);
   const sheetRef = useRef<any>();
-  const [showRow, setShowRow] = useState(0);
+  const [showRow] = useState(0);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
   const [startSave] = useRemoteSave();
   const [srcMediaId, setSrcMediaId] = useState('');
   const [warning, setWarning] = useState<string>();
-  const [deleting, setDeleting] = useState(false);
   const [active, setActive] = useState(-1);
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = bookCol > 0 ? 6 : 5;
 
-  const isValidNumber = (val: any) =>
-    val === undefined ? false : /^[0-9]+$/.test(val.toString());
+  const isSection = (i: number) => isSectionRow(rowInfo[i]);
 
-  const isSection = (row: any[]) => isValidNumber(row[SectionSeqCol]);
-
-  const isPassage = (row: any[]) => isValidNumber(row[PassageSeqCol]);
+  const isPassage = (i: number) => isPassageRow(rowInfo[i]);
 
   const handleAddSection = () => {
     addSection();
   };
   const handleAddPassage = () => {
     addPassage();
-  };
-  const justData = (data: Array<Array<ICell>>) => {
-    return data
-      .filter((row, rowIndex) => rowIndex > 0)
-      .map((row) =>
-        row.filter((row, rowIndex) => rowIndex > 2).map((col) => col.value)
-      );
   };
 
   const handleSave = () => {
@@ -257,9 +245,9 @@ export function PlanSheet(props: IProps) {
 
   const handleConfirmDelete = (rowIndex: number) => () => {
     const toDelete = [rowIndex];
-    if (isSection(rowData[rowIndex])) {
+    if (isSection(rowIndex)) {
       var psg = rowIndex + 1;
-      while (psg < rowData.length && !isSection(rowData[psg])) {
+      while (psg < rowData.length && !isSection(psg)) {
         toDelete.push(psg);
         psg++;
       }
@@ -270,10 +258,8 @@ export function PlanSheet(props: IProps) {
 
   const handleActionConfirmed = () => {
     if (action != null) {
-      setDeleting(true);
       action(confirmAction, check).then((result) => {
         setCheck(Array<number>());
-        setDeleting(false);
       });
     }
     setConfirmAction('');
@@ -296,37 +282,14 @@ export function PlanSheet(props: IProps) {
     onAudacity(i);
   };
 
-  const doUpdate = (grid: ICell[][]) => {
-    updateData(
-      justData(grid).map((row) =>
-        row.map((cell, cellIndex) =>
-          cellIndex !== bookCol && lookupBook !== null
-            ? cell
-            : lookupBook && lookupBook(cell)
-        )
-      )
-    );
-  };
-
-  const numCol = [3, 5]; // Section num = col 2, Passage num = col 4
-  const handleCellsChanged = (changes: Array<IChange>) => {
+  const handleCellsChanged = (changes: Array<ICellChange>) => {
     if (readonly) return; //readonly
-    const grid = data.map((row: Array<ICell>) => [...row]);
-    changes.forEach(({ cell, row, col, value }: IChange) => {
-      if (row !== 0 && numCol.includes(col) && value && !isNum(value)) {
-        showMessage(t.nonNumber);
-      } else {
-        grid[row][col] = { ...grid[row][col], value };
-      }
-    });
-    if (changes.length > 0) {
-      if (doSave) {
-        setSavingGrid(grid);
-      }
-      setChanged(true);
-      doUpdate(grid);
-      setShowRow(changes[0].row);
-    }
+    const colChanges = changes.map((c) => ({
+      ...c,
+      row: c.row - 1,
+      col: c.col - 3,
+    }));
+    updateData(colChanges);
   };
 
   const handleContextMenu = (
@@ -345,7 +308,7 @@ export function PlanSheet(props: IProps) {
 
   const handleSectionAbove = () => {
     //we'll find a section before we get past 0
-    while (!isSection(rowData[position.i - 1])) position.i -= 1;
+    while (!isSection(position.i - 1)) position.i -= 1;
     addSection(position.i - 1);
     setPosition(initialPosition);
   };
@@ -421,8 +384,6 @@ export function PlanSheet(props: IProps) {
       />
     );
   };
-  const isNum = (value: string | number) =>
-    typeof value === 'number' || /^[0-9]+$/.test(value);
 
   const handleAutoSave = () => {
     if (changed && !preventSave.current && !global.alertOpen) {
@@ -487,12 +448,14 @@ export function PlanSheet(props: IProps) {
         ),
       ].concat(
         rowData.map((row, rowIndex) => {
-          const section = isSection(row);
-          const passage = isPassage(row);
+          const section = isSection(rowIndex);
+          const passage = isPassage(rowIndex);
           return [
             {
               value: (
-                <MemoizedTaskAvatar assigned={rowInfo[rowIndex].editor || ''} />
+                <MemoizedTaskAvatar
+                  assigned={rowInfo[rowIndex].editor?.id || ''}
+                />
               ),
               readOnly: true,
               className: section ? 'set' + (passage ? 'p' : '') : 'pass',
@@ -500,7 +463,7 @@ export function PlanSheet(props: IProps) {
             {
               value: (
                 <MemoizedTaskAvatar
-                  assigned={rowInfo[rowIndex].transcriber || ''}
+                  assigned={rowInfo[rowIndex].transcriber?.id || ''}
                 />
               ),
               readOnly: true,
@@ -516,13 +479,13 @@ export function PlanSheet(props: IProps) {
                           {...props}
                           rowIndex={rowIndex}
                           isPassage={passage}
-                          mediaId={rowInfo[rowIndex].mediaId}
+                          mediaId={rowInfo[rowIndex].mediaId?.id}
                           onPlayStatus={handlePlayStatus}
                           online={connected || offlineOnly}
                           readonly={readonly}
                           isPlaying={
-                            rowInfo[rowIndex].mediaId !== '' &&
-                            srcMediaId === rowInfo[rowIndex].mediaId
+                            (rowInfo[rowIndex].mediaId?.id || '') !== '' &&
+                            srcMediaId === rowInfo[rowIndex].mediaId?.id
                           }
                         />
                       ),
@@ -578,14 +541,13 @@ export function PlanSheet(props: IProps) {
                     rowIndex={rowIndex}
                     isSection={section}
                     isPassage={passage}
-                    mediaId={rowInfo[rowIndex].mediaId}
+                    mediaId={rowInfo[rowIndex].mediaId?.id}
                     onDelete={handleConfirmDelete}
                     onTranscribe={handleTranscribe}
                     onAudacity={handleAudacity}
                     readonly={readonly}
                     canAssign={projRole === 'admin'}
                     canDelete={projRole === 'admin'}
-                    noDeleteNow={deleting}
                     active={active - 1 === rowIndex}
                   />
                 ),
@@ -599,8 +561,8 @@ export function PlanSheet(props: IProps) {
 
       let refErr = false;
       if (refCol > 0) {
-        rowData.forEach((row) => {
-          if (isPassage(row)) {
+        rowData.forEach((row, rowIndex) => {
+          if (isPassage(rowIndex)) {
             const ref = row[refCol];
             if (refErrTest(ref)) refErr = true;
           }
@@ -640,7 +602,6 @@ export function PlanSheet(props: IProps) {
   useEffect(() => {
     if (!doSave && !busy && savingGrid) {
       setChanged(true);
-      doUpdate(savingGrid);
       setSavingGrid(undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -757,7 +718,7 @@ export function PlanSheet(props: IProps) {
               : undefined
           }
         >
-          {position.i > 0 && isSection(rowData[position.i - 1]) && (
+          {position.i > 0 && isSection(position.i - 1) && (
             <MenuItem id="secAbove" onClick={handleSectionAbove}>
               {t.sectionAbove.replace('{0}', organizedBy)}
             </MenuItem>

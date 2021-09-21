@@ -1,0 +1,117 @@
+import { IWorkflow, IwfKind, WfSaveRec } from '../model';
+import { wfGetChangedRecs } from '../utils';
+
+test('can choose one section and passage from hierarchy', () => {
+  const workflow: IWorkflow[] = [
+    {
+      level: 0,
+      kind: IwfKind.Section,
+      sectionSeq: 1,
+      title: 'Intro',
+      passageSeq: 0,
+      sectionId: { type: 'section', id: 's1' },
+      sectionUpdated: '2021-09-15',
+      transcriber: undefined,
+      editor: undefined,
+      deleted: false,
+    },
+    {
+      level: 1,
+      kind: IwfKind.Passage,
+      sectionSeq: 1,
+      passageSeq: 1,
+      book: 'LUK',
+      reference: '1:1-4',
+      comment: 'salutation',
+      passageUpdated: '2021-09-15',
+      passageId: { type: 'passage', id: 'pa1' },
+      deleted: false,
+    },
+    {
+      level: 1,
+      kind: IwfKind.Passage,
+      sectionSeq: 1,
+      passageSeq: 2,
+      book: 'LUK',
+      reference: '1:5-7',
+      comment: 'introducing John',
+      passageUpdated: '2021-09-15',
+      passageId: { type: 'passage', id: 'pa2' },
+      deleted: false,
+    },
+    {
+      level: 1,
+      kind: IwfKind.Passage,
+      sectionSeq: 1,
+      passageSeq: 3,
+      book: 'LUK',
+      reference: '1:8-10',
+      comment: "John's call",
+      passageUpdated: '2021-09-15',
+      passageId: { type: 'passage', id: 'pa3' },
+      deleted: false,
+    },
+    {
+      level: 0,
+      kind: IwfKind.Section,
+      sectionSeq: 2,
+      passageSeq: 0,
+      title: 'Birth of John',
+      sectionId: { type: 'section', id: 's2' },
+      sectionUpdated: '2021-09-15',
+      transcriber: undefined,
+      editor: undefined,
+      deleted: false,
+    },
+    {
+      level: 1,
+      kind: IwfKind.Passage,
+      sectionSeq: 2,
+      passageSeq: 1,
+      book: 'LUK',
+      reference: '1:11-14',
+      comment: 'Zechariah at the temple',
+      passageUpdated: '2021-09-15',
+      passageId: { type: 'passage', id: 'pa4' },
+      deleted: false,
+    },
+  ];
+  const changed = [false, true, false, false, true, false];
+  expect(wfGetChangedRecs(workflow, changed, false)).toEqual([
+    {
+      changed: false,
+      issection: true,
+      id: 's1',
+      sequencenum: '1',
+      title: 'Intro',
+    },
+    {
+      changed: true,
+      issection: false,
+      id: 'pa1',
+      sequencenum: '1',
+      book: 'LUK',
+      reference: '1:1-4',
+      title: 'salutation',
+    },
+    {
+      changed: false,
+      issection: false,
+    },
+    {
+      changed: false,
+      issection: false,
+    },
+    {
+      changed: true,
+      issection: true,
+      id: 's2',
+      sequencenum: '2',
+      title: 'Birth of John',
+    },
+    {
+      changed: true,
+      issection: false,
+    },
+  ] as WfSaveRec[]);
+});

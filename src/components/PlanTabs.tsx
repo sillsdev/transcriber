@@ -9,6 +9,10 @@ import {
   Section,
   Passage,
   MediaFile,
+  flatScrColNames,
+  flatGenColNames,
+  levScrColNames,
+  levGenColNames,
 } from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -21,6 +25,7 @@ import TranscriptionTab from './TranscriptionTab';
 import StickyRedirect from './StickyRedirect';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
+import { PlanContext } from '../context/PlanContext';
 //import { HeadHeight } from '../App';
 import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
 
@@ -82,7 +87,6 @@ interface IRecordProps {
   mediafiles: MediaFile[];
 }
 interface IProps extends IStateProps, IRecordProps {
-  bookCol: number;
   checkSaved: (method: () => void) => void;
 }
 interface ParamTypes {
@@ -90,9 +94,10 @@ interface ParamTypes {
   tabNm: string;
 }
 const ScrollableTabsButtonAuto = (props: IProps) => {
-  const { t, bookCol, checkSaved, plans, sections, passages, mediafiles } =
-    props;
+  const { t, checkSaved, plans, sections, passages, mediafiles } = props;
   const classes = useStyles();
+  const ctx = React.useContext(PlanContext);
+  const { flat, scripture } = ctx.state;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [plan] = useGlobal('plan');
@@ -106,6 +111,15 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     sections,
     passages
   );
+
+  const getColNames = () =>
+    scripture && flat
+      ? flatScrColNames
+      : scripture && !flat
+      ? levScrColNames
+      : flat
+      ? flatGenColNames
+      : levGenColNames;
 
   const handleChange = (event: any, value: number) => {
     if (busy) return;
@@ -198,33 +212,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
       </AppBar>
       <div className={classes.content}>
         {tab === tabs.sectionPassage && (
-          <>
-            {bookCol !== -1 ? (
-              <ScriptureTable
-                {...props}
-                cols={{
-                  SectionSeq: 0,
-                  SectionnName: 1,
-                  PassageSeq: 2,
-                  Book: 3,
-                  Reference: 4,
-                  Title: 5,
-                }}
-              />
-            ) : (
-              <ScriptureTable
-                {...props}
-                cols={{
-                  SectionSeq: 0,
-                  SectionnName: 1,
-                  PassageSeq: 2,
-                  Book: -1,
-                  Reference: 3,
-                  Title: 4,
-                }}
-              />
-            )}
-          </>
+          <ScriptureTable {...props} colNames={getColNames()} />
         )}
         {tab === tabs.media && (
           <AudioTab

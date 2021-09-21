@@ -11,36 +11,29 @@ import {
   IScriptureTableStrings,
   BookNameMap,
   BookName,
-  SectionPassage,
   ISharedStrings,
   MediaFile,
   OptionType,
-  ActivityStates,
   Plan,
+  IWorkflow,
+  IwfKind,
 } from '../model';
 import localStrings from '../selector/localize';
 import * as actions from '../store';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
-import {
-  TransformBuilder,
-  RecordIdentity,
-  QueryBuilder,
-  Operation,
-} from '@orbit/data';
+import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useSnackBar } from '../hoc/SnackBar';
-import PlanSheet from './PlanSheet';
+import PlanSheet, { ICellChange } from './PlanSheet';
 import {
-  remoteId,
   remoteIdNum,
   remoteIdGuid,
   related,
-  getMediaRec,
+  getWorkflow,
   useOrganizedBy,
   usePlan,
-  UpdatePassageStateOps,
 } from '../crud';
 import {
   useRemoteSave,
@@ -48,6 +41,17 @@ import {
   waitForIt,
   cleanFileName,
   useCheckOnline,
+  workflowSheet,
+  wfColumnHeads,
+  wfResequence,
+  wfResequencePassages,
+  useWfLocalSave,
+  useWfOnlineSave,
+  isSectionRow,
+  isPassageRow,
+  useWfPaste,
+  wfNumChanges,
+  currentDateTime,
 } from '../utils';
 import { debounce } from 'lodash';
 import AudacityManager from './AudacityManager';
@@ -57,7 +61,8 @@ import Auth from '../auth/Auth';
 import Uploader, { IStatus } from './Uploader';
 import { useMediaAttach } from '../crud/useMediaAttach';
 import { keyMap } from '../schema';
-import { AddRecord, UpdateRecord } from '../model/baseModel';
+import { UpdateRecord } from '../model/baseModel';
+import { PlanContext } from '../context/PlanContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -84,27 +89,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface ISequencedRecordIdentity extends RecordIdentity {
-  sequencenum: number;
-}
-interface IRecord {
-  id: string;
-  issection: boolean;
-  changed: boolean;
-  sequencenum: string;
-  book: string;
-  reference: string;
-  title: string;
-}
-interface ICols {
-  SectionSeq: number;
-  SectionnName: number;
-  PassageSeq: number;
-  Book: number;
-  Reference: number;
-  Title: number;
-}
-
 interface IStateProps {
   t: IScriptureTableStrings;
   s: IPlanSheetStrings;
@@ -120,26 +104,22 @@ interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
   resetOrbitError: typeof actions.resetOrbitError;
 }
+
 interface IRecordProps {
   passages: Array<Passage>;
   sections: Array<Section>;
   mediafiles: Array<MediaFile>;
 }
+
 interface IProps
   extends IStateProps,
     IDispatchProps,
     IRecordProps,
     WithDataProps {
-  cols: ICols;
+  colNames: string[];
   auth: Auth;
 }
-export interface IRowInfo {
-  sectionId?: ISequencedRecordIdentity;
-  passageId?: ISequencedRecordIdentity;
-  transcriber?: string;
-  editor?: string;
-  mediaId: string;
-}
+
 interface ParamTypes {
   prjId: string;
 }
@@ -150,7 +130,7 @@ export function ScriptureTable(props: IProps) {
     s,
     ts,
     lang,
-    cols,
+    colNames,
     bookSuggestions,
     bookMap,
     allBookData,
@@ -177,14 +157,13 @@ export function ScriptureTable(props: IProps) {
   const myChangedRef = useRef(false);
   const savingRef = useRef(false);
   const updateRef = useRef(false);
-  const deleteRef = useRef(false);
-  const [needUpdate, setNeedUpdate] = useState(false);
   const [changed, setChangedx] = useGlobal('changed');
   const { showMessage } = useSnackBar();
-  const rowInfo = useRef(Array<IRowInfo>());
-  const inlinePassages = useRef(false);
+  const ctx = React.useContext(PlanContext);
+  const { flat, scripture } = ctx.state;
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState<string>(getOrganizedBy(true));
+  const [saveColAdd, setSaveColAdd] = useState<number[]>();
   const [columns, setColumns] = useState([
     { value: organizedBy, readOnly: true, width: 80 },
     { value: t.title, readOnly: true, width: 280 },
@@ -192,12 +171,10 @@ export function ScriptureTable(props: IProps) {
     { value: t.reference, readOnly: true, width: 180 },
     { value: t.description, readOnly: true, width: 280 },
   ]);
-  const [data, setData] = useState(Array<Array<any>>());
-  const [inData, setInData] = useState(Array<Array<any>>());
+  const [workflow, setWorkflow] = useState<IWorkflow[]>([]);
   const [, setComplete] = useGlobal('progress');
   const [view, setView] = useState('');
-  const [audacityItem, setAudacityItem] = React.useState(0);
-  const [audacityOpen, setAudacityOpen] = React.useState(false);
+  const [audacityItem, setAudacityItem] = React.useState<IWorkflow>();
   const [lastSaved, setLastSaved] = React.useState<string>();
   const [startSave, saveCompleted, waitForSave] = useRemoteSave();
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
@@ -206,10 +183,11 @@ export function ScriptureTable(props: IProps) {
   const [recordAudio, setRecordAudio] = useState(true);
   const [importList, setImportList] = useState<File[]>();
   const [status] = useState<IStatus>({ canceled: false });
-  const uploadRow = useRef<number>();
+  const [uploadItem, setUploadItem] = useState<IWorkflow>();
   const [defaultFilename, setDefaultFilename] = useState('');
-  const showBook = (cols: ICols) => cols.Book >= 0;
   const { getPlan } = usePlan();
+  const localSave = useWfLocalSave({ setComplete });
+  const onlineSave = useWfOnlineSave({ setComplete });
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
     ts,
@@ -217,21 +195,26 @@ export function ScriptureTable(props: IProps) {
   });
   const checkOnline = useCheckOnline(resetOrbitError);
 
-  const newSectionId = (sequenceNum: number) => {
-    return {
-      type: 'section',
-      id: '',
-      sequencenum: sequenceNum,
-    };
-  };
+  const secNumCol = React.useMemo(() => {
+    return colNames.indexOf('sectionSeq');
+  }, [colNames]);
 
-  const newPassageId = (sequenceNum: number) => {
-    return {
-      type: 'passage',
-      id: '',
-      sequencenum: sequenceNum,
-    };
-  };
+  const passNumCol = React.useMemo(() => {
+    return colNames.indexOf('passageSeq');
+  }, [colNames]);
+
+  const findBook = (val: string) =>
+    lookupBook({ book: val, allBookData, bookMap });
+
+  const paste = useWfPaste({
+    secNumCol,
+    passNumCol,
+    scripture,
+    flat,
+    colNames,
+    findBook,
+    t,
+  });
 
   const setChanged = (value: boolean) => {
     myChangedRef.current = value;
@@ -241,524 +224,234 @@ export function ScriptureTable(props: IProps) {
     myChangedRef.current = changed;
   }, [changed]);
 
-  const isSectionRow = (row: IRowInfo) => row.sectionId !== undefined;
-
-  const isPassageRow = (row: IRowInfo) => row.passageId !== undefined;
-
-  const sectionId = (row: number) =>
-    row < rowInfo.current.length
-      ? rowInfo.current[row].sectionId?.id || ''
-      : '';
-
-  const passageId = (row: number) =>
-    row < rowInfo.current.length
-      ? rowInfo.current[row].passageId?.id || ''
-      : '';
-
-  const resequencePassages = (data: any[][], sectionIndex: number) => {
-    let pas = 1;
-    let change = false;
-    for (
-      let i = sectionIndex;
-      i < data.length &&
-      (i === sectionIndex || !isValidNumber(data[i][cols.SectionSeq]));
-      i += 1
-    ) {
-      let r = data[i];
-      if (isValidNumber(r[cols.PassageSeq])) {
-        if (r[cols.PassageSeq] !== pas) {
-          change = true;
-          r[cols.PassageSeq] = pas;
-          data[i] = [...r];
-        }
-        pas += 1;
-      }
-    }
-    if (change) setChanged(true);
-    return change ? [...data] : data;
-  };
-
-  const resequence = (data: any[][], sec = 1) => {
-    let change = false;
-    let pas = 1;
-    for (let i = 0; i < data.length; i += 1) {
-      let r = data[i];
-      if (isValidNumber(r[cols.SectionSeq])) {
-        if (r[cols.SectionSeq] !== sec) {
-          change = true;
-          r[cols.SectionSeq] = sec;
-          data[i] = [...r];
-        }
-        sec += 1;
-        pas = 1;
-      }
-      if (isValidNumber(r[cols.PassageSeq])) {
-        if (r[cols.PassageSeq] !== pas) {
-          change = true;
-          r[cols.PassageSeq] = pas;
-          data[i] = [...r];
-        }
-        pas += 1;
-      }
-    }
-    if (change) setChanged(true);
-    else if (!data.length) {
-      //all rows deleted
-      setChanged(false);
-    }
-
-    return change ? [...data] : data;
-  };
-
   const handleResequence = () => {
-    setData(resequence(data));
+    const wf = wfResequence(workflow);
+    if (wf !== workflow) {
+      setWorkflow(wf);
+      setChanged(true);
+    }
   };
 
   const insertAt = (arr: Array<any>, item: any, index?: number) => {
-    const d2 = Array.isArray(item);
     if (index === undefined) {
       return [...arr.concat([item])];
     } else {
       const newArr = arr.map((v, i) =>
-        i < index
-          ? d2
-            ? [...v]
-            : v
-          : i === index
-          ? item
-          : d2
-          ? [...arr[i - 1]]
-          : arr[i - 1]
+        i < index ? v : i === index ? item : arr[i - 1]
       );
-      const lastIndex = arr.length - 1;
-      return [...newArr.concat([d2 ? [...arr[lastIndex]] : arr[lastIndex]])];
+      return [...newArr.concat([arr.pop()])];
     }
   };
 
   const updateRowAt = (arr: Array<any>, item: any, index: number) => {
-    const d2 = Array.isArray(item);
     const newArr = arr.map((v, i) =>
-      i < index
-        ? d2
-          ? [...v]
-          : v
-        : i === index
-        ? item
-        : d2
-        ? [...arr[i]]
-        : arr[i]
+      i < index ? v : i === index ? item : arr[i]
     );
     return newArr;
   };
 
-  const addSection = (i?: number) => {
-    const sequenceNums = data.map((row, j) =>
-      !i || j < i ? row[cols.SectionSeq] || 0 : 0
-    ) as number[];
-    const sequencenum = Math.max(...sequenceNums, 0) + 1;
-    let newRow;
-    if (showBook(cols)) {
-      newRow = [sequencenum, '', '', '', '', ''];
-      var prevRow = i ? i - 1 : data.length - 1;
-      if (prevRow >= 0) newRow[cols.Book] = data[prevRow][cols.Book];
-    } else {
-      newRow = [sequencenum, '', '', '', ''];
+  const movePassageDown = (data: IWorkflow[], index: number) => {
+    var origrowid = { ...data[index] };
+    var newrowid = { ...data[index + 1] };
+
+    if (scripture) {
+      newrowid.book = origrowid.book;
     }
-    var newData = insertAt(data, newRow, i);
-    //if added in the middle...resequence
-    if (i !== undefined) newData = resequence(newData);
-    addPassageTo(
-      newData,
-      insertAt(inData, newRow, i),
-      insertAt(
-        rowInfo.current,
-        { sectionId: newSectionId(sequencenum) } as IRowInfo,
-        i
-      ),
-      i,
-      true
-    );
+    newrowid.reference = origrowid.reference;
+    origrowid.reference = '';
+    newrowid.title = origrowid.title;
+    origrowid.title = '';
+    data[index] = origrowid;
+    data[index + 1] = newrowid;
   };
-  const addPassage = (i?: number, before?: boolean) => {
-    addPassageTo(data, inData, rowInfo.current, i, before);
-  };
+
   const addPassageTo = (
-    myData: any[][] /* may or may not already be a copy */,
-    myIndata: any[][],
-    //newRowId: ISequencedRecordIdentity[][],
-    myRowInfo: IRowInfo[],
+    myWorkflow: IWorkflow[],
     i?: number,
     before?: boolean
   ) => {
-    const lastRow = myData.length - 1;
+    const lastRow = myWorkflow.length - 1;
     var index = i === undefined ? lastRow : i;
+    let newRow = {
+      ...myWorkflow[index],
+      kind: flat ? IwfKind.SectionPassage : IwfKind.Passage,
+      book: workflow[lastRow]?.book || '',
+      reference: '',
+      comment: '',
+      passageUpdated: currentDateTime(),
+      passageId: undefined,
+    } as IWorkflow;
 
-    let newRow;
-    if (showBook(cols)) {
-      const book = myData[lastRow][cols.Book] || '';
-      newRow = ['', '', 0, book, '', ''];
-    } else {
-      newRow = ['', '', 0, '', ''];
-    }
     if (
-      inlinePassages.current &&
-      isSectionRow(myRowInfo[index]) &&
-      !isPassageRow(myRowInfo[index])
+      flat &&
+      isSectionRow(myWorkflow[index]) &&
+      !isPassageRow(myWorkflow[index])
     ) {
       //no passage on this row yet
-      newRow[cols.SectionSeq] = myData[index][cols.SectionSeq];
-      newRow[cols.SectionnName] = myData[index][cols.SectionnName];
-      myData = resequencePassages(updateRowAt(myData, newRow, index), index);
-      setData(myData);
-      newRow[cols.SectionSeq] = myIndata[index][cols.SectionSeq];
-      newRow[cols.SectionnName] = myIndata[index][cols.SectionnName];
-      setInData(updateRowAt(myIndata, newRow, index));
-
-      var rowinfo = { ...myRowInfo[index] };
-      rowinfo.passageId = newPassageId(
-        myData[index][cols.PassageSeq] as number
+      myWorkflow = wfResequencePassages(
+        updateRowAt(myWorkflow, newRow, index),
+        index
       );
-      rowinfo.mediaId = '';
-      myRowInfo[index] = rowinfo;
-      rowInfo.current = [...myRowInfo];
+      setWorkflow(myWorkflow);
     } else {
-      myData = insertAt(
-        myData,
+      myWorkflow = insertAt(
+        myWorkflow,
         newRow,
-        index < lastRow ? index + 1 : undefined
-      );
-      myIndata = insertAt(
-        myIndata,
-        newRow,
-        index < lastRow ? index + 1 : undefined
-      );
-      myRowInfo = insertAt(
-        myRowInfo,
-        { passageId: newPassageId(0), mediaId: '' },
         index < lastRow ? index + 1 : undefined
       );
       if (
         before &&
-        isSectionRow(myRowInfo[index]) &&
-        isPassageRow(myRowInfo[index])
+        isSectionRow(myWorkflow[index]) &&
+        isPassageRow(myWorkflow[index])
       ) {
         //move passage data from section row to new empty row
-        movePassageDown(myData, index);
-        movePassageDown(myIndata, index);
-        //swap rowIds
-        rowinfo = { ...myRowInfo[index] };
-        var newrowinfo = { ...myRowInfo[index + 1] };
-        newrowinfo.passageId = rowinfo.passageId;
-        rowinfo.passageId = newPassageId(0);
-        myRowInfo[index] = rowinfo;
-        myRowInfo[index + 1] = newrowinfo;
+        movePassageDown(myWorkflow, index);
       }
-      while (!isSectionRow(myRowInfo[index])) index -= 1;
-      setData(resequencePassages(myData, index));
-      setInData([...myIndata]);
-      rowInfo.current = [...myRowInfo];
+      while (!isSectionRow(myWorkflow[index])) index -= 1;
+      setWorkflow(wfResequencePassages(myWorkflow, index));
     }
-
     setChanged(true);
   };
-  const movePassageDown = (rowdata: any[][], index: number) => {
-    var origrowid = [...rowdata[index]];
-    var newrowid = [...rowdata[index + 1]];
 
-    if (cols.Book > 0) {
-      newrowid[cols.Book] = origrowid[cols.Book];
+  const addSection = (i?: number) => {
+    const sequenceNums = workflow.map((row, j) =>
+      !i || j < i ? row.sectionSeq || 0 : 0
+    ) as number[];
+    const sequencenum = Math.max(...sequenceNums, 0) + 1;
+    let newRow = {
+      level: flat ? 0 : 1,
+      kind: flat ? IwfKind.SectionPassage : IwfKind.Section,
+      sectionSeq: sequencenum,
+      passageSeq: 0,
+      reference: '',
+    } as IWorkflow;
+    let prevRowIdx = i ? i - 1 : workflow.length - 1;
+    if (prevRowIdx >= 0) newRow.book = workflow[prevRowIdx].book;
+    let newData = insertAt(workflow, newRow, i);
+    //if added in the middle...resequence
+    if (i !== undefined) newData = wfResequence(newData);
+    addPassageTo(newData, i);
+  };
+
+  const addPassage = (i?: number, before?: boolean) => {
+    addPassageTo(workflow, i, before);
+  };
+
+  const getByIndex = (wf: IWorkflow[], index: number) => {
+    let n = 0;
+    let i = 0;
+    while (n < index && i < wf.length) {
+      if (!wf[i].deleted) n += 1;
+      i += 1;
     }
-    newrowid[cols.Reference] = origrowid[cols.Reference];
-    origrowid[cols.Reference] = '';
-    newrowid[cols.Title] = origrowid[cols.Title];
-    origrowid[cols.Title] = '';
-    rowdata[index] = origrowid;
-    rowdata[index + 1] = newrowid;
+    return { wf: i < wf.length ? wf[i] : undefined, i };
+  };
+
+  const doDetachMedia = async (wf: IWorkflow | undefined) => {
+    if (!wf) return false;
+    if (wf.passageId) {
+      var attached = mediafiles.filter(
+        (m) => related(m, 'passage') === wf.passageId?.id
+      );
+      for (let ix = 0; ix < attached.length; ix++) {
+        var passage = passages.find((p) => p.id === wf.passageId?.id);
+        await detachPassage(
+          wf.passageId?.id || '',
+          related(passage, 'section'),
+          plan,
+          attached[ix].id
+        );
+      }
+    }
+    return true;
+  };
+
+  const markDelete = async (index: number) => {
+    const { wf, i } = getByIndex(workflow, index);
+    if (wf) {
+      if (isSectionRow(wf)) {
+        let j = i;
+        while (j < workflow.length) {
+          workflow[j] = { ...workflow[j], deleted: true };
+          j += 1;
+          if (isSectionRow(workflow[j])) break;
+        }
+      } else workflow[i] = { ...wf, deleted: true };
+      setWorkflow([...workflow]);
+      setChanged(true);
+    }
   };
 
   const handleDelete = async (what: string, where: number[]) => {
     if (what === 'Delete') {
-      uploadRow.current = undefined;
-      if (
-        !savingRef.current &&
-        !deleteRef.current &&
-        !updateRef.current &&
-        !needUpdate
-      )
+      setUploadItem(undefined);
+      if (!savingRef.current && !updateRef.current)
         if (changed || myChangedRef.current) {
           startSave();
           setTimeout(() => {}, 1000);
-          await doDelete(where);
-        } else await doDelete(where);
+          await markDelete(where[0]);
+        } else await markDelete(where[0]);
       return true;
     } else {
       showMessage(<span>{what}...</span>);
       return false;
     }
   };
-  const doDelete = async (where: number[]) => {
-    deleteRef.current = true;
-    let modified = false;
-    const deleteOrbitRow = async (id: RecordIdentity | undefined) => {
-      if (id && id.id !== '') {
-        await memory.update((t: TransformBuilder) => t.removeRecord(id));
-        modified = true;
-      }
-    };
-    //work from the bottom up so we can detach/delete passages before the section
-    for (
-      let rowListIndex = where.length - 1;
-      rowListIndex >= 0;
-      rowListIndex -= 1
-    ) {
-      const rowIndex = where[rowListIndex];
-      if (rowInfo.current[rowIndex].passageId) {
-        var attached = mediafiles.filter(
-          (m) =>
-            related(m, 'passage') === rowInfo.current[rowIndex].passageId?.id
-        );
-        for (let ix = 0; ix < attached.length; ix++) {
-          var passage = passages.find(
-            (p) => p.id === rowInfo.current[rowIndex].passageId?.id
-          );
-          await detachPassage(
-            rowInfo.current[rowIndex].passageId?.id || '',
-            related(passage, 'section'),
-            plan,
-            attached[ix].id
-          );
-        }
-        await deleteOrbitRow(
-          rowInfo.current[rowIndex].passageId as RecordIdentity
-        );
-      }
-      await deleteOrbitRow(
-        rowInfo.current[rowIndex].sectionId as RecordIdentity
-      );
-    }
-    if (modified) updateLastModified();
-    setData(
-      resequence(data.filter((row, rowIndex) => !where.includes(rowIndex)))
-    );
-    rowInfo.current = rowInfo.current.filter(
-      (row, rowIndex) => !where.includes(rowIndex)
-    );
-    setInData(inData.filter((row, rowIndex) => !where.includes(rowIndex)));
-    deleteRef.current = false;
-    setNeedUpdate(true);
-    return true;
-  };
 
   const getSectionsWhere = (where: number[]) => {
     let selected = Array<Section>();
-    let one: any;
     where.forEach((c) => {
-      one = sections.find((s) => s.id === sectionId(c));
+      const { wf } = getByIndex(workflow, c);
+      let one = sections.find((s) => s.id === wf?.sectionId?.id);
       if (one) selected.push(one);
     });
     return selected;
   };
 
-  const validTable = (rows: string[][]) => {
-    if (rows.length === 0) {
-      showMessage(t.pasteNoRows);
-      return false;
-    }
-    if (showBook(cols)) {
-      if (rows[0].length !== 6) {
-        showMessage(
-          t.pasteInvalidColumnsScripture.replace(
-            '{0}',
-            rows[0].length.toString()
-          )
-        );
-        return false;
-      }
-    } else {
-      if (rows[0].length !== 5) {
-        showMessage(
-          t.pasteInvalidColumnsGeneral.replace('{0}', rows[0].length.toString())
-        );
-        return false;
-      }
-    }
-    let invalidSec = rows
-      .filter(
-        (row, rowIndex) =>
-          rowIndex > 0 && !isBlankOrValidNumber(row[cols.SectionSeq])
-      )
-      .map((row) => row[cols.SectionSeq]);
-    if (invalidSec.length > 0) {
-      showMessage(
-        <span>
-          {t.pasteInvalidSections} {invalidSec.join()}
-        </span>
-      );
-      return false;
-    }
-    let invalidPas = rows
-      .filter(
-        (row, rowIndex) =>
-          rowIndex > 0 && !isBlankOrValidNumber(row[cols.PassageSeq])
-      )
-      .map((row) => row[cols.PassageSeq]);
-    if (invalidPas.length > 0) {
-      showMessage(
-        <span>
-          {t.pasteInvalidSections} {invalidPas.join()}.
-        </span>
-      );
-      return false;
-    }
-    return true;
-  };
-
-  const isBlankOrValidNumber = (value: string): boolean => {
-    return /^[0-9]*$/.test(value);
-  };
-
-  const isValidNumber = (value: string): boolean => {
-    return /^[0-9]+$/.test(value);
-  };
-
-  const splitSectionPassage = (
-    value: string[],
-    index: number,
-    array: string[][]
-  ): void => {
-    if (
-      isValidNumber(value[cols.SectionSeq]) &&
-      isValidNumber(value[cols.PassageSeq])
-    ) {
-      let cp = [...value];
-      cp[cols.PassageSeq] = '';
-      value[cols.SectionSeq] = '';
-      array.splice(index, 0, cp); //copy the row -- the copy goes in before
-    }
-  };
-
-  // const getTotalSections = (total: number, row: string[]) => {
-  //   return total + (isValidNumber(row[cols.SectionSeq]) ? 1 : 0);
-  // };
-
   const handleTablePaste = (rows: string[][]) => {
-    if (validTable(rows)) {
-      const startRow = isBlankOrValidNumber(rows[0][cols.SectionSeq]) ? 0 : 1;
-      if (!inlinePassages.current) {
-        while (
-          rows.find(function (value: string[]) {
-            return (
-              isValidNumber(value[cols.SectionSeq]) &&
-              isValidNumber(value[cols.PassageSeq])
-            );
-          }) !== undefined
-        ) {
-          rows.forEach(splitSectionPassage);
-        }
-      }
-      // const secCount = data.reduce(getTotalSections, 1);
-      // rows = resequence(rows, secCount);
-      /* Make it clear which columns can be imported by blanking others */
-      setData([
-        ...data.concat(
-          rows
-            .filter((row, rowIndex) => rowIndex >= startRow)
-            .map((row) =>
-              row.map((col, colIndex) =>
-                isValidNumber(row[cols.PassageSeq]) && colIndex === cols.Book
-                  ? lookupBook({ book: col, allBookData, bookMap })
-                  : isValidNumber(row[cols.SectionSeq])
-                  ? (inlinePassages.current &&
-                      isValidNumber(row[cols.PassageSeq]) &&
-                      parseInt(row[cols.PassageSeq]) === 1) ||
-                    colIndex < cols.PassageSeq
-                    ? col
-                    : ''
-                  : colIndex >= cols.PassageSeq //not a section row
-                  ? col
-                  : ''
-              )
-            )
-        ),
-      ]);
-      setInData([
-        ...inData.concat(
-          rows
-            .filter((row, rowIndex) => rowIndex >= startRow)
-            .map((row) =>
-              row.map((col, colIndex) =>
-                colIndex !== cols.Book
-                  ? col
-                  : lookupBook({ book: col, allBookData, bookMap })
-              )
-            )
-        ),
-      ]);
-      rowInfo.current = [
-        ...rowInfo.current.concat(
-          rows
-            .filter((row, rowIndex) => rowIndex >= startRow)
-            .map((row) => {
-              if (isValidNumber(row[cols.SectionSeq])) {
-                var newid = {
-                  sectionId: newSectionId(parseInt(row[cols.SectionSeq])),
-                  mediaId: '',
-                } as IRowInfo;
-                if (
-                  inlinePassages.current &&
-                  isValidNumber(row[cols.PassageSeq])
-                )
-                  newid.passageId = newPassageId(
-                    parseInt(row[cols.PassageSeq])
-                  );
-                return newid;
-              } else {
-                return {
-                  passageId: newPassageId(parseInt(row[cols.PassageSeq])),
-                  mediaId: '',
-                } as IRowInfo;
-              }
-            })
-        ),
-      ];
+    const { valid, addedWorkflow } = paste(rows);
+    if (valid) {
+      const newWorkflow = [...workflow].concat(addedWorkflow);
+      setWorkflow(newWorkflow);
       setChanged(true);
       return Array<Array<string>>();
     }
     return rows;
   };
 
-  const updateData = (rows: string[][]) => {
-    setData(rows);
-  };
-
-  function generateUUID() {
-    // Public Domain/MIT
-    var d = new Date().getTime(); //Timestamp
-    var d2 = (performance && performance.now && performance.now() * 1000) || 0; //Time in microseconds since page-load or 0 if unsupported
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = Math.random() * 16; //random number between 0 and 16
-        if (d > 0) {
-          //Use timestamp until depleted
-          r = (d + r) % 16 | 0;
-          d = Math.floor(d / 16);
-        } else {
-          //Use microseconds since page-load if supported
-          r = (d2 + r) % 16 | 0;
-          d2 = Math.floor(d2 / 16);
-        }
-        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
-      }
-    );
+  interface MyWorkflow extends IWorkflow {
+    [key: string]: any;
   }
-
-  const setDimensions = () => {
-    setWidth(window.innerWidth);
+  const updateData = (changes: ICellChange[]) => {
+    changes.forEach((c) => {
+      const { wf, i } = getByIndex(workflow, c.row);
+      const myWf = wf as MyWorkflow | undefined;
+      const name = colNames[c.col];
+      if (myWf && myWf[name] !== c.value) {
+        const isSection = c.col < 2;
+        const sectionUpdated = isSection
+          ? currentDateTime()
+          : wf?.sectionUpdated;
+        const passageUpdated = isSection
+          ? wf?.passageUpdated
+          : currentDateTime();
+        workflow[i] = {
+          ...wf,
+          [name]: c.value,
+          sectionUpdated,
+          passageUpdated,
+        } as IWorkflow;
+      }
+    });
+    if (changes.length > 0) {
+      setWorkflow([...workflow]);
+      setChanged(true);
+    }
   };
 
   const handleTranscribe = (i: number) => {
-    const id = passageId(i);
+    const { wf } = getByIndex(workflow, i);
+    const id = wf?.passageId?.id || '';
     const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
     if (changed || myChangedRef.current) {
       startSave();
@@ -766,16 +459,16 @@ export function ScriptureTable(props: IProps) {
     } else setView(`/work/${prjId}/${passageRemoteId}`);
   };
 
-  const handleAudacity = (i: number) => {
-    setAudacityItem(i);
+  const handleAudacity = (index: number) => {
+    const { wf } = getByIndex(workflow, index);
     if (changed || myChangedRef.current) {
       startSave();
-      waitForSave(() => setAudacityOpen(true), 100);
-    } else setAudacityOpen(true);
+      waitForSave(() => setAudacityItem(wf), 100);
+    } else setAudacityItem(wf);
   };
 
   const handleAudacityClose = () => {
-    setAudacityOpen(false);
+    setAudacityItem(undefined);
   };
 
   const doAssign = (where: number[]) => {
@@ -788,15 +481,13 @@ export function ScriptureTable(props: IProps) {
       waitForSave(() => doAssign(where), 100);
     } else doAssign(where);
   };
+
   const handleAssignClose = () => () => setAssignSectionVisible(false);
 
-  const setFilename = (row: number) => {
-    if (passageId(row)) {
+  const setFilename = (wf: IWorkflow | undefined) => {
+    if (wf?.passageId?.id) {
       var passageRec = memory.cache.query((q) =>
-        q.findRecord({
-          type: 'passage',
-          id: passageId(row),
-        })
+        q.findRecord(wf.passageId as RecordIdentity)
       ) as Passage;
       setDefaultFilename(
         cleanFileName(
@@ -805,31 +496,40 @@ export function ScriptureTable(props: IProps) {
       );
     }
   };
+
   const showUpload = (i: number, record: boolean) => {
-    setFilename(i);
-    uploadRow.current = i;
+    const { wf } = getByIndex(workflow, i);
+    setFilename(wf);
+    setUploadItem(wf);
     setRecordAudio(record);
     setUploadVisible(true);
   };
+
   const handleUploadVisible = (v: boolean) => {
     setUploadVisible(v);
   };
+
   const handleUpload = (i: number) => () => {
-    if (passageId(i) === '') {
+    const { wf } = getByIndex(workflow, i);
+    if (wf?.passageId?.id) {
       startSave();
       waitForSave(() => showUpload(i, false), 100);
     } else showUpload(i, false);
   };
+
   const handleAudacityImport = (i: number, list: File[]) => {
     setImportList(list);
     showUpload(i, false);
   };
+
   const handleRecord = (i: number) => {
-    if (passageId(i) === '') {
+    const { wf } = getByIndex(workflow, i);
+    if (wf?.sectionId?.id) {
       startSave();
       waitForSave(() => showUpload(i, true), 100);
     } else showUpload(i, true);
   };
+
   const updateLastModified = async () => {
     var planRec = getPlan(plan) as Plan;
     if (planRec !== null) {
@@ -837,7 +537,6 @@ export function ScriptureTable(props: IProps) {
       var plansections = memory.cache.query((qb) =>
         qb.findRecords('section')
       ) as Section[];
-
       planRec.attributes.sectionCount = plansections.filter(
         (s) => related(s, 'plan') === plan
       ).length;
@@ -855,7 +554,6 @@ export function ScriptureTable(props: IProps) {
           UpdateRecord(t, planRec, user)
         );
       }
-      setLastSaved(planRec.attributes.dateUpdated);
     }
   };
 
@@ -865,6 +563,11 @@ export function ScriptureTable(props: IProps) {
       if (planRec !== null) setLastSaved(planRec.attributes.dateUpdated);
       else setLastSaved('');
     }
+  };
+
+  // keep track of screen width
+  const setDimensions = () => {
+    setWidth(window.innerWidth);
   };
 
   useEffect(() => {
@@ -880,308 +583,51 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); //do this once to get the default;
 
-  const getRemoteId = async (table: string, localid: string) => {
-    await waitForIt(
-      'remoteId',
-      () => remoteId(table, localid, memory.keyMap) !== undefined,
-      () => false,
-      100
-    );
-    return remoteId(table, localid, memory.keyMap);
-  };
-  const getChangedRecs = async (changedRows: boolean[]) => {
-    let recs: IRecord[][] = [];
-    for (var index = 0; index < rowInfo.current.length; index++) {
-      var row = rowInfo.current[index];
-      var rec = [];
-      if (isSectionRow(row)) {
-        var id = row.sectionId?.id || '';
-        rec.push({
-          issection: true,
-          id: id,
-          changed: changedRows[index],
-          sequencenum: data[index][cols.SectionSeq],
-          book: showBook(cols) ? data[index][cols.Book] : '',
-          reference: data[index][cols.Reference],
-          title: data[index][cols.SectionnName],
-        });
-      }
-      if (isPassageRow(row)) {
-        if (changedRows[index]) {
-          id = row.passageId?.id || '';
-          rec.push({
-            issection: false,
-            id: id,
-            changed: true,
-            sequencenum: data[index][cols.PassageSeq],
-            book: showBook(cols) ? data[index][cols.Book] : '',
-            reference: data[index][cols.Reference],
-            title: data[index][cols.Title],
-          });
-        }
-        //don't bother to push all the passage if not changed
-        else
-          rec.push({
-            issection: false,
-            changed: false,
-          } as IRecord);
-      }
-      recs.push(rec);
-    }
-    return recs;
-  };
-
-  const onlineSaveFn = async (recs: IRecord[][], anyNew: boolean) => {
-    for (let ix = 0; ix < recs.length; ix++) {
-      let rec = recs[ix];
-      if ((rec[0].id || '') !== '')
-        rec[0].id = await getRemoteId(
-          rec[0].issection ? 'section' : 'passage',
-          rec[0].id
-        );
-      if (rec.length > 1 && (rec[1].id || '') !== '')
-        rec[1].id = await getRemoteId('passage', rec[1].id);
-    }
-    const sp: SectionPassage = {
-      attributes: {
-        data: JSON.stringify(recs),
-        planId: remoteIdNum('plan', plan, memory.keyMap),
-        uuid: generateUUID(),
-      },
-      type: 'sectionpassage',
-    } as SectionPassage;
-    memory.schema.initializeRecord(sp);
-    setComplete(20);
-    var dumbrec = await memory.update(
-      (t: TransformBuilder) => t.addRecord(sp),
-      {
-        label: 'Update Plan Section and Passages',
-        sources: {
-          remote: {
-            settings: {
-              timeout: 2000000,
-            },
-          },
-        },
-      }
-    );
-    //null only if sent twice by orbit
-    if (dumbrec) {
-      setComplete(50);
-      //dumbrec does not contain the new data...just the new id so go get it
-      var filterrec = {
-        attribute: 'plan-id',
-        value: remoteId('plan', plan, memory.keyMap),
-      };
-      //must wait for these...in case they they navigate away before done
-      await memory.sync(
-        await remote.pull((q) => q.findRecords('section').filter(filterrec))
-      );
-      await memory.sync(
-        await remote.pull((q) => q.findRecords('passage').filter(filterrec))
-      );
-      await memory.sync(
-        await remote.pull((q) => q.findRecord({ type: 'plan', id: plan }))
-      );
-      if (anyNew) {
-        var rec: SectionPassage = (await remote.query((q: QueryBuilder) =>
-          q.findRecord({ type: 'sectionpassage', id: dumbrec.id })
-        )) as any;
-        if (rec !== undefined) {
-          //outrecs is an array of arrays of IRecords
-          var outrecs = JSON.parse(rec.attributes.data);
-          var newrowinfo = rowInfo.current.map((r) => {
-            return { ...r };
-          }); // _.cloneDeep(r));
-
-          newrowinfo.forEach((row, index) => {
-            if (isSectionRow(row) && row.sectionId?.id === '')
-              row.sectionId.id = remoteIdGuid(
-                'section',
-                (outrecs[index][0] as IRecord).id,
-                memory.keyMap
-              );
-            if (isPassageRow(row) && row.passageId?.id === '')
-              row.passageId.id = remoteIdGuid(
-                'passage',
-                (outrecs[index][isSectionRow(row) ? 1 : 0] as IRecord).id,
-                memory.keyMap
-              );
-          });
-          rowInfo.current = newrowinfo;
-          setInData(data.map((row: Array<any>) => [...row]));
-        }
-      }
-    }
-  };
-  const updateSection = async (sec: Section) => {
-    await memory.update((t: TransformBuilder) => UpdateRecord(t, sec, user));
-  };
-  const localSaveFn = async (recs: IRecord[][]) => {
-    let lastSec: Section = { id: 'never here' } as Section;
-    const numRecs = recs.length;
-    for (let rIdx = 0; rIdx < numRecs; rIdx += 1) {
-      if (rIdx % 20 === 0) {
-        //this is slow...so find a happy medium between info and speed
-        setComplete(((rIdx / numRecs) * 100) | 0);
-      }
-      const table = recs[rIdx];
-      for (let tIdx = 0; tIdx < table.length; tIdx += 1) {
-        const item = table[tIdx];
-        if (item.issection) {
-          if (item.id !== '') {
-            lastSec = sections.filter((s) => s.id === item.id)[0];
-            //might have been the passage that changed if flat
-            if (
-              item.changed &&
-              (lastSec.attributes.sequencenum !== parseInt(item.sequencenum) ||
-                lastSec.attributes.name !== item.title)
-            ) {
-              const secRec = {
-                ...lastSec,
-                attributes: {
-                  ...lastSec.attributes,
-                  sequencenum: parseInt(item.sequencenum),
-                  name: item.title,
-                },
-              };
-              await updateSection(secRec);
-              lastSec = secRec;
-            }
-          } else {
-            const newRec = {
-              type: 'section',
-              attributes: {
-                sequencenum: parseInt(item.sequencenum),
-                name: item.title,
-                state: ActivityStates.NoMedia,
-              },
-            } as any;
-            const planRecId = { type: 'plan', id: plan };
-            await memory.update((t: TransformBuilder) => [
-              ...AddRecord(t, newRec, user, memory),
-              t.replaceRelatedRecord(newRec, 'plan', planRecId),
-            ]);
-            lastSec = newRec;
-          }
-        } else if (item.changed) {
-          //passage
-          if (item.id !== '') {
-            const passRecs = passages.filter((p) => p.id === item.id);
-            await memory.update((t: TransformBuilder) =>
-              UpdateRecord(
-                t,
-                {
-                  ...passRecs[0],
-                  attributes: {
-                    ...passRecs[0].attributes,
-                    sequencenum: parseInt(item.sequencenum),
-                    book: item.book,
-                    reference: item.reference,
-                    title: item.title,
-                  },
-                } as Passage,
-                user
-              )
-            );
-          } else {
-            const passRec: Passage = {
-              type: 'passage',
-              attributes: {
-                sequencenum: parseInt(item.sequencenum),
-                book: item.book,
-                reference: item.reference,
-                title: item.title,
-                state: ActivityStates.NoMedia,
-              },
-            } as any;
-            const secRecId = { type: 'section', id: lastSec.id };
-            const t = new TransformBuilder();
-            const ops: Operation[] = [
-              ...AddRecord(t, passRec, user, memory),
-              t.replaceRelatedRecord(passRec, 'section', secRecId),
-            ];
-            UpdatePassageStateOps(
-              passRec.id,
-              lastSec.id,
-              plan,
-              ActivityStates.NoMedia,
-              '',
-              user,
-              t,
-              ops,
-              memory
-            );
-            await memory.update(ops);
-          }
-          //update section last modified
-          //TT-2469 this causes any new passages to forget about their section
-          //await updateSection(lastSec);
-        }
-      }
-    }
-    //update plan section count and lastmodified
-    await updateLastModified();
-  };
-
+  // Save locally or online in batches
   useEffect(() => {
+    let prevSave = '';
     const handleSave = async () => {
-      const saveFn = async (changedRows: boolean[], anyNew: boolean) => {
-        setComplete(10);
-        const recs = await getChangedRecs(changedRows);
-        let numChanges = changedRows.filter((r) => r).length;
-        if (!offlineOnly && numChanges > 10) await onlineSaveFn(recs, anyNew);
-        else await localSaveFn(recs);
+      const numChanges = wfNumChanges(workflow, prevSave);
+
+      if (numChanges === 0) return;
+      for (const wf of workflow) {
+        if (wf.deleted) await doDetachMedia(wf);
+      }
+      setComplete(10);
+      const saveFn = async (workflow: IWorkflow[]) => {
+        if (!offlineOnly && numChanges > 10) {
+          return await onlineSave(workflow, prevSave);
+        } else {
+          await localSave(workflow, sections, passages, prevSave);
+          return false;
+        }
       };
-      let changedRows: boolean[] = rowInfo.current.map(
-        (row) => row.sectionId?.id === '' || row.passageId?.id === ''
-      );
-      const anyNew = changedRows.includes(true);
-      changedRows.forEach((row, index) => {
-        if (!row) {
-          //if not new, see if altered
-          for (let i = 0; i < inData[index].length; i++) {
-            if (inData[index][i] !== data[index][i]) {
-              changedRows[index] = true;
-              break;
-            }
-          }
-        }
-      });
-      let numChanges = changedRows.filter((r) => r).length;
-      if (numChanges === 0) {
-        return;
-      }
       if (numChanges > 50) setBusy(true);
+      let change = false;
+      let start = 0;
       if (!offlineOnly) {
-        while (numChanges > 200) {
-          let someChangedRows = [...changedRows];
-          let count = 0;
-          someChangedRows.forEach((row, index) => {
-            if (count <= 200) {
-              if (row) {
-                count++;
-                changedRows[index] = false;
-              }
-            } else someChangedRows[index] = false;
-          });
-          await saveFn(someChangedRows, anyNew);
-          numChanges = changedRows.filter((r) => r).length;
+        for (; start + 200 < numChanges; start += 200) {
+          setComplete(Math.floor((90 * start) / numChanges) + 10);
+          change = (await saveFn(workflow.slice(start, start + 200))) || change;
         }
       }
-      await saveFn(changedRows, anyNew);
+      change = (await saveFn(workflow.slice(start))) || change;
+      //update plan section count and lastmodified
+      await updateLastModified();
+      if (change) setWorkflow([...workflow]);
       setBusy(false);
     };
     const setSaving = (value: boolean) => (savingRef.current = value);
     const save = () => {
-      if (!savingRef.current && !updateRef.current && !deleteRef.current) {
+      if (!savingRef.current && !updateRef.current) {
         setSaving(true);
-        setNeedUpdate(false); // if it's true we need it to toggle when done
+        setChanged(false);
+        prevSave = lastSaved || '';
+        setLastSaved(currentDateTime());
         showMessage(t.saving);
         handleSave().then(() => {
           saveCompleted('');
           setSaving(false);
-          setNeedUpdate(true);
         });
       }
     };
@@ -1201,218 +647,65 @@ export function ScriptureTable(props: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave, data, inData, rowInfo.current]);
+  }, [doSave]);
 
+  // load data when tables change (and initally)
   useEffect(() => {
-    if (plan !== '') {
-      const getFlat = () => {
-        var planRec = getPlan(plan);
-        if (planRec !== null) return planRec.attributes?.flat;
-        return false;
-      };
-
-      inlinePassages.current = getFlat();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plan]);
-
-  useEffect(() => {
-    if (showBook(cols) && allBookData.length === 0) fetchBooks(lang);
-    let initData = Array<Array<any>>();
-    let newRowInfo = Array<IRowInfo>();
-    const getPassage = async (
-      passage: Passage,
-      list: (string | number)[][],
-      ids: Array<ISequencedRecordIdentity>
-    ) => {
-      if (!passage.attributes) return;
-      let newRow;
-      if (showBook(cols)) {
-        newRow = [
-          '',
-          '',
-          passage.attributes.sequencenum,
-          passage.attributes.book,
-          passage.attributes.reference,
-          passage.attributes.title,
-        ];
-      } else {
-        newRow = [
-          '',
-          '',
-          passage.attributes.sequencenum,
-          passage.attributes.reference,
-          passage.attributes.title,
-        ];
-      }
-      list.push(newRow);
-      ids.push({
-        type: 'passage',
-        id: passage.id,
-        sequencenum: passage.attributes.sequencenum,
-      });
-    };
-    const getSectionPassages = async (sec: Section) => {
-      // query filter doesn't work with JsonApi since id not translated
-      let sectionpassages = passages.filter(
-        (p) => related(p, 'section') === sec.id
-      );
-      if (sectionpassages != null) {
-        let passageids = Array<Array<string | number>>();
-        let ids = Array<ISequencedRecordIdentity>();
-        for (
-          let psgIndex = 0;
-          psgIndex < sectionpassages.length;
-          psgIndex += 1
-        ) {
-          await getPassage(sectionpassages[psgIndex], passageids, ids);
-        }
-        passageids = passageids.sort((i, j) => {
-          return (
-            parseInt(i[cols.PassageSeq].toString()) -
-            parseInt(j[cols.PassageSeq].toString())
-          );
-        });
-        ids = ids.sort((i, j) => {
-          return i.sequencenum - j.sequencenum;
-        });
-        for (let psgIndex = 0; psgIndex < passageids.length; psgIndex += 1) {
-          if (inlinePassages.current && psgIndex === 0) {
-            newRowInfo[newRowInfo.length - 1].passageId = ids[psgIndex];
-            for (
-              let ix = 2;
-              ix < initData[newRowInfo.length - 1].length;
-              ix += 1
-            )
-              initData[newRowInfo.length - 1][ix] = passageids[psgIndex][ix];
-          } else {
-            newRowInfo.push({ passageId: ids[psgIndex] } as IRowInfo);
-            initData.push(passageids[psgIndex]);
-          }
-          var rec = getMediaRec(ids[psgIndex].id, memory);
-          newRowInfo[newRowInfo.length - 1].mediaId =
-            rec !== null ? rec.id : '';
-          /*
-          if (mf) {
-
-            if (passMedia.hasOwnProperty(ids[psgIndex].id)) {
-              passMedia[ids[psgIndex].id].push(mf);
-            } else {
-              passMedia[ids[psgIndex].id] = [mf];
-            }
-          } */
-        }
-      }
-    };
-    const getSections = async (plan: string) => {
-      let plansections = sections
-        .filter((s) => related(s, 'plan') === plan)
-        .sort((i, j) => i.attributes?.sequencenum - j.attributes?.sequencenum);
-      if (plansections != null) {
-        for (let secIndex = 0; secIndex < plansections.length; secIndex += 1) {
-          let sec = plansections[secIndex] as Section;
-          if (!sec.attributes) continue;
-          newRowInfo.push({
-            sectionId: {
-              type: 'section',
-              id: sec.id,
-              sequencenum: sec.attributes.sequencenum,
-            },
-            editor: related(sec, 'editor'),
-            transcriber: related(sec, 'transcriber'),
-          } as IRowInfo);
-          let newRow;
-          if (showBook(cols)) {
-            newRow = [
-              sec.attributes.sequencenum,
-              sec.attributes.name,
-              '',
-              '',
-              '',
-              '',
-            ];
-          } else {
-            newRow = [
-              sec.attributes.sequencenum,
-              sec.attributes.name,
-              '',
-              '',
-              '',
-            ];
-          }
-          initData.push(newRow);
-          await getSectionPassages(sec);
-        }
-      }
-    };
+    if (scripture && allBookData.length === 0) fetchBooks(lang);
     const setUpdate = (value: boolean) => (updateRef.current = value);
     if (
       !savingRef.current &&
       !myChangedRef.current &&
       plan &&
-      !updateRef.current &&
-      !deleteRef.current
+      !updateRef.current
     ) {
       setUpdate(true);
-      getSections(plan as string).then(() => {
-        setData(initData);
-        setInData(initData.map((row: Array<any>) => [...row]));
-        rowInfo.current = newRowInfo;
-        getLastModified(plan);
-        setUpdate(false);
-        setNeedUpdate(false);
-      });
+      const newWorkflow = getWorkflow(plan, sections, passages, flat, memory);
+      setWorkflow(newWorkflow);
+      getLastModified(plan);
+      setUpdate(false);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [plan, sections, passages, inlinePassages.current, needUpdate]);
+  }, [plan, sections, passages, flat]);
 
+  // Reset column widths based on sheet content
   useEffect(() => {
-    const colMx = data.reduce(
-      (prev, cur, i) =>
-        cur.map((v, i) =>
-          Math.max(
-            prev[i],
-            !v ? 1 : typeof v === 'number' ? v.toString().length : v.length
-          )
-        ),
-      [0, 0, 0, 0, 0, 0, 0]
+    const curNames = colNames.concat(['action']);
+    const local = {
+      sectionSeq: organizedBy,
+      title: t.title,
+      passageSeq: t.passage,
+      book: t.book,
+      reference: t.reference,
+      comment: t.description,
+      action: t.action,
+    };
+    const minWidth = {
+      sectionSeq: 60,
+      title: 100,
+      passageSeq: 60,
+      book: 170,
+      reference: 120,
+      comment: 100,
+      action: 50,
+    };
+    const { colHead, colAdd } = wfColumnHeads(
+      workflow,
+      width,
+      curNames,
+      local,
+      minWidth
     );
-    const total = colMx.reduce((prev, cur) => prev + cur, 0);
-    const colMul = colMx.map((v) => v / total);
-    const extra = Math.max(width - 1020, 0);
-    const colAdd = colMul.map((v) => Math.floor(extra * v));
-    let colHead = [
-      { value: organizedBy, readOnly: true, width: 60 + colAdd[0] },
-      { value: t.title, readOnly: true, width: 100 + colAdd[1] },
-      { value: t.passage, readOnly: true, width: 60 + colAdd[2] },
-    ];
-    let nx = 3;
-    if (showBook(cols)) {
-      colHead = colHead.concat([
-        { value: t.book, readOnly: true, width: 170 + colAdd[4] },
-      ]);
-      nx += 1;
-    }
-    colHead = colHead.concat([
-      { value: t.reference, readOnly: true, width: 120 + colAdd[nx] },
-      { value: t.description, readOnly: true, width: 100 + colAdd[nx + 1] },
-    ]);
-    nx += 2;
-    colHead = colHead.concat([
-      {
-        value: t.action,
-        readOnly: true,
-        width: 50,
-      },
-    ]);
-    if (
-      colHead.length !== columns.length ||
-      columns[1].width !== colHead[1].width
-    ) {
+    let change = saveColAdd === undefined;
+    saveColAdd?.forEach((n, i) => {
+      change = change || n !== colAdd[i];
+    });
+    if (change) {
       setColumns(colHead);
+      setSaveColAdd(colAdd);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [data, width, cols]);
+  }, [workflow, width, colNames, flat]);
 
   if (view !== '') return <StickyRedirect to={view} />;
 
@@ -1420,9 +713,9 @@ export function ScriptureTable(props: IProps) {
     if (
       mediaRemoteIds &&
       mediaRemoteIds.length > 0 &&
-      uploadRow.current !== undefined
+      uploadItem !== undefined
     ) {
-      const passId = passageId(uploadRow.current);
+      const passId = uploadItem?.passageId?.id || '';
       await attachPassage(
         passId,
         related(
@@ -1434,7 +727,7 @@ export function ScriptureTable(props: IProps) {
           mediaRemoteIds[0]
       );
     }
-    uploadRow.current = undefined;
+    setUploadItem(undefined);
     if (importList) {
       setImportList(undefined);
       setUploadVisible(false);
@@ -1449,9 +742,9 @@ export function ScriptureTable(props: IProps) {
       <PlanSheet
         {...props}
         columns={columns}
-        rowData={data as Array<Array<any>>}
-        rowInfo={rowInfo.current as Array<IRowInfo>}
-        bookCol={showBook(cols) ? cols.Book : -1}
+        rowData={workflowSheet(workflow, colNames)}
+        rowInfo={workflow.filter((w) => !w.deleted)}
+        bookCol={colNames.findIndex((v) => v === 'book')}
         bookMap={bookMap}
         bookSuggestions={bookSuggestions}
         action={handleDelete}
@@ -1461,7 +754,7 @@ export function ScriptureTable(props: IProps) {
         paste={handleTablePaste}
         lookupBook={handleLookupBook}
         resequence={handleResequence}
-        inlinePassages={inlinePassages.current}
+        inlinePassages={flat}
         onTranscribe={handleTranscribe}
         onAudacity={handleAudacity}
         onAssign={handleAssign}
@@ -1481,11 +774,7 @@ export function ScriptureTable(props: IProps) {
         recordAudio={recordAudio}
         defaultFilename={defaultFilename}
         auth={auth}
-        mediaId={
-          uploadRow.current !== undefined
-            ? rowInfo.current[uploadRow.current].mediaId
-            : ''
-        }
+        mediaId={uploadItem?.mediaId?.id || ''}
         importList={importList}
         isOpen={uploadVisible}
         onOpen={handleUploadVisible}
@@ -1495,13 +784,13 @@ export function ScriptureTable(props: IProps) {
         finish={afterUpload}
         status={status}
       />
-      {audacityOpen && rowInfo.current[audacityItem].passageId && (
+      {audacityItem?.passageId && (
         <AudacityManager
           item={audacityItem}
-          open={audacityOpen}
+          open={Boolean(audacityItem)}
           onClose={handleAudacityClose}
-          passageId={rowInfo.current[audacityItem].passageId as RecordIdentity}
-          mediaId={rowInfo.current[audacityItem].mediaId || ''}
+          passageId={audacityItem?.passageId as RecordIdentity}
+          mediaId={audacityItem?.mediaId || ''}
           onImport={handleAudacityImport}
         />
       )}

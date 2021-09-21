@@ -51,7 +51,6 @@ interface IProps extends IStateProps {
   isPlaying: boolean;
   canAssign: boolean;
   canDelete: boolean;
-  noDeleteNow: boolean;
   active: boolean;
   onTranscribe: (i: number) => () => void;
   onAudacity: (i: number) => () => void;
@@ -72,7 +71,6 @@ export function PlanActionMenu(props: IProps) {
     onDelete,
     canAssign,
     canDelete,
-    noDeleteNow,
     active,
   } = props;
   const classes = useStyles();
@@ -225,7 +223,6 @@ export function PlanActionMenu(props: IProps) {
                         id="planActDel"
                         title={t.delete}
                         onClick={onDelete(rowIndex)}
-                        disabled={noDeleteNow}
                       >
                         <DeleteIcon className={classes.action} />
                       </MenuItem>

@@ -26,3 +26,27 @@ export interface IWorkflow {
   mediaId?: RecordIdentity;
   deleted: boolean;
 }
+
+export const flatScrColNames = [
+  'sectionSeq',
+  'title',
+  'book',
+  'reference',
+  'comment',
+];
+export const flatGenColNames = ['sectionSeq', 'title', 'reference', 'comment'];
+export const levScrColNames = [
+  'sectionSeq',
+  'title',
+  'passageSeq',
+  'book',
+  'reference',
+  'comment',
+];
+export const levGenColNames = [
+  'sectionSeq',
+  'title',
+  'passageSeq',
+  'reference',
+  'comment',
+];

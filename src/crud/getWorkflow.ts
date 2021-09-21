@@ -63,7 +63,7 @@ const wfPassageAdd = (
     while (indexAt < workflow.length) {
       if (
         item.kind !== IwfKind.Passage ||
-        item.passageSeq > workflow[indexAt].passageSeq
+        item.passageSeq < workflow[indexAt].passageSeq
       )
         break;
       indexAt += 1;
