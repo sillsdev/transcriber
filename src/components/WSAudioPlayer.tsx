@@ -563,6 +563,7 @@ function WSAudioPlayer(props: IProps) {
       wsPause(); //stop if playing
       recordStartPosition.current = wsPosition();
       recordOverwritePosition.current = recordStartPosition.current;
+      initialPosRef.current = recordStartPosition.current;
       startRecording(500);
     } else {
       processRecordRef.current = true;
