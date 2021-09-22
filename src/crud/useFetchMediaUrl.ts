@@ -35,7 +35,8 @@ export const mediaClean: IMediaState = {
 type Action =
   | { type: MediaSt.PENDING; payload: string } // mediaId
   | { type: MediaSt.FETCHED; payload: string } // temporary url
-  | { type: MediaSt.ERROR; payload: string };
+  | { type: MediaSt.ERROR; payload: string }
+  | { type: MediaSt.IDLE; payload: undefined };
 
 const stateReducer = (state: IMediaState, action: Action): IMediaState => {
   switch (action.type) {
@@ -49,6 +50,8 @@ const stateReducer = (state: IMediaState, action: Action): IMediaState => {
       return { ...state, status: MediaSt.FETCHED, url: action.payload };
     case MediaSt.ERROR:
       return { ...state, status: MediaSt.ERROR, error: action.payload };
+    case MediaSt.IDLE:
+      return { ...state, status: MediaSt.IDLE, urlMediaId: '' };
     default:
       return state;
   }
@@ -83,15 +86,23 @@ export const useFetchMediaUrl = (reporter?: any) => {
     let id = props.current.id;
     if (!id) return;
 
+    const cancelled = () => {
+      if (cancelRequest) {
+        dispatch({ payload: undefined, type: MediaSt.IDLE });
+        return true;
+      }
+      return false;
+    };
+
     const fetchData = () => {
       const remoteid = remId(id);
       id = guidId(id);
-      if (cancelRequest) return;
+      if (cancelled()) return;
       dispatch({ payload: id, type: MediaSt.PENDING });
 
       if (isElectron) {
         try {
-          if (cancelRequest) return;
+          if (cancelled()) return;
           const mediarec = memory.cache.query((q) =>
             q.findRecord({
               type: 'mediafile',
@@ -99,7 +110,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
             })
           ) as MediaFile;
           if (mediarec && mediarec.attributes) {
-            if (cancelRequest) return;
+            if (cancelled()) return;
             const audioUrl = mediarec.attributes.audioUrl;
             const path = dataPath(audioUrl, PathType.MEDIA);
             logError(Severity.info, reporter, `fetching=${path}`);
@@ -107,20 +118,19 @@ export const useFetchMediaUrl = (reporter?: any) => {
               const start = os.platform() === 'win32' ? 8 : 7;
               const url = new URL(`file://${path}`).toString().slice(start);
               const safeUrl = `transcribe-safe://${url}`;
-              if (cancelRequest) return;
+              if (cancelled()) return;
               dispatch({ payload: safeUrl, type: MediaSt.FETCHED });
               return;
             }
           }
         } catch (e: any) {
-          if (cancelRequest) return;
+          if (cancelled()) return;
           // we don't have it in our keymap?
           logError(Severity.error, reporter, infoMsg(e, ''));
           dispatch({ payload: e.message, type: MediaSt.ERROR });
         }
       }
-
-      if (cancelRequest) return;
+      if (cancelled()) return;
       Axios.get(`${API_CONFIG.host}/api/mediafiles/${remoteid}/fileurl`, {
         headers: {
           Authorization: 'Bearer ' + props.current.auth?.accessToken,
@@ -128,11 +138,11 @@ export const useFetchMediaUrl = (reporter?: any) => {
       })
         .then((strings) => {
           const attr: any = strings.data.data.attributes;
-          if (cancelRequest) return;
+          if (cancelled()) return;
           dispatch({ payload: attr['audio-url'], type: MediaSt.FETCHED });
         })
         .catch((e) => {
-          if (cancelRequest) return;
+          if (cancelled()) return;
           logError(Severity.error, reporter, infoMsg(e, 'media fetch failure'));
           dispatch({ payload: e.message, type: MediaSt.ERROR });
         });
