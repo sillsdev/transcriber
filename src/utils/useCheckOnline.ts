@@ -13,7 +13,7 @@ function Online(doCheck: boolean, cb: (result: boolean) => void) {
   //if we're electron, don't be using the internet even if it's available
   //until the user logs in or the override is true
   if (!doCheck) {
-    return false;
+    cb(false);
   }
 
   Axios.get(API_CONFIG.host + '/api/AmIOnline/', opts)

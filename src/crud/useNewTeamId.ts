@@ -47,7 +47,7 @@ export const useNewTeamId = (props: IProps) => {
     );
     if (orgRecs.length > 0) {
       teamRef.current = orgRecs[0].id;
-    } else
+    } else {
       orbitTeamCreate(
         {
           attributes: { name: personalOrg },
@@ -56,6 +56,7 @@ export const useNewTeamId = (props: IProps) => {
           teamRef.current = org;
         }
       );
+    }
   };
 
   const getPersonalId = () => {
@@ -76,7 +77,7 @@ export const useNewTeamId = (props: IProps) => {
 
   return async (teamIdType: string | undefined) => {
     let teamId: string;
-    if (teamIdType && teamIdType) {
+    if (teamIdType) {
       teamId = teamIdType;
     } else {
       const testId = getPersonalId();
