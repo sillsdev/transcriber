@@ -385,6 +385,7 @@ function WSAudioPlayer(props: IProps) {
 
   useEffect(() => {
     setDuration(0);
+    setHasRegion(0);
     if (blob) {
       wsLoad(blob, undefined);
       setBusy(true);
@@ -757,17 +758,19 @@ function WSAudioPlayer(props: IProps) {
                     </IconButton>
                   </LightTooltip>
                 )}
-                <LightTooltip id="wsAudioDeleteTip" title={t.deleteRecording}>
-                  <span>
-                    <IconButton
-                      id="wsAudioDelete"
-                      onClick={handleDelete()}
-                      disabled={recording || duration === 0}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </span>
-                </LightTooltip>
+                {hasRegion === 0 && (
+                  <LightTooltip id="wsAudioDeleteTip" title={t.deleteRecording}>
+                    <span>
+                      <IconButton
+                        id="wsAudioDelete"
+                        onClick={handleDelete()}
+                        disabled={recording || duration === 0}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </span>
+                  </LightTooltip>
+                )}
                 <div className={classes.grow}>{'\u00A0'}</div>
               </>
             )}
