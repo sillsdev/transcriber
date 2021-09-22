@@ -372,12 +372,14 @@ export function IntegrationPanel(props: IProps) {
       : t.offline;
   };
   const findConnectedProject = () => {
+    console.log('findConnectedProject', project);
     let index = paratext_projects.findIndex(
       (p) =>
         p.ProjectIds.indexOf(
           remoteId('project', project, memory.keyMap) || project
         ) >= 0
     );
+    console.log('found index:', index);
     setPtProj(index);
     setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
     setPtShortName(index >= 0 ? paratext_projects[index].ShortName : '');
@@ -475,7 +477,9 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     if (!busy) {
       if (!paratext_projectsStatus) {
+        console.log('calling getProject');
         let proj = getProject();
+        console.log('returned', proj);
         const langTag =
           proj && proj.attributes ? proj.attributes.language : undefined;
         if (offline) {
@@ -497,15 +501,19 @@ export function IntegrationPanel(props: IProps) {
             getLocalProjects(ptPath, t.projectsPending, projIds, langTag);
           });
         } else {
+          console.log('calling getProjects');
           getProjects(auth, t.projectsPending, errorReporter, langTag);
         }
       } else {
+        console.log('status:', paratext_projectsStatus);
         if (paratext_projectsStatus.errStatus) {
+          console.log('show error');
           showTitledMessage(
             t.projectError,
             translateParatextError(paratext_projectsStatus, ts)
           );
         } else if (paratext_projectsStatus.complete) {
+          console.log('calling findConnectedProject');
           findConnectedProject();
         }
       }
