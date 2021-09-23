@@ -57,6 +57,8 @@ function Team(props: IProps) {
   const [project] = useGlobal('project');
   const [group, setGroup] = useGlobal('group');
   const [organization] = useGlobal('organization');
+  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const { getRoleId } = useRole();
   const [open, setOpen] = useState(false);
   const [role, setRole] = useState('');
@@ -174,7 +176,12 @@ function Team(props: IProps) {
           titledetail={t.ownersDetail}
           people={useOwnerIds(props)}
           add={() => handleAdd(RoleNames.Admin)}
-          del={(id: string, name: string) => handleUpdate(id, RoleNames.Editor)}
+          del={
+            offline && !offlineOnly
+              ? undefined
+              : (id: string, name: string) => handleUpdate(id, RoleNames.Editor)
+          }
+          noDeleteInfo={t.noDeleteAdmin}
         />
         <TeamCol
           {...props}
@@ -182,8 +189,11 @@ function Team(props: IProps) {
           titledetail={t.editorsDetail}
           people={useReviewerIds(props)}
           add={() => handleAdd(RoleNames.Editor)}
-          del={(id: string, name: string) =>
-            handleUpdate(id, RoleNames.Transcriber)
+          del={
+            offline && !offlineOnly
+              ? undefined
+              : (id: string, name: string) =>
+                  handleUpdate(id, RoleNames.Transcriber)
           }
           noDeleteInfo={t.noDeleteInfo}
         />
@@ -193,7 +203,7 @@ function Team(props: IProps) {
           titledetail={t.transcribersDetail}
           people={useTranscriberIds(props)}
           add={() => handleAdd(RoleNames.Transcriber)}
-          del={handleRemove}
+          del={offline && !offlineOnly ? undefined : handleRemove}
           allUsers={allUsers}
           noDeleteInfo={t.noDeleteInfo}
           noDeleteAllUsersInfo={t.noDeleteAllUsersInfo}

@@ -922,6 +922,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupSettings.noDeleteAdmin">
+         <segment>
+            <source>The only Administrator cannot be deleted.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="groupSettings.noDeleteAllUsersInfo">
          <segment>
             <source>Cannot delete members from the All Members group</source>

@@ -217,6 +217,7 @@ const initialState = {
 			"editorsDetail": "(Review + Transcribe)",
 			"loadingTable": "Loading data",
 			"name": "Name",
+			"noDeleteAdmin": "The only Administrator cannot be deleted.",
 			"noDeleteAllUsersInfo": "Cannot delete members from the All Members group",
 			"noDeleteInfo": "This role is included in a higher role and cannot be deleted.",
 			"owners": "Owners",

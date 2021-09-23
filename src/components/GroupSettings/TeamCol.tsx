@@ -27,7 +27,7 @@ interface IProps extends IStateProps {
   titledetail: string;
   people: IPerson[];
   add: () => void;
-  del: (id: string, name: string) => void;
+  del?: (id: string, name: string) => void;
   allUsers?: boolean;
 }
 

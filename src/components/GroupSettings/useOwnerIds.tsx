@@ -14,7 +14,7 @@ function useOwnerIds(props: IProps): IPerson[] {
 
   const adminId = getRoleId(RoleNames.Admin);
 
-  return groupMemberships
+  let persons = groupMemberships
     .filter(
       (gm) => related(gm, 'group') === group && related(gm, 'role') === adminId
     )
@@ -22,6 +22,10 @@ function useOwnerIds(props: IProps): IPerson[] {
       canDelete: true,
       user: related(gm, 'user'),
     }));
+  if (persons.length === 1) {
+    persons[0].canDelete = false;
+  }
+  return persons;
 }
 
 export default useOwnerIds;
