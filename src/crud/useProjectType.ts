@@ -16,14 +16,14 @@ export const useProjectType = () => {
       if (project === '') return '';
       pId = project;
     } else pId = related(project, 'project');
-
+    console.log('useProjectType', pId); //TC138
     try {
       proj = memory.cache.query((q) =>
         q.findRecord({ type: 'project', id: pId })
       ) as Project;
     } catch (error) {
       // During refresh the project might not be found
-      console.log('project not found in useProjectType')
+      console.log('project not found in useProjectType');
       return 'Scripture';
     }
     var ptId = related(proj, 'projecttype');

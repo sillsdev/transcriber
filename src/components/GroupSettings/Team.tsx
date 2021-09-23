@@ -154,6 +154,7 @@ function Team(props: IProps) {
 
   useEffect(() => {
     if (!selectedGroup || selectedGroup === '') {
+      console.log('project, selectedGroup useEffect', project); //TC138
       const projRec = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'project', id: project })
       ) as Project;
