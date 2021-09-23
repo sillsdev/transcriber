@@ -603,6 +603,10 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         mediaUrlRef.current = mediaUrl;
         try {
           loadBlob(mediaUrl, (url, b) => {
+            if (!b) {
+              setSelected(state.selected);
+              return;
+            }
             //not sure what this intermediary file is, but causes console errors
             if (b.type !== 'text/html') {
               //console.log('got the blob', url.substr(70, 50));

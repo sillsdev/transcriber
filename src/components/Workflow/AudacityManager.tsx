@@ -156,8 +156,10 @@ function AudacityManager(props: IProps) {
     await launchAudacityExport(name, () => {
       console.log(`exported ${mp3FullName}`);
       loadBlob(mp3FullName, (url, b) => {
-        onImport(item, [new File([b], mp3Name, { type: 'audio/mp3' })]);
-        onClose();
+        if (b) {
+          onImport(item, [new File([b], mp3Name, { type: 'audio/mp3' })]);
+          onClose();
+        } else showMessage(url);
       });
     });
   };

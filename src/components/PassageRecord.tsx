@@ -20,6 +20,7 @@ import WSAudioPlayer from './WSAudioPlayer';
 import { QueryBuilder } from '@orbit/data';
 import { loadBlob, removeExtension } from '../utils';
 import { MediaSt, useFetchMediaUrl } from '../crud';
+import { useSnackBar } from '../hoc/SnackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -85,7 +86,7 @@ function PassageRecord(props: IProps) {
   const [filechanged, setFilechanged] = useState(false);
   const [blobReady, setBlobReady] = useState(true);
   const mimeTypeRef = useRef('audio/wav');
-
+  const { showMessage } = useSnackBar();
   const extensions = useMemo(
     () => ['mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'],
     []
@@ -178,10 +179,15 @@ function PassageRecord(props: IProps) {
   const handleLoadAudio = () => {
     setLoading(true);
     reset();
-    loadBlob(mediaState.url, (url, b) => {
-      setOriginalBlob(b);
-      setLoading(false);
-      setAudioBlob(b);
+    loadBlob(mediaState.url, (urlorError, b) => {
+      if (b) {
+        setOriginalBlob(b);
+        setLoading(false);
+        setAudioBlob(b);
+      } else {
+        showMessage(urlorError);
+        fetchMediaUrl({ id: mediaId, auth });
+      }
     });
     const mediaRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'mediafile', id: mediaId })
