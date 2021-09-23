@@ -919,6 +919,12 @@
             <target>Фамилия Имя</target>
          </segment>
       </unit>
+      <unit id="groupSettings.noDeleteAdmin">
+         <segment>
+            <source>The only Administrator cannot be deleted.</source>
+            <target>Единственного администратора удалить нельзя.</target>
+         </segment>
+      </unit>
       <unit id="groupSettings.noDeleteAllUsersInfo">
          <segment>
             <source/>

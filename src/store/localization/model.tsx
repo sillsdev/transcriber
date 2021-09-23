@@ -197,6 +197,7 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "editorsDetail": string;
     "loadingTable": string;
     "name": string;
+    "noDeleteAdmin": string;
     "noDeleteAllUsersInfo": string;
     "noDeleteInfo": string;
     "owners": string;

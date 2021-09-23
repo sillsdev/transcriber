@@ -1073,6 +1073,13 @@
                <context context-type="sourcefile">GroupSettings.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="groupSettings.noDeleteAdmin">
+            <source>The only Administrator cannot be deleted.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">GroupSettings.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="groupSettings.noDeleteAllUsersInfo">
             <source>Cannot delete members from the All Members group</source>
             <target/>
