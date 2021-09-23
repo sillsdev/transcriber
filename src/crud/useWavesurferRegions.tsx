@@ -213,7 +213,6 @@ export function useWaveSurferRegions(
     var length = peaks.length;
     var coef = duration() / length;
     var minLenSilence = Math.ceil(minSeconds / coef);
-    var minLenRegion = Math.ceil(minRegionLenSeconds / coef);
 
     // Gather silence indeces
     var silences: number[] = [];
@@ -247,18 +246,14 @@ export function useWaveSurferRegions(
       };
     });
 
-    // Filter regions by minimum length
-    let fRegions = regions.filter(function (reg) {
-      return reg.end - reg.start >= minLenRegion;
-    });
-
     // Return time-based regions
-    var tRegions = fRegions.map(function (reg) {
+    var tRegions = regions.map(function (reg) {
       return {
         start: Math.round(reg.start * coef * 10) / 10,
         end: Math.round(reg.end * coef * 10) / 10,
       };
     });
+
     if (tRegions.length > 0) {
       //add a region at zero if not there
       var firstRegion = tRegions[0];
@@ -270,13 +265,24 @@ export function useWaveSurferRegions(
       }
     }
     // Combine the regions so the silence is included at the end of the region
-    return tRegions.map(function (reg, index) {
+    let sRegions = tRegions.map(function (reg, index) {
       var next = tRegions[index + 1];
       return {
         start: reg.start,
         end: next ? next.start : duration(),
       };
     });
+    var ix = 0;
+    // combine regions shorter than minimum length
+    while (ix < sRegions.length - 1) {
+      if (sRegions[ix].end - sRegions[ix].start < minRegionLenSeconds) {
+        sRegions[ix].end = sRegions[ix + 1].end;
+        sRegions.splice(ix + 1, 1);
+      } else {
+        ix += 1;
+      }
+    }
+    return sRegions;
   };
 
   const setPrevNext = (sortedIds: string[]) => {
