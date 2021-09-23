@@ -39,6 +39,7 @@ export const getMediaProjRec = (rec: MediaFile | null, memory: Memory) => {
     const planRec = getMediaPlanRec(rec, memory);
     if (planRec) {
       const projId = related(planRec, 'project') as string;
+      console.log('getMediaProjRec', projId); //TC138
       projRec = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'project', id: projId })
       ) as Project;

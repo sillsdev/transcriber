@@ -478,6 +478,7 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     if (project && project !== '') {
+      console.log('project useEffect', project); //TC138
       var r = memory.cache.query((q) =>
         q.findRecord({ type: 'project', id: project })
       ) as Project;

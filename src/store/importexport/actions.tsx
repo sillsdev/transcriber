@@ -357,6 +357,7 @@ export const importProjectToElectron =
         );
       }
       try {
+        console.log('getProjectFromFile', id); //TC138
         var rec = memory.cache.query((q) =>
           q.findRecord({ type: project.type, id: id })
         ) as Project;

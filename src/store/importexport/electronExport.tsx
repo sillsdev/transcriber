@@ -91,6 +91,7 @@ export async function electronExport(
     'Transcriber' + idStr('user', userid) + '_backup.' + exportType;
 
   const getProjRec = (projectid: number | string): Project => {
+    console.log('getProjRec', projectid); //TC138
     return memory.cache.query((q: QueryBuilder) =>
       q.findRecord({
         type: 'project',
@@ -319,11 +320,11 @@ export async function electronExport(
           default:
             //activitystate,integration,plantype,projecttype,role
             const needsRemId = Boolean(projRec?.keys?.remoteId);
-            return (memory.cache.query((q: QueryBuilder) =>
-              q.findRecords(info.table)
-            ) as Record[]).filter(
-              (r) => Boolean(r?.keys?.remoteId) === needsRemId
-            );
+            return (
+              memory.cache.query((q: QueryBuilder) =>
+                q.findRecords(info.table)
+              ) as Record[]
+            ).filter((r) => Boolean(r?.keys?.remoteId) === needsRemId);
         }
       } else {
         return memory.cache.query((q: QueryBuilder) =>
