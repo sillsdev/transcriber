@@ -586,10 +586,12 @@ function WSAudioPlayer(props: IProps) {
   const handleActionConfirmed = () => {
     if (confirmAction === t.deleteRecording) {
       wsClear();
+      if (setChanged) setChanged(false);
+      if (setBlobReady) setBlobReady(true);
     } else {
       wsRegionDelete();
+      handleChanged();
     }
-    handleChanged();
     setConfirmAction('');
   };
   const handleActionRefused = () => {
