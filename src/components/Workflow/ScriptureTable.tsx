@@ -65,6 +65,8 @@ import { useMediaAttach } from '../../crud/useMediaAttach';
 import { UpdateRecord } from '../../model/baseModel';
 import { PlanContext } from '../../context/PlanContext';
 
+const SaveWait = 500;
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -455,17 +457,17 @@ export function ScriptureTable(props: IProps) {
     const { wf } = getByIndex(workflow, i);
     const id = wf?.passageId?.id || '';
     const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
-    if (changed || myChangedRef.current) {
+    if (myChangedRef.current) {
       startSave();
-      waitForSave(() => setView(`/work/${prjId}/${passageRemoteId}`), 100);
+      waitForSave(() => setView(`/work/${prjId}/${passageRemoteId}`), SaveWait);
     } else setView(`/work/${prjId}/${passageRemoteId}`);
   };
 
   const handleAudacity = (index: number) => {
     const { wf } = getByIndex(workflow, index);
-    if (changed || myChangedRef.current) {
+    if (myChangedRef.current) {
       startSave();
-      waitForSave(() => setAudacityItem(wf), 100);
+      waitForSave(() => setAudacityItem(wf), SaveWait);
     } else setAudacityItem(wf);
   };
 
@@ -478,9 +480,9 @@ export function ScriptureTable(props: IProps) {
     setAssignSectionVisible(true);
   };
   const handleAssign = (where: number[]) => () => {
-    if (changed || myChangedRef.current) {
+    if (myChangedRef.current) {
       startSave();
-      waitForSave(() => doAssign(where), 100);
+      waitForSave(() => doAssign(where), SaveWait);
     } else doAssign(where);
   };
 
@@ -512,9 +514,9 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleUpload = (i: number) => () => {
-    if (changed || myChangedRef.current) {
+    if (myChangedRef.current) {
       startSave();
-      waitForSave(() => showUpload(i, false), 100);
+      waitForSave(() => showUpload(i, false), SaveWait);
     } else showUpload(i, false);
   };
 
@@ -527,7 +529,7 @@ export function ScriptureTable(props: IProps) {
     const { wf } = getByIndex(workflow, i);
     if (wf?.sectionId?.id) {
       startSave();
-      waitForSave(() => showUpload(i, true), 100);
+      waitForSave(() => showUpload(i, true), SaveWait);
     } else showUpload(i, true);
   };
 
@@ -607,7 +609,7 @@ export function ScriptureTable(props: IProps) {
       let change = false;
       let start = 0;
       if (!offlineOnly) {
-        for (; start + 200 < numChanges; start += 200) {
+        for (; start + 200 < workflow.length; start += 200) {
           setComplete(Math.floor((90 * start) / numChanges) + 10);
           change = (await saveFn(workflow.slice(start, start + 200))) || change;
         }
