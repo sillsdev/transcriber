@@ -385,18 +385,10 @@ export function ScriptureTable(props: IProps) {
 
   const handleDelete = async (what: string, where: number[]) => {
     if (what === 'Delete') {
-      setUploadItem(undefined);
-      if (!savingRef.current && !updateRef.current)
-        if (changed || myChangedRef.current) {
-          startSave();
-          setTimeout(() => {}, 1000);
-          await markDelete(where[0]);
-        } else await markDelete(where[0]);
+      await markDelete(where[0]);
       return true;
-    } else {
-      showMessage(<span>{what}...</span>);
-      return false;
     }
+    return false;
   };
 
   const getSectionsWhere = (where: number[]) => {
@@ -420,6 +412,10 @@ export function ScriptureTable(props: IProps) {
     return rows;
   };
 
+  const isValidNumber = (value: string): boolean => {
+    return /^[0-9]+$/.test(value);
+  };
+
   interface MyWorkflow extends IWorkflow {
     [key: string]: any;
   }
@@ -428,7 +424,12 @@ export function ScriptureTable(props: IProps) {
       const { wf, i } = getByIndex(workflow, c.row);
       const myWf = wf as MyWorkflow | undefined;
       const name = colNames[c.col];
-      if (myWf && myWf[name] !== c.value) {
+      if (
+        (c.col === secNumCol && !isValidNumber(c.value || '')) ||
+        (c.col === passNumCol && !isValidNumber(c.value || ''))
+      ) {
+        showMessage(s.nonNumber);
+      } else if (myWf && myWf[name] !== c.value) {
         const isSection = c.col < 2;
         const sectionUpdated = isSection
           ? currentDateTime()
