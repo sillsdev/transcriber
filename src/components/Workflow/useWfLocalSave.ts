@@ -1,12 +1,12 @@
 import { useGlobal } from 'reactn';
-import { Section, Passage, ActivityStates, IWorkflow } from '../model';
-import { AddRecord, UpdateRecord } from '../model/baseModel';
+import { Section, Passage, ActivityStates, IWorkflow } from '../../model';
+import { AddRecord, UpdateRecord } from '../../model/baseModel';
 import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
 import {
   UpdateRelatedPassageOps,
   UpdatePassageStateOps,
   UpdateRelatedSectionOps,
-} from '../crud';
+} from '../../crud';
 import {
   isPassageAdding,
   isPassageRow,

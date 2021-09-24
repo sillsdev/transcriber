@@ -6,27 +6,28 @@ import {
   BookNameMap,
   OptionType,
   IWorkflow,
-} from '../model';
+} from '../../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem, AppBar } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from '@material-ui/icons/Add';
-import { useSnackBar } from '../hoc/SnackBar';
+import { useSnackBar } from '../../hoc/SnackBar';
 import DataSheet from 'react-datasheet';
-import Confirm from './AlertDialog';
-import BookSelect from './BookSelect';
-import { ProjButtons, LastEdit } from '../control';
+import Confirm from '../AlertDialog';
+import BookSelect from '../BookSelect';
+import { ProjButtons, LastEdit } from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
-import { isPassageRow, isSectionRow, refMatch } from '../utils';
-import { useOrganizedBy } from '../crud';
-import { useRemoteSave } from '../utils/useRemoteSave';
-import TaskAvatar from './TaskAvatar';
-import MediaPlayer from './MediaPlayer';
-import { PlanContext } from '../context/PlanContext';
-import Auth from '../auth/Auth';
-import { TranscriberIcon, EditorIcon } from './RoleIcons';
+import { refMatch } from '../../utils';
+import { isPassageRow, isSectionRow } from '.';
+import { useOrganizedBy } from '../../crud';
+import { useRemoteSave } from '../../utils/useRemoteSave';
+import TaskAvatar from '../TaskAvatar';
+import MediaPlayer from '../MediaPlayer';
+import { PlanContext } from '../../context/PlanContext';
+import Auth from '../../auth/Auth';
+import { TranscriberIcon, EditorIcon } from '../RoleIcons';
 import PlanActionMenu from './PlanActionMenu';
-import { ActionHeight, tabActions, actionBar } from './PlanTabs';
+import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
 import PlanAudioActions from './PlanAudioActions';
 
 const useStyles = makeStyles((theme: Theme) =>

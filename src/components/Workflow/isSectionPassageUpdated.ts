@@ -1,4 +1,4 @@
-import { IWorkflow } from '../model';
+import { IWorkflow } from '../../model';
 
 export const isSectionAdding = (wf: IWorkflow) =>
   (wf?.sectionId?.id || '') === '';

@@ -1,4 +1,4 @@
-import { IwfKind, IWorkflow } from '../model';
+import { IwfKind, IWorkflow } from '../../model';
 
 interface MyWorkflow extends IWorkflow {
   [key: string]: any;

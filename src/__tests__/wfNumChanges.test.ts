@@ -1,5 +1,5 @@
 import { IWorkflow, IwfKind } from '../model';
-import { wfNumChanges } from '../utils';
+import { wfNumChanges } from '../components/Workflow';
 
 const workflow: IWorkflow[] = [
   {

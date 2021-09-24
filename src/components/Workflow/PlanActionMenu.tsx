@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { ISharedStrings, IPlanActionsStrings, IState } from '../model';
-import localStrings from '../selector/localize';
+import { ISharedStrings, IPlanActionsStrings, IState } from '../../model';
+import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -16,9 +16,9 @@ import MoreIcon from '@material-ui/icons/MoreHoriz';
 import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import TranscribeIcon from '@material-ui/icons/EditOutlined';
-import { elemOffset } from '../utils';
-import { isElectron } from '../api-variable';
-import { AudacityLogo } from '../control';
+import { elemOffset } from '../../utils';
+import { isElectron } from '../../api-variable';
+import { AudacityLogo } from '../../control';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

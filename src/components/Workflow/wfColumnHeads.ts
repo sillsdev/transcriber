@@ -1,4 +1,4 @@
-import { IWorkflow } from '../model';
+import { IWorkflow } from '../../model';
 import { workflowSheet } from '.';
 
 interface ILocalName {

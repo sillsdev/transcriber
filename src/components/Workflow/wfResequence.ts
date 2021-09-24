@@ -1,5 +1,6 @@
-import { IWorkflow, IwfKind } from '../model';
-import { isSectionRow, isPassageRow, currentDateTime } from '.';
+import { IWorkflow, IwfKind } from '../../model';
+import { isSectionRow, isPassageRow } from '.';
+import { currentDateTime } from '../../utils';
 
 export const wfResequence = (wf: IWorkflow[], sec = 1) => {
   const updatedAt = currentDateTime();

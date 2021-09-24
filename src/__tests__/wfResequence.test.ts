@@ -1,5 +1,5 @@
 import { IWorkflow, IwfKind } from '../model';
-import { wfResequence } from '../utils';
+import { wfResequence } from '../components/Workflow';
 
 test('resequence empty give empty', () => {
   expect(wfResequence([])).toEqual([]);

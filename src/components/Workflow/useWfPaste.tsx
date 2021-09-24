@@ -1,9 +1,8 @@
-import React from 'react';
-import { IScriptureTableStrings, IwfKind, IWorkflow } from '../model';
-import { useSnackBar } from '../hoc/SnackBar';
-import { currentDateTime } from '../utils';
+import { IScriptureTableStrings, IwfKind, IWorkflow } from '../../model';
+import { useSnackBar } from '../../hoc/SnackBar';
+import { currentDateTime } from '../../utils';
 import { parseInt } from 'lodash';
-import { useOrganizedBy } from '../crud';
+import { useOrganizedBy } from '../../crud';
 
 interface MyWorkflow extends IWorkflow {
   [key: string]: any;

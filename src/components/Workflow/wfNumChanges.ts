@@ -4,7 +4,7 @@ import {
   isSectionUpdated,
   isPassageUpdated,
 } from '.';
-import { IWorkflow } from '../model';
+import { IWorkflow } from '../../model';
 
 export const wfNumChanges = (
   workflow: IWorkflow[],

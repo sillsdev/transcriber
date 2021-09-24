@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { setGlobal } from 'reactn';
 import { Section, Passage, IWorkflow, IwfKind } from '../model';
 import { DataProvider } from '../mods/react-orbitjs';
-import { useWfLocalSave } from '../utils';
+import { useWfLocalSave } from '../components/Workflow';
 import { memory } from '../schema';
 
 // see https://jestjs.io/docs/mock-functions#mocking-modules

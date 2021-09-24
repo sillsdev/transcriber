@@ -1,7 +1,7 @@
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { Section, Passage, IWorkflow } from '../model';
-import { getWorkflow } from '../crud';
+import { getWorkflow } from '../components/Workflow';
 import { memory } from '../schema';
 
 const s1: Section = {

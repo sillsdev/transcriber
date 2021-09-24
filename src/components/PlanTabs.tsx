@@ -18,7 +18,7 @@ import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AppBar, Tabs, Tab } from '@material-ui/core';
 import grey from '@material-ui/core/colors/grey';
-import ScriptureTable from '../components/ScriptureTable';
+import ScriptureTable from './Workflow/ScriptureTable';
 import AudioTab from '../components/AudioTab/AudioTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';

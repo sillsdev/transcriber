@@ -1,5 +1,5 @@
 import { IWorkflow, IwfKind } from '../model';
-import { isSectionRow, isPassageRow } from '../utils';
+import { isSectionRow, isPassageRow } from '../components/Workflow';
 
 test('return true for section row if valid hierarchy section', () => {
   const workflowItem: IWorkflow = {

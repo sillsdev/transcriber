@@ -1,4 +1,4 @@
-import { IWorkflow, IwfKind } from '../model';
+import { IWorkflow, IwfKind } from '../../model';
 
 export const isSectionRow = (row: IWorkflow) =>
   row.kind === IwfKind.Section || row.kind === IwfKind.SectionPassage;

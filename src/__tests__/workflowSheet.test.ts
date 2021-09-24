@@ -1,7 +1,7 @@
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { IWorkflow, IwfKind } from '../model';
-import { workflowSheet } from '../utils';
+import { workflowSheet } from '../components/Workflow';
 
 afterEach(cleanup);
 

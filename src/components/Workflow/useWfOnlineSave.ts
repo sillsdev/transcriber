@@ -1,11 +1,9 @@
 import { useGlobal } from 'reactn';
-import { SectionPassage, IWorkflow } from '../model';
+import { SectionPassage, IWorkflow } from '../../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import JSONAPISource from '@orbit/jsonapi';
-import { remoteId, remoteIdNum, remoteIdGuid } from '../crud';
+import { remoteId, remoteIdNum, remoteIdGuid } from '../../crud';
 import {
-  waitForIt,
-  generateUUID,
   isSectionRow,
   isPassageRow,
   isSectionAdding,
@@ -13,6 +11,7 @@ import {
   isSectionUpdated,
   isPassageUpdated,
 } from '.';
+import { waitForIt, generateUUID } from '../../utils';
 
 interface SaveRec {
   id: string;

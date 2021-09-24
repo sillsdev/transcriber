@@ -1,5 +1,5 @@
 import { IWorkflow, IwfKind, levScrColNames } from '../model';
-import { wfColumnHeads } from '../utils';
+import { wfColumnHeads } from '../components/Workflow';
 
 interface StrMap {
   [key: string]: string;

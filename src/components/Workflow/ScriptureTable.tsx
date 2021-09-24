@@ -17,52 +17,53 @@ import {
   Plan,
   IWorkflow,
   IwfKind,
-} from '../model';
-import localStrings from '../selector/localize';
-import * as actions from '../store';
-import { withData, WithDataProps } from '../mods/react-orbitjs';
+} from '../../model';
+import localStrings from '../../selector/localize';
+import * as actions from '../../store';
+import { withData, WithDataProps } from '../../mods/react-orbitjs';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { useSnackBar } from '../hoc/SnackBar';
+import { useSnackBar } from '../../hoc/SnackBar';
 import PlanSheet, { ICellChange } from './PlanSheet';
 import {
   remoteIdNum,
   remoteIdGuid,
   related,
-  getWorkflow,
   useOrganizedBy,
   usePlan,
-} from '../crud';
+} from '../../crud';
 import {
   useRemoteSave,
   lookupBook,
   waitForIt,
   cleanFileName,
   useCheckOnline,
-  workflowSheet,
+  currentDateTime,
+} from '../../utils';
+import {
+  isSectionRow,
+  isPassageRow,
   wfColumnHeads,
   wfResequence,
   wfResequencePassages,
   useWfLocalSave,
   useWfOnlineSave,
-  isSectionRow,
-  isPassageRow,
   useWfPaste,
   wfNumChanges,
-  currentDateTime,
-} from '../utils';
+  getWorkflow,
+  workflowSheet,
+} from '.';
 import { debounce } from 'lodash';
 import AudacityManager from './AudacityManager';
-import AssignSection from './AssignSection';
-import StickyRedirect from './StickyRedirect';
-import Auth from '../auth/Auth';
-import Uploader, { IStatus } from './Uploader';
-import { useMediaAttach } from '../crud/useMediaAttach';
-import { keyMap } from '../schema';
-import { UpdateRecord } from '../model/baseModel';
-import { PlanContext } from '../context/PlanContext';
+import AssignSection from '../AssignSection';
+import StickyRedirect from '../StickyRedirect';
+import Auth from '../../auth/Auth';
+import Uploader, { IStatus } from '../Uploader';
+import { useMediaAttach } from '../../crud/useMediaAttach';
+import { UpdateRecord } from '../../model/baseModel';
+import { PlanContext } from '../../context/PlanContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -723,7 +724,7 @@ export function ScriptureTable(props: IProps) {
           'section'
         ),
         plan,
-        remoteIdGuid('mediafile', mediaRemoteIds[0], keyMap) ||
+        remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ||
           mediaRemoteIds[0]
       );
     }

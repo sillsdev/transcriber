@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { IScriptureTableStrings, IwfKind, IWorkflow } from '../model';
-import { useWfPaste } from '../utils';
+import { useWfPaste } from '../components/Workflow';
 
 test('paste hieararchical', () => {
   const pasted = [
