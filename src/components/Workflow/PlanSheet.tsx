@@ -205,7 +205,6 @@ export function PlanSheet(props: IProps) {
   const preventSave = useRef<boolean>(false);
   const currentRow = useRef<number>(-1);
   const sheetRef = useRef<any>();
-  const [showRow] = useState(0);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
@@ -237,6 +236,25 @@ export function PlanSheet(props: IProps) {
     //don't mess with it if we're selecting the checkbox
     //if (loc.start.j > 0 && loc.start.i === loc.end.i) setShowRow(loc.start.i);
     currentRow.current = loc.end.i;
+    if (sheetRef.current && currentRow.current) {
+      const tbodyRef =
+        sheetRef.current?.firstChild?.firstChild?.firstChild?.childNodes[
+          currentRow.current
+        ];
+      //only scroll if it's not already visible
+      if (tbodyRef && tbodyRef.offsetTop < document.documentElement.scrollTop) {
+        window.scrollTo(0, tbodyRef.offsetTop - 10);
+      } else if (
+        tbodyRef &&
+        tbodyRef.offsetTop >
+          document.documentElement.scrollTop +
+            document.documentElement.clientHeight -
+            ActionHeight -
+            200
+      ) {
+        window.scrollTo(0, tbodyRef.offsetTop + 10);
+      }
+    }
   };
 
   const handleValueRender = (cell: ICell) =>
@@ -576,25 +594,6 @@ export function PlanSheet(props: IProps) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowData, rowInfo, bookCol, columns, srcMediaId, projRole]);
-
-  useEffect(() => {
-    if (sheetRef.current && showRow) {
-      const tbodyRef =
-        sheetRef.current?.firstChild?.firstChild?.firstChild?.childNodes[
-          showRow
-        ];
-      //only scroll if it's not already visible
-      if (
-        tbodyRef &&
-        (tbodyRef.offsetTop < document.documentElement.scrollTop ||
-          tbodyRef.offsetTop >
-            document.documentElement.scrollTop +
-              document.documentElement.clientHeight)
-      ) {
-        window.scrollTo(0, tbodyRef.offsetTop - 10);
-      }
-    }
-  }, [showRow]);
 
   useEffect(() => {
     suggestionRef.current = bookSuggestions;
