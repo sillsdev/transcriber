@@ -1,6 +1,7 @@
-import { IWorkflow, IwfKind, Section, Passage } from '../model';
+import { IWorkflow, IwfKind, Section, Passage } from '../../model';
 import Memory from '@orbit/memory';
-import { related, getMediaRec } from '.';
+import { related } from '../../crud/related';
+import { getMediaRec } from '../../crud/media';
 
 const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -63,7 +64,7 @@ const wfPassageAdd = (
     while (indexAt < workflow.length) {
       if (
         item.kind !== IwfKind.Passage ||
-        item.passageSeq > workflow[indexAt].passageSeq
+        item.passageSeq < workflow[indexAt].passageSeq
       )
         break;
       indexAt += 1;

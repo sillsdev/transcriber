@@ -29,13 +29,15 @@ import {
   hasPython,
   hasAudacity,
 } from './utils';
-import { isElectron, API_CONFIG } from './api-variable';
+import {
+  isElectron,
+  API_CONFIG,
+  OrbitNetworkErrorRetries,
+} from './api-variable';
 import { QueryBuilder } from '@orbit/data';
 import { related } from './crud';
 import { Section, Plan } from './model';
 const appVersion = require('../package.json').version;
-
-export const OrbitNetworkErrorRetries = 5;
 
 const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
 const prod = API_CONFIG.host.indexOf('prod') !== -1;

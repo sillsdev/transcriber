@@ -1,7 +1,7 @@
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { IWorkflow } from '../model';
-import { workflowSheet } from '../utils';
+import { IWorkflow, IwfKind } from '../model';
+import { workflowSheet } from '../components/Workflow';
 
 afterEach(cleanup);
 
@@ -24,7 +24,7 @@ test('section only', () => {
   const workflow: IWorkflow[] = [
     {
       level: 0,
-      kind: 0,
+      kind: IwfKind.Section,
       sectionSeq: 1,
       title: 'Intro',
       sectionId: { type: 'section', id: 's1' },
@@ -42,7 +42,7 @@ test('section with passage', () => {
   const workflow: IWorkflow[] = [
     {
       level: 0,
-      kind: 2,
+      kind: IwfKind.SectionPassage,
       sectionSeq: 1,
       title: 'Intro',
       passageSeq: 1,
@@ -67,7 +67,7 @@ test('two sections with passages', () => {
   const workflow: IWorkflow[] = [
     {
       level: 0,
-      kind: 0,
+      kind: IwfKind.Section,
       sectionSeq: 1,
       title: 'Intro',
       passageSeq: 0,
@@ -79,7 +79,7 @@ test('two sections with passages', () => {
     },
     {
       level: 1,
-      kind: 1,
+      kind: IwfKind.Passage,
       sectionSeq: 1,
       passageSeq: 1,
       book: 'LUK',
@@ -91,7 +91,7 @@ test('two sections with passages', () => {
     },
     {
       level: 1,
-      kind: 1,
+      kind: IwfKind.Passage,
       sectionSeq: 1,
       passageSeq: 2,
       book: 'LUK',
@@ -140,11 +140,11 @@ test('two sections with passages', () => {
   ];
   expect(workflowSheet(workflow, levCols)).toEqual([
     [1, 'Intro', '', '', '', ''],
-    [1, '', 1, 'LUK', '1:1-4', 'salutation'],
-    [1, '', 2, 'LUK', '1:5-7', 'introducing John'],
-    [1, '', 3, 'LUK', '1:8-10', "John's call"],
+    ['', '', 1, 'LUK', '1:1-4', 'salutation'],
+    ['', '', 2, 'LUK', '1:5-7', 'introducing John'],
+    ['', '', 3, 'LUK', '1:8-10', "John's call"],
     [2, 'Birth of John', '', '', '', ''],
-    [2, '', 1, 'LUK', '1:11-14', 'Zechariah at the temple'],
+    ['', '', 1, 'LUK', '1:11-14', 'Zechariah at the temple'],
   ]);
 });
 
@@ -225,9 +225,9 @@ test('two sections with deleted passage', () => {
   ];
   expect(workflowSheet(workflow, levCols)).toEqual([
     [1, 'Intro', '', '', '', ''],
-    [1, '', 1, 'LUK', '1:1-4', 'salutation'],
-    [1, '', 2, 'LUK', '1:8-10', "John's call"],
+    ['', '', 1, 'LUK', '1:1-4', 'salutation'],
+    ['', '', 2, 'LUK', '1:8-10', "John's call"],
     [2, 'Birth of John', '', '', '', ''],
-    [2, '', 1, 'LUK', '1:11-14', 'Zechariah at the temple'],
+    ['', '', 1, 'LUK', '1:11-14', 'Zechariah at the temple'],
   ]);
 });

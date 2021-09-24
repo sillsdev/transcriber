@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { useParams, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import AppHead from '../components/App/AppHead';
-import { PlanProvider, PlanContext } from '../context/PlanContext';
+import { PlanProvider } from '../context/PlanContext';
 import ViewMode, { ViewOption } from '../control/ViewMode';
 import PlanTabs from '../components/PlanTabs';
 import { useUrlContext, useRole, useProjectType } from '../crud';
@@ -26,23 +26,6 @@ interface IProps {
   auth: Auth;
 }
 
-const PlanBase = (props: IProps) => {
-  const classes = useStyles();
-  const uctx = React.useContext(UnsavedContext);
-  const { checkSavedFn } = uctx.state;
-  const ctx = React.useContext(PlanContext);
-  const { isScripture } = ctx.state;
-
-  return (
-    <div id="PlanScreen" className={classes.teamScreen}>
-      <PlanTabs
-        {...props}
-        checkSaved={checkSavedFn}
-        bookCol={isScripture() ? 0 : -1}
-      />
-    </div>
-  );
-};
 interface ParamTypes {
   prjId: string;
 }
@@ -106,7 +89,9 @@ export const PlanScreen = (props: IProps) => {
     <div className={classes.root}>
       <AppHead {...props} SwitchTo={SwitchTo} />
       <PlanProvider {...props}>
-        <PlanBase {...props} />
+        <div id="PlanScreen" className={classes.teamScreen}>
+          <PlanTabs {...props} checkSaved={checkSavedFn} />
+        </div>
       </PlanProvider>
     </div>
   );

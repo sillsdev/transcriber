@@ -1,8 +1,8 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IAudacityManagerStrings, MediaFile } from '../model';
-import localStrings from '../selector/localize';
+import { IState, IAudacityManagerStrings, MediaFile } from '../../model';
+import localStrings from '../../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
@@ -18,9 +18,9 @@ import {
   useAudacityProjRead,
   useAudacityProjDelete,
   useAudProjName,
-} from '../crud';
-import { useSnackBar } from '../hoc/SnackBar';
-import { API_CONFIG, isElectron } from '../api-variable';
+} from '../../crud';
+import { useSnackBar } from '../../hoc/SnackBar';
+import { API_CONFIG, isElectron } from '../../api-variable';
 import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
 import {
@@ -28,8 +28,8 @@ import {
   getMacroOutputName,
   launchAudacityExport,
   loadBlob,
-} from '../utils';
-import { dataPath, PathType } from '../utils';
+} from '../../utils';
+import { dataPath, PathType } from '../../utils';
 
 const fs = require('fs');
 const ipc = isElectron ? require('electron').ipcRenderer : null;

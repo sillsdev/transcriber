@@ -1,13 +1,13 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { ISharedStrings, IPlanActionsStrings, IState } from '../model';
+import { ISharedStrings, IPlanActionsStrings, IState } from '../../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 //import AddIcon from '@material-ui/icons/AddCircleOutline';
 import AddIcon from '@material-ui/icons/LibraryAddOutlined';
 import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
 import StopIcon from '@material-ui/icons/Stop';
 import MicIcon from '@material-ui/icons/Mic';
-import localStrings from '../selector/localize';
+import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 
 const useStyles = makeStyles((theme: Theme) =>

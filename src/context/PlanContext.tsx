@@ -42,8 +42,8 @@ const initState = {
   readonly: false,
   connected: false,
   projButtonStr: {} as IProjButtonsStrings,
-  isScripture: () => false,
-  isFlat: (plan: string) => false,
+  scripture: false,
+  flat: false,
 };
 
 export type ICtxState = typeof initState;
@@ -112,6 +112,20 @@ const PlanProvider = withData(mapRecordsToProps)(
     };
 
     React.useEffect(() => {
+      if (plan !== '') {
+        const newFlat = isFlat(plan);
+        const newScriture = isScripture();
+        if (state.flat !== newFlat || state.scripture !== newScriture)
+          setState((state) => ({
+            ...state,
+            flat: newFlat,
+            scripture: newScriture,
+          }));
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [plan]);
+
+    React.useEffect(() => {
       const newValue = (isOffline && !offlineOnly) || projRole !== 'admin';
       if (readonly !== newValue) setReadOnly(newValue);
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -127,8 +141,6 @@ const PlanProvider = withData(mapRecordsToProps)(
             ...state,
             connected,
             readonly,
-            isScripture,
-            isFlat,
           },
           setState,
         }}

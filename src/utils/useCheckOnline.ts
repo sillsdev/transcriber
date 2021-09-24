@@ -2,7 +2,7 @@ import { useGlobal } from 'reactn';
 import * as actions from '../store';
 import Axios from 'axios';
 import JSONAPISource from '@orbit/jsonapi';
-import { OrbitNetworkErrorRetries } from '..';
+import { OrbitNetworkErrorRetries } from '../api-variable';
 import { API_CONFIG } from '../api-variable';
 
 function Online(doCheck: boolean, cb: (result: boolean) => void) {

@@ -1,4 +1,4 @@
-import { refMatch } from '../utils';
+import { refMatch } from '../utils/refMatch';
 
 test('verse range', () => {
   expect(refMatch('1:1-4')).toBeTruthy();
