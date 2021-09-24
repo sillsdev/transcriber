@@ -511,8 +511,7 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleUpload = (i: number) => () => {
-    const { wf } = getByIndex(workflow, i);
-    if (wf?.passageId?.id) {
+    if (changed || myChangedRef.current) {
       startSave();
       waitForSave(() => showUpload(i, false), 100);
     } else showUpload(i, false);

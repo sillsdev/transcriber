@@ -1,4 +1,4 @@
-import { generateUUID } from '../utils';
+import { generateUUID } from '../utils/generateUUID';
 
 test('produce correctly formatted guid', () => {
   expect(generateUUID()).toMatch(

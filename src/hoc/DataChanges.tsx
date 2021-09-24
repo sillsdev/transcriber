@@ -13,7 +13,11 @@ import Coordinator from '@orbit/coordinator';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { DataChange } from '../model/dataChange';
-import { API_CONFIG, isElectron } from '../api-variable';
+import {
+  API_CONFIG,
+  isElectron,
+  OrbitNetworkErrorRetries,
+} from '../api-variable';
 import Auth from '../auth/Auth';
 import {
   offlineProjectUpdateSnapshot,
@@ -29,7 +33,6 @@ import IndexedDBSource from '@orbit/indexeddb';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { OrbitNetworkErrorRetries } from '..';
 
 interface IStateProps {}
 

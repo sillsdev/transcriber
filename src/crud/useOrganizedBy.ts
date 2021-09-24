@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { Plan, IState } from '../model';
+import { Plan, IState, IVProjectStrings } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
@@ -13,7 +13,7 @@ const stringSelector = (state: IState) =>
 export const useOrganizedBy = () => {
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
-  const t = useSelector(stringSelector, shallowEqual);
+  const t: IVProjectStrings = useSelector(stringSelector, shallowEqual);
 
   const switchToLocal: ISwitches = {
     section: t.sections,

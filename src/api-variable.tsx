@@ -7,6 +7,8 @@ const help =
     ? process.env.REACT_APP_HELP
     : '';
 
+export const OrbitNetworkErrorRetries = 5;
+
 export const API_CONFIG = {
   host: process.env.REACT_APP_HOST ? process.env.REACT_APP_HOST : '',
   snagId: process.env.REACT_APP_SNAGID ? process.env.REACT_APP_SNAGID : '',

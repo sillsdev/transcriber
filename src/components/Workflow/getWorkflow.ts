@@ -1,6 +1,7 @@
 import { IWorkflow, IwfKind, Section, Passage } from '../../model';
 import Memory from '@orbit/memory';
-import { related, getMediaRec } from '../../crud';
+import { related } from '../../crud/related';
+import { getMediaRec } from '../../crud/media';
 
 const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
   if (item.sectionUpdated && rec.sectionUpdated)

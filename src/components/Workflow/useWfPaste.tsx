@@ -1,8 +1,8 @@
 import { IScriptureTableStrings, IwfKind, IWorkflow } from '../../model';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { currentDateTime } from '../../utils';
+import { currentDateTime } from '../../utils/currentDateTime';
 import { parseInt } from 'lodash';
-import { useOrganizedBy } from '../../crud';
+import { useOrganizedBy } from '../../crud/useOrganizedBy';
 
 interface MyWorkflow extends IWorkflow {
   [key: string]: any;
