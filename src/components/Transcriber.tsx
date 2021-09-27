@@ -242,7 +242,6 @@ export function Transcriber(props: IProps) {
     role: '',
   };
   const classes = useStyles();
-
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
@@ -596,7 +595,7 @@ export function Transcriber(props: IProps) {
     setAddNoteVisible(true);
   };
   const handleReject = () => {
-    if (trBusy) {
+    if (saving.current) {
       showMessage(t.saving);
       return;
     }
@@ -784,7 +783,7 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleSaveButton = () => {
-    if (trBusy) {
+    if (saving.current) {
       showMessage(t.saving);
       return;
     }
