@@ -3127,6 +3127,12 @@
             <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
          </segment>
       </unit>
+      <unit id="shared.fileNotFound">
+         <segment>
+            <source>The audio file has not been downloaded or has been deleted.</source>
+            <target>Le fichier audio n'a pas été téléchargé ou a été supprimé.</target>
+         </segment>
+      </unit>
       <unit id="shared.importMediaSingular">
          <segment>
             <source>Import Audio</source>

@@ -3127,6 +3127,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.fileNotFound">
+         <segment>
+            <source>The audio file has not been downloaded or has been deleted.</source>
+            <target>O arquivo de áudio não foi baixado ou foi excluído.</target>
+         </segment>
+      </unit>
       <unit id="shared.importMediaSingular">
          <segment>
             <source>Import Audio</source>

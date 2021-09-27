@@ -15,6 +15,7 @@ export enum MediaSt {
   'PENDING',
   'FETCHED',
   'ERROR',
+  'SET_SELECTED',
 }
 
 export interface IMediaState {
@@ -36,7 +37,8 @@ type Action =
   | { type: MediaSt.PENDING; payload: string } // mediaId
   | { type: MediaSt.FETCHED; payload: string } // temporary url
   | { type: MediaSt.ERROR; payload: string }
-  | { type: MediaSt.IDLE; payload: undefined };
+  | { type: MediaSt.IDLE; payload: undefined }
+  | { type: MediaSt.SET_SELECTED; payload: string };
 
 const stateReducer = (state: IMediaState, action: Action): IMediaState => {
   switch (action.type) {
@@ -45,13 +47,20 @@ const stateReducer = (state: IMediaState, action: Action): IMediaState => {
         ...mediaClean,
         status: MediaSt.PENDING,
         urlMediaId: action.payload,
+        error: '',
       };
     case MediaSt.FETCHED:
-      return { ...state, status: MediaSt.FETCHED, url: action.payload };
+      return {
+        ...state,
+        status: MediaSt.FETCHED,
+        url: action.payload,
+      };
     case MediaSt.ERROR:
       return { ...state, status: MediaSt.ERROR, error: action.payload };
     case MediaSt.IDLE:
-      return { ...state, status: MediaSt.IDLE, urlMediaId: '' };
+      return { ...state, status: MediaSt.IDLE, urlMediaId: '', error: '' };
+    case MediaSt.SET_SELECTED:
+      return { ...state, trackedTask: action.payload };
     default:
       return state;
   }
@@ -121,6 +130,15 @@ export const useFetchMediaUrl = (reporter?: any) => {
               if (cancelled()) return;
               dispatch({ payload: safeUrl, type: MediaSt.FETCHED });
               return;
+            } else if (!props.current.auth) {
+              console.log(
+                'media fetch failure: offline trying to access online file'
+              );
+              dispatch({
+                payload: 'no offline file',
+                type: MediaSt.ERROR,
+              });
+              return;
             }
           }
         } catch (e: any) {
@@ -159,8 +177,10 @@ export const useFetchMediaUrl = (reporter?: any) => {
   const fetchMediaUrl = (aProps: IProps) => {
     props.current = { ...aProps };
   };
-
-  return { fetchMediaUrl, mediaState: state };
+  const setTrackedTask = (val: string) => (dispatch: any) => {
+    dispatch({ payload: val, type: MediaSt.SET_SELECTED });
+  };
+  return { fetchMediaUrl, mediaState: state, setTrackedTask };
 };
 
 export default useFetchMediaUrl;

@@ -51,7 +51,6 @@ import { HotKeyContext } from '../context/HotKeyContext';
 import WSAudioPlayerZoom from './WSAudioPlayerZoom';
 import { IRegionChange, IRegionParams } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
-import { useGlobal } from 'reactn';
 import Confirm from './AlertDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -177,6 +176,8 @@ interface IProps extends IStateProps {
   metaData?: JSX.Element;
   isPlaying?: boolean;
   loading: boolean;
+  busy?: boolean;
+  setBusy?: (busy: boolean) => void;
   setMimeType?: (type: string) => void;
   setAcceptedMimes?: (types: MimeInfo[]) => void;
   onPlayStatus?: (playing: boolean) => void;
@@ -219,6 +220,8 @@ function WSAudioPlayer(props: IProps) {
     metaData,
     isPlaying,
     loading,
+    busy,
+    setBusy,
     setMimeType,
     setAcceptedMimes,
     onProgress,
@@ -260,7 +263,6 @@ function WSAudioPlayer(props: IProps) {
   const justPlayButton = allowRecord;
   const processRecordRef = useRef(false);
   const { showMessage } = useSnackBar();
-  const [busy, setBusy] = useGlobal('remoteBusy');
   const [style, setStyle] = useState({
     cursor: busy || loading ? 'progress' : 'default',
   });
@@ -387,9 +389,12 @@ function WSAudioPlayer(props: IProps) {
     setDuration(0);
     setHasRegion(0);
     if (blob) {
+      if (setBusy) setBusy(true);
       wsLoad(blob, undefined);
-      setBusy(true);
-    } else wsClear();
+    } else {
+      if (setBusy) setBusy(false);
+      wsClear();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blob]); //passed in by user
 
@@ -451,7 +456,7 @@ function WSAudioPlayer(props: IProps) {
     setReady(true);
     setDuration(wsDuration());
     if (segmentsRef.current?.length > 2) wsLoadRegions(segmentsRef.current);
-    setBusy(false);
+    if (setBusy) setBusy(false);
     wsGoto(initialPosRef.current || 0);
   }
   function onWSProgress(progress: number) {

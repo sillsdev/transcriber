@@ -289,6 +289,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const handlePlayStatus = (mediaId: string) => {
+    console.log('handlePlayStatus PlanSheet', mediaId);
     setSrcMediaId(mediaId);
   };
 
@@ -747,7 +748,11 @@ export function PlanSheet(props: IProps) {
       ) : (
         <></>
       )}
-      <MediaPlayer auth={auth} srcMediaId={srcMediaId} onEnded={playEnded} />
+      <MediaPlayer
+        auth={isOffline ? null : auth}
+        srcMediaId={srcMediaId}
+        onEnded={playEnded}
+      />
     </div>
   );
 }

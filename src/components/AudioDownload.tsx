@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, MediaFile, IAudioDownloadStrings } from '../model';
+import {
+  IState,
+  MediaFile,
+  IAudioDownloadStrings,
+  ISharedStrings,
+} from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 import DownloadIcon from '@material-ui/icons/GetAppOutlined';
 import { remoteIdGuid, useFetchMediaUrl, MediaSt } from '../crud';
 import Auth from '../auth/Auth';
 import { loadBlob, removeExtension } from '../utils';
+import { useSnackBar } from '../hoc/SnackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: IAudioDownloadStrings;
+  ts: ISharedStrings;
 }
 
 interface IProps extends IStateProps {
@@ -31,15 +38,17 @@ interface IProps extends IStateProps {
 }
 
 export const AudioDownload = (props: IProps) => {
-  const { mediaId, title, t } = props;
+  const { mediaId, title, t, ts } = props;
   const { auth } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [reporter] = useGlobal('errorReporter');
+  const [offline] = useGlobal('offline');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const audAnchor = React.useRef<HTMLAnchorElement>(null);
   const [audName, setAudName] = useState('');
   const [blobUrl, setBlobUrl] = useState('');
+  const { showMessage } = useSnackBar();
 
   const handleDownload = () => {
     const id = remoteIdGuid('mediafile', mediaId, memory.keyMap) || mediaId;
@@ -51,7 +60,7 @@ export const AudioDownload = (props: IProps) => {
     const version = mediaRec?.attributes?.versionNumber || '1';
     setAudName(`${name}-ver${version}.${ext}`);
     if (id !== mediaState.urlMediaId) {
-      fetchMediaUrl({ id, auth });
+      fetchMediaUrl({ id, auth: offline ? null : auth });
     }
   };
 
@@ -62,6 +71,10 @@ export const AudioDownload = (props: IProps) => {
         //not sure what this intermediary file is, but causes console errors
         if (b && b.type !== 'text/html') setBlobUrl(URL.createObjectURL(b));
       });
+    if (mediaState.error === 'no offline file') showMessage(ts.fileNotFound);
+    else if (mediaState.error) showMessage(mediaState.error);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaState]);
 
   useEffect(() => {
@@ -102,6 +115,7 @@ export const AudioDownload = (props: IProps) => {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'audioDownload' }),
+  ts: localStrings(state, { layout: 'shared' }),
 });
 
 export default connect(mapStateToProps)(AudioDownload) as any;

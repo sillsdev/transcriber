@@ -222,6 +222,8 @@ export function Transcriber(props: IProps) {
     selected,
     playing,
     setPlaying,
+    trBusy,
+    setTrBusy,
     allDone,
     refresh,
     mediaUrl,
@@ -249,7 +251,6 @@ export function Transcriber(props: IProps) {
   const [user] = useGlobal('user');
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
-  const [busy, setBusy] = useGlobal('remoteBusy');
   const [assigned, setAssigned] = useState('');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
@@ -294,7 +295,7 @@ export function Transcriber(props: IProps) {
   const t = transcriberStr;
   const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
   const [style, setStyle] = useState({
-    cursor: busy || loading ? 'progress' : 'default',
+    cursor: trBusy || loading ? 'progress' : 'default',
   });
 
   /* debug what props are changing to force renders
@@ -347,9 +348,9 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     setStyle({
-      cursor: busy || loading ? 'progress' : 'default',
+      cursor: trBusy || loading ? 'progress' : 'default',
     });
-  }, [busy, loading]);
+  }, [trBusy, loading]);
 
   useEffect(() => {
     const getParatextIntegration = () => {
@@ -580,7 +581,7 @@ export function Transcriber(props: IProps) {
     setAddNoteVisible(true);
   };
   const handleReject = () => {
-    if (busy) {
+    if (trBusy) {
       showMessage(t.saving);
       return;
     }
@@ -768,7 +769,7 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleSaveButton = () => {
-    if (busy) {
+    if (trBusy) {
       showMessage(t.saving);
       return;
     }
@@ -887,9 +888,7 @@ export function Transcriber(props: IProps) {
   };
 
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
-  const onBusy = (value: boolean) => {
-    setBusy(value);
-  };
+
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
     setChanged(true);
@@ -968,7 +967,8 @@ export function Transcriber(props: IProps) {
                           segments={initialSegments}
                           isPlaying={playing}
                           loading={loading}
-                          onBusy={onBusy}
+                          busy={trBusy}
+                          setBusy={setTrBusy}
                           onProgress={onProgress}
                           onSegmentChange={onSegmentChange}
                           onPlayStatus={onPlayStatus}

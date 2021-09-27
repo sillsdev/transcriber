@@ -181,7 +181,7 @@ export function AssignmentTable(props: IProps) {
     { columnName: 'transcriber', width: 200 },
     { columnName: 'editor', width: 200 },
   ];
-  const { showMessage } = useSnackBar();
+
   const [filter, setFilter] = useState(false);
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
 

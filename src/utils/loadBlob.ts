@@ -39,8 +39,8 @@ export const loadBlob = (
         decodeURIComponent(url.replace(`transcribe-safe://`, ``))
       );
       setBlob(url, new Blob([source], { type: urlType(url) }));
-    } catch (e) {
-      setBlob(e as string, undefined);
+    } catch (e: any) {
+      setBlob(e.message, undefined);
     }
   }
 };

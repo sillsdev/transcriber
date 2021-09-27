@@ -87,6 +87,7 @@ export const Uploader = (props: IProps) => {
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
+  const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const planIdRef = React.useRef<string>(plan);
   const successCount = React.useRef<number>(0);
@@ -268,7 +269,7 @@ export const Uploader = (props: IProps) => {
         <PassageRecord
           visible={isOpen}
           mediaId={mediaId}
-          auth={auth}
+          auth={offline ? null : auth}
           multiple={multiple}
           uploadMethod={uploadMedia}
           cancelMethod={uploadCancel}
