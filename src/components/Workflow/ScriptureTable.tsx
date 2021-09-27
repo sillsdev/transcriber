@@ -292,7 +292,7 @@ export function ScriptureTable(props: IProps) {
     if (
       flat &&
       isSectionRow(myWorkflow[index]) &&
-      !isPassageRow(myWorkflow[index])
+      myWorkflow[index].passageSeq === 0
     ) {
       //no passage on this row yet
       myWorkflow = wfResequencePassages(
