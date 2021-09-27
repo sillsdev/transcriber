@@ -106,8 +106,12 @@ export const Sources = async (
 
           action(transform: Transform, ex: IApiError) {
             console.log('***** api pull fail', transform, ex);
-            orbitError(ex);
-            return remote.requestQueue.error;
+            if (ex.response.status === 401) {
+              auth.logout();
+            } else {
+              orbitError(ex);
+              return remote.requestQueue.error;
+            }
           },
 
           blocking: true,
