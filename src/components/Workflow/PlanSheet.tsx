@@ -748,11 +748,7 @@ export function PlanSheet(props: IProps) {
       ) : (
         <></>
       )}
-      <MediaPlayer
-        auth={isOffline ? null : auth}
-        srcMediaId={srcMediaId}
-        onEnded={playEnded}
-      />
+      <MediaPlayer auth={auth} srcMediaId={srcMediaId} onEnded={playEnded} />
     </div>
   );
 }

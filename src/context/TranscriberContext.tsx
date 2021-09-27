@@ -186,7 +186,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [project] = useGlobal('project');
     const [devPlan] = useGlobal('plan');
     const [projRole] = useGlobal('projRole');
-    const [offline] = useGlobal('offline');
     const view = React.useRef('');
     const [refreshed, setRefreshed] = useState(0);
     const mediaUrlRef = useRef('');
@@ -254,7 +253,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
             setTrackedTask(selected);
             fetchMediaUrl({
               id: r.mediaRemoteId,
-              auth: offline ? null : props.auth,
+              auth: props.auth,
             });
             setState((state: ICtxState) => {
               return {

@@ -39,7 +39,6 @@ export const AudioTable = (props: IProps) => {
   const ctx = React.useContext(PlanContext);
   const { connected, readonly } = ctx.state;
   const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
@@ -278,11 +277,7 @@ export const AudioTable = (props: IProps) => {
           noResponse={handleActionRefused}
         />
       )}
-      <MediaPlayer
-        auth={offline ? null : auth}
-        srcMediaId={playItem}
-        onEnded={playEnded}
-      />
+      <MediaPlayer auth={auth} srcMediaId={playItem} onEnded={playEnded} />
     </div>
   );
 };

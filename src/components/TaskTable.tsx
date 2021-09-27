@@ -497,11 +497,7 @@ export function TaskTable(props: IProps) {
           />
         </div>
       </div>
-      <MediaPlayer
-        auth={offline ? null : auth}
-        srcMediaId={playItem}
-        onEnded={playEnded}
-      />
+      <MediaPlayer auth={auth} srcMediaId={playItem} onEnded={playEnded} />
       <BigDialog
         title={tpb.integrationsTitle.replace('{0}', planName)}
         isOpen={openIntegration}

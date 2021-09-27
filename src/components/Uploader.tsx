@@ -269,7 +269,7 @@ export const Uploader = (props: IProps) => {
         <PassageRecord
           visible={isOpen}
           mediaId={mediaId}
-          auth={offline ? null : auth}
+          auth={auth}
           multiple={multiple}
           uploadMethod={uploadMedia}
           cancelMethod={uploadCancel}
