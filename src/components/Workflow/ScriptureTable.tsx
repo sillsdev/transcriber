@@ -439,9 +439,10 @@ export function ScriptureTable(props: IProps) {
         const passageUpdated = isSection
           ? wf?.passageUpdated
           : currentDateTime();
+        const value = name === 'book' ? findBook(c.value as string) : c.value;
         workflow[i] = {
           ...wf,
-          [name]: c.value,
+          [name]: value,
           sectionUpdated,
           passageUpdated,
         } as IWorkflow;
