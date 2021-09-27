@@ -139,6 +139,7 @@ export function TaskTable(props: IProps) {
     setPlaying,
     setFilter,
     loading,
+    trBusy,
   } = useTodo();
   const t = todoStr;
   const tpb = projButtonStr;
@@ -159,7 +160,6 @@ export function TaskTable(props: IProps) {
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const isInline = useRef(false);
-  const [busy] = useGlobal('remoteBusy');
   const [columns] = useState([
     { name: 'composite', title: '\u00A0' },
     { name: 'play', title: '\u00A0' },
@@ -205,7 +205,7 @@ export function TaskTable(props: IProps) {
   const [style, setStyle] = React.useState<CSSProperties>({
     height: window.innerHeight - 100,
     overflowY: 'auto',
-    cursor: busy || loading ? 'progress' : 'default',
+    cursor: trBusy || loading ? 'progress' : 'default',
   });
   const [playItem, setPlayItem] = useState('');
   const formRef = useRef<any>();
@@ -249,7 +249,7 @@ export function TaskTable(props: IProps) {
     setStyle({
       height: window.innerHeight - 100,
       overflowY: 'auto',
-      cursor: busy || loading ? 'progress' : 'default',
+      cursor: trBusy || loading ? 'progress' : 'default',
     });
     setWidth(window.innerWidth);
   };
@@ -272,9 +272,9 @@ export function TaskTable(props: IProps) {
     setStyle({
       height: window.innerHeight - 100,
       overflowY: 'auto',
-      cursor: busy || loading ? 'progress' : 'default',
+      cursor: trBusy || loading ? 'progress' : 'default',
     });
-  }, [busy, loading]);
+  }, [trBusy, loading]);
 
   useEffect(() => {
     if (formRef.current && selectedRef.current) {

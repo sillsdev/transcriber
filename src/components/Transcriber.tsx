@@ -222,6 +222,8 @@ export function Transcriber(props: IProps) {
     selected,
     playing,
     setPlaying,
+    trBusy,
+    setTrBusy,
     allDone,
     refresh,
     mediaUrl,
@@ -240,7 +242,6 @@ export function Transcriber(props: IProps) {
     role: '',
   };
   const classes = useStyles();
-
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
@@ -249,7 +250,6 @@ export function Transcriber(props: IProps) {
   const [user] = useGlobal('user');
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
-  const [busy, setBusy] = useGlobal('remoteBusy');
   const [assigned, setAssigned] = useState('');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
@@ -294,7 +294,17 @@ export function Transcriber(props: IProps) {
   const t = transcriberStr;
   const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
   const [style, setStyle] = useState({
-    cursor: busy || loading ? 'progress' : 'default',
+    cursor: 'default',
+  });
+  const [textAreaStyle, setTextAreaStyle] = useState({
+    overflow: 'auto',
+    backgroundColor: '#cfe8fc',
+    height: boxHeight,
+    width: '98hu',
+    fontFamily: projData?.fontFamily,
+    fontSize: projData?.fontSize,
+    direction: projData?.fontDir as any,
+    cursor: 'default',
   });
 
   /* debug what props are changing to force renders
@@ -347,9 +357,14 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     setStyle({
-      cursor: busy || loading ? 'progress' : 'default',
+      cursor: trBusy || loading ? 'progress' : 'default',
     });
-  }, [busy, loading]);
+    setTextAreaStyle({
+      ...textAreaStyle,
+      cursor: trBusy || loading ? 'progress' : 'default',
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trBusy, loading]);
 
   useEffect(() => {
     const getParatextIntegration = () => {
@@ -580,7 +595,7 @@ export function Transcriber(props: IProps) {
     setAddNoteVisible(true);
   };
   const handleReject = () => {
-    if (busy) {
+    if (saving.current) {
       showMessage(t.saving);
       return;
     }
@@ -768,7 +783,7 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleSaveButton = () => {
-    if (busy) {
+    if (saving.current) {
       showMessage(t.saving);
       return;
     }
@@ -867,16 +882,6 @@ export function Transcriber(props: IProps) {
     }, 1000 * 30);
   };
 
-  const textAreaStyle = {
-    overflow: 'auto',
-    backgroundColor: '#cfe8fc',
-    height: boxHeight,
-    width: '98hu',
-    fontFamily: projData?.fontFamily,
-    fontSize: projData?.fontSize,
-    direction: projData?.fontDir as any,
-  };
-
   const paperStyle = { width: width - 36 };
 
   const onDuration = (value: number) => {
@@ -887,9 +892,7 @@ export function Transcriber(props: IProps) {
   };
 
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
-  const onBusy = (value: boolean) => {
-    setBusy(value);
-  };
+
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
     setChanged(true);
@@ -968,7 +971,8 @@ export function Transcriber(props: IProps) {
                           segments={initialSegments}
                           isPlaying={playing}
                           loading={loading}
-                          onBusy={onBusy}
+                          busy={trBusy}
+                          setBusy={setTrBusy}
                           onProgress={onProgress}
                           onSegmentChange={onSegmentChange}
                           onPlayStatus={onPlayStatus}

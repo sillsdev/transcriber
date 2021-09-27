@@ -194,6 +194,8 @@ export function useWaveSurfer(
         if (wavesurferPlayingRef.current) wavesurferRef.current.stop();
         wavesurferRef.current.unAll();
         wavesurferRef.current.destroy();
+        wavesurferRef.current = undefined;
+        blobToLoad.current = undefined;
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -206,10 +208,9 @@ export function useWaveSurfer(
   };
 
   const wsClear = () => {
-    blobToLoad.current = undefined;
-    wavesurferRef.current?.unAll();
-    wavesurferRef.current?.destroy();
-    wavesurferRef.current = undefined;
+    if (wavesurferPlayingRef.current) wavesurferRef.current?.stop();
+    wavesurfer()?.empty();
+    wavesurfer()?.loadBlob(new Blob());
     durationRef.current = 0;
     setProgress(0);
   };

@@ -4,7 +4,6 @@ import {
   User,
   IOrbitState,
   IUploadState,
-  IMediaState,
   IParatextState,
   IImportExportState,
   IAuthState,
@@ -19,7 +18,6 @@ export interface IState {
     initials: string;
   };
   upload: IUploadState;
-  media: IMediaState;
   paratext: IParatextState;
   importexport: IImportExportState;
   auth: IAuthState;

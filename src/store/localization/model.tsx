@@ -631,6 +631,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "editor": string;
     "expiredParatextToken": string;
     "expiredToken": string;
+    "fileNotFound": string;
     "importMediaSingular": string;
     "invalidParatextLogin": string;
     "invalidReference": string;

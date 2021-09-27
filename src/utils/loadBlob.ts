@@ -26,16 +26,22 @@ const urlType = (url: string) => {
 
 export const loadBlob = (
   url: string,
-  setBlob: (url: string, blob: Blob) => void
+  setBlob: (urlorError: string, blob: Blob | undefined) => void
 ) => {
   if (!url) return;
   if (url.startsWith('http')) {
-    fetch(url).then(async (r) => setBlob(url, await r.blob()));
+    fetch(url)
+      .then(async (r) => setBlob(url, await r.blob()))
+      .catch((e) => setBlob(e as string, undefined));
   } else {
-    const source = fs.readFileSync(
-      decodeURIComponent(url.replace(`transcribe-safe://`, ``))
-    );
-    setBlob(url, new Blob([source], { type: urlType(url) }));
+    try {
+      const source = fs.readFileSync(
+        decodeURIComponent(url.replace(`transcribe-safe://`, ``))
+      );
+      setBlob(url, new Blob([source], { type: urlType(url) }));
+    } catch (e: any) {
+      setBlob(e.message, undefined);
+    }
   }
 };
 export default loadBlob;

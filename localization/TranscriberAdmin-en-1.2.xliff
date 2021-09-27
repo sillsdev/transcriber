@@ -3650,6 +3650,13 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.fileNotFound">
+            <source>The audio file has not been downloaded or has been deleted.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.importMediaSingular">
             <source>Import Audio</source>
             <target/>

@@ -3,7 +3,6 @@ import bookReducer from './book/reducers';
 import localizationReducer from './localization/reducers';
 import orbitReducer from './orbit/reducers';
 import uploadReducer from './upload/reducers';
-import mediaReducer from './media/reducers';
 import paratextReducer from './paratext/reducers';
 import exportReducer from './importexport/reducers';
 import authReducer from './auth/reducers';
@@ -17,7 +16,6 @@ const appReducer = combineReducers({
   books: bookReducer,
   orbit: orbitReducer,
   upload: uploadReducer,
-  media: mediaReducer,
   paratext: paratextReducer,
   importexport: exportReducer,
   auth: authReducer,
@@ -39,7 +37,6 @@ export * from './book/actions';
 export * from './localization/actions';
 export * from './orbit/actions';
 export * from './upload/actions';
-export * from './media/actions';
 export * from './paratext/actions';
 export * from './importexport/actions';
 export * from './auth/actions';

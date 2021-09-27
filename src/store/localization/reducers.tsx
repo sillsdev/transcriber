@@ -673,6 +673,7 @@ const initialState = {
 			"editor": "Editor",
 			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please log out and login again.",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",
+			"fileNotFound": "The audio file has not been downloaded or has been deleted.",
 			"importMediaSingular": "Import Audio",
 			"invalidParatextLogin": "You must login with a valid paratext login.",
 			"invalidReference": "Passage {0}.{1} {2}: Invalid Reference",
