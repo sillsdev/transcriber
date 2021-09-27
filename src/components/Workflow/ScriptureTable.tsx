@@ -454,22 +454,27 @@ export function ScriptureTable(props: IProps) {
     }
   };
 
+  const saveIfChanged = (cb: () => void) => {
+    if (myChangedRef.current) {
+      startSave();
+      waitForSave(() => cb(), SaveWait);
+    } else cb();
+  };
+
   const handleTranscribe = (i: number) => {
     const { wf } = getByIndex(workflow, i);
     const id = wf?.passageId?.id || '';
     const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
-    if (myChangedRef.current) {
-      startSave();
-      waitForSave(() => setView(`/work/${prjId}/${passageRemoteId}`), SaveWait);
-    } else setView(`/work/${prjId}/${passageRemoteId}`);
+    saveIfChanged(() => {
+      setView(`/work/${prjId}/${passageRemoteId}`);
+    });
   };
 
   const handleAudacity = (index: number) => {
     const { wf } = getByIndex(workflow, index);
-    if (myChangedRef.current) {
-      startSave();
-      waitForSave(() => setAudacityItem(wf), SaveWait);
-    } else setAudacityItem(wf);
+    saveIfChanged(() => {
+      setAudacityItem(wf);
+    });
   };
 
   const handleAudacityClose = () => {
@@ -481,10 +486,9 @@ export function ScriptureTable(props: IProps) {
     setAssignSectionVisible(true);
   };
   const handleAssign = (where: number[]) => () => {
-    if (myChangedRef.current) {
-      startSave();
-      waitForSave(() => doAssign(where), SaveWait);
-    } else doAssign(where);
+    saveIfChanged(() => {
+      doAssign(where);
+    });
   };
 
   const handleAssignClose = () => () => setAssignSectionVisible(false);
@@ -515,23 +519,22 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleUpload = (i: number) => () => {
-    if (myChangedRef.current) {
-      startSave();
-      waitForSave(() => showUpload(i, false), SaveWait);
-    } else showUpload(i, false);
+    saveIfChanged(() => {
+      showUpload(i, false);
+    });
   };
 
   const handleAudacityImport = (i: number, list: File[]) => {
-    setImportList(list);
-    showUpload(i, false);
+    saveIfChanged(() => {
+      setImportList(list);
+      showUpload(i, false);
+    });
   };
 
   const handleRecord = (i: number) => {
-    const { wf } = getByIndex(workflow, i);
-    if (wf?.sectionId?.id) {
-      startSave();
-      waitForSave(() => showUpload(i, true), SaveWait);
-    } else showUpload(i, true);
+    saveIfChanged(() => {
+      showUpload(i, true);
+    });
   };
 
   const updateLastModified = async () => {
