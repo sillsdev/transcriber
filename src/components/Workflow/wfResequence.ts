@@ -9,6 +9,7 @@ export const wfResequence = (wf: IWorkflow[], sec = 1) => {
   sec -= 1;
   for (let i = 0; i < wf.length; i += 1) {
     let cur = wf[i];
+    if (cur.deleted) continue;
     if (isSectionRow(cur)) {
       sec += 1;
       pas = cur.kind === IwfKind.Section ? 0 : 1;
@@ -46,6 +47,7 @@ export const wfResequencePassages = (wf: IWorkflow[], sectionIndex: number) => {
     i < wf.length && wf[i].kind === IwfKind.Passage;
     i += 1
   ) {
+    if (wf[i].deleted) continue;
     if (wf[i].passageSeq !== pas) {
       change = true;
       wf[i] = { ...wf[i], passageSeq: pas, passageUpdated: updatedAt };
