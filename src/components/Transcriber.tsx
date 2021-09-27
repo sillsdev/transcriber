@@ -295,7 +295,17 @@ export function Transcriber(props: IProps) {
   const t = transcriberStr;
   const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
   const [style, setStyle] = useState({
-    cursor: trBusy || loading ? 'progress' : 'default',
+    cursor: 'default',
+  });
+  const [textAreaStyle, setTextAreaStyle] = useState({
+    overflow: 'auto',
+    backgroundColor: '#cfe8fc',
+    height: boxHeight,
+    width: '98hu',
+    fontFamily: projData?.fontFamily,
+    fontSize: projData?.fontSize,
+    direction: projData?.fontDir as any,
+    cursor: 'default',
   });
 
   /* debug what props are changing to force renders
@@ -350,6 +360,11 @@ export function Transcriber(props: IProps) {
     setStyle({
       cursor: trBusy || loading ? 'progress' : 'default',
     });
+    setTextAreaStyle({
+      ...textAreaStyle,
+      cursor: trBusy || loading ? 'progress' : 'default',
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trBusy, loading]);
 
   useEffect(() => {
@@ -866,16 +881,6 @@ export function Transcriber(props: IProps) {
     autosaveTimer.current = setTimeout(() => {
       handleAutosave();
     }, 1000 * 30);
-  };
-
-  const textAreaStyle = {
-    overflow: 'auto',
-    backgroundColor: '#cfe8fc',
-    height: boxHeight,
-    width: '98hu',
-    fontFamily: projData?.fontFamily,
-    fontSize: projData?.fontSize,
-    direction: projData?.fontDir as any,
   };
 
   const paperStyle = { width: width - 36 };
