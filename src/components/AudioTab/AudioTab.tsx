@@ -129,7 +129,6 @@ export function AudioTab(props: IProps) {
   const [, setChanged] = useGlobal('changed');
   const [, saveCompleted] = useRemoteSave();
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
-  const [locale] = useGlobal('lang');
   const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
@@ -274,7 +273,6 @@ export function AudioTab(props: IProps) {
         sections,
         playItem,
         allBookData,
-        locale,
         isPassageDate: true,
       };
       const newData = getMedia(planMedia, mediaData);
@@ -290,7 +288,6 @@ export function AudioTab(props: IProps) {
       sections,
       playItem,
       allBookData,
-      locale,
       isPassageDate: true,
     };
     const newData = getMedia(planMedia, mediaData);

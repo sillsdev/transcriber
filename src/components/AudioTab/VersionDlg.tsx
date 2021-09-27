@@ -15,7 +15,6 @@ import localStrings from '../../selector/localize';
 import { QueryBuilder } from '@orbit/data';
 import Auth from '../../auth/Auth';
 import { related, usePlan } from '../../crud';
-import { localeDefault } from '../../utils';
 import { IRow, getMedia, IGetMedia } from '.';
 import AudioTable from './AudioTable';
 
@@ -40,8 +39,6 @@ export const VersionDlg = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const { getPlan } = usePlan();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
-  const [isDeveloper] = useGlobal('developer');
-  const locale = localeDefault(isDeveloper);
   const [playItem, setPlayItem] = useState('');
   const [data, setData] = useState<IRow[]>([]);
   const [refresh, setRefresh] = useState(false);
@@ -58,14 +55,13 @@ export const VersionDlg = (props: IProps) => {
       sections,
       playItem,
       allBookData,
-      locale,
       isPassageDate: false,
     };
     const newData = getMedia(media, mediaData);
     if (newData.length !== data.length || playChange || refresh)
       setData(newData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediaFiles, sections, passages, planRec, passId, playItem, locale]);
+  }, [mediaFiles, sections, passages, planRec, passId, playItem]);
 
   return (
     <AudioTable
