@@ -1,7 +1,6 @@
 import { MediaFile, Passage, Section, BookName } from '../../model';
 import { related } from '../../crud';
 import { IRow, getSection, getReference } from '.';
-import { dateOrTime } from '../../utils';
 
 export interface IGetMedia {
   planName: string;
@@ -9,12 +8,11 @@ export interface IGetMedia {
   sections: Section[];
   playItem: string;
   allBookData: BookName[];
-  locale: string;
   isPassageDate: boolean;
 }
 
 export const mediaRow = (f: MediaFile, data: IGetMedia) => {
-  const { planName, passages, sections, playItem, allBookData, locale } = data;
+  const { planName, passages, sections, playItem, allBookData } = data;
 
   const showId = related(f, 'passage');
   const passage = showId ? passages.filter((p) => p.id === showId) : [];
@@ -40,7 +38,7 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
     version: f.attributes.versionNumber
       ? f.attributes.versionNumber.toString()
       : '',
-    date: dateOrTime(updateddt, locale),
+    date: updateddt,
   } as IRow;
 };
 
