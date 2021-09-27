@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal, useRef } from 'reactn';
 import {
   Organization,
   ISharedStrings,
@@ -42,6 +42,7 @@ export const useTeamCreate = (props: IProps) => {
   const { getRoleRec } = useRole();
   const teamApiPull = useTeamApiPull();
   const checkOnline = useCheckOnline(resetOrbitError);
+  const workingOnItRef = useRef(false);
   const OrgRelated = async (
     coordinator: Coordinator,
     orgRec: Organization,
@@ -99,7 +100,6 @@ export const useTeamCreate = (props: IProps) => {
 
     const memory = coordinator.getSource('memory') as Memory;
     const userRecId = { type: 'user', id: user };
-
     await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, orgRec, user, memory),
       t.replaceRelatedRecord(orgRec, 'owner', userRecId),
@@ -115,7 +115,6 @@ export const useTeamCreate = (props: IProps) => {
   return (organization: Organization, cb?: (org: string) => void) => {
     const { name, description, websiteUrl, logoUrl, publicByDefault } =
       organization?.attributes;
-
     let orgRec = {
       type: 'organization',
       attributes: {
@@ -128,12 +127,18 @@ export const useTeamCreate = (props: IProps) => {
       },
     } as Organization;
 
-    checkOnline((online) => {
+    if (!workingOnItRef.current) {
+      workingOnItRef.current = true;
       createOrg({ orgRec })
         .then((org: string) => {
+          workingOnItRef.current = false;
           if (cb) cb(org);
         })
-        .catch((err) => offlineError({ ...props, online, showMessage, err }));
-    });
+        .catch((err) => {
+          checkOnline((online) =>
+            offlineError({ ...props, online, showMessage, err })
+          );
+        });
+    }
   };
 };
