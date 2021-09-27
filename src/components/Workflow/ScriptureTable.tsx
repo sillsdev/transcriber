@@ -228,6 +228,10 @@ export function ScriptureTable(props: IProps) {
   }, [changed]);
 
   const handleResequence = () => {
+    if (savingRef.current) {
+      showMessage(t.saving);
+      return;
+    }
     const wf = wfResequence(workflow);
     if (wf !== workflow) {
       setWorkflow(wf);
@@ -317,6 +321,10 @@ export function ScriptureTable(props: IProps) {
   };
 
   const addSection = (i?: number) => {
+    if (savingRef.current) {
+      showMessage(t.saving);
+      return;
+    }
     const sequenceNums = workflow.map((row, j) =>
       !i || j < i ? row.sectionSeq || 0 : 0
     ) as number[];
@@ -337,14 +345,21 @@ export function ScriptureTable(props: IProps) {
   };
 
   const addPassage = (i?: number, before?: boolean) => {
+    if (savingRef.current) {
+      showMessage(t.saving);
+      return;
+    }
     addPassageTo(workflow, i, before);
   };
 
   const getByIndex = (wf: IWorkflow[], index: number) => {
     let n = 0;
     let i = 0;
-    while (n < index && i < wf.length) {
-      if (!wf[i].deleted) n += 1;
+    while (i < wf.length) {
+      if (!wf[i].deleted) {
+        if (n === index) break;
+        n += 1;
+      }
       i += 1;
     }
     return { wf: i < wf.length ? wf[i] : undefined, i };
@@ -371,22 +386,46 @@ export function ScriptureTable(props: IProps) {
 
   const markDelete = async (index: number) => {
     const { wf, i } = getByIndex(workflow, index);
+    const removeItem: number[] = [];
+
+    const doDelete = (j: number, isSec?: boolean) => {
+      if (
+        (isSec && workflow[j].sectionId) ||
+        (!isSec && workflow[j].passageId)
+      ) {
+        workflow[j] = { ...workflow[j], deleted: true };
+      } else {
+        removeItem.push(j);
+      }
+    };
+
     if (wf) {
       if (isSectionRow(wf)) {
         let j = i;
+        let isSec = true;
         while (j < workflow.length) {
-          workflow[j] = { ...workflow[j], deleted: true };
+          doDelete(j, isSec);
           j += 1;
+          isSec = false;
+          if (j === workflow.length) break;
           if (isSectionRow(workflow[j])) break;
         }
-      } else workflow[i] = { ...wf, deleted: true };
-      setWorkflow([...workflow]);
+      } else doDelete(i);
+      const myWork: IWorkflow[] = [];
+      workflow.forEach((wf, i) => {
+        if (!removeItem.includes(i)) myWork.push(wf);
+      });
+      setWorkflow([...myWork]);
       setChanged(true);
     }
   };
 
   const handleDelete = async (what: string, where: number[]) => {
     if (what === 'Delete') {
+      if (savingRef.current) {
+        showMessage(t.saving);
+        return false;
+      }
       await markDelete(where[0]);
       return true;
     }
@@ -404,6 +443,10 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleTablePaste = (rows: string[][]) => {
+    if (savingRef.current) {
+      showMessage(t.saving);
+      return Array<Array<string>>();
+    }
     const { valid, addedWorkflow } = paste(rows);
     if (valid) {
       const newWorkflow = [...workflow].concat(addedWorkflow);
