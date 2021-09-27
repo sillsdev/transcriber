@@ -145,7 +145,6 @@ export function TaskTable(props: IProps) {
   const tpb = projButtonStr;
   const classes = useStyles();
   const [user] = useGlobal('user');
-  const [offline] = useGlobal('offline');
   const [width, setWidth] = useState(window.innerWidth);
   const { getPlan, getPlanName } = usePlan();
   const offlineProjectRead = useOfflnProjRead();

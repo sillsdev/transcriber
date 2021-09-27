@@ -43,7 +43,6 @@ export const AudioDownload = (props: IProps) => {
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [reporter] = useGlobal('errorReporter');
-  const [offline] = useGlobal('offline');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const audAnchor = React.useRef<HTMLAnchorElement>(null);
   const [audName, setAudName] = useState('');
@@ -60,7 +59,7 @@ export const AudioDownload = (props: IProps) => {
     const version = mediaRec?.attributes?.versionNumber || '1';
     setAudName(`${name}-ver${version}.${ext}`);
     if (id !== mediaState.urlMediaId) {
-      fetchMediaUrl({ id, auth: auth });
+      fetchMediaUrl({ id, auth });
     }
   };
 

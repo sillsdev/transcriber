@@ -87,7 +87,6 @@ export const Uploader = (props: IProps) => {
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
-  const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const planIdRef = React.useRef<string>(plan);
   const successCount = React.useRef<number>(0);

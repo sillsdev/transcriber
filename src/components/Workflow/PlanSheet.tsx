@@ -289,7 +289,6 @@ export function PlanSheet(props: IProps) {
   };
 
   const handlePlayStatus = (mediaId: string) => {
-    console.log('handlePlayStatus PlanSheet', mediaId);
     setSrcMediaId(mediaId);
   };
 
