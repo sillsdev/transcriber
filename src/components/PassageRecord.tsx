@@ -186,6 +186,7 @@ function PassageRecord(props: IProps) {
         setAudioBlob(b);
       } else {
         showMessage(urlorError);
+        //force it to go get another (unexpired) s3 url
         fetchMediaUrl({ id: mediaId, auth });
       }
     });
