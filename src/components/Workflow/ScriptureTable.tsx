@@ -656,9 +656,13 @@ export function ScriptureTable(props: IProps) {
       let change = false;
       let start = 0;
       if (!offlineOnly) {
-        for (; start + 200 < workflow.length; start += 200) {
+        let end = 200;
+        for (; start + 200 < workflow.length; start += end) {
           setComplete(Math.floor((90 * start) / numChanges) + 10);
-          change = (await saveFn(workflow.slice(start, start + 200))) || change;
+          end = 200;
+          while (!isSectionRow(workflow[start + end]) && end > 0) end -= 1;
+          if (end === 0) throw new Error('The section has > 200 passages');
+          change = (await saveFn(workflow.slice(start, start + end))) || change;
         }
       }
       change = (await saveFn(workflow.slice(start))) || change;
