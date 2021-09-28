@@ -378,7 +378,7 @@ export function TranscriptionTab(props: IProps) {
       getMediaEaf(mediaRec, memory, globalStore.errorReporter)
     );
     logError(Severity.info, globalStore.errorReporter, `eafCode=${eafCode}`);
-    const name = getMediaName(mediaRec, memory);
+    const name = getMediaName(mediaRec, memory, globalStore.errorReporter);
     logError(Severity.info, globalStore.errorReporter, `name=${name}`);
     setDataUrl('data:text/xml;base64,' + eafCode);
     setDataName(name + '.eaf');
