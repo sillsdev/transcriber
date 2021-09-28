@@ -357,6 +357,7 @@ export const importProjectToElectron =
         );
       }
       try {
+        //can't log to bugsnag here but I don't think this is the culprit
         console.log('getProjectFromFile', id); //TC138
         var rec = memory.cache.query((q) =>
           q.findRecord({ type: project.type, id: id })

@@ -45,6 +45,7 @@ interface IProps extends IRecordProps, IStateProps {
 }
 
 function TranscriptionShow(props: IProps) {
+  const [reporter] = useGlobal('errorReporter');
   const { id, isMediaId, t, visible, closeMethod } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
@@ -88,7 +89,7 @@ function TranscriptionShow(props: IProps) {
       if (!mediaRec) mediaRec = getMediaRec(id, memory);
       const attr = mediaRec && mediaRec.attributes;
       setTranscription(attr && attr.transcription ? attr.transcription : '');
-      const projRec = getMediaProjRec(mediaRec, memory);
+      const projRec = getMediaProjRec(mediaRec, memory, reporter);
       if (projRec) setFontData(getFontData(projRec, offline));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

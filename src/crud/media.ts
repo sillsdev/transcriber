@@ -33,13 +33,17 @@ const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {
   return planRec;
 };
 
-export const getMediaProjRec = (rec: MediaFile | null, memory: Memory) => {
+export const getMediaProjRec = (
+  rec: MediaFile | null,
+  memory: Memory,
+  reporter: any
+) => {
   let projRec: Project | undefined = undefined;
   if (rec) {
     const planRec = getMediaPlanRec(rec, memory);
     if (planRec) {
       const projId = related(planRec, 'project') as string;
-      console.log('getMediaProjRec', projId); //TC138
+      logError(Severity.info, reporter, `getMediaProjRec ${projId}`); //TC138
       projRec = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'project', id: projId })
       ) as Project;
@@ -48,12 +52,16 @@ export const getMediaProjRec = (rec: MediaFile | null, memory: Memory) => {
   return projRec;
 };
 
-const getMediaLang = (rec: MediaFile | null, memory: Memory) => {
-  const projRec = getMediaProjRec(rec, memory);
+const getMediaLang = (rec: MediaFile | null, memory: Memory, reporter: any) => {
+  const projRec = getMediaProjRec(rec, memory, reporter);
   return projRec && projRec.attributes && projRec.attributes.language;
 };
 
-export const getMediaName = (rec: MediaFile | null, memory: Memory) => {
+export const getMediaName = (
+  rec: MediaFile | null,
+  memory: Memory,
+  reporter: any
+) => {
   let passageRec: Passage | undefined = undefined;
   const passageId = related(rec, 'passage');
   if (passageId)
@@ -78,7 +86,7 @@ export const getMediaName = (rec: MediaFile | null, memory: Memory) => {
     rec.attributes.versionNumber.toString();
   const planRec = getMediaPlanRec(rec, memory);
   const planName = planRec && planRec.attributes && planRec.attributes.name;
-  const projRec = getMediaProjRec(rec, memory);
+  const projRec = getMediaProjRec(rec, memory, reporter);
   const projName = projRec && projRec.attributes && projRec.attributes.name;
   let val = projName + '_' + planName + '_';
   if (book && book !== '') val = val + book + '_';
@@ -113,7 +121,7 @@ export const getMediaEaf = (
     ? Math.round(durationNum * 1000).toString()
     : '0';
   logError(Severity.info, reporter, `duration=${duration}`);
-  const lang = getMediaLang(mediaRec, memory);
+  const lang = getMediaLang(mediaRec, memory, reporter);
   logError(Severity.info, reporter, `lang=${lang}`);
   const mime = (mediaAttr && mediaAttr.contentType) || '';
   logError(Severity.info, reporter, `mime=${mime}`);

@@ -108,7 +108,7 @@ export const useRole = () => {
   const getMyProjRole = (projectId: string) => {
     if (projectId === '') return '';
     try {
-      console.log('getMyProjRole', projectId); //TC138
+      logError(Severity.info, errorReporter, `getMyProjRole ${projectId}`); //TC138
       const proj = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'project', id: projectId })
       ) as Project;

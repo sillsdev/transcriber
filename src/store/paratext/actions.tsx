@@ -311,7 +311,11 @@ export const getLocalCount =
         (p) => p.attributes && p.attributes?.state === ActivityStates.Approved
       )
       .filter((p) => {
-        const projRec = getMediaProjRec(getMediaRec(p.id, memory), memory);
+        const projRec = getMediaProjRec(
+          getMediaRec(p.id, memory),
+          memory,
+          errorReporter
+        );
         return projRec && projRec.id === project;
       });
     const refMissing = ready.filter(
