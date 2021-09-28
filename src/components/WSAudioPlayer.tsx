@@ -394,6 +394,7 @@ function WSAudioPlayer(props: IProps) {
     } else {
       if (setBusy) setBusy(false);
       wsClear();
+      initialPosRef.current = undefined;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blob]); //passed in by user
@@ -457,7 +458,7 @@ function WSAudioPlayer(props: IProps) {
     setDuration(wsDuration());
     if (segmentsRef.current?.length > 2) wsLoadRegions(segmentsRef.current);
     if (setBusy) setBusy(false);
-    wsGoto(initialPosRef.current || 0);
+    if (initialPosRef.current) wsGoto(initialPosRef.current);
   }
   function onWSProgress(progress: number) {
     setProgress(progress);
@@ -589,6 +590,7 @@ function WSAudioPlayer(props: IProps) {
     });
   };
   const handleActionConfirmed = () => {
+    initialPosRef.current = undefined;
     if (confirmAction === t.deleteRecording) {
       wsClear();
       setDuration(0);

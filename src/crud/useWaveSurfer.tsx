@@ -54,8 +54,10 @@ export function useWaveSurfer(
     durationRef.current || wavesurfer()?.getDuration() || 0;
 
   const wsGoto = (position: number) => {
+    if (position > wsDuration()) position = wsDuration();
     onRegionGoTo(position);
-    if (position && wsDuration()) position = position / wsDuration();
+    if (wsDuration()) position = position / wsDuration();
+
     userInteractionRef.current = false;
     wavesurfer()?.seekAndCenter(position);
     userInteractionRef.current = true;
