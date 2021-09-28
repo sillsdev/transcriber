@@ -277,12 +277,13 @@ export function ScriptureTable(props: IProps) {
     i?: number,
     before?: boolean
   ) => {
-    const lastRow = myWorkflow.length - 1;
-    var index = i === undefined ? lastRow : i;
+    let lastRow = myWorkflow.length - 1;
+    while (lastRow >= 0 && myWorkflow[lastRow].deleted) lastRow -= 1;
+    let index = i === undefined && lastRow >= 0 ? lastRow : i || 0;
     let newRow = {
       ...myWorkflow[index],
       kind: flat ? IwfKind.SectionPassage : IwfKind.Passage,
-      book: workflow[lastRow]?.book || '',
+      book: workflow[lastRow]?.book || workflow[lastRow - 1]?.book || '',
       reference: '',
       comment: '',
       passageUpdated: currentDateTime(),
@@ -326,7 +327,7 @@ export function ScriptureTable(props: IProps) {
       return;
     }
     const sequenceNums = workflow.map((row, j) =>
-      !i || j < i ? row.sectionSeq || 0 : 0
+      !i || j < i ? (!row.deleted && row.sectionSeq) || 0 : 0
     ) as number[];
     const sequencenum = Math.max(...sequenceNums, 0) + 1;
     let newRow = {
