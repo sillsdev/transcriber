@@ -16,7 +16,7 @@ export const useProjectType = () => {
       if (project === '') return '';
       pId = project;
     } else pId = related(project, 'project');
-    console.log('useProjectType', pId); //TC138
+    logError(Severity.info, errorReporter, `useProjectType ${pId}`); //TC138
     try {
       proj = memory.cache.query((q) =>
         q.findRecord({ type: 'project', id: pId })

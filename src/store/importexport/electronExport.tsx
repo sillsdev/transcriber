@@ -91,6 +91,7 @@ export async function electronExport(
     'Transcriber' + idStr('user', userid) + '_backup.' + exportType;
 
   const getProjRec = (projectid: number | string): Project => {
+    //no error reporter here but this isn't it anyway
     console.log('getProjRec', projectid); //TC138
     return memory.cache.query((q: QueryBuilder) =>
       q.findRecord({
