@@ -195,6 +195,7 @@ export function useWaveSurfer(
         wavesurferRef.current.unAll();
         wavesurferRef.current.destroy();
         wavesurferRef.current = undefined;
+        wavesurferPlayingRef.current = false;
         blobToLoad.current = undefined;
       }
     };
@@ -209,8 +210,7 @@ export function useWaveSurfer(
 
   const wsClear = () => {
     if (wavesurferPlayingRef.current) wavesurferRef.current?.stop();
-    wavesurfer()?.empty();
-    wavesurfer()?.loadBlob(new Blob());
+    wavesurfer()?.loadDecodedBuffer();
     durationRef.current = 0;
     setProgress(0);
   };
