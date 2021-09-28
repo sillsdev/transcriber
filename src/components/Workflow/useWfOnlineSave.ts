@@ -1,7 +1,8 @@
 import { useGlobal } from 'reactn';
 import { SectionPassage, IWorkflow } from '../../model';
-import { TransformBuilder, QueryBuilder } from '@orbit/data';
+import { TransformBuilder, QueryBuilder, Operation } from '@orbit/data';
 import JSONAPISource from '@orbit/jsonapi';
+import IndexedDBSource from '@orbit/indexeddb';
 import { remoteId, remoteIdNum, remoteIdGuid } from '../../crud';
 import {
   isSectionRow,
@@ -32,6 +33,7 @@ export const useWfOnlineSave = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [plan] = useGlobal('plan');
 
   const getRemoteId = async (table: string, localid: string) => {
@@ -46,9 +48,12 @@ export const useWfOnlineSave = (props: IProps) => {
 
   // return Promise<boolean>: true if deep changes in workflow
   return async (workflow: IWorkflow[], lastSaved?: string) => {
+    let hasNew = false;
     const recs: SaveRec[][] = [];
+    const deleteItems: number[] = [];
     for (let ix = 0; ix < workflow.length; ix += 1) {
       const w = workflow[ix];
+      if (w.deleted) deleteItems.push(ix);
       const rowRec: SaveRec[] = [];
       if (isSectionRow(w)) {
         let rec = {
@@ -137,6 +142,7 @@ export const useWfOnlineSave = (props: IProps) => {
           (isPassageRow(cur) && isPassageAdding(cur)),
         false
       );
+      hasNew = anyNew;
       if (anyNew) {
         var rec: SectionPassage = (await remote.query((q: QueryBuilder) =>
           q.findRecord({ type: 'sectionpassage', id: dumbrec.id })
@@ -165,10 +171,28 @@ export const useWfOnlineSave = (props: IProps) => {
               };
             }
           });
-          return true;
         }
       }
+      if (deleteItems.length > 0) {
+        const tb = new TransformBuilder();
+        const operations: Operation[] = [];
+        deleteItems.forEach((i) => {
+          const wf = workflow[i];
+          if (wf.sectionId) operations.push(tb.removeRecord(wf.sectionId));
+          if (wf.passageId) operations.push(tb.removeRecord(wf.passageId));
+        });
+        if (operations.length > 0)
+          await memory.sync(await backup.push(operations));
+        for (let i = 0, j = 0; i < workflow.length; i++) {
+          if (deleteItems[j] !== i) {
+            if (i !== j) workflow[i] = workflow[j];
+          } else {
+            j += 1;
+          }
+        }
+        deleteItems.forEach(() => workflow.pop());
+      }
     }
-    return false;
+    return hasNew || deleteItems.length > 0;
   };
 };
