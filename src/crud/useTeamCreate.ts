@@ -135,9 +135,10 @@ export const useTeamCreate = (props: IProps) => {
           if (cb) cb(org);
         })
         .catch((err) => {
-          checkOnline((online) =>
-            offlineError({ ...props, online, showMessage, err })
-          );
+          checkOnline((online) => {
+            workingOnItRef.current = false;
+            offlineError({ ...props, online, showMessage, err });
+          });
         });
     }
   };
