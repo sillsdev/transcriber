@@ -51,16 +51,6 @@ export const AddFlatPassage = (
   return ops;
 };
 
-export const UpdateRelatedSectionOps = (
-  plan: string,
-  userId: string,
-  t: TransformBuilder,
-  ops: Operation[]
-) => {
-  const planRecId = { type: 'plan', id: plan };
-  ops.push(...UpdateLastModifedBy(t, planRecId, userId));
-};
-
 export const UpdateRelatedPassageOps = (
   section: string,
   plan: string,
@@ -70,7 +60,6 @@ export const UpdateRelatedPassageOps = (
 ) => {
   const secRecId = { type: 'section', id: section };
   ops.push(...UpdateLastModifedBy(t, secRecId, userId));
-  UpdateRelatedSectionOps(plan, userId, t, ops);
 };
 
 export const UpdatePassageStateOps = (

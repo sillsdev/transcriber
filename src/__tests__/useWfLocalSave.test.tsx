@@ -80,7 +80,7 @@ test('save one section and one passage', async () => {
   const updateCalls = (memory.update as jest.Mock).mock.calls;
   expect(updateCalls.length).toBe(2);
   expect(updateCalls[0][0].length).toBe(4);
-  expect(updateCalls[1][0].length).toBe(15);
+  expect(updateCalls[1][0].length).toBe(13);
   // console.log(JSON.stringify(updateCalls[1][0], null, 2));
 });
 
@@ -197,8 +197,8 @@ test('update section and passage', async () => {
   const updateCalls = (memory.update as jest.Mock).mock.calls;
   // console.log(JSON.stringify(updateCalls, null, 2));
   expect(updateCalls.length).toBe(2);
-  expect(updateCalls[0][0].length).toBe(5);
-  expect(updateCalls[1][0].length).toBe(7);
+  expect(updateCalls[0][0].length).toBe(3);
+  expect(updateCalls[1][0].length).toBe(5);
 });
 
 test('no update if same date', async () => {
