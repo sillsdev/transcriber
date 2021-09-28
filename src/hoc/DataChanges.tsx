@@ -118,7 +118,7 @@ export const doDataChanges = async (
       const changes = data?.attributes?.changes;
       const deletes = data.attributes.deleted;
       setDataChangeCount(changes.length + deletes.length);
-      changes.forEach((table) => {
+      for (const table of changes) {
         if (table.ids.length > 0) {
           remote
             .pull((q: QueryBuilder) =>
@@ -126,12 +126,12 @@ export const doDataChanges = async (
                 .findRecords(table.type)
                 .filter({ attribute: 'id-list', value: table.ids.join('|') })
             )
-            .then((t: Transform[]) => {
-              memory.sync(t);
-              t.forEach((tr) => {
+            .then(async (t: Transform[]) => {
+              for (const tr of t) {
                 var tb = new TransformBuilder();
                 var newOps: Operation[] = [];
-                tr.operations.forEach((o) => {
+                await memory.sync(await backup.push(tr.operations));
+                for (const o of tr.operations) {
                   if (o.op === 'updateRecord') {
                     var upRec = o as UpdateRecordOperation;
                     switch (upRec.record.type) {
@@ -154,12 +154,12 @@ export const doDataChanges = async (
                         break;
                     }
                   }
-                });
-                if (newOps.length > 0) memory.update(() => newOps);
-              });
+                }
+                if (newOps.length > 0) memory.sync(await backup.push(newOps));
+              }
             });
         }
-      });
+      }
       setDataChangeCount(deletes.length);
       var tb: TransformBuilder = new TransformBuilder();
 
@@ -174,7 +174,7 @@ export const doDataChanges = async (
           }
         });
         if (operations.length > 0) {
-          await memory.update(operations);
+          await memory.sync(await backup.push(operations));
         }
       }
       setDataChangeCount(0);
