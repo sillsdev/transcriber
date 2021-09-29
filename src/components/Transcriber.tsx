@@ -361,10 +361,13 @@ export function Transcriber(props: IProps) {
     });
     setTextAreaStyle({
       ...textAreaStyle,
+      fontFamily: projData?.fontFamily,
+      fontSize: projData?.fontSize,
+      direction: projData?.fontDir as any,
       cursor: trBusy || loading ? 'progress' : 'default',
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trBusy, loading]);
+  }, [trBusy, loading, projData]);
 
   useEffect(() => {
     const getParatextIntegration = () => {
