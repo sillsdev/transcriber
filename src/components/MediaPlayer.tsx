@@ -45,7 +45,8 @@ export function MediaPlayer(props: IProps) {
   useEffect(() => {
     if (mediaState.status === MediaSt.FETCHED) setReady(true);
     if (mediaState.error) {
-      if (mediaState.error === 'no offline file') showMessage(ts.fileNotFound);
+      if (mediaState.error.startsWith('no offline file'))
+        showMessage(ts.fileNotFound);
       else showMessage(mediaState.error);
       onEnded();
     }

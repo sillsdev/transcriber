@@ -34,6 +34,7 @@ export const getFontData = (r: Project, offline: boolean) => {
       localname: fileName,
     });
     if (local !== 'http') url = 'transcribe-safe://' + local;
+    else if (offline) url = '';
   }
   const data: FontData = {
     langTag,
