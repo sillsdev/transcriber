@@ -40,6 +40,12 @@ const detailContainerStyles = (theme: Theme) =>
     paper: {
       paddingTop: theme.spacing(3.5),
     },
+    paper2: {
+      paddingTop: theme.spacing(3.5),
+      '& #bottom-axis-container': {
+        visibility: 'hidden',
+      },
+    },
   });
 const legendStyles = () =>
   createStyles({
@@ -56,16 +62,10 @@ const legendLabelStyles = () =>
     },
   });
 
-// const valueFormatter = ({ value }: any) =>
-//   `$${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
 const valueFormatter = ({ value }: any) => value;
 const AxisLabel = ({ text, ...restProps }: any) => (
   <ValueAxis.Label {...restProps} text={valueFormatter({ value: text })} />
 );
-
-// const CurrencyTypeProvider = (props: any) => (
-//   <DataTypeProvider {...props} formatterComponent={valueFormatter} />
-// );
 
 const LegendRootBase = ({ classes, ...restProps }: any) => (
   <Legend.Root {...restProps} className={classes.root} />
@@ -102,109 +102,70 @@ const barSeriesForTask = (planwork: any) => {
   return acc;
 };
 
-const gridDetailContainerBase = (
-  t: ITreeChartStrings,
-  data1: any,
-  data2: any
-) => ({ row, classes }: any) => {
-  const planwork1 = data1.reduce((acc: any, item: any) => {
-    const currentwork = item.work.reduce((current: any, itemTarget: any) => {
-      let currentObj = {};
-      if (itemTarget.plan === row.plan) {
-        currentObj = { [itemTarget.name]: itemTarget.count };
-      }
-      return { ...current, ...currentObj };
+const gridDetailContainerBase =
+  (t: ITreeChartStrings, data1: any, data2: any) =>
+  ({ row, classes }: any) => {
+    const planwork1 = data1.reduce((acc: any, item: any) => {
+      const currentwork = item.work.reduce((current: any, itemTarget: any) => {
+        let currentObj = {};
+        if (itemTarget.plan === row.plan) {
+          currentObj = { [itemTarget.name]: itemTarget.count };
+        }
+        return { ...current, ...currentObj };
+      }, []);
+      return [...acc, { task: item.task, ...currentwork }];
     }, []);
-    return [...acc, { task: item.task, ...currentwork }];
-  }, []);
 
-  const planwork2 = data2.reduce((acc: any, item: any) => {
-    const currentwork = item.work.reduce((current: any, itemTarget: any) => {
-      let currentObj = {};
-      if (itemTarget.plan === row.plan) {
-        currentObj = { [itemTarget.name]: itemTarget.count };
-      }
-      return { ...current, ...currentObj };
+    const planwork2 = data2.reduce((acc: any, item: any) => {
+      const currentwork = item.work.reduce((current: any, itemTarget: any) => {
+        let currentObj = {};
+        if (itemTarget.plan === row.plan) {
+          currentObj = { [itemTarget.name]: itemTarget.count };
+        }
+        return { ...current, ...currentObj };
+      }, []);
+      return [...acc, { task: item.task, ...currentwork }];
     }, []);
-    return [...acc, { task: item.task, ...currentwork }];
-  }, []);
 
-  /* put this back in once we fine tune this
-  ** I think this worked, but some data wasn't showing up
-  ** dev Cabtal team, Imported Plan
-  <ValueScale factory={scale1}>
-
-  const getmax = (planwork: any) => {
-    var max = 0;
-    planwork.forEach((pw: any) => {
-      Object.keys(pw).forEach((item, index) => {
-        if (item !== 'task' && (Number(pw[item]) || 0) > max)
-          max = Number(pw[item]);
-      });
-    });
-    return max;
+    return (
+      <div className={classes.detailContainer}>
+        <h5 className={classes.title}>
+          {t.contributions} {row.plan}
+        </h5>
+        <Paper className={classes.paper}>
+          <Chart data={planwork1} height={300}>
+            <ArgumentScale factory={scaleBand} />
+            <ArgumentAxis showTicks={false} />
+            <ValueAxis labelComponent={AxisLabel} />
+            {barSeriesForTask(planwork1)}
+            <Stack />
+            <Legend
+              rootComponent={LegendRoot}
+              labelComponent={LegendLabel}
+              position="bottom"
+            />
+          </Chart>
+        </Paper>
+        <h5 className={classes.title}>
+          {t.status} {row.plan}
+        </h5>
+        <Paper className={classes.paper2}>
+          <Chart data={planwork2} height={300}>
+            <ArgumentScale factory={scaleBand} />
+            <ArgumentAxis showTicks={false} />
+            <ValueAxis labelComponent={AxisLabel} />
+            {barSeriesForTask(planwork2)}
+            <Stack />
+            <Legend
+              rootComponent={LegendRoot}
+              labelComponent={LegendLabel}
+              position="bottom"
+            />
+          </Chart>
+        </Paper>
+      </div>
+    );
   };
-
-
-  const scale1 = () => {
-    var max = getmax(planwork1);
-    var sx = scaleLinear();
-    sx.ticks = () =>
-      Array(20)
-        .fill(null)
-        .map((v, i) => i * (max > 20 ? 10 : 1));
-    return sx;
-  };
-  const scale2 = () => {
-    var max = getmax(planwork2);
-    var x = Math.ceil(max / 75) * 5;
-    var sx = scaleLinear();
-    sx.ticks = () =>
-      Array(15)
-        .fill(null)
-        .map((v, i) => i * (max > 15 ? x : 1));
-    return sx;
-  };
-  */
-  return (
-    <div className={classes.detailContainer}>
-      <h5 className={classes.title}>
-        {t.contributions} {row.plan}
-      </h5>
-      <Paper className={classes.paper}>
-        <Chart data={planwork1} height={300}>
-          <ArgumentScale factory={scaleBand} />
-          <ArgumentAxis showTicks={false} />
-          <ValueAxis labelComponent={AxisLabel} />
-          {barSeriesForTask(planwork1)}
-          <Stack />
-          <Legend
-            rootComponent={LegendRoot}
-            labelComponent={LegendLabel}
-            position="bottom"
-          />
-        </Chart>
-      </Paper>
-      <h5 className={classes.title}>
-        {t.status} {row.plan}
-      </h5>
-      <Paper className={classes.paper}>
-        <Chart data={planwork2} height={300}>
-          <ArgumentScale factory={scaleBand} />
-          <ArgumentAxis showTicks={false} />
-          <ValueAxis labelComponent={AxisLabel} />
-          {barSeriesForTask(planwork2)}
-          <Stack />
-          <Legend
-            rootComponent={LegendRoot}
-            labelComponent={LegendLabel}
-            position="bottom"
-          />
-        </Chart>
-      </Paper>
-    </div>
-  );
-};
 const gridDetailContainer: any = (
   t: ITreeChartStrings,
   data1: any,
@@ -216,6 +177,7 @@ const gridDetailContainer: any = (
 
 interface IStateProps {
   t: ITreeChartStrings;
+  tg: IGridStrings;
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
@@ -290,4 +252,4 @@ export const TreeChart = (props: IProps) => {
     </Paper>
   );
 };
-export default (connect(mapStateToProps)(TreeChart) as any) as any;
+export default connect(mapStateToProps)(TreeChart) as any as any;
