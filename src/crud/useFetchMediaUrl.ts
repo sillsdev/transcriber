@@ -130,7 +130,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
               if (cancelled()) return;
               dispatch({ payload: safeUrl, type: MediaSt.FETCHED });
               return;
-            } else if (!props.current.auth) {
+            } else if (!props.current.auth || !props.current.auth.accessToken) {
               console.log(
                 'media fetch failure: offline trying to access online file'
               );
