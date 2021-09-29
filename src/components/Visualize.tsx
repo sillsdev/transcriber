@@ -40,16 +40,8 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 }
 
 export function Visualize(props: IProps) {
-  const {
-    plans,
-    sections,
-    roles,
-    passages,
-    users,
-    selectedPlan,
-    ts,
-    ta,
-  } = props;
+  const { plans, sections, roles, passages, users, selectedPlan, ts, ta } =
+    props;
   const [project] = useGlobal('project');
   const [rows, setRows] = useState<Array<IPlanRow>>([]);
   const [data1, setData1] = useState<Array<IWork>>([]);
@@ -61,30 +53,25 @@ export function Visualize(props: IProps) {
 
   useEffect(() => {
     const getData = (tot: ITotal) => {
-      let edit = Array<ITargetWork>();
-      let transcribe = Array<ITargetWork>();
-      let editor = true;
+      const results = Array<IWork>();
+      const names: string[] = [];
       for (let [key, value] of Object.entries(tot)) {
-        const part = key.split(':');
-        if (part[2] === 'editor' || part[2] === 'status') {
-          if (part[2] === 'status') editor = false;
-          edit.push({
-            name: part[0],
-            plan: part[1],
-            count: value,
-          });
-        } else if (part[2] === 'transcriber') {
-          transcribe.push({
-            name: part[0],
-            plan: part[1],
-            count: value,
-          });
+        const [name, plan, taskType] = key.split(':');
+        let task = taskType;
+        if (taskType === 'status') {
+          if (!names.includes(name)) names.push(name);
+          task = String.fromCharCode(65 + names.findIndex((n) => n === name));
         }
+        const item = results.find((i) => i.task === task);
+        const work = item ? item.work : Array<ITargetWork>();
+        work.push({
+          name,
+          plan,
+          count: value,
+        });
+        if (!item) results.push({ task, work });
       }
-      return [
-        { task: editor ? ts.editor : '', work: edit },
-        { task: ts.transcriber, work: transcribe },
-      ];
+      return results;
     };
 
     let rowTot = {} as ITotal;
@@ -168,18 +155,7 @@ export function Visualize(props: IProps) {
     );
     setData1(getData(personTot));
     setData2(getData(statusTot));
-  }, [
-    project,
-    passages,
-    plans,
-    roles,
-    sections,
-    users,
-    selectedPlan,
-    ta,
-    ts.editor,
-    ts.transcriber,
-  ]);
+  }, [project, passages, plans, roles, sections, users, selectedPlan, ta, ts]);
 
   return <TreeChart rows={rows} data1={data1} data2={data2} />;
 }
