@@ -38,13 +38,17 @@ export const wfResequence = (wf: IWorkflow[], sec = 1) => {
   return change ? [...wf] : wf;
 };
 
-export const wfResequencePassages = (wf: IWorkflow[], sectionIndex: number) => {
+export const wfResequencePassages = (
+  wf: IWorkflow[],
+  sectionIndex: number,
+  flat: boolean
+) => {
   const updatedAt = currentDateTime();
   let pas = 1;
   let change = false;
   for (
-    let i = sectionIndex + 1;
-    i < wf.length && wf[i].kind === IwfKind.Passage;
+    let i = sectionIndex + (flat ? 0 : 1);
+    i < wf.length && isPassageRow(wf[i]);
     i += 1
   ) {
     if (wf[i].deleted) continue;

@@ -294,7 +294,8 @@ export function ScriptureTable(props: IProps) {
       //no passage on this row yet
       myWorkflow = wfResequencePassages(
         updateRowAt(myWorkflow, newRow, index),
-        index
+        index,
+        flat
       );
       setWorkflow(myWorkflow);
     } else {
@@ -312,7 +313,7 @@ export function ScriptureTable(props: IProps) {
         movePassageDown(myWorkflow, index);
       }
       while (!isSectionRow(myWorkflow[index])) index -= 1;
-      setWorkflow(wfResequencePassages(myWorkflow, index));
+      setWorkflow(wfResequencePassages(myWorkflow, index, flat));
     }
     setChanged(true);
   };
