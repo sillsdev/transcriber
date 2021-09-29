@@ -649,7 +649,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
 
     useEffect(() => {
       if (mediaState.error) {
-        if (mediaState.error === 'no offline file')
+        if (mediaState.error.startsWith('no offline file'))
           showMessage(sharedStr.fileNotFound);
         else showMessage(mediaState.error);
         setState((state: ICtxState) => {

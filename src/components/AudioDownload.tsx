@@ -70,7 +70,8 @@ export const AudioDownload = (props: IProps) => {
         //not sure what this intermediary file is, but causes console errors
         if (b && b.type !== 'text/html') setBlobUrl(URL.createObjectURL(b));
       });
-    if (mediaState.error === 'no offline file') showMessage(ts.fileNotFound);
+    if (mediaState.error?.startsWith('no offline file'))
+      showMessage(ts.fileNotFound);
     else if (mediaState.error) showMessage(mediaState.error);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
