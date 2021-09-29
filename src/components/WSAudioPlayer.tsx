@@ -199,13 +199,13 @@ const MIN_SPEED = 0.5;
 const MAX_SPEED = 1.5;
 const PLAY_PAUSE_KEY = 'F1,CTRL+SPACE';
 const HOME_KEY = 'CTRL+HOME';
-const BACK_KEY = 'F2,CTRL+2';
-const AHEAD_KEY = 'F3,CTRL+3';
+const BACK_KEY = 'F2,SHIFT+ARROWLEFT';
+const AHEAD_KEY = 'F3,SHIFT+ARROWRIGHT';
 const END_KEY = 'CTRL+END';
 const SLOWER_KEY = 'F4,CTRL+4';
 const FASTER_KEY = 'F5,CTRL+5';
 const TIMER_KEY = 'F6,CTRL+6';
-const RECORD_KEY = 'F9,CTRL+9';
+const RECORD_KEY = 'F9,SHIFT+R';
 const LEFT_KEY = 'CTRL+ARROWLEFT';
 const RIGHT_KEY = 'CTRL+ARROWRIGHT';
 
@@ -389,7 +389,7 @@ function WSAudioPlayer(props: IProps) {
     setDuration(0);
     setHasRegion(0);
     if (blob) {
-      if (setBusy) setBusy(true);
+      if (setBusy) setBusy(true); //turned off on ready
       wsLoad(blob, undefined);
     } else {
       if (setBusy) setBusy(false);
@@ -797,6 +797,7 @@ function WSAudioPlayer(props: IProps) {
                 wsRemoveSplitRegion={wsRemoveSplitRegion}
                 wsAddOrRemoveRegion={wsAddOrRemoveRegion}
                 wsClearRegions={wsClearRegions}
+                setBusy={setBusy}
                 t={t}
               />
             )}
