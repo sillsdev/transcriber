@@ -60,8 +60,8 @@ function WSAudioPlayerZoom(props: IProps) {
 
   const { t, ready, wsZoom, wsPctWidth } = props;
 
-  const ZOOMIN_KEY = 'CTRL+=';
-  const ZOOMOUT_KEY = 'CTRL+-';
+  const ZOOMIN_KEY = 'CTRL+1';
+  const ZOOMOUT_KEY = 'CTRL+3';
   const setZoom = (value: number) => {
     zoomRef.current = value;
     setZoomx(value);

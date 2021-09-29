@@ -61,6 +61,7 @@ interface IProps extends IStateProps {
   wsRemoveSplitRegion: (next?: boolean) => IRegionChange | undefined;
   wsAddOrRemoveRegion: () => IRegionChange | undefined;
   wsClearRegions: () => void;
+  setBusy?: (value: boolean) => void;
 }
 
 function WSAudioPlayerSegment(props: IProps) {
@@ -77,6 +78,7 @@ function WSAudioPlayerSegment(props: IProps) {
     wsRemoveSplitRegion,
     wsAddOrRemoveRegion,
     wsClearRegions,
+    setBusy,
   } = props;
   const [segParams, setSegParams] = useState<IRegionParams>({
     silenceThreshold: 0.004,
@@ -115,7 +117,9 @@ function WSAudioPlayerSegment(props: IProps) {
   }, [params]);
 
   const handleAutoSegment = () => {
+    if (setBusy) setBusy(true);
     var numRegions = wsAutoSegment(loop, segParams);
+    if (setBusy) setBusy(false);
     showMessage(t.segmentsCreated.replace('{0}', numRegions.toString()));
     return true;
   };

@@ -321,7 +321,7 @@ export function useWaveSurferRegions(
     loadingRef.current = true;
     paramsRef.current = regions?.params;
     wavesurferRef.current.regions.clear();
-    if (!regions || regions.regions.length === 0) {
+    if (!regions || !regions.regions || regions.regions.length === 0) {
       singleRegionRef.current = true;
       loadingRef.current = false;
       return;
@@ -341,7 +341,7 @@ export function useWaveSurferRegions(
       () => numRegions() === regarray.length,
       () => false,
       400
-    ).then(() => {
+    ).finally(() => {
       setPrevNext(regionIds());
       onRegion(regarray.length, paramsRef.current, newRegions);
       loadingRef.current = false;

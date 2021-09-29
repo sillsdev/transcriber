@@ -46,7 +46,7 @@ export function useWaveSurfer(
   const inputRegionsRef = useRef<IRegions>();
   const regionsLoadedRef = useRef(false);
   const widthRef = useRef(0);
-
+  const containerRef = useRef(container);
   const isNear = (position: number) => {
     return Math.abs(position - progressRef.current) < 0.3;
   };
@@ -182,6 +182,7 @@ export function useWaveSurfer(
 
     if (container && !wavesurferRef.current) {
       create(container, height);
+      containerRef.current = container;
       if (blobToLoad.current) {
         wsLoad();
       }
@@ -245,9 +246,10 @@ export function useWaveSurfer(
   const wsPctWidth = () => {
     return (
       widthRef.current /
-      (container.clientWidth * wavesurfer()?.params.pixelRatio)
+      (containerRef.current.clientWidth * wavesurfer()?.params.pixelRatio)
     );
   };
+
   const wsLoad = (blob?: Blob, regions: string = '') => {
     durationRef.current = 0;
     if (regions) inputRegionsRef.current = JSON.parse(regions);
