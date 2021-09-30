@@ -847,7 +847,7 @@ export function ScriptureTable(props: IProps) {
           open={Boolean(audacityItem)}
           onClose={handleAudacityClose}
           passageId={audacityItem?.wf?.passageId as RecordIdentity}
-          mediaId={audacityItem?.wf?.mediaId || ''}
+          mediaId={audacityItem?.wf?.mediaId?.id || ''}
           onImport={handleAudacityImport}
         />
       )}
