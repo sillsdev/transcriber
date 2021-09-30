@@ -361,13 +361,14 @@ export function Transcriber(props: IProps) {
     });
     setTextAreaStyle({
       ...textAreaStyle,
+      height: boxHeight,
       fontFamily: projData?.fontFamily,
       fontSize: projData?.fontSize,
       direction: projData?.fontDir as any,
       cursor: trBusy || loading ? 'progress' : 'default',
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trBusy, loading, projData]);
+  }, [trBusy, loading, boxHeight, projData]);
 
   useEffect(() => {
     const getParatextIntegration = () => {
@@ -422,7 +423,8 @@ export function Transcriber(props: IProps) {
   useEffect(() => {
     const newBoxHeight = height - (playerSize + 200);
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
-  }, [height, boxHeight, playerSize]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [height, playerSize]);
 
   useEffect(() => {
     if (!saving.current && selected) showTranscription(getTranscription());
@@ -933,8 +935,9 @@ export function Transcriber(props: IProps) {
             </Grid>
             <Wrapper>
               <SplitPane
-                defaultSize={180}
-                minSize={180}
+                defaultSize={INIT_PLAYER_HEIGHT}
+                minSize={INIT_PLAYER_HEIGHT}
+                maxSize={height - 280}
                 style={{ position: 'static' }}
                 split="horizontal"
                 onChange={handleSplitSize}
@@ -1035,7 +1038,7 @@ export function Transcriber(props: IProps) {
                       <Grid item xs={6} container direction="column">
                         <PassageHistory
                           passageId={passage?.id}
-                          boxHeight={boxHeight}
+                          boxHeight={boxHeight - 16}
                         />
                       </Grid>
                     )}
