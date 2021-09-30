@@ -184,12 +184,14 @@ export function AudioTab(props: IProps) {
     let n = 0;
     setComplete(n);
     for (let mediaId of Object.keys(map)) {
+      if (status.canceled) break;
       await handleRow(mediaId);
       n += 1;
       setComplete(Math.min((n * 100) / total, 100));
     }
     setAttachMap({});
-    showMessage(t.savingComplete);
+    if (status.canceled) status.canceled = false;
+    else showMessage(t.savingComplete);
     inProcess.current = false;
     saveCompleted('');
   };
