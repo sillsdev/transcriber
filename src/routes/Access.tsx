@@ -315,6 +315,7 @@ export function Access(props: IProps) {
   const handleBack = () => {
     //localStorage.removeItem('offlineAdmin');
     localStorage.setItem('offlineAdmin', 'choose');
+    localStorage.removeItem('isLoggedIn');
     setWhichUsers('');
   };
 
