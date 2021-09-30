@@ -127,6 +127,11 @@ interface ParamTypes {
   prjId: string;
 }
 
+interface AudacityInfo {
+  wf: IWorkflow;
+  index: number;
+}
+
 export function ScriptureTable(props: IProps) {
   const {
     t,
@@ -177,7 +182,7 @@ export function ScriptureTable(props: IProps) {
   const [workflow, setWorkflow] = useState<IWorkflow[]>([]);
   const [, setComplete] = useGlobal('progress');
   const [view, setView] = useState('');
-  const [audacityItem, setAudacityItem] = React.useState<IWorkflow>();
+  const [audacityItem, setAudacityItem] = React.useState<AudacityInfo>();
   const [lastSaved, setLastSaved] = React.useState<string>();
   const [startSave, saveCompleted, waitForSave] = useRemoteSave();
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
@@ -186,7 +191,7 @@ export function ScriptureTable(props: IProps) {
   const [recordAudio, setRecordAudio] = useState(true);
   const [importList, setImportList] = useState<File[]>();
   const [status] = useState<IStatus>({ canceled: false });
-  const [uploadItem, setUploadItem] = useState<IWorkflow>();
+  const uploadItem = useRef<IWorkflow>();
   const [defaultFilename, setDefaultFilename] = useState('');
   const { getPlan } = usePlan();
   const localSave = useWfLocalSave({ setComplete });
@@ -514,7 +519,7 @@ export function ScriptureTable(props: IProps) {
   const handleAudacity = (index: number) => {
     const { wf } = getByIndex(workflow, index);
     saveIfChanged(() => {
-      setAudacityItem(wf);
+      setAudacityItem({ wf: wf as IWorkflow, index });
     });
   };
 
@@ -550,7 +555,7 @@ export function ScriptureTable(props: IProps) {
   const showUpload = (i: number, record: boolean) => {
     const { wf } = getByIndex(workflow, i);
     setFilename(wf);
-    setUploadItem(wf);
+    uploadItem.current = wf;
     setRecordAudio(record);
     setUploadVisible(true);
   };
@@ -765,9 +770,9 @@ export function ScriptureTable(props: IProps) {
     if (
       mediaRemoteIds &&
       mediaRemoteIds.length > 0 &&
-      uploadItem !== undefined
+      uploadItem.current !== undefined
     ) {
-      const passId = uploadItem?.passageId?.id || '';
+      const passId = uploadItem.current?.passageId?.id || '';
       await attachPassage(
         passId,
         related(
@@ -779,7 +784,7 @@ export function ScriptureTable(props: IProps) {
           mediaRemoteIds[0]
       );
     }
-    setUploadItem(undefined);
+    uploadItem.current = undefined;
     if (importList) {
       setImportList(undefined);
       setUploadVisible(false);
@@ -826,7 +831,7 @@ export function ScriptureTable(props: IProps) {
         recordAudio={recordAudio}
         defaultFilename={defaultFilename}
         auth={auth}
-        mediaId={uploadItem?.mediaId?.id || ''}
+        mediaId={uploadItem.current?.mediaId?.id || ''}
         importList={importList}
         isOpen={uploadVisible}
         onOpen={handleUploadVisible}
@@ -836,13 +841,13 @@ export function ScriptureTable(props: IProps) {
         finish={afterUpload}
         status={status}
       />
-      {audacityItem?.passageId && (
+      {audacityItem?.wf?.passageId && (
         <AudacityManager
-          item={audacityItem}
+          item={audacityItem?.index}
           open={Boolean(audacityItem)}
           onClose={handleAudacityClose}
-          passageId={audacityItem?.passageId as RecordIdentity}
-          mediaId={audacityItem?.mediaId || ''}
+          passageId={audacityItem?.wf?.passageId as RecordIdentity}
+          mediaId={audacityItem?.wf?.mediaId || ''}
           onImport={handleAudacityImport}
         />
       )}

@@ -123,13 +123,13 @@ function AudacityManager(props: IProps) {
         return;
       }
       const fullName = await getProjName(passageId);
-      setName(fullName);
       fs.mkdirSync(path.dirname(fullName), { recursive: true });
       if (!fs.existsSync(fullName))
         fs.copyFileSync(
           path.join(API_CONFIG.resourcePath, 'new.aup3'),
           fullName
         );
+      setName(fullName);
       launchAudacity(fullName, getMediaUrl(mediaId));
     }
   };
