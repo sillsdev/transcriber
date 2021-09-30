@@ -325,6 +325,12 @@
             <target>Fechar</target>
          </segment>
       </unit>
+   	<unit id="audacityManager.closeAudacity">
+   		<segment>
+   			<source>Audacity is current running. Close before using this function.</source>
+   			<target>A audácia está correndo. Feche antes de usar esta função.</target>
+   		</segment>
+   	</unit>
       <unit id="audacityManager.create">
          <segment>
             <source>Create</source>

@@ -380,7 +380,14 @@
                <context context-type="sourcefile">AudacityManager.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="audacityManager.create">
+      	<trans-unit id="audacityManager.closeAudacity">
+      		<source>Audacity is current running. Close before using this function.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.create">
             <source>Create</source>
             <target/>
             <context-group>
