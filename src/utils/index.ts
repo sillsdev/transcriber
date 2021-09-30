@@ -56,3 +56,4 @@ export * from './getPythonExe';
 export * from './getMacroOutputName';
 export * from './useInterval';
 export * from './generateUUID';
+export * from './isProcessRunning';

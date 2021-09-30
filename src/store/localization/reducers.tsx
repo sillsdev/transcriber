@@ -82,6 +82,7 @@ const initialState = {
 			"browse": "Browse",
 			"checkDownload": "Exit to download media file before creating Audacity",
 			"close": "Close",
+			"closeAudacity": "Audacity is current running. Close before using this function.",
 			"create": "Create",
 			"import": "Import",
 			"missingProject": "Missing file. Use Browse to search for it or Create to make a new file.",

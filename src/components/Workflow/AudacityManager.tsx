@@ -28,6 +28,7 @@ import {
   getMacroOutputName,
   launchAudacityExport,
   loadBlob,
+  isProcessRunning,
 } from '../../utils';
 import { dataPath, PathType } from '../../utils';
 
@@ -115,6 +116,10 @@ function AudacityManager(props: IProps) {
   };
 
   const handleCreate = async () => {
+    if (await isProcessRunning('audacity')) {
+      showMessage(t.closeAudacity);
+      return;
+    }
     if ((passageId?.id || '') !== '') {
       const url = getMediaUrl(mediaId);
       const mediaName = dataPath(url, PathType.MEDIA);
@@ -143,6 +148,10 @@ function AudacityManager(props: IProps) {
   };
 
   const handleImport = async () => {
+    if (await isProcessRunning('audacity')) {
+      showMessage(t.closeAudacity);
+      return;
+    }
     if (name.indexOf('.aup3') === -1) {
       showMessage(t.badProjName);
       return;
