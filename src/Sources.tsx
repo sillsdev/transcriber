@@ -25,6 +25,7 @@ import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { orbitRetry, orbitErr, logError, infoMsg, Severity } from './utils';
 import { electronExport } from './store/importexport/electronExport';
 import { restoreBackup } from '.';
+import { State } from 'reactn/default';
 
 export const Sources = async (
   coordinator: Coordinator,
@@ -35,7 +36,7 @@ export const Sources = async (
   orbitError: (ex: IApiError) => void,
   setOrbitRetries: (r: number) => void,
   setLang: (locale: string) => void,
-  globalStore: any,
+  globalStore: State,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
 ) => {
   const memory = coordinator.getSource('memory') as Memory;

@@ -68,10 +68,8 @@ export function useWaveSurferRegions(
     wavesurferRef.current = ws;
     if (ws) {
       ws.on('region-created', function (r: any) {
-        //console.log('region-created', loadingRef.current);
         if (singleRegionRef.current) {
           r.drag = true;
-          if (currentRegion()) currentRegion().remove();
         } else {
           r.drag = false;
         }
@@ -566,7 +564,8 @@ export function useWaveSurferRegions(
     } */
   }
   function onRegionSeek(e: number, keepRegion: boolean) {
-    if (singleRegionRef.current && !keepRegion && currentRegion()) {
+    // TT-2884 remove single regions
+    if (singleRegionRef.current && currentRegion()) {
       currentRegion().remove();
       setCurrentRegion(undefined);
     }
