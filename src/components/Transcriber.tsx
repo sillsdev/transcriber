@@ -370,7 +370,7 @@ export function Transcriber(props: IProps) {
     });
     if (transcriptionRef.current) {
       const el = transcriptionRef?.current?.firstChild as HTMLTextAreaElement;
-      if (el) {
+      if (el && !el.selectionStart && !el.selectionEnd) {
         el.selectionStart = el.selectionEnd = el.textLength;
       }
     }
