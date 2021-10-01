@@ -205,7 +205,7 @@ const END_KEY = 'CTRL+END';
 const SLOWER_KEY = 'F4,CTRL+4';
 const FASTER_KEY = 'F5,CTRL+5';
 const TIMER_KEY = 'F6,CTRL+6';
-const RECORD_KEY = 'F9,SHIFT+R';
+const RECORD_KEY = 'F9,CTRL+9';
 const LEFT_KEY = 'CTRL+ARROWLEFT';
 const RIGHT_KEY = 'CTRL+ARROWRIGHT';
 
