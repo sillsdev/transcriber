@@ -241,6 +241,7 @@ export function Transcriber(props: IProps) {
     state: '',
     role: '',
   };
+
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -510,10 +511,10 @@ export function Transcriber(props: IProps) {
   useEffect(() => {
     const newAssigned = rowData[index]?.assigned;
     if (newAssigned !== assigned) setAssigned(newAssigned);
-    stateRef.current = rowData[index]?.state;
+    stateRef.current = state;
     focusOnTranscription();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [index, rowData]);
+  }, [index, rowData, state]);
 
   useEffect(() => {
     if (totalSeconds && (!duration || duration !== Math.floor(totalSeconds))) {

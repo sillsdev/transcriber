@@ -139,7 +139,7 @@ const initState = {
   transcriberStr: {} as ITranscriberStrings,
   projButtonStr: {} as IProjButtonsStrings,
   hasUrl: false,
-  loading: true,
+  loading: false,
   mediaUrl: '',
   audioBlob: undefined as Blob | undefined,
   trBusy: false,
@@ -190,9 +190,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [refreshed, setRefreshed] = useState(0);
     const mediaUrlRef = useRef('');
     const { showMessage } = useSnackBar();
+    const [trackedTask, setTrackedTask] = useGlobal('trackedTask');
     const [state, setState] = useState({
       ...initState,
-      selected: '',
       allBookData,
       todoStr,
       taskItemStr,
@@ -201,8 +201,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       projButtonStr,
       sharedStr,
     });
-    const { fetchMediaUrl, mediaState, setTrackedTask } =
-      useFetchMediaUrl(reporter);
+    const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
+    const fetching = useRef('');
 
     const setRows = (rowData: IRowData[]) => {
       setState((state: ICtxState) => {
@@ -240,34 +240,35 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       selected: string,
       rowData: IRowData[] = state.rowData
     ) => {
-      const rowLen = rowData.length;
-      for (let i = 0; i < rowLen; i++) {
-        const r = rowData[i];
-        if (r.passage?.id === selected && r.mediaRemoteId !== '') {
-          if (state.index !== i || mediaState.trackedTask !== selected) {
-            const remId =
-              remoteId('passage', selected, memory.keyMap) || selected;
-            if (pasId !== remId) {
-              view.current = `/work/${prjId}/${remId}`;
-            }
-            setTrackedTask(selected);
-            fetchMediaUrl({
-              id: r.mediaRemoteId,
-              auth: props.auth,
-            });
-            setState((state: ICtxState) => {
-              return {
-                ...state,
-                index: i,
-                selected,
-                playing: false,
-                playItem: r.mediaId,
-                loading: true,
-              };
-            });
-          }
-          break;
+      const i = rowData.findIndex((r) => r.passage.id === selected);
+      if (i < 0) return;
+      const r = rowData[i];
+      if (state.index !== i || state.selected !== selected) {
+        const remId = remoteId('passage', selected, memory.keyMap) || selected;
+        if (pasId !== remId) {
+          view.current = `/work/${prjId}/${remId}`;
         }
+        setTrackedTask(selected);
+        if (
+          mediaState.urlMediaId !== r.mediaId &&
+          fetching.current !== r.mediaId
+        ) {
+          fetching.current = r.mediaId;
+          fetchMediaUrl({
+            id: r.mediaId,
+            auth: props.auth,
+          });
+        }
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            index: i,
+            selected,
+            playing: false,
+            playItem: r.mediaId,
+            loading: fetching.current !== '',
+          };
+        });
       }
     };
 
@@ -287,10 +288,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       playItem: string
     ) => {
       const readyRecs = passages
-        .filter(
-          (p) =>
-            (p.attributes && p.attributes.state === state) || role === 'view'
-        ) //just group the passages within a section together right now
+        .filter((p) => p.attributes?.state === state || role === 'view') //just group the passages within a section together right now
         .sort((a, b) =>
           related(a, 'section') < related(b, 'section') ? -1 : 1
         );
@@ -326,11 +324,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                     }
                     if (role !== 'view' || already.length === 0) {
                       const curState: ActivityStates | string =
-                        role === 'view'
-                          ? p.attributes && p.attributes.state
-                            ? p.attributes.state
-                            : state
-                          : state;
+                        role === 'view' ? p.attributes?.state || state : state;
                       const planName = getPlanName(planRecs[0]);
                       const planTypeRecs = planTypes.filter(
                         (pt) => pt.id === related(planRecs[0], 'plantype')
@@ -354,7 +348,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                           planName,
                           planType,
                           section: { ...secRecs[0] },
-                          passage: { ...p },
+                          passage: {} as Passage,
                           state: '',
                           sectPass: secNum + '.',
                           mediaRemoteId: '',
@@ -518,11 +512,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       setExpandedGroups(exGrp);
 
       if (rowList.length > 0) {
-        let selected = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
-        selected =
+        let selected =
           state.selected !== ''
             ? state.selected
-            : selected || mediaState.trackedTask;
+            : remoteIdGuid('passage', pasId, memory.keyMap) ||
+              pasId ||
+              trackedTask;
         if (selected !== '') {
           const selectedRow = rowList.filter((r) => r.passage.id === selected);
           if (selectedRow.length > 0) {
@@ -532,12 +527,11 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           }
         }
         if (selected === '') {
-          setSelected(rowList[0].passage.id, rowList);
+          setSelected(rowList[1].passage.id, rowList);
         }
       }
-
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [role, project, mediaState.trackedTask, sections, refreshed]);
+    }, [role, project, sections, refreshed]);
 
     const actor: { [key: string]: string } = {
       [ActivityStates.TranscribeReady]: 'transcriber',
@@ -560,7 +554,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           if (transcriber !== r.transcriber) changed = true;
           const editor = related(section, 'editor');
           if (editor !== r.editor) changed = true;
-          const state = r.passage.attributes.state || '';
+          const state = r.passage.attributes?.state || '';
           let role = actor[state] || 'view';
           if (projRole === 'transcriber' && role === 'editor') role = 'view';
           const assigned = related(section, role);
@@ -579,25 +573,32 @@ const TranscriberProvider = withData(mapRecordsToProps)(
 
     useEffect(() => {
       let changed = false;
-      let selected = state.selected;
       const rowData: IRowData[] = [];
+      var forcerefresh = false;
       state.rowData.forEach((r) => {
-        const passRecs = passages.filter((p) => p.id === r.passage.id);
-        if (passRecs.length > 0) {
-          const passage = { ...passRecs[0] };
-          let role = r.role;
-          const newState = passage?.attributes?.state;
-          if (newState !== r.passage?.attributes?.state) {
-            changed = true;
-            if (noNewSelection.indexOf(newState) === -1) selected = '';
-            role = actor[newState] || 'view';
+        //section
+        if (!r.passage.id) rowData.push({ ...r });
+        else {
+          const passRecs = passages.filter((p) => p.id === r.passage.id);
+          if (passRecs.length > 0) {
+            const passage = { ...passRecs[0] };
+            let role = r.role;
+            const newState = passage?.attributes?.state;
+            if (newState !== r.passage?.attributes?.state) {
+              changed = true;
+              role = actor[newState] || 'view';
+              forcerefresh =
+                forcerefresh ||
+                noNewSelection.indexOf(newState) === -1 ||
+                role !== r.role;
+            }
+            rowData.push({ ...r, passage, role });
           }
-          rowData.push({ ...r, passage, role });
         }
       });
       if (changed) {
-        setState({ ...state, rowData, selected, playing: false });
-        if (!state.playing) setTrackedTask('');
+        setState({ ...state, rowData, playing: false });
+        if (forcerefresh) refresh(); //force the transcriber pane to refresh also
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [passages]);
@@ -605,6 +606,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     useEffect(() => {
       if (mediaState.url) {
         mediaUrlRef.current = mediaState.url;
+        fetching.current = '';
         try {
           loadBlob(mediaState.url, (urlOrError, b) => {
             if (!b) {
@@ -612,6 +614,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                 //force requery for new media url
                 setSelected(state.selected);
               } else {
+                //no blob
                 showMessage(urlOrError);
                 setState((state: ICtxState) => {
                   return {
@@ -626,7 +629,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
             }
             //not sure what this intermediary file is, but causes console errors
             if (b.type !== 'text/html') {
-              //console.log('got the blob', url.substr(70, 50));
               if (urlOrError === mediaUrlRef.current) {
                 setState((state: ICtxState) => {
                   return {

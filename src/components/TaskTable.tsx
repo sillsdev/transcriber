@@ -205,12 +205,13 @@ export function TaskTable(props: IProps) {
   const [style, setStyle] = React.useState<CSSProperties>({
     height: window.innerHeight - 100,
     overflowY: 'auto',
-    cursor: trBusy || loading ? 'progress' : 'default',
+    cursor: 'default',
   });
   const [playItem, setPlayItem] = useState('');
   const formRef = useRef<any>();
   const selectedRef = useRef<any>();
   const notSelectedRef = useRef<any>();
+  const busyRef = useRef(false);
 
   const handleToggleFilter = () => {
     handleStopPlayer();
@@ -249,7 +250,7 @@ export function TaskTable(props: IProps) {
     setStyle({
       height: window.innerHeight - 100,
       overflowY: 'auto',
-      cursor: trBusy || loading ? 'progress' : 'default',
+      cursor: busyRef.current ? 'progress' : 'default',
     });
     setWidth(window.innerWidth);
   };
@@ -269,10 +270,11 @@ export function TaskTable(props: IProps) {
   }, []);
 
   useEffect(() => {
+    busyRef.current = trBusy || loading;
     setStyle({
       height: window.innerHeight - 100,
       overflowY: 'auto',
-      cursor: trBusy || loading ? 'progress' : 'default',
+      cursor: busyRef.current ? 'progress' : 'default',
     });
   }, [trBusy, loading]);
 
@@ -447,6 +449,7 @@ export function TaskTable(props: IProps) {
   const playEnded = () => {
     setPlayItem('');
   };
+
   return (
     <div
       id="TaskTable"

@@ -15,7 +15,6 @@ export enum MediaSt {
   'PENDING',
   'FETCHED',
   'ERROR',
-  'SET_SELECTED',
 }
 
 export interface IMediaState {
@@ -23,22 +22,19 @@ export interface IMediaState {
   error: null | string;
   url: string; // temporary url
   urlMediaId: string; // media id
-  trackedTask: string; // passage id
 }
 export const mediaClean: IMediaState = {
   status: MediaSt.IDLE,
   error: null,
   url: '',
   urlMediaId: '',
-  trackedTask: '',
 };
 
 type Action =
   | { type: MediaSt.PENDING; payload: string } // mediaId
   | { type: MediaSt.FETCHED; payload: string } // temporary url
   | { type: MediaSt.ERROR; payload: string }
-  | { type: MediaSt.IDLE; payload: undefined }
-  | { type: MediaSt.SET_SELECTED; payload: string };
+  | { type: MediaSt.IDLE; payload: undefined };
 
 const stateReducer = (state: IMediaState, action: Action): IMediaState => {
   switch (action.type) {
@@ -63,8 +59,7 @@ const stateReducer = (state: IMediaState, action: Action): IMediaState => {
       };
     case MediaSt.IDLE:
       return { ...state, status: MediaSt.IDLE, urlMediaId: '', error: '' };
-    case MediaSt.SET_SELECTED:
-      return { ...state, trackedTask: action.payload };
+
     default:
       return state;
   }
@@ -126,7 +121,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
             if (cancelled()) return;
             const audioUrl = mediarec.attributes.audioUrl;
             const path = dataPath(audioUrl, PathType.MEDIA);
-            logError(Severity.info, reporter, `fetching=${path}`);
+            //logError(Severity.info, reporter, `fetching=${path}`);
             if (!path.startsWith('http')) {
               const start = os.platform() === 'win32' ? 8 : 7;
               const url = new URL(`file://${path}`).toString().slice(start);
@@ -181,10 +176,8 @@ export const useFetchMediaUrl = (reporter?: any) => {
   const fetchMediaUrl = (aProps: IProps) => {
     props.current = { ...aProps };
   };
-  const setTrackedTask = (val: string) => (dispatch: any) => {
-    dispatch({ payload: val, type: MediaSt.SET_SELECTED });
-  };
-  return { fetchMediaUrl, mediaState: state, setTrackedTask };
+
+  return { fetchMediaUrl, mediaState: state };
 };
 
 export default useFetchMediaUrl;
