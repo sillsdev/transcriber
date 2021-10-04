@@ -30,7 +30,7 @@ export const TeamProjects = (props: IProps) => {
         {(personalProjects().length > 0 || !offline || offlineOnly) && (
           <PersonalItem key={1} />
         )}
-        {teams().map((i) => {
+        {teams.map((i) => {
           return <TeamItem key={i.id} team={i} />;
         })}
       </Grid>
