@@ -96,14 +96,18 @@ function PersonItems(props: IProps) {
                 allUsers) && (
                 <ListItemSecondaryAction>
                   <Tooltip
-                    id={`info${index}`}
+                    id={`tip${index}`}
                     title={
                       !ids.filter((id) => id.user === u.id)[0].canDelete
                         ? noDeleteInfo || ''
                         : noDeleteAllUsersInfo || ''
                     }
                   >
-                    <IconButton edge="end" aria-label="Info">
+                    <IconButton
+                      id={`info${index}`}
+                      edge="end"
+                      aria-label="Info"
+                    >
                       <InfoIcon />
                     </IconButton>
                   </Tooltip>
