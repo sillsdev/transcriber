@@ -127,17 +127,23 @@ function WSAudioPlayerSegment(props: IProps) {
     setShowSettings(!showSettings);
   };
   const handleSplit = () => {
+    if (setBusy) setBusy(true);
     var result = wsAddOrRemoveRegion();
     if (result && onSplit) onSplit(result);
+    if (setBusy) setBusy(false);
     return true;
   };
   const handleRemoveNextSplit = () => {
+    if (setBusy) setBusy(true);
     var result = wsRemoveSplitRegion(true);
     if (result && onSplit) onSplit(result);
+    if (setBusy) setBusy(false);
     return true;
   };
   const handleClearSegments = () => {
+    if (setBusy) setBusy(true);
     wsClearRegions();
+    if (setBusy) setBusy(false);
     return true;
   };
   const handleSegParamChange = (
