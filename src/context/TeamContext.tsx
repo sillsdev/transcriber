@@ -125,7 +125,7 @@ const initState = {
   allBookData: Array<BookName>(),
   planTypes: Array<PlanType>(),
   isDeleting: false,
-  teams: () => Array<Organization>(),
+  teams: Array<Organization>(),
   personalProjects: () => Array<VProject>(),
   teamProjects: (teamId: string) => Array<VProject>(),
   teamMembers: (teamId: string) => 0,
@@ -216,7 +216,6 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [isOffline] = useGlobal('offline');
     const [offlineOnly] = useGlobal('offlineOnly');
     const [userProjects, setUserProjects] = useState(projects);
-    const [userOrgs, setUserOrgs] = useState(organizations);
     const [importOpen, setImportOpen] = useState(false);
     const [importProject, setImportProject] = useState<VProject>();
     const [state, setState] = useState({
@@ -298,8 +297,16 @@ const TeamProvider = withData(mapRecordsToProps)(
       return recs.length;
     };
 
-    const teams = () => {
-      return userOrgs
+    const getTeams = () => {
+      let orgs = organizations;
+      if (isElectron) {
+        //online or offline we may have other user's orgs in the db
+        const orgIds = orgMembers
+          .filter((om) => related(om, 'user') === user)
+          .map((om) => related(om, 'organization'));
+        orgs = organizations.filter((o) => orgIds.includes(o.id));
+      }
+      return orgs
         .filter(
           (o) =>
             !isPersonal(o.id) &&
@@ -449,15 +456,8 @@ const TeamProvider = withData(mapRecordsToProps)(
     }, [projects, groupMemberships, user, isOffline]);
 
     useEffect(() => {
-      if (isElectron) {
-        //online or offline we may have other user's orgs in the db
-        const orgIds = orgMembers
-          .filter((om) => related(om, 'user') === user)
-          .map((om) => related(om, 'organization'));
-        setUserOrgs(organizations.filter((o) => orgIds.includes(o.id)));
-      } else {
-        setUserOrgs(organizations);
-      }
+      setState((state) => ({ ...state, teams: getTeams() }));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [organizations, orgMembers, user, isOffline]);
 
     return (
@@ -469,7 +469,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             bookMap,
             allBookData,
             planTypes: getPlanTypes,
-            teams,
+            teams: getTeams(),
             personalProjects,
             teamProjects,
             teamMembers,
