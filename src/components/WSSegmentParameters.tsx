@@ -78,6 +78,10 @@ function WSSegmentParameters(props: IProps) {
   const [numRegions, setNumRegions] = useState(currentNumRegions);
 
   useEffect(() => {
+    setNumRegions(currentNumRegions);
+  }, [currentNumRegions]);
+
+  useEffect(() => {
     setSilenceValue(params.silenceThreshold * 1000);
     setTimeValue(params.timeThreshold * 100);
     setSegmentLen(params.segLenThreshold);
