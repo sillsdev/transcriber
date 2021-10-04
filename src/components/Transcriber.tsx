@@ -368,6 +368,13 @@ export function Transcriber(props: IProps) {
       direction: projData?.fontDir as any,
       cursor: trBusy || loading ? 'progress' : 'default',
     });
+    if (transcriptionRef.current) {
+      const el = transcriptionRef?.current?.firstChild as HTMLTextAreaElement;
+      if (el && !el.selectionStart && !el.selectionEnd) {
+        el.selectionStart = el.selectionEnd = el.textLength;
+      }
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trBusy, loading, boxHeight, projData]);
 
