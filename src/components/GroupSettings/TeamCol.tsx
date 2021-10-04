@@ -40,6 +40,7 @@ function TeamCol(props: IProps) {
 
   const canEdit = () =>
     !detail && orgRole === 'admin' && !allUsers && (!offline || offlineOnly);
+
   return (
     <Grid item xs={12} md={4}>
       <FormGroup className={classes.group}>
@@ -48,7 +49,7 @@ function TeamCol(props: IProps) {
           <div className={classes.grow}>{'\u00A0'}</div>
           {canEdit() && (
             <IconButton
-              id="teamColAdd"
+              id={`teamColAdd${title}`}
               size="small"
               className={classes.addButton}
               onClick={add}

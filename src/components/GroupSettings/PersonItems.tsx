@@ -58,7 +58,7 @@ function PersonItems(props: IProps) {
           (u) => u.attributes && ids.map((id) => id.user).indexOf(u.id) !== -1
         )
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-        .map((u) => (
+        .map((u, index) => (
           <ListItem
             key={u.id}
             disabled={
@@ -79,7 +79,7 @@ function PersonItems(props: IProps) {
               !allUsers && (
                 <ListItemSecondaryAction>
                   <IconButton
-                    id={`persDel-${u.id}`}
+                    id={`persDel-${index}`}
                     edge="end"
                     aria-label="Delete"
                     disabled={allUsers}
@@ -96,6 +96,7 @@ function PersonItems(props: IProps) {
                 allUsers) && (
                 <ListItemSecondaryAction>
                   <Tooltip
+                    id={`info${index}`}
                     title={
                       !ids.filter((id) => id.user === u.id)[0].canDelete
                         ? noDeleteInfo || ''
