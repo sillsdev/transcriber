@@ -24,6 +24,7 @@ interface IRecordProps {
 }
 
 interface IProps extends IRecordProps {
+  title: string;
   detail: boolean;
   ids: Array<IPerson>;
   rev: boolean;
@@ -35,6 +36,7 @@ interface IProps extends IRecordProps {
 
 function PersonItems(props: IProps) {
   const {
+    title,
     detail,
     users,
     ids,
@@ -79,7 +81,7 @@ function PersonItems(props: IProps) {
               !allUsers && (
                 <ListItemSecondaryAction>
                   <IconButton
-                    id={`persDel-${index}`}
+                    id={`persDel${title}${index}`}
                     edge="end"
                     aria-label="Delete"
                     disabled={allUsers}
@@ -96,7 +98,7 @@ function PersonItems(props: IProps) {
                 allUsers) && (
                 <ListItemSecondaryAction>
                   <Tooltip
-                    id={`tip${index}`}
+                    id={`tip${title}${index}`}
                     title={
                       !ids.filter((id) => id.user === u.id)[0].canDelete
                         ? noDeleteInfo || ''
@@ -104,7 +106,7 @@ function PersonItems(props: IProps) {
                     }
                   >
                     <IconButton
-                      id={`info${index}`}
+                      id={`info${title}${index}`}
                       edge="end"
                       aria-label="Info"
                     >
