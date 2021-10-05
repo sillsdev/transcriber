@@ -262,6 +262,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         setState((state: ICtxState) => {
           return {
             ...state,
+            audioBlob: undefined,
             index: i,
             selected,
             playing: false,

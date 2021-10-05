@@ -72,7 +72,7 @@ export const doDataChanges = async (
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const userLastTimeKey = localUserKey(LocalKey.time, memory);
-  if (!remote) return;
+  if (!remote || !remote.activated) return;
   let lastTime = localStorage.getItem(userLastTimeKey) || currentDateTime(); // should not happen
   let nextTime = currentDateTime();
 
