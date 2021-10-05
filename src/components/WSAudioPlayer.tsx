@@ -656,10 +656,12 @@ function WSAudioPlayer(props: IProps) {
                 <Grid item>
                   <LightTooltip
                     id="wsAudioPlayTip"
-                    title={(playing ? t.pauseTip : t.playTip).replace(
-                      '{0}',
-                      localizeHotKey(PLAY_PAUSE_KEY)
-                    )}
+                    title={(playing
+                      ? allowRecord
+                        ? t.stop
+                        : t.pauseTip
+                      : t.playTip
+                    ).replace('{0}', localizeHotKey(PLAY_PAUSE_KEY))}
                   >
                     <span>
                       <IconButton
