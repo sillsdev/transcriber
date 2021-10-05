@@ -26,6 +26,7 @@ import ForwardIcon from '@material-ui/icons/Refresh';
 import ReplayIcon from '@material-ui/icons/Replay';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
+import StopIcon from '@material-ui/icons/Stop';
 import LoopIcon from '@material-ui/icons/Loop';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SilenceIcon from '@material-ui/icons/SpaceBar';
@@ -666,7 +667,17 @@ function WSAudioPlayer(props: IProps) {
                         onClick={handlePlayStatus}
                         disabled={duration === 0 || recording}
                       >
-                        <>{playing ? <PauseIcon /> : <PlayIcon />}</>
+                        <>
+                          {playing ? (
+                            allowRecord ? (
+                              <StopIcon />
+                            ) : (
+                              <PauseIcon />
+                            )
+                          ) : (
+                            <PlayIcon />
+                          )}
+                        </>
                       </IconButton>
                     </span>
                   </LightTooltip>
