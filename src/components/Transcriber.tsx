@@ -39,6 +39,7 @@ import {
   getFontData,
   UpdatePassageStateOps,
   remoteIdNum,
+  useFetchMediaUrl,
 } from '../crud';
 import {
   insertAtCursor,
@@ -50,6 +51,8 @@ import {
   camel2Title,
   refMatch,
   waitForIt,
+  dataPath,
+  PathType,
 } from '../utils';
 import { isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
@@ -68,6 +71,7 @@ import WSAudioPlayer from './WSAudioPlayer';
 import PassageHistory from './PassageHistory';
 import { HotKeyContext } from '../context/HotKeyContext';
 import Spelling from './Spelling';
+
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
 const HISTORY_KEY = 'F7,CTRL+7';
@@ -230,7 +234,7 @@ export function Transcriber(props: IProps) {
     audioBlob,
     loading,
   } = useTodo();
-
+  const { safeURL } = useFetchMediaUrl();
   const { section, passage, duration, mediaId, state, role } = rowData[
     index
   ] || {
@@ -528,13 +532,15 @@ export function Transcriber(props: IProps) {
       const mediaRecs = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('mediafile')
       ) as MediaFile[];
+      //check if the url we have loaded is for the current mediaId
       const oldRec = mediaRecs.filter((m) => m.id === mediaId);
+      var mediaRecUrl =
+        oldRec.length > 0
+          ? safeURL(dataPath(oldRec[0].attributes.audioUrl, PathType.MEDIA))
+          : '';
       var cut = mediaUrl.lastIndexOf('&Signature');
       var check = cut > 0 ? mediaUrl.substr(0, cut) : mediaUrl;
-      if (
-        oldRec.length > 0 &&
-        check === oldRec[0].attributes.audioUrl.substr(0, cut)
-      ) {
+      if (check === (cut > 0 ? mediaRecUrl.substr(0, cut) : mediaRecUrl)) {
         memory
           .update((t: TransformBuilder) =>
             t.replaceAttribute(oldRec[0], 'duration', Math.floor(totalSeconds))

@@ -118,7 +118,8 @@ export function useWaveSurfer(
     setPlaying
   );
 
-  const wavesurfer = () => wavesurferRef.current;
+  const wavesurfer = () =>
+    wavesurferRef.current?.isDestroyed ? undefined : wavesurferRef.current;
 
   useEffect(() => {
     function create(container: any, height: number) {
@@ -193,13 +194,14 @@ export function useWaveSurfer(
   useEffect(() => {
     // Removes events, elements and disconnects Web Audio nodes on component unmount
     return () => {
+      blobToLoad.current = undefined;
       if (wavesurferRef.current) {
-        if (wavesurferPlayingRef.current) wavesurferRef.current.stop();
-        wavesurferRef.current.unAll();
-        wavesurferRef.current.destroy();
-        wavesurferRef.current = undefined;
+        var ws = wavesurferRef.current;
+        if (wavesurferPlayingRef.current) ws.stop();
         wavesurferPlayingRef.current = false;
-        blobToLoad.current = undefined;
+        wavesurferRef.current = undefined;
+        ws.unAll();
+        ws.destroy();
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -239,7 +241,6 @@ export function useWaveSurfer(
     }
   };
   const wsZoom = (zoom: number) => {
-    console.log('Zoom', zoom);
     wavesurfer()?.zoom(zoom);
     return wavesurfer()?.params.minPxPerSec;
   };
@@ -259,16 +260,32 @@ export function useWaveSurfer(
       loadRequests.current = 1;
     } else if (blob) {
       if (loadRequests.current) {
+        //queue this
         blobToLoad.current = blob;
         loadRequests.current = 2; //if there was another, we'll bypass it
       } else {
-        wavesurfer()?.loadBlob(blob);
+        myLoadBlob(blob);
         loadRequests.current = 1;
       }
     } else if (blobToLoad.current) {
-      wavesurfer()?.loadBlob(blobToLoad.current);
+      myLoadBlob(blobToLoad.current);
       blobToLoad.current = undefined;
     }
+  };
+
+  const myLoadBlob = (blob: Blob) => {
+    // Create file reader
+    const reader = new FileReader();
+    reader.addEventListener('load', (e) => {
+      console.log('load event', wavesurferRef.current);
+      if (wavesurferRef.current?.backend)
+        wavesurferRef.current?.loadArrayBuffer(e.target?.result);
+    });
+    reader.addEventListener('error', (e) =>
+      logError(Severity.error, globalStore.errorReporter, e.toString())
+    );
+
+    reader.readAsArrayBuffer(blob);
   };
 
   const wsLoadRegions = (regions: string) => {

@@ -89,6 +89,15 @@ export const useFetchMediaUrl = (reporter?: any) => {
     return isNaN(Number(id)) ? remoteId('mediafile', id, memory.keyMap) : id;
   };
 
+  const safeURL = (path: string) => {
+    if (!path.startsWith('http')) {
+      const start = os.platform() === 'win32' ? 8 : 7;
+      const url = new URL(`file://${path}`).toString().slice(start);
+      return `transcribe-safe://${url}`;
+    }
+    return path;
+  };
+
   useEffect(() => {
     let cancelRequest = false;
     let id = props.current.id;
@@ -123,11 +132,8 @@ export const useFetchMediaUrl = (reporter?: any) => {
             const path = dataPath(audioUrl, PathType.MEDIA);
             //logError(Severity.info, reporter, `fetching=${path}`);
             if (!path.startsWith('http')) {
-              const start = os.platform() === 'win32' ? 8 : 7;
-              const url = new URL(`file://${path}`).toString().slice(start);
-              const safeUrl = `transcribe-safe://${url}`;
               if (cancelled()) return;
-              dispatch({ payload: safeUrl, type: MediaSt.FETCHED });
+              dispatch({ payload: safeURL(path), type: MediaSt.FETCHED });
               return;
             } else if (!props.current.auth?.accessToken) {
               console.log(
@@ -177,7 +183,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
     props.current = { ...aProps };
   };
 
-  return { fetchMediaUrl, mediaState: state };
+  return { fetchMediaUrl, safeURL, mediaState: state };
 };
 
 export default useFetchMediaUrl;
