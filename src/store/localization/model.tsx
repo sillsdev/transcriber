@@ -369,6 +369,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "copyClipboard": string;
     "crashMessage": string;
     "deletedInvitation": string;
+    "details": string;
     "developer": string;
     "exit": string;
     "export": string;

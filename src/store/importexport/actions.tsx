@@ -2,7 +2,6 @@ import Axios, { AxiosError } from 'axios';
 import fs from 'fs';
 import path from 'path';
 import {
-  IApiError,
   Project,
   Plan,
   Section,
@@ -15,6 +14,7 @@ import {
   OfflineProject,
   VProject,
 } from '../../model';
+import * as actions from '../../store';
 import { API_CONFIG } from '../../api-variable';
 import Auth from '../../auth/Auth';
 import { ResourceDocument } from '@orbit/jsonapi';
@@ -40,7 +40,7 @@ import { TransformBuilder, Operation } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import { electronExport } from './electronExport';
 import { remoteIdGuid, related, insertData, remoteId } from '../../crud';
-import { infoMsg, orbitInfo, logError, Severity } from '../../utils';
+import { orbitInfo } from '../../utils';
 import Coordinator from '@orbit/coordinator';
 
 export const exportComplete = () => (dispatch: any) => {
@@ -60,7 +60,7 @@ export const exportProject =
     userid: number | string,
     numberOfMedia: number,
     auth: Auth,
-    errorReporter: any,
+    reportError: typeof actions.doOrbitError,
     pendingmsg: string,
     getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
   ) =>
@@ -87,11 +87,7 @@ export const exportProject =
           });
         })
         .catch((err: Error) => {
-          logError(
-            Severity.info,
-            errorReporter,
-            infoMsg(err, 'Export failed: ')
-          );
+          reportError(orbitInfo(err, 'Export failed: '));
           dispatch({
             payload: errorStatus(-1, err.message),
             type: EXPORT_ERROR,
@@ -147,11 +143,7 @@ export const exportProject =
           })
           // eslint-disable-next-line no-loop-func
           .catch((err: AxiosError) => {
-            logError(
-              Severity.info,
-              errorReporter,
-              infoMsg(err, 'Export failed: ')
-            );
+            reportError(orbitInfo(err, 'Export failed: '));
             start = -1;
             dispatch({
               payload: errStatus(err),
@@ -173,7 +165,7 @@ const importFromElectron =
     file: Blob,
     projectid: number,
     auth: Auth,
-    errorReporter: any,
+    reportError: typeof actions.doOrbitError,
     pendingmsg: string,
     completemsg: string
   ) =>
@@ -230,7 +222,15 @@ const importFromElectron =
                     type: IMPORT_SUCCESS,
                   });
                 else {
-                  logError(Severity.info, errorReporter, response.data.message);
+                  reportError(
+                    orbitInfo(
+                      {
+                        name: response.data.status,
+                        message: response.data.message,
+                      },
+                      'import error'
+                    )
+                  );
                   dispatch({
                     payload: errorStatus(
                       response.data.status,
@@ -241,17 +241,18 @@ const importFromElectron =
                 }
               })
               .catch((reason) => {
-                logError(Severity.error, errorReporter, reason.toString());
+                reportError(orbitInfo(reason, 'import error'));
                 dispatch({
                   payload: errorStatus(-1, reason.toString()),
                   type: IMPORT_ERROR,
                 });
               });
           } else {
-            logError(
-              Severity.info,
-              errorReporter,
-              `upload ${filename}: (${xhr.status}) ${xhr.responseText}`
+            reportError(
+              orbitInfo(
+                { name: xhr.status.toString(), message: xhr.responseText },
+                `upload ${filename}: `
+              )
             );
             dispatch({
               payload: errorStatus(xhr.status, xhr.responseText),
@@ -261,11 +262,7 @@ const importFromElectron =
         };
       })
       .catch((reason) => {
-        logError(
-          Severity.info,
-          errorReporter,
-          infoMsg(new Error(reason.toString()), 'Import Error')
-        );
+        reportError(orbitInfo(reason, 'Import Error'));
         dispatch({
           payload: errorStatus(-1, reason.toString()),
           type: IMPORT_ERROR,
@@ -278,7 +275,7 @@ export const importSyncFromElectron =
     filename: string,
     file: Buffer,
     auth: Auth,
-    errorReporter: any,
+    reportError: typeof actions.doOrbitError,
     pendingmsg: string,
     completemsg: string
   ) =>
@@ -290,7 +287,7 @@ export const importSyncFromElectron =
         new Blob([file]),
         0,
         auth,
-        errorReporter,
+        reportError,
         pendingmsg,
         completemsg
       )
@@ -302,7 +299,7 @@ export const importProjectFromElectron =
     files: File[],
     projectid: number,
     auth: Auth,
-    errorReporter: any,
+    reportError: typeof actions.doOrbitError,
     pendingmsg: string,
     completemsg: string
   ) =>
@@ -313,7 +310,7 @@ export const importProjectFromElectron =
         files[0],
         projectid,
         auth,
-        errorReporter,
+        reportError,
         pendingmsg,
         completemsg
       )
@@ -327,7 +324,7 @@ export const importProjectToElectron =
     coordinator: Coordinator,
     offlineOnly: boolean,
     AddProjectLoaded: (project: string) => void,
-    orbitError: (ex: IApiError) => void,
+    reportError: typeof actions.doOrbitError,
     pendingmsg: string,
     completemsg: string,
     oldfilemsg: string
@@ -476,7 +473,7 @@ export const importProjectToElectron =
       try {
         return await memory.update(oparray);
       } catch (err: any) {
-        orbitError(orbitInfo(err, title));
+        reportError(orbitInfo(err, title));
         throw err;
       }
     }
@@ -486,7 +483,7 @@ export const importProjectToElectron =
           return await backup.push(oparray);
         } catch (err: any) {
           console.log(err);
-          orbitError(orbitInfo(err, title));
+          reportError(orbitInfo(err, title));
           throw err;
         }
       }
@@ -511,7 +508,7 @@ export const importProjectToElectron =
           backup,
           tb,
           oparray,
-          orbitError,
+          reportError,
           true,
           true,
           dataDate

@@ -12,6 +12,7 @@ import {
 export const orbitCleanState = {
   status: undefined,
   message: '',
+  details: '',
   saving: false,
   retry: 0,
   fetchResults: undefined,
@@ -40,6 +41,7 @@ const OrbitReducers = function (
         status: action.payload.response.status,
         message:
           action.payload.message + ' ' + (url ? url.split('/').pop() : ''),
+        details: action.payload.stack,
       };
     case ORBIT_RETRY:
       const res2 = action.payload.response as any;
@@ -49,11 +51,14 @@ const OrbitReducers = function (
         status: action.payload.response.status,
         message:
           action.payload.message + ' ' + (url2 ? url2.split('/').pop() : ''),
+        details: action.payload.stack,
       };
     case RESET_ORBIT_ERROR:
       return {
         ...state,
         status: undefined,
+        message: '',
+        details: '',
       };
     case ORBIT_SAVING:
       return {

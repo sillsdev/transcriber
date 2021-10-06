@@ -11,7 +11,14 @@ import {
   Theme,
   createStyles,
 } from '@material-ui/core/styles';
-import { Typography, Button } from '@material-ui/core';
+import {
+  Typography,
+  Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {
   logError,
   Severity,
@@ -45,6 +52,10 @@ const styles = (theme: Theme) =>
       textAlign: 'center',
       display: 'flex',
       flexDirection: 'column',
+      '& #detail': {
+        textAlign: 'left',
+        fontSize: 'small',
+      },
     },
     modalActions: {
       display: 'flex',
@@ -60,6 +71,7 @@ interface IStateProps {
   t: IMainStrings;
   orbitStatus: number | undefined;
   orbitMessage: string;
+  orbitDetails?: string;
   orbitRetry: number;
 }
 
@@ -80,6 +92,7 @@ interface IProps
 const initState = {
   errCount: 0,
   error: '',
+  details: '',
   view: '',
 };
 
@@ -107,7 +120,8 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
     this.setState({
       ...this.state,
       errCount: this.state.errCount + 1,
-      error: error.error?.toString(),
+      error: error.error?.toString() || error.message,
+      details: error.stack,
     });
   }
 
@@ -117,6 +131,7 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
       t,
       orbitStatus,
       orbitMessage,
+      orbitDetails,
       orbitRetry,
       errorReporter,
     } = this.props;
@@ -127,6 +142,16 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
           <div className={classes.modalContent}>
             <Typography>{t.crashMessage}</Typography>
             {message}
+            {this.state.details && (
+              <Accordion expanded>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  {t.details}
+                </AccordionSummary>
+                <AccordionDetails id="detail">
+                  {this.state.details}
+                </AccordionDetails>
+              </Accordion>
+            )}
             <div className={classes.modalActions}>
               {orbitStatus !== 401 && (
                 <Button
@@ -162,6 +187,10 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
       logError(Severity.error, errorReporter, {
         message: orbitMessage,
         name: orbitStatus.toString(),
+      });
+      this.setState({
+        ...this.state,
+        details: orbitDetails || '',
       });
       return modalMessage(
         <>
@@ -209,6 +238,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
   orbitStatus: state.orbit.status,
   orbitMessage: state.orbit.message,
+  orbitDetails: state.orbit.details,
   orbitRetry: state.orbit.retry,
 });
 

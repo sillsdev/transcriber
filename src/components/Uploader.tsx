@@ -38,7 +38,6 @@ interface IDispatchProps {
   uploadFiles: typeof actions.uploadFiles;
   nextUpload: typeof actions.nextUpload;
   uploadComplete: typeof actions.uploadComplete;
-  doOrbitError: typeof actions.doOrbitError;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -304,7 +303,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       uploadFiles: actions.uploadFiles,
       nextUpload: actions.nextUpload,
       uploadComplete: actions.uploadComplete,
-      doOrbitError: actions.doOrbitError,
     },
     dispatch
   ),
