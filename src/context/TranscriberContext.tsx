@@ -249,6 +249,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           view.current = `/work/${prjId}/${remId}`;
         }
         setTrackedTask(selected);
+        var resetBlob = false;
         if (
           mediaState.urlMediaId !== r.mediaId &&
           fetching.current !== r.mediaId
@@ -258,11 +259,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
             id: r.mediaId,
             auth: props.auth,
           });
+          resetBlob = true;
         }
         setState((state: ICtxState) => {
           return {
             ...state,
-            audioBlob: undefined,
+            audioBlob: resetBlob ? undefined : state.audioBlob,
             index: i,
             selected,
             playing: false,
