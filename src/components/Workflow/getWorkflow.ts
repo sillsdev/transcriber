@@ -125,7 +125,7 @@ export const getWorkflow = (
     sectionPassages.forEach((passage) => {
       const passAttr = passage.attributes;
       if (passAttr) {
-        if (!flat) {
+        if (!flat || passAttr.sequencenum > 1) {
           item.level = 1;
           item.kind = IwfKind.Passage;
         }

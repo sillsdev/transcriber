@@ -280,6 +280,42 @@ test('one section and two passages gives output', async () => {
   ] as IWorkflow[]);
 });
 
+test('one section and two passages with flat output', async () => {
+  expect(getWorkflow('pl1', [s1], [pa1, pa2], true, memory)).toEqual([
+    {
+      level: 0,
+      kind: 2,
+      sectionSeq: 1,
+      title: 'Intro',
+      sectionId: { type: 'section', id: 's1' },
+      sectionUpdated: '2021-09-15',
+      transcriber: undefined,
+      editor: undefined,
+      passageSeq: 1,
+      book: 'LUK',
+      reference: '1:1-4',
+      comment: 'salutation',
+      passageUpdated: '2021-09-15',
+      passageId: { type: 'passage', id: 'pa1' },
+      mediaId: undefined,
+      deleted: false,
+    },
+    {
+      level: 1,
+      kind: 1,
+      sectionSeq: 1,
+      passageSeq: 2,
+      book: 'LUK',
+      reference: '1:5-7',
+      comment: 'introducing John',
+      passageUpdated: '2021-09-15',
+      passageId: { type: 'passage', id: 'pa2' },
+      mediaId: undefined,
+      deleted: false,
+    },
+  ] as IWorkflow[]);
+});
+
 test('one section and three passages out of order', async () => {
   expect(getWorkflow('pl1', [s1], [pa3, pa1, pa2], false, memory)).toEqual([
     {
