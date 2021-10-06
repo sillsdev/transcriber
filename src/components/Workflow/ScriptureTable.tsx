@@ -733,7 +733,7 @@ export function ScriptureTable(props: IProps) {
 
   // Reset column widths based on sheet content
   useEffect(() => {
-    const curNames = colNames.concat(['action']);
+    const curNames = [...colNames.concat(['action'])];
     const local = {
       sectionSeq: organizedBy,
       title: t.title,
@@ -764,8 +764,8 @@ export function ScriptureTable(props: IProps) {
       change = change || n !== colAdd[i];
     });
     if (change) {
-      setColumns(colHead);
-      setSaveColAdd(colAdd);
+      setColumns([...colHead]);
+      setSaveColAdd([...colAdd]);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [workflow, width, colNames, flat]);

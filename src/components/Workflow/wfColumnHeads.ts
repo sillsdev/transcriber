@@ -37,7 +37,7 @@ export const wfColumnHeads = (
   const colMul = colMx.map((v) => (total ? v / total : 0));
   const extra = Math.max(width - 1020, 0);
   const colAdd = colMul.map((v) => Math.floor(extra * v));
-  const colHead: IColDesc[] = [];
+  const colHead = new Array<IColDesc>();
   colNames.forEach((c, i) => {
     colHead.push({
       value: localName[c],
