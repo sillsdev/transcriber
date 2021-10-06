@@ -93,6 +93,7 @@ const initState = {
   errCount: 0,
   error: '',
   details: '',
+  expanded: true,
   view: '',
 };
 
@@ -101,6 +102,7 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
     super(props);
     this.continue = this.continue.bind(this);
     this.logout = this.logout.bind(this);
+    this.change = this.change.bind(this);
     this.state = { ...initState };
   }
 
@@ -125,6 +127,10 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
     });
   }
 
+  change() {
+    this.setState({ ...this.state, expanded: !this.state.expanded });
+  }
+
   render() {
     const {
       classes,
@@ -136,19 +142,19 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
       errorReporter,
     } = this.props;
 
-    const modalMessage = (message: ReactElement | string) => {
+    const modalMessage = (message: ReactElement | string, details?: string) => {
       return (
         <div id="myModal" className={classes.modal} key={this.state.errCount}>
           <div className={classes.modalContent}>
             <Typography>{t.crashMessage}</Typography>
             {message}
-            {this.state.details && (
-              <Accordion expanded>
+            {(details || this.state.details) && (
+              <Accordion expanded={this.state.expanded} onChange={this.change}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   {t.details}
                 </AccordionSummary>
                 <AccordionDetails id="detail">
-                  {this.state.details}
+                  {details || this.state.details}
                 </AccordionDetails>
               </Accordion>
             )}
@@ -188,16 +194,13 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
         message: orbitMessage,
         name: orbitStatus.toString(),
       });
-      this.setState({
-        ...this.state,
-        details: orbitDetails || '',
-      });
       return modalMessage(
         <>
           {t.apiError + ' ' + orbitStatus.toString()}
           <br />
           {orbitMessage}
-        </>
+        </>,
+        orbitDetails
       );
     } else if (orbitStatus === Severity.info) {
       logError(Severity.info, errorReporter, orbitMessage);
