@@ -161,7 +161,7 @@ export function ScriptureTable(props: IProps) {
   const [doSave] = useGlobal('doSave');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setBusy] = useGlobal('importexportBusy');
-
+  const [globalStore] = useGlobal();
   const myChangedRef = useRef(false);
   const savingRef = useRef(false);
   const updateRef = useRef(false);
@@ -509,9 +509,15 @@ export function ScriptureTable(props: IProps) {
 
   const handleTranscribe = (i: number) => {
     const { wf } = getByIndex(workflow, i);
-    const id = wf?.passageId?.id || '';
-    const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
-    saveIfChanged(() => {
+    saveIfChanged(async () => {
+      const id = wf?.passageId?.id || '';
+      const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
+      await waitForIt(
+        'busy or saving',
+        () => !globalStore.importexportBusy && !savingRef.current,
+        () => false,
+        200
+      );
       setView(`/work/${prjId}/${passageRemoteId}`);
     });
   };
