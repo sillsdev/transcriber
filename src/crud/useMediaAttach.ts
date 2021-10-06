@@ -1,6 +1,6 @@
 import { useGlobal } from 'reactn';
 import { ISharedStrings, ActivityStates, MediaFile } from '../model';
-import { orbitErr } from '../utils';
+import { logError, Severity, orbitErr } from '../utils';
 import * as actions from '../store';
 import { TransformBuilder, Operation } from '@orbit/data';
 import { getMediaInPlans, related, UpdatePassageStateOps } from '.';
@@ -18,6 +18,7 @@ export const useMediaAttach = (props: IProps) => {
   const { doOrbitError, ts } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const [errorReporter] = useGlobal('errorReporter');
 
   const attach = async (
     passage: string,
@@ -61,9 +62,8 @@ export const useMediaAttach = (props: IProps) => {
       memory
     );
     await memory.update(ops).catch((err: Error) => {
-      var x = orbitErr(err, 'attach passage');
-      doOrbitError(x);
-      console.log(err.message);
+      doOrbitError(orbitErr(err, 'attach passage'));
+      logError(Severity.info, errorReporter, err);
     });
   };
 
@@ -97,9 +97,8 @@ export const useMediaAttach = (props: IProps) => {
       memory
     );
     await memory.update(ops).catch((err: Error) => {
-      var x = orbitErr(err, 'detach passage');
-      doOrbitError(x);
-      console.log(err.message);
+      doOrbitError(orbitErr(err, 'detach passage'));
+      logError(Severity.info, errorReporter, err);
     });
   };
 

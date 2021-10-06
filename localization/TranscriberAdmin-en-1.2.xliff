@@ -2109,6 +2109,13 @@
                <context context-type="sourcefile">Loading.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="main.details">
+      		<source>Details</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">HelpMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="main.developer">
             <source>Developer mode</source>
             <target/>

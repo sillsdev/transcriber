@@ -16,7 +16,6 @@ export const useProjectType = () => {
       if (project === '') return '';
       pId = project;
     } else pId = related(project, 'project');
-    logError(Severity.info, errorReporter, `useProjectType ${pId}`); //TC138
     if (!pId) return '';
     try {
       proj = memory.cache.query((q) =>

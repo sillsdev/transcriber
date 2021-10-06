@@ -397,6 +397,7 @@ const initialState = {
 			"copyClipboard": "Copy Version to Clipboard",
 			"crashMessage": "Something went wrong. The developers need to address this issue.",
 			"deletedInvitation": "Invitation is no longer valid.",
+			"details": "Details",
 			"developer": "Developer mode",
 			"exit": "Exit",
 			"export": "Export",

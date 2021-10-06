@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import moment, { Moment } from 'moment';
 import { OpenDialogSyncOptions } from 'electron';
-import { IApiError, Project, IElectronImportStrings, IState } from '../model';
+import { Project, IElectronImportStrings, IState } from '../model';
 import * as action from '../store';
 import { QueryBuilder } from '@orbit/data';
 import { remoteIdGuid, useOfflnProjRead } from '../crud';
@@ -19,7 +19,6 @@ import { useGlobal, useRef } from 'reactn';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
-import React from 'react';
 
 export interface IImportData {
   fileName: string;
@@ -62,7 +61,7 @@ export const useElectronImport = (
   /* if we aren't electron - define these dummies */
   var handleElectronImport = (
     importProjectToElectron: typeof action.importProjectToElectron,
-    orbitError: (ex: IApiError) => void
+    reportError: typeof action.doOrbitError
   ): void => {};
 
   var getElectronImportData = (project: string): IImportData => {
@@ -250,7 +249,7 @@ export const useElectronImport = (
 
     handleElectronImport = (
       importProjectToElectron: typeof action.importProjectToElectron,
-      orbitError: (ex: IApiError) => void
+      reportError: typeof action.doOrbitError
     ): void => {
       if (zipRef.current) {
         const where = dataPath();
@@ -260,7 +259,7 @@ export const useElectronImport = (
           fs.unlinkSync(path.join(where, 'data', 'H_passagesections.json'));
         } catch (err: any) {
           if (err.errno !== -4058)
-            orbitError(
+            reportError(
               orbitInfo(err, `Delete failed for ${where} passage sections`)
             );
         }
@@ -278,7 +277,7 @@ export const useElectronImport = (
           coordinator,
           isOfflinePtf.current,
           AddProjectLoaded,
-          orbitError,
+          reportError,
           t.importPending,
           t.importComplete,
           t.importOldFile

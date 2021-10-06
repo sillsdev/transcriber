@@ -7,14 +7,19 @@ export interface IApiError extends Exception {
     status: number;
   };
 }
-export interface IFetchResults  {syncBuffer: Buffer, syncFile:string, goRemote:boolean};
+export interface IFetchResults {
+  syncBuffer: Buffer;
+  syncFile: string;
+  goRemote: boolean;
+}
 
 export interface IOrbitState {
   status: number | undefined;
   message: string;
+  details?: string;
   saving: boolean;
   retry: number;
-  fetchResults: IFetchResults|undefined
+  fetchResults: IFetchResults | undefined;
 }
 
 // Describing the different ACTION NAMES available
@@ -28,7 +33,7 @@ export const ORBIT_SAVING = 'ORBIT_SAVING';
 
 interface OrbitMsg {
   type: typeof FETCH_ORBIT_DATA;
-  payload:IFetchResults;
+  payload: IFetchResults;
 }
 
 interface OrbitLoadedMsg {

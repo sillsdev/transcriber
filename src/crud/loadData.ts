@@ -19,13 +19,13 @@ import {
   RecordIdentity,
 } from '@orbit/data';
 import Memory from '@orbit/memory';
-import OrgData from '../model/orgData';
 import {
   Project,
-  IApiError,
+  OrgData,
   OrganizationMembership,
   GroupMembership,
 } from '../model';
+import * as actions from '../store';
 import { orbitInfo } from '../utils/infoMsg';
 import ProjData from '../model/projData';
 import Coordinator from '@orbit/coordinator';
@@ -76,7 +76,7 @@ export async function insertData(
   backup: IndexedDBSource,
   tb: TransformBuilder,
   oparray: Operation[],
-  orbitError: (ex: IApiError) => void,
+  orbitError: typeof actions.doOrbitError,
   checkExisting: boolean,
   isImport: boolean,
   snapshotDate?: string
@@ -162,7 +162,7 @@ async function processData(
   backup: IndexedDBSource,
   tb: TransformBuilder,
   setCompleted: undefined | ((valud: number) => void),
-  orbitError: (ex: IApiError) => void
+  orbitError: typeof actions.doOrbitError
 ) {
   var x = JSON.parse(data);
   var tables: ResourceDocument[] = x.data;
@@ -236,7 +236,7 @@ async function cleanUpMemberships(memory: Memory, backup: IndexedDBSource) {
 export async function LoadData(
   coordinator: Coordinator,
   setCompleted: (valud: number) => void,
-  orbitError: (ex: IApiError) => void
+  orbitError: typeof actions.doOrbitError
 ): Promise<boolean> {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -297,7 +297,7 @@ export async function LoadProjectData(
   projectsLoaded: string[],
   AddProjectLoaded: (proj: string) => void,
   setBusy: (v: boolean) => void,
-  orbitError: (ex: IApiError) => void
+  orbitError: typeof actions.doOrbitError
 ): Promise<boolean> {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;

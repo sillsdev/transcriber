@@ -510,7 +510,6 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     if (project && project !== '') {
-      logError(Severity.info, errorReporter, `project useEffect ${project}`); //TC138
       var r = memory.cache.query((q) =>
         q.findRecord({ type: 'project', id: project })
       ) as Project;

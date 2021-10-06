@@ -1807,6 +1807,12 @@
             <target/>
          </segment>
       </unit>
+   	<unit id="main.details">
+   		<segment>
+   			<source>Details</source>
+   			<target>Detalhes</target>
+   		</segment>
+   	</unit>
       <unit id="main.developer">
          <segment>
             <source>Developer mode</source>

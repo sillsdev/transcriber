@@ -106,7 +106,6 @@ export const useRole = () => {
   };
 
   const getMyProjRole = (projectId: string) => {
-    logError(Severity.info, errorReporter, `getMyProjRole ${projectId}`); //TC138
     if (!projectId || projectId === '') return '';
     try {
       const proj = memory.cache.query((q: QueryBuilder) =>
