@@ -166,7 +166,7 @@ export const Uploader = (props: IProps) => {
           ...AddRecord(t, mediaRec, user, memory),
           t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
         ]);
-        if (psg !== '')
+        if (psg && psg !== '')
           await memory.update([
             t.replaceRelatedRecord(mediaRec, 'passage', {
               type: 'passage',
