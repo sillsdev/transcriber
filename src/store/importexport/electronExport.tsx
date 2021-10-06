@@ -446,8 +446,10 @@ export async function electronExport(
     exportType === ExportType.ITFSYNC
   ) {
     //avoid intermittent errors where projecttype or plan is null
-    if (backup)
+    if (backup) {
       await memory.sync(await backup.pull((q) => q.findRecords('project')));
+      await memory.sync(await backup.pull((q) => q.findRecords('mediafile')));
+    }
 
     projects = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('project')
