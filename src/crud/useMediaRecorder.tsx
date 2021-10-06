@@ -57,6 +57,15 @@ export function useMediaRecorder(
       mediaStreamRef.current?.getTracks().forEach((track) => {
         track.stop();
       });
+      if (mediaRecorderRef.current) {
+        mediaRecorderRef.current.removeEventListener(
+          'dataavailable',
+          handleDataAvailable
+        );
+        mediaRecorderRef.current.removeEventListener('error', handleError);
+        mediaRecorderRef.current.removeEventListener('stop', handleStopped);
+        mediaRecorderRef.current = undefined;
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -157,13 +166,6 @@ export function useMediaRecorder(
       mediaRecorderRef.current.state !== 'inactive'
     ) {
       mediaRecorderRef.current.stop();
-      mediaRecorderRef.current.removeEventListener(
-        'dataavailable',
-        handleDataAvailable
-      );
-      mediaRecorderRef.current.removeEventListener('error', handleError);
-      mediaRecorderRef.current.removeEventListener('stop', handleStopped);
-      mediaRecorderRef.current = undefined;
     }
   }
   return {
