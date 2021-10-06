@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import {
   IPlanSheetStrings,
@@ -29,6 +29,9 @@ import { TranscriberIcon, EditorIcon } from '../RoleIcons';
 import PlanActionMenu from './PlanActionMenu';
 import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
 import PlanAudioActions from './PlanAudioActions';
+import { HotKeyContext } from '../../context/HotKeyContext';
+
+const DOWN_ARROW = 'ARROWDOWN';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -212,6 +215,7 @@ export function PlanSheet(props: IProps) {
   const [srcMediaId, setSrcMediaId] = useState('');
   const [warning, setWarning] = useState<string>();
   const [active, setActive] = useState(-1);
+  const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = bookCol > 0 ? 6 : 5;
@@ -231,16 +235,14 @@ export function PlanSheet(props: IProps) {
     startSave();
   };
 
-  const handleSelect = (loc: DataSheet.Selection) => {
-    // this autoscroll causes issues TT-1393
-    //don't mess with it if we're selecting the checkbox
-    //if (loc.start.j > 0 && loc.start.i === loc.end.i) setShowRow(loc.start.i);
-    currentRow.current = loc.end.i;
+  const sheetScroll = () => {
     if (sheetRef.current && currentRow.current) {
-      const tbodyRef =
-        sheetRef.current?.firstChild?.firstChild?.firstChild?.childNodes[
-          currentRow.current
-        ];
+      const gridRef = (
+        sheetRef.current as HTMLDivElement
+      ).getElementsByClassName('data-grid-container');
+      const tbodyRef = gridRef[0]?.firstChild?.firstChild?.childNodes[
+        currentRow.current
+      ] as HTMLDivElement;
       //only scroll if it's not already visible
       if (tbodyRef && tbodyRef.offsetTop < document.documentElement.scrollTop) {
         window.scrollTo(0, tbodyRef.offsetTop - 10);
@@ -255,6 +257,12 @@ export function PlanSheet(props: IProps) {
         window.scrollTo(0, tbodyRef.offsetTop + 10);
       }
     }
+    return false;
+  };
+
+  const handleSelect = (loc: DataSheet.Selection) => {
+    currentRow.current = loc.end.i;
+    sheetScroll();
   };
 
   const handleValueRender = (cell: ICell) =>
@@ -417,6 +425,16 @@ export function PlanSheet(props: IProps) {
       handleAutoSave();
     }, 1000 * 30);
   };
+
+  useEffect(() => {
+    const keys = [{ key: DOWN_ARROW, cb: sheetScroll }];
+    keys.forEach((k) => subscribe(k.key, k.cb));
+
+    return () => {
+      keys.forEach((k) => unsubscribe(k.key));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (changed) {
