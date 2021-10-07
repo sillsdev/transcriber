@@ -59,19 +59,27 @@ function WSAudioPlayerZoom(props: IProps) {
   const zoomMax = 500;
 
   const { t, ready, wsZoom, wsPctWidth } = props;
+  const readyRef = useRef(ready);
 
   const ZOOMIN_KEY = 'CTRL+1';
   const ZOOMOUT_KEY = 'CTRL+3';
+
+  useEffect(() => {
+    readyRef.current = ready;
+  }, [ready]);
+
   const setZoom = (value: number) => {
     zoomRef.current = value;
     setZoomx(value);
     wsZoom(value);
   };
   const handleZoomIn = () => {
+    if (!readyRef.current) return false;
     setZoom(Math.min(zoomRef.current * 2, zoomMax));
     return true;
   };
   const handleZoomOut = () => {
+    if (!readyRef.current) return false;
     setZoom(Math.max(zoomRef.current / 2, zoomMin));
     if (wsPctWidth() === 1) setZoomMin(zoomRef.current);
     return true;

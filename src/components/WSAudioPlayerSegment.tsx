@@ -92,6 +92,7 @@ function WSAudioPlayerSegment(props: IProps) {
   const { showMessage } = useSnackBar();
   const DELREG_KEY = 'CTRL+ALT+X';
   const ADDREMSEG_KEY = 'CTRL+ARROWDOWN';
+  const readyRef = useRef(ready);
 
   useEffect(() => {
     const keys = [
@@ -106,6 +107,10 @@ function WSAudioPlayerSegment(props: IProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    readyRef.current = ready;
+  }, [ready]);
 
   useEffect(() => {
     setSegParams({
@@ -132,6 +137,7 @@ function WSAudioPlayerSegment(props: IProps) {
     setShowSettings(!showSettings);
   };
   const handleSplit = () => {
+    if (!readyRef.current) return false;
     if (setBusy) setBusy(true);
     var result = wsAddOrRemoveRegion();
     if (result && onSplit) onSplit(result);
@@ -139,6 +145,7 @@ function WSAudioPlayerSegment(props: IProps) {
     return true;
   };
   const handleRemoveNextSplit = () => {
+    if (!readyRef.current) return false;
     if (setBusy) setBusy(true);
     var result = wsRemoveSplitRegion(true);
     if (result && onSplit) onSplit(result);
@@ -146,6 +153,7 @@ function WSAudioPlayerSegment(props: IProps) {
     return true;
   };
   const handleClearSegments = () => {
+    if (!readyRef.current) return false;
     if (setBusy) setBusy(true);
     wsClearRegions();
     if (setBusy) setBusy(false);
