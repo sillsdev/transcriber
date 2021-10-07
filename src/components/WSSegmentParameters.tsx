@@ -12,7 +12,7 @@ import {
   DialogTitle,
   IconButton,
 } from '@material-ui/core';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { IWsAudioPlayerSegmentStrings, IState } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
@@ -58,6 +58,7 @@ interface IProps extends IStateProps {
   isOpen: boolean;
   onOpen: (isOpen: boolean) => void;
   onSave: (silence: number, silenceLen: number, segmentLen: number) => void;
+  setBusy?: (value: boolean) => void;
 }
 
 function WSSegmentParameters(props: IProps) {
@@ -71,11 +72,13 @@ function WSSegmentParameters(props: IProps) {
     isOpen,
     onOpen,
     onSave,
+    setBusy,
   } = props;
   const [silenceValue, setSilenceValue] = useState(0);
   const [timeValue, setTimeValue] = useState(0);
   const [segLength, setSegmentLen] = useState(0);
   const [numRegions, setNumRegions] = useState(currentNumRegions);
+  const applyingRef = useRef(false);
 
   useEffect(() => {
     setNumRegions(currentNumRegions);
@@ -108,7 +111,12 @@ function WSSegmentParameters(props: IProps) {
     if (Array.isArray(value)) value = value[0];
     setSegmentLen(value);
   };
+  const setApplying = (value: boolean) => {
+    applyingRef.current = value;
+    if (setBusy) setBusy(value);
+  };
   const handleApply = () => {
+    setApplying(true);
     setNumRegions(
       wsAutoSegment(loop, {
         silenceThreshold: silenceValue / 1000,
@@ -117,6 +125,7 @@ function WSSegmentParameters(props: IProps) {
       })
     );
     onSave(silenceValue / 1000, timeValue / 100, segLength);
+    setApplying(false);
   };
 
   const handleClose = () => {
@@ -143,7 +152,11 @@ function WSSegmentParameters(props: IProps) {
       <DialogTitle className={classes.movecursor} id="draggable-dialog-title">
         <div className={classes.row}>
           <div className={classes.grow}>{'\u00A0'}</div>{' '}
-          <IconButton id="bigClose" onClick={handleClose}>
+          <IconButton
+            id="bigClose"
+            onClick={handleClose}
+            disabled={applyingRef.current}
+          >
             <CloseIcon />
           </IconButton>
         </div>
@@ -208,6 +221,7 @@ function WSSegmentParameters(props: IProps) {
           className={classes.button}
           onClick={handleApply}
           variant="outlined"
+          disabled={applyingRef.current}
         >
           {t.apply}
         </Button>
@@ -215,6 +229,7 @@ function WSSegmentParameters(props: IProps) {
           className={classes.button}
           onClick={handleClose}
           variant="outlined"
+          disabled={applyingRef.current}
         >
           {t.close}
         </Button>

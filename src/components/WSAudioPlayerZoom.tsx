@@ -65,15 +65,15 @@ function WSAudioPlayerZoom(props: IProps) {
   const setZoom = (value: number) => {
     zoomRef.current = value;
     setZoomx(value);
+    wsZoom(value);
   };
   const handleZoomIn = () => {
-    setZoom(wsZoom(Math.min(zoomRef.current * 2, zoomMax)));
+    setZoom(Math.min(zoomRef.current * 2, zoomMax));
     return true;
   };
   const handleZoomOut = () => {
-    var newZoom = wsZoom(Math.max(zoomRef.current / 2, zoomMin));
-    setZoom(newZoom);
-    if (wsPctWidth() === 1) setZoomMin(newZoom);
+    setZoom(Math.max(zoomRef.current / 2, zoomMin));
+    if (wsPctWidth() === 1) setZoomMin(zoomRef.current);
     return true;
   };
   const handleZoomFull = () => {
