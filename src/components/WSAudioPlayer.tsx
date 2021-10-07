@@ -335,6 +335,7 @@ function WSAudioPlayer(props: IProps) {
       {
         key: HOME_KEY,
         cb: () => {
+          if (!readyRef.current || recordingRef.current) return false;
           wsGoto(0);
           return true;
         },
@@ -342,6 +343,7 @@ function WSAudioPlayer(props: IProps) {
       {
         key: END_KEY,
         cb: () => {
+          if (!readyRef.current || recordingRef.current) return false;
           gotoEnd();
           return true;
         },
@@ -416,6 +418,7 @@ function WSAudioPlayer(props: IProps) {
   }, [busy, loading]);
 
   const handlePlayStatus = () => {
+    if (durationRef.current === 0 || recordingRef.current) return false;
     const playing = wsTogglePlay();
     setPlaying(playing);
     if (onPlayStatus && isPlaying !== undefined && playing !== isPlaying)
@@ -488,6 +491,7 @@ function WSAudioPlayer(props: IProps) {
     setPlaybackRate(value / 100);
   };
   const handleSlower = () => {
+    if (playbackRef.current === MIN_SPEED || recordingRef.current) return false;
     setPlaybackRate(Math.max(MIN_SPEED, playbackRef.current - SPEED_STEP));
     return true;
   };
@@ -515,6 +519,7 @@ function WSAudioPlayer(props: IProps) {
     readyRef.current = value;
   };
   const handleFaster = () => {
+    if (playbackRef.current === MAX_SPEED || recordingRef.current) return false;
     setPlaybackRate(Math.min(MAX_SPEED, playbackRef.current + SPEED_STEP));
     return true;
   };
@@ -526,7 +531,7 @@ function WSAudioPlayer(props: IProps) {
     return handleJumpFn(-1 * jump);
   };
   const handleJumpFn = (amount: number) => {
-    if (!readyRef.current) return false;
+    if (!readyRef.current || recordingRef.current) return false;
     wsSkip(amount);
     return true;
   };
@@ -565,7 +570,8 @@ function WSAudioPlayer(props: IProps) {
     setRecordingx(value);
   };
   const handleRecorder = () => {
-    if (!allowRecord) return false;
+    if (!allowRecord || playingRef.current || processRecordRef.current)
+      return false;
     if (!recordingRef.current) {
       wsPause(); //stop if playing
       recordStartPosition.current = wsPosition();
