@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { debounce } from 'lodash';
 import { useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import WaveSurfer from 'wavesurfer.js';
@@ -240,10 +240,11 @@ export function useWaveSurfer(
       wavesurfer()?.setPlaybackRate(rate);
     }
   };
-  const wsZoom = (zoom: number) => {
+  const wsZoom = debounce((zoom: number) => {
     wavesurfer()?.zoom(zoom);
     return wavesurfer()?.params.minPxPerSec;
-  };
+  }, 10);
+
   const wsPctWidth = () => {
     return (
       widthRef.current /

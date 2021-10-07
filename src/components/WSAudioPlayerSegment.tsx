@@ -5,7 +5,7 @@ import {
   IconButton,
   Grid,
 } from '@material-ui/core';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { LightTooltip } from '../control';
 import { IWsAudioPlayerSegmentStrings, IState } from '../model';
 import { IoMdBarcode } from 'react-icons/io';
@@ -85,6 +85,7 @@ function WSAudioPlayerSegment(props: IProps) {
     timeThreshold: 0.02,
     segLenThreshold: 0.5,
   });
+  const busyRef = useRef(false);
   const [showSettings, setShowSettings] = useState(false);
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
@@ -116,11 +117,15 @@ function WSAudioPlayerSegment(props: IProps) {
     });
   }, [params]);
 
+  const setSegmenting = (value: boolean) => {
+    if (setBusy) setBusy(value);
+    busyRef.current = value;
+  };
   const handleAutoSegment = () => {
-    if (setBusy) setBusy(true);
+    setSegmenting(true);
     var numRegions = wsAutoSegment(loop, segParams);
-    if (setBusy) setBusy(false);
     showMessage(t.segmentsCreated.replace('{0}', numRegions.toString()));
+    setSegmenting(false);
     return true;
   };
   const handleShowSettings = () => {
@@ -169,7 +174,7 @@ function WSAudioPlayerSegment(props: IProps) {
               <IconButton
                 id="wsSegment"
                 onClick={handleAutoSegment}
-                disabled={!ready || playing}
+                disabled={!ready || playing || busyRef.current}
               >
                 <IoMdBarcode />
               </IconButton>
@@ -194,6 +199,7 @@ function WSAudioPlayerSegment(props: IProps) {
             isOpen={showSettings && !playing}
             onOpen={setShowSettings}
             onSave={handleSegParamChange}
+            setBusy={setBusy}
           />
 
           <LightTooltip
@@ -202,7 +208,7 @@ function WSAudioPlayerSegment(props: IProps) {
           >
             <span>
               <IconButton id="wsSplit" onClick={handleSplit}>
-                <PlusMinusLogo disabled={!ready} />
+                <PlusMinusLogo disabled={!ready || busyRef.current} />
               </IconButton>
             </span>
           </LightTooltip>
@@ -211,14 +217,22 @@ function WSAudioPlayerSegment(props: IProps) {
             title={t.removeSegment.replace('{0}', localizeHotKey(DELREG_KEY))}
           >
             <span>
-              <IconButton id="wsJoin" onClick={handleRemoveNextSplit}>
+              <IconButton
+                id="wsJoin"
+                onClick={handleRemoveNextSplit}
+                disabled={!ready || busyRef.current}
+              >
                 <RemoveOneIcon />
               </IconButton>
             </span>
           </LightTooltip>
           <LightTooltip id="wsDeleteTip" title={t.removeAll}>
             <span>
-              <IconButton id="wsSegmentSettings" onClick={handleClearSegments}>
+              <IconButton
+                id="wsSegmentSettings"
+                onClick={handleClearSegments}
+                disabled={!ready || busyRef.current}
+              >
                 <ClearIcon fontSize="small" />
               </IconButton>
             </span>
