@@ -29,7 +29,7 @@ import * as actions from '../store';
 import { orbitInfo } from '../utils/infoMsg';
 import ProjData from '../model/projData';
 import Coordinator from '@orbit/coordinator';
-import { getFingerprint, currentDateTime } from '../utils';
+import { getFingerprint, currentDateTime, orbitErr } from '../utils';
 
 const completePerTable = 3;
 
@@ -285,8 +285,8 @@ export async function LoadData(
       }
     } while (start > -1);
     await cleanUpMemberships(memory, backup);
-  } catch (rejected) {
-    console.log(rejected);
+  } catch (rejected: any) {
+    orbitError(orbitErr(rejected, 'load data rejected'));
   }
   return false;
 }
@@ -364,8 +364,8 @@ export async function LoadProjectData(
       }
     } while (start > -1);
     setBusy(false);
-  } catch (rejected) {
-    console.log(rejected);
+  } catch (rejected: any) {
+    orbitError(orbitErr(rejected, 'load project data rejected'));
     setBusy(false);
     return false;
   }

@@ -136,7 +136,9 @@ export const useFetchMediaUrl = (reporter?: any) => {
               dispatch({ payload: safeURL(path), type: MediaSt.FETCHED });
               return;
             } else if (!props.current.auth?.accessToken) {
-              console.log(
+              logError(
+                Severity.info,
+                reporter,
                 'media fetch failure: offline trying to access online file'
               );
               dispatch({

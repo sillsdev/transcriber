@@ -23,7 +23,11 @@ export const useProjectType = () => {
       ) as Project;
     } catch (error) {
       // During refresh the project might not be found
-      console.log('project not found in useProjectType');
+      logError(
+        Severity.info,
+        errorReporter,
+        'project not found in useProjectType'
+      );
       return 'Scripture';
     }
     var ptId = related(proj, 'projecttype');
@@ -35,7 +39,6 @@ export const useProjectType = () => {
       return pt.attributes.name;
     } else {
       //default to scripture so they don't lose any book info they have
-      console.log('MISSING PROJECT TYPE!', proj);
       logError(
         Severity.error,
         errorReporter,

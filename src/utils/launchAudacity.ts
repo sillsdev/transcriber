@@ -18,7 +18,6 @@ export const launchAudacity = async (proj: string, mediaName?: string) => {
     env: { ...{ ...process }.env },
   })
     .then((res: IExeca) => {
-      console.log(res);
       if (typeof res.stdout === 'string') {
         res.stdout.split('\n').forEach((ln: string) => {
           console.log(ln);

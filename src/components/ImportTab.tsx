@@ -59,7 +59,13 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { doDataChanges } from '../hoc/DataChanges';
 import { HeadHeight } from '../App';
-import { localUserKey, LocalKey } from '../utils';
+import {
+  localUserKey,
+  LocalKey,
+  logError,
+  Severity,
+  axiosError,
+} from '../utils';
 
 interface IStateProps {
   t: IImportStrings;
@@ -344,7 +350,7 @@ export function ImportTab(props: IProps) {
     return false;
   }
   const translateError = (err: IAxiosStatus): string => {
-    console.log(err.errMsg);
+    logError(Severity.info, errorReporter, axiosError(err));
     switch (err.errStatus) {
       case 301:
         localStorage.setItem(localUserKey(LocalKey.url, memory), '/');

@@ -83,7 +83,6 @@ export const ProjectDownload = (props: IProps) => {
       );
     };
     if (open && projectIds.length > 0 && progress === Steps.Prepare) {
-      console.log(currentStep, projectIds);
       if (currentStep < projectIds.length) {
         let newSteps = new Array<string>();
         projectIds.forEach((pId) => {
@@ -154,7 +153,6 @@ export const ProjectDownload = (props: IProps) => {
   React.useEffect(() => {
     if (progress === Steps.Import) {
       const localPath = dataPath(exportName, PathType.ZIP);
-      // console.log(`unzipping: ${localPath}`);
       const zip = new AdmZip(localPath);
       zip.extractAllTo(dataPath(), true);
       offlineProjectUpdateFilesDownloaded(

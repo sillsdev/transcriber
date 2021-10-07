@@ -102,7 +102,6 @@ export function UserMenu(props: IProps) {
     const userRecs = users.filter((u) => u.id === user) as User[];
     const newRec = userRecs.length > 0 ? userRecs[0] : undefined;
     if (userRec !== newRec) {
-      // console.log('setting userRec', userRec, 'to', newRec);
       setUserRec(newRec);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -93,7 +93,7 @@ const initState = {
   errCount: 0,
   error: '',
   details: '',
-  expanded: true,
+  expanded: false,
   view: '',
 };
 
