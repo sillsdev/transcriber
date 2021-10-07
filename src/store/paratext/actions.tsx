@@ -132,7 +132,6 @@ export const getUserName =
         logError(Severity.info, errorReporter, infoMsg(err, 'Username failed'));
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
-      console.log('username', numTries);
       numTries--;
     }
     if (!success) {

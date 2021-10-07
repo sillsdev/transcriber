@@ -547,7 +547,7 @@ export function Transcriber(props: IProps) {
           .then(() => {
             refresh();
           });
-        console.log(`update duration to ${Math.floor(totalSeconds)}`);
+        // console.log(`update duration to ${Math.floor(totalSeconds)}`);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1095,7 +1095,11 @@ export function Transcriber(props: IProps) {
               <Grid item xs>
                 <Grid container justifyContent="flex-end">
                   <div>
-                    <LastEdit when={lastSaved} t={sharedStr} />
+                    <LastEdit
+                      when={lastSaved}
+                      cb={handleShowHistory}
+                      t={sharedStr}
+                    />
                     {role !== 'view' ? (
                       <>
                         <Button

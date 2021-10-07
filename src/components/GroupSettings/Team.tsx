@@ -25,7 +25,6 @@ import GroupMemberAdd from './GroupMemberAdd';
 import Confirm from '../AlertDialog';
 import { OptionType } from '../../model';
 import { related, useRole } from '../../crud';
-import { logError, Severity } from '../../utils';
 
 interface IStateProps {
   t: IGroupSettingsStrings;
@@ -54,7 +53,6 @@ function Team(props: IProps) {
     t,
     selectedGroup,
   } = props;
-  const [errorReporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
   const [project] = useGlobal('project');
   const [group, setGroup] = useGlobal('group');
@@ -158,11 +156,6 @@ function Team(props: IProps) {
 
   useEffect(() => {
     if (!selectedGroup || selectedGroup === '') {
-      logError(
-        Severity.info,
-        errorReporter,
-        `project, selectedGroup useEffect ${project}`
-      ); //TC138
       const projRec = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'project', id: project })
       ) as Project;

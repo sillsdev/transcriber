@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
-import { logError, Severity } from '../utils';
+import { infoMsg, logError, Severity } from '../utils';
 //import { useMounted } from '../utils';
 //import { convertToMP3 } from '../utils/mp3';
 import { convertToWav } from '../utils/wav';
@@ -80,7 +80,11 @@ export function useWaveSurfer(
             if (wavesurferPlayingRef.current) wavesurfer()?.pause();
           } catch (e: any) {
             //ignore
-            console.log('ignored');
+            logError(
+              Severity.info,
+              globalStore.errorReporter,
+              infoMsg(e, 'play ignored')
+            );
           }
         }
         if (onPlayStatus) onPlayStatus(playingRef.current);
@@ -127,7 +131,6 @@ export function useWaveSurfer(
       wavesurferRef.current = ws;
       setWaveSurfer(ws);
       ws.on('ready', function () {
-        //console.log('ready', loadRequests.current);
         //recording also sends ready
         if (loadRequests.current > 0) loadRequests.current--;
         if (!loadRequests.current) {
@@ -173,11 +176,9 @@ export function useWaveSurfer(
       ws.on('redraw', function (peaks: any, width: number) {
         widthRef.current = width;
       });
-      /*
-      ws.drawer.on('click', (event: any, progress: number) => {
-        console.log('Clicking now', progress);
-      });
-      */
+      // ws.drawer.on('click', (event: any, progress: number) => {
+      //   console.log('Clicking now', progress);
+      // });
       return ws;
     }
 
@@ -278,7 +279,11 @@ export function useWaveSurfer(
     // Create file reader
     const reader = new FileReader();
     reader.addEventListener('load', (e) => {
-      console.log('load event', wavesurferRef.current);
+      logError(
+        Severity.info,
+        globalStore.errorReporter,
+        `load event: ${wavesurferRef.current}`
+      );
       if (wavesurferRef.current?.backend)
         wavesurferRef.current?.loadArrayBuffer(e.target?.result);
     });

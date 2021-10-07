@@ -88,9 +88,13 @@ export const nextUpload =
       try {
         var filename = writeFileLocal(files[n]);
         if (cb) cb(n, true, { ...record, audioUrl: filename });
-      } catch (err) {
+      } catch (err: any) {
+        logError(
+          Severity.info,
+          errorReporter,
+          infoMsg(err, `failed getting name: ${files.length}`)
+        );
         if (cb) cb(n, false);
-        console.log(err);
       }
       return;
     }
@@ -107,7 +111,11 @@ export const nextUpload =
           try {
             writeFileLocal(files[n], response.data.audioUrl);
           } catch (err) {
-            console.log(err);
+            logError(
+              Severity.info,
+              errorReporter,
+              `failed writing ${files[n]}`
+            );
           }
         }
         xhr.setRequestHeader('Content-Type', response.data.contentType);

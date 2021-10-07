@@ -119,7 +119,7 @@ export function useMediaRecorder(
       .catch((e) => handleError(e));
   }
   function handleError(e: any) {
-    console.log(e.error);
+    logError(Severity.info, reporter, e.error);
     onError(e.error);
   }
 

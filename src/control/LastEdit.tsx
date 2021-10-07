@@ -23,15 +23,16 @@ interface IStateProps {
 
 interface IProps extends IStateProps {
   when: string | undefined;
+  cb?: () => void;
 }
 
 export const LastEdit = (props: IProps) => {
-  const { when, t } = props;
+  const { when, cb, t } = props;
   const classes = useStyles();
   const [lang] = useGlobal('lang');
 
   const handleHistory = () => {
-    console.log(`display history`);
+    cb && cb();
   };
 
   return when ? (

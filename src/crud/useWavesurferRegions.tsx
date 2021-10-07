@@ -137,10 +137,10 @@ export function useWaveSurferRegions(
         }
         onRegion(Object.keys(ws.regions.list).length, paramsRef.current, true);
       });
-      /* other potentially useful messages
-      ws.on('region-play', function (r: any) {
-        console.log('region-play', r.start, r.loop);
-      });*/
+      // other potentially useful messages
+      // ws.on('region-play', function (r: any) {
+      //   console.log('region-play', r.start, r.loop);
+      // });
       ws.on('region-in', function (r: any) {
         //console.log('region-in', r.start, r.loop);
         setCurrentRegion(r);

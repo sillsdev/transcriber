@@ -38,7 +38,7 @@ import {
   MediaSt,
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
-import { loadBlob } from '../utils';
+import { loadBlob, logError, Severity } from '../utils';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 
@@ -186,6 +186,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [project] = useGlobal('project');
     const [devPlan] = useGlobal('plan');
     const [projRole] = useGlobal('projRole');
+    const [errorReporter] = useGlobal('errorReporter');
     const view = React.useRef('');
     const [refreshed, setRefreshed] = useState(0);
     const mediaUrlRef = useRef('');
@@ -641,11 +642,16 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                     playing: false,
                   };
                 });
-              } else console.log('not sending blob...newer request pending');
+              } else
+                logError(
+                  Severity.info,
+                  errorReporter,
+                  'not sending blob...newer request pending'
+                );
             }
           });
         } catch (e: any) {
-          console.log(e);
+          logError(Severity.info, errorReporter, e);
           showMessage(e.message);
         }
       }

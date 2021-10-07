@@ -1,11 +1,19 @@
 import { IApiError } from '../model';
 import { ServerError } from '@orbit/data';
 import { Severity } from '.';
+import { IAxiosStatus } from '../store/AxiosStatus';
 
-export const infoMsg = (e: Error, info: string) => ({
-  ...e,
-  name: info + e.name,
-});
+export const infoMsg = (e: Error, info: string) =>
+  ({
+    ...e,
+    name: info + e.name,
+  } as Error);
+
+export const axiosError = (e: IAxiosStatus) =>
+  ({
+    name: e.statusMsg,
+    message: `${e.errStatus}: ${e.errMsg}`,
+  } as Error);
 
 const orbitMsg = (err: Error | IApiError | null, info: string) =>
   err instanceof ServerError && (err as any).data?.errors?.length > 0

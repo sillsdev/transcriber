@@ -280,7 +280,6 @@ export const importSyncFromElectron =
     completemsg: string
   ) =>
   (dispatch: any) => {
-    console.log('importSyncFromElectron');
     dispatch(
       importFromElectron(
         filename,
@@ -354,8 +353,6 @@ export const importProjectToElectron =
         );
       }
       try {
-        //can't log to bugsnag here but I don't think this is the culprit
-        console.log('getProjectFromFile', id); //TC138
         var rec = memory.cache.query((q) =>
           q.findRecord({ type: project.type, id: id })
         ) as Project;
@@ -482,7 +479,6 @@ export const importProjectToElectron =
         try {
           return await backup.push(oparray);
         } catch (err: any) {
-          console.log(err);
           reportError(orbitInfo(err, title));
           throw err;
         }
