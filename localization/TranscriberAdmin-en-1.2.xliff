@@ -1375,7 +1375,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="import.onlineChangeReport">
-            <source>Online changes made since data provided to offline member:</source>
+            <source>Changes made since data provided to offline member:</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">import.tsx</context>

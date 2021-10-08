@@ -1182,7 +1182,7 @@
       </unit>
       <unit id="import.onlineChangeReport">
          <segment>
-            <source>Online changes made since data provided to offline member:</source>
+            <source>Changes made since data provided to offline member:</source>
             <target/>
          </segment>
       </unit>
