@@ -350,7 +350,7 @@ export function ImportTab(props: IProps) {
     return false;
   }
   const translateError = (err: IAxiosStatus): string => {
-    logError(Severity.info, errorReporter, axiosError(err));
+    logError(Severity.error, errorReporter, axiosError(err));
     switch (err.errStatus) {
       case 301:
         localStorage.setItem(localUserKey(LocalKey.url, memory), '/');

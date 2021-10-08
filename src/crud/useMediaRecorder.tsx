@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { useState, useEffect } from 'react';
 import { useUserMedia } from './useUserMedia';
 import { useSnackBar } from '../hoc/SnackBar';
-import { logError, Severity, waitForIt } from '../utils';
+import { logError, Severity, infoMsg, waitForIt } from '../utils';
 
 const CAPTURE_OPTIONS = {
   audio: true,
@@ -79,7 +79,7 @@ export function useMediaRecorder(
             mediaStreamRef.current = stream;
           } else {
             const err = stream.toString();
-            logError(Severity.info, reporter, err);
+            logError(Severity.error, reporter, infoMsg(err, 'no media stream'));
             showMessage(err);
           }
         });
@@ -119,7 +119,7 @@ export function useMediaRecorder(
       .catch((e) => handleError(e));
   }
   function handleError(e: any) {
-    logError(Severity.info, reporter, e.error);
+    logError(Severity.error, reporter, e.error);
     onError(e.error);
   }
 

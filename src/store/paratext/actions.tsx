@@ -29,6 +29,7 @@ import {
   logError,
   Severity,
   refMatch,
+  axiosError,
 } from '../../utils';
 import MemorySource from '@orbit/memory';
 
@@ -64,7 +65,7 @@ export const getParatextText =
     } catch (err: any) {
       if (err.errMsg !== 'no range')
         logError(
-          Severity.info,
+          Severity.error,
           errorReporter,
           infoMsg(err, 'Paratext Text failed')
         );
@@ -97,7 +98,7 @@ export const getParatextTextLocal =
     } catch (err: any) {
       if (err.errMsg !== 'no range')
         logError(
-          Severity.info,
+          Severity.error,
           errorReporter,
           infoMsg(err, 'Paratext Text failed')
         );
@@ -129,12 +130,12 @@ export const getUserName =
         success = true;
       } catch (err: any) {
         lasterr = err;
-        logError(Severity.info, errorReporter, infoMsg(err, 'Username failed'));
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
       numTries--;
     }
     if (!success) {
+      logError(Severity.info, errorReporter, 'Username failed');
       dispatch({
         payload:
           lasterr !== null
@@ -185,7 +186,11 @@ export const getProjects =
         dispatch({ payload: pt, type: PROJECTS_SUCCESS });
       })
       .catch((err) => {
-        logError(Severity.info, errorReporter, infoMsg(err, 'Projects failed'));
+        logError(
+          Severity.error,
+          errorReporter,
+          infoMsg(err, 'Projects failed')
+        );
         dispatch({ payload: errStatus(err), type: PROJECTS_ERROR });
       });
   };
@@ -287,7 +292,7 @@ export const getCount =
         dispatch({ payload: response.data, type: COUNT_SUCCESS });
       })
       .catch((err) => {
-        logError(Severity.info, errorReporter, infoMsg(err, 'Count failed'));
+        logError(Severity.error, errorReporter, infoMsg(err, 'Count failed'));
         dispatch({ payload: errStatus(err), type: COUNT_ERROR });
       });
   };
@@ -326,7 +331,7 @@ export const getLocalCount =
         101,
         t.invalidReferences.replace('{0}', `${refMissing.length}`)
       );
-      logError(Severity.info, errorReporter, err.errMsg);
+      logError(Severity.error, errorReporter, axiosError(err));
       dispatch({
         type: COUNT_ERROR,
         payload: err,
@@ -358,7 +363,7 @@ export const syncProject =
         getCount(auth, projectId, errorReporter, '');
       })
       .catch((err) => {
-        logError(Severity.info, errorReporter, infoMsg(err, 'Sync Failed'));
+        logError(Severity.error, errorReporter, infoMsg(err, 'Sync Failed'));
         dispatch({ payload: errStatus(err), type: SYNC_ERROR });
       });
   };

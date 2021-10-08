@@ -130,17 +130,11 @@ export const useFetchMediaUrl = (reporter?: any) => {
             if (cancelled()) return;
             const audioUrl = mediarec.attributes.audioUrl;
             const path = dataPath(audioUrl, PathType.MEDIA);
-            //logError(Severity.info, reporter, `fetching=${path}`);
             if (!path.startsWith('http')) {
               if (cancelled()) return;
               dispatch({ payload: safeURL(path), type: MediaSt.FETCHED });
               return;
             } else if (!props.current.auth?.accessToken) {
-              logError(
-                Severity.info,
-                reporter,
-                'media fetch failure: offline trying to access online file'
-              );
               dispatch({
                 payload: 'no offline file',
                 type: MediaSt.ERROR,

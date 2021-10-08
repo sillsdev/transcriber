@@ -90,7 +90,7 @@ export const nextUpload =
         if (cb) cb(n, true, { ...record, audioUrl: filename });
       } catch (err: any) {
         logError(
-          Severity.info,
+          Severity.error,
           errorReporter,
           infoMsg(err, `failed getting name: ${files.length}`)
         );
@@ -112,7 +112,7 @@ export const nextUpload =
             writeFileLocal(files[n], response.data.audioUrl);
           } catch (err) {
             logError(
-              Severity.info,
+              Severity.error,
               errorReporter,
               `failed writing ${files[n]}`
             );
@@ -126,7 +126,7 @@ export const nextUpload =
             if (cb) cb(n, true, response.data);
           } else {
             logError(
-              Severity.info,
+              Severity.error,
               errorReporter,
               `upload ${files[n].name}: (${xhr.status}) ${xhr.responseText}`
             );
@@ -139,9 +139,12 @@ export const nextUpload =
               }
             ).catch((err) => {
               logError(
-                Severity.info,
+                Severity.error,
                 errorReporter,
-                `unable to remove orphaned mediafile ${response.data.id}`
+                infoMsg(
+                  err,
+                  `unable to remove orphaned mediafile ${response.data.id}`
+                )
               );
             });
             dispatch({
@@ -157,7 +160,7 @@ export const nextUpload =
       })
       .catch((err) => {
         logError(
-          Severity.info,
+          Severity.error,
           errorReporter,
           infoMsg(err, `Upload ${files[n].name} failed.`)
         );

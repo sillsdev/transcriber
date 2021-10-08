@@ -642,16 +642,11 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                     playing: false,
                   };
                 });
-              } else
-                logError(
-                  Severity.info,
-                  errorReporter,
-                  'not sending blob...newer request pending'
-                );
+              }
             }
           });
         } catch (e: any) {
-          logError(Severity.info, errorReporter, e);
+          logError(Severity.error, errorReporter, e);
           showMessage(e.message);
         }
       }

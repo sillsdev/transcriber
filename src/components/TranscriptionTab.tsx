@@ -61,7 +61,7 @@ import {
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
-import { logError, Severity, dateOrTime } from '../utils';
+import { dateOrTime } from '../utils';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 import AudioDownload from './AudioDownload';
 
@@ -373,30 +373,17 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const handleEaf = (passageId: string) => () => {
-    logError(Severity.info, globalStore.errorReporter, 'handleEaf');
     const mediaRec = getMediaRec(passageId, memory);
-    logError(
-      Severity.info,
-      globalStore.errorReporter,
-      `mediaRec=` + JSON.stringify(mediaRec)
-    );
     if (!mediaRec) return;
     const eafCode = btoa(
       getMediaEaf(mediaRec, memory, globalStore.errorReporter)
     );
-    logError(Severity.info, globalStore.errorReporter, `eafCode=${eafCode}`);
     const name = getMediaName(mediaRec, memory, globalStore.errorReporter);
-    logError(Severity.info, globalStore.errorReporter, `name=${name}`);
     setDataUrl('data:text/xml;base64,' + eafCode);
     setDataName(name + '.eaf');
   };
 
   useEffect(() => {
-    logError(
-      Severity.info,
-      globalStore.errorReporter,
-      `dataName=${dataName}, dataUrl=${dataUrl}, eafAnchor=${eafAnchor?.current}`
-    );
     if (dataUrl && dataName !== '') {
       if (eafAnchor && eafAnchor.current) {
         eafAnchor.current.click();

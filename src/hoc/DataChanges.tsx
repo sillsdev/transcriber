@@ -217,8 +217,6 @@ export const doDataChanges = async (
     )
   ) {
     localStorage.setItem(userLastTimeKey, nextTime);
-  } else {
-    logError(Severity.info, errorReporter, 'Users last time not updated');
   }
 };
 

@@ -138,7 +138,6 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
       orbitStatus,
       orbitMessage,
       orbitDetails,
-      orbitRetry,
       errorReporter,
     } = this.props;
 
@@ -204,12 +203,6 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
       );
     } else if (orbitStatus === Severity.info) {
       logError(Severity.info, errorReporter, orbitMessage);
-    } else if (orbitStatus === Severity.retry) {
-      logError(
-        orbitRetry > 0 ? Severity.info : Severity.error,
-        errorReporter,
-        orbitMessage
-      );
     }
     // If there is no error just render the children component.
     return this.props.children;

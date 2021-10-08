@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { Role, Project, RoleNames } from '../model';
 import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import { related } from '../crud';
-import { infoMsg, logError, Severity } from '../utils';
+import { logError, Severity } from '../utils';
 
 export const useRole = () => {
   const [memory] = useGlobal('memory');
@@ -114,12 +114,7 @@ export const useRole = () => {
 
       const gMbrRecs = getMbrRoleRec('group', related(proj, 'group'), user);
       return getMbrRole(gMbrRecs);
-    } catch (e: any) {
-      logError(
-        Severity.info,
-        errorReporter,
-        infoMsg(e, 'project not found in useRole')
-      );
+    } catch {
       return 'Admin';
     }
   };

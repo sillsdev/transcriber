@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
-import { infoMsg, logError, Severity } from '../utils';
+import { logError, Severity } from '../utils';
 //import { useMounted } from '../utils';
 //import { convertToMP3 } from '../utils/mp3';
 import { convertToWav } from '../utils/wav';
@@ -78,13 +78,8 @@ export function useWaveSurfer(
         } else {
           try {
             if (wavesurferPlayingRef.current) wavesurfer()?.pause();
-          } catch (e: any) {
+          } catch {
             //ignore
-            logError(
-              Severity.info,
-              globalStore.errorReporter,
-              infoMsg(e, 'play ignored')
-            );
           }
         }
         if (onPlayStatus) onPlayStatus(playingRef.current);
@@ -279,11 +274,6 @@ export function useWaveSurfer(
     // Create file reader
     const reader = new FileReader();
     reader.addEventListener('load', (e) => {
-      logError(
-        Severity.info,
-        globalStore.errorReporter,
-        `load event: ${wavesurferRef.current}`
-      );
       if (wavesurferRef.current?.backend)
         wavesurferRef.current?.loadArrayBuffer(e.target?.result);
     });
