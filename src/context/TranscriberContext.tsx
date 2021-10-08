@@ -36,6 +36,7 @@ import {
   remoteIdGuid,
   useFetchMediaUrl,
   MediaSt,
+  usePlan,
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob, logError, Severity } from '../utils';
@@ -144,6 +145,7 @@ const initState = {
   audioBlob: undefined as Blob | undefined,
   trBusy: false,
   setTrBusy: (trBusy: boolean) => {},
+  flat: false,
 };
 
 export type ICtxState = typeof initState;
@@ -185,6 +187,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
     const [devPlan] = useGlobal('plan');
+    const { getPlan } = usePlan();
     const [projRole] = useGlobal('projRole');
     const [errorReporter] = useGlobal('errorReporter');
     const view = React.useRef('');
@@ -680,6 +683,26 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [lang, booksLoaded, allBookData]);
+
+    const isFlat = (plan: string) => {
+      if (plan !== '') {
+        var planRec = getPlan(plan);
+        if (planRec !== null) return planRec.attributes?.flat;
+      }
+      return false;
+    };
+
+    React.useEffect(() => {
+      if (devPlan !== '') {
+        const newFlat = isFlat(devPlan);
+        if (state.flat !== newFlat)
+          setState((state) => ({
+            ...state,
+            flat: newFlat,
+          }));
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [devPlan]);
 
     if (view.current !== '') {
       const target = view.current;

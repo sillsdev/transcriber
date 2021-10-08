@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
@@ -140,6 +140,7 @@ export function TaskTable(props: IProps) {
     setFilter,
     loading,
     trBusy,
+    flat,
   } = useTodo();
   const t = todoStr;
   const tpb = projButtonStr;
@@ -212,6 +213,8 @@ export function TaskTable(props: IProps) {
   const selectedRef = useRef<any>();
   const notSelectedRef = useRef<any>();
   const busyRef = useRef(false);
+
+  const hiddenColumnNames = useMemo(() => (flat ? ['sectPass'] : []), [flat]);
 
   const handleToggleFilter = () => {
     handleStopPlayer();
@@ -493,6 +496,7 @@ export function TaskTable(props: IProps) {
             expandedGroups={expandedGroups}
             filteringEnabled={filteringEnabled}
             columnSorting={columnSorting}
+            hiddenColumnNames={hiddenColumnNames}
             numCols={numCols}
             shaping={filter}
             rows={rows}
