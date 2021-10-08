@@ -272,7 +272,7 @@ const initialState = {
 			"locale": "Preferred Language",
 			"noFile": "Please select file to be uploaded.",
 			"old": "Previous Value",
-			"onlineChangeReport": "Online changes made since data provided to offline member:",
+			"onlineChangeReport": "Changes made since data provided to offline member:",
 			"other": "Other",
 			"passage": "Passage",
 			"phone": "Phone",

@@ -1179,8 +1179,8 @@
       </unit>
       <unit id="import.onlineChangeReport">
          <segment>
-            <source>Online changes made since data provided to offline member:</source>
-            <target>Modifications apportées en ligne depuis les données fournies au membre hors ligne:</target>
+            <source>Changes made since data provided to offline member:</source>
+            <target>Modifications depuis les données fournies au membre hors ligne:</target>
          </segment>
       </unit>
       <unit id="import.other">
