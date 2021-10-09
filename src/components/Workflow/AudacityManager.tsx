@@ -83,6 +83,7 @@ function AudacityManager(props: IProps) {
   const audUpdate = useAudacityProjUpdate();
   const audRead = useAudacityProjRead();
   const audDelete = useAudacityProjDelete();
+  const [reporter] = useGlobal('errorReporter');
   const [exists, setExists] = React.useState(false);
   const [name, setName] = React.useState('');
   const [memory] = useGlobal('memory');
@@ -135,7 +136,7 @@ function AudacityManager(props: IProps) {
           fullName
         );
       setName(fullName);
-      launchAudacity(fullName, getMediaUrl(mediaId));
+      launchAudacity(fullName, reporter, getMediaUrl(mediaId));
     }
   };
 
@@ -144,7 +145,7 @@ function AudacityManager(props: IProps) {
       showMessage(t.saveFirst);
       return;
     }
-    launchAudacity(name);
+    launchAudacity(name, reporter);
   };
 
   const handleImport = async () => {
@@ -162,7 +163,7 @@ function AudacityManager(props: IProps) {
       return;
     }
     const mp3FullName = await getMacroOutputName(mp3Name);
-    await launchAudacityExport(name, () => {
+    await launchAudacityExport(name, reporter, () => {
       loadBlob(mp3FullName, (url, b) => {
         if (b) {
           onImport(item, [new File([b], mp3Name, { type: 'audio/mp3' })]);

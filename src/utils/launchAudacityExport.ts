@@ -1,11 +1,12 @@
 import { IExeca } from '../model';
-import { getPythonExe } from '.';
+import { getPythonExe, logError, Severity, infoMsg } from '.';
 import { API_CONFIG } from '../api-variable';
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 const execa = isElectron ? require('execa') : null;
 
 export const launchAudacityExport = async (
   projPath: string,
+  reporter: any,
   cb: () => void
 ) => {
   const pythonExe = await getPythonExe();
@@ -16,19 +17,19 @@ export const launchAudacityExport = async (
     env: { ...{ ...process }.env },
   })
     .then((res: IExeca) => {
-      if (typeof res.stdout === 'string') {
-        res.stdout.split('\n').forEach((ln: string) => {
-          console.log(ln);
-        });
+      if (typeof res?.stdout === 'string' && res.stdout.trim().length > 0) {
+        const msg = `Launch Audacity Export Results:\n${res.stdout}`;
+        logError(Severity.info, reporter, msg);
       }
       cb();
     })
     .catch((err: any) => {
-      console.error(JSON.stringify(err, null, 2));
-      if (typeof err.stdout === 'string') {
-        err.stdout.split('\n').forEach((ln: string) => {
-          console.log(ln);
-        });
+      const launchErr = 'Launch Audacity Export Error';
+      if (typeof err?.stdout === 'string' && err.stdout.trim().length > 0) {
+        let msg = `${launchErr}\n${err.stdout}`;
+        logError(Severity.error, reporter, infoMsg(err, msg));
+      } else {
+        logError(Severity.error, reporter, infoMsg(err, launchErr));
       }
     });
 };
