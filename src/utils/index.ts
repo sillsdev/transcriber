@@ -53,7 +53,6 @@ export * from './launchAudacity';
 export * from './launchAudacityExport';
 export * from './pad2';
 export * from './getPythonExe';
-export * from './getMacroOutputName';
 export * from './useInterval';
 export * from './generateUUID';
 export * from './isProcessRunning';

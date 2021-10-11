@@ -159,13 +159,14 @@ export function HelpMenu(props: IProps) {
     setAnchorEl(null);
   };
 
-  const handleDownload = (url: string) => async () => {
+  const handleDownload = (url: string, inOffline?: boolean) => async () => {
+    const loc = inOffline !== undefined ? inOffline : offline;
     const urlObj = new URL(url);
     const name = urlObj.pathname.split('/').pop() || '';
-    const localPath = offline
+    const localPath = loc
       ? path.join(execFolder(), 'help', name)
       : dataPath(name, PathType.ZIP);
-    if (!offline) await downloadFile({ url, localPath });
+    if (!loc) await downloadFile({ url, localPath });
     launch(localPath, false);
     setAnchorEl(null);
     if (action) action('Download');
@@ -298,7 +299,7 @@ export function HelpMenu(props: IProps) {
         {planRec && isElectron && (
           <StyledMenuItem
             id="helpSampleOff"
-            onClick={handleDownload(sampleHref)}
+            onClick={handleDownload(sampleHref, isElectron)}
           >
             <ListItemIcon>
               <DownloadIcon />
