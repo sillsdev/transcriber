@@ -96,7 +96,6 @@ REACT_APP_HIERARCHICAL= (url of Scripture hierarchical spreadsheet sample)
 REACT_APP_GEN_FLAT= (url of general flat spreadsheet sample)
 REACT_APP_GEN_HIERARCHICAL= (url of general hierarchical spreadsheet sample)
 REACT_APP_SNAGID=(bugsnag client id)
-REACT_APP_BIGSAVE_THRESHOLD=(number of changes to force a full save vs row by row)
 
 REACT_APP_OFFLINE_not=true
 BROWSER=none
@@ -118,7 +117,6 @@ REACT_APP_GEN_FLAT= (url of general flat spreadsheet sample)
 REACT_APP_GEN_HIERARCHICAL= (url of general hierarchical spreadsheet sample)
 REACT_APP_SITE_TITLE= (title for browser tab)
 REACT_APP_SNAGID=(bugsnag client id)
-REACT_APP_BIGSAVE_THRESHOLD=(number of changes to force a full save vs row by row)
 ```
 Example _env-config/auth0-variables.dev.json_
 
