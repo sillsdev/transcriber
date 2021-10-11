@@ -88,6 +88,7 @@ const initialState = {
 			"missingProject": "Missing file. Use Browse to search for it or Create to make a new file.",
 			"open": "Open",
 			"saveFirst": "Save before editing",
+			"tip": "If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.",
 			"title": "Audacity Manager",
 			"unlink": "Unlink",
 		}

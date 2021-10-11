@@ -422,6 +422,14 @@
                <context context-type="sourcefile">AudacityManager.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="audacityManager.tip">
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AudacityManager.tsx</context>
+            </context-group>
+         </trans-unit>
+
          <trans-unit id="audacityManager.title">
             <source>Audacity Manager</source>
             <target/>

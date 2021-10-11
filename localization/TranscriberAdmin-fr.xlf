@@ -361,6 +361,13 @@
             <target>Sauvegarder avant de modifier</target>
          </segment>
       </unit>
+      <unit id="audacityManager.tip">
+         <segment>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur PARCOURIR. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CRÉER.
+            </target>
+         </segment>
+      </unit>
       <unit id="audacityManager.title">
          <segment>
             <source>Audacity Manager</source>

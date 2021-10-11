@@ -77,6 +77,7 @@ export interface IAudacityManagerStrings extends Localize.LocalizedStringsMethod
     "missingProject": string;
     "open": string;
     "saveFirst": string;
+    "tip": string;
     "title": string;
     "unlink": string;
 };
