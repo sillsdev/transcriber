@@ -4,7 +4,7 @@ import { isElectron } from '../api-variable';
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 const os = require('os');
 
-const prefsName = async () => {
+export const audPrefsName = async () => {
   if (os.platform() === 'win32') {
     const appData = await ipc?.invoke('appData');
     return path.join(appData, 'audacity', 'audacity.cfg');
@@ -29,6 +29,12 @@ const getAllPref = async (prefs: string) => {
   return fs.readFileSync(prefs, 'utf-8');
 };
 
+export const getAudPrefContent = async (inPrefs?: string) => {
+  const prefs = inPrefs || (await audPrefsName());
+  if (prefs === undefined) return false;
+  return await getAllPref(prefs);
+};
+
 const getScriptPref = (content: string) => {
   return /mod-script-pipe=([01234])/.exec(content);
 };
@@ -37,10 +43,24 @@ const getRecordChannels = (content: string) => {
   return /RecordChannels=([12])/.exec(content);
 };
 
+export const getMacroOutputMatch = (content: string) => {
+  // return /\[Directories\/MacrosOut\]\nDefault=([^\n]+)/.exec(content || '');
+  return /\[Directories\/MacrosOut\]\r?\nDefault=([^\n]+)/.exec(content || '');
+};
+
+export const setMacroOutputPath = (
+  prefs: string,
+  data: string,
+  m: RegExpExecArray,
+  to: string
+) => {
+  const pos = data.indexOf(m[0]) + m[0].length - m[1].length;
+  const results = data.slice(0, pos) + to + data.slice(pos + m[1].length);
+  fs.writeFileSync(prefs, results);
+};
+
 export const hasAuacityScripts = async () => {
-  const prefs = await prefsName();
-  if (prefs === undefined) return false;
-  const content = await getAllPref(prefs);
+  const content = await getAudPrefContent();
   const m = content && getScriptPref(content);
   return Boolean(m && m[1] === '1');
 };
@@ -51,9 +71,9 @@ const changeValue = (data: string, m: RegExpExecArray) => {
 };
 
 export const enableAudacityScripts = async () => {
-  const prefs = await prefsName();
+  const prefs = await audPrefsName();
   if (prefs === undefined) return false;
-  const content = await getAllPref(prefs);
+  const content = await getAudPrefContent(prefs);
   if (!content) return;
   let changed = false;
   const m = getScriptPref(content);
