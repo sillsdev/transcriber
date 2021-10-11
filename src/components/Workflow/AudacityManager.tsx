@@ -26,10 +26,13 @@ import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
 import {
   launchAudacity,
-  getMacroOutputName,
   launchAudacityExport,
   loadBlob,
   isProcessRunning,
+  getMacroOutputMatch,
+  setMacroOutputPath,
+  audPrefsName,
+  getAudPrefContent,
 } from '../../utils';
 import { dataPath, PathType } from '../../utils';
 
@@ -159,20 +162,55 @@ function AudacityManager(props: IProps) {
       showMessage(t.badProjName);
       return;
     }
-    const mp3Name = name.replace('.aup3', '.mp3').split(path.sep).pop();
+    const splitName = name.split(path.sep);
+    let mp3Name = splitName.pop();
     if (!mp3Name) {
       showMessage(t.badProjPath);
       return;
     }
-    const mp3FullName = await getMacroOutputName(mp3Name);
+    mp3Name = mp3Name.replace('.aup3', '.mp3');
+    const mp3FullName = splitName
+      .concat('macro-output')
+      .concat(mp3Name)
+      .join(path.sep);
+    fs.mkdirSync(path.dirname(mp3FullName), { recursive: true });
+    const prefsName = await audPrefsName();
+    if (!prefsName) {
+      showMessage('Audacity Install Error');
+      return;
+    }
+    const beforeContent = (await getAudPrefContent(prefsName)) || '';
+    const m = getMacroOutputMatch(beforeContent);
+    let oldMacroPath: string | undefined = undefined;
+    if (m) {
+      let folder = splitName.join(path.sep);
+      if (path.sep === '\\') {
+        folder = folder.replace(/\\/g, `${path.sep}${path.sep}`);
+      }
+      if (m[1] !== folder) {
+        setMacroOutputPath(prefsName, beforeContent, m, folder);
+        oldMacroPath = m[1];
+      }
+    }
+
     await launchAudacityExport(name, reporter, () => {
       loadBlob(mp3FullName, (url, b) => {
         if (b) {
-          onImport(item, [new File([b], mp3Name, { type: 'audio/mp3' })]);
+          onImport(item, [
+            new File([b], mp3Name as string, { type: 'audio/mp3' }),
+          ]);
           onClose();
         } else showMessage(url);
       });
     });
+
+    if (oldMacroPath) {
+      const afterContent = (await getAudPrefContent(prefsName)) || '';
+      const m = getMacroOutputMatch(afterContent);
+      if (m) {
+        setMacroOutputPath(prefsName, afterContent, m, oldMacroPath);
+      }
+    }
   };
 
   const handleUnlink = () => {
