@@ -12,6 +12,7 @@ import {
   Grid,
   FormControl,
   TextField,
+  Typography,
 } from '@material-ui/core';
 import {
   useAudacityProjUpdate,
@@ -60,6 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
       //   justifyContent: 'flex-end',
       // },
     },
+    label: { margin: theme.spacing(2) },
   })
 );
 
@@ -211,47 +213,56 @@ function AudacityManager(props: IProps) {
     <Dialog onClose={handleClose} aria-labelledby="manager-title" open={open}>
       <DialogTitle id="manager-title">{t.title}</DialogTitle>
       <Grid container className={classes.grid}>
-        <Grid item xs={9}>
+        {exists && name !== '' ? (
           <Grid container justifyContent="center">
-            <FormControl>
-              <TextField
-                id="audacity-project"
-                autoFocus
-                required
-                label={t.audacityProject}
-                className={classes.name}
-                value={name}
-                onChange={handleAudacityName}
-                helperText={exists || name === '' ? null : t.missingProject}
-              />
-            </FormControl>
+            <Grid item xs={9}>
+              <FormControl>
+                <TextField
+                  id="audacity-project"
+                  autoFocus
+                  required
+                  label={t.audacityProject}
+                  className={classes.name}
+                  value={name}
+                  onChange={handleAudacityName}
+                  helperText={exists || name === '' ? null : t.missingProject}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={3}>
+              <div className={classes.actions}>
+                <Button onClick={handleOpen} variant="outlined">
+                  {t.open}
+                </Button>
+                <Button onClick={handleImport} variant="outlined">
+                  {t.import}
+                </Button>
+                <Button onClick={handleUnlink} variant="outlined">
+                  {t.unlink}
+                </Button>
+                {/* <Button onClick={handleDelete}>Delete</Button> */}
+              </div>
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={3}>
-          {exists && name !== '' ? (
-            <div className={classes.actions}>
-              <Button onClick={handleOpen} variant="outlined">
-                {t.open}
-              </Button>
-              <Button onClick={handleImport} variant="outlined">
-                {t.import}
-              </Button>
-              <Button onClick={handleUnlink} variant="outlined">
-                {t.unlink}
-              </Button>
-              {/* <Button onClick={handleDelete}>Delete</Button> */}
-            </div>
-          ) : (
-            <div className={classes.actions}>
-              <Button onClick={handleBrowse} variant="outlined">
-                {t.browse}
-              </Button>
-              <Button onClick={handleCreate} variant="outlined">
-                {t.create}
-              </Button>
-            </div>
-          )}
-        </Grid>
+        ) : (
+          <Grid container justifyContent="center">
+            <Grid item xs={9}>
+              <FormControl className={classes.label}>
+                <Typography>{t.tip}</Typography>
+              </FormControl>
+            </Grid>
+            <Grid item xs={3}>
+              <div className={classes.actions}>
+                <Button onClick={handleCreate} variant="outlined">
+                  {t.create}
+                </Button>
+                <Button onClick={handleBrowse} variant="outlined">
+                  {t.browse}
+                </Button>
+              </div>
+            </Grid>
+          </Grid>
+        )}
       </Grid>
       <DialogActions>
         <Button onClick={handleClose} variant="contained" color="primary">

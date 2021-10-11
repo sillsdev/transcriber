@@ -364,6 +364,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="audacityManager.tip">
+         <segment>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="audacityManager.title">
          <segment>
             <source>Audacity Manager</source>
