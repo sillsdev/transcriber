@@ -170,6 +170,7 @@ export function AssignmentTable(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
+  const [organizedByPlural] = useState(getOrganizedBy(false));
   const columnDefs = [
     { name: 'name', title: organizedBy },
     { name: 'state', title: t.sectionstate },
@@ -284,9 +285,9 @@ export function AssignmentTable(props: IProps) {
                   color="primary"
                   className={classes.button}
                   onClick={handleAssignSection(true)}
-                  title={t.assignSec.replace('{0}', organizedBy)}
+                  title={t.assignSec.replace('{0}', organizedByPlural)}
                 >
-                  {t.assignSec.replace('{0}', organizedBy)}
+                  {t.assignSec.replace('{0}', organizedByPlural)}
                 </Button>
                 <Button
                   id="assignRem"
