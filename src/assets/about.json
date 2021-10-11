@@ -5,6 +5,7 @@
     "Sara Hentzel (SIL International)|SIL International|https://www.sil.org",
     "Don Dillard (SIL International)|SIL International|https://www.sil.org",
     "Marlon Hovland (SIL International)|SIL International|https://www.sil.org",
+    "Michael Pelley (SIL International)|SIL International|https://www.sil.org",
     "Alex Mercado (SIL International)|SIL International|https://www.sil.org",
     "Santhosh Kumar (EC Group Datasoft)|EC Group Datasoft|https://ecgroup-intl.com",
     "Dhamaraj Mani (EC Group Datasoft)|EC Group Datasoft|https://ecgroup-intl.com"
@@ -249,6 +250,16 @@
     ],
     "product": [
       "SoundTouch.js for WaveSurfer is licensed LGPLv2.1|SoundTouch.js|https://wavesurfer-js.org/example/stretcher/index.html"
+    ]
+  },
+  "icons8": {
+    "title": "icons8 attribution",
+    "url": "https://icons8.com/terms-and-conditions",
+    "text": [
+      "To use the icons for free please insert the link somewhere on the page."
+    ],
+    "product": [
+      "Upvote Downvote icon by Icons8|Upvote Downvote|https://icons8.com/icon/90294/upvote-downvote"
     ]
   }
 }

@@ -194,6 +194,7 @@ function AboutDialog(props: AboutDialogProps) {
         <LicenseAccordion {...about.apache} />
         <LicenseAccordion {...about.mpl} />
         <LicenseAccordion {...about.LGPLv21} />
+        <LicenseAccordion {...about.icons8} />
         <ExternalLink externalUrl={externalUrl} />
       </DialogContentText>
       <DialogActions>
