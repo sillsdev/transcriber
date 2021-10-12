@@ -731,10 +731,14 @@ export function ScriptureTable(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [plan, sections, passages, flat]);
 
+  interface ILocal {
+    [key: string]: string;
+  }
+
   // Reset column widths based on sheet content
   useEffect(() => {
     const curNames = [...colNames.concat(['action'])];
-    const local = {
+    const local: ILocal = {
       sectionSeq: organizedBy,
       title: t.title,
       passageSeq: t.passage,
@@ -762,6 +766,10 @@ export function ScriptureTable(props: IProps) {
     let change = saveColAdd === undefined;
     saveColAdd?.forEach((n, i) => {
       change = change || n !== colAdd[i];
+    });
+    curNames.forEach((n, i) => {
+      if (local.hasOwnProperty(n))
+        change = change || local[n] !== columns[i].value;
     });
     if (change) {
       setColumns([...colHead]);

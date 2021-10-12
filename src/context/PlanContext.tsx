@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
@@ -81,47 +81,22 @@ const PlanProvider = withData(mapRecordsToProps)(
       projButtonStr,
     });
     const checkOnline = useCheckOnline(resetOrbitError);
-    const isScripture = () => {
-      const planRecs = (
-        memory.cache.query((q: QueryBuilder) => q.findRecords('plan')) as Plan[]
-      ).filter((p) => p.id === plan);
-      if (planRecs.length > 0) {
-        const typeId = related(planRecs[0], 'plantype');
-        const typeRecs = (
-          memory.cache.query((q: QueryBuilder) =>
-            q.findRecords('plantype')
-          ) as PlanType[]
-        ).filter((pt) => pt.id === typeId);
-        if (typeRecs.length > 0) {
-          return (
-            typeRecs[0]?.attributes?.name
-              ?.toLowerCase()
-              ?.indexOf('scripture') !== -1
-          );
-        }
-      }
-      return false;
-    };
 
-    const isFlat = (plan: string) => {
-      if (plan !== '') {
-        var planRec = getPlan(plan);
-        if (planRec !== null) return planRec.attributes?.flat;
-      }
-      return false;
-    };
-
-    React.useEffect(() => {
-      if (plan !== '') {
-        const newFlat = isFlat(plan);
-        const newScriture = isScripture();
-        if (state.flat !== newFlat || state.scripture !== newScriture)
-          setState((state) => ({
-            ...state,
-            flat: newFlat,
-            scripture: newScriture,
-          }));
-      }
+    useEffect(() => {
+      let planRec: Plan | null = null;
+      if (plan && plan !== '') planRec = getPlan(plan);
+      const typeId = planRec && related(planRec, 'plantype');
+      let typeRec: PlanType | null = null;
+      if (typeId)
+        typeRec = memory.cache.query((q: QueryBuilder) =>
+          q.findRecord({ type: 'plantype', id: typeId })
+        ) as PlanType;
+      const flat = planRec ? planRec?.attributes?.flat : false;
+      const scripture = typeRec
+        ? typeRec?.attributes?.name?.toLowerCase()?.indexOf('scripture') !== -1
+        : false;
+      if (flat !== state.flat || scripture !== state.scripture)
+        setState((state) => ({ ...state, flat, scripture }));
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [plan]);
 
