@@ -71,7 +71,7 @@ export const privacyContent = `<div>
     rel="noopener noreferrer"
     target="_blank"
     >community.software.sil.org</a>
-    or Language Forge at
+    or SIL Transcriber at
     <a
     href="https://app.siltranscriber.org"
     rel="noopener noreferrer"
@@ -83,7 +83,7 @@ export const privacyContent = `<div>
     This is data that you submit to a service that we provide. Very
     often you provide content to our service expressly for the purpose
     that we share that data with others. For example, you enter data
-    into Language Forge so that we can share it with other members of
+    into SIL Transcriber so that we can share it with other members of
     your team. Please refer to the SIL Language Software
     <a
     href="https://software.sil.org/language-software-terms-of-use/"
@@ -121,7 +121,7 @@ export const privacyContent = `<div>
 </p>
 <p>
     We collect this information when your device contacts one of our
-    servers for example, when you send/receive data, submit a crash
+    servers for example, when you upload and download data, submit a crash
     report or communicate on a forum.
 </p>
 
