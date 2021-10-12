@@ -261,27 +261,13 @@ export function useWaveSurfer(
         blobToLoad.current = blob;
         loadRequests.current = 2; //if there was another, we'll bypass it
       } else {
-        myLoadBlob(blob);
+        wavesurfer()?.loadBlob(blob);
         loadRequests.current = 1;
       }
     } else if (blobToLoad.current) {
-      myLoadBlob(blobToLoad.current);
+      wavesurfer()?.loadBlob(blobToLoad.current);
       blobToLoad.current = undefined;
     }
-  };
-
-  const myLoadBlob = (blob: Blob) => {
-    // Create file reader
-    const reader = new FileReader();
-    reader.addEventListener('load', (e) => {
-      if (wavesurferRef.current?.backend)
-        wavesurferRef.current?.loadArrayBuffer(e.target?.result);
-    });
-    reader.addEventListener('error', (e) =>
-      logError(Severity.error, globalStore.errorReporter, e.toString())
-    );
-
-    reader.readAsArrayBuffer(blob);
   };
 
   const wsLoadRegions = (regions: string) => {
