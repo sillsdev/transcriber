@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "2.12.2",
+  "version": "2.13.1",
   "description": "transcribe audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
@@ -27,7 +27,7 @@
     "adm-zip": "^0.4.16",
     "asar": "^2.1.0",
     "audio-recorder-polyfill": "^0.4.1",
-    "aws-amplify": "^3.3.16",
+    "aws-amplify": "^4.3.2",
     "axios": "^0.21.1",
     "electron-is-dev": "^1.2.0",
     "execa": "^4.0.2",
