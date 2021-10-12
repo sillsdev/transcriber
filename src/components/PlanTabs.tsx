@@ -112,14 +112,15 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     passages
   );
 
-  const getColNames = () =>
-    scripture && flat
+  const colNames = React.useMemo(() => {
+    return scripture && flat
       ? flatScrColNames
       : scripture && !flat
       ? levScrColNames
       : flat
       ? flatGenColNames
       : levGenColNames;
+  }, [scripture, flat]);
 
   const handleChange = (event: any, value: number) => {
     if (busy) return;
@@ -212,7 +213,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
       </AppBar>
       <div className={classes.content}>
         {tab === tabs.sectionPassage && (
-          <ScriptureTable {...props} colNames={getColNames()} />
+          <ScriptureTable {...props} colNames={colNames} />
         )}
         {tab === tabs.media && (
           <AudioTab
