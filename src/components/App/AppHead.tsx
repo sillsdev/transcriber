@@ -272,7 +272,7 @@ export const AppHead = (props: IProps) => {
           lr = moment(lr).locale(lang).format('L');
           setLatestVersion(lv);
           setLatestRelease(lr);
-          if (isElectron)
+          if (isElectron && lv !== version)
             showMessage(
               <span>
                 {t.updateAvailable.replace('{0}', lv).replace('{1}', lr)}
