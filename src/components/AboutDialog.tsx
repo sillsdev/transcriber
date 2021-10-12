@@ -103,7 +103,12 @@ function AboutDialog(props: AboutDialogProps) {
           <ListItem>
             <ListItemText>
               {stringReplace(part(i, 0), part(i, 1), (m: string) => (
-                <Link href="#" onClick={handleLaunch(part(i, 2))}>
+                <Link
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={handleLaunch(part(i, 2))}
+                >
                   {m}
                 </Link>
               ))}
