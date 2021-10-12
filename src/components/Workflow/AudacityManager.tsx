@@ -31,6 +31,7 @@ import {
   isProcessRunning,
   getMacroOutputMatch,
   setMacroOutputPath,
+  resetAudContent,
   audPrefsName,
   getAudPrefContent,
 } from '../../utils';
@@ -184,16 +185,20 @@ function AudacityManager(props: IProps) {
     }
     const beforeContent = (await getAudPrefContent(prefsName)) || '';
     const m = getMacroOutputMatch(beforeContent);
-    let oldMacroPath: string | undefined = undefined;
+    let change = false;
+    let folder = splitName.join(path.sep);
+    if (path.sep === '\\') {
+      folder = folder.replace(/\\/g, `${path.sep}${path.sep}`);
+    }
     if (m) {
-      let folder = splitName.join(path.sep);
-      if (path.sep === '\\') {
-        folder = folder.replace(/\\/g, `${path.sep}${path.sep}`);
-      }
       if (m[1] !== folder) {
         setMacroOutputPath(prefsName, beforeContent, m, folder);
-        oldMacroPath = m[1];
+        change = true;
       }
+    } else {
+      const cfgSection = '[Directories/MacrosOut]\nDefault=';
+      resetAudContent(prefsName, beforeContent + cfgSection + folder);
+      change = true;
     }
 
     await launchAudacityExport(name, reporter, () => {
@@ -207,12 +212,8 @@ function AudacityManager(props: IProps) {
       });
     });
 
-    if (oldMacroPath) {
-      const afterContent = (await getAudPrefContent(prefsName)) || '';
-      const m = getMacroOutputMatch(afterContent);
-      if (m) {
-        setMacroOutputPath(prefsName, afterContent, m, oldMacroPath);
-      }
+    if (change) {
+      resetAudContent(prefsName, beforeContent);
     }
   };
 

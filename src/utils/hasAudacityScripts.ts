@@ -45,7 +45,13 @@ const getRecordChannels = (content: string) => {
 
 export const getMacroOutputMatch = (content: string) => {
   // return /\[Directories\/MacrosOut\]\nDefault=([^\n]+)/.exec(content || '');
-  return /\[Directories\/MacrosOut\]\r?\nDefault=([^\n]+)/.exec(content || '');
+  return /\[Directories\/MacrosOut\]\r?\nDefault=([^\r\n]*)/.exec(
+    content || ''
+  );
+};
+
+export const resetAudContent = (prefs: string, data: string) => {
+  fs.writeFileSync(prefs, data);
 };
 
 export const setMacroOutputPath = (
