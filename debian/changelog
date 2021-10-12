@@ -1,8 +1,481 @@
-sil-transcriber (2.12.2.1)  experimental; urgency=high
+sil-transcriber (2.13.1.0)  experimental; urgency=high
 
-  * tests for getWhereis
+  * TT-2948 Plan Column Headers (#464)
+  * TT-2937 upgrade wave surfer (#465)
+  * updated help
+  * TT-2945 About Link in new window (#463)
+  * TT-2946 Handle missing Audacity folder setting (#462)
+  * TT-2941 get off line spreadsheets in Desktop
+  * TT-2535 Audacity Import (#460)
+  * Add a tip to the audacity manager (#457)
+  * TT-2828d Audacity errors (#454)
+  * Report errors in Audacity linkage
+  * TT-2939 Unique Audacity Names (#453)
+  * TT-2932b Remove passage column from flat filter (#455)
+  * Filtered task table doesn't have a passage column if in flat mode
+  * Update import message (#456)
+  * Duplicate disabled checks for hot keys (#451)
+  * TT-2875 try to set busy indicator when segmenting (doesn't really show up) (#450)
+  * de-bounce zoom requests to avoid multiple redraws
+  * allow segmenting to finish before closing parameters
+  * TT-2880b Check data sheet screen position on down arrow (#448)
+  * TT-2934 don't cleanup mediaRecorder until closed instead of on stop. (#446)
+  * TT-2929 handle flat work flow with passages better (#445)
+  * TT-2933 reset audioBlob if fetching new media (#444)
+  * TT-2932 remove passage columns (#443)
+  * TT-2828 error reporting (#442)
+  * show details on crash screen
+  * TT-2928 transcribe while saving (#441)
+  * let saving finish before navigating to transcriber
+  * TT-2927 uploading without passage (#440)
+  * TT-2832 Pull media on export (#439)
+  * TT-2926 on record dialog use stop icon (#437)
+  * TT-2821b fix duration update to account for local paths (#436)
+  * reset audio blob when switching tasks
+  * replace wave surfer's loadBlob because it errors when user clicks around
+  * TT-2884 notify parent on single region create and update (#435)
+  * TT-2892 put the team list in the context so the state changes when the team list changes (#434)
+  * TT-2883 update numRegions if changed from parent (#433)
+  * TT-2817 position transcription at end after load (#428)
+  * only position if at beginning
+  * TT-2442 use book abbreviation instead of short (#427)
+  * change record hot key back to ctrl 9 (#426)
+  * TT-2908 add state to useEffect in case index doesn't change (#425)
+  * move trackedTask to global
+  * use busyRef in setDimensions
+  * TT-2049 Set max size for audio re sizer (#423)
+  * update style if resized.
+  * TT-2823 Backing out of log in (#422)
+  * TT-2834 Auto Attach cancel (#421)
+  * TT-2542 Fix ELAN date export (#420)
+  * TT-2536 Don't allow minimized Audacity (#419)
+  * Make errors unique so state is updated.
+  * TT-2885 Use HotKeys similar to Audacity (#415)
+  * TT-2790 add busy around auto segment
+  * TT-2921 flat passage num is 1 (#417)
+  * TT-2920 Only one section on flat insert above (#414)
+  * TT-2564 Adjust status report (#413)
+  * TT-2879c reset initialPosition (#411)
+  * TT-2905 update text style with projData (#412)
+  * TT-2899b after delete - reset recorder (#410)
+  * TT-2899 reset duration after delete recording
+  * really clear the wave surfer
+  * TT-2907 Add Section after delete (#409)
+  * TT-2466f Only update plan after all the rest (#406)
+  * TT-2876 fix version date sort (#402)
+  * TT-2872 handle expired media URLs (#399)
+  * TT-2790 Transcriber needs it's own busy status
+  * TT-2790 busy in text area too
+  * TT-2900 Adding flat passage (#401)
+  * TT-2901 Deleting unsaved (#400)
+  * handle deleting last item
+  * handle deleting continuous
+  * no delete or add while save
+  * TT-2904 handle orbit 401 errors more gracefully (#398)
+  * TT-2902 Save before record (#397)
+  * TT-2466e save pasted book value
+  * TT-2466d update sample spreadsheets
+  * TT-2880 Keep selection on screen (#396)
+  * TT-2466 re-factor work flow (#395)
+  * TT-2466c Start re-factor ScriptureTable
+  * column heads
+  * re-sequence
+  * use memo for column numbers
+  * move logic from Scripture Table
+  * some unit tests
+  * saving local and on line
+  * move to folder
+  * Validate section and passage sequence
+  * allow delete without saving
+  * process whole work flow when saving.
+  * TT-2887b don't show delete button if off line (#394)
+  * don't allow only administrator to be deleted
+  * TT-2898b set changed false if recording deleted (#393)
+  * TT-2891 minimum region length correction (#392)
+  * TC138 TT-2829 more consoles (#391)
+  * TT-2289 TT-22895 TT-2896 TT-2897 delete region or delete file, cancel resets media (#390)
+  * TT-2889 show either delete region or delete file
+  * TT-2895 save position when recording
+  * TT-2896 reset hasRegion when reload file
+  * TT-2897 if canceled in middle of fetch, reset mediaId
+  * TT-2893 call on line cb when not checking also (#389)
+  * TT-2835 turn off play when closing filter (#387)
+  * TT-2838 Do not set connected anywhere but useCheckOnline so it can restart orbit when coming back on line (#386)
+  * TT-2892 no paratext login will now return 400 (to reduce 500 errors) (#385)
+  * TT-2877 inform parent when we clear regions (#384)
+  * TT-2890 handle load Requests on recording ready (#383)
+  * TT-2887 no admin off line (#382)
+  * TT-2886 show members button to all roles (#381)
+  * TT-2873 If all done, don't check save status (#380)
+  * TT-2846 make sure everyone knows playing stops when switching tasks (#379)
+  * TT-2845 warn user if local file is missing. (#378)
+  * TT-2466b compute work flow sheet (#377)
+  * add media id to work flow
+  * TT-2839 show user orbit error messages (#376)
+  * TT-2815 remove team list (#375)
+  * remove team list on on line list
+  * remove console logs
+  * TT-2466a Load work flow (#373)
+  * TT-2466a Load work flow
+  * add deleted flat
+  * remove language name (#374)
+  * TT-2829 unable to reproduce, but put in checks for valid project (#372)
+  * TT-2829 unable to reproduce, but put in checks for valid project
+  * TT-2881 tweak labels and time setting (#371)
+  * TT-2877, TT-2878 set changed flag when regions updated (#370)
+  * ignore signature when comparing urls (#369)
+  * TT-2865b Close segment param if playing (with hot key) (#368)
+  * TT-2785 zoom limits (#367)
+  * TT-2785 Reduce maximum zoom in
+  * Figure out when we're zoomed all the way out (whole audio is showing)
+  * put console log back in so testers can see current zoom setting
+  * remove console
+  * TT-2783 (#366)
+  * reset refs when clearing all segments (#365)
+  * TT-2462, TT-2807, TT-2822 Delete Recording with confirmation, keep duration updating (#363)
+  * TT-2462 Add delete entire recording
+  * TT-2807 confirm delete
+  * TT-2822 keep duration updated while recording
+  * setReady when done recording
+  * TT-2566 exit congratulations (#362)
+  * TT-2857 don't insert silence while playing (#361)
+  * TT-2455 Stop player on sync (#360)
+  * don't allow auto segment or segment parameters while playing (#359)
+  * TT-2860 add clear all (#358)
+  * TT 2821 (#356)
+  * loadBlob returns blob's url
+  * check if the blob's url is still the one we want
+  * remove consoles
+  * change cursor to busy when loading
+  * TT-2790 set busy cursor
+  * setStyle
+  * TT-2871 sequence delete, save and update (#357)
+  * make sure we always have the latest copy of rowInfo
+  * TT-2867 Show flat faster (#355)
+  * also fixes TT-2870 trying to add audio when flat not showing
+  * TT-2864 Privacy Policy contact us (#354)
+  * TT-2866 No audio filter (#353)
+  * TT-2566 Refresh on reselect (#352)
+  * TT-2569 Reset cancel on upload (#350)
+  * TT-2466 Add update in progress flag (#351)
+  * TT-2840 always initialize starting position (#349)
+  * TT-2793 Save before delete (#348)
+  * TT-2847 change segment icon (#347)
+  * TT-2800 no refresh option (#346)
+  * TT-1803 save after paste (#345)
+  * TT-2791 add number segments localization (#344)
+  * TT-2863-new-window (#343)
+  * TT-2856 fix hasRegion showing (#341)
+  * TT-2833 wait longer for switch user log out
+  * TT-2862 Update table state values after save (#340)
+  * Update help
+  * TT-2841 Policy Dialog needed for Desktop (#339)
+  * TT-2841 Update Privacy and Terms of use Policies (#337)
+  * TT-2850 initialize segments for json (#336)
+  * TT-2852 don't allow add while deleting (#335)
+  * TT-2851 Refresh with code auth (#334)
+  * TT-2793 saving flag to a ref so no race condition (#333)
+  * login on error
+  * TT-2827 redirect on logout
+  * TT-2554 reset selected table row on cancel (#332)
+  * type checks of node v14.x
+  * remove unneeded builder dependency
+  * TT-2841 Terms of Use
+  * TT-2844 handle invite flow (#330)
+  * almost always logged in now...handle this another way. (#322)
+  * add localization
+  * add login choices
+  * Offer a logout and hope it works for them
+  * remove console.logs
+  * TT-2788 TT-2789 TT-2813 create segment parameter dialog (#328)
+  * save segment parameters with regions
+  * TT-2819 expired token check (#327)
+  * Fix exit navigation for electron
+  * Update orbit token
+  * set default user email address
+  * handle expired refresh token
+  * only display email when it's an auth0 user
+  * Remove console logs
+  * update ids for automated tests (#326)
+  * set base projects and match language to those also (#321)
+  * use short name
+  * TT-2825 always go to next region (#320)
+  * TT-2821 handle stacked loads (#319)
+  * when switching tasks, the old tasks blob is loaded because the audio player refreshes before the blob is updated.
+  * We need to move the blob into the context so it gets updated at least to empty at the same time the task is switched.
+  * but for now, it's loading the old and then when that is fully loaded, loading the new.
+  * reset peaksRef.current (#318)
+  * TT-2787b add left arrow tool tip localization (#317)
+  * fix the backward compatible one region on playback (#316)
+  * remove sound touch filter - too buggy (#315)
+  * TT 2816 (#314)
+  * TT-2816 Force position to 0 when submit
+  * TT 2569 (#313)
+  * TT 2569
+  * statusInit was acting as a global state variable.  Give each screen their own status.
+  * explicitly pass in off line only to upload
+  * prevent mounted console error on snack bar
+  * TT-2787 Add previous region button (#312)
+  * don't allow record if playing (#311)
+  * because the url is in the context and doesn't always change on screen entry, the regions were not set by the time the blob was requested.  Wait for the blob to be loaded before passing the regions in. (#310)
+  * TT-2596b check for no regions on remove region (#309)
+  * TT-2802 Handle verified email (#308)
+  * check for verified and then load data
+  * TT-1539 reset orbit error to make off line icon disappear when back on line (#307)
+  * verify other operations on line/off line
+  * TT-2775c handle desktop case
+  * TT-2775b qa has custom login opts
+  * TT-2779 Work off line wo proj not allowed (#305)
+  * TT-2786 Multi upload with cancel (#304)
+  * TT-2775 display sign up first time (#303)
+  * TT-2775 electron show sign up 1st time
+  * Handle on line case
+  * uses latest auth0 react method
+  * removes need for implicit auth
+  * adds need for auth code and refresh
+  * remove /callback endpoint
+  * optionally enable code rotation
+  * TT-2778 use Work On line instead of Switch User (#306)
+  * TT-2532 add sound touch to change pitch (#302)
+  * TT-2532 add sound touch to change pitch
+  * Add LGPLv2.1 license to about box
+  * TT-2455 Stop player on  Project menu (#301)
+  * player interferes with integration,etc
+  * TT-2351 fix users avatar url for Linux
+  * TT-2447 upload cancel (#300)
+  * TT 2438 start where we left off (#299)
+  * pass in initial position to audio player
+  * if no next region, go to end and stop
+  * TT-2501 add sort by date
+  * primary sort by plan number
+  * secondary sort by file name
+  * tertiary sort by date (desc)
+  * TT-2443 get play buttons right
+  * if there is no audio put nothing
+  * use play unless playing
+  * use stop if the item is playing
+  * TT-2442 use short name for passage ref
+  * TT-2439 use in line ref instead of state
+  * TT-2757 Going on line after import (#298)
+  * TT-2755 Only set tokens when on line (#297)
+  * TT-2756b handle on line user startup (#295)
+  * TT-2745 include 0 in digit search :/ (#296)
+  * TT-2533 only send new audio if done processing last send (#292)
+  * TT-2461 Simplify record view (#291)
+  * TT-2565 ignore audio process messages that come in after playing has stopped (#293)
+  * Only auto jump if off line user (#294)
+  * update language picker for fonapi with script
+  * update help
+  * fix language picker deployment
+  * TT-2572 Fix 2 channel editing. (#290)
+  * update language picker
+  * TT-2754 margin for Task header
+  * TT-2753 No upgrade alert on web (#289)
+  * Add mode button ids
+  * TT-2751 remove title - Change view switch (#288)
+  * TT-2751 Change switch and title
+  * Only react to mode change
+  * TT-2750 Switching to alone when alone (#287)
+  * TT-2749 cur User at top when work off line (#286)
+  * TT-2747 Getting Started title (#283)
+  * TT-2596, TT-2597, TT- 2741 fix zoom, delete, strings (#284)
+  * Sorted and updated strings
+  * TT-2748 Switch User when no off line projects (#285)
+  * TT-2746 Switch User displays User List (#282)
+  * TT-2437 Version Alert (#281)
+  * rename justify to justifyContent to remove Mui warning
+  * fix mui warnings (#279)
+  * rename createMuiTheme to createTheme
+  * remove mixins
+  * TT-2744 make directory hierarchy (#280)
+  * TT-2727-after-import (#278)
+  * TT-2727 After Import
+  * turn off busy
+  * select on line users working off line
+  * handle off line case
+  * switch to off line view if all users are off line
+  * clear import status to allow returning to welcome screen
+  * user list adjustments (#277)
+  * log out when clicking avatar on log out tab
+  * no user list on switch user tab
+  * list team with user avatar
+  * alphabetize localization files
+  * use Audio Project instead of Project
+  * Updated welcome and access user list localization
+  * user-list (#275)
+  * update-user-list
+  * Handle initial startup
+  * wording changes (#276)
+  * TT-2049 remove resize ability from text area (#274)
+  * fix split resizing
+  * TT 2546b (#273)
+  * TT-2546b add hotkeys
+  * add removeNextRegion concept
+  * fix single region delete
+  * init segments
+  * setChanged when segments change, indicate save needs to happen
+  * fix intermittent missing last region
+  * Add Setup Team key factor (#272)
+  * Update wording on Welcome screen
+  * TT-2552 Handle Initial User (#271)
+  * Adjust welcome logic
+  * create user in indexedDb
+  * fix when team user can work off line
+  * display user list based on welcome button choice
+  * decrease space on user list title
+  * Update localization
+  * check projects for auto project
+  * TT 2546 auto segment (#270)
+  * detect regions and allow user interaction
+  * region dragging
+  * remove split
+  * tweak getRegions in progress
+  * move next segment to player
+  * utility function for refs in progress
+  * use wave surfer state instead of ref
+  * hide more refs
+  * use split pane to make waveform bigger
+  * back to ref for wave surfer because it wasn't getting cleaned up with state variable
+  * add wsAddOrRemoveRegion
+  * save/load saved segments
+  * fix resizing
+  * fix prev/next on loaded
+  * updated help
+  * TT 2552 8 (#269)
+  * TT-2552h welcome screen using new project look
+  * update NewProjectGrid
+  * Add description to BigDialog for NewProject
+  * TT-2529c New Project updates
+  * Use cache busting strings name (#268)
+  * strings Guid
+  * latest strings
+  * Updated strings
+  * Update documentation
+  * TT-2529b add id for auto tests
+  * TT-2552g keep user logged in (#267)
+  * string tweaks
+  * Only remove user-id if user chooses to logout/switch user
+  * skip access if we know the last user
+  * quick user localize
+  * TT-2529 Simple Project Type choice (#266)
+  * TT-2529 Simplify Project Type choice
+  * Remove cancel
+  * Adding bulleted list of key factors
+  * Re-factor grid
+  * localizations
+  * TT-2552 localize (#265)
+  * localize
+  * updated strings from crowdin
+  * a few more strings and style tweaks (#264)
+  * admin/owner wording (#263)
+  * offline setup
+  * handle quick case with no users (#262)
+  * move the import button into the without an Internet connection paper (#261)
+  * fix some wording
+  * handle quick transcribe
+  * TT 2552 round2 welcome rough draft (#260)
+  * Welcome screen with roles
+  * remove DecideAccess
+  * TT-2557 Outlined buttons (#259)
+  * remove quotes from strings
+  * more string changes
+  * update strings
+  * TT-2552 clarify access screen for desktop apps (#258)
+  * first draft of on line/off line setting
+  * more temporary words
+  * icons on radio labels
+  * Decide access page
+  * centered
+  * localize
+  * remove unused props
+  * update localization and use more boxes
+  * Update strings
+  * TT-2556 Able to preview audio from Audacity
+  * TT-2550 Linux Audacity (#257)
+  * Adjust scripts for Audacity snap
+  * use python3 for Linux
+  * piping to audacity snap package
+  * Updated messaging
+  * TT-2555 handle error from user versions (#256)
+  * TT-2551 process offl ine projects then do the regular pull all (#255)
+  * whereis (#254)
+  * TT-2547 Check if media downloaded (#252)
+  * TT-2547 Check if media downloaded
+  * improve name for general flat projects
+  * Update localization
+  * TT-2439 Add duration to task list (#251)
+  * Fix log file name
+  * Updated help
+  * TT-2537 close Audacity after import
+  * update language picker
+  * Use test that waits for result
+  * add new index for orbit js (#250)
+  * add single quote to filename restrictions because s3 hates them
+  * Load Audacity Manager strings
+  * TT-1471d Audacity MVP (#249)
+  * Add Audacity to PlanActions
+  * Add AudacityProject table
+  * Set flag if audacity present
+  * Only auto recheck setup if not setup
+  * launching audacity
+  * Update for new more menu
+  * Audacity dialog stays open
+  * when more menu closes
+  * force save before audacity
+  * Allow launching Audacity from keyboard
+  * Change to AudacityManager
+  * Fix unlink and delete
+  * Open existing project
+  * Update setup defaults
+  * creating audacity project
+  * copy blank file into new file
+  * Only show Audacity for passages
+  * Handle no media file case
+  * Add missing file message
+  * Import audio from Audacity
+  * Remove Delete option
+  * no error for empty name
+  * No Audacity when ready only
+  * Improve names with sec & pas num
+  * Import existing audio when creating
+  * TT-2531 set Audacity to mono
+  * Update localization
+  * Don't overwrite existing audacity project
+  * Make sure plan gets set
+  * add db changes for summer release (#248)
+  * TT-2523b remove message (#247)
+  * TT-2456b More with keyboard (#246)
+  * handle arrow menu selection on right
+  * change button color
+  * enable some hover behavior
+  * improved hover
+  * Handle activate and escape
+  * Check for initial null
+  * TT-2523 run data changes right away on start up.  Tell user if there are more than 5 changes
+  * More menu cosmetic fixes
+  * TT-2467 Refresh more position (#244)
+  * TT-2465 Add More menu to plan (#242)
+  * move audience to config files (#238)
+  * move auth0 info to auth0-variables.json
+  * TT-2446 save delete (#237)
+  * on sections save without waiting for remote update
+  * TT-1471 audacity linux (#236)
+  * Enabling scripts
+  * work for web too
+  * TT-1523 wait for remote before updating plan (#235)
+  * TT-2439 Make task list narrow (#234)
+  * Remove section and passage for flat items
+  * Simplify message to just have section and passage
+  * default flat passage number to 1
+  * TT-1471b Explain versions (#232)
+  * Fix refresh after scripting enable
+  * TT-1471 setup (#231)
+  * TT-1471 Audacity Setup
+  * use Promise all and trap error of missing key
+  * also use enum
+  * remove unused variables
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 28 Jun 2021 14:23:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Tue, 12 Oct 2021 14:39:00 -0600
 
 sil-transcriber (2.12.2.0)  experimental; urgency=high
 
