@@ -115,6 +115,7 @@ export const getWorkflow = (
       item.deleted = false;
       curSection = item.sectionSeq;
     }
+    let first = true;
     if (item.kind === IwfKind.Section) {
       sectionIndex = wfSectionAdd(myWork, item);
       item = { ...initItem };
@@ -125,10 +126,11 @@ export const getWorkflow = (
     sectionPassages.forEach((passage) => {
       const passAttr = passage.attributes;
       if (passAttr) {
-        if (!flat || passAttr.sequencenum > 1) {
+        if (!flat || !first) {
           item.level = 1;
           item.kind = IwfKind.Passage;
         }
+        first = false;
         item.sectionSeq = curSection;
         item.passageSeq = passAttr.sequencenum;
         item.book = passAttr.book;
