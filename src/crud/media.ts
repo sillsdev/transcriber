@@ -2,7 +2,7 @@ import { MediaFile, Plan, Project, Passage, Section } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { related } from '.';
-import { cleanFileName, updateXml, logError, Severity } from '../utils';
+import { cleanFileName, updateXml } from '../utils';
 import moment from 'moment';
 import eaf from '../utils/transcriptionEaf';
 import path from 'path';
@@ -33,26 +33,35 @@ const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {
   return planRec;
 };
 
-export const getMediaProjRec = (rec: MediaFile | null, memory: Memory) => {
+export const getMediaProjRec = (
+  rec: MediaFile | null,
+  memory: Memory,
+  reporter: any
+) => {
   let projRec: Project | undefined = undefined;
   if (rec) {
     const planRec = getMediaPlanRec(rec, memory);
     if (planRec) {
-      const projId = related(planRec, 'project') as string;
-      projRec = memory.cache.query((q: QueryBuilder) =>
-        q.findRecord({ type: 'project', id: projId })
-      ) as Project;
+      const projId = related(planRec, 'project');
+      if (projId)
+        projRec = memory.cache.query((q: QueryBuilder) =>
+          q.findRecord({ type: 'project', id: projId })
+        ) as Project;
     }
   }
   return projRec;
 };
 
-const getMediaLang = (rec: MediaFile | null, memory: Memory) => {
-  const projRec = getMediaProjRec(rec, memory);
+const getMediaLang = (rec: MediaFile | null, memory: Memory, reporter: any) => {
+  const projRec = getMediaProjRec(rec, memory, reporter);
   return projRec && projRec.attributes && projRec.attributes.language;
 };
 
-export const getMediaName = (rec: MediaFile | null, memory: Memory) => {
+export const getMediaName = (
+  rec: MediaFile | null,
+  memory: Memory,
+  reporter: any
+) => {
   let passageRec: Passage | undefined = undefined;
   const passageId = related(rec, 'passage');
   if (passageId)
@@ -77,7 +86,7 @@ export const getMediaName = (rec: MediaFile | null, memory: Memory) => {
     rec.attributes.versionNumber.toString();
   const planRec = getMediaPlanRec(rec, memory);
   const planName = planRec && planRec.attributes && planRec.attributes.name;
-  const projRec = getMediaProjRec(rec, memory);
+  const projRec = getMediaProjRec(rec, memory, reporter);
   const projName = projRec && projRec.attributes && projRec.attributes.name;
   let val = projName + '_' + planName + '_';
   if (book && book !== '') val = val + book + '_';
@@ -90,32 +99,21 @@ export const getMediaEaf = (
   memory: Memory,
   reporter?: any
 ): string => {
-  logError(Severity.info, reporter, `getMediaEaf`);
   let Encoder = require('node-html-encoder').Encoder;
   let encoder = new Encoder('numerical');
 
   const mediaAttr = mediaRec && mediaRec.attributes;
   const transcription =
     mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
-  logError(Severity.info, reporter, `transcription=${transcription}`);
   const encTranscript = encoder
     .htmlEncode(transcription)
     .replace(/\([0-9]{1,2}:[0-9]{2}(:[0-9]{2})?\)/g, '');
-  logError(
-    Severity.info,
-    reporter,
-    `encTranscript=${JSON.stringify(encTranscript)}`
-  );
   const durationNum = mediaAttr && mediaAttr.duration;
-  logError(Severity.info, reporter, `durationNum=${durationNum}`);
   const duration = durationNum
     ? Math.round(durationNum * 1000).toString()
     : '0';
-  logError(Severity.info, reporter, `duration=${duration}`);
-  const lang = getMediaLang(mediaRec, memory);
-  logError(Severity.info, reporter, `lang=${lang}`);
+  const lang = getMediaLang(mediaRec, memory, reporter);
   const mime = (mediaAttr && mediaAttr.contentType) || '';
-  logError(Severity.info, reporter, `mime=${mime}`);
   const ext = /mpeg/.test(mime)
     ? '.mp3'
     : /m4a/.test(mime)
@@ -123,23 +121,22 @@ export const getMediaEaf = (
     : /ogg/.test(mime)
     ? '.ogg'
     : '.wav';
-  logError(Severity.info, reporter, `ext=${ext}`);
   const audioUrl = mediaAttr && mediaAttr.audioUrl;
-  logError(Severity.info, reporter, `audioUrl=${audioUrl}`);
   const audioBase = audioUrl && audioUrl.split('?')[0];
-  logError(Severity.info, reporter, `audioBase=${audioBase}`);
   const audioName = audioBase && audioBase.split('/').pop();
-  logError(Severity.info, reporter, `audioName=${audioName}`);
   const filename = audioName
     ? audioName
     : path.basename(
         mediaAttr.originalFile,
         path.extname(mediaAttr.originalFile)
       ) + ext;
-  logError(Severity.info, reporter, `filename=${filename}`);
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(eaf(), 'text/xml');
-  updateXml('@DATE', xmlDoc, moment().format('YYYY-MM-DDTHH:MM:SSZ'));
+  updateXml(
+    '@DATE',
+    xmlDoc,
+    moment().locale('en').format('YYYY-MM-DDTHH:MM:SSZ')
+  );
   // updateXml("*[local-name()='ANNOTATION_VALUE']", xmlDoc, encTranscript);
   updateXml('@DEFAULT_LOCALE', xmlDoc, lang ? lang : 'en');
   updateXml('@LANGUAGE_CODE', xmlDoc, lang ? lang : 'en');
@@ -155,6 +152,5 @@ export const getMediaEaf = (
       '<' + annotationValue + '/>',
       '<' + annotationValue + '>' + encTranscript + '</' + annotationValue + '>'
     );
-  logError(Severity.info, reporter, `str=${str}`);
   return str;
 };

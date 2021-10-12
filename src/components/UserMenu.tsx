@@ -3,7 +3,7 @@ import { useEffect, useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, IMainStrings, ISharedStrings, User } from '../model';
 import localStrings from '../selector/localize';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { MenuProps } from '@material-ui/core/Menu';
 import {
   Button,
@@ -12,6 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
+  Divider,
 } from '@material-ui/core';
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import AccountIcon from '@material-ui/icons/AccountCircle';
@@ -22,6 +23,17 @@ import { useLocation } from 'react-router-dom';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { localizeRole } from '../utils';
+
+const useStyles = makeStyles({
+  terms: {
+    textAlign: 'center',
+    lineHeight: 1,
+    paddingBottom: 0,
+    '& .MuiListItemText-primary': {
+      fontSize: 'small',
+    },
+  },
+});
 
 const StyledMenu = withStyles({
   paper: {
@@ -72,6 +84,7 @@ interface IProps extends IStateProps, IRecordProps {
 
 export function UserMenu(props: IProps) {
   const { action, t, ts, users } = props;
+  const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [developer] = useGlobal('developer');
   const [user] = useGlobal('user');
@@ -89,7 +102,6 @@ export function UserMenu(props: IProps) {
     const userRecs = users.filter((u) => u.id === user) as User[];
     const newRec = userRecs.length > 0 ? userRecs[0] : undefined;
     if (userRec !== newRec) {
-      // console.log('setting userRec', userRec, 'to', newRec);
       setUserRec(newRec);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,7 +180,22 @@ export function UserMenu(props: IProps) {
           <ListItemIcon>
             <ExitIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText primary={isElectron ? t.exit : t.logout} />
+          <ListItemText primary={isElectron ? t.switchUser : t.logout} />
+        </StyledMenuItem>
+        <Divider />
+        <StyledMenuItem
+          id="terms"
+          onClick={handleAction('Privacy')}
+          className={classes.terms}
+        >
+          <ListItemText primary={t.privacy} />
+        </StyledMenuItem>
+        <StyledMenuItem
+          id="terms"
+          onClick={handleAction('Terms')}
+          className={classes.terms}
+        >
+          <ListItemText primary={t.terms} />
         </StyledMenuItem>
       </StyledMenu>
     </div>

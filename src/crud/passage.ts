@@ -73,7 +73,7 @@ export function passageReference(passage: Passage, bookData: BookName[] = []) {
   if (book !== '') {
     const bookItem = bookData.filter((b) => b.code === book);
     if (bookItem.length > 0) {
-      book = bookItem[0].long;
+      book = bookItem[0].abbr;
     }
     book += ' ';
   }

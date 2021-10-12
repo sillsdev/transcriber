@@ -1,13 +1,10 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { useParams, useLocation } from 'react-router-dom';
-import { IState, IMainStrings } from '../model';
-import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
 import { makeStyles } from '@material-ui/core';
 import AppHead from '../components/App/AppHead';
-import { PlanProvider, PlanContext } from '../context/PlanContext';
-import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
+import { PlanProvider } from '../context/PlanContext';
+import ViewMode, { ViewOption } from '../control/ViewMode';
 import PlanTabs from '../components/PlanTabs';
 import { useUrlContext, useRole, useProjectType } from '../crud';
 import { forceLogin, localUserKey, LocalKey } from '../utils';
@@ -25,39 +22,14 @@ const useStyles = makeStyles({
   },
 });
 
-interface IStateProps {
-  t: IMainStrings;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'main' }),
-});
-
-interface IProps extends IStateProps {
+interface IProps {
   auth: Auth;
 }
 
-const PlanBase = (props: IProps) => {
-  const classes = useStyles();
-  const uctx = React.useContext(UnsavedContext);
-  const { checkSavedFn } = uctx.state;
-  const ctx = React.useContext(PlanContext);
-  const { isScripture } = ctx.state;
-
-  return (
-    <div id="PlanScreen" className={classes.teamScreen}>
-      <PlanTabs
-        {...props}
-        checkSaved={checkSavedFn}
-        bookCol={isScripture() ? 0 : -1}
-      />
-    </div>
-  );
-};
 interface ParamTypes {
   prjId: string;
 }
-export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
-  const { t } = props;
+export const PlanScreen = (props: IProps) => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const { prjId } = useParams<ParamTypes>();
@@ -79,7 +51,12 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
 
   const SwitchTo = () => {
     return (
-      <TranscribeSwitch switchTo={() => checkSavedFn(handleSwitchTo)} t={t} />
+      <ViewMode
+        mode={ViewOption.AudioProject}
+        onMode={(mode: ViewOption) =>
+          mode === ViewOption.Transcribe && checkSavedFn(handleSwitchTo)
+        }
+      />
     );
   };
 
@@ -112,10 +89,12 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
     <div className={classes.root}>
       <AppHead {...props} SwitchTo={SwitchTo} />
       <PlanProvider {...props}>
-        <PlanBase {...props} />
+        <div id="PlanScreen" className={classes.teamScreen}>
+          <PlanTabs {...props} checkSaved={checkSavedFn} />
+        </div>
       </PlanProvider>
     </div>
   );
-});
+};
 
 export default PlanScreen;

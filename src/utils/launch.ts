@@ -12,7 +12,7 @@ export const launch = (target: string, online: boolean) => {
   if (online) shell.openExternal(target);
   else if (os.platform() === 'win32') shell.openPath(target);
   else {
-    console.log(target);
+    console.log(`launching ${target}`);
     const cmd = /\.sh/i.test(target) ? '' : 'xdg-open ';
     execa.command(`${cmd}${target}`, {
       env: { ...{ ...process }.env, DISPLAY: ':0' },

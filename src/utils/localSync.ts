@@ -345,7 +345,7 @@ const findNodeAfterVerse = (
 };
 
 const ParseTranscription = (currentPassage: Passage, transcription: string) => {
-  var pattern = /(\\v\s*[1-9+]-*[1-9+]*)/g;
+  var pattern = /(\\v\s*[0-9+]-*[0-9+]*)/g;
   var internalverses = Array.from(transcription.matchAll(pattern));
   // Get all matches
   if (internalverses.length < 1) {
@@ -620,13 +620,13 @@ export const localSync = async (
 ) => {
   let chapChg: { [key: string]: Passage[] } = {};
   passages
-    .filter((p) => p.attributes.state === ActivityStates.Approved)
+    .filter((p) => p.attributes?.state === ActivityStates.Approved)
     .filter((p) => related(getMediaRec(p.id, memory), 'plan') === plan)
     .forEach((p) => {
       parseRef(p);
       let chap = p.startChapter;
       if (chap) {
-        const k = p.attributes.book + '-' + chap;
+        const k = p.attributes?.book + '-' + chap;
         if (chapChg.hasOwnProperty(k)) {
           chapChg[k].push(p);
         } else {
@@ -645,7 +645,7 @@ export const localSync = async (
         userId,
         addNumberToSection
       );
-    } catch (error) {
+    } catch (error: any) {
       return error.message.replace(
         'Missing Localizer implementation. English text will be used instead.',
         ''

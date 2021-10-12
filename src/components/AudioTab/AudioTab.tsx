@@ -19,13 +19,13 @@ import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, AppBar } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import FilterIcon from '@material-ui/icons/FilterList';
-import SelectAllIcon from '@material-ui/icons/SelectAll';
+// import FilterIcon from '@material-ui/icons/FilterList';
+// import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
 import { useSnackBar } from '../../hoc/SnackBar';
 import BigDialog from '../../hoc/BigDialog';
 import AudioTable from './AudioTable';
-import Uploader, { statusInit } from '../Uploader';
+import Uploader, { IStatus } from '../Uploader';
 import Auth from '../../auth/Auth';
 import { getMediaInPlans, usePlan, remoteIdGuid } from '../../crud';
 import { useGlobal } from 'reactn';
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
     progress: {
       width: '100%',
     },
-    actions: theme.mixins.gutters(tabActions) as any,
+    actions: tabActions,
     grow: {
       flexGrow: 1,
     },
@@ -129,17 +129,16 @@ export function AudioTab(props: IProps) {
   const [, setChanged] = useGlobal('changed');
   const [, saveCompleted] = useRemoteSave();
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
-  const [locale] = useGlobal('lang');
   const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
   const [attachVisible, setAttachVisible] = useState(false);
   const [mcheck, setMCheck] = useState(-1);
   const [pcheck, setPCheck] = useState(-1);
-  const [filter, setFilter] = useState(false);
+  // const [filter, setFilter] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
-  const [status] = useState(statusInit);
-  const [, setComplete] = useGlobal('progress');
+  const [status] = useState<IStatus>({ canceled: false });
+  const [complete, setComplete] = useGlobal('progress');
   const [autoMatch, setAutoMatch] = useState(false);
   const [playItem, setPlayItem] = useState('');
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
@@ -161,6 +160,7 @@ export function AudioTab(props: IProps) {
   };
 
   const handleUpload = () => {
+    status.canceled = false;
     setUploadVisible(true);
   };
 
@@ -169,6 +169,7 @@ export function AudioTab(props: IProps) {
   const handleAttachCancel = () => {
     setAttachVisible(false);
     setPCheck(-1);
+    setMCheck(-1);
   };
 
   const handleSave = async (argMap?: IAttachMap) => {
@@ -183,12 +184,14 @@ export function AudioTab(props: IProps) {
     let n = 0;
     setComplete(n);
     for (let mediaId of Object.keys(map)) {
+      if (status.canceled) break;
       await handleRow(mediaId);
       n += 1;
       setComplete(Math.min((n * 100) / total, 100));
     }
     setAttachMap({});
-    showMessage(t.savingComplete);
+    if (status.canceled) status.canceled = false;
+    else showMessage(t.savingComplete);
     inProcess.current = false;
     saveCompleted('');
   };
@@ -236,7 +239,11 @@ export function AudioTab(props: IProps) {
       setMCheck(newCheck);
     }
   };
-  const handleFilter = () => setFilter(!filter);
+  // const handleFilter = () => setFilter(!filter);
+
+  const handleUploadCancel = () => {
+    status.canceled = true;
+  };
 
   useEffect(() => {
     if (urlOpen) {
@@ -268,7 +275,6 @@ export function AudioTab(props: IProps) {
         sections,
         playItem,
         allBookData,
-        locale,
         isPassageDate: true,
       };
       const newData = getMedia(planMedia, mediaData);
@@ -284,7 +290,6 @@ export function AudioTab(props: IProps) {
       sections,
       playItem,
       allBookData,
-      locale,
       isPassageDate: true,
     };
     const newData = getMedia(planMedia, mediaData);
@@ -322,11 +327,13 @@ export function AudioTab(props: IProps) {
 
   const afterUpload = (planId: string, mediaRemoteIds?: string[]) => {
     if (mediaRemoteIds && mediaRemoteIds.length === 1) {
-      setUploadMedia(
-        remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ||
-          mediaRemoteIds[0]
-      );
-      setAttachVisible(true);
+      if (!status.canceled) {
+        setUploadMedia(
+          remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ||
+            mediaRemoteIds[0]
+        );
+        setAttachVisible(true);
+      }
     }
   };
 
@@ -384,7 +391,19 @@ export function AudioTab(props: IProps) {
               </>
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
-            <Button
+            {complete !== 0 && complete !== 100 && (
+              <Button
+                id="uploadCancel"
+                aria-label={ts.cancel}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleUploadCancel}
+              >
+                {ts.cancel}
+              </Button>
+            )}
+            {/* <Button
               id="audFilt"
               key="filter"
               aria-label={t.filter}
@@ -400,7 +419,7 @@ export function AudioTab(props: IProps) {
               ) : (
                 <FilterIcon className={classes.icon} />
               )}
-            </Button>
+            </Button> */}
           </div>
         </AppBar>
         <div className={classes.content}>

@@ -20,12 +20,13 @@ import {
 import { NextAction } from './TaskFlag';
 import TaskAvatar from './TaskAvatar';
 import { UnsavedContext } from '../context/UnsavedContext';
+import { TaskItemWidth } from './TaskTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      minWidth: 360,
+      minWidth: `${TaskItemWidth}px`,
     },
     detail: {
       display: 'flex',
@@ -44,16 +45,19 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IProps {
   item: number;
   organizedBy: string;
+  flat: boolean;
 }
 
 export function TaskItem(props: IProps) {
-  const { organizedBy } = props;
+  const { flat } = props;
   const classes = useStyles();
   const {
     rowData,
-    taskItemStr,
     activityStateStr,
+    selected,
+    allDone,
     setSelected,
+    refresh,
     setAllDone,
     allBookData,
   } = useTodo();
@@ -63,11 +67,16 @@ export function TaskItem(props: IProps) {
   // TT-1749 during refresh the index went out of range.
   if (props.item >= rowData.length) return <></>;
   const { passage, section, duration } = rowData[props.item];
-  const t = taskItemStr;
 
-  const handleSelect = (selected: string) => () => {
-    setAllDone(false);
-    checkSavedFn(() => setSelected(selected));
+  const handleSelect = (select: string) => () => {
+    //if we're all done, we can't need to save
+    if (allDone && select === selected) {
+      setAllDone(false);
+    } else
+      checkSavedFn(() => {
+        if (select !== selected) setSelected(select);
+        else refresh();
+      });
   };
 
   let assigned: string | null = null;
@@ -104,12 +113,13 @@ export function TaskItem(props: IProps) {
             <div className={classes.detailAlign}>
               <Duration seconds={duration} />
             </div>
-            <div className={classes.detailAlign}>
-              {t.section
-                .replace('{0}', organizedBy)
-                .replace('{1}', sectionNumber(section))
-                .replace('{2}', passageNumber(passage).trim())}
-            </div>
+            {!flat && (
+              <div className={classes.detailAlign}>
+                {'{1}.{2}'
+                  .replace('{1}', sectionNumber(section))
+                  .replace('{2}', passageNumber(passage).trim())}
+              </div>
+            )}
           </div>
         </ListItemSecondaryAction>
       </ListItem>

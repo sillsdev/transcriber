@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import JwtDecode from 'jwt-decode';
 import { connect } from 'react-redux';
-import { IState, IEmailUnverifiedStrings } from '../model';
+import { IState, IToken, IEmailUnverifiedStrings } from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Typography, Grid, Button } from '@material-ui/core';
@@ -27,12 +29,12 @@ const useStyles = makeStyles((theme: Theme) =>
       variant: 'outlined',
       color: 'primary',
     },
-    actions: theme.mixins.gutters({
+    actions: {
       paddingBottom: 16,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
-    }) as any,
+    },
   })
 );
 
@@ -47,6 +49,7 @@ interface IProps extends IStateProps {
 export const EmailUnverified = (props: IProps) => {
   const { auth, t } = props;
   const classes = useStyles();
+  const { getAccessTokenSilently, user } = useAuth0();
   const [view, setView] = useState('');
   const [message, setMessage] = useState('');
 
@@ -63,17 +66,32 @@ export const EmailUnverified = (props: IProps) => {
       });
   };
 
-  const handleVerified = (e: any) => {
+  const handleVerified = async (e: any) => {
+    localStorage.setItem('email_verified', 'true');
+    !isElectron && (await getAccessTokenSilently({ ignoreCache: true }));
     if (isElectron) {
-      doLogout();
       goOnline();
-    } else setView('Logout');
+    }
   };
   const handleLogout = (e: any) => {
     doLogout();
     setView('Logout');
   };
+
+  React.useEffect(() => {
+    if (user?.email_verified) {
+      (async () => {
+        const token = await getAccessTokenSilently();
+        const decodedToken = JwtDecode(token) as IToken;
+        auth.setAuthSession(user, token, decodedToken.exp);
+        setView('Loading');
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
+  if (/Loading/i.test(view)) return <Redirect to="/loading" />;
 
   return (
     <div className={classes.fullScreen}>
@@ -88,7 +106,7 @@ export const EmailUnverified = (props: IProps) => {
       <Grid
         container
         direction="column"
-        justify="space-around"
+        justifyContent="space-around"
         alignItems="center"
         spacing={0}
       >

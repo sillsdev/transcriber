@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
@@ -13,9 +13,10 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { related } from '../crud';
-import { Online, useInterval } from '../utils';
+import { related, usePlan } from '../crud';
+import { useCheckOnline, useInterval } from '../utils';
 import Auth from '../auth/Auth';
+import * as actions from '../store';
 
 interface IStateProps {
   projButtonStr: IProjButtonsStrings;
@@ -24,9 +25,11 @@ const mapStateToProps = (state: IState): IStateProps => ({
   projButtonStr: localStrings(state, { layout: 'projButtons' }),
 });
 
-interface IDispatchProps {}
+interface IDispatchProps {
+  resetOrbitError: typeof actions.resetOrbitError;
+}
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators({}, dispatch),
+  ...bindActionCreators({ resetOrbitError: actions.resetOrbitError }, dispatch),
 });
 
 interface IRecordProps {}
@@ -39,7 +42,8 @@ const initState = {
   readonly: false,
   connected: false,
   projButtonStr: {} as IProjButtonsStrings,
-  isScripture: () => false,
+  scripture: false,
+  flat: false,
 };
 
 export type ICtxState = typeof initState;
@@ -61,13 +65,14 @@ const PlanProvider = withData(mapRecordsToProps)(
     mapStateToProps,
     mapDispatchToProps
   )((props: IProps) => {
-    const { projButtonStr, auth } = props;
+    const { projButtonStr, resetOrbitError } = props;
     const [memory] = useGlobal('memory');
     const [plan] = useGlobal('plan');
-    const [connected, setConnected] = useGlobal('connected');
+    const [connected] = useGlobal('connected');
     const [projRole] = useGlobal('projRole');
     const [isOffline] = useGlobal('offline');
     const [offlineOnly] = useGlobal('offlineOnly');
+    const { getPlan } = usePlan();
     const [readonly, setReadOnly] = useState(
       (isOffline && !offlineOnly) || projRole !== 'admin'
     );
@@ -75,26 +80,25 @@ const PlanProvider = withData(mapRecordsToProps)(
       ...initState,
       projButtonStr,
     });
+    const checkOnline = useCheckOnline(resetOrbitError);
 
-    const isScripture = () => {
-      const planRecs = (memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('plan')
-      ) as Plan[]).filter((p) => p.id === plan);
-      if (planRecs.length > 0) {
-        const typeId = related(planRecs[0], 'plantype');
-        const typeRecs = (memory.cache.query((q: QueryBuilder) =>
-          q.findRecords('plantype')
-        ) as PlanType[]).filter((pt) => pt.id === typeId);
-        if (typeRecs.length > 0) {
-          return (
-            typeRecs[0]?.attributes?.name
-              ?.toLowerCase()
-              ?.indexOf('scripture') !== -1
-          );
-        }
-      }
-      return false;
-    };
+    useEffect(() => {
+      let planRec: Plan | null = null;
+      if (plan && plan !== '') planRec = getPlan(plan);
+      const typeId = planRec && related(planRec, 'plantype');
+      let typeRec: PlanType | null = null;
+      if (typeId)
+        typeRec = memory.cache.query((q: QueryBuilder) =>
+          q.findRecord({ type: 'plantype', id: typeId })
+        ) as PlanType;
+      const flat = planRec ? planRec?.attributes?.flat : false;
+      const scripture = typeRec
+        ? typeRec?.attributes?.name?.toLowerCase()?.indexOf('scripture') !== -1
+        : false;
+      if (flat !== state.flat || scripture !== state.scripture)
+        setState((state) => ({ ...state, flat, scripture }));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [plan]);
 
     React.useEffect(() => {
       const newValue = (isOffline && !offlineOnly) || projRole !== 'admin';
@@ -102,16 +106,8 @@ const PlanProvider = withData(mapRecordsToProps)(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [projRole]);
 
-    const tryOnline = () =>
-      Online((result) => {
-        setConnected(result);
-      }, auth);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => tryOnline(), []);
-
     //do this every 30 seconds to warn they can't save
-    useInterval(() => tryOnline(), 1000 * 30);
+    useInterval(() => checkOnline((result: boolean) => {}), 1000 * 30);
 
     return (
       <PlanContext.Provider
@@ -120,7 +116,6 @@ const PlanProvider = withData(mapRecordsToProps)(
             ...state,
             connected,
             readonly,
-            isScripture,
           },
           setState,
         }}

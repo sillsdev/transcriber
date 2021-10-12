@@ -6,14 +6,14 @@ import AddIcon from '@material-ui/icons/Add';
 import { VProject, DialogMode, OptionType } from '../../model';
 import { ProjectDialog, IProjectDialog, ProjectType } from './ProjectDialog';
 import { Language, ILanguage } from '../../control';
-import Uploader, { statusInit } from '../Uploader';
+import Uploader, { IStatus } from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
 import { waitForRemoteId, remoteId, useOrganizedBy } from '../../crud';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
-import NewProject from './NewProject';
+import NewProjectGrid from './NewProjectGrid';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -88,13 +88,21 @@ export const AddCard = (props: IProps) => {
   ]);
   const { fromLocalizedOrganizedBy } = useOrganizedBy();
   const [step, setStep] = React.useState(0);
-  const [status] = React.useState({ ...statusInit });
+  const [status] = React.useState<IStatus>({ canceled: false });
   const [, setPlan] = useGlobal('plan');
   const [pickOpen, setPickOpen] = React.useState(false);
   const preventBoth = React.useRef(false);
   const [view, setView] = React.useState('');
   const [forceType, setForceType] = React.useState(false);
   const [recordAudio, setRecordAudio] = React.useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem('autoaddProject') !== null && team === null) {
+      setPickOpen(true);
+      localStorage.removeItem('autoaddProject');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (status.canceled) {
@@ -286,7 +294,7 @@ export const AddCard = (props: IProps) => {
         <CardContent className={classes.content}>
           <div className={classes.icon}>
             <AddIcon fontSize="large" />
-            <NewProject
+            <NewProjectGrid
               open={pickOpen && !open && !uploadVisible}
               onOpen={handleSolutionHide}
               doUpload={handleUpload}

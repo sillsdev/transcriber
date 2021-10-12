@@ -59,7 +59,13 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { doDataChanges } from '../hoc/DataChanges';
 import { HeadHeight } from '../App';
-import { localUserKey, LocalKey } from '../utils';
+import {
+  localUserKey,
+  LocalKey,
+  logError,
+  Severity,
+  axiosError,
+} from '../utils';
 
 interface IStateProps {
   t: IImportStrings;
@@ -142,10 +148,10 @@ export function ImportTab(props: IProps) {
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
   const { getOrganizedBy } = useOrganizedBy();
   const [projectsLoaded] = useGlobal('projectsLoaded');
+  const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const getOfflineProject = useOfflnProjRead();
-  const { handleElectronImport, getElectronImportData } = useElectronImport(
-    importComplete
-  );
+  const { handleElectronImport, getElectronImportData } =
+    useElectronImport(importComplete);
   const handleFilter = () => setFilter(!filter);
   const headerRow = () =>
     t.plan +
@@ -218,12 +224,12 @@ export function ImportTab(props: IProps) {
         margin: theme.spacing(4),
       },
       paper: {},
-      actions: theme.mixins.gutters({
+      actions: {
         paddingBottom: 16,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-start',
-      }) as any,
+      },
       button: {
         margin: theme.spacing(1),
         variant: 'outlined',
@@ -243,11 +249,11 @@ export function ImportTab(props: IProps) {
       grow: {
         flexGrow: 1,
       },
-      dialogHeader: theme.mixins.gutters({
+      dialogHeader: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
-      }) as any,
+      },
       progress: {
         top: `calc(${HeadHeight}px - ${theme.spacing(1)}px)`,
         zIndex: 100,
@@ -344,7 +350,7 @@ export function ImportTab(props: IProps) {
     return false;
   }
   const translateError = (err: IAxiosStatus): string => {
-    console.log(err.errMsg);
+    logError(Severity.error, errorReporter, axiosError(err));
     switch (err.errStatus) {
       case 301:
         localStorage.setItem(localUserKey(LocalKey.url, memory), '/');
@@ -483,8 +489,10 @@ export function ImportTab(props: IProps) {
                         type: 'user',
                         id: remoteIdGuid(
                           'user',
-                          (section?.relationships?.editor
-                            .data as RecordIdentity).id,
+                          (
+                            section?.relationships?.editor
+                              .data as RecordIdentity
+                          ).id,
                           memory.keyMap
                         ),
                       })
@@ -512,8 +520,10 @@ export function ImportTab(props: IProps) {
                 oldsection.relationships?.transcriber?.data &&
                 (section.relationships?.transcriber?.data as RecordIdentity)
                   ?.id !==
-                  (oldsection.relationships?.transcriber
-                    ?.data as RecordIdentity)?.id
+                  (
+                    oldsection.relationships?.transcriber
+                      ?.data as RecordIdentity
+                  )?.id
               ) {
                 var transcriber = section.relationships?.transcriber?.data
                   ? (memory.cache.query((q: QueryBuilder) =>
@@ -521,8 +531,10 @@ export function ImportTab(props: IProps) {
                         type: 'user',
                         id: remoteIdGuid(
                           'user',
-                          (section?.relationships?.transcriber
-                            .data as RecordIdentity).id,
+                          (
+                            section?.relationships?.transcriber
+                              .data as RecordIdentity
+                          ).id,
                           memory.keyMap
                         ),
                       })
@@ -533,8 +545,10 @@ export function ImportTab(props: IProps) {
                     type: 'user',
                     id: remoteIdGuid(
                       'user',
-                      (oldsection?.relationships?.transcriber
-                        .data as RecordIdentity).id,
+                      (
+                        oldsection?.relationships?.transcriber
+                          .data as RecordIdentity
+                      ).id,
                       memory.keyMap
                     ),
                   })
@@ -716,7 +730,8 @@ export function ImportTab(props: IProps) {
               getOfflineProject,
               errorReporter,
               user,
-              setLanguage
+              setLanguage,
+              setDataChangeCount
             );
           else SetUserLanguage(memory, user, setLanguage);
 

@@ -1,16 +1,13 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { User } from '../model';
-import { makeStyles } from '@material-ui/core/styles';
 import { List } from '@material-ui/core';
 import { UserListItem } from '.';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 
-const useStyles = makeStyles({
-  listHead: {
-    fontWeight: 'bold',
-  },
-});
+export interface ListAction {
+  [key: string]: ReactElement;
+}
 
 interface IRecordProps {
   users: Array<User>;
@@ -18,28 +15,33 @@ interface IRecordProps {
 
 interface IProps extends IRecordProps {
   isSelected: (userId: string) => boolean;
-  select: (userId: string) => void;
-  title?: string;
+  curId: string | undefined;
+  select?: (userId: string) => void;
+  showTeams: boolean;
 }
 
 export const UserList = (props: IProps) => {
-  const { users, isSelected, select, title } = props;
-  const classes = useStyles();
+  const { users, isSelected, curId, select, showTeams } = props;
 
   return (
     <>
-      {title && <div className={classes.listHead}>{title}</div>}
       <List>
         {users
-          .filter((u) => isSelected(u.id))
+          .filter((u) => u.id !== curId && isSelected(u.id))
           .sort((i, j) =>
             (i.attributes ? i.attributes.name : '') <
             (j.attributes ? j.attributes.name : '')
               ? -1
               : 1
           )
-          .map((u) => (
-            <UserListItem u={u} users={users} onSelect={select} />
+          .map((u, i) => (
+            <UserListItem
+              u={u}
+              key={i}
+              users={users}
+              onSelect={select}
+              showTeams={showTeams}
+            />
           ))}
       </List>
     </>

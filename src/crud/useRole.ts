@@ -106,7 +106,7 @@ export const useRole = () => {
   };
 
   const getMyProjRole = (projectId: string) => {
-    if (projectId === '') return '';
+    if (!projectId || projectId === '') return '';
     try {
       const proj = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'project', id: projectId })
@@ -115,7 +115,6 @@ export const useRole = () => {
       const gMbrRecs = getMbrRoleRec('group', related(proj, 'group'), user);
       return getMbrRole(gMbrRecs);
     } catch {
-      console.log('project not found in useRole');
       return 'Admin';
     }
   };

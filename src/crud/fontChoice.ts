@@ -1,5 +1,5 @@
 import { Project } from '../model';
-import { dataPath, PathType } from '../utils';
+import { dataPath, PathType } from '../utils/dataPath';
 import { isElectron } from '../api-variable';
 
 export interface FontData {
@@ -34,6 +34,7 @@ export const getFontData = (r: Project, offline: boolean) => {
       localname: fileName,
     });
     if (local !== 'http') url = 'transcribe-safe://' + local;
+    else if (offline) url = '';
   }
   const data: FontData = {
     langTag,

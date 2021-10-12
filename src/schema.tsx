@@ -356,6 +356,7 @@ const schemaDefinition: SchemaSettings = {
         originalFile: { type: 'string' },
         filesize: { type: 'number' },
         position: { type: 'number' },
+        segments: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
@@ -469,7 +470,12 @@ const schemaDefinition: SchemaSettings = {
   },
   version: 1,
 };
-if (process.env.REACT_APP_SCHEMAVERSION !== '1' && schemaDefinition.models) {
+/* you can set your REACT_APP_SCHEMAVERSION to a version if you want to go back
+   for testing purposes */
+if (
+  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 1 &&
+  schemaDefinition.models
+) {
   schemaDefinition.models.offlineproject = {
     keys: { remoteId: {} },
     attributes: {
@@ -493,7 +499,28 @@ if (process.env.REACT_APP_SCHEMAVERSION !== '1' && schemaDefinition.models) {
   delete schemaDefinition.models.project.attributes?.dateExported;
   schemaDefinition.version = 2;
 }
-
+if (
+  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 2 &&
+  schemaDefinition.models
+) {
+  schemaDefinition.models.audacityproject = {
+    keys: { remoteId: {} },
+    attributes: {
+      audacityName: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      passage: {
+        type: 'hasOne',
+        model: 'passage',
+      },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.version = 3;
+}
 export const schema = new Schema(schemaDefinition);
 
 export const keyMap = new KeyMap();
@@ -538,19 +565,33 @@ export const backup = window.indexedDB
     })
   : ({} as IndexedDBSource);
 
-backup.cache.migrateDB = function (db, event) {
-  console.log('migrateDb', event);
-  // Ensure that all models are registered
-  findMissingModels(this.schema, db).forEach((model) => {
-    console.log(
-      `Registering IndexedDB model at version ${event.newVersion}: ${model}`
-    );
-    this.registerModel(db, model);
-  });
-  if (isElectron && event.newVersion === 2) {
-    SaveOfflineProjectInfo(backup, memory);
-  }
-};
+if (backup.cache)
+  backup.cache.migrateDB = function (db, event) {
+    console.log('migrateDb', event);
+    // Ensure that all models are registered
+    findMissingModels(this.schema, db).forEach((model) => {
+      console.log(
+        `Registering IndexedDB model at version ${event.newVersion}: ${model}`
+      );
+      this.registerModel(db, model);
+    });
+    if (isElectron && event.newVersion === 2) {
+      SaveOfflineProjectInfo(backup, memory);
+    }
+    if (event.newVersion === 3) {
+      //Summer 2021
+      // Add missing `relatedIdentity` index. This is required.
+      // https://github.com/orbitjs/orbit/pull/825
+      const transaction = (event.target as any).transaction;
+      if (transaction) {
+        const objectStore = transaction.objectStore('__inverseRels__');
+        if (!objectStore.indexNames.contains('relatedIdentity'))
+          objectStore.createIndex('relatedIdentity', 'relatedIdentity', {
+            unique: false,
+          });
+      }
+    }
+  };
 
 export const coordinator = new Coordinator();
 coordinator.addSource(memory);

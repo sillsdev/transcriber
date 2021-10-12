@@ -126,6 +126,9 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
       .replace('SPACE', t.spaceKey)
       .replace('HOME', t.homeKey)
       .replace('END', t.endKey)
+      .replace('ARROWLEFT', t.leftArrow)
+      .replace('ARROWRIGHT', t.rightArrow)
+      .replace('ARROWDOWN', t.downArrow)
       .split(',')
       .join(` ${t.or} `);
   };

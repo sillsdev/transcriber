@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
@@ -36,6 +36,7 @@ import {
 } from '../crud';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 import { UpdateLastModifedBy } from '../model/baseModel';
+import { PlanContext } from '../context/PlanContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
     },
-    actions: theme.mixins.gutters(tabActions) as any,
+    actions: tabActions,
     grow: {
       flexGrow: 1,
     },
@@ -162,11 +163,14 @@ export function AssignmentTable(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const { showMessage } = useSnackBar();
+  const ctx = useContext(PlanContext);
+  const { flat } = ctx.state;
   const [data, setData] = useState(Array<IRow>());
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
+  const [organizedByPlural] = useState(getOrganizedBy(false));
   const columnDefs = [
     { name: 'name', title: organizedBy },
     { name: 'state', title: t.sectionstate },
@@ -174,25 +178,28 @@ export function AssignmentTable(props: IProps) {
     { name: 'transcriber', title: ts.transcriber },
     { name: 'editor', title: ts.editor },
   ];
-  const columnWidths = [
-    { columnName: 'name', width: 300 },
-    { columnName: 'state', width: 150 },
-    { columnName: 'passages', width: 100 },
-    { columnName: 'transcriber', width: 200 },
-    { columnName: 'editor', width: 200 },
-  ];
-
   const [filter, setFilter] = useState(false);
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
 
-  const handleAssignSection = (status: boolean) => (e: any) => {
+  const columnWidths = useMemo(
+    () => [
+      { columnName: 'name', width: 300 },
+      { columnName: 'state', width: 150 },
+      { columnName: 'passages', width: flat ? 1 : 100 },
+      { columnName: 'transcriber', width: 200 },
+      { columnName: 'editor', width: 200 },
+    ],
+    [flat]
+  );
+
+  const handleAssignSection = (status: boolean) => () => {
     if (check.length === 0) {
       showMessage(t.selectRowsToAssign);
     } else {
       setAssignSectionVisible(status);
     }
   };
-  const handleRemoveAssignments = (e: any) => {
+  const handleRemoveAssignments = () => {
     if (check.length === 0) {
       showMessage(t.selectRowsToRemove);
     } else {
@@ -278,9 +285,9 @@ export function AssignmentTable(props: IProps) {
                   color="primary"
                   className={classes.button}
                   onClick={handleAssignSection(true)}
-                  title={t.assignSec.replace('{0}', organizedBy)}
+                  title={t.assignSec.replace('{0}', organizedByPlural)}
                 >
-                  {t.assignSec.replace('{0}', organizedBy)}
+                  {t.assignSec.replace('{0}', organizedByPlural)}
                 </Button>
                 <Button
                   id="assignRem"

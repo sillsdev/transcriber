@@ -20,12 +20,13 @@ import { sectionNumber, sectionDescription, useOrganizedBy } from '../crud';
 import PeopleIconOutline from '@material-ui/icons/PeopleAltOutlined';
 import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
+import { TaskItemWidth } from './TaskTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      minWidth: 360,
+      minWidth: `${TaskItemWidth}px`,
     },
     menuItem: {
       display: 'flex',

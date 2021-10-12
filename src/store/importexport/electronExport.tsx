@@ -319,11 +319,11 @@ export async function electronExport(
           default:
             //activitystate,integration,plantype,projecttype,role
             const needsRemId = Boolean(projRec?.keys?.remoteId);
-            return (memory.cache.query((q: QueryBuilder) =>
-              q.findRecords(info.table)
-            ) as Record[]).filter(
-              (r) => Boolean(r?.keys?.remoteId) === needsRemId
-            );
+            return (
+              memory.cache.query((q: QueryBuilder) =>
+                q.findRecords(info.table)
+              ) as Record[]
+            ).filter((r) => Boolean(r?.keys?.remoteId) === needsRemId);
         }
       } else {
         return memory.cache.query((q: QueryBuilder) =>
@@ -444,8 +444,10 @@ export async function electronExport(
     exportType === ExportType.ITFSYNC
   ) {
     //avoid intermittent errors where projecttype or plan is null
-    if (backup)
+    if (backup) {
       await memory.sync(await backup.pull((q) => q.findRecords('project')));
+      await memory.sync(await backup.pull((q) => q.findRecords('mediafile')));
+    }
 
     projects = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('project')

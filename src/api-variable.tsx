@@ -1,3 +1,4 @@
+let path = require('path');
 export const isElectron = process.env.REACT_APP_MODE === 'electron';
 const help =
   isElectron && process.env.REACT_APP_DESKTOP_HELP
@@ -5,6 +6,8 @@ const help =
     : process.env.REACT_APP_HELP
     ? process.env.REACT_APP_HELP
     : '';
+
+export const OrbitNetworkErrorRetries = 5;
 
 export const API_CONFIG = {
   host: process.env.REACT_APP_HOST ? process.env.REACT_APP_HOST : '',
@@ -33,4 +36,8 @@ export const API_CONFIG = {
   genHierarchicalSample: process.env.REACT_APP_GEN_HIERARCHICAL
     ? process.env.REACT_APP_GEN_HIERARCHICAL
     : '',
+  resourcePath:
+    process.env.NODE_ENV === 'development'
+      ? path.join(process.cwd(), 'src', 'script')
+      : process.resourcesPath,
 };

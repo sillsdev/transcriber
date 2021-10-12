@@ -1,9 +1,6 @@
-import React from 'react';
 import { useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { useHistory, useLocation } from 'react-router-dom';
-import { isElectron } from '../api-variable';
-import { logError, Severity } from '../utils';
 import { LocalKey, localUserKey } from '../utils/localUserKey';
 
 interface IProps {
@@ -18,7 +15,6 @@ export const StickyRedirect = ({ to }: IProps) => {
 
   useEffect(() => {
     localStorage.setItem(localUserKey(LocalKey.url, memory), to);
-    if (isElectron) logError(Severity.info, reporter, to);
     if (
       to.length > 4 &&
       pathname.length > 4 &&

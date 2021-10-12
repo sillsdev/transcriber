@@ -41,7 +41,7 @@ import { useSnackBar } from '../hoc/SnackBar';
 import ParatextLogo from '../control/ParatextLogo';
 // import RenderLogo from '../control/RenderLogo';
 import { remoteIdNum, related, useOfflnProjRead, remoteId } from '../crud';
-import { Online, localSync, getParatextDataPath } from '../utils';
+import { localSync, getParatextDataPath, useCheckOnline } from '../utils';
 import Auth from '../auth/Auth';
 import { bindActionCreators } from 'redux';
 import ParatextProject from '../model/paratextProject';
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) =>
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-      width: 300,
+      width: 600,
     },
     //style for font size
     formTextInput: {
@@ -128,6 +128,7 @@ interface IDispatchProps {
   resetProjects: typeof actions.resetProjects;
   resetUserName: typeof actions.resetUserName;
   setLanguage: typeof actions.setLanguage;
+  resetOrbitError: typeof actions.resetOrbitError;
 }
 interface IRecordProps {
   projectintegrations: Array<ProjectIntegration>;
@@ -141,6 +142,7 @@ interface IProps
     IRecordProps,
     WithDataProps {
   auth: Auth;
+  stopPlayer?: () => void;
 }
 
 export function IntegrationPanel(props: IProps) {
@@ -155,6 +157,7 @@ export function IntegrationPanel(props: IProps) {
     paratext_projects,
     paratext_projectsStatus,
     paratext_syncStatus,
+    stopPlayer,
   } = props;
   const {
     getUserName,
@@ -167,10 +170,11 @@ export function IntegrationPanel(props: IProps) {
     resetProjects,
     resetUserName,
     setLanguage,
+    resetOrbitError,
   } = props;
   const { projectintegrations, integrations, projects, passages } = props;
   const classes = useStyles();
-  const [connected, setConnected] = useGlobal('connected');
+  const [connected] = useGlobal('connected');
   const [hasPtProj, setHasPtProj] = useState(false);
   const [ptProj, setPtProj] = useState(-1);
   const [ptProjName, setPtProjName] = useState('');
@@ -199,8 +203,11 @@ export function IntegrationPanel(props: IProps) {
   const [ptPath, setPtPath] = useState('');
   const syncing = React.useRef<boolean>(false);
   const setSyncing = (state: boolean) => (syncing.current = state);
+  const [, setDataChangeCount] = useGlobal('dataChangeCount');
+  const checkOnline = useCheckOnline(resetOrbitError);
 
   const getProject = () => {
+    if (!project) return undefined;
     const projfind: Project[] = projects.filter((p) => p.id === project);
     return projfind.length > 0 ? projfind[0] : undefined;
   };
@@ -319,6 +326,7 @@ export function IntegrationPanel(props: IProps) {
     }
   };
   const handleSync = () => {
+    if (stopPlayer) stopPlayer();
     setSyncing(true);
     syncProject(
       auth,
@@ -329,6 +337,7 @@ export function IntegrationPanel(props: IProps) {
     );
   };
   const handleLocalSync = async () => {
+    if (stopPlayer) stopPlayer();
     setSyncing(true);
     showMessage(t.syncPending);
     var err = await localSync(plan, ptShortName, passages, memory, user);
@@ -378,10 +387,6 @@ export function IntegrationPanel(props: IProps) {
     return <span>{translateParatextError(err, ts)}</span>;
   };
 
-  const canEditParatextText = (role: string): boolean => {
-    return role === 'pt_administrator' || role === 'pt_translator';
-  };
-
   const formatWithLanguage = (replLang: string): string => {
     let proj = getProject();
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
@@ -389,10 +394,12 @@ export function IntegrationPanel(props: IProps) {
   };
 
   useEffect(() => {
-    Online((result) => {
-      setConnected(result);
-    }, auth);
-    if (offline) getParatextDataPath().then((val) => setPtPath(val));
+    if (offline) {
+      getParatextDataPath().then((val) => setPtPath(val));
+    } else {
+      //force a current check -- will set connected
+      checkOnline((result) => {});
+    }
     resetProjects();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
@@ -407,7 +414,7 @@ export function IntegrationPanel(props: IProps) {
   }, [resetUserName, connected, hasParatext]);
 
   useEffect(() => {
-    if (project !== myProject) {
+    if (project && project !== myProject) {
       setPtProj(-1);
       setPtProjName('');
       setPtShortName('');
@@ -421,9 +428,9 @@ export function IntegrationPanel(props: IProps) {
 
   useEffect(() => {
     resetCount();
-    getLocalCount(passages, project, memory, errorReporter, t);
+    if (project) getLocalCount(passages, project, memory, errorReporter, t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passages]);
+  }, [passages, project]);
 
   /* do this once */
   useEffect(() => {
@@ -507,9 +514,9 @@ export function IntegrationPanel(props: IProps) {
   }, [busy, paratext_projects, paratext_projectsStatus]);
 
   useEffect(() => {
-    findConnectedProject();
+    if (project) findConnectedProject();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectintegrations]);
+  }, [projectintegrations, project]);
 
   useEffect(() => {
     if (paratext_syncStatus) {
@@ -532,7 +539,8 @@ export function IntegrationPanel(props: IProps) {
           getOfflineProject,
           errorReporter,
           user,
-          setLanguage
+          setLanguage,
+          setDataChangeCount
         );
       }
     }
@@ -545,8 +553,8 @@ export function IntegrationPanel(props: IProps) {
     if (ptProj >= 0 && paratext_projects && paratext_projects.length > ptProj) {
       setPtPermission(paratext_projects[ptProj].CurrentUserRole);
       setHasPermission(
-        paratext_projects[ptProj].IsConnectable &&
-          canEditParatextText(paratext_projects[ptProj].CurrentUserRole)
+        paratext_projects[ptProj].IsConnectable //&& built in to isConnectable
+        //canEditParatextText(paratext_projects[ptProj].CurrentUserRole)
       );
     } else {
       setHasPermission(false);
@@ -618,15 +626,12 @@ export function IntegrationPanel(props: IProps) {
                     required={true}
                   >
                     {paratext_projects
-                      .sort((i, j) => (i.Name < j.Name ? -1 : 1))
+                      .sort((i, j) => (i.ShortName < j.ShortName ? -1 : 1))
                       .map((option: ParatextProject) => (
                         <MenuItem key={option.ParatextId} value={option.Name}>
-                          {option.Name +
-                            ' (' +
-                            option.LanguageName +
-                            '-' +
-                            option.LanguageTag +
-                            ')'}
+                          {`${option.ShortName ? option.ShortName + '/' : ''}${
+                            option.Name
+                          } (${option.LanguageTag})`}
                         </MenuItem>
                       ))
                       .concat(
@@ -786,15 +791,10 @@ export function IntegrationPanel(props: IProps) {
                     required={true}
                   >
                     {paratext_projects
-                      .sort((i, j) => (i.Name < j.Name ? -1 : 1))
+                      .sort((i, j) => (i.ShortName < j.ShortName ? -1 : 1))
                       .map((option: ParatextProject) => (
                         <MenuItem key={option.ParatextId} value={option.Name}>
-                          {option.Name +
-                            ' (' +
-                            option.LanguageName +
-                            '-' +
-                            option.LanguageTag +
-                            ')'}
+                          {`${option.ShortName}/${option.Name} (${option.LanguageName}-${option.LanguageTag})`}
                         </MenuItem>
                       ))
                       .concat(
@@ -914,6 +914,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       resetProjects: actions.resetProjects,
       resetUserName: actions.resetUserName,
       setLanguage: actions.setLanguage,
+      resetOrbitError: actions.resetOrbitError,
     },
     dispatch
   ),

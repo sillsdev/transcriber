@@ -94,16 +94,22 @@ namespace updateLocalization
 		}
 
 		private static void CombineStrings()
-		{
+        {
 			XsltProcess(@"CombineStrings-12.xsl", @"strings.xml");
+            const string RelPath = @"..\..\";
 			var xmlDoc = new XmlDocument();
-			xmlDoc.Load(@"..\..\strings.xml");
+			xmlDoc.Load($"{RelPath}strings.xml");
 			var json = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement);
-			using (var sw = new StreamWriter(@"..\..\strings.json"))
+            var guid = Guid.NewGuid().ToString().Split('-')[0];
+			using (var sw = new StreamWriter($"{RelPath}strings{guid}.json"))
 			{
 				sw.Write(json.Substring(11, json.Length - 12));
 			}
-		}
+
+            var outName = new StreamWriter($"{RelPath}exported-strings-name.json");
+            outName.Write($"{{ \"stringsName\": \"strings{guid}.json\" }}");
+            outName.Close();
+        }
 
 		private static void XsltProcess(string xslName, string outName, string inName = "TranscriberAdmin-en-1.2.xliff", Dictionary<QName, XdmValue> stylesheetParams = null)
 		{

@@ -106,8 +106,12 @@ export const Sources = async (
 
           action(transform: Transform, ex: IApiError) {
             console.log('***** api pull fail', transform, ex);
-            orbitError(ex);
-            return remote.requestQueue.error;
+            if (ex.response.status === 401) {
+              auth.logout();
+            } else {
+              orbitError(ex);
+              return remote.requestQueue.error;
+            }
           },
 
           blocking: true,
@@ -164,7 +168,7 @@ export const Sources = async (
               // reset state.
               let label = transform.options && transform.options.label;
               if (label) {
-                orbitError(orbitErr(null, `Unable to complete "${label}"`));
+                orbitError(orbitErr(ex, `Unable to complete "${label}"`));
               } else {
                 const response = ex.response as any;
                 const url: string | null = response?.url;
@@ -177,7 +181,7 @@ export const Sources = async (
                 if (url && detail) {
                   orbitError(
                     orbitErr(
-                      null,
+                      ex,
                       `Unable to complete ` +
                         transform.operations[0].op +
                         ` in ` +
@@ -187,7 +191,7 @@ export const Sources = async (
                     )
                   );
                 } else {
-                  orbitError(orbitErr(null, `Unable to complete operation`));
+                  orbitError(orbitErr(ex, `Unable to complete operation`));
                 }
               }
 

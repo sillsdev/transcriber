@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
@@ -61,7 +61,7 @@ import {
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
-import { logError, Severity, dateOrTime } from '../utils';
+import { dateOrTime } from '../utils';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 import AudioDownload from './AudioDownload';
 
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
     },
-    actions: theme.mixins.gutters(tabActions) as any,
+    actions: tabActions,
     grow: {
       flexGrow: 1,
     },
@@ -237,10 +237,17 @@ export function TranscriptionTab(props: IProps) {
     { columnName: 'updated', width: 200 },
     { columnName: 'action', width: 150 },
   ];
-  const [defaultHiddenColumnNames, setDefaultHiddenColumnNames] = useState<
-    string[]
-  >([]);
   const [filter, setFilter] = useState(false);
+
+  const defaultHiddenColumnNames = useMemo(
+    () =>
+      (planColumn ? ['planName'] : []).concat(
+        projectPlans.length > 0 && projectPlans[0].attributes.flat
+          ? ['passages']
+          : []
+      ),
+    [projectPlans, planColumn]
+  );
 
   const handleFilter = () => setFilter(!filter);
   const translateError = (err: IAxiosStatus): string => {
@@ -366,30 +373,17 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const handleEaf = (passageId: string) => () => {
-    logError(Severity.info, globalStore.errorReporter, 'handleEaf');
     const mediaRec = getMediaRec(passageId, memory);
-    logError(
-      Severity.info,
-      globalStore.errorReporter,
-      `mediaRec=` + JSON.stringify(mediaRec)
-    );
     if (!mediaRec) return;
     const eafCode = btoa(
       getMediaEaf(mediaRec, memory, globalStore.errorReporter)
     );
-    logError(Severity.info, globalStore.errorReporter, `eafCode=${eafCode}`);
-    const name = getMediaName(mediaRec, memory);
-    logError(Severity.info, globalStore.errorReporter, `name=${name}`);
+    const name = getMediaName(mediaRec, memory, globalStore.errorReporter);
     setDataUrl('data:text/xml;base64,' + eafCode);
     setDataName(name + '.eaf');
   };
 
   useEffect(() => {
-    logError(
-      Severity.info,
-      globalStore.errorReporter,
-      `dataName=${dataName}, dataUrl=${dataUrl}, eafAnchor=${eafAnchor?.current}`
-    );
     if (dataUrl && dataName !== '') {
       if (eafAnchor && eafAnchor.current) {
         eafAnchor.current.click();
@@ -442,20 +436,13 @@ export function TranscriptionTab(props: IProps) {
   }, [exportStatus]);
 
   useEffect(() => {
-    // logError(Severity.info, globalStore.errorReporter, `planColumn useEffect`);
-    if (planColumn) {
-      if (defaultHiddenColumnNames.length > 0)
-        //assume planName is only one
-        setDefaultHiddenColumnNames([]);
-    } else if (projectPlans.length === 1) {
+    if (projectPlans.length === 1) {
       if (plan === '') {
         setPlan(projectPlans[0].id); //set the global plan
       }
-      if (defaultHiddenColumnNames.length !== 1)
-        setDefaultHiddenColumnNames(['planName']);
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projectPlans, plan, planColumn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectPlans, plan]);
 
   const getAssignments = (
     projectPlans: Plan[],

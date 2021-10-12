@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { useGlobal } from 'reactn';
 import clsx from 'clsx';
 import { ISharedStrings, IState } from '../model';
@@ -49,6 +49,10 @@ const useStyles = makeStyles((theme: Theme) =>
     row: {
       display: 'flex',
     },
+    column: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
     grow: {
       flexGrow: 1,
     },
@@ -67,6 +71,7 @@ export enum BigDialogBp {
 
 interface IProps extends IStateProps {
   title: string;
+  description?: ReactElement;
   children: JSX.Element;
   isOpen: boolean;
   onOpen: (isOpen: boolean) => void;
@@ -77,6 +82,7 @@ interface IProps extends IStateProps {
 
 export function BigDialog({
   title,
+  description,
   children,
   isOpen,
   onOpen,
@@ -108,7 +114,10 @@ export function BigDialog({
     >
       <DialogTitle id="bigDlg">
         <div className={classes.row}>
-          {title}
+          <div className={classes.column}>
+            {title}
+            {description}
+          </div>
           <div className={classes.grow}>{'\u00A0'}</div>
           {!isExportBusy ? (
             <IconButton id="bigClose" onClick={handleClose}>
@@ -123,12 +132,17 @@ export function BigDialog({
       {(onCancel || onSave) && (
         <DialogActions>
           {onCancel && (
-            <Button id="bigCancel" onClick={onCancel} color="primary">
+            <Button
+              id="bigCancel"
+              onClick={onCancel}
+              color="default"
+              variant="outlined"
+            >
               {ts.cancel}
             </Button>
           )}
           {onSave && (
-            <Button color="primary" onClick={onSave}>
+            <Button color="primary" onClick={onSave} variant="outlined">
               {ts.save}
             </Button>
           )}

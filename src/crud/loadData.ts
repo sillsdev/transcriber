@@ -19,17 +19,17 @@ import {
   RecordIdentity,
 } from '@orbit/data';
 import Memory from '@orbit/memory';
-import OrgData from '../model/orgData';
 import {
   Project,
-  IApiError,
+  OrgData,
   OrganizationMembership,
   GroupMembership,
 } from '../model';
+import * as actions from '../store';
 import { orbitInfo } from '../utils/infoMsg';
 import ProjData from '../model/projData';
 import Coordinator from '@orbit/coordinator';
-import { getFingerprint, currentDateTime } from '../utils';
+import { getFingerprint, currentDateTime, orbitErr } from '../utils';
 
 const completePerTable = 3;
 
@@ -76,7 +76,7 @@ export async function insertData(
   backup: IndexedDBSource,
   tb: TransformBuilder,
   oparray: Operation[],
-  orbitError: (ex: IApiError) => void,
+  orbitError: typeof actions.doOrbitError,
   checkExisting: boolean,
   isImport: boolean,
   snapshotDate?: string
@@ -89,7 +89,7 @@ export async function insertData(
         q.findRecord({ type: item.type, id: id })
       );
     }
-  } catch (err) {
+  } catch (err: any) {
     if (err.constructor.name !== 'RecordNotFoundException') {
       orbitError(orbitInfo(err, item.keys ? item.keys['remoteId'] : ''));
     }
@@ -138,7 +138,7 @@ export async function insertData(
             isImport
           );
         }
-      } catch (err) {
+      } catch (err: any) {
         orbitError(orbitInfo(err, 'Add record error'));
       }
     }
@@ -162,7 +162,7 @@ async function processData(
   backup: IndexedDBSource,
   tb: TransformBuilder,
   setCompleted: undefined | ((valud: number) => void),
-  orbitError: (ex: IApiError) => void
+  orbitError: typeof actions.doOrbitError
 ) {
   var x = JSON.parse(data);
   var tables: ResourceDocument[] = x.data;
@@ -210,7 +210,7 @@ async function processData(
       .sync(transform)
       .then((x) => console.log('backup sync complete'))
       .catch((err) => orbitError(orbitInfo(err, 'Backup sync failed'))); */
-  } catch (err) {
+  } catch (err: any) {
     orbitError(orbitInfo(err, 'Backup update error'));
   }
 }
@@ -236,7 +236,7 @@ async function cleanUpMemberships(memory: Memory, backup: IndexedDBSource) {
 export async function LoadData(
   coordinator: Coordinator,
   setCompleted: (valud: number) => void,
-  orbitError: (ex: IApiError) => void
+  orbitError: typeof actions.doOrbitError
 ): Promise<boolean> {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -285,8 +285,8 @@ export async function LoadData(
       }
     } while (start > -1);
     await cleanUpMemberships(memory, backup);
-  } catch (rejected) {
-    console.log(rejected);
+  } catch (rejected: any) {
+    orbitError(orbitErr(rejected, 'load data rejected'));
   }
   return false;
 }
@@ -297,7 +297,7 @@ export async function LoadProjectData(
   projectsLoaded: string[],
   AddProjectLoaded: (proj: string) => void,
   setBusy: (v: boolean) => void,
-  orbitError: (ex: IApiError) => void
+  orbitError: typeof actions.doOrbitError
 ): Promise<boolean> {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -364,8 +364,8 @@ export async function LoadProjectData(
       }
     } while (start > -1);
     setBusy(false);
-  } catch (rejected) {
-    console.log(rejected);
+  } catch (rejected: any) {
+    orbitError(orbitErr(rejected, 'load project data rejected'));
     setBusy(false);
     return false;
   }

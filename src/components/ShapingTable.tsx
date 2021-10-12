@@ -59,11 +59,11 @@ const styles = (theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
     },
-    paper: theme.mixins.gutters({
+    paper: {
       display: 'flex',
       flexDirection: 'column',
       alignContent: 'center',
-    }) as any,
+    },
     size: {
       display: 'flex',
       flexGrow: 1,
@@ -121,11 +121,11 @@ const SizeEditor = withStyles(styles)(
   }
 );
 
-const SizeFormatter = withStyles(
-  styles
-)(({ value, classes }: SizeFormatterProps) => (
-  <i className={classes.size}>{value}</i>
-));
+const SizeFormatter = withStyles(styles)(
+  ({ value, classes }: SizeFormatterProps) => (
+    <i className={classes.size}>{value}</i>
+  )
+);
 
 const SizeTypeProvider: React.ComponentType<DataTypeProviderProps> = (
   props: DataTypeProviderProps
@@ -372,4 +372,4 @@ function ShapingTable(props: IProps) {
     </Grid>
   );
 }
-export default (connect(mapStateToProps)(ShapingTable) as any) as any;
+export default connect(mapStateToProps)(ShapingTable) as any as any;

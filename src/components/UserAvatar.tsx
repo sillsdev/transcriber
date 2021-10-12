@@ -10,6 +10,7 @@ import { makeAbbr } from '../utils';
 import { dataPath, PathType } from '../utils/dataPath';
 import { remoteId } from '../crud';
 import { isElectron } from '../api-variable';
+const os = require('os');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,7 +61,7 @@ export function UserAvatar(props: IProps) {
         })
       : '';
   if (src && isElectron && !src.startsWith('http')) {
-    const url = new URL(src).toString().slice(8);
+    const url = os.platform() === 'win32' ? new URL(src).toString().slice(8): src;
     src = `transcribe-safe://${url}`;
   }
   return src ? (

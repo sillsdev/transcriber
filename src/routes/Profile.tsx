@@ -109,11 +109,11 @@ const useStyles = makeStyles((theme: Theme) =>
     menu: {
       width: 200,
     },
-    actions: theme.mixins.gutters({
+    actions: {
       paddingBottom: 16,
       display: 'flex',
       flexDirection: 'row',
-    }) as any,
+    },
     button: {
       margin: theme.spacing(1),
     },
@@ -185,7 +185,9 @@ export function Profile(props: IProps) {
   const [given, setGiven] = useState<string | null>(null);
   const [family, setFamily] = useState<string | null>(null);
   const [email, setEmail] = useState('');
-  const [timezone, setTimezone] = useState<string | null>(moment.tz.guess());
+  const [timezone, setTimezone] = useState<string | null>(
+    moment.tz.guess() || ''
+  );
   const [role, setRole] = useState('member');
   const [locale, setLocale] = useState<string>(localeDefault(isDeveloper));
   const [news, setNews] = useState<boolean | null>(null);
@@ -538,7 +540,7 @@ export function Profile(props: IProps) {
   useEffect(() => {
     if (timezone === null) {
       const myZone = moment.tz.guess();
-      setTimezone(myZone);
+      setTimezone(myZone || '');
       setChanged(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -566,7 +568,7 @@ export function Profile(props: IProps) {
     (locale || '') !== '';
 
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
-  if (/Access/i.test(view)) return <Redirect to="/" />;
+  if (/access/i.test(view)) return <Redirect to="/" />;
   if (/Team/i.test(view)) return <StickyRedirect to="/team" />;
 
   const orgRoles = ['Admin', 'Member'];
@@ -582,7 +584,7 @@ export function Profile(props: IProps) {
         <div className={classes.paper}>
           <Grid container>
             <StyledGrid item xs={12} md={5}>
-              <BigAvatar avatarUrl={avatarUrl} name={name} />
+              <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               {name !== email && (
                 <Typography variant="h6" className={classes.caption}>
                   {name || ''}

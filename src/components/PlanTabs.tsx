@@ -9,18 +9,23 @@ import {
   Section,
   Passage,
   MediaFile,
+  flatScrColNames,
+  flatGenColNames,
+  levScrColNames,
+  levGenColNames,
 } from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AppBar, Tabs, Tab } from '@material-ui/core';
 import grey from '@material-ui/core/colors/grey';
-import ScriptureTable from '../components/ScriptureTable';
+import ScriptureTable from './Workflow/ScriptureTable';
 import AudioTab from '../components/AudioTab/AudioTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import StickyRedirect from './StickyRedirect';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
+import { PlanContext } from '../context/PlanContext';
 //import { HeadHeight } from '../App';
 import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
 
@@ -50,12 +55,12 @@ export const tabActions = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: theme.mixins.gutters({
+    root: {
       flexGrow: 1,
       width: '100%',
       backgroundColor: theme.palette.background.paper,
       flexDirection: 'column',
-    }) as any,
+    },
     bar: {
       top: `${HeadHeight}px`,
       height: `${TabHeight}px`,
@@ -82,7 +87,6 @@ interface IRecordProps {
   mediafiles: MediaFile[];
 }
 interface IProps extends IStateProps, IRecordProps {
-  bookCol: number;
   checkSaved: (method: () => void) => void;
 }
 interface ParamTypes {
@@ -90,16 +94,10 @@ interface ParamTypes {
   tabNm: string;
 }
 const ScrollableTabsButtonAuto = (props: IProps) => {
-  const {
-    t,
-    bookCol,
-    checkSaved,
-    plans,
-    sections,
-    passages,
-    mediafiles,
-  } = props;
+  const { t, checkSaved, plans, sections, passages, mediafiles } = props;
   const classes = useStyles();
+  const ctx = React.useContext(PlanContext);
+  const { flat, scripture } = ctx.state;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [plan] = useGlobal('plan');
@@ -113,6 +111,16 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     sections,
     passages
   );
+
+  const colNames = React.useMemo(() => {
+    return scripture && flat
+      ? flatScrColNames
+      : scripture && !flat
+      ? levScrColNames
+      : flat
+      ? flatGenColNames
+      : levGenColNames;
+  }, [scripture, flat]);
 
   const handleChange = (event: any, value: number) => {
     if (busy) return;
@@ -205,33 +213,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
       </AppBar>
       <div className={classes.content}>
         {tab === tabs.sectionPassage && (
-          <>
-            {bookCol !== -1 ? (
-              <ScriptureTable
-                {...props}
-                cols={{
-                  SectionSeq: 0,
-                  SectionnName: 1,
-                  PassageSeq: 2,
-                  Book: 3,
-                  Reference: 4,
-                  Title: 5,
-                }}
-              />
-            ) : (
-              <ScriptureTable
-                {...props}
-                cols={{
-                  SectionSeq: 0,
-                  SectionnName: 1,
-                  PassageSeq: 2,
-                  Book: -1,
-                  Reference: 3,
-                  Title: 4,
-                }}
-              />
-            )}
-          </>
+          <ScriptureTable {...props} colNames={colNames} />
         )}
         {tab === tabs.media && (
           <AudioTab

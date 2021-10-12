@@ -51,6 +51,17 @@ export const AddFlatPassage = (
   return ops;
 };
 
+export const UpdateRelatedPassageOps = (
+  section: string,
+  plan: string,
+  userId: string,
+  t: TransformBuilder,
+  ops: Operation[]
+) => {
+  const secRecId = { type: 'section', id: section };
+  ops.push(...UpdateLastModifedBy(t, secRecId, userId));
+};
+
 export const UpdatePassageStateOps = (
   passage: string,
   section: string,
@@ -61,17 +72,15 @@ export const UpdatePassageStateOps = (
   t: TransformBuilder,
   ops: Operation[],
   memory: Memory,
-  psc = true,
+  psc = true
 ): Operation[] => {
   ops.push(
     t.replaceAttribute({ type: 'passage', id: passage }, 'state', state)
   );
   const passRecId = { type: 'passage', id: passage };
-  const secRecId = { type: 'section', id: section };
-  const planRecId = { type: 'plan', id: plan };
   ops.push(...UpdateLastModifedBy(t, passRecId, userId));
-  ops.push(...UpdateLastModifedBy(t, secRecId, userId));
-  ops.push(...UpdateLastModifedBy(t, planRecId, userId));
-  if (psc) AddPassageStateChangeToOps(t, ops, passage, state, comment, userId, memory);
+  UpdateRelatedPassageOps(section, plan, userId, t, ops);
+  if (psc)
+    AddPassageStateChangeToOps(t, ops, passage, state, comment, userId, memory);
   return ops;
 };

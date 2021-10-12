@@ -103,15 +103,14 @@ export const TeamItem = (props: IProps) => {
           {team?.attributes?.name}
         </Typography>
         <div>
-          {canModify(offline, team, offlineOnly) && (
-            <Button
-              id="teamMembers"
-              variant="contained"
-              onClick={handleMembers(team)}
-            >
-              {t.members.replace('{0}', teamMembers(team.id).toString())}
-            </Button>
-          )}
+          <Button
+            id="teamMembers"
+            variant="contained"
+            onClick={handleMembers(team)}
+          >
+            {t.members.replace('{0}', teamMembers(team.id).toString())}
+          </Button>
+
           {' \u00A0'}
           {canModify(offline, team, offlineOnly) && (
             <Button

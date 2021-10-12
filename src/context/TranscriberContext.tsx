@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
@@ -34,8 +34,14 @@ import {
   sectionNumber,
   passageNumber,
   remoteIdGuid,
+  useFetchMediaUrl,
+  MediaSt,
+  usePlan,
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
+import { loadBlob, logError, Severity } from '../utils';
+import Auth from '../auth/Auth';
+import { useSnackBar } from '../hoc/SnackBar';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -51,9 +57,6 @@ interface IStateProps {
   allBookData: BookName[];
   booksLoaded: boolean;
   lang: string;
-  hasUrl: boolean;
-  mediaUrl: string;
-  trackedTask: string;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   todoStr: localStrings(state, { layout: 'toDoTable' }),
@@ -65,22 +68,15 @@ const mapStateToProps = (state: IState): IStateProps => ({
   allBookData: state.books.bookData,
   booksLoaded: state.books.loaded,
   lang: state.strings.lang,
-  hasUrl: state.media.loaded,
-  mediaUrl: state.media.url,
-  trackedTask: state.media.trackedTask,
 });
 
 interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
-  fetchMediaUrl: typeof actions.fetchMediaUrl;
-  setTrackedTask: typeof actions.setTrackedTask;
 }
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       fetchBooks: actions.fetchBooks,
-      fetchMediaUrl: actions.fetchMediaUrl,
-      setTrackedTask: actions.setTrackedTask,
     },
     dispatch
   ),
@@ -135,6 +131,7 @@ const initState = {
   playItem: '',
   allDone: false,
   setAllDone: (val: boolean) => {},
+  refresh: () => {},
   allBookData: Array<BookName>(),
   taskItemStr: {} as ITaskItemStrings,
   activityStateStr: {} as IActivityStateStrings,
@@ -143,8 +140,12 @@ const initState = {
   transcriberStr: {} as ITranscriberStrings,
   projButtonStr: {} as IProjButtonsStrings,
   hasUrl: false,
+  loading: false,
   mediaUrl: '',
-  fetchMediaUrl: actions.fetchMediaUrl,
+  audioBlob: undefined as Blob | undefined,
+  trBusy: false,
+  setTrBusy: (trBusy: boolean) => {},
+  flat: false,
 };
 
 export type ICtxState = typeof initState;
@@ -158,6 +159,7 @@ const TranscriberContext = React.createContext({} as IContext);
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   children: React.ReactElement;
+  auth: Auth;
 }
 interface ParamTypes {
   prjId: string;
@@ -168,6 +170,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     mapStateToProps,
     mapDispatchToProps
   )((props: IProps) => {
+    const [reporter] = useGlobal('errorReporter');
     const { passages, mediafiles, sections, plans, planTypes } = props;
     const { projects, groupMemberships, roles } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
@@ -179,18 +182,21 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       projButtonStr,
       sharedStr,
     } = props;
-    const { hasUrl, mediaUrl, fetchMediaUrl } = props;
-    const { trackedTask, setTrackedTask } = props;
     const { prjId, pasId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
     const [devPlan] = useGlobal('plan');
+    const { getPlan } = usePlan();
     const [projRole] = useGlobal('projRole');
+    const [errorReporter] = useGlobal('errorReporter');
     const view = React.useRef('');
+    const [refreshed, setRefreshed] = useState(0);
+    const mediaUrlRef = useRef('');
+    const { showMessage } = useSnackBar();
+    const [trackedTask, setTrackedTask] = useGlobal('trackedTask');
     const [state, setState] = useState({
       ...initState,
-      selected: '',
       allBookData,
       todoStr,
       taskItemStr,
@@ -198,14 +204,13 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       transcriberStr,
       projButtonStr,
       sharedStr,
-      hasUrl,
-      mediaUrl,
-      fetchMediaUrl,
     });
+    const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
+    const fetching = useRef('');
 
     const setRows = (rowData: IRowData[]) => {
       setState((state: ICtxState) => {
-        return { ...state, rowData };
+        return { ...state, rowData, playing: false };
       });
     };
 
@@ -227,33 +232,57 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       });
     };
 
+    const setTrBusy = (busy: boolean) => {
+      setState((state: ICtxState) => {
+        return {
+          ...state,
+          trBusy: busy,
+        };
+      });
+    };
     const setSelected = (
       selected: string,
       rowData: IRowData[] = state.rowData
     ) => {
-      const rowLen = rowData.length;
-      for (let i = 0; i < rowLen; i++) {
-        const r = rowData[i];
-        if (r.passage?.id === selected && r.mediaRemoteId !== '') {
-          if (state.index !== i || trackedTask !== selected) {
-            const remId =
-              remoteId('passage', selected, memory.keyMap) || selected;
-            if (pasId !== remId) {
-              view.current = `/work/${prjId}/${remId}`;
-            }
-            setTrackedTask(selected);
-            setState((state: ICtxState) => {
-              return {
-                ...state,
-                index: i,
-                selected,
-                playItem: r.mediaId,
-              };
-            });
-          }
-          break;
+      const i = rowData.findIndex((r) => r.passage.id === selected);
+      if (i < 0) return;
+      const r = rowData[i];
+      if (state.index !== i || state.selected !== selected) {
+        const remId = remoteId('passage', selected, memory.keyMap) || selected;
+        if (pasId !== remId) {
+          view.current = `/work/${prjId}/${remId}`;
         }
+        setTrackedTask(selected);
+        var resetBlob = false;
+        if (
+          mediaState.urlMediaId !== r.mediaId &&
+          fetching.current !== r.mediaId
+        ) {
+          fetching.current = r.mediaId;
+          fetchMediaUrl({
+            id: r.mediaId,
+            auth: props.auth,
+          });
+          resetBlob = true;
+        }
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            audioBlob: resetBlob ? undefined : state.audioBlob,
+            index: i,
+            selected,
+            playing: false,
+            playItem: r.mediaId,
+            loading: fetching.current !== '',
+          };
+        });
       }
+    };
+
+    const refresh = () => {
+      setRefreshed((refreshed) => {
+        return refreshed + 1;
+      });
     };
 
     let curSec = '';
@@ -266,10 +295,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       playItem: string
     ) => {
       const readyRecs = passages
-        .filter(
-          (p) =>
-            (p.attributes && p.attributes.state === state) || role === 'view'
-        ) //just group the passages within a section together right now
+        .filter((p) => p.attributes?.state === state || role === 'view') //just group the passages within a section together right now
         .sort((a, b) =>
           related(a, 'section') < related(b, 'section') ? -1 : 1
         );
@@ -305,11 +331,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                     }
                     if (role !== 'view' || already.length === 0) {
                       const curState: ActivityStates | string =
-                        role === 'view'
-                          ? p.attributes && p.attributes.state
-                            ? p.attributes.state
-                            : state
-                          : state;
+                        role === 'view' ? p.attributes?.state || state : state;
                       const planName = getPlanName(planRecs[0]);
                       const planTypeRecs = planTypes.filter(
                         (pt) => pt.id === related(planRecs[0], 'plantype')
@@ -325,7 +347,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                       if (
                         nextSecId !== curSec &&
                         rowList.findIndex(
-                          (r) => r.sectPass === sectionNumber(secRecs[0]) + '.'
+                          (r) => r.sectPass === secNum + '.'
                         ) === -1
                       ) {
                         curSec = nextSecId;
@@ -333,9 +355,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                           planName,
                           planType,
                           section: { ...secRecs[0] },
-                          passage: { ...p },
+                          passage: {} as Passage,
                           state: '',
-                          sectPass: sectionNumber(secRecs[0]) + '.',
+                          sectPass: secNum + '.',
                           mediaRemoteId: '',
                           mediaId: mediaRec.id,
                           playItem: '',
@@ -497,9 +519,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       setExpandedGroups(exGrp);
 
       if (rowList.length > 0) {
-        let selected = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
-        selected =
-          state.selected !== '' ? state.selected : selected || trackedTask;
+        let selected =
+          state.selected !== ''
+            ? state.selected
+            : remoteIdGuid('passage', pasId, memory.keyMap) ||
+              pasId ||
+              trackedTask;
         if (selected !== '') {
           const selectedRow = rowList.filter((r) => r.passage.id === selected);
           if (selectedRow.length > 0) {
@@ -509,12 +534,11 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           }
         }
         if (selected === '') {
-          setSelected(rowList[0].passage.id, rowList);
+          setSelected(rowList[1].passage.id, rowList);
         }
       }
-
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [role, project, trackedTask, sections]);
+    }, [role, project, sections, refreshed]);
 
     const actor: { [key: string]: string } = {
       [ActivityStates.TranscribeReady]: 'transcriber',
@@ -537,7 +561,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           if (transcriber !== r.transcriber) changed = true;
           const editor = related(section, 'editor');
           if (editor !== r.editor) changed = true;
-          const state = r.passage.attributes.state || '';
+          const state = r.passage.attributes?.state || '';
           let role = actor[state] || 'view';
           if (projRole === 'transcriber' && role === 'editor') role = 'view';
           const assigned = related(section, role);
@@ -556,28 +580,98 @@ const TranscriberProvider = withData(mapRecordsToProps)(
 
     useEffect(() => {
       let changed = false;
-      let selected = state.selected;
       const rowData: IRowData[] = [];
+      var forcerefresh = false;
       state.rowData.forEach((r) => {
-        const passRecs = passages.filter((p) => p.id === r.passage.id);
-        if (passRecs.length > 0) {
-          const passage = { ...passRecs[0] };
-          let role = r.role;
-          const newState = passage?.attributes?.state;
-          if (newState !== r.passage?.attributes?.state) {
-            changed = true;
-            if (noNewSelection.indexOf(newState) === -1) selected = '';
-            role = actor[newState] || 'view';
+        //section
+        if (!r.passage.id) rowData.push({ ...r });
+        else {
+          const passRecs = passages.filter((p) => p.id === r.passage.id);
+          if (passRecs.length > 0) {
+            const passage = { ...passRecs[0] };
+            let role = r.role;
+            const newState = passage?.attributes?.state;
+            if (newState !== r.passage?.attributes?.state) {
+              changed = true;
+              role = actor[newState] || 'view';
+              forcerefresh =
+                forcerefresh ||
+                noNewSelection.indexOf(newState) === -1 ||
+                role !== r.role;
+            }
+            rowData.push({ ...r, passage, role });
           }
-          rowData.push({ ...r, passage, role });
         }
       });
       if (changed) {
-        setState({ ...state, rowData, selected });
-        if (!state.playing) setTrackedTask('');
+        setState({ ...state, rowData, playing: false });
+        if (forcerefresh) refresh(); //force the transcriber pane to refresh also
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [passages]);
+
+    useEffect(() => {
+      if (mediaState.url) {
+        mediaUrlRef.current = mediaState.url;
+        fetching.current = '';
+        try {
+          loadBlob(mediaState.url, (urlOrError, b) => {
+            if (!b) {
+              if (urlOrError.includes('403')) {
+                //force requery for new media url
+                setSelected(state.selected);
+              } else {
+                //no blob
+                showMessage(urlOrError);
+                setState((state: ICtxState) => {
+                  return {
+                    ...state,
+                    loading: false,
+                    audioBlob: undefined,
+                    playing: false,
+                  };
+                });
+              }
+              return;
+            }
+            //not sure what this intermediary file is, but causes console errors
+            if (b.type !== 'text/html') {
+              if (urlOrError === mediaUrlRef.current) {
+                setState((state: ICtxState) => {
+                  return {
+                    ...state,
+                    loading: false,
+                    audioBlob: b,
+                    playing: false,
+                  };
+                });
+              }
+            }
+          });
+        } catch (e: any) {
+          logError(Severity.error, errorReporter, e);
+          showMessage(e.message);
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mediaState.url]);
+
+    useEffect(() => {
+      if (mediaState.error) {
+        if (mediaState.error.startsWith('no offline file'))
+          showMessage(sharedStr.fileNotFound);
+        else showMessage(mediaState.error);
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            loading: false,
+            audioBlob: undefined,
+            playing: false,
+          };
+        });
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mediaState.error]);
 
     useEffect(() => {
       if (!booksLoaded) {
@@ -590,6 +684,26 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [lang, booksLoaded, allBookData]);
 
+    const isFlat = (plan: string) => {
+      if (plan !== '') {
+        var planRec = getPlan(plan);
+        if (planRec !== null) return planRec.attributes?.flat;
+      }
+      return false;
+    };
+
+    React.useEffect(() => {
+      if (devPlan !== '') {
+        const newFlat = isFlat(devPlan);
+        if (state.flat !== newFlat)
+          setState((state) => ({
+            ...state,
+            flat: newFlat,
+          }));
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [devPlan]);
+
     if (view.current !== '') {
       const target = view.current;
       view.current = '';
@@ -601,11 +715,13 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         value={{
           state: {
             ...state,
-            hasUrl,
-            mediaUrl,
+            hasUrl: mediaState.status === MediaSt.FETCHED,
+            mediaUrl: mediaState.url,
             setSelected,
             setPlaying,
             setAllDone,
+            setTrBusy,
+            refresh,
           },
           setState,
         }}

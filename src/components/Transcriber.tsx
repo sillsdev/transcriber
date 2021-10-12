@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
+import SplitPane, { Pane } from 'react-split-pane';
+import styled from 'styled-components';
 import {
   MediaFile,
   Project,
@@ -37,6 +39,7 @@ import {
   getFontData,
   UpdatePassageStateOps,
   remoteIdNum,
+  useFetchMediaUrl,
 } from '../crud';
 import {
   insertAtCursor,
@@ -48,7 +51,8 @@ import {
   camel2Title,
   refMatch,
   waitForIt,
-  loadBlob,
+  dataPath,
+  PathType,
 } from '../utils';
 import { isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
@@ -68,8 +72,10 @@ import PassageHistory from './PassageHistory';
 import { HotKeyContext } from '../context/HotKeyContext';
 import Spelling from './Spelling';
 
+//import useRenderingTrace from '../utils/useRenderingTrace';
+
 const HISTORY_KEY = 'F7,CTRL+7';
-const NON_BOX_HEIGHT = 360;
+const INIT_PLAYER_HEIGHT = 180;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -95,8 +101,65 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
+    pane: {},
+    textarea: { resize: 'none' },
   })
 );
+const Wrapper = styled.div`
+  .Resizer {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    background: #000;
+    opacity: 0.2;
+    z-index: 1;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding;
+    background-clip: padding-box;
+  }
+
+  .Resizer:hover {
+    -webkit-transition: all 2s ease;
+    transition: all 2s ease;
+  }
+
+  .Resizer.horizontal {
+    height: 11px;
+    margin: -5px 0;
+    border-top: 5px solid rgba(255, 255, 255, 0);
+    border-bottom: 5px solid rgba(255, 255, 255, 0);
+    cursor: row-resize;
+    width: 100%;
+  }
+
+  .Resizer.horizontal:hover {
+    border-top: 5px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+  }
+
+  .Resizer.vertical {
+    width: 11px;
+    margin: 0 -5px;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+    border-right: 5px solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
+  }
+
+  .Resizer.vertical:hover {
+    border-left: 5px solid rgba(0, 0, 0, 0.5);
+    border-right: 5px solid rgba(0, 0, 0, 0.5);
+  }
+  .Pane1 {
+    // background-color: blue;
+    display: flex;
+    min-height: 0;
+  }
+  .Pane2 {
+    // background-color: red;
+    display: flex;
+    min-height: 0;
+  }
+`;
 interface IRecordProps {
   mediafiles: MediaFile[];
   integrations: Integration[];
@@ -159,33 +222,31 @@ export function Transcriber(props: IProps) {
     index,
     transcriberStr,
     sharedStr,
-    mediaUrl,
-    fetchMediaUrl,
     allBookData,
     selected,
     playing,
     setPlaying,
+    trBusy,
+    setTrBusy,
     allDone,
+    refresh,
+    mediaUrl,
+    audioBlob,
+    loading,
   } = useTodo();
-  const {
-    section,
-    passage,
-    duration,
-    mediaRemoteId,
-    mediaId,
-    state,
-    role,
-  } = rowData[index] || {
+  const { safeURL } = useFetchMediaUrl();
+  const { section, passage, duration, mediaId, state, role } = rowData[
+    index
+  ] || {
     section: {} as Section,
     passage: {} as Passage,
     duration: 0,
-    mediaRemoteId: '',
     mediaId: '',
     state: '',
     role: '',
   };
-  const classes = useStyles();
 
+  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
@@ -194,25 +255,28 @@ export function Transcriber(props: IProps) {
   const [user] = useGlobal('user');
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
-  const [busy] = useGlobal('remoteBusy');
   const [assigned, setAssigned] = useState('');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
   const [projData, setProjData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
-  const playedSecsRef = React.useRef<number>(0);
-  const stateRef = React.useRef<string>(state);
+  const playedSecsRef = useRef<number>(0);
+  const segmentsRef = useRef('{}');
+  const stateRef = useRef<string>(state);
   const [totalSeconds, setTotalSeconds] = useState(duration);
   const [transcribing] = useState(
     state === ActivityStates.Transcribing ||
       state === ActivityStates.TranscribeReady
   );
   const [height, setHeight] = useState(window.innerHeight);
-  const [boxHeight, setBoxHeight] = useState(height - NON_BOX_HEIGHT);
+  const [boxHeight, setBoxHeight] = useState(
+    height - (INIT_PLAYER_HEIGHT + 200)
+  );
   const [width, setWidth] = useState(window.innerWidth);
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
-  const [, setDefaultPosition] = useState(0.0);
+  const [defaultPosition, setDefaultPosition] = useState(0.0);
+  const [initialSegments, setInitialSegments] = useState('{}');
   const { showMessage } = useSnackBar();
   const showHistoryRef = useRef(false);
   const [showHistory, setShowHistoryx] = useState(false);
@@ -227,26 +291,96 @@ export function Transcriber(props: IProps) {
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
   const [, saveCompleted] = useRemoteSave();
-  const [audioBlob, setAudioBlob] = useState<Blob>();
   const transcriptionRef = React.useRef<any>();
   const playingRef = useRef<Boolean>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
-  const { subscribe, unsubscribe, localizeHotKey } = useContext(
-    HotKeyContext
-  ).state;
+  const { subscribe, unsubscribe, localizeHotKey } =
+    useContext(HotKeyContext).state;
   const t = transcriberStr;
+  const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
+  const [style, setStyle] = useState({
+    cursor: 'default',
+  });
+  const [textAreaStyle, setTextAreaStyle] = useState({
+    overflow: 'auto',
+    backgroundColor: '#cfe8fc',
+    height: boxHeight,
+    width: '98hu',
+    fontFamily: projData?.fontFamily,
+    fontSize: projData?.fontSize,
+    direction: projData?.fontDir as any,
+    cursor: 'default',
+  });
+
+  /* debug what props are changing to force renders
+  useRenderingTrace(
+    'Transcriber',
+    {
+      ...props,
+      memory,
+      offline,
+      project,
+      projType,
+      plan,
+      user,
+      projRole,
+      errorReporter,
+      busy,
+      assigned,
+      changed,
+      doSave,
+      projData,
+      fontStatus,
+      totalSeconds,
+      transcribing,
+      height,
+      boxHeight,
+      width,
+      textValue,
+      lastSaved,
+      defaultPosition,
+      showHistory,
+      rejectVisible,
+      addNoteVisible,
+      hasParatextName,
+      paratextProject,
+      paratextIntegration,
+      connected,
+      coordinator,
+      audioBlob,
+      subscribe,
+      unsubscribe,
+      localizeHotKey,
+      playerSize,
+    },
+    'log'
+  ); */
 
   useEffect(() => {
     playingRef.current = playing;
   }, [playing]);
 
   useEffect(() => {
-    setAudioBlob(undefined);
-    loadBlob(mediaUrl, !isElectron || !offline, (b) => {
-      //not sure what this intermediary file is, but causes console errors
-      if (b.type !== 'text/html') setAudioBlob(b);
+    setStyle({
+      cursor: trBusy || loading ? 'progress' : 'default',
     });
-  }, [mediaUrl, offline]);
+    setTextAreaStyle({
+      ...textAreaStyle,
+      height: boxHeight,
+      fontFamily: projData?.fontFamily,
+      fontSize: projData?.fontSize,
+      direction: projData?.fontDir as any,
+      cursor: trBusy || loading ? 'progress' : 'default',
+    });
+    if (transcriptionRef.current) {
+      const el = transcriptionRef?.current?.firstChild as HTMLTextAreaElement;
+      if (el && !el.selectionStart && !el.selectionEnd) {
+        el.selectionStart = el.selectionEnd = el.textLength;
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trBusy, loading, boxHeight, projData]);
 
   useEffect(() => {
     const getParatextIntegration = () => {
@@ -299,12 +433,13 @@ export function Transcriber(props: IProps) {
   }, [doSave]);
 
   useEffect(() => {
-    const newBoxHeight = height - NON_BOX_HEIGHT;
+    const newBoxHeight = height - (playerSize + 200);
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
-  }, [height, boxHeight]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [height, playerSize]);
 
   useEffect(() => {
-    if (!saving.current) showTranscription(getTranscription());
+    if (!saving.current && selected) showTranscription(getTranscription());
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [selected]);
 
@@ -347,7 +482,12 @@ export function Transcriber(props: IProps) {
         position: 0,
       });
       setChanged(true);
-      save(passage.attributes.state, 0, t.pullParatextStatus);
+      save(
+        passage.attributes.state,
+        0,
+        segmentsRef.current,
+        t.pullParatextStatus
+      );
       resetParatextText();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -381,22 +521,34 @@ export function Transcriber(props: IProps) {
   useEffect(() => {
     const newAssigned = rowData[index]?.assigned;
     if (newAssigned !== assigned) setAssigned(newAssigned);
-    stateRef.current = rowData[index]?.state;
+    stateRef.current = state;
     focusOnTranscription();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [index, rowData]);
+  }, [index, rowData, state]);
 
   useEffect(() => {
-    if (totalSeconds && (!duration || duration !== Math.ceil(totalSeconds))) {
+    if (totalSeconds && (!duration || duration !== Math.floor(totalSeconds))) {
       const mediaRecs = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('mediafile')
       ) as MediaFile[];
+      //check if the url we have loaded is for the current mediaId
       const oldRec = mediaRecs.filter((m) => m.id === mediaId);
-      if (oldRec.length > 0)
-        memory.update((t: TransformBuilder) =>
-          t.replaceAttribute(oldRec[0], 'duration', Math.ceil(totalSeconds))
-        );
-      console.log(`update duration to ${Math.ceil(totalSeconds)}`);
+      var mediaRecUrl =
+        oldRec.length > 0
+          ? safeURL(dataPath(oldRec[0].attributes.audioUrl, PathType.MEDIA))
+          : '';
+      var cut = mediaUrl.lastIndexOf('&Signature');
+      var check = cut > 0 ? mediaUrl.substr(0, cut) : mediaUrl;
+      if (check === (cut > 0 ? mediaRecUrl.substr(0, cut) : mediaRecUrl)) {
+        memory
+          .update((t: TransformBuilder) =>
+            t.replaceAttribute(oldRec[0], 'duration', Math.floor(totalSeconds))
+          )
+          .then(() => {
+            refresh();
+          });
+        // console.log(`update duration to ${Math.floor(totalSeconds)}`);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration, totalSeconds]);
@@ -461,7 +613,7 @@ export function Transcriber(props: IProps) {
     setAddNoteVisible(true);
   };
   const handleReject = () => {
-    if (busy) {
+    if (saving.current) {
       showMessage(t.saving);
       return;
     }
@@ -514,7 +666,10 @@ export function Transcriber(props: IProps) {
     transcribed: ActivityStates.Approved,
     needsNewTranscription: ActivityStates.Transcribed,
   };
-
+  const forcePosition = (position: number) => {
+    setDefaultPosition(playedSecsRef.current || 0);
+    setDefaultPosition(position);
+  };
   const handleSubmit = async () => {
     if (next.hasOwnProperty(state)) {
       let nextState = next[state];
@@ -523,7 +678,8 @@ export function Transcriber(props: IProps) {
         projType.toLowerCase() !== 'scripture'
       )
         nextState = ActivityStates.Done;
-      await save(nextState, 0, '');
+      await save(nextState, 0, segmentsRef.current, '');
+      forcePosition(0);
     } else {
       logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
     }
@@ -581,6 +737,7 @@ export function Transcriber(props: IProps) {
     await save(
       nextOnSave[stateRef.current] ?? stateRef.current,
       playedSecsRef.current,
+      segmentsRef.current,
       undefined
     );
   };
@@ -588,6 +745,7 @@ export function Transcriber(props: IProps) {
   const save = async (
     nextState: string,
     newPosition: number,
+    segments: string,
     thiscomment: string | undefined
   ) => {
     if (transcriptionRef.current) {
@@ -618,8 +776,9 @@ export function Transcriber(props: IProps) {
             attributes: {
               transcription: transcription,
               position: newPosition,
+              segments: segments,
             },
-          } as MediaFile,
+          } as any as MediaFile,
           user
         )
       );
@@ -642,7 +801,7 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleSaveButton = () => {
-    if (busy) {
+    if (saving.current) {
       showMessage(t.saving);
       return;
     }
@@ -695,6 +854,8 @@ export function Transcriber(props: IProps) {
     const mediaRec = mediafiles.filter((m) => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
+      segmentsRef.current = attr.segments || '{}';
+      setInitialSegments(segmentsRef.current);
       return {
         transcription: attr.transcription ? attr.transcription : '',
         position: attr.position,
@@ -708,6 +869,7 @@ export function Transcriber(props: IProps) {
     transcriptionIn.current = val.transcription;
     setTextValue(val.transcription);
     setDefaultPosition(val.position);
+
     //focus on player
     if (transcriptionRef.current) {
       transcriptionRef.current.firstChild.value = val.transcription;
@@ -715,7 +877,6 @@ export function Transcriber(props: IProps) {
     }
     setLastSaved(passage.attributes?.dateUpdated || '');
     setTotalSeconds(duration);
-    fetchMediaUrl(mediaRemoteId, memory, offline, auth);
   };
 
   const handleAutosave = async () => {
@@ -739,19 +900,21 @@ export function Transcriber(props: IProps) {
     }, 1000 * 30);
   };
 
-  const textAreaStyle = {
-    overflow: 'auto',
-    backgroundColor: '#cfe8fc',
-    height: boxHeight,
-    width: '98hu',
-    fontFamily: projData?.fontFamily,
-    fontSize: projData?.fontSize,
-    direction: projData?.fontDir as any,
-  };
-
   const paperStyle = { width: width - 36 };
 
+  const onDuration = (value: number) => {
+    setTotalSeconds(value);
+  };
+  const onInteraction = () => {
+    focusOnTranscription();
+  };
+
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
+
+  const onSegmentChange = (segments: string) => {
+    segmentsRef.current = segments;
+    setChanged(true);
+  };
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {
       focusOnTranscription();
@@ -762,6 +925,9 @@ export function Transcriber(props: IProps) {
       setTextValue(textArea.value);
     }
   };
+  const handleSplitSize = debounce((e: any) => {
+    setPlayerSize(e);
+  }, 50);
 
   const onPlayStatus = (newPlaying: boolean) => {
     setPlaying(newPlaying);
@@ -773,94 +939,127 @@ export function Transcriber(props: IProps) {
         {allDone ? (
           <AllDone />
         ) : (
-          <Grid container direction="column">
+          <Grid container direction="column" style={style}>
             <Grid container direction="row" className={classes.row}>
               <Grid item xs={9} className={classes.description}>
                 {sectionDescription(section)}
               </Grid>
               <Grid item>{passageDescription(passage, allBookData)}</Grid>
             </Grid>
-            <Grid container direction="row" className={classes.row}>
-              {role === 'transcriber' && hasParatextName && paratextProject && (
-                <Grid item>
-                  <LightTooltip title={t.pullParatextTip}>
-                    <span>
-                      <IconButton
-                        id="transcriber.pullParatext"
-                        onClick={handlePullParatext}
-                        disabled={selected === ''}
-                      >
-                        <>
-                          <PullIcon />{' '}
-                          <Typography>{t.pullParatextCaption}</Typography>
-                        </>
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
-                </Grid>
-              )}
-              <Grid item xs>
-                <Grid container justify="center">
-                  <WSAudioPlayer
-                    allowRecord={false}
-                    blob={audioBlob}
-                    onProgress={onProgress}
-                    onPlayStatus={onPlayStatus}
-                    onSaveProgress={
-                      selected === '' || role === 'view'
-                        ? undefined
-                        : onSaveProgress
-                    }
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} sm container>
-              <Grid
-                ref={transcriptionRef}
-                item
-                xs={showHistory ? 6 : 12}
-                container
-                direction="column"
+            <Wrapper>
+              <SplitPane
+                defaultSize={INIT_PLAYER_HEIGHT}
+                minSize={INIT_PLAYER_HEIGHT}
+                maxSize={height - 280}
+                style={{ position: 'static' }}
+                split="horizontal"
+                onChange={handleSplitSize}
               >
-                {projData && !fontStatus?.endsWith('active') ? (
-                  <WebFontLoader
-                    config={projData.fontConfig}
-                    onStatus={loadStatus}
-                  >
-                    <TextareaAutosize
-                      autoFocus
-                      id="transcriber.text"
-                      value={textValue}
-                      readOnly={selected === '' || role === 'view'}
-                      style={textAreaStyle}
-                      onChange={handleChange}
-                      lang={projData?.langTag || 'en'}
-                      spellCheck={projData?.spellCheck}
-                    />
-                  </WebFontLoader>
-                ) : (
-                  <TextareaAutosize
-                    autoFocus
-                    id="transcriber.text"
-                    value={textValue}
-                    readOnly={selected === '' || role === 'view'}
-                    style={textAreaStyle}
-                    onChange={handleChange}
-                    lang={projData?.langTag || 'en'}
-                    spellCheck={projData?.spellCheck}
-                  />
-                )}
-              </Grid>
-              {showHistory && (
-                <Grid item xs={6} container direction="column">
-                  <PassageHistory
-                    passageId={passage?.id}
-                    boxHeight={boxHeight}
-                  />
-                </Grid>
-              )}
-            </Grid>
+                <Pane className={classes.pane}>
+                  <Grid container direction="row" className={classes.row}>
+                    {role === 'transcriber' &&
+                      hasParatextName &&
+                      paratextProject && (
+                        <Grid item>
+                          <LightTooltip title={t.pullParatextTip}>
+                            <span>
+                              <IconButton
+                                id="transcriber.pullParatext"
+                                onClick={handlePullParatext}
+                                disabled={selected === ''}
+                              >
+                                <>
+                                  <PullIcon />{' '}
+                                  <Typography>
+                                    {t.pullParatextCaption}
+                                  </Typography>
+                                </>
+                              </IconButton>
+                            </span>
+                          </LightTooltip>
+                        </Grid>
+                      )}
+                    <Grid item xs>
+                      <Grid container justifyContent="center">
+                        <WSAudioPlayer
+                          id="audioPlayer"
+                          allowRecord={false}
+                          size={playerSize}
+                          blob={audioBlob}
+                          initialposition={defaultPosition}
+                          segments={initialSegments}
+                          isPlaying={playing}
+                          loading={loading}
+                          busy={trBusy}
+                          setBusy={setTrBusy}
+                          onProgress={onProgress}
+                          onSegmentChange={onSegmentChange}
+                          onPlayStatus={onPlayStatus}
+                          onDuration={onDuration}
+                          onInteraction={onInteraction}
+                          onSaveProgress={
+                            selected === '' || role === 'view'
+                              ? undefined
+                              : onSaveProgress
+                          }
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Pane>
+                <Pane className={classes.pane}>
+                  <Grid item xs={12} sm container>
+                    <Grid
+                      ref={transcriptionRef}
+                      item
+                      xs={showHistory ? 6 : 12}
+                      container
+                      direction="column"
+                    >
+                      {projData && !fontStatus?.endsWith('active') ? (
+                        <WebFontLoader
+                          config={projData.fontConfig}
+                          onStatus={loadStatus}
+                        >
+                          <TextareaAutosize
+                            className={classes.textarea}
+                            autoFocus
+                            id="transcriber.text"
+                            value={textValue}
+                            readOnly={selected === '' || role === 'view'}
+                            style={textAreaStyle}
+                            onChange={handleChange}
+                            lang={projData?.langTag || 'en'}
+                            spellCheck={projData?.spellCheck}
+                          />
+                        </WebFontLoader>
+                      ) : (
+                        <TextareaAutosize
+                          className={classes.textarea}
+                          autoFocus
+                          id="transcriber.text"
+                          value={textValue}
+                          readOnly={selected === '' || role === 'view'}
+                          style={textAreaStyle}
+                          onChange={handleChange}
+                          lang={projData?.langTag || 'en'}
+                          spellCheck={projData?.spellCheck}
+                        />
+                      )}
+                    </Grid>
+                    {showHistory && (
+                      <Grid item xs={6} container direction="column">
+                        <PassageHistory
+                          passageId={passage?.id}
+                          boxHeight={boxHeight - 16}
+                        />
+                      </Grid>
+                    )}
+                  </Grid>
+                </Pane>
+              </SplitPane>
+            </Wrapper>
+
             <Grid container direction="row" className={classes.padRow}>
               <Grid item>
                 <Button
@@ -894,9 +1093,13 @@ export function Transcriber(props: IProps) {
                 {isElectron && <Spelling />}
               </Grid>
               <Grid item xs>
-                <Grid container justify="flex-end">
+                <Grid container justifyContent="flex-end">
                   <div>
-                    <LastEdit when={lastSaved} t={sharedStr} />
+                    <LastEdit
+                      when={lastSaved}
+                      cb={handleShowHistory}
+                      t={sharedStr}
+                    />
                     {role !== 'view' ? (
                       <>
                         <Button
@@ -915,7 +1118,7 @@ export function Transcriber(props: IProps) {
                           <span>
                             <Button
                               id="transcriber.save"
-                              variant="outlined"
+                              variant={changed ? 'contained' : 'outlined'}
                               color="primary"
                               className={classes.button}
                               onClick={handleSaveButton}

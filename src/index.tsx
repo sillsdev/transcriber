@@ -1,5 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Auth0Provider } from '@auth0/auth0-react';
+import {
+  auth0Domain,
+  webClientId,
+  apiIdentifier,
+} from './auth/auth0-variables.json';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -19,14 +25,19 @@ import {
   infoMsg,
   logFile,
   getFingerprintArray,
+  hasAuacityScripts,
+  hasPython,
+  hasAudacity,
 } from './utils';
-import { isElectron, API_CONFIG } from './api-variable';
+import {
+  isElectron,
+  API_CONFIG,
+  OrbitNetworkErrorRetries,
+} from './api-variable';
 import { QueryBuilder } from '@orbit/data';
 import { related } from './crud';
 import { Section, Plan } from './model';
 const appVersion = require('../package.json').version;
-
-export const OrbitNetworkErrorRetries = 5;
 
 const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
 const prod = API_CONFIG.host.indexOf('prod') !== -1;
@@ -49,17 +60,19 @@ export async function restoreBackup() {
     await memory.sync(await backup.pull((q) => q.findRecords()));
 
     const loadedplans = new Set(
-      (memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('section')
-      ) as Section[]).map((s) => related(s, 'plan') as string)
+      (
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('section')
+        ) as Section[]
+      ).map((s) => related(s, 'plan') as string)
     );
-    const plans = (memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('plan')
-    ) as Plan[]).filter((p) => loadedplans.has(p.id));
+    const plans = (
+      memory.cache.query((q: QueryBuilder) => q.findRecords('plan')) as Plan[]
+    ).filter((p) => loadedplans.has(p.id));
     const projs = new Set(plans.map((p) => related(p, 'project') as string));
     var ret = Array.from(projs);
     return ret;
-  } catch (err) {
+  } catch (err: any) {
     logError(
       Severity.error,
       bugsnagClient,
@@ -86,10 +99,25 @@ const errorManagedApp = bugsnagClient ? (
   </ErrorBoundary>
 );
 
+const onRedirectingCallbck = (appState: { returnTo?: string }) => {
+  history.push(
+    appState && appState.returnTo ? appState.returnTo : window.location.pathname
+  );
+};
+
 const router = isElectron ? (
   <HashRouter>{errorManagedApp}</HashRouter>
 ) : (
-  <Router history={history}>{errorManagedApp}</Router>
+  <Auth0Provider
+    domain={auth0Domain}
+    clientId={webClientId}
+    audience={apiIdentifier}
+    redirectUri={process.env.REACT_APP_CALLBACK}
+    useRefreshTokens={true}
+    onRedirectCallback={onRedirectingCallbck}
+  >
+    <Router history={history}>{errorManagedApp}</Router>
+  </Auth0Provider>
 );
 
 const Root = () => (
@@ -99,8 +127,16 @@ const Root = () => (
 );
 const promises = [];
 promises.push(getFingerprintArray());
+const audacity = async () => {
+  return [
+    (await hasAudacity()) && (await hasAuacityScripts()) && (await hasPython())
+      ? 'true'
+      : 'false',
+  ];
+};
 if (isElectron) {
   promises.push(restoreBackup()); //.then(() => console.log('pull done'));
+  promises.push(audacity());
 }
 Promise.all(promises)
   .then((promResults) => {
@@ -118,9 +154,11 @@ Promise.all(promises)
       coordinator,
       memory,
       remoteBusy: true, //prevent datachanges until after login
+      dataChangeCount: 0,
       doSave: false,
       saveResult: undefined,
-      snackMessage: <></>,
+      snackMessage: (<></>) as JSX.Element,
+      snackAlert: undefined,
       changed: false,
       projectsLoaded: promResults.length > 1 ? promResults[1] : [],
       loadComplete: false,
@@ -139,6 +177,9 @@ Promise.all(promises)
       latestVersion: '',
       releaseDate: '',
       progress: 0,
+      allAudacity:
+        promResults.length > 2 ? promResults[2][0] === 'true' : false,
+      trackedTask: '',
     });
     ReactDOM.render(<Root />, document.getElementById('root'));
   })

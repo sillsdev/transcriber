@@ -1,5 +1,5 @@
 import { useGlobal, useState, useEffect } from 'reactn';
-import { infoMsg, logError, Online, Severity } from '../utils';
+import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
 import { useInterval } from '../utils/useInterval';
 import Axios from 'axios';
 import {
@@ -13,7 +13,11 @@ import Coordinator from '@orbit/coordinator';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { DataChange } from '../model/dataChange';
-import { API_CONFIG, isElectron } from '../api-variable';
+import {
+  API_CONFIG,
+  isElectron,
+  OrbitNetworkErrorRetries,
+} from '../api-variable';
 import Auth from '../auth/Auth';
 import {
   offlineProjectUpdateSnapshot,
@@ -29,12 +33,12 @@ import IndexedDBSource from '@orbit/indexeddb';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { OrbitNetworkErrorRetries } from '..';
 
 interface IStateProps {}
 
 interface IDispatchProps {
   setLanguage: typeof actions.setLanguage;
+  resetOrbitError: typeof actions.resetOrbitError;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -47,6 +51,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       setLanguage: actions.setLanguage,
+      resetOrbitError: actions.resetOrbitError,
     },
     dispatch
   ),
@@ -60,15 +65,15 @@ export const doDataChanges = async (
   getOfflineProject: (plan: string | Plan | VProject) => OfflineProject,
   errorReporter: any,
   user: string,
-  setLanguage: typeof actions.setLanguage
+  setLanguage: typeof actions.setLanguage,
+  setDataChangeCount: (value: number) => void
 ) => {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const userLastTimeKey = localUserKey(LocalKey.time, memory);
-  if (!remote) return;
-  let lastTime = localStorage.getItem(userLastTimeKey);
-  if (!lastTime) lastTime = currentDateTime(); // should not happen
+  if (!remote || !remote.activated) return;
+  let lastTime = localStorage.getItem(userLastTimeKey) || currentDateTime(); // should not happen
   let nextTime = currentDateTime();
 
   const updateSnapshotDates = async () => {
@@ -101,116 +106,143 @@ export const doDataChanges = async (
     );
   };
 
+  const processDataChanges = async (api: string, params: any) => {
+    try {
+      var response = await Axios.get(api, {
+        params: params,
+        headers: {
+          Authorization: 'Bearer ' + auth.accessToken,
+        },
+      });
+      var data = response.data.data as DataChange;
+      const changes = data?.attributes?.changes;
+      const deletes = data.attributes.deleted;
+      setDataChangeCount(changes.length + deletes.length);
+      for (const table of changes) {
+        if (table.ids.length > 0) {
+          remote
+            .pull((q: QueryBuilder) =>
+              q
+                .findRecords(table.type)
+                .filter({ attribute: 'id-list', value: table.ids.join('|') })
+            )
+            .then(async (t: Transform[]) => {
+              for (const tr of t) {
+                var tb = new TransformBuilder();
+                var newOps: Operation[] = [];
+                await memory.sync(await backup.push(tr.operations));
+                for (const o of tr.operations) {
+                  if (o.op === 'updateRecord') {
+                    var upRec = o as UpdateRecordOperation;
+                    switch (upRec.record.type) {
+                      case 'section':
+                        if (
+                          upRec.record.relationships?.transcriber === undefined
+                        )
+                          resetRelated(newOps, tb, 'transcriber', upRec);
+
+                        if (upRec.record.relationships?.editor === undefined)
+                          resetRelated(newOps, tb, 'editor', upRec);
+
+                        break;
+                      case 'mediafile':
+                        if (upRec.record.relationships?.passage === undefined)
+                          resetRelated(newOps, tb, 'passage', upRec);
+                        break;
+                      case 'user':
+                        SetUserLanguage(memory, user, setLanguage);
+                        break;
+                    }
+                  }
+                }
+                if (newOps.length > 0) memory.sync(await backup.push(newOps));
+              }
+            });
+        }
+      }
+      setDataChangeCount(deletes.length);
+      var tb: TransformBuilder = new TransformBuilder();
+
+      for (var ix = 0; ix < deletes.length; ix++) {
+        var table = deletes[ix];
+        let operations: Operation[] = [];
+        // eslint-disable-next-line no-loop-func
+        table.ids.forEach((r) => {
+          const localId = remoteIdGuid(table.type, r.toString(), memory.keyMap);
+          if (localId) {
+            operations.push(tb.removeRecord({ type: table.type, id: localId }));
+          }
+        });
+        if (operations.length > 0) {
+          await memory.sync(await backup.push(operations));
+        }
+      }
+      setDataChangeCount(0);
+      return true;
+    } catch (e: any) {
+      logError(Severity.error, errorReporter, e);
+      return false;
+    }
+  };
+
   var api = API_CONFIG.host + '/api/datachanges/';
-  var params;
   if (isElectron) {
-    api += 'projects/' + fingerprint;
     var records: { id: string; since: string }[] = [];
     projectsLoaded.forEach((p) => {
       var op = getOfflineProject(p);
-      if (op.attributes && op.attributes.snapshotDate)
+      if (
+        op?.attributes &&
+        op.attributes.snapshotDate &&
+        Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
+      )
         records.push({
           id: remoteId('project', p, memory.keyMap),
           since: op.attributes.snapshotDate,
         });
     });
-    params = new URLSearchParams([['projlist', JSON.stringify(records)]]);
-  } else {
-    api += 'since/' + lastTime + '?origin=' + fingerprint;
-  }
-  try {
-    var response = await Axios.get(api, {
-      params: params,
-      headers: {
-        Authorization: 'Bearer ' + auth.accessToken,
-      },
-    });
-    var data = response.data.data as DataChange;
-    const changes = data?.attributes?.changes;
-    changes.forEach((table) => {
-      if (table.ids.length > 0) {
-        remote
-          .pull((q: QueryBuilder) =>
-            q
-              .findRecords(table.type)
-              .filter({ attribute: 'id-list', value: table.ids.join('|') })
-          )
-          .then((t: Transform[]) => {
-            memory.sync(t);
-            t.forEach((tr) => {
-              var tb = new TransformBuilder();
-              var newOps: Operation[] = [];
-              tr.operations.forEach((o) => {
-                if (o.op === 'updateRecord') {
-                  var upRec = o as UpdateRecordOperation;
-                  switch (upRec.record.type) {
-                    case 'section':
-                      if (upRec.record.relationships?.transcriber === undefined)
-                        resetRelated(newOps, tb, 'transcriber', upRec);
-
-                      if (upRec.record.relationships?.editor === undefined)
-                        resetRelated(newOps, tb, 'editor', upRec);
-
-                      break;
-                    case 'mediafile':
-                      if (upRec.record.relationships?.passage === undefined)
-                        resetRelated(newOps, tb, 'passage', upRec);
-                      break;
-                    case 'user':
-                      SetUserLanguage(memory, user, setLanguage);
-                      break;
-                  }
-                }
-              });
-              if (newOps.length > 0) memory.update(() => newOps);
-            });
-          });
-      }
-    });
-    const deletes = data.attributes.deleted;
-    var tb: TransformBuilder = new TransformBuilder();
-
-    for (var ix = 0; ix < deletes.length; ix++) {
-      var table = deletes[ix];
-      let operations: Operation[] = [];
-      // eslint-disable-next-line no-loop-func
-      table.ids.forEach((r) => {
-        const localId = remoteIdGuid(table.type, r.toString(), memory.keyMap);
-        if (localId) {
-          operations.push(tb.removeRecord({ type: table.type, id: localId }));
-        }
-      });
-      if (operations.length > 0) {
-        await memory.update(operations);
-      }
+    if (records.length) {
+      if (
+        await processDataChanges(
+          api + 'projects/' + fingerprint,
+          new URLSearchParams([['projlist', JSON.stringify(records)]])
+        )
+      )
+        await updateSnapshotDates();
     }
+  }
+  if (
+    await processDataChanges(
+      api + 'since/' + lastTime + '?origin=' + fingerprint,
+      undefined
+    )
+  ) {
     localStorage.setItem(userLastTimeKey, nextTime);
-    if (isElectron) await updateSnapshotDates();
-  } catch (e) {
-    logError(Severity.error, errorReporter, e);
   }
 };
 
 export function DataChanges(props: IProps) {
-  const { auth, children, setLanguage } = props;
+  const { auth, children, setLanguage, resetOrbitError } = props;
   const [isOffline] = useGlobal('offline');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [loadComplete] = useGlobal('loadComplete');
   const [busy, setBusy] = useGlobal('remoteBusy');
-  const [connected, setConnected] = useGlobal('connected');
+  const [, setDataChangeCount] = useGlobal('dataChangeCount');
+  const [connected] = useGlobal('connected');
   const [user] = useGlobal('user');
   const [doSave] = useGlobal('doSave');
   const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
   const [busyDelay, setBusyDelay] = useState<number | null>(null);
   const [dataDelay, setDataDelay] = useState<number | null>(null);
+  const [firstRun, setFirstRun] = useState(true);
   const [project] = useGlobal('project');
   const [projectsLoaded] = useGlobal('projectsLoaded');
-  const [orbitRetries, setOrbitRetries] = useGlobal('orbitRetries');
+  const [orbitRetries] = useGlobal('orbitRetries');
 
   const getOfflineProject = useOfflnProjRead();
+  const checkOnline = useCheckOnline(resetOrbitError);
 
   const defaultBackupDelay = isOffline ? 1000 * 60 * 30 : null; //30 minutes;
 
@@ -218,37 +250,36 @@ export function DataChanges(props: IProps) {
     const defaultBusyDelay = 1000;
     const defaultDataDelay = 1000 * 100;
 
+    setFirstRun(dataDelay === null);
+    var newDelay =
+      connected && loadComplete && remote && auth?.isAuthenticated()
+        ? dataDelay === null
+          ? 10
+          : defaultDataDelay
+        : null;
+    setDataDelay(newDelay);
     if (!remote) setBusy(false);
     setBusyDelay(
       remote && auth?.isAuthenticated()
         ? defaultBusyDelay * (connected ? 1 : 10)
         : null
     );
-    setDataDelay(
-      connected && loadComplete && remote && auth?.isAuthenticated()
-        ? defaultDataDelay
-        : null
-    );
-  }, [remote, auth, loadComplete, connected, setBusy]);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remote, auth, loadComplete, connected, firstRun]);
   const updateBusy = () => {
     const checkBusy =
       user === '' || (remote && remote.requestQueue.length !== 0);
-    if (checkBusy && orbitRetries < OrbitNetworkErrorRetries) {
-      Online((result) => {
-        if (connected !== result) {
-          setConnected(result);
-          if (result) {
-            setOrbitRetries(OrbitNetworkErrorRetries);
-            remote.requestQueue.retry();
-          }
-        }
+    //we know we're offline, or we've retried something so maybe we're offline
+    if (!connected || (checkBusy && orbitRetries < OrbitNetworkErrorRetries)) {
+      checkOnline((result) => {
         if ((checkBusy && result) !== busy) setBusy(checkBusy && result);
       });
     } else if (checkBusy !== busy) setBusy(checkBusy);
   };
   const updateData = () => {
     if (!busy && !doSave && auth?.isAuthenticated()) {
+      setBusy(true); //attempt to prevent double calls
+      setFirstRun(false);
       doDataChanges(
         auth,
         coordinator,
@@ -257,7 +288,8 @@ export function DataChanges(props: IProps) {
         getOfflineProject,
         errorReporter,
         user,
-        setLanguage
+        setLanguage,
+        setDataChangeCount
       );
     }
   };

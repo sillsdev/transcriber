@@ -8,3 +8,5 @@ export * from './OneStoryLogo';
 export * from './RenderLogo';
 export * from './LightTooltip';
 export * from './UserListItem';
+export * from './AudacityLogo';
+export * from './ViewMode';

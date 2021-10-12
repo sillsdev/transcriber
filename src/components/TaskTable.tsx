@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
@@ -34,14 +34,14 @@ import { useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
 import MediaPlayer from './MediaPlayer';
 
-export const TaskItemWidth = 370;
+export const TaskItemWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
       '&[data-list="true"] table': {
-        minWidth: '372px !important',
+        minWidth: `${TaskItemWidth}px !important`,
       },
       '&[data-list="true"] thead': {
         display: 'none',
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) =>
         width: '1px !important',
       },
       '&[data-list="true"] colgroup col:nth-child(2)': {
-        width: '370px !important',
+        width: `${TaskItemWidth}px !important`,
       },
       '& tbody > tr:first-child': {
         display: 'none',
@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
     },
-    paper: theme.mixins.gutters({
+    paper: {
       display: 'flex',
       flexDirection: 'column',
       alignContent: 'center',
@@ -74,18 +74,19 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingLeft: 0,
         paddingRight: 0,
       },
-    }) as any,
+    },
     grow: {
       flexGrow: 1,
     },
-    dialogHeader: theme.mixins.gutters({
-      width: '340px',
-      paddingTop: '8px',
+    dialogHeader: {
+      width: `${TaskItemWidth - 30}px`,
+      paddingLeft: theme.spacing(2),
+      paddingTop: theme.spacing(1),
       paddingBottom: '8px',
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-    }) as any,
+    },
     filterHeader: {
       width: 'auto',
     },
@@ -134,14 +135,19 @@ export function TaskTable(props: IProps) {
     selected,
     expandedGroups,
     filter,
+    playing,
+    setPlaying,
     setFilter,
+    loading,
+    trBusy,
+    flat,
   } = useTodo();
   const t = todoStr;
   const tpb = projButtonStr;
   const classes = useStyles();
   const [user] = useGlobal('user');
   const [width, setWidth] = useState(window.innerWidth);
-  const { getPlanName } = usePlan();
+  const { getPlan, getPlanName } = usePlan();
   const offlineProjectRead = useOfflnProjRead();
   const offlineAvailableToggle = useOfflineAvailToggle();
   const [planId] = useGlobal('plan');
@@ -154,6 +160,7 @@ export function TaskTable(props: IProps) {
   const [openReports, setOpenReports] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
+  const isInline = useRef(false);
   const [columns] = useState([
     { name: 'composite', title: '\u00A0' },
     { name: 'play', title: '\u00A0' },
@@ -199,15 +206,25 @@ export function TaskTable(props: IProps) {
   const [style, setStyle] = React.useState<CSSProperties>({
     height: window.innerHeight - 100,
     overflowY: 'auto',
+    cursor: 'default',
   });
   const [playItem, setPlayItem] = useState('');
   const formRef = useRef<any>();
   const selectedRef = useRef<any>();
   const notSelectedRef = useRef<any>();
+  const busyRef = useRef(false);
+
+  const hiddenColumnNames = useMemo(() => (flat ? ['sectPass'] : []), [flat]);
 
   const handleToggleFilter = () => {
+    handleStopPlayer();
+    setPlayItem('');
     if (onFilter) onFilter(!filter);
     setFilter(!filter);
+  };
+
+  const handleStopPlayer = () => {
+    if (playing) setPlaying(false);
   };
 
   const handleProjectMenu = (what: string) => {
@@ -233,7 +250,11 @@ export function TaskTable(props: IProps) {
   };
 
   const setDimensions = () => {
-    setStyle({ height: window.innerHeight - 100, overflowY: 'auto' });
+    setStyle({
+      height: window.innerHeight - 100,
+      overflowY: 'auto',
+      cursor: busyRef.current ? 'progress' : 'default',
+    });
     setWidth(window.innerWidth);
   };
 
@@ -252,6 +273,15 @@ export function TaskTable(props: IProps) {
   }, []);
 
   useEffect(() => {
+    busyRef.current = trBusy || loading;
+    setStyle({
+      height: window.innerHeight - 100,
+      overflowY: 'auto',
+      cursor: busyRef.current ? 'progress' : 'default',
+    });
+  }, [trBusy, loading]);
+
+  useEffect(() => {
     if (formRef.current && selectedRef.current) {
       formRef.current.scrollTo(0, selectedRef.current.offsetTop);
     }
@@ -259,7 +289,10 @@ export function TaskTable(props: IProps) {
 
   useEffect(() => {
     setPlanName(getPlanName(planId));
-  }, [getPlanName, planId]);
+    const planRec = getPlan(planId);
+    isInline.current = Boolean(planRec?.attributes?.flat);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [planId]);
 
   useEffect(() => {
     if (!filter) {
@@ -324,9 +357,13 @@ export function TaskTable(props: IProps) {
         r.state === '' ? (
           <TaskHead item={i} />
         ) : (
-          <TaskItem item={i} organizedBy={organizedBy} />
+          <TaskItem
+            item={i}
+            organizedBy={organizedBy}
+            flat={isInline.current}
+          />
         ),
-      play: r.playItem,
+      play: playItem,
       plan: r.planName,
       section: Number(sectionNumber(r.section)),
       sectPass: r.sectPass,
@@ -346,7 +383,7 @@ export function TaskTable(props: IProps) {
     }));
     setRows(newRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData]);
+  }, [rowData, playItem]);
 
   interface ICell {
     value: any;
@@ -401,8 +438,13 @@ export function TaskTable(props: IProps) {
     } else {
       if (column.name === 'composite') {
         return <td>{'\u00a0'}</td>;
-      } else if (column.name === 'play' && row.length !== '') {
-        return <PlayCell {...props} mediaId={row.mediaRemoteId} />;
+      } else if (column.name === 'play') {
+        // if there is no audio file to play put nothing in the play column
+        return row.length !== '' ? (
+          <PlayCell {...props} mediaId={row.mediaRemoteId || props.mediaId} />
+        ) : (
+          <Table.Cell {...props} value="" />
+        );
       }
       return <Table.Cell {...props} />;
     }
@@ -410,6 +452,7 @@ export function TaskTable(props: IProps) {
   const playEnded = () => {
     setPlayItem('');
   };
+
   return (
     <div
       id="TaskTable"
@@ -429,6 +472,7 @@ export function TaskTable(props: IProps) {
             <div className={classes.grow}>{'\u00A0'}</div>
             <ProjectMenu
               action={handleProjectMenu}
+              stopPlayer={handleStopPlayer}
               inProject={true}
               isOwner={projRole === 'admin'}
               project={projectId}
@@ -452,6 +496,7 @@ export function TaskTable(props: IProps) {
             expandedGroups={expandedGroups}
             filteringEnabled={filteringEnabled}
             columnSorting={columnSorting}
+            hiddenColumnNames={hiddenColumnNames}
             numCols={numCols}
             shaping={filter}
             rows={rows}
@@ -464,7 +509,7 @@ export function TaskTable(props: IProps) {
         isOpen={openIntegration}
         onOpen={setOpenIntegration}
       >
-        <IntegrationTab {...props} auth={auth} />
+        <IntegrationTab {...props} auth={auth} stopPlayer={handleStopPlayer} />
       </BigDialog>
       <BigDialog
         title={tpb.exportTitle.replace('{0}', planName)}

@@ -86,12 +86,14 @@ const mapStateToProps = (state: IState): IStateProps => ({
 interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
   doOrbitError: typeof actions.doOrbitError;
+  resetOrbitError: typeof actions.resetOrbitError;
 }
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       fetchBooks: actions.fetchBooks,
       doOrbitError: actions.doOrbitError,
+      resetOrbitError: actions.resetOrbitError,
     },
     dispatch
   ),
@@ -122,7 +124,8 @@ const initState = {
   bookMap: {} as BookNameMap,
   allBookData: Array<BookName>(),
   planTypes: Array<PlanType>(),
-  teams: () => Array<Organization>(),
+  isDeleting: false,
+  teams: Array<Organization>(),
   personalProjects: () => Array<VProject>(),
   teamProjects: (teamId: string) => Array<VProject>(),
   teamMembers: (teamId: string) => 0,
@@ -203,6 +206,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       allBookData,
       fetchBooks,
       doOrbitError,
+      resetOrbitError,
     } = props;
     const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
@@ -212,7 +216,6 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [isOffline] = useGlobal('offline');
     const [offlineOnly] = useGlobal('offlineOnly');
     const [userProjects, setUserProjects] = useState(projects);
-    const [userOrgs, setUserOrgs] = useState(organizations);
     const [importOpen, setImportOpen] = useState(false);
     const [importProject, setImportProject] = useState<VProject>();
     const [state, setState] = useState({
@@ -242,7 +245,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
     const { setProjectType } = useProjectType();
     const { getPlan } = usePlan();
-    const LoadData = useLoadProjectData(auth, t, doOrbitError);
+    const LoadData = useLoadProjectData(auth, t, doOrbitError, resetOrbitError);
 
     const setProjectParams = (plan: Plan) => {
       const projectId = related(plan, 'project');
@@ -294,8 +297,16 @@ const TeamProvider = withData(mapRecordsToProps)(
       return recs.length;
     };
 
-    const teams = () => {
-      return userOrgs
+    const getTeams = () => {
+      let orgs = organizations;
+      if (isElectron) {
+        //online or offline we may have other user's orgs in the db
+        const orgIds = orgMembers
+          .filter((om) => related(om, 'user') === user)
+          .map((om) => related(om, 'organization'));
+        orgs = organizations.filter((o) => orgIds.includes(o.id));
+      }
+      return orgs
         .filter(
           (o) =>
             !isPersonal(o.id) &&
@@ -391,7 +402,9 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const teamDelete = async (team: Organization) => {
+      setState((state) => ({ ...state, isDeleting: true }));
       await orbitTeamDelete(team);
+      setState((state) => ({ ...state, isDeleting: false }));
     };
 
     interface IUniqueTypes {
@@ -443,15 +456,8 @@ const TeamProvider = withData(mapRecordsToProps)(
     }, [projects, groupMemberships, user, isOffline]);
 
     useEffect(() => {
-      if (isElectron) {
-        //online or offline we may have other user's orgs in the db
-        const orgIds = orgMembers
-          .filter((om) => related(om, 'user') === user)
-          .map((om) => related(om, 'organization'));
-        setUserOrgs(organizations.filter((o) => orgIds.includes(o.id)));
-      } else {
-        setUserOrgs(organizations);
-      }
+      setState((state) => ({ ...state, teams: getTeams() }));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [organizations, orgMembers, user, isOffline]);
 
     return (
@@ -463,7 +469,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             bookMap,
             allBookData,
             planTypes: getPlanTypes,
-            teams,
+            teams: getTeams(),
             personalProjects,
             teamProjects,
             teamMembers,

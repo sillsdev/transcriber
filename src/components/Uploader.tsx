@@ -24,7 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const statusInit = { canceled: false };
+export interface IStatus {
+  canceled: boolean;
+}
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -36,7 +38,6 @@ interface IDispatchProps {
   uploadFiles: typeof actions.uploadFiles;
   nextUpload: typeof actions.nextUpload;
   uploadComplete: typeof actions.uploadComplete;
-  doOrbitError: typeof actions.doOrbitError;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -51,9 +52,10 @@ interface IProps extends IStateProps, IDispatchProps {
   metaData?: JSX.Element; // component embeded in dialog
   ready?: () => boolean; // if false control is disabled
   createProject?: (file: File[]) => Promise<any>;
-  status: typeof statusInit;
+  status: IStatus;
   multiple?: boolean;
   mediaId?: string;
+  importList?: File[];
 }
 
 export const Uploader = (props: IProps) => {
@@ -68,6 +70,7 @@ export const Uploader = (props: IProps) => {
     showMessage,
     status,
     multiple,
+    importList,
   } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
@@ -101,9 +104,8 @@ export const Uploader = (props: IProps) => {
       uploadComplete();
       setComplete(0);
       setBusy(false);
-      if (successCount.current > 0 && finish)
-        finish(planIdRef.current, mediaIdRef.current);
-      else if (status) status.canceled = true;
+      status.canceled = successCount.current <= 0;
+      finish && finish(planIdRef.current, mediaIdRef.current);
     }, 1000);
   };
 
@@ -163,7 +165,7 @@ export const Uploader = (props: IProps) => {
           ...AddRecord(t, mediaRec, user, memory),
           t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
         ]);
-        if (psg !== '')
+        if (psg && psg !== '')
           await memory.update([
             t.replaceRelatedRecord(mediaRec, 'passage', {
               type: 'passage',
@@ -199,6 +201,7 @@ export const Uploader = (props: IProps) => {
       uploadList,
       currentlyLoading,
       authRef.current,
+      offlineOnly,
       errorReporter,
       itemComplete
     );
@@ -223,6 +226,7 @@ export const Uploader = (props: IProps) => {
   const uploadCancel = () => {
     onOpen(false);
     if (status) status.canceled = true;
+    //what is this???
     document.getElementsByTagName('body')[0].removeAttribute('style');
   };
 
@@ -243,9 +247,20 @@ export const Uploader = (props: IProps) => {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [uploadError]);
 
+  React.useEffect(() => {
+    if (importList) {
+      uploadMedia(importList);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [importList]);
+
+  React.useEffect(() => {
+    if (plan !== '') planIdRef.current = plan;
+  }, [plan]);
+
   return (
     <div>
-      {recordAudio && (
+      {recordAudio && !importList && (
         <PassageRecord
           visible={isOpen}
           mediaId={mediaId}
@@ -258,7 +273,7 @@ export const Uploader = (props: IProps) => {
           defaultFilename={defaultFilename}
         />
       )}
-      {!recordAudio && (
+      {!recordAudio && !importList && (
         <MediaUpload
           visible={isOpen}
           uploadType={UploadType.Media}
@@ -285,7 +300,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       uploadFiles: actions.uploadFiles,
       nextUpload: actions.nextUpload,
       uploadComplete: actions.uploadComplete,
-      doOrbitError: actions.doOrbitError,
     },
     dispatch
   ),

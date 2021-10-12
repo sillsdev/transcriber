@@ -24,15 +24,8 @@ interface IProps extends IRecordProps, IDialog<Organization> {
 }
 
 export function TeamDialog(props: IProps) {
-  const {
-    mode,
-    values,
-    isOpen,
-    organizations,
-    onOpen,
-    onCommit,
-    onDelete,
-  } = props;
+  const { mode, values, isOpen, organizations, onOpen, onCommit, onDelete } =
+    props;
   const [name, setName] = React.useState('');
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
@@ -102,7 +95,7 @@ export function TeamDialog(props: IProps) {
           id="teamName"
           label={t.teamName}
           value={name}
-          helperText={nameInUse(name) && t.nameInUse}
+          helperText={name && nameInUse(name) && t.nameInUse}
           onChange={handleChange}
           fullWidth
         />

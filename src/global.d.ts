@@ -1,6 +1,7 @@
 import 'reactn';
 import Coordinator from '@orbit/coordinator';
 import Memory from '@orbit/memory';
+import { AlertSeverity } from './hoc/SnackBar';
 
 declare module 'reactn/default' {
   export interface State {
@@ -17,9 +18,11 @@ declare module 'reactn/default' {
     coordinator: Coordinator;
     memory: Memory;
     remoteBusy: boolean;
+    dataChangeCount: int;
     doSave: boolean;
     saveResult: string | undefined;
     snackMessage: JSX.Element;
+    snackAlert: AlertSeverity | undefined;
     changed: boolean;
     projectsLoaded: string[];
     loadComplete: boolean;
@@ -38,5 +41,7 @@ declare module 'reactn/default' {
     latestVersion: string;
     releaseDate: string;
     progress: number;
+    allAudacity: boolean;
+    trackedTask: string;
   }
 }

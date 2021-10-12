@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, ITranscriptionShowStrings } from '../model';
 import localStrings from '../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -22,14 +22,12 @@ import { FaCopy } from 'react-icons/fa';
 import { useSnackBar } from '../hoc/SnackBar';
 import { getMediaProjRec, getMediaRec, FontData, getFontData } from '../crud';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    actions: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-  })
-);
+const useStyles = makeStyles({
+  actions: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+});
 
 interface IStateProps {
   t: ITranscriptionShowStrings;
@@ -47,6 +45,7 @@ interface IProps extends IRecordProps, IStateProps {
 }
 
 function TranscriptionShow(props: IProps) {
+  const [reporter] = useGlobal('errorReporter');
   const { id, isMediaId, t, visible, closeMethod } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
@@ -90,7 +89,7 @@ function TranscriptionShow(props: IProps) {
       if (!mediaRec) mediaRec = getMediaRec(id, memory);
       const attr = mediaRec && mediaRec.attributes;
       setTranscription(attr && attr.transcription ? attr.transcription : '');
-      const projRec = getMediaProjRec(mediaRec, memory);
+      const projRec = getMediaProjRec(mediaRec, memory, reporter);
       if (projRec) setFontData(getFontData(projRec, offline));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

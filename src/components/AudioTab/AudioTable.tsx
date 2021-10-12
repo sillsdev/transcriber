@@ -17,12 +17,13 @@ import MediaActions2 from './MediaActions2';
 import Confirm from '../AlertDialog';
 import Auth from '../../auth/Auth';
 import { remoteId, useOrganizedBy } from '../../crud';
-import { numCompare, dateCompare } from '../../utils';
+import { numCompare, dateCompare, dateOrTime } from '../../utils';
 import { IRow } from '.';
 import { Sorting } from '@devexpress/dx-react-grid';
 
 interface IStateProps {
   t: IMediaTabStrings;
+  lang: string;
 }
 
 interface IProps extends IStateProps {
@@ -34,7 +35,7 @@ interface IProps extends IStateProps {
   onAttach?: (checks: number[], attach: boolean) => void;
 }
 export const AudioTable = (props: IProps) => {
-  const { data, setRefresh, auth, t } = props;
+  const { data, setRefresh, lang, auth, t } = props;
   const { playItem, setPlayItem, onAttach } = props;
   const ctx = React.useContext(PlanContext);
   const { connected, readonly } = ctx.state;
@@ -80,6 +81,7 @@ export const AudioTable = (props: IProps) => {
       columnName: onAttach ? 'fileName' : 'version',
       direction: onAttach ? 'asc' : 'desc',
     },
+    { columnName: 'date', direction: 'desc' },
   ] as Sorting[];
   const columnSorting = [
     { columnName: 'duration', compare: numCompare },
@@ -212,6 +214,12 @@ export const AudioTable = (props: IProps) => {
     </Table.Cell>
   );
 
+  const DateCell = ({ row, value, ...props }: ICell) => (
+    <Table.Cell row {...props} value>
+      {dateOrTime(value, lang)}
+    </Table.Cell>
+  );
+
   const Cell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'actions') {
@@ -227,6 +235,9 @@ export const AudioTable = (props: IProps) => {
     }
     if (column.name === 'reference') {
       return <ReferenceCell {...props} />;
+    }
+    if (column.name === 'date') {
+      return <DateCell {...props} />;
     }
     return <Table.Cell {...props} />;
   };
@@ -283,6 +294,7 @@ export const AudioTable = (props: IProps) => {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaTab' }),
+  lang: state.strings.lang,
 });
 
 export default connect(mapStateToProps)(AudioTable) as any;

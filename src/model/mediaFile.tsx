@@ -16,6 +16,7 @@ export interface MediaFile extends BaseModel {
     originalFile: string;
     filesize: number;
     position: number;
+    segments: string;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;

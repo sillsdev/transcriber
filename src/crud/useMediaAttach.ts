@@ -3,8 +3,7 @@ import { ISharedStrings, ActivityStates, MediaFile } from '../model';
 import { orbitErr } from '../utils';
 import * as actions from '../store';
 import { TransformBuilder, Operation } from '@orbit/data';
-import { UpdatePassageStateOps } from '../crud/updatePassageState';
-import { getMediaInPlans, related } from '.';
+import { getMediaInPlans, related, UpdatePassageStateOps } from '.';
 
 interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
@@ -62,9 +61,7 @@ export const useMediaAttach = (props: IProps) => {
       memory
     );
     await memory.update(ops).catch((err: Error) => {
-      var x = orbitErr(err, 'attach passage');
-      doOrbitError(x);
-      console.log(err.message);
+      doOrbitError(orbitErr(err, 'attach passage'));
     });
   };
 
@@ -98,9 +95,7 @@ export const useMediaAttach = (props: IProps) => {
       memory
     );
     await memory.update(ops).catch((err: Error) => {
-      var x = orbitErr(err, 'detach passage');
-      doOrbitError(x);
-      console.log(err.message);
+      doOrbitError(orbitErr(err, 'detach passage'));
     });
   };
 

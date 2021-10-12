@@ -11,19 +11,14 @@ export function useUserMedia(requestedMedia: MediaStreamConstraints) {
         );
         mediaStreamRef.current = stream;
         return stream;
-      } catch (err) {
+      } catch (err: any) {
         return err;
       }
   }
 
   useEffect(() => {
     return function cleanup() {
-      console.log(
-        'userMedia cleanup',
-        mediaStreamRef.current?.getTracks().length
-      );
       mediaStreamRef.current?.getTracks().forEach((track) => {
-        console.log('usermedia stop');
         track.stop();
       });
       mediaStreamRef.current = undefined;

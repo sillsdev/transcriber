@@ -1,16 +1,15 @@
+const envVariables = require('./auth0-variables');
 const jwtDecode = require('jwt-decode');
 const axios = require('axios');
 const url = require('url');
-const envVariables = require('./env-variables');
 const keytar = require('keytar');
 const os = require('os');
-
-const { apiIdentifier, auth0Domain, desktopId } = envVariables;
 
 const redirectUri = 'http://localhost/callback';
 
 const keytarService = 'electron-openid-oauth';
 const keytarAccount = os.userInfo().username;
+const { apiIdentifier, auth0Domain, desktopId } = envVariables;
 
 let accessToken = null;
 let profile = null;
@@ -24,21 +23,22 @@ function getProfile() {
   return profile;
 }
 
-function getAuthenticationURL() {
+function getAuthenticationURL(hasUsed, email) {
+  const dev = envVariables.auth0Domain.indexOf('-dev') > 0;
   return (
-    'https://' +
-    auth0Domain +
-    '/authorize?' +
-    'audience=' +
-    apiIdentifier +
-    '&' +
+    `https://${auth0Domain}/authorize?` +
+    `audience=${apiIdentifier}&` +
     'scope=openid email profile offline_access&' +
     'response_type=code&' +
-    'client_id=' +
-    desktopId +
-    '&' +
-    'redirect_uri=' +
-    redirectUri
+    (!hasUsed && dev
+      ? 'login_hint=signUp&'
+      : !hasUsed && !dev
+      ? 'mode=signUp&'
+      : hasUsed && email
+      ? `login_hint=${encodeURIComponent(email)}&`
+      : '') +
+    `client_id=${desktopId}&` +
+    `redirect_uri=${redirectUri}`
   );
 }
 

@@ -1,10 +1,17 @@
-import _ from 'lodash';
+import _, { debounce } from 'lodash';
 import { useEffect, useRef } from 'react';
+import { useGlobal } from 'reactn';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
-import { useMounted } from '../utils';
+import { logError, Severity } from '../utils';
+//import { useMounted } from '../utils';
 //import { convertToMP3 } from '../utils/mp3';
 import { convertToWav } from '../utils/wav';
+import {
+  IRegionParams,
+  IRegions,
+  useWaveSurferRegions,
+} from './useWavesurferRegions';
 
 const noop = () => {};
 const noop1 = (x: any) => {};
@@ -13,138 +20,203 @@ export function useWaveSurfer(
   container: any,
   onReady: () => void = noop,
   onProgress: (progress: number) => void = noop1,
-  onRegion: (hasRegion: boolean) => void = noop1,
-  onStop: () => void = noop,
+  onRegion: (
+    count: number,
+    params: IRegionParams | undefined,
+    newRegion: boolean
+  ) => void = noop1,
+  onPlayStatus: (playing: boolean) => void = noop,
+  onInteraction: () => void = noop,
   onError: (e: any) => void = noop,
   height: number = 128,
+  singleRegionOnly: boolean = false,
   timelineContainer?: any
 ) {
-  const isMounted = useMounted('wavesurfer');
+  //const isMounted = useMounted('wavesurfer');
+  const [globalStore] = useGlobal();
   const progressRef = useRef(0);
-  const wsRef = useRef<WaveSurfer>();
+  const wavesurferRef = useRef<WaveSurfer>();
   const blobToLoad = useRef<Blob>();
-  const blobTypeRef = useRef('');
+  const loadRequests = useRef(0);
   const playingRef = useRef(false);
-  const regionRef = useRef<any>();
-  const regionPlayingRef = useRef(false);
-  const keepRegion = useRef(false);
+  const wavesurferPlayingRef = useRef(false); //don't trust ws.isPlaying()
   const durationRef = useRef(0);
+  const userInteractionRef = useRef(true);
+
+  const inputRegionsRef = useRef<IRegions>();
+  const regionsLoadedRef = useRef(false);
+  const widthRef = useRef(0);
+  const containerRef = useRef(container);
+  const isNear = (position: number) => {
+    return Math.abs(position - progressRef.current) < 0.3;
+  };
+  const wsDuration = () =>
+    durationRef.current || wavesurfer()?.getDuration() || 0;
+
+  const wsGoto = (position: number) => {
+    if (position > wsDuration()) position = wsDuration();
+    onRegionGoTo(position);
+    if (wsDuration()) position = position / wsDuration();
+
+    userInteractionRef.current = false;
+    wavesurfer()?.seekAndCenter(position);
+    userInteractionRef.current = true;
+  };
+  const progress = () => progressRef.current;
+  const setPlaying = (value: boolean) => {
+    if (value !== playingRef.current) {
+      playingRef.current = value;
+      try {
+        if (value) {
+          if (wavesurfer()?.isReady) {
+            //play region once if single region
+            if (!justPlayRegion(progress())) {
+              //default play (which will loop region if looping is on)
+              wavesurfer()?.play(progress());
+            }
+          }
+        } else {
+          try {
+            if (wavesurferPlayingRef.current) wavesurfer()?.pause();
+          } catch {
+            //ignore
+          }
+        }
+        if (onPlayStatus) onPlayStatus(playingRef.current);
+      } catch (error: any) {
+        logError(Severity.error, globalStore.errorReporter, error);
+      }
+    }
+  };
+
+  const {
+    wsAutoSegment,
+    wsSplitRegion,
+    wsRemoveSplitRegion,
+    wsAddOrRemoveRegion,
+    wsPrevRegion,
+    wsNextRegion,
+    loadRegions,
+    clearRegions,
+    wsGetRegions,
+    wsLoopRegion,
+    justPlayRegion,
+    onRegionSeek,
+    onRegionProgress,
+    onRegionGoTo,
+    currentRegion,
+    setWaveSurfer,
+  } = useWaveSurferRegions(
+    singleRegionOnly,
+    onRegion,
+    onPlayStatus,
+    wsDuration,
+    isNear,
+    wsGoto,
+    progress,
+    setPlaying
+  );
+
+  const wavesurfer = () =>
+    wavesurferRef.current?.isDestroyed ? undefined : wavesurferRef.current;
 
   useEffect(() => {
     function create(container: any, height: number) {
       var ws = createWaveSurfer(container, height, timelineContainer);
-      wsRef.current = ws;
-
+      wavesurferRef.current = ws;
+      setWaveSurfer(ws);
       ws.on('ready', function () {
-        durationRef.current = ws.getDuration();
-        onReady();
+        //recording also sends ready
+        if (loadRequests.current > 0) loadRequests.current--;
+        if (!loadRequests.current) {
+          durationRef.current = ws.getDuration();
+          if (!regionsLoadedRef.current) {
+            //we need to call this even if undefined to setup regions variables
+            loadRegions(inputRegionsRef.current, false);
+            regionsLoadedRef.current = true;
+          }
+          if (playingRef.current) setPlaying(true);
+          onReady();
+        } else {
+          //requesting load of blob that came in while this one was loading
+          wsLoad();
+        }
+      });
+      ws.on('destroy', function () {
+        wavesurferRef.current = undefined;
       });
       ws.on(
         'audioprocess',
         _.throttle(function (e: number) {
-          setProgress(e);
+          if (wavesurferPlayingRef.current) setProgress(e);
         }, 150)
       );
+      ws.on('play', function () {
+        wavesurferPlayingRef.current = true;
+      });
+      ws.on('pause', function () {
+        wavesurferPlayingRef.current = true;
+      });
       ws.on('seek', function (e: number) {
-        setProgress(e * durationRef.current);
-        if (!keepRegion.current && regionRef.current) {
-          regionRef.current?.remove();
-          regionRef.current = undefined;
-          if (onRegion) onRegion(false);
-        }
+        onRegionSeek(e, !userInteractionRef.current);
+        setProgress(e * wsDuration());
       });
       ws.on('finish', function () {
+        //we'll get a pause next, so don't set wavesurferPlayingRef here
         setPlaying(false);
-        onStop();
       });
-      ws.on('region-created', function (r: any) {
-        if (regionRef.current) regionRef.current?.remove();
-        regionRef.current = r;
-        keepRegion.current = true;
-        if (onRegion) onRegion(true);
+      ws.on('interaction', function () {
+        if (onInteraction) onInteraction();
       });
-      ws.on('region-update-end', function (r: any) {
-        wsGoto(regionRef.current.start);
-        keepRegion.current = false;
+      ws.on('redraw', function (peaks: any, width: number) {
+        widthRef.current = width;
       });
-      /* other potentially useful messages
-      ws.on('loading', function (progress) {
-        console.log('loading', progress);
-      });
-      ws.on('region-play', function (r: any) {
-        console.log('region-play', r);
-      });
-      ws.on('region-out', function (r: any) {
-        console.log('region-out');
-      }); */
-
+      // ws.drawer.on('click', (event: any, progress: number) => {
+      //   console.log('Clicking now', progress);
+      // });
       return ws;
     }
-    if (container && !wsRef.current) {
+
+    if (container && !wavesurferRef.current) {
       create(container, height);
+      containerRef.current = container;
       if (blobToLoad.current) {
-        wsLoad(blobToLoad.current);
-        blobToLoad.current = undefined;
+        wsLoad();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [container]);
+  }, [container, wavesurferRef.current]);
 
   useEffect(() => {
     // Removes events, elements and disconnects Web Audio nodes on component unmount
     return () => {
-      if (wsRef.current) {
-        wsRef.current.unAll();
-        wsRef.current.destroy();
-        wsRef.current = undefined;
+      blobToLoad.current = undefined;
+      if (wavesurferRef.current) {
+        var ws = wavesurferRef.current;
+        if (wavesurferPlayingRef.current) ws.stop();
+        wavesurferPlayingRef.current = false;
+        wavesurferRef.current = undefined;
+        ws.unAll();
+        ws.destroy();
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (!isMounted()) return;
-    if (wsRef.current?.isReady && playingRef.current) setPlaying(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wsRef.current?.isReady]);
-
   const setProgress = (value: number) => {
     progressRef.current = value;
+    onRegionProgress(value);
     onProgress(value);
-    if (
-      regionPlayingRef.current &&
-      progressRef.current >= regionRef.current.end - 0.01
-    ) {
-      //turning off region play
-      regionPlayingRef.current = false;
-      playingRef.current = false;
-      onStop();
-    }
   };
-  const setPlaying = (value: boolean) => {
-    //if (!isMounted()) return;
-    playingRef.current = value;
-    if (playingRef.current) {
-      if (wsRef.current?.isReady) {
-        if (
-          regionRef.current &&
-          !regionRef.current.loop &&
-          regionRef.current.start <= progressRef.current &&
-          regionRef.current.end > progressRef.current + 0.01
-        ) {
-          //play region once
-          regionPlayingRef.current = true;
-          regionRef.current.play(progressRef.current);
-        } else {
-          //default play (which will loop region if looping is on)
-          wsRef.current?.play(progressRef.current);
-        }
-      }
-    } else if (wsRef.current?.isPlaying()) wsRef.current?.pause();
-  };
-  const wsClear = () => wsRef.current?.empty();
 
-  const wsIsReady = () => wsRef.current?.isReady || false;
+  const wsClear = () => {
+    if (wavesurferPlayingRef.current) wavesurferRef.current?.stop();
+    wavesurfer()?.loadDecodedBuffer();
+    durationRef.current = 0;
+    setProgress(0);
+  };
+
+  const wsIsReady = () => wavesurfer()?.isReady || false;
 
   const wsIsPlaying = () => playingRef.current;
 
@@ -157,31 +229,65 @@ export function useWaveSurfer(
 
   const wsPause = () => setPlaying(false);
 
-  const wsDuration = () =>
-    durationRef.current || wsRef.current?.getDuration() || 0;
-
   const wsPosition = () => progressRef.current;
 
-  const wsGoto = (position: number) => {
-    if (position && durationRef.current)
-      position = position / durationRef.current;
-    keepRegion.current = true;
-    wsRef.current?.seekAndCenter(position);
-    keepRegion.current = false;
+  const wsSetPlaybackRate = (rate: number) => {
+    if (rate !== wavesurfer()?.getPlaybackRate()) {
+      wavesurfer()?.setPlaybackRate(rate);
+    }
   };
-  const wsSetPlaybackRate = (rate: number) =>
-    wsRef.current?.setPlaybackRate(rate);
+  const wsZoom = debounce((zoom: number) => {
+    wavesurfer()?.zoom(zoom);
+    return wavesurfer()?.params.minPxPerSec;
+  }, 10);
 
-  const wsLoad = (blob: Blob, mimeType?: string) => {
+  const wsPctWidth = () => {
+    return (
+      widthRef.current /
+      (containerRef.current.clientWidth * wavesurfer()?.params.pixelRatio)
+    );
+  };
+
+  const wsLoad = (blob?: Blob, regions: string = '') => {
     durationRef.current = 0;
-    if (!wsRef.current) blobToLoad.current = blob;
-    else wsRef.current?.loadBlob(blob);
-    blobTypeRef.current = mimeType || blob.type;
+    if (regions) inputRegionsRef.current = JSON.parse(regions);
+    regionsLoadedRef.current = false;
+    if (!wavesurfer() || !wavesurfer()?.backend) {
+      blobToLoad.current = blob;
+      loadRequests.current = 1;
+    } else if (blob) {
+      if (loadRequests.current) {
+        //queue this
+        blobToLoad.current = blob;
+        loadRequests.current = 2; //if there was another, we'll bypass it
+      } else {
+        wavesurfer()?.loadBlob(blob);
+        loadRequests.current = 1;
+      }
+    } else if (blobToLoad.current) {
+      wavesurfer()?.loadBlob(blobToLoad.current);
+      blobToLoad.current = undefined;
+    }
   };
 
+  const wsLoadRegions = (regions: string) => {
+    if (wavesurfer()?.isReady) {
+      loadRegions(JSON.parse(regions), false);
+      regionsLoadedRef.current = true;
+    } else {
+      inputRegionsRef.current = JSON.parse(regions);
+      regionsLoadedRef.current = false;
+    }
+  };
+  const wsClearRegions = () => {
+    if (wavesurfer()?.isReady) {
+      clearRegions();
+    } else {
+      inputRegionsRef.current = undefined;
+    }
+  };
   const wsBlob = async () => {
-    var wavesurfer = wsRef.current;
-    var backend = wavesurfer?.backend as any;
+    var backend = wavesurfer()?.backend as any;
     if (backend) {
       var originalBuffer = backend.buffer;
       var channels = originalBuffer.numberOfChannels;
@@ -203,72 +309,47 @@ export function useWaveSurfer(
     }
     return undefined;
   };
-  const wsSkip = (amt: number) => wsRef.current?.skip(amt);
+  const wsSkip = (amt: number) => wavesurfer()?.skip(amt);
 
-  const wsSetHeight = (height: number) => wsRef.current?.setHeight(height);
+  const wsSetHeight = (height: number) => wavesurfer()?.setHeight(height);
 
-  const wsHasRegion = () => regionRef.current !== undefined;
-
-  const wsLoopRegion = (loop: boolean) => {
-    if (!regionRef.current) return false;
-    regionRef.current.loop = loop;
-    if (regionRef.current.loop) wsGoto(regionRef.current.start);
-    return regionRef.current.loop;
-  };
-
-  const wsRegionIsLooping = (): boolean => {
-    if (!regionRef.current) return false;
-    return regionRef.current.loop;
-  };
   const trimTo = (val: number, places: number) => {
     var dec = places > 0 ? 10 ** places : 1;
     return ((val * dec) >> 0) / dec;
   };
   function loadDecoded(new_buffer: any) {
-    wsRef.current?.loadDecodedBuffer(new_buffer);
+    wavesurfer()?.loadDecodedBuffer(new_buffer);
   }
 
   const insertBuffer = (
     newBuffer: any,
     startposition: number,
-    endposition?: number
+    endposition: number
   ) => {
-    if (!wsRef.current) return 0;
-    var wavesurfer = wsRef.current;
-    var backend = wavesurfer?.backend as any;
+    if (!wavesurfer()) return 0;
+    var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
-
-    if (
-      startposition === 0 &&
-      endposition === undefined &&
-      newBuffer.length > (originalBuffer?.length | 0)
-    ) {
+    if (startposition === 0 && (originalBuffer?.length | 0) === 0) {
       loadDecoded(newBuffer);
-      return newBuffer.length / originalBuffer.sampleRate;
+      return newBuffer.length / newBuffer.sampleRate;
     }
-    var start_offset = ((startposition / 1) * originalBuffer.sampleRate) >> 0;
-
-    var after_len = 0;
-    var after_offset = 0;
-
-    if (endposition !== undefined) {
-      after_offset = (endposition * originalBuffer.sampleRate) >> 0;
-    } else {
-      after_offset = start_offset + newBuffer.length;
-    }
-    after_len = originalBuffer.length - after_offset;
+    var start_offset = (startposition * originalBuffer.sampleRate) >> 0;
+    var after_offset = (endposition * originalBuffer.sampleRate) >> 0;
+    var after_len = originalBuffer.length - after_offset;
     if (after_len < 0) after_len = 0;
     var new_len = start_offset + newBuffer.length + after_len;
+
     var uberSegment = null;
     uberSegment = backend.ac.createBuffer(
       originalBuffer.numberOfChannels,
       new_len,
       originalBuffer.sampleRate
     );
-
     for (var ix = 0; ix < originalBuffer.numberOfChannels; ++ix) {
       var chan_data = originalBuffer.getChannelData(ix);
-      var new_data = newBuffer.getChannelData(0); //we're not recording in stereo currently
+      var new_data = newBuffer.getChannelData(
+        ix < newBuffer.numChannels ? ix : newBuffer.numberOfChannels - 1
+      );
       var uber_chan_data = uberSegment.getChannelData(ix);
 
       uber_chan_data.set(chan_data.slice(0, start_offset));
@@ -280,38 +361,32 @@ export function useWaveSurfer(
         );
     }
     loadDecoded(uberSegment);
-    durationRef.current = wavesurfer.getDuration();
+    durationRef.current = wavesurfer()?.getDuration() || 0;
     return (start_offset + newBuffer.length) / originalBuffer.sampleRate;
   };
 
   const wsInsertAudio = async (
     blob: Blob,
     position: number,
-    overwriteToPosition?: number,
+    overwriteToPosition: number,
     mimeType?: string
   ) => {
-    if (!wsRef.current) return;
-    var wavesurfer = wsRef.current;
-    var backend = wavesurfer?.backend as any;
+    if (!wavesurfer()) return;
+    var backend = wavesurfer()?.backend as any;
     if (!backend) return; //throw?
-    var originalBuffer = backend.buffer;
-    if (!originalBuffer) {
-      wsLoad(blob, mimeType);
-      return;
-    }
     var buffer = await blob.arrayBuffer();
 
     return await new Promise<number>((resolve, reject) => {
-      if (!wsRef.current?.backend) return; //closed while we were working on the blob
-      wavesurfer.decodeArrayBuffer(buffer, function (newBuffer: any) {
+      if (!wavesurfer()?.backend) return; //closed while we were working on the blob
+      wavesurfer()?.decodeArrayBuffer(buffer, function (newBuffer: any) {
         resolve(insertBuffer(newBuffer, position, overwriteToPosition));
       });
     });
   };
+
   const wsInsertSilence = (seconds: number, position: number) => {
-    if (!wsRef.current) return;
-    var wavesurfer = wsRef.current;
-    var backend = wavesurfer.backend as any;
+    if (!wavesurfer()) return;
+    var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
     var new_len = ((seconds / 1.0) * originalBuffer.sampleRate) >> 0;
     var newBuffer = backend.ac.createBuffer(
@@ -322,13 +397,13 @@ export function useWaveSurfer(
     insertBuffer(newBuffer, position, position);
   };
 
+  //delete the audio in the current region
   const wsRegionDelete = () => {
-    if (!regionRef.current || !wsRef.current) return;
-    var wavesurfer = wsRef.current;
-    var start = trimTo(regionRef.current.start, 3);
-    var end = trimTo(regionRef.current.end, 3);
+    if (!currentRegion() || !wavesurfer()) return;
+    var start = trimTo(currentRegion().start, 3);
+    var end = trimTo(currentRegion().end, 3);
     var len = end - start;
-    var backend = wavesurfer.backend as any;
+    var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
     var new_len = ((len / 1) * originalBuffer.sampleRate) >> 0;
     var new_offset = ((start / 1) * originalBuffer.sampleRate) >> 0;
@@ -357,12 +432,12 @@ export function useWaveSurfer(
     }
 
     loadDecoded(uberSegment);
-    wsRef.current?.regions.clear();
-    onRegion(false);
+    wavesurfer()?.regions.clear();
+    onRegion(0, undefined, true);
     var tmp = start - 0.03;
     if (tmp < 0) tmp = 0;
     wsGoto(tmp);
-    durationRef.current = wavesurfer.getDuration();
+    durationRef.current = wavesurfer()?.getDuration() || 0;
     return emptySegment;
   };
 
@@ -381,11 +456,20 @@ export function useWaveSurfer(
     wsPosition,
     wsSkip,
     wsSetHeight,
-    wsHasRegion,
+    wsLoadRegions,
+    wsClearRegions,
     wsLoopRegion,
-    wsRegionIsLooping,
     wsRegionDelete,
     wsInsertAudio,
     wsInsertSilence,
+    wsZoom,
+    wsPctWidth,
+    wsGetRegions,
+    wsAutoSegment,
+    wsPrevRegion,
+    wsNextRegion,
+    wsSplitRegion,
+    wsAddOrRemoveRegion,
+    wsRemoveSplitRegion,
   };
 }

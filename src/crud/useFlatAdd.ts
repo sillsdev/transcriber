@@ -40,7 +40,7 @@ export const useFlatAdd = (ts: ISharedStrings) => {
         const passage: Passage = {
           type: 'passage',
           attributes: {
-            sequencenum: seq + 1,
+            sequencenum: 1,
             book: book,
             reference: ts.part.replace('{0}', (seq + 1).toString()),
             title: '',

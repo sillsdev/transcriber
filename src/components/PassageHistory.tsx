@@ -231,7 +231,6 @@ export function PassageHistory(props: IProps) {
   };
   const handleDeleteConfirmed = () => {
     setConfirmItem(null);
-    console.log('confirm', selectedId);
     const psc = curStateChanges.find((psc) => psc.id === selectedId);
     //this may be a comment on a state change, so just hide the comment but leave the record
     if (psc) {

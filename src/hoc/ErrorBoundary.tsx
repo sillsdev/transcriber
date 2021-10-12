@@ -11,7 +11,14 @@ import {
   Theme,
   createStyles,
 } from '@material-ui/core/styles';
-import { Typography, Button } from '@material-ui/core';
+import {
+  Typography,
+  Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {
   logError,
   Severity,
@@ -45,6 +52,10 @@ const styles = (theme: Theme) =>
       textAlign: 'center',
       display: 'flex',
       flexDirection: 'column',
+      '& #detail': {
+        textAlign: 'left',
+        fontSize: 'small',
+      },
     },
     modalActions: {
       display: 'flex',
@@ -60,6 +71,7 @@ interface IStateProps {
   t: IMainStrings;
   orbitStatus: number | undefined;
   orbitMessage: string;
+  orbitDetails?: string;
   orbitRetry: number;
 }
 
@@ -80,6 +92,8 @@ interface IProps
 const initState = {
   errCount: 0,
   error: '',
+  details: '',
+  expanded: false,
   view: '',
 };
 
@@ -88,6 +102,7 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
     super(props);
     this.continue = this.continue.bind(this);
     this.logout = this.logout.bind(this);
+    this.change = this.change.bind(this);
     this.state = { ...initState };
   }
 
@@ -107,8 +122,13 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
     this.setState({
       ...this.state,
       errCount: this.state.errCount + 1,
-      error: error.error?.toString(),
+      error: error.error?.toString() || error.message,
+      details: error.stack,
     });
+  }
+
+  change() {
+    this.setState({ ...this.state, expanded: !this.state.expanded });
   }
 
   render() {
@@ -117,16 +137,26 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
       t,
       orbitStatus,
       orbitMessage,
-      orbitRetry,
+      orbitDetails,
       errorReporter,
     } = this.props;
 
-    const modalMessage = (message: ReactElement | string) => {
+    const modalMessage = (message: ReactElement | string, details?: string) => {
       return (
         <div id="myModal" className={classes.modal} key={this.state.errCount}>
           <div className={classes.modalContent}>
             <Typography>{t.crashMessage}</Typography>
             {message}
+            {(details || this.state.details) && (
+              <Accordion expanded={this.state.expanded} onChange={this.change}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  {t.details}
+                </AccordionSummary>
+                <AccordionDetails id="detail">
+                  {details || this.state.details}
+                </AccordionDetails>
+              </Accordion>
+            )}
             <div className={classes.modalActions}>
               {orbitStatus !== 401 && (
                 <Button
@@ -168,16 +198,11 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
           {t.apiError + ' ' + orbitStatus.toString()}
           <br />
           {orbitMessage}
-        </>
+        </>,
+        orbitDetails
       );
     } else if (orbitStatus === Severity.info) {
       logError(Severity.info, errorReporter, orbitMessage);
-    } else if (orbitStatus === Severity.retry) {
-      logError(
-        orbitRetry > 0 ? Severity.info : Severity.error,
-        errorReporter,
-        orbitMessage
-      );
     }
     // If there is no error just render the children component.
     return this.props.children;
@@ -209,6 +234,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
   orbitStatus: state.orbit.status,
   orbitMessage: state.orbit.message,
+  orbitDetails: state.orbit.details,
   orbitRetry: state.orbit.retry,
 });
 

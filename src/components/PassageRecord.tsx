@@ -3,7 +3,6 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, IPassageRecordStrings } from '../model';
 import localStrings from '../selector/localize';
-import { isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
 //import lamejs from 'lamejs';
 import {
@@ -21,6 +20,7 @@ import WSAudioPlayer from './WSAudioPlayer';
 import { QueryBuilder } from '@orbit/data';
 import { loadBlob, removeExtension } from '../utils';
 import { MediaSt, useFetchMediaUrl } from '../crud';
+import { useSnackBar } from '../hoc/SnackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       '& .MuiDialog-paper': {
         maxWidth: '90%',
-        minWidth: '60%',
+        minWidth: '90%',
       },
     },
     paper: {
@@ -74,7 +74,6 @@ function PassageRecord(props: IProps) {
     metaData,
   } = props;
   const [reporter] = useGlobal('errorReporter');
-  const [isOffline] = useGlobal('offline');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [name, setName] = useState(t.defaultFilename);
   const [userHasSetName, setUserHasSetName] = useState(false);
@@ -87,7 +86,7 @@ function PassageRecord(props: IProps) {
   const [filechanged, setFilechanged] = useState(false);
   const [blobReady, setBlobReady] = useState(true);
   const mimeTypeRef = useRef('audio/wav');
-
+  const { showMessage } = useSnackBar();
   const extensions = useMemo(
     () => ['mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'],
     []
@@ -179,10 +178,17 @@ function PassageRecord(props: IProps) {
 
   const handleLoadAudio = () => {
     setLoading(true);
-    loadBlob(mediaState.url, !isElectron || !isOffline, (b) => {
-      setOriginalBlob(b);
-      setLoading(false);
-      setAudioBlob(b);
+    reset();
+    loadBlob(mediaState.url, (urlorError, b) => {
+      if (b) {
+        setOriginalBlob(b);
+        setLoading(false);
+        setAudioBlob(b);
+      } else {
+        showMessage(urlorError);
+        //force it to go get another (unexpired) s3 url
+        fetchMediaUrl({ id: mediaId, auth });
+      }
     });
     const mediaRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'mediafile', id: mediaId })
@@ -209,6 +215,7 @@ function PassageRecord(props: IProps) {
           )}
         <WSAudioPlayer
           allowRecord={true}
+          size={350}
           blob={originalBlob}
           setMimeType={setMimeType}
           onBlobReady={onBlobReady}

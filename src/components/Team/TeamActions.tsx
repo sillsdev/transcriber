@@ -8,6 +8,7 @@ import { TeamContext } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
 import Auth from '../../auth/Auth';
 import ImportTab from '../ImportTab';
+import AudacitySetup from '../AudacitySetup';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,7 +37,7 @@ const TeamActions = (props: IProps) => {
   const [openAdd, setOpenAdd] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const ctx = React.useContext(TeamContext);
-  const { teamCreate, cardStrings } = ctx.state;
+  const { teamCreate, cardStrings, isDeleting } = ctx.state;
   const t = cardStrings;
 
   const handleClickOpen = () => {
@@ -68,16 +69,19 @@ const TeamActions = (props: IProps) => {
           id="teamActImport"
           variant="contained"
           color="default"
+          className={classes.button}
           onClick={handleClickImport}
         >
           {t.import}
         </Button>
       )}
+      {isElectron && <AudacitySetup />}
       <TeamDialog
         mode={DialogMode.add}
         isOpen={openAdd}
         onOpen={setOpenAdd}
         onCommit={handleAdd}
+        disabled={isDeleting}
       />
       {isElectron && importOpen && (
         <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />

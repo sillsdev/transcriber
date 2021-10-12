@@ -39,12 +39,12 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
-    actions: theme.mixins.gutters({
+    actions: {
       paddingBottom: 16,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
-    }) as any,
+    },
     grow: {
       flexGrow: 1,
     },
@@ -145,6 +145,7 @@ export function UserTable(props: IProps) {
   const [memory] = useGlobal('memory');
   const [orgRole] = useGlobal('orgRole');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline');
   const [data, setData] = useState(Array<IRow>());
   const columnDefs = [
     { name: 'name', title: t.name },
@@ -289,51 +290,49 @@ export function UserTable(props: IProps) {
 
   const ActionCell = ({ value, style, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
-      {orgRole === 'admin' && (
-        <>
-          <IconButton
-            id={'edit-' + value}
-            key={'edit-' + value}
-            aria-label={'edit-' + value}
-            color="default"
-            className={classes.actionIcon}
-            onClick={handleEdit(value)}
-            disabled={isCurrentUser(value)}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            id={'del-' + value}
-            key={'del-' + value}
-            aria-label={'del-' + value}
-            color="default"
-            className={classes.actionIcon}
-            onClick={handleDelete(value)}
-            disabled={isCurrentUser(value)}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </>
-      )}
+      <>
+        <IconButton
+          id={'edit-' + value}
+          key={'edit-' + value}
+          aria-label={'edit-' + value}
+          color="default"
+          className={classes.actionIcon}
+          onClick={handleEdit(value)}
+          disabled={isCurrentUser(value)}
+        >
+          <EditIcon />
+        </IconButton>
+        <IconButton
+          id={'del-' + value}
+          key={'del-' + value}
+          aria-label={'del-' + value}
+          color="default"
+          className={classes.actionIcon}
+          onClick={handleDelete(value)}
+          disabled={isCurrentUser(value)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </>
     </Table.Cell>
   );
+  const canEdit = () => orgRole === 'admin' && (!offline || offlineOnly);
 
   const Cell = (props: any) => {
     const { column } = props;
     if (column.name === 'action') {
-      if (orgRole === 'admin') return <ActionCell {...props} />;
+      if (canEdit()) return <ActionCell {...props} />;
       else return <></>;
     }
     return <Table.Cell {...props} />;
   };
 
   if (/profile/i.test(view)) return <StickyRedirect to="/profile" />;
-
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
         <div className={classes.actions}>
-          {orgRole === 'admin' && (
+          {canEdit() && (
             <>
               {!offlineOnly && (
                 <Button

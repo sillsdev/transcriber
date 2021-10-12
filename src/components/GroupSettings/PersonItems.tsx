@@ -24,10 +24,11 @@ interface IRecordProps {
 }
 
 interface IProps extends IRecordProps {
+  title: string;
   detail: boolean;
   ids: Array<IPerson>;
   rev: boolean;
-  del: (id: string, name: string) => void;
+  del?: (id: string, name: string) => void;
   allUsers?: boolean;
   noDeleteInfo?: string;
   noDeleteAllUsersInfo?: string;
@@ -35,6 +36,7 @@ interface IProps extends IRecordProps {
 
 function PersonItems(props: IProps) {
   const {
+    title,
     detail,
     users,
     ids,
@@ -47,7 +49,9 @@ function PersonItems(props: IProps) {
   const classes = useStyles();
   const [orgRole] = useGlobal('orgRole');
 
-  const handleDel = (id: string, name: string) => () => del(id, name);
+  const handleDel = (id: string, name: string) => () => {
+    if (del) del(id, name);
+  };
 
   return (
     <>
@@ -56,7 +60,7 @@ function PersonItems(props: IProps) {
           (u) => u.attributes && ids.map((id) => id.user).indexOf(u.id) !== -1
         )
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-        .map((u) => (
+        .map((u, index) => (
           <ListItem
             key={u.id}
             disabled={
@@ -70,13 +74,14 @@ function PersonItems(props: IProps) {
               primary={u.attributes.name}
               secondary={detail ? <Involvement user={u.id} rev={rev} /> : null}
             />
-            {!detail &&
+            {del &&
+              !detail &&
               orgRole === 'admin' &&
               ids.filter((id) => id.user === u.id)[0].canDelete &&
               !allUsers && (
                 <ListItemSecondaryAction>
                   <IconButton
-                    id={`persDel-${u.id}`}
+                    id={`persDel${title}${index}`}
                     edge="end"
                     aria-label="Delete"
                     disabled={allUsers}
@@ -86,19 +91,25 @@ function PersonItems(props: IProps) {
                   </IconButton>
                 </ListItemSecondaryAction>
               )}
-            {!detail &&
+            {del &&
+              !detail &&
               orgRole === 'admin' &&
               (!ids.filter((id) => id.user === u.id)[0].canDelete ||
                 allUsers) && (
                 <ListItemSecondaryAction>
                   <Tooltip
+                    id={`tip${title}${index}`}
                     title={
                       !ids.filter((id) => id.user === u.id)[0].canDelete
                         ? noDeleteInfo || ''
                         : noDeleteAllUsersInfo || ''
                     }
                   >
-                    <IconButton edge="end" aria-label="Info">
+                    <IconButton
+                      id={`info${title}${index}`}
+                      edge="end"
+                      aria-label="Info"
+                    >
                       <InfoIcon />
                     </IconButton>
                   </Tooltip>
