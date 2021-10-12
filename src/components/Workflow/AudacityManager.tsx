@@ -126,13 +126,16 @@ function AudacityManager(props: IProps) {
       showMessage(t.closeAudacity);
       return;
     }
-    if ((passageId?.id || '') !== '') {
-      const url = getMediaUrl(mediaId);
+    let url = '';
+    if ((mediaId || '') !== '') {
+      url = getMediaUrl(mediaId);
       const mediaName = dataPath(url, PathType.MEDIA);
       if (!fs.existsSync(mediaName)) {
         showMessage(t.checkDownload);
-        return;
+        url = '';
       }
+    }
+    if ((passageId.id || '') !== '') {
       const fullName = await getProjName(passageId);
       fs.mkdirSync(path.dirname(fullName), { recursive: true });
       if (!fs.existsSync(fullName))
@@ -141,7 +144,7 @@ function AudacityManager(props: IProps) {
           fullName
         );
       setName(fullName);
-      launchAudacity(fullName, reporter, getMediaUrl(mediaId));
+      launchAudacity(fullName, reporter, url);
     }
   };
 
