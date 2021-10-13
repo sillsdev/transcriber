@@ -1,5 +1,7 @@
-sil-transcriber (2.13.1.0)  experimental; urgency=high
+sil-transcriber (2.13.3.0)  experimental; urgency=high
 
+  * Set Audacity Exists and don't allow create if files missing
+  * handle flat passage seq gt 1
   * TT-2948 Plan Column Headers (#464)
   * TT-2937 upgrade wave surfer (#465)
   * updated help
