@@ -133,7 +133,7 @@ function AudacityManager(props: IProps) {
       const mediaName = dataPath(url, PathType.MEDIA);
       if (!fs.existsSync(mediaName)) {
         showMessage(t.checkDownload);
-        url = '';
+        return;
       }
     }
     if ((passageId.id || '') !== '') {
@@ -144,6 +144,7 @@ function AudacityManager(props: IProps) {
           path.join(API_CONFIG.resourcePath, 'new.aup3'),
           fullName
         );
+      setExists(true);
       setName(fullName);
       launchAudacity(fullName, reporter, url);
     }
