@@ -51,6 +51,7 @@ const TeamActions = (props: IProps) => {
     teamCreate(team);
   };
 
+  console.log(`TeamAction isDeveloper=${isDeveloper}`);
   return (
     <div className={classes.root}>
       {(!offline || isDeveloper) && (
@@ -75,7 +76,7 @@ const TeamActions = (props: IProps) => {
           {t.import}
         </Button>
       )}
-      {isElectron && <AudacitySetup />}
+      {/* {isElectron && <AudacitySetup />} */}
       <TeamDialog
         mode={DialogMode.add}
         isOpen={openAdd}

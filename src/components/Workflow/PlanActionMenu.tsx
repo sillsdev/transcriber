@@ -209,7 +209,7 @@ export function PlanActionMenu(props: IProps) {
                         <TranscribeIcon className={classes.action} />
                       </MenuItem>
                     )}
-                    {isElectron && allAudacity && isPassage && !readonly && (
+                    {/* {isElectron && allAudacity && isPassage && !readonly && (
                       <MenuItem
                         id="planActAud"
                         title={t.launchAudacity}
@@ -217,7 +217,7 @@ export function PlanActionMenu(props: IProps) {
                       >
                         <AudacityLogo />
                       </MenuItem>
-                    )}
+                    )} */}
                     {canDelete && !readonly && (
                       <MenuItem
                         id="planActDel"
