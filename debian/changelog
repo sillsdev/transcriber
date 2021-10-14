@@ -1,5 +1,6 @@
-sil-transcriber (2.13.3.0)  experimental; urgency=high
+sil-transcriber (2.13.4.0)  experimental; urgency=high
 
+  * Remove Audacity features from this release
   * Set Audacity Exists and don't allow create if files missing
   * handle flat passage seq gt 1
   * TT-2948 Plan Column Headers (#464)
