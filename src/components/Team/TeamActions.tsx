@@ -8,7 +8,6 @@ import { TeamContext } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
 import Auth from '../../auth/Auth';
 import ImportTab from '../ImportTab';
-import AudacitySetup from '../AudacitySetup';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,7 +50,6 @@ const TeamActions = (props: IProps) => {
     teamCreate(team);
   };
 
-  console.log(`TeamAction isDeveloper=${isDeveloper}`);
   return (
     <div className={classes.root}>
       {(!offline || isDeveloper) && (
@@ -76,7 +74,6 @@ const TeamActions = (props: IProps) => {
           {t.import}
         </Button>
       )}
-      {/* {isElectron && <AudacitySetup />} */}
       <TeamDialog
         mode={DialogMode.add}
         isOpen={openAdd}

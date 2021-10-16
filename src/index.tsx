@@ -177,8 +177,6 @@ Promise.all(promises)
       latestVersion: '',
       releaseDate: '',
       progress: 0,
-      allAudacity:
-        promResults.length > 2 ? promResults[2][0] === 'true' : false,
       trackedTask: '',
     });
     ReactDOM.render(<Root />, document.getElementById('root'));

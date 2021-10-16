@@ -41,7 +41,6 @@ declare module 'reactn/default' {
     latestVersion: string;
     releaseDate: string;
     progress: number;
-    allAudacity: boolean;
     trackedTask: string;
   }
 }

@@ -3532,7 +3532,7 @@
                <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="scriptureTable.action">
+      	<trans-unit id="scriptureTable.action">
             <source>Action</source>
             <target/>
             <context-group>
@@ -3553,6 +3553,13 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="scriptureTable.installAudacity">
+      		<source>Install {Audacity} to use this feature.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ScriptureTable.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="scriptureTable.loadingTable">
             <source>Loading data</source>
             <target/>

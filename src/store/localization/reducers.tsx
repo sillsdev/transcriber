@@ -655,6 +655,7 @@ const initialState = {
 			"action": "Action",
 			"book": "Book",
 			"description": "Description",
+			"installAudacity": "Install {Audacity} to use this feature.",
 			"loadingTable": "Loading data",
 			"passage": "Passage",
 			"pasteInvalidColumnsGeneral": "Invalid number of columns ({0}). Expecting 5 columns.",

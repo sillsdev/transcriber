@@ -3046,6 +3046,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTable.installAudacity">
+         <segment>
+            <source>Install {Audacity} to use this feature.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.loadingTable">
          <segment>
             <source>Loading data</source>
