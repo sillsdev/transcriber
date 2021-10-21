@@ -25,9 +25,6 @@ import {
   infoMsg,
   logFile,
   getFingerprintArray,
-  hasAuacityScripts,
-  hasPython,
-  hasAudacity,
 } from './utils';
 import {
   isElectron,
@@ -127,16 +124,8 @@ const Root = () => (
 );
 const promises = [];
 promises.push(getFingerprintArray());
-const audacity = async () => {
-  return [
-    (await hasAudacity()) && (await hasAuacityScripts()) && (await hasPython())
-      ? 'true'
-      : 'false',
-  ];
-};
 if (isElectron) {
   promises.push(restoreBackup()); //.then(() => console.log('pull done'));
-  promises.push(audacity());
 }
 Promise.all(promises)
   .then((promResults) => {

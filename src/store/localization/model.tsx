@@ -73,24 +73,17 @@ export interface IAudacityManagerStrings extends Localize.LocalizedStringsMethod
     "close": string;
     "closeAudacity": string;
     "create": string;
+    "exportFirst": string;
     "import": string;
+    "installError": string;
+    "loadingAudio": string;
+    "missingImport": string;
     "missingProject": string;
     "open": string;
     "saveFirst": string;
     "tip": string;
     "title": string;
     "unlink": string;
-};
-
-export interface IAudacitySetupStrings extends Localize.LocalizedStringsMethods {
-    "audacityInstalled": string;
-    "audacitySetup": string;
-    "close": string;
-    "enable": string;
-    "getInstaller": string;
-    "pythonInstalled": string;
-    "scriptingEnabled": string;
-    "versions": string;
 };
 
 export interface IAudioDownloadStrings extends Localize.LocalizedStringsMethods {
@@ -943,7 +936,6 @@ export interface ILocalizedStrings {
 	assignmentTable: IAssignmentTableStrings;
 	assignSection: IAssignSectionStrings;
 	audacityManager: IAudacityManagerStrings;
-	audacitySetup: IAudacitySetupStrings;
 	audioDownload: IAudioDownloadStrings;
 	cards: ICardsStrings;
 	control: IControlStrings;

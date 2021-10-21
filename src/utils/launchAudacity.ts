@@ -1,28 +1,13 @@
 import { IExeca } from '../model';
-import {
-  dataPath,
-  PathType,
-  getPythonExe,
-  logError,
-  Severity,
-  infoMsg,
-} from '.';
+import { getAudacityExe, logError, Severity, infoMsg } from '.';
 import { API_CONFIG } from '../api-variable';
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 const execa = isElectron ? require('execa') : null;
 
-export const launchAudacity = async (
-  proj: string,
-  reporter: any,
-  mediaName?: string
-) => {
-  const pythonExe = await getPythonExe();
-  const args = ['audacity-pipe.py', `"${proj}"`];
-  if (mediaName && mediaName !== '') {
-    const curPath = dataPath(mediaName, PathType.MEDIA);
-    args.push(`"${curPath}"`);
-  }
-  execa(pythonExe, args, {
+export const launchAudacity = async (proj: string, reporter: any) => {
+  const audacityExe = await getAudacityExe();
+  const args = [`"${proj}"`];
+  execa(`"${audacityExe}"`, args, {
     shell: true,
     detached: true,
     cwd: API_CONFIG.resourcePath,

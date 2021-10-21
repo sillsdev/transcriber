@@ -337,10 +337,34 @@
             <target>Создать</target>
          </segment>
       </unit>
+      <unit id="audacityManager.exportFirst">
+         <segment>
+            <source>Open Audacity and use File:Export before importing</source>
+         	<target>Откройте Audacity и используйте Файл:Экспорт перед импортом</target>
+         </segment>
+      </unit>
       <unit id="audacityManager.import">
          <segment>
             <source>Import</source>
             <target>Импорт</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.installError">
+         <segment>
+            <source>Audacity install error</source>
+         	<target>Ошибка установки Audacity</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.loadingAudio">
+         <segment>
+            <source>Use File:Import in Audacity to load current audio if desired.</source>
+         	<target>Используйте Файл:Импорт в Audacity для загрузки текущего аудио, если это необходимо</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.missingImport">
+         <segment>
+            <source>Missing import file: {0}</source>
+         	<target>Отсутствует файл импорта: {0}</target>
          </segment>
       </unit>
       <unit id="audacityManager.missingProject">
@@ -358,7 +382,7 @@
       <unit id="audacityManager.saveFirst">
          <segment>
             <source>Save before editing</source>
-            <target/>
+         	<target>Сохранить перед редактированием</target>
          </segment>
       </unit>
       <unit id="audacityManager.tip">
@@ -377,54 +401,6 @@
          <segment>
             <source>Unlink</source>
             <target>Разъединить</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.audacityInstalled">
-         <segment>
-            <source>Audacity Installed</source>
-            <target>Audacity Installed</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.audacitySetup">
-         <segment>
-            <source>Audacity Setup</source>
-            <target>Настройка Audacity</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.close">
-         <segment>
-            <source>Close</source>
-            <target>Закрыть</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.enable">
-         <segment>
-            <source>Enable</source>
-            <target>Включить</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.getInstaller">
-         <segment>
-            <source>Get Installer</source>
-            <target>Получить программу установки</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.pythonInstalled">
-         <segment>
-            <source>Python Installed</source>
-            <target>Установлен Python</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.scriptingEnabled">
-         <segment>
-            <source>Scripting Enabled</source>
-            <target>Сценарии включены</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.versions">
-         <segment>
-            <source>NB: Audacity integration was last tested with version {0} of Audacity and Linux requires the snap package.</source>
-            <target>NB: Интеграция Audacity была в последний раз протестирована с версией {0} Audacity, а для Linux требуется пакет snap.</target>
          </segment>
       </unit>
       <unit id="audioDownload.downloadMedia">

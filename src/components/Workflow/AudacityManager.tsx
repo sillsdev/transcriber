@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import { IState, IAudacityManagerStrings, MediaFile } from '../../model';
 import localStrings from '../../selector/localize';
@@ -26,14 +27,10 @@ import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
 import {
   launchAudacity,
-  launchAudacityExport,
   loadBlob,
   isProcessRunning,
-  getMacroOutputMatch,
-  setMacroOutputPath,
-  resetAudContent,
   audPrefsName,
-  getAudPrefContent,
+  setAudacityPref,
 } from '../../utils';
 import { dataPath, PathType } from '../../utils';
 
@@ -107,7 +104,7 @@ function AudacityManager(props: IProps) {
 
   const handleBrowse = () => {
     ipc?.invoke('audacityOpen').then((fullName: string[]) => {
-      setName(fullName[0]);
+      if (fullName && fullName.length > 0) setName(fullName[0]);
     });
   };
 
@@ -122,15 +119,28 @@ function AudacityManager(props: IProps) {
     return mediaUrl;
   };
 
+  const getMediaUpdated = (mediaId: string) => {
+    let mediaUpdated = '';
+    if (mediaId !== '') {
+      const mediaRec = memory.cache.query((q) =>
+        q.findRecord({ type: 'mediafile', id: mediaId })
+      ) as MediaFile;
+      mediaUpdated = mediaRec?.attributes?.dateUpdated || '';
+    }
+    return mediaUpdated;
+  };
+
   const handleCreate = async () => {
-    if (await isProcessRunning('audacity')) {
-      showMessage(t.closeAudacity);
+    const prefsName = await audPrefsName();
+    if (!prefsName) {
+      showMessage(t.installError);
       return;
     }
-    let url = '';
+
+    let mediaName = '';
     if ((mediaId || '') !== '') {
-      url = getMediaUrl(mediaId);
-      const mediaName = dataPath(url, PathType.MEDIA);
+      const url = getMediaUrl(mediaId);
+      mediaName = dataPath(url, PathType.MEDIA);
       if (!fs.existsSync(mediaName)) {
         showMessage(t.checkDownload);
         return;
@@ -138,84 +148,88 @@ function AudacityManager(props: IProps) {
     }
     if ((passageId.id || '') !== '') {
       const fullName = await getProjName(passageId);
-      fs.mkdirSync(path.dirname(fullName), { recursive: true });
-      if (!fs.existsSync(fullName))
+      const beforeContent = await setAudacityPref(fullName);
+      // setAudacityPref creates the folders needed for the copy below
+      if (!fs.existsSync(fullName)) {
+        const mp3FullName = fullName
+          .replace('aup3', 'io')
+          .replace('.aup3', '.mp3');
+        if (Boolean(mediaName) && !fs.existsSync(mp3FullName)) {
+          showMessage(t.loadingAudio);
+          fs.copyFileSync(mediaName, mp3FullName);
+          const updated = new Date(getMediaUpdated(mediaId));
+          fs.utimesSync(mp3FullName, updated, updated);
+        }
         fs.copyFileSync(
           path.join(API_CONFIG.resourcePath, 'new.aup3'),
           fullName
         );
+      }
       setExists(true);
       setName(fullName);
-      launchAudacity(fullName, reporter, url);
+      if (beforeContent && (await isProcessRunning('audacity'))) {
+        showMessage(t.closeAudacity);
+        return;
+      }
+
+      launchAudacity(fullName, reporter);
     }
   };
 
-  const handleOpen = () => {
+  const handleOpen = async () => {
     if (changed) {
       showMessage(t.saveFirst);
       return;
     }
+    const prefsName = await audPrefsName();
+    if (!prefsName) {
+      showMessage(t.installError);
+      return;
+    }
+    const beforeContent = await setAudacityPref(name);
+    if (beforeContent && (await isProcessRunning('audacity'))) {
+      showMessage(t.closeAudacity);
+      return;
+    }
+
     launchAudacity(name, reporter);
   };
 
   const handleImport = async () => {
-    if (await isProcessRunning('audacity')) {
-      showMessage(t.closeAudacity);
-      return;
-    }
     if (name.indexOf('.aup3') === -1) {
       showMessage(t.badProjName);
       return;
     }
-    const splitName = name.split(path.sep);
-    let mp3Name = splitName.pop();
+    const mp3FullName = name.replace('aup3', 'io').replace('.aup3', '.mp3');
+    if (!fs.existsSync(mp3FullName)) {
+      showMessage(t.missingImport.replace('{0}', mp3FullName));
+      return;
+    }
+    const stat = fs.statSync(mp3FullName);
+    if (moment(stat.mtime).isSame(new Date(getMediaUpdated(mediaId)))) {
+      showMessage(t.exportFirst);
+      return;
+    }
+    const mp3Name = mp3FullName.split(path.sep).pop();
     if (!mp3Name) {
       showMessage(t.badProjPath);
       return;
     }
-    mp3Name = mp3Name.replace('.aup3', '.mp3');
-    const mp3FullName = splitName
-      .concat('macro-output')
-      .concat(mp3Name)
-      .join(path.sep);
-    fs.mkdirSync(path.dirname(mp3FullName), { recursive: true });
+
     const prefsName = await audPrefsName();
     if (!prefsName) {
-      showMessage('Audacity Install Error');
+      showMessage(t.installError);
       return;
     }
-    const beforeContent = (await getAudPrefContent(prefsName)) || '';
-    const m = getMacroOutputMatch(beforeContent);
-    let change = false;
-    let folder = splitName.join(path.sep);
-    if (path.sep === '\\') {
-      folder = folder.replace(/\\/g, `${path.sep}${path.sep}`);
-    }
-    if (m) {
-      if (m[1] !== folder) {
-        setMacroOutputPath(prefsName, beforeContent, m, folder);
-        change = true;
-      }
-    } else {
-      const cfgSection = '[Directories/MacrosOut]\nDefault=';
-      resetAudContent(prefsName, beforeContent + cfgSection + folder);
-      change = true;
-    }
 
-    await launchAudacityExport(name, reporter, () => {
-      loadBlob(mp3FullName, (url, b) => {
-        if (b) {
-          onImport(item, [
-            new File([b], mp3Name as string, { type: 'audio/mp3' }),
-          ]);
-          onClose();
-        } else showMessage(url);
-      });
+    loadBlob(mp3FullName, (url, b) => {
+      if (b) {
+        onImport(item, [
+          new File([b], mp3Name as string, { type: 'audio/mp3' }),
+        ]);
+        onClose();
+      } else showMessage(url);
     });
-
-    if (change) {
-      resetAudContent(prefsName, beforeContent);
-    }
   };
 
   const handleUnlink = () => {
