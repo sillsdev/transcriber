@@ -24,6 +24,7 @@ import { withData, WithDataProps } from '../../mods/react-orbitjs';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
+import { Link } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useSnackBar } from '../../hoc/SnackBar';
 import PlanSheet, { ICellChange } from './PlanSheet';
@@ -41,6 +42,7 @@ import {
   cleanFileName,
   useCheckOnline,
   currentDateTime,
+  hasAudacity,
 } from '../../utils';
 import {
   isSectionRow,
@@ -64,6 +66,8 @@ import Uploader, { IStatus } from '../Uploader';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import { UpdateRecord } from '../../model/baseModel';
 import { PlanContext } from '../../context/PlanContext';
+import stringReplace from 'react-string-replace';
+import { useExternalLink } from '../useExternalLink';
 
 const SaveWait = 500;
 
@@ -202,6 +206,7 @@ export function ScriptureTable(props: IProps) {
     doOrbitError,
   });
   const checkOnline = useCheckOnline(resetOrbitError);
+  const { handleLaunch } = useExternalLink();
 
   const secNumCol = React.useMemo(() => {
     return colNames.indexOf('sectionSeq');
@@ -522,7 +527,24 @@ export function ScriptureTable(props: IProps) {
     });
   };
 
-  const handleAudacity = (index: number) => {
+  const handleAudacity = async (index: number) => {
+    if (!(await hasAudacity())) {
+      showMessage(
+        <span>
+          {stringReplace(t.installAudacity, '{Audacity}', () => (
+            <Link
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleLaunch('https://www.audacityteam.org/download/')}
+            >
+              'Audacity'
+            </Link>
+          ))}
+        </span>
+      );
+      return;
+    }
     const { wf } = getByIndex(workflow, index);
     saveIfChanged(() => {
       setAudacityItem({ wf: wf as IWorkflow, index });

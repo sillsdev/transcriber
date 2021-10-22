@@ -63,13 +63,13 @@
       </unit>
       <unit id="access.noOnlineUsers2">
          <segment>
-            <source>Log in and select Offline Available in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
+            <source>Log in and select Offline Available in the audio project card menu and then log out. Or, click IMPORT AUDIO PROJECT to import an audio project your admin exported.</source>
             <target>Faça login e selecione Offline disponível no menu do cartão do projeto e, em seguida, faça logout. Ou clique em IMPORTAR PROJETO para importar um projeto exportado pelo administrador.</target>
          </segment>
       </unit>
       <unit id="access.noOnlineUsers3">
          <segment>
-            <source>To create an online project for working alone:</source>
+            <source>To create an online audio project for working alone:</source>
             <target/>
          </segment>
       </unit>
@@ -337,10 +337,34 @@
             <target>Criar</target>
          </segment>
       </unit>
+      <unit id="audacityManager.exportFirst">
+         <segment>
+            <source>Open Audacity and use File:Export before importing</source>
+         	<target>Abrir Audacity e usar File:Exportar antes de importar</target>
+         </segment>
+      </unit>
       <unit id="audacityManager.import">
          <segment>
             <source>Import</source>
             <target>Importação</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.installError">
+         <segment>
+            <source>Audacity install error</source>
+         	<target>Erro de instalação de audácia</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.loadingAudio">
+         <segment>
+            <source>Use File:Import in Audacity to load current audio if desired.</source>
+         	<target>Use File:Import in Audacity para carregar o áudio atual, se desejado.</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.missingImport">
+         <segment>
+            <source>Missing import file: {0}</source>
+         	<target>Falta arquivo de importação: {0}</target>
          </segment>
       </unit>
       <unit id="audacityManager.missingProject">
@@ -377,54 +401,6 @@
          <segment>
             <source>Unlink</source>
             <target>Desbloqueio</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.audacityInstalled">
-         <segment>
-            <source>Audacity Installed</source>
-            <target>Audacidade Instalada</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.audacitySetup">
-         <segment>
-            <source>Audacity Setup</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.close">
-         <segment>
-            <source>Close</source>
-            <target>Fechar</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.enable">
-         <segment>
-            <source>Enable</source>
-            <target>Habilitar</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.getInstaller">
-         <segment>
-            <source>Get Installer</source>
-            <target>Obter instalador</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.pythonInstalled">
-         <segment>
-            <source>Python Installed</source>
-            <target>Python Instalado</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.scriptingEnabled">
-         <segment>
-            <source>Scripting Enabled</source>
-            <target>Scripting Habilitar</target>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.versions">
-         <segment>
-            <source>NB: Audacity integration was last tested with version {0} of Audacity and Linux requires the snap package.</source>
-            <target>NB: A integração do Audacity foi testada pela última vez com a versão {0} do Audacity e o Linux requer o pacote snap.</target>
          </segment>
       </unit>
       <unit id="audioDownload.downloadMedia">

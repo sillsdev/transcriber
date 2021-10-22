@@ -394,6 +394,13 @@
                <context context-type="sourcefile">AudacityManager.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="audacityManager.exportFirst">
+      		<source>Open Audacity and use File:Export before importing</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="audacityManager.import">
             <source>Import</source>
             <target/>
@@ -401,6 +408,27 @@
                <context context-type="sourcefile">AudacityManager.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="audacityManager.installError">
+      		<source>Audacity install error</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.loadingAudio">
+      		<source>Use File:Import in Audacity to load current audio if desired.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="audacityManager.missingImport">
+      		<source>Missing import file: {0}</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudacityManager.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="audacityManager.missingProject">
             <source>Missing file. Use Browse to search for it or Create to make a new file.</source>
             <target/>
@@ -442,62 +470,6 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">AudacityManager.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="audacitySetup.audacityInstalled">
-            <source>Audacity Installed</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">AudacitySetup.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="audacitySetup.audacitySetup">
-            <source>Audacity Setup</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">AudacitySetup.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="audacitySetup.close">
-            <source>Close</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">AudacitySetup.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="audacitySetup.enable">
-            <source>Enable</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">AudacitySetup.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="audacitySetup.getInstaller">
-            <source>Get Installer</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">AudacitySetup.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="audacitySetup.pythonInstalled">
-            <source>Python Installed</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">AudacitySetup.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="audacitySetup.scriptingEnabled">
-            <source>Scripting Enabled</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">AudacitySetup.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="audacitySetup.versions">
-            <source>NB: Audacity integration was last tested with version {0} of Audacity and Linux requires the snap package.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">AudacitySetup.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="audioDownload.downloadMedia">
@@ -3532,7 +3504,7 @@
                <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="scriptureTable.action">
+      	<trans-unit id="scriptureTable.action">
             <source>Action</source>
             <target/>
             <context-group>
@@ -3553,6 +3525,13 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="scriptureTable.installAudacity">
+      		<source>Install {Audacity} to use this feature.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ScriptureTable.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="scriptureTable.loadingTable">
             <source>Loading data</source>
             <target/>
