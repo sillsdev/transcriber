@@ -33,6 +33,7 @@ import {
   setAudacityPref,
 } from '../../utils';
 import { dataPath, PathType } from '../../utils';
+import { extensions, mimes } from '.';
 
 const fs = require('fs');
 const ipc = isElectron ? require('electron').ipcRenderer : null;
@@ -151,14 +152,17 @@ function AudacityManager(props: IProps) {
       const beforeContent = await setAudacityPref(fullName);
       // setAudacityPref creates the folders needed for the copy below
       if (!fs.existsSync(fullName)) {
-        const mp3FullName = fullName
-          .replace('aup3', 'io')
-          .replace('.aup3', '.mp3');
-        if (Boolean(mediaName) && !fs.existsSync(mp3FullName)) {
-          showMessage(t.loadingAudio);
-          fs.copyFileSync(mediaName, mp3FullName);
-          const updated = new Date(getMediaUpdated(mediaId));
-          fs.utimesSync(mp3FullName, updated, updated);
+        if (Boolean(mediaName)) {
+          let ext = mediaName.split('.').pop() || 'mp3';
+          const mp3FullName = fullName
+            .replace('aup3', 'io')
+            .replace('.aup3', `.${ext}`);
+          if (!fs.existsSync(mp3FullName)) {
+            showMessage(t.loadingAudio);
+            fs.copyFileSync(mediaName, mp3FullName);
+            const updated = new Date(getMediaUpdated(mediaId));
+            fs.utimesSync(mp3FullName, updated, updated);
+          }
         }
         fs.copyFileSync(
           path.join(API_CONFIG.resourcePath, 'new.aup3'),
@@ -200,13 +204,30 @@ function AudacityManager(props: IProps) {
       showMessage(t.badProjName);
       return;
     }
-    const mp3FullName = name.replace('aup3', 'io').replace('.aup3', '.mp3');
-    if (!fs.existsSync(mp3FullName)) {
-      showMessage(t.missingImport.replace('{0}', mp3FullName));
+    const audioFolder = path.dirname(name.replace('aup3', 'io'));
+    const result = fs.readdirSync(audioFolder) as string[];
+    let mp3FullName = '';
+    let mime = '';
+    let lastTime = 0;
+    for (const audioName of result) {
+      const ext = audioName.split('.').pop() || '';
+      const extIdx = extensions.indexOf(ext);
+      const fullName = path.join(audioFolder, audioName);
+      const stat = fs.statSync(fullName);
+      if (
+        moment(stat.mtime).isAfter(moment(lastTime)) &&
+        extensions.indexOf(ext) >= 0
+      ) {
+        lastTime = stat.mtime;
+        mp3FullName = fullName;
+        mime = mimes[extIdx];
+      }
+    }
+    if (!Boolean(mp3FullName)) {
+      showMessage(t.missingImport.replace('{0}', audioFolder));
       return;
     }
-    const stat = fs.statSync(mp3FullName);
-    if (moment(stat.mtime).isSame(new Date(getMediaUpdated(mediaId)))) {
+    if (moment(lastTime).toISOString() <= getMediaUpdated(mediaId)) {
       showMessage(t.exportFirst);
       return;
     }
@@ -224,9 +245,7 @@ function AudacityManager(props: IProps) {
 
     loadBlob(mp3FullName, (url, b) => {
       if (b) {
-        onImport(item, [
-          new File([b], mp3Name as string, { type: 'audio/mp3' }),
-        ]);
+        onImport(item, [new File([b], mp3Name as string, { type: mime })]);
         onClose();
       } else showMessage(url);
     });
