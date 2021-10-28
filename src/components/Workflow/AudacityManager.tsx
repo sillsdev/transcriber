@@ -227,7 +227,11 @@ function AudacityManager(props: IProps) {
       showMessage(t.missingImport.replace('{0}', audioFolder));
       return;
     }
-    if (moment(lastTime).toISOString() <= getMediaUpdated(mediaId)) {
+    // YYYY-MM-DDTHH:MM:SS (= 19 characters)
+    if (
+      moment(lastTime).toISOString().slice(1, 19) <=
+      getMediaUpdated(mediaId).slice(0, 19)
+    ) {
       showMessage(t.exportFirst);
       return;
     }
