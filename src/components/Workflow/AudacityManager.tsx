@@ -105,7 +105,11 @@ function AudacityManager(props: IProps) {
 
   const handleBrowse = () => {
     ipc?.invoke('audacityOpen').then((fullName: string[]) => {
-      if (fullName && fullName.length > 0) setName(fullName[0]);
+      if (fullName && fullName.length > 0) {
+        setAudacityPref(fullName[0]);
+        // setAudacityPref creates the folders needed for audacity export
+        setName(fullName[0]);
+      }
     });
   };
 
@@ -229,7 +233,7 @@ function AudacityManager(props: IProps) {
     }
     // YYYY-MM-DDTHH:MM:SS (= 19 characters)
     if (
-      moment(lastTime).toISOString().slice(1, 19) <=
+      moment(lastTime).toISOString().slice(0, 19) <=
       getMediaUpdated(mediaId).slice(0, 19)
     ) {
       showMessage(t.exportFirst);
