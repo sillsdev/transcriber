@@ -3022,7 +3022,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planActions.playpause">
-            <source>Play/Pause</source>
+            <source>Play/Stop</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>

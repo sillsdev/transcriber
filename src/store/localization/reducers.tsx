@@ -551,7 +551,7 @@ const initialState = {
 			"assign": "Assign",
 			"delete": "Delete",
 			"launchAudacity": "Launch Audacity",
-			"playpause": "Play/Pause",
+			"playpause": "Play/Stop",
 			"recordAudio": "Record/Edit Audio",
 			"transcribe": "Transcribe",
 		}

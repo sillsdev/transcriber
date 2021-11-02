@@ -2589,8 +2589,8 @@
       </unit>
       <unit id="planActions.playpause">
          <segment>
-            <source>Play/Pause</source>
-            <target>Tocar / Pausar gravação</target>
+            <source>Play/Stop</source>
+         	<target>Jogar/Pararar</target>
          </segment>
       </unit>
       <unit id="planActions.recordAudio">
