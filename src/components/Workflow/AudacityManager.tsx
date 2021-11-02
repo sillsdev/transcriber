@@ -208,6 +208,8 @@ function AudacityManager(props: IProps) {
       showMessage(t.badProjName);
       return;
     }
+    const nameOnly = name.replace('.aup3', '').split(path.sep).pop();
+    const nmLen = nameOnly?.length;
     const audioFolder = path.dirname(name.replace('aup3', 'io'));
     const result = fs.readdirSync(audioFolder) as string[];
     let mp3FullName = '';
@@ -220,7 +222,8 @@ function AudacityManager(props: IProps) {
       const stat = fs.statSync(fullName);
       if (
         moment(stat.mtime).isAfter(moment(lastTime)) &&
-        extensions.indexOf(ext) >= 0
+        extensions.indexOf(ext) >= 0 &&
+        nameOnly === audioName.slice(0, nmLen)
       ) {
         lastTime = stat.mtime;
         mp3FullName = fullName;
