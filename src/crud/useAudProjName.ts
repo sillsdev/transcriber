@@ -41,7 +41,7 @@ export const useAudProjName = () => {
     let secPart = `${book ? '-' + book : ''}${recSlug(secRec, secSeq)}`;
     const ref = passRec?.attributes?.reference;
     const cleanRef = ref ? `-${cleanFileName(ref.replace(' ', '_'))}` : '';
-    let aupPath = path.join(docs, 'Audacity', planSlug(planRec));
+    let aupPath = path.join(docs, 'Audacity', 'aup3', planSlug(planRec));
     let pasPart = '';
     if (planRec?.attributes?.flat) {
       secPart += cleanRef;

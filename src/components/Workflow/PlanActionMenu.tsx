@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { useGlobal } from 'reactn';
 import { ISharedStrings, IPlanActionsStrings, IState } from '../../model';
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
@@ -74,7 +73,6 @@ export function PlanActionMenu(props: IProps) {
     active,
   } = props;
   const classes = useStyles();
-  const [allAudacity] = useGlobal('allAudacity');
   const [open, setOpen] = React.useState(false);
   const [hover, setHover] = React.useState(false);
   const top = React.useRef<number>(0);
@@ -209,7 +207,7 @@ export function PlanActionMenu(props: IProps) {
                         <TranscribeIcon className={classes.action} />
                       </MenuItem>
                     )}
-                    {/* {isElectron && allAudacity && isPassage && !readonly && (
+                    {isElectron && isPassage && !readonly && (
                       <MenuItem
                         id="planActAud"
                         title={t.launchAudacity}
@@ -217,7 +215,7 @@ export function PlanActionMenu(props: IProps) {
                       >
                         <AudacityLogo />
                       </MenuItem>
-                    )} */}
+                    )}
                     {canDelete && !readonly && (
                       <MenuItem
                         id="planActDel"

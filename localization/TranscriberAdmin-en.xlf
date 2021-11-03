@@ -340,9 +340,33 @@
             <target/>
          </segment>
       </unit>
+      <unit id="audacityManager.exportFirst">
+         <segment>
+            <source>Open Audacity and use File:Export before importing</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="audacityManager.import">
          <segment>
             <source>Import</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="audacityManager.installError">
+         <segment>
+            <source>Audacity install error</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="audacityManager.loadingAudio">
+         <segment>
+            <source>Use File:Import in Audacity to load current audio if desired.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="audacityManager.missingImport">
+         <segment>
+            <source>Missing import file: {0}</source>
             <target/>
          </segment>
       </unit>
@@ -379,54 +403,6 @@
       <unit id="audacityManager.unlink">
          <segment>
             <source>Unlink</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.audacityInstalled">
-         <segment>
-            <source>Audacity Installed</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.audacitySetup">
-         <segment>
-            <source>Audacity Setup</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.close">
-         <segment>
-            <source>Close</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.enable">
-         <segment>
-            <source>Enable</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.getInstaller">
-         <segment>
-            <source>Get Installer</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.pythonInstalled">
-         <segment>
-            <source>Python Installed</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.scriptingEnabled">
-         <segment>
-            <source>Scripting Enabled</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="audacitySetup.versions">
-         <segment>
-            <source>NB: Audacity integration was last tested with version {0} of Audacity and Linux requires the snap package.</source>
             <target/>
          </segment>
       </unit>
@@ -2616,7 +2592,7 @@
       </unit>
       <unit id="planActions.playpause">
          <segment>
-            <source>Play/Pause</source>
+            <source>Play/Stop</source>
             <target/>
          </segment>
       </unit>
@@ -3043,6 +3019,12 @@
       <unit id="scriptureTable.description">
          <segment>
             <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.installAudacity">
+         <segment>
+            <source>Install {Audacity} to use this feature.</source>
             <target/>
          </segment>
       </unit>

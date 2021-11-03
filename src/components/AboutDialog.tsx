@@ -147,7 +147,12 @@ function AboutDialog(props: AboutDialogProps) {
           >
             <Typography className={classes.heading}>
               {
-                <Link href="#" onClick={handleLaunch(lic.url)}>
+                <Link
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={handleLaunch(lic.url)}
+                >
                   {lic.title}
                 </Link>
               }
