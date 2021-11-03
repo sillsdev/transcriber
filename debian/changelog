@@ -1,3 +1,9 @@
+sil-transcriber (2.13.5.0)  experimental; urgency=high
+
+  * TT-2955 Audacity Integration
+
+ -- Greg Trihus <greg_trihus@sil.org>  Tue, 3 Nov 2021 9:24:00 -0600
+
 sil-transcriber (2.13.4.0)  experimental; urgency=high
 
   * Remove Audacity features from this release
