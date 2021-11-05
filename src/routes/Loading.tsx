@@ -169,17 +169,16 @@ export function Loading(props: IProps) {
 
     //filter will be passed to api which will lowercase the email before comparison
     var allinvites: Invitation[] = (await newremote.query((q: QueryBuilder) =>
-      q
-        .findRecords('invitation')
-        .filter(
-          { attribute: 'email', value: userEmail },
-          { attribute: 'accepted', value: false }
-        )
+      q.findRecords('invitation').filter(
+        { attribute: 'email', value: userEmail }
+        // { attribute: 'accepted', value: false }  //went from AND to OR between attributes :/
+      )
     )) as any;
     allinvites.forEach(async (invitation) => {
-      await newremote.update((t: TransformBuilder) =>
-        t.replaceAttribute(invitation, 'accepted', true)
-      );
+      if (!invitation.attributes.accepted)
+        await newremote.update((t: TransformBuilder) =>
+          t.replaceAttribute(invitation, 'accepted', true)
+        );
     });
 
     if (inviteId) {
@@ -350,9 +349,14 @@ export function Loading(props: IProps) {
 
   useEffect(() => {
     const finishRemoteLoad = () => {
+      const tokData = auth.getProfile() || { sub: '' };
       localStorage.removeItem('goingOnline');
       remote
-        .pull((q) => q.findRecords('currentuser'))
+        .pull((q) =>
+          q
+            .findRecords('user')
+            .filter({ attribute: 'auth0Id', value: tokData.sub })
+        )
         .then((tr) => {
           const user = (tr[0].operations[0] as any).record as User;
           InviteUser(remote, user?.attributes?.email || 'neverhere').then(

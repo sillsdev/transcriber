@@ -322,7 +322,9 @@ export const Sources = async (
   }
   /* set the user from the token - must be done after the backup is loaded and after changes to offline are recorded */
   if (!offline) {
-    var tr = await remote.pull((q) => q.findRecords('currentuser'));
+    var tr = await remote.pull((q) =>
+      q.findRecords('user').filter({ attribute: 'auth0Id', value: tokData.sub })
+    );
     const user = (tr[0].operations[0] as any).record as User;
     const locale = user?.attributes?.locale || 'en';
     setLang(locale);
