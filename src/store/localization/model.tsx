@@ -43,6 +43,14 @@ export interface IAlertStrings extends Localize.LocalizedStringsMethods {
     "yes": string;
 };
 
+export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
+    "backtranslation": string;
+    "comment": string;
+    "resource": string;
+    "testing": string;
+    "vernacular": string;
+};
+
 export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethods {
     "assignSec": string;
     "delete": string;
@@ -460,12 +468,15 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
+    "addNewType": string;
+    "artifactType": string;
     "cancel": string;
     "dragDropMultiple": string;
     "dragDropSingle": string;
     "invalidFile": string;
     "ITFtask": string;
     "ITFtitle": string;
+    "newArtifactType": string;
     "PTFtask": string;
     "PTFtitle": string;
     "task": string;
@@ -516,6 +527,7 @@ export interface IPassageRecordStrings extends Localize.LocalizedStringsMethods 
 export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
     "assign": string;
     "delete": string;
+    "resources": string;
     "launchAudacity": string;
     "playpause": string;
     "recordAudio": string;
@@ -618,6 +630,13 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "saveFirst": string;
     "saving": string;
     "title": string;
+};
+
+export interface ISectionResourcesStrings extends Localize.LocalizedStringsMethods {
+    "close": string;
+    "role": string;
+    "title": string;
+    "users": string;
 };
 
 export interface ISharedStrings extends Localize.LocalizedStringsMethods {
@@ -934,6 +953,7 @@ export interface ILocalizedStrings {
 	access: IAccessStrings;
 	activityState: IActivityStateStrings;
 	alert: IAlertStrings;
+	artifactType: IArtifactTypeStrings;
 	assignmentTable: IAssignmentTableStrings;
 	assignSection: IAssignSectionStrings;
 	audacityManager: IAudacityManagerStrings;
@@ -966,6 +986,7 @@ export interface ILocalizedStrings {
 	projButtons: IProjButtonsStrings;
 	projectDownload: IProjectDownloadStrings;
 	scriptureTable: IScriptureTableStrings;
+	sectionResources: ISectionResourcesStrings;
 	shared: ISharedStrings;
 	spelling: ISpellingStrings;
 	taskItem: ITaskItemStrings;

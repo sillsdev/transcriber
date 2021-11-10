@@ -51,6 +51,15 @@ const initialState = {
 			"yes": "Yes",
 		}
 	}),
+	"artifactType": new LocalizedStrings({
+		"en": {
+			"backtranslation": "Back Translation",
+			"comment": "Comment",
+			"resource": "Resource",
+			"testing": "Testing",
+			"vernacular": "Vernacular",
+		}
+	}),
 	"assignmentTable": new LocalizedStrings({
 		"en": {
 			"assignSec": "Assign {0}",
@@ -490,12 +499,15 @@ const initialState = {
 	}),
 	"mediaUpload": new LocalizedStrings({
 		"en": {
+			"addNewType": "Add New Type",
+			"artifactType": "Artifact Type",
 			"cancel": "Cancel",
 			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",
 			"dragDropSingle": "Drag and drop a file here, or click here to browse for the file.",
 			"invalidFile": "Not valid for this operation: {0} ",
 			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the Desktop app.",
 			"ITFtitle": "Upload Change Data from Desktop app.",
+			"newArtifactType": "New Artifact Type",
 			"PTFtask": "Upload a Portable Transcriber File (ptf).",
 			"PTFtitle": "Upload complete Audio Project Data from PTF",
 			"task": "You can upload audio files in .mp3, .m4a, .wav or .ogg format.",
@@ -550,6 +562,7 @@ const initialState = {
 		"en": {
 			"assign": "Assign",
 			"delete": "Delete",
+			"resources": "Resources",
 			"launchAudacity": "Launch Audacity",
 			"playpause": "Play/Stop",
 			"recordAudio": "Record/Edit Audio",
@@ -658,6 +671,14 @@ const initialState = {
 			"saveFirst": "You must save changes first!",
 			"saving": "Saving...",
 			"title": "Title",
+		}
+	}),
+	"sectionResources": new LocalizedStrings({
+		"en": {
+			"close": "Close",
+			"role": "Role",
+			"title": "Assign {0}",
+			"users": "Members",
 		}
 	}),
 	"shared": new LocalizedStrings({
@@ -999,6 +1020,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"access" : new LocalizedStrings(action.payload.data.access),
 				"activityState" : new LocalizedStrings(action.payload.data.activityState),
 				"alert" : new LocalizedStrings(action.payload.data.alert),
+				"artifactType" : new LocalizedStrings(action.payload.data.artifactType),
 				"assignmentTable" : new LocalizedStrings(action.payload.data.assignmentTable),
 				"assignSection" : new LocalizedStrings(action.payload.data.assignSection),
 				"audacityManager" : new LocalizedStrings(action.payload.data.audacityManager),
@@ -1031,6 +1053,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"projButtons" : new LocalizedStrings(action.payload.data.projButtons),
 				"projectDownload" : new LocalizedStrings(action.payload.data.projectDownload),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
+				"sectionResources" : new LocalizedStrings(action.payload.data.sectionResources),
 				"shared" : new LocalizedStrings(action.payload.data.shared),
 				"spelling" : new LocalizedStrings(action.payload.data.spelling),
 				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),

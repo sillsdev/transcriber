@@ -193,8 +193,10 @@ export const useOfflineSetup = () => {
     await makeRoleRecs();
     await makeTypeRecs('project');
     await makeTypeRecs('plan');
-    await makeArtifactCategoryRecs();
-    await makeArtifactTypeRecs();
-    await makeWorkflowStepsRecs();
+    if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 3) {
+      await makeArtifactCategoryRecs();
+      await makeArtifactTypeRecs();
+      await makeWorkflowStepsRecs();
+    }
   };
 };

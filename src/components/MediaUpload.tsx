@@ -10,9 +10,16 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
+  MenuItem,
+  TextField,
 } from '@material-ui/core';
 import path from 'path';
 import { useSnackBar } from '../hoc/SnackBar';
+import AddIcon from '@material-ui/icons/Add';
+import CancelIcon from '@material-ui/icons/CancelOutlined';
+import { useArtifactType } from '../crud/useArtifactType';
+
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
 
@@ -33,6 +40,20 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(1),
       margin: theme.spacing(1),
     },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 400,
+    },
+    menu: {
+      width: 300,
+    },
+    formTextInput: {
+      fontSize: 'small',
+    },
+    formTextLabel: {
+      fontSize: 'small',
+    },
   })
 );
 
@@ -50,7 +71,7 @@ export enum UploadType {
 interface IProps extends IStateProps {
   visible: boolean;
   uploadType: UploadType;
-  uploadMethod?: (files: File[]) => void;
+  uploadMethod?: (files: File[], artifactType?: string) => void;
   multiple?: boolean;
   cancelMethod?: () => void;
   metaData?: JSX.Element;
@@ -72,7 +93,13 @@ function MediaUpload(props: IProps) {
   const [open, setOpen] = useState(visible);
   const [name, setName] = useState('');
   const [files, setFiles] = useState<File[]>([]);
+  const [artifactType, setArtifactType] = useState('vernacular');
+  const [newArtifactType, setNewArtifactType] = useState('');
+  const [showNew, setShowNew] = useState(false);
   const { showMessage } = useSnackBar();
+  const { getArtifactTypes, fromLocalizedArtifactType, addNewArtifactType } =
+    useArtifactType();
+  const [artifactTypes, setArtifactTypes] = useState(getArtifactTypes());
   const acceptextension = [
     '.mp3, .m4a, .wav, .ogg',
     '.itf',
@@ -87,10 +114,10 @@ function MediaUpload(props: IProps) {
   ];
   const title = [t.title, t.ITFtitle, t.PTFtitle, 'FUTURE TODO'];
   const text = [t.task, t.ITFtask, t.PTFtask, 'FUTURE TODO'];
-
+  const pRef = React.useRef<HTMLDivElement>(null);
   const handleAddOrSave = () => {
     if (uploadMethod && files) {
-      uploadMethod(files);
+      uploadMethod(files, fromLocalizedArtifactType(artifactType));
     }
     handleFiles(undefined);
     setOpen(false);
@@ -152,6 +179,7 @@ function MediaUpload(props: IProps) {
   useEffect(() => {
     setOpen(visible);
   }, [visible]);
+
   const inputStyle = { display: 'none' };
   const dropTarget =
     process.env.NODE_ENV !== 'test' ? (
@@ -202,6 +230,24 @@ function MediaUpload(props: IProps) {
       </div>
     );
 
+  const addNewType = async () => {
+    await addNewArtifactType(newArtifactType);
+    setArtifactTypes(getArtifactTypes());
+    setArtifactType(newArtifactType);
+    cancelNewType();
+  };
+  const cancelNewType = () => {
+    setNewArtifactType('');
+    setShowNew(false);
+  };
+  const handleArtifactTypeChange = (e: any) => {
+    if (e.target.value === t.addNewType) setShowNew(true);
+    else setArtifactType(e.target.value);
+  };
+  const handleNewArtifactTypeChange = (e: any) => {
+    setNewArtifactType(e.target.value);
+  };
+
   return (
     <div>
       <Dialog open={open} onClose={handleCancel} aria-labelledby="audUploadDlg">
@@ -209,6 +255,75 @@ function MediaUpload(props: IProps) {
         <DialogContent>
           <DialogContentText>{text[uploadType]}</DialogContentText>
           <div className={classes.drop}>{dropTarget}</div>
+          {uploadType === UploadType.Media && (
+            <TextField
+              id="artifact-type"
+              select
+              label={t.artifactType}
+              className={classes.textField}
+              value={artifactType}
+              onChange={handleArtifactTypeChange}
+              SelectProps={{
+                MenuProps: {
+                  className: classes.menu,
+                },
+              }}
+              InputProps={{
+                classes: {
+                  input: classes.formTextInput,
+                },
+              }}
+              InputLabelProps={{
+                classes: {
+                  root: classes.formTextLabel,
+                },
+              }}
+              margin="normal"
+              variant="filled"
+              required={true}
+            >
+              {artifactTypes
+                .sort()
+                .map((option: string) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))
+                .concat(
+                  <MenuItem key={t.addNewType} value={t.addNewType}>
+                    {t.addNewType + '\u00A0\u00A0'}
+                    <AddIcon />
+                  </MenuItem>
+                )}
+            </TextField>
+          )}
+          {showNew && (
+            <>
+              <TextField
+                id="new-artifact-type"
+                label={t.newArtifactType}
+                className={classes.textField}
+                value={newArtifactType}
+                onChange={handleNewArtifactTypeChange}
+              ></TextField>
+              <IconButton
+                id="addnew"
+                color="secondary"
+                aria-label="addnew"
+                onClick={addNewType}
+              >
+                <AddIcon />
+              </IconButton>
+              <IconButton
+                id="cancelnew"
+                color="secondary"
+                aria-label="cancelnew"
+                onClick={cancelNewType}
+              >
+                <CancelIcon />
+              </IconButton>
+            </>
+          )}
           {metaData}
         </DialogContent>
         <DialogActions>

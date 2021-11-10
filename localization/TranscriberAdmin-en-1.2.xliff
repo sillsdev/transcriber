@@ -233,6 +233,41 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactType.backtranslation">
+            <source>Back Translation</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.comment">
+            <source>Comment</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.resource">
+            <source>Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.testing">
+            <source>Testing</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.vernacular">
+            <source>Vernacular</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="assignmentTable.assignSec">
             <source>Assign {0}</source>
             <target/>
@@ -2706,6 +2741,20 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaUpload.addNewType">
+            <source>Add New Type</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaUpload.artifactType">
+            <source>Artifact Type</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaUpload.cancel">
             <source>Cancel</source>
             <target/>
@@ -2743,6 +2792,13 @@
          </trans-unit>
          <trans-unit id="mediaUpload.ITFtitle">
             <source>Upload Change Data from Desktop app.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaUpload.newArtifactType">
+            <source>New Artifact Type</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>
@@ -3009,6 +3065,13 @@
          </trans-unit>
          <trans-unit id="planActions.delete">
             <source>Delete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planActions.resources">
+            <source>Resources</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -3602,6 +3665,35 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="sectionResources.close">
+            <source>Close</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">sectionResources.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="sectionResources.role">
+            <source>Role</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">sectionResources.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="sectionResources.title">
+            <source>Assign {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">sectionResources.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="sectionResources.users">
+            <source>Members</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">sectionResources.tsx</context>
+            </context-group>
+         </trans-unit>
+
          <trans-unit id="shared.admin">
             <source>Admin</source>
             <target/>

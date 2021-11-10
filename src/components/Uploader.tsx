@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -87,11 +87,12 @@ export const Uploader = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const planIdRef = React.useRef<string>(plan);
-  const successCount = React.useRef<number>(0);
-  const fileList = React.useRef<File[]>();
-  const authRef = React.useRef<Auth>(auth);
-  const mediaIdRef = React.useRef<string[]>([]);
+  const planIdRef = useRef<string>(plan);
+  const successCount = useRef<number>(0);
+  const fileList = useRef<File[]>();
+  const authRef = useRef<Auth>(auth);
+  const mediaIdRef = useRef<string[]>([]);
+  const artifactTypeRef = useRef<string>('');
 
   const finishMessage = () => {
     setTimeout(() => {
@@ -195,6 +196,7 @@ export const Uploader = (props: IProps) => {
       planId: getPlanId(),
       originalFile: uploadList[currentlyLoading].name,
       contentType: uploadList[currentlyLoading].type,
+      artifactType: artifactTypeRef.current,
     } as any;
     nextUpload(
       mediaFile,
@@ -207,7 +209,7 @@ export const Uploader = (props: IProps) => {
     );
   };
 
-  const uploadMedia = async (files: File[]) => {
+  const uploadMedia = async (files: File[], artifactType?: string) => {
     successCount.current = 0;
     if (!files || files.length === 0) {
       showMessage(t.selectFiles);
@@ -219,6 +221,7 @@ export const Uploader = (props: IProps) => {
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
     authRef.current = auth;
+    artifactTypeRef.current = artifactType || '';
     doUpload(0);
     onOpen(false);
   };

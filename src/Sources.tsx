@@ -265,25 +265,28 @@ export const Sources = async (
       }
     }
     //get v4 data
-    if (offline) {
-      await offlineSetup();
-    } else {
-      const recs: WorkflowStep[] = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('workflowstep')
-      ) as any;
-      if (true || recs.filter((r) => r?.keys?.remoteId).length === 0) {
-        await memory.sync(
-          await remote.pull((q) => q.findRecords('workflowstep'))
-        );
-        await memory.sync(
-          await remote.pull((q) => q.findRecords('artifactcategory'))
-        );
-        await memory.sync(
-          await remote.pull((q) => q.findRecords('artifacttype'))
-        );
+    if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 3) {
+      if (offline) {
+        await offlineSetup();
+      } else {
+        const recs: WorkflowStep[] = (await backup.cache.query(
+          (q: QueryBuilder) => q.findRecords('workflowstep')
+        )) as any;
+        if (recs.filter((r) => r?.keys?.remoteId).length === 0) {
+          await memory.sync(
+            await remote.pull((q) => q.findRecords('workflowstep'))
+          );
+          await memory.sync(
+            await remote.pull((q) => q.findRecords('artifactcategory'))
+          );
+          await memory.sync(
+            await remote.pull((q) => q.findRecords('artifacttype'))
+          );
+        }
       }
     }
   }
+
   var syncBuffer: Buffer | undefined = undefined;
   var syncFile = '';
   if (!offline && isElectron) {

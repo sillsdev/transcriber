@@ -1,4 +1,10 @@
-import { KeyMap, Operation, Schema, SchemaSettings } from '@orbit/data';
+import {
+  KeyMap,
+  Operation,
+  Schema,
+  SchemaSettings,
+  TransformBuilder,
+} from '@orbit/data';
 import Memory from '@orbit/memory';
 import IndexedDBSource from '@orbit/indexeddb';
 import Coordinator from '@orbit/coordinator';
@@ -369,7 +375,6 @@ const schemaDefinition: SchemaSettings = {
         passage: { type: 'hasOne', model: 'passage', inverse: 'mediafiles' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
         recordedbyUser: { type: 'hasOne', model: 'user' },
-        artifactType: { type: 'hasOne', model: 'artifacttype' },
       },
     },
     user: {
@@ -744,7 +749,31 @@ const SaveOfflineProjectInfo = async (
     console.log('done with upgrade to v2');
   }
 };
-
+const UpdatePublicFlags = async (backup: IndexedDBSource, memory: Memory) => {
+  var p = await backup.pull((q) => q.findRecords('project'));
+  const ops: Operation[] = [];
+  const tb = new TransformBuilder();
+  p[0].operations.forEach((r: any) => {
+    r.record.attributes = { ...r.record.attributes, isPublic: false };
+    ops.push(tb.updateRecord(r.record));
+  });
+  var o = await backup.pull((q) => q.findRecords('organization'));
+  o[0].operations.forEach((r: any) => {
+    r.record.attributes = { ...r.record.attributes, publicByDefault: false };
+    ops.push(tb.updateRecord(r.record));
+  });
+  var m = await backup.pull((q) => q.findRecords('mediafile'));
+  m[0].operations.forEach((r: any) => {
+    r.record.attributes = {
+      ...r.record.attributes,
+      artifactType: 'vernacular',
+      link: false,
+    };
+    ops.push(tb.updateRecord(r.record));
+  });
+  await memory.sync(await backup.push(ops));
+  console.log('done with upgrade to v4');
+};
 export const backup = window.indexedDB
   ? new IndexedDBSource({
       schema,
@@ -779,6 +808,11 @@ if (backup.cache)
             unique: false,
           });
       }
+    }
+    if (event.newVersion === 4) {
+      //Dec 2021
+      // update public flags to false because we're going to start using them
+      UpdatePublicFlags(backup, memory);
     }
   };
 

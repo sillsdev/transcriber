@@ -171,21 +171,25 @@ async function processData(
 
   for (let ti = 0; ti < tables.length; ti += 1) {
     const t = tables[ti];
-    var jsonData = ser.deserialize(t).data;
-    if (!Array.isArray(jsonData)) jsonData = [jsonData];
-    for (let ji = 0; ji < jsonData.length; ji += 1) {
-      const item = jsonData[ji];
-      await insertData(
-        item,
-        memory,
-        backup,
-        tb,
-        oparray,
-        orbitError,
-        false,
-        false,
-        undefined
-      );
+    try {
+      var jsonData = ser.deserialize(t).data;
+      if (!Array.isArray(jsonData)) jsonData = [jsonData];
+      for (let ji = 0; ji < jsonData.length; ji += 1) {
+        const item = jsonData[ji];
+        await insertData(
+          item,
+          memory,
+          backup,
+          tb,
+          oparray,
+          orbitError,
+          false,
+          false,
+          undefined
+        );
+      }
+    } catch {
+      //ignore it
     }
     completed += completePerTable;
     if (setCompleted && completed < 90) setCompleted(completed);
