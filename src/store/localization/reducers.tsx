@@ -60,6 +60,13 @@ const initialState = {
 			"vernacular": "Vernacular",
 		}
 	}),
+	"artifactTypeComp": new LocalizedStrings({
+		"en": {
+			"addNewType": "Add New Type",
+			"artifactType": "Artifact Type",
+			"newArtifactType": "New Artifact Type",
+		}
+	}),
 	"assignmentTable": new LocalizedStrings({
 		"en": {
 			"assignSec": "Assign {0}",
@@ -499,15 +506,12 @@ const initialState = {
 	}),
 	"mediaUpload": new LocalizedStrings({
 		"en": {
-			"addNewType": "Add New Type",
-			"artifactType": "Artifact Type",
 			"cancel": "Cancel",
 			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",
 			"dragDropSingle": "Drag and drop a file here, or click here to browse for the file.",
 			"invalidFile": "Not valid for this operation: {0} ",
 			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the Desktop app.",
 			"ITFtitle": "Upload Change Data from Desktop app.",
-			"newArtifactType": "New Artifact Type",
 			"PTFtask": "Upload a Portable Transcriber File (ptf).",
 			"PTFtitle": "Upload complete Audio Project Data from PTF",
 			"task": "You can upload audio files in .mp3, .m4a, .wav or .ogg format.",
@@ -1021,6 +1025,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"activityState" : new LocalizedStrings(action.payload.data.activityState),
 				"alert" : new LocalizedStrings(action.payload.data.alert),
 				"artifactType" : new LocalizedStrings(action.payload.data.artifactType),
+				"artifactTypeComp" : new LocalizedStrings(action.payload.data.artifactTypeComp),
 				"assignmentTable" : new LocalizedStrings(action.payload.data.assignmentTable),
 				"assignSection" : new LocalizedStrings(action.payload.data.assignSection),
 				"audacityManager" : new LocalizedStrings(action.payload.data.audacityManager),

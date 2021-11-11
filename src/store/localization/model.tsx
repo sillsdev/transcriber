@@ -51,6 +51,12 @@ export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
     "vernacular": string;
 };
 
+export interface IArtifactTypeCompStrings extends Localize.LocalizedStringsMethods {
+    "addNewType": string;
+    "artifactType": string;
+    "newArtifactType": string;
+};
+
 export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethods {
     "assignSec": string;
     "delete": string;
@@ -468,15 +474,12 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
-    "addNewType": string;
-    "artifactType": string;
     "cancel": string;
     "dragDropMultiple": string;
     "dragDropSingle": string;
     "invalidFile": string;
     "ITFtask": string;
     "ITFtitle": string;
-    "newArtifactType": string;
     "PTFtask": string;
     "PTFtitle": string;
     "task": string;
@@ -954,6 +957,7 @@ export interface ILocalizedStrings {
 	activityState: IActivityStateStrings;
 	alert: IAlertStrings;
 	artifactType: IArtifactTypeStrings;
+	artifactTypeComp: IArtifactTypeCompStrings;
 	assignmentTable: IAssignmentTableStrings;
 	assignSection: IAssignSectionStrings;
 	audacityManager: IAudacityManagerStrings;

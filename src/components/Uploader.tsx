@@ -112,7 +112,9 @@ export const Uploader = (props: IProps) => {
 
   const getPlanId = () =>
     remoteIdNum('plan', planIdRef.current, memory.keyMap) || planIdRef.current;
-
+  const getArtifactTypeId = () =>
+    remoteIdNum('orgartifacttype', artifactTypeRef.current, memory.keyMap) ||
+    artifactTypeRef.current;
   const pullPlanMedia = async () => {
     const planId = getPlanId();
     if (planId !== undefined) {
@@ -196,7 +198,7 @@ export const Uploader = (props: IProps) => {
       planId: getPlanId(),
       originalFile: uploadList[currentlyLoading].name,
       contentType: uploadList[currentlyLoading].type,
-      artifactType: artifactTypeRef.current,
+      orgArtifactTypeId: getArtifactTypeId(),
     } as any;
     nextUpload(
       mediaFile,
@@ -209,7 +211,7 @@ export const Uploader = (props: IProps) => {
     );
   };
 
-  const uploadMedia = async (files: File[], artifactType?: string) => {
+  const uploadMedia = async (files: File[], artifactTypeId?: string) => {
     successCount.current = 0;
     if (!files || files.length === 0) {
       showMessage(t.selectFiles);
@@ -221,7 +223,7 @@ export const Uploader = (props: IProps) => {
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
     authRef.current = auth;
-    artifactTypeRef.current = artifactType || '';
+    artifactTypeRef.current = artifactTypeId || '';
     doUpload(0);
     onOpen(false);
   };

@@ -232,6 +232,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactTypeComp.addNewType">
+         <segment>
+            <source>Add New Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactTypeComp.artifactType">
+         <segment>
+            <source>Artifact Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactTypeComp.newArtifactType">
+         <segment>
+            <source>New Artifact Type</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignmentTable.assignSec">
          <segment>
             <source>Assign {0}</source>
@@ -2350,18 +2368,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaUpload.addNewType">
-         <segment>
-            <source>Add New Type</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="mediaUpload.artifactType">
-         <segment>
-            <source>Artifact Type</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -2395,12 +2401,6 @@
       <unit id="mediaUpload.ITFtitle">
          <segment>
             <source>Upload Change Data from Desktop app.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="mediaUpload.newArtifactType">
-         <segment>
-            <source>New Artifact Type</source>
             <target/>
          </segment>
       </unit>

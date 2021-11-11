@@ -371,6 +371,7 @@ const schemaDefinition: SchemaSettings = {
         performedby: { type: 'string' },
       },
       relationships: {
+        orgArtifactType: { type: 'hasOne', model: 'orgartifacttype' },
         plan: { type: 'hasOne', model: 'plan', inverse: 'mediafiles' },
         passage: { type: 'hasOne', model: 'passage', inverse: 'mediafiles' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
@@ -535,30 +536,6 @@ if (
   parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 3 &&
   schemaDefinition.models
 ) {
-  schemaDefinition.models.artifactcategory = {
-    keys: { remoteId: {} },
-    attributes: {
-      categoryname: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
-      lastModifiedBy: { type: 'number' }, //bkwd compat only
-    },
-    relationships: {
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
-    },
-  };
-  schemaDefinition.models.artifacttype = {
-    keys: { remoteId: {} },
-    attributes: {
-      typename: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
-      lastModifiedBy: { type: 'number' }, //bkwd compat only
-    },
-    relationships: {
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
-    },
-  };
   schemaDefinition.models.orgartifactcategory = {
     keys: { remoteId: {} },
     attributes: {
@@ -760,15 +737,6 @@ const UpdatePublicFlags = async (backup: IndexedDBSource, memory: Memory) => {
   var o = await backup.pull((q) => q.findRecords('organization'));
   o[0].operations.forEach((r: any) => {
     r.record.attributes = { ...r.record.attributes, publicByDefault: false };
-    ops.push(tb.updateRecord(r.record));
-  });
-  var m = await backup.pull((q) => q.findRecords('mediafile'));
-  m[0].operations.forEach((r: any) => {
-    r.record.attributes = {
-      ...r.record.attributes,
-      artifactType: 'vernacular',
-      link: false,
-    };
     ops.push(tb.updateRecord(r.record));
   });
   await memory.sync(await backup.push(ops));

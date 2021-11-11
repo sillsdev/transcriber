@@ -268,6 +268,27 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactTypeComp.addNewType">
+            <source>Add New Type</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactTypeComp.artifactType">
+            <source>Artifact Type</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactTypeComp.newArtifactType">
+            <source>New Artifact Type</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="assignmentTable.assignSec">
             <source>Assign {0}</source>
             <target/>
@@ -2741,20 +2762,6 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaUpload.addNewType">
-            <source>Add New Type</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">MediaUpload.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="mediaUpload.artifactType">
-            <source>Artifact Type</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">MediaUpload.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="mediaUpload.cancel">
             <source>Cancel</source>
             <target/>
@@ -2792,13 +2799,6 @@
          </trans-unit>
          <trans-unit id="mediaUpload.ITFtitle">
             <source>Upload Change Data from Desktop app.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">MediaUpload.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="mediaUpload.newArtifactType">
-            <source>New Artifact Type</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>

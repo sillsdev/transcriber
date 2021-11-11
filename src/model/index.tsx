@@ -40,8 +40,6 @@ export * from './token';
 export * from './workflow';
 export * from './wfSaveRec';
 export * from './orgData';
-export * from './artifactCategory';
-export * from './artifactType';
 export * from './workflowStep';
 export * from './orgArtifactCategory';
 export * from './orgArtifactType';

@@ -1,7 +1,7 @@
 import { RecordRelationship } from '@orbit/data';
-import { ArtifactType } from '.';
+import { BaseModel } from './baseModel';
 
-export interface OrgArtifactType extends ArtifactType {
+export interface OrgArtifactType extends BaseModel {
   attributes: {
     typename: string;
     dateCreated: string;

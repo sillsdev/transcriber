@@ -10,3 +10,4 @@ export * from './wfNumChanges';
 export * from './wfResequence';
 export * from './workflowSheet';
 export * from './audioTypes';
+export * from './ArtifactType';

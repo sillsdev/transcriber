@@ -270,17 +270,17 @@ export const Sources = async (
         await offlineSetup();
       } else {
         const recs: WorkflowStep[] = (await backup.cache.query(
-          (q: QueryBuilder) => q.findRecords('workflowstep')
+          (q: QueryBuilder) => q.findRecords('orgartifactcategory')
         )) as any;
         if (recs.filter((r) => r?.keys?.remoteId).length === 0) {
           await memory.sync(
             await remote.pull((q) => q.findRecords('workflowstep'))
           );
           await memory.sync(
-            await remote.pull((q) => q.findRecords('artifactcategory'))
+            await remote.pull((q) => q.findRecords('orgartifactcategory'))
           );
           await memory.sync(
-            await remote.pull((q) => q.findRecords('artifacttype'))
+            await remote.pull((q) => q.findRecords('orgartifacttype'))
           );
         }
       }
