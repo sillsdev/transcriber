@@ -367,7 +367,8 @@ const schemaDefinition: SchemaSettings = {
         lastModifiedBy: { type: 'number' }, //bkwd compat only
         languagebcp47: { type: 'string' },
         link: { type: 'bool' },
-        performedby: { type: 'string' },
+        readyToShare: { type: 'bool' },
+        performedBy: { type: 'string' },
       },
       relationships: {
         artifactType: { type: 'hasOne', model: 'artifacttype' },
@@ -377,6 +378,7 @@ const schemaDefinition: SchemaSettings = {
         passage: { type: 'hasOne', model: 'passage', inverse: 'mediafiles' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
         recordedbyUser: { type: 'hasOne', model: 'user' },
+        resourcePassage: { type: 'hasOne', model: 'passage' },
       },
     },
     user: {
@@ -659,25 +661,7 @@ if (
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
-  schemaDefinition.models.sectionresourceorgworkflowstep = {
-    keys: { remoteId: {} },
-    attributes: {
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
-      lastModifiedBy: { type: 'number' }, //bkwd compat only
-    },
-    relationships: {
-      sectionresource: {
-        type: 'hasOne',
-        model: 'sectionresource',
-      },
-      orgworkflowstep: {
-        type: 'hasOne',
-        model: 'orgworkflowstep',
-      },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
-    },
-  };
+
   schemaDefinition.models.sectionresourceuser = {
     keys: { remoteId: {} },
     attributes: {
@@ -697,6 +681,7 @@ if (
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
+
   schemaDefinition.version = 4;
 }
 export const schema = new Schema(schemaDefinition);

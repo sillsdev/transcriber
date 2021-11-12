@@ -20,6 +20,10 @@ export interface MediaFile extends BaseModel {
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
+    languagebcp47: string | null;
+    link: boolean;
+    readyToShare: boolean;
+    performedBy: string | null;
   };
   relationships?: {
     passage: RecordRelationship;
@@ -28,6 +32,8 @@ export interface MediaFile extends BaseModel {
     artifactType: RecordRelationship;
     artifactCategory: RecordRelationship;
     orgWorkflowStep: RecordRelationship;
+    recordedbyUser: RecordRelationship;
+    resourcePassage: RecordRelationship;
   };
 }
 export default MediaFile;
