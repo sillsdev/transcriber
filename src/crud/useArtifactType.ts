@@ -1,5 +1,5 @@
 import { useGlobal, useState } from 'reactn';
-import { IState, IArtifactTypeStrings, OrgArtifactType } from '../model';
+import { IState, IArtifactTypeStrings, ArtifactType } from '../model';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
@@ -39,8 +39,8 @@ export const useArtifactType = () => {
 
   const getArtifactTypes = () => {
     const types: IArtifactType[] = [];
-    const orgrecs: OrgArtifactType[] = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('orgartifacttype')
+    const orgrecs: ArtifactType[] = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('artifacttype')
     ) as any;
     orgrecs
       .filter(
@@ -58,8 +58,8 @@ export const useArtifactType = () => {
     return types;
   };
   const addNewArtifactType = async (newArtifactType: string) => {
-    const artifactType: OrgArtifactType = {
-      type: 'orgartifacttype',
+    const artifactType: ArtifactType = {
+      type: 'artifacttype',
       attributes: {
         typename: newArtifactType,
         dateCreated: currentDateTime(),
@@ -70,7 +70,7 @@ export const useArtifactType = () => {
     await memory.update([
       ...AddRecord(t, artifactType, user, memory),
       t.replaceRelatedRecord(
-        { type: 'orgartifacttype', id: artifactType.id },
+        { type: 'artifacttype', id: artifactType.id },
         'organization',
         {
           type: 'organization',

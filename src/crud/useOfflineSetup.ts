@@ -1,10 +1,5 @@
 import { useGlobal } from 'reactn';
-import {
-  Role,
-  ProjectType,
-  OrgArtifactCategory,
-  OrgArtifactType,
-} from '../model';
+import { Role, ProjectType, ArtifactCategory, ArtifactType } from '../model';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import WorkflowStep from '../model/workflowStep';
@@ -154,11 +149,11 @@ export const useOfflineSetup = () => {
       ];
       names.forEach(async (n, ix) => {
         const s = {
-          type: 'orgartifactcategory',
+          type: 'artifactcategory',
           attributes: {
             categoryname: n,
           },
-        } as OrgArtifactCategory;
+        } as ArtifactCategory;
         memory.schema.initializeRecord(s);
         await memory.sync(
           await backup.push((t: TransformBuilder) => [t.addRecord(s)])
@@ -181,11 +176,11 @@ export const useOfflineSetup = () => {
       ];
       names.forEach(async (n, ix) => {
         const s = {
-          type: 'orgartifacttype',
+          type: 'artifacttype',
           attributes: {
             typename: n,
           },
-        } as OrgArtifactType;
+        } as ArtifactType;
         memory.schema.initializeRecord(s);
         await memory.sync(
           await backup.push((t: TransformBuilder) => [t.addRecord(s)])

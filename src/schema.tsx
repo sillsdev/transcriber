@@ -351,7 +351,6 @@ const schemaDefinition: SchemaSettings = {
       keys: { remoteId: {} },
       attributes: {
         versionNumber: { type: 'number' },
-        artifactType: { type: 'string' },
         eafUrl: { type: 'string' },
         audioUrl: { type: 'string' },
         duration: { type: 'number' },
@@ -371,7 +370,9 @@ const schemaDefinition: SchemaSettings = {
         performedby: { type: 'string' },
       },
       relationships: {
-        orgArtifactType: { type: 'hasOne', model: 'orgartifacttype' },
+        artifactType: { type: 'hasOne', model: 'artifacttype' },
+        artifactCategory: { type: 'hasOne', model: 'artifactcategory' },
+        orgWorkflowStep: { type: 'hasOne', model: 'orgworkflowstep' },
         plan: { type: 'hasOne', model: 'plan', inverse: 'mediafiles' },
         passage: { type: 'hasOne', model: 'passage', inverse: 'mediafiles' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
@@ -536,7 +537,7 @@ if (
   parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 3 &&
   schemaDefinition.models
 ) {
-  schemaDefinition.models.orgartifactcategory = {
+  schemaDefinition.models.artifactcategory = {
     keys: { remoteId: {} },
     attributes: {
       categoryname: { type: 'string' },
@@ -549,7 +550,7 @@ if (
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
-  schemaDefinition.models.orgartifacttype = {
+  schemaDefinition.models.artifacttype = {
     keys: { remoteId: {} },
     attributes: {
       typename: { type: 'string' },
@@ -612,6 +613,11 @@ if (
       role: { type: 'hasOne', model: 'role' },
       user: { type: 'hasOne', model: 'user' },
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      artifactCategory: { type: 'hasOne', model: 'artifactcategory' },
+      orgworkflowstep: {
+        type: 'hasOne',
+        model: 'orgworkflowstep',
+      },
     },
   };
   schemaDefinition.models.comment = {
@@ -632,6 +638,7 @@ if (
   schemaDefinition.models.sectionresource = {
     keys: { remoteId: {} },
     attributes: {
+      sequenceNum: { type: 'number' },
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
       lastModifiedBy: { type: 'number' }, //bkwd compat only
@@ -645,8 +652,8 @@ if (
         type: 'hasOne',
         model: 'mediafile',
       },
-      orgworkflowsteps: {
-        type: 'hasMany',
+      orgworkflowstep: {
+        type: 'hasOne',
         model: 'orgworkflowstep',
       },
       lastModifiedByUser: { type: 'hasOne', model: 'user' },

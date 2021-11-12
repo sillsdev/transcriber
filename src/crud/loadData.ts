@@ -255,9 +255,13 @@ export async function LoadData(
       var transform: OrgData[] = (await remote.query(
         // eslint-disable-next-line no-loop-func
         (q: QueryBuilder) =>
-          q
-            .findRecords('orgdata')
-            .filter({ attribute: 'start-index', value: start }),
+          q.findRecords('orgdata').filter(
+            {
+              attribute: 'json',
+              value: `{version: ${backup.schema.version}}`,
+            },
+            { attribute: 'start-index', value: start }
+          ),
         {
           label: 'Get Data',
           sources: {
@@ -320,12 +324,14 @@ export async function LoadProjectData(
       var transform: ProjData[] = (await remote.query(
         // eslint-disable-next-line no-loop-func
         (q: QueryBuilder) =>
-          q
-            .findRecords('projdata')
-            .filter(
-              { attribute: 'start-index', value: start },
-              { attribute: 'project-id', value: projectid }
-            ),
+          q.findRecords('projdata').filter(
+            {
+              attribute: 'json',
+              value: `{version: ${backup.schema.version}}`,
+            },
+            { attribute: 'start-index', value: start },
+            { attribute: 'project-id', value: projectid }
+          ),
         {
           label: 'Get Project Data',
           sources: {

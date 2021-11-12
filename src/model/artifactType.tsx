@@ -1,9 +1,9 @@
 import { RecordRelationship } from '@orbit/data';
 import { BaseModel } from './baseModel';
 
-export interface OrgArtifactCategory extends BaseModel {
+export interface ArtifactType extends BaseModel {
   attributes: {
-    categoryname: string;
+    typename: string;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
@@ -14,4 +14,4 @@ export interface OrgArtifactCategory extends BaseModel {
   };
 }
 
-export default OrgArtifactCategory;
+export default ArtifactType;

@@ -113,7 +113,7 @@ export const Uploader = (props: IProps) => {
   const getPlanId = () =>
     remoteIdNum('plan', planIdRef.current, memory.keyMap) || planIdRef.current;
   const getArtifactTypeId = () =>
-    remoteIdNum('orgartifacttype', artifactTypeRef.current, memory.keyMap) ||
+    remoteIdNum('artifacttype', artifactTypeRef.current, memory.keyMap) ||
     artifactTypeRef.current;
   const pullPlanMedia = async () => {
     const planId = getPlanId();
@@ -198,7 +198,7 @@ export const Uploader = (props: IProps) => {
       planId: getPlanId(),
       originalFile: uploadList[currentlyLoading].name,
       contentType: uploadList[currentlyLoading].type,
-      orgArtifactTypeId: getArtifactTypeId(),
+      artifactTypeId: getArtifactTypeId(),
     } as any;
     nextUpload(
       mediaFile,
