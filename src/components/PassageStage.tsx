@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const PassageStage = () => {
   const classes = useStyles();
   const [selected, setSelected] = useState('');
+  const [done, setDone] = useState(false);
   const workflow = useMemo(
     () => [
       'Internalization',
@@ -28,14 +29,23 @@ export const PassageStage = () => {
     ],
     []
   );
-  const index = useMemo(() => workflow.indexOf(selected), [selected, workflow]);
+  const index = useMemo(
+    () => workflow.indexOf(selected) + (done ? 1 : 0),
+    [done, selected, workflow]
+  );
 
   const curColor = (i: number) => {
     return i < index ? 'lightgreen' : i === index ? 'lightblue' : undefined;
   };
 
   const handleSelect = (item: string) => {
-    setSelected(item);
+    if (item === selected) {
+      if (!done) setDone(true);
+    } else {
+      setSelected(item);
+      const newDone = item === workflow[index];
+      if (done !== newDone) setDone(newDone);
+    }
   };
 
   return (
