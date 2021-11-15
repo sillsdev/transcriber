@@ -22,6 +22,7 @@ import PassageDetailArtifacts from '../components/PassageDetail/PassageDetailArt
 import DiscussionList from '../components/Discussions/DiscussionList';
 import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
+import { PassageDetailProvider } from '../context/PassageDetailContext';
 
 const INIT_COMMENT_WIDTH = 200;
 
@@ -158,53 +159,55 @@ export const PassageDetail = (props: IProps) => {
   return (
     <div className={classes.root}>
       <AppHead {...props} SwitchTo={SwitchTo} />
-      <div className={classes.panel2}>
-        <Grid container direction="row" className={classes.row}>
-          <Grid item className={classes.description} xs={12}>
-            <WorkflowSteps />
-          </Grid>
-          {true && (
+      <PassageDetailProvider {...props}>
+        <div className={classes.panel2}>
+          <Grid container direction="row" className={classes.row}>
             <Grid item className={classes.description} xs={12}>
-              <TeamCheckReference />
+              <WorkflowSteps />
             </Grid>
-          )}
-          {true && (
-            <Grid item className={classes.description} xs={12}>
-              <PassageDetailPlayer />
-            </Grid>
-          )}
-          <Paper className={classes.paper} style={paperStyle}>
-            <Wrapper>
-              <SplitPane
-                defaultSize={width - INIT_COMMENT_WIDTH}
-                style={{ position: 'static' }}
-                split="vertical"
-                onChange={handleSplitSize}
-              >
-                <Pane className={classes.pane}>
-                  <Grid container direction="row" className={classes.row}>
-                    <Grid item xs={12}>
-                      <PassageDetailToolbar />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Grid container>
-                        <PassageDetailArtifacts />
+            {true && (
+              <Grid item className={classes.description} xs={12}>
+                <TeamCheckReference />
+              </Grid>
+            )}
+            {true && (
+              <Grid item className={classes.description} xs={12}>
+                <PassageDetailPlayer />
+              </Grid>
+            )}
+            <Paper className={classes.paper} style={paperStyle}>
+              <Wrapper>
+                <SplitPane
+                  defaultSize={width - INIT_COMMENT_WIDTH}
+                  style={{ position: 'static' }}
+                  split="vertical"
+                  onChange={handleSplitSize}
+                >
+                  <Pane className={classes.pane}>
+                    <Grid container direction="row" className={classes.row}>
+                      <Grid item xs={12}>
+                        <PassageDetailToolbar />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Grid container>
+                          <PassageDetailArtifacts />
+                        </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
-                </Pane>
-                <Pane className={classes.pane}>
-                  <Grid item xs={12} sm container>
-                    <Grid item container direction="column">
-                      <DiscussionList />
+                  </Pane>
+                  <Pane className={classes.pane}>
+                    <Grid item xs={12} sm container>
+                      <Grid item container direction="column">
+                        <DiscussionList />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Pane>
-              </SplitPane>
-            </Wrapper>
-          </Paper>
-        </Grid>
-      </div>
+                  </Pane>
+                </SplitPane>
+              </Wrapper>
+            </Paper>
+          </Grid>
+        </div>
+      </PassageDetailProvider>
     </div>
   );
 };

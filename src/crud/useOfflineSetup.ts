@@ -168,6 +168,7 @@ export const useOfflineSetup = () => {
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineRecs.length === 0) {
       const names = [
+        'activity',
         'resource',
         'backtranslation',
         'vernacular',
