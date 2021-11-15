@@ -2578,6 +2578,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailPlayer.title">
+         <segment>
+            <source>Passage Detail Player</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailToolbar.add">
          <segment>
             <source>Passage Detail Toolbar</source>

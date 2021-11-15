@@ -555,6 +555,11 @@ const initialState = {
 			"title": "Passage Detail Artifacts",
 		}
 	}),
+	"passageDetailPlayer": new LocalizedStrings({
+		"en": {
+			"title": "Passage Detail Player",
+		}
+	}),
 	"passageDetailToolbar": new LocalizedStrings({
 		"en": {
 			"add": "Passage Detail Toolbar",
@@ -1076,6 +1081,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"mediaUpload" : new LocalizedStrings(action.payload.data.mediaUpload),
 				"newProject" : new LocalizedStrings(action.payload.data.newProject),
 				"passageDetailArtifacts" : new LocalizedStrings(action.payload.data.passageDetailArtifacts),
+				"passageDetailPlayer" : new LocalizedStrings(action.payload.data.passageDetailPlayer),
 				"passageDetailToolbar" : new LocalizedStrings(action.payload.data.passageDetailToolbar),
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),

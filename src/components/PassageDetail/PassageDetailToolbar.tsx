@@ -1,4 +1,3 @@
-import { Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { IPassageDetailToolbarStrings, IState } from '../../model';
 import localStrings from '../../selector/localize';

@@ -520,6 +520,10 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "title": string;
 };
 
+export interface IPassageDetailPlayerStrings extends Localize.LocalizedStringsMethods {
+    "title": string;
+};
+
 export interface IPassageDetailToolbarStrings extends Localize.LocalizedStringsMethods {
     "add": string;
 };
@@ -1003,6 +1007,7 @@ export interface ILocalizedStrings {
 	mediaUpload: IMediaUploadStrings;
 	newProject: INewProjectStrings;
 	passageDetailArtifacts: IPassageDetailArtifactsStrings;
+	passageDetailPlayer: IPassageDetailPlayerStrings;
 	passageDetailToolbar: IPassageDetailToolbarStrings;
 	passageMedia: IPassageMediaStrings;
 	passageRecord: IPassageRecordStrings;

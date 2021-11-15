@@ -21,6 +21,7 @@ import PassageDetailToolbar from '../components/PassageDetail/PassageDetailToolb
 import PassageDetailArtifacts from '../components/PassageDetail/PassageDetailArtifacts';
 import DiscussionList from '../components/Discussions/DiscussionList';
 import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
+import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 
 const INIT_COMMENT_WIDTH = 200;
 
@@ -165,6 +166,11 @@ export const PassageDetail = (props: IProps) => {
           {true && (
             <Grid item className={classes.description} xs={12}>
               <TeamCheckReference />
+            </Grid>
+          )}
+          {true && (
+            <Grid item className={classes.description} xs={12}>
+              <PassageDetailPlayer />
             </Grid>
           )}
           <Paper className={classes.paper} style={paperStyle}>
