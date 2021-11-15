@@ -114,6 +114,7 @@ function App() {
                   }}
                 />
                 <Route path="/error" exact render={(props) => <Buggy />} />
+                <Route path="/stage" exact render={() => <PassageStage />} />
                 <Route
                   path="/emailunverified"
                   exact={true}
