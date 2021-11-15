@@ -330,6 +330,7 @@ const schemaDefinition: SchemaSettings = {
           model: 'section',
           inverse: 'passages',
         },
+        orgWorkflowStep: { type: 'hasOne', model: 'orgworkflowstep' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
