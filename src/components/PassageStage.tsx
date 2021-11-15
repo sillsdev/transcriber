@@ -17,14 +17,14 @@ export const PassageStage = () => {
   const workflow = useMemo(
     () => [
       'Internalization',
-      'Draft',
+      'Record',
       'Team Check',
       'Key Terms',
+      'Peer Review',
       'Community',
       'Back Translate',
       'Consultant',
       'Review',
-      'Final Edit',
       'Final Read',
     ],
     []
