@@ -984,6 +984,9 @@ export function Transcriber(props: IProps) {
                         <WSAudioPlayer
                           id="audioPlayer"
                           allowRecord={false}
+                          allowSegment={true}
+                          allowZoom={true}
+                          allowSpeed={true}
                           size={playerSize}
                           blob={audioBlob}
                           initialposition={defaultPosition}

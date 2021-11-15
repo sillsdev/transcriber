@@ -172,6 +172,9 @@ interface IProps extends IStateProps {
   blob?: Blob;
   initialposition?: number;
   allowRecord?: boolean;
+  allowZoom?: boolean;
+  allowSegment?: boolean;
+  allowSpeed?: boolean;
   size: number;
   segments: string;
   metaData?: JSX.Element;
@@ -216,6 +219,9 @@ function WSAudioPlayer(props: IProps) {
     blob,
     initialposition,
     allowRecord,
+    allowZoom,
+    allowSegment,
+    allowSpeed,
     size,
     segments,
     metaData,
@@ -719,21 +725,25 @@ function WSAudioPlayer(props: IProps) {
               orientation="vertical"
               flexItem
             />
-            <Grid item>
-              <WSAudioPlayerZoom
-                startBig={allowRecord || false}
-                ready={ready}
-                wsZoom={wsZoom}
-                wsPctWidth={wsPctWidth}
-                t={t}
-              ></WSAudioPlayerZoom>
-            </Grid>
-            <Divider
-              id="wsAudioDiv3"
-              className={classes.divider}
-              orientation="vertical"
-              flexItem
-            />
+            {allowZoom && (
+              <>
+                <Grid item>
+                  <WSAudioPlayerZoom
+                    startBig={allowRecord || false}
+                    ready={ready}
+                    wsZoom={wsZoom}
+                    wsPctWidth={wsPctWidth}
+                    t={t}
+                  ></WSAudioPlayerZoom>
+                </Grid>
+                <Divider
+                  id="wsAudioDiv3"
+                  className={classes.divider}
+                  orientation="vertical"
+                  flexItem
+                />
+              </>
+            )}
             {allowRecord && (
               <>
                 <div className={classes.labeledControl}>
@@ -824,7 +834,7 @@ function WSAudioPlayer(props: IProps) {
                 <div className={classes.grow}>{'\u00A0'}</div>
               </>
             )}
-            {allowRecord || (
+            {allowSegment && (
               <WSAudioPlayerSegment
                 ready={ready}
                 onSplit={onSplit}
@@ -863,34 +873,44 @@ function WSAudioPlayer(props: IProps) {
                     </ToggleButton>
                   </span>
                 </LightTooltip>
-                <LightTooltip
-                  id="wsPrevTip"
-                  title={t.prevRegion.replace('{0}', localizeHotKey(LEFT_KEY))}
-                >
-                  <span>
-                    <IconButton
-                      disabled={!hasRegion}
-                      id="wsNext"
-                      onClick={handlePrevRegion}
+                {allowSegment && (
+                  <>
+                    <LightTooltip
+                      id="wsPrevTip"
+                      title={t.prevRegion.replace(
+                        '{0}',
+                        localizeHotKey(LEFT_KEY)
+                      )}
                     >
-                      <NextSegmentIcon className={classes.flipIcon} />
-                    </IconButton>
-                  </span>
-                </LightTooltip>
-                <LightTooltip
-                  id="wsNextTip"
-                  title={t.nextRegion.replace('{0}', localizeHotKey(RIGHT_KEY))}
-                >
-                  <span>
-                    <IconButton
-                      disabled={!hasRegion}
-                      id="wsNext"
-                      onClick={handleNextRegion}
+                      <span>
+                        <IconButton
+                          disabled={!hasRegion}
+                          id="wsNext"
+                          onClick={handlePrevRegion}
+                        >
+                          <NextSegmentIcon className={classes.flipIcon} />
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+                    <LightTooltip
+                      id="wsNextTip"
+                      title={t.nextRegion.replace(
+                        '{0}',
+                        localizeHotKey(RIGHT_KEY)
+                      )}
                     >
-                      <NextSegmentIcon />
-                    </IconButton>
-                  </span>
-                </LightTooltip>
+                      <span>
+                        <IconButton
+                          disabled={!hasRegion}
+                          id="wsNext"
+                          onClick={handleNextRegion}
+                        >
+                          <NextSegmentIcon />
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+                  </>
+                )}
               </Grid>
               <Divider
                 id="wsAudioDiv5"
@@ -986,66 +1006,72 @@ function WSAudioPlayer(props: IProps) {
                   </LightTooltip>
                 </>
               </Grid>
-              <Divider
-                id="wsAudioDiv6"
-                className={classes.divider}
-                orientation="vertical"
-                flexItem
-              />
-              <Grid item>
-                <div className={classes.toolbar}>
-                  <LightTooltip
-                    id="wsAudioSlowerTip"
-                    title={t.slowerTip.replace(
-                      '{0}',
-                      localizeHotKey(SLOWER_KEY)
-                    )}
-                  >
-                    <span>
-                      <IconButton
-                        id="wsAudioSlower"
-                        onClick={handleSlower}
-                        disabled={playbackRate === MIN_SPEED || recording}
-                      >
-                        <FaAngleDoubleDown fontSize="small" />{' '}
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
-                  <IOSSlider
-                    id="wsAudioPlaybackSpeed"
-                    aria-label="ios slider"
-                    value={
-                      typeof playbackRate === 'number' ? playbackRate * 100 : 0
-                    }
-                    step={SPEED_STEP * 100}
-                    marks
-                    min={MIN_SPEED * 100}
-                    max={MAX_SPEED * 100}
-                    valueLabelDisplay="on"
-                    getAriaValueText={valuetext}
-                    valueLabelFormat={valuetext}
-                    onChange={handleSliderChange}
+              {allowSpeed && (
+                <>
+                  <Divider
+                    id="wsAudioDiv6"
+                    className={classes.divider}
+                    orientation="vertical"
+                    flexItem
                   />
-
-                  <LightTooltip
-                    id="wsAudioFasterTip"
-                    title={t.fasterTip.replace(
-                      '{0}',
-                      localizeHotKey(FASTER_KEY)
-                    )}
-                  >
-                    <span>
-                      <IconButton
-                        id="wsAudioFaster"
-                        onClick={handleFaster}
-                        disabled={playbackRate === MAX_SPEED || recording}
+                  <Grid item>
+                    <div className={classes.toolbar}>
+                      <LightTooltip
+                        id="wsAudioSlowerTip"
+                        title={t.slowerTip.replace(
+                          '{0}',
+                          localizeHotKey(SLOWER_KEY)
+                        )}
                       >
-                        <FaAngleDoubleUp fontSize="small" />{' '}
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
-                </div>
-              </Grid>
+                        <span>
+                          <IconButton
+                            id="wsAudioSlower"
+                            onClick={handleSlower}
+                            disabled={playbackRate === MIN_SPEED || recording}
+                          >
+                            <FaAngleDoubleDown fontSize="small" />{' '}
+                          </IconButton>
+                        </span>
+                      </LightTooltip>
+                      <IOSSlider
+                        id="wsAudioPlaybackSpeed"
+                        aria-label="ios slider"
+                        value={
+                          typeof playbackRate === 'number'
+                            ? playbackRate * 100
+                            : 0
+                        }
+                        step={SPEED_STEP * 100}
+                        marks
+                        min={MIN_SPEED * 100}
+                        max={MAX_SPEED * 100}
+                        valueLabelDisplay="on"
+                        getAriaValueText={valuetext}
+                        valueLabelFormat={valuetext}
+                        onChange={handleSliderChange}
+                      />
+
+                      <LightTooltip
+                        id="wsAudioFasterTip"
+                        title={t.fasterTip.replace(
+                          '{0}',
+                          localizeHotKey(FASTER_KEY)
+                        )}
+                      >
+                        <span>
+                          <IconButton
+                            id="wsAudioFaster"
+                            onClick={handleFaster}
+                            disabled={playbackRate === MAX_SPEED || recording}
+                          >
+                            <FaAngleDoubleUp fontSize="small" />{' '}
+                          </IconButton>
+                        </span>
+                      </LightTooltip>
+                    </div>
+                  </Grid>
+                </>
+              )}
               {onSaveProgress && (
                 <>
                   <Divider

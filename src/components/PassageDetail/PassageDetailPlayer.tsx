@@ -1,18 +1,58 @@
-import { Typography } from '@material-ui/core';
+import { useRef, useState } from 'react';
 import { connect } from 'react-redux';
+import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { IPassageDetailPlayerStrings, IState } from '../../model';
 import localStrings from '../../selector/localize';
+import WSAudioPlayer from '../WSAudioPlayer';
 
 interface IStateProps {
   t: IPassageDetailPlayerStrings;
 }
 
-interface IProps extends IStateProps {}
-
+interface IProps extends IStateProps {
+  audioBlob: Blob;
+}
+const INIT_PLAYER_HEIGHT = 180;
 export function PassageDetailPlayer(props: IProps) {
-  const { t } = props;
+  const { playerStr, sharedStr, loading, pdBusy, setPDBusy, audioBlob } =
+    usePassageDetailContext();
+  const t = playerStr;
+  const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
+  const [playing, setPlaying] = useState(false);
+  const playingRef = useRef(false);
+  const playedSecsRef = useRef<number>(0);
+  const segmentsRef = useRef('{}');
+  const onSegmentChange = (segments: string) => {
+    segmentsRef.current = segments;
+  };
 
-  return <div>{t.title}</div>;
+  const onPlayStatus = (newPlaying: boolean) => {
+    setPlaying(newPlaying);
+    playingRef.current = newPlaying;
+  };
+  const onProgress = (progress: number) => (playedSecsRef.current = progress);
+  const onInteraction = () => {
+    //focus on add comment?? focusOnTranscription();
+  };
+  return (
+    <div>
+      <WSAudioPlayer
+        id="audioPlayer"
+        allowRecord={false}
+        size={playerSize}
+        blob={audioBlob}
+        initialposition={0}
+        isPlaying={playing}
+        loading={loading}
+        busy={pdBusy}
+        setBusy={setPDBusy}
+        onProgress={onProgress}
+        onSegmentChange={onSegmentChange}
+        onPlayStatus={onPlayStatus}
+        onInteraction={onInteraction}
+      />
+    </div>
+  );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
