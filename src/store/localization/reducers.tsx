@@ -160,6 +160,11 @@ const initialState = {
 			"delete": "Delete",
 		}
 	}),
+	"discussionList": new LocalizedStrings({
+		"en": {
+			"title": "Comments",
+		}
+	}),
 	"electronImport": new LocalizedStrings({
 		"en": {
 			"allDataOverwritten": "All {name0} data will be overwritten.",
@@ -545,6 +550,16 @@ const initialState = {
 			"uploadAudio": "Upload Audio",
 		}
 	}),
+	"passageDetailArtifacts": new LocalizedStrings({
+		"en": {
+			"title": "Passage Detail Artifacts",
+		}
+	}),
+	"passageDetailToolbar": new LocalizedStrings({
+		"en": {
+			"add": "Passage Detail Toolbar",
+		}
+	}),
 	"passageMedia": new LocalizedStrings({
 		"en": {
 			"close": "Close",
@@ -732,6 +747,11 @@ const initialState = {
 			"assign": "Assign {0}",
 			"section": "{0} {1}.{2}",
 			"unassign": "Unassign {0}",
+		}
+	}),
+	"teamCheckReference": new LocalizedStrings({
+		"en": {
+			"reference": "I could have a reference here but that's lowest priority because they can listen to their reference somewhere else",
 		}
 	}),
 	"template": new LocalizedStrings({
@@ -963,6 +983,11 @@ const initialState = {
 			"title": "Getting Started",
 		}
 	}),
+	"workflowSteps": new LocalizedStrings({
+		"en": {
+			"internalization": "Internalization",
+		}
+	}),
 	"wsAudioPlayer": new LocalizedStrings({
 		"en": {
 			"aheadTip": "Ahead {jump} {1} [{0}]",
@@ -1033,6 +1058,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"cards" : new LocalizedStrings(action.payload.data.cards),
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
+				"discussionList" : new LocalizedStrings(action.payload.data.discussionList),
 				"electronImport" : new LocalizedStrings(action.payload.data.electronImport),
 				"emailUnverified" : new LocalizedStrings(action.payload.data.emailUnverified),
 				"grid" : new LocalizedStrings(action.payload.data.grid),
@@ -1049,6 +1075,8 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
 				"mediaUpload" : new LocalizedStrings(action.payload.data.mediaUpload),
 				"newProject" : new LocalizedStrings(action.payload.data.newProject),
+				"passageDetailArtifacts" : new LocalizedStrings(action.payload.data.passageDetailArtifacts),
+				"passageDetailToolbar" : new LocalizedStrings(action.payload.data.passageDetailToolbar),
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),
 				"planActions" : new LocalizedStrings(action.payload.data.planActions),
@@ -1062,6 +1090,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"shared" : new LocalizedStrings(action.payload.data.shared),
 				"spelling" : new LocalizedStrings(action.payload.data.spelling),
 				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),
+				"teamCheckReference" : new LocalizedStrings(action.payload.data.teamCheckReference),
 				"template" : new LocalizedStrings(action.payload.data.template),
 				"toDoTable" : new LocalizedStrings(action.payload.data.toDoTable),
 				"transcribeAddNote" : new LocalizedStrings(action.payload.data.transcribeAddNote),
@@ -1076,6 +1105,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"viewMode" : new LocalizedStrings(action.payload.data.viewMode),
 				"vProject" : new LocalizedStrings(action.payload.data.vProject),
 				"welcome" : new LocalizedStrings(action.payload.data.welcome),
+				"workflowSteps" : new LocalizedStrings(action.payload.data.workflowSteps),
 				"wsAudioPlayer" : new LocalizedStrings(action.payload.data.wsAudioPlayer),
 				"wsAudioPlayerSegment" : new LocalizedStrings(action.payload.data.wsAudioPlayerSegment),
 				"wsAudioPlayerZoom" : new LocalizedStrings(action.payload.data.wsAudioPlayerZoom),

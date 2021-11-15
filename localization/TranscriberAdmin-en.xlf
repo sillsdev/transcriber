@@ -640,6 +640,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionList.title">
+         <segment>
+            <source>Comments</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="electronImport.allDataOverwritten">
          <segment>
             <source>All {name0} data will be overwritten.</source>
@@ -2566,6 +2572,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.title">
+         <segment>
+            <source>Passage Detail Artifacts</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailToolbar.add">
+         <segment>
+            <source>Passage Detail Toolbar</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageMedia.close">
          <segment>
             <source>Close</source>
@@ -3385,6 +3403,12 @@
       <unit id="taskItem.unassign">
          <segment>
             <source>Unassign {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="teamCheckReference.reference">
+         <segment>
+            <source>I could have a reference here but that's lowest priority because they can listen to their reference somewhere else</source>
             <target/>
          </segment>
       </unit>
@@ -4423,6 +4447,12 @@
       <unit id="welcome.title">
          <segment>
             <source>Getting Started</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.internalization">
+         <segment>
+            <source>Internalization</source>
             <target/>
          </segment>
       </unit>

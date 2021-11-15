@@ -745,6 +745,13 @@
                <context context-type="sourcefile">DeleteExpansion.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="discussionList.title">
+            <source>Comments</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="electronImport.allDataOverwritten">
             <source>All {name0} data will be overwritten.</source>
             <target/>
@@ -2993,6 +3000,20 @@
                <context context-type="sourcefile">NewProject.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="passageDetailArtifacts.title">
+            <source>Passage Detail Artifacts</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageDetailToolbar.add">
+            <source>Passage Detail Toolbar</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="passageMedia.close">
             <source>Close</source>
             <target/>
@@ -3951,6 +3972,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">TaskHead.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="teamCheckReference.reference">
+            <source>I could have a reference here but that's lowest priority because they can listen to their reference somewhere else</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">template.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="template.apply">
@@ -5159,6 +5187,13 @@
          </trans-unit>
          <trans-unit id="welcome.title">
             <source>Getting Started</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">welcome.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.internalization">
+            <source>Internalization</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">welcome.tsx</context>

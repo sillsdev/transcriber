@@ -143,6 +143,10 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
     "delete": string;
 };
 
+export interface IDiscussionListStrings extends Localize.LocalizedStringsMethods {
+    "title": string;
+};
+
 export interface IElectronImportStrings extends Localize.LocalizedStringsMethods {
     "allDataOverwritten": string;
     "exportedLost": string;
@@ -512,6 +516,14 @@ export interface INewProjectStrings extends Localize.LocalizedStringsMethods {
     "uploadAudio": string;
 };
 
+export interface IPassageDetailArtifactsStrings extends Localize.LocalizedStringsMethods {
+    "title": string;
+};
+
+export interface IPassageDetailToolbarStrings extends Localize.LocalizedStringsMethods {
+    "add": string;
+};
+
 export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
     "close": string;
 };
@@ -686,6 +698,10 @@ export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
     "assign": string;
     "section": string;
     "unassign": string;
+};
+
+export interface ITeamCheckReferenceStrings extends Localize.LocalizedStringsMethods {
+    "reference": string;
 };
 
 export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
@@ -903,6 +919,10 @@ export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
     "title": string;
 };
 
+export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods {
+    "internalization": string;
+};
+
 export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods {
     "aheadTip": string;
     "backTip": string;
@@ -965,6 +985,7 @@ export interface ILocalizedStrings {
 	cards: ICardsStrings;
 	control: IControlStrings;
 	deleteExpansion: IDeleteExpansionStrings;
+	discussionList: IDiscussionListStrings;
 	electronImport: IElectronImportStrings;
 	emailUnverified: IEmailUnverifiedStrings;
 	grid: IGridStrings;
@@ -981,6 +1002,8 @@ export interface ILocalizedStrings {
 	mediaTab: IMediaTabStrings;
 	mediaUpload: IMediaUploadStrings;
 	newProject: INewProjectStrings;
+	passageDetailArtifacts: IPassageDetailArtifactsStrings;
+	passageDetailToolbar: IPassageDetailToolbarStrings;
 	passageMedia: IPassageMediaStrings;
 	passageRecord: IPassageRecordStrings;
 	planActions: IPlanActionsStrings;
@@ -994,6 +1017,7 @@ export interface ILocalizedStrings {
 	shared: ISharedStrings;
 	spelling: ISpellingStrings;
 	taskItem: ITaskItemStrings;
+	teamCheckReference: ITeamCheckReferenceStrings;
 	template: ITemplateStrings;
 	toDoTable: IToDoTableStrings;
 	transcribeAddNote: ITranscribeAddNoteStrings;
@@ -1008,6 +1032,7 @@ export interface ILocalizedStrings {
 	viewMode: IViewModeStrings;
 	vProject: IVProjectStrings;
 	welcome: IWelcomeStrings;
+	workflowSteps: IWorkflowStepsStrings;
 	wsAudioPlayer: IWsAudioPlayerStrings;
 	wsAudioPlayerSegment: IWsAudioPlayerSegmentStrings;
 	wsAudioPlayerZoom: IWsAudioPlayerZoomStrings;

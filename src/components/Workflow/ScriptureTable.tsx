@@ -526,6 +526,20 @@ export function ScriptureTable(props: IProps) {
       setView(`/work/${prjId}/${passageRemoteId}`);
     });
   };
+  const handlePassageDetail = (i: number) => {
+    const { wf } = getByIndex(workflow, i);
+    saveIfChanged(async () => {
+      const id = wf?.passageId?.id || '';
+      const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
+      await waitForIt(
+        'busy or saving',
+        () => !globalStore.importexportBusy && !savingRef.current,
+        () => false,
+        200
+      );
+      setView(`/detail/${prjId}/${passageRemoteId}`);
+    });
+  };
 
   const handleAudacity = async (index: number) => {
     if (!(await hasAudacity())) {
@@ -850,6 +864,7 @@ export function ScriptureTable(props: IProps) {
         inlinePassages={flat}
         onTranscribe={handleTranscribe}
         onAudacity={handleAudacity}
+        onPassageDetail={handlePassageDetail}
         onAssign={handleAssign}
         onUpload={handleUpload}
         onRecord={handleRecord}

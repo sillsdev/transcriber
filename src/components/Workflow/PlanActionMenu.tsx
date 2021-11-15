@@ -15,6 +15,7 @@ import MoreIcon from '@material-ui/icons/MoreHoriz';
 import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import TranscribeIcon from '@material-ui/icons/EditOutlined';
+import DetailIcon from '@material-ui/icons/Edit';
 import { elemOffset } from '../../utils';
 import { isElectron } from '../../api-variable';
 import { AudacityLogo } from '../../control';
@@ -53,6 +54,7 @@ interface IProps extends IStateProps {
   active: boolean;
   onTranscribe: (i: number) => () => void;
   onAudacity: (i: number) => () => void;
+  onPassageDetail: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
 }
@@ -66,6 +68,7 @@ export function PlanActionMenu(props: IProps) {
     readonly,
     onTranscribe,
     onAudacity,
+    onPassageDetail,
     onAssign,
     onDelete,
     canAssign,
@@ -205,6 +208,15 @@ export function PlanActionMenu(props: IProps) {
                         disabled={(mediaId || '') === ''}
                       >
                         <TranscribeIcon className={classes.action} />
+                      </MenuItem>
+                    )}
+                    {isPassage && (
+                      <MenuItem
+                        id="planActDetail"
+                        title={'t.passagedetail'}
+                        onClick={onPassageDetail(rowIndex)}
+                      >
+                        <DetailIcon className={classes.action} />
                       </MenuItem>
                     )}
                     {isElectron && isPassage && !readonly && (
