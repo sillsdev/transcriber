@@ -14,13 +14,12 @@ interface IProps extends IStateProps {
 }
 const INIT_PLAYER_HEIGHT = 180;
 export function PassageDetailPlayer(props: IProps) {
-  const { playerStr, sharedStr, loading, pdBusy, setPDBusy, audioBlob } =
-    usePassageDetailContext();
-  const t = playerStr;
+  const { loading, pdBusy, setPDBusy, audioBlob } = usePassageDetailContext();
   const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
   const [playing, setPlaying] = useState(false);
   const playingRef = useRef(false);
   const playedSecsRef = useRef<number>(0);
+  //do I care about this?
   const segmentsRef = useRef('{}');
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;

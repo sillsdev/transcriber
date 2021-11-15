@@ -153,6 +153,13 @@ function App() {
                 <PrivateRoute auth={auth} exact path="/detail/:prjId/:pasId">
                   <PassageDetail auth={auth} />
                 </PrivateRoute>
+                <PrivateRoute
+                  auth={auth}
+                  exact
+                  path="/detail/:prjId/:pasId/:mediaId"
+                >
+                  <PassageDetail auth={auth} />
+                </PrivateRoute>
                 <Route path="/neworg" render={(props) => handleNewOrg(props)} />
               </ThemeProvider>
             </HotKeyProvider>

@@ -71,6 +71,7 @@ import WSAudioPlayer from './WSAudioPlayer';
 import PassageHistory from './PassageHistory';
 import { HotKeyContext } from '../context/HotKeyContext';
 import Spelling from './Spelling';
+import { SectionPassageTitle } from '../control/SectionPassageTitle';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -940,12 +941,11 @@ export function Transcriber(props: IProps) {
           <AllDone />
         ) : (
           <Grid container direction="column" style={style}>
-            <Grid container direction="row" className={classes.row}>
-              <Grid item xs={9} className={classes.description}>
-                {sectionDescription(section)}
-              </Grid>
-              <Grid item>{passageDescription(passage, allBookData)}</Grid>
-            </Grid>
+            <SectionPassageTitle
+              section={section}
+              passage={passage}
+              allBookData={allBookData}
+            />
             <Wrapper>
               <SplitPane
                 defaultSize={INIT_PLAYER_HEIGHT}

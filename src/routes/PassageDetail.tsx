@@ -23,7 +23,9 @@ import DiscussionList from '../components/Discussions/DiscussionList';
 import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 import { PassageDetailProvider } from '../context/PassageDetailContext';
-
+import { sectionDescription, passageDescription } from '../crud';
+import usePassageDetailContext from '../context/usePassageDetailContext';
+import { PassageDetailSectionPassage } from '../components/PassageDetail/PassageDetailSectionPassage';
 const INIT_COMMENT_WIDTH = 200;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -170,11 +172,8 @@ export const PassageDetail = (props: IProps) => {
                 <TeamCheckReference />
               </Grid>
             )}
-            {true && (
-              <Grid item className={classes.description} xs={12}>
-                <PassageDetailPlayer />
-              </Grid>
-            )}
+            <PassageDetailSectionPassage />
+
             <Paper className={classes.paper} style={paperStyle}>
               <Wrapper>
                 <SplitPane
@@ -184,6 +183,11 @@ export const PassageDetail = (props: IProps) => {
                   onChange={handleSplitSize}
                 >
                   <Pane className={classes.pane}>
+                    {true && (
+                      <Grid item className={classes.description} xs={12}>
+                        <PassageDetailPlayer />
+                      </Grid>
+                    )}
                     <Grid container direction="row" className={classes.row}>
                       <Grid item xs={12}>
                         <PassageDetailToolbar />

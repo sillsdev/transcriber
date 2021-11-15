@@ -9,29 +9,38 @@ import {
   MediaFile,
   ISharedStrings,
   IPassageDetailPlayerStrings,
+  Passage,
+  Section,
+  BookName,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { remoteId, useFetchMediaUrl, MediaSt, usePlan } from '../crud';
+import { remoteId, useFetchMediaUrl, MediaSt, usePlan, related } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob, logError, Severity } from '../utils';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
+import * as actions from '../store';
+import { bindActionCreators } from 'redux';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
 };
 
 interface IStateProps {
-  playerStr: IPassageDetailPlayerStrings;
   sharedStr: ISharedStrings;
+  allBookData: BookName[];
+  booksLoaded: boolean;
+  lang: string;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
-  playerStr: localStrings(state, { layout: 'passageDetailPlayer' }),
   sharedStr: localStrings(state, { layout: 'shared' }),
+  allBookData: state.books.bookData,
+  booksLoaded: state.books.loaded,
+  lang: state.strings.lang,
 });
-/*
+
 interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
 }
@@ -43,12 +52,16 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     dispatch
   ),
 });
-*/
+
 interface IRecordProps {
+  passages: Passage[];
+  sections: Section[];
   mediafiles: MediaFile[];
 }
 
 const mapRecordsToProps = {
+  passages: (q: QueryBuilder) => q.findRecords('passage'),
+  sections: (q: QueryBuilder) => q.findRecords('section'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
 
@@ -63,6 +76,8 @@ export interface IRowData {
 }
 
 const initState = {
+  passage: {} as Passage,
+  section: {} as Section,
   index: 0,
   selected: '',
   setSelected: (selected: string) => {},
@@ -79,6 +94,7 @@ const initState = {
   audioBlob: undefined as Blob | undefined,
   pdBusy: false,
   setPDBusy: (pdBusy: boolean) => {},
+  allBookData: Array<BookName>(),
 };
 
 export type ICtxState = typeof initState;
@@ -90,8 +106,7 @@ interface IContext {
 
 const PassageDetailContext = React.createContext({} as IContext);
 
-interface IProps extends IStateProps, IRecordProps {
-  //, IDispatchProps {
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   children: React.ReactElement;
   auth: Auth;
 }
@@ -102,18 +117,18 @@ interface ParamTypes {
 }
 const PassageDetailProvider = withData(mapRecordsToProps)(
   connect(
-    mapStateToProps
-    //mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
   )((props: IProps) => {
     const [reporter] = useGlobal('errorReporter');
-    const { mediafiles } = props;
-    const { playerStr, sharedStr } = props;
+    const { passages, sections, mediafiles } = props;
+    const { sharedStr } = props;
+    const { lang, allBookData, fetchBooks, booksLoaded } = props;
     const { prjId, pasId, mediaId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
     const [devPlan] = useGlobal('plan');
-    const { getPlan } = usePlan();
     const [projRole] = useGlobal('projRole');
     const [errorReporter] = useGlobal('errorReporter');
     const view = React.useRef('');
@@ -123,7 +138,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const [trackedTask, setTrackedTask] = useGlobal('trackedTask');
     const [state, setState] = useState({
       ...initState,
-      playerStr,
+      allBookData,
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const fetching = useRef('');
@@ -193,6 +208,33 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         return refreshed + 1;
       });
     };
+
+    useEffect(() => {
+      var p = passages.find((p) => p.id === pasId);
+      if (p) {
+        var s = sections.find((s) => (s.id = related(p, 'section')));
+        if (s) {
+          setState((state: ICtxState) => {
+            return {
+              ...state,
+              passage: p as Passage,
+              section: s as Section,
+            };
+          });
+        }
+      }
+    }, [pasId, passages, sections]);
+
+    useEffect(() => {
+      if (!booksLoaded) {
+        fetchBooks(lang);
+      } else {
+        setState((state: ICtxState) => {
+          return { ...state, allBookData };
+        });
+      }
+      /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    }, [lang, booksLoaded, allBookData]);
 
     useEffect(() => {
       if (mediaState.url) {
