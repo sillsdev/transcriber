@@ -16,7 +16,13 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { remoteId, useFetchMediaUrl, MediaSt, usePlan, related } from '../crud';
+import {
+  remoteId,
+  useFetchMediaUrl,
+  MediaSt,
+  remoteIdGuid,
+  related,
+} from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob, logError, Severity } from '../utils';
 import Auth from '../auth/Auth';
@@ -210,7 +216,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     };
 
     useEffect(() => {
-      var p = passages.find((p) => p.id === pasId);
+      var p = passages.find(
+        (p) => p.id === remoteIdGuid('passage', pasId, memory.keyMap)
+      );
       if (p) {
         var s = sections.find((s) => (s.id = related(p, 'section')));
         if (s) {

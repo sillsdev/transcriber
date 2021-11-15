@@ -167,13 +167,18 @@ export const PassageDetail = (props: IProps) => {
             <Grid item className={classes.description} xs={12}>
               <WorkflowSteps />
             </Grid>
-            {true && (
-              <Grid item className={classes.description} xs={12}>
-                <TeamCheckReference />
-              </Grid>
-            )}
-            <PassageDetailSectionPassage />
 
+            <PassageDetailSectionPassage />
+            <Grid container direction="row" className={classes.row}>
+              <Grid item xs={12}>
+                <PassageDetailToolbar />
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container>
+                  <PassageDetailArtifacts />
+                </Grid>
+              </Grid>
+            </Grid>
             <Paper className={classes.paper} style={paperStyle}>
               <Wrapper>
                 <SplitPane
@@ -185,19 +190,14 @@ export const PassageDetail = (props: IProps) => {
                   <Pane className={classes.pane}>
                     {true && (
                       <Grid item className={classes.description} xs={12}>
+                        <TeamCheckReference />
+                      </Grid>
+                    )}
+                    {true && (
+                      <Grid item className={classes.description} xs={12}>
                         <PassageDetailPlayer />
                       </Grid>
                     )}
-                    <Grid container direction="row" className={classes.row}>
-                      <Grid item xs={12}>
-                        <PassageDetailToolbar />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Grid container>
-                          <PassageDetailArtifacts />
-                        </Grid>
-                      </Grid>
-                    </Grid>
                   </Pane>
                   <Pane className={classes.pane}>
                     <Grid item xs={12} sm container>
