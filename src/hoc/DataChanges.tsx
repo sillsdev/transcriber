@@ -184,8 +184,9 @@ export const doDataChanges = async (
       return false;
     }
   };
+  var version = backup.cache.dbVersion;
 
-  var api = API_CONFIG.host + '/api/datachanges/';
+  var api = API_CONFIG.host + '/api/datachanges/v' + version.toString() + '/';
   if (isElectron) {
     var records: { id: string; since: string }[] = [];
     projectsLoaded.forEach((p) => {
