@@ -14,7 +14,8 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import MoreIcon from '@material-ui/icons/MoreHoriz';
 import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
-import TranscribeIcon from '@material-ui/icons/EditOutlined';
+// import TranscribeIcon from '@material-ui/icons/EditOutlined';
+import TranscribeIcon from '../../control/TranscribeIcon';
 import DetailIcon from '@material-ui/icons/Edit';
 import { elemOffset } from '../../utils';
 import { isElectron } from '../../api-variable';
@@ -207,7 +208,7 @@ export function PlanActionMenu(props: IProps) {
                         onClick={onTranscribe(rowIndex)}
                         disabled={(mediaId || '') === ''}
                       >
-                        <TranscribeIcon className={classes.action} />
+                        <TranscribeIcon />
                       </MenuItem>
                     )}
                     {isPassage && (
