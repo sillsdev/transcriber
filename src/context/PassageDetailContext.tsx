@@ -8,10 +8,10 @@ import {
   Plan,
   MediaFile,
   ISharedStrings,
-  IPassageDetailPlayerStrings,
   Passage,
   Section,
   BookName,
+  OrgWorkflowStep,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -84,7 +84,11 @@ export interface IRowData {
 const initState = {
   passage: {} as Passage,
   section: {} as Section,
-  index: 0,
+  currentstep: '',
+  orgWorkflowSteps: [] as OrgWorkflowStep[],
+  setOrgWorkflowSteps: (steps: OrgWorkflowStep[]) => {},
+  setCurrentStep: (step: string) => {},
+  index: 0, //row index?
   selected: '',
   setSelected: (selected: string) => {},
   playing: false,
@@ -92,7 +96,6 @@ const initState = {
   rowData: Array<IRowData>(),
   playItem: '',
   refresh: () => {},
-  playerStr: {} as IPassageDetailPlayerStrings,
   sharedStr: {} as ISharedStrings,
   loading: false,
   hasUrl: false,
@@ -148,6 +151,18 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const fetching = useRef('');
+
+    const setOrgWorkflowSteps = (steps: OrgWorkflowStep[]) => {
+      setState((state: ICtxState) => {
+        return { ...state, orgWorkflowSteps: steps };
+      });
+    };
+    const setCurrentStep = (stepId: string) => {
+      console.log('setting currentstep', stepId);
+      setState((state: ICtxState) => {
+        return { ...state, currentstep: stepId, playing: false };
+      });
+    };
 
     const setRows = (rowData: IRowData[]) => {
       setState((state: ICtxState) => {
@@ -231,7 +246,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           });
         }
       }
-    }, [pasId, passages, sections]);
+    }, [memory.keyMap, pasId, passages, sections]);
 
     useEffect(() => {
       if (!booksLoaded) {
@@ -321,6 +336,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             hasUrl: mediaState.status === MediaSt.FETCHED,
             mediaUrl: mediaState.url,
             setSelected,
+            setOrgWorkflowSteps,
+            setCurrentStep,
             setPlaying,
             setPDBusy,
             refresh,

@@ -32,8 +32,6 @@ import { formatTime, LightTooltip } from '../control';
 import TranscribeReject from './TranscribeReject';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
-  sectionDescription,
-  passageDescription,
   related,
   FontData,
   getFontData,

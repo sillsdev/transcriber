@@ -9,6 +9,7 @@ import {
   debounce,
   Paper,
 } from '@material-ui/core';
+
 import styled from 'styled-components';
 import AppHead from '../components/App/AppHead';
 import ViewMode, { ViewOption } from '../control/ViewMode';
@@ -23,9 +24,8 @@ import DiscussionList from '../components/Discussions/DiscussionList';
 import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 import { PassageDetailProvider } from '../context/PassageDetailContext';
-import { sectionDescription, passageDescription } from '../crud';
-import usePassageDetailContext from '../context/usePassageDetailContext';
 import { PassageDetailSectionPassage } from '../components/PassageDetail/PassageDetailSectionPassage';
+import { PassageDetailStageComplete } from '../components/PassageDetail/PassageDetailStageComplete';
 const INIT_COMMENT_WIDTH = 200;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -46,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: 'hidden',
       textOverflow: 'ellipsis',
     },
+    right: {
+      alignItems: 'right',
+    },
     column: {
       alignItems: 'left',
       whiteSpace: 'nowrap',
@@ -63,6 +66,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     pane: {},
     textarea: { resize: 'none' },
+    actionButton: {
+      color: theme.palette.primary.light,
+    },
   })
 );
 const Wrapper = styled.div`
@@ -167,8 +173,14 @@ export const PassageDetail = (props: IProps) => {
             <Grid item className={classes.description} xs={12}>
               <WorkflowSteps />
             </Grid>
-
-            <PassageDetailSectionPassage />
+            <Grid container direction="row" className={classes.row}>
+              <Grid item className={classes.row} xs={9}>
+                <PassageDetailSectionPassage />
+              </Grid>
+              <Grid item className={classes.right} xs={3}>
+                <PassageDetailStageComplete />
+              </Grid>
+            </Grid>
             <Grid container direction="row" className={classes.row}>
               <Grid item xs={12}>
                 <PassageDetailToolbar />
@@ -188,7 +200,7 @@ export const PassageDetail = (props: IProps) => {
                   onChange={handleSplitSize}
                 >
                   <Pane className={classes.pane}>
-                    {true && (
+                    {false && (
                       <Grid item className={classes.description} xs={12}>
                         <TeamCheckReference />
                       </Grid>

@@ -4,6 +4,10 @@ import { BookName, Passage, Section } from '../model';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      display: 'flex',
+      margin: theme.spacing(1),
+    },
     description: {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
@@ -23,11 +27,13 @@ export const SectionPassageTitle = (props: IProps) => {
   const { section, passage, allBookData } = props;
   const classes = useStyles();
   return (
-    <Grid container direction="row" className={classes.row}>
-      <Grid item xs={9} className={classes.description}>
-        {sectionDescription(section)}
+    <Grid container direction="row" className={classes.root}>
+      <Grid item className={classes.description}>
+        {sectionDescription(section) + '\u00A0\u00A0'}
       </Grid>
-      <Grid item>{passageDescription(passage, allBookData)}</Grid>
+      <Grid item className={classes.description}>
+        {passageDescription(passage, allBookData)}
+      </Grid>
     </Grid>
   );
 };

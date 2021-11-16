@@ -1,15 +1,17 @@
 import { CSSProperties } from 'styled-components';
 
 export const Stage = ({
+  id,
   label,
   color,
   done,
   select,
 }: {
+  id: string;
   label: string;
   color?: string;
   done?: boolean;
-  select?: (label: string) => void;
+  select?: (id: string) => void;
 }) => {
   const lineProps = { strokeWidth: 1.10133 };
   const textProps = {
@@ -27,7 +29,7 @@ export const Stage = ({
   } as CSSProperties;
 
   const handleClick = () => {
-    select && select(label);
+    select && select(id);
   };
 
   return (

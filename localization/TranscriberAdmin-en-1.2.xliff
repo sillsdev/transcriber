@@ -5199,11 +5199,88 @@
                <context context-type="sourcefile">welcome.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="workflowSteps.backTranslation">
+            <source>Back Translation</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.communityTesting">
+            <source>Community Testing</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.consultantCheck">
+            <source>Consultant Check</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+          <trans-unit id="workflowSteps.duplication">
+            <source>Duplication</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.finalEdit">
+            <source>Final Edit</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="workflowSteps.internalization">
             <source>Internalization</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">welcome.tsx</context>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.keyTerms">
+            <source>Key Terms</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.peerReview">
+            <source>Peer Review</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+          <trans-unit id="workflowSteps.readThrough">
+            <source>Read Through</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+        <trans-unit id="workflowSteps.record">
+            <source>Record</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.review">
+            <source>Review</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.teamCheck">
+            <source>Team Check</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.aheadTip">

@@ -990,7 +990,18 @@ const initialState = {
 	}),
 	"workflowSteps": new LocalizedStrings({
 		"en": {
+			"backTranslation": "Back Translation",
+			"communityTesting": "Community Testing",
+			"consultantCheck": "Consultant Check",
+			"duplication": "Duplication",
+			"finalEdit": "Final Edit",
 			"internalization": "Internalization",
+			"keyTerms": "Key Terms",
+			"peerReview": "Peer Review",
+			"readThrough": "Read Through",
+			"record": "Record",
+			"review": "Review",
+			"teamCheck": "Team Check",
 		}
 	}),
 	"wsAudioPlayer": new LocalizedStrings({

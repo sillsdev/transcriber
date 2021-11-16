@@ -924,7 +924,18 @@ export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods {
+    "backTranslation": string;
+    "communityTesting": string;
+    "consultantCheck": string;
+    "duplication": string;
+    "finalEdit": string;
     "internalization": string;
+    "keyTerms": string;
+    "peerReview": string;
+    "readThrough": string;
+    "record": string;
+    "review": string;
+    "teamCheck": string;
 };
 
 export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods {
