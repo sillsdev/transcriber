@@ -13,7 +13,6 @@ import {
 } from '@material-ui/core';
 import path from 'path';
 import { useSnackBar } from '../hoc/SnackBar';
-import ArtifactType from './Workflow/SelectArtifactType';
 
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
@@ -66,7 +65,7 @@ export enum UploadType {
 interface IProps extends IStateProps {
   visible: boolean;
   uploadType: UploadType;
-  uploadMethod?: (files: File[], artifactType?: string) => void;
+  uploadMethod?: (files: File[]) => void;
   multiple?: boolean;
   cancelMethod?: () => void;
   metaData?: JSX.Element;
@@ -88,7 +87,6 @@ function MediaUpload(props: IProps) {
   const [open, setOpen] = useState(visible);
   const [name, setName] = useState('');
   const [files, setFiles] = useState<File[]>([]);
-  const [artifactType, setArtifactType] = useState(''); //id
   const { showMessage } = useSnackBar();
   const acceptextension = [
     '.mp3, .m4a, .wav, .ogg',
@@ -107,7 +105,7 @@ function MediaUpload(props: IProps) {
 
   const handleAddOrSave = () => {
     if (uploadMethod && files) {
-      uploadMethod(files, artifactType);
+      uploadMethod(files);
     }
     handleFiles(undefined);
     setOpen(false);
@@ -227,12 +225,6 @@ function MediaUpload(props: IProps) {
         <DialogContent>
           <DialogContentText>{text[uploadType]}</DialogContentText>
           <div className={classes.drop}>{dropTarget}</div>
-          {uploadType === UploadType.Media && (
-            <ArtifactType
-              onTypeChange={setArtifactType}
-              allowNew={true} //check for admin
-            />
-          )}
           {metaData}
         </DialogContent>
         <DialogActions>

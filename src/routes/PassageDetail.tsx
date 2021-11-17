@@ -23,7 +23,7 @@ import WorkflowSteps from '../components/PassageDetail/WorkflowSteps';
 import PassageDetailSectionPassage from '../components/PassageDetail/PassageDetailSectionPassage';
 import PassageDetailStepComplete from '../components/PassageDetail/PassageDetailStepComplete';
 import PassageDetailToolbar from '../components/PassageDetail/PassageDetailToolbar';
-import PassageDetailArtifacts from '../components/PassageDetail/PassageDetailArtifacts';
+import PassageDetailArtifacts from '../components/PassageDetail/Internalization/PassageDetailArtifacts';
 import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 
@@ -135,6 +135,7 @@ interface ParamTypes {
   prjId: string;
 }
 export const PassageDetail = (props: IProps) => {
+  const { auth } = props;
   const classes = useStyles();
   const { prjId } = useParams<ParamTypes>();
   const [projRole] = useGlobal('projRole');
@@ -205,7 +206,7 @@ export const PassageDetail = (props: IProps) => {
               </Grid>
               <Grid item xs={12}>
                 <Grid container>
-                  <PassageDetailArtifacts />
+                  <PassageDetailArtifacts auth={auth} />
                 </Grid>
               </Grid>
             </Grid>

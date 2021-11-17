@@ -642,6 +642,7 @@ if (
     keys: { remoteId: {} },
     attributes: {
       sequenceNum: { type: 'number' },
+      description: { type: 'string' },
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
       lastModifiedBy: { type: 'number' }, //bkwd compat only
@@ -655,7 +656,7 @@ if (
         type: 'hasOne',
         model: 'mediafile',
       },
-      orgworkflowstep: {
+      orgWorkflowStep: {
         type: 'hasOne',
         model: 'orgworkflowstep',
       },
@@ -695,6 +696,7 @@ if (
       passage: { type: 'string' },
       passageSequencenum: { type: 'number' },
       book: { type: 'string' },
+      passageId: { type: 'string' },
       reference: { type: 'string' },
       versionNumber: { type: 'number' },
       audioUrl: { type: 'string' },

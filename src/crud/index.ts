@@ -56,3 +56,6 @@ export * from './useAudProjName';
 export * from './useRecOfType';
 export * from './useOfflineTeamList';
 export * from './useUpdateOrbitToken';
+export * from './useSecResCreate';
+export * from './useMediaResCreate';
+export * from './useSecResUpdate';

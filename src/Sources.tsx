@@ -179,7 +179,8 @@ export const Sources = async (
                   data?.errors &&
                   Array.isArray(data.errors) &&
                   data.errors.length > 0 &&
-                  data.errors[0].detail;
+                  data.errors[0].meta &&
+                  data.errors[0].meta.stackTrace[0];
                 if (url && detail) {
                   orbitError(
                     orbitErr(

@@ -13,6 +13,7 @@ import {
   Section,
   BookName,
   OrgWorkflowStep,
+  ArtifactCategory,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -23,6 +24,7 @@ import {
   MediaSt,
   remoteIdGuid,
   related,
+  getAllMediaRecs,
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob, logError, Severity } from '../utils';
@@ -65,17 +67,19 @@ interface IRecordProps {
   passages: Passage[];
   sections: Section[];
   mediafiles: MediaFile[];
+  categories: ArtifactCategory[];
 }
 
 const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  categories: (q: QueryBuilder) => q.findRecords('artifactcategory'),
 };
 
 export interface IRowData {
-  planName: string;
-  planType: string;
+  // planName: string;
+  // planType: string;
   mediafile: MediaFile;
   playItem: string;
   artifactName: string;
@@ -107,7 +111,7 @@ const initState = {
   pdBusy: false,
   setPDBusy: (pdBusy: boolean) => {},
   allBookData: Array<BookName>(),
-  getResources: async () => [] as Resource[],
+  getSharedResources: async () => [] as Resource[],
 };
 
 export type ICtxState = typeof initState;
@@ -134,7 +138,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     mapDispatchToProps
   )((props: IProps) => {
     const [reporter] = useGlobal('errorReporter');
-    const { passages, sections } = props;
+    const { passages, sections, mediafiles, categories } = props;
     const { sharedStr } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
     const { prjId, pasId, mediaId } = useParams<ParamTypes>();
@@ -190,7 +194,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         };
       });
     };
-    const getResources = async () => {
+    const getSharedResources = async () => {
       if (remote)
         return (await remote.query((q: QueryBuilder) =>
           q.findRecords('resource')
@@ -335,6 +339,26 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mediaState.error]);
 
+    useEffect(() => {
+      const passageId = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+      const newData = Array<IRowData>();
+      getAllMediaRecs(passageId, memory).forEach((m) => {
+        const catRec = categories.find(
+          (c) => c.id === related(m, 'artifactCategory')
+        );
+        newData.push({
+          mediafile: m,
+          artifactName: m.attributes.originalFile,
+          artifactType: m.attributes.artifactType,
+          artifactCategory: catRec?.attributes?.categoryname,
+        } as IRowData);
+      });
+      setState((state: ICtxState) => {
+        return { ...state, rowData: newData };
+      });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pasId]);
+
     if (view.current !== '') {
       const target = view.current;
       view.current = '';
@@ -353,7 +377,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setCurrentStep,
             setPlaying,
             setPDBusy,
-            getResources,
+            getSharedResources,
             refresh,
           },
           setState,

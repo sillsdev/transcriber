@@ -47,3 +47,5 @@ export * from './orgWorkflowStep';
 export * from './discussion';
 export * from './comment';
 export * from './resource';
+export * from './sectionResource';
+export * from './sectionResourceUser';

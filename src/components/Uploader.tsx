@@ -56,6 +56,7 @@ interface IProps extends IStateProps, IDispatchProps {
   multiple?: boolean;
   mediaId?: string;
   importList?: File[];
+  artifactType?: string; //id
 }
 
 export const Uploader = (props: IProps) => {
@@ -71,6 +72,7 @@ export const Uploader = (props: IProps) => {
     status,
     multiple,
     importList,
+    artifactType,
   } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
@@ -113,8 +115,8 @@ export const Uploader = (props: IProps) => {
   const getPlanId = () =>
     remoteIdNum('plan', planIdRef.current, memory.keyMap) || planIdRef.current;
   const getArtifactTypeId = () =>
-    remoteIdNum('artifacttype', artifactTypeRef.current, memory.keyMap) ||
-    artifactTypeRef.current;
+    remoteIdNum('artifacttype', artifactType || '', memory.keyMap) ||
+    artifactType;
   const pullPlanMedia = async () => {
     const planId = getPlanId();
     if (planId !== undefined) {
@@ -211,7 +213,7 @@ export const Uploader = (props: IProps) => {
     );
   };
 
-  const uploadMedia = async (files: File[], artifactTypeId?: string) => {
+  const uploadMedia = async (files: File[]) => {
     successCount.current = 0;
     if (!files || files.length === 0) {
       showMessage(t.selectFiles);
@@ -223,7 +225,7 @@ export const Uploader = (props: IProps) => {
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
     authRef.current = auth;
-    artifactTypeRef.current = artifactTypeId || '';
+    artifactTypeRef.current = artifactType || '';
     doUpload(0);
     onOpen(false);
   };

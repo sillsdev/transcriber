@@ -87,7 +87,6 @@ function PassageRecord(props: IProps) {
   const [filechanged, setFilechanged] = useState(false);
   const [blobReady, setBlobReady] = useState(true);
   const mimeTypeRef = useRef('audio/wav');
-  const [artifactType, setArtifactType] = useState(''); //id
   const { showMessage } = useSnackBar();
   const extensions = useMemo(
     () => ['mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'],
@@ -232,10 +231,6 @@ function PassageRecord(props: IProps) {
           onChange={handleChangeFileName}
           fullWidth
           required={true}
-        />
-        <ArtifactType
-          onTypeChange={setArtifactType}
-          allowNew={true} //check for admin
         />
         {metaData}
       </DialogContent>
