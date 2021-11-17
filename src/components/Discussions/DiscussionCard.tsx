@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
-import { useGlobal, useEffect } from 'reactn';
+import { useEffect } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import {
-  Card,
-  CardActions,
-  CardContent,
-  Grid,
-  Typography,
-} from '@material-ui/core';
-import moment from 'moment';
+import { Card, CardContent, Grid, Typography } from '@material-ui/core';
+
 import {
   Discussion,
   Comment,

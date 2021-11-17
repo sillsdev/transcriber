@@ -77,7 +77,7 @@ export function DiscussionList(props: IProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgWorkflowSteps, currentstep, selected]);
-  console.log(discussions);
+
   return (
     <Paper id="PersonalItem" className={classes.root}>
       <div className={classes.discussionHead}>

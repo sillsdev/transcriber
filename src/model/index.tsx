@@ -46,3 +46,4 @@ export * from './artifactType';
 export * from './orgWorkflowStep';
 export * from './discussion';
 export * from './comment';
+export * from './resource';

@@ -90,12 +90,10 @@ interface IStateProps {
 }
 interface IProps extends IStateProps, IRecordProps {
   comment: Comment;
-  selected: boolean;
-  selectComment: (commentId: string) => void;
 }
 
 export const CommentCard = (props: IProps) => {
-  const { t, ts, comment, selected, selectComment, mediafiles, users } = props;
+  const { t, ts, comment, users } = props;
   const classes = useStyles();
   const [author, setAuthor] = useState<User>();
   const [lang] = useGlobal('lang');
@@ -103,9 +101,6 @@ export const CommentCard = (props: IProps) => {
   const [editing, setEditing] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
 
-  const handleSelect = (comment: Comment) => () => {
-    selectComment(comment.id);
-  };
   const handleCommentAction = (what: string) => {
     if (what === 'edit') {
       setEditing(true);

@@ -7,6 +7,7 @@ import {
   IState,
   Plan,
   MediaFile,
+  Resource,
   ISharedStrings,
   Passage,
   Section,
@@ -29,6 +30,7 @@ import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
+import JSONAPISource from '@orbit/jsonapi';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -104,6 +106,7 @@ const initState = {
   pdBusy: false,
   setPDBusy: (pdBusy: boolean) => {},
   allBookData: Array<BookName>(),
+  getResources: async () => [] as Resource[],
 };
 
 export type ICtxState = typeof initState;
@@ -130,11 +133,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     mapDispatchToProps
   )((props: IProps) => {
     const [reporter] = useGlobal('errorReporter');
-    const { passages, sections, mediafiles } = props;
+    const { passages, sections } = props;
     const { sharedStr } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
     const { prjId, pasId, mediaId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
+    const [coordinator] = useGlobal('coordinator');
+    const remote = coordinator.getSource('remote') as JSONAPISource;
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
     const [devPlan] = useGlobal('plan');
@@ -183,6 +188,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           pdBusy: busy,
         };
       });
+    };
+    const getResources = async () => {
+      if (remote)
+        return (await remote.query((q: QueryBuilder) =>
+          q.findRecords('resource')
+        )) as Resource[];
+      else return [] as Resource[];
     };
     const setSelected = (
       selected: string,
@@ -340,6 +352,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setCurrentStep,
             setPlaying,
             setPDBusy,
+            getResources,
             refresh,
           },
           setState,

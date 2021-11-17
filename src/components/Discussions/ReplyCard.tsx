@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardContent,
-  createStyles,
-  Grid,
-  makeStyles,
-  Theme,
-} from '@material-ui/core';
+import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
 import { connect } from 'react-redux';
 import {
   Comment,
@@ -16,20 +9,13 @@ import {
   MediaFile,
   User,
 } from '../../model';
-import Confirm from '../AlertDialog';
 import localStrings from '../../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
-import { useEffect, useState } from 'react';
-import { related } from '../../crud';
 import UserAvatar from '../UserAvatar';
-import { dateOrTime } from '../../utils';
-import { useGlobal } from 'reactn';
-import CommentMenu from './CommentMenu';
+import { useGlobal, useState } from 'reactn';
 import { CommentEditor } from './CommentEditor';
-import { AddRecord, UpdateRecord } from '../../model/baseModel';
-import { memory } from '../../schema';
-import plan from '../../model/plan';
+import { AddRecord } from '../../model/baseModel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -86,22 +72,16 @@ interface IStateProps {
 interface IProps extends IStateProps, IRecordProps {
   discussion: Discussion;
   firstComment: boolean;
-  selected: boolean;
-  selectComment: (commentId: string) => void;
 }
 
 export const ReplyCard = (props: IProps) => {
-  const { t, ts, discussion, firstComment, selected, selectComment } = props;
+  const { t, ts, discussion, firstComment } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [refresh, setRefresh] = useState(0);
 
-  const handleSelect = () => () => {
-    selectComment('reply');
-  };
   const handleCommentChange = (commentText: string) => {
-    console.log('save this comment!', commentText);
     const comment: Comment = {
       type: 'comment',
       attributes: {

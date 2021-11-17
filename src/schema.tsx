@@ -682,7 +682,39 @@ if (
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
-
+  schemaDefinition.models.resource = {
+    keys: { remoteId: {} },
+    attributes: {
+      projectName: { type: 'string' },
+      organization: { type: 'string' },
+      language: { type: 'string' },
+      plan: { type: 'string' },
+      plantype: { type: 'string' },
+      section: { type: 'string' },
+      sectionSequencenum: { type: 'number' },
+      passage: { type: 'string' },
+      passageSequencenum: { type: 'number' },
+      book: { type: 'string' },
+      reference: { type: 'string' },
+      versionNumber: { type: 'number' },
+      audioUrl: { type: 'string' },
+      duration: { type: 'number' },
+      contentType: { type: 'string' },
+      transcription: { type: 'string' },
+      originalFile: { type: 'string' },
+      filesize: { type: 'number' },
+      languagebcp47: { type: 'string' },
+      categoryName: { type: 'string' },
+      typeName: { type: 'string' },
+      latest: { type: 'boolean' },
+      dateCreated: { type: 'string' },
+      dateUpdated: { type: 'string' },
+      lastModifiedBy: { type: 'number' },
+    },
+    relationships: {
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
   schemaDefinition.version = 4;
 }
 export const schema = new Schema(schemaDefinition);
