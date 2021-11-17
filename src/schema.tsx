@@ -617,7 +617,7 @@ if (
       user: { type: 'hasOne', model: 'user' },
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
       artifactCategory: { type: 'hasOne', model: 'artifactcategory' },
-      orgworkflowstep: {
+      orgWorkflowStep: {
         type: 'hasOne',
         model: 'orgworkflowstep',
       },
@@ -626,7 +626,7 @@ if (
   schemaDefinition.models.comment = {
     keys: { remoteId: {} },
     attributes: {
-      commenttext: { type: 'string' },
+      commentText: { type: 'string' },
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
       lastModifiedBy: { type: 'number' }, //bkwd compat only

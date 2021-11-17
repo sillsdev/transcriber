@@ -3,7 +3,7 @@ import { BaseModel } from './baseModel';
 
 export interface Comment extends BaseModel {
   attributes: {
-    commenttext: string;
+    commentText: string;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;

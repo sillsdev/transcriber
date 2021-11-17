@@ -15,6 +15,7 @@ export interface Discussion extends BaseModel {
     role: RecordRelationship;
     user: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
+    orgWorkflowStep: RecordRelationship;
   };
 }
 export default Discussion;

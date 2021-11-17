@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
 import {
@@ -17,15 +17,16 @@ import { UnsavedContext } from '../context/UnsavedContext';
 import Auth from '../auth/Auth';
 import SplitPane, { Pane } from 'react-split-pane';
 import { HeadHeight } from '../App';
+import { PassageDetailProvider } from '../context/PassageDetailContext';
+import DiscussionList from '../components/Discussions/DiscussionList';
 import WorkflowSteps from '../components/PassageDetail/WorkflowSteps';
+import PassageDetailSectionPassage from '../components/PassageDetail/PassageDetailSectionPassage';
+import PassageDetailStepComplete from '../components/PassageDetail/PassageDetailStepComplete';
 import PassageDetailToolbar from '../components/PassageDetail/PassageDetailToolbar';
 import PassageDetailArtifacts from '../components/PassageDetail/PassageDetailArtifacts';
-import DiscussionList from '../components/Discussions/DiscussionList';
 import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
-import { PassageDetailProvider } from '../context/PassageDetailContext';
-import { PassageDetailSectionPassage } from '../components/PassageDetail/PassageDetailSectionPassage';
-import { PassageDetailStageComplete } from '../components/PassageDetail/PassageDetailStageComplete';
+
 const INIT_COMMENT_WIDTH = 200;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(2),
       margin: 'auto',
+      width: '100%',
     },
     panel2: {
       display: 'flex',
@@ -142,7 +144,7 @@ export const PassageDetail = (props: IProps) => {
   const { checkSavedFn } = uctx.state;
   const [view, setView] = useState('');
   const [width, setWidth] = useState(window.innerWidth);
-  const [paperStyle] = useState({ width: width - 36 });
+  const [paperStyle, setPaperStyle] = useState({ width: width - 20 });
 
   const handleSwitchTo = () => {
     setView(`/plan/${prjId}/0`);
@@ -159,10 +161,26 @@ export const PassageDetail = (props: IProps) => {
       />
     );
   };
-
+  const setDimensions = () => {
+    setWidth(window.innerWidth);
+    setPaperStyle({ width: window.innerWidth - 10 });
+  };
   const handleSplitSize = debounce((e: any) => {
     //setPlayerSize(e);
   }, 50);
+
+  useEffect(() => {
+    setDimensions();
+    const handleResize = debounce(() => {
+      setDimensions();
+    }, 100);
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -178,7 +196,7 @@ export const PassageDetail = (props: IProps) => {
                 <PassageDetailSectionPassage />
               </Grid>
               <Grid item className={classes.right} xs={3}>
-                <PassageDetailStageComplete />
+                <PassageDetailStepComplete />
               </Grid>
             </Grid>
             <Grid container direction="row" className={classes.row}>
@@ -191,7 +209,7 @@ export const PassageDetail = (props: IProps) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Paper className={classes.paper} style={paperStyle}>
+            <Paper className={classes.paper}>
               <Wrapper>
                 <SplitPane
                   defaultSize={width - INIT_COMMENT_WIDTH}

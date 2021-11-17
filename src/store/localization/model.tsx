@@ -132,6 +132,16 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "uploadProgress": string;
 };
 
+export interface ICommentCardStrings extends Localize.LocalizedStringsMethods {
+    "confirmDelete": string;
+    "reply": string;
+};
+
+export interface ICommentMenuStrings extends Localize.LocalizedStringsMethods {
+    "edit": string;
+    "delete": string;
+};
+
 export interface IControlStrings extends Localize.LocalizedStringsMethods {
     "other": string;
     "scripture": string;
@@ -141,6 +151,10 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
     "advanced": string;
     "dangerZone": string;
     "delete": string;
+};
+
+export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods {
+    "comments": string;
 };
 
 export interface IDiscussionListStrings extends Localize.LocalizedStringsMethods {
@@ -520,7 +534,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "title": string;
 };
 
-export interface IPassageDetailPlayerStrings extends Localize.LocalizedStringsMethods {
+export interface IPassageDetailStepCompleteStrings extends Localize.LocalizedStringsMethods {
     "title": string;
 };
 
@@ -998,8 +1012,11 @@ export interface ILocalizedStrings {
 	audacityManager: IAudacityManagerStrings;
 	audioDownload: IAudioDownloadStrings;
 	cards: ICardsStrings;
+	commentCard: ICommentCardStrings;
+	commentMenu: ICommentMenuStrings;
 	control: IControlStrings;
 	deleteExpansion: IDeleteExpansionStrings;
+	discussionCard: IDiscussionCardStrings;
 	discussionList: IDiscussionListStrings;
 	electronImport: IElectronImportStrings;
 	emailUnverified: IEmailUnverifiedStrings;
@@ -1018,7 +1035,7 @@ export interface ILocalizedStrings {
 	mediaUpload: IMediaUploadStrings;
 	newProject: INewProjectStrings;
 	passageDetailArtifacts: IPassageDetailArtifactsStrings;
-	passageDetailPlayer: IPassageDetailPlayerStrings;
+	passageDetailStepComplete: IPassageDetailStepCompleteStrings;
 	passageDetailToolbar: IPassageDetailToolbarStrings;
 	passageMedia: IPassageMediaStrings;
 	passageRecord: IPassageRecordStrings;

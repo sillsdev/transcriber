@@ -147,6 +147,18 @@ const initialState = {
 			"uploadProgress": "Upload Progress",
 		}
 	}),
+	"commentCard": new LocalizedStrings({
+		"en": {
+			"confirmDelete": "Delete this comment?",
+			"reply": "Reply",
+		}
+	}),
+	"commentMenu": new LocalizedStrings({
+		"en": {
+			"edit": "Edit",
+			"delete": "Delete",
+		}
+	}),
 	"control": new LocalizedStrings({
 		"en": {
 			"other": "General Transcription",
@@ -160,9 +172,14 @@ const initialState = {
 			"delete": "Delete",
 		}
 	}),
+	"discussionCard": new LocalizedStrings({
+		"en": {
+			"comments": "Comments {0}",
+		}
+	}),
 	"discussionList": new LocalizedStrings({
 		"en": {
-			"title": "Comments",
+			"title": "Discussions",
 		}
 	}),
 	"electronImport": new LocalizedStrings({
@@ -555,9 +572,9 @@ const initialState = {
 			"title": "Passage Detail Artifacts",
 		}
 	}),
-	"passageDetailPlayer": new LocalizedStrings({
+	"passageDetailStepComplete": new LocalizedStrings({
 		"en": {
-			"title": "Passage Detail Player",
+			"title": "Step Complete",
 		}
 	}),
 	"passageDetailToolbar": new LocalizedStrings({
@@ -1072,8 +1089,11 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"audacityManager" : new LocalizedStrings(action.payload.data.audacityManager),
 				"audioDownload" : new LocalizedStrings(action.payload.data.audioDownload),
 				"cards" : new LocalizedStrings(action.payload.data.cards),
+				"commentCard" : new LocalizedStrings(action.payload.data.commentCard),
+				"commentMenu" : new LocalizedStrings(action.payload.data.commentMenu),
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
+				"discussionCard" : new LocalizedStrings(action.payload.data.discussionCard),
 				"discussionList" : new LocalizedStrings(action.payload.data.discussionList),
 				"electronImport" : new LocalizedStrings(action.payload.data.electronImport),
 				"emailUnverified" : new LocalizedStrings(action.payload.data.emailUnverified),
@@ -1092,7 +1112,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"mediaUpload" : new LocalizedStrings(action.payload.data.mediaUpload),
 				"newProject" : new LocalizedStrings(action.payload.data.newProject),
 				"passageDetailArtifacts" : new LocalizedStrings(action.payload.data.passageDetailArtifacts),
-				"passageDetailPlayer" : new LocalizedStrings(action.payload.data.passageDetailPlayer),
+				"passageDetailStepComplete" : new LocalizedStrings(action.payload.data.passageDetailStepComplete),
 				"passageDetailToolbar" : new LocalizedStrings(action.payload.data.passageDetailToolbar),
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),

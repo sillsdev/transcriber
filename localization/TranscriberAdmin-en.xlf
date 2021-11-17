@@ -610,6 +610,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="commentCard.confirmDelete">
+         <segment>
+            <source>Delete this comment?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentCard.reply">
+         <segment>
+            <source>Reply</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentMenu.edit">
+         <segment>
+            <source>Edit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentMenu.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="control.other">
          <segment>
             <source>General Transcription</source>
@@ -640,9 +664,15 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionCard.comments">
+         <segment>
+            <source>Comments {0}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionList.title">
          <segment>
-            <source>Comments</source>
+            <source>Discussions</source>
             <target/>
          </segment>
       </unit>
@@ -2578,9 +2608,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="passageDetailPlayer.title">
+      <unit id="passageDetailStepComplete.title">
          <segment>
-            <source>Passage Detail Player</source>
+            <source>Step Complete</source>
             <target/>
          </segment>
       </unit>

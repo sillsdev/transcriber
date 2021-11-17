@@ -1,7 +1,7 @@
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { SectionPassageTitle } from '../../control/SectionPassageTitle';
 
-export function PassageDetailSectionPassage() {
+export default function PassageDetailSectionPassage() {
   const { section, passage, allBookData } = usePassageDetailContext();
 
   return (

@@ -7,6 +7,9 @@ import { related } from '../../crud';
 import { UpdateRelatedRecord } from '../../model/baseModel';
 import { useGlobal } from 'reactn';
 import { TransformBuilder } from '@orbit/data';
+import { IPassageDetailStepCompleteStrings, IState } from '../../model';
+import localStrings from '../../selector/localize';
+import { connect } from 'react-redux';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     actionButton: {
@@ -17,7 +20,14 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-export const PassageDetailStageComplete = () => {
+interface IStateProps {
+  t: IPassageDetailStepCompleteStrings;
+}
+
+interface IProps extends IStateProps {}
+
+export const PassageDetailStepComplete = (props: IProps) => {
+  const { t } = props;
   const { passage, currentstep, orgWorkflowSteps } = usePassageDetailContext();
   const classes = useStyles();
   const [memory] = useGlobal('memory');
@@ -56,11 +66,11 @@ export const PassageDetailStageComplete = () => {
 
   return (
     <div>
-      Stage Complete:
+      {t.title}
       <IconButton
         id="complete"
         className={classes.actionButton}
-        title={'t.complete'}
+        title={t.title}
         onClick={handleToggleComplete}
         disabled={!complete && !canComplete}
       >
@@ -69,3 +79,9 @@ export const PassageDetailStageComplete = () => {
     </div>
   );
 };
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, { layout: 'passageDetailStepComplete' }),
+});
+export default connect(mapStateToProps)(
+  PassageDetailStepComplete
+) as any as any;

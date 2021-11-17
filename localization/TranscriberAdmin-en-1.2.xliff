@@ -710,6 +710,34 @@
                <context context-type="sourcefile">AddCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="commentCard.confirmDelete">
+            <source>Delete this comment?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="commentCard.reply">
+            <source>Reply</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="commentMenu.edit">
+            <source>Edit</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="commentMenu.delete">
+            <source>Delete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="control.other">
             <source>General Transcription</source>
             <target/>
@@ -745,8 +773,15 @@
                <context context-type="sourcefile">DeleteExpansion.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="discussionCard.comments">
+            <source>Comments {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="discussionList.title">
-            <source>Comments</source>
+            <source>Discussions</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DeleteExpansion.tsx</context>
@@ -3007,11 +3042,11 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="passageDetailPlayer.title">
-            <source>Passage Detail Player</source>
+         <trans-unit id="passageDetailStepComplete.title">
+            <source>Step Complete</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">PassageMedia.tsx</context>
+               <context context-type="sourcefile">passageDetailStepComplete.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="passageDetailToolbar.add">

@@ -1,13 +1,10 @@
 import { useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import { IPassageDetailPlayerStrings, IState } from '../../model';
-import localStrings from '../../selector/localize';
+import { IState } from '../../model';
 import WSAudioPlayer from '../WSAudioPlayer';
 
-interface IStateProps {
-  t: IPassageDetailPlayerStrings;
-}
+interface IStateProps {}
 
 interface IProps extends IStateProps {
   audioBlob: Blob;
@@ -54,8 +51,6 @@ export function PassageDetailPlayer(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'passageDetailPlayer' }),
-});
+const mapStateToProps = (state: IState): IStateProps => ({});
 
 export default connect(mapStateToProps)(PassageDetailPlayer) as any as any;
