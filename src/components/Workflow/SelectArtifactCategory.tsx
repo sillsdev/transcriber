@@ -11,14 +11,14 @@ import {
   IArtifactCategory,
   useArtifactCategory,
 } from '../../crud/useArtifactCategory';
-import { IArtifactCategoryStrings, IState } from '../../model';
+import { ISelectArtifactCategoryStrings, IState } from '../../model';
 import AddIcon from '@material-ui/icons/Add';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 
 interface IStateProps {
-  t: IArtifactCategoryStrings;
+  t: ISelectArtifactCategoryStrings;
 }
 interface IProps extends IStateProps {
   initCategory: string; //id
@@ -173,6 +173,6 @@ export const SelectArtifactCategory = (props: IProps) => {
   );
 };
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'artifactCategory' }),
+  t: localStrings(state, { layout: 'selectArtifactCategory' }),
 });
 export default connect(mapStateToProps)(SelectArtifactCategory);
