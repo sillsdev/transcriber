@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { IState, ICommentMenuStrings } from '../../model';
+import { IState, IDiscussionMenuStrings } from '../../model';
 import localStrings from '../../selector/localize';
 import { withStyles } from '@material-ui/core/styles';
 import { MenuProps } from '@material-ui/core/Menu';
@@ -15,11 +15,13 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import ResolveIcon from '@material-ui/icons/Check';
+import ReopenIcon from '@material-ui/icons/Unarchive';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     icon: {
-      color: theme.palette.primary.light,
+      color: theme.palette.background.paper,
     },
   })
 );
@@ -56,16 +58,17 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 interface IStateProps {
-  t: ICommentMenuStrings;
+  t: IDiscussionMenuStrings;
 }
 
 interface IProps extends IStateProps {
   action?: (what: string) => void;
+  resolved?: boolean;
   stopPlayer?: () => void;
 }
 
-export function CommentMenu(props: IProps) {
-  const { action, t, stopPlayer } = props;
+export function DiscussionMenu(props: IProps) {
+  const { action, t, resolved, stopPlayer } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -100,26 +103,43 @@ export function CommentMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        <StyledMenuItem id="commentEdit" onClick={handle('edit')}>
-          <ListItemIcon>
-            <EditIcon />
-          </ListItemIcon>
-          <ListItemText primary={t.edit} />
-        </StyledMenuItem>
-
+        {!resolved && (
+          <StyledMenuItem id="commentEdit" onClick={handle('edit')}>
+            <ListItemIcon>
+              <EditIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.edit} />
+          </StyledMenuItem>
+        )}
         <StyledMenuItem id="commentMenu" onClick={handle('delete')}>
           <ListItemIcon>
             <DeleteIcon />
           </ListItemIcon>
           <ListItemText primary={t.delete} />
         </StyledMenuItem>
+        {resolved === false && (
+          <StyledMenuItem id="resolve" onClick={handle('resolve')}>
+            <ListItemIcon>
+              <ResolveIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.resolve} />
+          </StyledMenuItem>
+        )}
+        {resolved && (
+          <StyledMenuItem id="reopen" onClick={handle('reopen')}>
+            <ListItemIcon>
+              <ReopenIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.reopen} />
+          </StyledMenuItem>
+        )}
       </StyledMenu>
     </div>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'commentMenu' }),
+  t: localStrings(state, { layout: 'discussionMenu' }),
 });
 
-export default connect(mapStateToProps)(CommentMenu) as any;
+export default connect(mapStateToProps)(DiscussionMenu) as any;

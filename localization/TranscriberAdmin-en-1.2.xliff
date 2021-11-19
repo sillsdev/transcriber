@@ -233,6 +233,69 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactCategory.activity">
+            <source>Activity</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.biblestory">
+            <source>Bible Story</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+          <trans-unit id="artifactCategory.cultural">
+            <source>Cultural</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.geographic">
+            <source>Geographic</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.grammar">
+            <source>Grammar</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.person">
+            <source>Person</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.scripture">
+            <source>Scripture</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.theology">
+            <source>Theology</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.word">
+            <source>Word</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="artifactType.backtranslation">
             <source>Back Translation</source>
             <target/>
@@ -268,21 +331,43 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="artifactTypeComp.addNewType">
+         <trans-unit id="selectArtifactCategory.addNewCategory">
+            <source>Add New Category</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">selectArtifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="selectArtifactCategory.artifactCategory">
+            <source>Category</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">selectArtifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="selectArtifactCategory.newArtifactCategory">
+            <source>New Category</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+
+         <trans-unit id="selectArtifactType.addNewType">
             <source>Add New Type</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="artifactTypeComp.artifactType">
+         <trans-unit id="selectArtifactType.artifactType">
             <source>Artifact Type</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="artifactTypeComp.newArtifactType">
+         <trans-unit id="selectArtifactType.newArtifactType">
             <source>New Artifact Type</source>
             <target/>
             <context-group>
@@ -724,18 +809,32 @@
                <context context-type="sourcefile">DeleteExpansion.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="commentMenu.edit">
+         <trans-unit id="discussionMenu.edit">
             <source>Edit</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+               <context context-type="sourcefile">DiscussionMenu.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="commentMenu.delete">
+         <trans-unit id="discussionMenu.delete">
             <source>Delete</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+               <context context-type="sourcefile">DiscussionMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionMenu.reopen">
+            <source>Re-open</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionMenu.resolve">
+            <source>Resolve</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionMenu.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="control.other">
@@ -773,11 +872,81 @@
                <context context-type="sourcefile">DeleteExpansion.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="discussionCard.comments">
-            <source>Comments {0}</source>
+         <trans-unit id="discussionCard.assignRole">
+            <source>Assign to a Role</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.assignUser">
+            <source>Assign to a User</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.category">
+            <source>Category: {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.collapse">
+            <source>Show/Hide Comments</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.comments">
+            <source>Comments: {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.confirmDelete">
+            <source>Delete this discussion and all commments?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.or">
+            <source>or</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.resolved">
+            <source>Resolved</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.subject">
+            <source>Subject</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionList.add">
+            <source>Add Discussion</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">discussionList.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionList.collapse">
+            <source>Show/Hide All Comments</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">discussionList.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="discussionList.title">
@@ -3883,6 +4052,13 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.role">
+            <source>Role</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.paratextchapterSpan">
             <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
             <target/>
@@ -3930,6 +4106,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.user">
+            <source>User</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="shared.yes">

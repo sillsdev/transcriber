@@ -202,6 +202,60 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactCategory.activity">
+         <segment>
+            <source>Activity</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.biblestory">
+         <segment>
+            <source>Bible Story</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.cultural">
+         <segment>
+            <source>Cultural</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.geographic">
+         <segment>
+            <source>Geographic</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.grammar">
+         <segment>
+            <source>Grammar</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.person">
+         <segment>
+            <source>Person</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.scripture">
+         <segment>
+            <source>Scripture</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.theology">
+         <segment>
+            <source>Theology</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.word">
+         <segment>
+            <source>Word</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactType.backtranslation">
          <segment>
             <source>Back Translation</source>
@@ -232,19 +286,37 @@
             <target/>
          </segment>
       </unit>
-      <unit id="artifactTypeComp.addNewType">
+      <unit id="selectArtifactCategory.addNewCategory">
+         <segment>
+            <source>Add New Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactCategory.artifactCategory">
+         <segment>
+            <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactCategory.newArtifactCategory">
+         <segment>
+            <source>New Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactType.addNewType">
          <segment>
             <source>Add New Type</source>
             <target/>
          </segment>
       </unit>
-      <unit id="artifactTypeComp.artifactType">
+      <unit id="selectArtifactType.artifactType">
          <segment>
             <source>Artifact Type</source>
             <target/>
          </segment>
       </unit>
-      <unit id="artifactTypeComp.newArtifactType">
+      <unit id="selectArtifactType.newArtifactType">
          <segment>
             <source>New Artifact Type</source>
             <target/>
@@ -622,15 +694,27 @@
             <target/>
          </segment>
       </unit>
-      <unit id="commentMenu.edit">
+      <unit id="discussionMenu.edit">
          <segment>
             <source>Edit</source>
             <target/>
          </segment>
       </unit>
-      <unit id="commentMenu.delete">
+      <unit id="discussionMenu.delete">
          <segment>
             <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.reopen">
+         <segment>
+            <source>Re-open</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.resolve">
+         <segment>
+            <source>Resolve</source>
             <target/>
          </segment>
       </unit>
@@ -664,9 +748,69 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionCard.assignRole">
+         <segment>
+            <source>Assign to a Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.assignUser">
+         <segment>
+            <source>Assign to a User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.category">
+         <segment>
+            <source>Category: {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.collapse">
+         <segment>
+            <source>Show/Hide Comments</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionCard.comments">
          <segment>
-            <source>Comments {0}</source>
+            <source>Comments: {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.confirmDelete">
+         <segment>
+            <source>Delete this discussion and all commments?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.or">
+         <segment>
+            <source>or</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.resolved">
+         <segment>
+            <source>Resolved</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.subject">
+         <segment>
+            <source>Subject</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.add">
+         <segment>
+            <source>Add Discussion</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.collapse">
+         <segment>
+            <source>Show/Hide All Comments</source>
             <target/>
          </segment>
       </unit>
@@ -3328,6 +3472,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.role">
+         <segment>
+            <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.paratextchapterSpan">
          <segment>
             <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
@@ -3367,6 +3517,12 @@
       <unit id="shared.uploadMediaSingular">
          <segment>
             <source>Upload Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.user">
+         <segment>
+            <source>User</source>
             <target/>
          </segment>
       </unit>

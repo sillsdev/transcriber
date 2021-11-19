@@ -51,6 +51,19 @@ const initialState = {
 			"yes": "Yes",
 		}
 	}),
+	"artifactCategory": new LocalizedStrings({
+		"en": {
+			"activity": "Activity",
+			"biblestory": "Bible Story",
+			"cultural": "Cultural",
+			"geographic": "Geographic",
+			"grammar": "Grammar",
+			"person": "Person",
+			"scripture": "Scripture",
+			"theology": "Theology",
+			"word": "Word",
+		}
+	}),
 	"artifactType": new LocalizedStrings({
 		"en": {
 			"backtranslation": "Back Translation",
@@ -60,7 +73,14 @@ const initialState = {
 			"vernacular": "Vernacular",
 		}
 	}),
-	"artifactTypeComp": new LocalizedStrings({
+	"selectArtifactCategory": new LocalizedStrings({
+		"en": {
+			"addNewCategory": "Add New Category",
+			"artifactCategory": "Category",
+			"newArtifactCategory": "New Category",
+		}
+	}),
+	"selectArtifactType": new LocalizedStrings({
 		"en": {
 			"addNewType": "Add New Type",
 			"artifactType": "Artifact Type",
@@ -153,10 +173,12 @@ const initialState = {
 			"reply": "Reply",
 		}
 	}),
-	"commentMenu": new LocalizedStrings({
+	"discussionMenu": new LocalizedStrings({
 		"en": {
 			"edit": "Edit",
 			"delete": "Delete",
+			"reopen": "Re-open",
+			"resolve": "Resolve",
 		}
 	}),
 	"control": new LocalizedStrings({
@@ -174,11 +196,21 @@ const initialState = {
 	}),
 	"discussionCard": new LocalizedStrings({
 		"en": {
-			"comments": "Comments {0}",
+			"assignRole": "Assign to a Role",
+			"assignUser": "Assign to a User",
+			"category": "Category: {0}",
+			"collapse": "Show/Hide Comments",
+			"comments": "Comments: {0}",
+			"confirmDelete": "Delete this discussion and all commments?",
+			"or": "or",
+			"resolved": "Resolved",
+			"subject": "Subject",
 		}
 	}),
 	"discussionList": new LocalizedStrings({
 		"en": {
+			"add": "Add Discussion",
+			"collapse": "Show/Hide All Comments",
 			"title": "Discussions",
 		}
 	}),
@@ -742,6 +774,7 @@ const initialState = {
 			"no": "No",
 			"NoSaveOffline": "Unable to save while offline.",
 			"owner": "Owner",
+			"role": "Role",
 			"paratextchapterSpan": "Passage {0}.{1} {2}: Passage must not span chapters.",
 			"part": "Part {0}",
 			"referenceNotFound": "Reference does not exist in Paratext chapter, or reference is within a larger verse range.",
@@ -749,6 +782,7 @@ const initialState = {
 			"transcriber": "Transcriber",
 			"uploadMediaPlural": "Upload Audio",
 			"uploadMediaSingular": "Upload Audio",
+			"user": "User",
 			"yes": "Yes",
 		}
 	}),
@@ -1082,15 +1116,17 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"access" : new LocalizedStrings(action.payload.data.access),
 				"activityState" : new LocalizedStrings(action.payload.data.activityState),
 				"alert" : new LocalizedStrings(action.payload.data.alert),
+				"artifactCategory" : new LocalizedStrings(action.payload.data.artifactCategory),
 				"artifactType" : new LocalizedStrings(action.payload.data.artifactType),
-				"artifactTypeComp" : new LocalizedStrings(action.payload.data.artifactTypeComp),
+				"selectArtifactCategory" : new LocalizedStrings(action.payload.data.selectArtifactCategory),
+				"selectArtifactType" : new LocalizedStrings(action.payload.data.selectArtifactType),
 				"assignmentTable" : new LocalizedStrings(action.payload.data.assignmentTable),
 				"assignSection" : new LocalizedStrings(action.payload.data.assignSection),
 				"audacityManager" : new LocalizedStrings(action.payload.data.audacityManager),
 				"audioDownload" : new LocalizedStrings(action.payload.data.audioDownload),
 				"cards" : new LocalizedStrings(action.payload.data.cards),
 				"commentCard" : new LocalizedStrings(action.payload.data.commentCard),
-				"commentMenu" : new LocalizedStrings(action.payload.data.commentMenu),
+				"discussionMenu" : new LocalizedStrings(action.payload.data.discussionMenu),
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
 				"discussionCard" : new LocalizedStrings(action.payload.data.discussionCard),

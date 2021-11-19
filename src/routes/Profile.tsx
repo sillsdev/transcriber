@@ -66,6 +66,7 @@ import {
 import AppHead from '../components/App/AppHead';
 import StickyRedirect from '../components/StickyRedirect';
 import { useSnackBar } from '../hoc/SnackBar';
+import SelectRole from '../control/SelectRole';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -192,7 +193,7 @@ export function Profile(props: IProps) {
   const [timezone, setTimezone] = useState<string | null>(
     moment.tz.guess() || ''
   );
-  const [role, setRole] = useState('member');
+  const [role, setRole] = useState('');
   const [locale, setLocale] = useState<string>(localeDefault(isDeveloper));
   const [news, setNews] = useState<boolean | null>(null);
   const [digest, setDigest] = useState<DigestPreference | null>(null);
@@ -267,9 +268,9 @@ export function Profile(props: IProps) {
     setTimezone(e.target.value);
   };
 
-  const handleRoleChange = (e: any) => {
+  const handleRoleChange = (e: string) => {
     setChanged(true);
-    setRole(e.target.value);
+    setRole(e);
   };
 
   const handleLocaleChange = (e: any) => {
@@ -498,14 +499,7 @@ export function Profile(props: IProps) {
             related(r, 'organization') === organization
         );
         if (mbrRec.length > 0) {
-          const roleId = related(mbrRec[0], 'role');
-          const roleRec = memory.cache.query((q: QueryBuilder) =>
-            q.findRecord({ type: 'role', id: roleId })
-          ) as Role;
-          const roleName = roleRec?.attributes?.roleName;
-          if (roleName) {
-            setRole(roleName);
-          }
+          setRole(related(mbrRec[0], 'role'));
         }
       }
     }
@@ -563,8 +557,6 @@ export function Profile(props: IProps) {
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
   if (/access/i.test(view)) return <Redirect to="/" />;
   if (/Team/i.test(view)) return <StickyRedirect to="/team" />;
-
-  const orgRoles = ['Admin', 'Member'];
 
   return (
     <div id="Profile" className={classes.root}>
@@ -659,28 +651,12 @@ export function Profile(props: IProps) {
                   {orgRole === 'admin' && editId && email !== '' && (
                     <FormControlLabel
                       control={
-                        <TextField
-                          id="select-org-role"
-                          select
-                          label={t.role}
-                          className={classes.locale}
-                          value={role}
+                        <SelectRole
+                          org={true}
+                          initRole={role}
                           onChange={handleRoleChange}
-                          SelectProps={{
-                            MenuProps: {
-                              className: classes.menu,
-                            },
-                          }}
-                          margin="normal"
-                          variant="filled"
                           required={true}
-                        >
-                          {orgRoles.map((option: string, idx: number) => (
-                            <MenuItem key={'role' + idx} value={option}>
-                              {option}
-                            </MenuItem>
-                          ))}
-                        </TextField>
+                        />
                       }
                       label=""
                     />

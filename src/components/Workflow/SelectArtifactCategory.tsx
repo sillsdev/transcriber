@@ -6,19 +6,23 @@ import {
   TextField,
   Theme,
 } from '@material-ui/core';
-import { useState } from 'react';
-import { IArtifactType, useArtifactType } from '../../crud/useArtifactType';
-import { IArtifactTypeCompStrings, IState } from '../../model';
+import { useEffect, useState } from 'react';
+import {
+  IArtifactCategory,
+  useArtifactCategory,
+} from '../../crud/useArtifactCategory';
+import { IArtifactCategoryStrings, IState } from '../../model';
 import AddIcon from '@material-ui/icons/Add';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 
 interface IStateProps {
-  t: IArtifactTypeCompStrings;
+  t: IArtifactCategoryStrings;
 }
 interface IProps extends IStateProps {
-  onTypeChange: (artifactTypeId: string) => void;
+  initCategory: string; //id
+  onCategoryChange: (artifactCategoryId: string) => void;
   allowNew?: boolean;
 }
 
@@ -53,45 +57,54 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-export const ArtifactType = (props: IProps) => {
-  const { onTypeChange, allowNew, t } = props;
+export const SelectArtifactCategory = (props: IProps) => {
+  const { onCategoryChange, allowNew, t, initCategory } = props;
   const classes = useStyles();
-  const [artifactType, setArtifactType] = useState('vernacular');
-  const [newArtifactType, setNewArtifactType] = useState('');
+  const [categoryId, setCategoryId] = useState(initCategory);
+  const [newArtifactCategory, setNewArtifactCategory] = useState('');
   const [showNew, setShowNew] = useState(false);
-  const { getArtifactTypes, addNewArtifactType } = useArtifactType();
-  const [artifactTypes, setArtifactTypes] = useState(getArtifactTypes());
-  const addNewType = async () => {
-    await addNewArtifactType(newArtifactType);
-    setArtifactTypes(getArtifactTypes());
-    setArtifactType(newArtifactType);
-    onTypeChange(newArtifactType);
-    cancelNewType();
+  const { getArtifactCategorys, addNewArtifactCategory } =
+    useArtifactCategory();
+  const [artifactCategorys, setArtifactCategorys] = useState(
+    getArtifactCategorys()
+  );
+
+  useEffect(() => {
+    setCategoryId(initCategory);
+  }, [initCategory]);
+
+  const addNewCategory = () => {
+    addNewArtifactCategory(newArtifactCategory).then((newId) => {
+      setCategoryId(newId);
+      setArtifactCategorys(getArtifactCategorys());
+      onCategoryChange(newId);
+      cancelNewCategory();
+    });
   };
-  const cancelNewType = () => {
-    setNewArtifactType('');
+  const cancelNewCategory = () => {
+    setNewArtifactCategory('');
     setShowNew(false);
   };
-  const handleArtifactTypeChange = (e: any) => {
-    if (e.target.value === t.addNewType) setShowNew(true);
+  const handleArtifactCategoryChange = (e: any) => {
+    if (e.target.value === t.addNewCategory) setShowNew(true);
     else {
-      setArtifactType(e.target.value);
-      onTypeChange(e.target.value);
+      setCategoryId(e.target.value);
+      onCategoryChange(e.target.value);
     }
   };
-  const handleNewArtifactTypeChange = (e: any) => {
-    setNewArtifactType(e.target.value);
+  const handleNewArtifactCategoryChange = (e: any) => {
+    setNewArtifactCategory(e.target.value);
   };
 
   return (
     <div className={classes.container}>
       <TextField
-        id="artifact-type"
+        id="artifact-category"
         select
-        label={t.artifactType}
+        label={t.artifactCategory}
         className={classes.textField}
-        value={artifactType}
-        onChange={handleArtifactTypeChange}
+        value={categoryId}
+        onChange={handleArtifactCategoryChange}
         SelectProps={{
           MenuProps: {
             className: classes.menu,
@@ -111,17 +124,17 @@ export const ArtifactType = (props: IProps) => {
         variant="filled"
         required={true}
       >
-        {artifactTypes
+        {artifactCategorys
           .sort()
-          .map((option: IArtifactType) => (
+          .map((option: IArtifactCategory) => (
             <MenuItem key={option.id} value={option.id}>
-              {option.type}
+              {option.category}
             </MenuItem>
           ))
           .concat(
             allowNew ? (
-              <MenuItem key={t.addNewType} value={t.addNewType}>
-                {t.addNewType + '\u00A0\u00A0'}
+              <MenuItem key={t.addNewCategory} value={t.addNewCategory}>
+                {t.addNewCategory + '\u00A0\u00A0'}
                 <AddIcon />
               </MenuItem>
             ) : (
@@ -132,17 +145,17 @@ export const ArtifactType = (props: IProps) => {
       {showNew && (
         <div className={classes.row}>
           <TextField
-            id="new-artifact-type"
-            label={t.newArtifactType}
+            id="new-artifact-cat"
+            label={t.newArtifactCategory}
             className={classes.newTextField}
-            value={newArtifactType}
-            onChange={handleNewArtifactTypeChange}
+            value={newArtifactCategory}
+            onChange={handleNewArtifactCategoryChange}
           ></TextField>
           <IconButton
             id="addnew"
             color="secondary"
             aria-label="addnew"
-            onClick={addNewType}
+            onClick={addNewCategory}
           >
             <AddIcon />
           </IconButton>
@@ -150,7 +163,7 @@ export const ArtifactType = (props: IProps) => {
             id="cancelnew"
             color="secondary"
             aria-label="cancelnew"
-            onClick={cancelNewType}
+            onClick={cancelNewCategory}
           >
             <CancelIcon />
           </IconButton>
@@ -160,6 +173,6 @@ export const ArtifactType = (props: IProps) => {
   );
 };
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'artifactTypeComp' }),
+  t: localStrings(state, { layout: 'artifactCategory' }),
 });
-export default connect(mapStateToProps)(ArtifactType);
+export default connect(mapStateToProps)(SelectArtifactCategory);

@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import path from 'path';
 import { useSnackBar } from '../hoc/SnackBar';
-import ArtifactType from './Workflow/ArtifactType';
+import ArtifactType from './Workflow/SelectArtifactType';
 
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;

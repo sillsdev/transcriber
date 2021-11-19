@@ -1,6 +1,7 @@
 import {
   createStyles,
   Grid,
+  IconButton,
   makeStyles,
   Paper,
   Theme,
@@ -11,11 +12,15 @@ import { useContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useGlobal } from 'reactn';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { related, remoteIdGuid } from '../../crud';
+import { related } from '../../crud';
 import { Discussion, IDiscussionListStrings, IState } from '../../model';
 import localStrings from '../../selector/localize';
-import PersonIcon from '@material-ui/icons/Person';
+import AddIcon from '@material-ui/icons/Add';
+import HideIcon from '@material-ui/icons/ArrowDropUp';
+import ShowIcon from '@material-ui/icons/ArrowDropDown';
 import DiscussionCard from './DiscussionCard';
+import { TransformBuilder } from '@orbit/data';
+import { AddRecord, UpdateRelatedRecord } from '../../model/baseModel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,6 +45,9 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       paddingRight: theme.spacing(1),
     },
+    actionButton: {
+      color: theme.palette.primary.light,
+    },
     cardFlow: {
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
@@ -56,39 +64,130 @@ export function DiscussionList(props: IProps) {
   const { t } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
+  const [user] = useGlobal('user');
   const [discussions, setDiscussions] = useState<Discussion[]>([]);
+  const [collapsed, setCollapsed] = useState(false);
+  const [addingId, setAddingId] = useState('');
   const ctx = useContext(PassageDetailContext);
-  const { orgWorkflowSteps, currentstep, selected } = ctx.state;
+  const { orgWorkflowSteps, currentstep, selected, mediafileId } = ctx.state;
 
   useEffect(() => {
-    /* TEMP!! */
-    var xx = remoteIdGuid('mediafile', '5001', memory.keyMap);
-    if (xx !== '' && currentstep !== '') {
-      var dis = (
-        memory.cache.query((q: QueryBuilder) =>
-          q.findRecords('discussion')
-        ) as Discussion[]
-      ).filter(
-        (d) =>
-          related(d, 'orgWorkflowStep') === currentstep &&
-          related(d, 'mediafile') === xx
-      );
-      setDiscussions(dis);
+    // will I have a mediafileId here???
+    if (currentstep !== '') {
+      if (addingId !== '')
+        setDiscussions(
+          (
+            memory.cache.query((q: QueryBuilder) =>
+              q.findRecords('discussion')
+            ) as Discussion[]
+          ).filter((d) => d.id === addingId)
+        );
+      else
+        setDiscussions(
+          (
+            memory.cache.query((q: QueryBuilder) =>
+              q.findRecords('discussion')
+            ) as Discussion[]
+          )
+            .filter((d) => related(d, 'orgWorkflowStep') === currentstep)
+            .sort((x, y) =>
+              x.attributes.resolved === y.attributes.resolved
+                ? x.attributes.dateCreated < y.attributes.dateCreated
+                  ? -1
+                  : 1
+                : x.attributes.resolved
+                ? 1
+                : -1
+            )
+        );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orgWorkflowSteps, currentstep, selected]);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [discussions, orgWorkflowSteps, currentstep, selected, addingId]);
+
+  const handleAddComplete = () => {
+    setAddingId('');
+  };
+  const handleAddCanceled = () => {
+    memory.update((t: TransformBuilder) =>
+      t.removeRecord({ type: 'discussion', id: addingId })
+    );
+    setAddingId('');
+  };
+
+  const handleAddDiscussion = async () => {
+    const discussion: Discussion = {
+      type: 'discussion',
+      attributes: {
+        subject: '',
+      },
+    } as any;
+    const t = new TransformBuilder();
+    var ops = [
+      ...AddRecord(t, discussion, user, memory),
+      ...UpdateRelatedRecord(
+        t,
+        discussion,
+        'orgWorkflowStep',
+        'orgworkflowstep',
+        currentstep,
+        user
+      ),
+    ];
+    if (mediafileId)
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          discussion,
+          'mediafile',
+          'mediafile',
+          mediafileId,
+          user
+        )
+      );
+    memory.update(ops);
+    setAddingId(discussion.id);
+
+    return discussion.id;
+  };
+  const handleToggleCollapse = () => {
+    setCollapsed(!collapsed);
+  };
   return (
-    <Paper id="PersonalItem" className={classes.root}>
+    <Paper id="DiscussionList" className={classes.root}>
       <div className={classes.discussionHead}>
         <Typography variant="h5" className={classes.name}>
-          <PersonIcon className={classes.icon} />
           {t.title}
         </Typography>
+        <div>
+          <IconButton
+            id="addDiscussion"
+            className={classes.actionButton}
+            title={t.add}
+            onClick={handleAddDiscussion}
+          >
+            <AddIcon />
+          </IconButton>
+          <IconButton
+            id="collapseDiscussion"
+            className={classes.actionButton}
+            title={t.collapse}
+            onClick={handleToggleCollapse}
+          >
+            {collapsed ? <ShowIcon /> : <HideIcon />}
+          </IconButton>
+        </div>
       </div>
       <Grid container className={classes.cardFlow}>
         {discussions.map((i) => {
-          return <DiscussionCard discussion={i} />;
+          return (
+            <DiscussionCard
+              discussion={i}
+              collapsed={collapsed}
+              onAddCancelled={addingId ? handleAddCanceled : undefined}
+              onAddComplete={addingId ? handleAddComplete : undefined}
+            />
+          );
         })}
       </Grid>
     </Paper>

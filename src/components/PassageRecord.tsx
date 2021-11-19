@@ -21,7 +21,7 @@ import { QueryBuilder } from '@orbit/data';
 import { loadBlob, removeExtension } from '../utils';
 import { MediaSt, useFetchMediaUrl } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
-import ArtifactType from './Workflow/ArtifactType';
+import ArtifactType from './Workflow/SelectArtifactType';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

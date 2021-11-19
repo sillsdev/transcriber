@@ -17,17 +17,16 @@ import { related } from '../../crud';
 import UserAvatar from '../UserAvatar';
 import { dateOrTime } from '../../utils';
 import { useGlobal } from 'reactn';
-import CommentMenu from './CommentMenu';
 import { CommentEditor } from './CommentEditor';
 import { UpdateRecord } from '../../model/baseModel';
-import { memory } from '../../schema';
+import DiscussionMenu from './DiscussionMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
       '&:hover button': {
-        color: 'grey',
+        color: 'primary',
       },
       '& .MuiTypography-root': {
         cursor: 'default ',
@@ -75,8 +74,11 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(1),
     },
     text: {
-      overflow: 'auto',
       color: theme.palette.primary.dark,
+      wordBreak: 'break-word',
+    },
+    button: {
+      color: theme.palette.background.paper,
     },
   })
 );
@@ -98,6 +100,7 @@ export const CommentCard = (props: IProps) => {
   const [author, setAuthor] = useState<User>();
   const [lang] = useGlobal('lang');
   const [user] = useGlobal('user');
+  const [memory] = useGlobal('memory');
   const [editing, setEditing] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
 
@@ -140,7 +143,7 @@ export const CommentCard = (props: IProps) => {
   useEffect(() => {
     if (users) {
       var u = users.filter(
-        (u) => (u.id = related(comment, 'lastModifiedByUser'))
+        (u) => u.id === related(comment, 'lastModifiedByUser')
       );
       if (u.length > 0) setAuthor(u[0]);
     }
@@ -163,7 +166,7 @@ export const CommentCard = (props: IProps) => {
           </Grid>
           {author?.id === user && (
             <Grid item>
-              <CommentMenu action={handleCommentAction} />
+              <DiscussionMenu action={handleCommentAction} />
             </Grid>
           )}
         </Grid>

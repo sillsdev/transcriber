@@ -14,6 +14,7 @@ export interface Discussion extends BaseModel {
     mediafile: RecordRelationship;
     role: RecordRelationship;
     user: RecordRelationship;
+    artifactCategory: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
     orgWorkflowStep: RecordRelationship;
   };

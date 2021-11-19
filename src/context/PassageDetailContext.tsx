@@ -99,6 +99,7 @@ const initState = {
   playItem: '',
   refresh: () => {},
   sharedStr: {} as ISharedStrings,
+  mediafileId: '',
   loading: false,
   hasUrl: false,
   mediaUrl: '',
@@ -247,7 +248,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         (p) => p.id === remoteIdGuid('passage', pasId, memory.keyMap)
       );
       if (p) {
-        var s = sections.find((s) => (s.id = related(p, 'section')));
+        var s = sections.find((s) => s.id === related(p, 'section'));
         if (s) {
           setState((state: ICtxState) => {
             return {

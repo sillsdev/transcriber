@@ -62,8 +62,6 @@ export const useArtifactType = () => {
       type: 'artifacttype',
       attributes: {
         typename: newArtifactType,
-        dateCreated: currentDateTime(),
-        dateUpdated: currentDateTime(),
       },
     } as any;
     const t = new TransformBuilder();

@@ -5,17 +5,22 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      backgroudColor: theme.palette.primary.dark,
       display: 'flex',
+      '&:hover button': {
+        color: 'black',
+      },
     },
     row: {
       display: 'flex',
       flexDirection: 'row',
-      backgroudColor: theme.palette.primary.dark,
     },
     column: {
       display: 'flex',
       flexDirection: 'column',
-      backgroudColor: theme.palette.primary.dark,
+    },
+    button: {
+      color: theme.palette.background.paper,
     },
   })
 );
@@ -45,7 +50,7 @@ export const CommentEditor = (props: IProps) => {
   useEffect(() => {
     if (refresh > 0) setCurText('');
   }, [refresh]);
-  console.log(comment, curText);
+
   return (
     <div className={classes.column}>
       <TextField
@@ -55,12 +60,13 @@ export const CommentEditor = (props: IProps) => {
         value={curText}
         onChange={handleTextChange}
         fullWidth
+        multiline
       />
       <div className={classes.row}>
-        <Button id="ok" onClick={handleOk} color="default">
+        <Button id="ok" onClick={handleOk} className={classes.button}>
           {okStr}
         </Button>
-        <Button id="cancel" onClick={handleCancel} color="default">
+        <Button id="cancel" onClick={handleCancel} className={classes.button}>
           {cancelStr}
         </Button>
       </div>

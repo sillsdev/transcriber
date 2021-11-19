@@ -24,19 +24,17 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  MenuItem,
   Typography,
   Grid,
   FormLabel,
   Checkbox,
   FormControlLabel,
-  ListItem,
-  ListItemText,
 } from '@material-ui/core';
 import { related, useRole, getUserById } from '../crud';
-import { localizeRole, localizeRoleDetail, validateEmail } from '../utils';
+import { validateEmail } from '../utils';
 import { API_CONFIG } from '../api-variable';
 import { AddRecord } from '../model/baseModel';
+import SelectRole from '../control/SelectRole';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -83,10 +81,7 @@ interface IProps extends IRecordProps, IStateProps {
 function Invite(props: IProps) {
   const {
     t,
-    ts,
-    tg,
     visible,
-    roles,
     groups,
     users,
     projects,
@@ -99,7 +94,6 @@ function Invite(props: IProps) {
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
-  const [offline] = useGlobal('offline');
   const { getRoleId } = useRole();
   const [currentUser, setcurrentUser] = useState('');
   const [open, setOpen] = useState(visible);
@@ -227,11 +221,11 @@ function Invite(props: IProps) {
   const handleEmailChange = (e: any) => {
     setEmail(e.target.value);
   };
-  const handleRoleChange = (e: any) => {
-    setRole(e.target.value);
+  const handleRoleChange = (e: string) => {
+    setRole(e);
   };
-  const handleAllUsersRoleChange = (e: any) => {
-    setAllUsersRole(e.target.value);
+  const handleAllUsersRoleChange = (e: string) => {
+    setAllUsersRole(e);
   };
   const hasInvite = (email: string) => {
     const selectInvite: Invitation[] = memory.cache.query((q: QueryBuilder) =>
@@ -351,88 +345,23 @@ function Invite(props: IProps) {
               <FormLabel>{t.organization}</FormLabel>
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                id="select-role"
-                className={classes.textField}
-                select
-                label={t.role}
-                value={role}
+              <SelectRole
+                org={true}
+                initRole={role}
                 onChange={handleRoleChange}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes.menu,
-                  },
-                }}
-                helperText={t.selectTeamRole}
-                margin="normal"
-                variant="filled"
-                required
-              >
-                {roles
-                  .filter(
-                    (r) =>
-                      r.attributes &&
-                      r.attributes.orgRole &&
-                      Boolean(r?.keys?.remoteId) !== offline
-                  )
-                  .sort((i, j) =>
-                    i.attributes.roleName < j.attributes.roleName ? -1 : 1
-                  )
-                  .map((option: Role) => (
-                    <MenuItem key={option.id} value={option.id}>
-                      {localizeRole(option.attributes.roleName, ts)}
-                    </MenuItem>
-                  ))}
-              </TextField>
+                required={true}
+              />
             </Grid>
             <Grid item xs={12}>
               <FormLabel>{t.groups}</FormLabel>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                id="select-allusersrole"
-                className={classes.textField}
-                select
-                label={t.groupRole}
-                value={allUsersRole}
+              <SelectRole
+                org={false}
+                initRole={allUsersRole}
                 onChange={handleAllUsersRoleChange}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes.menu,
-                  },
-                }}
-                helperText={t.selectProjectRole}
-                margin="normal"
-                variant="filled"
-                required
-              >
-                {roles
-                  .filter(
-                    (r) =>
-                      r.attributes &&
-                      r.attributes.groupRole &&
-                      Boolean(r?.keys?.remoteId) !== offline
-                  )
-                  .sort((i, j) =>
-                    i.attributes.roleName < j.attributes.roleName ? -1 : 1
-                  )
-                  .map((option: Role) => (
-                    <ListItem key={option.id} value={option.id}>
-                      <ListItemText
-                        primary={localizeRole(
-                          option.attributes.roleName,
-                          ts,
-                          true
-                        )}
-                        secondary={localizeRoleDetail(
-                          option.attributes.roleName,
-                          tg,
-                          true
-                        )}
-                      />
-                    </ListItem>
-                  ))}
-              </TextField>
+                required={true}
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
               <label id="projectsAll" className={classes.label}>

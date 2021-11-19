@@ -21,12 +21,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
-      '&:hover button': {
-        color: 'grey',
-      },
-      '& .MuiTypography-root': {
-        cursor: 'default ',
-      },
     },
 
     commentLine: {
