@@ -66,7 +66,10 @@ export const SelectResource = (props: IProps) => {
   };
 
   useEffect(() => {
-    getSharedResources().then((r) => setResouce(r));
+    getSharedResources().then((res) => {
+      const latest = res.filter((r) => r.attributes?.latest);
+      setResouce(latest);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -90,6 +93,7 @@ export const SelectResource = (props: IProps) => {
           onClick={handleSelect}
           variant="contained"
           className={classes.button}
+          color="primary"
         >
           {t2.select}
         </Button>
