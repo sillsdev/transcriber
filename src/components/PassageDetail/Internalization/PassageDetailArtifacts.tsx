@@ -28,6 +28,7 @@ import {
   useSecResCreate,
   useMediaResCreate,
   useSecResUpdate,
+  useSecResDelete,
   related,
 } from '../../../crud';
 import BigDialog from '../../../hoc/BigDialog';
@@ -70,6 +71,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const AddSectionResource = useSecResCreate(section);
   const AddMediaFileResource = useMediaResCreate(passage);
   const UpdateSectionResource = useSecResUpdate();
+  const DeleteSectionResource = useSecResDelete();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [status] = useState<IStatus>({ canceled: false });
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
@@ -101,6 +103,11 @@ export function PassageDetailArtifacts(props: IProps) {
         ),
       };
     });
+  };
+
+  const handleDelete = (id: string) => {
+    const secRes = sectionResources.find((r) => related(r, 'mediafile') === id);
+    secRes && DeleteSectionResource(secRes);
   };
 
   const handleUploadVisible = (v: boolean) => {
@@ -175,8 +182,9 @@ export function PassageDetailArtifacts(props: IProps) {
             index={index}
             value={value as any}
             playItem={playItem}
-            handlePlay={handlePlay}
-            handleDone={handleDone}
+            onPlay={handlePlay}
+            onDone={handleDone}
+            onDelete={handleDelete}
           />
         ))}
       </SortableList>

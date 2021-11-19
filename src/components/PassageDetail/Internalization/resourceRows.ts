@@ -51,6 +51,7 @@ export const resourceRows = ({
       artifactType: t.getString(typeNameSlug) || typeNameSlug,
       artifactCategory: t.getString(catNameSlug) || catNameSlug,
       done,
+      editAction: null,
       mediafile: media || ({} as MediaFile),
     });
   });

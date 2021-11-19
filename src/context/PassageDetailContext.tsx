@@ -103,6 +103,7 @@ export interface IRow {
   artifactType: string;
   artifactCategory: string;
   done: boolean;
+  editAction: JSX.Element | null;
 }
 
 const initState = {

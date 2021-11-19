@@ -10,7 +10,8 @@ const useStyles = makeStyles({
   version: { minWidth: 100, textAlign: 'center' },
   resType: { minWidth: 200 },
   resCat: { minWidth: 200 },
-  done: { minWidth: 200, textAlign: 'center' },
+  done: { minWidth: 100, textAlign: 'center' },
+  edit: { minWidth: 100, textAlign: 'center' },
   hidden: { visibility: 'hidden' },
   bold: { fontWeight: 'bold' },
 });
@@ -50,6 +51,9 @@ export const TableRow = ({ value, header }: IProps) => {
       </div>
       <div className={clsx(classes.done, { [classes.bold]: header })}>
         {value.done}
+      </div>
+      <div className={clsx(classes.edit, { [classes.bold]: header })}>
+        {value.editAction}
       </div>
     </ListItem>
   );

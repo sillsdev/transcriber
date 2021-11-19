@@ -6,3 +6,4 @@ export * from './SortableItem';
 export * from './PlayButton';
 export * from './DoneButton';
 export * from './SortableList';
+export * from './ResourceEditAction';

@@ -59,3 +59,4 @@ export * from './useUpdateOrbitToken';
 export * from './useSecResCreate';
 export * from './useMediaResCreate';
 export * from './useSecResUpdate';
+export * from './useSecResDelete';
