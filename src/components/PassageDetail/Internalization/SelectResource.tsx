@@ -2,7 +2,12 @@ import { useEffect, useState, useContext } from 'react';
 import { connect } from 'react-redux';
 import { Resource, ISharedStrings, IState } from '../../../model';
 import localStrings from '../../../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import {
+  makeStyles,
+  createStyles,
+  Theme,
+  ListItemSecondaryAction,
+} from '@material-ui/core';
 import {
   List,
   ListItem,
@@ -13,6 +18,7 @@ import {
 import Checked from '@material-ui/icons/CheckBoxOutlined';
 import UnChecked from '@material-ui/icons/CheckBoxOutlineBlank';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
+import SelectCategory from '../../Workflow/SelectArtifactCategory';
 
 const t2 = {
   select: 'Select',
@@ -28,12 +34,34 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface SecondaryProps {
+  id: string;
+  fileName?: string;
+  onCategory: (resId: string, catId: string) => void;
+}
+const Secondary = ({ id, fileName, onCategory }: SecondaryProps) => {
+  const handleCategory = (catId: string) => {
+    onCategory(id, catId);
+  };
+
+  return (
+    <div>
+      {fileName}
+      <SelectCategory initCategory={''} onCategoryChange={handleCategory} />
+    </div>
+  );
+};
+
+export interface CatMap {
+  [resId: string]: string; //map resource id to category id
+}
+
 interface IStateProps {
   ts: ISharedStrings;
 }
 
 interface IProps extends IStateProps {
-  onSelect?: (resources: Resource[]) => void;
+  onSelect?: (resources: Resource[], catMap: CatMap) => void;
   onOpen?: (open: boolean) => void;
 }
 
@@ -42,6 +70,7 @@ export const SelectResource = (props: IProps) => {
   const classes = useStyles();
   const [resource, setResouce] = useState<Resource[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
+  const [catMap] = useState<CatMap>({});
   const ctx = useContext(PassageDetailContext);
   const { getSharedResources } = ctx.state;
 
@@ -57,12 +86,20 @@ export const SelectResource = (props: IProps) => {
   };
 
   const handleSelect = () => {
-    onSelect && onSelect(resource.filter((r, i) => selected.indexOf(i) !== -1));
+    onSelect &&
+      onSelect(
+        resource.filter((r, i) => selected.indexOf(i) !== -1),
+        catMap
+      );
     onOpen && onOpen(false);
   };
 
   const handleCancel = () => {
     onOpen && onOpen(false);
+  };
+
+  const handleCategory = (resId: string, catId: string) => {
+    catMap[resId] = catId;
   };
 
   useEffect(() => {
@@ -85,6 +122,9 @@ export const SelectResource = (props: IProps) => {
               primary={r.attributes?.reference}
               secondary={r.attributes?.originalFile}
             />
+            <ListItemSecondaryAction>
+              <Secondary id={r.id} onCategory={handleCategory} />
+            </ListItemSecondaryAction>
           </ListItem>
         ))}
       </List>

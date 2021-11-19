@@ -17,7 +17,9 @@ import {
   SectionResourceUser,
   ArtifactType,
   ArtifactCategory,
+  WorkflowStep,
   IPassageDetailArtifactsStrings,
+  IWorkflowStepsStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -29,8 +31,9 @@ import {
   remoteIdGuid,
   related,
 } from '../crud';
+import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
-import { loadBlob, logError, Severity } from '../utils';
+import { loadBlob, logError, Severity, toCamel } from '../utils';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
@@ -47,6 +50,7 @@ export const getPlanName = (plan: Plan) => {
 };
 
 interface IStateProps {
+  wfStr: IWorkflowStepsStrings;
   artStr: IPassageDetailArtifactsStrings;
   sharedStr: ISharedStrings;
   allBookData: BookName[];
@@ -54,6 +58,7 @@ interface IStateProps {
   lang: string;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
+  wfStr: localStrings(state, { layout: 'workflowSteps' }),
   artStr: localStrings(state, { layout: 'passageDetailArtifacts' }),
   sharedStr: localStrings(state, { layout: 'shared' }),
   allBookData: state.books.bookData,
@@ -81,6 +86,8 @@ interface IRecordProps {
   userResources: SectionResourceUser[];
   artifactTypes: ArtifactType[];
   categories: ArtifactCategory[];
+  workflowSteps: WorkflowStep[];
+  orgWorkflowSteps: OrgWorkflowStep[];
 }
 
 const mapRecordsToProps = {
@@ -91,6 +98,8 @@ const mapRecordsToProps = {
   userResources: (q: QueryBuilder) => q.findRecords('sectionresourceuser'),
   artifactTypes: (q: QueryBuilder) => q.findRecords('artifacttype'),
   categories: (q: QueryBuilder) => q.findRecords('artifactcategory'),
+  workflowSteps: (q: QueryBuilder) => q.findRecords('workflowsteps'),
+  orgWorkflowSteps: (q: QueryBuilder) => q.findRecords('orgworkflowsteps'),
 };
 
 export interface IRow {
@@ -104,6 +113,11 @@ export interface IRow {
   artifactCategory: string;
   done: boolean;
   editAction: JSX.Element | null;
+}
+
+interface SimpleWf {
+  id: string;
+  label: string;
 }
 
 const initState = {
@@ -131,6 +145,8 @@ const initState = {
   setPDBusy: (pdBusy: boolean) => {},
   allBookData: Array<BookName>(),
   getSharedResources: async () => [] as Resource[],
+  workflow: Array<SimpleWf>(),
+  wfIndex: -1,
 };
 
 export type ICtxState = typeof initState;
@@ -158,7 +174,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
   )((props: IProps) => {
     const [reporter] = useGlobal('errorReporter');
     const { auth, passages, sections, sectionResources, mediafiles } = props;
-    const { artStr, sharedStr } = props;
+    const { workflowSteps, orgWorkflowSteps } = props;
+    const { wfStr, artStr, sharedStr } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
     const { prjId, pasId, mediaId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
@@ -180,6 +197,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const fetching = useRef('');
+    const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
 
     const setOrgWorkflowSteps = (steps: OrgWorkflowStep[]) => {
       setState((state: ICtxState) => {
@@ -276,15 +294,17 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       if (p) {
         var s = sections.find((s) => s.id === related(p, 'section'));
         if (s) {
-          setState((state: ICtxState) => {
-            return {
-              ...state,
-              passage: p as Passage,
-              section: s as Section,
-            };
-          });
+          if (p.id !== state.passage.id || s.id !== state.section.id)
+            setState((state: ICtxState) => {
+              return {
+                ...state,
+                passage: p as Passage,
+                section: s as Section,
+              };
+            });
         }
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [memory.keyMap, pasId, passages, sections]);
 
     useEffect(() => {
@@ -378,6 +398,37 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       view.current = '';
       return <StickyRedirect to={target} />;
     }
+
+    useEffect(() => {
+      var wf: SimpleWf[] = [];
+      GetOrgWorkflowSteps('OBT').then((orgsteps: any[]) => {
+        setOrgWorkflowSteps(orgsteps);
+        wf = orgsteps.map((s) => {
+          return {
+            id: s.id,
+            label:
+              wfStr.getString(toCamel(s.attributes.name)) || s.attributes.name,
+          };
+        });
+        setState((state: ICtxState) => ({ ...state, workflow: wf }));
+      });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [workflowSteps, orgWorkflowSteps]);
+
+    useEffect(() => {
+      var passagewf = related(state.passage, 'orgWorkflowStep');
+      var psgIndex = state.workflow.findIndex((wf) => wf.id === passagewf);
+      if (state.wfIndex !== psgIndex) {
+        setState((state: ICtxState) => ({ ...state, wfIndex: psgIndex }));
+      }
+      if (state.currentstep === '' && state.workflow.length > 0) {
+        const next = state.workflow[psgIndex + 1].id;
+        if (state.currentstep !== next) {
+          setCurrentStep(next);
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state.workflow, state.passage]);
 
     return (
       <PassageDetailContext.Provider

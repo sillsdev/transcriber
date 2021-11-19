@@ -19,7 +19,7 @@ import SplitPane, { Pane } from 'react-split-pane';
 import { HeadHeight } from '../App';
 import { PassageDetailProvider } from '../context/PassageDetailContext';
 import DiscussionList from '../components/Discussions/DiscussionList';
-import WorkflowSteps from '../components/PassageDetail/WorkflowSteps';
+import { WorkflowSteps } from '../components/PassageDetail/WorkflowSteps';
 import PassageDetailSectionPassage from '../components/PassageDetail/PassageDetailSectionPassage';
 import PassageDetailStepComplete from '../components/PassageDetail/PassageDetailStepComplete';
 import PassageDetailToolbar from '../components/PassageDetail/PassageDetailToolbar';
@@ -162,14 +162,14 @@ export const PassageDetail = (props: IProps) => {
       />
     );
   };
-  const setDimensions = () => {
-    setWidth(window.innerWidth);
-    setPaperStyle({ width: window.innerWidth - 10 });
-  };
   const handleSplitSize = debounce((e: any) => {
     //setPlayerSize(e);
   }, 50);
 
+  const setDimensions = () => {
+    setWidth(window.innerWidth);
+    setPaperStyle({ width: window.innerWidth - 10 });
+  };
   useEffect(() => {
     setDimensions();
     const handleResize = debounce(() => {

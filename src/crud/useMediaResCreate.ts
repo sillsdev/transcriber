@@ -19,7 +19,7 @@ export const useMediaResCreate = (passage: RecordIdentity) => {
       .filter((s) => related(s, 'organization') === organization)
       .find((s) => s.attributes?.name === 'Internalization');
     return internalizationStep;
-  }, [memory, organization]);
+  }, [memory.cache, organization]);
 
   const sharedResource = useMemo(() => {
     const artifactTypes = memory.cache.query((q: QueryBuilder) =>
@@ -28,7 +28,7 @@ export const useMediaResCreate = (passage: RecordIdentity) => {
     return artifactTypes.find(
       (t) => t.attributes?.typename === 'sharedresource'
     );
-  }, [memory]);
+  }, [memory.cache]);
 
   const planRecId = { type: 'plan', id: plan };
 

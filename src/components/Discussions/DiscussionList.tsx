@@ -182,6 +182,7 @@ export function DiscussionList(props: IProps) {
         {discussions.map((i) => {
           return (
             <DiscussionCard
+              key={i}
               discussion={i}
               collapsed={collapsed}
               onAddCancelled={addingId ? handleAddCanceled : undefined}

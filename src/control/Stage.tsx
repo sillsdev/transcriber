@@ -38,26 +38,26 @@ export const Stage = ({
       viewBox="0.0 0.0 200.0 50.0"
       fill="none"
       stroke="none"
-      stroke-linecap="square"
-      stroke-miterlimit="10"
+      strokeLinecap="square"
+      strokeMiterlimit="10"
       xmlns="http://www.w3.org/2000/svg"
     >
       <g onClick={handleClick}>
         <path
           fill="#eeeeee"
           d="M 0,0 H 176.52729 L 199.6284,24.725997 176.52729,49.451994 H 0 L 23.101103,24.725997 Z"
-          fill-rule="evenodd"
+          fillRule="evenodd"
           id="path743"
           style={lineProps}
         />
         <path
           fill={color || '#ffffff'}
           stroke="#595959"
-          stroke-width="1.10133"
-          stroke-linejoin="round"
-          stroke-linecap="butt"
+          strokeWidth="1.10133"
+          strokeLinejoin="round"
+          strokeLinecap="butt"
           d="M 0,0 H 176.52729 L 199.6284,24.725997 176.52729,49.451994 H 0 L 23.101102,24.725997 Z"
-          fill-rule="evenodd"
+          fillRule="evenodd"
           id="path745"
         />
         <text

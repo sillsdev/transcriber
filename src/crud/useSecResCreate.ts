@@ -18,7 +18,7 @@ export const useSecResCreate = (section: RecordIdentity) => {
       .filter((s) => related(s, 'organization') === organization)
       .find((s) => s.attributes?.name === 'Internalization');
     return internalizationStep;
-  }, [memory, organization]);
+  }, [memory.cache, organization]);
 
   return async (
     seq: number,

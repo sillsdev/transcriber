@@ -31,8 +31,8 @@ import {
   useSecResDelete,
   related,
 } from '../../../crud';
-import BigDialog from '../../../hoc/BigDialog';
-import SelectResource from './SelectResource';
+import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
+import SelectResource, { CatMap } from './SelectResource';
 
 const t2 = {
   sharedResource: 'Select Shared Resource',
@@ -161,11 +161,12 @@ export function PassageDetailArtifacts(props: IProps) {
       }
   };
 
-  const handleSelectShared = async (res: Resource[]) => {
+  const handleSelectShared = async (res: Resource[], catMap: CatMap) => {
     let cnt = rowData.length;
     for (const r of res) {
       const medRec: any = { attributes: { ...r.attributes } };
-      const newMediaRec = await AddMediaFileResource(medRec);
+      const catRecId = { type: 'artifactcategory', id: catMap[r.id] };
+      const newMediaRec = await AddMediaFileResource(medRec, catRecId);
       cnt += 1;
       await AddSectionResource(cnt, r.attributes.reference, newMediaRec);
     }
@@ -204,6 +205,7 @@ export function PassageDetailArtifacts(props: IProps) {
         title={t2.sharedResource}
         isOpen={sharedResourceVisible}
         onOpen={handleSharedResourceVisible}
+        bp={BigDialogBp.md}
       >
         <SelectResource
           onSelect={handleSelectShared}
