@@ -8,14 +8,14 @@ import {
 } from '@material-ui/core';
 import { useState } from 'react';
 import { IArtifactType, useArtifactType } from '../../crud/useArtifactType';
-import { IArtifactTypeCompStrings, IState } from '../../model';
+import { ISelectArtifactTypeStrings, IState } from '../../model';
 import AddIcon from '@material-ui/icons/Add';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 
 interface IStateProps {
-  t: IArtifactTypeCompStrings;
+  t: ISelectArtifactTypeStrings;
 }
 interface IProps extends IStateProps {
   onTypeChange: (artifactTypeId: string) => void;
@@ -160,6 +160,6 @@ export const SelectArtifactType = (props: IProps) => {
   );
 };
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'artifactTypeComp' }),
+  t: localStrings(state, { layout: 'SelectArtifactType' }),
 });
 export default connect(mapStateToProps)(SelectArtifactType);
