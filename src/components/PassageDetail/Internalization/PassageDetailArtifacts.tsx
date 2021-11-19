@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useMemo } from 'react';
+import { useState, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IPassageDetailArtifactsStrings, IState } from '../../../model';
@@ -18,9 +18,10 @@ import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { QueryBuilder } from '@orbit/data';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import Uploader, { IStatus } from '../../Uploader';
+import MediaPlayer from '../../MediaPlayer';
 import AddResource from './AddResource';
 import SortableHeader from './SortableHeader';
-import { getResources, IRow, resourceRows } from '.';
+import { IRow } from '../../../context/PassageDetailContext';
 import { SortableList, SortableItem } from '.';
 import {
   remoteIdGuid,
@@ -53,16 +54,22 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 export function PassageDetailArtifacts(props: IProps) {
-  const { sectionResources, mediafiles, artifactTypes, auth, t } = props;
+  const { sectionResources, artifactTypes, auth } = props;
   const [memory] = useGlobal('memory');
   const [, setComplete] = useGlobal('progress');
-  const [user] = useGlobal('user');
   const ctx = useContext(PassageDetailContext);
-  const { rowData, section, passage } = ctx.state;
+  const {
+    rowData,
+    section,
+    passage,
+    setSelected,
+    selected,
+    playItem,
+    setPlaying,
+  } = ctx.state;
   const AddSectionResource = useSecResCreate(section);
   const AddMediaFileResource = useMediaResCreate(passage);
   const UpdateSectionResource = useSecResUpdate();
-  const [resources, setResources] = useState<IRow[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [status] = useState<IStatus>({ canceled: false });
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
@@ -76,17 +83,24 @@ export function PassageDetailArtifacts(props: IProps) {
   }, [artifactTypes]);
 
   const handlePlay = (id: string) => {
-    setResources((res) =>
-      res.map((r) =>
-        r.id === id ? { ...r, playItem: r.playItem === '' ? id : '' } : r
-      )
-    );
+    if (playItem !== '') {
+      setPlaying(false);
+    } else setSelected(id);
+  };
+
+  const handlePlayEnd = () => {
+    if (selected !== '') handlePlay(selected);
   };
 
   const handleDone = (id: string) => {
-    setResources((res) =>
-      res.map((r) => (r.id === id ? { ...r, done: !r.done } : r))
-    );
+    ctx.setState((state) => {
+      return {
+        ...state,
+        rowData: (rowData as any).map((r: IRow) =>
+          r.id === id ? { ...r, done: !r.done } : r
+        ),
+      };
+    });
   };
 
   const handleUploadVisible = (v: boolean) => {
@@ -113,12 +127,10 @@ export function PassageDetailArtifacts(props: IProps) {
     oldIndex: number;
     newIndex: number;
   }) => {
-    // TODO: decide if rowData should also contain resources
+    const newRows = arrayMove(rowData, oldIndex, newIndex) as IRow[];
     ctx.setState((state) => {
-      return { ...state, rowData: arrayMove(rowData, oldIndex, newIndex) };
+      return { ...state, rowData: newRows };
     });
-    const newRows = arrayMove(resources, oldIndex, newIndex) as IRow[];
-    setResources(newRows);
     for (let i = 0; i < newRows.length; i += 1) {
       const secResRec = sectionResources.find(
         (r) => related(r, 'mediafile') === newRows[i].id
@@ -133,7 +145,7 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
-    let cnt = resources.length;
+    let cnt = rowData.length;
     if (mediaRemoteIds)
       for (const remId of mediaRemoteIds) {
         cnt += 1;
@@ -143,7 +155,7 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const handleSelectShared = async (res: Resource[]) => {
-    let cnt = resources.length;
+    let cnt = rowData.length;
     for (const r of res) {
       const medRec: any = { attributes: { ...r.attributes } };
       const newMediaRec = await AddMediaFileResource(medRec);
@@ -152,23 +164,17 @@ export function PassageDetailArtifacts(props: IProps) {
     }
   };
 
-  useEffect(() => {
-    let res = getResources(sectionResources, mediafiles, section.id);
-    const newRow = resourceRows({ ...props, res, user, t });
-    setResources(newRow);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sectionResources, mediafiles, section]);
-
   return (
     <>
       <AddResource action={handleAction} />
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
-        {resources.map((value, index) => (
+        {rowData.map((value, index) => (
           <SortableItem
             key={`item-${index}`}
             index={index}
-            value={value}
+            value={value as any}
+            playItem={playItem}
             handlePlay={handlePlay}
             handleDone={handleDone}
           />
@@ -196,6 +202,13 @@ export function PassageDetailArtifacts(props: IProps) {
           onOpen={handleSharedResourceVisible}
         />
       </BigDialog>
+      {playItem !== '' && (
+        <MediaPlayer
+          auth={auth}
+          scrMediaId={playItem}
+          onEnded={handlePlayEnd}
+        />
+      )}
     </>
   );
 }

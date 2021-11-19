@@ -1,4 +1,3 @@
-export * from './IRow';
 export * from './getResources';
 export * from './resourceRows';
 export * from './DragHandle';

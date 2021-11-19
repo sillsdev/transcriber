@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core';
 import { ListItem } from '@material-ui/core';
-
-import { IRow, DragHandle } from '.';
+import { IRow } from '../../../context/PassageDetailContext';
+import { DragHandle } from '.';
 
 const useStyles = makeStyles({
   action: { minWidth: 100, textAlign: 'center' },

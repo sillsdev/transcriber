@@ -1,21 +1,23 @@
 import { SortableElement } from 'react-sortable-hoc';
-import { IRow, TableRow, PlayButton, DoneButton } from '.';
+import { IRow } from '../../../context/PassageDetailContext';
+import { TableRow, PlayButton, DoneButton } from '.';
 
 interface IProps {
   value: IRow;
+  playItem: string;
   handlePlay: (id: string) => void;
   handleDone: (id: string) => void;
 }
 
 export const SortableItem = SortableElement(
-  ({ value, handlePlay, handleDone }: IProps) => (
+  ({ value, playItem, handlePlay, handleDone }: IProps) => (
     <TableRow
       value={
         {
           ...value,
           playItem: (
             <PlayButton
-              value={value.playItem !== value.id}
+              value={playItem !== value.id}
               id={value.id}
               cb={handlePlay}
             />

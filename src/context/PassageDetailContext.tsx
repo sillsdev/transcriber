@@ -13,7 +13,11 @@ import {
   Section,
   BookName,
   OrgWorkflowStep,
+  SectionResource,
+  SectionResourceUser,
+  ArtifactType,
   ArtifactCategory,
+  IPassageDetailArtifactsStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -24,7 +28,6 @@ import {
   MediaSt,
   remoteIdGuid,
   related,
-  getAllMediaRecs,
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob, logError, Severity } from '../utils';
@@ -33,18 +36,25 @@ import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
 import JSONAPISource from '@orbit/jsonapi';
+import MediaPlayer from '../components/MediaPlayer';
+import {
+  getResources,
+  resourceRows,
+} from '../components/PassageDetail/Internalization';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
 };
 
 interface IStateProps {
+  artStr: IPassageDetailArtifactsStrings;
   sharedStr: ISharedStrings;
   allBookData: BookName[];
   booksLoaded: boolean;
   lang: string;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
+  artStr: localStrings(state, { layout: 'passageDetailArtifacts' }),
   sharedStr: localStrings(state, { layout: 'shared' }),
   allBookData: state.books.bookData,
   booksLoaded: state.books.loaded,
@@ -67,6 +77,9 @@ interface IRecordProps {
   passages: Passage[];
   sections: Section[];
   mediafiles: MediaFile[];
+  sectionResources: SectionResource[];
+  userResources: SectionResourceUser[];
+  artifactTypes: ArtifactType[];
   categories: ArtifactCategory[];
 }
 
@@ -74,17 +87,22 @@ const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  sectionResources: (q: QueryBuilder) => q.findRecords('sectionresource'),
+  userResources: (q: QueryBuilder) => q.findRecords('sectionresourceuser'),
+  artifactTypes: (q: QueryBuilder) => q.findRecords('artifacttype'),
   categories: (q: QueryBuilder) => q.findRecords('artifactcategory'),
 };
 
-export interface IRowData {
-  // planName: string;
-  // planType: string;
+export interface IRow {
+  id: string;
+  sequenceNum: number;
+  version: number;
   mediafile: MediaFile;
   playItem: string;
   artifactName: string;
   artifactType: string;
   artifactCategory: string;
+  done: boolean;
 }
 
 const initState = {
@@ -99,7 +117,7 @@ const initState = {
   setSelected: (selected: string) => {},
   playing: false,
   setPlaying: (playing: boolean) => {},
-  rowData: Array<IRowData>(),
+  rowData: Array<IRow>(),
   playItem: '',
   refresh: () => {},
   sharedStr: {} as ISharedStrings,
@@ -138,8 +156,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     mapDispatchToProps
   )((props: IProps) => {
     const [reporter] = useGlobal('errorReporter');
-    const { passages, sections, mediafiles, categories } = props;
-    const { sharedStr } = props;
+    const { auth, passages, sections, sectionResources, mediafiles } = props;
+    const { artStr, sharedStr } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
     const { prjId, pasId, mediaId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
@@ -174,16 +192,22 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       });
     };
 
-    const setRows = (rowData: IRowData[]) => {
+    const setRows = (rowData: IRow[]) => {
       setState((state: ICtxState) => {
         return { ...state, rowData, playing: false };
       });
     };
 
     const setPlaying = (playing: boolean) => {
+      const playItem = playing ? state.playItem : '';
+      const selected = playing ? state.selected : '';
       setState((state: ICtxState) => {
-        return { ...state, playing };
+        return { ...state, playing, selected, playItem };
       });
+    };
+
+    const handlePlayEnd = () => {
+      setPlaying(false);
     };
 
     const setPDBusy = (busy: boolean) => {
@@ -201,19 +225,16 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         )) as Resource[];
       else return [] as Resource[];
     };
-    const setSelected = (
-      selected: string,
-      rowData: IRowData[] = state.rowData
-    ) => {
+    const setSelected = (selected: string, rowData: IRow[] = state.rowData) => {
       const i = rowData.findIndex((r) => r.mediafile.id === selected);
       if (i < 0) return;
       const r = rowData[i];
       if (state.index !== i || state.selected !== selected) {
-        const remId =
-          remoteId('mediafile', selected, memory.keyMap) || selected;
-        if (mediaId !== remId) {
-          view.current = `/work/${prjId}/${pasId}/${remId}`;
-        }
+        // const remId =
+        //   remoteId('mediafile', selected, memory.keyMap) || selected;
+        // if (mediaId !== remId) {
+        //   view.current = `/work/${prjId}/${pasId}/${remId}`;
+        // }
         setTrackedTask(selected);
         var resetBlob = false;
         if (
@@ -341,23 +362,15 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
 
     useEffect(() => {
       const passageId = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
-      const newData = Array<IRowData>();
-      getAllMediaRecs(passageId, memory).forEach((m) => {
-        const catRec = categories.find(
-          (c) => c.id === related(m, 'artifactCategory')
-        );
-        newData.push({
-          mediafile: m,
-          artifactName: m.attributes.originalFile,
-          artifactType: m.attributes.artifactType,
-          artifactCategory: catRec?.attributes?.categoryname,
-        } as IRowData);
-      });
+      const passRec = passages.find((p) => p.id === passageId);
+      const sectId = related(passRec, 'section');
+      let res = getResources(sectionResources, mediafiles, sectId);
+      const newData = resourceRows({ ...props, res, user, t: artStr });
       setState((state: ICtxState) => {
         return { ...state, rowData: newData };
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pasId]);
+    }, [sectionResources, mediafiles, pasId]);
 
     if (view.current !== '') {
       const target = view.current;
@@ -384,6 +397,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         }}
       >
         {props.children}
+        <MediaPlayer
+          auth={auth}
+          srcMediaId={state.playItem}
+          onEnded={handlePlayEnd}
+        />
       </PassageDetailContext.Provider>
     );
   })

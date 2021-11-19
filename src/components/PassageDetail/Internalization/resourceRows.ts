@@ -7,7 +7,7 @@ import {
   SectionResourceUser,
 } from '../../../model';
 import { related } from '../../../crud';
-import { IRow } from '.';
+import { IRow } from '../../../context/PassageDetailContext';
 
 interface IProps {
   res: SectionResource[];
