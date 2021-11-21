@@ -21,6 +21,7 @@ import ShowIcon from '@material-ui/icons/ArrowDropDown';
 import DiscussionCard from './DiscussionCard';
 import { TransformBuilder } from '@orbit/data';
 import { AddRecord, UpdateRelatedRecord } from '../../model/baseModel';
+import { withData } from '../../mods/react-orbitjs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,38 +58,35 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IStateProps {
   t: IDiscussionListStrings;
 }
-
-interface IProps extends IStateProps {}
+interface IRecordProps {
+  discussions: Discussion[];
+}
+interface IProps extends IStateProps, IRecordProps {}
 
 export function DiscussionList(props: IProps) {
-  const { t } = props;
+  const { t, discussions } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [discussions, setDiscussions] = useState<Discussion[]>([]);
+  const [displayDiscussions, setDisplayDiscussions] = useState<Discussion[]>(
+    []
+  );
   const [collapsed, setCollapsed] = useState(false);
   const [addingId, setAddingId] = useState('');
   const ctx = useContext(PassageDetailContext);
-  const { orgWorkflowSteps, currentstep, selected, mediafileId } = ctx.state;
+  const { currentstep, mediafileId } = ctx.state;
 
   useEffect(() => {
+    console.log('dl1');
+
     // will I have a mediafileId here???
     if (currentstep !== '') {
       if (addingId !== '')
-        setDiscussions(
-          (
-            memory.cache.query((q: QueryBuilder) =>
-              q.findRecords('discussion')
-            ) as Discussion[]
-          ).filter((d) => d.id === addingId)
-        );
+        setDisplayDiscussions(discussions.filter((d) => d.id === addingId));
       else
-        setDiscussions(
-          (
-            memory.cache.query((q: QueryBuilder) =>
-              q.findRecords('discussion')
-            ) as Discussion[]
-          )
+        setDisplayDiscussions(
+          discussions
+
             .filter((d) => related(d, 'orgWorkflowStep') === currentstep)
             .sort((x, y) =>
               x.attributes.resolved === y.attributes.resolved
@@ -101,9 +99,7 @@ export function DiscussionList(props: IProps) {
             )
         );
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [discussions, orgWorkflowSteps, currentstep, selected, addingId]);
+  }, [discussions, currentstep, addingId]);
 
   const handleAddComplete = () => {
     setAddingId('');
@@ -179,7 +175,7 @@ export function DiscussionList(props: IProps) {
         </div>
       </div>
       <Grid container className={classes.cardFlow}>
-        {discussions.map((i) => {
+        {displayDiscussions.map((i) => {
           return (
             <DiscussionCard
               key={i}
@@ -198,5 +194,10 @@ export function DiscussionList(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'discussionList' }),
 });
+const mapRecordsToProps = {
+  discussions: (q: QueryBuilder) => q.findRecords('discussion'),
+};
 
-export default connect(mapStateToProps)(DiscussionList) as any as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(DiscussionList) as any as any
+) as any;
