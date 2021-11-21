@@ -11,13 +11,12 @@ import {
   DigestPreference,
   OrganizationMembership,
   Role,
-  Invitation,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
-import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   withStyles,
   makeStyles,
@@ -41,7 +40,12 @@ import SaveIcon from '@material-ui/icons/Save';
 import Confirm from '../components/AlertDialog';
 import ParatextLinked from '../components/ParatextLinked';
 import DeleteExpansion from '../components/DeleteExpansion';
-import { related, useRole, useAddToOrgAndGroup } from '../crud';
+import {
+  related,
+  useRole,
+  useAddToOrgAndGroup,
+  RemoveUserFromOrg,
+} from '../crud';
 import {
   makeAbbr,
   uiLang,
@@ -416,21 +420,10 @@ export function Profile(props: IProps) {
     if (currentUser) setDeleteItem(currentUser.id);
   };
   const handleDeleteConfirmed = async () => {
-    const tb: TransformBuilder = new TransformBuilder();
-    const ops: Operation[] = [];
-    const current = users.filter((u) => u.id === deleteItem)[0];
-    /* delete any invitations for this user
-    so they can't rejoin orgs without a new invite */
-    const invites: Invitation[] = memory.cache.query((q: QueryBuilder) =>
-      q
-        .findRecords('invitation')
-        .filter({ attribute: 'email', value: current.attributes.email })
-    ) as any;
-    invites.forEach((i) =>
-      ops.push(tb.removeRecord({ type: 'invitation', id: i.id }))
+    RemoveUserFromOrg(memory, deleteItem, undefined, user);
+    await memory.update((tb) =>
+      tb.removeRecord({ type: 'user', id: deleteItem })
     );
-    ops.push(tb.removeRecord({ type: 'user', id: deleteItem }));
-    await memory.update(ops);
     const remote = coordinator.getSource('remote');
     //wait to be sure orbit remote is done also
     await waitForIt(

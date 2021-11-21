@@ -10,14 +10,11 @@ import {
   Role,
   OrganizationMembership,
   IUsertableStrings,
-  Group,
-  GroupMembership,
-  Invitation,
   ISharedStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
-import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -31,7 +28,7 @@ import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import UserAdd from './UserAdd';
 import StickyRedirect from './StickyRedirect';
-import { related, useAddToOrgAndGroup } from '../crud';
+import { related, RemoveUserFromOrg, useAddToOrgAndGroup } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -221,50 +218,11 @@ export function UserTable(props: IProps) {
     setDeleteItem(value);
   };
   const handleDeleteConfirmed = () => {
-    const orgMemberRecs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('organizationmembership')
-    ) as OrganizationMembership[];
-    const userOrgRec = orgMemberRecs.filter(
-      (o) =>
-        related(o, 'user') === deleteItem &&
-        related(o, 'organization') === organization
-    );
-    if (userOrgRec.length === 1) {
-      memory.update((t: TransformBuilder) => t.removeRecord(userOrgRec[0]));
-    }
-    const invites = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('invitation')
-    ) as Invitation[];
-    const user = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'user', id: deleteItem })
-    ) as User;
-    const inviteRec = invites.filter(
-      (i) =>
-        i.attributes.email === user.attributes.email &&
-        related(i, 'organization') === organization
-    );
-    inviteRec.forEach((i) => {
-      memory.update((t: TransformBuilder) => t.removeRecord(i));
-    });
-    const groupRecs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('group')
-    ) as Group[];
-    const orgGroups = groupRecs
-      .filter((g) => related(g, 'owner') === organization)
-      .map((og) => og.id);
-    const grpMbrRecs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('groupmembership')
-    ) as GroupMembership[];
-    const userGrpOrgRecs = grpMbrRecs.filter(
-      (g) =>
-        related(g, 'user') === deleteItem &&
-        orgGroups.includes(related(g, 'group'))
-    );
-    userGrpOrgRecs.forEach((g) => {
-      memory.update((t: TransformBuilder) => t.removeRecord(g));
-    });
+    RemoveUserFromOrg(memory, deleteItem, organization, user);
+
     setDeleteItem('');
   };
+
   const handleDeleteRefused = () => {
     setDeleteItem('');
   };
