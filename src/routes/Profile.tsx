@@ -10,7 +10,7 @@ import {
   IProfileStrings,
   DigestPreference,
   OrganizationMembership,
-  Role,
+  Invitation,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';

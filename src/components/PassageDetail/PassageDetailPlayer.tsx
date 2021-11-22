@@ -12,7 +12,7 @@ interface IProps extends IStateProps {
 const INIT_PLAYER_HEIGHT = 180;
 export function PassageDetailPlayer(props: IProps) {
   const { loading, pdBusy, setPDBusy, audioBlob } = usePassageDetailContext();
-  const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
+  const [playerSize] = useState(INIT_PLAYER_HEIGHT);
   const [playing, setPlaying] = useState(false);
   const playingRef = useRef(false);
   const playedSecsRef = useRef<number>(0);

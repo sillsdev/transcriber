@@ -18,7 +18,6 @@ import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { QueryBuilder } from '@orbit/data';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import Uploader, { IStatus } from '../../Uploader';
-import MediaPlayer from '../../MediaPlayer';
 import AddResource from './AddResource';
 import SortableHeader from './SortableHeader';
 import { IRow } from '../../../context/PassageDetailContext';
@@ -33,10 +32,6 @@ import {
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import SelectResource, { CatMap } from './SelectResource';
-
-const t2 = {
-  sharedResource: 'Select Shared Resource',
-};
 
 interface IRecordProps {
   sectionResources: SectionResource[];
@@ -55,20 +50,12 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 export function PassageDetailArtifacts(props: IProps) {
-  const { sectionResources, artifactTypes, auth } = props;
+  const { sectionResources, artifactTypes, auth, t } = props;
   const [memory] = useGlobal('memory');
   const [, setComplete] = useGlobal('progress');
   const ctx = useContext(PassageDetailContext);
-  const {
-    rowData,
-    section,
-    passage,
-    setSelected,
-    selected,
-    playItem,
-    setPlaying,
-    isResource,
-  } = ctx.state;
+  const { rowData, section, passage, setSelected, playItem, setPlaying } =
+    ctx.state;
   const AddSectionResource = useSecResCreate(section);
   const AddMediaFileResource = useMediaResCreate(passage);
   const UpdateSectionResource = useSecResUpdate();
@@ -89,10 +76,6 @@ export function PassageDetailArtifacts(props: IProps) {
     if (playItem !== '') {
       setPlaying(false);
     } else setSelected(id);
-  };
-
-  const handlePlayEnd = () => {
-    if (selected !== '') handlePlay(selected);
   };
 
   const handleDone = (id: string) => {
@@ -179,7 +162,7 @@ export function PassageDetailArtifacts(props: IProps) {
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
         {rowData
-          .filter((r) => isResource(r.artifactType))
+          .filter((r) => r.isResource)
           .map((value, index) => (
             <SortableItem
               key={`item-${index}`}
@@ -205,7 +188,7 @@ export function PassageDetailArtifacts(props: IProps) {
         artifactType={resourceType}
       />
       <BigDialog
-        title={t2.sharedResource}
+        title={t.sharedResource}
         isOpen={sharedResourceVisible}
         onOpen={handleSharedResourceVisible}
         bp={BigDialogBp.md}
@@ -215,13 +198,6 @@ export function PassageDetailArtifacts(props: IProps) {
           onOpen={handleSharedResourceVisible}
         />
       </BigDialog>
-      {playItem !== '' && (
-        <MediaPlayer
-          auth={auth}
-          scrMediaId={playItem}
-          onEnded={handlePlayEnd}
-        />
-      )}
     </>
   );
 }

@@ -59,6 +59,7 @@ export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
     "backtranslation": string;
     "comment": string;
     "resource": string;
+    "sharedresource": string;
     "testing": string;
     "vernacular": string;
 };
@@ -561,7 +562,16 @@ export interface INewProjectStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IPassageDetailArtifactsStrings extends Localize.LocalizedStringsMethods {
-    "title": string;
+    "action": string;
+    "activity": string;
+    "add": string;
+    "category": string;
+    "completed": string;
+    "resource": string;
+    "sharedResource": string;
+    "type": string;
+    "upload": string;
+    "version": string;
 };
 
 export interface IPassageDetailStepCompleteStrings extends Localize.LocalizedStringsMethods {

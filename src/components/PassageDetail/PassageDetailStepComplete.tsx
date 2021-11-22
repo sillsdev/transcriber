@@ -43,7 +43,6 @@ export const PassageDetailStepComplete = (props: IProps) => {
     setCurrentIndex(curIndex);
     setComplete(psgIndex >= curIndex);
     setCanComplete(psgIndex + 1 === curIndex);
-    console.log(`passagedetailstepcomplete`);
   }, [passage, currentstep, orgWorkflowSteps]);
 
   const handleToggleComplete = () => {

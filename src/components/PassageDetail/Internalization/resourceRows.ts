@@ -1,4 +1,3 @@
-import { IPassageDetailArtifactsStrings } from '../../../model';
 import {
   ArtifactCategory,
   ArtifactType,
@@ -9,12 +8,16 @@ import {
 import { related } from '../../../crud';
 import { IRow } from '../../../context/PassageDetailContext';
 
+const isResource = (typeSlug: string) =>
+  ['resource', 'sharedresource'].indexOf(typeSlug) !== -1;
+
 interface DataProps {
   artifactTypes: ArtifactType[];
   categories: ArtifactCategory[];
   userResources: SectionResourceUser[];
   user: string;
-  t: IPassageDetailArtifactsStrings;
+  localizedCategory: (slug: string) => string;
+  localizedType: (slug: string) => string;
 }
 
 interface RowProps extends DataProps {
@@ -31,7 +34,8 @@ const oneRow = ({
   categories,
   userResources,
   user,
-  t,
+  localizedCategory,
+  localizedType,
 }: RowProps) => {
   const mediaAttr = media?.attributes;
   const typId = related(media, 'artifactType');
@@ -43,28 +47,29 @@ const oneRow = ({
   const done = Boolean(
     r && userResources.find((u) => related(u, r.id) && related(u, user))
   );
+
   newRow.push({
     id: media?.id || '',
     playItem: '',
     sequenceNum: r?.attributes.sequenceNum || 0,
     version: mediaAttr?.versionNumber || 0,
     artifactName: r?.attributes.description || mediaAttr?.originalFile || '',
-    artifactType: t.getString(typeNameSlug) || typeNameSlug,
-    artifactCategory: t.getString(catNameSlug) || catNameSlug,
+    artifactType: localizedType(typeNameSlug),
+    artifactCategory: localizedCategory(catNameSlug),
     done,
     editAction: null,
     mediafile: media || ({} as MediaFile),
+    isResource: isResource(typeNameSlug),
   });
   return newRow;
 };
 
 interface MediaProps extends DataProps {
   mediafiles: MediaFile[];
-  isResource: (typeSlug: string) => boolean;
 }
 
 export const mediaRows = (props: MediaProps) => {
-  const { mediafiles, artifactTypes, isResource } = props;
+  const { mediafiles, artifactTypes } = props;
 
   const newRow = Array<IRow>();
   mediafiles

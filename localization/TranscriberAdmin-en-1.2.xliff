@@ -317,6 +317,13 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="artifactType.sharedresource">
+      		<source>Shared Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AlertDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="artifactType.testing">
             <source>Testing</source>
             <target/>
@@ -3204,13 +3211,76 @@
                <context context-type="sourcefile">NewProject.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="passageDetailArtifacts.title">
-            <source>Passage Detail Artifacts</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">PassageMedia.tsx</context>
-            </context-group>
-         </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.action">
+      		<source>Action</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.activity">
+      		<source>Add Activity</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.add">
+      		<source>Add</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.category">
+      		<source>Category</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.completed">
+      		<source>Completed</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.resource">
+      		<source>Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.sharedResource">
+      		<source>Select Shared Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.type">
+      		<source>Type</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.upload">
+      		<source>Upload Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.version">
+      		<source>Version</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailStepComplete.title">
             <source>Step Complete</source>
             <target/>

@@ -9,9 +9,9 @@ interface IProps {
 }
 
 export const ResourceEditAction = ({ item, onEdit, onDelete }: IProps) => {
-  const handleEdit = (item: string) => () => {
-    onEdit && onEdit(item);
-  };
+  // const handleEdit = (item: string) => () => {
+  //   onEdit && onEdit(item);
+  // };
 
   const handleDelete = (item: string) => () => {
     onDelete && onDelete(item);

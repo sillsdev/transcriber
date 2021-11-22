@@ -274,6 +274,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactType.sharedresource">
+         <segment>
+            <source>Shared Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactType.testing">
          <segment>
             <source>Testing</source>
@@ -2746,9 +2752,63 @@
             <target/>
          </segment>
       </unit>
-      <unit id="passageDetailArtifacts.title">
+      <unit id="passageDetailArtifacts.action">
          <segment>
-            <source>Passage Detail Artifacts</source>
+            <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.activity">
+         <segment>
+            <source>Add Activity</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.category">
+         <segment>
+            <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.completed">
+         <segment>
+            <source>Completed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.resource">
+         <segment>
+            <source>Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.sharedResource">
+         <segment>
+            <source>Select Shared Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.type">
+         <segment>
+            <source>Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.upload">
+         <segment>
+            <source>Upload Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.version">
+         <segment>
+            <source>Version</source>
             <target/>
          </segment>
       </unit>

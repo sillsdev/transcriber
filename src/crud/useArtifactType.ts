@@ -4,7 +4,6 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { related } from '.';
-import { currentDateTime } from '../utils';
 import { AddRecord } from '../model/baseModel';
 
 interface ISwitches {

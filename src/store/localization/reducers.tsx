@@ -69,6 +69,7 @@ const initialState = {
 			"backtranslation": "Back Translation",
 			"comment": "Comment",
 			"resource": "Resource",
+			"sharedresource": "Shared Resource",
 			"testing": "Testing",
 			"vernacular": "Vernacular",
 		}
@@ -601,7 +602,16 @@ const initialState = {
 	}),
 	"passageDetailArtifacts": new LocalizedStrings({
 		"en": {
-			"title": "Passage Detail Artifacts",
+			"action": "Action",
+			"activity": "Add Activity",
+			"add": "Add",
+			"category": "Category",
+			"completed": "Completed",
+			"resource": "Resource",
+			"sharedResource": "Select Shared Resource",
+			"type": "Type",
+			"upload": "Upload Resource",
+			"version": "Version",
 		}
 	}),
 	"passageDetailStepComplete": new LocalizedStrings({

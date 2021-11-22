@@ -7,13 +7,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { MenuProps } from '@material-ui/core/Menu';
 import { Button, Menu, MenuItem, ListItemText } from '@material-ui/core';
 
-const t2 = {
-  add: 'Add',
-  upload: 'Upload Resource',
-  reference: 'Select Shared Resource',
-  activity: 'Add Activity',
-};
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     button: { margin: theme.spacing(2) },
@@ -61,7 +54,7 @@ interface IProps extends IStateProps {
 }
 
 export const AddResource = (props: IProps) => {
-  const { action, stopPlayer } = props;
+  const { action, stopPlayer, t } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -87,7 +80,7 @@ export const AddResource = (props: IProps) => {
         color="primary"
         className={classes.button}
       >
-        {t2.add}
+        {t.add}
       </Button>
       <StyledMenu
         id="customized-menu"
@@ -97,13 +90,13 @@ export const AddResource = (props: IProps) => {
         onClose={handle('Close')}
       >
         <StyledMenuItem id="uploadResource" onClick={handle('upload')}>
-          <ListItemText primary={t2.upload} />
+          <ListItemText primary={t.upload} />
         </StyledMenuItem>
         <StyledMenuItem id="referenceResource" onClick={handle('reference')}>
-          <ListItemText primary={t2.reference} />
+          <ListItemText primary={t.sharedResource} />
         </StyledMenuItem>
         <StyledMenuItem id="activity" onClick={handle('activity')}>
-          <ListItemText primary={t2.activity} />
+          <ListItemText primary={t.activity} />
         </StyledMenuItem>
       </StyledMenu>
     </div>

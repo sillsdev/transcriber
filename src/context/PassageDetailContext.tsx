@@ -18,7 +18,6 @@ import {
   ArtifactType,
   ArtifactCategory,
   WorkflowStep,
-  IPassageDetailArtifactsStrings,
   IWorkflowStepsStrings,
 } from '../model';
 import localStrings from '../selector/localize';
@@ -30,6 +29,8 @@ import {
   remoteIdGuid,
   related,
   getAllMediaRecs,
+  useArtifactCategory,
+  useArtifactType,
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
@@ -52,7 +53,6 @@ export const getPlanName = (plan: Plan) => {
 
 interface IStateProps {
   wfStr: IWorkflowStepsStrings;
-  artStr: IPassageDetailArtifactsStrings;
   sharedStr: ISharedStrings;
   allBookData: BookName[];
   booksLoaded: boolean;
@@ -60,7 +60,6 @@ interface IStateProps {
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   wfStr: localStrings(state, { layout: 'workflowSteps' }),
-  artStr: localStrings(state, { layout: 'passageDetailArtifacts' }),
   sharedStr: localStrings(state, { layout: 'shared' }),
   allBookData: state.books.bookData,
   booksLoaded: state.books.loaded,
@@ -114,6 +113,7 @@ export interface IRow {
   artifactCategory: string;
   done: boolean;
   editAction: JSX.Element | null;
+  isResource: boolean;
 }
 
 interface SimpleWf {
@@ -148,7 +148,6 @@ const initState = {
   getSharedResources: async () => [] as Resource[],
   workflow: Array<SimpleWf>(),
   wfIndex: -1,
-  isResource: (typeSlug: string) => false,
 };
 
 export type ICtxState = typeof initState;
@@ -177,7 +176,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const [reporter] = useGlobal('errorReporter');
     const { auth, passages, sections, sectionResources, mediafiles } = props;
     const { workflowSteps, orgWorkflowSteps } = props;
-    const { wfStr, artStr, sharedStr } = props;
+    const { wfStr, sharedStr } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
     const { pasId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
@@ -197,6 +196,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const fetching = useRef('');
     const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
+    const { localizedArtifactType } = useArtifactType();
+    const { localizedArtifactCategory } = useArtifactCategory();
 
     const setOrgWorkflowSteps = (steps: OrgWorkflowStep[]) => {
       setState((state: ICtxState) => {
@@ -204,7 +205,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       });
     };
     const setCurrentStep = (stepId: string) => {
-      console.log('setting currentstep', stepId);
       setState((state: ICtxState) => {
         return { ...state, currentstep: stepId, playing: false };
       });
@@ -278,10 +278,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setRefreshed((refreshed) => {
         return refreshed + 1;
       });
-    };
-
-    const isResource = (typeSlug: string) => {
-      return ['resource', 'sharedresource'].indexOf(typeSlug) !== -1;
     };
 
     useEffect(() => {
@@ -381,18 +377,21 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     useEffect(() => {
       const passageId = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
       const allMedia = getAllMediaRecs(passageId, memory);
+      const localize = {
+        localizedCategory: localizedArtifactCategory,
+        localizedType: localizedArtifactType,
+      };
       let newData = mediaRows({
         ...props,
         mediafiles: allMedia,
         user,
-        t: artStr,
-        isResource,
+        ...localize,
       });
       const passRec = passages.find((p) => p.id === passageId);
       const sectId = related(passRec, 'section');
       let res = getResources(sectionResources, mediafiles, sectId);
       newData = newData.concat(
-        resourceRows({ ...props, res, user, t: artStr })
+        resourceRows({ ...props, res, user, ...localize })
       );
       setState((state: ICtxState) => {
         return { ...state, rowData: newData };
@@ -452,13 +451,12 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setPDBusy,
             getSharedResources,
             refresh,
-            isResource,
           },
           setState,
         }}
       >
         {props.children}
-        {state.rowData[state.index]?.artifactType === 'resource' && (
+        {state.rowData[state.index]?.isResource && (
           <MediaPlayer
             auth={auth}
             srcMediaId={state.playItem}
