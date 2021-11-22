@@ -1,5 +1,5 @@
 import _, { debounce } from 'lodash';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
@@ -25,6 +25,7 @@ export function useWaveSurfer(
     params: IRegionParams | undefined,
     newRegion: boolean
   ) => void = noop1,
+  onCanUndo: (canUndo: boolean) => void = noop1,
   onPlayStatus: (playing: boolean) => void = noop,
   onInteraction: () => void = noop,
   onError: (e: any) => void = noop,
@@ -42,7 +43,7 @@ export function useWaveSurfer(
   const wavesurferPlayingRef = useRef(false); //don't trust ws.isPlaying()
   const durationRef = useRef(0);
   const userInteractionRef = useRef(true);
-
+  const [undoBuffer, setUndoBuffer] = useState();
   const inputRegionsRef = useRef<IRegions>();
   const regionsLoadedRef = useRef(false);
   const widthRef = useRef(0);
@@ -320,7 +321,25 @@ export function useWaveSurfer(
   function loadDecoded(new_buffer: any) {
     wavesurfer()?.loadDecodedBuffer(new_buffer);
   }
+  const copyOriginal = () => {
+    if (!wavesurfer()) return 0;
+    var backend = wavesurfer()?.backend as any;
+    var originalBuffer = backend.buffer;
+    var len = originalBuffer.length;
+    var uberSegment = null;
+    uberSegment = backend.ac.createBuffer(
+      originalBuffer.numberOfChannels,
+      len,
+      originalBuffer.sampleRate
+    );
+    for (var ix = 0; ix < originalBuffer.numberOfChannels; ++ix) {
+      var chan_data = originalBuffer.getChannelData(ix);
+      var uber_chan_data = uberSegment.getChannelData(ix);
 
+      uber_chan_data.set(chan_data);
+    }
+    return uberSegment;
+  };
   const insertBuffer = (
     newBuffer: any,
     startposition: number,
@@ -329,6 +348,8 @@ export function useWaveSurfer(
     if (!wavesurfer()) return 0;
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
+    setUndoBuffer(copyOriginal());
+    onCanUndo(true);
     if (startposition === 0 && (originalBuffer?.length | 0) === 0) {
       loadDecoded(newBuffer);
       return newBuffer.length / newBuffer.sampleRate;
@@ -396,6 +417,11 @@ export function useWaveSurfer(
     );
     insertBuffer(newBuffer, position, position);
   };
+  const wsUndo = () => {
+    if (undoBuffer) loadDecoded(undoBuffer);
+    setUndoBuffer(undefined);
+    onCanUndo(false);
+  };
 
   //delete the audio in the current region
   const wsRegionDelete = () => {
@@ -405,6 +431,9 @@ export function useWaveSurfer(
     var len = end - start;
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
+    setUndoBuffer(copyOriginal());
+    onCanUndo(true);
+
     var new_len = ((len / 1) * originalBuffer.sampleRate) >> 0;
     var new_offset = ((start / 1) * originalBuffer.sampleRate) >> 0;
     var emptySegment = backend.ac.createBuffer(
@@ -460,6 +489,7 @@ export function useWaveSurfer(
     wsClearRegions,
     wsLoopRegion,
     wsRegionDelete,
+    wsUndo,
     wsInsertAudio,
     wsInsertSilence,
     wsZoom,

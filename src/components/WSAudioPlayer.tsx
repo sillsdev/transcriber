@@ -32,7 +32,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import SilenceIcon from '@material-ui/icons/SpaceBar';
 import TimerIcon from '@material-ui/icons/AccessTime';
 import NextSegmentIcon from '@material-ui/icons/ArrowRightAlt';
-
+import UndoIcon from '@material-ui/icons/Undo';
 import localStrings from '../selector/localize';
 import { IState, IWsAudioPlayerStrings } from '../model';
 import {
@@ -248,6 +248,7 @@ function WSAudioPlayer(props: IProps) {
   const loopingRef = useRef(false);
   const [looping, setLoopingx] = useState(false);
   const [hasRegion, setHasRegion] = useState(0);
+  const [canUndo, setCanUndo] = useState(false);
   const [regionParams, setRegionParams] = useState<IRegionParams>();
   const recordStartPosition = useRef(0);
   const recordOverwritePosition = useRef<number | undefined>(undefined);
@@ -288,6 +289,7 @@ function WSAudioPlayer(props: IProps) {
     wsGetRegions,
     wsLoopRegion,
     wsRegionDelete,
+    wsUndo,
     wsInsertAudio,
     wsInsertSilence,
     wsZoom,
@@ -303,6 +305,7 @@ function WSAudioPlayer(props: IProps) {
     onWSReady,
     onWSProgress,
     onWSRegion,
+    onWSCanUndo,
     onWSPlayStatus,
     onInteraction,
     () => {}, //on error...probably should report?
@@ -477,7 +480,9 @@ function WSAudioPlayer(props: IProps) {
     setRegionParams(params);
     if (onSegmentChange && newRegion) onSegmentChange(wsGetRegions());
   }
-
+  function onWSCanUndo(canUndo: boolean) {
+    setCanUndo(canUndo);
+  }
   function onWSPlayStatus(status: boolean) {
     setPlaying(status);
     if (onPlayStatus) onPlayStatus(status);
@@ -554,7 +559,7 @@ function WSAudioPlayer(props: IProps) {
     setPlaying(false);
     wsGoto(durationRef.current);
   };
-  const handleGoToEnd = () => () => {
+  const handleGoToEnd = () => {
     gotoEnd();
   };
   const handleSendProgress = () => {
@@ -612,11 +617,15 @@ function WSAudioPlayer(props: IProps) {
   const handleActionRefused = () => {
     setConfirmAction('');
   };
-  const handleDelete = () => () => {
+  const handleDelete = () => {
     setConfirmAction(t.deleteRecording);
   };
-  const handleDeleteRegion = () => () => {
+  const handleDeleteRegion = () => {
     setConfirmAction(t.deleteRegion);
+  };
+  const handleUndo = () => {
+    wsUndo();
+    handleChanged();
   };
   const handleAddSilence = () => () => {
     wsInsertSilence(silence, wsPosition());
@@ -781,10 +790,21 @@ function WSAudioPlayer(props: IProps) {
                   >
                     <IconButton
                       id="wsAudioDeleteRegion"
-                      onClick={handleDeleteRegion()}
+                      onClick={handleDeleteRegion}
                       disabled={recording}
                     >
                       <FaHandScissors />
+                    </IconButton>
+                  </LightTooltip>
+                )}
+                {canUndo && (
+                  <LightTooltip id="wsUndoTip" title={t.undoTip}>
+                    <IconButton
+                      id="wsUndo"
+                      onClick={handleUndo}
+                      disabled={recording}
+                    >
+                      <UndoIcon />
                     </IconButton>
                   </LightTooltip>
                 )}
@@ -793,7 +813,7 @@ function WSAudioPlayer(props: IProps) {
                     <span>
                       <IconButton
                         id="wsAudioDelete"
-                        onClick={handleDelete()}
+                        onClick={handleDelete}
                         disabled={recording || duration === 0}
                       >
                         <DeleteIcon />
@@ -957,7 +977,7 @@ function WSAudioPlayer(props: IProps) {
                     <span>
                       <IconButton
                         id="wsAudioEnd"
-                        onClick={handleGoToEnd()}
+                        onClick={handleGoToEnd}
                         disabled={!ready || recording}
                       >
                         <SkipNextIcon />{' '}

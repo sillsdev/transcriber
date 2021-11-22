@@ -4480,6 +4480,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.undoTip">
+         <segment>
+            <source>Undo</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayerSegment.apply">
          <segment>
             <source>Apply</source>

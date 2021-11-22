@@ -5226,6 +5226,13 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="wsAudioPlayer.undoTip">
+            <source>Undo</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="wsAudioPlayerSegment.apply">
             <source>Apply</source>
             <target/>

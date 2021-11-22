@@ -962,6 +962,7 @@ const initialState = {
 			"slowerTip": "Slower [{0}]",
 			"stop": "Stop [{0}]",
 			"timerTip": "Timestamp [{0}]",
+			"undoTip": "Undo",
 		}
 	}),
 	"wsAudioPlayerSegment": new LocalizedStrings({

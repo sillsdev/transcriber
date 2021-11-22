@@ -904,6 +904,7 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "slowerTip": string;
     "stop": string;
     "timerTip": string;
+    "undoTip": string;
 };
 
 export interface IWsAudioPlayerSegmentStrings extends Localize.LocalizedStringsMethods {
