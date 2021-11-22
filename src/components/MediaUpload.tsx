@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import path from 'path';
 import { useSnackBar } from '../hoc/SnackBar';
+
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
 
@@ -32,6 +33,20 @@ const useStyles = makeStyles((theme: Theme) =>
       borderColor: theme.palette.secondary.light,
       padding: theme.spacing(1),
       margin: theme.spacing(1),
+    },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 400,
+    },
+    menu: {
+      width: 300,
+    },
+    formTextInput: {
+      fontSize: 'small',
+    },
+    formTextLabel: {
+      fontSize: 'small',
     },
   })
 );
@@ -152,6 +167,7 @@ function MediaUpload(props: IProps) {
   useEffect(() => {
     setOpen(visible);
   }, [visible]);
+
   const inputStyle = { display: 'none' };
   const dropTarget =
     process.env.NODE_ENV !== 'test' ? (

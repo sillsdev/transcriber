@@ -30,6 +30,7 @@ import { HTMLPage } from './components/HTMLPage';
 import { termsContent } from './routes/TermsContent';
 import { privacyContent } from './routes/privacyContent';
 import { isElectron } from './api-variable';
+import PassageDetail from './routes/PassageDetail';
 
 export const HeadHeight = 64;
 
@@ -148,6 +149,16 @@ function App() {
                 </PrivateRoute>
                 <PrivateRoute auth={auth} exact path="/work/:prjId">
                   <WorkScreen auth={auth} />
+                </PrivateRoute>
+                <PrivateRoute auth={auth} exact path="/detail/:prjId/:pasId">
+                  <PassageDetail auth={auth} />
+                </PrivateRoute>
+                <PrivateRoute
+                  auth={auth}
+                  exact
+                  path="/detail/:prjId/:pasId/:mediaId"
+                >
+                  <PassageDetail auth={auth} />
                 </PrivateRoute>
                 <Route path="/neworg" render={(props) => handleNewOrg(props)} />
               </ThemeProvider>

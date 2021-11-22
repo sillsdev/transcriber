@@ -233,6 +233,154 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactCategory.activity">
+            <source>Activity</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.biblestory">
+            <source>Bible Story</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+          <trans-unit id="artifactCategory.cultural">
+            <source>Cultural</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.geographic">
+            <source>Geographic</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.grammar">
+            <source>Grammar</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.person">
+            <source>Person</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.scripture">
+            <source>Scripture</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.theology">
+            <source>Theology</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.word">
+            <source>Word</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.backtranslation">
+            <source>Back Translation</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.comment">
+            <source>Comment</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.resource">
+            <source>Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+      	<trans-unit id="artifactType.sharedresource">
+      		<source>Shared Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AlertDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="artifactType.testing">
+            <source>Testing</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.vernacular">
+            <source>Vernacular</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="selectArtifactCategory.addNewCategory">
+            <source>Add New Category</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">selectArtifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="selectArtifactCategory.artifactCategory">
+            <source>Category</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">selectArtifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="selectArtifactCategory.newArtifactCategory">
+            <source>New Category</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+
+         <trans-unit id="selectArtifactType.addNewType">
+            <source>Add New Type</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="selectArtifactType.artifactType">
+            <source>Artifact Type</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="selectArtifactType.newArtifactType">
+            <source>New Artifact Type</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="assignmentTable.assignSec">
             <source>Assign {0}</source>
             <target/>
@@ -654,6 +802,48 @@
                <context context-type="sourcefile">AddCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="commentCard.confirmDelete">
+            <source>Delete this comment?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="commentCard.reply">
+            <source>Reply</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionMenu.edit">
+            <source>Edit</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionMenu.delete">
+            <source>Delete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionMenu.reopen">
+            <source>Re-open</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionMenu.resolve">
+            <source>Resolve</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="control.other">
             <source>General Transcription</source>
             <target/>
@@ -684,6 +874,90 @@
          </trans-unit>
          <trans-unit id="deleteExpansion.delete">
             <source>Delete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.assignRole">
+            <source>Assign to a Role</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.assignUser">
+            <source>Assign to a User</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.category">
+            <source>Category: {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.collapse">
+            <source>Show/Hide Comments</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.comments">
+            <source>Comments: {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.confirmDelete">
+            <source>Delete this discussion and all commments?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.or">
+            <source>or</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.resolved">
+            <source>Resolved</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.subject">
+            <source>Subject</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionList.add">
+            <source>Add Discussion</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">discussionList.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionList.collapse">
+            <source>Show/Hide All Comments</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">discussionList.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionList.title">
+            <source>Discussions</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DeleteExpansion.tsx</context>
@@ -2937,6 +3211,90 @@
                <context context-type="sourcefile">NewProject.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.action">
+      		<source>Action</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.activity">
+      		<source>Add Activity</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.add">
+      		<source>Add</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.category">
+      		<source>Category</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.completed">
+      		<source>Completed</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.resource">
+      		<source>Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.sharedResource">
+      		<source>Select Shared Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.type">
+      		<source>Type</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.upload">
+      		<source>Upload Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.version">
+      		<source>Version</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="passageDetailStepComplete.title">
+            <source>Step Complete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetailStepComplete.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageDetailToolbar.add">
+            <source>Passage Detail Toolbar</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="passageMedia.close">
             <source>Close</source>
             <target/>
@@ -3009,6 +3367,13 @@
          </trans-unit>
          <trans-unit id="planActions.delete">
             <source>Delete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planActions.resources">
+            <source>Resources</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -3602,6 +3967,35 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="sectionResources.close">
+            <source>Close</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">sectionResources.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="sectionResources.role">
+            <source>Role</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">sectionResources.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="sectionResources.title">
+            <source>Assign {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">sectionResources.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="sectionResources.users">
+            <source>Members</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">sectionResources.tsx</context>
+            </context-group>
+         </trans-unit>
+
          <trans-unit id="shared.admin">
             <source>Admin</source>
             <target/>
@@ -3728,6 +4122,13 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.role">
+            <source>Role</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.paratextchapterSpan">
             <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
             <target/>
@@ -3756,6 +4157,13 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="shared.select">
+      		<source>Select</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="shared.transcriber">
             <source>Transcriber</source>
             <target/>
@@ -3775,6 +4183,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.user">
+            <source>User</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="shared.yes">
@@ -3859,6 +4274,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">TaskHead.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="teamCheckReference.reference">
+            <source>The ability to play the resource here will be added later. For now, play it with another application.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">template.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="template.apply">
@@ -5070,6 +5492,90 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">welcome.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.backTranslation">
+            <source>Back Translation</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.communityTesting">
+            <source>Community Testing</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.consultantCheck">
+            <source>Consultant Check</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+          <trans-unit id="workflowSteps.duplication">
+            <source>Duplication</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.finalEdit">
+            <source>Final Edit</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.internalization">
+            <source>Internalization</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.keyTerms">
+            <source>Key Terms</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.peerReview">
+            <source>Peer Review</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+          <trans-unit id="workflowSteps.readThrough">
+            <source>Read Through</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+        <trans-unit id="workflowSteps.record">
+            <source>Record</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.review">
+            <source>Review</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.teamCheck">
+            <source>Team Check</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.aheadTip">

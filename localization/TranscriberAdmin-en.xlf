@@ -202,6 +202,132 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactCategory.activity">
+         <segment>
+            <source>Activity</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.biblestory">
+         <segment>
+            <source>Bible Story</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.cultural">
+         <segment>
+            <source>Cultural</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.geographic">
+         <segment>
+            <source>Geographic</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.grammar">
+         <segment>
+            <source>Grammar</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.person">
+         <segment>
+            <source>Person</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.scripture">
+         <segment>
+            <source>Scripture</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.theology">
+         <segment>
+            <source>Theology</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.word">
+         <segment>
+            <source>Word</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.backtranslation">
+         <segment>
+            <source>Back Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.comment">
+         <segment>
+            <source>Comment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.resource">
+         <segment>
+            <source>Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.sharedresource">
+         <segment>
+            <source>Shared Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.testing">
+         <segment>
+            <source>Testing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.vernacular">
+         <segment>
+            <source>Vernacular</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactCategory.addNewCategory">
+         <segment>
+            <source>Add New Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactCategory.artifactCategory">
+         <segment>
+            <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactCategory.newArtifactCategory">
+         <segment>
+            <source>New Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactType.addNewType">
+         <segment>
+            <source>Add New Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactType.artifactType">
+         <segment>
+            <source>Artifact Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactType.newArtifactType">
+         <segment>
+            <source>New Artifact Type</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignmentTable.assignSec">
          <segment>
             <source>Assign {0}</source>
@@ -562,6 +688,42 @@
             <target/>
          </segment>
       </unit>
+      <unit id="commentCard.confirmDelete">
+         <segment>
+            <source>Delete this comment?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentCard.reply">
+         <segment>
+            <source>Reply</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.edit">
+         <segment>
+            <source>Edit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.reopen">
+         <segment>
+            <source>Re-open</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.resolve">
+         <segment>
+            <source>Resolve</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="control.other">
          <segment>
             <source>General Transcription</source>
@@ -589,6 +751,78 @@
       <unit id="deleteExpansion.delete">
          <segment>
             <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.assignRole">
+         <segment>
+            <source>Assign to a Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.assignUser">
+         <segment>
+            <source>Assign to a User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.category">
+         <segment>
+            <source>Category: {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.collapse">
+         <segment>
+            <source>Show/Hide Comments</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.comments">
+         <segment>
+            <source>Comments: {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.confirmDelete">
+         <segment>
+            <source>Delete this discussion and all commments?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.or">
+         <segment>
+            <source>or</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.resolved">
+         <segment>
+            <source>Resolved</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.subject">
+         <segment>
+            <source>Subject</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.add">
+         <segment>
+            <source>Add Discussion</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.collapse">
+         <segment>
+            <source>Show/Hide All Comments</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.title">
+         <segment>
+            <source>Discussions</source>
             <target/>
          </segment>
       </unit>
@@ -2518,6 +2752,78 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.action">
+         <segment>
+            <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.activity">
+         <segment>
+            <source>Add Activity</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.category">
+         <segment>
+            <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.completed">
+         <segment>
+            <source>Completed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.resource">
+         <segment>
+            <source>Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.sharedResource">
+         <segment>
+            <source>Select Shared Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.type">
+         <segment>
+            <source>Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.upload">
+         <segment>
+            <source>Upload Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.version">
+         <segment>
+            <source>Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailStepComplete.title">
+         <segment>
+            <source>Step Complete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailToolbar.add">
+         <segment>
+            <source>Passage Detail Toolbar</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageMedia.close">
          <segment>
             <source>Close</source>
@@ -2581,6 +2887,12 @@
       <unit id="planActions.delete">
          <segment>
             <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planActions.resources">
+         <segment>
+            <source>Resources</source>
             <target/>
          </segment>
       </unit>
@@ -3088,6 +3400,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="sectionResources.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sectionResources.role">
+         <segment>
+            <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sectionResources.title">
+         <segment>
+            <source>Assign {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sectionResources.users">
+         <segment>
+            <source>Members</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.admin">
          <segment>
             <source>Admin</source>
@@ -3196,6 +3532,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.role">
+         <segment>
+            <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.paratextchapterSpan">
          <segment>
             <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
@@ -3220,6 +3562,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.select">
+         <segment>
+            <source>Select</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.transcriber">
          <segment>
             <source>Transcriber</source>
@@ -3235,6 +3583,12 @@
       <unit id="shared.uploadMediaSingular">
          <segment>
             <source>Upload Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.user">
+         <segment>
+            <source>User</source>
             <target/>
          </segment>
       </unit>
@@ -3307,6 +3661,12 @@
       <unit id="taskItem.unassign">
          <segment>
             <source>Unassign {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="teamCheckReference.reference">
+         <segment>
+            <source>The ability to play the resource here will be added later. For now, play it with another application.</source>
             <target/>
          </segment>
       </unit>
@@ -4345,6 +4705,78 @@
       <unit id="welcome.title">
          <segment>
             <source>Getting Started</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.backTranslation">
+         <segment>
+            <source>Back Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.communityTesting">
+         <segment>
+            <source>Community Testing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.consultantCheck">
+         <segment>
+            <source>Consultant Check</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.duplication">
+         <segment>
+            <source>Duplication</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.finalEdit">
+         <segment>
+            <source>Final Edit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.internalization">
+         <segment>
+            <source>Internalization</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.keyTerms">
+         <segment>
+            <source>Key Terms</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.peerReview">
+         <segment>
+            <source>Peer Review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.readThrough">
+         <segment>
+            <source>Read Through</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.record">
+         <segment>
+            <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.review">
+         <segment>
+            <source>Review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.teamCheck">
+         <segment>
+            <source>Team Check</source>
             <target/>
          </segment>
       </unit>

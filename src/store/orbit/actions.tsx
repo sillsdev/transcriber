@@ -48,29 +48,33 @@ export const orbitSaving = (val: boolean) => {
   };
 };
 
-export const fetchOrbitData = (
-  coordinator: Coordinator,
-  auth: Auth,
-  fingerprint: string,
-  setUser: (id: string) => void,
-  setProjectsLoaded: (value: string[]) => void,
-  setOrbitRetries: (r: number) => void,
-  setLang: (locale: string) => void,
-  global: any,
-  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
-) => (dispatch: any) => {
-  Sources(
-    coordinator,
-    auth,
-    fingerprint,
-    setUser,
-    setProjectsLoaded,
-    (ex: IApiError) => dispatch(orbitError(ex)),
-    setOrbitRetries,
-    setLang,
-    global,
-    getOfflineProject
-  ).then((fr) => {
-    dispatch({ type: FETCH_ORBIT_DATA, payload: fr });
-  });
-};
+export const fetchOrbitData =
+  (
+    coordinator: Coordinator,
+    auth: Auth,
+    fingerprint: string,
+    setUser: (id: string) => void,
+    setProjectsLoaded: (value: string[]) => void,
+    setOrbitRetries: (r: number) => void,
+    setLang: (locale: string) => void,
+    global: any,
+    getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+    offlineSetup: () => Promise<void>
+  ) =>
+  (dispatch: any) => {
+    Sources(
+      coordinator,
+      auth,
+      fingerprint,
+      setUser,
+      setProjectsLoaded,
+      (ex: IApiError) => dispatch(orbitError(ex)),
+      setOrbitRetries,
+      setLang,
+      global,
+      getOfflineProject,
+      offlineSetup
+    ).then((fr) => {
+      dispatch({ type: FETCH_ORBIT_DATA, payload: fr });
+    });
+  };

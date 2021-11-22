@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export enum ViewOption {
   AudioProject,
   Transcribe,
+  Detail,
 }
 
 interface IStateProps {
@@ -40,7 +41,7 @@ interface IProps extends IStateProps {
 }
 
 export function ViewMode(props: IProps) {
-  const { onMode, t } = props;
+  const { mode, onMode, t } = props;
   const classes = useStyles();
   const [viewOption, setViewOption] = useState<ViewOption>(props.mode);
 
@@ -61,15 +62,28 @@ export function ViewMode(props: IProps) {
         {t.audioProject}
       </Button>
       <span className={classes.bar}>|</span>
-      <Button
-        id="transcribeMode"
-        className={clsx({
-          [classes.modeSelect]: viewOption === ViewOption.Transcribe,
-        })}
-        onClick={handleMode(ViewOption.Transcribe)}
-      >
-        {t.transcribe}
-      </Button>
+      {mode !== ViewOption.Detail && (
+        <Button
+          id="transcribeMode"
+          className={clsx({
+            [classes.modeSelect]: viewOption === ViewOption.Transcribe,
+          })}
+          onClick={handleMode(ViewOption.Transcribe)}
+        >
+          {t.transcribe}
+        </Button>
+      )}
+      {mode === ViewOption.Detail && (
+        <Button
+          id="detailMode"
+          className={clsx({
+            [classes.modeSelect]: viewOption === ViewOption.Detail,
+          })}
+          onClick={handleMode(ViewOption.Detail)}
+        >
+          {'Detail'}
+        </Button>
+      )}
     </div>
   );
 }

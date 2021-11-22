@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -56,6 +56,7 @@ interface IProps extends IStateProps, IDispatchProps {
   multiple?: boolean;
   mediaId?: string;
   importList?: File[];
+  artifactType?: string; //id
 }
 
 export const Uploader = (props: IProps) => {
@@ -71,6 +72,7 @@ export const Uploader = (props: IProps) => {
     status,
     multiple,
     importList,
+    artifactType,
   } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
@@ -87,11 +89,12 @@ export const Uploader = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const planIdRef = React.useRef<string>(plan);
-  const successCount = React.useRef<number>(0);
-  const fileList = React.useRef<File[]>();
-  const authRef = React.useRef<Auth>(auth);
-  const mediaIdRef = React.useRef<string[]>([]);
+  const planIdRef = useRef<string>(plan);
+  const successCount = useRef<number>(0);
+  const fileList = useRef<File[]>();
+  const authRef = useRef<Auth>(auth);
+  const mediaIdRef = useRef<string[]>([]);
+  const artifactTypeRef = useRef<string>('');
 
   const finishMessage = () => {
     setTimeout(() => {
@@ -111,7 +114,9 @@ export const Uploader = (props: IProps) => {
 
   const getPlanId = () =>
     remoteIdNum('plan', planIdRef.current, memory.keyMap) || planIdRef.current;
-
+  const getArtifactTypeId = () =>
+    remoteIdNum('artifacttype', artifactType || '', memory.keyMap) ||
+    artifactType;
   const pullPlanMedia = async () => {
     const planId = getPlanId();
     if (planId !== undefined) {
@@ -195,6 +200,7 @@ export const Uploader = (props: IProps) => {
       planId: getPlanId(),
       originalFile: uploadList[currentlyLoading].name,
       contentType: uploadList[currentlyLoading].type,
+      artifactTypeId: getArtifactTypeId(),
     } as any;
     nextUpload(
       mediaFile,
@@ -219,6 +225,7 @@ export const Uploader = (props: IProps) => {
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
     authRef.current = auth;
+    artifactTypeRef.current = artifactType || '';
     doUpload(0);
     onOpen(false);
   };

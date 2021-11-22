@@ -21,6 +21,16 @@ export const getMediaRec = (passageId: string, memory: Memory) => {
     : null;
 };
 
+export const getAllMediaRecs = (passageId: string, memory: Memory) => {
+  const mediaRecs = memory.cache.query((q: QueryBuilder) =>
+    q.findRecords('mediafile').filter({
+      relation: 'passage',
+      record: { type: 'passage', id: passageId },
+    })
+  ) as MediaFile[];
+  return mediaRecs;
+};
+
 const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {
   let planRec: Plan | undefined = undefined;
   if (rec) {

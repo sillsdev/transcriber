@@ -1,4 +1,10 @@
-import { KeyMap, Operation, Schema, SchemaSettings } from '@orbit/data';
+import {
+  KeyMap,
+  Operation,
+  Schema,
+  SchemaSettings,
+  TransformBuilder,
+} from '@orbit/data';
 import Memory from '@orbit/memory';
 import IndexedDBSource from '@orbit/indexeddb';
 import Coordinator from '@orbit/coordinator';
@@ -324,6 +330,7 @@ const schemaDefinition: SchemaSettings = {
           model: 'section',
           inverse: 'passages',
         },
+        orgWorkflowStep: { type: 'hasOne', model: 'orgworkflowstep' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
@@ -345,7 +352,6 @@ const schemaDefinition: SchemaSettings = {
       keys: { remoteId: {} },
       attributes: {
         versionNumber: { type: 'number' },
-        artifactType: { type: 'string' },
         eafUrl: { type: 'string' },
         audioUrl: { type: 'string' },
         duration: { type: 'number' },
@@ -360,11 +366,20 @@ const schemaDefinition: SchemaSettings = {
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
+        languagebcp47: { type: 'string' },
+        link: { type: 'bool' },
+        readyToShare: { type: 'bool' },
+        performedBy: { type: 'string' },
       },
       relationships: {
+        artifactType: { type: 'hasOne', model: 'artifacttype' },
+        artifactCategory: { type: 'hasOne', model: 'artifactcategory' },
+        orgWorkflowStep: { type: 'hasOne', model: 'orgworkflowstep' },
         plan: { type: 'hasOne', model: 'plan', inverse: 'mediafiles' },
         passage: { type: 'hasOne', model: 'passage', inverse: 'mediafiles' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        recordedbyUser: { type: 'hasOne', model: 'user' },
+        resourcePassage: { type: 'hasOne', model: 'passage' },
       },
     },
     user: {
@@ -521,6 +536,189 @@ if (
   };
   schemaDefinition.version = 3;
 }
+if (
+  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 3 &&
+  schemaDefinition.models
+) {
+  schemaDefinition.models.artifactcategory = {
+    keys: { remoteId: {} },
+    attributes: {
+      categoryname: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      organization: { type: 'hasOne', model: 'organization' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.artifacttype = {
+    keys: { remoteId: {} },
+    attributes: {
+      typename: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      organization: { type: 'hasOne', model: 'organization' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.workflowstep = {
+    keys: { remoteId: {} },
+    attributes: {
+      process: { type: 'string' },
+      name: { type: 'string' },
+      sequencenum: { type: 'number' },
+      tool: { type: 'string' },
+      permissions: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.orgworkflowstep = {
+    keys: { remoteId: {} },
+    attributes: {
+      process: { type: 'string' },
+      name: { type: 'string' },
+      sequencenum: { type: 'number' },
+      tool: { type: 'string' },
+      permissions: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      organization: { type: 'hasOne', model: 'organization' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.discussion = {
+    keys: { remoteId: {} },
+    attributes: {
+      segments: { type: 'string' },
+      subject: { type: 'string' },
+      resolved: { type: 'bool' },
+      tool: { type: 'string' },
+      permissions: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      mediafile: { type: 'hasOne', model: 'mediafile' },
+      role: { type: 'hasOne', model: 'role' },
+      user: { type: 'hasOne', model: 'user' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      artifactCategory: { type: 'hasOne', model: 'artifactcategory' },
+      orgWorkflowStep: {
+        type: 'hasOne',
+        model: 'orgworkflowstep',
+      },
+    },
+  };
+  schemaDefinition.models.comment = {
+    keys: { remoteId: {} },
+    attributes: {
+      commentText: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      discussion: { type: 'hasOne', model: 'discussion' },
+      mediafile: { type: 'hasOne', model: 'mediafile' },
+      user: { type: 'hasOne', model: 'user' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.sectionresource = {
+    keys: { remoteId: {} },
+    attributes: {
+      sequenceNum: { type: 'number' },
+      description: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      section: {
+        type: 'hasOne',
+        model: 'section',
+      },
+      mediafile: {
+        type: 'hasOne',
+        model: 'mediafile',
+      },
+      orgWorkflowStep: {
+        type: 'hasOne',
+        model: 'orgworkflowstep',
+      },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+
+  schemaDefinition.models.sectionresourceuser = {
+    keys: { remoteId: {} },
+    attributes: {
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      sectionresource: {
+        type: 'hasOne',
+        model: 'sectionresource',
+      },
+      user: {
+        type: 'hasOne',
+        model: 'user',
+      },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.resource = {
+    keys: { remoteId: {} },
+    attributes: {
+      projectName: { type: 'string' },
+      organization: { type: 'string' },
+      language: { type: 'string' },
+      plan: { type: 'string' },
+      plantype: { type: 'string' },
+      section: { type: 'string' },
+      sectionSequencenum: { type: 'number' },
+      passage: { type: 'string' },
+      passageSequencenum: { type: 'number' },
+      book: { type: 'string' },
+      passageId: { type: 'string' },
+      reference: { type: 'string' },
+      versionNumber: { type: 'number' },
+      audioUrl: { type: 'string' },
+      duration: { type: 'number' },
+      contentType: { type: 'string' },
+      transcription: { type: 'string' },
+      originalFile: { type: 'string' },
+      filesize: { type: 'number' },
+      languagebcp47: { type: 'string' },
+      categoryName: { type: 'string' },
+      typeName: { type: 'string' },
+      latest: { type: 'boolean' },
+      dateCreated: { type: 'string' },
+      dateUpdated: { type: 'string' },
+      lastModifiedBy: { type: 'number' },
+    },
+    relationships: {
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.version = 4;
+}
 export const schema = new Schema(schemaDefinition);
 
 export const keyMap = new KeyMap();
@@ -555,7 +753,22 @@ const SaveOfflineProjectInfo = async (
     console.log('done with upgrade to v2');
   }
 };
-
+const UpdatePublicFlags = async (backup: IndexedDBSource, memory: Memory) => {
+  var p = await backup.pull((q) => q.findRecords('project'));
+  const ops: Operation[] = [];
+  const tb = new TransformBuilder();
+  p[0].operations.forEach((r: any) => {
+    r.record.attributes = { ...r.record.attributes, isPublic: false };
+    ops.push(tb.updateRecord(r.record));
+  });
+  var o = await backup.pull((q) => q.findRecords('organization'));
+  o[0].operations.forEach((r: any) => {
+    r.record.attributes = { ...r.record.attributes, publicByDefault: false };
+    ops.push(tb.updateRecord(r.record));
+  });
+  await memory.sync(await backup.push(ops));
+  console.log('done with upgrade to v4');
+};
 export const backup = window.indexedDB
   ? new IndexedDBSource({
       schema,
@@ -590,6 +803,11 @@ if (backup.cache)
             unique: false,
           });
       }
+    }
+    if (event.newVersion === 4) {
+      //Dec 2021
+      // update public flags to false because we're going to start using them
+      UpdatePublicFlags(backup, memory);
     }
   };
 
