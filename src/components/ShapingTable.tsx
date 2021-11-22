@@ -69,7 +69,7 @@ const styles = (theme: Theme) =>
       flexGrow: 1,
       justifyContent: 'flex-end',
       marginRight: theme.spacing(5),
-      fontWeight: theme.typography.fontWeightMedium,
+      fontWeight: theme.typography.fontWeightMedium as any,
     },
     numericInput: {
       width: '100%',
