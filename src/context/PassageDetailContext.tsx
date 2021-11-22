@@ -25,11 +25,11 @@ import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
-  remoteId,
   useFetchMediaUrl,
   MediaSt,
   remoteIdGuid,
   related,
+  getAllMediaRecs,
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
@@ -42,6 +42,7 @@ import JSONAPISource from '@orbit/jsonapi';
 import MediaPlayer from '../components/MediaPlayer';
 import {
   getResources,
+  mediaRows,
   resourceRows,
 } from '../components/PassageDetail/Internalization';
 
@@ -147,6 +148,7 @@ const initState = {
   getSharedResources: async () => [] as Resource[],
   workflow: Array<SimpleWf>(),
   wfIndex: -1,
+  isResource: (typeSlug: string) => false,
 };
 
 export type ICtxState = typeof initState;
@@ -177,20 +179,17 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { workflowSteps, orgWorkflowSteps } = props;
     const { wfStr, artStr, sharedStr } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
-    const { prjId, pasId, mediaId } = useParams<ParamTypes>();
+    const { pasId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
     const [coordinator] = useGlobal('coordinator');
     const remote = coordinator.getSource('remote') as JSONAPISource;
     const [user] = useGlobal('user');
-    const [project] = useGlobal('project');
-    const [devPlan] = useGlobal('plan');
-    const [projRole] = useGlobal('projRole');
     const [errorReporter] = useGlobal('errorReporter');
     const view = React.useRef('');
-    const [refreshed, setRefreshed] = useState(0);
+    const [, setRefreshed] = useState(0);
     const mediaUrlRef = useRef('');
     const { showMessage } = useSnackBar();
-    const [trackedTask, setTrackedTask] = useGlobal('trackedTask');
+    const [, setTrackedTask] = useGlobal('trackedTask');
     const [state, setState] = useState({
       ...initState,
       allBookData,
@@ -208,12 +207,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       console.log('setting currentstep', stepId);
       setState((state: ICtxState) => {
         return { ...state, currentstep: stepId, playing: false };
-      });
-    };
-
-    const setRows = (rowData: IRow[]) => {
-      setState((state: ICtxState) => {
-        return { ...state, rowData, playing: false };
       });
     };
 
@@ -285,6 +278,10 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setRefreshed((refreshed) => {
         return refreshed + 1;
       });
+    };
+
+    const isResource = (typeSlug: string) => {
+      return ['resource', 'sharedresource'].indexOf(typeSlug) !== -1;
     };
 
     useEffect(() => {
@@ -383,13 +380,24 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
 
     useEffect(() => {
       const passageId = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+      const allMedia = getAllMediaRecs(passageId, memory);
+      let newData = mediaRows({
+        ...props,
+        mediafiles: allMedia,
+        user,
+        t: artStr,
+        isResource,
+      });
       const passRec = passages.find((p) => p.id === passageId);
       const sectId = related(passRec, 'section');
       let res = getResources(sectionResources, mediafiles, sectId);
-      const newData = resourceRows({ ...props, res, user, t: artStr });
+      newData = newData.concat(
+        resourceRows({ ...props, res, user, t: artStr })
+      );
       setState((state: ICtxState) => {
         return { ...state, rowData: newData };
       });
+      if (newData.length > 0) setSelected(newData[0].id, newData);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sectionResources, mediafiles, pasId]);
 
@@ -444,16 +452,19 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setPDBusy,
             getSharedResources,
             refresh,
+            isResource,
           },
           setState,
         }}
       >
         {props.children}
-        <MediaPlayer
-          auth={auth}
-          srcMediaId={state.playItem}
-          onEnded={handlePlayEnd}
-        />
+        {state.rowData[state.index]?.artifactType === 'resource' && (
+          <MediaPlayer
+            auth={auth}
+            srcMediaId={state.playItem}
+            onEnded={handlePlayEnd}
+          />
+        )}
       </PassageDetailContext.Provider>
     );
   })

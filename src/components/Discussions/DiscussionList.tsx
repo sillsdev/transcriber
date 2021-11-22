@@ -77,8 +77,6 @@ export function DiscussionList(props: IProps) {
   const { currentstep, mediafileId } = ctx.state;
 
   useEffect(() => {
-    console.log('dl1');
-
     // will I have a mediafileId here???
     if (currentstep !== '') {
       if (addingId !== '')
@@ -178,7 +176,7 @@ export function DiscussionList(props: IProps) {
         {displayDiscussions.map((i) => {
           return (
             <DiscussionCard
-              key={i}
+              key={i.id}
               discussion={i}
               collapsed={collapsed}
               onAddCancelled={addingId ? handleAddCanceled : undefined}

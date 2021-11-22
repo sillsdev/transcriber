@@ -67,6 +67,7 @@ export function PassageDetailArtifacts(props: IProps) {
     selected,
     playItem,
     setPlaying,
+    isResource,
   } = ctx.state;
   const AddSectionResource = useSecResCreate(section);
   const AddMediaFileResource = useMediaResCreate(passage);
@@ -177,17 +178,19 @@ export function PassageDetailArtifacts(props: IProps) {
       <AddResource action={handleAction} />
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
-        {rowData.map((value, index) => (
-          <SortableItem
-            key={`item-${index}`}
-            index={index}
-            value={value as any}
-            playItem={playItem}
-            onPlay={handlePlay}
-            onDone={handleDone}
-            onDelete={handleDelete}
-          />
-        ))}
+        {rowData
+          .filter((r) => isResource(r.artifactType))
+          .map((value, index) => (
+            <SortableItem
+              key={`item-${index}`}
+              index={index}
+              value={value as any}
+              playItem={playItem}
+              onPlay={handlePlay}
+              onDone={handleDone}
+              onDelete={handleDelete}
+            />
+          ))}
       </SortableList>
       <Uploader
         recordAudio={false}

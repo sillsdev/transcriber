@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useGlobal } from 'reactn';
 import { useLocation, useParams } from 'react-router-dom';
 import {
   makeStyles,
@@ -243,9 +242,6 @@ export const PassageDetail = (props: IProps) => {
   const classes = useStyles();
   const { prjId } = useParams<ParamTypes>();
   const { pathname } = useLocation();
-  const [projRole] = useGlobal('projRole');
-  const [projType] = useGlobal('projType');
-  const [memory] = useGlobal('memory');
   const uctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = uctx.state;
   const [view, setView] = useState('');
