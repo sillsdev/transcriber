@@ -31,7 +31,7 @@ import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 import { useStepId } from '../crud';
 
-const INIT_COMMENT_WIDTH = 400;
+const INIT_COMMENT_WIDTH = 500;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
