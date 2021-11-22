@@ -63,8 +63,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
     },
     heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightRegular,
+      fontSize: theme.typography.pxToRem(15) as any,
+      fontWeight: theme.typography.fontWeightRegular as any,
     },
     legend: {
       paddingTop: theme.spacing(4),

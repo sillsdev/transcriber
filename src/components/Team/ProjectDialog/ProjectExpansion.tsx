@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     heading: {
-      fontSize: theme.typography.pxToRem(18),
-      fontWeight: theme.typography.fontWeightRegular,
+      fontSize: theme.typography.pxToRem(18) as any,
+      fontWeight: theme.typography.fontWeightRegular as any,
     },
     logo: {
       width: '16px',
