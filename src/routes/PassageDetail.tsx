@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import {
   makeStyles,
   createStyles,
@@ -17,17 +17,22 @@ import { UnsavedContext } from '../context/UnsavedContext';
 import Auth from '../auth/Auth';
 import SplitPane, { Pane } from 'react-split-pane';
 import { HeadHeight } from '../App';
-import { PassageDetailProvider } from '../context/PassageDetailContext';
+import {
+  PassageDetailProvider,
+  PassageDetailContext,
+} from '../context/PassageDetailContext';
+import StickyRedirect from '../components/StickyRedirect';
 import DiscussionList from '../components/Discussions/DiscussionList';
 import { WorkflowSteps } from '../components/PassageDetail/WorkflowSteps';
 import PassageDetailSectionPassage from '../components/PassageDetail/PassageDetailSectionPassage';
 import PassageDetailStepComplete from '../components/PassageDetail/PassageDetailStepComplete';
-import PassageDetailToolbar from '../components/PassageDetail/PassageDetailToolbar';
+// import PassageDetailToolbar from '../components/PassageDetail/PassageDetailToolbar';
 import PassageDetailArtifacts from '../components/PassageDetail/Internalization/PassageDetailArtifacts';
 import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
+import { useStepId } from '../crud';
 
-const INIT_COMMENT_WIDTH = 200;
+const INIT_COMMENT_WIDTH = 400;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,7 +54,8 @@ const useStyles = makeStyles((theme: Theme) =>
       textOverflow: 'ellipsis',
     },
     right: {
-      alignItems: 'right',
+      display: 'flex',
+      justifyContent: 'end',
     },
     column: {
       alignItems: 'left',
@@ -134,42 +140,25 @@ interface IProps {
 interface ParamTypes {
   prjId: string;
 }
-export const PassageDetail = (props: IProps) => {
+
+const PassageDetailGrids = (props: IProps) => {
   const { auth } = props;
   const classes = useStyles();
-  const { prjId } = useParams<ParamTypes>();
-  const [projRole] = useGlobal('projRole');
-  const [projType] = useGlobal('projType');
-  const [memory] = useGlobal('memory');
-  const uctx = React.useContext(UnsavedContext);
-  const { checkSavedFn } = uctx.state;
-  const [view, setView] = useState('');
   const [width, setWidth] = useState(window.innerWidth);
-  const [paperStyle, setPaperStyle] = useState({ width: width - 20 });
+  const ctx = useContext(PassageDetailContext);
+  const { currentstep } = ctx.state;
+  const internalizationRec = useStepId('Internalization');
+  // const [paperStyle, setPaperStyle] = useState({ width: width - 20 });
 
-  const handleSwitchTo = () => {
-    setView(`/plan/${prjId}/0`);
-  };
-
-  const SwitchTo = () => {
-    //if (projRole !== 'admin') return <></>;
-    return (
-      <ViewMode
-        mode={ViewOption.Transcribe}
-        onMode={(mode: ViewOption) =>
-          mode === ViewOption.AudioProject && checkSavedFn(handleSwitchTo)
-        }
-      />
-    );
-  };
   const handleSplitSize = debounce((e: any) => {
     //setPlayerSize(e);
   }, 50);
 
   const setDimensions = () => {
     setWidth(window.innerWidth);
-    setPaperStyle({ width: window.innerWidth - 10 });
+    // setPaperStyle({ width: window.innerWidth - 10 });
   };
+
   useEffect(() => {
     setDimensions();
     const handleResize = debounce(() => {
@@ -184,32 +173,35 @@ export const PassageDetail = (props: IProps) => {
   }, []);
 
   return (
-    <div className={classes.root}>
-      <AppHead {...props} SwitchTo={SwitchTo} />
-      <PassageDetailProvider {...props}>
-        <div className={classes.panel2}>
-          <Grid container direction="row" className={classes.row}>
-            <Grid item className={classes.description} xs={12}>
-              <WorkflowSteps />
-            </Grid>
+    <div className={classes.panel2}>
+      <Grid container direction="row" className={classes.row}>
+        <Grid item className={classes.description} xs={12}>
+          <WorkflowSteps />
+        </Grid>
+        <Grid container direction="row" className={classes.row}>
+          <Grid item className={classes.row} xs={9}>
+            <PassageDetailSectionPassage />
+          </Grid>
+          <Grid item className={classes.right} xs={3}>
+            <PassageDetailStepComplete />
+          </Grid>
+        </Grid>
+        {currentstep === internalizationRec?.id && (
+          <>
             <Grid container direction="row" className={classes.row}>
-              <Grid item className={classes.row} xs={9}>
-                <PassageDetailSectionPassage />
-              </Grid>
-              <Grid item className={classes.right} xs={3}>
-                <PassageDetailStepComplete />
-              </Grid>
-            </Grid>
-            <Grid container direction="row" className={classes.row}>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <PassageDetailToolbar />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <Grid container>
                   <PassageDetailArtifacts auth={auth} />
                 </Grid>
               </Grid>
             </Grid>
+          </>
+        )}
+        {currentstep !== internalizationRec?.id && (
+          <>
             <Paper className={classes.paper}>
               <Wrapper>
                 <SplitPane
@@ -240,8 +232,47 @@ export const PassageDetail = (props: IProps) => {
                 </SplitPane>
               </Wrapper>
             </Paper>
-          </Grid>
-        </div>
+          </>
+        )}
+      </Grid>
+    </div>
+  );
+};
+
+export const PassageDetail = (props: IProps) => {
+  const classes = useStyles();
+  const { prjId } = useParams<ParamTypes>();
+  const { pathname } = useLocation();
+  const [projRole] = useGlobal('projRole');
+  const [projType] = useGlobal('projType');
+  const [memory] = useGlobal('memory');
+  const uctx = React.useContext(UnsavedContext);
+  const { checkSavedFn } = uctx.state;
+  const [view, setView] = useState('');
+
+  const handleSwitchTo = () => {
+    setView(`/plan/${prjId}/0`);
+  };
+
+  const SwitchTo = () => {
+    //if (projRole !== 'admin') return <></>;
+    return (
+      <ViewMode
+        mode={ViewOption.Detail}
+        onMode={(mode: ViewOption) =>
+          mode === ViewOption.AudioProject && checkSavedFn(handleSwitchTo)
+        }
+      />
+    );
+  };
+
+  if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
+
+  return (
+    <div className={classes.root}>
+      <AppHead {...props} SwitchTo={SwitchTo} />
+      <PassageDetailProvider {...props}>
+        <PassageDetailGrids {...props} />
       </PassageDetailProvider>
     </div>
   );

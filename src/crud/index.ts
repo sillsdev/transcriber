@@ -60,3 +60,4 @@ export * from './useSecResCreate';
 export * from './useMediaResCreate';
 export * from './useSecResUpdate';
 export * from './useSecResDelete';
+export * from './stepId';
