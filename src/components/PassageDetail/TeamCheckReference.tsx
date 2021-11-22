@@ -6,12 +6,27 @@ interface IStateProps {
   t: ITeamCheckReferenceStrings;
 }
 
-interface IProps extends IStateProps {}
+interface IProps extends IStateProps {
+  width: number;
+}
 
 export function TeamCheckReference(props: IProps) {
-  const { t } = props;
+  const { width, t } = props;
 
-  return <div>{t.reference}</div>;
+  return (
+    <div>
+      <p
+        style={{
+          inlineSize: `${width}px`,
+          overflowWrap: 'break-word',
+          hyphens: 'manual',
+          whiteSpace: 'normal',
+        }}
+      >
+        {t.reference}
+      </p>
+    </div>
+  );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({

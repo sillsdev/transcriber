@@ -29,6 +29,8 @@ import PassageDetailStepComplete from '../components/PassageDetail/PassageDetail
 import PassageDetailArtifacts from '../components/PassageDetail/Internalization/PassageDetailArtifacts';
 import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
+import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord';
+import PassageBackTranslate from '../components/PassageDetail/PassageBackTranslate';
 import { useStepId } from '../crud';
 
 const INIT_COMMENT_WIDTH = 500;
@@ -147,10 +149,13 @@ const PassageDetailGrids = (props: IProps) => {
   const ctx = useContext(PassageDetailContext);
   const { currentstep } = ctx.state;
   const internalizationRec = useStepId('Internalization');
-  // const [paperStyle, setPaperStyle] = useState({ width: width - 20 });
+  const teamCheckRec = useStepId('TeamCheck');
+  const recordRec = useStepId('Record');
+  const backTranslationRec = useStepId('BackTranslation');
+  const [playerWidth, setPlayerWidth] = useState(width - INIT_COMMENT_WIDTH);
 
-  const handleSplitSize = debounce((e: any) => {
-    //setPlayerSize(e);
+  const handleSplitSize = debounce((e: number) => {
+    setPlayerWidth(e);
   }, 50);
 
   const setDimensions = () => {
@@ -186,53 +191,65 @@ const PassageDetailGrids = (props: IProps) => {
           </Grid>
         </Grid>
         {currentstep === internalizationRec?.id && (
-          <>
-            <Grid container direction="row" className={classes.row}>
-              {/* <Grid item xs={12}>
+          <Grid container direction="row" className={classes.row}>
+            {/* <Grid item xs={12}>
                 <PassageDetailToolbar />
               </Grid> */}
-              <Grid item xs={12}>
-                <Grid container>
-                  <PassageDetailArtifacts auth={auth} />
-                </Grid>
+            <Grid item xs={12}>
+              <Grid container>
+                <PassageDetailArtifacts auth={auth} />
               </Grid>
             </Grid>
-          </>
+          </Grid>
         )}
-        {currentstep !== internalizationRec?.id && (
-          <>
-            <Paper className={classes.paper}>
-              <Wrapper>
-                <SplitPane
-                  defaultSize={width - INIT_COMMENT_WIDTH}
-                  style={{ position: 'static' }}
-                  split="vertical"
-                  onChange={handleSplitSize}
-                >
-                  <Pane className={classes.pane}>
-                    {false && (
-                      <Grid item className={classes.description} xs={12}>
-                        <TeamCheckReference />
-                      </Grid>
-                    )}
-                    {true && (
+        {currentstep === recordRec?.id && (
+          <Grid container direction="row" className={classes.row}>
+            <Grid item xs={12}>
+              <PassageDetailRecord width={width - 20} />
+            </Grid>
+          </Grid>
+        )}
+        {currentstep === backTranslationRec?.id && (
+          <Grid container direction="row" className={classes.row}>
+            <Grid item xs={12}>
+              <PassageBackTranslate width={width - 20} />
+            </Grid>
+          </Grid>
+        )}
+        {currentstep !== internalizationRec?.id &&
+          currentstep !== recordRec?.id &&
+          currentstep !== backTranslationRec?.id && (
+            <>
+              <Paper className={classes.paper}>
+                <Wrapper>
+                  <SplitPane
+                    defaultSize={width - INIT_COMMENT_WIDTH}
+                    style={{ position: 'static' }}
+                    split="vertical"
+                    onChange={handleSplitSize}
+                  >
+                    <Pane className={classes.pane}>
+                      {currentstep === teamCheckRec?.id && (
+                        <Grid item className={classes.description} xs={12}>
+                          <TeamCheckReference width={playerWidth} />
+                        </Grid>
+                      )}
                       <Grid item className={classes.description} xs={12}>
                         <PassageDetailPlayer />
                       </Grid>
-                    )}
-                  </Pane>
-                  <Pane className={classes.pane}>
-                    <Grid item xs={12} sm container>
-                      <Grid item container direction="column">
-                        <DiscussionList />
+                    </Pane>
+                    <Pane className={classes.pane}>
+                      <Grid item xs={12} sm container>
+                        <Grid item container direction="column">
+                          <DiscussionList />
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  </Pane>
-                </SplitPane>
-              </Wrapper>
-            </Paper>
-          </>
-        )}
+                    </Pane>
+                  </SplitPane>
+                </Wrapper>
+              </Paper>
+            </>
+          )}
       </Grid>
     </div>
   );

@@ -4277,7 +4277,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="teamCheckReference.reference">
-            <source>I could have a reference here but that's lowest priority because they can listen to their reference somewhere else</source>
+            <source>The ability to play the resource here will be added later. For now, play it with another application.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">template.tsx</context>

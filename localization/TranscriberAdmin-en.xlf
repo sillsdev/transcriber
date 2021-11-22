@@ -3666,7 +3666,7 @@
       </unit>
       <unit id="teamCheckReference.reference">
          <segment>
-            <source>I could have a reference here but that's lowest priority because they can listen to their reference somewhere else</source>
+            <source>The ability to play the resource here will be added later. For now, play it with another application.</source>
             <target/>
          </segment>
       </unit>
