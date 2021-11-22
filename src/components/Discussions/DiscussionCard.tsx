@@ -460,7 +460,7 @@ export const DiscussionCard = (props: IProps) => {
           {showComments && !onAddComplete && (
             <Grid container className={classes.cardFlow}>
               {myComments.map((i) => {
-                return <CommentCard comment={i} />;
+                return <CommentCard key={i.id} comment={i} />;
               })}
               {!discussion.attributes.resolved && (
                 <ReplyCard
