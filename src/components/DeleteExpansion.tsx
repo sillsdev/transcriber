@@ -27,8 +27,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightRegular,
+      fontSize: theme.typography.pxToRem(15) as any,
+      fontWeight: theme.typography.fontWeightRegular as any,
     },
     dangerGroup: {
       display: 'flex',
