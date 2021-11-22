@@ -39,6 +39,7 @@ import {
   usePlan,
   useLoadProjectData,
   SetUserLanguage,
+  useOfflineSetup,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -143,6 +144,7 @@ export function Loading(props: IProps) {
   const [doSync, setDoSync] = useState(false);
   const [syncComplete, setSyncComplete] = useState(false);
   const [, setBusy] = useGlobal('importexportBusy');
+  const offlineSetup = useOfflineSetup();
   const LoadProjData = useLoadProjectData(
     auth,
     t,
@@ -227,7 +229,8 @@ export function Loading(props: IProps) {
       setOrbitRetries,
       setLang,
       globalStore,
-      getOfflineProject
+      getOfflineProject,
+      offlineSetup
     );
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);

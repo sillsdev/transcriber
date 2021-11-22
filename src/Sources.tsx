@@ -6,6 +6,7 @@ import {
   OfflineProject,
   VProject,
   ExportType,
+  WorkflowStep,
 } from './model';
 import Coordinator, {
   RequestStrategy,
@@ -36,7 +37,8 @@ export const Sources = async (
   setOrbitRetries: (r: number) => void,
   setLang: (locale: string) => void,
   globalStore: any,
-  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
+  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+  offlineSetup: () => Promise<void>
 ) => {
   const memory = coordinator.getSource('memory') as Memory;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
@@ -260,6 +262,25 @@ export const Sources = async (
       if (recs.length === 0) {
         //orbitError(orbitInfo(null, 'Indexed DB corrupt or missing.'));
         goRemote = true;
+      }
+    }
+    //get v4 data
+    if (offline) {
+      await offlineSetup();
+    } else {
+      const recs: WorkflowStep[] = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('workflowstep')
+      ) as any;
+      if (true || recs.filter((r) => r?.keys?.remoteId).length === 0) {
+        await memory.sync(
+          await remote.pull((q) => q.findRecords('workflowstep'))
+        );
+        await memory.sync(
+          await remote.pull((q) => q.findRecords('artifactcategory'))
+        );
+        await memory.sync(
+          await remote.pull((q) => q.findRecords('artifacttype'))
+        );
       }
     }
   }

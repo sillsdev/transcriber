@@ -1,18 +1,15 @@
 import { useGlobal } from 'reactn';
-import { Role, ProjectType } from '../model';
+import { Role, ProjectType, ArtifactCategory, ArtifactType } from '../model';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import Coordinator from '@orbit/coordinator';
-import Memory from '@orbit/memory';
 import IndexedDBSource from '@orbit/indexeddb';
+import WorkflowStep from '../model/workflowStep';
 
 export const useOfflineSetup = () => {
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
 
-  const makeTypeRecs = async (coordinator: Coordinator, kind: string) => {
-    const memory = coordinator.getSource('memory') as Memory;
-    const backup = coordinator.getSource('backup') as IndexedDBSource;
-
+  const makeTypeRecs = async (kind: string) => {
     const allTypeRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords(`${kind}type`)
     ) as ProjectType[];
@@ -40,11 +37,7 @@ export const useOfflineSetup = () => {
       );
     }
   };
-
-  return async () => {
-    // local update only, migrate offlineproject to include offlineAvailable
-    const backup = coordinator.getSource('backup') as IndexedDBSource;
-
+  const makeRoleRecs = async () => {
     const allRoleRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('role')
     ) as Role[];
@@ -85,7 +78,123 @@ export const useOfflineSetup = () => {
         ])
       );
     }
-    await makeTypeRecs(coordinator, 'project');
-    await makeTypeRecs(coordinator, 'plan');
+  };
+  const makeWorkflowStepsRecs = async () => {
+    const allRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('workflowstep')
+    ) as WorkflowStep[];
+    const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
+    if (offlineRecs.length === 0) {
+      const names = [
+        'Exegesis',
+        'Internalization',
+        'Draft',
+        'TeamCheck',
+        'KeyTerms',
+        'CommunityTesting',
+        'BackTranslation',
+        'ConsultantCheck',
+        'TestAndReview',
+        'FinalEdit',
+        'ReadThrough',
+        'Duplication',
+        'Done',
+      ];
+      const tools = [
+        'audio',
+        'audio',
+        'transcribe',
+        'audio',
+        'transcribe',
+        'audio',
+        'back translate',
+        'audio',
+        'audio',
+        'audio',
+        'audio',
+        'audio',
+        'none',
+      ];
+      names.forEach(async (n, ix) => {
+        const s = {
+          type: 'workflowstep',
+          attributes: {
+            process: 'OBT',
+            name: n,
+            sequencenum: ix + 1,
+            tool: `{"tool": "${tools[ix]}"}`,
+            permissions: '{"role": "any", "signoffrole": "none"}',
+          },
+        } as WorkflowStep;
+        memory.schema.initializeRecord(s);
+        await memory.sync(
+          await backup.push((t: TransformBuilder) => [t.addRecord(s)])
+        );
+      });
+    }
+  };
+  const makeArtifactCategoryRecs = async () => {
+    const allRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('artifactcategory')
+    ) as WorkflowStep[];
+    const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
+    if (offlineRecs.length === 0) {
+      const names = [
+        'cultural',
+        'geographic',
+        'person',
+        'theology',
+        'word',
+        'grammar',
+      ];
+      names.forEach(async (n, ix) => {
+        const s = {
+          type: 'artifactcategory',
+          attributes: {
+            categoryname: n,
+          },
+        } as ArtifactCategory;
+        memory.schema.initializeRecord(s);
+        await memory.sync(
+          await backup.push((t: TransformBuilder) => [t.addRecord(s)])
+        );
+      });
+    }
+  };
+  const makeArtifactTypeRecs = async () => {
+    const allRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('artifacttype')
+    ) as WorkflowStep[];
+    const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
+    if (offlineRecs.length === 0) {
+      const names = [
+        'resource',
+        'backtranslation',
+        'vernacular',
+        'comment',
+        'testing',
+      ];
+      names.forEach(async (n, ix) => {
+        const s = {
+          type: 'artifacttype',
+          attributes: {
+            typename: n,
+          },
+        } as ArtifactType;
+        memory.schema.initializeRecord(s);
+        await memory.sync(
+          await backup.push((t: TransformBuilder) => [t.addRecord(s)])
+        );
+      });
+    }
+  };
+  return async () => {
+    // local update only, migrate offlineproject to include offlineAvailable
+    await makeRoleRecs();
+    await makeTypeRecs('project');
+    await makeTypeRecs('plan');
+    await makeArtifactCategoryRecs();
+    await makeArtifactTypeRecs();
+    await makeWorkflowStepsRecs();
   };
 };

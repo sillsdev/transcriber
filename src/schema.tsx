@@ -360,11 +360,16 @@ const schemaDefinition: SchemaSettings = {
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
+        languagebcp47: { type: 'string' },
+        link: { type: 'bool' },
+        performedby: { type: 'string' },
       },
       relationships: {
         plan: { type: 'hasOne', model: 'plan', inverse: 'mediafiles' },
         passage: { type: 'hasOne', model: 'passage', inverse: 'mediafiles' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        recordedbyUser: { type: 'hasOne', model: 'user' },
+        artifactType: { type: 'hasOne', model: 'artifacttype' },
       },
     },
     user: {
@@ -520,6 +525,190 @@ if (
     },
   };
   schemaDefinition.version = 3;
+}
+if (
+  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 3 &&
+  schemaDefinition.models
+) {
+  schemaDefinition.models.artifactcategory = {
+    keys: { remoteId: {} },
+    attributes: {
+      categoryname: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.artifacttype = {
+    keys: { remoteId: {} },
+    attributes: {
+      typename: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.orgartifactcategory = {
+    keys: { remoteId: {} },
+    attributes: {
+      categoryname: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      organization: { type: 'hasOne', model: 'organization' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.orgartifacttype = {
+    keys: { remoteId: {} },
+    attributes: {
+      typename: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      organization: { type: 'hasOne', model: 'organization' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.workflowstep = {
+    keys: { remoteId: {} },
+    attributes: {
+      process: { type: 'string' },
+      name: { type: 'string' },
+      sequencenum: { type: 'number' },
+      tool: { type: 'string' },
+      permissions: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.orgworkflowstep = {
+    keys: { remoteId: {} },
+    attributes: {
+      process: { type: 'string' },
+      name: { type: 'string' },
+      sequencenum: { type: 'number' },
+      tool: { type: 'string' },
+      permissions: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      organization: { type: 'hasOne', model: 'organization' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.discussion = {
+    keys: { remoteId: {} },
+    attributes: {
+      segments: { type: 'string' },
+      subject: { type: 'string' },
+      resolved: { type: 'bool' },
+      tool: { type: 'string' },
+      permissions: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      mediafile: { type: 'hasOne', model: 'mediafile' },
+      role: { type: 'hasOne', model: 'role' },
+      user: { type: 'hasOne', model: 'user' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.comment = {
+    keys: { remoteId: {} },
+    attributes: {
+      commenttext: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      discussion: { type: 'hasOne', model: 'discussion' },
+      mediafile: { type: 'hasOne', model: 'mediafile' },
+      user: { type: 'hasOne', model: 'user' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.sectionresource = {
+    keys: { remoteId: {} },
+    attributes: {
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      section: {
+        type: 'hasOne',
+        model: 'section',
+      },
+      mediafile: {
+        type: 'hasOne',
+        model: 'mediafile',
+      },
+      orgworkflowsteps: {
+        type: 'hasMany',
+        model: 'orgworkflowstep',
+      },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.sectionresourceorgworkflowstep = {
+    keys: { remoteId: {} },
+    attributes: {
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      sectionresource: {
+        type: 'hasOne',
+        model: 'sectionresource',
+      },
+      orgworkflowstep: {
+        type: 'hasOne',
+        model: 'orgworkflowstep',
+      },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.sectionresourceuser = {
+    keys: { remoteId: {} },
+    attributes: {
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      sectionresource: {
+        type: 'hasOne',
+        model: 'sectionresource',
+      },
+      user: {
+        type: 'hasOne',
+        model: 'user',
+      },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.version = 4;
 }
 export const schema = new Schema(schemaDefinition);
 
