@@ -95,9 +95,9 @@ export const AddResource = (props: IProps) => {
         <StyledMenuItem id="referenceResource" onClick={handle('reference')}>
           <ListItemText primary={t.sharedResource} />
         </StyledMenuItem>
-        <StyledMenuItem id="activity" onClick={handle('activity')}>
+        {/* <StyledMenuItem id="activity" onClick={handle('activity')}>
           <ListItemText primary={t.activity} />
-        </StyledMenuItem>
+        </StyledMenuItem> */}
       </StyledMenu>
     </div>
   );
