@@ -789,6 +789,7 @@ const initialState = {
 			"part": "Part {0}",
 			"referenceNotFound": "Reference does not exist in Paratext chapter, or reference is within a larger verse range.",
 			"save": "Save",
+			"select": "Select",
 			"transcriber": "Transcriber",
 			"uploadMediaPlural": "Upload Audio",
 			"uploadMediaSingular": "Upload Audio",

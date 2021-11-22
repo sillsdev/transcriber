@@ -4157,6 +4157,13 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="shared.select">
+      		<source>Select</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="shared.transcriber">
             <source>Transcriber</source>
             <target/>

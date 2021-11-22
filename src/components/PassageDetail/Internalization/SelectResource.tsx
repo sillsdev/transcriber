@@ -20,10 +20,6 @@ import UnChecked from '@material-ui/icons/CheckBoxOutlineBlank';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import SelectCategory from '../../Workflow/SelectArtifactCategory';
 
-const t2 = {
-  select: 'Select',
-};
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     actions: {
@@ -135,7 +131,7 @@ export const SelectResource = (props: IProps) => {
           className={classes.button}
           color="primary"
         >
-          {t2.select}
+          {ts.select}
         </Button>
         <Button
           onClick={handleCancel}

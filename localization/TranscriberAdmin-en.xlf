@@ -3562,6 +3562,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.select">
+         <segment>
+            <source>Select</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.transcriber">
          <segment>
             <source>Transcriber</source>
