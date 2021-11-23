@@ -1481,6 +1481,13 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="hotKey.shiftKey">
+            <source>Shift</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">hotKeyContext.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="hotKey.spaceKey">
             <source>Space</source>
             <target/>
