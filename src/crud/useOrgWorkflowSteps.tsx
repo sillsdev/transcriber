@@ -10,6 +10,8 @@ export const useOrgWorkflowSteps = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [errorReporter] = useGlobal('errorReporter');
+  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const creatingRef = useRef(false);
 
   const AddOrgWFToOps = async (t: TransformBuilder, wf: WorkflowStep) => {
@@ -60,7 +62,7 @@ export const useOrgWorkflowSteps = () => {
   };
 
   const GetOrgWorkflowSteps = async (process: string) => {
-    if (creatingRef.current)
+    if (creatingRef.current && (!offline || offlineOnly))
       await waitForIt(
         'creating org workflow',
         () => !creatingRef.current,
