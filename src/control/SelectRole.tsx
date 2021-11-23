@@ -51,10 +51,10 @@ export const SelectRole = (props: IProps) => {
 
   return (
     <TextField
-      id="select-role"
+      id={'select-role' + org ? '-team' : '-project'}
       className={classes.textField}
       select
-      label={ts.role}
+      label={label || org ? ts.teamrole : ts.role}
       value={role}
       onChange={handleRoleChange}
       SelectProps={{

@@ -3538,6 +3538,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.projectrole">
+         <segment>
+            <source>Project Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.teamrole">
+         <segment>
+            <source>Team Role</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.paratextchapterSpan">
          <segment>
             <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
@@ -4468,6 +4480,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.isPublic">
+         <segment>
+            <source>This project contains resources that can be used in other projects for Internalization.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.language">
          <segment>
             <source>Language</source>
@@ -4561,6 +4579,12 @@
       <unit id="vProject.sets">
          <segment>
             <source>Set/Sets</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.sharedResources">
+         <segment>
+            <source>Shared Resources</source>
             <target/>
          </segment>
       </unit>

@@ -732,6 +732,8 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "NoSaveOffline": string;
     "owner": string;
     "role": string;
+    "projectrole": string;
+    "teamrole": string;
     "paratextchapterSpan": string;
     "part": string;
     "referenceNotFound": string;
@@ -935,6 +937,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "font": string;
     "fontSize": string;
     "hierarchical": string;
+    "isPublic": string;
     "language": string;
     "layout": string;
     "nameInUse": string;
@@ -951,6 +954,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "scenes": string;
     "sections": string;
     "sets": string;
+    "sharedResources": string;
     "spellCheck": string;
     "stories": string;
     "tags": string;
