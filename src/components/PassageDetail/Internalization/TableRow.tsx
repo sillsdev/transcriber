@@ -1,3 +1,4 @@
+import { useGlobal } from 'reactn';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core';
 import { ListItem } from '@material-ui/core';
@@ -23,6 +24,7 @@ interface IProps {
 
 export const TableRow = ({ value, header }: IProps) => {
   const classes = useStyles();
+  const [projRole] = useGlobal('projRole');
 
   const nameParts = value.artifactName?.split('.');
   if (nameParts.length > 1) nameParts?.pop();
@@ -52,9 +54,11 @@ export const TableRow = ({ value, header }: IProps) => {
       <div className={clsx(classes.done, { [classes.bold]: header })}>
         {value.done}
       </div>
-      <div className={clsx(classes.edit, { [classes.bold]: header })}>
-        {value.editAction}
-      </div>
+      {/admin/i.test(projRole) && (
+        <div className={clsx(classes.edit, { [classes.bold]: header })}>
+          {value.editAction}
+        </div>
+      )}
     </ListItem>
   );
 };

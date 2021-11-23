@@ -52,6 +52,7 @@ interface IProps extends IStateProps, IRecordProps {
 export function PassageDetailArtifacts(props: IProps) {
   const { sectionResources, artifactTypes, auth, t } = props;
   const [memory] = useGlobal('memory');
+  const [projRole] = useGlobal('projRole');
   const [, setComplete] = useGlobal('progress');
   const ctx = useContext(PassageDetailContext);
   const { rowData, section, passage, setSelected, playItem, setPlaying } =
@@ -158,7 +159,7 @@ export function PassageDetailArtifacts(props: IProps) {
 
   return (
     <>
-      <AddResource action={handleAction} />
+      {/admin/i.test(projRole) && <AddResource action={handleAction} />}
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
         {rowData
