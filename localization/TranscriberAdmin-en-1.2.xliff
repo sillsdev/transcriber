@@ -4126,6 +4126,20 @@
             <source>Role</source>
             <target/>
             <context-group>
+               <context context-type="sourcefile">selectRole.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.projectrole">
+            <source>Project Role</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">selectRole.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.teamrole">
+            <source>Team Role</source>
+            <target/>
+            <context-group>
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
@@ -5214,6 +5228,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="vProject.isPublic">
+            <source>This project contains resources that can be used in other projects for Internalization.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="vProject.language">
             <source>Language</source>
             <target/>
@@ -5324,6 +5345,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">LastEdit.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="vProject.sharedResources">
+            <source>Shared Resources</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="vProject.spellCheck">
