@@ -7,7 +7,12 @@ export enum IwfKind {
   Task,
   SubTask,
 }
-
+export enum IMediaShare {
+  Latest,
+  OldVersionOnly,
+  None,
+  NotPublic,
+}
 export interface IWorkflow {
   level: number;
   kind: IwfKind;
@@ -24,6 +29,7 @@ export interface IWorkflow {
   passageId?: RecordIdentity;
   passageUpdated?: string;
   mediaId?: RecordIdentity;
+  mediaShared: IMediaShare;
   deleted: boolean;
 }
 

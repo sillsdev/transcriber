@@ -1,4 +1,11 @@
-import { MediaFile, Plan, Project, Passage, Section } from '../model';
+import {
+  MediaFile,
+  Plan,
+  Project,
+  Passage,
+  Section,
+  IMediaShare,
+} from '../model';
 import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { related } from '.';
@@ -8,26 +15,29 @@ import eaf from '../utils/transcriptionEaf';
 import path from 'path';
 
 export const getMediaRec = (passageId: string, memory: Memory) => {
-  const mediaRecs = memory.cache.query((q: QueryBuilder) =>
-    q.findRecords('mediafile').filter({
-      relation: 'passage',
-      record: { type: 'passage', id: passageId },
-    })
-  ) as MediaFile[];
-  return mediaRecs.length > 0
-    ? mediaRecs.sort(
-        (a, b) => b.attributes.versionNumber - a.attributes.versionNumber
-      )[0]
-    : null;
-};
+  const mediaRecs = getAllMediaRecs(passageId, memory);
 
+  return mediaRecs.length > 0 ? mediaRecs[0] : null;
+};
+export const getMediaShared = (passageId: string, memory: Memory) => {
+  const mediaRecs = getAllMediaRecs(passageId, memory);
+  return mediaRecs.length > 0
+    ? mediaRecs[0].attributes.readyToShare
+      ? IMediaShare.Latest
+      : mediaRecs.findIndex((m) => m.attributes.readyToShare) > 0
+      ? IMediaShare.OldVersionOnly
+      : IMediaShare.None
+    : IMediaShare.None;
+};
 export const getAllMediaRecs = (passageId: string, memory: Memory) => {
-  const mediaRecs = memory.cache.query((q: QueryBuilder) =>
-    q.findRecords('mediafile').filter({
-      relation: 'passage',
-      record: { type: 'passage', id: passageId },
-    })
-  ) as MediaFile[];
+  const mediaRecs = (
+    memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('mediafile').filter({
+        relation: 'passage',
+        record: { type: 'passage', id: passageId },
+      })
+    ) as MediaFile[]
+  ).sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
   return mediaRecs;
 };
 

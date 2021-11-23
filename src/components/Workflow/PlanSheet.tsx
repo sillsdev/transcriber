@@ -158,6 +158,7 @@ interface IProps extends IStateProps {
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
   onRecord: (i: number) => void;
+  onHistory: (i: number) => () => void;
   auth: Auth;
 }
 
@@ -523,6 +524,7 @@ export function PlanSheet(props: IProps) {
                           rowIndex={rowIndex}
                           isPassage={passage}
                           mediaId={rowInfo[rowIndex].mediaId?.id}
+                          mediaShared={rowInfo[rowIndex].mediaShared}
                           onPlayStatus={handlePlayStatus}
                           online={connected || offlineOnly}
                           readonly={readonly}
@@ -585,6 +587,7 @@ export function PlanSheet(props: IProps) {
                     isSection={section}
                     isPassage={passage}
                     mediaId={rowInfo[rowIndex].mediaId?.id}
+                    mediaShared={rowInfo[rowIndex].mediaShared}
                     onDelete={handleConfirmDelete}
                     onTranscribe={handleTranscribe}
                     onAudacity={handleAudacity}

@@ -1,7 +1,7 @@
-import { IWorkflow, IwfKind, Section, Passage } from '../../model';
+import { IWorkflow, IwfKind, Section, Passage, IMediaShare } from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
-import { getMediaRec } from '../../crud/media';
+import { getMediaRec, getMediaShared } from '../../crud/media';
 
 const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -86,6 +86,7 @@ export const getWorkflow = (
   sections: Section[],
   passages: Passage[],
   flat: boolean,
+  projectShared: boolean,
   memory: Memory,
   current?: IWorkflow[]
 ) => {
@@ -142,9 +143,12 @@ export const getWorkflow = (
         item.mediaId = mediaRec
           ? { type: 'mediafile', id: mediaRec.id }
           : undefined;
+        item.mediaShared = projectShared
+          ? getMediaShared(passage.id, memory)
+          : IMediaShare.NotPublic;
         item.deleted = false;
       }
-      // console.log(`item ${JSON.stringify(item, null, 2)}`);
+      console.log(`item ${JSON.stringify(item, null, 2)}`);
       wfPassageAdd(myWork, item, sectionIndex);
       item = { ...initItem };
     });

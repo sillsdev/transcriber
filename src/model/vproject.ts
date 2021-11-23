@@ -14,6 +14,7 @@ export interface VProject extends Record {
     uilanguagebcp47: string | null;
     language: string;
     languageName: string | null;
+    isPublic: boolean;
     spellCheck: boolean | null;
     defaultFont: string | null;
     defaultFontSize: string | null;

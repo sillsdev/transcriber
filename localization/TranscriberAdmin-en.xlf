@@ -2476,6 +2476,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.readyToShare">
+         <segment>
+            <source>Ready to Share</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.reference">
          <segment>
             <source>Reference</source>
@@ -2887,6 +2893,12 @@
       <unit id="planActions.delete">
          <segment>
             <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planActions.passageDetail">
+         <segment>
+            <source>Passage Detail</source>
             <target/>
          </segment>
       </unit>
@@ -3397,6 +3409,12 @@
       <unit id="scriptureTable.title">
          <segment>
             <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.versionHistory">
+         <segment>
+            <source>Version History</source>
             <target/>
          </segment>
       </unit>

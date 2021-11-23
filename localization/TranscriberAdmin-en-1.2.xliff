@@ -2889,6 +2889,13 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaTab.readyToShare">
+            <source>Ready to Share</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaTab.reference">
             <source>Reference</source>
             <target/>
@@ -3367,6 +3374,13 @@
          </trans-unit>
          <trans-unit id="planActions.delete">
             <source>Delete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planActions.passageDetail">
+            <source>Passage Detail</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -3967,7 +3981,14 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="sectionResources.close">
+         <trans-unit id="scriptureTable.versionHistory">
+            <source>Version History</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+        <trans-unit id="sectionResources.close">
             <source>Close</source>
             <target/>
             <context-group>

@@ -544,6 +544,7 @@ const initialState = {
 			"passageAttached": "Passage already attached",
 			"planName": "Plan",
 			"proposed": "Proposed",
+			"readyToShare": "Ready to Share",
 			"reference": "Reference",
 			"save": "Save",
 			"saving": "Saving...",
@@ -645,6 +646,7 @@ const initialState = {
 		"en": {
 			"assign": "Assign",
 			"delete": "Delete",
+			"passageDetail": "Passage Detail",
 			"resources": "Resources",
 			"launchAudacity": "Launch Audacity",
 			"playpause": "Play/Stop",
@@ -754,6 +756,7 @@ const initialState = {
 			"saveFirst": "You must save changes first!",
 			"saving": "Saving...",
 			"title": "Title",
+			"versionHistory": "Version History",
 		}
 	}),
 	"sectionResources": new LocalizedStrings({

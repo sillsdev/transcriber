@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { PlanContext } from '../../context/PlanContext';
-import { IState, IMediaTabStrings } from '../../model';
-import { Button } from '@material-ui/core';
+import { IState, IMediaTabStrings, MediaFile } from '../../model';
+import { Button, Checkbox, FormControlLabel } from '@material-ui/core';
 import localStrings from '../../selector/localize';
 import { TransformBuilder } from '@orbit/data';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
@@ -20,6 +20,7 @@ import { remoteId, useOrganizedBy } from '../../crud';
 import { numCompare, dateCompare, dateOrTime } from '../../utils';
 import { IRow } from '.';
 import { Sorting } from '@devexpress/dx-react-grid';
+import { UpdateRecord } from '../../model/baseModel';
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -40,6 +41,7 @@ export const AudioTable = (props: IProps) => {
   const ctx = React.useContext(PlanContext);
   const { connected, readonly } = ctx.state;
   const [memory] = useGlobal('memory');
+  const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
@@ -56,6 +58,7 @@ export const AudioTable = (props: IProps) => {
     { name: 'duration', title: t.duration },
     { name: 'size', title: t.size },
     { name: 'version', title: t.version },
+    { name: 'readyToShare', title: t.readyToShare },
     { name: 'date', title: t.date },
     { name: 'detach', title: '\u00A0' },
   ];
@@ -68,6 +71,7 @@ export const AudioTable = (props: IProps) => {
     { columnName: 'duration', width: 100 },
     { columnName: 'size', width: 100 },
     { columnName: 'version', width: 100 },
+    { columnName: 'readyToShare', width: 100 },
     { columnName: 'date', width: 100 },
     { columnName: 'detach', width: 120 },
   ];
@@ -102,7 +106,14 @@ export const AudioTable = (props: IProps) => {
   const handleShowTranscription = (id: string) => () => {
     setShowId(id);
   };
-
+  const handleChangeReadyToShare = (id: string) => () => {
+    const mediaRec = memory.cache.query((q) =>
+      q.findRecord({ type: 'mediafile', id: id })
+    ) as MediaFile;
+    mediaRec.attributes.readyToShare = !mediaRec.attributes.readyToShare;
+    memory.update((t: TransformBuilder) => UpdateRecord(t, mediaRec, user));
+    setRefresh(true);
+  };
   const handleCloseTranscription = () => {
     setShowId('');
   };
@@ -219,7 +230,20 @@ export const AudioTable = (props: IProps) => {
       {dateOrTime(value, lang)}
     </Table.Cell>
   );
-
+  const ReadyToShareCell = ({ row, value, ...props }: ICell) => (
+    <Table.Cell row {...props} value>
+      <FormControlLabel
+        control={
+          <Checkbox
+            id="checkbox-rts"
+            checked={value as any as boolean}
+            onChange={handleChangeReadyToShare(row.id)}
+          />
+        }
+        label=""
+      />
+    </Table.Cell>
+  );
   const Cell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'actions') {
@@ -238,6 +262,9 @@ export const AudioTable = (props: IProps) => {
     }
     if (column.name === 'date') {
       return <DateCell {...props} />;
+    }
+    if (column.name === 'readyToShare') {
+      return <ReadyToShareCell {...props} />;
     }
     return <Table.Cell {...props} />;
   };
