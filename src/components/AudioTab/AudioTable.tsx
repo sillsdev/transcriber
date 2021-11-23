@@ -129,7 +129,7 @@ export const AudioTable = (props: IProps) => {
   };
 
   const handleDelete = async (i: number) => {
-    memory.update((t: TransformBuilder) =>
+    await memory.update((t: TransformBuilder) =>
       t.removeRecord({
         type: 'mediafile',
         id: data[i].id,
