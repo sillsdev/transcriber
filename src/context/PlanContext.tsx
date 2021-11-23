@@ -9,6 +9,7 @@ import {
   Plan,
   PlanType,
   IProjButtonsStrings,
+  Project,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -44,6 +45,7 @@ const initState = {
   projButtonStr: {} as IProjButtonsStrings,
   scripture: false,
   flat: false,
+  shared: false,
 };
 
 export type ICtxState = typeof initState;
@@ -68,6 +70,7 @@ const PlanProvider = withData(mapRecordsToProps)(
     const { projButtonStr, resetOrbitError } = props;
     const [memory] = useGlobal('memory');
     const [plan] = useGlobal('plan');
+    const [project] = useGlobal('project');
     const [connected] = useGlobal('connected');
     const [projRole] = useGlobal('projRole');
     const [isOffline] = useGlobal('offline');
@@ -99,6 +102,20 @@ const PlanProvider = withData(mapRecordsToProps)(
         setState((state) => ({ ...state, flat, scripture }));
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [plan]);
+
+    useEffect(() => {
+      let projRec: Project | null = null;
+      if (project && project !== '')
+        projRec = memory.cache.query((q: QueryBuilder) =>
+          q.findRecord({ type: 'project', id: project })
+        ) as Project;
+      if (projRec !== null && projRec.attributes.isPublic !== state.shared)
+        setState((state) => ({
+          ...state,
+          shared: projRec?.attributes.isPublic || false,
+        }));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [project]);
 
     React.useEffect(() => {
       const newValue = (isOffline && !offlineOnly) || projRole !== 'admin';

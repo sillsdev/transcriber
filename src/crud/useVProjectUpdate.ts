@@ -18,6 +18,7 @@ export const useVProjectUpdate = () => {
       uilanguagebcp47,
       language,
       languageName,
+      isPublic,
       spellCheck,
       defaultFont,
       defaultFontSize,
@@ -38,6 +39,7 @@ export const useVProjectUpdate = () => {
             uilanguagebcp47,
             language,
             languageName,
+            isPublic,
             spellCheck,
             defaultFont,
             defaultFontSize,
@@ -60,7 +62,7 @@ export const useVProjectUpdate = () => {
     await memory.update((t: TransformBuilder) => [
       ...UpdateRecord(
         t,
-        ({
+        {
           type: 'plan',
           id: vProject.id,
           attributes: {
@@ -69,7 +71,7 @@ export const useVProjectUpdate = () => {
             tags: JSON.stringify(tags),
             organizedBy,
           },
-        } as any) as Plan,
+        } as any as Plan,
         user
       ),
       t.replaceRelatedRecord({ type: 'plan', id: vProject.id }, 'plantype', {

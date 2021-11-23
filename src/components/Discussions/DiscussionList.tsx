@@ -150,7 +150,7 @@ export function DiscussionList(props: IProps) {
   return (
     <Paper id="DiscussionList" className={classes.root}>
       <div className={classes.discussionHead}>
-        <Typography variant="h5" className={classes.name}>
+        <Typography variant="h6" className={classes.name}>
           {t.title}
         </Typography>
         <div>

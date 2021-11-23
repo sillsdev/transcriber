@@ -507,6 +507,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "passageAttached": string;
     "planName": string;
     "proposed": string;
+    "readyToShare": string;
     "reference": string;
     "save": string;
     "saving": string;
@@ -600,6 +601,7 @@ export interface IPassageRecordStrings extends Localize.LocalizedStringsMethods 
 export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
     "assign": string;
     "delete": string;
+    "passageDetail": string;
     "resources": string;
     "launchAudacity": string;
     "playpause": string;
@@ -703,6 +705,7 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "saveFirst": string;
     "saving": string;
     "title": string;
+    "versionHistory": string;
 };
 
 export interface ISectionResourcesStrings extends Localize.LocalizedStringsMethods {

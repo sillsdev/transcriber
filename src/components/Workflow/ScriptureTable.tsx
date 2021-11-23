@@ -68,6 +68,8 @@ import { UpdateRecord } from '../../model/baseModel';
 import { PlanContext } from '../../context/PlanContext';
 import stringReplace from 'react-string-replace';
 import { useExternalLink } from '../useExternalLink';
+import BigDialog from '../../hoc/BigDialog';
+import VersionDlg from '../AudioTab/VersionDlg';
 
 const SaveWait = 500;
 
@@ -172,7 +174,7 @@ export function ScriptureTable(props: IProps) {
   const [changed, setChangedx] = useGlobal('changed');
   const { showMessage } = useSnackBar();
   const ctx = React.useContext(PlanContext);
-  const { flat, scripture } = ctx.state;
+  const { flat, scripture, shared } = ctx.state;
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState<string>(getOrganizedBy(true));
   const [saveColAdd, setSaveColAdd] = useState<number[]>();
@@ -196,6 +198,7 @@ export function ScriptureTable(props: IProps) {
   const [importList, setImportList] = useState<File[]>();
   const [status] = useState<IStatus>({ canceled: false });
   const uploadItem = useRef<IWorkflow>();
+  const [versionItem, setVersionItem] = useState('');
   const [defaultFilename, setDefaultFilename] = useState('');
   const { getPlan } = usePlan();
   const localSave = useWfLocalSave({ setComplete });
@@ -612,6 +615,13 @@ export function ScriptureTable(props: IProps) {
     });
   };
 
+  const handleVersions = (i: number) => () => {
+    console.log('handle versions', i);
+    saveIfChanged(() => {
+      setVersionItem(workflow[i].passageId?.id || '');
+    });
+  };
+
   const handleAudacityImport = (i: number, list: File[]) => {
     saveIfChanged(() => {
       setImportList(list);
@@ -620,9 +630,15 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleRecord = (i: number) => {
+    console.log('handle record', i);
     saveIfChanged(() => {
       showUpload(i, true);
     });
+  };
+
+  const handleVerHistClose = () => {
+    console.log('setVersionItem from ', versionItem, '');
+    setVersionItem('');
   };
 
   const updateLastModified = async () => {
@@ -759,13 +775,21 @@ export function ScriptureTable(props: IProps) {
       !updateRef.current
     ) {
       setUpdate(true);
-      const newWorkflow = getWorkflow(plan, sections, passages, flat, memory);
+      const newWorkflow = getWorkflow(
+        plan,
+        sections,
+        passages,
+        flat,
+        shared,
+        memory
+      );
       setWorkflow(newWorkflow);
       getLastModified(plan);
       setUpdate(false);
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [plan, sections, passages, flat]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plan, sections, passages, mediafiles, flat, shared]);
 
   interface ILocal {
     [key: string]: string;
@@ -868,6 +892,7 @@ export function ScriptureTable(props: IProps) {
         onAssign={handleAssign}
         onUpload={handleUpload}
         onRecord={handleRecord}
+        onHistory={handleVersions}
         lastSaved={lastSaved}
         auth={auth}
         t={s}
@@ -902,6 +927,13 @@ export function ScriptureTable(props: IProps) {
           onImport={handleAudacityImport}
         />
       )}
+      <BigDialog
+        title={t.versionHistory}
+        isOpen={versionItem !== ''}
+        onOpen={handleVerHistClose}
+      >
+        <VersionDlg auth={auth} passId={versionItem} />
+      </BigDialog>
     </div>
   );
 }

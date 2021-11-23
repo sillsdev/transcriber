@@ -3,12 +3,13 @@ import { useGlobal, useRef } from 'reactn';
 import { related } from '.';
 import { OrgWorkflowStep, WorkflowStep } from '../model';
 import { AddRecord } from '../model/baseModel';
-import { waitForIt } from '../utils';
+import { logError, Severity, waitForIt } from '../utils';
 
 export const useOrgWorkflowSteps = () => {
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const [errorReporter] = useGlobal('errorReporter');
   const creatingRef = useRef(false);
 
   const AddOrgWFToOps = async (t: TransformBuilder, wf: WorkflowStep) => {
@@ -23,7 +24,11 @@ export const useOrgWorkflowSteps = () => {
     const orgRecId = { type: 'organization', id: organization };
     ops.push(t.replaceRelatedRecord(wfs, 'organization', orgRecId));
     console.log(wfs.attributes.name, wfs.attributes.dateCreated);
-    await memory.update(ops);
+    try {
+      await memory.update(ops);
+    } catch (ex) {
+      logError(Severity.error, errorReporter, ex as Error);
+    }
   };
 
   const QueryOrgWorkflowSteps = (process: string) => {

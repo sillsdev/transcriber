@@ -1,6 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { ISharedStrings, IPlanActionsStrings, IState } from '../../model';
+import {
+  ISharedStrings,
+  IPlanActionsStrings,
+  IState,
+  IMediaShare,
+} from '../../model';
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
@@ -47,6 +52,7 @@ interface IProps extends IStateProps {
   isSection: boolean;
   isPassage: boolean;
   mediaId: string;
+  mediaShared: IMediaShare;
   online: boolean;
   readonly: boolean;
   isPlaying: boolean;
@@ -214,7 +220,7 @@ export function PlanActionMenu(props: IProps) {
                     {isPassage && (
                       <MenuItem
                         id="planActDetail"
-                        title={'t.passagedetail'}
+                        title={t.passageDetail}
                         onClick={onPassageDetail(rowIndex)}
                       >
                         <DetailIcon className={classes.action} />
