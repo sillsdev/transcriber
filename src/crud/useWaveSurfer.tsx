@@ -289,8 +289,8 @@ export function useWaveSurfer(
   };
   const wsBlob = async () => {
     var backend = wavesurfer()?.backend as any;
-    var originalBuffer = backend?.buffer;
-    if (originalBuffer) {
+    if (backend) {
+      var originalBuffer = backend.buffer;
       var channels = originalBuffer.numberOfChannels;
       var data_left = originalBuffer.getChannelData(0);
       var data_right = null;
@@ -324,23 +324,21 @@ export function useWaveSurfer(
   const copyOriginal = () => {
     if (!wavesurfer()) return 0;
     var backend = wavesurfer()?.backend as any;
-    var originalBuffer = backend?.buffer;
-    if (originalBuffer) {
-      var len = originalBuffer.length;
-      var uberSegment = null;
-      uberSegment = backend.ac.createBuffer(
-        originalBuffer.numberOfChannels,
-        len,
-        originalBuffer.sampleRate
-      );
-      for (var ix = 0; ix < originalBuffer.numberOfChannels; ++ix) {
-        var chan_data = originalBuffer.getChannelData(ix);
-        var uber_chan_data = uberSegment.getChannelData(ix);
+    var originalBuffer = backend.buffer;
+    var len = originalBuffer.length;
+    var uberSegment = null;
+    uberSegment = backend.ac.createBuffer(
+      originalBuffer.numberOfChannels,
+      len,
+      originalBuffer.sampleRate
+    );
+    for (var ix = 0; ix < originalBuffer.numberOfChannels; ++ix) {
+      var chan_data = originalBuffer.getChannelData(ix);
+      var uber_chan_data = uberSegment.getChannelData(ix);
 
-        uber_chan_data.set(chan_data);
-      }
-      return uberSegment;
-    } else return null;
+      uber_chan_data.set(chan_data);
+    }
+    return uberSegment;
   };
   const insertBuffer = (
     newBuffer: any,
@@ -350,7 +348,8 @@ export function useWaveSurfer(
     if (!wavesurfer()) return 0;
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
-
+    setUndoBuffer(copyOriginal());
+    onCanUndo(true);
     if (startposition === 0 && (originalBuffer?.length | 0) === 0) {
       loadDecoded(newBuffer);
       return newBuffer.length / newBuffer.sampleRate;
@@ -405,31 +404,21 @@ export function useWaveSurfer(
       });
     });
   };
-  const wsStartRecord = () => {
-    setUndoBuffer(copyOriginal());
-  };
-  const wsStopRecord = () => {
-    onCanUndo(true);
-  };
+
   const wsInsertSilence = (seconds: number, position: number) => {
     if (!wavesurfer()) return;
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
-    if (originalBuffer !== null) {
-      var new_len = ((seconds / 1.0) * originalBuffer.sampleRate) >> 0;
-      var newBuffer = backend.ac.createBuffer(
-        originalBuffer.numberOfChannels,
-        new_len,
-        originalBuffer.sampleRate
-      );
-      setUndoBuffer(copyOriginal());
-      onCanUndo(true);
-    }
+    var new_len = ((seconds / 1.0) * originalBuffer.sampleRate) >> 0;
+    var newBuffer = backend.ac.createBuffer(
+      originalBuffer.numberOfChannels,
+      new_len,
+      originalBuffer.sampleRate
+    );
     insertBuffer(newBuffer, position, position);
   };
   const wsUndo = () => {
     if (undoBuffer) loadDecoded(undoBuffer);
-    else wsClear();
     setUndoBuffer(undefined);
     onCanUndo(false);
   };
@@ -512,7 +501,5 @@ export function useWaveSurfer(
     wsSplitRegion,
     wsAddOrRemoveRegion,
     wsRemoveSplitRegion,
-    wsStartRecord,
-    wsStopRecord,
   };
 }

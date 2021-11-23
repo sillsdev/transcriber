@@ -306,8 +306,6 @@ function WSAudioPlayer(props: IProps) {
     wsRemoveSplitRegion,
     wsAddOrRemoveRegion,
     wsSetHeight,
-    wsStartRecord,
-    wsStopRecord,
   } = useWaveSurfer(
     waveformRef.current,
     onWSReady,
@@ -590,12 +588,10 @@ function WSAudioPlayer(props: IProps) {
       recordStartPosition.current = wsPosition();
       recordOverwritePosition.current = recordStartPosition.current;
       initialPosRef.current = recordStartPosition.current;
-      wsStartRecord();
       startRecording(500);
     } else {
       processRecordRef.current = true;
       stopRecording();
-      wsStopRecord();
     }
     setRecording(!recordingRef.current);
     return true;

@@ -630,12 +630,14 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleRecord = (i: number) => {
+    console.log('handle record', i);
     saveIfChanged(() => {
       showUpload(i, true);
     });
   };
 
   const handleVerHistClose = () => {
+    console.log('setVersionItem from ', versionItem, '');
     setVersionItem('');
   };
 
