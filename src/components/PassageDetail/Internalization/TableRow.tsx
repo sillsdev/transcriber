@@ -32,10 +32,12 @@ export const TableRow = ({ value, header }: IProps) => {
 
   return (
     <ListItem>
-      <span className={clsx({ [classes.hidden]: header })}>
-        <DragHandle />
-        {'\u00A0'}
-      </span>
+      {/admin/i.test(projRole) && (
+        <span className={clsx({ [classes.hidden]: header })}>
+          <DragHandle />
+          {'\u00A0'}
+        </span>
+      )}
       <div className={clsx(classes.action, { [classes.bold]: header })}>
         {value.playItem}
       </div>
