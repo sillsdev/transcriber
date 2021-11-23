@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { useGlobal } from 'reactn';
 import { useLocation, useParams } from 'react-router-dom';
 import {
   makeStyles,
@@ -145,6 +146,7 @@ interface ParamTypes {
 const PassageDetailGrids = (props: IProps) => {
   const { auth } = props;
   const classes = useStyles();
+  const [projRole] = useGlobal('projRole');
   const [width, setWidth] = useState(window.innerWidth);
   const ctx = useContext(PassageDetailContext);
   const { currentstep } = ctx.state;
@@ -186,9 +188,11 @@ const PassageDetailGrids = (props: IProps) => {
           <Grid item className={classes.row} xs={9}>
             <PassageDetailSectionPassage />
           </Grid>
-          <Grid item className={classes.right} xs={3}>
-            <PassageDetailStepComplete />
-          </Grid>
+          {/admin/i.test(projRole) && (
+            <Grid item className={classes.right} xs={3}>
+              <PassageDetailStepComplete />
+            </Grid>
+          )}
         </Grid>
         {currentstep === internalizationRec?.id && (
           <Grid container direction="row" className={classes.row}>
