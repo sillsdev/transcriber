@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export function WorkflowSteps() {
-  const { workflow, wfIndex, currentstep, setCurrentStep } =
+  const { workflow, psgCompletedIndex, currentstep, setCurrentStep } =
     usePassageDetailContext();
   const classes = useStyles();
 
@@ -23,7 +23,11 @@ export function WorkflowSteps() {
   );
 
   const curColor = (i: number) => {
-    return i === index ? 'lightblue' : i <= wfIndex ? 'lightgreen' : undefined;
+    return i === index
+      ? 'lightblue'
+      : i <= psgCompletedIndex
+      ? 'lightgreen'
+      : undefined;
   };
 
   const handleSelect = (item: string) => {
@@ -33,7 +37,7 @@ export function WorkflowSteps() {
       setCurrentStep(item);
     }
   };
-
+  console.log(index);
   return (
     <div className={classes.root}>
       {workflow.map((w, i) => {
@@ -43,7 +47,7 @@ export function WorkflowSteps() {
             id={w.id}
             label={w.label}
             color={curColor(i)}
-            done={i <= wfIndex}
+            done={i <= psgCompletedIndex}
             select={handleSelect}
           />
         );
