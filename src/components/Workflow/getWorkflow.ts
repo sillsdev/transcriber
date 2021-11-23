@@ -148,7 +148,7 @@ export const getWorkflow = (
           : IMediaShare.NotPublic;
         item.deleted = false;
       }
-      console.log(`item ${JSON.stringify(item, null, 2)}`);
+      //console.log(`item ${JSON.stringify(item, null, 2)}`);
       wfPassageAdd(myWork, item, sectionIndex);
       item = { ...initItem };
     });

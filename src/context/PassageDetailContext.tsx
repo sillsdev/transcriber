@@ -127,7 +127,7 @@ const initState = {
   currentstep: '',
   orgWorkflowSteps: [] as OrgWorkflowStep[],
   setOrgWorkflowSteps: (steps: OrgWorkflowStep[]) => {},
-  setCurrentStep: (step: string) => {},
+  setCurrentStep: (step: string) => {}, //what the user is looking at
   index: 0, //row index?
   selected: '',
   setSelected: (selected: string) => {},
@@ -147,7 +147,7 @@ const initState = {
   allBookData: Array<BookName>(),
   getSharedResources: async () => [] as Resource[],
   workflow: Array<SimpleWf>(),
-  wfIndex: -1,
+  psgCompletedIndex: -2,
 };
 
 export type ICtxState = typeof initState;
@@ -284,21 +284,39 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       var p = passages.find(
         (p) => p.id === remoteIdGuid('passage', pasId, memory.keyMap)
       );
-      if (p) {
+      if (p && state.workflow.length > 0) {
+        //wait for the workflow
+        var passagewf = related(p, 'orgWorkflowStep');
+        var psgIndex = state.workflow.findIndex((wf) => wf.id === passagewf);
         var s = sections.find((s) => s.id === related(p, 'section'));
         if (s) {
-          if (p.id !== state.passage.id || s.id !== state.section.id)
+          if (p.id !== state.passage.id || s.id !== state.section.id) {
             setState((state: ICtxState) => {
               return {
                 ...state,
                 passage: p as Passage,
                 section: s as Section,
+                psgCompletedIndex: psgIndex,
               };
             });
+          } else if (state.psgCompletedIndex !== psgIndex) {
+            setState((state: ICtxState) => ({
+              ...state,
+              psgCompletedIndex: psgIndex,
+            }));
+          }
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [memory.keyMap, pasId, passages, sections]);
+    }, [
+      memory.keyMap,
+      pasId,
+      passages,
+      sections,
+      state.passage.id,
+      state.psgCompletedIndex,
+      state.section.id,
+      state.workflow,
+    ]);
 
     useEffect(() => {
       if (!booksLoaded) {
@@ -423,19 +441,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     }, [workflowSteps, orgWorkflowSteps]);
 
     useEffect(() => {
-      var passagewf = related(state.passage, 'orgWorkflowStep');
-      var psgIndex = state.workflow.findIndex((wf) => wf.id === passagewf);
-      if (state.wfIndex !== psgIndex) {
-        setState((state: ICtxState) => ({ ...state, wfIndex: psgIndex }));
-      }
-      if (state.currentstep === '' && state.workflow.length > 0) {
-        const next = state.workflow[psgIndex + 1].id;
+      if (state.currentstep === '' && state.psgCompletedIndex > -2) {
+        const next = state.workflow[state.psgCompletedIndex + 1].id;
         if (state.currentstep !== next) {
           setCurrentStep(next);
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state.workflow, state.passage]);
+    }, [state.currentstep, state.psgCompletedIndex, state.workflow]);
 
     return (
       <PassageDetailContext.Provider

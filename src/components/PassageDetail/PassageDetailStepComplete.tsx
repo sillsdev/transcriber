@@ -3,7 +3,6 @@ import CompleteIcon from '@material-ui/icons/CheckBoxOutlined';
 import NotCompleteIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import { useEffect, useState } from 'react';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import { related } from '../../crud';
 import { UpdateRelatedRecord } from '../../model/baseModel';
 import { useGlobal } from 'reactn';
 import { TransformBuilder } from '@orbit/data';
@@ -28,7 +27,8 @@ interface IProps extends IStateProps {}
 
 export const PassageDetailStepComplete = (props: IProps) => {
   const { t } = props;
-  const { passage, currentstep, orgWorkflowSteps } = usePassageDetailContext();
+  const { passage, currentstep, psgCompletedIndex, orgWorkflowSteps } =
+    usePassageDetailContext();
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
@@ -37,21 +37,20 @@ export const PassageDetailStepComplete = (props: IProps) => {
   const [canComplete, setCanComplete] = useState(false);
 
   useEffect(() => {
-    var passageStep = related(passage, 'orgWorkflowStep');
-    var psgIndex = orgWorkflowSteps.findIndex((s) => s.id === passageStep);
     var curIndex = orgWorkflowSteps.findIndex((s) => s.id === currentstep);
     setCurrentIndex(curIndex);
-    setComplete(psgIndex >= curIndex);
-    setCanComplete(psgIndex + 1 === curIndex);
-  }, [passage, currentstep, orgWorkflowSteps]);
+    setComplete(psgCompletedIndex >= curIndex);
+    setCanComplete(psgCompletedIndex + 1 === curIndex);
+  }, [psgCompletedIndex, currentstep, orgWorkflowSteps]);
 
   const handleToggleComplete = () => {
     var newstep: string | undefined = '';
     if (complete)
       //turn it off
-      newstep =
-        currentIndex === 0 ? undefined : orgWorkflowSteps[currentIndex - 1].id;
-    else newstep = orgWorkflowSteps[currentIndex].id;
+      newstep = currentIndex === 0 ? '' : orgWorkflowSteps[currentIndex - 1].id;
+    else {
+      newstep = orgWorkflowSteps[currentIndex].id;
+    }
     memory.update((t: TransformBuilder) => [
       ...UpdateRelatedRecord(
         t,
