@@ -311,6 +311,7 @@ const initialState = {
 			"or": "or",
 			"leftArrow": "Left Arrow",
 			"rightArrow": "Right Arrow",
+			"shiftKey": "Shift",
 			"spaceKey": "Space",
 		}
 	}),

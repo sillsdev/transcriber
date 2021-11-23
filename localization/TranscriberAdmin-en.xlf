@@ -1270,6 +1270,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="hotKey.shiftKey">
+         <segment>
+            <source>Shift</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="hotKey.spaceKey">
          <segment>
             <source>Space</source>

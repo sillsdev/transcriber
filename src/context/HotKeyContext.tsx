@@ -33,6 +33,7 @@ interface hotKeyInfo {
   key: string;
   ctrl?: boolean;
   alt?: boolean;
+  shift?: boolean;
   cb: () => boolean;
 }
 
@@ -45,9 +46,18 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
   });
   const isMounted = useMounted('hotkeycontext');
 
-  const hotKeyCallback = (key: string, ctrl: boolean, alt: boolean) => {
+  const hotKeyCallback = (
+    key: string,
+    ctrl: boolean,
+    alt: boolean,
+    shift: boolean
+  ) => {
     var ix = hotKeys.findIndex(
-      (hk) => hk.key === key.toUpperCase() && hk.ctrl === ctrl && hk.alt === alt
+      (hk) =>
+        hk.key === key.toUpperCase() &&
+        hk.ctrl === ctrl &&
+        hk.alt === alt &&
+        hk.shift === shift
     );
     if (ix !== -1) return hotKeys[ix].cb;
     return undefined;
@@ -59,7 +69,7 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
       case 'SHIFT':
         return;
       default:
-        var cb = hotKeyCallback(e.key, e.ctrlKey, e.altKey);
+        var cb = hotKeyCallback(e.key, e.ctrlKey, e.altKey, e.shiftKey);
         var handled = false;
         if (cb) handled = cb();
         if (handled) e.preventDefault();
@@ -81,6 +91,9 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
         case 'ALT':
           hk.alt = true;
           break;
+        case 'SHIFT':
+          hk.shift = true;
+          break;
         case 'SPACE':
           hk.key = ' ';
           break;
@@ -96,7 +109,8 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
       (hk) =>
         hk.key === thiskey.key &&
         hk.ctrl === thiskey.ctrl &&
-        hk.alt === thiskey.alt
+        hk.alt === thiskey.alt &&
+        hk.shift === thiskey.shift
     );
   };
   const subscribe = (keys: string, cb: () => boolean) => {
@@ -129,6 +143,7 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
       .replace('ARROWLEFT', t.leftArrow)
       .replace('ARROWRIGHT', t.rightArrow)
       .replace('ARROWDOWN', t.downArrow)
+      .replace('SHIFT', t.shiftKey)
       .split(',')
       .join(` ${t.or} `);
   };
