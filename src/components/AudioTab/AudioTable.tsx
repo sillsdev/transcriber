@@ -39,7 +39,7 @@ export const AudioTable = (props: IProps) => {
   const { data, setRefresh, lang, auth, t } = props;
   const { playItem, setPlayItem, onAttach } = props;
   const ctx = React.useContext(PlanContext);
-  const { connected, readonly } = ctx.state;
+  const { connected, readonly, shared } = ctx.state;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -58,10 +58,10 @@ export const AudioTable = (props: IProps) => {
     { name: 'duration', title: t.duration },
     { name: 'size', title: t.size },
     { name: 'version', title: t.version },
-    { name: 'readyToShare', title: t.readyToShare },
     { name: 'date', title: t.date },
-    { name: 'detach', title: '\u00A0' },
   ];
+  if (shared) columnDefs.push({ name: 'readyToShare', title: t.readyToShare });
+  columnDefs.push({ name: 'detach', title: '\u00A0' });
   const columnWidths = [
     { columnName: 'planName', width: 150 },
     { columnName: 'actions', width: onAttach ? 120 : 50 },
@@ -71,10 +71,14 @@ export const AudioTable = (props: IProps) => {
     { columnName: 'duration', width: 100 },
     { columnName: 'size', width: 100 },
     { columnName: 'version', width: 100 },
-    { columnName: 'readyToShare', width: 100 },
     { columnName: 'date', width: 100 },
-    { columnName: 'detach', width: 120 },
   ];
+  if (shared)
+    columnWidths.push({
+      columnName: 'readyToShare',
+      width: 100,
+    });
+  columnWidths.push({ columnName: 'detach', width: 120 });
   const columnFormatting = [
     { columnName: 'actions', aligh: 'center', wordWrapEnabled: false },
     { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },

@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     label: {
       color: theme.palette.secondary.main,
+      paddingTop: theme.spacing(4),
     },
   })
 );
@@ -139,18 +140,6 @@ export function ProjectExpansion(props: IProjectDialogState) {
           <RenderCustomize />
         </AccordionSummary>
         <AccordionDetails className={classes.panel}>
-          <FormLabel className={classes.label}>{t.sharedResources}</FormLabel>
-          <FormControlLabel
-            className={classes.textField}
-            control={
-              <Checkbox
-                id="checkbox-shared"
-                checked={isPublic}
-                onChange={handleShareable}
-              />
-            }
-            label={t.isPublic}
-          />
           <EditorSettings state={state} setState={setState} />
 
           <Options
@@ -168,6 +157,18 @@ export function ProjectExpansion(props: IProjectDialogState) {
             addOption={options.length === 5 ? handleAddOption : undefined}
             otherLabel={t.other}
             decorations={decoration}
+          />
+          <FormLabel className={classes.label}>{t.sharedResources}</FormLabel>
+          <FormControlLabel
+            className={classes.textField}
+            control={
+              <Checkbox
+                id="checkbox-shared"
+                checked={isPublic}
+                onChange={handleShareable}
+              />
+            }
+            label={t.isPublic}
           />
         </AccordionDetails>
       </Accordion>
