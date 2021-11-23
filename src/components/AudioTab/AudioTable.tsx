@@ -43,6 +43,7 @@ export const AudioTable = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const [, setBusy] = useGlobal('remoteBusy');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const [confirmAction, setConfirmAction] = useState('');
@@ -127,13 +128,14 @@ export const AudioTable = (props: IProps) => {
     setConfirmAction('Delete');
   };
 
-  const handleDelete = (i: number) => {
+  const handleDelete = async (i: number) => {
     memory.update((t: TransformBuilder) =>
       t.removeRecord({
         type: 'mediafile',
         id: data[i].id,
       })
     );
+    setBusy(false); // forces refresh of plan tabs
   };
 
   const handleActionConfirmed = () => {
