@@ -78,7 +78,7 @@ export const SelectRole = (props: IProps) => {
         )
         .map((option: Role) => (
           <MenuItem key={option.id} value={option.id}>
-            {localizeRole(option.attributes.roleName, ts)}
+            {localizeRole(option.attributes.roleName, ts, !org)}
           </MenuItem>
         ))}
     </TextField>
