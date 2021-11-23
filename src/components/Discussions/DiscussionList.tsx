@@ -10,7 +10,6 @@ import {
 import QueryBuilder from '@orbit/data/dist/types/query-builder';
 import { useContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { useGlobal } from 'reactn';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { related } from '../../crud';
 import { Discussion, IDiscussionListStrings, IState } from '../../model';
@@ -19,8 +18,6 @@ import AddIcon from '@material-ui/icons/Add';
 import HideIcon from '@material-ui/icons/ArrowDropUp';
 import ShowIcon from '@material-ui/icons/ArrowDropDown';
 import DiscussionCard from './DiscussionCard';
-import { TransformBuilder } from '@orbit/data';
-import { AddRecord, UpdateRelatedRecord } from '../../model/baseModel';
 import { withData } from '../../mods/react-orbitjs';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -66,25 +63,29 @@ interface IProps extends IStateProps, IRecordProps {}
 export function DiscussionList(props: IProps) {
   const { t, discussions } = props;
   const classes = useStyles();
-  const [memory] = useGlobal('memory');
-  const [user] = useGlobal('user');
   const [displayDiscussions, setDisplayDiscussions] = useState<Discussion[]>(
     []
   );
   const [collapsed, setCollapsed] = useState(false);
-  const [addingId, setAddingId] = useState('');
+  const [adding, setAdding] = useState(false);
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, mediafileId } = ctx.state;
+  const { currentstep } = ctx.state;
 
   useEffect(() => {
     // will I have a mediafileId here???
     if (currentstep !== '') {
-      if (addingId !== '')
-        setDisplayDiscussions(discussions.filter((d) => d.id === addingId));
+      if (adding)
+        setDisplayDiscussions([
+          {
+            type: 'discussion',
+            attributes: {
+              subject: '',
+            },
+          } as any as Discussion,
+        ]);
       else
         setDisplayDiscussions(
           discussions
-
             .filter((d) => related(d, 'orgWorkflowStep') === currentstep)
             .sort((x, y) =>
               x.attributes.resolved === y.attributes.resolved
@@ -97,52 +98,14 @@ export function DiscussionList(props: IProps) {
             )
         );
     }
-  }, [discussions, currentstep, addingId]);
+  }, [discussions, currentstep, adding]);
 
   const handleAddComplete = () => {
-    setAddingId('');
-  };
-  const handleAddCanceled = () => {
-    memory.update((t: TransformBuilder) =>
-      t.removeRecord({ type: 'discussion', id: addingId })
-    );
-    setAddingId('');
+    setAdding(false);
   };
 
   const handleAddDiscussion = async () => {
-    const discussion: Discussion = {
-      type: 'discussion',
-      attributes: {
-        subject: '',
-      },
-    } as any;
-    const t = new TransformBuilder();
-    var ops = [
-      ...AddRecord(t, discussion, user, memory),
-      ...UpdateRelatedRecord(
-        t,
-        discussion,
-        'orgWorkflowStep',
-        'orgworkflowstep',
-        currentstep,
-        user
-      ),
-    ];
-    if (mediafileId)
-      ops.push(
-        ...UpdateRelatedRecord(
-          t,
-          discussion,
-          'mediafile',
-          'mediafile',
-          mediafileId,
-          user
-        )
-      );
-    memory.update(ops);
-    setAddingId(discussion.id);
-
-    return discussion.id;
+    setAdding(true);
   };
   const handleToggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -159,6 +122,7 @@ export function DiscussionList(props: IProps) {
             className={classes.actionButton}
             title={t.add}
             onClick={handleAddDiscussion}
+            disabled={adding}
           >
             <AddIcon />
           </IconButton>
@@ -179,8 +143,7 @@ export function DiscussionList(props: IProps) {
               key={i.id}
               discussion={i}
               collapsed={collapsed}
-              onAddCancelled={addingId ? handleAddCanceled : undefined}
-              onAddComplete={addingId ? handleAddComplete : undefined}
+              onAddComplete={adding ? handleAddComplete : undefined}
             />
           );
         })}

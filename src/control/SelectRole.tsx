@@ -54,7 +54,7 @@ export const SelectRole = (props: IProps) => {
       id={'select-role' + org ? '-team' : '-project'}
       className={classes.textField}
       select
-      label={label || org ? ts.teamrole : ts.role}
+      label={org ? ts.teamrole : ts.projectrole}
       value={role}
       onChange={handleRoleChange}
       SelectProps={{

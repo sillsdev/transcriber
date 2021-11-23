@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useEffect, useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -35,12 +35,17 @@ import ReplyCard from './ReplyCard';
 import UserAvatar from '../UserAvatar';
 import RoleAvatar from '../RoleAvatar';
 import DiscussionMenu from './DiscussionMenu';
-import { UpdateRecord, UpdateRelatedRecord } from '../../model/baseModel';
+import {
+  AddRecord,
+  UpdateRecord,
+  UpdateRelatedRecord,
+} from '../../model/baseModel';
 
 import { useArtifactCategory } from '../../crud/useArtifactCategory';
 import SelectRole from '../../control/SelectRole';
 import SelectUser from '../../control/SelectUser';
 import SelectArtifactCategory from '../Workflow/SelectArtifactCategory';
+import { PassageDetailContext } from '../../context/PassageDetailContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -133,7 +138,6 @@ interface IStateProps {
 interface IProps extends IRecordProps, IStateProps {
   discussion: Discussion;
   collapsed: boolean;
-  onAddCancelled?: () => {};
   onAddComplete?: () => {};
 }
 
@@ -144,7 +148,6 @@ export const DiscussionCard = (props: IProps) => {
     ts,
     discussion,
     collapsed,
-    onAddCancelled,
     onAddComplete,
     comments,
     mediafiles,
@@ -152,6 +155,8 @@ export const DiscussionCard = (props: IProps) => {
     roles,
     users,
   } = props;
+  const ctx = useContext(PassageDetailContext);
+  const { currentstep, mediafileId } = ctx.state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
   const [myComments, setMyComments] = useState<Comment[]>([]);
@@ -164,8 +169,8 @@ export const DiscussionCard = (props: IProps) => {
   const [confirmAction, setConfirmAction] = useState('');
   const [changed, setChanged] = useState(false);
   const [editSubject, setEditSubject] = useState('');
-  const [editRole, setEditRole] = useState<string>();
-  const [editUser, setEditUser] = useState<string>();
+  const [editRole, setEditRole] = useState<string>('');
+  const [editUser, setEditUser] = useState<string>('');
   const [editCategory, setEditCategory] = useState('');
   const { localizedArtifactCategory } = useArtifactCategory();
   const handleSelect = (discussion: Discussion) => () => {
@@ -301,12 +306,12 @@ export const DiscussionCard = (props: IProps) => {
   };
   const handleRoleChange = (e: string) => {
     setEditRole(e);
-    setEditUser(undefined);
+    setEditUser('');
     setChanged(true);
   };
   const handleUserChange = (e: string) => {
     setEditUser(e);
-    setEditRole(undefined);
+    setEditRole('');
     setChanged(true);
   };
   const onCategoryChange = (cat: string) => {
@@ -316,8 +321,33 @@ export const DiscussionCard = (props: IProps) => {
   const handleSave = async () => {
     if (changed) {
       discussion.attributes.subject = editSubject;
-      await memory.update((t: TransformBuilder) => [
-        ...UpdateRecord(t, discussion, user),
+      var ops: Operation[] = [];
+      var t = new TransformBuilder();
+      if (onAddComplete) {
+        ops.push(...AddRecord(t, discussion, user, memory));
+        ops.push(
+          ...UpdateRelatedRecord(
+            t,
+            discussion,
+            'orgWorkflowStep',
+            'orgworkflowstep',
+            currentstep,
+            user
+          )
+        );
+        if (mediafileId)
+          ops.push(
+            ...UpdateRelatedRecord(
+              t,
+              discussion,
+              'mediafile',
+              'mediafile',
+              mediafileId,
+              user
+            )
+          );
+      } else ops.push(...UpdateRecord(t, discussion, user));
+      ops.push(
         ...UpdateRelatedRecord(
           t,
           discussion,
@@ -327,18 +357,20 @@ export const DiscussionCard = (props: IProps) => {
           user
         ),
         ...UpdateRelatedRecord(t, discussion, 'role', 'role', editRole, user),
-        ...UpdateRelatedRecord(t, discussion, 'user', 'user', editUser, user),
-      ]);
+        ...UpdateRelatedRecord(t, discussion, 'user', 'user', editUser, user)
+      );
+      await memory.update(ops);
     }
     onAddComplete && onAddComplete();
     setEditing(false);
     setChanged(false);
   };
   const handleCancel = (e: any) => {
-    onAddCancelled && onAddCancelled();
+    onAddComplete && onAddComplete();
     setEditing(false);
     setChanged(false);
   };
+
   return (
     <div className={classes.root}>
       <Card
