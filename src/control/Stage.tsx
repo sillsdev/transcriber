@@ -35,6 +35,8 @@ export const Stage = ({
   return (
     <svg
       version="1.1"
+      width="200px"
+      height="50px"
       viewBox="0.0 0.0 200.0 50.0"
       fill="none"
       stroke="none"
