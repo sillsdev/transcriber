@@ -414,7 +414,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setState((state: ICtxState) => {
         return { ...state, rowData: newData };
       });
-      if (newData.length > 0) setSelected(newData[0].id, newData);
+      if (newData.length > 0 && !newData[0].isResource)
+        setSelected(newData[0].id, newData);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sectionResources, mediafiles, pasId]);
 
