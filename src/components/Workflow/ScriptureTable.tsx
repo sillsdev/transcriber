@@ -298,6 +298,7 @@ export function ScriptureTable(props: IProps) {
       kind: flat ? IwfKind.SectionPassage : IwfKind.Passage,
       book: workflow[lastRow]?.book || workflow[lastRow - 1]?.book || '',
       reference: '',
+      mediaId: undefined,
       comment: '',
       passageUpdated: currentDateTime(),
       passageId: undefined,
