@@ -71,6 +71,11 @@ export function DiscussionList(props: IProps) {
   const ctx = useContext(PassageDetailContext);
   const { currentstep, rowData } = ctx.state;
 
+  const currentPassage = (d: Discussion) => {
+    const mediaId = related(d, 'mediafile');
+    return rowData.filter((r) => r.id === mediaId).length > 0;
+  };
+
   useEffect(() => {
     // will I have a mediafileId here???
     if (currentstep !== '') {
@@ -86,7 +91,11 @@ export function DiscussionList(props: IProps) {
       else
         setDisplayDiscussions(
           discussions
-            .filter((d) => related(d, 'orgWorkflowStep') === currentstep)
+            .filter(
+              (d) =>
+                related(d, 'orgWorkflowStep') === currentstep &&
+                currentPassage(d)
+            )
             .sort((x, y) =>
               x.attributes.resolved === y.attributes.resolved
                 ? x.attributes.dateCreated < y.attributes.dateCreated
@@ -98,6 +107,7 @@ export function DiscussionList(props: IProps) {
             )
         );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussions, currentstep, adding]);
 
   const handleAddComplete = () => {
