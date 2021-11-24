@@ -112,11 +112,11 @@ export const useOfflineSetup = () => {
       const ops = [
         { name: 'Internalization', tool: 'Internalization' },
         { name: 'Record', tool: 'Record' },
-        { name: 'TeamCheck', tool: 'Team Check' },
+        { name: 'TeamCheck', tool: 'TeamCheck' },
         { name: 'PeerReview', tool: 'audio' },
         { name: 'KeyTerms', tool: 'audio' },
         { name: 'CommunityTesting', tool: 'audio' },
-        { name: 'BackTranslation', tool: 'Back Translate' },
+        { name: 'BackTranslation', tool: 'BackTranslate' },
         { name: 'ConsultantCheck', tool: 'audio' },
         { name: 'Review', tool: 'audio' },
         { name: 'FinalEdit', tool: 'audio' },
