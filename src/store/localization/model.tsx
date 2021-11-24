@@ -67,6 +67,7 @@ export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
 export interface ISelectArtifactCategoryStrings extends Localize.LocalizedStringsMethods {
     "addNewCategory": string;
     "artifactCategory": string;
+    "duplicateCategory": string;
     "newArtifactCategory": string;
 };
 
