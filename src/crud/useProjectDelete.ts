@@ -8,6 +8,7 @@ import {
   MediaFile,
   Discussion,
   Comment,
+  PassageStateChange,
 } from '../model';
 import { useOfflnProjDelete } from './useOfflnProjDelete';
 import { related } from '.';
@@ -67,7 +68,14 @@ export const useProjectDelete = () => {
           q.findRecords('passage')
         ) as Passage[]
       )
-        .filter((p) => sections.includes(p.id))
+        .filter((p) => sections.includes(related(p, 'section')))
+        .map((p) => p.id);
+      const psc = (
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('passagestatechange')
+        ) as PassageStateChange[]
+      )
+        .filter((p) => passages.includes(related(p, 'passage')))
         .map((p) => p.id);
       const sectionresources = (
         memory.cache.query((q: QueryBuilder) =>
@@ -77,6 +85,14 @@ export const useProjectDelete = () => {
         .filter((r) => sections.includes(r.id))
         .map((r) => r.id);
 
+      psc.forEach((id) =>
+        ops.push(
+          t.removeRecord({
+            type: 'passagestatechange',
+            id: id,
+          })
+        )
+      );
       comments.forEach((id) =>
         ops.push(
           t.removeRecord({
