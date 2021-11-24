@@ -13,7 +13,7 @@ export const Stage = ({
   done?: boolean;
   select?: (id: string) => void;
 }) => {
-  const lineProps = { strokeWidth: 1.10133 };
+  const lineProps = { strokeWidth: 1.1 };
   const textProps = {
     fontStyle: 'normal',
     fontSize: '16px',
@@ -22,7 +22,7 @@ export const Stage = ({
     textAlign: 'center',
     textAnchor: 'middle',
     whiteSpace: 'pre',
-    inlineSize: 115.44,
+    inlineSize: 173,
     fill: '#000000',
     fillOpacity: 1,
     stroke: 'none',
@@ -34,10 +34,9 @@ export const Stage = ({
 
   return (
     <svg
-      version="1.1"
-      width="200px"
+      width="300px"
       height="50px"
-      viewBox="0.0 0.0 200.0 50.0"
+      viewBox="0.0 0.0 300.0 50.0"
       fill="none"
       stroke="none"
       strokeLinecap="square"
@@ -47,30 +46,26 @@ export const Stage = ({
       <g onClick={handleClick}>
         <path
           fill="#eeeeee"
-          d="M 0,0 H 176.52729 L 199.6284,24.725997 176.52729,49.451994 H 0 L 23.101103,24.725997 Z"
+          d="M 0,0 H 276 L 299,24.7 276,49.5 H 0 L 23,24.7 Z"
           fillRule="evenodd"
-          id="path743"
           style={lineProps}
         />
         <path
           fill={color || '#ffffff'}
           stroke="#595959"
-          strokeWidth="1.10133"
+          strokeWidth="1.1"
           strokeLinejoin="round"
           strokeLinecap="butt"
-          d="M 0,0 H 176.52729 L 199.6284,24.725997 176.52729,49.451994 H 0 L 23.101102,24.725997 Z"
+          d="M 0,0 H 276 L 299,24.7 276,49.5 H 0 L 23,24.7 Z"
           fillRule="evenodd"
-          id="path745"
         />
         <text
-          // xml:space="preserve"
           style={textProps}
-          x="85.276993"
-          y="25.568182"
-          id="text50627"
-          transform="matrix(1.2814758,0,0,2.1700602,-8.2661539,-17.681404)"
+          x="85.3"
+          y="25.6"
+          transform="matrix(1.3,0,0,2.2,34.5,-21.3)"
         >
-          <tspan x="85.276993" y="25.568182" id="tspan83787">
+          <tspan x="85.3" y="25.6">
             {`${done ? '\u2714 ' : ''}${label}`}
           </tspan>
         </text>
