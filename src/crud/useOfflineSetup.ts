@@ -78,6 +78,29 @@ export const useOfflineSetup = () => {
         ])
       );
     }
+    if (offlineRoleRecs.length === 0 || offlineRoleRecs.length === 3) {
+      const t = new TransformBuilder();
+      const ops = [
+        'Transcriber',
+        'Translator',
+        'BackTranslator',
+        'Consultant',
+        'Observer',
+        'PeerReviewer',
+      ].map((name) => {
+        let rec = {
+          type: 'role',
+          attributes: {
+            orgRole: false,
+            groupRole: true,
+            roleName: name,
+          },
+        } as Role;
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
+      });
+      await memory.sync(await backup.push(ops));
+    }
   };
   const makeWorkflowStepsRecs = async () => {
     const allRecs = memory.cache.query((q: QueryBuilder) =>
@@ -86,19 +109,18 @@ export const useOfflineSetup = () => {
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineRecs.length === 0) {
       const names = [
-        'Exegesis',
         'Internalization',
-        'Draft',
+        'Record',
         'TeamCheck',
+        'PeerReview',
         'KeyTerms',
         'CommunityTesting',
         'BackTranslation',
         'ConsultantCheck',
-        'TestAndReview',
+        'Review',
         'FinalEdit',
         'ReadThrough',
         'Duplication',
-        'Done',
       ];
       const tools = [
         'audio',
@@ -113,9 +135,9 @@ export const useOfflineSetup = () => {
         'audio',
         'audio',
         'audio',
-        'none',
       ];
-      names.forEach(async (n, ix) => {
+      for (let ix = 0; ix < names.length; ix += 1) {
+        const n = names[ix];
         const s = {
           type: 'workflowstep',
           attributes: {
@@ -130,7 +152,7 @@ export const useOfflineSetup = () => {
         await memory.sync(
           await backup.push((t: TransformBuilder) => [t.addRecord(s)])
         );
-      });
+      }
     }
   };
   const makeArtifactCategoryRecs = async () => {
@@ -147,7 +169,8 @@ export const useOfflineSetup = () => {
         'word',
         'grammar',
       ];
-      names.forEach(async (n, ix) => {
+      for (let ix = 0; ix < names.length; ix += 1) {
+        const n = names[ix];
         const s = {
           type: 'artifactcategory',
           attributes: {
@@ -158,7 +181,7 @@ export const useOfflineSetup = () => {
         await memory.sync(
           await backup.push((t: TransformBuilder) => [t.addRecord(s)])
         );
-      });
+      }
     }
   };
   const makeArtifactTypeRecs = async () => {
@@ -175,7 +198,8 @@ export const useOfflineSetup = () => {
         'comment',
         'testing',
       ];
-      names.forEach(async (n, ix) => {
+      for (let ix = 0; ix < names.length; ix += 1) {
+        const n = names[ix];
         const s = {
           type: 'artifacttype',
           attributes: {
@@ -186,7 +210,7 @@ export const useOfflineSetup = () => {
         await memory.sync(
           await backup.push((t: TransformBuilder) => [t.addRecord(s)])
         );
-      });
+      }
     }
   };
   return async () => {

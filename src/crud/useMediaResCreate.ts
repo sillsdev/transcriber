@@ -1,25 +1,15 @@
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
-import { OrgWorkflowStep, MediaFile, ArtifactType } from '../model';
+import { MediaFile, ArtifactType } from '../model';
 import { AddRecord } from '../model/baseModel';
-import { related } from '.';
+import { useStepId } from '.';
 
 export const useMediaResCreate = (passage: RecordIdentity) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [plan] = useGlobal('plan');
-  const [organization] = useGlobal('organization');
-
-  const internalization = useMemo(() => {
-    const workflowsteps = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('orgworkflowstep')
-    ) as OrgWorkflowStep[];
-    const internalizationStep = workflowsteps
-      .filter((s) => related(s, 'organization') === organization)
-      .find((s) => s.attributes?.name === 'Internalization');
-    return internalizationStep;
-  }, [memory.cache, organization]);
+  const internalization = useStepId('Internalization');
 
   const sharedResource = useMemo(() => {
     const artifactTypes = memory.cache.query((q: QueryBuilder) =>

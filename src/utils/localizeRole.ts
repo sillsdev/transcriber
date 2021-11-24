@@ -7,9 +7,5 @@ export const localizeRole = (
 ) => {
   const lcRole = role.toLowerCase();
   const myRole = proj && lcRole === 'admin' ? 'owner' : lcRole;
-  try {
-    return ts.getString(myRole);
-  } catch {
-    return role;
-  }
+  return ts.hasOwnProperty(myRole) ? ts.getString(myRole) : myRole;
 };
