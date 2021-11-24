@@ -838,7 +838,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="discussionMenu.reopen">
-            <source>Re-open</source>
+            <source>Reopen</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionMenu.tsx</context>
@@ -936,7 +936,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="discussionCard.resolved">
-            <source>Resolved</source>
+            <source>Resolve</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>

@@ -720,7 +720,7 @@
       </unit>
       <unit id="discussionMenu.reopen">
          <segment>
-            <source>Re-open</source>
+            <source>Reopen</source>
             <target/>
          </segment>
       </unit>
@@ -804,7 +804,7 @@
       </unit>
       <unit id="discussionCard.resolved">
          <segment>
-            <source>Resolved</source>
+            <source>Resolve</source>
             <target/>
          </segment>
       </unit>

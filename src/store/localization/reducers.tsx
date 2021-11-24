@@ -179,7 +179,7 @@ const initialState = {
 		"en": {
 			"edit": "Edit",
 			"delete": "Delete",
-			"reopen": "Re-open",
+			"reopen": "Reopen",
 			"resolve": "Resolve",
 		}
 	}),
@@ -205,7 +205,7 @@ const initialState = {
 			"comments": "Comments: {0}",
 			"confirmDelete": "Delete this discussion and all commments?",
 			"or": "or",
-			"resolved": "Resolved",
+			"resolved": "Resolve",
 			"subject": "Subject",
 		}
 	}),
