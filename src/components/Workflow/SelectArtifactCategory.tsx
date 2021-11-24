@@ -16,6 +16,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
+import { useSnackBar } from '../../hoc/SnackBar';
 
 interface IStateProps {
   t: ISelectArtifactCategoryStrings;
@@ -68,16 +69,22 @@ export const SelectArtifactCategory = (props: IProps) => {
   const [artifactCategorys, setArtifactCategorys] = useState(
     getArtifactCategorys()
   );
-
+  const { showMessage } = useSnackBar();
   useEffect(() => {
     setCategoryId(initCategory);
   }, [initCategory]);
 
   const addNewCategory = () => {
     addNewArtifactCategory(newArtifactCategory).then((newId) => {
-      setCategoryId(newId);
-      setArtifactCategorys(getArtifactCategorys());
-      onCategoryChange(newId);
+      if (newId) {
+        if (newId === 'duplicate') {
+          showMessage(t.duplicateCategory);
+        } else {
+          setCategoryId(newId);
+          setArtifactCategorys(getArtifactCategorys());
+          onCategoryChange(newId);
+        }
+      }
       cancelNewCategory();
     });
   };

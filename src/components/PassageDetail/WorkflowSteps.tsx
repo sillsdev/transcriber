@@ -37,7 +37,7 @@ export function WorkflowSteps() {
       setCurrentStep(item);
     }
   };
-  console.log(index);
+
   return (
     <div className={classes.root}>
       {workflow.map((w, i) => {

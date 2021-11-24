@@ -304,6 +304,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="selectArtifactCategory.duplicateCategory">
+         <segment>
+            <source>Category already exists.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="selectArtifactCategory.newArtifactCategory">
          <segment>
             <source>New Category</source>

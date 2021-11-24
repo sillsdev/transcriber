@@ -78,6 +78,7 @@ const initialState = {
 		"en": {
 			"addNewCategory": "Add New Category",
 			"artifactCategory": "Category",
+			"duplicateCategory": "Category already exists.",
 			"newArtifactCategory": "New Category",
 		}
 	}),

@@ -57,26 +57,42 @@ export const useArtifactCategory = () => {
     return categorys;
   };
   const addNewArtifactCategory = async (newArtifactCategory: string) => {
-    const artifactCategory: ArtifactCategory = {
-      type: 'artifactcategory',
-      attributes: {
-        categoryname: newArtifactCategory,
-      },
-    } as any;
-    const t = new TransformBuilder();
-    var ops = [
-      ...AddRecord(t, artifactCategory, user, memory),
-      t.replaceRelatedRecord(
-        { type: 'artifactcategory', id: artifactCategory.id },
-        'organization',
-        {
-          type: 'organization',
-          id: organization,
-        }
-      ),
-    ];
-    await memory.update(ops);
-    return artifactCategory.id;
+    if (newArtifactCategory.length > 0) {
+      //check for duplicate
+      const orgrecs: ArtifactCategory[] = memory.cache.query(
+        (q: QueryBuilder) =>
+          q
+            .findRecords('artifactcategory')
+            .filter({ attribute: 'categoryname', value: newArtifactCategory })
+      ) as any;
+      if (orgrecs.length > 0) return 'duplicate';
+      //now check duplicate localized
+      const ac = getArtifactCategorys().filter(
+        (c) => c.category === newArtifactCategory
+      );
+      if (ac.length > 0) return 'duplicate';
+
+      const artifactCategory: ArtifactCategory = {
+        type: 'artifactcategory',
+        attributes: {
+          categoryname: newArtifactCategory,
+        },
+      } as any;
+      const t = new TransformBuilder();
+      var ops = [
+        ...AddRecord(t, artifactCategory, user, memory),
+        t.replaceRelatedRecord(
+          { type: 'artifactcategory', id: artifactCategory.id },
+          'organization',
+          {
+            type: 'organization',
+            id: organization,
+          }
+        ),
+      ];
+      await memory.update(ops);
+      return artifactCategory.id;
+    }
   };
   return {
     getArtifactCategorys,

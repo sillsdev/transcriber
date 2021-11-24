@@ -352,6 +352,13 @@
                <context context-type="sourcefile">selectArtifactCategory.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="selectArtifactCategory.duplicateCategory">
+            <source>Category already exists.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="selectArtifactCategory.newArtifactCategory">
             <source>New Category</source>
             <target/>
