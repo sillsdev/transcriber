@@ -410,11 +410,12 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       newData = newData.concat(
         resourceRows({ ...props, res, user, ...localize })
       );
+      const mediafileId =
+        newData.length > 0 && !newData[0].isResource ? newData[0].id : '';
       setState((state: ICtxState) => {
-        return { ...state, rowData: newData };
+        return { ...state, rowData: newData, mediafileId };
       });
-      if (newData.length > 0 && !newData[0].isResource)
-        setSelected(newData[0].id, newData);
+      if (mediafileId) setSelected(mediafileId, newData);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sectionResources, mediafiles, pasId]);
 

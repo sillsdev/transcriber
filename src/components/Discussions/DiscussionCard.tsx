@@ -46,6 +46,7 @@ import SelectRole from '../../control/SelectRole';
 import SelectUser from '../../control/SelectUser';
 import SelectArtifactCategory from '../Workflow/SelectArtifactCategory';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
+import { removeExtension } from '../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -235,12 +236,11 @@ export const DiscussionCard = (props: IProps) => {
   }, [onAddComplete]);
 
   function selectDiscussion(discussion: Discussion) {}
-  function discussionDescription(discussion: Discussion) {
+  function discussionDescription() {
     var media = '';
     if (sourceMediafile) {
-      media = sourceMediafile.attributes.originalFile;
-      if (discussion.attributes.segments !== '{}')
-        media += ':' + discussion.attributes.segments; //probably need to fix this up
+      const parts = removeExtension(sourceMediafile.attributes.originalFile);
+      media = parts.name;
     }
     return media;
   }
@@ -469,7 +469,7 @@ export const DiscussionCard = (props: IProps) => {
                 </div>
               </div>
               <div>
-                <Typography>{discussionDescription(discussion)}</Typography>
+                <Typography>{discussionDescription()}</Typography>
                 <Typography>
                   {t.category.replace('{0}', artifactCategory)}
                 </Typography>
