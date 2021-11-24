@@ -329,24 +329,16 @@ export function Profile(props: IProps) {
         // we aren't allowing them to change owner oraganization currently
       );
       setLang(locale);
-      const newRoleRec = getRoleRec(role, true);
       const mbrRec = getMbrRoleRec(
         'organization',
         organization,
         currentUserId
       ) as OrganizationMembership[];
-      if (newRoleRec.length > 0 && mbrRec.length > 0) {
+      if (mbrRec.length > 0) {
         const curRoleId = related(mbrRec[0], 'role');
-        if (curRoleId !== newRoleRec[0].id) {
+        if (curRoleId !== role) {
           memory.update((t: TransformBuilder) =>
-            UpdateRelatedRecord(
-              t,
-              mbrRec[0],
-              'role',
-              'role',
-              newRoleRec[0].id,
-              user
-            )
+            UpdateRelatedRecord(t, mbrRec[0], 'role', 'role', role, user)
           );
           // setOrgRole(role);
         }
