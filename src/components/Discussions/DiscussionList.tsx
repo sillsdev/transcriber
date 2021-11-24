@@ -69,7 +69,7 @@ export function DiscussionList(props: IProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [adding, setAdding] = useState(false);
   const ctx = useContext(PassageDetailContext);
-  const { currentstep } = ctx.state;
+  const { currentstep, rowData } = ctx.state;
 
   useEffect(() => {
     // will I have a mediafileId here???
@@ -110,6 +110,11 @@ export function DiscussionList(props: IProps) {
   const handleToggleCollapse = () => {
     setCollapsed(!collapsed);
   };
+
+  const isMediaMissing = () => {
+    return rowData.length === 0 || rowData[0].isResource;
+  };
+
   return (
     <Paper id="DiscussionList" className={classes.root}>
       <div className={classes.discussionHead}>
@@ -122,7 +127,7 @@ export function DiscussionList(props: IProps) {
             className={classes.actionButton}
             title={t.add}
             onClick={handleAddDiscussion}
-            disabled={adding}
+            disabled={adding || isMediaMissing()}
           >
             <AddIcon />
           </IconButton>
