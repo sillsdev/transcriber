@@ -281,9 +281,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     };
 
     useEffect(() => {
-      var p = passages.find(
-        (p) => p.id === remoteIdGuid('passage', pasId, memory.keyMap)
-      );
+      const passageId = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+      var p = passages.find((p) => p.id === passageId);
       if (p && state.workflow.length > 0) {
         //wait for the workflow
         var passagewf = related(p, 'orgWorkflowStep');
