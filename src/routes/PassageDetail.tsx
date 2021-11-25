@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     right: {
       display: 'flex',
-      justifyContent: 'end',
+      justifyContent: 'flex-end',
     },
     column: {
       alignItems: 'left',
@@ -181,9 +181,6 @@ const PassageDetailGrids = (props: IProps) => {
   return (
     <div className={classes.panel2}>
       <Grid container direction="row" className={classes.row}>
-        <Grid item className={classes.description} xs={12}>
-          <WorkflowSteps />
-        </Grid>
         <Grid container direction="row" className={classes.row}>
           <Grid item className={classes.row} xs={9}>
             <PassageDetailSectionPassage />
@@ -193,6 +190,9 @@ const PassageDetailGrids = (props: IProps) => {
               <PassageDetailStepComplete />
             </Grid>
           )}
+        </Grid>
+        <Grid item className={classes.description} xs={12}>
+          <WorkflowSteps />
         </Grid>
         {currentstep === internalizationRec?.id && (
           <Grid container direction="row" className={classes.row}>

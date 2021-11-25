@@ -1,4 +1,10 @@
-import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
+import {
+  createStyles,
+  Grid,
+  Typography,
+  makeStyles,
+  Theme,
+} from '@material-ui/core';
 import { passageDescription, sectionDescription } from '../crud';
 import { BookName, Passage, Section } from '../model';
 
@@ -11,6 +17,9 @@ const useStyles = makeStyles((theme: Theme) =>
     description: {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
+    },
+    passage: {
+      justifyContent: 'end',
     },
     row: {
       alignItems: 'center',
@@ -28,11 +37,15 @@ export const SectionPassageTitle = (props: IProps) => {
   const classes = useStyles();
   return (
     <Grid container direction="row" className={classes.root}>
-      <Grid item className={classes.description}>
-        {sectionDescription(section) + '\u00A0\u00A0'}
+      <Grid item xs={8}>
+        <Typography variant="h6" className={classes.description}>
+          {sectionDescription(section) + '\u00A0\u00A0'}
+        </Typography>
       </Grid>
-      <Grid item className={classes.description}>
-        {passageDescription(passage, allBookData)}
+      <Grid item xs={4} className={classes.passage}>
+        <Typography variant="h6" className={classes.description}>
+          {passageDescription(passage, allBookData)}
+        </Typography>
       </Grid>
     </Grid>
   );
