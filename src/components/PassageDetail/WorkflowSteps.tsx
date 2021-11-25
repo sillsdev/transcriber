@@ -24,9 +24,9 @@ export function WorkflowSteps() {
 
   const curColor = (i: number) => {
     return i === index
-      ? 'lightblue'
+      ? '#70DBFF'
       : i <= psgCompletedIndex
-      ? 'lightgreen'
+      ? '#D6F5FF'
       : undefined;
   };
 
