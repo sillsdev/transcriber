@@ -448,7 +448,9 @@ export const DiscussionCard = (props: IProps) => {
                   >
                     {discussion.attributes?.subject}
                   </Typography>
-                  {assignedRole && <RoleAvatar roleRec={assignedRole} />}
+                  {assignedRole && (
+                    <RoleAvatar roleRec={assignedRole} org={false} />
+                  )}
                   {assignedUser && <UserAvatar userRec={assignedUser} />}
                 </>
                 <div className={classes.row}>
