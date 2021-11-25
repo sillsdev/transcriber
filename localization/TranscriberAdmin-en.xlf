@@ -3484,6 +3484,36 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.backtranslator">
+         <segment>
+            <source>Back Translator</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.consultant">
+         <segment>
+            <source>Consultant</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.observer">
+         <segment>
+            <source>Observer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.peerreviewer">
+         <segment>
+            <source>Peer Reviewer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.translator">
+         <segment>
+            <source>Translator</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
             <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>

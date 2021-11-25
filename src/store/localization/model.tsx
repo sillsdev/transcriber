@@ -723,6 +723,11 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "BookNotSet": string;
     "cancel": string;
     "editor": string;
+    "backtranslator": string;
+    "consultant": string;
+    "observer": string;
+    "peerreviewer": string;
+    "translator": string;
     "expiredParatextToken": string;
     "expiredToken": string;
     "fileNotFound": string;

@@ -284,6 +284,12 @@ export const Sources = async (
             await remote.pull((q) => q.findRecords('artifacttype'))
           );
         }
+        const roles: Role[] = (await backup.cache.query((q: QueryBuilder) =>
+          q.findRecords('role')
+        )) as any;
+        if (roles.filter((r) => r?.keys?.remoteId).length < 9) {
+          await memory.sync(await remote.pull((q) => q.findRecords('role')));
+        }
       }
     }
   }
