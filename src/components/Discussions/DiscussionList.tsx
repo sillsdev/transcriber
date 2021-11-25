@@ -23,7 +23,6 @@ import { withData } from '../../mods/react-orbitjs';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: '100%',
       backgroundColor: theme.palette.background.default,
       marginBottom: theme.spacing(2),
       '& .MuiPaper-rounded': {
@@ -69,15 +68,22 @@ export function DiscussionList(props: IProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [adding, setAdding] = useState(false);
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, rowData } = ctx.state;
-
+  const { currentstep, rowData, discussionSize } = ctx.state;
+  const [rootWidthStyle, setRootWidthStyle] = useState({
+    width: `${discussionSize}px`,
+  });
   const currentPassage = (d: Discussion) => {
     const mediaId = related(d, 'mediafile');
     return rowData.filter((r) => r.id === mediaId).length > 0;
   };
 
   useEffect(() => {
-    // will I have a mediafileId here???
+    setRootWidthStyle({
+      width: `${discussionSize}px`,
+    });
+  }, [discussionSize]);
+
+  useEffect(() => {
     if (currentstep !== '') {
       if (adding)
         setDisplayDiscussions([
@@ -126,7 +132,7 @@ export function DiscussionList(props: IProps) {
   };
 
   return (
-    <Paper id="DiscussionList" className={classes.root}>
+    <Paper id="DiscussionList" className={classes.root} style={rootWidthStyle}>
       <div className={classes.discussionHead}>
         <Typography variant="h6" className={classes.name}>
           {t.title}

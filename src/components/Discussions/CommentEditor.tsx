@@ -63,7 +63,12 @@ export const CommentEditor = (props: IProps) => {
         multiline
       />
       <div className={classes.row}>
-        <Button id="ok" onClick={handleOk} className={classes.button}>
+        <Button
+          id="ok"
+          onClick={handleOk}
+          className={classes.button}
+          disabled={!curText.length}
+        >
           {okStr}
         </Button>
         <Button id="cancel" onClick={handleCancel} className={classes.button}>
