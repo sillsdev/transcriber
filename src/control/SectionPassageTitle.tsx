@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+import { useGlobal } from 'reactn';
 import {
   createStyles,
   Grid,
@@ -5,8 +7,9 @@ import {
   makeStyles,
   Theme,
 } from '@material-ui/core';
-import { passageDescription, sectionDescription } from '../crud';
-import { BookName, Passage, Section } from '../model';
+import { passageReference, sectionDescription } from '../crud';
+import { BookName, Passage, Section, Plan } from '../model';
+import { QueryBuilder } from '@orbit/data';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,16 +38,26 @@ interface IProps {
 export const SectionPassageTitle = (props: IProps) => {
   const { section, passage, allBookData } = props;
   const classes = useStyles();
+  const [plan] = useGlobal('plan');
+  const [memory] = useGlobal('memory');
+
+  const isFlat = useMemo(() => {
+    const planRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'plan', id: plan })
+    ) as Plan | null;
+    return !planRec || planRec.attributes?.flat;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plan]);
+
+  const passNum = !isFlat ? passage : undefined;
+  const ref = passageReference(passage, allBookData);
+  const refText = ref !== '' ? ` - ${ref}` : '';
+
   return (
     <Grid container direction="row" className={classes.root}>
-      <Grid item xs={8}>
+      <Grid item xs={12}>
         <Typography variant="h6" className={classes.description}>
-          {sectionDescription(section) + '\u00A0\u00A0'}
-        </Typography>
-      </Grid>
-      <Grid item xs={4} className={classes.passage}>
-        <Typography variant="h6" className={classes.description}>
-          {passageDescription(passage, allBookData)}
+          {sectionDescription(section, passNum) + refText}
         </Typography>
       </Grid>
     </Grid>
