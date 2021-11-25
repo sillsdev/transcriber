@@ -43,7 +43,11 @@ const Secondary = ({ id, fileName, onCategory }: SecondaryProps) => {
   return (
     <div>
       {fileName}
-      <SelectCategory initCategory={''} onCategoryChange={handleCategory} />
+      <SelectCategory
+        initCategory={''}
+        onCategoryChange={handleCategory}
+        required={true}
+      />
     </div>
   );
 };

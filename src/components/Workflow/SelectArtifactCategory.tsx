@@ -24,6 +24,7 @@ interface IStateProps {
 interface IProps extends IStateProps {
   initCategory: string; //id
   onCategoryChange: (artifactCategoryId: string) => void;
+  required: boolean;
   allowNew?: boolean;
 }
 
@@ -59,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 export const SelectArtifactCategory = (props: IProps) => {
-  const { onCategoryChange, allowNew, t, initCategory } = props;
+  const { onCategoryChange, allowNew, required, t, initCategory } = props;
   const classes = useStyles();
   const [categoryId, setCategoryId] = useState(initCategory);
   const [newArtifactCategory, setNewArtifactCategory] = useState('');
@@ -129,7 +130,7 @@ export const SelectArtifactCategory = (props: IProps) => {
         }}
         margin="normal"
         variant="filled"
-        required={true}
+        required={required}
       >
         {artifactCategorys
           .sort()

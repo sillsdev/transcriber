@@ -148,6 +148,8 @@ const initState = {
   getSharedResources: async () => [] as Resource[],
   workflow: Array<SimpleWf>(),
   psgCompletedIndex: -2,
+  discussionSize: 500,
+  setDiscussionSize: (size: number) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -207,6 +209,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const setCurrentStep = (stepId: string) => {
       setState((state: ICtxState) => {
         return { ...state, currentstep: stepId, playing: false };
+      });
+    };
+    const setDiscussionSize = (discussionSize: number) => {
+      setState((state: ICtxState) => {
+        return { ...state, discussionSize };
       });
     };
 
@@ -460,6 +467,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setSelected,
             setOrgWorkflowSteps,
             setCurrentStep,
+            setDiscussionSize,
             setPlaying,
             setPDBusy,
             getSharedResources,

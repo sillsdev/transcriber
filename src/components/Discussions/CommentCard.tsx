@@ -1,4 +1,10 @@
-import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
+import {
+  createStyles,
+  Grid,
+  makeStyles,
+  TextField,
+  Theme,
+} from '@material-ui/core';
 import { connect } from 'react-redux';
 import {
   Comment,
@@ -170,7 +176,7 @@ export const CommentCard = (props: IProps) => {
             </Grid>
           )}
         </Grid>
-        <Grid item>
+        <Grid item xs={12}>
           {editing ? (
             <CommentEditor
               refresh={0}
@@ -181,9 +187,13 @@ export const CommentCard = (props: IProps) => {
               onCancel={handleCancelEdit}
             />
           ) : (
-            <div className={classes.text}>
-              {comment.attributes?.commentText}
-            </div>
+            <TextField
+              className={classes.text}
+              id="outlined-textarea"
+              value={comment.attributes?.commentText}
+              multiline
+              fullWidth
+            />
           )}
         </Grid>
       </Grid>

@@ -34,8 +34,6 @@ import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord
 import PassageBackTranslate from '../components/PassageDetail/PassageBackTranslate';
 import { useStepId } from '../crud';
 
-const INIT_COMMENT_WIDTH = 500;
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -149,15 +147,16 @@ const PassageDetailGrids = (props: IProps) => {
   const [projRole] = useGlobal('projRole');
   const [width, setWidth] = useState(window.innerWidth);
   const ctx = useContext(PassageDetailContext);
-  const { currentstep } = ctx.state;
+  const { currentstep, discussionSize, setDiscussionSize } = ctx.state;
   const internalizationRec = useStepId('Internalization');
   const teamCheckRec = useStepId('TeamCheck');
   const recordRec = useStepId('Record');
   const backTranslationRec = useStepId('BackTranslation');
-  const [playerWidth, setPlayerWidth] = useState(width - INIT_COMMENT_WIDTH);
+  const [playerWidth, setPlayerWidth] = useState(width - discussionSize);
 
   const handleSplitSize = debounce((e: number) => {
     setPlayerWidth(e);
+    setDiscussionSize(width - e);
   }, 50);
 
   const setDimensions = () => {
@@ -227,7 +226,7 @@ const PassageDetailGrids = (props: IProps) => {
               <Paper className={classes.paper}>
                 <Wrapper>
                   <SplitPane
-                    defaultSize={width - INIT_COMMENT_WIDTH}
+                    defaultSize={width - discussionSize}
                     style={{ position: 'static' }}
                     split="vertical"
                     onChange={handleSplitSize}

@@ -83,9 +83,8 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-    name: {
-      display: 'flex',
-      alignItems: 'center',
+    subject: {
+      marginRight: theme.spacing(2),
     },
     pos: {
       marginBottom: 12,
@@ -391,6 +390,7 @@ export const DiscussionCard = (props: IProps) => {
                 onChange={handleSubjectChange}
                 placeholder={t.subject}
                 required
+                fullWidth
               />
               <div className={classes.row}>
                 <SelectRole
@@ -418,6 +418,7 @@ export const DiscussionCard = (props: IProps) => {
                 initCategory={editCategory}
                 onCategoryChange={onCategoryChange}
                 allowNew={true}
+                required={false}
               />
               <div className={classes.row}>
                 <Button
@@ -439,36 +440,44 @@ export const DiscussionCard = (props: IProps) => {
             </div>
           ) : (
             <>
-              <div className={classes.firstLine}>
-                <>
-                  <Typography
-                    variant="h6"
-                    component="h2"
-                    className={classes.name}
-                  >
-                    {discussion.attributes?.subject}
-                  </Typography>
-                  {assignedRole && (
-                    <RoleAvatar roleRec={assignedRole} org={false} />
-                  )}
-                  {assignedUser && <UserAvatar userRec={assignedUser} />}
-                </>
-                <div className={classes.row}>
-                  {!discussion.attributes.resolved && (
-                    <IconButton
-                      id="resolveDiscussion"
-                      className={classes.actionButton}
-                      title={t.resolved}
-                      onClick={handleResolveButton}
+              <div>
+                <Grid container className={classes.row}>
+                  <Grid item>
+                    <Typography
+                      variant="h6"
+                      component="h2"
+                      className={classes.subject}
                     >
-                      <ResolveIcon />
-                    </IconButton>
+                      {discussion.attributes?.subject}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    {assignedRole && (
+                      <RoleAvatar roleRec={assignedRole} org={false} />
+                    )}
+
+                    {assignedUser && <UserAvatar userRec={assignedUser} />}
+                  </Grid>
+
+                  {!discussion.attributes.resolved && (
+                    <Grid item>
+                      <IconButton
+                        id="resolveDiscussion"
+                        className={classes.actionButton}
+                        title={t.resolved}
+                        onClick={handleResolveButton}
+                      >
+                        <ResolveIcon />
+                      </IconButton>
+                    </Grid>
                   )}
-                  <DiscussionMenu
-                    action={handleDiscussionAction}
-                    resolved={discussion.attributes.resolved || false}
-                  />
-                </div>
+                  <Grid item>
+                    <DiscussionMenu
+                      action={handleDiscussionAction}
+                      resolved={discussion.attributes.resolved || false}
+                    />
+                  </Grid>
+                </Grid>
               </div>
               <div>
                 <Typography>{discussionDescription()}</Typography>
