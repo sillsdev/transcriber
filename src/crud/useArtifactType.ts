@@ -20,6 +20,7 @@ export const useArtifactType = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const t: IArtifactTypeStrings = useSelector(stringSelector, shallowEqual);
   const [fromLocal] = useState<ISwitches>({});
 
@@ -44,8 +45,9 @@ export const useArtifactType = () => {
     orgrecs
       .filter(
         (r) =>
-          related(r, 'organization') === organization ||
-          related(r, 'organization') === null
+          (related(r, 'organization') === organization ||
+            related(r, 'organization') === null) &&
+          Boolean(r.keys?.remoteId) !== offlineOnly
       )
       .forEach((r) =>
         types.push({

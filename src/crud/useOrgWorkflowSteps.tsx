@@ -41,17 +41,23 @@ export const useOrgWorkflowSteps = () => {
     ) as OrgWorkflowStep[];
 
     return orgworkflowsteps
-      .filter((s) => related(s, 'organization') === organization)
+      .filter(
+        (s) =>
+          related(s, 'organization') === organization &&
+          Boolean(s.keys?.remoteId) !== offlineOnly
+      )
       .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
   };
 
   const CreateOrgWorkflowSteps = async (process: string) => {
     creatingRef.current = true;
-    const workflowsteps = memory.cache.query((q: QueryBuilder) =>
-      q
-        .findRecords('workflowstep')
-        .filter({ attribute: 'process', value: process })
-    ) as WorkflowStep[];
+    const workflowsteps = (
+      memory.cache.query((q: QueryBuilder) =>
+        q
+          .findRecords('workflowstep')
+          .filter({ attribute: 'process', value: process })
+      ) as WorkflowStep[]
+    ).filter((s) => Boolean(s.keys?.remoteId) !== offlineOnly);
     var tb = new TransformBuilder();
     //originally had them all in one ops, but it was too fast
     //we have checks on the back end for duplicate entries (using just type, datecreated, dateupdated) because orbit sometimes sends twice

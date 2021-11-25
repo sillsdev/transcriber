@@ -78,6 +78,29 @@ export const useOfflineSetup = () => {
         ])
       );
     }
+    if (offlineRoleRecs.length === 0 || offlineRoleRecs.length === 3) {
+      const t = new TransformBuilder();
+      const ops = [
+        'Transcriber',
+        'Translator',
+        'BackTranslator',
+        'Consultant',
+        'Observer',
+        'PeerReviewer',
+      ].map((name) => {
+        let rec = {
+          type: 'role',
+          attributes: {
+            orgRole: false,
+            groupRole: true,
+            roleName: name,
+          },
+        } as Role;
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
+      });
+      await memory.sync(await backup.push(ops));
+    }
   };
   const makeWorkflowStepsRecs = async () => {
     const allRecs = memory.cache.query((q: QueryBuilder) =>
@@ -85,52 +108,35 @@ export const useOfflineSetup = () => {
     ) as WorkflowStep[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineRecs.length === 0) {
-      const names = [
-        'Exegesis',
-        'Internalization',
-        'Draft',
-        'TeamCheck',
-        'KeyTerms',
-        'CommunityTesting',
-        'BackTranslation',
-        'ConsultantCheck',
-        'TestAndReview',
-        'FinalEdit',
-        'ReadThrough',
-        'Duplication',
-        'Done',
-      ];
-      const tools = [
-        'audio',
-        'audio',
-        'transcribe',
-        'audio',
-        'transcribe',
-        'audio',
-        'back translate',
-        'audio',
-        'audio',
-        'audio',
-        'audio',
-        'audio',
-        'none',
-      ];
-      names.forEach(async (n, ix) => {
-        const s = {
+      const t = new TransformBuilder();
+      const ops = [
+        { name: 'Internalization', tool: 'Internalization' },
+        { name: 'Record', tool: 'Record' },
+        { name: 'TeamCheck', tool: 'TeamCheck' },
+        { name: 'PeerReview', tool: 'audio' },
+        { name: 'KeyTerms', tool: 'audio' },
+        { name: 'CommunityTesting', tool: 'audio' },
+        { name: 'BackTranslation', tool: 'BackTranslate' },
+        { name: 'ConsultantCheck', tool: 'audio' },
+        { name: 'Review', tool: 'audio' },
+        { name: 'FinalEdit', tool: 'audio' },
+        { name: 'ReadThrough', tool: 'audio' },
+        { name: 'Duplication', tool: 'audio' },
+      ].map((step, ix) => {
+        let rec = {
           type: 'workflowstep',
           attributes: {
             process: 'OBT',
-            name: n,
+            name: step.name,
             sequencenum: ix + 1,
-            tool: `{"tool": "${tools[ix]}"}`,
+            tool: `{"tool": "${step.tool}"}`,
             permissions: '{"role": "any", "signoffrole": "none"}',
           },
         } as WorkflowStep;
-        memory.schema.initializeRecord(s);
-        await memory.sync(
-          await backup.push((t: TransformBuilder) => [t.addRecord(s)])
-        );
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
       });
+      await memory.sync(await backup.push(ops));
     }
   };
   const makeArtifactCategoryRecs = async () => {
@@ -139,26 +145,25 @@ export const useOfflineSetup = () => {
     ) as WorkflowStep[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineRecs.length === 0) {
-      const names = [
+      const t = new TransformBuilder();
+      const ops = [
         'cultural',
         'geographic',
         'person',
         'theology',
         'word',
         'grammar',
-      ];
-      names.forEach(async (n, ix) => {
-        const s = {
+      ].map((n) => {
+        let rec = {
           type: 'artifactcategory',
           attributes: {
             categoryname: n,
           },
         } as ArtifactCategory;
-        memory.schema.initializeRecord(s);
-        await memory.sync(
-          await backup.push((t: TransformBuilder) => [t.addRecord(s)])
-        );
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
       });
+      await memory.sync(await backup.push(ops));
     }
   };
   const makeArtifactTypeRecs = async () => {
@@ -167,26 +172,25 @@ export const useOfflineSetup = () => {
     ) as WorkflowStep[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineRecs.length === 0) {
-      const names = [
+      const t = new TransformBuilder();
+      const ops = [
         'activity',
         'resource',
         'backtranslation',
         'vernacular',
         'comment',
         'testing',
-      ];
-      names.forEach(async (n, ix) => {
-        const s = {
+      ].map((n) => {
+        let rec = {
           type: 'artifacttype',
           attributes: {
             typename: n,
           },
         } as ArtifactType;
-        memory.schema.initializeRecord(s);
-        await memory.sync(
-          await backup.push((t: TransformBuilder) => [t.addRecord(s)])
-        );
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
       });
+      await memory.sync(await backup.push(ops));
     }
   };
   return async () => {

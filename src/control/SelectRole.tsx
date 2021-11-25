@@ -37,7 +37,7 @@ interface IProps extends IStateProps, IRecordProps {
 export const SelectRole = (props: IProps) => {
   const { ts, roles, org, onChange, initRole, required, label } = props;
   const classes = useStyles();
-  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [role, setRole] = useState(initRole);
 
   const handleRoleChange = (e: any) => {
@@ -68,17 +68,25 @@ export const SelectRole = (props: IProps) => {
       required={required}
     >
       {roles
-        .filter((r) =>
-          r.attributes && org
-            ? r.attributes.orgRole
-            : r.attributes.groupRole && Boolean(r?.keys?.remoteId) !== offline
+        .filter(
+          (r) =>
+            r.attributes &&
+            (org ? r.attributes.orgRole : r.attributes.groupRole) &&
+            Boolean(r?.keys?.remoteId) !== offlineOnly
         )
+        .map((r) => ({
+          ...r,
+          attributes: {
+            ...r.attributes,
+            roleName: localizeRole(r.attributes.roleName, ts, !org),
+          },
+        }))
         .sort((i, j) =>
           i.attributes.roleName < j.attributes.roleName ? -1 : 1
         )
         .map((option: Role) => (
           <MenuItem key={option.id} value={option.id}>
-            {localizeRole(option.attributes.roleName, ts, !org)}
+            {option.attributes.roleName}
           </MenuItem>
         ))}
     </TextField>
