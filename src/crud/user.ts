@@ -41,11 +41,12 @@ export function SetUserLanguage(
       : localeDefault(false)
   );
 }
-export function RemoveUserFromOrg(
+export async function RemoveUserFromOrg(
   memory: Memory,
   userToRemove: string,
   organization: string | undefined,
-  user: string
+  user: string,
+  teamDelete: (id: string) => void
 ) {
   var t = new TransformBuilder();
   var ops: Operation[] = [];
@@ -129,6 +130,17 @@ export function RemoveUserFromOrg(
   assigned.forEach((s) =>
     ops.push(...UpdateRelatedRecord(t, s, 'editor', 'user', '', user))
   );
-  //TODO!  Add removal from discussions
-  memory.update(ops);
+
+  //TODO!  Add removal from discussion (author, assigned)
+  await memory.update(ops);
+
+  //now...if any orgs are orphaned (this was the only user) delete those too
+  const orgWithMembers = (
+    memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('organizationmembership')
+    ) as OrganizationMembership[]
+  ).map((om) => related(om, 'organization'));
+  const orphaned = organizationIds.filter((o) => !orgWithMembers.includes(o));
+  console.log(orphaned);
+  orphaned.forEach((o) => teamDelete(o));
 }
