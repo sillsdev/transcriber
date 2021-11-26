@@ -13,7 +13,7 @@ import ErrorBoundary from './hoc/ErrorBoundary';
 import { Router, HashRouter } from 'react-router-dom';
 import { DataProvider } from './mods/react-orbitjs';
 import { Provider } from 'react-redux';
-import { coordinator, memory, backup } from './schema';
+import { coordinator, memory, backup, schema } from './schema';
 import configureStore from './store';
 import { setGlobal } from 'reactn';
 import bugsnag from '@bugsnag/js';
@@ -25,6 +25,7 @@ import {
   infoMsg,
   logFile,
   getFingerprintArray,
+  waitForIt,
 } from './utils';
 import {
   isElectron,
@@ -54,6 +55,15 @@ const store = configureStore();
 
 export async function restoreBackup() {
   try {
+    await waitForIt(
+      'migration',
+      () => {
+        console.log(schema.version, backup.schema.version);
+        return schema.version === backup.schema.version;
+      },
+      () => false,
+      300
+    );
     await memory.sync(await backup.pull((q) => q.findRecords()));
 
     const loadedplans = new Set(
