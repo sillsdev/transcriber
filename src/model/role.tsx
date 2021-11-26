@@ -18,7 +18,11 @@ export const canTranscribe = [
   RoleNames.Editor,
   RoleNames.Admin,
 ];
-export const canBeEditor = [RoleNames.Editor, RoleNames.Admin];
+export const canBeEditor = [
+  RoleNames.Editor,
+  RoleNames.PeerReviewer,
+  RoleNames.Admin,
+];
 
 export interface Role extends Record {
   attributes: {
