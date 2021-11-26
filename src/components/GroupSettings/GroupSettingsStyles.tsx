@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     label: {
       display: 'flex',
+      marginBottom: theme.spacing(1),
       // color: theme.palette.primary.dark,
     },
     noProjects: {

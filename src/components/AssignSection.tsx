@@ -95,7 +95,7 @@ function AssignSection(props: IProps) {
   const [project] = useGlobal('project');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const { getRoleId } = useRole();
+  const { getTranscriberRoleIds, getEditorRoleIds } = useRole();
   const [open, setOpen] = useState(visible);
   const [selectedTranscriber, setSelectedTranscriber] = useState('');
   const [selectedReviewer, setSelectedReviewer] = useState('');
@@ -154,10 +154,15 @@ function AssignSection(props: IProps) {
 
   const projectRec = projects.filter((p) => p.id === project);
   const groupId = projectRec.length > 0 ? related(projectRec[0], 'group') : '';
-  const transcriberRoleId = getRoleId(RoleNames.Transcriber);
+  const transcriberRoleIds = getTranscriberRoleIds();
+  const editorRoleIds = getEditorRoleIds();
 
   const transcriberIds = groupMemberships
-    .filter((gm) => related(gm, 'group') === groupId)
+    .filter(
+      (gm) =>
+        related(gm, 'group') === groupId &&
+        transcriberRoleIds.includes(related(gm, 'role'))
+    )
     .map((gm) => related(gm, 'user'));
 
   const transcriberUserList = users
@@ -190,7 +195,7 @@ function AssignSection(props: IProps) {
     .filter(
       (gm) =>
         related(gm, 'group') === groupId &&
-        related(gm, 'role') !== transcriberRoleId
+        editorRoleIds.includes(related(gm, 'role'))
     )
     .map((gm) => related(gm, 'user'));
   const editorUserList = users

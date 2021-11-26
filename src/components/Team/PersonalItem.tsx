@@ -53,7 +53,7 @@ export const PersonalItem = () => {
         </Typography>
       </div>
       <Grid container className={classes.cardFlow}>
-        {personalProjects().map((i) => {
+        {personalProjects.map((i) => {
           return <ProjectCard key={i.id} project={i} />;
         })}
         {(!isOffline || offlineOnly) && <AddCard team={null} />}

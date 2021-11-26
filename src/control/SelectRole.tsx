@@ -31,18 +31,30 @@ interface IProps extends IStateProps, IRecordProps {
   org: boolean;
   initRole?: string;
   required: boolean;
+  disabled: boolean;
   label?: string;
-  onChange: (role: string) => void;
+  rowid?: string;
+  onChange: (role: string, rowid?: string) => void;
 }
 export const SelectRole = (props: IProps) => {
-  const { ts, roles, org, onChange, initRole, required, label } = props;
+  const {
+    ts,
+    roles,
+    org,
+    onChange,
+    initRole,
+    required,
+    disabled,
+    label,
+    rowid,
+  } = props;
   const classes = useStyles();
   const [offlineOnly] = useGlobal('offlineOnly');
   const [role, setRole] = useState(initRole);
 
   const handleRoleChange = (e: any) => {
     setRole(e.target.value);
-    onChange && onChange(e.target.value);
+    onChange && onChange(e.target.value, rowid);
   };
 
   useEffect(() => {
@@ -51,7 +63,7 @@ export const SelectRole = (props: IProps) => {
 
   return (
     <TextField
-      id={org ? 'selectteamrole' : 'selectprojectrole'}
+      id={(org ? 'selectteamrole' : 'selectprojectrole') + (rowid || '')}
       className={classes.textField}
       select
       label={org ? ts.teamrole : ts.projectrole}
@@ -62,10 +74,11 @@ export const SelectRole = (props: IProps) => {
           className: classes.menu,
         },
       }}
-      helperText={label || ts.role}
+      helperText={label || ''}
       margin="normal"
       variant="filled"
       required={required}
+      disabled={disabled}
     >
       {roles
         .filter(

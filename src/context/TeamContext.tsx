@@ -126,7 +126,7 @@ const initState = {
   planTypes: Array<PlanType>(),
   isDeleting: false,
   teams: Array<Organization>(),
-  personalProjects: () => Array<VProject>(),
+  personalProjects: Array<VProject>(),
   teamProjects: (teamId: string) => Array<VProject>(),
   teamMembers: (teamId: string) => 0,
   loadProject: (plan: Plan, cb: () => void) => {},
@@ -322,20 +322,26 @@ const TeamProvider = withData(mapRecordsToProps)(
         'Training'
       );
     };
-
-    const personalProjects = () => {
-      const projIds = userProjects
-        .filter(
-          (p) =>
-            isPersonal(related(p, 'organization')) &&
-            (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
-        )
-        .map((p) => p.id);
-      return plans
-        .filter((p) => projIds.includes(related(p, 'project')))
-        .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1))
-        .map((p) => vProject(p));
-    };
+    useEffect(() => {
+      const getPersonalProjects = () => {
+        const projIds = userProjects
+          .filter(
+            (p) =>
+              isPersonal(related(p, 'organization')) &&
+              (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
+          )
+          .map((p) => p.id);
+        return plans
+          .filter((p) => projIds.includes(related(p, 'project')))
+          .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1))
+          .map((p) => vProject(p));
+      };
+      setState((state) => ({
+        ...state,
+        personalProjects: getPersonalProjects(),
+      }));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOffline, plans, userProjects]);
 
     const teamProjects = (teamId: string) => {
       const projIds = userProjects
@@ -456,7 +462,10 @@ const TeamProvider = withData(mapRecordsToProps)(
     }, [projects, groupMemberships, user, isOffline]);
 
     useEffect(() => {
-      setState((state) => ({ ...state, teams: getTeams() }));
+      setState((state) => ({
+        ...state,
+        teams: getTeams(),
+      }));
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [organizations, orgMembers, user, isOffline]);
 
@@ -469,8 +478,6 @@ const TeamProvider = withData(mapRecordsToProps)(
             bookMap,
             allBookData,
             planTypes: getPlanTypes,
-            teams: getTeams(),
-            personalProjects,
             teamProjects,
             teamMembers,
             projectType,

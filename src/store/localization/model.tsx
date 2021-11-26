@@ -262,7 +262,9 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "owners": string;
     "ownersDetail": string;
     "projectPlans": string;
+    "roles": string;
     "save": string;
+    "transcriptionTitle": string;
     "transcribers": string;
     "transcribersDetail": string;
 };
@@ -921,7 +923,6 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "locale": string;
     "name": string;
     "phone": string;
-    "role": string;
     "selectRows": string;
     "selectUser": string;
     "showHideFilter": string;

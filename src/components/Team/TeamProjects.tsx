@@ -16,18 +16,13 @@ export const TeamProjects = (props: IProps) => {
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const ctx = React.useContext(TeamContext);
-  const {
-    teams,
-    importOpen,
-    setImportOpen,
-    importProject,
-    personalProjects,
-  } = ctx.state;
+  const { teams, importOpen, setImportOpen, importProject, personalProjects } =
+    ctx.state;
 
   return (
     <>
       <Grid container>
-        {(personalProjects().length > 0 || !offline || offlineOnly) && (
+        {(personalProjects.length > 0 || !offline || offlineOnly) && (
           <PersonalItem key={1} />
         )}
         {teams.map((i) => {

@@ -24,6 +24,8 @@ import {
   RoleNames,
   ISharedStrings,
   IActivityStateStrings,
+  canTranscribe,
+  canBeEditor,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -39,7 +41,7 @@ import {
   usePlan,
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
-import { loadBlob, logError, Severity } from '../utils';
+import { camel2Title, loadBlob, logError, Severity } from '../utils';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 
@@ -172,7 +174,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
   )((props: IProps) => {
     const [reporter] = useGlobal('errorReporter');
     const { passages, mediafiles, sections, plans, planTypes } = props;
-    const { projects, groupMemberships, roles } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
     const {
       todoStr,
@@ -407,29 +408,15 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         .forEach((r) => rowList.push(r));
     };
 
-    const getUserRole = (user: string, project: string) => {
-      const projectRecs = projects.filter((p) => p.id === project);
-      if (projectRecs.length === 0) {
-        return '';
-      }
-      const groupId = related(projectRecs[0], 'group');
-      const memberships = groupMemberships.filter(
-        (gm) => related(gm, 'group') === groupId && related(gm, 'user') === user
-      );
-      if (memberships.length === 0) {
-        return '';
-      }
-      const memberRole: string = related(memberships[0], 'role');
-      const roleRecs = roles.filter((r) => r.id === memberRole);
-      return roleRecs.length > 0 && roleRecs[0].attributes
-        ? roleRecs[0].attributes.roleName
-        : '';
-    };
-
     const role = React.useMemo(() => {
-      return getUserRole(user, project);
+      var camelRole = camel2Title(projRole) as RoleNames;
+      if (canTranscribe.includes(camelRole)) {
+        if (canBeEditor.includes(camelRole)) return RoleNames.Editor;
+        else return RoleNames.Transcriber;
+      } else return '';
+
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [user, project, projects.length, groupMemberships.length, roles.length]);
+    }, [projRole]);
 
     const selectTasks = (
       onlyAvailable: boolean,
@@ -437,8 +424,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       item: string
     ) => {
       // IN PROGRESS TASKS
-      if (role !== RoleNames.Transcriber) {
-        // editor or admin
+      if (role === RoleNames.Editor) {
         addTasks(
           ActivityStates.Reviewing,
           'editor',
@@ -474,8 +460,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       );
 
       // READY TO BEGIN TASKS
-      if (role !== RoleNames.Transcriber) {
-        // editor or admin
+      if (role === RoleNames.Editor) {
         addTasks(
           ActivityStates.Transcribed,
           'editor',
@@ -509,6 +494,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           setAllDone(true);
         }
         // ALL OTHERS
+        addTasks('', 'view', rowList, false, playItem);
+      } else {
         addTasks('', 'view', rowList, false, playItem);
       }
       setRows(rowList.map((r) => r));
@@ -562,10 +549,18 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           const editor = related(section, 'editor');
           if (editor !== r.editor) changed = true;
           const state = r.passage.attributes?.state || '';
-          let role = actor[state] || 'view';
-          if (projRole === 'transcriber' && role === 'editor') role = 'view';
-          const assigned = related(section, role);
-          rowData.push({ ...r, section, role, assigned, transcriber, editor });
+          let rowRole = actor[state] || 'view';
+          if (rowRole === 'editor' && role !== RoleNames.Editor)
+            rowRole = 'view';
+          const assigned = related(section, rowRole);
+          rowData.push({
+            ...r,
+            section,
+            role: rowRole,
+            assigned,
+            transcriber,
+            editor,
+          });
         }
       });
       if (changed) setState({ ...state, rowData });
