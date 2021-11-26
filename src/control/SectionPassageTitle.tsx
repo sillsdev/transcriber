@@ -42,10 +42,10 @@ export const SectionPassageTitle = (props: IProps) => {
   const [memory] = useGlobal('memory');
 
   const isFlat = useMemo(() => {
-    const planRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'plan', id: plan })
-    ) as Plan | null;
-    return !planRec || planRec.attributes?.flat;
+    const plans = (
+      memory.cache.query((q: QueryBuilder) => q.findRecords('plan')) as Plan[]
+    ).filter((p) => p.id === plan);
+    return plans.length === 0 || plans[0].attributes?.flat;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plan]);
 
