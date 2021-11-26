@@ -289,7 +289,9 @@ const initialState = {
 			"owners": "Owners",
 			"ownersDetail": "(Manage + Review + Transcribe)",
 			"projectPlans": "Audio Project Plans",
+			"roles": "Roles:{0}",
 			"save": "Save",
+			"transcriptionTitle": "Users in Transcription Roles",
 			"transcribers": "Transcribers",
 			"transcribersDetail": "(Transcribe)",
 		}
@@ -988,7 +990,6 @@ const initialState = {
 			"locale": "Locale",
 			"name": "Name",
 			"phone": "Phone",
-			"role": "Team Role",
 			"selectRows": "Please select row(s) to {0}.",
 			"selectUser": "Select User",
 			"showHideFilter": "Show/Hide filter rows",

@@ -221,10 +221,10 @@ function Invite(props: IProps) {
   const handleEmailChange = (e: any) => {
     setEmail(e.target.value);
   };
-  const handleRoleChange = (e: string) => {
+  const handleRoleChange = (e: string, rowid: string) => {
     setRole(e);
   };
-  const handleAllUsersRoleChange = (e: string) => {
+  const handleAllUsersRoleChange = (e: string, rowid: string) => {
     setAllUsersRole(e);
   };
   const hasInvite = (email: string) => {

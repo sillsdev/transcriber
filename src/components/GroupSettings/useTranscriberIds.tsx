@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { GroupMembership, RoleNames } from '../../model';
+import { GroupMembership } from '../../model';
 import { related, useRole } from '../../crud';
 import { IPerson } from './TeamCol';
 
@@ -9,15 +9,19 @@ interface IProps {
 
 function useTranscriberIds(props: IProps): IPerson[] {
   const { groupMemberships } = props;
-  const { getRoleId } = useRole();
+  const { getTranscriberRoleIds, getEditorRoleIds } = useRole();
   const [group] = useGlobal('group');
 
-  const transcriberId = getRoleId(RoleNames.Transcriber);
-
+  const transcriberIds = getTranscriberRoleIds();
+  const editorIds = getEditorRoleIds();
   return groupMemberships
-    .filter((gm) => related(gm, 'group') === group)
+    .filter(
+      (gm) =>
+        related(gm, 'group') === group &&
+        transcriberIds.includes(related(gm, 'role'))
+    )
     .map((gm) => ({
-      canDelete: related(gm, 'role') === transcriberId,
+      canDelete: !editorIds.includes(related(gm, 'role')),
       user: related(gm, 'user'),
     }));
 }

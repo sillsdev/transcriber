@@ -9,19 +9,19 @@ interface IProps {
 
 function useReviewerIds(props: IProps): IPerson[] {
   const { groupMemberships } = props;
-  const { getRoleId } = useRole();
+  const { getEditorRoleIds, getRoleId } = useRole();
   const [group] = useGlobal('group');
 
-  const transcriberId = getRoleId(RoleNames.Transcriber);
-  const editorId = getRoleId(RoleNames.Editor);
-
+  const editorIds = getEditorRoleIds();
+  const adminId = getRoleId(RoleNames.Admin);
   return groupMemberships
     .filter(
       (gm) =>
-        related(gm, 'group') === group && related(gm, 'role') !== transcriberId
+        related(gm, 'group') === group &&
+        editorIds.includes(related(gm, 'role'))
     )
     .map((gm) => ({
-      canDelete: related(gm, 'role') === editorId,
+      canDelete: related(gm, 'role') !== adminId,
       user: related(gm, 'user'),
     }));
 }

@@ -982,7 +982,7 @@ export function Transcriber(props: IProps) {
                         <WSAudioPlayer
                           id="audioPlayer"
                           allowRecord={false}
-                          allowSegment={true}
+                          allowSegment={selected !== '' && role !== 'view'}
                           allowZoom={true}
                           allowSpeed={true}
                           size={playerSize}

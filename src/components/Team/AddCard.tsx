@@ -169,7 +169,7 @@ export const AddCard = (props: IProps) => {
   };
 
   const nameInUse = (newName: string) => {
-    const projects = team ? teamProjects(team.id) : personalProjects();
+    const projects = team ? teamProjects(team.id) : personalProjects;
     const sameNameRec = projects.filter((p) => p?.attributes?.name === newName);
     return sameNameRec.length > 0;
   };

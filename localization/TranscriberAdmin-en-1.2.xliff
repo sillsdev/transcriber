@@ -1383,8 +1383,22 @@
                <context context-type="sourcefile">GroupSettings.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="groupSettings.roles">
+            <source>Roles:{0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">GroupSettings.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="groupSettings.save">
             <source>Save</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">GroupSettings.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="groupSettings.transcriptionTitle">
+            <source>Users in Transcription Roles</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">GroupSettings.tsx</context>
@@ -5153,13 +5167,6 @@
          </trans-unit>
          <trans-unit id="usertable.phone">
             <source>Phone</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">UserTable.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="usertable.role">
-            <source>Team Role</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">UserTable.tsx</context>

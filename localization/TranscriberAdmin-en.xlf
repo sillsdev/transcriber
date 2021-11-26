@@ -1186,9 +1186,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupSettings.roles">
+         <segment>
+            <source>Roles:{0}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="groupSettings.save">
          <segment>
             <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.transcriptionTitle">
+         <segment>
+            <source>Users in Transcription Roles</source>
             <target/>
          </segment>
       </unit>
@@ -4417,12 +4429,6 @@
       <unit id="usertable.phone">
          <segment>
             <source>Phone</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="usertable.role">
-         <segment>
-            <source>Team Role</source>
             <target/>
          </segment>
       </unit>

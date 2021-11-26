@@ -25,6 +25,7 @@ interface IProps extends IStateProps {
   detail: boolean;
   title: string;
   titledetail: string;
+  roledetail?: string;
   people: IPerson[];
   add: () => void;
   del?: (id: string, name: string) => void;
@@ -32,7 +33,8 @@ interface IProps extends IStateProps {
 }
 
 function TeamCol(props: IProps) {
-  const { detail, people, add, del, allUsers, title, titledetail } = props;
+  const { detail, people, add, del, allUsers, title, titledetail, roledetail } =
+    props;
   const classes = useStyles();
   const [orgRole] = useGlobal('orgRole');
   const [offline] = useGlobal('offline');
@@ -58,6 +60,9 @@ function TeamCol(props: IProps) {
             </IconButton>
           )}
         </FormLabel>
+        {roledetail && (
+          <FormLabel className={classes.label}>{roledetail}</FormLabel>
+        )}
         <List dense={true}>
           <PersonItems
             {...props}

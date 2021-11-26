@@ -1,9 +1,16 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { Role, Project, RoleNames } from '../model';
+import {
+  Role,
+  Project,
+  RoleNames,
+  canTranscribe,
+  canBeEditor,
+  ISharedStrings,
+} from '../model';
 import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import { related } from '../crud';
-import { logError, Severity } from '../utils';
+import { localizeRole, logError, Severity } from '../utils';
 
 export const useRole = () => {
   const [memory] = useGlobal('memory');
@@ -37,7 +44,18 @@ export const useRole = () => {
     if (findit.length > 0) return findit[0].id;
     return '';
   };
-
+  const getTranscriberRoleIds = () => {
+    return canTranscribe.map((rn) => getRoleId(rn));
+  };
+  const getEditorRoleIds = () => {
+    return canBeEditor.map((rn) => getRoleId(rn));
+  };
+  const getLocalizedTranscriberRoles = (ts: ISharedStrings) => {
+    return canTranscribe.map((rn) => localizeRole(rn, ts, true));
+  };
+  const getLocalizedEditorRoles = (ts: ISharedStrings) => {
+    return canBeEditor.map((rn) => localizeRole(rn, ts, true));
+  };
   const getRoleRec = (kind: string, orgRole: boolean) => {
     const lcKind = kind.toLowerCase();
     return orgRole
@@ -133,5 +151,9 @@ export const useRole = () => {
     setMyProjRole,
     getMyOrgRole,
     getMyProjRole,
+    getTranscriberRoleIds,
+    getEditorRoleIds,
+    getLocalizedTranscriberRoles,
+    getLocalizedEditorRoles,
   };
 };
