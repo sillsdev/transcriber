@@ -5,7 +5,6 @@ import {
   Discussion,
   Group,
   GroupMembership,
-  Organization,
   OrganizationMembership,
   OrgWorkflowStep,
   Project,
@@ -19,11 +18,11 @@ export const useTeamDelete = () => {
   const [offlineOnly] = useGlobal('offlineOnly');
   const projectDelete = useProjectDelete();
 
-  return async (team: Organization) => {
+  return async (teamid: string) => {
     const teamgrpIds = (
       memory.cache.query((q: QueryBuilder) => q.findRecords('group')) as Group[]
     )
-      .filter((g) => related(g, 'owner') === team.id)
+      .filter((g) => related(g, 'owner') === teamid)
       .map((tg) => tg.id);
     const teamgms = (
       memory.cache.query((q: QueryBuilder) =>
@@ -59,7 +58,7 @@ export const useTeamDelete = () => {
         memory.cache.query((q: QueryBuilder) =>
           q.findRecords('orgworkflowstep').filter({
             relation: 'organization',
-            record: { type: 'organization', id: team.id },
+            record: { type: 'organization', id: teamid },
           })
         ) as OrgWorkflowStep[]
       ).map((s) => s.id);
@@ -68,7 +67,7 @@ export const useTeamDelete = () => {
         memory.cache.query((q: QueryBuilder) =>
           q.findRecords('artifactcategory').filter({
             relation: 'organization',
-            record: { type: 'organization', id: team.id },
+            record: { type: 'organization', id: teamid },
           })
         ) as ArtifactCategory[]
       ).map((c) => c.id);
@@ -76,7 +75,7 @@ export const useTeamDelete = () => {
         memory.cache.query((q: QueryBuilder) =>
           q.findRecords('artifacttype').filter({
             relation: 'organization',
-            record: { type: 'organization', id: team.id },
+            record: { type: 'organization', id: teamid },
           })
         ) as ArtifactType[]
       ).map((s) => s.id);
@@ -111,7 +110,7 @@ export const useTeamDelete = () => {
         ops.push(t.removeRecord({ type: 'artifactcategory', id }))
       );
     }
-    ops.push(t.removeRecord(team));
+    ops.push(t.removeRecord({ type: 'organization', id: teamid }));
 
     await memory.update(ops);
   };

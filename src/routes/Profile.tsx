@@ -44,6 +44,7 @@ import {
   useRole,
   useAddToOrgAndGroup,
   RemoveUserFromOrg,
+  useTeamDelete,
 } from '../crud';
 import {
   makeAbbr,
@@ -189,9 +190,7 @@ export function Profile(props: IProps) {
   const [given, setGiven] = useState<string | null>(null);
   const [family, setFamily] = useState<string | null>(null);
   const [email, setEmail] = useState('');
-  const [timezone, setTimezone] = useState<string | null>(
-    moment.tz.guess() || ''
-  );
+  const [timezone, setTimezone] = useState<string>(moment.tz.guess() || '');
   const [role, setRole] = useState('');
   const [locale, setLocale] = useState<string>(localeDefault(isDeveloper));
   const [news, setNews] = useState<boolean | null>(null);
@@ -215,7 +214,7 @@ export function Profile(props: IProps) {
   const [ptPath, setPtPath] = React.useState('');
   const { showMessage } = useSnackBar();
   const addToOrgAndGroup = useAddToOrgAndGroup();
-
+  const teamDelete = useTeamDelete();
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
   };
@@ -412,7 +411,7 @@ export function Profile(props: IProps) {
     if (currentUser) setDeleteItem(currentUser.id);
   };
   const handleDeleteConfirmed = async () => {
-    RemoveUserFromOrg(memory, deleteItem, undefined, user);
+    await RemoveUserFromOrg(memory, deleteItem, undefined, user, teamDelete);
     await memory.update((tb) =>
       tb.removeRecord({ type: 'user', id: deleteItem })
     );
@@ -501,7 +500,7 @@ export function Profile(props: IProps) {
     setFamily(attr.familyName ? attr.familyName : '');
     setEmail(attr.email);
     setPhone(attr.phone);
-    setTimezone(attr.timezone);
+    setTimezone(attr.timezone || '');
     setLocale(attr.locale ? attr.locale : localeDefault(isDeveloper));
     setNews(attr.newsPreference);
     setDigest(attr.digestPreference);
@@ -516,7 +515,7 @@ export function Profile(props: IProps) {
   }, [user]);
 
   useEffect(() => {
-    if (timezone === null) {
+    if (timezone === '') {
       const myZone = moment.tz.guess();
       setTimezone(myZone || '');
       setChanged(true);

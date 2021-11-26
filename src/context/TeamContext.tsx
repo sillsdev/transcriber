@@ -409,7 +409,7 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const teamDelete = async (team: Organization) => {
       setState((state) => ({ ...state, isDeleting: true }));
-      await orbitTeamDelete(team);
+      await orbitTeamDelete(team.id);
       setState((state) => ({ ...state, isDeleting: false }));
     };
 

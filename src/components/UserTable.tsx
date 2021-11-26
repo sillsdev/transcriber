@@ -29,7 +29,12 @@ import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import UserAdd from './UserAdd';
 import StickyRedirect from './StickyRedirect';
-import { related, RemoveUserFromOrg, useAddToOrgAndGroup } from '../crud';
+import {
+  related,
+  RemoveUserFromOrg,
+  useAddToOrgAndGroup,
+  useTeamDelete,
+} from '../crud';
 import SelectRole from '../control/SelectRole';
 import { UpdateRelatedRecord } from '../model/baseModel';
 
@@ -157,6 +162,7 @@ export function UserTable(props: IProps) {
   const [addOpen, setAddOpen] = useState(false);
   const [view, setView] = useState('');
   const addToOrgAndGroup = useAddToOrgAndGroup();
+  const teamDelete = useTeamDelete();
 
   const handleInvite = () => {
     setDialogVisible(true);
@@ -202,7 +208,7 @@ export function UserTable(props: IProps) {
     setDeleteItem(value);
   };
   const handleDeleteConfirmed = () => {
-    RemoveUserFromOrg(memory, deleteItem, organization, user);
+    RemoveUserFromOrg(memory, deleteItem, organization, user, teamDelete);
 
     setDeleteItem('');
   };
