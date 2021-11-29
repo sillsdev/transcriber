@@ -21,6 +21,7 @@ import {
   MediaFile,
   ISharedStrings,
   ArtifactCategory,
+  RoleNames,
 } from '../../model';
 import ResolveIcon from '@material-ui/icons/Check';
 import HideIcon from '@material-ui/icons/ArrowDropUp';
@@ -159,6 +160,9 @@ export const DiscussionCard = (props: IProps) => {
   const { currentstep, mediafileId } = ctx.state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
+  const [projRole] = useGlobal('projRole');
+  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [myComments, setMyComments] = useState<Comment[]>([]);
   const [showComments, setShowComments] = useState(true);
   const [artifactCategory, setArtifactCategory] = useState('');
@@ -173,6 +177,7 @@ export const DiscussionCard = (props: IProps) => {
   const [editUser, setEditUser] = useState<string>('');
   const [editCategory, setEditCategory] = useState('');
   const { localizedArtifactCategory } = useArtifactCategory();
+
   const handleSelect = (discussion: Discussion) => () => {
     selectDiscussion(discussion);
   };
@@ -373,6 +378,7 @@ export const DiscussionCard = (props: IProps) => {
   return (
     <div className={classes.root}>
       <Card
+        key={discussion.id}
         id={`card-${discussion.id}`}
         className={
           discussion.attributes.resolved ? classes.resolvedcard : classes.card
@@ -417,7 +423,9 @@ export const DiscussionCard = (props: IProps) => {
               <SelectArtifactCategory
                 initCategory={editCategory}
                 onCategoryChange={onCategoryChange}
-                allowNew={true}
+                allowNew={
+                  projRole === RoleNames.Admin && (!offline || offlineOnly)
+                }
                 required={false}
               />
               <div className={classes.row}>
