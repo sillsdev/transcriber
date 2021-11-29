@@ -182,19 +182,19 @@ const pa11: Passage = {
 afterEach(cleanup);
 
 test('empty input gives empty output', async () => {
-  expect(getWorkflow('', [], [], false, memory)).toEqual([]);
+  expect(getWorkflow('', [], [], false, false, memory)).toEqual([]);
 });
 
 test('empty flat input gives empty output', async () => {
-  expect(getWorkflow('', [], [], true, memory)).toEqual([]);
+  expect(getWorkflow('', [], [], true, false, memory)).toEqual([]);
 });
 
 test('empty input with plan id gives empty output', async () => {
-  expect(getWorkflow('pl1', [], [], false, memory)).toEqual([]);
+  expect(getWorkflow('pl1', [], [], false, false, memory)).toEqual([]);
 });
 
 test('one section gives output', async () => {
-  expect(getWorkflow('pl1', [s1], [], false, memory)).toEqual([
+  expect(getWorkflow('pl1', [s1], [], false, false, memory)).toEqual([
     {
       level: 0,
       kind: 0,
@@ -211,7 +211,7 @@ test('one section gives output', async () => {
 });
 
 test('one section and one passage gives output', async () => {
-  expect(getWorkflow('pl1', [s1], [pa1], false, memory)).toEqual([
+  expect(getWorkflow('pl1', [s1], [pa1], false, false, memory)).toEqual([
     {
       level: 0,
       kind: 0,
@@ -240,7 +240,7 @@ test('one section and one passage gives output', async () => {
 });
 
 test('one section and two passages gives output', async () => {
-  expect(getWorkflow('pl1', [s1], [pa1, pa2], false, memory)).toEqual([
+  expect(getWorkflow('pl1', [s1], [pa1, pa2], false, false, memory)).toEqual([
     {
       level: 0,
       kind: 0,
@@ -281,7 +281,7 @@ test('one section and two passages gives output', async () => {
 });
 
 test('one section and two passages with flat output', async () => {
-  expect(getWorkflow('pl1', [s1], [pa1, pa2], true, memory)).toEqual([
+  expect(getWorkflow('pl1', [s1], [pa1, pa2], true, false, memory)).toEqual([
     {
       level: 0,
       kind: 2,
@@ -317,7 +317,9 @@ test('one section and two passages with flat output', async () => {
 });
 
 test('one section and three passages out of order', async () => {
-  expect(getWorkflow('pl1', [s1], [pa3, pa1, pa2], false, memory)).toEqual([
+  expect(
+    getWorkflow('pl1', [s1], [pa3, pa1, pa2], false, false, memory)
+  ).toEqual([
     {
       level: 0,
       kind: 0,
@@ -370,7 +372,7 @@ test('one section and three passages out of order', async () => {
 });
 
 test('one flat section and with one passage gives output', async () => {
-  expect(getWorkflow('pl1', [s1], [pa1], true, memory)).toEqual([
+  expect(getWorkflow('pl1', [s1], [pa1], true, false, memory)).toEqual([
     {
       level: 0,
       kind: 2,
@@ -393,7 +395,7 @@ test('one flat section and with one passage gives output', async () => {
 
 test('two flat sections and one from another plan gives output', async () => {
   expect(
-    getWorkflow('pl1', [s1, s2, s3], [pa1, pa4, pa11], true, memory)
+    getWorkflow('pl1', [s1, s2, s3], [pa1, pa4, pa11], true, false, memory)
   ).toEqual([
     {
       level: 0,
@@ -434,7 +436,14 @@ test('two flat sections and one from another plan gives output', async () => {
 
 test('two sections and passages with one from another plan', async () => {
   expect(
-    getWorkflow('pl1', [s1, s2, s3], [pa11, pa3, pa1, pa4, pa2], false, memory)
+    getWorkflow(
+      'pl1',
+      [s1, s2, s3],
+      [pa11, pa3, pa1, pa4, pa2],
+      false,
+      false,
+      memory
+    )
   ).toEqual([
     {
       level: 0,
@@ -512,7 +521,14 @@ test('two sections and passages with one from another plan', async () => {
 });
 
 test('update one flat section to two flat section ignoring other plan', async () => {
-  const workflow = getWorkflow('pl1', [s1, s3], [pa1, pa11], true, memory);
+  const workflow = getWorkflow(
+    'pl1',
+    [s1, s3],
+    [pa1, pa11],
+    true,
+    false,
+    memory
+  );
   expect(workflow).toEqual([
     {
       level: 0,
@@ -537,6 +553,7 @@ test('update one flat section to two flat section ignoring other plan', async ()
     [s1, s2, s3],
     [pa1, pa4, pa11],
     true,
+    false,
     memory,
     workflow
   );
