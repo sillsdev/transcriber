@@ -57,6 +57,8 @@ export function PassageDetailArtifacts(props: IProps) {
   const { sectionResources, artifactTypes, auth, t } = props;
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
+  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [, setComplete] = useGlobal('progress');
   const ctx = useContext(PassageDetailContext);
   const { rowData, section, passage, setSelected, playItem, setPlaying } =
@@ -163,7 +165,9 @@ export function PassageDetailArtifacts(props: IProps) {
 
   return (
     <>
-      {projRole === RoleNames.Admin && <AddResource action={handleAction} />}
+      {projRole === RoleNames.Admin && (!offline || offlineOnly) && (
+        <AddResource action={handleAction} />
+      )}
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
         {rowData
