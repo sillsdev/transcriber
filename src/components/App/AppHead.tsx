@@ -85,7 +85,7 @@ const ProjectName = ({ setView }: INameProps) => {
   const handleHome = () => {
     setProject('');
     setPlan('');
-    setProjRole('');
+    setProjRole(undefined);
     setProjType('');
     setView('Home');
   };
@@ -334,8 +334,8 @@ export const AppHead = (props: IProps) => {
           <LinearProgress id="busy" variant="indeterminate" />
         )}
         <Toolbar>
-          {projRole !== '' && <ProjectName setView={setView} />}
-          {projRole === '' && (
+          {projRole && <ProjectName setView={setView} />}
+          {!projRole && (
             <span
               className={clsx(classes.twoIcon, {
                 [classes.threeIcon]:

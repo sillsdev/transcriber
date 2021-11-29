@@ -141,9 +141,9 @@ Promise.all(promises)
   .then((promResults) => {
     setGlobal({
       organization: '',
-      orgRole: '',
+      orgRole: undefined,
       project: '',
-      projRole: '',
+      projRole: undefined,
       projType: '',
       plan: '',
       tab: undefined,

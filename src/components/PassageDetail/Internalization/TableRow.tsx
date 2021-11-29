@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core';
 import { ListItem } from '@material-ui/core';
 import { IRow } from '../../../context/PassageDetailContext';
 import { DragHandle } from '.';
+import { RoleNames } from '../../../model';
 
 const useStyles = makeStyles({
   action: { minWidth: 100, textAlign: 'center' },
@@ -32,7 +33,7 @@ export const TableRow = ({ value, header }: IProps) => {
 
   return (
     <ListItem>
-      {/admin/i.test(projRole) && (
+      {projRole === RoleNames.Admin && (
         <span className={clsx({ [classes.hidden]: header })}>
           <DragHandle />
           {'\u00A0'}
@@ -56,7 +57,7 @@ export const TableRow = ({ value, header }: IProps) => {
       <div className={clsx(classes.done, { [classes.bold]: header })}>
         {value.done}
       </div>
-      {/admin/i.test(projRole) && (
+      {projRole === RoleNames.Admin && (
         <div className={clsx(classes.edit, { [classes.bold]: header })}>
           {value.editAction}
         </div>

@@ -10,6 +10,7 @@ import {
   PlanType,
   IProjButtonsStrings,
   Project,
+  RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -77,7 +78,7 @@ const PlanProvider = withData(mapRecordsToProps)(
     const [offlineOnly] = useGlobal('offlineOnly');
     const { getPlan } = usePlan();
     const [readonly, setReadOnly] = useState(
-      (isOffline && !offlineOnly) || projRole !== 'admin'
+      (isOffline && !offlineOnly) || projRole !== RoleNames.Admin
     );
     const [state, setState] = useState({
       ...initState,
@@ -118,7 +119,8 @@ const PlanProvider = withData(mapRecordsToProps)(
     }, [project]);
 
     React.useEffect(() => {
-      const newValue = (isOffline && !offlineOnly) || projRole !== 'admin';
+      const newValue =
+        (isOffline && !offlineOnly) || projRole !== RoleNames.Admin;
       if (readonly !== newValue) setReadOnly(newValue);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [projRole]);

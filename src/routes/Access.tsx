@@ -324,7 +324,7 @@ export function Access(props: IProps) {
     setOrganization('');
     setProject('');
     setPlan('');
-    setProjRole('');
+    setProjRole(undefined);
     setProjType('');
     checkOnline((online) => {}, true);
     if (!auth?.isAuthenticated() && !isAuthenticated) {

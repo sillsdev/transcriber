@@ -131,7 +131,7 @@ export function UserMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handleAction('Close')}
       >
-        {projRole !== '' && (
+        {projRole && (
           <StyledMenuItem>
             <ListItemText
               primary={

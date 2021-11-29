@@ -17,7 +17,7 @@ export const useRole = () => {
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setOrgRole] = useGlobal('orgRole');
-  const [, setProjRole] = useGlobal('projRole');
+  const [projRole, setProjRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
 
   interface IUniqueRoles {
@@ -56,6 +56,13 @@ export const useRole = () => {
   const getLocalizedEditorRoles = (ts: ISharedStrings) => {
     return canBeEditor.map((rn) => localizeRole(rn, ts, true));
   };
+
+  const userCanTranscribe = () =>
+    projRole ? canTranscribe.includes(projRole) : false;
+  const userCanBeEditor = () =>
+    projRole ? canBeEditor.includes(projRole) : false;
+  const userIsProjAdmin = () => projRole === RoleNames.Admin;
+
   const getRoleRec = (kind: string, orgRole: boolean) => {
     const lcKind = kind.toLowerCase();
     return orgRole
@@ -107,9 +114,9 @@ export const useRole = () => {
       ) as Role;
 
       const roleName = roleRec?.attributes?.roleName;
-      if (roleName) return roleName.toLocaleLowerCase();
+      if (roleName) return roleName as RoleNames;
     }
-    return '';
+    return undefined;
   };
 
   const getMyOrgRole = (orgId: string) => {
@@ -133,14 +140,14 @@ export const useRole = () => {
       const gMbrRecs = getMbrRoleRec('group', related(proj, 'group'), user);
       return getMbrRole(gMbrRecs);
     } catch {
-      return 'Admin';
+      return RoleNames.Admin;
     }
   };
 
   const setMyProjRole = (projectId: string) => {
     const role = getMyProjRole(projectId);
-    setProjRole(role);
-    return role;
+    setProjRole(role as RoleNames);
+    return role as RoleNames;
   };
 
   return {
@@ -155,5 +162,8 @@ export const useRole = () => {
     getEditorRoleIds,
     getLocalizedTranscriberRoles,
     getLocalizedEditorRoles,
+    userCanTranscribe,
+    userCanBeEditor,
+    userIsProjAdmin,
   };
 };

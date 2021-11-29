@@ -12,6 +12,7 @@ import {
   IUsertableStrings,
   ISharedStrings,
   GroupMembership,
+  RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -142,7 +143,7 @@ export function UserTable(props: IProps) {
     { name: 'role', title: projectRole ? ts.projectrole : ts.teamrole },
     {
       name: 'action',
-      title: orgRole === 'admin' ? t.action : '\u00A0',
+      title: orgRole === RoleNames.Admin ? t.action : '\u00A0',
     },
   ];
   const columnWidths = [
@@ -334,7 +335,8 @@ export function UserTable(props: IProps) {
       </>
     </Table.Cell>
   );
-  const canEdit = () => orgRole === 'admin' && (!offline || offlineOnly);
+  const canEdit = () =>
+    orgRole === RoleNames.Admin && (!offline || offlineOnly);
 
   const Cell = (props: any) => {
     const { column } = props;

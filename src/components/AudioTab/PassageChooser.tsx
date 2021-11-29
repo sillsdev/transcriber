@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IMediaTabStrings } from '../../model';
+import { IState, IMediaTabStrings, RoleNames } from '../../model';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import localStrings from '../../selector/localize';
 import { FormControlLabel, Switch, Radio } from '@material-ui/core';
@@ -98,7 +98,7 @@ export const PassageChooser = (props: IProps) => {
     const handleSelect = () => {
       props.onToggle && props.onToggle();
     };
-    return projRole === 'admin' ? (
+    return projRole === RoleNames.Admin ? (
       <Table.Cell {...props}>
         {(!props.row.fileName || props.row.reference === '') && (
           <Radio checked={props.selected} onChange={handleSelect} />
