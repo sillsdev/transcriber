@@ -17,6 +17,7 @@ import {
   Plan,
   IWorkflow,
   IwfKind,
+  IMediaShare,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import * as actions from '../../store';
@@ -302,6 +303,7 @@ export function ScriptureTable(props: IProps) {
       comment: '',
       passageUpdated: currentDateTime(),
       passageId: undefined,
+      mediaShared: shared ? IMediaShare.None : IMediaShare.NotPublic,
     } as IWorkflow;
 
     if (flat && isSectionRow(myWorkflow[index])) {

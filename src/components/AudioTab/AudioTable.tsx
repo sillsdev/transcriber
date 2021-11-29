@@ -244,6 +244,7 @@ export const AudioTable = (props: IProps) => {
             id="checkbox-rts"
             checked={value as any as boolean}
             onChange={handleChangeReadyToShare(row.id)}
+            disabled={row.passId === ''}
           />
         }
         label=""
