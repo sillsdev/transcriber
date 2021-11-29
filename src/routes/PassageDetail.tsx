@@ -33,6 +33,7 @@ import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer
 import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord';
 import PassageBackTranslate from '../components/PassageDetail/PassageBackTranslate';
 import { useStepId } from '../crud';
+import { RoleNames } from '../model';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -184,7 +185,7 @@ const PassageDetailGrids = (props: IProps) => {
           <Grid item className={classes.row} xs={9}>
             <PassageDetailSectionPassage />
           </Grid>
-          {/admin/i.test(projRole) && (
+          {projRole === RoleNames.Admin && (
             <Grid item className={classes.right} xs={3}>
               <PassageDetailStepComplete />
             </Grid>
@@ -271,7 +272,6 @@ export const PassageDetail = (props: IProps) => {
   };
 
   const SwitchTo = () => {
-    //if (projRole !== 'admin') return <></>;
     return (
       <ViewMode
         mode={ViewOption.Detail}

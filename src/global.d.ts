@@ -2,13 +2,14 @@ import 'reactn';
 import Coordinator from '@orbit/coordinator';
 import Memory from '@orbit/memory';
 import { AlertSeverity } from './hoc/SnackBar';
+import { RoleNames } from './model';
 
 declare module 'reactn/default' {
   export interface State {
     organization: string;
-    orgRole: string;
+    orgRole: RoleNames | undefined;
     project: string;
-    projRole: string;
+    projRole: RoleNames | undefined;
     projType: string;
     plan: string;
     tab: number;

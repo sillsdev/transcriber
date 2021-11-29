@@ -5,6 +5,7 @@ import {
   OrganizationMembership,
   Group,
   GroupMembership,
+  RoleNames,
 } from '../model';
 import { useCheckOnline, cleanFileName } from '../utils';
 import { offlineError, useProjectType, useRole } from '.';
@@ -59,8 +60,8 @@ export const useTeamCreate = (props: IProps) => {
       attributes: {},
     } as GroupMembership;
 
-    const orgRoleRec = getRoleRec('admin', true);
-    const grpRoleRec = getRoleRec('admin', false);
+    const orgRoleRec = getRoleRec(RoleNames.Admin, true);
+    const grpRoleRec = getRoleRec(RoleNames.Admin, false);
     const allUsersGroup = allUsersRec(memory, orgRec.id);
     if (allUsersGroup.length === 0) {
       let group: Group = {

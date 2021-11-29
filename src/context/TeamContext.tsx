@@ -23,6 +23,7 @@ import {
   INewProjectStrings,
   BookNameMap,
   BookName,
+  RoleNames,
 } from '../model';
 import { isElectron } from '../api-variable';
 import { OptionType } from '../model';
@@ -282,12 +283,12 @@ const TeamProvider = withData(mapRecordsToProps)(
     const isOwner = (plan: Plan) => {
       const projectId = related(plan, 'project');
       const role = getMyProjRole(projectId);
-      return /admin/i.test(role);
+      return role === RoleNames.Admin;
     };
 
     const isAdmin = (org: Organization) => {
       const role = getMyOrgRole(org.id);
-      return /admin/i.test(role);
+      return role === RoleNames.Admin;
     };
 
     const teamMembers = (teamId: string) => {

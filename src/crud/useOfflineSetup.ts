@@ -1,5 +1,11 @@
 import { useGlobal } from 'reactn';
-import { Role, ProjectType, ArtifactCategory, ArtifactType } from '../model';
+import {
+  Role,
+  ProjectType,
+  ArtifactCategory,
+  ArtifactType,
+  RoleNames,
+} from '../model';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import WorkflowStep from '../model/workflowStep';
@@ -48,7 +54,7 @@ export const useOfflineSetup = () => {
         attributes: {
           orgRole: true,
           groupRole: true,
-          roleName: 'Admin',
+          roleName: RoleNames.Admin,
         },
       } as Role;
       memory.schema.initializeRecord(adminRec);
@@ -57,7 +63,7 @@ export const useOfflineSetup = () => {
         attributes: {
           orgRole: true,
           groupRole: false,
-          roleName: 'Member',
+          roleName: RoleNames.Member,
         },
       } as Role;
       memory.schema.initializeRecord(memberRec);

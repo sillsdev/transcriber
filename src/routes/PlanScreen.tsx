@@ -62,8 +62,8 @@ export const PlanScreen = (props: IProps) => {
 
   React.useEffect(() => {
     const projectId = setUrlContext(prjId);
-    if (projRole === '')
-      if (setMyProjRole(projectId) === '') {
+    if (!projRole)
+      if (!setMyProjRole(projectId)) {
         // If after proj role set there is none, force reload
         localStorage.removeItem(localUserKey(LocalKey.url, memory));
         forceLogin();

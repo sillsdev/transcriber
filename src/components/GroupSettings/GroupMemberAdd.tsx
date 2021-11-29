@@ -6,6 +6,7 @@ import {
   GroupMembership,
   IGroupSettingsStrings,
   RoleNames,
+  ISharedStrings,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -24,9 +25,11 @@ import { OptionType } from '../../model';
 import useStyles from './GroupSettingsStyles';
 import { addGroupMember, useRole } from '../../crud';
 import { UpdateRelatedRecord } from '../../model/baseModel';
+import { localizeRole } from '../../utils';
 
 interface IStateProps {
   t: IGroupSettingsStrings;
+  ts: ISharedStrings;
 }
 
 interface IProps extends IStateProps {
@@ -37,7 +40,7 @@ interface IProps extends IStateProps {
 }
 
 function GroupMemberAdd(props: IProps) {
-  const { open, role, orgPeople, t, setOpen } = props;
+  const { open, role, orgPeople, t, ts, setOpen } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
@@ -96,19 +99,11 @@ function GroupMemberAdd(props: IProps) {
   return (
     <Dialog open={open} onClose={handleCancel} aria-labelledby="memberDlg">
       <DialogTitle id="memberDlg">
-        {t.addGroupMember.replace(
-          '{0}',
-          role.toLocaleLowerCase() === 'admin' ? 'Owner' : role
-        )}
+        {t.addGroupMember.replace('{0}', localizeRole(role, ts, true))}
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          {t.addMemberInstruction.replace(
-            '{0}',
-            role.toLocaleLowerCase() === 'admin'
-              ? 'owner'
-              : role.toLocaleLowerCase()
-          )}
+          {t.addMemberInstruction.replace('{0}', localizeRole(role, ts, true))}
         </DialogContentText>
         <TextField
           id="choos-group-member"
@@ -157,6 +152,7 @@ function GroupMemberAdd(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'groupSettings' }),
+  ts: localStrings(state, { layout: 'shared' }),
 });
 
 export default connect(mapStateToProps)(GroupMemberAdd) as any;

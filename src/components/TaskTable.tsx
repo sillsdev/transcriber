@@ -33,6 +33,7 @@ import { numCompare } from '../utils';
 import { useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
 import MediaPlayer from './MediaPlayer';
+import { RoleNames } from '../model';
 
 export const TaskItemWidth = 240;
 
@@ -474,7 +475,7 @@ export function TaskTable(props: IProps) {
               action={handleProjectMenu}
               stopPlayer={handleStopPlayer}
               inProject={true}
-              isOwner={projRole === 'admin'}
+              isOwner={projRole === RoleNames.Admin}
               project={projectId}
             />
             {filter && (

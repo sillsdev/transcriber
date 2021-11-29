@@ -9,6 +9,7 @@ import {
   IInvitationTableStrings,
   Group,
   ISharedStrings,
+  RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -182,7 +183,7 @@ export function InvitationTable(props: IProps) {
   useEffect(() => {
     setData(getInvites(organization, roles, invitations, ts));
   }, [organization, roles, invitations, confirmAction, ts]);
-  const canEdit = () => orgRole === 'admin' && !offline;
+  const canEdit = () => orgRole === RoleNames.Admin && !offline;
   return (
     <div className={classes.container}>
       <div className={classes.paper}>

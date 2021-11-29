@@ -24,8 +24,6 @@ import {
   RoleNames,
   ISharedStrings,
   IActivityStateStrings,
-  canTranscribe,
-  canBeEditor,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -39,9 +37,10 @@ import {
   useFetchMediaUrl,
   MediaSt,
   usePlan,
+  useRole,
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
-import { camel2Title, loadBlob, logError, Severity } from '../utils';
+import { loadBlob, logError, Severity } from '../utils';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 
@@ -196,6 +195,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const mediaUrlRef = useRef('');
     const { showMessage } = useSnackBar();
     const [trackedTask, setTrackedTask] = useGlobal('trackedTask');
+    const { userCanTranscribe, userCanBeEditor } = useRole();
     const [state, setState] = useState({
       ...initState,
       allBookData,
@@ -409,9 +409,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     };
 
     const role = React.useMemo(() => {
-      var camelRole = camel2Title(projRole) as RoleNames;
-      if (canTranscribe.includes(camelRole)) {
-        if (canBeEditor.includes(camelRole)) return RoleNames.Editor;
+      if (userCanTranscribe()) {
+        if (userCanBeEditor()) return RoleNames.Editor;
         else return RoleNames.Transcriber;
       } else return '';
 

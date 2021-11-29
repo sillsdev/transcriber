@@ -16,11 +16,17 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { TransformBuilder } from '@orbit/data';
-import { sectionNumber, sectionDescription, useOrganizedBy } from '../crud';
+import {
+  sectionNumber,
+  sectionDescription,
+  useOrganizedBy,
+  useRole,
+} from '../crud';
 import PeopleIconOutline from '@material-ui/icons/PeopleAltOutlined';
 import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
 import { TaskItemWidth } from './TaskTable';
+import { RoleNames } from '../model';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,10 +59,10 @@ export function TaskHead(props: IProps) {
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [orgRole] = useGlobal('orgRole');
   const [projRole] = useGlobal('projRole');
   const [menuItem, setMenuItem] = React.useState(null);
   const { getOrganizedBy } = useOrganizedBy();
+  const { userCanTranscribe } = useRole();
 
   const t = taskItemStr;
   const ts = sharedStr;
@@ -121,8 +127,7 @@ export function TaskHead(props: IProps) {
             disabled={
               tranAction === unassignAction &&
               transcriber !== user &&
-              !/admin/i.test(orgRole) &&
-              !/admin/i.test(projRole)
+              projRole !== RoleNames.Admin
             }
           >
             {
@@ -142,9 +147,8 @@ export function TaskHead(props: IProps) {
             disabled={
               (editAction === unassignAction &&
                 editor !== user &&
-                !/admin/i.test(orgRole) &&
-                !/admin/i.test(projRole)) ||
-              (editAction === assignAction && /transcriber/i.test(projRole))
+                projRole !== RoleNames.Admin) ||
+              (editAction === assignAction && userCanTranscribe())
             }
           >
             {

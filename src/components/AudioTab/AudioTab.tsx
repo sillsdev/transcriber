@@ -12,6 +12,7 @@ import {
   Plan,
   BookName,
   ISharedStrings,
+  RoleNames,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import { withData, WithDataProps } from '../../mods/react-orbitjs';
@@ -363,7 +364,7 @@ export function AudioTab(props: IProps) {
           color="default"
         >
           <div className={classes.actions}>
-            {projRole === 'admin' && (!isOffline || offlineOnly) && (
+            {projRole === RoleNames.Admin && (!isOffline || offlineOnly) && (
               <>
                 <Button
                   id="audUpload"

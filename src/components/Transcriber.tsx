@@ -704,8 +704,9 @@ export function Transcriber(props: IProps) {
     const role = stateRole[curState];
     if (
       role &&
+      projRole &&
       roleHierarchy.indexOf(camel2Title(role) as RoleNames) <=
-        roleHierarchy.indexOf(camel2Title(projRole) as RoleNames)
+        roleHierarchy.indexOf(projRole)
     ) {
       const assigned = related(secRec, role);
       if (!assigned || assigned === '') {
@@ -1162,7 +1163,7 @@ export function Transcriber(props: IProps) {
                           !previous.hasOwnProperty(state) ||
                           playing ||
                           (user !== related(section, 'transcriber') &&
-                            !/admin/i.test(projRole))
+                            projRole !== RoleNames.Admin)
                         }
                       >
                         {t.reopen}

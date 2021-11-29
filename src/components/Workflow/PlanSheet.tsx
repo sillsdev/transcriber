@@ -6,6 +6,7 @@ import {
   BookNameMap,
   OptionType,
   IWorkflow,
+  RoleNames,
 } from '../../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem, AppBar } from '@material-ui/core';
@@ -333,7 +334,7 @@ export function PlanSheet(props: IProps) {
     j: number
   ) => {
     e.preventDefault();
-    if (i > 0 && (!isOffline || offlineOnly) && projRole === 'admin') {
+    if (i > 0 && (!isOffline || offlineOnly) && projRole === RoleNames.Admin) {
       setPosition({ mouseX: e.clientX - 2, mouseY: e.clientY - 4, i, j });
     }
   };
@@ -483,7 +484,7 @@ export function PlanSheet(props: IProps) {
           {
             value: t.audio,
             readOnly: true,
-            width: projRole === 'admin' ? 50 : 20,
+            width: projRole === RoleNames.Admin ? 50 : 20,
           } as ICell,
         ].concat(
           columns.map((col) => {
@@ -593,8 +594,8 @@ export function PlanSheet(props: IProps) {
                     onAudacity={handleAudacity}
                     onPassageDetail={handlePassageDetail}
                     readonly={readonly}
-                    canAssign={projRole === 'admin'}
-                    canDelete={projRole === 'admin'}
+                    canAssign={projRole === RoleNames.Admin}
+                    canDelete={projRole === RoleNames.Admin}
                     active={active - 1 === rowIndex}
                   />
                 ),
@@ -641,7 +642,7 @@ export function PlanSheet(props: IProps) {
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
-        {projRole === 'admin' && (
+        {projRole === RoleNames.Admin && (
           <AppBar position="fixed" className={classes.bar} color="default">
             <div className={classes.actions}>
               <>
@@ -737,7 +738,7 @@ export function PlanSheet(props: IProps) {
         </div>
         <Menu
           keepMounted
-          open={position.mouseY !== null && projRole === 'admin'}
+          open={position.mouseY !== null && projRole === RoleNames.Admin}
           onClose={handleNoContextMenu}
           anchorReference="anchorPosition"
           anchorPosition={

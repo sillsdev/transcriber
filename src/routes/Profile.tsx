@@ -10,6 +10,7 @@ import {
   IProfileStrings,
   DigestPreference,
   OrganizationMembership,
+  RoleNames,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
@@ -339,7 +340,6 @@ export function Profile(props: IProps) {
           memory.update((t: TransformBuilder) =>
             UpdateRelatedRecord(t, mbrRec[0], 'role', 'role', role, user)
           );
-          // setOrgRole(role);
         }
       }
       if (!editId) setLanguage(locale);
@@ -638,7 +638,7 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
-                  {orgRole === 'admin' && editId && email !== '' && (
+                  {orgRole === RoleNames.Admin && editId && email !== '' && (
                     <FormControlLabel
                       control={
                         <SelectRole
@@ -737,7 +737,7 @@ export function Profile(props: IProps) {
                         }
                         label=""
                       />
-                      {orgRole === 'admin' && (
+                      {orgRole === RoleNames.Admin && (
                         <FormControlLabel
                           className={classes.textField}
                           control={

@@ -1,7 +1,11 @@
 import { useState, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IPassageDetailArtifactsStrings, IState } from '../../../model';
+import {
+  IPassageDetailArtifactsStrings,
+  IState,
+  RoleNames,
+} from '../../../model';
 import localStrings from '../../../selector/localize';
 import {
   SectionResource,
@@ -159,7 +163,7 @@ export function PassageDetailArtifacts(props: IProps) {
 
   return (
     <>
-      {/admin/i.test(projRole) && <AddResource action={handleAction} />}
+      {projRole === RoleNames.Admin && <AddResource action={handleAction} />}
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
         {rowData

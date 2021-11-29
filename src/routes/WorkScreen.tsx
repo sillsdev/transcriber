@@ -73,7 +73,6 @@ export const WorkScreen = (props: IProps) => {
   };
 
   const SwitchTo = () => {
-    //if (projRole !== 'admin') return <></>;
     return (
       <ViewMode
         mode={ViewOption.Transcribe}
@@ -88,8 +87,8 @@ export const WorkScreen = (props: IProps) => {
 
   React.useEffect(() => {
     const projectId = setUrlContext(prjId);
-    if (projRole === '')
-      if (setMyProjRole(projectId) === '') {
+    if (!projRole)
+      if (!setMyProjRole(projectId)) {
         // If after proj role set there is none, force reload
         localStorage.removeItem(localUserKey(LocalKey.url, memory));
         forceLogin();

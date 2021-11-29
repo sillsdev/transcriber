@@ -12,16 +12,16 @@ export enum RoleNames {
   Consultant = 'Consultant',
   Translator = 'Translator',
 }
-export const canTranscribe = [
-  RoleNames.Transcriber,
-  RoleNames.BackTranslator,
-  RoleNames.Editor,
-  RoleNames.Admin,
-];
+
 export const canBeEditor = [
   RoleNames.Editor,
   RoleNames.PeerReviewer,
   RoleNames.Admin,
+];
+export const canTranscribe = [
+  ...canBeEditor,
+  RoleNames.Transcriber,
+  RoleNames.BackTranslator,
 ];
 
 export interface Role extends Record {

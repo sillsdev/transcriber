@@ -11,6 +11,7 @@ import {
   Role,
   BookName,
   ISharedStrings,
+  RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -275,7 +276,7 @@ export function AssignmentTable(props: IProps) {
       <div className={classes.paper}>
         <AppBar position="fixed" className={classes.bar} color="default">
           <div className={classes.actions}>
-            {projRole === 'admin' && (
+            {projRole === RoleNames.Admin && (
               <>
                 <Button
                   id="assignAdd"

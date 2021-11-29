@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IGroupSettingsStrings } from '../../model';
+import { IState, IGroupSettingsStrings, RoleNames } from '../../model';
 import localStrings from '../../selector/localize';
 import {
   FormLabel,
@@ -41,7 +41,10 @@ function TeamCol(props: IProps) {
   const [offlineOnly] = useGlobal('offlineOnly');
 
   const canEdit = () =>
-    !detail && orgRole === 'admin' && !allUsers && (!offline || offlineOnly);
+    !detail &&
+    orgRole === RoleNames.Admin &&
+    !allUsers &&
+    (!offline || offlineOnly);
 
   return (
     <Grid item xs={12} md={4}>
