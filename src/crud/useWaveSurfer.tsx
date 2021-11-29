@@ -48,6 +48,7 @@ export function useWaveSurfer(
   const regionsLoadedRef = useRef(false);
   const widthRef = useRef(0);
   const containerRef = useRef(container);
+
   const isNear = (position: number) => {
     return Math.abs(position - progressRef.current) < 0.3;
   };
@@ -177,13 +178,13 @@ export function useWaveSurfer(
       // });
       return ws;
     }
-
     if (container && !wavesurferRef.current) {
       create(container, height);
       containerRef.current = container;
       if (blobToLoad.current) {
         wsLoad();
       }
+      onCanUndo && onCanUndo(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [container, wavesurferRef.current]);
@@ -212,6 +213,8 @@ export function useWaveSurfer(
 
   const wsClear = () => {
     if (wavesurferPlayingRef.current) wavesurferRef.current?.stop();
+    setUndoBuffer(copyOriginal());
+    onCanUndo(true);
     wavesurfer()?.loadDecodedBuffer();
     durationRef.current = 0;
     setProgress(0);
