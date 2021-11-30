@@ -84,6 +84,11 @@ export const doDataChanges = async (
     });
     await memory.sync(await backup.push((t: TransformBuilder) => oparray));
   };
+  const updateSnapshotDate = async (pid: string) => {
+    const oparray: Operation[] = [];
+    offlineProjectUpdateSnapshot(pid, oparray, memory, nextTime, false);
+    await memory.sync(await backup.push((t: TransformBuilder) => oparray));
+  };
 
   const resetRelated = (
     newOps: Operation[],
@@ -189,7 +194,8 @@ export const doDataChanges = async (
   var api = API_CONFIG.host + '/api/datachanges/v' + version.toString() + '/';
   if (isElectron) {
     var records: { id: string; since: string }[] = [];
-    projectsLoaded.forEach((p) => {
+    for (var ix = 0; ix < projectsLoaded.length; ix++) {
+      var p = projectsLoaded[ix];
       var op = getOfflineProject(p);
       if (
         op?.attributes &&
@@ -200,22 +206,31 @@ export const doDataChanges = async (
           id: remoteId('project', p, memory.keyMap),
           since: op.attributes.snapshotDate,
         });
-    });
-    if (records.length) {
-      if (
-        await processDataChanges(
-          api + 'projects/' + fingerprint,
-          new URLSearchParams([['projlist', JSON.stringify(records)]])
+
+      if (records.length) {
+        if (
+          (await processDataChanges(
+            api + 'A/projects/' + fingerprint,
+            new URLSearchParams([['projlist', JSON.stringify(records)]])
+          )) &&
+          (await processDataChanges(
+            api + 'B/projects/' + fingerprint,
+            new URLSearchParams([['projlist', JSON.stringify(records)]])
+          ))
         )
-      )
-        await updateSnapshotDates();
+          await updateSnapshotDate(p);
+      }
     }
   }
   if (
-    await processDataChanges(
-      api + 'since/' + lastTime + '?origin=' + fingerprint,
+    (await processDataChanges(
+      api + 'A/since/' + lastTime + '?origin=' + fingerprint,
       undefined
-    )
+    )) &&
+    (await processDataChanges(
+      api + 'B/since/' + lastTime + '?origin=' + fingerprint,
+      undefined
+    ))
   ) {
     localStorage.setItem(userLastTimeKey, nextTime);
   }
