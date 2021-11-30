@@ -709,6 +709,7 @@ if (
       categoryName: { type: 'string' },
       typeName: { type: 'string' },
       latest: { type: 'boolean' },
+      s3file: { type: 'string' },
       dateCreated: { type: 'string' },
       dateUpdated: { type: 'string' },
       lastModifiedBy: { type: 'number' },

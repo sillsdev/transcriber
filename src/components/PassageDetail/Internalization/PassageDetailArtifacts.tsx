@@ -155,9 +155,8 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleSelectShared = async (res: Resource[], catMap: CatMap) => {
     let cnt = rowData.length;
     for (const r of res) {
-      const medRec: any = { attributes: { ...r.attributes } };
       const catRecId = { type: 'artifactcategory', id: catMap[r.id] };
-      const newMediaRec = await AddMediaFileResource(medRec, catRecId);
+      const newMediaRec = await AddMediaFileResource(r, catRecId);
       cnt += 1;
       await AddSectionResource(cnt, r.attributes.reference, newMediaRec);
     }

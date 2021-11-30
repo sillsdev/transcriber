@@ -32,12 +32,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface SecondaryProps {
   id: string;
+  idx: number;
   fileName?: string;
-  onCategory: (resId: string, catId: string) => void;
+  onCategory: (resId: string, catId: string, idx: number) => void;
 }
-const Secondary = ({ id, fileName, onCategory }: SecondaryProps) => {
+const Secondary = ({ id, idx, fileName, onCategory }: SecondaryProps) => {
   const handleCategory = (catId: string) => {
-    onCategory(id, catId);
+    onCategory(id, catId, idx);
   };
 
   return (
@@ -46,7 +47,7 @@ const Secondary = ({ id, fileName, onCategory }: SecondaryProps) => {
       <SelectCategory
         initCategory={''}
         onCategoryChange={handleCategory}
-        required={true}
+        required={false}
       />
     </div>
   );
@@ -74,15 +75,19 @@ export const SelectResource = (props: IProps) => {
   const ctx = useContext(PassageDetailContext);
   const { getSharedResources } = ctx.state;
 
-  const handleClick = (i: number) => () => {
+  const select = (i: number, noToggle?: boolean) => {
     let newSelected = [...selected];
     const idx = selected.indexOf(i);
     if (idx !== -1) {
-      newSelected.splice(idx, 1);
+      if (!noToggle) newSelected.splice(idx, 1);
     } else {
       newSelected.push(i);
     }
     setSelected(newSelected);
+  };
+
+  const handleClick = (i: number) => () => {
+    select(i);
   };
 
   const handleSelect = () => {
@@ -98,8 +103,9 @@ export const SelectResource = (props: IProps) => {
     onOpen && onOpen(false);
   };
 
-  const handleCategory = (resId: string, catId: string) => {
+  const handleCategory = (resId: string, catId: string, idx: number) => {
     catMap[resId] = catId;
+    select(idx, true);
   };
 
   useEffect(() => {
@@ -123,7 +129,7 @@ export const SelectResource = (props: IProps) => {
               secondary={r.attributes?.originalFile}
             />
             <ListItemSecondaryAction>
-              <Secondary id={r.id} onCategory={handleCategory} />
+              <Secondary id={r.id} idx={i} onCategory={handleCategory} />
             </ListItemSecondaryAction>
           </ListItem>
         ))}
@@ -134,6 +140,7 @@ export const SelectResource = (props: IProps) => {
           variant="contained"
           className={classes.button}
           color="primary"
+          disabled={selected.length === 0}
         >
           {ts.select}
         </Button>

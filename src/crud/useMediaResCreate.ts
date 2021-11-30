@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
-import { MediaFile, ArtifactType } from '../model';
+import { Resource, MediaFile, ArtifactType } from '../model';
 import { AddRecord } from '../model/baseModel';
-import { useStepId } from '.';
+import { remoteIdGuid, useStepId } from '.';
 
 export const useMediaResCreate = (passage: RecordIdentity) => {
   const [memory] = useGlobal('memory');
@@ -22,34 +22,38 @@ export const useMediaResCreate = (passage: RecordIdentity) => {
 
   const planRecId = { type: 'plan', id: plan };
 
-  return async (mediafile: MediaFile, artifactCategory?: RecordIdentity) => {
-    const attr = mediafile.attributes;
+  return async (res: Resource, artifactCategory?: RecordIdentity) => {
+    const attr = res.attributes;
     const mediaRec = {
       type: 'mediafile',
       attributes: {
         versionNumber: attr.versionNumber,
-        eafUrl: attr.eafUrl,
-        audioUrl: attr.audioUrl,
+        eafUrl: null,
+        audioUrl: attr.s3file,
         duration: attr.duration,
         contentType: attr.contentType,
-        audioQuality: attr.audioQuality,
-        textQuality: attr.textQuality,
+        audioQuality: null,
+        textQuality: null,
         transcription: attr.transcription,
         originalFile: attr.originalFile,
         filesize: attr.filesize,
         position: 0,
-        segments: attr.segments,
+        segments: '{}',
         languagebcp47: attr.languagebcp47,
-        performedBy: attr.performedBy,
+        performedBy: null,
       },
     } as MediaFile;
     memory.schema.initializeRecord(mediaRec);
+    const resPassId =
+      remoteIdGuid('passage', attr.passageId, memory.keyMap) || attr.passageId;
+    const resPassRecId = { type: 'passage', id: resPassId };
     const t = new TransformBuilder();
     const ops = [
       ...AddRecord(t, mediaRec, user, memory),
 
       t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
       t.replaceRelatedRecord(mediaRec, 'passage', passage),
+      t.replaceRelatedRecord(mediaRec, 'resourcePassage', resPassRecId),
     ];
     if (sharedResource)
       ops.push(
