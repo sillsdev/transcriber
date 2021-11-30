@@ -23,6 +23,7 @@ import useTodo from '../context/useTodo';
 import TranscribeAddNote from './TranscribeAddNote';
 import { UpdateRecord } from '../model/baseModel';
 import { dateOrTime } from '../utils';
+import { useUser } from '../crud';
 
 interface IStateProps {}
 interface IDispatchProps {}
@@ -60,6 +61,7 @@ export function PassageHistory(props: IProps) {
   );
   const [user] = useGlobal('user');
   const [locale] = useGlobal('lang');
+  const { getUserRec } = useUser();
   const [editNoteVisible, setEditNoteVisible] = useState(false);
   const historyStyle = { height: boxHeight };
   const [selectedId, setSelectedId] = React.useState('');
@@ -98,21 +100,7 @@ export function PassageHistory(props: IProps) {
             memory.keyMap
           );
         }
-        let user = {
-          id: '',
-          attributes: { avatarUrl: null, name: 'Unknown', familyName: '' },
-        } as any;
-        if (!id) {
-          return user;
-        }
-        try {
-          user = memory.cache.query((q: QueryBuilder) =>
-            q.findRecord({ type: 'user', id })
-          ) as User;
-        } catch (error) {
-          // leave default user data
-        }
-        return user;
+        return getUserRec(id);
       };
 
       const nameFromId = (psc: PassageStateChange) => {

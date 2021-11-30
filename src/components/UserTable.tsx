@@ -35,6 +35,7 @@ import {
   RemoveUserFromOrg,
   useAddToOrgAndGroup,
   useTeamDelete,
+  useUser,
 } from '../crud';
 import SelectRole from '../control/SelectRole';
 import { UpdateRelatedRecord } from '../model/baseModel';
@@ -133,6 +134,7 @@ export function UserTable(props: IProps) {
   const [orgRole] = useGlobal('orgRole');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [offline] = useGlobal('offline');
+  const { getUserRec } = useUser();
   const [data, setData] = useState(Array<IRow>());
   const columnDefs = [
     { name: 'name', title: t.name },
@@ -209,7 +211,8 @@ export function UserTable(props: IProps) {
     setDeleteItem(value);
   };
   const handleDeleteConfirmed = () => {
-    RemoveUserFromOrg(memory, deleteItem, organization, user, teamDelete);
+    const deleteRec = getUserRec(deleteItem);
+    RemoveUserFromOrg(memory, deleteRec, organization, user, teamDelete);
 
     setDeleteItem('');
   };
