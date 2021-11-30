@@ -49,7 +49,7 @@ export const useArtifactCategory = () => {
     await waitForIt(
       'category update',
       () => !remote || remote.requestQueue.length === 0,
-      () => offline,
+      () => offline && !offlineOnly,
       200
     );
     const orgrecs: ArtifactCategory[] = memory.cache.query((q: QueryBuilder) =>
