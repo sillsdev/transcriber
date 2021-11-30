@@ -25,6 +25,8 @@ export interface Resource extends BaseModel {
     categoryName: string | null;
     typeName: string | null;
     latest: boolean;
+    s3file: string | null;
+    passageId: string;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;

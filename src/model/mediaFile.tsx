@@ -24,6 +24,7 @@ export interface MediaFile extends BaseModel {
     link: boolean;
     readyToShare: boolean;
     performedBy: string | null;
+    resourcePassageId: number | null;
   };
   relationships?: {
     passage: RecordRelationship;
@@ -33,7 +34,6 @@ export interface MediaFile extends BaseModel {
     artifactCategory: RecordRelationship;
     orgWorkflowStep: RecordRelationship;
     recordedbyUser: RecordRelationship;
-    resourcePassage: RecordRelationship;
   };
 }
 export default MediaFile;
