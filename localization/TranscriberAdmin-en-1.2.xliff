@@ -942,8 +942,8 @@
                <context context-type="sourcefile">DiscussionCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="discussionCard.subject">
-            <source>Subject</source>
+         <trans-unit id="discussionCard.topic">
+            <source>Topic</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>

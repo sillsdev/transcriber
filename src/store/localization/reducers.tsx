@@ -206,7 +206,7 @@ const initialState = {
 			"confirmDelete": "Delete this discussion and all commments?",
 			"or": "or",
 			"resolved": "Resolve",
-			"subject": "Subject",
+			"topic": "Topic",
 		}
 	}),
 	"discussionList": new LocalizedStrings({
