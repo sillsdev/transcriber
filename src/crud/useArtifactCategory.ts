@@ -21,6 +21,7 @@ const stringSelector = (state: IState) =>
 export const useArtifactCategory = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const [offline] = useGlobal('offline');
   const [organization] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [coordinator] = useGlobal('coordinator');
@@ -48,7 +49,7 @@ export const useArtifactCategory = () => {
     await waitForIt(
       'category update',
       () => !remote || remote.requestQueue.length === 0,
-      () => false,
+      () => offline,
       200
     );
     const orgrecs: ArtifactCategory[] = memory.cache.query((q: QueryBuilder) =>
