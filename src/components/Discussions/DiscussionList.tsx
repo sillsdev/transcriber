@@ -158,16 +158,14 @@ export function DiscussionList(props: IProps) {
         </div>
       </div>
       <Grid container className={classes.cardFlow}>
-        {displayDiscussions.map((i) => {
-          return (
-            <DiscussionCard
-              key={i.id}
-              discussion={i}
-              collapsed={collapsed}
-              onAddComplete={adding ? handleAddComplete : undefined}
-            />
-          );
-        })}
+        {displayDiscussions.map((i, j) => (
+          <DiscussionCard
+            key={j}
+            discussion={i}
+            collapsed={collapsed}
+            onAddComplete={adding ? handleAddComplete : undefined}
+          />
+        ))}
       </Grid>
     </Paper>
   );

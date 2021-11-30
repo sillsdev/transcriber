@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-    subject: {
+    topic: {
       marginRight: theme.spacing(2),
     },
     pos: {
@@ -391,10 +391,10 @@ export const DiscussionCard = (props: IProps) => {
               <TextField
                 autoFocus
                 margin="dense"
-                id="subject"
+                id="topic"
                 value={editSubject}
                 onChange={handleSubjectChange}
-                placeholder={t.subject}
+                placeholder={t.topic}
                 required
                 fullWidth
               />
@@ -454,7 +454,7 @@ export const DiscussionCard = (props: IProps) => {
                     <Typography
                       variant="h6"
                       component="h2"
-                      className={classes.subject}
+                      className={classes.topic}
                     >
                       {discussion.attributes?.subject}
                     </Typography>
@@ -510,9 +510,9 @@ export const DiscussionCard = (props: IProps) => {
           </div>
           {showComments && !onAddComplete && (
             <Grid container className={classes.cardFlow}>
-              {myComments.map((i) => {
-                return <CommentCard key={i.id} comment={i} />;
-              })}
+              {myComments.map((i) => (
+                <CommentCard key={i.id} comment={i} />
+              ))}
               {!discussion.attributes.resolved && (
                 <ReplyCard
                   discussion={discussion}

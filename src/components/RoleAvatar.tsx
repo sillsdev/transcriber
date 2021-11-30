@@ -13,6 +13,7 @@ import { isElectron } from '../api-variable';
 import localStrings from '../selector/localize';
 import { localizeRole } from '../utils';
 const os = require('os');
+const fs = require('fs');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,9 +54,11 @@ export function RoleAvatar(props: IProps) {
       '.png',
   });
   if (src && isElectron && !src.startsWith('http')) {
-    const url =
-      os.platform() === 'win32' ? new URL(src).toString().slice(8) : src;
-    src = `transcribe-safe://${url}`;
+    if (fs.existsSync(src)) {
+      const url =
+        os.platform() === 'win32' ? new URL(src).toString().slice(8) : src;
+      src = `transcribe-safe://${url}`;
+    } else src = '';
   }
   return src ? (
     <Avatar

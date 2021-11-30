@@ -808,9 +808,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="discussionCard.subject">
+      <unit id="discussionCard.topic">
          <segment>
-            <source>Subject</source>
+            <source>Topic</source>
             <target/>
          </segment>
       </unit>
