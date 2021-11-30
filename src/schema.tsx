@@ -370,6 +370,7 @@ const schemaDefinition: SchemaSettings = {
         link: { type: 'bool' },
         readyToShare: { type: 'bool' },
         performedBy: { type: 'string' },
+        resourcePassageId: { type: 'number' },
       },
       relationships: {
         artifactType: { type: 'hasOne', model: 'artifacttype' },
@@ -379,7 +380,6 @@ const schemaDefinition: SchemaSettings = {
         passage: { type: 'hasOne', model: 'passage', inverse: 'mediafiles' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
         recordedbyUser: { type: 'hasOne', model: 'user' },
-        resourcePassage: { type: 'hasOne', model: 'passage' },
       },
     },
     user: {
@@ -693,7 +693,7 @@ if (
       plantype: { type: 'string' },
       section: { type: 'string' },
       sectionSequencenum: { type: 'number' },
-      passage: { type: 'string' },
+      passageDesc: { type: 'string' },
       passageSequencenum: { type: 'number' },
       book: { type: 'string' },
       passageId: { type: 'string' },
@@ -715,6 +715,7 @@ if (
       lastModifiedBy: { type: 'number' },
     },
     relationships: {
+      passage: { type: 'hasOne', model: 'passage' },
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };

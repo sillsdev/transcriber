@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { Resource, MediaFile, ArtifactType } from '../model';
 import { AddRecord } from '../model/baseModel';
-import { remoteIdGuid, useStepId } from '.';
+import { useStepId } from '.';
 
 export const useMediaResCreate = (passage: RecordIdentity) => {
   const [memory] = useGlobal('memory');
@@ -29,7 +29,6 @@ export const useMediaResCreate = (passage: RecordIdentity) => {
       attributes: {
         versionNumber: attr.versionNumber,
         eafUrl: null,
-        audioUrl: attr.s3file,
         duration: attr.duration,
         contentType: attr.contentType,
         audioQuality: null,
@@ -41,19 +40,16 @@ export const useMediaResCreate = (passage: RecordIdentity) => {
         segments: '{}',
         languagebcp47: attr.languagebcp47,
         performedBy: null,
+        resourcePassageId: attr.passageId,
       },
-    } as MediaFile;
+    } as any as MediaFile;
     memory.schema.initializeRecord(mediaRec);
-    const resPassId =
-      remoteIdGuid('passage', attr.passageId, memory.keyMap) || attr.passageId;
-    const resPassRecId = { type: 'passage', id: resPassId };
     const t = new TransformBuilder();
     const ops = [
       ...AddRecord(t, mediaRec, user, memory),
 
       t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
       t.replaceRelatedRecord(mediaRec, 'passage', passage),
-      t.replaceRelatedRecord(mediaRec, 'resourcePassage', resPassRecId),
     ];
     if (sharedResource)
       ops.push(
