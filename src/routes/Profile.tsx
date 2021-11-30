@@ -46,6 +46,7 @@ import {
   useAddToOrgAndGroup,
   RemoveUserFromOrg,
   useTeamDelete,
+  useUser,
 } from '../crud';
 import {
   makeAbbr,
@@ -184,6 +185,7 @@ export function Profile(props: IProps) {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
+  const { getUserRec } = useUser();
   const { getMbrRoleRec } = useRole();
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [currentUser, setCurrentUser] = useState<User | undefined>();
@@ -411,7 +413,8 @@ export function Profile(props: IProps) {
     if (currentUser) setDeleteItem(currentUser.id);
   };
   const handleDeleteConfirmed = async () => {
-    await RemoveUserFromOrg(memory, deleteItem, undefined, user, teamDelete);
+    const deleteRec = getUserRec(deleteItem);
+    await RemoveUserFromOrg(memory, deleteRec, undefined, user, teamDelete);
     await memory.update((tb) =>
       tb.removeRecord({ type: 'user', id: deleteItem })
     );

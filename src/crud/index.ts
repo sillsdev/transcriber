@@ -63,3 +63,4 @@ export * from './useSecResDelete';
 export * from './stepId';
 export * from './useArtifactCategory';
 export * from './useArtifactType';
+export * from './useUser';

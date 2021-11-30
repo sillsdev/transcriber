@@ -43,22 +43,21 @@ export function SetUserLanguage(
 }
 export async function RemoveUserFromOrg(
   memory: Memory,
-  userToRemove: string,
+  deletedUser: User,
   organization: string | undefined,
   user: string,
   teamDelete: (id: string) => void
 ) {
   var t = new TransformBuilder();
   var ops: Operation[] = [];
-  const deletedUser = memory.cache.query((q: QueryBuilder) =>
-    q.findRecord({ type: 'user', id: userToRemove })
-  ) as User;
+
+  if (deletedUser.id === '') return; // user already deleted
 
   const orgMemberRecs = memory.cache.query((q: QueryBuilder) =>
     q.findRecords('organizationmembership')
   ) as OrganizationMembership[];
   var userOrgRec = orgMemberRecs.filter(
-    (o) => related(o, 'user') === userToRemove
+    (o) => related(o, 'user') === deletedUser.id
   );
 
   if (organization)
@@ -78,7 +77,7 @@ export async function RemoveUserFromOrg(
 
   const inviteRec = invites.filter(
     (i) =>
-      i.attributes.email === deletedUser.attributes.email &&
+      i.attributes.email === deletedUser.attributes?.email &&
       organizationIds.includes(related(i, 'organization'))
   );
   inviteRec.forEach((i) => {
@@ -95,7 +94,7 @@ export async function RemoveUserFromOrg(
   ) as GroupMembership[];
   const userGrpOrgRecs = grpMbrRecs.filter(
     (g) =>
-      related(g, 'user') === userToRemove &&
+      related(g, 'user') === deletedUser.id &&
       orgGroups.includes(related(g, 'group'))
   );
   userGrpOrgRecs.forEach((g) => {
@@ -120,13 +119,13 @@ export async function RemoveUserFromOrg(
   sections = sections.filter((s) => planids.includes(related(s, 'plan')));
 
   var assigned = sections.filter(
-    (s) => related(s, 'transcriber') === userToRemove
+    (s) => related(s, 'transcriber') === deletedUser.id
   );
   assigned.forEach((s) =>
     ops.push(...UpdateRelatedRecord(t, s, 'transcriber', 'user', '', user))
   );
 
-  assigned = sections.filter((s) => related(s, 'editor') === userToRemove);
+  assigned = sections.filter((s) => related(s, 'editor') === deletedUser.id);
   assigned.forEach((s) =>
     ops.push(...UpdateRelatedRecord(t, s, 'editor', 'user', '', user))
   );
