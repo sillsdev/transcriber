@@ -5,6 +5,8 @@ import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { related } from '.';
 import { AddRecord } from '../model/baseModel';
+import { waitForIt } from '../utils';
+import JSONAPISource from '@orbit/jsonapi';
 
 interface ISwitches {
   [key: string]: any;
@@ -19,8 +21,12 @@ const stringSelector = (state: IState) =>
 export const useArtifactCategory = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const [offline] = useGlobal('offline');
   const [organization] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator.getSource('remote') as JSONAPISource;
+
   const t: IArtifactCategoryStrings = useSelector(stringSelector, shallowEqual);
   const [fromLocal] = useState<ISwitches>({});
 
@@ -37,8 +43,15 @@ export const useArtifactCategory = () => {
     return fromLocal[val] || val;
   };
 
-  const getArtifactCategorys = () => {
+  const getArtifactCategorys = async () => {
     const categorys: IArtifactCategory[] = [];
+    /* wait for new categories remote id to fill in */
+    await waitForIt(
+      'category update',
+      () => !remote || remote.requestQueue.length === 0,
+      () => offline,
+      200
+    );
     const orgrecs: ArtifactCategory[] = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('artifactcategory')
     ) as any;
@@ -55,9 +68,9 @@ export const useArtifactCategory = () => {
           id: r.id,
         })
       );
-
     return categorys;
   };
+
   const addNewArtifactCategory = async (newArtifactCategory: string) => {
     if (newArtifactCategory.length > 0) {
       //check for duplicate
@@ -67,9 +80,14 @@ export const useArtifactCategory = () => {
             .findRecords('artifactcategory')
             .filter({ attribute: 'categoryname', value: newArtifactCategory })
       ) as any;
-      if (orgrecs.length > 0) return 'duplicate';
+      var dup = false;
+      orgrecs.forEach((r) => {
+        var org = related(r, 'organization');
+        if (org === organization || !org) dup = true;
+      });
+      if (dup) return 'duplicate';
       //now check duplicate localized
-      const ac = getArtifactCategorys().filter(
+      const ac = (await getArtifactCategorys()).filter(
         (c) => c.category === newArtifactCategory
       );
       if (ac.length > 0) return 'duplicate';

@@ -11,17 +11,26 @@ import {
   IArtifactCategory,
   useArtifactCategory,
 } from '../../crud/useArtifactCategory';
-import { ISelectArtifactCategoryStrings, IState } from '../../model';
+import {
+  ArtifactCategory,
+  ISelectArtifactCategoryStrings,
+  IState,
+} from '../../model';
 import AddIcon from '@material-ui/icons/Add';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 import { useSnackBar } from '../../hoc/SnackBar';
+import { QueryBuilder } from '@orbit/data';
+import { withData } from '../../mods/react-orbitjs';
 
+interface IRecordProps {
+  artifactCategories: Array<ArtifactCategory>;
+}
 interface IStateProps {
   t: ISelectArtifactCategoryStrings;
 }
-interface IProps extends IStateProps {
+interface IProps extends IStateProps, IRecordProps {
   initCategory: string; //id
   onCategoryChange: (artifactCategoryId: string) => void;
   required: boolean;
@@ -60,20 +69,33 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 export const SelectArtifactCategory = (props: IProps) => {
-  const { onCategoryChange, allowNew, required, t, initCategory } = props;
+  const {
+    onCategoryChange,
+    allowNew,
+    required,
+    t,
+    artifactCategories,
+    initCategory,
+  } = props;
   const classes = useStyles();
   const [categoryId, setCategoryId] = useState(initCategory);
   const [newArtifactCategory, setNewArtifactCategory] = useState('');
   const [showNew, setShowNew] = useState(false);
   const { getArtifactCategorys, addNewArtifactCategory } =
     useArtifactCategory();
-  const [artifactCategorys, setArtifactCategorys] = useState(
-    getArtifactCategorys()
-  );
+  const [artifactCategorys, setArtifactCategorys] = useState<
+    IArtifactCategory[]
+  >([]);
+
   const { showMessage } = useSnackBar();
   useEffect(() => {
     setCategoryId(initCategory);
   }, [initCategory]);
+
+  useEffect(() => {
+    getArtifactCategorys().then((cats) => setArtifactCategorys(cats));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [artifactCategories]);
 
   const addNewCategory = () => {
     addNewArtifactCategory(newArtifactCategory).then((newId) => {
@@ -81,9 +103,11 @@ export const SelectArtifactCategory = (props: IProps) => {
         if (newId === 'duplicate') {
           showMessage(t.duplicateCategory);
         } else {
-          setCategoryId(newId);
-          setArtifactCategorys(getArtifactCategorys());
-          onCategoryChange(newId);
+          getArtifactCategorys().then((cats) => {
+            setArtifactCategorys(cats);
+            setCategoryId(newId);
+            onCategoryChange(newId);
+          });
         }
       }
       cancelNewCategory();
@@ -183,4 +207,10 @@ export const SelectArtifactCategory = (props: IProps) => {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'selectArtifactCategory' }),
 });
-export default connect(mapStateToProps)(SelectArtifactCategory);
+const mapRecordsToProps = {
+  artifactCategories: (q: QueryBuilder) => q.findRecords('artifactCategory'),
+};
+
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(SelectArtifactCategory) as any
+) as any;
