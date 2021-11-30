@@ -51,6 +51,8 @@ export async function RemoveUserFromOrg(
   var t = new TransformBuilder();
   var ops: Operation[] = [];
 
+  if (deletedUser.id === '') return; // user already deleted
+
   const orgMemberRecs = memory.cache.query((q: QueryBuilder) =>
     q.findRecords('organizationmembership')
   ) as OrganizationMembership[];
@@ -75,7 +77,7 @@ export async function RemoveUserFromOrg(
 
   const inviteRec = invites.filter(
     (i) =>
-      i.attributes.email === deletedUser.attributes.email &&
+      i.attributes.email === deletedUser.attributes?.email &&
       organizationIds.includes(related(i, 'organization'))
   );
   inviteRec.forEach((i) => {
