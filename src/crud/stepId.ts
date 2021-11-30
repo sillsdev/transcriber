@@ -1,12 +1,14 @@
-import { useMemo } from 'react';
+import { useMemo, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { OrgWorkflowStep } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import { related } from '.';
+import { PassageDetailContext } from '../context/PassageDetailContext';
 
 export const useStepId = (step: string) => {
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
+  const { workflow } = useContext(PassageDetailContext).state;
 
   return useMemo(() => {
     const workflowsteps = memory.cache.query((q: QueryBuilder) =>
@@ -16,5 +18,6 @@ export const useStepId = (step: string) => {
       .filter((s) => related(s, 'organization') === organization)
       .find((s) => s.attributes?.name === step);
     return internalizationStep;
-  }, [step, memory.cache, organization]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, memory.cache, organization, workflow]);
 };

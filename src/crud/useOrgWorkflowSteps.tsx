@@ -4,10 +4,13 @@ import { related } from '.';
 import { OrgWorkflowStep, WorkflowStep } from '../model';
 import { AddRecord } from '../model/baseModel';
 import { logError, Severity, waitForIt } from '../utils';
+import JSONAPISource from '@orbit/jsonapi';
 
 export const useOrgWorkflowSteps = () => {
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
+  const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
   const [errorReporter] = useGlobal('errorReporter');
   const [offline] = useGlobal('offline');
@@ -33,7 +36,15 @@ export const useOrgWorkflowSteps = () => {
     }
   };
 
-  const QueryOrgWorkflowSteps = (process: string) => {
+  const QueryOrgWorkflowSteps = async (process: string) => {
+    /* wait for new workflow steps remote id to fill in */
+    await waitForIt(
+      'waiting for workflow update',
+      () => !remote || remote.requestQueue.length === 0,
+      () => offline && !offlineOnly,
+      200
+    );
+
     const orgworkflowsteps = memory.cache.query((q: QueryBuilder) =>
       q
         .findRecords('orgworkflowstep')
@@ -64,7 +75,7 @@ export const useOrgWorkflowSteps = () => {
     for (var ix = 0; ix < workflowsteps.length; ix++)
       await AddOrgWFToOps(tb, workflowsteps[ix]);
     creatingRef.current = false;
-    return QueryOrgWorkflowSteps(process);
+    return await QueryOrgWorkflowSteps(process);
   };
 
   const GetOrgWorkflowSteps = async (process: string) => {
@@ -75,7 +86,7 @@ export const useOrgWorkflowSteps = () => {
         () => false,
         100
       );
-    var orgsteps = QueryOrgWorkflowSteps(process);
+    var orgsteps = await QueryOrgWorkflowSteps(process);
     if (orgsteps.length === 0) {
       orgsteps = await CreateOrgWorkflowSteps(process);
     }
