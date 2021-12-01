@@ -611,6 +611,7 @@ export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
     "playpause": string;
     "recordAudio": string;
     "transcribe": string;
+    "versions": string;
 };
 
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {

@@ -14,6 +14,7 @@ import StopIcon from '@material-ui/icons/Stop';
 import MicIcon from '@material-ui/icons/Mic';
 import SharedCheckbox from '@material-ui/icons/CheckBoxOutlined';
 import NotSharedCheckbox from '@material-ui/icons/CheckBoxOutlineBlankOutlined';
+import VersionsIcon from '@material-ui/icons/List';
 
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
@@ -85,7 +86,7 @@ export function PlanAudioActions(props: IProps) {
 
   return (
     <div className={classes.arrangeActions}>
-      {isPassage && mediaShared !== IMediaShare.NotPublic && (
+      {isPassage && (
         <IconButton
           id="passageShare"
           className={
@@ -93,11 +94,13 @@ export function PlanAudioActions(props: IProps) {
               ? classes.oldShared
               : classes.actionButton
           }
-          title={'Shared?'}
+          title={t.versions}
           disabled={(mediaId || '') === ''}
           onClick={onHistory(rowIndex)}
         >
-          {mediaShared === IMediaShare.None ? (
+          {mediaShared === IMediaShare.NotPublic ? (
+            <VersionsIcon />
+          ) : mediaShared === IMediaShare.None ? (
             <NotSharedCheckbox />
           ) : (
             <SharedCheckbox />
