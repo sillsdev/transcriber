@@ -333,9 +333,7 @@ function WSAudioPlayer(props: IProps) {
   const paperStyle = {};
 
   useEffect(() => {
-    const keys = [
-      { key: FASTER_KEY, cb: handleFaster },
-      { key: SLOWER_KEY, cb: handleSlower },
+    const playerKeys = [
       {
         key: PLAY_PAUSE_KEY,
         cb: () => {
@@ -362,14 +360,34 @@ function WSAudioPlayer(props: IProps) {
       { key: BACK_KEY, cb: handleJumpBackward },
       { key: AHEAD_KEY, cb: handleJumpForward },
       { key: TIMER_KEY, cb: handleSendProgress },
-      { key: RECORD_KEY, cb: handleRecorder },
+    ];
+
+    const speedKeys = [
+      { key: FASTER_KEY, cb: handleFaster },
+      { key: SLOWER_KEY, cb: handleSlower },
+    ];
+
+    const recordKeys = [{ key: RECORD_KEY, cb: handleRecorder }];
+
+    const segmentKeys = [
       { key: LEFT_KEY, cb: handlePrevRegion },
       { key: RIGHT_KEY, cb: handleNextRegion },
     ];
-    keys.forEach((k) => subscribe(k.key, k.cb));
+
+    if (allowRecord) recordKeys.forEach((k) => subscribe(k.key, k.cb));
+
+    if (allowSegment) segmentKeys.forEach((k) => subscribe(k.key, k.cb));
+
+    if (allowSpeed) speedKeys.forEach((k) => subscribe(k.key, k.cb));
+
+    playerKeys.forEach((k) => subscribe(k.key, k.cb));
+
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      keys.forEach((k) => unsubscribe(k.key));
+      playerKeys.forEach((k) => unsubscribe(k.key));
+      recordKeys.forEach((k) => unsubscribe(k.key));
+      segmentKeys.forEach((k) => unsubscribe(k.key));
+      speedKeys.forEach((k) => unsubscribe(k.key));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
