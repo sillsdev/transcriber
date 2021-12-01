@@ -125,13 +125,14 @@ export function PassageDetailArtifacts(props: IProps) {
     oldIndex: number;
     newIndex: number;
   }) => {
-    const newRows = arrayMove(rowData, oldIndex, newIndex) as IRow[];
-    ctx.setState((state) => {
-      return { ...state, rowData: newRows };
+    const indexes = Array<number>();
+    rowData.forEach((r, i) => {
+      if (r.isResource) indexes.push(i);
     });
-    for (let i = 0; i < newRows.length; i += 1) {
+    const newIndexes = arrayMove(indexes, oldIndex, newIndex) as number[];
+    for (let i = 0; i < newIndexes.length; i += 1) {
       const secResRec = sectionResources.find(
-        (r) => related(r, 'mediafile') === newRows[i].id
+        (r) => related(r, 'mediafile') === rowData[newIndexes[i]].id
       );
       if (secResRec && secResRec.attributes?.sequenceNum !== i) {
         UpdateSectionResource({
@@ -140,6 +141,12 @@ export function PassageDetailArtifacts(props: IProps) {
         });
       }
     }
+    const newRows = rowData.map((r, i) =>
+      r.isResource ? rowData[newIndexes[i]] : r
+    );
+    ctx.setState((state) => {
+      return { ...state, rowData: newRows };
+    });
   };
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
