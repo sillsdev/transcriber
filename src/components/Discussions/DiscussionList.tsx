@@ -19,6 +19,7 @@ import HideIcon from '@material-ui/icons/ArrowDropUp';
 import ShowIcon from '@material-ui/icons/ArrowDropDown';
 import DiscussionCard from './DiscussionCard';
 import { withData } from '../../mods/react-orbitjs';
+import { useGlobal } from 'reactn';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,6 +63,7 @@ interface IProps extends IStateProps, IRecordProps {}
 export function DiscussionList(props: IProps) {
   const { t, discussions } = props;
   const classes = useStyles();
+  const [changed, setChanged] = useGlobal('changed');
   const [displayDiscussions, setDisplayDiscussions] = useState<Discussion[]>(
     []
   );
@@ -116,12 +118,22 @@ export function DiscussionList(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussions, currentstep, adding]);
 
+  useEffect(() => {
+    if (changed) {
+      setAdding(false);
+      setChanged(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentstep]);
+
   const handleAddComplete = () => {
     setAdding(false);
+    setChanged(false);
   };
 
   const handleAddDiscussion = async () => {
     setAdding(true);
+    setChanged(true);
   };
   const handleToggleCollapse = () => {
     setCollapsed(!collapsed);

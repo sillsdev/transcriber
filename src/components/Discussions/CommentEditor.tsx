@@ -1,6 +1,7 @@
 import { Button, TextField } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { useGlobal } from 'reactn';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,10 +37,13 @@ interface IProps {
 export const CommentEditor = (props: IProps) => {
   const { comment, okStr, cancelStr, refresh, onOk, onCancel } = props;
   const classes = useStyles();
+  const [changed, setChanged] = useGlobal('changed');
   const [curText, setCurText] = useState(comment);
 
   const handleTextChange = (e: any) => {
     setCurText(e.target.value);
+    const change = e.target.value !== '';
+    if (change !== changed) setChanged(change);
   };
   const handleOk = (e: any) => {
     onOk && onOk(curText);
