@@ -14,7 +14,7 @@ import {
 import localStrings from '../../selector/localize';
 import { QueryBuilder } from '@orbit/data';
 import Auth from '../../auth/Auth';
-import { related, usePlan } from '../../crud';
+import { related, useArtifactType, usePlan } from '../../crud';
 import { IRow, getMedia, IGetMedia } from '.';
 import AudioTable from './AudioTable';
 
@@ -42,13 +42,17 @@ export const VersionDlg = (props: IProps) => {
   const [playItem, setPlayItem] = useState('');
   const [data, setData] = useState<IRow[]>([]);
   const [refresh, setRefresh] = useState(false);
+  const { vernacularId } = useArtifactType();
 
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
     const media: MediaFile[] = mediaFiles.filter(
-      (m) => related(m, 'passage') === passId
+      (m) =>
+        related(m, 'passage') === passId &&
+        (related(m, 'artifactType') == null ||
+          related(m, 'artifactType') === vernacularId)
     );
-
+    //filter
     const mediaData: IGetMedia = {
       planName: planRec?.attributes?.name,
       passages,

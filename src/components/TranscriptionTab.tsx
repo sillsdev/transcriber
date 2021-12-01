@@ -58,6 +58,7 @@ import {
   getMediaName,
   getMediaInPlans,
   useOrganizedBy,
+  useArtifactType,
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -216,7 +217,7 @@ export function TranscriptionTab(props: IProps) {
   const [fingerprint] = useGlobal('fingerprint');
   const getOfflineProject = useOfflnProjRead();
   const [globalStore] = useGlobal();
-
+  const { vernacularId } = useArtifactType();
   const columnDefs = [
     { name: 'name', title: getOrganizedBy(true) },
     { name: 'state', title: t.sectionstate },
@@ -268,7 +269,9 @@ export function TranscriptionTab(props: IProps) {
     var projectplans = plans.filter((pl) => related(pl, 'project') === project);
     let media: MediaFile[] = getMediaInPlans(
       projectplans.map((p) => p.id),
-      mediaFiles
+      mediaFiles,
+      vernacularId,
+      true
     );
     const attached = media
       .map((m) => related(m, 'passage'))

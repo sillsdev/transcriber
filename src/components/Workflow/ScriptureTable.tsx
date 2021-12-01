@@ -619,7 +619,6 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleVersions = (i: number) => () => {
-    console.log('handle versions', i);
     saveIfChanged(() => {
       setVersionItem(workflow[i].passageId?.id || '');
     });
