@@ -11,10 +11,19 @@ const versionName = (mf: MediaFile) => {
 };
 export const getMediaInPlans = (
   planids: Array<string>,
-  mediaFiles: Array<MediaFile>
+  mediaFiles: Array<MediaFile>,
+  onlyTypeId: string | undefined,
+  nullTypeId: boolean
 ) => {
   const latest: ILatest = {};
   var media = mediaFiles.filter((m) => planids.includes(related(m, 'plan')));
+  if (onlyTypeId) {
+    media = media.filter(
+      (m) =>
+        related(m, 'artifactType') === onlyTypeId ||
+        (nullTypeId ? related(m, 'artifactType') === null : false)
+    );
+  }
   media.forEach((f) => {
     const name = versionName(f);
     latest[name] = latest[name]

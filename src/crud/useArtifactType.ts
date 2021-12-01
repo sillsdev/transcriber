@@ -1,4 +1,4 @@
-import { useGlobal, useState } from 'reactn';
+import { useGlobal, useMemo, useState } from 'reactn';
 import { IState, IArtifactTypeStrings, ArtifactType } from '../model';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
@@ -58,6 +58,18 @@ export const useArtifactType = () => {
 
     return types;
   };
+  const vernacularId = useMemo(() => {
+    var types = memory.cache.query((q: QueryBuilder) =>
+      q
+        .findRecords('artifacttype')
+        .filter({ attribute: 'typename', value: 'vernacular' })
+    ) as ArtifactType[];
+    var v = types.find((r) => Boolean(r?.keys?.remoteId) !== offlineOnly);
+    if (v) return v.id;
+    return '';
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offlineOnly]);
+
   const addNewArtifactType = async (newArtifactType: string) => {
     const artifactType: ArtifactType = {
       type: 'artifacttype',
@@ -83,5 +95,6 @@ export const useArtifactType = () => {
     addNewArtifactType,
     localizedArtifactType,
     fromLocalizedArtifactType,
+    vernacularId,
   };
 };

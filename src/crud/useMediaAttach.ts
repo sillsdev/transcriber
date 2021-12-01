@@ -3,7 +3,12 @@ import { ISharedStrings, ActivityStates, MediaFile } from '../model';
 import { orbitErr } from '../utils';
 import * as actions from '../store';
 import { TransformBuilder, Operation } from '@orbit/data';
-import { getMediaInPlans, related, UpdatePassageStateOps } from '.';
+import {
+  getMediaInPlans,
+  related,
+  UpdatePassageStateOps,
+  useArtifactType,
+} from '.';
 
 interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
@@ -18,6 +23,7 @@ export const useMediaAttach = (props: IProps) => {
   const { doOrbitError, ts } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const { vernacularId } = useArtifactType();
 
   const attach = async (
     passage: string,
@@ -33,7 +39,9 @@ export const useMediaAttach = (props: IProps) => {
     if (related(mediaRec, 'passage') !== passage) {
       var media = getMediaInPlans(
         [plan],
-        memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
+        memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[],
+        vernacularId,
+        true
       ).filter((m) => related(m, 'passage') === passage);
       ops.push(
         tb.replaceAttribute(

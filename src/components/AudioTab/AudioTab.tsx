@@ -28,7 +28,12 @@ import BigDialog from '../../hoc/BigDialog';
 import AudioTable from './AudioTable';
 import Uploader, { IStatus } from '../Uploader';
 import Auth from '../../auth/Auth';
-import { getMediaInPlans, usePlan, remoteIdGuid } from '../../crud';
+import {
+  getMediaInPlans,
+  usePlan,
+  remoteIdGuid,
+  useArtifactType,
+} from '../../crud';
 import { useGlobal } from 'reactn';
 import { useRemoteSave } from '../../utils';
 import { HeadHeight } from '../../App';
@@ -152,6 +157,7 @@ export function AudioTab(props: IProps) {
     doOrbitError,
   });
   const [refresh, setRefresh] = useState(false);
+  const { vernacularId } = useArtifactType();
 
   const hasPassage = (pRow: number) => {
     for (let mediaId of Object.keys(attachMap)) {
@@ -263,9 +269,9 @@ export function AudioTab(props: IProps) {
 
   useEffect(() => {
     if (plan && mediaFiles.length > 0) {
-      setPlanMedia(getMediaInPlans([plan], mediaFiles));
+      setPlanMedia(getMediaInPlans([plan], mediaFiles, vernacularId, true));
     }
-  }, [mediaFiles, plan]);
+  }, [mediaFiles, plan, vernacularId]);
 
   // Check if playItem changes
   useEffect(() => {

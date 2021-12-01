@@ -7,7 +7,12 @@ import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import localStrings from '../selector/localize';
 import MediaUpload, { UploadType } from './MediaUpload';
-import { getMediaInPlans, related, remoteIdNum } from '../crud';
+import {
+  getMediaInPlans,
+  related,
+  remoteIdNum,
+  useArtifactType,
+} from '../crud';
 import Auth from '../auth/Auth';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
@@ -95,6 +100,7 @@ export const Uploader = (props: IProps) => {
   const authRef = useRef<Auth>(auth);
   const mediaIdRef = useRef<string[]>([]);
   const artifactTypeRef = useRef<string>('');
+  const { vernacularId } = useArtifactType();
 
   const finishMessage = () => {
     setTimeout(() => {
@@ -142,7 +148,9 @@ export const Uploader = (props: IProps) => {
       if (planRecId.id) {
         var media = getMediaInPlans(
           [planRecId.id],
-          memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
+          memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[],
+          artifactTypeRef.current,
+          artifactTypeRef.current === vernacularId
         ).filter((m) => m.attributes.originalFile === data.originalFile);
         var num = 1;
         var psg = '';
