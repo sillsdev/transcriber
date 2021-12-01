@@ -1009,6 +1009,8 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "record": string;
     "review": string;
     "teamCheck": string;
+    "unsaved": string;
+    "withoutSave": string;
 };
 
 export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods {

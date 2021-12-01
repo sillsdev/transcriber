@@ -507,8 +507,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           <Confirm
             open={true}
             onClose={handleRefuseStep}
-            title={'Unsaved content'}
-            text={'Change step without saving?'}
+            title={wfStr.unsaved}
+            text={wfStr.withoutSave}
             yesResponse={handleConfirmStep}
             noResponse={handleRefuseStep}
           />
