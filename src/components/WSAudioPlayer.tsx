@@ -602,7 +602,7 @@ function WSAudioPlayer(props: IProps) {
   };
 
   const handleChanged = async () => {
-    if (setChanged) setChanged(true);
+    if (setChanged) setChanged(durationRef.current !== 0);
     if (setBlobReady) setBlobReady(false);
     wsBlob().then((newblob) => {
       if (onBlobReady && newblob) onBlobReady(newblob);
