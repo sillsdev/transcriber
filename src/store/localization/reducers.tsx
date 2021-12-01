@@ -656,6 +656,7 @@ const initialState = {
 			"playpause": "Play/Stop",
 			"recordAudio": "Record/Edit Audio",
 			"transcribe": "Transcribe",
+			"versions": "Versions",
 		}
 	}),
 	"planSheet": new LocalizedStrings({

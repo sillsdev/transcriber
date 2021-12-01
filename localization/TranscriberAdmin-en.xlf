@@ -2956,6 +2956,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planActions.versions">
+         <segment>
+            <source>Versions</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.action">
          <segment>
             <source>Action</source>
