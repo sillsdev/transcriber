@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Axios from 'axios';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
 import { Redirect, useHistory } from 'react-router-dom';
@@ -186,16 +187,20 @@ export function Loading(props: IProps) {
                 .findRecords('invitation')
                 .filter({ attribute: 'silId', value: parseInt(inviteId) })
           )) as any;
-
-          //if previously accepted just roll with it
-          if (
-            thisinvite[0].attributes.email.toLowerCase() !==
-            userEmail.toLowerCase()
-          ) {
-            /* they must have logged in with another email */
-            inviteErr = t.inviteError;
+          if (!thisinvite.length) {
+            //it's either deleted, or I don't have access to it
+            //check if my paratext email is linked
+            if (!(await checkAlternateParatextEmail(inviteId))) {
+              inviteErr = t.inviteError;
+            }
           } else {
-            invite = thisinvite[0];
+            if (
+              thisinvite[0].attributes.email.toLowerCase() !==
+              userEmail.toLowerCase()
+            ) {
+              /* they must have logged in with another email */
+              inviteErr = t.inviteError;
+            }
           }
         } catch {
           inviteErr = t.deletedInvitation;
@@ -211,6 +216,21 @@ export function Loading(props: IProps) {
     }
   };
 
+  const checkAlternateParatextEmail = async (inviteId: string) => {
+    try {
+      let response = await Axios.get(
+        API_CONFIG.host + '/api/paratext/useremail/' + inviteId,
+        {
+          headers: {
+            Authorization: 'Bearer ' + auth.accessToken,
+          },
+        }
+      );
+      if (response.data === inviteId) return true;
+    } catch (err: any) {
+      return false;
+    }
+  };
   useEffect(() => {
     if (!offline && !auth?.isAuthenticated()) return;
     if (!offline) {
