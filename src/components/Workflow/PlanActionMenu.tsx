@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
+import { useGlobal } from 'reactn';
 import {
   ISharedStrings,
   IPlanActionsStrings,
@@ -83,6 +84,7 @@ export function PlanActionMenu(props: IProps) {
     active,
   } = props;
   const classes = useStyles();
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [open, setOpen] = React.useState(false);
   const [hover, setHover] = React.useState(false);
   const top = React.useRef<number>(0);
@@ -217,7 +219,7 @@ export function PlanActionMenu(props: IProps) {
                         <TranscribeIcon />
                       </MenuItem>
                     )}
-                    {isPassage && (
+                    {isPassage && !offlineOnly && (
                       <MenuItem
                         id="planActDetail"
                         title={t.passageDetail}
