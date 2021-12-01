@@ -5,7 +5,7 @@ import { useUser } from '../crud';
 export const TaskAvatar = ({ assigned }: { assigned: string | null }) => {
   const { getUserRec } = useUser();
 
-  if (!assigned) return <></>;
+  if (!assigned || assigned === '') return <></>;
   const userRec = getUserRec(assigned);
   return <UserAvatar userRec={userRec} small={true} />;
 };

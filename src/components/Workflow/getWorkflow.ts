@@ -106,11 +106,13 @@ export const getWorkflow = (
       item.sectionSeq = section.attributes.sequencenum;
       item.title = section?.attributes?.name;
       const transcriber = related(section, 'transcriber');
-      item.transcriber = transcriber
-        ? { ...userid, id: transcriber }
-        : undefined;
+      item.transcriber =
+        transcriber && transcriber.id !== ''
+          ? { ...userid, id: transcriber }
+          : undefined;
       const editor = related(section, 'editor');
-      item.editor = editor ? { ...userid, id: editor } : undefined;
+      item.editor =
+        editor && editor.id !== '' ? { ...userid, id: editor } : undefined;
       item.sectionUpdated = section.attributes.dateUpdated;
       item.passageSeq = 0;
       item.deleted = false;
