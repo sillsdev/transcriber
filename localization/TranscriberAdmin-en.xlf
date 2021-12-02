@@ -4876,6 +4876,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="workflowSteps.unsaved">
+         <segment>
+            <source>Unsaved content</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.withoutSave">
+         <segment>
+            <source>Change step without saving?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.aheadTip">
          <segment>
             <source>Ahead {jump} {1} [{0}]</source>

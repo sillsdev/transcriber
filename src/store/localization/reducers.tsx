@@ -1080,6 +1080,8 @@ const initialState = {
 			"record": "Record",
 			"review": "Review",
 			"teamCheck": "Team Check",
+			"unsaved": "Unsaved content",
+			"withoutSave": "Change step without saving?",
 		}
 	}),
 	"wsAudioPlayer": new LocalizedStrings({

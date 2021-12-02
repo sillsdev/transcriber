@@ -46,6 +46,7 @@ import {
   mediaRows,
   resourceRows,
 } from '../components/PassageDetail/Internalization';
+import Confirm from '../components/AlertDialog';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -186,6 +187,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const remote = coordinator.getSource('remote') as JSONAPISource;
     const [user] = useGlobal('user');
     const [errorReporter] = useGlobal('errorReporter');
+    const [changed] = useGlobal('changed');
+    const [confirm, setConfirm] = useState('');
     const view = React.useRef('');
     const [, setRefreshed] = useState(0);
     const mediaUrlRef = useRef('');
@@ -206,10 +209,25 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         return { ...state, orgWorkflowSteps: steps };
       });
     };
-    const setCurrentStep = (stepId: string) => {
+
+    const handleSetCurrentStep = (stepId: string) => {
       setState((state: ICtxState) => {
         return { ...state, currentstep: stepId, playing: false };
       });
+    };
+    const setCurrentStep = (stepId: string) => {
+      if (changed) {
+        setConfirm(stepId);
+      } else {
+        handleSetCurrentStep(stepId);
+      }
+    };
+    const handleConfirmStep = () => {
+      handleSetCurrentStep(confirm);
+      setConfirm('');
+    };
+    const handleRefuseStep = () => {
+      setConfirm('');
     };
     const setDiscussionSize = (discussionSize: number) => {
       setState((state: ICtxState) => {
@@ -455,6 +473,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           setCurrentStep(next);
         }
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.currentstep, state.psgCompletedIndex, state.workflow]);
 
     return (
@@ -482,6 +501,16 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             auth={auth}
             srcMediaId={state.playItem}
             onEnded={handlePlayEnd}
+          />
+        )}
+        {confirm !== '' && (
+          <Confirm
+            open={true}
+            onClose={handleRefuseStep}
+            title={wfStr.unsaved}
+            text={wfStr.withoutSave}
+            yesResponse={handleConfirmStep}
+            noResponse={handleRefuseStep}
           />
         )}
       </PassageDetailContext.Provider>

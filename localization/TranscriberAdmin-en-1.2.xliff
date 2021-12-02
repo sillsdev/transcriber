@@ -5606,13 +5606,13 @@
                <context context-type="sourcefile">welcome.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.backTranslation">
-            <source>Back Translation</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">passageDetail.tsx</context>
-            </context-group>
-         </trans-unit>
+      	<trans-unit id="workflowSteps.backTranslation">
+      		<source>Back Translation</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.communityTesting">
             <source>Community Testing</source>
             <target/>
@@ -5690,6 +5690,20 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.unsaved">
+      		<source>Unsaved content</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.withoutSave">
+      		<source>Change step without saving?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="wsAudioPlayer.aheadTip">
             <source>Ahead {jump} {1} [{0}]</source>
             <target/>

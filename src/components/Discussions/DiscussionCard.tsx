@@ -270,6 +270,18 @@ export const DiscussionCard = (props: IProps) => {
       handleResolveDiscussion(false);
     }
   };
+
+  const handleReset = () => {
+    setEditSubject('');
+    setEditRole('');
+    setEditUser('');
+    setEditCategory('');
+  };
+
+  useEffect(() => {
+    handleReset();
+  }, [currentstep]);
+
   const handleDelete = () => {
     var ops: Operation[] = [];
     var t = new TransformBuilder();
