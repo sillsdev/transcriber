@@ -432,7 +432,7 @@ export function Transcriber(props: IProps) {
   }, [doSave]);
 
   useEffect(() => {
-    const newBoxHeight = height - (playerSize + 200);
+    const newBoxHeight = height - (playerSize + 220);
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, playerSize]);
