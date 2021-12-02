@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { PlanContext } from '../../context/PlanContext';
@@ -50,36 +50,13 @@ export const AudioTable = (props: IProps) => {
   const [deleteItem, setDeleteItem] = useState(-1);
   const [showId, setShowId] = useState('');
 
-  const columnDefs = [
-    { name: 'planName', title: t.planName },
-    { name: 'actions', title: '\u00A0' },
-    { name: 'fileName', title: t.fileName },
-    { name: 'sectionDesc', title: organizedBy },
-    { name: 'reference', title: t.reference },
-    { name: 'duration', title: t.duration },
-    { name: 'size', title: t.size },
-    { name: 'version', title: t.version },
-    { name: 'date', title: t.date },
-  ];
-  if (shared) columnDefs.push({ name: 'readyToShare', title: t.readyToShare });
-  columnDefs.push({ name: 'detach', title: '\u00A0' });
-  const columnWidths = [
-    { columnName: 'planName', width: 150 },
-    { columnName: 'actions', width: onAttach ? 120 : 50 },
-    { columnName: 'fileName', width: 220 },
-    { columnName: 'sectionDesc', width: 150 },
-    { columnName: 'reference', width: 150 },
-    { columnName: 'duration', width: 100 },
-    { columnName: 'size', width: 100 },
-    { columnName: 'version', width: 100 },
-    { columnName: 'date', width: 100 },
-  ];
-  if (shared)
-    columnWidths.push({
-      columnName: 'readyToShare',
-      width: 100,
-    });
-  columnWidths.push({ columnName: 'detach', width: 120 });
+  const [columnDefs, setColumnDefs] = useState<
+    { name: string; title: string }[]
+  >([]);
+  const [columnWidths, setColumnWidths] = useState<
+    { columnName: string; width: number }[]
+  >([]);
+
   const columnFormatting = [
     { columnName: 'actions', aligh: 'center', wordWrapEnabled: false },
     { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
@@ -107,6 +84,40 @@ export const AudioTable = (props: IProps) => {
   const [pageSizes] = useState<number[]>([]);
   const [hiddenColumnNames] = useState<string[]>(['planName']);
   const [verHist, setVerHist] = useState('');
+
+  useEffect(() => {
+    var cols = [
+      { name: 'planName', title: t.planName },
+      { name: 'actions', title: '\u00A0' },
+      { name: 'fileName', title: t.fileName },
+      { name: 'sectionDesc', title: organizedBy },
+      { name: 'reference', title: t.reference },
+      { name: 'duration', title: t.duration },
+      { name: 'size', title: t.size },
+      { name: 'version', title: t.version },
+      { name: 'date', title: t.date },
+    ];
+    var widths = [
+      { columnName: 'planName', width: 150 },
+      { columnName: 'actions', width: onAttach ? 120 : 50 },
+      { columnName: 'fileName', width: 220 },
+      { columnName: 'sectionDesc', width: 150 },
+      { columnName: 'reference', width: 150 },
+      { columnName: 'duration', width: 100 },
+      { columnName: 'size', width: 100 },
+      { columnName: 'version', width: 100 },
+      { columnName: 'date', width: 100 },
+    ];
+    if (shared) {
+      cols.push({ name: 'readyToShare', title: t.readyToShare });
+      widths.push({ columnName: 'readyToShare', width: 100 });
+    }
+    cols.push({ name: 'detach', title: '\u00A0' });
+    widths.push({ columnName: 'detach', width: 120 });
+    setColumnDefs(cols);
+    setColumnWidths(widths);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shared]);
 
   const handleShowTranscription = (id: string) => () => {
     setShowId(id);
@@ -244,7 +255,7 @@ export const AudioTable = (props: IProps) => {
             id="checkbox-rts"
             checked={value as any as boolean}
             onChange={handleChangeReadyToShare(row.id)}
-            disabled={row.passId === ''}
+            disabled={(row.passId || '') === ''}
           />
         }
         label=""
