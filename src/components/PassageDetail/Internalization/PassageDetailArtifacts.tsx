@@ -177,7 +177,7 @@ export function PassageDetailArtifacts(props: IProps) {
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
         {rowData
-          .filter((r) => r.isResource)
+          .filter((r) => r?.isResource)
           .map((value, index) => (
             <SortableItem
               key={`item-${index}`}
