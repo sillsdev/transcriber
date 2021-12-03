@@ -1,4 +1,4 @@
-import { useGlobal, useState, useEffect } from 'reactn';
+import { useGlobal, useState, useEffect, useRef } from 'reactn';
 import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
 import { useInterval } from '../utils/useInterval';
 import Axios from 'axios';
@@ -72,21 +72,19 @@ export const doDataChanges = async (
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const userLastTimeKey = localUserKey(LocalKey.time, memory);
+  const userNextStartKey = localUserKey(LocalKey.start, memory);
   if (!remote || !remote.activated) return;
+  let startNext = 0;
   let lastTime = localStorage.getItem(userLastTimeKey) || currentDateTime(); // should not happen
   let nextTime = currentDateTime();
 
-  const updateSnapshotDates = async () => {
+  const updateSnapshotDate = async (
+    pid: string,
+    newDate: string,
+    start: number
+  ) => {
     const oparray: Operation[] = [];
-
-    projectsLoaded.forEach((p) => {
-      offlineProjectUpdateSnapshot(p, oparray, memory, nextTime, false);
-    });
-    await memory.sync(await backup.push((t: TransformBuilder) => oparray));
-  };
-  const updateSnapshotDate = async (pid: string) => {
-    const oparray: Operation[] = [];
-    offlineProjectUpdateSnapshot(pid, oparray, memory, nextTime, false);
+    offlineProjectUpdateSnapshot(pid, oparray, memory, newDate, start, false);
     await memory.sync(await backup.push((t: TransformBuilder) => oparray));
   };
 
@@ -111,7 +109,11 @@ export const doDataChanges = async (
     );
   };
 
-  const processDataChanges = async (api: string, params: any) => {
+  const processDataChanges = async (
+    api: string,
+    params: any,
+    started: number
+  ) => {
     try {
       var response = await Axios.get(api, {
         params: params,
@@ -121,7 +123,7 @@ export const doDataChanges = async (
       });
       var data = response.data.data as DataChange;
       const changes = data?.attributes?.changes;
-      const deletes = data.attributes.deleted;
+      const deletes = data?.attributes?.deleted;
       setDataChangeCount(changes.length + deletes.length);
       for (const table of changes) {
         if (table.ids.length > 0) {
@@ -183,17 +185,18 @@ export const doDataChanges = async (
         }
       }
       setDataChangeCount(0);
-      return true;
+      return data?.attributes?.startnext;
     } catch (e: any) {
       logError(Severity.error, errorReporter, e);
-      return false;
+      return started;
     }
   };
   var version = backup.cache.dbVersion;
 
   var api = API_CONFIG.host + '/api/datachanges/v' + version.toString() + '/';
+  var start = 1;
+  var tries = 5;
   if (isElectron) {
-    var records: { id: string; since: string }[] = [];
     for (var ix = 0; ix < projectsLoaded.length; ix++) {
       var p = projectsLoaded[ix];
       var op = getOfflineProject(p);
@@ -201,39 +204,45 @@ export const doDataChanges = async (
         op?.attributes &&
         op.attributes.snapshotDate &&
         Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
-      )
-        records.push({
-          id: remoteId('project', p, memory.keyMap),
-          since: op.attributes.snapshotDate,
-        });
-
-      if (records.length) {
-        if (
-          (await processDataChanges(
-            api + 'A/projects/' + fingerprint,
-            new URLSearchParams([['projlist', JSON.stringify(records)]])
-          )) &&
-          (await processDataChanges(
-            api + 'B/projects/' + fingerprint,
-            new URLSearchParams([['projlist', JSON.stringify(records)]])
-          ))
-        )
-          await updateSnapshotDate(p);
+      ) {
+        start = 1;
+        startNext = 0;
+        tries = 5;
+        while (startNext >= 0 && tries > 0) {
+          startNext = await processDataChanges(
+            `${api}${startNext}/project/${fingerprint}`,
+            new URLSearchParams([
+              [
+                'projlist',
+                JSON.stringify({
+                  id: remoteId('project', p, memory.keyMap),
+                  since: op.attributes.snapshotDate,
+                }),
+              ],
+            ]),
+            start
+          );
+          if (startNext === start) tries--;
+          else start = startNext;
+        }
+        await updateSnapshotDate(p, nextTime, startNext + 1);
       }
     }
   }
-  if (
-    (await processDataChanges(
-      api + 'A/since/' + lastTime + '?origin=' + fingerprint,
-      undefined
-    )) &&
-    (await processDataChanges(
-      api + 'B/since/' + lastTime + '?origin=' + fingerprint,
-      undefined
-    ))
-  ) {
-    localStorage.setItem(userLastTimeKey, nextTime);
+  startNext = parseInt(localStorage.getItem(userNextStartKey) || '0', 10);
+  start = 1;
+  tries = 5;
+  while (startNext >= 0 && tries > 0) {
+    startNext = await processDataChanges(
+      `${api}${startNext}/since/${lastTime}?origin=${fingerprint}`,
+      undefined,
+      start
+    );
+    if (startNext === start) tries--;
+    else start = startNext;
   }
+  if (startNext < 0) localStorage.setItem(userLastTimeKey, nextTime);
+  localStorage.setItem(userNextStartKey, (startNext + 1).toString());
 };
 
 export function DataChanges(props: IProps) {
@@ -256,7 +265,7 @@ export function DataChanges(props: IProps) {
   const [project] = useGlobal('project');
   const [projectsLoaded] = useGlobal('projectsLoaded');
   const [orbitRetries] = useGlobal('orbitRetries');
-
+  const doingChanges = useRef(false);
   const getOfflineProject = useOfflnProjRead();
   const checkOnline = useCheckOnline(resetOrbitError);
 
@@ -292,11 +301,11 @@ export function DataChanges(props: IProps) {
       });
     } else if (checkBusy !== busy) setBusy(checkBusy);
   };
-  const updateData = () => {
-    if (!busy && !doSave && auth?.isAuthenticated()) {
-      setBusy(true); //attempt to prevent double calls
+  const updateData = async () => {
+    if (!doingChanges.current && !busy && !doSave && auth?.isAuthenticated()) {
+      doingChanges.current = true; //attempt to prevent double calls
       setFirstRun(false);
-      doDataChanges(
+      await doDataChanges(
         auth,
         coordinator,
         fingerprint,
@@ -307,6 +316,7 @@ export function DataChanges(props: IProps) {
         setLanguage,
         setDataChangeCount
       );
+      doingChanges.current = false; //attempt to prevent double calls
     }
   };
   const backupElectron = () => {

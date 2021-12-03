@@ -5,6 +5,7 @@ export enum LocalKey {
   time = 'lastTime',
   url = 'fromUrl',
   deeplink = 'deeplink',
+  start = 'startNext',
 }
 
 export const localUserKey = (id: LocalKey, memory: Memory) => {

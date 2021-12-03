@@ -6,6 +6,7 @@ interface ChangeList {
 }
 export interface DataChange extends Record {
   attributes: {
+    startnext: number;
     querydate: Date;
     changes: ChangeList[];
     deleted: ChangeList[];
