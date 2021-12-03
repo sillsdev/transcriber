@@ -27,8 +27,13 @@ interface IProps extends IStateProps {}
 
 export const PassageDetailStepComplete = (props: IProps) => {
   const { t } = props;
-  const { passage, currentstep, psgCompletedIndex, orgWorkflowSteps } =
-    usePassageDetailContext();
+  const {
+    passage,
+    currentstep,
+    setCurrentStep,
+    psgCompletedIndex,
+    orgWorkflowSteps,
+  } = usePassageDetailContext();
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
@@ -50,6 +55,8 @@ export const PassageDetailStepComplete = (props: IProps) => {
       newstep = currentIndex === 0 ? '' : orgWorkflowSteps[currentIndex - 1].id;
     else {
       newstep = orgWorkflowSteps[currentIndex].id;
+      if (currentIndex < orgWorkflowSteps.length - 1)
+        setCurrentStep(orgWorkflowSteps[currentIndex + 1].id);
     }
     memory.update((t: TransformBuilder) => [
       ...UpdateRelatedRecord(
