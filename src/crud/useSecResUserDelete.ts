@@ -9,23 +9,9 @@ export const useSecResUserDelete = () => {
   const [user] = useGlobal('user');
   const [reporter] = useGlobal('errorReporter');
 
-  return async (mediaId: string, secResUserRec?: SectionResourceUser) => {
-    if (secResUserRec) {
-      memory.update((t: TransformBuilder) => t.removeRecord(secResUserRec));
-      return;
-    }
-    const sectionresources = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('sectionresource')
-    ) as SectionResource[];
-    const resource = sectionresources.find(
-      (r) => related(r, 'mediafile') === mediaId
-    );
-    if (!resource) {
-      logError(
-        Severity.error,
-        reporter,
-        `can't find section resource for mediaId=${mediaId}`
-      );
+  return async (resource: SectionResource, resUser?: SectionResourceUser) => {
+    if (resUser) {
+      memory.update((t: TransformBuilder) => t.removeRecord(resUser));
       return;
     }
     const sectionResourceUsers = memory.cache.query((q: QueryBuilder) =>
@@ -40,7 +26,7 @@ export const useSecResUserDelete = () => {
       logError(
         Severity.error,
         reporter,
-        `unable to delete section resource user for mediaId=${mediaId}`
+        `unable to delete section resource user for resourceId=${resource.id}`
       );
       return;
     }

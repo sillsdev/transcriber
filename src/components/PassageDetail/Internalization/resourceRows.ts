@@ -59,6 +59,7 @@ const oneRow = ({
     done,
     editAction: null,
     mediafile: media || ({} as MediaFile),
+    resource: r,
     isResource: isResource(typeNameSlug),
   });
   return newRow;

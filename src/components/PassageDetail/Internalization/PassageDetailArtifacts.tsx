@@ -91,12 +91,13 @@ export function PassageDetailArtifacts(props: IProps) {
     } else setSelected(id);
   };
 
-  const handleDone = async (id: string) => {
-    const rec = await ReadSectionResourceUser(id);
+  const handleDone = async (id: string, res: SectionResource | null) => {
+    if (!res) return;
+    const rec = await ReadSectionResourceUser(res);
     if (rec !== null) {
-      RemoveSectionResourceUser(id, rec);
+      await RemoveSectionResourceUser(res, rec);
     } else {
-      AddSectionResourceUser(id);
+      await AddSectionResourceUser(res);
     }
     ctx.setState((state) => ({
       ...state,

@@ -114,6 +114,7 @@ export interface IRow {
   artifactCategory: string;
   done: boolean;
   editAction: JSX.Element | null;
+  resource: SectionResource | null;
   isResource: boolean;
 }
 
