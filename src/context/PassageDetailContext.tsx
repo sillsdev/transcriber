@@ -216,12 +216,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         return { ...state, currentstep: stepId, playing: false };
       });
       //check tool here??
-      if (
-        step &&
-        step.attributes.name !== 'internalization' &&
-        state.rowData.length > 0
-      ) {
-        setSelected(state.rowData[0].id); //this does a bunch of stuff...don't just set it in the state above...
+      if (step && step.attributes.name !== 'internalization') {
+        //this does a bunch of stuff...don't just set it in the state above...
+        if (state.rowData.length > 0 && !state.rowData[0].isResource)
+          setSelected(state.rowData[0].id);
+        else setSelected('');
       }
     };
     const setCurrentStep = (stepId: string) => {
@@ -273,7 +272,20 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     };
     const setSelected = (selected: string, rowData: IRow[] = state.rowData) => {
       const i = rowData.findIndex((r) => r.mediafile.id === selected);
-      if (i < 0) return;
+      if (i < 0) {
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            audioBlob: undefined,
+            index: -1,
+            selected,
+            playing: false,
+            playItem: '',
+            loading: false,
+          };
+        });
+        return;
+      }
       const r = rowData[i];
       if (state.index !== i || state.selected !== selected) {
         // const remId =

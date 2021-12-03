@@ -21,7 +21,7 @@ import {
 } from './types';
 import { ParatextProject } from '../../model/paratextProject';
 import { pendingStatus, errStatus, errorStatus } from '../AxiosStatus';
-import { getMediaProjRec, getMediaRec } from '../../crud';
+import { getMediaProjRec, getVernacularMediaRec } from '../../crud';
 import {
   fileJson,
   getLocalParatextText,
@@ -303,7 +303,8 @@ export const getLocalCount =
     project: string,
     memory: MemorySource,
     errorReporter: any,
-    t: IIntegrationStrings
+    t: IIntegrationStrings,
+    vernacularId: string
   ) =>
   (dispatch: any) => {
     dispatch({
@@ -316,7 +317,7 @@ export const getLocalCount =
       )
       .filter((p) => {
         const projRec = getMediaProjRec(
-          getMediaRec(p.id, memory),
+          getVernacularMediaRec(p.id, memory, vernacularId),
           memory,
           errorReporter
         );
