@@ -49,6 +49,7 @@ const saveOfflineProject = async (
       oparray,
       memory,
       dataDate,
+      0,
       isImport
     )
   ) {
@@ -363,6 +364,7 @@ export async function LoadProjectData(
             oparray,
             memory,
             r.attributes.snapshotdate || currentDateTime(),
+            0,
             false
           );
           await memory.sync(await backup.push(oparray));

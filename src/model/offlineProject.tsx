@@ -5,6 +5,7 @@ export interface OfflineProject extends BaseModel {
   attributes: {
     computerfp: string;
     snapshotDate: string; //data date
+    startNext: number;
     offlineAvailable: boolean;
     exportedDate: string;
     fileDownloadDate: string; //last time files downloaded

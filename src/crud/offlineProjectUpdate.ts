@@ -22,6 +22,7 @@ export const offlineProjectUpdateSnapshot = (
   ops: Operation[],
   memory: Memory,
   newDate: string,
+  startNext: number,
   filesToo: boolean
 ) => {
   const tb = new TransformBuilder();
@@ -30,10 +31,12 @@ export const offlineProjectUpdateSnapshot = (
     const proj = {
       ...oprec,
       attributes: {
-        snapshotDate: newDate,
         dateUpdated: newDate,
+        startNext: startNext,
       },
     } as OfflineProject;
+    if (startNext === 0) proj.attributes.snapshotDate = newDate;
+
     if (filesToo) {
       proj.attributes.offlineAvailable = true;
       proj.attributes.fileDownloadDate = newDate;

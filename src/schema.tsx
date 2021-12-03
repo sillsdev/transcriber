@@ -501,6 +501,7 @@ if (
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
       lastModifiedBy: { type: 'number' }, //bkwd compat only
+      startNext: { type: 'number' },
     },
     relationships: {
       project: {
@@ -719,6 +720,7 @@ if (
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
+
   schemaDefinition.version = 4;
 }
 export const schema = new Schema(schemaDefinition);
