@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
-import { logError, Severity } from '../utils';
+import { logError, Severity, waitForIt } from '../utils';
 //import { useMounted } from '../utils';
 //import { convertToMP3 } from '../utils/mp3';
 import { convertToWav } from '../utils/wav';
@@ -56,13 +56,31 @@ export function useWaveSurfer(
     durationRef.current || wavesurfer()?.getDuration() || 0;
 
   const wsGoto = (position: number) => {
-    if (position > wsDuration()) position = wsDuration();
+    var duration = wsDuration();
+    if (position > duration) position = duration;
     onRegionGoTo(position);
-    if (wsDuration()) position = position / wsDuration();
-
-    userInteractionRef.current = false;
-    wavesurfer()?.seekAndCenter(position);
-    userInteractionRef.current = true;
+    if (duration) position = position / duration;
+    if (position === 1 && wavesurfer()?.isPlaying()) {
+      //if playing, position messages come in after this one that set it back to previously playing position.  Turn this off first in hopes that all messages are done before we set the position...
+      wavesurfer()?.pause();
+      waitForIt(
+        'wavesurfer stop',
+        () => !wavesurfer()?.isPlaying(),
+        () => {
+          console.log('waiting for pause');
+          return false;
+        },
+        100
+      ).then(() => {
+        userInteractionRef.current = false;
+        wavesurfer()?.seekAndCenter(position);
+        userInteractionRef.current = true;
+      });
+    } else {
+      userInteractionRef.current = false;
+      wavesurfer()?.seekAndCenter(position);
+      userInteractionRef.current = true;
+    }
   };
   const progress = () => progressRef.current;
   const setPlaying = (value: boolean) => {
@@ -157,7 +175,7 @@ export function useWaveSurfer(
         wavesurferPlayingRef.current = true;
       });
       ws.on('pause', function () {
-        wavesurferPlayingRef.current = true;
+        wavesurferPlayingRef.current = false;
       });
       ws.on('seek', function (e: number) {
         onRegionSeek(e, !userInteractionRef.current);
