@@ -53,7 +53,7 @@ import {
   sectionCompare,
   passageCompare,
   passageDescription,
-  getMediaRec,
+  getVernacularMediaRec,
   getMediaEaf,
   getMediaName,
   getMediaInPlans,
@@ -301,7 +301,7 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const getTranscription = (passageId: string) => {
-    const mediaRec = getMediaRec(passageId, memory);
+    const mediaRec = getVernacularMediaRec(passageId, memory, vernacularId);
     return mediaRec?.attributes?.transcription || '';
   };
 
@@ -368,7 +368,7 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const hasTranscription = (passageId: string) => {
-    const mediaRec = getMediaRec(passageId, memory);
+    const mediaRec = getVernacularMediaRec(passageId, memory, vernacularId);
     const mediaAttr = mediaRec && mediaRec.attributes;
     const transcription =
       mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
@@ -376,7 +376,7 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const handleEaf = (passageId: string) => () => {
-    const mediaRec = getMediaRec(passageId, memory);
+    const mediaRec = getVernacularMediaRec(passageId, memory, vernacularId);
     if (!mediaRec) return;
     const eafCode = btoa(
       getMediaEaf(mediaRec, memory, globalStore.errorReporter)

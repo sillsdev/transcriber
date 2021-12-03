@@ -38,6 +38,8 @@ import {
   MediaSt,
   usePlan,
   useRole,
+  useArtifactType,
+  getMediaInPlans,
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob, logError, Severity } from '../utils';
@@ -196,6 +198,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const { showMessage } = useSnackBar();
     const [trackedTask, setTrackedTask] = useGlobal('trackedTask');
     const { userCanTranscribe, userCanBeEditor } = useRole();
+    const [planMedia, setPlanMedia] = useState<MediaFile[]>([]);
     const [state, setState] = useState({
       ...initState,
       allBookData,
@@ -207,7 +210,16 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       sharedStr,
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
+    const { vernacularId } = useArtifactType();
     const fetching = useRef('');
+
+    useEffect(() => {
+      if (devPlan && mediafiles.length > 0) {
+        setPlanMedia(
+          getMediaInPlans([devPlan], mediafiles, vernacularId, true)
+        );
+      }
+    }, [mediafiles, devPlan, vernacularId]);
 
     const setRows = (rowData: IRowData[]) => {
       setState((state: ICtxState) => {
@@ -303,7 +315,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
 
       let addRows = Array<IRowData>();
       readyRecs.forEach((p) => {
-        const mediaRecs = mediafiles
+        const mediaRecs = planMedia
           .filter((m) => related(m, 'passage') === p.id)
           .sort((i: MediaFile, j: MediaFile) =>
             // Sort descending
@@ -524,7 +536,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [role, project, sections, refreshed]);
+    }, [role, project, sections, planMedia, refreshed]);
 
     const actor: { [key: string]: string } = {
       [ActivityStates.TranscribeReady]: 'transcriber',

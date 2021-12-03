@@ -35,6 +35,7 @@ import {
   related,
   useOrganizedBy,
   usePlan,
+  useArtifactType,
 } from '../../crud';
 import {
   useRemoteSave,
@@ -211,7 +212,7 @@ export function ScriptureTable(props: IProps) {
   });
   const checkOnline = useCheckOnline(resetOrbitError);
   const { handleLaunch } = useExternalLink();
-
+  const { vernacularId } = useArtifactType();
   const secNumCol = React.useMemo(() => {
     return colNames.indexOf('sectionSeq');
   }, [colNames]);
@@ -781,7 +782,8 @@ export function ScriptureTable(props: IProps) {
         passages,
         flat,
         shared,
-        memory
+        memory,
+        vernacularId
       );
       setWorkflow(newWorkflow);
       getLastModified(plan);

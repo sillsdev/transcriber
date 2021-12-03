@@ -1,7 +1,7 @@
 import { IWorkflow, IwfKind, Section, Passage, IMediaShare } from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
-import { getMediaRec, getMediaShared } from '../../crud/media';
+import { getVernacularMediaRec, getMediaShared } from '../../crud/media';
 
 const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -88,6 +88,7 @@ export const getWorkflow = (
   flat: boolean,
   projectShared: boolean,
   memory: Memory,
+  vernacularId: string,
   current?: IWorkflow[]
 ) => {
   const myWork = current || Array<IWorkflow>();
@@ -141,7 +142,11 @@ export const getWorkflow = (
         item.comment = passAttr.title;
         item.passageUpdated = passage.attributes.dateUpdated;
         item.passageId = { type: 'passage', id: passage.id };
-        const mediaRec = getMediaRec(passage.id, memory);
+        const mediaRec = getVernacularMediaRec(
+          passage.id,
+          memory,
+          vernacularId
+        );
         item.mediaId = mediaRec
           ? { type: 'mediafile', id: mediaRec.id }
           : undefined;

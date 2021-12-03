@@ -20,7 +20,13 @@ import {
 } from '@material-ui/core';
 import { FaCopy } from 'react-icons/fa';
 import { useSnackBar } from '../hoc/SnackBar';
-import { getMediaProjRec, getMediaRec, FontData, getFontData } from '../crud';
+import {
+  getMediaProjRec,
+  getVernacularMediaRec,
+  FontData,
+  getFontData,
+  useArtifactType,
+} from '../crud';
 
 const useStyles = makeStyles({
   actions: {
@@ -55,7 +61,7 @@ function TranscriptionShow(props: IProps) {
   const [transcription, setTranscription] = useState('');
   const [fontData, setFontData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
-
+  const { vernacularId } = useArtifactType();
   const loadStatus = (status: string) => {
     setFontStatus(status);
   };
@@ -86,7 +92,7 @@ function TranscriptionShow(props: IProps) {
             q.findRecord({ type: 'mediafile', id })
           ) as MediaFile)
         : null;
-      if (!mediaRec) mediaRec = getMediaRec(id, memory);
+      if (!mediaRec) mediaRec = getVernacularMediaRec(id, memory, vernacularId);
       const attr = mediaRec && mediaRec.attributes;
       setTranscription(attr && attr.transcription ? attr.transcription : '');
       const projRec = getMediaProjRec(mediaRec, memory, reporter);

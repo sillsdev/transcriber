@@ -3,7 +3,12 @@ import { DOMParser, XMLSerializer } from 'xmldom';
 import { Passage, ActivityStates, MediaFile, Section } from '../model';
 import Memory from '@orbit/memory';
 import { Operation, QueryBuilder, Record, TransformBuilder } from '@orbit/data';
-import { related, getMediaRec, parseRef, UpdatePassageStateOps } from '../crud';
+import {
+  related,
+  getVernacularMediaRec,
+  parseRef,
+  UpdatePassageStateOps,
+} from '../crud';
 import { getReadWriteProg } from './paratextPath';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
@@ -616,12 +621,17 @@ export const localSync = async (
   passages: Passage[],
   memory: Memory,
   userId: string,
+  vernacularId: string,
   addNumberToSection: boolean = true
 ) => {
   let chapChg: { [key: string]: Passage[] } = {};
   passages
     .filter((p) => p.attributes?.state === ActivityStates.Approved)
-    .filter((p) => related(getMediaRec(p.id, memory), 'plan') === plan)
+    .filter(
+      (p) =>
+        related(getVernacularMediaRec(p.id, memory, vernacularId), 'plan') ===
+        plan
+    )
     .forEach((p) => {
       parseRef(p);
       let chap = p.startChapter;

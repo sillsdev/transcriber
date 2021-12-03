@@ -40,7 +40,13 @@ import CheckIcon from '@material-ui/icons/Check';
 import { useSnackBar } from '../hoc/SnackBar';
 import ParatextLogo from '../control/ParatextLogo';
 // import RenderLogo from '../control/RenderLogo';
-import { remoteIdNum, related, useOfflnProjRead, remoteId } from '../crud';
+import {
+  remoteIdNum,
+  related,
+  useOfflnProjRead,
+  remoteId,
+  useArtifactType,
+} from '../crud';
 import { localSync, getParatextDataPath, useCheckOnline } from '../utils';
 import Auth from '../auth/Auth';
 import { bindActionCreators } from 'redux';
@@ -205,7 +211,7 @@ export function IntegrationPanel(props: IProps) {
   const setSyncing = (state: boolean) => (syncing.current = state);
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const checkOnline = useCheckOnline(resetOrbitError);
-
+  const { vernacularId } = useArtifactType();
   const getProject = () => {
     if (!project) return undefined;
     const projfind: Project[] = projects.filter((p) => p.id === project);
@@ -340,7 +346,14 @@ export function IntegrationPanel(props: IProps) {
     if (stopPlayer) stopPlayer();
     setSyncing(true);
     showMessage(t.syncPending);
-    var err = await localSync(plan, ptShortName, passages, memory, user);
+    var err = await localSync(
+      plan,
+      ptShortName,
+      passages,
+      memory,
+      user,
+      vernacularId
+    );
     showMessage(err || t.syncComplete);
     resetCount();
     setSyncing(false);
@@ -421,14 +434,15 @@ export function IntegrationPanel(props: IProps) {
       resetProjects();
       resetCount();
       setMyProject(project);
-      getLocalCount(passages, project, memory, errorReporter, t);
+      getLocalCount(passages, project, memory, errorReporter, t, vernacularId);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
 
   useEffect(() => {
     resetCount();
-    if (project) getLocalCount(passages, project, memory, errorReporter, t);
+    if (project)
+      getLocalCount(passages, project, memory, errorReporter, t, vernacularId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passages, project]);
 

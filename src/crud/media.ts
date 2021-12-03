@@ -14,9 +14,18 @@ import moment from 'moment';
 import eaf from '../utils/transcriptionEaf';
 import path from 'path';
 
-export const getMediaRec = (passageId: string, memory: Memory) => {
-  const mediaRecs = getAllMediaRecs(passageId, memory);
-
+export const getVernacularMediaRec = (
+  passageId: string,
+  memory: Memory,
+  vernacularId: string
+) => {
+  const mediaRecs = getAllMediaRecs(passageId, memory)
+    .filter(
+      (m) =>
+        related(m, 'artifactType') === vernacularId ||
+        related(m, 'artifactType') === null
+    )
+    .sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
   return mediaRecs.length > 0 ? mediaRecs[0] : null;
 };
 export const getMediaShared = (passageId: string, memory: Memory) => {
