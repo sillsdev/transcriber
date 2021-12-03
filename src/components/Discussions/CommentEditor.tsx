@@ -47,9 +47,11 @@ export const CommentEditor = (props: IProps) => {
   };
   const handleOk = (e: any) => {
     onOk && onOk(curText);
+    setChanged(false);
   };
   const handleCancel = (e: any) => {
     onCancel && onCancel();
+    setChanged(false);
   };
   useEffect(() => {
     if (refresh > 0) setCurText('');
