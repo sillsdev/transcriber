@@ -49,13 +49,58 @@ export const AudioTable = (props: IProps) => {
   const [confirmAction, setConfirmAction] = useState('');
   const [deleteItem, setDeleteItem] = useState(-1);
   const [showId, setShowId] = useState('');
-
-  const [columnDefs, setColumnDefs] = useState<
-    { name: string; title: string }[]
-  >([]);
-  const [columnWidths, setColumnWidths] = useState<
-    { columnName: string; width: number }[]
-  >([]);
+  const columnDefs = shared
+    ? [
+        { name: 'planName', title: t.planName },
+        { name: 'actions', title: '\u00A0' },
+        { name: 'fileName', title: t.fileName },
+        { name: 'sectionDesc', title: organizedBy },
+        { name: 'reference', title: t.reference },
+        { name: 'duration', title: t.duration },
+        { name: 'size', title: t.size },
+        { name: 'version', title: t.version },
+        { name: 'date', title: t.date },
+        { name: 'readyToShare', title: t.readyToShare },
+        { name: 'detach', title: '\u00A0' },
+      ]
+    : [
+        { name: 'planName', title: t.planName },
+        { name: 'actions', title: '\u00A0' },
+        { name: 'fileName', title: t.fileName },
+        { name: 'sectionDesc', title: organizedBy },
+        { name: 'reference', title: t.reference },
+        { name: 'duration', title: t.duration },
+        { name: 'size', title: t.size },
+        { name: 'version', title: t.version },
+        { name: 'date', title: t.date },
+        { name: 'detach', title: '\u00A0' },
+      ];
+  const columnWidths = shared
+    ? [
+        { columnName: 'planName', width: 150 },
+        { columnName: 'actions', width: onAttach ? 120 : 50 },
+        { columnName: 'fileName', width: 220 },
+        { columnName: 'sectionDesc', width: 150 },
+        { columnName: 'reference', width: 150 },
+        { columnName: 'duration', width: 100 },
+        { columnName: 'size', width: 100 },
+        { columnName: 'version', width: 100 },
+        { columnName: 'date', width: 100 },
+        { columnName: 'readyToShare', width: 100 },
+        { columnName: 'detach', width: 120 },
+      ]
+    : [
+        { columnName: 'planName', width: 150 },
+        { columnName: 'actions', width: onAttach ? 120 : 50 },
+        { columnName: 'fileName', width: 220 },
+        { columnName: 'sectionDesc', width: 150 },
+        { columnName: 'reference', width: 150 },
+        { columnName: 'duration', width: 100 },
+        { columnName: 'size', width: 100 },
+        { columnName: 'version', width: 100 },
+        { columnName: 'date', width: 100 },
+        { columnName: 'detach', width: 120 },
+      ];
 
   const columnFormatting = [
     { columnName: 'actions', aligh: 'center', wordWrapEnabled: false },
@@ -84,40 +129,6 @@ export const AudioTable = (props: IProps) => {
   const [pageSizes] = useState<number[]>([]);
   const [hiddenColumnNames] = useState<string[]>(['planName']);
   const [verHist, setVerHist] = useState('');
-
-  useEffect(() => {
-    var cols = [
-      { name: 'planName', title: t.planName },
-      { name: 'actions', title: '\u00A0' },
-      { name: 'fileName', title: t.fileName },
-      { name: 'sectionDesc', title: organizedBy },
-      { name: 'reference', title: t.reference },
-      { name: 'duration', title: t.duration },
-      { name: 'size', title: t.size },
-      { name: 'version', title: t.version },
-      { name: 'date', title: t.date },
-    ];
-    var widths = [
-      { columnName: 'planName', width: 150 },
-      { columnName: 'actions', width: onAttach ? 120 : 50 },
-      { columnName: 'fileName', width: 220 },
-      { columnName: 'sectionDesc', width: 150 },
-      { columnName: 'reference', width: 150 },
-      { columnName: 'duration', width: 100 },
-      { columnName: 'size', width: 100 },
-      { columnName: 'version', width: 100 },
-      { columnName: 'date', width: 100 },
-    ];
-    if (shared) {
-      cols.push({ name: 'readyToShare', title: t.readyToShare });
-      widths.push({ columnName: 'readyToShare', width: 100 });
-    }
-    cols.push({ name: 'detach', title: '\u00A0' });
-    widths.push({ columnName: 'detach', width: 120 });
-    setColumnDefs(cols);
-    setColumnWidths(widths);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shared]);
 
   const handleShowTranscription = (id: string) => () => {
     setShowId(id);
@@ -272,7 +283,7 @@ export const AudioTable = (props: IProps) => {
       const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
       return <DetachCell {...props} mediaId={mediaId} />;
     }
-    if (column.name === 'version' && row.version !== '1' && onAttach) {
+    if (column.name === 'version' && onAttach) {
       return <VersionCell {...props} />;
     }
     if (column.name === 'reference') {
