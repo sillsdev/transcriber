@@ -211,9 +211,18 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     };
 
     const handleSetCurrentStep = (stepId: string) => {
+      var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
       setState((state: ICtxState) => {
         return { ...state, currentstep: stepId, playing: false };
       });
+      //check tool here??
+      if (
+        step &&
+        step.attributes.name !== 'internalization' &&
+        state.rowData.length > 0
+      ) {
+        setSelected(state.rowData[0].id); //this does a bunch of stuff...don't just set it in the state above...
+      }
     };
     const setCurrentStep = (stepId: string) => {
       if (changed) {

@@ -13,7 +13,6 @@ const INIT_PLAYER_HEIGHT = 280;
 export function PassageDetailPlayer(props: IProps) {
   const { loading, pdBusy, setPDBusy, audioBlob } = usePassageDetailContext();
   const [playerSize] = useState(INIT_PLAYER_HEIGHT);
-  const [playing, setPlaying] = useState(false);
   const playingRef = useRef(false);
   const playedSecsRef = useRef<number>(0);
   //do I care about this?
@@ -21,6 +20,7 @@ export function PassageDetailPlayer(props: IProps) {
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
   };
+  const { playing, setPlaying } = usePassageDetailContext();
 
   const onPlayStatus = (newPlaying: boolean) => {
     setPlaying(newPlaying);
