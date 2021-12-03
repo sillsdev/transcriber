@@ -1,4 +1,9 @@
-import { IScriptureTableStrings, IwfKind, IWorkflow } from '../../model';
+import {
+  IMediaShare,
+  IScriptureTableStrings,
+  IwfKind,
+  IWorkflow,
+} from '../../model';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { currentDateTime } from '../../utils/currentDateTime';
 import { parseInt } from 'lodash';
@@ -13,13 +18,14 @@ interface IProps {
   passNumCol: number;
   scripture: boolean;
   flat: boolean;
+  shared: boolean;
   colNames: string[];
   findBook: (val: string) => string;
   t: IScriptureTableStrings;
 }
 
 export const useWfPaste = (props: IProps) => {
-  const { secNumCol, passNumCol, scripture, flat, t } = props;
+  const { secNumCol, passNumCol, scripture, flat, t, shared } = props;
   const { colNames, findBook } = props;
   const { showMessage } = useSnackBar();
   const { getOrganizedBy } = useOrganizedBy();
@@ -146,6 +152,7 @@ export const useWfPaste = (props: IProps) => {
           if (wf.passageSeq) {
             wf.level = flat ? 0 : 1;
             wf.kind = flat ? IwfKind.SectionPassage : IwfKind.Passage;
+            wf.mediaShared = shared ? IMediaShare.None : IMediaShare.NotPublic;
           } else {
             wf.level = 0;
             wf.kind = flat ? IwfKind.SectionPassage : IwfKind.Section;
