@@ -229,6 +229,7 @@ export function ScriptureTable(props: IProps) {
     passNumCol,
     scripture,
     flat,
+    shared,
     colNames,
     findBook,
     t,
