@@ -33,6 +33,9 @@ import {
   useSecResUpdate,
   useSecResDelete,
   related,
+  useSecResUserCreate,
+  useSecResUserRead,
+  useSecResUserDelete,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import SelectResource, { CatMap } from './SelectResource';
@@ -64,6 +67,9 @@ export function PassageDetailArtifacts(props: IProps) {
   const { rowData, section, passage, setSelected, playItem, setPlaying } =
     ctx.state;
   const AddSectionResource = useSecResCreate(section);
+  const AddSectionResourceUser = useSecResUserCreate();
+  const ReadSectionResourceUser = useSecResUserRead();
+  const RemoveSectionResourceUser = useSecResUserDelete();
   const AddMediaFileResource = useMediaResCreate(passage);
   const UpdateSectionResource = useSecResUpdate();
   const DeleteSectionResource = useSecResDelete();
@@ -85,15 +91,19 @@ export function PassageDetailArtifacts(props: IProps) {
     } else setSelected(id);
   };
 
-  const handleDone = (id: string) => {
-    ctx.setState((state) => {
-      return {
-        ...state,
-        rowData: (rowData as any).map((r: IRow) =>
-          r.id === id ? { ...r, done: !r.done } : r
-        ),
-      };
-    });
+  const handleDone = async (id: string) => {
+    const rec = await ReadSectionResourceUser(id);
+    if (rec !== null) {
+      RemoveSectionResourceUser(id, rec);
+    } else {
+      AddSectionResourceUser(id);
+    }
+    ctx.setState((state) => ({
+      ...state,
+      rowData: (rowData as any).map((r: IRow) =>
+        r.id === id ? { ...r, done: !r.done } : r
+      ),
+    }));
   };
 
   const handleDelete = (id: string) => {
