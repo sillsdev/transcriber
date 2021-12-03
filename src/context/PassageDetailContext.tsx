@@ -489,7 +489,10 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
 
     useEffect(() => {
       if (state.currentstep === '' && state.psgCompletedIndex > -2) {
-        const next = state.workflow[state.psgCompletedIndex + 1].id;
+        const nextStep =
+          state.psgCompletedIndex +
+          (state.psgCompletedIndex === state.workflow.length - 1 ? 0 : 1);
+        const next = state.workflow[nextStep].id;
         if (state.currentstep !== next) {
           setCurrentStep(next);
         }
