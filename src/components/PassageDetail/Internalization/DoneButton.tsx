@@ -1,17 +1,19 @@
 import { IconButton } from '@material-ui/core';
 import OpenIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import DoneIcon from '@material-ui/icons/CheckBoxOutlined';
+import { SectionResource } from '../../../model';
 
 interface IProps {
   value: boolean;
   id: string;
-  cb: (id: string) => void;
+  res: SectionResource | null;
+  cb: (id: string, res: SectionResource | null) => void;
 }
 
 const handleDone =
-  ({ id, cb }: IProps) =>
+  ({ id, res, cb }: IProps) =>
   () => {
-    cb(id);
+    cb(id, res);
   };
 
 export const DoneButton = (props: IProps) => (
