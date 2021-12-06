@@ -158,8 +158,8 @@ export const SelectArtifactCategory = (props: IProps) => {
       >
         {artifactCategorys
           .sort()
-          .map((option: IArtifactCategory) => (
-            <MenuItem key={option.id} value={option.id}>
+          .map((option: IArtifactCategory, i) => (
+            <MenuItem key={i} value={option.id}>
               {option.category}
             </MenuItem>
           ))
@@ -170,7 +170,7 @@ export const SelectArtifactCategory = (props: IProps) => {
                 <AddIcon />
               </MenuItem>
             ) : (
-              <></>
+              <div key={'noNew'}></div>
             )
           )}
       </TextField>

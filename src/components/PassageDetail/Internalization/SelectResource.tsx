@@ -118,9 +118,9 @@ export const SelectResource = (props: IProps) => {
 
   return (
     <div id="selectResource">
-      <List>
+      <List component="div">
         {resource.map((r, i) => (
-          <ListItem onClick={handleClick(i)}>
+          <ListItem key={i} onClick={handleClick(i)}>
             <ListItemIcon>
               {selected.indexOf(i) !== -1 ? <Checked /> : <UnChecked />}
             </ListItemIcon>
