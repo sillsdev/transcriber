@@ -2,6 +2,7 @@ import { Button, TextField } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { useGlobal } from 'reactn';
+import { useRemoteSave } from '../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,6 +39,8 @@ export const CommentEditor = (props: IProps) => {
   const { comment, okStr, cancelStr, refresh, onOk, onCancel } = props;
   const classes = useStyles();
   const [changed, setChanged] = useGlobal('changed');
+  const [doSave] = useGlobal('doSave');
+  const [, saveCompleted] = useRemoteSave();
   const [curText, setCurText] = useState(comment);
 
   const handleTextChange = (e: any) => {
@@ -45,17 +48,25 @@ export const CommentEditor = (props: IProps) => {
     const change = e.target.value !== '';
     if (change !== changed) setChanged(change);
   };
-  const handleOk = (e: any) => {
+  const handleOk = () => {
     onOk && onOk(curText);
     setChanged(false);
   };
-  const handleCancel = (e: any) => {
+  const handleCancel = () => {
     onCancel && onCancel();
     setChanged(false);
   };
   useEffect(() => {
     if (refresh > 0) setCurText('');
   }, [refresh]);
+
+  useEffect(() => {
+    if (doSave && curText !== '') {
+      handleOk();
+      saveCompleted('');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doSave]);
 
   return (
     <div className={classes.column}>

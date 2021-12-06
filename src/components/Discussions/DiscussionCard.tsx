@@ -47,7 +47,8 @@ import SelectRole from '../../control/SelectRole';
 import SelectUser from '../../control/SelectUser';
 import SelectArtifactCategory from '../Workflow/SelectArtifactCategory';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { removeExtension } from '../../utils';
+import { removeExtension, useRemoteSave, waitForIt } from '../../utils';
+import JSONAPISource from '@orbit/jsonapi';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -171,7 +172,11 @@ export const DiscussionCard = (props: IProps) => {
   const [sourceMediafile, setSourceMediafile] = useState<MediaFile>();
   const [editing, setEditing] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
+  const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   const [changed, setChanged] = useState(false);
+  const [doSave] = useGlobal('doSave');
+  const [, saveCompleted] = useRemoteSave();
   const [editSubject, setEditSubject] = useState('');
   const [editRole, setEditRole] = useState<string>('');
   const [editUser, setEditUser] = useState<string>('');
@@ -386,6 +391,20 @@ export const DiscussionCard = (props: IProps) => {
     setEditing(false);
     setChanged(false);
   };
+
+  useEffect(() => {
+    if (doSave) {
+      handleSave().then(() => {
+        waitForIt(
+          'category update',
+          () => !remote || remote.requestQueue.length === 0,
+          () => offline && !offlineOnly,
+          200
+        ).then(() => saveCompleted(''));
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doSave]);
 
   return (
     <div className={classes.root}>
