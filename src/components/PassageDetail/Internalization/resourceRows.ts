@@ -45,7 +45,11 @@ const oneRow = ({
   const category = categories.find((c) => c.id === catId);
   const catNameSlug = category?.attributes?.categoryname || '';
   const done = Boolean(
-    r && userResources.find((u) => related(u, r.id) && related(u, user))
+    r &&
+      userResources.find(
+        (u) =>
+          related(u, 'sectionresource') === r.id && related(u, 'user') === user
+      )
   );
 
   newRow.push({
