@@ -138,12 +138,11 @@ export const AppHead = (props: IProps) => {
   const [busy] = useGlobal('remoteBusy');
   const [dataChangeCount] = useGlobal('dataChangeCount');
   const [importexportBusy] = useGlobal('importexportBusy');
-  const [doSave] = useGlobal('doSave');
   const [globalStore] = useGlobal();
   const [isChanged] = useGlobal('changed');
   const [lang] = useGlobal('lang');
   const [exitAlert, setExitAlert] = React.useState(false);
-  const [dosave, setDoSave] = useGlobal('doSave');
+  const [doSave, setDoSave] = useGlobal('doSave');
   const isMounted = useMounted('apphead');
   const [version, setVersion] = useState('');
   const [updates] = useState(
@@ -251,9 +250,9 @@ export const AppHead = (props: IProps) => {
         if (isMounted()) {
           setDownloadAlert(true);
         }
-      } else if (!dosave) setDoSave(true);
+      } else if (!doSave) setDoSave(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exitAlert, isChanged, dosave]);
+  }, [exitAlert, isChanged, doSave]);
 
   useEffect(() => {
     isMounted() && setVersion(require('../../../package.json').version);
