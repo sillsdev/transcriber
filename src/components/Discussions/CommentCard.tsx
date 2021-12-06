@@ -113,7 +113,7 @@ export const CommentCard = (props: IProps) => {
   const handleCommentAction = (what: string) => {
     if (what === 'edit') {
       setEditing(true);
-    } else if ((what = 'delete')) {
+    } else if (what === 'delete') {
       setConfirmAction(what);
     }
   };
