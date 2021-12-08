@@ -4,9 +4,10 @@ interface IProps {
   label: string;
   value: boolean;
   onChange: (value: boolean) => void;
+  disabled?: boolean;
 }
 
-export const ShowAll = ({ label, value, onChange }: IProps) => {
+export const CheckedChoice = ({ label, value, onChange, disabled }: IProps) => {
   const handleChange = () => {
     onChange(!value);
   };
@@ -16,6 +17,7 @@ export const ShowAll = ({ label, value, onChange }: IProps) => {
         <Checkbox checked={value} onChange={handleChange} name={label} />
       }
       label={label}
+      disabled={disabled}
     />
   );
 };

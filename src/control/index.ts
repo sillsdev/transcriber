@@ -11,3 +11,4 @@ export * from './UserListItem';
 export * from './AudacityLogo';
 export * from './ViewMode';
 export * from './DragHandle';
+export * from './CheckedChoice';

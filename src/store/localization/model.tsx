@@ -192,7 +192,13 @@ export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods
 
 export interface IDiscussionListStrings extends Localize.LocalizedStringsMethods {
     "add": string;
+    "allPassages": string;
+    "allSteps": string;
     "collapse": string;
+    "discussionFilter": string;
+    "forYou": string;
+    "latestVersion": string;
+    "resolved": string;
     "title": string;
 };
 

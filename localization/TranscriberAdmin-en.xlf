@@ -838,9 +838,45 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionList.allPassages">
+         <segment>
+            <source>All Passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.allSteps">
+         <segment>
+            <source>All Steps</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionList.collapse">
          <segment>
             <source>Show/Hide All Comments</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.discussionFilter">
+         <segment>
+            <source>Discussion Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.forYou">
+         <segment>
+            <source>For You</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.latestVersion">
+         <segment>
+            <source>Latest Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.resolved">
+         <segment>
+            <source>Resolved</source>
             <target/>
          </segment>
       </unit>

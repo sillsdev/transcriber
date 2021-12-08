@@ -215,7 +215,13 @@ const initialState = {
 	"discussionList": new LocalizedStrings({
 		"en": {
 			"add": "Add Discussion",
+			"allPassages": "All Passages",
+			"allSteps": "All Steps",
 			"collapse": "Show/Hide All Comments",
+			"discussionFilter": "Discussion Filter",
+			"forYou": "For You",
+			"latestVersion": "Latest Version",
+			"resolved": "Resolved",
 			"title": "Discussions",
 		}
 	}),
