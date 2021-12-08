@@ -10,3 +10,4 @@ export * from './LightTooltip';
 export * from './UserListItem';
 export * from './AudacityLogo';
 export * from './ViewMode';
+export * from './DragHandle';

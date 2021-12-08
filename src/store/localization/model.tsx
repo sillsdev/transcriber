@@ -131,6 +131,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "connectParatext": string;
     "delete": string;
     "deleteTeam": string;
+    "editWorkflow": string;
     "explainTeamDelete": string;
     "import": string;
     "language": string;
@@ -138,10 +139,12 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "members": string;
     "nameInUse": string;
     "newProject": string;
+    "OBT": string;
     "offline": string;
     "offlineAvail": string;
     "passagesCreated": string;
     "personalProjects": string;
+    "process": string;
     "projectCreated": string;
     "save": string;
     "sectionStatus": string;
@@ -770,6 +773,11 @@ export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
     "spellingLangsTip": string;
 };
 
+export interface IStepEditorStrings extends Localize.LocalizedStringsMethods {
+    "name": string;
+    "tool": string;
+};
+
 export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
     "assign": string;
     "section": string;
@@ -809,6 +817,16 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "title": string;
     "transcriber": string;
     "yes": string;
+};
+
+export interface IToolStrings extends Localize.LocalizedStringsMethods {
+    "internalization": string;
+    "record": string;
+    "teamCheck": string;
+    "discuss": string;
+    "transcribe": string;
+    "segments": string;
+    "paratext": string;
 };
 
 export interface ITranscribeAddNoteStrings extends Localize.LocalizedStringsMethods {
@@ -1112,10 +1130,12 @@ export interface ILocalizedStrings {
 	sectionResources: ISectionResourcesStrings;
 	shared: ISharedStrings;
 	spelling: ISpellingStrings;
+	stepEditor: IStepEditorStrings;
 	taskItem: ITaskItemStrings;
 	teamCheckReference: ITeamCheckReferenceStrings;
 	template: ITemplateStrings;
 	toDoTable: IToDoTableStrings;
+	tool: IToolStrings;
 	transcribeAddNote: ITranscribeAddNoteStrings;
 	transcriber: ITranscriberStrings;
 	transcribeReject: ITranscribeRejectStrings;

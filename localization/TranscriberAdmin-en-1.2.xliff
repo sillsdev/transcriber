@@ -676,6 +676,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="cards.editWorkflow">
+      		<source>Edit Workflow</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="cards.explainTeamDelete">
             <source>Deleting the team will delete all audio projects of the team.</source>
             <target/>
@@ -725,6 +732,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="cards.OBT">
+      		<source>Oral Bible Translation</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="cards.offline">
             <source>Offline</source>
             <target/>
@@ -753,6 +767,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="cards.process">
+      		<source>Process</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="cards.projectCreated">
             <source>Audio Project Created</source>
             <target/>
@@ -4360,6 +4381,20 @@
                <context context-type="sourcefile">Spelling.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="stepEditor.name">
+      		<source>Name</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">StepName.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="stepEditor.tool">
+      		<source>Tool</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">StepTool.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="taskItem.assign">
             <source>Assign {0}</source>
             <target/>
@@ -4563,6 +4598,55 @@
                <context context-type="sourcefile">ToDoTable.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="tool.internalization">
+      		<source>Internalization</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="tool.record">
+      		<source>Record</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="tool.teamCheck">
+      		<source>Team Check</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="tool.discuss">
+      		<source>Discuss</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="tool.transcribe">
+      		<source>Transcribe</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="tool.segments">
+      		<source>Segments</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="tool.paratext">
+      		<source>Paratext</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="transcribeAddNote.addNoteTitle">
             <source>Add Note</source>
             <target/>

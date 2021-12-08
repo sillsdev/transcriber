@@ -474,7 +474,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
 
     useEffect(() => {
       var wf: SimpleWf[] = [];
-      GetOrgWorkflowSteps('OBT').then((orgsteps: any[]) => {
+      GetOrgWorkflowSteps('OBT').then((orgsteps: OrgWorkflowStep[]) => {
         setOrgWorkflowSteps(orgsteps);
         wf = orgsteps.map((s) => {
           return {

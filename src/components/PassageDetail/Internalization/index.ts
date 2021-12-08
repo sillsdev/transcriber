@@ -1,6 +1,6 @@
 export * from './getResources';
 export * from './resourceRows';
-export * from './DragHandle';
+export * from '../../../control';
 export * from './TableRow';
 export * from './SortableItem';
 export * from './PlayButton';

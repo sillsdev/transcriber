@@ -7,7 +7,7 @@ import { logError, Severity, waitForIt } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
 
 export const useOrgWorkflowSteps = () => {
-  const [organization] = useGlobal('organization');
+  const [global] = useGlobal();
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -17,7 +17,11 @@ export const useOrgWorkflowSteps = () => {
   const [offlineOnly] = useGlobal('offlineOnly');
   const creatingRef = useRef(false);
 
-  const AddOrgWFToOps = async (t: TransformBuilder, wf: WorkflowStep) => {
+  const AddOrgWFToOps = async (
+    t: TransformBuilder,
+    wf: WorkflowStep,
+    org?: string
+  ) => {
     var ops: Operation[] = [];
     const wfs = {
       type: 'orgworkflowstep',
@@ -26,7 +30,7 @@ export const useOrgWorkflowSteps = () => {
       },
     } as OrgWorkflowStep;
     ops.push(...AddRecord(t, wfs, user, memory));
-    const orgRecId = { type: 'organization', id: organization };
+    const orgRecId = { type: 'organization', id: org || global.organization };
     ops.push(t.replaceRelatedRecord(wfs, 'organization', orgRecId));
     console.log(wfs.attributes.name, wfs.attributes.dateCreated);
     try {
@@ -36,7 +40,7 @@ export const useOrgWorkflowSteps = () => {
     }
   };
 
-  const QueryOrgWorkflowSteps = async (process: string) => {
+  const QueryOrgWorkflowSteps = async (process: string, org?: string) => {
     /* wait for new workflow steps remote id to fill in */
     await waitForIt(
       'waiting for workflow update',
@@ -54,13 +58,13 @@ export const useOrgWorkflowSteps = () => {
     return orgworkflowsteps
       .filter(
         (s) =>
-          related(s, 'organization') === organization &&
+          related(s, 'organization') === (org || global.organization) &&
           Boolean(s.keys?.remoteId) !== offlineOnly
       )
       .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
   };
 
-  const CreateOrgWorkflowSteps = async (process: string) => {
+  const CreateOrgWorkflowSteps = async (process: string, org?: string) => {
     creatingRef.current = true;
     const workflowsteps = (
       memory.cache.query((q: QueryBuilder) =>
@@ -73,12 +77,12 @@ export const useOrgWorkflowSteps = () => {
     //originally had them all in one ops, but it was too fast
     //we have checks on the back end for duplicate entries (using just type, datecreated, dateupdated) because orbit sometimes sends twice
     for (var ix = 0; ix < workflowsteps.length; ix++)
-      await AddOrgWFToOps(tb, workflowsteps[ix]);
+      await AddOrgWFToOps(tb, workflowsteps[ix], org);
     creatingRef.current = false;
-    return await QueryOrgWorkflowSteps(process);
+    return await QueryOrgWorkflowSteps(process, org);
   };
 
-  const GetOrgWorkflowSteps = async (process: string) => {
+  const GetOrgWorkflowSteps = async (process: string, org?: string) => {
     if (creatingRef.current && (!offline || offlineOnly))
       await waitForIt(
         'creating org workflow',
@@ -86,9 +90,9 @@ export const useOrgWorkflowSteps = () => {
         () => false,
         100
       );
-    var orgsteps = await QueryOrgWorkflowSteps(process);
+    var orgsteps = await QueryOrgWorkflowSteps(process, org);
     if (orgsteps.length === 0) {
-      orgsteps = await CreateOrgWorkflowSteps(process);
+      orgsteps = await CreateOrgWorkflowSteps(process, org);
     }
     return orgsteps;
   };

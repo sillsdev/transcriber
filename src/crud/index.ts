@@ -67,3 +67,4 @@ export * from './useUser';
 export * from './useSecResUserCreate';
 export * from './useSecResUserRead';
 export * from './useSecResUserDelete';
+export * from './useTools';
