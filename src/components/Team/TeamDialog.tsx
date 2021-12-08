@@ -29,10 +29,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     process: {
       width: '200px',
-      marginRight: theme.spacing(2),
-    },
-    row: {
-      display: 'flex',
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2),
     },
@@ -63,6 +59,8 @@ export function TeamDialog(props: IProps) {
   const [processOptions, setProcessOptions] = useState<OptionType[]>([]);
 
   const handleClose = () => {
+    setName('');
+    setProcess(undefined);
     onOpen && onOpen(false);
   };
 
@@ -98,6 +96,7 @@ export function TeamDialog(props: IProps) {
         GetOrgWorkflowSteps({ process: process || 'OBT' });
       });
     }
+    setProcess(undefined);
     onOpen && onOpen(false);
   };
 
@@ -170,24 +169,22 @@ export function TeamDialog(props: IProps) {
             onChange={handleChange}
             fullWidth
           />
-          <div className={classes.row}>
-            {mode === DialogMode.add && (
-              <TextField
-                id="process"
-                select
-                label={t.process}
-                value={process}
-                onChange={handleProcess}
-                className={classes.process}
-              >
-                {processOptions.map((o: OptionType, i) => (
-                  <MenuItem key={i} value={o.value}>
-                    {o.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          </div>
+          {mode === DialogMode.add && (
+            <TextField
+              id="process"
+              select
+              label={t.process}
+              value={process}
+              onChange={handleProcess}
+              className={classes.process}
+            >
+              {processOptions.map((o: OptionType, i) => (
+                <MenuItem key={i} value={o.value}>
+                  {o.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
           {mode === DialogMode.edit && (
             <DeleteExpansion
               title={t.deleteTeam}
