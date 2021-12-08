@@ -17,9 +17,12 @@ import localStrings from '../../selector/localize';
 import AddIcon from '@material-ui/icons/Add';
 import HideIcon from '@material-ui/icons/ArrowDropUp';
 import ShowIcon from '@material-ui/icons/ArrowDropDown';
+import FilterIcon from '@material-ui/icons/FilterList';
 import DiscussionCard from './DiscussionCard';
 import { withData } from '../../mods/react-orbitjs';
 import { useGlobal } from 'reactn';
+import BigDialog from '../../hoc/BigDialog';
+import DiscussionFilter from './DiscussionFilter';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,16 +67,19 @@ export function DiscussionList(props: IProps) {
   const { t, discussions } = props;
   const classes = useStyles();
   const [changed, setChanged] = useGlobal('changed');
+  const [plan] = useGlobal('plan');
   const [displayDiscussions, setDisplayDiscussions] = useState<Discussion[]>(
     []
   );
   const [collapsed, setCollapsed] = useState(false);
   const [adding, setAdding] = useState(false);
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, rowData, discussionSize } = ctx.state;
+  const { currentstep, rowData, discussionSize, passage } = ctx.state;
+  const [showFilter, setShowFilter] = useState(false);
   const [rootWidthStyle, setRootWidthStyle] = useState({
     width: `${discussionSize}px`,
   });
+
   const currentPassage = (d: Discussion) => {
     const mediaId = related(d, 'mediafile');
     return rowData.filter((r) => r.id === mediaId).length > 0;
@@ -139,47 +145,80 @@ export function DiscussionList(props: IProps) {
     setCollapsed(!collapsed);
   };
 
+  const handleFilter = (isOpen: boolean) => {
+    setShowFilter(isOpen);
+  };
+
+  const handleShowFilter = () => {
+    setShowFilter(true);
+  };
+
   const isMediaMissing = () => {
     return rowData.length === 0 || rowData[0].isResource;
   };
 
   return (
-    <Paper id="DiscussionList" className={classes.root} style={rootWidthStyle}>
-      <div className={classes.discussionHead}>
-        <Typography variant="h6" className={classes.name}>
-          {t.title}
-        </Typography>
-        <div>
-          <IconButton
-            id="addDiscussion"
-            className={classes.actionButton}
-            title={t.add}
-            onClick={handleAddDiscussion}
-            disabled={adding || isMediaMissing()}
-          >
-            <AddIcon />
-          </IconButton>
-          <IconButton
-            id="collapseDiscussion"
-            className={classes.actionButton}
-            title={t.collapse}
-            onClick={handleToggleCollapse}
-          >
-            {collapsed ? <ShowIcon /> : <HideIcon />}
-          </IconButton>
+    <>
+      <Paper
+        id="DiscussionList"
+        className={classes.root}
+        style={rootWidthStyle}
+      >
+        <div className={classes.discussionHead}>
+          <Typography variant="h6" className={classes.name}>
+            {t.title}
+          </Typography>
+          <div>
+            <IconButton
+              id="filterDiscussion"
+              className={classes.actionButton}
+              title={t.discussionFilter}
+              onClick={handleShowFilter}
+            >
+              <FilterIcon />
+            </IconButton>
+            <IconButton
+              id="addDiscussion"
+              className={classes.actionButton}
+              title={t.add}
+              onClick={handleAddDiscussion}
+              disabled={adding || isMediaMissing()}
+            >
+              <AddIcon />
+            </IconButton>
+            <IconButton
+              id="collapseDiscussion"
+              className={classes.actionButton}
+              title={t.collapse}
+              onClick={handleToggleCollapse}
+            >
+              {collapsed ? <ShowIcon /> : <HideIcon />}
+            </IconButton>
+          </div>
         </div>
-      </div>
-      <Grid container className={classes.cardFlow}>
-        {displayDiscussions.map((i, j) => (
-          <DiscussionCard
-            key={j}
-            discussion={i}
-            collapsed={collapsed}
-            onAddComplete={adding ? handleAddComplete : undefined}
-          />
-        ))}
-      </Grid>
-    </Paper>
+        <Grid container className={classes.cardFlow}>
+          {displayDiscussions.map((i, j) => (
+            <DiscussionCard
+              key={j}
+              discussion={i}
+              collapsed={collapsed}
+              onAddComplete={adding ? handleAddComplete : undefined}
+            />
+          ))}
+        </Grid>
+      </Paper>
+      <BigDialog
+        title={t.discussionFilter}
+        isOpen={showFilter}
+        onOpen={handleFilter}
+      >
+        <DiscussionFilter
+          currentstep={currentstep}
+          planId={plan}
+          passage={passage}
+        />
+      </BigDialog>
+    </>
   );
 }
 
