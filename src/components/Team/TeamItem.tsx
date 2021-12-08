@@ -6,6 +6,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import { Organization, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
+import { StepEditor } from '../StepEditor';
 import GroupTabs from '../GroupTabs';
 import { ProjectCard, AddCard } from '.';
 import TeamDialog from './TeamDialog';
@@ -53,6 +54,7 @@ export const TeamItem = (props: IProps) => {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setOrganization] = useGlobal('organization');
   const [editOpen, setEditOpen] = React.useState(false);
+  const [showWorkflow, setShowWorkflow] = React.useState(false);
   const [deleteItem, setDeleteItem] = React.useState<Organization>();
   const ctx = React.useContext(TeamContext);
   const { teamProjects, teamMembers, teamUpdate, teamDelete, isAdmin } =
@@ -89,6 +91,14 @@ export const TeamItem = (props: IProps) => {
 
   const handleDeleteRefused = () => setDeleteItem(undefined);
 
+  const handleWorkflow = (isOpen: boolean) => {
+    setShowWorkflow(isOpen);
+  };
+
+  const handleEditWorkflow = () => {
+    setShowWorkflow(true);
+  };
+
   const canModify = (
     offline: boolean,
     team: Organization,
@@ -110,16 +120,25 @@ export const TeamItem = (props: IProps) => {
           >
             {t.members.replace('{0}', teamMembers(team.id).toString())}
           </Button>
-
           {' \u00A0'}
           {canModify(offline, team, offlineOnly) && (
-            <Button
-              id="teamSettings"
-              variant="contained"
-              onClick={handleSettings(team)}
-            >
-              {t.settings}
-            </Button>
+            <>
+              <Button
+                id="editWorkflow"
+                onClick={handleEditWorkflow}
+                variant="contained"
+              >
+                {t.editWorkflow}
+              </Button>
+              {' \u00A0'}
+              <Button
+                id="teamSettings"
+                variant="contained"
+                onClick={handleSettings(team)}
+              >
+                {t.settings}
+              </Button>
+            </>
           )}
         </div>
       </div>
@@ -138,6 +157,13 @@ export const TeamItem = (props: IProps) => {
         bp={BigDialogBp.md}
       >
         <GroupTabs {...props} />
+      </BigDialog>
+      <BigDialog
+        title={t.editWorkflow}
+        isOpen={showWorkflow}
+        onOpen={handleWorkflow}
+      >
+        <StepEditor process={'OBT'} org={team.id} />
       </BigDialog>
       {deleteItem && (
         <Confirm

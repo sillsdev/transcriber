@@ -148,6 +148,7 @@ const initialState = {
 			"connectParatext": "Connect a Paratext Project",
 			"delete": "Delete",
 			"deleteTeam": "Delete Team",
+			"editWorkflow": "Edit Workflow",
 			"explainTeamDelete": "Deleting the team will delete all audio projects of the team.",
 			"import": "Import Audio Project",
 			"language": "Language: {0}",
@@ -155,10 +156,12 @@ const initialState = {
 			"members": "Members ({0})",
 			"nameInUse": "Name in use",
 			"newProject": "New Audio Project",
+			"OBT": "Oral Bible Translation",
 			"offline": "Offline",
 			"offlineAvail": "Offline Available",
 			"passagesCreated": "Passages Created",
 			"personalProjects": "Personal Audio Projects",
+			"process": "Process",
 			"projectCreated": "Audio Project Created",
 			"save": "Save",
 			"sectionStatus": "{0} {1}",
@@ -824,6 +827,15 @@ const initialState = {
 			"spellingLangsTip": "Choose spell checking languages",
 		}
 	}),
+	"stepEditor": new LocalizedStrings({
+		"en": {
+			"add": "Add",
+			"name": "Name",
+			"nextStep": "Next Step",
+			"showAll": "Show all",
+			"tool": "Tool",
+		}
+	}),
 	"taskItem": new LocalizedStrings({
 		"en": {
 			"assign": "Assign {0}",
@@ -867,6 +879,17 @@ const initialState = {
 			"title": "Title",
 			"transcriber": "Transcribe",
 			"yes": "Yes",
+		}
+	}),
+	"tool": new LocalizedStrings({
+		"en": {
+			"resource": "Resource",
+			"record": "Record",
+			"teamCheck": "Team Check",
+			"discuss": "Discuss",
+			"transcribe": "Transcribe",
+			"segment": "Segment",
+			"paratext": "Paratext",
 		}
 	}),
 	"transcribeAddNote": new LocalizedStrings({
@@ -1191,10 +1214,12 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"sectionResources" : new LocalizedStrings(action.payload.data.sectionResources),
 				"shared" : new LocalizedStrings(action.payload.data.shared),
 				"spelling" : new LocalizedStrings(action.payload.data.spelling),
+				"stepEditor" : new LocalizedStrings(action.payload.data.stepEditor),
 				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),
 				"teamCheckReference" : new LocalizedStrings(action.payload.data.teamCheckReference),
 				"template" : new LocalizedStrings(action.payload.data.template),
 				"toDoTable" : new LocalizedStrings(action.payload.data.toDoTable),
+				"tool" : new LocalizedStrings(action.payload.data.tool),
 				"transcribeAddNote" : new LocalizedStrings(action.payload.data.transcribeAddNote),
 				"transcriber" : new LocalizedStrings(action.payload.data.transcriber),
 				"transcribeReject" : new LocalizedStrings(action.payload.data.transcribeReject),

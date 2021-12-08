@@ -580,6 +580,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.editWorkflow">
+         <segment>
+            <source>Edit Workflow</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.explainTeamDelete">
          <segment>
             <source>Deleting the team will delete all audio projects of the team.</source>
@@ -622,6 +628,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.OBT">
+         <segment>
+            <source>Oral Bible Translation</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.offline">
          <segment>
             <source>Offline</source>
@@ -643,6 +655,12 @@
       <unit id="cards.personalProjects">
          <segment>
             <source>Personal Audio Projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.process">
+         <segment>
+            <source>Process</source>
             <target/>
          </segment>
       </unit>
@@ -3736,6 +3754,36 @@
             <target/>
          </segment>
       </unit>
+      <unit id="stepEditor.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.name">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.nextStep">
+         <segment>
+            <source>Next Step</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.showAll">
+         <segment>
+            <source>Show all</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.tool">
+         <segment>
+            <source>Tool</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="taskItem.assign">
          <segment>
             <source>Assign {0}</source>
@@ -3907,6 +3955,48 @@
       <unit id="toDoTable.yes">
          <segment>
             <source>Yes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.resource">
+         <segment>
+            <source>Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.record">
+         <segment>
+            <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.teamCheck">
+         <segment>
+            <source>Team Check</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.discuss">
+         <segment>
+            <source>Discuss</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.transcribe">
+         <segment>
+            <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.segment">
+         <segment>
+            <source>Segment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.paratext">
+         <segment>
+            <source>Paratext</source>
             <target/>
          </segment>
       </unit>
