@@ -3958,9 +3958,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="tool.internalization">
+      <unit id="tool.resource">
          <segment>
-            <source>Internalization</source>
+            <source>Resource</source>
             <target/>
          </segment>
       </unit>
@@ -3988,9 +3988,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="tool.segments">
+      <unit id="tool.segment">
          <segment>
-            <source>Segments</source>
+            <source>Segment</source>
             <target/>
          </segment>
       </unit>

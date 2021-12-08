@@ -823,12 +823,12 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IToolStrings extends Localize.LocalizedStringsMethods {
-    "internalization": string;
+    "resource": string;
     "record": string;
     "teamCheck": string;
     "discuss": string;
     "transcribe": string;
-    "segments": string;
+    "segment": string;
     "paratext": string;
 };
 

@@ -883,12 +883,12 @@ const initialState = {
 	}),
 	"tool": new LocalizedStrings({
 		"en": {
-			"internalization": "Internalization",
+			"resource": "Resource",
 			"record": "Record",
 			"teamCheck": "Team Check",
 			"discuss": "Discuss",
 			"transcribe": "Transcribe",
-			"segments": "Segments",
+			"segment": "Segment",
 			"paratext": "Paratext",
 		}
 	}),

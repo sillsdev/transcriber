@@ -4619,8 +4619,8 @@
                <context context-type="sourcefile">ToDoTable.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="tool.internalization">
-      		<source>Internalization</source>
+      	<trans-unit id="tool.resource">
+      		<source>Resource</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">useTools.ts</context>
@@ -4654,8 +4654,8 @@
       			<context context-type="sourcefile">useTools.ts</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="tool.segments">
-      		<source>Segments</source>
+      	<trans-unit id="tool.segment">
+      		<source>Segment</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">useTools.ts</context>

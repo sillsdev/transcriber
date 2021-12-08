@@ -4,18 +4,18 @@ import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 
 export const toolNames = [
-  'internalization',
+  'resource',
   'record',
   'teamCheck',
   'discuss',
   'transcribe',
-  'segments',
+  'segment',
   'paratext',
 ];
 
 const toolMap = [
   { from: 'audio', to: 'discuss' },
-  { from: 'backTranslate', to: 'segments' },
+  { from: 'backTranslate', to: 'segment' },
 ];
 
 interface ISwitches {
