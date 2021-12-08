@@ -4381,11 +4381,32 @@
                <context context-type="sourcefile">Spelling.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="stepEditor.add">
+      		<source>Add</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">StepName.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="stepEditor.name">
       		<source>Name</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">StepName.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="stepEditor.nextStep">
+      		<source>Next Step</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">StepEditor.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="stepEditor.showAll">
+      		<source>Show all</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">StepEditor.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="stepEditor.tool">

@@ -829,7 +829,10 @@ const initialState = {
 	}),
 	"stepEditor": new LocalizedStrings({
 		"en": {
+			"add": "Add",
 			"name": "Name",
+			"nextStep": "Next Step",
+			"showAll": "Show all",
 			"tool": "Tool",
 		}
 	}),

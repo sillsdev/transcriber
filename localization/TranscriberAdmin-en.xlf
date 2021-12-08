@@ -3754,9 +3754,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="stepEditor.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="stepEditor.name">
          <segment>
             <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.nextStep">
+         <segment>
+            <source>Next Step</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.showAll">
+         <segment>
+            <source>Show all</source>
             <target/>
          </segment>
       </unit>

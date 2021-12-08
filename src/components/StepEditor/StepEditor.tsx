@@ -1,14 +1,28 @@
 import { useEffect, useState } from 'react';
-import { IState, IWorkflowStepsStrings } from '../../model';
+import {
+  IStepEditorStrings,
+  IState,
+  IWorkflowStepsStrings,
+  OrgWorkflowStep,
+} from '../../model';
+import { Button, makeStyles } from '@material-ui/core';
 import localStrings from '../../selector/localize';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { useGlobal } from 'reactn';
 import { TransformBuilder } from '@orbit/data';
-import { StepItem, StepList } from '.';
+import { ShowAll, StepItem, StepList } from '.';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { shallowEqual, useSelector } from 'react-redux';
 import { toCamel } from '../../utils';
 import { useTools } from '../../crud';
+import { AddRecord } from '../../model/baseModel';
+
+const useStyles = makeStyles({
+  row: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+});
 
 export interface IStepRow {
   id: string;
@@ -27,13 +41,19 @@ interface IProps {
   org?: string;
 }
 
-const stringSelector = (state: IState) =>
+const wfStepsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'workflowSteps' });
+const stepEditorSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'stepEditor' });
 
 export const StepEditor = ({ process, org }: IProps) => {
+  const classes = useStyles();
   const [rows, setRows] = useState<IStepRow[]>([]);
-  const t: IWorkflowStepsStrings = useSelector(stringSelector, shallowEqual);
+  const [showAll, setShowALl] = useState(false);
+  const t: IWorkflowStepsStrings = useSelector(wfStepsSelector, shallowEqual);
+  const se: IStepEditorStrings = useSelector(stepEditorSelector, shallowEqual);
   const [memory] = useGlobal('memory');
+  const [user] = useGlobal('user');
   const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
   const { mapTool } = useTools();
   const [refresh, setRefresh] = useState(0);
@@ -74,10 +94,42 @@ export const StepEditor = ({ process, org }: IProps) => {
     );
     setRefresh(refresh + 1);
   };
+  const handleRestore = async (id: string) => {
+    const recId = { type: 'orgworkflowstep', id };
+    await memory.update((t: TransformBuilder) =>
+      t.replaceAttribute(recId, 'sequencenum', rows.length)
+    );
+    setRefresh(refresh + 1);
+  };
+  const handleAdd = async () => {
+    const tool = 'discuss';
+    const rec = {
+      type: 'orgworkflowstep',
+      attributes: {
+        sequencenum: rows.length,
+        name: se.nextStep,
+        process: process || 'OBT',
+        tool: JSON.stringify({ tool }),
+      },
+    } as OrgWorkflowStep;
+    if (org) {
+      const orgRec = { type: 'organization', id: org };
+      await memory.update((t: TransformBuilder) => [
+        ...AddRecord(t, rec, user, memory),
+        t.replaceRelatedRecord(rec, 'organization', orgRec),
+      ]);
+    }
+    setRefresh(refresh + 1);
+  };
 
   const localName = (name: string) => {
     const lookUp = toCamel(name);
     return t.hasOwnProperty(lookUp) ? t.getString(lookUp) : name;
+  };
+
+  const handleShow = () => {
+    setShowALl(!showAll);
+    setRefresh(refresh + 1);
   };
 
   useEffect(() => {
@@ -92,23 +144,36 @@ export const StepEditor = ({ process, org }: IProps) => {
           tool: mapTool(toCamel(tools.tool)),
         });
       });
-      setRows(newRows.filter((r) => r.seq >= 0).sort((i, j) => i.seq - j.seq));
+      setRows(
+        newRows
+          .filter((r) => showAll || r.seq >= 0)
+          .sort((i, j) => i.seq - j.seq)
+      );
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
   return (
-    <StepList onSortEnd={handleSortEnd} useDragHandle>
-      {rows.map((value, index) => (
-        <StepItem
-          key={index}
-          index={index}
-          value={value}
-          onNameChange={handleNameChange}
-          onToolChange={handleToolChange}
-          onDelete={handleDelete}
-        />
-      ))}
-    </StepList>
+    <div>
+      <div className={classes.row}>
+        <Button onClick={handleAdd} variant="contained">
+          {se.add}
+        </Button>
+        <ShowAll label={se.showAll} value={showAll} onChange={handleShow} />
+      </div>
+      <StepList onSortEnd={handleSortEnd} useDragHandle>
+        {rows.map((value, index) => (
+          <StepItem
+            key={index}
+            index={index}
+            value={value}
+            onNameChange={handleNameChange}
+            onToolChange={handleToolChange}
+            onDelete={handleDelete}
+            onRestore={handleRestore}
+          />
+        ))}
+      </StepList>
+    </div>
   );
 };
