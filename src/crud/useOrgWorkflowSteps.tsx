@@ -82,7 +82,13 @@ export const useOrgWorkflowSteps = () => {
     return await QueryOrgWorkflowSteps(process, org);
   };
 
-  const GetOrgWorkflowSteps = async (process: string, org?: string) => {
+  interface IGetSteps {
+    process: string;
+    org?: string;
+    showAll?: boolean;
+  }
+
+  const GetOrgWorkflowSteps = async ({ process, org, showAll }: IGetSteps) => {
     if (creatingRef.current && (!offline || offlineOnly))
       await waitForIt(
         'creating org workflow',
@@ -94,7 +100,7 @@ export const useOrgWorkflowSteps = () => {
     if (orgsteps.length === 0) {
       orgsteps = await CreateOrgWorkflowSteps(process, org);
     }
-    return orgsteps;
+    return orgsteps.filter((s) => showAll || s.attributes.sequencenum >= 0);
   };
 
   return { GetOrgWorkflowSteps };

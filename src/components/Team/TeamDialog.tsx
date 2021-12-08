@@ -22,8 +22,6 @@ import {
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
 import { useTeamApiPull } from '../../crud';
-import { BigDialog } from '../../hoc/BigDialog';
-import { StepEditor } from '../StepEditor';
 import { waitForIt } from '../../utils';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 
@@ -32,9 +30,6 @@ const useStyles = makeStyles((theme: Theme) =>
     process: {
       width: '200px',
       marginRight: theme.spacing(2),
-    },
-    button: {
-      alignSelf: 'center',
     },
     row: {
       display: 'flex',
@@ -57,15 +52,13 @@ export function TeamDialog(props: IProps) {
   const classes = useStyles();
   const [name, setName] = React.useState('');
   const ctx = React.useContext(TeamContext);
-  const { cardStrings, sharedStrings } = ctx.state;
+  const { cardStrings } = ctx.state;
   const t = cardStrings;
-  const ts = sharedStrings;
   const teamApiPull = useTeamApiPull();
   const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
   const [global] = useGlobal();
   const [memory] = useGlobal('memory');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [showWorkflow, setShowWorkflow] = useState(false);
   const [process, setProcess] = useState<string>();
   const [processOptions, setProcessOptions] = useState<OptionType[]>([]);
 
@@ -102,8 +95,7 @@ export function TeamDialog(props: IProps) {
         () => false,
         200
       ).then(() => {
-        console.log(`org=${global.organization}`);
-        GetOrgWorkflowSteps(process || 'OBT');
+        GetOrgWorkflowSteps({ process: process || 'OBT' });
       });
     }
     onOpen && onOpen(false);
@@ -117,14 +109,6 @@ export function TeamDialog(props: IProps) {
   const handleDelete = () => {
     const team = { ...values, attributes: { name } } as Organization;
     onDelete && onDelete(team);
-  };
-
-  const handleWorkflow = (isOpen: boolean) => {
-    setShowWorkflow(isOpen);
-  };
-
-  const handleEditWorkflow = () => {
-    setShowWorkflow(true);
   };
 
   const handleProcess = (e: any) => {
@@ -187,7 +171,7 @@ export function TeamDialog(props: IProps) {
             fullWidth
           />
           <div className={classes.row}>
-            {mode === DialogMode.add ? (
+            {mode === DialogMode.add && (
               <TextField
                 id="process"
                 select
@@ -202,14 +186,6 @@ export function TeamDialog(props: IProps) {
                   </MenuItem>
                 ))}
               </TextField>
-            ) : (
-              <Button
-                onClick={handleEditWorkflow}
-                variant="contained"
-                className={classes.button}
-              >
-                {t.editWorkflow}
-              </Button>
             )}
           </div>
           {mode === DialogMode.edit && (
@@ -234,14 +210,6 @@ export function TeamDialog(props: IProps) {
           </Button>
         </DialogActions>
       </Dialog>
-      <BigDialog
-        title={t.editWorkflow}
-        isOpen={showWorkflow}
-        onOpen={handleWorkflow}
-        ts={ts}
-      >
-        <StepEditor process={process} org={values?.id} />
-      </BigDialog>
     </div>
   );
 }

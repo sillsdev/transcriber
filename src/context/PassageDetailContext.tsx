@@ -474,17 +474,20 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
 
     useEffect(() => {
       var wf: SimpleWf[] = [];
-      GetOrgWorkflowSteps('OBT').then((orgsteps: OrgWorkflowStep[]) => {
-        setOrgWorkflowSteps(orgsteps);
-        wf = orgsteps.map((s) => {
-          return {
-            id: s.id,
-            label:
-              wfStr.getString(toCamel(s.attributes.name)) || s.attributes.name,
-          };
-        });
-        setState((state: ICtxState) => ({ ...state, workflow: wf }));
-      });
+      GetOrgWorkflowSteps({ process: 'OBT' }).then(
+        (orgsteps: OrgWorkflowStep[]) => {
+          setOrgWorkflowSteps(orgsteps);
+          wf = orgsteps.map((s) => {
+            return {
+              id: s.id,
+              label:
+                wfStr.getString(toCamel(s.attributes.name)) ||
+                s.attributes.name,
+            };
+          });
+          setState((state: ICtxState) => ({ ...state, workflow: wf }));
+        }
+      );
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [workflowSteps, orgWorkflowSteps]);
 

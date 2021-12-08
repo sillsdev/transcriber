@@ -78,7 +78,7 @@ export const StepEditor = ({ process, org }: IProps) => {
     await memory.update((t: TransformBuilder) =>
       t.replaceAttribute(recId, 'name', name)
     );
-    setRefresh(refresh + 1);
+    setRows(rows.map((r) => (r.id === id ? { ...r, name } : r)));
   };
   const handleToolChange = async (id: string, tool: string) => {
     const recId = { type: 'orgworkflowstep', id };
@@ -133,23 +133,21 @@ export const StepEditor = ({ process, org }: IProps) => {
   };
 
   useEffect(() => {
-    GetOrgWorkflowSteps(process || 'OBT', org).then((orgSteps) => {
-      const newRows = Array<IStepRow>();
-      orgSteps.forEach((s) => {
-        const tools = JSON.parse(s.attributes?.tool);
-        newRows.push({
-          id: s.id,
-          seq: s.attributes?.sequencenum,
-          name: localName(s.attributes?.name),
-          tool: mapTool(toCamel(tools.tool)),
+    GetOrgWorkflowSteps({ process: process || 'OBT', org, showAll }).then(
+      (orgSteps) => {
+        const newRows = Array<IStepRow>();
+        orgSteps.forEach((s) => {
+          const tools = JSON.parse(s.attributes?.tool);
+          newRows.push({
+            id: s.id,
+            seq: s.attributes?.sequencenum,
+            name: localName(s.attributes?.name),
+            tool: mapTool(toCamel(tools.tool)),
+          });
         });
-      });
-      setRows(
-        newRows
-          .filter((r) => showAll || r.seq >= 0)
-          .sort((i, j) => i.seq - j.seq)
-      );
-    });
+        setRows(newRows.sort((i, j) => i.seq - j.seq));
+      }
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
