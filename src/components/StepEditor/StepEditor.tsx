@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   IStepEditorStrings,
   IState,
@@ -15,8 +15,9 @@ import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { CheckedChoice as ShowAll } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
 import { toCamel } from '../../utils';
-import { useTools } from '../../crud';
+import { related, useTools } from '../../crud';
 import { AddRecord } from '../../model/baseModel';
+import { useSnackBar } from '../../hoc/SnackBar';
 
 const useStyles = makeStyles({
   row: {
@@ -44,7 +45,7 @@ interface IProps {
 
 const wfStepsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'workflowSteps' });
-const stepEditorSelector = (state: IState) =>
+export const stepEditorSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'stepEditor' });
 
 export const StepEditor = ({ process, org }: IProps) => {
@@ -58,6 +59,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
   const { mapTool } = useTools();
   const [refresh, setRefresh] = useState(0);
+  const { showMessage } = useSnackBar();
 
   const handleSortEnd = ({ oldIndex, newIndex }: SortEndProps) => {
     const newRows = arrayMove(rows, oldIndex, newIndex);
@@ -78,7 +80,12 @@ export const StepEditor = ({ process, org }: IProps) => {
     const recs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('orgworkflowstep')
     ) as OrgWorkflowStep[];
-    return recs.filter((r) => r.attributes?.name?.startsWith(name)).length;
+    return recs.filter(
+      (r) =>
+        related(r, 'organization') === org &&
+        r.attributes?.name?.startsWith(name) &&
+        / [0-9]+/.test(r.attributes?.name?.slice(name.length))
+    ).length;
   };
 
   const handleNameChange = async (id: string, name: string) => {
@@ -99,20 +106,39 @@ export const StepEditor = ({ process, org }: IProps) => {
     );
     setRefresh(refresh + 1);
   };
-  const handleDelete = async (id: string) => {
+
+  const visible = useMemo(() => {
+    const recs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('orgworkflowstep')
+    ) as OrgWorkflowStep[];
+    return recs.filter(
+      (r) => related(r, 'organization') === org && r.attributes.sequencenum >= 0
+    ).length;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org, refresh]);
+
+  const handleHide = async (id: string) => {
+    if (visible === 1) {
+      showMessage(se.lastStep);
+      return;
+    }
     const recId = { type: 'orgworkflowstep', id };
     await memory.update((t: TransformBuilder) =>
       t.replaceAttribute(recId, 'sequencenum', -1)
     );
+    showMessage(se.oneHidden);
     setRefresh(refresh + 1);
   };
-  const handleRestore = async (id: string) => {
+
+  const handleVisible = async (id: string) => {
     const recId = { type: 'orgworkflowstep', id };
     await memory.update((t: TransformBuilder) =>
       t.replaceAttribute(recId, 'sequencenum', rows.length)
     );
+    showMessage(se.oneVisible);
     setRefresh(refresh + 1);
   };
+
   const handleAdd = async () => {
     let name = se.nextStep;
     const count = countName(name);
@@ -137,6 +163,7 @@ export const StepEditor = ({ process, org }: IProps) => {
         t.replaceRelatedRecord(rec, 'organization', orgRec),
       ]);
     }
+    showMessage(se.stepAdded);
     setRefresh(refresh + 1);
   };
 
@@ -169,13 +196,36 @@ export const StepEditor = ({ process, org }: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
+  const hidden = useMemo(() => {
+    const recs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('orgworkflowstep')
+    ) as OrgWorkflowStep[];
+    return recs.filter(
+      (r) => related(r, 'organization') === org && r.attributes.sequencenum < 0
+    ).length;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org, refresh]);
+
+  const hiddenMessage = useMemo(
+    () => se.stepsHidden.replace('{0}', hidden.toString()),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [hidden]
+  );
+
   return (
     <div>
       <div className={classes.row}>
         <Button onClick={handleAdd} variant="contained">
           {se.add}
         </Button>
-        <ShowAll label={se.showAll} value={showAll} onChange={handleShow} />
+        <div title={hiddenMessage}>
+          <ShowAll
+            label={se.showAll}
+            value={showAll}
+            onChange={handleShow}
+            disabled={hidden === 0}
+          />
+        </div>
       </div>
       <StepList onSortEnd={handleSortEnd} useDragHandle>
         {rows.map((value, index) => (
@@ -185,8 +235,8 @@ export const StepEditor = ({ process, org }: IProps) => {
             value={value}
             onNameChange={handleNameChange}
             onToolChange={handleToolChange}
-            onDelete={handleDelete}
-            onRestore={handleRestore}
+            onDelete={handleHide}
+            onRestore={handleVisible}
           />
         ))}
       </StepList>

@@ -3796,6 +3796,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="stepEditor.hide">
+         <segment>
+            <source>Hide</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.lastStep">
+         <segment>
+            <source>Unable to hide the last step.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="stepEditor.name">
          <segment>
             <source>Name</source>
@@ -3808,9 +3820,39 @@
             <target/>
          </segment>
       </unit>
+      <unit id="stepEditor.oneHidden">
+         <segment>
+            <source>One step hidden</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.oneVisible">
+         <segment>
+            <source>One step visible and added to the end of the list.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.show">
+         <segment>
+            <source>Show</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="stepEditor.showAll">
          <segment>
             <source>Show all</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.stepAdded">
+         <segment>
+            <source>Step added to the end of the list.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.stepsHidden">
+         <segment>
+            <source>{0} steps hidden</source>
             <target/>
          </segment>
       </unit>

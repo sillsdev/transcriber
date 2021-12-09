@@ -1,10 +1,12 @@
 import { SortableElement } from 'react-sortable-hoc';
 import { ListItem, IconButton, makeStyles } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import RestoreIcon from '@material-ui/icons/Undo';
-import { IStepRow, DragHandle } from '.';
+import HideIcon from '@material-ui/icons/VisibilityOff';
+import ShowIcon from '@material-ui/icons/Visibility';
+import { IStepRow, DragHandle, stepEditorSelector } from '.';
 import StepName from './StepName';
 import ToolChoice from './ToolChoice';
+import { shallowEqual, useSelector } from 'react-redux';
+import { IStepEditorStrings } from '../../model';
 
 const useStyles = makeStyles({
   step: { minWidth: 200 },
@@ -22,6 +24,10 @@ interface IProps {
 export const StepItem = SortableElement(
   ({ value, onNameChange, onToolChange, onDelete, onRestore }: IProps) => {
     const classes = useStyles();
+    const se: IStepEditorStrings = useSelector(
+      stepEditorSelector,
+      shallowEqual
+    );
 
     const handleNameChange = (name: string) => {
       onNameChange(value.id, name);
@@ -43,8 +49,11 @@ export const StepItem = SortableElement(
         <span className={classes.tool}>
           <ToolChoice tool={value.tool} onChange={handleToolChange} />
         </span>
-        <IconButton onClick={handleDeleteOrRestore}>
-          {value.seq >= 0 ? <DeleteIcon /> : <RestoreIcon />}
+        <IconButton
+          onClick={handleDeleteOrRestore}
+          title={value.seq >= 0 ? se.hide : se.show}
+        >
+          {value.seq >= 0 ? <HideIcon /> : <ShowIcon />}
         </IconButton>
       </ListItem>
     );

@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
+import { useDebounce } from '../../utils';
+import { useEffect, useState } from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,16 +28,24 @@ interface IProps extends IStateProps {
 
 export const StepName = ({ name, onChange, t }: IProps) => {
   const classes = useStyles();
+  const [response, setResponse] = useState('');
+
+  const debouncedResponse = useDebounce(response, 1000);
 
   const handleChange = (e: any) => {
-    onChange(e.target.value);
+    setResponse(e.target.value);
+    if (debouncedResponse !== name) onChange(debouncedResponse);
   };
+
+  useEffect(() => {
+    setResponse(name);
+  }, [name]);
 
   return (
     <TextField
       id="stepName"
       label={t.name}
-      value={name}
+      value={response}
       onChange={handleChange}
       variant="filled"
       className={classes.textField}

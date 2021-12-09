@@ -781,9 +781,16 @@ export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
 
 export interface IStepEditorStrings extends Localize.LocalizedStringsMethods {
     "add": string;
+    "hide": string;
+    "lastStep": string;
     "name": string;
     "nextStep": string;
+    "oneHidden": string;
+    "oneVisible": string;
+    "show": string;
     "showAll": string;
+    "stepAdded": string;
+    "stepsHidden": string;
     "tool": string;
 };
 
