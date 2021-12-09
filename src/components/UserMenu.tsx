@@ -184,7 +184,7 @@ export function UserMenu(props: IProps) {
         </StyledMenuItem>
         <Divider />
         <StyledMenuItem
-          id="terms"
+          id="privacy"
           onClick={handleAction('Privacy')}
           className={classes.terms}
         >
