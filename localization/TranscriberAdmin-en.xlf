@@ -838,18 +838,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="discussionList.allPassages">
-         <segment>
-            <source>All Passages</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="discussionList.allSteps">
-         <segment>
-            <source>All Steps</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="discussionList.collapse">
          <segment>
             <source>Show/Hide All Comments</source>
@@ -862,21 +850,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="discussionList.forYou">
+      <unit id="discussionList.filterStatus">
          <segment>
-            <source>For You</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="discussionList.latestVersion">
-         <segment>
-            <source>Latest Version</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="discussionList.resolved">
-         <segment>
-            <source>Resolved</source>
+            <source>{0} / {1} discussions selected</source>
             <target/>
          </segment>
       </unit>
@@ -1003,6 +979,36 @@
       <unit id="emailUnverified.verify">
          <segment>
             <source>Please verify by clicking on the link in the authorization email sent to your account.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.allPassages">
+         <segment>
+            <source>All Passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.allSteps">
+         <segment>
+            <source>All Steps</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.forYou">
+         <segment>
+            <source>For You</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.latestVersion">
+         <segment>
+            <source>Latest Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.resolved">
+         <segment>
+            <source>Resolved</source>
             <target/>
          </segment>
       </unit>

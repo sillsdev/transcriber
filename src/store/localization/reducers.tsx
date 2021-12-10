@@ -215,13 +215,9 @@ const initialState = {
 	"discussionList": new LocalizedStrings({
 		"en": {
 			"add": "Add Discussion",
-			"allPassages": "All Passages",
-			"allSteps": "All Steps",
 			"collapse": "Show/Hide All Comments",
 			"discussionFilter": "Discussion Filter",
-			"forYou": "For You",
-			"latestVersion": "Latest Version",
-			"resolved": "Resolved",
+			"filterStatus": "{0} / {1} discussions selected",
 			"title": "Discussions",
 		}
 	}),
@@ -251,6 +247,15 @@ const initialState = {
 			"resend": "Resend the authorization email",
 			"verified": "I'm verified!  Carry on!",
 			"verify": "Please verify by clicking on the link in the authorization email sent to your account.",
+		}
+	}),
+	"filterMenu": new LocalizedStrings({
+		"en": {
+			"allPassages": "All Passages",
+			"allSteps": "All Steps",
+			"forYou": "For You",
+			"latestVersion": "Latest Version",
+			"resolved": "Resolved",
 		}
 	}),
 	"grid": new LocalizedStrings({
@@ -1200,6 +1205,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"discussionList" : new LocalizedStrings(action.payload.data.discussionList),
 				"electronImport" : new LocalizedStrings(action.payload.data.electronImport),
 				"emailUnverified" : new LocalizedStrings(action.payload.data.emailUnverified),
+				"filterMenu" : new LocalizedStrings(action.payload.data.filterMenu),
 				"grid" : new LocalizedStrings(action.payload.data.grid),
 				"groupSettings" : new LocalizedStrings(action.payload.data.groupSettings),
 				"groupTabs" : new LocalizedStrings(action.payload.data.groupTabs),

@@ -977,20 +977,6 @@
                <context context-type="sourcefile">discussionList.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="discussionList.allPassages">
-      		<source>All Passages</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">discussionFilter.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="discussionList.allSteps">
-      		<source>All Steps</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">discussionFilter.tsx</context>
-      		</context-group>
-      	</trans-unit>
          <trans-unit id="discussionList.collapse">
             <source>Show/Hide All Comments</source>
             <target/>
@@ -1005,25 +991,11 @@
       			<context context-type="sourcefile">discussionList.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="discussionList.forYou">
-      		<source>For You</source>
+      	<trans-unit id="discussionList.filterStatus">
+      		<source>{0} / {1} discussions selected</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">discussionFilter.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="discussionList.latestVersion">
-      		<source>Latest Version</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">discussionFilter.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="discussionList.resolved">
-      		<source>Resolved</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">discussionFilter.tsx</context>
+      			<context context-type="sourcefile">DeleteExpansion.tsx</context>
       		</context-group>
       	</trans-unit>
          <trans-unit id="discussionList.title">
@@ -1173,6 +1145,41 @@
                <context context-type="sourcefile">EmailUnverified.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="filterMenu.allPassages">
+      		<source>All Passages</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">filterMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="filterMenu.allSteps">
+      		<source>All Steps</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">filterMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="filterMenu.forYou">
+      		<source>For You</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">filterMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="filterMenu.latestVersion">
+      		<source>Latest Version</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">filterMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="filterMenu.resolved">
+      		<source>Resolved</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">filterMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="grid.all">
             <source>All</source>
             <target/>

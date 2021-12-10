@@ -192,13 +192,9 @@ export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods
 
 export interface IDiscussionListStrings extends Localize.LocalizedStringsMethods {
     "add": string;
-    "allPassages": string;
-    "allSteps": string;
     "collapse": string;
     "discussionFilter": string;
-    "forYou": string;
-    "latestVersion": string;
-    "resolved": string;
+    "filterStatus": string;
     "title": string;
 };
 
@@ -226,6 +222,14 @@ export interface IEmailUnverifiedStrings extends Localize.LocalizedStringsMethod
     "resend": string;
     "verified": string;
     "verify": string;
+};
+
+export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {
+    "allPassages": string;
+    "allSteps": string;
+    "forYou": string;
+    "latestVersion": string;
+    "resolved": string;
 };
 
 export interface IGridStrings extends Localize.LocalizedStringsMethods {
@@ -1119,6 +1123,7 @@ export interface ILocalizedStrings {
 	discussionList: IDiscussionListStrings;
 	electronImport: IElectronImportStrings;
 	emailUnverified: IEmailUnverifiedStrings;
+	filterMenu: IFilterMenuStrings;
 	grid: IGridStrings;
 	groupSettings: IGroupSettingsStrings;
 	groupTabs: IGroupTabsStrings;
