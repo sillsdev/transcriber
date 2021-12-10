@@ -3832,6 +3832,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="stepEditor.saving">
+         <segment>
+            <source>Saving ...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="stepEditor.show">
          <segment>
             <source>Show</source>

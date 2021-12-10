@@ -842,6 +842,7 @@ const initialState = {
 			"nextStep": "Next Step",
 			"oneHidden": "One step hidden",
 			"oneVisible": "One step visible and added to the end of the list.",
+			"saving": "Saving ...",
 			"show": "Show",
 			"showAll": "Show all",
 			"stepAdded": "Step added to the end of the list.",

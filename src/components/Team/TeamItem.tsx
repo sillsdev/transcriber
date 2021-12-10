@@ -12,6 +12,7 @@ import { ProjectCard, AddCard } from '.';
 import TeamDialog from './TeamDialog';
 import { useRole, useAllUserGroup } from '../../crud';
 import Confirm from '../AlertDialog';
+import { useRemoteSave } from '../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,6 +65,8 @@ export const TeamItem = (props: IProps) => {
   const { setMyOrgRole } = useRole();
   const [, setGroup] = useGlobal('group');
   const allUserGroup = useAllUserGroup();
+  const [startSave, , waitForSave] = useRemoteSave();
+  const [changed] = useGlobal('changed');
 
   const handleMembers = (team: Organization) => () => {
     setOrganization(team.id);
@@ -92,7 +95,10 @@ export const TeamItem = (props: IProps) => {
   const handleDeleteRefused = () => setDeleteItem(undefined);
 
   const handleWorkflow = (isOpen: boolean) => {
-    setShowWorkflow(isOpen);
+    if (changed) {
+      startSave();
+      waitForSave(() => setShowWorkflow(isOpen), 500);
+    } else setShowWorkflow(isOpen);
   };
 
   const handleEditWorkflow = () => {

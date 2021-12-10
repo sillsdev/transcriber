@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   IStepEditorStrings,
   IState,
@@ -14,7 +14,7 @@ import { StepItem, StepList } from '.';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { CheckedChoice as ShowAll } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
-import { toCamel } from '../../utils';
+import { toCamel, useRemoteSave } from '../../utils';
 import { related, useTools } from '../../crud';
 import { AddRecord } from '../../model/baseModel';
 import { useSnackBar } from '../../hoc/SnackBar';
@@ -56,10 +56,14 @@ export const StepEditor = ({ process, org }: IProps) => {
   const se: IStepEditorStrings = useSelector(stepEditorSelector, shallowEqual);
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const [changed, setChanged] = useGlobal('changed');
+  const [doSave] = useGlobal('doSave');
+  const [, saveCompleted] = useRemoteSave();
   const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
   const { mapTool } = useTools();
   const [refresh, setRefresh] = useState(0);
   const { showMessage } = useSnackBar();
+  const changeList = useRef(new Set<string>());
 
   const handleSortEnd = ({ oldIndex, newIndex }: SortEndProps) => {
     const newRows = arrayMove(rows, oldIndex, newIndex);
@@ -76,29 +80,67 @@ export const StepEditor = ({ process, org }: IProps) => {
     setRows(newRows);
   };
 
-  const countName = (name: string) => {
-    const recs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('orgworkflowstep')
-    ) as OrgWorkflowStep[];
-    return recs.filter(
-      (r) =>
-        related(r, 'organization') === org &&
-        r.attributes?.name?.startsWith(name) &&
-        / [0-9]+/.test(r.attributes?.name?.slice(name.length))
+  const handleNameChange = async (id: string, name: string) => {
+    setRows(rows.map((r) => (r.id === id ? { ...r, name } : r)));
+    if (!changed) setChanged(true);
+    changeList.current.add(id);
+  };
+
+  const countName = (name: string, orgNames: string[], recName?: string) => {
+    return orgNames.filter(
+      (n) =>
+        n !== recName &&
+        (n === name ||
+          (n.startsWith(name) && / [0-9]+/.test(n.slice(name.length))))
     ).length;
   };
 
-  const handleNameChange = async (id: string, name: string) => {
-    const count = countName(name);
-    if (count > 0) {
-      name = `${name} ${count + 1}`;
+  const saveRecs = async (orgNames: string[]) => {
+    if (changed) showMessage(se.saving);
+    for (const id of Array.from(changeList.current)) {
+      const row = rows.find((r) => r.id === id);
+      const recId = { type: 'orgworkflowstep', id };
+      const rec = memory.cache.query((q: QueryBuilder) =>
+        q.findRecord(recId)
+      ) as OrgWorkflowStep | undefined;
+      if (rec && row) {
+        const recName = rec.attributes?.name;
+        if (recName !== row.name) {
+          let name = row.name;
+          let count = 1;
+          while (countName(name, orgNames, recName) > 0) {
+            count += 1;
+            name = `${row.name} ${count}`;
+          }
+          await memory.update((t: TransformBuilder) =>
+            t.replaceAttribute(recId, 'name', name)
+          );
+          const idx = orgNames.indexOf(recName);
+          if (idx >= 0) orgNames[idx] = name;
+          else orgNames.push(name);
+        }
+      }
     }
-    const recId = { type: 'orgworkflowstep', id };
-    await memory.update((t: TransformBuilder) =>
-      t.replaceAttribute(recId, 'name', name)
-    );
-    setRows(rows.map((r) => (r.id === id ? { ...r, name } : r)));
   };
+
+  const getOrgNames = () => {
+    const names = (
+      memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('orgworkflowstep')
+      ) as OrgWorkflowStep[]
+    )
+      .filter((r) => related(r, 'organization') === org)
+      .map((r) => r.attributes?.name);
+    return names;
+  };
+
+  useEffect(() => {
+    const orgNames = getOrgNames();
+
+    saveRecs(orgNames).then(() => saveCompleted(''));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doSave]);
+
   const handleToolChange = async (id: string, tool: string) => {
     const recId = { type: 'orgworkflowstep', id };
     await memory.update((t: TransformBuilder) =>
@@ -141,7 +183,7 @@ export const StepEditor = ({ process, org }: IProps) => {
 
   const handleAdd = async () => {
     let name = se.nextStep;
-    const count = countName(name);
+    const count = countName(name, getOrgNames());
     if (count > 0) {
       name = `${name} ${count + 1}`;
     }

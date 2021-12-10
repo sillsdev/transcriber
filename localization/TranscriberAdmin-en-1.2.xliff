@@ -4472,6 +4472,13 @@
       			<context context-type="sourcefile">StepEditor.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="stepEditor.saving">
+      		<source>Saving ...</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">StepItem.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="stepEditor.show">
       		<source>Show</source>
       		<target/>

@@ -787,6 +787,7 @@ export interface IStepEditorStrings extends Localize.LocalizedStringsMethods {
     "nextStep": string;
     "oneHidden": string;
     "oneVisible": string;
+    "saving": string;
     "show": string;
     "showAll": string;
     "stepAdded": string;
