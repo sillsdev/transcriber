@@ -4437,6 +4437,13 @@
       			<context context-type="sourcefile">StepItem.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="stepEditor.inProgress">
+      		<source>In progress...</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">StepItem.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="stepEditor.lastStep">
       		<source>Unable to hide the last step.</source>
       		<target/>

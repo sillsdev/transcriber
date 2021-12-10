@@ -64,6 +64,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   const [refresh, setRefresh] = useState(0);
   const { showMessage } = useSnackBar();
   const changeList = useRef(new Set<string>());
+  const adding = useRef(false);
 
   const handleSortEnd = ({ oldIndex, newIndex }: SortEndProps) => {
     const newRows = arrayMove(rows, oldIndex, newIndex);
@@ -86,17 +87,30 @@ export const StepEditor = ({ process, org }: IProps) => {
     changeList.current.add(id);
   };
 
-  const countName = (name: string, orgNames: string[], recName?: string) => {
-    return orgNames.filter(
-      (n) =>
-        n !== recName &&
-        (n === name ||
-          (n.startsWith(name) && / [0-9]+/.test(n.slice(name.length))))
-    ).length;
+  const getOrgNames = (exceptId?: string) => {
+    const names = (
+      memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('orgworkflowstep')
+      ) as OrgWorkflowStep[]
+    )
+      .filter((r) => related(r, 'organization') === org && r.id !== exceptId)
+      .map((r) => r.attributes?.name);
+    return names;
   };
 
-  const saveRecs = async (orgNames: string[]) => {
+  const mangleName = (name: string, orgNames: string[]) => {
+    const baseName = name;
+    let count = 1;
+    while (orgNames.indexOf(name) >= 0) {
+      count += 1;
+      name = `${baseName} ${count}`;
+    }
+    return name;
+  };
+
+  const saveRecs = async () => {
     if (changed) showMessage(se.saving);
+    let orgNames = new Set<string>();
     for (const id of Array.from(changeList.current)) {
       const row = rows.find((r) => r.id === id);
       const recId = { type: 'orgworkflowstep', id };
@@ -106,38 +120,21 @@ export const StepEditor = ({ process, org }: IProps) => {
       if (rec && row) {
         const recName = rec.attributes?.name;
         if (recName !== row.name) {
-          let name = row.name;
-          let count = 1;
-          while (countName(name, orgNames, recName) > 0) {
-            count += 1;
-            name = `${row.name} ${count}`;
-          }
+          const name = mangleName(
+            row.name,
+            getOrgNames(id).concat(Array.from(orgNames))
+          );
           await memory.update((t: TransformBuilder) =>
             t.replaceAttribute(recId, 'name', name)
           );
-          const idx = orgNames.indexOf(recName);
-          if (idx >= 0) orgNames[idx] = name;
-          else orgNames.push(name);
+          orgNames.add(name);
         }
       }
     }
   };
 
-  const getOrgNames = () => {
-    const names = (
-      memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('orgworkflowstep')
-      ) as OrgWorkflowStep[]
-    )
-      .filter((r) => related(r, 'organization') === org)
-      .map((r) => r.attributes?.name);
-    return names;
-  };
-
   useEffect(() => {
-    const orgNames = getOrgNames();
-
-    saveRecs(orgNames).then(() => saveCompleted(''));
+    saveRecs().then(() => saveCompleted(''));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doSave]);
 
@@ -182,11 +179,12 @@ export const StepEditor = ({ process, org }: IProps) => {
   };
 
   const handleAdd = async () => {
-    let name = se.nextStep;
-    const count = countName(name, getOrgNames());
-    if (count > 0) {
-      name = `${name} ${count + 1}`;
+    let name = mangleName(se.nextStep, getOrgNames());
+    if (adding.current) {
+      showMessage(se.inProgress);
+      return;
     }
+    adding.current = true;
     const tool = 'discuss';
     const rec = {
       type: 'orgworkflowstep',
@@ -206,6 +204,7 @@ export const StepEditor = ({ process, org }: IProps) => {
       ]);
     }
     showMessage(se.stepAdded);
+    adding.current = false;
     setRefresh(refresh + 1);
   };
 
@@ -257,7 +256,11 @@ export const StepEditor = ({ process, org }: IProps) => {
   return (
     <div>
       <div className={classes.row}>
-        <Button onClick={handleAdd} variant="contained">
+        <Button
+          onClick={handleAdd}
+          variant="contained"
+          disabled={adding.current}
+        >
           {se.add}
         </Button>
         <div title={hiddenMessage}>

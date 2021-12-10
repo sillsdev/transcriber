@@ -837,6 +837,7 @@ const initialState = {
 		"en": {
 			"add": "Add",
 			"hide": "Hide",
+			"inProgress": "In progress...",
 			"lastStep": "Unable to hide the last step.",
 			"name": "Name",
 			"nextStep": "Next Step",

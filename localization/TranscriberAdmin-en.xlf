@@ -3802,6 +3802,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="stepEditor.inProgress">
+         <segment>
+            <source>In progress...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="stepEditor.lastStep">
          <segment>
             <source>Unable to hide the last step.</source>
