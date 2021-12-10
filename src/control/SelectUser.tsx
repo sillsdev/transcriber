@@ -35,7 +35,7 @@ interface IProps extends IStateProps, IRecordProps {
 export const SelectUser = (props: IProps) => {
   const { ts, users, onChange, initUser, required, label } = props;
   const classes = useStyles();
-  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [role, setUser] = useState(initUser);
 
   const handleUserChange = (e: any) => {
@@ -66,7 +66,9 @@ export const SelectUser = (props: IProps) => {
       required={required}
     >
       {users
-        .filter((u) => u.attributes && Boolean(u?.keys?.remoteId) !== offline)
+        .filter(
+          (u) => u.attributes && Boolean(u?.keys?.remoteId) !== offlineOnly
+        )
         .sort((i, j) =>
           (i.attributes.familyName || '') < (j.attributes.familyName || '')
             ? -1
