@@ -992,7 +992,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="discussionList.filterStatus">
-      		<source>{0} / {1} discussions selected</source>
+      		<source>{0} / {1} discussions</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">DeleteExpansion.tsx</context>

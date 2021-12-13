@@ -217,7 +217,7 @@ const initialState = {
 			"add": "Add Discussion",
 			"collapse": "Show/Hide All Comments",
 			"discussionFilter": "Discussion Filter",
-			"filterStatus": "{0} / {1} discussions selected",
+			"filterStatus": "{0} / {1} discussions",
 			"title": "Discussions",
 		}
 	}),

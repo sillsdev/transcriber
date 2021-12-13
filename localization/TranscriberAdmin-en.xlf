@@ -852,7 +852,7 @@
       </unit>
       <unit id="discussionList.filterStatus">
          <segment>
-            <source>{0} / {1} discussions selected</source>
+            <source>{0} / {1} discussions</source>
             <target/>
          </segment>
       </unit>
