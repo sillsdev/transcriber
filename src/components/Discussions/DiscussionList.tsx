@@ -74,6 +74,8 @@ export function DiscussionList(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [planId] = useGlobal('plan');
   const [userId] = useGlobal('user');
+  const [memory] = useGlobal('memory');
+  const [organization] = useGlobal('organization');
   const [displayDiscussions, setDisplayDiscussions] = useState<Discussion[]>(
     []
   );
@@ -108,6 +110,16 @@ export function DiscussionList(props: IProps) {
     const mediaId = related(d, 'mediafile');
     const mediaRec = mediafiles.find((m) => m.id === mediaId);
     return mediaRec && passage && related(mediaRec, 'passage') === passage.id;
+  };
+
+  const discussionOrg = (d: Discussion) => {
+    const id = related(d, 'orgWorkflowStep');
+    if (!id) return '';
+    const stepRecId = { type: 'orgworkflowstep', id };
+    const rec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord(stepRecId)
+    );
+    return related(rec, 'organization');
   };
 
   const projRoleId = useMemo(
@@ -156,7 +168,9 @@ export function DiscussionList(props: IProps) {
                 (!latestVersion ||
                   latestMedia.indexOf(related(d, 'mediafile')) >= 0) &&
                 (allPassages || currentPassage(d)) &&
-                (allSteps || related(d, 'orgWorkflowStep') === currentstep)
+                (allSteps
+                  ? discussionOrg(d) === organization
+                  : related(d, 'orgWorkflowStep') === currentstep)
             )
             .sort((x, y) =>
               x.attributes.dateCreated < y.attributes.dateCreated ? -1 : 1
@@ -202,7 +216,12 @@ export function DiscussionList(props: IProps) {
     () =>
       t.filterStatus
         .replace('{0}', displayDiscussions.length.toString())
-        .replace('{1}', discussions.length.toString()),
+        .replace(
+          '{1}',
+          discussions
+            .filter((d) => discussionOrg(d) === organization)
+            .length.toString()
+        ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [displayDiscussions, discussions]
   );
