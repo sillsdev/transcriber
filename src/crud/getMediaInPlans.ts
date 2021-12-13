@@ -16,7 +16,9 @@ export const getMediaInPlans = (
   nullTypeId: boolean
 ) => {
   const latest: ILatest = {};
-  var media = mediaFiles.filter((m) => planids.includes(related(m, 'plan')));
+  var media = mediaFiles.filter(
+    (m) => planids.indexOf(related(m, 'plan')) >= 0
+  );
   if (onlyTypeId) {
     media = media.filter(
       (m) =>
