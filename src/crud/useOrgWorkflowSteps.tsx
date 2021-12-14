@@ -32,7 +32,6 @@ export const useOrgWorkflowSteps = () => {
     ops.push(...AddRecord(t, wfs, user, memory));
     const orgRecId = { type: 'organization', id: org || global.organization };
     ops.push(t.replaceRelatedRecord(wfs, 'organization', orgRecId));
-    console.log(wfs.attributes.name, wfs.attributes.dateCreated);
     try {
       await memory.update(ops);
     } catch (ex) {

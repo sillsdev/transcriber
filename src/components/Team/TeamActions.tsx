@@ -46,9 +46,17 @@ const TeamActions = (props: IProps) => {
     setImportOpen(true);
   };
 
-  const handleAdd = (team: Organization) => {
-    teamCreate(team);
+  const handleAdd = (
+    team: Organization,
+    cb?: (id: string) => Promise<void>
+  ) => {
+    teamCreate(team, async () => {
+      cb && (await cb(team.id));
+      setOpenAdd(false);
+    });
   };
+
+  const handleAdded = () => {};
 
   return (
     <div className={classes.root}>
@@ -77,7 +85,7 @@ const TeamActions = (props: IProps) => {
       <TeamDialog
         mode={DialogMode.add}
         isOpen={openAdd}
-        onOpen={setOpenAdd}
+        onOpen={handleAdded}
         onCommit={handleAdd}
         disabled={isDeleting}
       />

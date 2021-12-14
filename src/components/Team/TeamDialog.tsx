@@ -22,7 +22,6 @@ import {
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
 import { useTeamApiPull } from '../../crud';
-import { waitForIt } from '../../utils';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -52,7 +51,6 @@ export function TeamDialog(props: IProps) {
   const t = cardStrings;
   const teamApiPull = useTeamApiPull();
   const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
-  const [global] = useGlobal();
   const [memory] = useGlobal('memory');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [process, setProcess] = useState<string>();
@@ -62,16 +60,6 @@ export function TeamDialog(props: IProps) {
     setName('');
     setProcess(undefined);
     onOpen && onOpen(false);
-  };
-
-  const countTeams = (name: string) => {
-    const recs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('organization')
-    ) as Organization[];
-    return recs.filter(
-      (r) =>
-        r.attributes.name === name && Boolean(r.keys?.remoteId) === !offlineOnly
-    ).length;
   };
 
   const handleCommit = async () => {
@@ -84,20 +72,13 @@ export function TeamDialog(props: IProps) {
       ...current,
       attributes: { ...current.attributes, name },
     } as Organization;
-    const curCount = countTeams(name);
-    onCommit(team);
-    if (mode === DialogMode.add) {
-      waitForIt(
-        'team created',
-        () => countTeams(name) === curCount + 1 && global.organization !== '',
-        () => false,
-        200
-      ).then(() => {
-        GetOrgWorkflowSteps({ process: process || 'OBT' });
-      });
-    }
-    setProcess(undefined);
-    onOpen && onOpen(false);
+    onCommit(team, async () => {
+      if (mode === DialogMode.add) {
+        await GetOrgWorkflowSteps({ process: process || 'OBT' });
+      }
+      setProcess(undefined);
+      onOpen && onOpen(false);
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,7 +155,7 @@ export function TeamDialog(props: IProps) {
               id="process"
               select
               label={t.process}
-              value={process}
+              value={process || ''}
               onChange={handleProcess}
               className={classes.process}
             >

@@ -5,6 +5,6 @@ export interface IDialog<T> {
   values?: T;
   isOpen: boolean;
   onOpen?: (val: boolean) => void;
-  onCommit: (values: T) => void;
+  onCommit: (values: T, cb?: (id: string) => Promise<void>) => void;
   onCancel?: () => void;
 }
