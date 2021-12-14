@@ -3,6 +3,8 @@
   "editor.formatOnSave": true,
   "editor.rulers": [80],
   "editor.wordWrapColumn": 80,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs":"active",
   "explorer.openEditors.sortOrder": "alphabetical",
   "explorer.openEditors.visible": 8
 }
