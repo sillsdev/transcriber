@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import {
   Comment,
   ICommentCardStrings,
-  ISharedStrings,
   IState,
   MediaFile,
   User,
@@ -31,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
+      flexGrow: 1,
       '&:hover button': {
         color: 'primary',
       },
@@ -39,20 +39,18 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     card: {
-      minWidth: 275,
+      // minWidth: 275,
       margin: theme.spacing(1),
       backgroundColor: theme.palette.secondary.light,
     },
     selectedcard: {
-      minWidth: 275,
+      // minWidth: 275,
       margin: theme.spacing(1),
       backgroundColor: theme.palette.secondary.dark,
     },
     spreadIt: {
-      width: '100%',
       display: 'flex',
       justifyContent: 'space-between',
-      alignItems: 'center',
     },
     content: {
       display: 'flex',
@@ -82,6 +80,12 @@ const useStyles = makeStyles((theme: Theme) =>
     text: {
       color: theme.palette.primary.dark,
       wordBreak: 'break-word',
+      '& .MuiInput-underline:before': {
+        borderBottom: 'none',
+      },
+      '& .MuiInput-underline:after': {
+        borderBottom: 'none',
+      },
     },
     button: {
       color: theme.palette.background.paper,
@@ -94,14 +98,14 @@ interface IRecordProps {
 }
 interface IStateProps {
   t: ICommentCardStrings;
-  ts: ISharedStrings;
 }
 interface IProps extends IStateProps, IRecordProps {
   comment: Comment;
+  onEditing: (val: boolean) => void;
 }
 
 export const CommentCard = (props: IProps) => {
-  const { t, ts, comment, users } = props;
+  const { t, comment, users, onEditing } = props;
   const classes = useStyles();
   const [author, setAuthor] = useState<User>();
   const [lang] = useGlobal('lang');
@@ -113,6 +117,7 @@ export const CommentCard = (props: IProps) => {
   const handleCommentAction = (what: string) => {
     if (what === 'edit') {
       setEditing(true);
+      onEditing(true);
     } else if (what === 'delete') {
       setConfirmAction(what);
     }
@@ -141,9 +146,11 @@ export const CommentCard = (props: IProps) => {
     comment.attributes.commentText = newComment;
     memory.update((t: TransformBuilder) => UpdateRecord(t, comment, user));
     setEditing(false);
+    onEditing(false);
   };
   const handleCancelEdit = () => {
     setEditing(false);
+    onEditing(false);
   };
 
   useEffect(() => {
@@ -181,8 +188,6 @@ export const CommentCard = (props: IProps) => {
             <CommentEditor
               refresh={0}
               comment={comment.attributes?.commentText}
-              okStr={ts.save}
-              cancelStr={ts.cancel}
               onOk={handleCommentChange}
               onCancel={handleCancelEdit}
             />
@@ -214,7 +219,6 @@ const mapRecordsToProps = {
 };
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'commentCard' }),
-  ts: localStrings(state, { layout: 'shared' }),
 });
 export default withData(mapRecordsToProps)(
   connect(mapStateToProps)(CommentCard) as any

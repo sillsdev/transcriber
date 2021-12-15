@@ -1,6 +1,8 @@
 import { Button, TextField } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import SendIcon from '@material-ui/icons/Send';
+import CancelIcon from '@material-ui/icons/CancelOutlined';
 import { useGlobal } from 'reactn';
 import { useRemoteSave } from '../../utils';
 
@@ -9,6 +11,8 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       backgroudColor: theme.palette.primary.dark,
       display: 'flex',
+      flexFlow: 'column',
+      flexGrow: 1,
       '&:hover button': {
         color: 'black',
       },
@@ -16,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
     row: {
       display: 'flex',
       flexDirection: 'row',
+      justifyContent: 'flex-end',
     },
     column: {
       display: 'flex',
@@ -29,14 +34,12 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IProps {
   comment: string;
   refresh: number;
-  okStr: string;
-  cancelStr: string;
   onOk: (comment: string) => void;
   onCancel: () => void;
 }
 
 export const CommentEditor = (props: IProps) => {
-  const { comment, okStr, cancelStr, refresh, onOk, onCancel } = props;
+  const { comment, refresh, onOk, onCancel } = props;
   const classes = useStyles();
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
@@ -53,7 +56,7 @@ export const CommentEditor = (props: IProps) => {
     setChanged(false);
   };
   const handleCancel = () => {
-    onCancel && onCancel();
+    onCancel();
     setChanged(false);
   };
   useEffect(() => {
@@ -80,16 +83,16 @@ export const CommentEditor = (props: IProps) => {
         multiline
       />
       <div className={classes.row}>
+        <Button id="cancel" onClick={handleCancel} className={classes.button}>
+          <CancelIcon />
+        </Button>
         <Button
           id="ok"
           onClick={handleOk}
           className={classes.button}
           disabled={!curText.length}
         >
-          {okStr}
-        </Button>
-        <Button id="cancel" onClick={handleCancel} className={classes.button}>
-          {cancelStr}
+          <SendIcon />
         </Button>
       </div>
     </div>

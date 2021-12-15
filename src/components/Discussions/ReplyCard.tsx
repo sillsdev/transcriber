@@ -1,18 +1,7 @@
-import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
-import { connect } from 'react-redux';
-import {
-  Comment,
-  Discussion,
-  ICommentCardStrings,
-  ISharedStrings,
-  IState,
-  MediaFile,
-  User,
-} from '../../model';
-import localStrings from '../../selector/localize';
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { Comment, Discussion, MediaFile, User } from '../../model';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
-import UserAvatar from '../UserAvatar';
 import { useGlobal, useState } from 'reactn';
 import { CommentEditor } from './CommentEditor';
 import { AddRecord } from '../../model/baseModel';
@@ -21,6 +10,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
+      flexFlow: 'column',
+      flexGrow: 1,
     },
 
     commentLine: {
@@ -45,10 +36,12 @@ const useStyles = makeStyles((theme: Theme) =>
     row: {
       display: 'flex',
       flexDirection: 'row',
+      flexGrow: 1,
     },
     column: {
       display: 'flex',
       flexDirection: 'column',
+      flexGrow: 'inherit',
     },
     avatar: {
       margin: theme.spacing(1),
@@ -59,17 +52,13 @@ interface IRecordProps {
   mediafiles: Array<MediaFile>;
   users: Array<User>;
 }
-interface IStateProps {
-  t: ICommentCardStrings;
-  ts: ISharedStrings;
-}
-interface IProps extends IStateProps, IRecordProps {
+interface IProps extends IRecordProps {
   discussion: Discussion;
   firstComment: boolean;
 }
 
 export const ReplyCard = (props: IProps) => {
-  const { t, ts, discussion, firstComment } = props;
+  const { discussion } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
@@ -94,21 +83,12 @@ export const ReplyCard = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <Grid container className={classes.row}>
-        <Grid className={classes.avatar} item xs={2}>
-          <UserAvatar {...props} />
-        </Grid>
-        <Grid item>
-          <CommentEditor
-            comment={''}
-            refresh={refresh}
-            okStr={firstComment ? ts.save : t.reply}
-            cancelStr={ts.cancel}
-            onOk={handleCommentChange}
-            onCancel={handleCancelEdit}
-          />
-        </Grid>
-      </Grid>
+      <CommentEditor
+        comment={''}
+        refresh={refresh}
+        onOk={handleCommentChange}
+        onCancel={handleCancelEdit}
+      />
     </div>
   );
 };
@@ -116,10 +96,4 @@ const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'commentCard' }),
-  ts: localStrings(state, { layout: 'shared' }),
-});
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(ReplyCard) as any
-) as any;
+export default withData(mapRecordsToProps)(ReplyCard) as any;

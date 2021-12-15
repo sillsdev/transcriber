@@ -68,10 +68,12 @@ const useStyles = makeStyles((theme: Theme) =>
     card: {
       margin: theme.spacing(1),
       backgroundColor: theme.palette.primary.light,
+      flexGrow: 1,
     },
     resolvedcard: {
       margin: theme.spacing(1),
       backgroundColor: 'grey',
+      flexGrow: 1,
     },
     content: {
       display: 'flex',
@@ -91,6 +93,16 @@ const useStyles = makeStyles((theme: Theme) =>
     pos: {
       marginBottom: 12,
     },
+    title: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      flexGrow: 1,
+    },
+    titleControls: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
     row: {
       display: 'flex',
       flexDirection: 'row',
@@ -99,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
       backgroundColor: theme.palette.background.paper,
-      display: 'block',
+      display: 'flex',
     },
     actionButton: {
       color: theme.palette.background.paper,
@@ -181,10 +193,15 @@ export const DiscussionCard = (props: IProps) => {
   const [editRole, setEditRole] = useState<string>('');
   const [editUser, setEditUser] = useState<string>('');
   const [editCategory, setEditCategory] = useState('');
+  const [editCard, setEditCard] = useState(false);
   const { localizedArtifactCategory } = useArtifactCategory();
 
   const handleSelect = (discussion: Discussion) => () => {
     selectDiscussion(discussion);
+  };
+
+  const handleEditCard = (val: boolean) => {
+    if (val !== editCard) setEditCard(val);
   };
 
   useEffect(() => {
@@ -479,45 +496,39 @@ export const DiscussionCard = (props: IProps) => {
             </div>
           ) : (
             <>
-              <div>
-                <Grid container className={classes.row}>
-                  <Grid item>
-                    <Typography
-                      variant="h6"
-                      component="h2"
-                      className={classes.topic}
-                    >
-                      {discussion.attributes?.subject}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    {assignedRole && (
-                      <RoleAvatar roleRec={assignedRole} org={false} />
-                    )}
+              <Grid container className={classes.title}>
+                <Grid item>
+                  <Typography
+                    variant="h6"
+                    component="h2"
+                    className={classes.topic}
+                  >
+                    {discussion.attributes?.subject}
+                  </Typography>
+                </Grid>
+                <Grid item className={classes.titleControls}>
+                  {assignedRole && (
+                    <RoleAvatar roleRec={assignedRole} org={false} />
+                  )}
 
-                    {assignedUser && <UserAvatar userRec={assignedUser} />}
-                  </Grid>
+                  {assignedUser && <UserAvatar userRec={assignedUser} />}
 
                   {!discussion.attributes.resolved && (
-                    <Grid item>
-                      <IconButton
-                        id="resolveDiscussion"
-                        className={classes.actionButton}
-                        title={t.resolved}
-                        onClick={handleResolveButton}
-                      >
-                        <ResolveIcon />
-                      </IconButton>
-                    </Grid>
+                    <IconButton
+                      id="resolveDiscussion"
+                      className={classes.actionButton}
+                      title={t.resolved}
+                      onClick={handleResolveButton}
+                    >
+                      <ResolveIcon />
+                    </IconButton>
                   )}
-                  <Grid item>
-                    <DiscussionMenu
-                      action={handleDiscussionAction}
-                      resolved={discussion.attributes.resolved || false}
-                    />
-                  </Grid>
+                  <DiscussionMenu
+                    action={handleDiscussionAction}
+                    resolved={discussion.attributes.resolved || false}
+                  />
                 </Grid>
-              </div>
+              </Grid>
               <div>
                 <Typography>{discussionDescription()}</Typography>
                 <Typography>
@@ -542,9 +553,13 @@ export const DiscussionCard = (props: IProps) => {
           {showComments && !onAddComplete && (
             <Grid container className={classes.cardFlow}>
               {myComments.map((i) => (
-                <CommentCard key={i.id} comment={i} />
+                <CommentCard
+                  key={i.id}
+                  comment={i}
+                  onEditing={handleEditCard}
+                />
               ))}
-              {!discussion.attributes.resolved && (
+              {!discussion.attributes.resolved && !editCard && (
                 <ReplyCard
                   discussion={discussion}
                   firstComment={myComments.length === 0}
