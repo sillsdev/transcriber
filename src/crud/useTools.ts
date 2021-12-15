@@ -7,6 +7,7 @@ export const toolNames = [
   'resource',
   'record',
   'teamCheck',
+  'keyTerms',
   'discuss',
   'transcribe',
   'segment',

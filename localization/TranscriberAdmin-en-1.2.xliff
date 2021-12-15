@@ -669,6 +669,13 @@
                <context context-type="sourcefile">ProjectMenu.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="cards.draft">
+      		<source>Oral Drafting</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="cards.deleteTeam">
             <source>Delete Team</source>
             <target/>
@@ -732,6 +739,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="cards.OBS">
+      		<source>Oral Storying</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="cards.OBT">
       		<source>Oral Bible Translation</source>
       		<target/>
@@ -823,6 +837,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="cards.transcriber">
+      		<source>Transcriber</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="cards.uploadProgress">
             <source>Upload Progress</source>
             <target/>
@@ -4731,6 +4752,13 @@
                <context context-type="sourcefile">ToDoTable.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="tool.keyTerms">
+      		<source>Key Terms</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="tool.resource">
       		<source>Resource</source>
       		<target/>
@@ -5830,6 +5858,20 @@
       			<context context-type="sourcefile">passageDetail.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="workflowSteps.backTranslation-D">
+      		<source>Back Translation</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.backTranslation-S">
+      		<source>Back Translation</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.communityTesting">
             <source>Community Testing</source>
             <target/>
@@ -5837,6 +5879,20 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.communityTesting-D">
+      		<source>Community Testing</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.communityTesting-S">
+      		<source>Community Testing</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.consultantCheck">
             <source>Consultant Check</source>
             <target/>
@@ -5844,6 +5900,13 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.consultantCheck-S">
+      		<source>Consultant Check</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
           <trans-unit id="workflowSteps.duplication">
             <source>Duplication</source>
             <target/>
@@ -5851,13 +5914,34 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.finalEdit">
-            <source>Final Edit</source>
+      	<trans-unit id="workflowSteps.duplication-S">
+      		<source>Duplication</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="workflowSteps.finalRecording">
+            <source>Final Recording</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.finalRecording-S">
+      		<source>Final Recording</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.finalReview-S">
+      		<source>Final Review</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.internalization">
             <source>Internalization</source>
             <target/>
@@ -5865,6 +5949,20 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.internalization-D">
+      		<source>Internalization</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.internalization-S">
+      		<source>Internalization</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.keyTerms">
             <source>Key Terms</source>
             <target/>
@@ -5872,6 +5970,34 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.keyTerms-D">
+      		<source>Key Terms</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.keyTerms-S">
+      		<source>Key Terms</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.paratextSync-D">
+      		<source>Paratext Sync</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.paratextSync-T">
+      		<source>Paratext Sync</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.peerReview">
             <source>Peer Review</source>
             <target/>
@@ -5879,13 +6005,27 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-          <trans-unit id="workflowSteps.readThrough">
-            <source>Read Through</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">passageDetail.tsx</context>
-            </context-group>
-         </trans-unit>
+      	<trans-unit id="workflowSteps.peerReview-D">
+      		<source>Peer Review</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.peerReview-T">
+      		<source>Peer Review</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.peerReview-S">
+      		<source>Peer Review</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
         <trans-unit id="workflowSteps.record">
             <source>Record</source>
             <target/>
@@ -5893,6 +6033,20 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.record-D">
+      		<source>Record</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.record-S">
+      		<source>Record</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.review">
             <source>Review</source>
             <target/>
@@ -5907,6 +6061,20 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.transcribe-D">
+      		<source>Transcribe</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.transcribe-T">
+      		<source>Transcribe</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="workflowSteps.unsaved">
       		<source>Unsaved content</source>
       		<target/>

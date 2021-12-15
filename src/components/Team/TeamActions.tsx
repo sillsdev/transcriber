@@ -56,7 +56,9 @@ const TeamActions = (props: IProps) => {
     });
   };
 
-  const handleAdded = () => {};
+  const handleAdded = () => {
+    setOpenAdd(false);
+  };
 
   return (
     <div className={classes.root}>

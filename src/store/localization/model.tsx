@@ -130,6 +130,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
     "connectParatext": string;
     "delete": string;
+    "draft": string;
     "deleteTeam": string;
     "editWorkflow": string;
     "explainTeamDelete": string;
@@ -139,6 +140,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "members": string;
     "nameInUse": string;
     "newProject": string;
+    "OBS": string;
     "OBT": string;
     "offline": string;
     "offlineAvail": string;
@@ -152,6 +154,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "sync": string;
     "teamName": string;
     "teamSettings": string;
+    "transcriber": string;
     "uploadProgress": string;
 };
 
@@ -842,6 +845,7 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IToolStrings extends Localize.LocalizedStringsMethods {
+    "keyTerms": string;
     "resource": string;
     "record": string;
     "teamCheck": string;
@@ -1038,17 +1042,37 @@ export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
 
 export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods {
     "backTranslation": string;
+    "backTranslation-D": string;
+    "backTranslation-S": string;
     "communityTesting": string;
+    "communityTesting-D": string;
+    "communityTesting-S": string;
     "consultantCheck": string;
+    "consultantCheck-S": string;
     "duplication": string;
-    "finalEdit": string;
+    "duplication-S": string;
+    "finalRecording": string;
+    "finalRecording-S": string;
+    "finalReview-S": string;
     "internalization": string;
+    "internalization-D": string;
+    "internalization-S": string;
     "keyTerms": string;
+    "keyTerms-D": string;
+    "keyTerms-S": string;
+    "paratextSync-D": string;
+    "paratextSync-T": string;
     "peerReview": string;
-    "readThrough": string;
+    "peerReview-D": string;
+    "peerReview-T": string;
+    "peerReview-S": string;
     "record": string;
+    "record-D": string;
+    "record-S": string;
     "review": string;
     "teamCheck": string;
+    "transcribe-D": string;
+    "transcribe-T": string;
     "unsaved": string;
     "withoutSave": string;
 };

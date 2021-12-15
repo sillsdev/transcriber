@@ -49,14 +49,13 @@ export const useOrgWorkflowSteps = () => {
     );
 
     const orgworkflowsteps = memory.cache.query((q: QueryBuilder) =>
-      q
-        .findRecords('orgworkflowstep')
-        .filter({ attribute: 'process', value: process })
+      q.findRecords('orgworkflowstep')
     ) as OrgWorkflowStep[];
 
     return orgworkflowsteps
       .filter(
         (s) =>
+          (process === 'ANY' || s.attributes.process === process) &&
           related(s, 'organization') === (org || global.organization) &&
           Boolean(s.keys?.remoteId) !== offlineOnly
       )

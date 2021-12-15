@@ -77,7 +77,6 @@ export function TeamDialog(props: IProps) {
         await GetOrgWorkflowSteps({ process: process || 'OBT' });
       }
       setProcess(undefined);
-      onOpen && onOpen(false);
     });
   };
 
@@ -159,11 +158,13 @@ export function TeamDialog(props: IProps) {
               onChange={handleProcess}
               className={classes.process}
             >
-              {processOptions.map((o: OptionType, i) => (
-                <MenuItem key={i} value={o.value}>
-                  {o.label}
-                </MenuItem>
-              ))}
+              {processOptions
+                .sort((i, j) => (i.label < j.label ? -1 : 1))
+                .map((o: OptionType, i) => (
+                  <MenuItem key={i} value={o.value}>
+                    {o.label}
+                  </MenuItem>
+                ))}
             </TextField>
           )}
           {mode === DialogMode.edit && (
