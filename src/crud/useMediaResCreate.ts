@@ -3,13 +3,16 @@ import { useGlobal } from 'reactn';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { Resource, MediaFile, ArtifactType } from '../model';
 import { AddRecord } from '../model/baseModel';
-import { useStepId } from '.';
 
-export const useMediaResCreate = (passage: RecordIdentity) => {
+export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [plan] = useGlobal('plan');
-  const internalization = useStepId('Internalization');
+
+  const stepRecId = useMemo(
+    () => ({ type: 'orgworkflowstep', id: stepId }),
+    [stepId]
+  );
 
   const sharedResource = useMemo(() => {
     const artifactTypes = memory.cache.query((q: QueryBuilder) =>
@@ -59,10 +62,8 @@ export const useMediaResCreate = (passage: RecordIdentity) => {
       ops.push(
         t.replaceRelatedRecord(mediaRec, 'artifactCategory', artifactCategory)
       );
-    if (internalization)
-      ops.push(
-        t.replaceRelatedRecord(mediaRec, 'orgWorkflowStep', internalization)
-      );
+    if (stepId)
+      ops.push(t.replaceRelatedRecord(mediaRec, 'orgWorkflowStep', stepRecId));
     await memory.update(ops);
     return mediaRec;
   };

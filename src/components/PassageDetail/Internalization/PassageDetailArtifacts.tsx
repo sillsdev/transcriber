@@ -64,13 +64,20 @@ export function PassageDetailArtifacts(props: IProps) {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setComplete] = useGlobal('progress');
   const ctx = useContext(PassageDetailContext);
-  const { rowData, section, passage, setSelected, playItem, setPlaying } =
-    ctx.state;
+  const {
+    rowData,
+    section,
+    passage,
+    setSelected,
+    playItem,
+    setPlaying,
+    currentstep,
+  } = ctx.state;
   const AddSectionResource = useSecResCreate(section);
   const AddSectionResourceUser = useSecResUserCreate();
   const ReadSectionResourceUser = useSecResUserRead();
   const RemoveSectionResourceUser = useSecResUserDelete();
-  const AddMediaFileResource = useMediaResCreate(passage);
+  const AddMediaFileResource = useMediaResCreate(passage, currentstep);
   const UpdateSectionResource = useSecResUpdate();
   const DeleteSectionResource = useSecResDelete();
   const [uploadVisible, setUploadVisible] = useState(false);

@@ -11,7 +11,13 @@ import QueryBuilder from '@orbit/data/dist/types/query-builder';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { getMediaInPlans, related, useArtifactType, useRole } from '../../crud';
+import {
+  getMediaInPlans,
+  related,
+  useArtifactType,
+  useRole,
+  useStepTool,
+} from '../../crud';
 import {
   Discussion,
   IDiscussionListStrings,
@@ -83,6 +89,7 @@ export function DiscussionList(props: IProps) {
   const [adding, setAdding] = useState(false);
   const ctx = useContext(PassageDetailContext);
   const { currentstep, rowData, discussionSize, passage } = ctx.state;
+  const tool = useStepTool(currentstep);
   const { getRoleRec } = useRole();
   const { vernacularId } = useArtifactType();
   const [rootWidthStyle, setRootWidthStyle] = useState({
@@ -187,6 +194,13 @@ export function DiscussionList(props: IProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentstep]);
+
+  useEffect(() => {
+    if (tool !== '') {
+      setFilterState({ ...filterState, allPassages: tool === 'keyTerms' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tool]);
 
   const handleAddComplete = () => {
     setAdding(false);
