@@ -5020,31 +5020,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.backTranslation-D">
-         <segment>
-            <source>Back Translation</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.backTranslation-S">
-         <segment>
-            <source>Back Translation</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="workflowSteps.communityTesting">
-         <segment>
-            <source>Community Testing</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.communityTesting-D">
-         <segment>
-            <source>Community Testing</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.communityTesting-S">
          <segment>
             <source>Community Testing</source>
             <target/>
@@ -5056,31 +5032,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.consultantCheck-S">
-         <segment>
-            <source>Consultant Check</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="workflowSteps.duplication">
          <segment>
             <source>Duplication</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.duplication-S">
-         <segment>
-            <source>Duplication</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="workflowSteps.finalRecording">
-         <segment>
-            <source>Final Recording</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.finalRecording-S">
          <segment>
             <source>Final Recording</source>
             <target/>
@@ -5098,25 +5056,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.finalReview-S">
-         <segment>
-            <source>Final Review</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="workflowSteps.internalization">
-         <segment>
-            <source>Internalization</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.internalization-D">
-         <segment>
-            <source>Internalization</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.internalization-S">
          <segment>
             <source>Internalization</source>
             <target/>
@@ -5128,25 +5068,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.keyTerms-D">
-         <segment>
-            <source>Key Terms</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.keyTerms-S">
-         <segment>
-            <source>Key Terms</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.paratextSync-D">
-         <segment>
-            <source>Paratext Sync</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.paratextSync-T">
+      <unit id="workflowSteps.paratextSync">
          <segment>
             <source>Paratext Sync</source>
             <target/>
@@ -5158,37 +5080,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.peerReview-D">
-         <segment>
-            <source>Peer Review</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.peerReview-T">
-         <segment>
-            <source>Peer Review</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.peerReview-S">
-         <segment>
-            <source>Peer Review</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="workflowSteps.record">
-         <segment>
-            <source>Record</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.record-D">
-         <segment>
-            <source>Record</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.record-S">
          <segment>
             <source>Record</source>
             <target/>
@@ -5203,18 +5095,6 @@
       <unit id="workflowSteps.teamCheck">
          <segment>
             <source>Team Check</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.transcribe-D">
-         <segment>
-            <source>Transcribe</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.transcribe-T">
-         <segment>
-            <source>Transcribe</source>
             <target/>
          </segment>
       </unit>
