@@ -58,8 +58,8 @@ export const UpdateRelatedPassageOps = (
   t: TransformBuilder,
   ops: Operation[]
 ) => {
-  const secRecId = { type: 'section', id: section };
-  ops.push(...UpdateLastModifedBy(t, secRecId, userId));
+  ops.push(...UpdateLastModifedBy(t, { type: 'section', id: section }, userId));
+  ops.push(...UpdateLastModifedBy(t, { type: 'plan', id: plan }, userId));
 };
 
 export const UpdatePassageStateOps = (
@@ -79,8 +79,9 @@ export const UpdatePassageStateOps = (
   );
   const passRecId = { type: 'passage', id: passage };
   ops.push(...UpdateLastModifedBy(t, passRecId, userId));
-  UpdateRelatedPassageOps(section, plan, userId, t, ops);
-  if (psc)
+  if (psc) {
+    UpdateRelatedPassageOps(section, plan, userId, t, ops);
     AddPassageStateChangeToOps(t, ops, passage, state, comment, userId, memory);
+  }
   return ops;
 };
