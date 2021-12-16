@@ -381,6 +381,13 @@ export function Transcriber(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trBusy, loading, boxHeight, projData]);
 
+  const handleShowHistory = () => {
+    setShowHistory(!showHistoryRef.current);
+    return true;
+  };
+
+  const keys = [{ key: HISTORY_KEY, cb: handleShowHistory }];
+
   useEffect(() => {
     const getParatextIntegration = () => {
       const intfind = integrations.findIndex(
@@ -398,7 +405,6 @@ export function Transcriber(props: IProps) {
     const handleResize = debounce(() => {
       setDimensions();
     }, 100);
-    const keys = [{ key: HISTORY_KEY, cb: handleShowHistory }];
     keys.forEach((k) => subscribe(k.key, k.cb));
 
     window.addEventListener('resize', handleResize);
@@ -408,6 +414,13 @@ export function Transcriber(props: IProps) {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    if (!allDone) {
+      keys.forEach((k) => subscribe(k.key, k.cb));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allDone]);
 
   useEffect(() => {
     const getParatextIntegration = () => {
@@ -576,10 +589,6 @@ export function Transcriber(props: IProps) {
   const setShowHistory = (value: boolean) => {
     showHistoryRef.current = value;
     setShowHistoryx(value);
-  };
-  const handleShowHistory = () => {
-    setShowHistory(!showHistoryRef.current);
-    return true;
   };
 
   const handlePullParatext = () => {
