@@ -5935,6 +5935,20 @@
       			<context context-type="sourcefile">passageDetail.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="workflowSteps.finalEdit">
+      		<source>Final Edit</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.finalReview">
+      		<source>Final Review</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="workflowSteps.finalReview-S">
       		<source>Final Review</source>
       		<target/>

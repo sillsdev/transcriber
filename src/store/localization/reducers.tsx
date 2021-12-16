@@ -1127,6 +1127,8 @@ const initialState = {
 			"duplication-S": "Duplication",
 			"finalRecording": "Final Recording",
 			"finalRecording-S": "Final Recording",
+			"finalEdit": "Final Edit",
+			"finalReview": "Final Review",
 			"finalReview-S": "Final Review",
 			"internalization": "Internalization",
 			"internalization-D": "Internalization",

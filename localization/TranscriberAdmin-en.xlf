@@ -5086,6 +5086,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="workflowSteps.finalEdit">
+         <segment>
+            <source>Final Edit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.finalReview">
+         <segment>
+            <source>Final Review</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="workflowSteps.finalReview-S">
          <segment>
             <source>Final Review</source>

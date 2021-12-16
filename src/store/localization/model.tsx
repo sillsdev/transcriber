@@ -1053,6 +1053,8 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "duplication-S": string;
     "finalRecording": string;
     "finalRecording-S": string;
+    "finalEdit": string;
+    "finalReview": string;
     "finalReview-S": string;
     "internalization": string;
     "internalization-D": string;
