@@ -51,7 +51,7 @@ export const StepItem = SortableElement(
         </span>
         <IconButton
           onClick={handleDeleteOrRestore}
-          title={value.seq <= 0 ? se.hide : se.show}
+          title={value.seq >= 0 ? se.hide : se.show}
         >
           {value.seq < 0 ? <HideIcon /> : <ShowIcon />}
         </IconButton>
