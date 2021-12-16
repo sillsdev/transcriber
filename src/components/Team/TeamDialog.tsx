@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogTitle,
   MenuItem,
+  LinearProgress,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import {
@@ -55,6 +56,7 @@ export function TeamDialog(props: IProps) {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [process, setProcess] = useState<string>();
   const [processOptions, setProcessOptions] = useState<OptionType[]>([]);
+  const savingRef = useRef(false);
 
   const handleClose = () => {
     setName('');
@@ -63,6 +65,7 @@ export function TeamDialog(props: IProps) {
   };
 
   const handleCommit = async () => {
+    savingRef.current = true;
     const current =
       mode === DialogMode.edit && values
         ? values
@@ -77,6 +80,7 @@ export function TeamDialog(props: IProps) {
         await GetOrgWorkflowSteps({ process: process || 'OBT' });
       }
       setProcess(undefined);
+      savingRef.current = false;
     });
   };
 
@@ -139,13 +143,18 @@ export function TeamDialog(props: IProps) {
           {mode === DialogMode.add ? t.addTeam : t.teamSettings}
         </DialogTitle>
         <DialogContent>
+          {savingRef.current && (
+            <LinearProgress id="busy" variant="indeterminate" />
+          )}
           <TextField
             autoFocus
             margin="dense"
             id="teamName"
             label={t.teamName}
             value={name}
-            helperText={name && nameInUse(name) && t.nameInUse}
+            helperText={
+              !savingRef.current && name && nameInUse(name) && t.nameInUse
+            }
             onChange={handleChange}
             fullWidth
           />
@@ -176,14 +185,19 @@ export function TeamDialog(props: IProps) {
           )}
         </DialogContent>
         <DialogActions>
-          <Button id="teamCancel" onClick={handleClose} color="primary">
+          <Button
+            id="teamCancel"
+            onClick={handleClose}
+            color="primary"
+            disabled={savingRef.current}
+          >
             {t.cancel}
           </Button>
           <Button
             id="teamCommit"
             onClick={handleCommit}
             color="primary"
-            disabled={name === '' || nameInUse(name)}
+            disabled={savingRef.current || name === '' || nameInUse(name)}
           >
             {mode === DialogMode.add ? t.add : t.save}
           </Button>

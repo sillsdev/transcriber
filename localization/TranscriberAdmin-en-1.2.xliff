@@ -669,7 +669,7 @@
                <context context-type="sourcefile">ProjectMenu.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="cards.draft">
+	      <trans-unit id="cards.draft">
       		<source>Oral Drafting</source>
       		<target/>
       		<context-group>
@@ -782,7 +782,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="cards.process">
-      		<source>Process</source>
+      		<source>Default Workflow</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TeamDialog.tsx</context>
@@ -838,7 +838,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="cards.transcriber">
-      		<source>Transcriber</source>
+      		<source>Transcription</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TeamDialog.tsx</context>
