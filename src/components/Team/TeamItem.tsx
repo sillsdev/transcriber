@@ -81,6 +81,7 @@ export const TeamItem = (props: IProps) => {
 
   const handleCommitSettings = (team: Organization) => {
     teamUpdate(team);
+    setEditOpen(false);
   };
 
   const handleDeleteTeam = (team: Organization) => {
