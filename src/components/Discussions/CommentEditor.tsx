@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
+import MicIcon from '@material-ui/icons/MicOutlined';
 import { useGlobal } from 'reactn';
 import { useRemoteSave } from '../../utils';
 
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
     row: {
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'flex-end',
+      justifyContent: 'space-between',
     },
     column: {
       display: 'flex',
@@ -36,10 +37,11 @@ interface IProps {
   refresh: number;
   onOk: (comment: string) => void;
   onCancel: () => void;
+  onRecord: () => void;
 }
 
 export const CommentEditor = (props: IProps) => {
-  const { comment, refresh, onOk, onCancel } = props;
+  const { comment, refresh, onOk, onCancel, onRecord } = props;
   const classes = useStyles();
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
@@ -58,6 +60,9 @@ export const CommentEditor = (props: IProps) => {
   const handleCancel = () => {
     onCancel();
     setChanged(false);
+  };
+  const handleRecord = () => {
+    onRecord();
   };
   useEffect(() => {
     if (refresh > 0) setCurText('');
@@ -83,17 +88,22 @@ export const CommentEditor = (props: IProps) => {
         multiline
       />
       <div className={classes.row}>
-        <Button id="cancel" onClick={handleCancel} className={classes.button}>
-          <CancelIcon />
+        <Button id="record" onClick={handleRecord}>
+          <MicIcon />
         </Button>
-        <Button
-          id="ok"
-          onClick={handleOk}
-          className={classes.button}
-          disabled={!curText.length}
-        >
-          <SendIcon />
-        </Button>
+        <div>
+          <Button id="cancel" onClick={handleCancel} className={classes.button}>
+            <CancelIcon />
+          </Button>
+          <Button
+            id="ok"
+            onClick={handleOk}
+            className={classes.button}
+            disabled={!curText.length}
+          >
+            <SendIcon />
+          </Button>
+        </div>
       </div>
     </div>
   );

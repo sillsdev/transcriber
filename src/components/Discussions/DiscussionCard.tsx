@@ -112,6 +112,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingRight: theme.spacing(2),
       backgroundColor: theme.palette.background.paper,
       display: 'flex',
+      flexDirection: 'column',
     },
     actionButton: {
       color: theme.palette.background.paper,
@@ -552,18 +553,16 @@ export const DiscussionCard = (props: IProps) => {
           </div>
           {showComments && !onAddComplete && (
             <Grid container className={classes.cardFlow}>
-              {myComments.map((i) => (
+              {myComments.map((i, j) => (
                 <CommentCard
                   key={i.id}
                   comment={i}
+                  number={j}
                   onEditing={handleEditCard}
                 />
               ))}
               {!discussion.attributes.resolved && !editCard && (
-                <ReplyCard
-                  discussion={discussion}
-                  firstComment={myComments.length === 0}
-                />
+                <ReplyCard discussion={discussion} number={myComments.length} />
               )}
             </Grid>
           )}

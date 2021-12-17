@@ -5,6 +5,7 @@ import { withData } from '../../mods/react-orbitjs';
 import { useGlobal, useState } from 'reactn';
 import { CommentEditor } from './CommentEditor';
 import { AddRecord } from '../../model/baseModel';
+import { useRecordComment } from './useRecordComment';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,12 +55,13 @@ interface IRecordProps {
 }
 interface IProps extends IRecordProps {
   discussion: Discussion;
-  firstComment: boolean;
+  number: number;
 }
 
 export const ReplyCard = (props: IProps) => {
-  const { discussion } = props;
+  const { discussion, number } = props;
   const classes = useStyles();
+  const recordComment = useRecordComment();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [refresh, setRefresh] = useState(0);
@@ -80,6 +82,11 @@ export const ReplyCard = (props: IProps) => {
   const handleCancelEdit = () => {
     setRefresh(refresh + 1);
   };
+  const handleRecord = () => {
+    recordComment(discussion, number, () => {
+      setRefresh(refresh + 1);
+    });
+  };
 
   return (
     <div className={classes.root}>
@@ -88,6 +95,7 @@ export const ReplyCard = (props: IProps) => {
         refresh={refresh}
         onOk={handleCommentChange}
         onCancel={handleCancelEdit}
+        onRecord={handleRecord}
       />
     </div>
   );
