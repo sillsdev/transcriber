@@ -207,7 +207,6 @@ export function ScriptureTable(props: IProps) {
   const onlineSave = useWfOnlineSave({ setComplete });
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
-    ts,
     doOrbitError,
   });
   const checkOnline = useCheckOnline(resetOrbitError);

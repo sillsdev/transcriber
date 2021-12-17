@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { ISharedStrings, ActivityStates, MediaFile } from '../model';
+import { ISharedStrings, ActivityStates, MediaFile, IState } from '../model';
 import { orbitErr } from '../utils';
 import * as actions from '../store';
 import { TransformBuilder, Operation } from '@orbit/data';
@@ -9,20 +9,23 @@ import {
   UpdatePassageStateOps,
   useArtifactType,
 } from '.';
+import localStrings from '../selector/localize';
+import { shallowEqual, useSelector } from 'react-redux';
 
 interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
 }
-interface IStateProps {
-  ts: ISharedStrings;
-}
 
-interface IProps extends IStateProps, IDispatchProps {}
+const sharedSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'shared' });
+
+interface IProps extends IDispatchProps {}
 
 export const useMediaAttach = (props: IProps) => {
-  const { doOrbitError, ts } = props;
+  const { doOrbitError } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { vernacularId } = useArtifactType();
 
   const attach = async (

@@ -15,6 +15,7 @@ import {
   MediaFile,
   User,
 } from '../../model';
+import * as actions from '../../store';
 import Confirm from '../AlertDialog';
 import localStrings from '../../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -29,6 +30,7 @@ import { CommentEditor } from './CommentEditor';
 import { UpdateRecord } from '../../model/baseModel';
 import DiscussionMenu from './DiscussionMenu';
 import { useRecordComment } from './useRecordComment';
+import { bindActionCreators } from 'redux';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -103,14 +105,18 @@ interface IRecordProps {
 interface IStateProps {
   t: ICommentCardStrings;
 }
-interface IProps extends IStateProps, IRecordProps {
+interface IDispatchProps {
+  doOrbitError: typeof actions.doOrbitError;
+}
+
+interface IProps extends IStateProps, IRecordProps, IDispatchProps {
   comment: Comment;
   number: number;
   onEditing: (val: boolean) => void;
 }
 
 export const CommentCard = (props: IProps) => {
-  const { t, comment, number, users, onEditing } = props;
+  const { t, comment, number, users, onEditing, doOrbitError } = props;
   const classes = useStyles();
   const [author, setAuthor] = useState<User>();
   const [lang] = useGlobal('lang');
@@ -118,7 +124,7 @@ export const CommentCard = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [editing, setEditing] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
-  const recordComment = useRecordComment();
+  const recordComment = useRecordComment({ doOrbitError });
   const text = comment.attributes?.commentText;
 
   const handleCommentAction = (what: string) => {
@@ -248,9 +254,17 @@ const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators(
+    {
+      doOrbitError: actions.doOrbitError,
+    },
+    dispatch
+  ),
+});
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'commentCard' }),
 });
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(CommentCard) as any
+  connect(mapStateToProps, mapDispatchToProps)(CommentCard) as any
 ) as any;
