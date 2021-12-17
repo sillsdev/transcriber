@@ -163,7 +163,7 @@ const initialState = {
 			"offlineAvail": "Offline Available",
 			"passagesCreated": "Passages Created",
 			"personalProjects": "Personal Audio Projects",
-			"process": "Process",
+			"process": "Default Workflow",
 			"projectCreated": "Audio Project Created",
 			"save": "Save",
 			"sectionStatus": "{0} {1}",
@@ -171,7 +171,7 @@ const initialState = {
 			"sync": "Sync ({0})",
 			"teamName": "Team Name",
 			"teamSettings": "Team Settings",
-			"transcriber": "Transcriber",
+			"transcriber": "Transcription",
 			"uploadProgress": "Upload Progress",
 		}
 	}),

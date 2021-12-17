@@ -672,7 +672,7 @@
       </unit>
       <unit id="cards.process">
          <segment>
-            <source>Process</source>
+            <source>Default Workflow</source>
             <target/>
          </segment>
       </unit>
@@ -720,7 +720,7 @@
       </unit>
       <unit id="cards.transcriber">
          <segment>
-            <source>Transcriber</source>
+            <source>Transcription</source>
             <target/>
          </segment>
       </unit>
