@@ -1,6 +1,7 @@
 import {
   createStyles,
   Grid,
+  IconButton,
   makeStyles,
   TextField,
   Theme,
@@ -8,23 +9,29 @@ import {
 import { connect } from 'react-redux';
 import {
   Comment,
+  Discussion,
   ICommentCardStrings,
   IState,
   MediaFile,
   User,
 } from '../../model';
+import * as actions from '../../store';
 import Confirm from '../AlertDialog';
 import localStrings from '../../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { related } from '../../crud';
+import PlayIcon from '@material-ui/icons/PlayArrow';
 import UserAvatar from '../UserAvatar';
 import { dateOrTime } from '../../utils';
 import { useGlobal } from 'reactn';
 import { CommentEditor } from './CommentEditor';
 import { UpdateRecord } from '../../model/baseModel';
 import DiscussionMenu from './DiscussionMenu';
+import { useRecordComment } from './useRecordComment';
+import { bindActionCreators } from 'redux';
+import { PassageDetailContext } from '../../context/PassageDetailContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -99,20 +106,28 @@ interface IRecordProps {
 interface IStateProps {
   t: ICommentCardStrings;
 }
-interface IProps extends IStateProps, IRecordProps {
+interface IDispatchProps {
+  doOrbitError: typeof actions.doOrbitError;
+}
+
+interface IProps extends IStateProps, IRecordProps, IDispatchProps {
   comment: Comment;
+  number: number;
   onEditing: (val: boolean) => void;
 }
 
 export const CommentCard = (props: IProps) => {
-  const { t, comment, users, onEditing } = props;
+  const { t, comment, number, users, onEditing, doOrbitError } = props;
   const classes = useStyles();
   const [author, setAuthor] = useState<User>();
   const [lang] = useGlobal('lang');
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
+  const { setSelected } = useContext(PassageDetailContext).state;
   const [editing, setEditing] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
+  const recordComment = useRecordComment({ doOrbitError });
+  const text = comment.attributes?.commentText;
 
   const handleCommentAction = (what: string) => {
     if (what === 'edit') {
@@ -152,6 +167,25 @@ export const CommentCard = (props: IProps) => {
     setEditing(false);
     onEditing(false);
   };
+  const handleRecord = () => {
+    const discussion = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'discussion', id: related(comment, 'discussion') })
+    ) as Discussion;
+    recordComment(discussion, number, comment);
+  };
+
+  const media = useMemo(() => {
+    const id = related(comment, 'mediafile');
+    if (!id || id === '') return null;
+    const recId = { type: 'mediafile', id };
+    return memory.cache.query((q: QueryBuilder) => q.findRecord(recId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [comment]);
+
+  const handlePlayComment = () => {
+    const mediaId = related(comment, 'mediafile');
+    setSelected(mediaId);
+  };
 
   useEffect(() => {
     if (users) {
@@ -170,6 +204,11 @@ export const CommentCard = (props: IProps) => {
             <Grid item className={classes.avatar}>
               <UserAvatar {...props} userRec={author} />
             </Grid>
+            {media && (
+              <IconButton onClick={handlePlayComment}>
+                <PlayIcon />
+              </IconButton>
+            )}
             <Grid item className={classes.column}>
               <Grid item>{author?.attributes?.name}</Grid>
               <Grid item>
@@ -190,15 +229,18 @@ export const CommentCard = (props: IProps) => {
               comment={comment.attributes?.commentText}
               onOk={handleCommentChange}
               onCancel={handleCancelEdit}
+              onRecord={handleRecord}
             />
-          ) : (
+          ) : text ? (
             <TextField
               className={classes.text}
               id="outlined-textarea"
-              value={comment.attributes?.commentText}
+              value={text}
               multiline
               fullWidth
             />
+          ) : (
+            <></>
           )}
         </Grid>
       </Grid>
@@ -217,9 +259,17 @@ const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators(
+    {
+      doOrbitError: actions.doOrbitError,
+    },
+    dispatch
+  ),
+});
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'commentCard' }),
 });
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(CommentCard) as any
+  connect(mapStateToProps, mapDispatchToProps)(CommentCard) as any
 ) as any;

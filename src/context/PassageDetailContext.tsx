@@ -47,6 +47,7 @@ import {
   resourceRows,
 } from '../components/PassageDetail/Internalization';
 import Confirm from '../components/AlertDialog';
+import Uploader, { IStatus } from '../components/Uploader';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -116,6 +117,7 @@ export interface IRow {
   editAction: JSX.Element | null;
   resource: SectionResource | null;
   isResource: boolean;
+  isComment: boolean;
 }
 
 interface SimpleWf {
@@ -152,6 +154,14 @@ const initState = {
   psgCompletedIndex: -2,
   discussionSize: 500,
   setDiscussionSize: (size: number) => {},
+  defaultFilename: '',
+  uploadItem: '',
+  showRecord: (
+    defaultFilename: string,
+    uploadItem: string,
+    recordCb: (planId: string, MediaRemId?: string[]) => void
+  ) => {},
+  recordCb: (planId: string, MediaRemId?: string[]) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -189,7 +199,10 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const [user] = useGlobal('user');
     const [errorReporter] = useGlobal('errorReporter');
     const [changed] = useGlobal('changed');
+    const [, setComplete] = useGlobal('progress');
+    const [status] = useState<IStatus>({ canceled: false });
     const [confirm, setConfirm] = useState('');
+    const [uploadVisible, setUploadVisible] = useState(false);
     const view = React.useRef('');
     const [, setRefreshed] = useState(0);
     const mediaUrlRef = useRef('');
@@ -216,10 +229,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setState((state: ICtxState) => {
         return { ...state, currentstep: stepId, playing: false };
       });
-      //check tool here??
-      if (step && step.attributes.name !== 'internalization') {
+      if (step && step.attributes.tool !== 'resource') {
         //this does a bunch of stuff...don't just set it in the state above...
-        if (state.rowData.length > 0 && !state.rowData[0].isResource)
+        if (
+          state.rowData.length > 0 &&
+          !state.rowData[0].isResource &&
+          !state.rowData[0].isComment
+        )
           setSelected(state.rowData[0].id);
         else setSelected('');
       }
@@ -298,7 +314,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         var resetBlob = false;
         if (
           mediaState.urlMediaId !== r.mediafile.id &&
-          fetching.current !== r.mediafile.id
+          fetching.current !== r.mediafile.id &&
+          !r.isResource &&
+          !r.isComment
         ) {
           fetching.current = r.mediafile.id;
           fetchMediaUrl({
@@ -319,6 +337,19 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           };
         });
       }
+    };
+
+    const showRecord = (
+      defaultFilename: string,
+      uploadItem: any,
+      recordCb: (planId: string, MediaRemId?: string[]) => void
+    ) => {
+      setState({ ...state, defaultFilename, uploadItem, recordCb });
+      setUploadVisible(true);
+    };
+
+    const handleUploadVisible = (v: boolean) => {
+      setUploadVisible(v);
     };
 
     const refresh = () => {
@@ -458,7 +489,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         resourceRows({ ...props, res, user, ...localize })
       );
       const mediafileId =
-        newData.length > 0 && !newData[0].isResource ? newData[0].id : '';
+        newData.length > 0 && !newData[0].isResource && !newData[0].isComment
+          ? newData[0].id
+          : '';
       setState((state: ICtxState) => {
         return { ...state, rowData: newData, mediafileId };
       });
@@ -518,19 +551,35 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setPlaying,
             setPDBusy,
             getSharedResources,
+            showRecord,
             refresh,
           },
           setState,
         }}
       >
         {props.children}
-        {state.rowData[state.index]?.isResource && (
+        {(state.rowData[state.index]?.isResource ||
+          state.rowData[state.index]?.isComment) && (
           <MediaPlayer
             auth={auth}
             srcMediaId={state.playItem}
             onEnded={handlePlayEnd}
           />
         )}
+        <Uploader
+          recordAudio={true}
+          defaultFilename={state.defaultFilename}
+          auth={auth}
+          mediaId={state.uploadItem || ''}
+          importList={undefined}
+          isOpen={uploadVisible}
+          onOpen={handleUploadVisible}
+          showMessage={showMessage}
+          setComplete={setComplete}
+          multiple={false}
+          finish={state.recordCb}
+          status={status}
+        />
         {confirm !== '' && (
           <Confirm
             open={true}

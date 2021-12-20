@@ -65,6 +65,7 @@ const oneRow = ({
     mediafile: media || ({} as MediaFile),
     resource: r,
     isResource: isResource(typeNameSlug),
+    isComment: typeNameSlug === 'comment',
   });
   return newRow;
 };

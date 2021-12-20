@@ -153,7 +153,6 @@ export function AudioTab(props: IProps) {
   const inProcess = React.useRef<boolean>(false);
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
-    ts,
     doOrbitError,
   });
   const [refresh, setRefresh] = useState(false);

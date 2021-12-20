@@ -58,11 +58,24 @@ export const useArtifactType = () => {
 
     return types;
   };
+
   const vernacularId = useMemo(() => {
     var types = memory.cache.query((q: QueryBuilder) =>
       q
         .findRecords('artifacttype')
         .filter({ attribute: 'typename', value: 'vernacular' })
+    ) as ArtifactType[];
+    var v = types.find((r) => Boolean(r?.keys?.remoteId) !== offlineOnly);
+    if (v) return v.id;
+    return '';
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offlineOnly]);
+
+  const commentId = useMemo(() => {
+    var types = memory.cache.query((q: QueryBuilder) =>
+      q
+        .findRecords('artifacttype')
+        .filter({ attribute: 'typename', value: 'comment' })
     ) as ArtifactType[];
     var v = types.find((r) => Boolean(r?.keys?.remoteId) !== offlineOnly);
     if (v) return v.id;
@@ -96,5 +109,6 @@ export const useArtifactType = () => {
     localizedArtifactType,
     fromLocalizedArtifactType,
     vernacularId,
+    commentId,
   };
 };
