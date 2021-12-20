@@ -29,7 +29,7 @@ export const useRecordComment = ({ doOrbitError }: IProps) => {
     return { type: 'passage', id: passageId };
   };
 
-  const attachCommentMedia = async (
+  const attachNewCommentMedia = async (
     discussion: Discussion,
     mediaRemId?: string[]
   ) => {
@@ -58,18 +58,54 @@ export const useRecordComment = ({ doOrbitError }: IProps) => {
     await memory.update(ops);
   };
 
-  return (discussion: Discussion, number: number, cb?: () => void) => {
+  const updateCommentMedia = async (
+    discussion: Discussion,
+    comment: Comment,
+    mediaRemId?: string[]
+  ) => {
+    const t = new TransformBuilder();
+    if (mediaRemId && mediaRemId.length > 0) {
+      const ops = [];
+      const id =
+        remoteIdGuid('mediafile', mediaRemId[0], memory.keyMap) ||
+        mediaRemId[0];
+      const recId = { type: 'mediafile', id };
+      ops.push(t.replaceRelatedRecord(comment, 'mediafile', recId));
+      const cmtRecId = { type: 'artifacttype', id: commentId };
+      ops.push(t.replaceRelatedRecord(recId, 'artifactType', cmtRecId));
+      const passRecId = getPassRec(discussion, id);
+      ops.push(t.replaceRelatedRecord(recId, 'passage', passRecId));
+      await memory.update(ops);
+    }
+  };
+
+  return (
+    discussion: Discussion,
+    number: number,
+    comment: Comment | null,
+    cb?: () => void
+  ) => {
     const name = `${cleanFileName(
       discussion.attributes?.subject
     )}${discussion.id.slice(0, 4)}-${number}`;
     showRecord(name, '', (planId: string, mediaRemId?: string[]) => {
-      attachCommentMedia(discussion, mediaRemId)
-        .then(() => {
-          cb && cb();
-        })
-        .catch((err: Error) => {
-          doOrbitError(orbitErr(err, 'attach comment media'));
-        });
+      if (comment) {
+        updateCommentMedia(discussion, comment, mediaRemId)
+          .then(() => {
+            cb && cb();
+          })
+          .catch((err: Error) => {
+            doOrbitError(orbitErr(err, 'attach comment media'));
+          });
+      } else {
+        attachNewCommentMedia(discussion, mediaRemId)
+          .then(() => {
+            cb && cb();
+          })
+          .catch((err: Error) => {
+            doOrbitError(orbitErr(err, 'attach comment media'));
+          });
+      }
     });
   };
 };

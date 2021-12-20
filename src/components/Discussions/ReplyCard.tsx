@@ -89,7 +89,7 @@ export const ReplyCard = (props: IProps) => {
     setRefresh(refresh + 1);
   };
   const handleRecord = () => {
-    recordComment(discussion, number, () => {
+    recordComment(discussion, number, null, () => {
       setRefresh(refresh + 1);
     });
   };

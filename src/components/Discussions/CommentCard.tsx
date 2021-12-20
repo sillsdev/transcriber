@@ -171,7 +171,7 @@ export const CommentCard = (props: IProps) => {
     const discussion = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'discussion', id: related(comment, 'discussion') })
     ) as Discussion;
-    recordComment(discussion, number);
+    recordComment(discussion, number, comment);
   };
 
   const media = useMemo(() => {
