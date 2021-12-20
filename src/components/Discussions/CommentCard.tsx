@@ -20,7 +20,7 @@ import Confirm from '../AlertDialog';
 import localStrings from '../../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { related } from '../../crud';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import UserAvatar from '../UserAvatar';
@@ -31,6 +31,7 @@ import { UpdateRecord } from '../../model/baseModel';
 import DiscussionMenu from './DiscussionMenu';
 import { useRecordComment } from './useRecordComment';
 import { bindActionCreators } from 'redux';
+import { PassageDetailContext } from '../../context/PassageDetailContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -122,6 +123,7 @@ export const CommentCard = (props: IProps) => {
   const [lang] = useGlobal('lang');
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
+  const { setSelected } = useContext(PassageDetailContext).state;
   const [editing, setEditing] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
   const recordComment = useRecordComment({ doOrbitError });
@@ -180,7 +182,10 @@ export const CommentCard = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment]);
 
-  const handlePlayComment = () => {};
+  const handlePlayComment = () => {
+    const mediaId = related(comment, 'mediafile');
+    setSelected(mediaId);
+  };
 
   useEffect(() => {
     if (users) {

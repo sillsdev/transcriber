@@ -14,6 +14,22 @@ import moment from 'moment';
 import eaf from '../utils/transcriptionEaf';
 import path from 'path';
 
+const vernSort = (m: MediaFile) => (!related(m, 'artifactType') ? 0 : 1);
+
+export const getAllMediaRecs = (passageId: string, memory: Memory) => {
+  const mediaRecs = (
+    memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('mediafile').filter({
+        relation: 'passage',
+        record: { type: 'passage', id: passageId },
+      })
+    ) as MediaFile[]
+  )
+    .sort((a, b) => vernSort(a) - vernSort(b))
+    .sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
+  return mediaRecs;
+};
+
 export const getVernacularMediaRec = (
   passageId: string,
   memory: Memory,
@@ -28,6 +44,7 @@ export const getVernacularMediaRec = (
     .sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
   return mediaRecs.length > 0 ? mediaRecs[0] : null;
 };
+
 export const getMediaShared = (passageId: string, memory: Memory) => {
   const mediaRecs = getAllMediaRecs(passageId, memory);
   return mediaRecs.length > 0
@@ -37,17 +54,6 @@ export const getMediaShared = (passageId: string, memory: Memory) => {
       ? IMediaShare.OldVersionOnly
       : IMediaShare.None
     : IMediaShare.None;
-};
-export const getAllMediaRecs = (passageId: string, memory: Memory) => {
-  const mediaRecs = (
-    memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('mediafile').filter({
-        relation: 'passage',
-        record: { type: 'passage', id: passageId },
-      })
-    ) as MediaFile[]
-  ).sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
-  return mediaRecs;
 };
 
 const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {

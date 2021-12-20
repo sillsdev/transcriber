@@ -117,6 +117,7 @@ export interface IRow {
   editAction: JSX.Element | null;
   resource: SectionResource | null;
   isResource: boolean;
+  isComment: boolean;
 }
 
 interface SimpleWf {
@@ -228,10 +229,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setState((state: ICtxState) => {
         return { ...state, currentstep: stepId, playing: false };
       });
-      //check tool here??
-      if (step && step.attributes.name !== 'internalization') {
+      if (step && step.attributes.tool !== 'resource') {
         //this does a bunch of stuff...don't just set it in the state above...
-        if (state.rowData.length > 0 && !state.rowData[0].isResource)
+        if (
+          state.rowData.length > 0 &&
+          !state.rowData[0].isResource &&
+          !state.rowData[0].isComment
+        )
           setSelected(state.rowData[0].id);
         else setSelected('');
       }
@@ -310,7 +314,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         var resetBlob = false;
         if (
           mediaState.urlMediaId !== r.mediafile.id &&
-          fetching.current !== r.mediafile.id
+          fetching.current !== r.mediafile.id &&
+          !r.isResource &&
+          !r.isComment
         ) {
           fetching.current = r.mediafile.id;
           fetchMediaUrl({
@@ -483,7 +489,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         resourceRows({ ...props, res, user, ...localize })
       );
       const mediafileId =
-        newData.length > 0 && !newData[0].isResource ? newData[0].id : '';
+        newData.length > 0 && !newData[0].isResource && !newData[0].isComment
+          ? newData[0].id
+          : '';
       setState((state: ICtxState) => {
         return { ...state, rowData: newData, mediafileId };
       });
@@ -550,7 +558,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         }}
       >
         {props.children}
-        {state.rowData[state.index]?.isResource && (
+        {(state.rowData[state.index]?.isResource ||
+          state.rowData[state.index]?.isComment) && (
           <MediaPlayer
             auth={auth}
             srcMediaId={state.playItem}
