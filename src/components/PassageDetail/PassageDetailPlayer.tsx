@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { IState } from '../../model';
@@ -12,21 +12,22 @@ interface IProps extends IStateProps {
 const INIT_PLAYER_HEIGHT = 280;
 
 export function PassageDetailPlayer(props: IProps) {
-  const { loading, pdBusy, setPDBusy, audioBlob, setSegments } =
+  const { loading, pdBusy, setPDBusy, audioBlob, setSegments, setupLocate } =
     usePassageDetailContext();
   const [playerSize] = useState(INIT_PLAYER_HEIGHT);
   const playingRef = useRef(false);
   const playedSecsRef = useRef<number>(0);
   //do I care about this?
-  const segmentsRef = useRef('{}');
-  const onSegmentChange = (segments: string) => {
-    if (segments !== segmentsRef.current) {
-      segmentsRef.current = segments;
-      setSegments(segments);
-    }
-  };
+  const [segments, setLocalSegments] = useState('{}');
   const { playing, setPlaying } = usePassageDetailContext();
 
+  const setPlayerSegments = (segments: string) => {
+    setLocalSegments(segments);
+  };
+
+  const onSegmentChange = (segments: string) => {
+    setSegments(segments);
+  };
   const onPlayStatus = (newPlaying: boolean) => {
     setPlaying(newPlaying);
     playingRef.current = newPlaying;
@@ -35,6 +36,14 @@ export function PassageDetailPlayer(props: IProps) {
   const onInteraction = () => {
     //focus on add comment?? focusOnTranscription();
   };
+
+  useEffect(() => {
+    setupLocate(setPlayerSegments);
+    return () => {
+      setupLocate();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>
@@ -47,7 +56,7 @@ export function PassageDetailPlayer(props: IProps) {
         isPlaying={playing}
         loading={loading}
         busy={pdBusy}
-        segments={segmentsRef.current}
+        segments={segments}
         setBusy={setPDBusy}
         onProgress={onProgress}
         onSegmentChange={onSegmentChange}

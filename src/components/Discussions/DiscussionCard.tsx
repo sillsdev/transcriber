@@ -27,6 +27,7 @@ import {
 import ResolveIcon from '@material-ui/icons/Check';
 import HideIcon from '@material-ui/icons/ArrowDropUp';
 import ShowIcon from '@material-ui/icons/ArrowDropDown';
+import LocationIcon from '@material-ui/icons/LocationSearching';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -90,9 +91,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     topicItem: {
       overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'row',
     },
     topic: {
       marginRight: theme.spacing(2),
+      alignSelf: 'center',
     },
     pos: {
       marginBottom: 12,
@@ -176,7 +180,7 @@ export const DiscussionCard = (props: IProps) => {
     users,
   } = props;
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, mediafileId } = ctx.state;
+  const { currentstep, mediafileId, setPlayerSegments } = ctx.state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
@@ -278,6 +282,19 @@ export const DiscussionCard = (props: IProps) => {
     }
     return media;
   }
+  const startEnd = (val: string) =>
+    /^([0-9]+\.[0-9])-([0-9]+\.[0-9]) /.exec(val);
+
+  const handleLocate = () => {
+    const m = startEnd(discussion.attributes?.subject);
+    if (m) {
+      const regions = JSON.stringify([
+        { start: parseFloat(m[1]), end: parseFloat(m[2]) },
+      ]);
+      setPlayerSegments(JSON.stringify({ regions }));
+    }
+  };
+
   const handleResolveButton = () => {
     handleResolveDiscussion(true);
   };
@@ -505,6 +522,17 @@ export const DiscussionCard = (props: IProps) => {
           ) : (
             <Grid container className={classes.title}>
               <Grid item className={classes.topicItem}>
+                {startEnd(discussion.attributes?.subject) && (
+                  <IconButton
+                    id="location"
+                    size="small"
+                    className={classes.actionButton}
+                    title={'Locate discussion subject in audio recording'}
+                    onClick={handleLocate}
+                  >
+                    <LocationIcon fontSize="small" />
+                  </IconButton>
+                )}
                 <Typography
                   variant="h6"
                   component="h2"
@@ -542,10 +570,12 @@ export const DiscussionCard = (props: IProps) => {
             <Typography variant="body2" component="p">
               {t.comments.replace('{0}', myComments.length.toString())}
             </Typography>
-            <Chip
-              size="small"
-              label={t.category.replace('{0}', artifactCategory)}
-            />
+            {artifactCategory && artifactCategory !== '' && (
+              <Chip
+                size="small"
+                label={t.category.replace('{0}', artifactCategory)}
+              />
+            )}
             <IconButton
               id="collapseDiscussion"
               className={classes.smallButton}
