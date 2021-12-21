@@ -162,6 +162,8 @@ const initState = {
     recordCb: (planId: string, MediaRemId?: string[]) => void
   ) => {},
   recordCb: (planId: string, MediaRemId?: string[]) => {},
+  setSegments: (segments: string) => {},
+  getSegments: () => '',
 };
 
 export type ICtxState = typeof initState;
@@ -214,6 +216,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const fetching = useRef('');
+    const segmentsRef = useRef('{}');
     const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
     const { localizedArtifactType } = useArtifactType();
     const { localizedArtifactCategory } = useArtifactCategory();
@@ -356,6 +359,21 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setRefreshed((refreshed) => {
         return refreshed + 1;
       });
+    };
+
+    const setSegments = (segments: string) => {
+      segmentsRef.current = segments;
+    };
+
+    const getSegments = () => {
+      const segs = JSON.parse(segmentsRef.current);
+      const region = segs.regions ? JSON.parse(segs.regions) : [];
+      if (region.length > 0) {
+        const start: number = region[0].start;
+        const end: number = region[0].end;
+        return `${Math.round(start * 10) / 10}-${Math.round(end * 10) / 10} `;
+      }
+      return '';
     };
 
     useEffect(() => {
@@ -553,6 +571,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             getSharedResources,
             showRecord,
             refresh,
+            setSegments,
+            getSegments,
           },
           setState,
         }}

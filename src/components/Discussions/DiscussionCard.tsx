@@ -265,6 +265,8 @@ export const DiscussionCard = (props: IProps) => {
   }, [artifactcategorys, discussion]);
   useEffect(() => {
     setEditing(onAddComplete !== undefined);
+    if (onAddComplete) setEditSubject(discussion.attributes?.subject);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onAddComplete]);
 
   function selectDiscussion(discussion: Discussion) {}

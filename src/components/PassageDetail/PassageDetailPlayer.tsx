@@ -12,14 +12,18 @@ interface IProps extends IStateProps {
 const INIT_PLAYER_HEIGHT = 280;
 
 export function PassageDetailPlayer(props: IProps) {
-  const { loading, pdBusy, setPDBusy, audioBlob } = usePassageDetailContext();
+  const { loading, pdBusy, setPDBusy, audioBlob, setSegments } =
+    usePassageDetailContext();
   const [playerSize] = useState(INIT_PLAYER_HEIGHT);
   const playingRef = useRef(false);
   const playedSecsRef = useRef<number>(0);
   //do I care about this?
   const segmentsRef = useRef('{}');
   const onSegmentChange = (segments: string) => {
-    segmentsRef.current = segments;
+    if (segments !== segmentsRef.current) {
+      segmentsRef.current = segments;
+      setSegments(segments);
+    }
   };
   const { playing, setPlaying } = usePassageDetailContext();
 
@@ -31,6 +35,7 @@ export function PassageDetailPlayer(props: IProps) {
   const onInteraction = () => {
     //focus on add comment?? focusOnTranscription();
   };
+
   return (
     <div>
       <WSAudioPlayer
@@ -42,6 +47,7 @@ export function PassageDetailPlayer(props: IProps) {
         isPlaying={playing}
         loading={loading}
         busy={pdBusy}
+        segments={segmentsRef.current}
         setBusy={setPDBusy}
         onProgress={onProgress}
         onSegmentChange={onSegmentChange}
