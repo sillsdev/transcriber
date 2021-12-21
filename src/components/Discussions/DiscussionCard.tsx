@@ -5,6 +5,7 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   Grid,
   IconButton,
   TextField,
@@ -81,11 +82,14 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'flex-start',
       color: theme.palette.primary.contrastText,
     },
-    firstLine: {
+    commentCount: {
       width: '100%',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
+    },
+    topicItem: {
+      overflow: 'hidden',
     },
     topic: {
       marginRight: theme.spacing(2),
@@ -98,6 +102,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       flexGrow: 1,
+      flexWrap: 'unset',
     },
     titleControls: {
       display: 'flex',
@@ -496,52 +501,49 @@ export const DiscussionCard = (props: IProps) => {
               </div>
             </div>
           ) : (
-            <>
-              <Grid container className={classes.title}>
-                <Grid item>
-                  <Typography
-                    variant="h6"
-                    component="h2"
-                    className={classes.topic}
-                  >
-                    {discussion.attributes?.subject}
-                  </Typography>
-                </Grid>
-                <Grid item className={classes.titleControls}>
-                  {assignedRole && (
-                    <RoleAvatar roleRec={assignedRole} org={false} />
-                  )}
-
-                  {assignedUser && <UserAvatar userRec={assignedUser} />}
-
-                  {!discussion.attributes.resolved && (
-                    <IconButton
-                      id="resolveDiscussion"
-                      className={classes.actionButton}
-                      title={t.resolved}
-                      onClick={handleResolveButton}
-                    >
-                      <ResolveIcon />
-                    </IconButton>
-                  )}
-                  <DiscussionMenu
-                    action={handleDiscussionAction}
-                    resolved={discussion.attributes.resolved || false}
-                  />
-                </Grid>
-              </Grid>
-              <div>
-                <Typography>{discussionDescription()}</Typography>
-                <Typography>
-                  {t.category.replace('{0}', artifactCategory)}
+            <Grid container className={classes.title}>
+              <Grid item className={classes.topicItem}>
+                <Typography
+                  variant="h6"
+                  component="h2"
+                  className={classes.topic}
+                  title={discussionDescription()}
+                >
+                  {discussion.attributes?.subject}
                 </Typography>
-              </div>
-            </>
+              </Grid>
+              <Grid item className={classes.titleControls}>
+                {assignedRole && (
+                  <RoleAvatar roleRec={assignedRole} org={false} />
+                )}
+
+                {assignedUser && <UserAvatar userRec={assignedUser} />}
+
+                {!discussion.attributes.resolved && (
+                  <IconButton
+                    id="resolveDiscussion"
+                    className={classes.actionButton}
+                    title={t.resolved}
+                    onClick={handleResolveButton}
+                  >
+                    <ResolveIcon />
+                  </IconButton>
+                )}
+                <DiscussionMenu
+                  action={handleDiscussionAction}
+                  resolved={discussion.attributes.resolved || false}
+                />
+              </Grid>
+            </Grid>
           )}
-          <div className={classes.firstLine}>
+          <div className={classes.commentCount}>
             <Typography variant="body2" component="p">
               {t.comments.replace('{0}', myComments.length.toString())}
             </Typography>
+            <Chip
+              size="small"
+              label={t.category.replace('{0}', artifactCategory)}
+            />
             <IconButton
               id="collapseDiscussion"
               className={classes.smallButton}
