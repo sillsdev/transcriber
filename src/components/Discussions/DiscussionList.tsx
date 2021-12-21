@@ -88,7 +88,8 @@ export function DiscussionList(props: IProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [adding, setAdding] = useState(false);
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, rowData, discussionSize, passage } = ctx.state;
+  const { currentstep, rowData, discussionSize, passage, getSegments } =
+    ctx.state;
   const tool = useStepTool(currentstep);
   const { getRoleRec } = useRole();
   const { vernacularId } = useArtifactType();
@@ -159,7 +160,7 @@ export function DiscussionList(props: IProps) {
           {
             type: 'discussion',
             attributes: {
-              subject: '',
+              subject: getSegments() || '',
             },
           } as any as Discussion,
         ]);

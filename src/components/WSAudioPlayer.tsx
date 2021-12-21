@@ -405,7 +405,18 @@ function WSAudioPlayer(props: IProps) {
   }, [initialposition]);
 
   useEffect(() => {
-    segmentsRef.current = segments;
+    if (segments !== segmentsRef.current) {
+      segmentsRef.current = segments;
+      if (ready) {
+        wsLoadRegions(segments);
+        const regions = JSON.parse(segments)?.regions;
+        if (regions) {
+          const start = JSON.parse(regions)[0].start;
+          wsGoto(start);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [segments]);
 
   useEffect(() => {
