@@ -329,6 +329,7 @@ export const AddCard = (props: IProps) => {
         finish={makeSectionsAndPassages}
         status={status}
         defaultFilename={book?.value}
+        allowWave={true}
       />
       <Progress
         title={t.uploadProgress}

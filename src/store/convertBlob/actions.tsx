@@ -16,7 +16,7 @@ export const convertBlob =
     const fakeSourceName = 'fname.wav';
     const fakeOggName = 'encoded.ogg';
     dispatch({
-      payload: 'here we go',
+      payload: '',
       type: CONVERT_BLOB_PENDING,
     });
     // Convert to ogg
