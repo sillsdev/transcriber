@@ -970,6 +970,13 @@
                <context context-type="sourcefile">DiscussionCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="discussionCard.locate">
+      		<source>Locate discussion subject in audio recording</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="discussionCard.or">
             <source>or</source>
             <target/>

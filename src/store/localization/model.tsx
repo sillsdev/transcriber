@@ -188,6 +188,7 @@ export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods
     "collapse": string;
     "comments": string;
     "confirmDelete": string;
+    "locate": string;
     "or": string;
     "resolved": string;
     "topic": string;

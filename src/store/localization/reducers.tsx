@@ -210,6 +210,7 @@ const initialState = {
 			"collapse": "Show/Hide Comments",
 			"comments": "Comments: {0}",
 			"confirmDelete": "Delete this discussion and all commments?",
+			"locate": "Locate discussion subject in audio recording",
 			"or": "or",
 			"resolved": "Resolve",
 			"topic": "Topic",

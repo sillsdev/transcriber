@@ -832,6 +832,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionCard.locate">
+         <segment>
+            <source>Locate discussion subject in audio recording</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionCard.or">
          <segment>
             <source>or</source>
