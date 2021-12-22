@@ -27,6 +27,7 @@ enum Steps {
   Download,
   Import,
   Finished,
+  Error,
 }
 
 interface IStateProps {
@@ -113,7 +114,7 @@ export const ProjectDownload = (props: IProps) => {
       if (exportStatus.errStatus) {
         showTitledMessage(t.error, translateError(exportStatus));
         exportComplete();
-        setBusy(false);
+        setProgress(Steps.Error);
       } else {
         if (!enableOffsite) setEnableOffsite(true);
         if (exportStatus?.statusMsg) {
@@ -129,8 +130,8 @@ export const ProjectDownload = (props: IProps) => {
         }
       }
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [exportStatus, progress]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exportFile, exportStatus]);
 
   React.useEffect(() => {
     if (progress === Steps.Download) {
@@ -163,7 +164,11 @@ export const ProjectDownload = (props: IProps) => {
       );
       setProgress(Steps.Prepare);
       setCurrentStep(currentStep + 1);
-    } /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    } else if (progress === Steps.Error) {
+      setProgress(Steps.Prepare);
+      setCurrentStep(currentStep + 1);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [progress]);
 
   const percent = (count: number, total: number) => {
