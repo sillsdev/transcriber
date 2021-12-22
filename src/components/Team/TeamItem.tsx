@@ -79,8 +79,12 @@ export const TeamItem = (props: IProps) => {
     setEditOpen(true);
   };
 
-  const handleCommitSettings = (team: Organization) => {
+  const handleCommitSettings = (
+    team: Organization,
+    cb?: (id: string) => Promise<void>
+  ) => {
     teamUpdate(team);
+    cb && cb(team.id);
     setEditOpen(false);
   };
 
