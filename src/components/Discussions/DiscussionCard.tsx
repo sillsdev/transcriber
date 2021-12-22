@@ -527,7 +527,7 @@ export const DiscussionCard = (props: IProps) => {
                     id="location"
                     size="small"
                     className={classes.actionButton}
-                    title={'Locate discussion subject in audio recording'}
+                    title={t.locate}
                     onClick={handleLocate}
                   >
                     <LocationIcon fontSize="small" />
