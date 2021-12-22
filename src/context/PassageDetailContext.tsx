@@ -156,16 +156,15 @@ const initState = {
   setDiscussionSize: (size: number) => {},
   defaultFilename: '',
   uploadItem: '',
+  recordCb: (planId: string, MediaRemId?: string[]) => {},
   showRecord: (
     defaultFilename: string,
     uploadItem: string,
     recordCb: (planId: string, MediaRemId?: string[]) => void
   ) => {},
-  recordCb: (planId: string, MediaRemId?: string[]) => {},
+  segments: '{}',
   setSegments: (segments: string) => {},
-  setupLocate: (cb?: (segments: string) => void) => {},
   getSegments: () => '',
-  setPlayerSegments: (segments: string) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -218,8 +217,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const fetching = useRef('');
-    const segmentsRef = useRef('{}');
-    const segmentsCb = useRef<(segments: string) => void>();
     const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
     const { localizedArtifactType } = useArtifactType();
     const { localizedArtifactCategory } = useArtifactCategory();
@@ -245,7 +242,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           setSelected(state.rowData[0].id);
         else setSelected('');
       }
-      segmentsCb.current = undefined;
     };
     const setCurrentStep = (stepId: string) => {
       if (changed) {
@@ -366,21 +362,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     };
 
     const setSegments = (segments: string) => {
-      segmentsRef.current = segments;
-    };
-
-    const setupLocate = (cb?: (segments: string) => void) => {
-      segmentsCb.current = cb;
-    };
-
-    const setPlayerSegments = (segments: string) => {
-      if (segmentsCb.current) segmentsCb.current(segments);
+      setState({ ...state, segments });
     };
 
     const onePlace = (n: number) => (Math.round(n * 10) / 10).toFixed(1);
 
     const getSegments = () => {
-      const segs = JSON.parse(segmentsRef.current);
+      const segs = JSON.parse(state.segments);
       const region = segs.regions ? JSON.parse(segs.regions) : [];
       if (region.length > 0) {
         const start: number = region[0].start;
@@ -565,7 +553,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         if (state.currentstep !== next) {
           setCurrentStep(next);
         }
-        segmentsCb.current = undefined;
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.currentstep, state.psgCompletedIndex, state.workflow]);
@@ -588,8 +575,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             refresh,
             setSegments,
             getSegments,
-            setPlayerSegments,
-            setupLocate,
           },
           setState,
         }}
