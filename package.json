@@ -38,7 +38,6 @@
     "jwt-decode": "^3.1.2",
     "keycode": "^2.2.0",
     "keytar": "~7.6.0",
-    "lamejs": "^1.2.0",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.31",
@@ -208,7 +207,5 @@
         ]
       }
     ]
-  },
-  "main": "public/electron-dev.js",
-  "homepage": "./"
+  }
 }
