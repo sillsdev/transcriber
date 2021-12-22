@@ -23,6 +23,7 @@ import { withData } from '../../mods/react-orbitjs';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { related } from '../../crud';
 import PlayIcon from '@material-ui/icons/PlayArrow';
+import PauseIcon from '@material-ui/icons/Pause';
 import UserAvatar from '../UserAvatar';
 import { dateOrTime } from '../../utils';
 import { useGlobal } from 'reactn';
@@ -123,11 +124,12 @@ export const CommentCard = (props: IProps) => {
   const [lang] = useGlobal('lang');
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
-  const { setSelected } = useContext(PassageDetailContext).state;
+  const { setSelected, playItem } = useContext(PassageDetailContext).state;
   const [editing, setEditing] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
   const recordComment = useRecordComment({ doOrbitError });
   const text = comment.attributes?.commentText;
+  const [mediaId, setMediaId] = useState('');
 
   const handleCommentAction = (what: string) => {
     if (what === 'edit') {
@@ -175,15 +177,13 @@ export const CommentCard = (props: IProps) => {
   };
 
   const media = useMemo(() => {
-    const id = related(comment, 'mediafile');
-    if (!id || id === '') return null;
-    const recId = { type: 'mediafile', id };
+    if (!mediaId || mediaId === '') return null;
+    const recId = { type: 'mediafile', id: mediaId };
     return memory.cache.query((q: QueryBuilder) => q.findRecord(recId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment]);
 
   const handlePlayComment = () => {
-    const mediaId = related(comment, 'mediafile');
     setSelected(mediaId);
   };
 
@@ -194,6 +194,7 @@ export const CommentCard = (props: IProps) => {
       );
       if (u.length > 0) setAuthor(u[0]);
     }
+    setMediaId(related(comment, 'mediafile'));
   }, [comment, users]);
 
   return (
@@ -206,7 +207,7 @@ export const CommentCard = (props: IProps) => {
             </Grid>
             {media && (
               <IconButton onClick={handlePlayComment}>
-                <PlayIcon />
+                {mediaId === playItem ? <PauseIcon /> : <PlayIcon />}
               </IconButton>
             )}
             <Grid item className={classes.column}>

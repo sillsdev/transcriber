@@ -52,7 +52,6 @@ export const convertBlob =
     worker.onmessage = function (event) {
       /* expected messaged from OpusEncoder 'done', 'progress','log', 'err' */
       var message = event.data;
-      console.log('my worker got a message!', message);
       if (message.reply === 'progress') {
         if (message.values[1]) {
           dispatch({
