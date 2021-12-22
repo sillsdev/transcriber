@@ -180,7 +180,7 @@ export const DiscussionCard = (props: IProps) => {
     users,
   } = props;
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, mediafileId, setPlayerSegments } = ctx.state;
+  const { currentstep, mediafileId, setSegments } = ctx.state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
@@ -291,7 +291,7 @@ export const DiscussionCard = (props: IProps) => {
       const regions = JSON.stringify([
         { start: parseFloat(m[1]), end: parseFloat(m[2]) },
       ]);
-      setPlayerSegments(JSON.stringify({ regions }));
+      setSegments(JSON.stringify({ regions }));
     }
   };
 
