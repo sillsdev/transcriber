@@ -4,14 +4,12 @@ import { useGlobal } from 'reactn';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
 import { logError, Severity, waitForIt } from '../utils';
-//import { useMounted } from '../utils';
-//import { convertToMP3 } from '../utils/mp3';
-import { convertToWav } from '../utils/wav';
 import {
   IRegionParams,
   IRegions,
   useWaveSurferRegions,
 } from './useWavesurferRegions';
+import { convertToWav } from '../utils/wav';
 
 const noop = () => {};
 const noop1 = (x: any) => {};
@@ -323,11 +321,12 @@ export function useWaveSurfer(
           channels = 1;
         }
       }
-      return convertToWav(data_left, data_right, {
+      var wavblob = await convertToWav(data_left, data_right, {
         isFloat: true, // floating point or 16-bit integer (WebAudio API decodes to Float32Array) ???
         numChannels: channels,
         sampleRate: originalBuffer.sampleRate,
       });
+      return wavblob;
     }
     return undefined;
   };

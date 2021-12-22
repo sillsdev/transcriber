@@ -3435,6 +3435,13 @@
                <context context-type="sourcefile">passageRecord.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="passageRecord.compressed">
+            <source>Compressed</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="passageRecord.defaultFilename">
             <source>MyRecording</source>
             <target/>
@@ -3477,8 +3484,22 @@
                <context context-type="sourcefile">passageRecord.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="passageRecord.saving">
+            <source>Saving... {0}%</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="passageRecord.title">
             <source>Record/Edit Audio</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageRecord.uncompressed">
+            <source>Uncompressed</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageRecord.tsx</context>

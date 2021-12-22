@@ -7,12 +7,7 @@ import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import localStrings from '../selector/localize';
 import MediaUpload, { UploadType } from './MediaUpload';
-import {
-  getMediaInPlans,
-  related,
-  remoteIdNum,
-  useArtifactType,
-} from '../crud';
+import { getMediaInPlans, related, remoteIdNum } from '../crud';
 import Auth from '../auth/Auth';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
@@ -20,6 +15,7 @@ import { currentDateTime } from '../utils';
 import { TransformBuilder } from '@orbit/data';
 import { AddRecord } from '../model/baseModel';
 import PassageRecord from './PassageRecord';
+import { useArtifactType } from '../crud/useArtifactType';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,6 +44,7 @@ interface IDispatchProps {
 interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
   recordAudio: boolean;
+  allowWave?: boolean;
   defaultFilename?: string;
   isOpen: boolean;
   onOpen: (visible: boolean) => void;
@@ -69,6 +66,7 @@ export const Uploader = (props: IProps) => {
     auth,
     mediaId,
     recordAudio,
+    allowWave,
     defaultFilename,
     t,
     isOpen,
@@ -286,6 +284,8 @@ export const Uploader = (props: IProps) => {
           metaData={metaData}
           ready={ready}
           defaultFilename={defaultFilename}
+          allowWave={allowWave}
+          showFilename={allowWave}
         />
       )}
       {!recordAudio && !importList && (

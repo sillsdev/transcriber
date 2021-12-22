@@ -277,7 +277,6 @@ function WSAudioPlayer(props: IProps) {
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
-
   const {
     wsLoad,
     wsClear,
@@ -422,11 +421,6 @@ function WSAudioPlayer(props: IProps) {
   useEffect(() => {
     onSaveProgressRef.current = onSaveProgress;
   }, [onSaveProgress]);
-
-  useEffect(() => {
-    //we're always going to convert it to wav to send to caller
-    if (setMimeType) setMimeType('audio/wav');
-  }, [setMimeType]);
 
   useEffect(() => {
     setDuration(0);

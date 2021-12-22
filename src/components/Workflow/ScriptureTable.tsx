@@ -35,7 +35,6 @@ import {
   related,
   useOrganizedBy,
   usePlan,
-  useArtifactType,
 } from '../../crud';
 import {
   useRemoteSave,
@@ -72,6 +71,7 @@ import stringReplace from 'react-string-replace';
 import { useExternalLink } from '../useExternalLink';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
+import { useArtifactType } from '../../crud/useArtifactType';
 
 const SaveWait = 500;
 
@@ -593,11 +593,16 @@ export function ScriptureTable(props: IProps) {
       var passageRec = memory.cache.query((q) =>
         q.findRecord(wf.passageId as RecordIdentity)
       ) as Passage;
-      setDefaultFilename(
-        cleanFileName(
-          (passageRec.attributes.book || '') + passageRec.attributes.reference
-        )
-      );
+      var tmp =
+        (passageRec.attributes.book || '') + passageRec.attributes.reference;
+      tmp += (tmp.length ? '_' : '') + passageRec.id.slice(0, 4);
+      if (wf.mediaId) {
+        var mediaRec = memory.cache.query((q) =>
+          q.findRecord(wf.mediaId as RecordIdentity)
+        ) as MediaFile;
+        tmp += 'v' + (mediaRec.attributes.versionNumber + 1).toString();
+      }
+      setDefaultFilename(cleanFileName(tmp));
     }
   };
 
@@ -907,6 +912,7 @@ export function ScriptureTable(props: IProps) {
       />
       <Uploader
         recordAudio={recordAudio}
+        allowWave={true}
         defaultFilename={defaultFilename}
         auth={auth}
         mediaId={uploadItem.current?.mediaId?.id || ''}

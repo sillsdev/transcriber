@@ -2944,6 +2944,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageRecord.compressed">
+         <segment>
+            <source>Compressed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageRecord.defaultFilename">
          <segment>
             <source>MyRecording</source>
@@ -2980,9 +2986,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageRecord.saving">
+         <segment>
+            <source>Saving... {0}%</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageRecord.title">
          <segment>
             <source>Record/Edit Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageRecord.uncompressed">
+         <segment>
+            <source>Uncompressed</source>
             <target/>
          </segment>
       </unit>
