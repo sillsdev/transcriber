@@ -310,7 +310,7 @@ export function ImportTab(props: IProps) {
           files,
           remoteIdNum('project', project, memory.keyMap),
           auth,
-          orbitError,
+          errorReporter,
           t.importPending,
           t.importComplete
         );
@@ -324,7 +324,7 @@ export function ImportTab(props: IProps) {
       fileName,
       buffer,
       auth,
-      orbitError,
+      errorReporter,
       t.importPending,
       t.importComplete
     );
