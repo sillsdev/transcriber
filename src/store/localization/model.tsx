@@ -609,13 +609,16 @@ export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
 
 export interface IPassageRecordStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
+    "compressed": string;
     "defaultFilename": string;
     "fileName": string;
     "fileType": string;
     "loadfile": string;
     "loading": string;
     "save": string;
+    "saving": string;
     "title": string;
+    "uncompressed": string;
 };
 
 export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {

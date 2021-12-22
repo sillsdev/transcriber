@@ -654,13 +654,16 @@ const initialState = {
 	"passageRecord": new LocalizedStrings({
 		"en": {
 			"cancel": "Cancel",
+			"compressed": "Compressed",
 			"defaultFilename": "MyRecording",
 			"fileName": "Name",
 			"fileType": "File Type",
 			"loadfile": "Load Existing File",
 			"loading": "Loading...",
 			"save": "Save",
+			"saving": "Saving... {0}%",
 			"title": "Record/Edit Audio",
+			"uncompressed": "Uncompressed",
 		}
 	}),
 	"planActions": new LocalizedStrings({

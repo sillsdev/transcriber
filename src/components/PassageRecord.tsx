@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, IPassageRecordStrings } from '../model';
 import localStrings from '../selector/localize';
 import Auth from '../auth/Auth';
-//import lamejs from 'lamejs';
+import * as actions from '../store';
 import {
   Button,
   createStyles,
@@ -12,7 +12,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  FormControlLabel,
   makeStyles,
+  Radio,
+  RadioGroup,
   TextField,
   Theme,
 } from '@material-ui/core';
@@ -21,6 +25,7 @@ import { QueryBuilder } from '@orbit/data';
 import { loadBlob, removeExtension } from '../utils';
 import { MediaSt, useFetchMediaUrl } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
+import { bindActionCreators } from 'redux';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,15 +46,24 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 120,
+    },
+    row: {
+      display: 'flex',
     },
   })
 );
+interface IDispatchProps {
+  convertBlob: typeof actions.convertBlob;
+  resetConvertBlob: typeof actions.resetConvertBlob;
+}
 interface IStateProps {
   t: IPassageRecordStrings;
+  convert_status: string;
+  convert_complete: boolean;
+  convert_blob: Blob;
 }
 
-interface IProps extends IStateProps {
+interface IProps extends IStateProps, IDispatchProps {
   visible: boolean;
   mediaId: string;
   auth: Auth;
@@ -57,8 +71,10 @@ interface IProps extends IStateProps {
   metaData?: JSX.Element;
   defaultFilename?: string;
   ready: () => boolean;
-  uploadMethod?: (files: File[]) => void;
+  uploadMethod?: (files: File[]) => Promise<void>;
   cancelMethod?: () => void;
+  allowWave?: boolean;
+  showFilename?: boolean;
 }
 
 function PassageRecord(props: IProps) {
@@ -72,6 +88,13 @@ function PassageRecord(props: IProps) {
     cancelMethod,
     ready,
     metaData,
+    allowWave,
+    showFilename,
+    convert_status,
+    convert_complete,
+    convert_blob,
+    convertBlob,
+    resetConvertBlob,
   } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -85,8 +108,9 @@ function PassageRecord(props: IProps) {
   const [memory] = useGlobal('memory');
   const [filechanged, setFilechanged] = useState(false);
   const [blobReady, setBlobReady] = useState(true);
-  const mimeTypeRef = useRef('audio/wav');
+  const [mimeType, setMimeType] = useState('audio/ogg;codecs=opus');
   const { showMessage } = useSnackBar();
+  const [converting, setConverting] = useState(false);
   const extensions = useMemo(
     () => ['mp3', 'mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'],
     []
@@ -104,7 +128,10 @@ function PassageRecord(props: IProps) {
     []
   );
   const classes = useStyles();
-
+  const close = () => {
+    reset();
+    setOpen(false);
+  };
   useEffect(() => {
     if (mediaId !== mediaState.urlMediaId) fetchMediaUrl({ id: mediaId, auth });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -115,63 +142,84 @@ function PassageRecord(props: IProps) {
   }, [visible]);
 
   useEffect(() => {
+    setExtension(mimeType);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mimeType, extensions, mimes]);
+
+  useEffect(() => {
     if (!userHasSetName) {
       if (defaultFilename) setName(defaultFilename);
       else setName(t.defaultFilename);
     }
   }, [userHasSetName, defaultFilename, t.defaultFilename]);
 
-  const setMimeType = (mimeType: string) => {
-    console.log(mimeType);
-    mimeTypeRef.current = mimeType;
-    setExtension();
-  };
-  const setExtension = () => {
-    if (mimeTypeRef.current) {
-      var i = mimes.findIndex((m) => m === mimeTypeRef.current);
-      console.log(i);
-      setFiletype(extensions[i]);
+  useEffect(() => {
+    if (convert_status) {
+      if (!isNaN(parseInt(convert_status)))
+        showMessage(t.saving.replace('{0}', convert_status));
+      else showMessage(convert_status);
+    }
+    if (convert_complete) {
+      if (convert_blob)
+        doUpload(convert_blob).then(() => {
+          resetConvertBlob();
+          setConverting(false);
+          close();
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [convert_status, convert_complete, convert_blob]);
+
+  const setExtension = (mimeType: string) => {
+    if (mimeType) {
+      var i = mimes.findIndex((m) => m === mimeType);
+      if (i >= 0) setFiletype(extensions[i]);
     }
   };
-  useEffect(() => {
-    setExtension();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [extensions, mimes]);
 
   function onBlobReady(blob: Blob) {
     setAudioBlob(blob);
-    if (blob.type) {
-      setMimeType(blob.type);
-    }
     setFilechanged(true);
   }
   const reset = () => {
+    setMimeType('audio/ogg;codecs=opus');
     setUserHasSetName(false);
     setFilechanged(false);
     setOriginalBlob(undefined);
   };
   const fileName = () => name; // + '.' + filetype;
 
+  const handleChangeMime = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMimeType((event.target as HTMLInputElement).value);
+  };
+
+  const doUpload = async (blob: Blob) => {
+    var files = [
+      new File([blob], fileName() + '.' + filetype, {
+        type: mimeType,
+      }),
+    ];
+    if (uploadMethod && files) {
+      await uploadMethod(files);
+    }
+  };
   const handleAddOrSave = () => {
     if (audioBlob) {
-      var files = [
-        new File([audioBlob], fileName() + '.' + filetype, {
-          type: mimeTypeRef.current,
-        }),
-      ];
-      if (uploadMethod && files) {
-        uploadMethod(files);
+      if (mimeType !== 'audio/wav') {
+        setConverting(true);
+        convertBlob(audioBlob, mimeType);
+      } else {
+        doUpload(audioBlob).then(() => close());
       }
+      return;
     }
-    reset();
-    setOpen(false);
+    close();
   };
   const handleCancel = () => {
     if (cancelMethod) {
       cancelMethod();
     }
-    reset();
-    setOpen(false);
+    close();
   };
   const handleChangeFileName = (e: any) => {
     e.persist();
@@ -220,20 +268,47 @@ function PassageRecord(props: IProps) {
           allowRecord={true}
           size={350}
           blob={originalBlob}
-          setMimeType={setMimeType}
           onBlobReady={onBlobReady}
           setChanged={setFilechanged}
           setBlobReady={setBlobReady}
         />
-        <TextField
-          className={classes.formControl}
-          id="filename"
-          label={t.fileName}
-          value={fileName()}
-          onChange={handleChangeFileName}
-          fullWidth
-          required={true}
-        />
+        <div className={classes.row}>
+          {showFilename && (
+            <TextField
+              className={classes.formControl}
+              id="filename"
+              label={t.fileName}
+              value={fileName()}
+              onChange={handleChangeFileName}
+              required={true}
+            />
+          )}
+          {allowWave && (
+            <FormControl component="fieldset" className={classes.formControl}>
+              <RadioGroup
+                row={true}
+                id="filetype"
+                aria-label="filetype"
+                name="filetype"
+                value={mimeType}
+                onChange={handleChangeMime}
+              >
+                <FormControlLabel
+                  id="compressed"
+                  value={'audio/ogg;codecs=opus'}
+                  control={<Radio />}
+                  label={t.compressed}
+                />
+                <FormControlLabel
+                  id="uncompressed"
+                  value={'audio/wav'}
+                  control={<Radio />}
+                  label={t.uncompressed}
+                />
+              </RadioGroup>
+            </FormControl>
+          )}
+        </div>
         {metaData}
       </DialogContent>
       <DialogActions>
@@ -243,6 +318,7 @@ function PassageRecord(props: IProps) {
           onClick={handleCancel}
           variant="outlined"
           color="primary"
+          disabled={converting}
         >
           {t.cancel}
         </Button>
@@ -253,7 +329,11 @@ function PassageRecord(props: IProps) {
           variant="contained"
           color="primary"
           disabled={
-            !blobReady || (ready && !ready()) || name === '' || !filechanged
+            !blobReady ||
+            (ready && !ready()) ||
+            name === '' ||
+            !filechanged ||
+            converting
           }
         >
           {t.save}
@@ -262,8 +342,22 @@ function PassageRecord(props: IProps) {
     </Dialog>
   );
 }
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators(
+    {
+      convertBlob: actions.convertBlob,
+      resetConvertBlob: actions.resetConvertBlob,
+    },
+    dispatch
+  ),
+});
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'passageRecord' }),
+  convert_status: state.convertBlob.statusmsg,
+  convert_complete: state.convertBlob.complete,
+  convert_blob: state.convertBlob.blob,
 });
-
-export default connect(mapStateToProps)(PassageRecord) as any;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PassageRecord) as any;

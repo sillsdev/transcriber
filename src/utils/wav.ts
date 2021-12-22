@@ -7,7 +7,8 @@ export interface WaveOptions {
 export function encodeWAV(
   numChannels: number,
   sampleRate: number,
-  samples: Int16Array
+  data_left: any,
+  data_right: any
 ) {
   function writeString(view: DataView, offset: number, str: string) {
     for (let i = 0; i < str.length; i++) {
@@ -24,6 +25,11 @@ export function encodeWAV(
       output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
     }
   }
+  let samples = interleave(data_left, data_right, {
+    isFloat: true, // floating point or 16-bit integer (WebAudio API decodes to Float32Array) ???
+    numChannels: numChannels,
+    sampleRate: sampleRate,
+  });
   let buffer = new ArrayBuffer(44 + samples.length * 2);
   let view = new DataView(buffer);
 

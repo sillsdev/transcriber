@@ -4,15 +4,12 @@ import { useGlobal } from 'reactn';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
 import { logError, Severity, waitForIt } from '../utils';
-//import { useMounted } from '../utils';
-//import { convertToMP3 } from '../utils/mp3';
 import {
   IRegionParams,
   IRegions,
   useWaveSurferRegions,
 } from './useWavesurferRegions';
-import { convertToWav, encodeWAV } from '../utils/wav';
-import lamejs from 'lamejs';
+import { convertToWav } from '../utils/wav';
 
 const noop = () => {};
 const noop1 = (x: any) => {};
@@ -309,60 +306,6 @@ export function useWaveSurfer(
       inputRegionsRef.current = undefined;
     }
   };
-  function encodeMono(
-    channels: number,
-    sampleRate: number,
-    samples: Int16Array
-  ) {
-    var mp3Data = [];
-
-    var mp3encoder = new lamejs.Mp3Encoder(1, 44100, 128);
-    var mp3Tmp = mp3encoder.encodeBuffer(samples); //encode mp3
-
-    //Push encode buffer to mp3Data variable
-    mp3Data.push(mp3Tmp);
-
-    // Get end part of mp3
-    mp3Tmp = mp3encoder.flush();
-
-    // Write last data to the output data, too
-    // mp3Data contains now the complete mp3Data
-    mp3Data.push(mp3Tmp);
-
-    console.debug(mp3Data);
-    /*
-    var buffer = [];
-    var remaining = samples.length;
-    var maxSamples = 1152;
-    for (var i = 0; remaining >= maxSamples; i += maxSamples) {
-      var mono = samples.subarray(i, i + maxSamples);
-      var mp3buf = mp3enc.encodeBuffer(mono);
-      if (mp3buf.length > 0) {
-        buffer.push(new Int8Array(mp3buf));
-      }
-      remaining -= maxSamples;
-    }
-    var d = mp3enc.flush();
-    if (d.length > 0) {
-      buffer.push(new Int8Array(d));
-    }
-*/
-    console.log('done encoding, size=', mp3Data.length);
-    var blob = new Blob(mp3Data, { type: 'audio/mp3' });
-    return blob;
-  }
-  const interleave = (left: any, right: any) => {
-    if (right) {
-      const interleaved = new Int16Array(left.length + right.length);
-      for (let src = 0, dst = 0; src < left.length; src++, dst += 2) {
-        interleaved[dst] = left[src];
-        interleaved[dst + 1] = right[src];
-      }
-      return interleaved;
-    } else {
-      return left;
-    }
-  };
   const wsBlob = async () => {
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend?.buffer;
@@ -378,17 +321,12 @@ export function useWaveSurfer(
           channels = 1;
         }
       }
-      /*
       var wavblob = await convertToWav(data_left, data_right, {
         isFloat: true, // floating point or 16-bit integer (WebAudio API decodes to Float32Array) ???
         numChannels: channels,
         sampleRate: originalBuffer.sampleRate,
       });
-      return wavblob */
-      let dataview = encodeWAV(1, originalBuffer.sampleRate, data_left);
-      let mp3 = new Blob([dataview], { type: 'audio/mp3' });
-      //var mp3 = encodeMono(channels, originalBuffer.sampleRate, samples);
-      return mp3;
+      return wavblob;
     }
     return undefined;
   };
