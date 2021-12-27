@@ -595,7 +595,7 @@ export function ScriptureTable(props: IProps) {
       ) as Passage;
       var tmp =
         (passageRec.attributes.book || '') + passageRec.attributes.reference;
-      tmp += (tmp.length ? '_' : '') + passageRec.id.slice(0, 4);
+      tmp += tmp.length ? '_' : passageRec.id.slice(0, 4);
       if (wf.mediaId) {
         var mediaRec = memory.cache.query((q) =>
           q.findRecord(wf.mediaId as RecordIdentity)
