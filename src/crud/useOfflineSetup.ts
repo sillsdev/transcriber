@@ -120,7 +120,6 @@ export const useOfflineSetup = () => {
         { name: 'Record', tool: 'Record' },
         { name: 'TeamCheck', tool: 'TeamCheck' },
         { name: 'PeerReview', tool: 'audio' },
-        { name: 'KeyTerms', tool: 'audio' },
         { name: 'CommunityTesting', tool: 'audio' },
         { name: 'BackTranslation', tool: 'BackTranslate' },
         { name: 'ConsultantCheck', tool: 'audio' },
