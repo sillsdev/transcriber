@@ -595,12 +595,12 @@ export function ScriptureTable(props: IProps) {
       ) as Passage;
       var tmp =
         (passageRec.attributes.book || '') + passageRec.attributes.reference;
-      tmp += tmp.length ? '_' : passageRec.id.slice(0, 4);
+      if (!tmp.length) tmp = passageRec.id.slice(0, 4);
       if (wf.mediaId) {
         var mediaRec = memory.cache.query((q) =>
           q.findRecord(wf.mediaId as RecordIdentity)
         ) as MediaFile;
-        tmp += 'v' + (mediaRec.attributes.versionNumber + 1).toString();
+        tmp += '_v' + (mediaRec.attributes.versionNumber + 1).toString();
       }
       setDefaultFilename(cleanFileName(tmp));
     }
