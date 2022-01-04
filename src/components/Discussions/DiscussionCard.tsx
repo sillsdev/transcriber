@@ -278,11 +278,14 @@ export const DiscussionCard = (props: IProps) => {
       var u = artifactcategorys.filter(
         (u) => related(discussion, 'artifactCategory') === u.id
       );
-      if (u.length > 0)
+      if (u.length > 0) {
         setArtifactCategory(
           localizedArtifactCategory(u[0].attributes.categoryname)
         );
+        return;
+      }
     }
+    setArtifactCategory('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [artifactcategorys, discussion]);
 
@@ -406,7 +409,6 @@ export const DiscussionCard = (props: IProps) => {
     setConfirmAction('');
   };
   const handleToggleCollapse = () => {
-    console.log('changing from', showComments);
     setShowComments(!showComments);
   };
   const handleSubjectChange = (e: any) => {
