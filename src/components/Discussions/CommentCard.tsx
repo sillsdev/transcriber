@@ -124,7 +124,8 @@ export const CommentCard = (props: IProps) => {
   const [lang] = useGlobal('lang');
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
-  const { setSelected, playItem } = useContext(PassageDetailContext).state;
+  const { setPlaying, setSelected, mediaPlaying, setMediaPlaying, playItem } =
+    useContext(PassageDetailContext).state;
   const [editing, setEditing] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
   const recordComment = useRecordComment({ doOrbitError });
@@ -181,10 +182,12 @@ export const CommentCard = (props: IProps) => {
     const recId = { type: 'mediafile', id: mediaId };
     return memory.cache.query((q: QueryBuilder) => q.findRecord(recId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [comment]);
+  }, [comment, mediaId]);
 
   const handlePlayComment = () => {
-    setSelected(mediaId);
+    setPlaying(false);
+    if (mediaId === playItem) setMediaPlaying(!mediaPlaying);
+    else setSelected(mediaId);
   };
 
   useEffect(() => {
@@ -207,7 +210,11 @@ export const CommentCard = (props: IProps) => {
             </Grid>
             {media && (
               <IconButton onClick={handlePlayComment}>
-                {mediaId === playItem ? <PauseIcon /> : <PlayIcon />}
+                {mediaId === playItem && mediaPlaying ? (
+                  <PauseIcon />
+                ) : (
+                  <PlayIcon />
+                )}
               </IconButton>
             )}
             <Grid item className={classes.column}>

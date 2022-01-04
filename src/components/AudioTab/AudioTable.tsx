@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { PlanContext } from '../../context/PlanContext';
@@ -33,11 +33,14 @@ interface IProps extends IStateProps {
   setRefresh: (refresh: boolean) => void;
   playItem: string;
   setPlayItem: (item: string) => void;
+  mediaPlaying: boolean;
+  setMediaPlaying: (playing: boolean) => void;
   onAttach?: (checks: number[], attach: boolean) => void;
 }
 export const AudioTable = (props: IProps) => {
   const { data, setRefresh, lang, auth, t } = props;
-  const { playItem, setPlayItem, onAttach } = props;
+  const { playItem, setPlayItem, mediaPlaying, setMediaPlaying, onAttach } =
+    props;
   const ctx = React.useContext(PlanContext);
   const { connected, readonly, shared } = ctx.state;
   const [memory] = useGlobal('memory');
@@ -175,9 +178,17 @@ export const AudioTable = (props: IProps) => {
   };
 
   const handleSelect = (id: string) => {
-    if (id === playItem) setPlayItem('');
-    else setPlayItem(id);
+    if (id === playItem) {
+      setMediaPlaying(!mediaPlaying);
+    } else {
+      setPlayItem(id);
+    }
   };
+  useEffect(() => {
+    //if I set playing when I set the mediaId, it plays a bit of the old
+    if (playItem) setMediaPlaying(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playItem]);
 
   const handleVerHistOpen = (passId: string) => () => {
     setVerHist(passId);
@@ -187,7 +198,7 @@ export const AudioTable = (props: IProps) => {
   };
 
   const playEnded = () => {
-    setPlayItem('');
+    setMediaPlaying(false);
   };
 
   interface ICell {
@@ -214,7 +225,7 @@ export const AudioTable = (props: IProps) => {
         attached={Boolean(row.passId)}
         onAttach={onAttach}
         onPlayStatus={handleSelect}
-        isPlaying={mediaId !== '' && playItem === mediaId}
+        isPlaying={playItem === mediaId && mediaPlaying}
       />
     </Table.Cell>
   );
@@ -343,7 +354,12 @@ export const AudioTable = (props: IProps) => {
           noResponse={handleActionRefused}
         />
       )}
-      <MediaPlayer auth={auth} srcMediaId={playItem} onEnded={playEnded} />
+      <MediaPlayer
+        auth={auth}
+        srcMediaId={playItem}
+        requestPlay={mediaPlaying}
+        onEnded={playEnded}
+      />
     </div>
   );
 };

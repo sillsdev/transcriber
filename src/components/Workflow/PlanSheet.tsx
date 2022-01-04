@@ -217,6 +217,7 @@ export function PlanSheet(props: IProps) {
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
   const [startSave] = useRemoteSave();
   const [srcMediaId, setSrcMediaId] = useState('');
+  const [mediaPlaying, setMediaPlaying] = useState(false);
   const [warning, setWarning] = useState<string>();
   const [active, setActive] = useState(-1);
   const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
@@ -301,7 +302,11 @@ export function PlanSheet(props: IProps) {
   };
 
   const handlePlayStatus = (mediaId: string) => {
-    setSrcMediaId(mediaId);
+    if (mediaId === srcMediaId) {
+      setMediaPlaying(!mediaPlaying);
+    } else {
+      setSrcMediaId(mediaId);
+    }
   };
 
   const handleTranscribe = (i: number) => () => {
@@ -530,8 +535,8 @@ export function PlanSheet(props: IProps) {
                           online={connected || offlineOnly}
                           readonly={readonly}
                           isPlaying={
-                            (rowInfo[rowIndex].mediaId?.id || '') !== '' &&
-                            srcMediaId === rowInfo[rowIndex].mediaId?.id
+                            srcMediaId === rowInfo[rowIndex].mediaId?.id &&
+                            mediaPlaying
                           }
                         />
                       ),
@@ -622,7 +627,12 @@ export function PlanSheet(props: IProps) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, rowInfo, bookCol, columns, srcMediaId, projRole]);
+  }, [rowData, rowInfo, bookCol, columns, srcMediaId, mediaPlaying, projRole]);
+
+  useEffect(() => {
+    //if I set playing when I set the mediaId, it plays a bit of the old
+    if (srcMediaId) setMediaPlaying(true);
+  }, [srcMediaId]);
 
   useEffect(() => {
     suggestionRef.current = bookSuggestions;
@@ -637,8 +647,9 @@ export function PlanSheet(props: IProps) {
   }, [doSave, busy, savingGrid]);
 
   const playEnded = () => {
-    setSrcMediaId('');
+    setMediaPlaying(false);
   };
+
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
@@ -776,7 +787,12 @@ export function PlanSheet(props: IProps) {
       ) : (
         <></>
       )}
-      <MediaPlayer auth={auth} srcMediaId={srcMediaId} onEnded={playEnded} />
+      <MediaPlayer
+        auth={auth}
+        srcMediaId={srcMediaId}
+        onEnded={playEnded}
+        requestPlay={mediaPlaying}
+      />
     </div>
   );
 }

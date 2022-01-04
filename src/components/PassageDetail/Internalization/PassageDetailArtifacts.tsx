@@ -70,7 +70,8 @@ export function PassageDetailArtifacts(props: IProps) {
     passage,
     setSelected,
     playItem,
-    setPlaying,
+    mediaPlaying,
+    setMediaPlaying,
     currentstep,
   } = ctx.state;
   const AddSectionResource = useSecResCreate(section);
@@ -93,9 +94,8 @@ export function PassageDetailArtifacts(props: IProps) {
   }, [artifactTypes]);
 
   const handlePlay = (id: string) => {
-    if (playItem !== '') {
-      setPlaying(false);
-    } else setSelected(id);
+    if (id === playItem) setMediaPlaying(!mediaPlaying);
+    else setSelected(id);
   };
 
   const handleDone = async (id: string, res: SectionResource | null) => {
@@ -201,7 +201,7 @@ export function PassageDetailArtifacts(props: IProps) {
               key={`item-${index}`}
               index={index}
               value={value as any}
-              playItem={playItem}
+              isPlaying={playItem === value.id && mediaPlaying}
               onPlay={handlePlay}
               onDone={handleDone}
               onDelete={handleDelete}

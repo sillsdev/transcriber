@@ -1,6 +1,6 @@
 import { IconButton } from '@material-ui/core';
 import PlayIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
+import PauseIcon from '@material-ui/icons/Pause';
 
 interface IProps {
   value: boolean;
@@ -16,6 +16,6 @@ const handlePlay =
 
 export const PlayButton = (props: IProps) => (
   <IconButton onClick={handlePlay(props)}>
-    {props.value ? <PlayIcon /> : <StopIcon />}
+    {props.value ? <PlayIcon /> : <PauseIcon />}
   </IconButton>
 );

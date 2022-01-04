@@ -13,11 +13,12 @@ interface IStateProps {
 interface IProps extends IStateProps {
   auth: Auth | null;
   srcMediaId: string;
+  requestPlay: boolean;
   onEnded: () => void;
 }
 
 export function MediaPlayer(props: IProps) {
-  const { auth, srcMediaId, onEnded, ts } = props;
+  const { auth, srcMediaId, requestPlay, onEnded, ts } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const audioRef = useRef<any>();
@@ -54,15 +55,22 @@ export function MediaPlayer(props: IProps) {
   }, [mediaState]);
 
   useEffect(() => {
-    if (ready && audioRef.current && !playing && playItem !== '') {
+    if (ready && audioRef.current && playItem !== '' && requestPlay) {
       setPlaying(true);
       audioRef.current.play();
+    } else if (!requestPlay) {
+      if (playing) {
+        audioRef.current.pause();
+        setPlaying(false);
+      }
     }
-  }, [ready, playing, playItem]);
+  }, [ready, requestPlay, playing, playItem]);
 
   const ended = () => {
+    audioRef.current.currentTime = 0;
     if (onEnded) onEnded();
   };
+
   return ready ? (
     <audio onEnded={ended} ref={audioRef} src={mediaState.url} />
   ) : (

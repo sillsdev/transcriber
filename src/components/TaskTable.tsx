@@ -5,7 +5,7 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import clsx from 'clsx';
 import { IconButton, Typography } from '@material-ui/core';
 import PlayIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
+import PauseIcon from '@material-ui/icons/Pause';
 import CloseIcon from '@material-ui/icons/Close';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import useTodo from '../context/useTodo';
@@ -246,7 +246,7 @@ export function TaskTable(props: IProps) {
     if (id !== playItem) {
       setPlayItem(id);
     } else {
-      setPlayItem('');
+      setPlaying(!playing);
     }
   };
 
@@ -386,6 +386,12 @@ export function TaskTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowData, playItem]);
 
+  useEffect(() => {
+    //if I set playing when I set the mediaId, it plays a bit of the old
+    if (playItem) setPlaying(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playItem]);
+
   interface ICell {
     value: any;
     style?: React.CSSProperties;
@@ -404,10 +410,10 @@ export function TaskTable(props: IProps) {
         aria-label={'audio-' + mediaId}
         color="primary"
         className={classes.link}
-        onClick={handlePlay(mediaId ? mediaId : '')}
+        onClick={handlePlay(mediaId || '')}
       >
-        {value === mediaId ? (
-          <StopIcon className={classes.playIcon} />
+        {value === mediaId && playing ? (
+          <PauseIcon className={classes.playIcon} />
         ) : (
           <PlayIcon className={classes.playIcon} />
         )}
@@ -451,7 +457,7 @@ export function TaskTable(props: IProps) {
     }
   };
   const playEnded = () => {
-    setPlayItem('');
+    setPlaying(false);
   };
 
   return (
@@ -504,7 +510,12 @@ export function TaskTable(props: IProps) {
           />
         </div>
       </div>
-      <MediaPlayer auth={auth} srcMediaId={playItem} onEnded={playEnded} />
+      <MediaPlayer
+        auth={auth}
+        srcMediaId={playItem}
+        requestPlay={playing}
+        onEnded={playEnded}
+      />
       <BigDialog
         title={tpb.integrationsTitle.replace('{0}', planName)}
         isOpen={openIntegration}

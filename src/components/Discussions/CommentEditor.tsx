@@ -1,11 +1,12 @@
 import { Button, TextField } from '@material-ui/core';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
 import MicIcon from '@material-ui/icons/MicOutlined';
 import { useGlobal } from 'reactn';
-import { useRemoteSave } from '../../utils';
+import { useRemoteSave, waitForIt } from '../../utils';
+import { PassageDetailContext } from '../../context/PassageDetailContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,11 +43,35 @@ interface IProps {
 
 export const CommentEditor = (props: IProps) => {
   const { comment, refresh, onOk, onCancel, onRecord } = props;
+  const { playing, mediaPlaying, setPlaying, setMediaPlaying } =
+    useContext(PassageDetailContext).state;
+
   const classes = useStyles();
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
   const [, saveCompleted] = useRemoteSave();
   const [curText, setCurText] = useState(comment);
+  const [doRecord, setDoRecord] = useState(false);
+
+  useEffect(() => {
+    if (doRecord)
+      try {
+        waitForIt(
+          'stop playing',
+          () => !playing && !mediaPlaying,
+          () => false,
+          100
+        ).then(() => {
+          onRecord();
+          setDoRecord(false);
+        });
+      } catch {
+        //do it anyway...
+        onRecord();
+        setDoRecord(false);
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doRecord, playing, mediaPlaying]);
 
   const handleTextChange = (e: any) => {
     setCurText(e.target.value);
@@ -62,7 +87,9 @@ export const CommentEditor = (props: IProps) => {
     setChanged(false);
   };
   const handleRecord = () => {
-    onRecord();
+    setPlaying(false);
+    setMediaPlaying(false);
+    setDoRecord(true);
   };
   useEffect(() => {
     if (refresh > 0) setCurText('');
