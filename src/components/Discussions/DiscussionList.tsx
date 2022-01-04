@@ -11,13 +11,7 @@ import QueryBuilder from '@orbit/data/dist/types/query-builder';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import {
-  getMediaInPlans,
-  related,
-  useArtifactType,
-  useRole,
-  useStepTool,
-} from '../../crud';
+import { getMediaInPlans, related, useArtifactType, useRole } from '../../crud';
 import {
   Discussion,
   IDiscussionListStrings,
@@ -90,7 +84,6 @@ export function DiscussionList(props: IProps) {
   const ctx = useContext(PassageDetailContext);
   const { currentstep, rowData, discussionSize, passage, getSegments } =
     ctx.state;
-  const tool = useStepTool(currentstep);
   const { getRoleRec } = useRole();
   const { vernacularId } = useArtifactType();
   const [rootWidthStyle, setRootWidthStyle] = useState({
