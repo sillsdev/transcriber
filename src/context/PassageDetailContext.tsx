@@ -25,7 +25,6 @@ import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
   useFetchMediaUrl,
-  MediaSt,
   remoteIdGuid,
   related,
   getAllMediaRecs,
@@ -135,16 +134,16 @@ const initState = {
   index: 0, //row index?
   selected: '',
   setSelected: (selected: string) => {},
-  playing: false,
+  playing: false, //vernacular in wavesurfer
   setPlaying: (playing: boolean) => {},
+  mediaPlaying: false, //resource or comment
+  setMediaPlaying: (playing: boolean) => {},
+  playItem: '', //resource or comment
   rowData: Array<IRow>(),
-  playItem: '',
   refresh: () => {},
   sharedStr: {} as ISharedStrings,
   mediafileId: '',
   loading: false,
-  hasUrl: false,
-  mediaUrl: '',
   audioBlob: undefined as Blob | undefined,
   pdBusy: false,
   setPDBusy: (pdBusy: boolean) => {},
@@ -262,17 +261,19 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         return { ...state, discussionSize };
       });
     };
-
+    //this is for the vernacular only
     const setPlaying = (playing: boolean) => {
-      const playItem = playing ? state.playItem : '';
-      const selected = playing ? state.selected : '';
       setState((state: ICtxState) => {
-        return { ...state, playing, selected, playItem };
+        return { ...state, playing: playing };
       });
     };
-
+    const setMediaPlaying = (mediaPlaying: boolean) => {
+      setState((state: ICtxState) => {
+        return { ...state, mediaPlaying };
+      });
+    };
     const handlePlayEnd = () => {
-      setPlaying(false);
+      setMediaPlaying(false);
     };
 
     const setPDBusy = (busy: boolean) => {
@@ -283,6 +284,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         };
       });
     };
+
     const getSharedResources = async () => {
       if (remote)
         return (await remote.query((q: QueryBuilder) =>
@@ -300,6 +302,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             index: -1,
             selected,
             playing: false,
+            mediaPlaying: false,
             playItem: '',
             loading: false,
           };
@@ -308,40 +311,46 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       }
       const r = rowData[i];
       if (state.index !== i || state.selected !== selected) {
-        // const remId =
-        //   remoteId('mediafile', selected, memory.keyMap) || selected;
-        // if (mediaId !== remId) {
-        //   view.current = `/work/${prjId}/${pasId}/${remId}`;
-        // }
-        setTrackedTask(selected);
         var resetBlob = false;
-        if (
-          mediaState.urlMediaId !== r.mediafile.id &&
-          fetching.current !== r.mediafile.id &&
-          !r.isResource &&
-          !r.isComment
-        ) {
-          fetching.current = r.mediafile.id;
-          fetchMediaUrl({
-            id: r.mediafile.id,
-            auth: props.auth,
+        //if this is a file that will be played in the wavesurfer..fetch it
+        if (!r.isResource && !r.isComment) {
+          if (
+            mediaState.urlMediaId !== r.mediafile.id &&
+            fetching.current !== r.mediafile.id
+          ) {
+            setTrackedTask(selected);
+            fetching.current = r.mediafile.id;
+            fetchMediaUrl({
+              id: r.mediafile.id,
+              auth: props.auth,
+            });
+            resetBlob = true;
+          }
+          setState((state: ICtxState) => {
+            return {
+              ...state,
+              audioBlob: resetBlob ? undefined : state.audioBlob,
+              index: i,
+              selected,
+              playing: false,
+              mediaPlaying: false,
+              loading: fetching.current !== '',
+            };
           });
-          resetBlob = true;
+        } else {
+          setState((state: ICtxState) => {
+            return {
+              ...state,
+              index: i,
+              selected,
+              playing: false, //going to play a comment or resource so turn off vernacular
+              playItem: r.mediafile.id,
+              mediaPlaying: false,
+            };
+          });
         }
-        setState((state: ICtxState) => {
-          return {
-            ...state,
-            audioBlob: resetBlob ? undefined : state.audioBlob,
-            index: i,
-            selected,
-            playing: false,
-            playItem: r.mediafile.id,
-            loading: fetching.current !== '',
-          };
-        });
       }
     };
-
     const showRecord = (
       defaultFilename: string,
       uploadItem: any,
@@ -524,6 +533,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       view.current = '';
       return <StickyRedirect to={target} />;
     }
+    useEffect(() => {
+      //if I set playing when I set the mediaId, it plays a bit of the old
+      if (state.playItem) setMediaPlaying(true);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state.playItem]);
 
     useEffect(() => {
       var wf: SimpleWf[] = [];
@@ -562,13 +576,12 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         value={{
           state: {
             ...state,
-            hasUrl: mediaState.status === MediaSt.FETCHED,
-            mediaUrl: mediaState.url,
             setSelected,
             setOrgWorkflowSteps,
             setCurrentStep,
             setDiscussionSize,
             setPlaying,
+            setMediaPlaying,
             setPDBusy,
             getSharedResources,
             showRecord,
@@ -585,6 +598,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           <MediaPlayer
             auth={auth}
             srcMediaId={state.playItem}
+            requestPlay={state.mediaPlaying}
             onEnded={handlePlayEnd}
           />
         )}

@@ -147,6 +147,7 @@ export function AudioTab(props: IProps) {
   const [complete, setComplete] = useGlobal('progress');
   const [autoMatch, setAutoMatch] = useState(false);
   const [playItem, setPlayItem] = useState('');
+  const [mediaPlaying, setMediaPlaying] = useState(false);
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
   const [planMedia, setPlanMedia] = useState<MediaFile[]>([]);
   const [uploadMedia, setUploadMedia] = useState<string>();
@@ -444,6 +445,8 @@ export function AudioTab(props: IProps) {
               setRefresh={setRefresh}
               playItem={playItem}
               setPlayItem={setPlayItem}
+              mediaPlaying={mediaPlaying}
+              setMediaPlaying={setMediaPlaying}
               onAttach={onAttach}
             />
             {attachVisible && (

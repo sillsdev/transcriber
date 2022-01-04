@@ -2590,7 +2590,7 @@
       </unit>
       <unit id="planActions.playpause">
          <segment>
-            <source>Play/Stop</source>
+            <source>Play/Pause</source>
          	<target>Jouer/Arrêter</target>
          </segment>
       </unit>

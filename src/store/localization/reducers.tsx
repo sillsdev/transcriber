@@ -674,7 +674,7 @@ const initialState = {
 			"passageDetail": "Passage Detail",
 			"resources": "Resources",
 			"launchAudacity": "Launch Audacity",
-			"playpause": "Play/Stop",
+			"playpause": "Play/Pause",
 			"recordAudio": "Record/Edit Audio",
 			"transcribe": "Transcribe",
 			"versions": "Versions",

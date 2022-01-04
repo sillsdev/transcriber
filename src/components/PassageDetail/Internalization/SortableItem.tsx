@@ -5,7 +5,7 @@ import { SectionResource } from '../../../model';
 
 interface IProps {
   value: IRow;
-  playItem: string;
+  isPlaying: boolean;
   onPlay: (id: string) => void;
   onDone: (id: string, res: SectionResource | null) => void;
   onEdit?: (id: string) => void;
@@ -13,18 +13,12 @@ interface IProps {
 }
 
 export const SortableItem = SortableElement(
-  ({ value, playItem, onPlay, onDone, onEdit, onDelete }: IProps) => (
+  ({ value, isPlaying, onPlay, onDone, onEdit, onDelete }: IProps) => (
     <TableRow
       value={
         {
           ...value,
-          playItem: (
-            <PlayButton
-              value={playItem !== value.id}
-              id={value.id}
-              cb={onPlay}
-            />
-          ),
+          playItem: <PlayButton value={!isPlaying} id={value.id} cb={onPlay} />,
           done: (
             <DoneButton
               value={value.done}

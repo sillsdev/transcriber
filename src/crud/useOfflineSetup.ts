@@ -116,18 +116,16 @@ export const useOfflineSetup = () => {
     if (offlineRecs.length === 0) {
       const t = new TransformBuilder();
       const ops = [
-        { name: 'Internalization', tool: 'Internalization' },
-        { name: 'Record', tool: 'Record' },
-        { name: 'TeamCheck', tool: 'TeamCheck' },
-        { name: 'PeerReview', tool: 'audio' },
-        { name: 'KeyTerms', tool: 'audio' },
-        { name: 'CommunityTesting', tool: 'audio' },
-        { name: 'BackTranslation', tool: 'BackTranslate' },
-        { name: 'ConsultantCheck', tool: 'audio' },
-        { name: 'Review', tool: 'audio' },
-        { name: 'FinalEdit', tool: 'audio' },
-        { name: 'ReadThrough', tool: 'audio' },
-        { name: 'Duplication', tool: 'audio' },
+        { name: 'Internalization', tool: 'resource' },
+        { name: 'Record', tool: 'record' },
+        { name: 'TeamCheck', tool: 'teamCheck' },
+        { name: 'PeerReview', tool: 'teamCheck' },
+        { name: 'CommunityTesting', tool: 'discuss' },
+        { name: 'BackTranslation', tool: 'segment' },
+        { name: 'ConsultantCheck', tool: 'discuss' },
+        { name: 'Review', tool: 'discuss' },
+        { name: 'FinalEdit', tool: 'discuss' },
+        { name: 'ReadThrough', tool: 'discuss' },
       ].map((step, ix) => {
         let rec = {
           type: 'workflowstep',

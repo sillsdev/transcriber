@@ -10,7 +10,7 @@ import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 //import AddIcon from '@material-ui/icons/AddCircleOutline';
 import AddIcon from '@material-ui/icons/LibraryAddOutlined';
 import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
-import StopIcon from '@material-ui/icons/Stop';
+import PauseIcon from '@material-ui/icons/Pause';
 import MicIcon from '@material-ui/icons/Mic';
 import SharedCheckbox from '@material-ui/icons/CheckBoxOutlined';
 import NotSharedCheckbox from '@material-ui/icons/CheckBoxOutlineBlankOutlined';
@@ -77,7 +77,7 @@ export function PlanAudioActions(props: IProps) {
   const [offlineOnly] = useGlobal('offlineOnly');
 
   const handlePlayStatus = () => () => {
-    onPlayStatus(isPlaying ? '' : mediaId);
+    onPlayStatus(mediaId);
   };
   const handleRecord = (index: number) => () => {
     onPlayStatus('');
@@ -139,7 +139,7 @@ export function PlanAudioActions(props: IProps) {
           disabled={(mediaId || '') === ''}
           onClick={handlePlayStatus()}
         >
-          {isPlaying ? <StopIcon /> : <PlayIcon />}
+          {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </IconButton>
       )}
     </div>

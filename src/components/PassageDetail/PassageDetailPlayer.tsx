@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
+import { PassageDetailContext } from '../../context/PassageDetailContext';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { IState } from '../../model';
 import WSAudioPlayer from '../WSAudioPlayer';
@@ -14,18 +15,17 @@ const INIT_PLAYER_HEIGHT = 280;
 export function PassageDetailPlayer(props: IProps) {
   const { loading, pdBusy, setPDBusy, audioBlob, setSegments, segments } =
     usePassageDetailContext();
+
+  const { playing, setPlaying } = useContext(PassageDetailContext).state;
+
   const [playerSize] = useState(INIT_PLAYER_HEIGHT);
-  const playingRef = useRef(false);
   const playedSecsRef = useRef<number>(0);
-  //do I care about this?
-  const { playing, setPlaying } = usePassageDetailContext();
 
   const onSegmentChange = (segments: string) => {
     setSegments(segments);
   };
   const onPlayStatus = (newPlaying: boolean) => {
     setPlaying(newPlaying);
-    playingRef.current = newPlaying;
   };
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
   const onInteraction = () => {
