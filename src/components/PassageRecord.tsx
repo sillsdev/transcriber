@@ -245,8 +245,6 @@ function PassageRecord(props: IProps) {
       q.findRecord({ type: 'mediafile', id: mediaId })
     ) as MediaFile;
     setName(removeExtension(mediaRec.attributes.originalFile).name);
-    var index = mimes.findIndex((m) => m === mediaRec.attributes.contentType);
-    if (index > -1) setFiletype(extensions[index]);
   };
 
   return (
