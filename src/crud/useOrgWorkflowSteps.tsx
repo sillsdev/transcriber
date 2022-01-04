@@ -1,12 +1,26 @@
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useGlobal, useRef } from 'reactn';
 import { related } from '.';
-import { OrgWorkflowStep, WorkflowStep } from '../model';
+import {
+  IState,
+  IWorkflowStepsStrings,
+  OrgWorkflowStep,
+  WorkflowStep,
+} from '../model';
 import { AddRecord } from '../model/baseModel';
-import { logError, Severity, waitForIt } from '../utils';
+import { logError, Severity, toCamel, waitForIt } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
+import { shallowEqual, useSelector } from 'react-redux';
+import localStrings from '../selector/localize';
 
+interface ISwitches {
+  [key: string]: any;
+}
 export const useOrgWorkflowSteps = () => {
+  const wfStepsSelector = (state: IState) =>
+    localStrings(state as IState, { layout: 'workflowSteps' });
+  const t: IWorkflowStepsStrings = useSelector(wfStepsSelector, shallowEqual);
+
   const [global] = useGlobal();
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
@@ -16,6 +30,20 @@ export const useOrgWorkflowSteps = () => {
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const creatingRef = useRef(false);
+
+  const localizedWorkStep = (val: string) => {
+    return (t as ISwitches)[toCamel(val)] || val;
+  };
+  const localizedWorkStepFromId = (id: string) => {
+    try {
+      var step = memory.cache.query((q: QueryBuilder) =>
+        q.findRecord({ type: 'orgworkflowstep', id: id })
+      ) as OrgWorkflowStep;
+      return localizedWorkStep(step.attributes.name);
+    } catch {
+      return '';
+    }
+  };
 
   const AddOrgWFToOps = async (
     t: TransformBuilder,
@@ -101,5 +129,5 @@ export const useOrgWorkflowSteps = () => {
     return orgsteps.filter((s) => showAll || s.attributes.sequencenum >= 0);
   };
 
-  return { GetOrgWorkflowSteps };
+  return { GetOrgWorkflowSteps, localizedWorkStepFromId, localizedWorkStep };
 };

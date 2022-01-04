@@ -155,7 +155,7 @@ export function DiscussionList(props: IProps) {
 
   useEffect(() => {
     if (currentstep !== '') {
-      if (adding)
+      if (adding) {
         setDisplayDiscussions([
           {
             type: 'discussion',
@@ -164,7 +164,7 @@ export function DiscussionList(props: IProps) {
             },
           } as any as Discussion,
         ]);
-      else
+      } else {
         setDisplayDiscussions(
           discussions
             .filter(
@@ -184,6 +184,7 @@ export function DiscussionList(props: IProps) {
               x.attributes.dateCreated < y.attributes.dateCreated ? -1 : 1
             )
         );
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussions, currentstep, adding, filterState]);
@@ -195,13 +196,6 @@ export function DiscussionList(props: IProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentstep]);
-
-  useEffect(() => {
-    if (tool !== '') {
-      setFilterState({ ...filterState, allPassages: tool === 'keyTerms' });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tool]);
 
   const handleAddComplete = () => {
     setAdding(false);
@@ -240,7 +234,6 @@ export function DiscussionList(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [displayDiscussions, discussions]
   );
-
   return (
     <Paper id="DiscussionList" className={classes.root} style={rootWidthStyle}>
       <div className={classes.discussionHead}>
@@ -279,6 +272,8 @@ export function DiscussionList(props: IProps) {
             discussion={i}
             collapsed={collapsed}
             onAddComplete={adding ? handleAddComplete : undefined}
+            showStep={allSteps}
+            showReference={allPassages}
           />
         ))}
       </Grid>
