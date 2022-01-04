@@ -147,6 +147,8 @@ export const CommentCard = (props: IProps) => {
         id: comment.id,
       })
     );
+    setEditing(false);
+    onEditing(false);
   };
 
   const handleActionConfirmed = () => {
