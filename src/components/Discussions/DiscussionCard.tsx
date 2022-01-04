@@ -23,6 +23,9 @@ import {
   ISharedStrings,
   ArtifactCategory,
   RoleNames,
+  Section,
+  Plan,
+  Passage,
 } from '../../model';
 import ResolveIcon from '@material-ui/icons/Check';
 import HideIcon from '@material-ui/icons/ArrowDropUp';
@@ -51,6 +54,7 @@ import SelectArtifactCategory from '../Workflow/SelectArtifactCategory';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { removeExtension, useRemoteSave, waitForIt } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
+import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -151,6 +155,9 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IRecordProps {
   comments: Array<Comment>;
   mediafiles: Array<MediaFile>;
+  sections: Array<Section>;
+  passages: Array<Passage>;
+  plans: Array<Plan>;
   artifactcategorys: Array<ArtifactCategory>;
   roles: Array<Role>;
   users: Array<User>;
@@ -162,6 +169,8 @@ interface IStateProps {
 interface IProps extends IRecordProps, IStateProps {
   discussion: Discussion;
   collapsed: boolean;
+  showStep: boolean;
+  showReference: boolean;
   onAddComplete?: () => {};
 }
 
@@ -172,9 +181,14 @@ export const DiscussionCard = (props: IProps) => {
     ts,
     discussion,
     collapsed,
+    showStep,
+    showReference,
     onAddComplete,
     comments,
     mediafiles,
+    sections,
+    passages,
+    plans,
     artifactcategorys,
     roles,
     users,
@@ -189,6 +203,8 @@ export const DiscussionCard = (props: IProps) => {
   const [myComments, setMyComments] = useState<Comment[]>([]);
   const [showComments, setShowComments] = useState(true);
   const [artifactCategory, setArtifactCategory] = useState('');
+  const [step, setStep] = useState('');
+  const [reference, setReference] = useState('');
   const [assignedRole, setAssignedRole] = useState<Role>();
   const [assignedUser, setAssignedUser] = useState<User>();
   const [sourceMediafile, setSourceMediafile] = useState<MediaFile>();
@@ -199,13 +215,15 @@ export const DiscussionCard = (props: IProps) => {
   const [changed, setChanged] = useState(false);
   const [doSave] = useGlobal('doSave');
   const [, saveCompleted] = useRemoteSave();
-  const [editSubject, setEditSubject] = useState('');
+  const [editSubject, setEditSubject] = useState(
+    discussion.attributes?.subject
+  );
   const [editRole, setEditRole] = useState<string>('');
   const [editUser, setEditUser] = useState<string>('');
   const [editCategory, setEditCategory] = useState('');
   const [editCard, setEditCard] = useState(false);
   const { localizedArtifactCategory } = useArtifactCategory();
-
+  const { localizedWorkStepFromId } = useOrgWorkflowSteps();
   const handleSelect = (discussion: Discussion) => () => {
     selectDiscussion(discussion);
   };
@@ -267,6 +285,34 @@ export const DiscussionCard = (props: IProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [artifactcategorys, discussion]);
+
+  useEffect(() => {
+    if (showStep && discussion.relationships?.orgWorkflowStep) {
+      setStep(localizedWorkStepFromId(related(discussion, 'orgWorkflowStep')));
+    } else setStep('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [discussion, showStep]);
+
+  useEffect(() => {
+    if (showReference && discussion.relationships?.mediafile) {
+      const mediaId = related(discussion, 'mediafile');
+      const mediaRec = mediafiles.find((m) => m.id === mediaId);
+      const passageRec = passages.find(
+        (p) => p.id === related(mediaRec, 'passage')
+      );
+      const sectionRec = sections.find(
+        (s) => s.id === related(passageRec, 'section')
+      );
+      const planRec = plans.find(
+        (s) => s.id === related(sectionRec, 'plan')
+      ) as Plan;
+      setReference(
+        `${planRec.attributes.name} ${sectionRec?.attributes.sequencenum}.${passageRec?.attributes.sequencenum} ${passageRec?.attributes.reference}`
+      );
+    } else setReference('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [discussion, showReference]);
+
   useEffect(() => {
     setEditing(onAddComplete !== undefined);
     if (onAddComplete) setEditSubject(discussion.attributes?.subject);
@@ -576,6 +622,12 @@ export const DiscussionCard = (props: IProps) => {
                 label={t.category.replace('{0}', artifactCategory)}
               />
             )}
+            {step && <Chip size="small" label={step} />}
+            {reference && (
+              <Typography variant="body2" component="p">
+                {reference}
+              </Typography>
+            )}
             <IconButton
               id="collapseDiscussion"
               className={classes.smallButton}
@@ -615,6 +667,9 @@ export const DiscussionCard = (props: IProps) => {
 const mapRecordsToProps = {
   comments: (q: QueryBuilder) => q.findRecords('comment'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  sections: (q: QueryBuilder) => q.findRecords('section'),
+  passages: (q: QueryBuilder) => q.findRecords('passage'),
+  plans: (q: QueryBuilder) => q.findRecords('plan'),
   artifactcategorys: (q: QueryBuilder) => q.findRecords('artifactcategory'),
   roles: (q: QueryBuilder) => q.findRecords('role'),
   users: (q: QueryBuilder) => q.findRecords('user'),

@@ -408,10 +408,13 @@ function WSAudioPlayer(props: IProps) {
       segmentsRef.current = segments;
       if (ready) {
         wsLoadRegions(segments);
-        const regions = JSON.parse(segments)?.regions;
+        var regions = JSON.parse(segments)?.regions;
         if (regions) {
-          const start = JSON.parse(regions)[0].start;
-          wsGoto(start);
+          regions = JSON.parse(regions);
+          if (Array.isArray(regions) && regions.length) {
+            const start = regions[0].start;
+            wsGoto(start);
+          }
         }
       }
     }
