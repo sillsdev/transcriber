@@ -213,7 +213,7 @@ export function UserTable(props: IProps) {
   const handleDeleteConfirmed = () => {
     const deleteRec = getUserRec(deleteItem);
     RemoveUserFromOrg(memory, deleteRec, organization, user, teamDelete);
-
+    localStorage.setItem(localUserKey(LocalKey.deeplink, memory), '/');
     setDeleteItem('');
   };
 
