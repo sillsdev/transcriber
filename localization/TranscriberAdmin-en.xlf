@@ -90,7 +90,7 @@
       </unit>
       <unit id="access.title">
          <segment>
-            <source>User List</source>
+            <source>Connection Mode</source>
             <target/>
          </segment>
       </unit>
@@ -2334,7 +2334,7 @@
       </unit>
       <unit id="main.switchUser">
          <segment>
-            <source>Switch User</source>
+            <source>Switch Mode or User</source>
             <target/>
          </segment>
       </unit>
