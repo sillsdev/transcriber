@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import usePassageDetailContext from '../../context/usePassageDetailContext';

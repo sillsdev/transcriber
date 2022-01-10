@@ -41,6 +41,8 @@ import {
   useLoadProjectData,
   SetUserLanguage,
   useOfflineSetup,
+  useRole,
+  useProjectType,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -135,6 +137,8 @@ export function Loading(props: IProps) {
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [loadComplete, setLoadComplete] = useGlobal('loadComplete');
   const [isDeveloper] = useGlobal('developer');
+  const [, setPlan] = useGlobal('plan');
+  const [, setOrganization] = useGlobal('organization');
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [, setCompleted] = useGlobal('progress');
   const { showMessage } = useSnackBar();
@@ -146,6 +150,8 @@ export function Loading(props: IProps) {
   const [syncComplete, setSyncComplete] = useState(false);
   const [, setBusy] = useGlobal('importexportBusy');
   const offlineSetup = useOfflineSetup();
+  const { setMyProjRole } = useRole();
+  const { setProjectType } = useProjectType();
   const LoadProjData = useLoadProjectData(
     auth,
     t,
@@ -308,9 +314,10 @@ export function Loading(props: IProps) {
     }
     let fromUrl = getGotoUrl();
 
-    if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
+    if (fromUrl && !/^\/profile|^\/work|^\/plan|^\/detail/.test(fromUrl))
+      fromUrl = null;
     if (fromUrl) {
-      const m = /^\/[workplan]+\/([0-9a-f-]+)/.exec(fromUrl);
+      const m = /^\/[workplandetail]+\/([0-9a-f-]+)/.exec(fromUrl);
       if (m) {
         const planId = remoteIdGuid('plan', m[1], memory.keyMap) || m[1];
         const planRec = getPlan(planId);
@@ -318,7 +325,19 @@ export function Loading(props: IProps) {
           const oProjRec = planRec && getOfflineProject(planRec);
           if (!oProjRec?.attributes?.offlineAvailable) fromUrl = null;
         } else {
-          LoadProjData(related(planRec, 'project'));
+          const projectId = related(planRec, 'project') as string;
+          LoadProjData(projectId, () => {
+            setPlan(planId);
+            setProjectType(projectId);
+            setMyProjRole(projectId);
+          });
+          const projRec = memory.cache.query((q: QueryBuilder) =>
+            q.findRecord({ type: 'project', id: projectId })
+          );
+          if (projRec) {
+            const orgId = related(projRec, 'organization') as string;
+            setOrganization(orgId);
+          }
         }
       } else if (!/^\/profile/.test(fromUrl)) fromUrl = null;
     }
