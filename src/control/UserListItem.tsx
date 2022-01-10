@@ -1,8 +1,22 @@
 import React from 'react';
 import { User } from '../model';
-import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import {
+  Button,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import UserAvatar from '../components/UserAvatar';
 import { useOfflineTeamList } from '../crud';
+
+const useStyles = makeStyles({
+  button: {
+    '& .MuiTypography-root': {
+      textTransform: 'none',
+    },
+  },
+});
 
 interface IProps {
   u: User;
@@ -12,6 +26,7 @@ interface IProps {
 }
 export const UserListItem = (props: IProps) => {
   const { u, users, onSelect, showTeams } = props;
+  const classes = useStyles();
   const teams = useOfflineTeamList();
 
   const handleSelect = (user: string) => () => {
@@ -19,7 +34,7 @@ export const UserListItem = (props: IProps) => {
   };
 
   const ItemContent = () => (
-    <>
+    <Button variant="outlined" className={classes.button}>
       <ListItemIcon>
         <UserAvatar {...props} users={users} userRec={u} />
       </ListItemIcon>
@@ -27,7 +42,7 @@ export const UserListItem = (props: IProps) => {
         primary={u?.attributes?.name || ''}
         secondary={showTeams ? teams(u) : ''}
       />
-    </>
+    </Button>
   );
 
   return onSelect ? (

@@ -87,8 +87,8 @@
       </unit>
       <unit id="access.title">
          <segment>
-            <source>User List</source>
-            <target>Liste d'utilisateur</target>
+            <source>Connection Mode</source>
+         	<target>Mode de connexion</target>
          </segment>
       </unit>
       <unit id="activityState.approved">
@@ -1990,8 +1990,8 @@
       </unit>
       <unit id="main.switchUser">
          <segment>
-            <source>Switch User</source>
-            <target>Changer d'utilisateur</target>
+            <source>Switch Mode or User</source>
+         	<target>Changement de mode ou d'utilisateur</target>
          </segment>
       </unit>
       <unit id="main.tasks">

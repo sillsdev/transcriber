@@ -101,7 +101,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="access.title">
-            <source>User List</source>
+            <source>Connection Mode</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">access.tsx</context>
@@ -2722,7 +2722,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.switchUser">
-            <source>Switch User</source>
+            <source>Switch Mode or User</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TokenCheck.tsx</context>

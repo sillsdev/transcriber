@@ -22,7 +22,7 @@ const initialState = {
 			"noOnlineUsers3": "To create an online audio project for working alone:",
 			"noOnlineUsers4": "Create a personal audio project.",
 			"offlineUsers": "Offline Users",
-			"title": "User List",
+			"title": "Connection Mode",
 		}
 	}),
 	"activityState": new LocalizedStrings({
@@ -516,7 +516,7 @@ const initialState = {
 			"sessionExpiring": "Session Expiring",
 			"settings": "Settings",
 			"switchTo": "Switch to:",
-			"switchUser": "Switch User",
+			"switchUser": "Switch Mode or User",
 			"tasks": "Tasks",
 			"team": "Team",
 			"terms": "Terms of Use",
