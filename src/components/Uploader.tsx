@@ -91,7 +91,7 @@ export const Uploader = (props: IProps) => {
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline');
   const planIdRef = useRef<string>(plan);
   const successCount = useRef<number>(0);
   const fileList = useRef<File[]>();
@@ -192,7 +192,7 @@ export const Uploader = (props: IProps) => {
     const next = n + 1;
     if (next < uploadList.length && !status.canceled) {
       doUpload(next);
-    } else if (!offlineOnly) {
+    } else if (!offline) {
       pullPlanMedia().then(() => finishMessage());
     } else {
       finishMessage();
@@ -214,7 +214,7 @@ export const Uploader = (props: IProps) => {
       uploadList,
       currentlyLoading,
       authRef.current,
-      offlineOnly,
+      offline,
       errorReporter,
       itemComplete
     );

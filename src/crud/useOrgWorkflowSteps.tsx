@@ -124,7 +124,10 @@ export const useOrgWorkflowSteps = () => {
       );
     var orgsteps = await QueryOrgWorkflowSteps(process, org);
     if (orgsteps.length === 0) {
-      orgsteps = await CreateOrgWorkflowSteps(process, org);
+      orgsteps = await CreateOrgWorkflowSteps(
+        process === 'ANY' ? 'OBT' : process,
+        org
+      );
     }
     return orgsteps.filter((s) => showAll || s.attributes.sequencenum >= 0);
   };

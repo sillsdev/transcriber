@@ -68,3 +68,4 @@ export * from './useSecResUserRead';
 export * from './useSecResUserDelete';
 export * from './useTools';
 export * from './useStepTool';
+export * from './tryFindRecord';

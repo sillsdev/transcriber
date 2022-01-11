@@ -25,6 +25,7 @@ export interface MediaFile extends BaseModel {
     readyToShare: boolean;
     performedBy: string | null;
     resourcePassageId: number | null;
+    offlineId: string;
   };
   relationships?: {
     passage: RecordRelationship;

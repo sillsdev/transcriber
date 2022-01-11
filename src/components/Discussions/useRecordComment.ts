@@ -2,10 +2,10 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { related, remoteIdGuid, useArtifactType } from '../../crud';
+import { findRecord, related, remoteIdGuid, useArtifactType } from '../../crud';
 import { Discussion, Comment, MediaFile } from '../../model';
 import * as actions from '../../store';
-import { AddRecord } from '../../model/baseModel';
+import { AddRecord, UpdateRelatedRecord } from '../../model/baseModel';
 import { cleanFileName, orbitErr } from '../../utils';
 
 interface IDispatchProps {
@@ -31,7 +31,7 @@ export const useRecordComment = ({ doOrbitError }: IProps) => {
 
   const attachNewCommentMedia = async (
     discussion: Discussion,
-    mediaRemId?: string[]
+    mediafile: MediaFile
   ) => {
     const comment: Comment = {
       type: 'comment',
@@ -44,16 +44,38 @@ export const useRecordComment = ({ doOrbitError }: IProps) => {
       ...AddRecord(t, comment, user, memory),
       t.replaceRelatedRecord(comment, 'discussion', discussion),
     ];
-    if (mediaRemId && mediaRemId.length > 0) {
-      const id =
-        remoteIdGuid('mediafile', mediaRemId[0], memory.keyMap) ||
-        mediaRemId[0];
-      const recId = { type: 'mediafile', id };
-      ops.push(t.replaceRelatedRecord(comment, 'mediafile', recId));
-      const cmtRecId = { type: 'artifacttype', id: commentId };
-      ops.push(t.replaceRelatedRecord(recId, 'artifactType', cmtRecId));
-      const passRecId = getPassRec(discussion, id);
-      ops.push(t.replaceRelatedRecord(recId, 'passage', passRecId));
+    if (mediafile) {
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          comment,
+          'mediafile',
+          'mediafile',
+          mediafile.id,
+          user
+        )
+      );
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          mediafile,
+          'artifactType',
+          'artifacttype',
+          commentId,
+          user
+        )
+      );
+      const passRecId = getPassRec(discussion, mediafile.id);
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          mediafile,
+          'passage',
+          'passage',
+          passRecId.id,
+          user
+        )
+      );
     }
     await memory.update(ops);
   };
@@ -61,20 +83,42 @@ export const useRecordComment = ({ doOrbitError }: IProps) => {
   const updateCommentMedia = async (
     discussion: Discussion,
     comment: Comment,
-    mediaRemId?: string[]
+    mediafile: MediaFile
   ) => {
     const t = new TransformBuilder();
-    if (mediaRemId && mediaRemId.length > 0) {
+    if (mediafile) {
       const ops = [];
-      const id =
-        remoteIdGuid('mediafile', mediaRemId[0], memory.keyMap) ||
-        mediaRemId[0];
-      const recId = { type: 'mediafile', id };
-      ops.push(t.replaceRelatedRecord(comment, 'mediafile', recId));
-      const cmtRecId = { type: 'artifacttype', id: commentId };
-      ops.push(t.replaceRelatedRecord(recId, 'artifactType', cmtRecId));
-      const passRecId = getPassRec(discussion, id);
-      ops.push(t.replaceRelatedRecord(recId, 'passage', passRecId));
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          comment,
+          'mediafile',
+          'mediafile',
+          mediafile.id,
+          user
+        )
+      );
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          mediafile,
+          'artifactType',
+          'artifacttype',
+          commentId,
+          user
+        )
+      );
+      const passRecId = getPassRec(discussion, mediafile.id);
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          mediafile,
+          'passage',
+          'passage',
+          passRecId.id,
+          user
+        )
+      );
       await memory.update(ops);
     }
   };
@@ -89,22 +133,29 @@ export const useRecordComment = ({ doOrbitError }: IProps) => {
       discussion.attributes?.subject
     )}${discussion.id.slice(0, 4)}-${number}`;
     showRecord(name, '', (planId: string, mediaRemId?: string[]) => {
-      if (comment) {
-        updateCommentMedia(discussion, comment, mediaRemId)
-          .then(() => {
-            cb && cb();
-          })
-          .catch((err: Error) => {
-            doOrbitError(orbitErr(err, 'attach comment media'));
-          });
-      } else {
-        attachNewCommentMedia(discussion, mediaRemId)
-          .then(() => {
-            cb && cb();
-          })
-          .catch((err: Error) => {
-            doOrbitError(orbitErr(err, 'attach comment media'));
-          });
+      if (mediaRemId && mediaRemId.length > 0) {
+        const id =
+          remoteIdGuid('mediafile', mediaRemId[0], memory.keyMap) ||
+          mediaRemId[0];
+        const mediafile = findRecord(memory, 'mediafile', id) as MediaFile;
+
+        if (comment) {
+          updateCommentMedia(discussion, comment, mediafile)
+            .then(() => {
+              cb && cb();
+            })
+            .catch((err: Error) => {
+              doOrbitError(orbitErr(err, 'attach comment media'));
+            });
+        } else {
+          attachNewCommentMedia(discussion, mediafile)
+            .then(() => {
+              cb && cb();
+            })
+            .catch((err: Error) => {
+              doOrbitError(orbitErr(err, 'attach comment media'));
+            });
+        }
       }
     });
   };

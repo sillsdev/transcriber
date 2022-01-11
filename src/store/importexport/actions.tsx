@@ -135,7 +135,7 @@ export const exportProject =
                 dispatch({
                   payload: pendingmsg.replace(
                     '{0}',
-                    Math.round((start / (numberOfMedia + 10)) * 100).toString()
+                    Math.round((start / (numberOfMedia + 15)) * 100).toString()
                   ),
                   type: EXPORT_PENDING,
                 });

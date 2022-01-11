@@ -281,6 +281,13 @@ export function TranscriptionTab(props: IProps) {
       setBusy(false);
       return;
     }
+    /* get correct count */
+    media = getMediaInPlans(
+      projectplans.map((p) => p.id),
+      mediaFiles,
+      undefined,
+      false
+    );
     exportProject(
       exportType,
       memory,
