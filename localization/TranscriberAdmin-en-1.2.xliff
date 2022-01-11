@@ -3449,6 +3449,13 @@
                <context context-type="sourcefile">passageRecord.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="passageRecord.compressing">
+            <source>Compressing...{0}%</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="passageRecord.defaultFilename">
             <source>MyRecording</source>
             <target/>
@@ -3492,7 +3499,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="passageRecord.saving">
-            <source>Saving... {0}%</source>
+            <source>Saving...</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageRecord.tsx</context>

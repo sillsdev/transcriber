@@ -40,7 +40,7 @@ const convertBlobReducers = function (
         complete: true,
         blob: action.payload,
         errmsg: '',
-        statusmsg: 'success',
+        statusmsg: '',
       };
     case CONVERT_BLOB_FAILED:
       return {

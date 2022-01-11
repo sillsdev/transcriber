@@ -26,7 +26,6 @@
 /* jshint onevar: false, white: false, laxbreak: true */
 
 ( function( global ) {
-  'use strict';
 
 	/**
 	 * Worker proxy implementing communication between worker and website
@@ -36,7 +35,6 @@
 	global.EmsWorkerProxy = {
 		init: function() {
 			global.onmessage = function( e ) {
-        console.log(e.data.command)
 				switch ( e.data.command ) {
 					case 'ping':
 						global.postMessage( { reply: 'pong' } );
@@ -45,7 +43,6 @@
 						if ( !global.OpusEncoder )  {
 							importScripts( 'OpusEncoder.js' );
 						}
-            console.log('calling opusEncoder')
 						OpusEncoder.encode( e.data );
 						break;
 					case 'prefetch':
