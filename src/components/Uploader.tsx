@@ -204,6 +204,7 @@ export const Uploader = (props: IProps) => {
     if (!uploadList) return; // This should never happen
     const mediaFile = {
       planId: getPlanId(),
+      versionNumber: 1,
       originalFile: uploadList[currentlyLoading].name,
       contentType: uploadList[currentlyLoading].type,
       artifactTypeId: getArtifactTypeId(),
