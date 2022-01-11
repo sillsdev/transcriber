@@ -2826,8 +2826,8 @@
                <context context-type="sourcefile">MediaActions.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaActions.stop">
-            <source>Stop</source>
+         <trans-unit id="mediaActions.pause">
+            <source>Pause</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaActions.tsx</context>
@@ -6131,8 +6131,8 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="wsAudioPlayer.stop">
-            <source>Stop [{0}]</source>
+         <trans-unit id="wsAudioPlayer.pause">
+            <source>Pause [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

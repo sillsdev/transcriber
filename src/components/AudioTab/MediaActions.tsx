@@ -78,7 +78,7 @@ export function MediaActions(props: IProps) {
         <IconButton
           id="audActPlayStop"
           className={classes.actionButton}
-          title={isPlaying ? t.stop : t.play}
+          title={isPlaying ? t.pause : t.play}
           disabled={(mediaId || '') === ''}
           onClick={handlePlayStatus}
         >
