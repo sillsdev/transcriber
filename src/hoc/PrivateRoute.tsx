@@ -11,7 +11,6 @@ interface IProps extends RouteProps {
 
 export function PrivateRoute({ auth, children, ...rest }: IProps) {
   const [offline] = useGlobal('offline');
-  const [memory] = useGlobal('memory');
   return (
     <Route
       {...rest}
@@ -19,9 +18,10 @@ export function PrivateRoute({ auth, children, ...rest }: IProps) {
         if (offline || auth.isAuthenticated()) return children;
         if (typeof location?.pathname === 'string')
           localStorage.setItem(
-            localUserKey(LocalKey.deeplink, memory),
+            localUserKey(LocalKey.deeplink),
             location?.pathname
           );
+        localStorage.setItem(localUserKey(LocalKey.url), location?.pathname);
         return (
           <Redirect
             to={{

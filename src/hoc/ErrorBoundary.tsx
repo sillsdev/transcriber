@@ -218,8 +218,7 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
   }
 
   private continue() {
-    const { memory } = this.props;
-    var deeplink = localStorage.getItem(localUserKey(LocalKey.url, memory));
+    var deeplink = localStorage.getItem(localUserKey(LocalKey.url));
     if (!deeplink || deeplink === 'loading') deeplink = '/';
     this.cleanUpAndGo(deeplink);
   }

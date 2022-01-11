@@ -287,12 +287,12 @@ export function Loading(props: IProps) {
   }, [doSync, importOpen, setBusy]);
 
   const getGotoUrl = () => {
-    let fromUrl = localStorage.getItem(localUserKey(LocalKey.deeplink, memory));
+    let fromUrl = localStorage.getItem(localUserKey(LocalKey.url));
     if (fromUrl) {
-      localStorage.removeItem(localUserKey(LocalKey.deeplink, memory));
+      localStorage.removeItem(localUserKey(LocalKey.deeplink));
       return fromUrl;
     }
-    return localStorage.getItem(localUserKey(LocalKey.url, memory));
+    return localStorage.getItem(localUserKey(LocalKey.deeplink));
   };
   const LoadComplete = () => {
     setCompleted(100);
@@ -364,10 +364,7 @@ export function Loading(props: IProps) {
     //sync was either not needed, or is done
     if (syncComplete && orbitFetchResults) {
       if (orbitFetchResults.goRemote) {
-        localStorage.setItem(
-          localUserKey(LocalKey.time, memory),
-          currentDateTime()
-        );
+        localStorage.setItem(localUserKey(LocalKey.time), currentDateTime());
         if (isElectron) finishRemoteLoad();
         else
           backup.reset().then(() => {

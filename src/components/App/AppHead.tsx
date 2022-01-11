@@ -127,7 +127,6 @@ export const AppHead = (props: IProps) => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const [errorReporter] = useGlobal('errorReporter');
-  const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
@@ -183,7 +182,7 @@ export const AppHead = (props: IProps) => {
       });
       return;
     }
-    localStorage.setItem(localUserKey(LocalKey.url, memory), lastpath);
+    localStorage.setItem(localUserKey(LocalKey.url), lastpath);
     if (!/Close/i.test(what)) {
       if (/ClearLogout/i.test(what)) {
         forceLogin();
