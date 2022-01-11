@@ -6131,13 +6131,6 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="wsAudioPlayer.stop">
-            <source>Stop [{0}]</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="wsAudioPlayer.timerTip">
             <source>Timestamp [{0}]</source>
             <target/>
