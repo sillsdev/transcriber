@@ -282,7 +282,7 @@ export const useElectronImport = (
           t.importComplete,
           t.importOldFile
         );
-        const userLastTimeKey = localUserKey(LocalKey.time, memory);
+        const userLastTimeKey = localUserKey(LocalKey.time);
         let lastTime = localStorage.getItem(userLastTimeKey) || '';
         if (!lastTime || moment(lastTime) > moment(dataDate)) {
           localStorage.setItem(userLastTimeKey, dataDate);

@@ -46,10 +46,10 @@ export const TeamScreen = (props: IProps) => {
         projRole === RoleNames.Admin && (!isOffline || offlineOnly)
           ? `/plan/${remProjId || plan}/0`
           : `/work/${remProjId || plan}`;
-      if (loc !== localStorage.getItem(localUserKey(LocalKey.url, memory))) {
+      if (loc !== localStorage.getItem(localUserKey(LocalKey.url))) {
         setView(loc);
       } else {
-        localStorage.setItem(localUserKey(LocalKey.url, memory), '/team');
+        localStorage.setItem(localUserKey(LocalKey.url), '/team');
         if (project !== '') setProject('');
         if (projRole) setProjRole(undefined);
         if (projType !== '') setProjType('');

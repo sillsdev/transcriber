@@ -1,4 +1,3 @@
-import Memory from '@orbit/memory';
 import { isElectron } from '../api-variable';
 
 export enum LocalKey {
@@ -8,7 +7,7 @@ export enum LocalKey {
   start = 'startNext',
 }
 
-export const localUserKey = (id: LocalKey, memory: Memory) => {
+export const localUserKey = (id: LocalKey) => {
   var userId = '';
   switch (id) {
     case LocalKey.time:

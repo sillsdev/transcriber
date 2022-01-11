@@ -42,7 +42,6 @@ export const PlanScreen = (props: IProps) => {
   const { setProjectType } = useProjectType();
   const [project] = useGlobal('project');
   const [organization] = useGlobal('organization');
-  const [memory] = useGlobal('memory');
   const [view, setView] = React.useState('');
 
   const handleSwitchTo = () => {
@@ -65,7 +64,7 @@ export const PlanScreen = (props: IProps) => {
     if (!projRole)
       if (!setMyProjRole(projectId)) {
         // If after proj role set there is none, force reload
-        localStorage.removeItem(localUserKey(LocalKey.url, memory));
+        localStorage.removeItem(localUserKey(LocalKey.url));
         forceLogin();
         setView('/logout');
       }

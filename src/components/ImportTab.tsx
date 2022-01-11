@@ -353,7 +353,7 @@ export function ImportTab(props: IProps) {
     logError(Severity.error, errorReporter, axiosError(err));
     switch (err.errStatus) {
       case 301:
-        localStorage.setItem(localUserKey(LocalKey.url, memory), '/');
+        localStorage.setItem(localUserKey(LocalKey.url), '/');
         return t.projectDeleted.replace('{0}', err.errMsg);
       case 401:
         return ts.expiredToken;
@@ -430,7 +430,7 @@ export function ImportTab(props: IProps) {
             var project = c.imported.data as Project;
             imported = ' ';
             old = t.projectDeleted.replace('{0}', project.attributes.name);
-            localStorage.setItem(localUserKey(LocalKey.url, memory), '/');
+            localStorage.setItem(localUserKey(LocalKey.url), '/');
             break;
           case 'mediafile':
             var mediafile = c.imported.data as MediaFile;

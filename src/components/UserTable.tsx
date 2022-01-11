@@ -179,7 +179,7 @@ export function UserTable(props: IProps) {
   };
 
   const doEdit = (userId: string) => {
-    localStorage.setItem(localUserKey(LocalKey.url, memory), pathname);
+    localStorage.setItem(localUserKey(LocalKey.url), pathname);
     setEditId(userId);
     setView('Profile');
   };
@@ -213,7 +213,7 @@ export function UserTable(props: IProps) {
   const handleDeleteConfirmed = () => {
     const deleteRec = getUserRec(deleteItem);
     RemoveUserFromOrg(memory, deleteRec, organization, user, teamDelete);
-    localStorage.setItem(localUserKey(LocalKey.deeplink, memory), '/');
+    localStorage.setItem(localUserKey(LocalKey.url), '/');
     setDeleteItem('');
   };
 

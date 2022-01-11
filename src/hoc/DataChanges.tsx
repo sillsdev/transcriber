@@ -71,8 +71,8 @@ export const doDataChanges = async (
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
-  const userLastTimeKey = localUserKey(LocalKey.time, memory);
-  const userNextStartKey = localUserKey(LocalKey.start, memory);
+  const userLastTimeKey = localUserKey(LocalKey.time);
+  const userNextStartKey = localUserKey(LocalKey.start);
   if (!remote || !remote.activated) return;
   let startNext = 0;
   let lastTime = localStorage.getItem(userLastTimeKey) || currentDateTime(); // should not happen
