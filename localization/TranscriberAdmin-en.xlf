@@ -2956,6 +2956,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageRecord.compressing">
+         <segment>
+            <source>Compressing...{0}%</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageRecord.defaultFilename">
          <segment>
             <source>MyRecording</source>
@@ -2994,7 +3000,7 @@
       </unit>
       <unit id="passageRecord.saving">
          <segment>
-            <source>Saving... {0}%</source>
+            <source>Saving...</source>
             <target/>
          </segment>
       </unit>

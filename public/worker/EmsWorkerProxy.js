@@ -27,7 +27,6 @@
 
 ( function( global ) {
 
-
 	/**
 	 * Worker proxy implementing communication between worker and website
 	 *  @class EmsWorkerProxy

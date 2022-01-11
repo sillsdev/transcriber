@@ -632,6 +632,7 @@ export interface IPassageRecordStrings
   extends Localize.LocalizedStringsMethods {
   cancel: string;
   compressed: string;
+  compressing: string;
   defaultFilename: string;
   fileName: string;
   fileType: string;
