@@ -4459,12 +4459,6 @@
             <target>Mais lento [{0}]</target>
          </segment>
       </unit>
-      <unit id="wsAudioPlayer.pause">
-         <segment>
-            <source>Pause [{0}]</source>
-            <target>Pausa [{0}]</target>
-         </segment>
-      </unit>
       <unit id="wsAudioPlayer.timerTip">
          <segment>
             <source>Timestamp [{0}]</source>
