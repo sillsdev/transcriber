@@ -2826,8 +2826,8 @@
                <context context-type="sourcefile">MediaActions.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaActions.stop">
-            <source>Stop</source>
+         <trans-unit id="mediaActions.pause">
+            <source>Pause</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaActions.tsx</context>

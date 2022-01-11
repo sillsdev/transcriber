@@ -2077,9 +2077,9 @@
             <target>Играть</target>
          </segment>
       </unit>
-      <unit id="mediaActions.stop">
+      <unit id="mediaActions.pause">
          <segment>
-            <source/>
+            <source>Pause</source>
             <target/>
          </segment>
       </unit>

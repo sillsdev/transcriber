@@ -535,7 +535,7 @@ const initialState = {
 			"detach": "Disassociate",
 			"download": "Download",
 			"play": "Play",
-			"stop": "Stop",
+			"pause": "Pause",
 		}
 	}),
 	"mediaTab": new LocalizedStrings({
