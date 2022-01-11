@@ -21,8 +21,6 @@ export const getFileObject = function (
   mimeType: string,
   cb: (f: File) => void
 ) {
-  console.log(window.location.pathname);
-  console.log(filePathOrUrl);
   getFileBlob(filePathOrUrl, function (blob) {
     cb(blobToFile(blob, name, mimeType));
   });

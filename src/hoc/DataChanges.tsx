@@ -131,6 +131,7 @@ export const doDataChanges = async (
         id: m.id,
         audioUrl: m.attributes.audioUrl,
         contentType: m.attributes.contentType,
+        offlineId: m.attributes.offlineId,
       },
       f,
       errorReporter,
@@ -198,16 +199,17 @@ export const doDataChanges = async (
             ) {
               if (success) {
                 var delOps: Operation[] = [];
-                console.log('success!', data);
                 DeleteLocalCopy(
-                  upRec.record.attributes?.offlineId,
-                  upRec.record.type,
+                  data.offlineId,
+                  'mediafile',
                   new TransformBuilder(),
                   delOps
                 );
                 if (delOps.length > 0) memory.sync(await backup.push(delOps));
               } else {
                 //what to do here???
+                //not deleting our local comment, which means they'll see both
+                //it would try again only if either comment was edited...
                 console.log(status, statusText);
               }
             }
