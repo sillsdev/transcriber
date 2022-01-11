@@ -122,7 +122,7 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
     this.setState({
       ...this.state,
       errCount: this.state.errCount + 1,
-      error: error.error?.toString() || error.message,
+      error: error?.error?.toString() || error.message,
       details: error.stack,
     });
   }
@@ -185,7 +185,7 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
     //if (this.state.view !== '') return <Redirect to={this.state.view} />;
 
     if (this.state.errCount && localStorage.getItem('isLoggedIn')) {
-      return modalMessage(this.state.error);
+      return modalMessage(this.state?.error || 'Error count > 0');
     }
 
     if (orbitStatus && orbitStatus >= 400) {
