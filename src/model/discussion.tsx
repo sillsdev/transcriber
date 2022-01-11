@@ -9,6 +9,8 @@ export interface Discussion extends BaseModel {
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
+    offlineId: string;
+    offlineMediafileId: string;
   };
   relationships?: {
     mediafile: RecordRelationship;

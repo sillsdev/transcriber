@@ -7,6 +7,9 @@ export interface Comment extends BaseModel {
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
+    offlineId: string;
+    offlineDiscussionId: string;
+    offlineMediafileId: string;
   };
   relationships?: {
     mediafile: RecordRelationship;

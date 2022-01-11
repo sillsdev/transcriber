@@ -342,6 +342,7 @@ const schemaDefinition: SchemaSettings = {
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
+        offlineId: { type: 'string' },
       },
       relationships: {
         passage: { type: 'hasOne', model: 'passage' },
@@ -371,6 +372,7 @@ const schemaDefinition: SchemaSettings = {
         readyToShare: { type: 'bool' },
         performedBy: { type: 'string' },
         resourcePassageId: { type: 'number' },
+        offlineId: { type: 'string' },
       },
       relationships: {
         artifactType: { type: 'hasOne', model: 'artifacttype' },
@@ -611,6 +613,8 @@ if (
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
       lastModifiedBy: { type: 'number' }, //bkwd compat only
+      offlineId: { type: 'string' },
+      offlineMediafileId: { type: 'string' },
     },
     relationships: {
       mediafile: { type: 'hasOne', model: 'mediafile' },
@@ -631,6 +635,9 @@ if (
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
       lastModifiedBy: { type: 'number' }, //bkwd compat only
+      offlineId: { type: 'string' },
+      offlineDiscussionId: { type: 'string' },
+      offlineMediafileId: { type: 'string' },
     },
     relationships: {
       discussion: { type: 'hasOne', model: 'discussion' },

@@ -15,6 +15,7 @@ import {
   Group,
   OfflineProject,
   VProject,
+  Discussion,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { getSerializer } from '../../serializers/JSONAPISerializerCustom';
@@ -254,26 +255,105 @@ export async function electronExport(
       return passages.filter((p) => sections.includes(related(p, 'section')));
     };
 
+    const FromPassages = (
+      table: string,
+      project: Project | undefined,
+      remoteIds: boolean
+    ) => {
+      //passagestatechange or mediafile
+      var recs = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords(table)
+      ) as Record[];
+      if (project) {
+        var passages = Passages(project).map((p) => p.id);
+        recs = recs.filter((rec) => passages.includes(related(rec, 'passage')));
+      }
+      if (remoteIds) {
+        recs.forEach((r) => {
+          if (!remoteId('table', r.id, memory.keyMap) && r.attributes)
+            r.attributes.offlineId = r.id;
+        });
+      }
+      return recs;
+    };
+    const Discussions = (project: Project | undefined, remoteIds: boolean) => {
+      var ds = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('discussion')
+      ) as Discussion[];
+      if (project) {
+        var mediafiles = FromPassages('mediafile', project, remoteIds).map(
+          (m) => m.id
+        );
+        ds = ds.filter((rec) => mediafiles.includes(related(rec, 'mediafile')));
+      }
+      if (remoteIds) {
+        ds.forEach((d) => {
+          if (!remoteId('discussion', d.id, memory.keyMap) && d.attributes)
+            d.attributes.offlineId = d.id;
+        });
+      }
+      return ds;
+    };
+    const Comments = (project: Project | undefined, remoteIds: boolean) => {
+      var comments = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('comment')
+      ) as Record[];
+      if (project) {
+        var discussions = Discussions(project, remoteIds);
+        var discussionIds = discussions.map((d) => d.id);
+        comments = comments.filter((rec) =>
+          discussionIds.includes(related(rec, 'discussion'))
+        );
+      }
+      if (remoteIds) {
+        comments.forEach((c) => {
+          if (!remoteId('comment', c.id, memory.keyMap) && c.attributes) {
+            c.attributes.offlineId = c.id;
+            c.attributes.offlineDiscussionId = related(c, 'discussion');
+          }
+          if (
+            !remoteId('mediafile', related(c, 'mediafile'), memory.keyMap) &&
+            c.attributes
+          ) {
+            c.attributes.offlineMediafileId = related(c, 'mediafile');
+          }
+        });
+      }
+      return comments;
+    };
+
     const GetTableRecs = (
       info: fileInfo,
-      project: Project | undefined
+      project: Project | undefined,
+      needsRemoteIds: boolean
     ): Record[] => {
-      if (project) {
-        switch (info.table) {
-          case 'project':
-            return [project];
+      const defaultQuery = (table: string) => {
+        return (
+          memory.cache.query((q: QueryBuilder) =>
+            q.findRecords(table)
+          ) as Record[]
+        ).filter((r) => Boolean(r?.keys?.remoteId) === needsRemoteIds);
+      };
+      switch (info.table) {
+        case 'project':
+          if (project) return [project];
+          return defaultQuery(info.table);
 
-          case 'group':
+        case 'group':
+          if (project)
             return [
               memory.cache.query((q: QueryBuilder) =>
                 q.findRecord({ type: 'group', id: related(project, 'group') })
               ) as Group,
             ];
+          return defaultQuery(info.table);
 
-          case 'groupmembership':
-            return GroupMemberships(project);
+        case 'groupmembership':
+          if (project) return GroupMemberships(project);
+          return defaultQuery(info.table);
 
-          case 'user':
+        case 'user':
+          if (project) {
             var gms = GroupMemberships(project).map((gm) => gm.id);
             var users = memory.cache.query((q: QueryBuilder) =>
               q.findRecords(info.table)
@@ -288,51 +368,56 @@ export async function electronExport(
                       .indexOf(gm) >= 0
                 )
             );
+          }
+          return defaultQuery(info.table);
 
-          case 'plan':
-            return Plans(project);
+        case 'plan':
+          if (project) return Plans(project);
+          return defaultQuery(info.table);
 
-          case 'section':
-            return Sections(project);
+        case 'section':
+          if (project) return Sections(project);
+          return defaultQuery(info.table);
 
-          case 'passage':
-            return Passages(project);
+        case 'passage':
+          if (project) return Passages(project);
+          return defaultQuery(info.table);
 
-          case 'mediafile':
-          case 'passagestatechange':
-            var passages = Passages(project).map((p) => p.id);
-            var recs = memory.cache.query((q: QueryBuilder) =>
-              q.findRecords(info.table)
-            ) as Record[];
-            return recs.filter((rec) =>
-              passages.includes(related(rec, 'passage'))
-            );
+        case 'mediafile':
+        case 'passagestatechange':
+          return FromPassages(info.table, project, needsRemoteIds);
 
-          case 'projectintegration':
+        case 'discussion':
+          return Discussions(project, needsRemoteIds);
+
+        case 'comment':
+          return Comments(project, needsRemoteIds);
+
+        case 'projectintegration':
+          if (project)
             return memory.cache.query((q: QueryBuilder) =>
               q.findRecords(info.table).filter({
                 relation: 'project',
                 record: { type: 'project', id: project.id },
               })
             ) as Record[];
+          return defaultQuery(info.table);
 
-          default:
-            //activitystate,integration,plantype,projecttype,role
-            const needsRemId = Boolean(projRec?.keys?.remoteId);
-            return (
-              memory.cache.query((q: QueryBuilder) =>
-                q.findRecords(info.table)
-              ) as Record[]
-            ).filter((r) => Boolean(r?.keys?.remoteId) === needsRemId);
-        }
-      } else {
-        return memory.cache.query((q: QueryBuilder) =>
-          q.findRecords(info.table)
-        ) as Record[];
+        default:
+          //activitystate,integration,plantype,projecttype,role
+          return (
+            memory.cache.query((q: QueryBuilder) =>
+              q.findRecords(info.table)
+            ) as Record[]
+          ).filter((r) => Boolean(r?.keys?.remoteId) === needsRemoteIds);
       }
     };
-    const AddChanged = (info: fileInfo, project: Project | undefined) => {
-      var recs = GetTableRecs(info, project);
+    const AddChanged = (
+      info: fileInfo,
+      project: Project | undefined,
+      needsRemoteIds: boolean
+    ) => {
+      var recs = GetTableRecs(info, project, needsRemoteIds);
       var changed = recs;
       if (recs && Array.isArray(recs) && recs.length > 0) {
         changed = recs.filter(
@@ -360,8 +445,12 @@ export async function electronExport(
       return 0;
     };
 
-    const AddAll = (info: fileInfo, project: Project | undefined) => {
-      var recs = GetTableRecs(info, project);
+    const AddAll = (
+      info: fileInfo,
+      project: Project | undefined,
+      needsRemoteIds: boolean
+    ) => {
+      var recs = GetTableRecs(info, project, needsRemoteIds);
       if (recs && Array.isArray(recs) && recs.length > 0) {
         AddJsonEntry(info.table + 's', recs, info.sort);
         switch (info.table) {
@@ -396,11 +485,16 @@ export async function electronExport(
       { table: 'passage', sort: 'G' },
       { table: 'mediafile', sort: 'H' },
       { table: 'passagestatechange', sort: 'H' },
+      { table: 'discussion', sort: 'D' },
+      { table: 'comment', sort: 'E' },
+      { table: 'sectionresourceuser', sort: 'H' },
     ];
     /* If these can change in electron, they must extend BaseModel instead of Record,
         call UpdateRecord instead of t.updateRecord, and be moved up to the files array */
     const staticFiles = [
       { table: 'activitystate', sort: 'B' },
+      { table: 'artifactcategory', sort: 'C' },
+      { table: 'artifacttype', sort: 'C' },
       { table: 'integration', sort: 'B' },
       { table: 'organization', sort: 'B' },
       { table: 'plantype', sort: 'B' },
@@ -410,12 +504,16 @@ export async function electronExport(
       { table: 'organizationmembership', sort: 'C' },
       { table: 'plan', sort: 'E' },
       { table: 'projectintegration', sort: 'E' }, //do we care that they synced locally??
+      { table: 'workflowstep', sort: 'B' },
+      { table: 'orgworkflowstep', sort: 'C' },
+      { table: 'sectionresource', sort: 'G' },
     ];
     const op = getOfflineProject(projRec.id);
     const imported = moment.utc(op.attributes.snapshotDate || '01/01/1900');
     AddSourceEntry(imported.toISOString());
-    AddVersionEntry('2'); //TODO: ask what version indexeddb is
-    if (!projRec?.keys?.remoteId) AddOfflineEntry();
+    AddVersionEntry((backup?.schema.version || 1).toString());
+    var needsRemoteIds = Boolean(projRec?.keys?.remoteId);
+    if (!needsRemoteIds) AddOfflineEntry();
     const limit = onlyOneProject() ? undefined : projRec;
     var numRecs = 0;
     switch (exportType) {
@@ -423,15 +521,19 @@ export async function electronExport(
       case ExportType.ITFBACKUP:
       case ExportType.ITFSYNC:
         const exported = AddCheckEntry();
-        updateableFiles.forEach((info) => (numRecs += AddChanged(info, limit)));
+        updateableFiles.forEach(
+          (info) => (numRecs += AddChanged(info, limit, needsRemoteIds))
+        );
         if (exportType !== ExportType.ITFBACKUP && backup) {
           op.attributes.exportedDate = exported;
           await backup.push((t: TransformBuilder) => t.updateRecord(op));
         }
         break;
       default:
-        updateableFiles.forEach((info) => (numRecs += AddAll(info, limit)));
-        staticFiles.forEach((info) => AddAll(info, limit));
+        updateableFiles.forEach(
+          (info) => (numRecs += AddAll(info, limit, needsRemoteIds))
+        );
+        staticFiles.forEach((info) => AddAll(info, limit, needsRemoteIds));
         AddFonts();
     }
     return { zip, numRecs };

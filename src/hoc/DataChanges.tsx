@@ -1,5 +1,12 @@
 import { useGlobal, useState, useEffect, useRef } from 'reactn';
-import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
+import path from 'path';
+import {
+  infoMsg,
+  logError,
+  PathType,
+  Severity,
+  useCheckOnline,
+} from '../utils';
 import { useInterval } from '../utils/useInterval';
 import Axios from 'axios';
 import {
@@ -8,6 +15,7 @@ import {
   TransformBuilder,
   Operation,
   UpdateRecordOperation,
+  RecordIdentity,
 } from '@orbit/data';
 import Coordinator from '@orbit/coordinator';
 import Memory from '@orbit/memory';
@@ -20,6 +28,7 @@ import {
 } from '../api-variable';
 import Auth from '../auth/Auth';
 import {
+  findRecord,
   offlineProjectUpdateSnapshot,
   remoteId,
   remoteIdGuid,
@@ -33,7 +42,10 @@ import IndexedDBSource from '@orbit/indexeddb';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import { uploadFile } from '../store';
+import { getFileObject } from '../utils/getLocalFile';
+import Mediafile, { MediaFile } from '../model/mediaFile';
+const os = require('os');
 interface IStateProps {}
 
 interface IDispatchProps {
@@ -92,7 +104,7 @@ export const doDataChanges = async (
     newOps: Operation[],
     tb: TransformBuilder,
     relationship: string,
-    upRec: UpdateRecordOperation
+    record: RecordIdentity
   ) => {
     var table = relationship;
     switch (relationship) {
@@ -102,11 +114,109 @@ export const doDataChanges = async (
     }
 
     newOps.push(
-      tb.replaceRelatedRecord(upRec.record, relationship, {
+      tb.replaceRelatedRecord(record, relationship, {
         type: table,
         id: '',
       })
     );
+  };
+
+  const doUpload = (
+    f: File,
+    m: Mediafile,
+    cb: (s: boolean, data: any, status: number, statusText: string) => void
+  ) => {
+    uploadFile(
+      {
+        id: m.id,
+        audioUrl: m.attributes.audioUrl,
+        contentType: m.attributes.contentType,
+        offlineId: m.attributes.offlineId,
+      },
+      f,
+      errorReporter,
+      auth,
+      cb
+    );
+  };
+
+  const safeURL = (path: string) => {
+    if (!path.startsWith('http')) {
+      const start = os.platform() === 'win32' ? 8 : 7;
+      const url = new URL(`file://${path}`).toString().slice(start);
+      return `transcribe-safe://${url}`;
+    }
+    return path;
+  };
+
+  const DeleteLocalCopy = (
+    offlineId: string | null,
+    type: string,
+    tb: TransformBuilder,
+    localOps: Operation[]
+  ) => {
+    if (offlineId) {
+      var myRecord = findRecord(memory, type, offlineId);
+      if (myRecord) {
+        localOps.push(
+          tb.removeRecord({
+            type: type,
+            id: offlineId,
+          })
+        );
+      }
+    }
+  };
+
+  const CheckUploadLocal = async (upRec: any) => {
+    var myRecord = findRecord(
+      memory,
+      upRec.record.type,
+      upRec.record.attributes?.offlineId
+    ) as MediaFile;
+    if (myRecord) {
+      var curpath = path.join(
+        os.homedir(),
+        process.env.REACT_APP_OFFLINEDATA || '',
+        PathType.MEDIA,
+        upRec.record.attributes?.originalFile
+      );
+      var url = safeURL(curpath);
+      getFileObject(
+        url,
+        myRecord.attributes.originalFile,
+        myRecord.attributes.contentType,
+        // eslint-disable-next-line no-loop-func
+        function (f: File) {
+          doUpload(
+            f,
+            upRec.record as Mediafile,
+            async function (
+              success: boolean,
+              data: any,
+              status: number,
+              statusText: string
+            ) {
+              if (success) {
+                var delOps: Operation[] = [];
+                DeleteLocalCopy(
+                  data.offlineId,
+                  'mediafile',
+                  new TransformBuilder(),
+                  delOps
+                );
+                if (delOps.length > 0) memory.sync(await backup.push(delOps));
+              } else {
+                //what to do here???
+                //not deleting our local comment, which means they'll see both
+                //it would try again only if either comment was edited...
+                console.log(status, statusText);
+              }
+            }
+          );
+        }
+      );
+    }
   };
 
   const processDataChanges = async (
@@ -136,33 +246,53 @@ export const doDataChanges = async (
             .then(async (t: Transform[]) => {
               for (const tr of t) {
                 var tb = new TransformBuilder();
+                var localOps: Operation[] = [];
                 var newOps: Operation[] = [];
+                var upRec: UpdateRecordOperation;
+                //await UpdateOfflineIds(tr.operations, tb, newOps);
                 await memory.sync(await backup.push(tr.operations));
                 for (const o of tr.operations) {
                   if (o.op === 'updateRecord') {
-                    var upRec = o as UpdateRecordOperation;
+                    upRec = o as UpdateRecordOperation;
                     switch (upRec.record.type) {
                       case 'section':
                         if (
                           upRec.record.relationships?.transcriber === undefined
                         )
-                          resetRelated(newOps, tb, 'transcriber', upRec);
-
+                          resetRelated(
+                            localOps,
+                            tb,
+                            'transcriber',
+                            upRec.record
+                          );
                         if (upRec.record.relationships?.editor === undefined)
-                          resetRelated(newOps, tb, 'editor', upRec);
+                          resetRelated(localOps, tb, 'editor', upRec.record);
+                        break;
 
-                        break;
                       case 'mediafile':
+                        await CheckUploadLocal(upRec);
                         if (upRec.record.relationships?.passage === undefined)
-                          resetRelated(newOps, tb, 'passage', upRec);
+                          resetRelated(localOps, tb, 'passage', upRec.record);
                         break;
+
                       case 'user':
                         SetUserLanguage(memory, user, setLanguage);
                         break;
+
+                      case 'discussion':
+                      case 'comment':
+                        DeleteLocalCopy(
+                          upRec.record.attributes?.offlineId,
+                          upRec.record.type,
+                          tb,
+                          localOps
+                        );
                     }
                   }
                 }
-                if (newOps.length > 0) memory.sync(await backup.push(newOps));
+                if (localOps.length > 0)
+                  memory.sync(await backup.push(localOps));
+                if (newOps.length > 0) memory.update(newOps);
               }
             });
         }

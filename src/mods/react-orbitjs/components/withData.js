@@ -2,7 +2,7 @@ Object.defineProperty(exports, '__esModule', {
   value: true,
 });
 
-var _createClass = (function() {
+var _createClass = (function () {
   function defineProperties(target, props) {
     for (var i = 0; i < props.length; i++) {
       var descriptor = props[i];
@@ -12,7 +12,7 @@ var _createClass = (function() {
       Object.defineProperty(target, descriptor.key, descriptor);
     }
   }
-  return function(Constructor, protoProps, staticProps) {
+  return function (Constructor, protoProps, staticProps) {
     if (protoProps) defineProperties(Constructor.prototype, protoProps);
     if (staticProps) defineProperties(Constructor, staticProps);
     return Constructor;
@@ -21,7 +21,7 @@ var _createClass = (function() {
 
 var _extends =
   Object.assign ||
-  function(target) {
+  function (target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -128,7 +128,7 @@ function withData(mapRecordsToProps, mergeProps) {
       return finalMergeProps(stateProps, parentProps);
     }
 
-    var WithData = (function(_Component) {
+    var WithData = (function (_Component) {
       _inherits(WithData, _Component);
 
       _createClass(WithData, [
@@ -246,20 +246,20 @@ function withData(mapRecordsToProps, mergeProps) {
     var _initialiseProps = function _initialiseProps() {
       var _this2 = this;
 
-      this.makeReducePropsToRecords = function(dataStore, recordQueries) {
-        return function(recordProps, prop) {
+      this.makeReducePropsToRecords = function (dataStore, recordQueries) {
+        return function (recordProps, prop) {
           var result = void 0;
           try {
             result = dataStore.cache.query(recordQueries[prop]);
           } catch (error) {
-            console.warn(error.message);
+            console.warn(error?.message || JSON.stringify(error));
             result = undefined;
           }
           return _extends({}, recordProps, _defineProperty({}, prop, result));
         };
       };
 
-      this.computeChangedRecordProps = function(
+      this.computeChangedRecordProps = function (
         selectedRecordProps,
         dataStore,
         props
@@ -271,11 +271,11 @@ function withData(mapRecordsToProps, mergeProps) {
         );
       };
 
-      this.computeAllRecordProps = function(dataStore, props) {
+      this.computeAllRecordProps = function (dataStore, props) {
         return _this2.selectivelyComputeRecordProps(true, dataStore, props);
       };
 
-      this.computeChangedQueryProps = function(dataStore, props) {
+      this.computeChangedQueryProps = function (dataStore, props) {
         var recordQueries = _this2.getRecordQueries(dataStore, props);
         var recordProps = _this2.expressionChangedProps.reduce(
           _this2.makeReducePropsToRecords(dataStore, recordQueries),
@@ -285,7 +285,7 @@ function withData(mapRecordsToProps, mergeProps) {
         return recordProps;
       };
 
-      this.selectivelyComputeRecordProps = function(
+      this.selectivelyComputeRecordProps = function (
         selectedRecordPropsOrAll,
         dataStore,
         props
@@ -311,7 +311,7 @@ function withData(mapRecordsToProps, mergeProps) {
         return recordProps;
       };
 
-      this.getConvenienceProps = function(dataStore) {
+      this.getConvenienceProps = function (dataStore) {
         if (!_this2.convenienceProps) {
           _this2.convenienceProps = {
             dataStore: dataStore,
@@ -327,7 +327,7 @@ function withData(mapRecordsToProps, mergeProps) {
         return _this2.convenienceProps;
       };
 
-      this.getRecordQueries = function(dataStore, props) {
+      this.getRecordQueries = function (dataStore, props) {
         if (
           !_this2.mapRecordsIsConfigured ||
           (_this2.doRecordPropsDependOnOwnProps && _this2.haveOwnPropsChanged)
@@ -338,11 +338,11 @@ function withData(mapRecordsToProps, mergeProps) {
         return _this2.mapRecordsGivenOwnProps(props);
       };
 
-      this.mapRecordsGivenOwnProps = function(props) {
+      this.mapRecordsGivenOwnProps = function (props) {
         return _this2.recordPropsIsFunction ? mapRecords(props) : mapRecords;
       };
 
-      this.configureMapRecords = function(dataStore, props) {
+      this.configureMapRecords = function (dataStore, props) {
         _this2.recordPropsIsFunction = typeof mapRecords === 'function';
         _this2.doRecordPropsDependOnOwnProps =
           _this2.recordPropsIsFunction && mapRecords.length > 0;
@@ -357,14 +357,15 @@ function withData(mapRecordsToProps, mergeProps) {
         // and we don't listen for stale record props.
         _this2.subscribedModels = {};
 
-        recordQueryKeys.forEach(function(prop) {
+        recordQueryKeys.forEach(function (prop) {
           return (_this2.subscribedModels[prop] = []);
         });
 
         // Iterate all queries, to make a list of models to listen for
-        recordQueryKeys.forEach(function(prop) {
-          var expression = recordQueries[prop](dataStore.queryBuilder)
-            .expression;
+        recordQueryKeys.forEach(function (prop) {
+          var expression = recordQueries[prop](
+            dataStore.queryBuilder
+          ).expression;
 
           switch (expression.op) {
             case 'findRecord':
@@ -390,16 +391,16 @@ function withData(mapRecordsToProps, mergeProps) {
           currentExpressions[prop] = expression;
         });
 
-        recordQueryKeys.forEach(function(prop) {
+        recordQueryKeys.forEach(function (prop) {
           _this2.subscribedModels[prop] = _this2.subscribedModels[prop].filter(
-            function(value, index, self) {
+            function (value, index, self) {
               return self.indexOf(value) === index;
             }
           );
         });
 
         // Update expressionChangedProps by diffing lastExpressions with expressions
-        recordQueryKeys.forEach(function(prop) {
+        recordQueryKeys.forEach(function (prop) {
           if (
             typeof _this2.lastExpressions[prop] === 'undefined' ||
             JSON.stringify(currentExpressions[prop]) !==
@@ -414,7 +415,7 @@ function withData(mapRecordsToProps, mergeProps) {
         return recordQueries;
       };
 
-      this.updateRecordPropsIfNeeded = function() {
+      this.updateRecordPropsIfNeeded = function () {
         var nextRecordProps = {};
 
         if (_this2.recordProps === null) {
@@ -439,13 +440,13 @@ function withData(mapRecordsToProps, mergeProps) {
             _this2.getConvenienceProps(_this2.dataStore)
           );
           Object.keys(_this2.recordProps)
-            .filter(function(key) {
+            .filter(function (key) {
               return (
                 !recordQueryKeys.includes(key) &&
                 !conveniencePropKeys.includes(key)
               );
             })
-            .forEach(function(key) {
+            .forEach(function (key) {
               return delete nextRecordProps[key];
             });
         } else {
@@ -471,7 +472,7 @@ function withData(mapRecordsToProps, mergeProps) {
         return true;
       };
 
-      this.updateMergedPropsIfNeeded = function() {
+      this.updateMergedPropsIfNeeded = function () {
         var nextMergedProps = computeMergedProps(
           _this2.recordProps,
           _this2.props
@@ -488,21 +489,21 @@ function withData(mapRecordsToProps, mergeProps) {
         return true;
       };
 
-      this.trySubscribe = function() {
+      this.trySubscribe = function () {
         if (shouldSubscribe && !_this2.isListening) {
           _this2.isListening = true;
           _this2.dataStore.on('transform', _this2.handleTransform);
         }
       };
 
-      this.tryUnsubscribe = function() {
+      this.tryUnsubscribe = function () {
         if (_this2.isListening) {
           _this2.isListening = null;
           _this2.dataStore.off('transform', _this2.handleTransform);
         }
       };
 
-      this.clearCache = function() {
+      this.clearCache = function () {
         _this2.convenienceProps = null;
         _this2.recordProps = null;
         _this2.mergedProps = null;
@@ -516,14 +517,14 @@ function withData(mapRecordsToProps, mergeProps) {
         _this2.subscribedModels = {};
       };
 
-      this.handleTransform = function(transform) {
+      this.handleTransform = function (transform) {
         if (!_this2.isListening) {
           return;
         }
 
         // Iterate all transforms, to see if any of those matches a model in the list of queries
         var operationModels = [];
-        transform.operations.forEach(function(operation) {
+        transform.operations.forEach(function (operation) {
           switch (operation.op) {
             case 'addRecord':
             case 'replaceRecord':
@@ -532,7 +533,7 @@ function withData(mapRecordsToProps, mergeProps) {
               // its inverse relationships are modified too, we add them to operationModels.
               operationModels.push(operation.record.type);
               if (operation.record.relationships === undefined) break;
-              Object.keys(operation.record.relationships).forEach(function(
+              Object.keys(operation.record.relationships).forEach(function (
                 relationship
               ) {
                 operationModels.push(
@@ -552,10 +553,10 @@ function withData(mapRecordsToProps, mergeProps) {
                 _this2.dataStore.schema.models[operation.record.type]
                   .relationships;
               Object.keys(relationships)
-                .map(function(k) {
+                .map(function (k) {
                   return relationships[k];
                 })
-                .forEach(function(relationship) {
+                .forEach(function (relationship) {
                   operationModels.push(relationship.model);
                 });
               break;
@@ -579,7 +580,7 @@ function withData(mapRecordsToProps, mergeProps) {
 
             case 'replaceRelatedRecords':
               operationModels.push(operation.record.type);
-              operation.relatedRecords.forEach(function(relatedRecord) {
+              operation.relatedRecords.forEach(function (relatedRecord) {
                 operationModels.push(relatedRecord.type);
               });
               break;
@@ -593,8 +594,8 @@ function withData(mapRecordsToProps, mergeProps) {
 
         var uniqueOperationModels = new Set(operationModels);
 
-        uniqueOperationModels.forEach(function(model) {
-          Object.keys(_this2.subscribedModels).forEach(function(prop) {
+        uniqueOperationModels.forEach(function (model) {
+          Object.keys(_this2.subscribedModels).forEach(function (prop) {
             if (_this2.subscribedModels[prop].includes(model)) {
               _this2.hasDataStoreChanged = true;
               _this2.dataStoreChangedProps.push(prop);
