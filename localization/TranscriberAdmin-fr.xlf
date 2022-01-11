@@ -2078,9 +2078,9 @@
             <target>Jouer</target>
          </segment>
       </unit>
-      <unit id="mediaActions.stop">
+      <unit id="mediaActions.pause">
          <segment>
-            <source>Stop</source>
+            <source>Pause</source>
             <target>Arrêter</target>
          </segment>
       </unit>
@@ -4460,10 +4460,10 @@
             <target>Plus lente [{0}]</target>
          </segment>
       </unit>
-      <unit id="wsAudioPlayer.stop">
+      <unit id="wsAudioPlayer.pause">
          <segment>
-            <source>Stop [{0}]</source>
-            <target>Arrêter [{0}]</target>
+            <source>Pause [{0}]</source>
+            <target>Pause [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.timerTip">

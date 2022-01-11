@@ -498,7 +498,7 @@ export interface IMediaActionsStrings extends Localize.LocalizedStringsMethods {
     "detach": string;
     "download": string;
     "play": string;
-    "stop": string;
+    "pause": string;
 };
 
 export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
@@ -1084,7 +1084,7 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "seconds": string;
     "silence": string;
     "slowerTip": string;
-    "stop": string;
+    "pause": string;
     "timerTip": string;
     "undoTip": string;
 };

@@ -2422,9 +2422,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaActions.stop">
+      <unit id="mediaActions.pause">
          <segment>
-            <source>Stop</source>
+            <source>Pause</source>
             <target/>
          </segment>
       </unit>
@@ -5254,9 +5254,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="wsAudioPlayer.stop">
+      <unit id="wsAudioPlayer.pause">
          <segment>
-            <source>Stop [{0}]</source>
+            <source>Pause [{0}]</source>
             <target/>
          </segment>
       </unit>
