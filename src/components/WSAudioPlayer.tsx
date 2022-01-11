@@ -685,7 +685,7 @@ function WSAudioPlayer(props: IProps) {
                 <Grid item>
                   <LightTooltip
                     id="wsAudioRecordTip"
-                    title={(recording ? t.pause : t.record).replace(
+                    title={(recording ? t.pauseTip : t.record).replace(
                       '{0}',
                       RECORD_KEY
                     )}
