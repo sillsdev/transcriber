@@ -19,7 +19,6 @@ export interface Passage extends BaseModel {
     section: RecordRelationship;
     users: RecordHasManyRelationship;
     media: RecordRelationship;
-    orgworkflowstep: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
   startChapter: number; //calculated
