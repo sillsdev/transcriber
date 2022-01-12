@@ -22,7 +22,7 @@ import {
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   useFetchMediaUrl,
   remoteIdGuid,
@@ -30,6 +30,8 @@ import {
   getAllMediaRecs,
   useArtifactCategory,
   useArtifactType,
+  findRecord,
+  remoteId,
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
@@ -123,6 +125,11 @@ interface SimpleWf {
   id: string;
   label: string;
 }
+interface StepComplete {
+  stepid: string;
+  complete: boolean;
+  name: string; //don't use for querying.  For our readability only
+}
 
 const initState = {
   passage: {} as Passage,
@@ -150,7 +157,11 @@ const initState = {
   allBookData: Array<BookName>(),
   getSharedResources: async () => [] as Resource[],
   workflow: Array<SimpleWf>(),
-  psgCompletedIndex: -2,
+  psgCompleted: [] as StepComplete[],
+  setStepComplete: (stepId: string, complete: boolean) => {},
+  stepComplete: (stepId: string) => {
+    return false;
+  },
   discussionSize: 500,
   setDiscussionSize: (size: number) => {},
   defaultFilename: '',
@@ -289,6 +300,41 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       });
     };
 
+    const stepComplete = (stepid: string) => {
+      stepid = remoteId('orgworkflowstep', stepid, memory.keyMap) || stepid;
+      var step = state.psgCompleted.find((s) => s.stepid === stepid);
+      return Boolean(step?.complete);
+    };
+
+    const setStepComplete = (stepid: string, complete: boolean) => {
+      var completed = state.psgCompleted;
+      var remId = remoteId('orgworkflowstep', stepid, memory.keyMap) || stepid;
+      var step = state.psgCompleted.find((s) => s.stepid === remId);
+      if (step) {
+        step.complete = complete;
+      } else {
+        var rec = findRecord(
+          memory,
+          'orgworkflowstep',
+          stepid
+        ) as OrgWorkflowStep;
+        completed.push({ stepid: remId, complete, name: rec.attributes.name });
+      }
+      setState((state: ICtxState) => {
+        return {
+          ...state,
+          psgCompleted: [...completed],
+        };
+      });
+      const recId = {
+        type: 'passage',
+        id: remoteIdGuid('passage', pasId, memory.keyMap) || pasId,
+      };
+      memory.update((t: TransformBuilder) =>
+        t.replaceAttribute(recId, 'stepComplete', JSON.stringify({ completed }))
+      );
+    };
+
     const getSharedResources = async () => {
       if (remote)
         return (await remote.query((q: QueryBuilder) =>
@@ -296,6 +342,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         )) as Resource[];
       else return [] as Resource[];
     };
+
     const setSelected = (selected: string, rowData: IRow[] = state.rowData) => {
       const i = rowData.findIndex((r) => r.mediafile.id === selected);
       if (i < 0) {
@@ -402,10 +449,12 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     useEffect(() => {
       const passageId = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
       var p = passages.find((p) => p.id === passageId);
-      if (p && state.workflow.length > 0) {
-        //wait for the workflow
-        var passagewf = related(p, 'orgWorkflowStep');
-        var psgIndex = state.workflow.findIndex((wf) => wf.id === passagewf);
+      if (p) {
+        var complete = [] as StepComplete[];
+        if (p.attributes.stepComplete) {
+          var tmp = JSON.parse(p.attributes.stepComplete);
+          if (tmp) complete = tmp.completed;
+        }
         var s = sections.find((s) => s.id === related(p, 'section'));
         if (s) {
           if (p.id !== state.passage.id || s.id !== state.section.id) {
@@ -414,13 +463,15 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
                 ...state,
                 passage: p as Passage,
                 section: s as Section,
-                psgCompletedIndex: psgIndex,
+                psgCompleted: [...complete],
               };
             });
-          } else if (state.psgCompletedIndex !== psgIndex) {
+          } else if (
+            JSON.stringify(state.psgCompleted) !== JSON.stringify(complete)
+          ) {
             setState((state: ICtxState) => ({
               ...state,
-              psgCompletedIndex: psgIndex,
+              psgCompleted: [...complete],
             }));
           }
         }
@@ -431,9 +482,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       passages,
       sections,
       state.passage.id,
-      state.psgCompletedIndex,
+      state.psgCompleted,
       state.section.id,
-      state.workflow,
     ]);
 
     useEffect(() => {
@@ -571,19 +621,38 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     }, [workflowSteps, orgWorkflowSteps]);
 
     useEffect(() => {
-      if (state.currentstep === '' && state.psgCompletedIndex > -2) {
-        const nextStep =
-          state.psgCompletedIndex +
-          (state.psgCompletedIndex === state.workflow.length - 1 ? 0 : 1);
-        const next = state.workflow[nextStep].id;
+      if (state.currentstep === '' && state.workflow.length > 0) {
+        var nextIndex = 0;
+        var lastcompleted = state.psgCompleted
+          .filter((s) => s.complete)
+          .map(
+            (cs) =>
+              findRecord(
+                memory,
+                'orgworkflowstep',
+                remoteIdGuid('orgworkflowstep', cs.stepid, memory.keyMap) ||
+                  cs.stepid
+              ) as OrgWorkflowStep
+          )
+          .sort(
+            (i, j) => j?.attributes?.sequencenum - i?.attributes?.sequencenum
+          );
+
+        if (lastcompleted.length) {
+          var lastIndex = state.workflow.findIndex(
+            (s) => s.id === lastcompleted[0].id
+          );
+          nextIndex =
+            lastIndex + (lastIndex === state.workflow.length - 1 ? 0 : 1);
+        }
+        const next = state.workflow[nextIndex].id;
         if (state.currentstep !== next) {
           setCurrentStep(next);
         }
         segmentsCb.current = undefined;
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state.currentstep, state.psgCompletedIndex, state.workflow]);
-
+    }, [state.currentstep, state.psgCompleted, state.workflow]);
     return (
       <PassageDetailContext.Provider
         value={{
@@ -603,6 +672,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             getSegments,
             setPlayerSegments,
             setupLocate,
+            stepComplete,
+            setStepComplete,
           },
           setState,
         }}

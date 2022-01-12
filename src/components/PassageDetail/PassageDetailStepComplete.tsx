@@ -3,9 +3,6 @@ import CompleteIcon from '@material-ui/icons/CheckBoxOutlined';
 import NotCompleteIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import { useEffect, useState } from 'react';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import { UpdateRelatedRecord } from '../../model/baseModel';
-import { useGlobal } from 'reactn';
-import { TransformBuilder } from '@orbit/data';
 import { IPassageDetailStepCompleteStrings, IState } from '../../model';
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
@@ -28,46 +25,32 @@ interface IProps extends IStateProps {}
 export const PassageDetailStepComplete = (props: IProps) => {
   const { t } = props;
   const {
-    passage,
     currentstep,
     setCurrentStep,
-    psgCompletedIndex,
+    stepComplete,
+    setStepComplete,
     orgWorkflowSteps,
   } = usePassageDetailContext();
   const classes = useStyles();
-  const [memory] = useGlobal('memory');
-  const [user] = useGlobal('user');
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [complete, setComplete] = useState(false);
-  const [canComplete, setCanComplete] = useState(false);
 
   useEffect(() => {
+    console.log('currentstep, orgWorkflowsteps');
     var curIndex = orgWorkflowSteps.findIndex((s) => s.id === currentstep);
     setCurrentIndex(curIndex);
-    setComplete(psgCompletedIndex >= curIndex);
-    setCanComplete(psgCompletedIndex + 1 === curIndex);
-  }, [psgCompletedIndex, currentstep, orgWorkflowSteps]);
+    setComplete(stepComplete(currentstep));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentstep, orgWorkflowSteps]);
 
   const handleToggleComplete = () => {
-    var newstep: string | undefined = '';
-    if (complete)
-      //turn it off
-      newstep = currentIndex === 0 ? '' : orgWorkflowSteps[currentIndex - 1].id;
-    else {
-      newstep = orgWorkflowSteps[currentIndex].id;
-      if (currentIndex < orgWorkflowSteps.length - 1)
+    setStepComplete(currentstep, !complete);
+    if (!complete) {
+      //turning it on so go to next step
+      if (currentIndex < orgWorkflowSteps.length - 1) {
         setCurrentStep(orgWorkflowSteps[currentIndex + 1].id);
-    }
-    memory.update((t: TransformBuilder) => [
-      ...UpdateRelatedRecord(
-        t,
-        passage,
-        'orgWorkflowStep',
-        'orgworkflowstep',
-        newstep,
-        user
-      ),
-    ]);
+      }
+    } else setComplete(!complete);
   };
 
   return (
@@ -78,7 +61,6 @@ export const PassageDetailStepComplete = (props: IProps) => {
         className={classes.actionButton}
         title={t.title}
         onClick={handleToggleComplete}
-        disabled={!complete && !canComplete}
       >
         {complete ? <CompleteIcon /> : <NotCompleteIcon />}
       </IconButton>

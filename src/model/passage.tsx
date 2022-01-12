@@ -10,6 +10,7 @@ export interface Passage extends BaseModel {
     hold: boolean;
     title: string;
     lastComment: string;
+    stepComplete: string; //json
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;

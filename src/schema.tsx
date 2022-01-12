@@ -319,6 +319,7 @@ const schemaDefinition: SchemaSettings = {
         hold: { type: 'boolean' },
         title: { type: 'string' },
         lastComment: { type: 'string' },
+        stepComplete: { type: 'string' }, //json
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
