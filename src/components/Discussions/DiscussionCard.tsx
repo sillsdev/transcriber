@@ -194,7 +194,7 @@ export const DiscussionCard = (props: IProps) => {
     users,
   } = props;
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, mediafileId, setSegments } = ctx.state;
+  const { currentstep, mediafileId, setPlayerSegments } = ctx.state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
@@ -340,7 +340,7 @@ export const DiscussionCard = (props: IProps) => {
       const regions = JSON.stringify([
         { start: parseFloat(m[1]), end: parseFloat(m[2]) },
       ]);
-      setSegments(JSON.stringify({ regions }));
+      setPlayerSegments(JSON.stringify({ regions }));
     }
   };
 
@@ -368,7 +368,7 @@ export const DiscussionCard = (props: IProps) => {
   };
 
   const handleReset = () => {
-    setEditSubject('');
+    if (!onAddComplete) setEditSubject('');
     setEditRole('');
     setEditUser('');
     setEditCategory('');
@@ -376,6 +376,7 @@ export const DiscussionCard = (props: IProps) => {
 
   useEffect(() => {
     handleReset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentstep]);
 
   const handleDelete = () => {
