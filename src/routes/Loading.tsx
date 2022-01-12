@@ -139,6 +139,7 @@ export function Loading(props: IProps) {
   const [isDeveloper] = useGlobal('developer');
   const [, setPlan] = useGlobal('plan');
   const [, setOrganization] = useGlobal('organization');
+  const [, setProject] = useGlobal('project');
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [, setCompleted] = useGlobal('progress');
   const { showMessage } = useSnackBar();
@@ -335,6 +336,7 @@ export function Loading(props: IProps) {
             q.findRecord({ type: 'project', id: projectId })
           );
           if (projRec) {
+            setProject(projectId);
             const orgId = related(projRec, 'organization') as string;
             setOrganization(orgId);
           }
