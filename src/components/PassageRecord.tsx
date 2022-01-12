@@ -19,6 +19,7 @@ import {
   RadioGroup,
   TextField,
   Theme,
+  Typography,
 } from '@material-ui/core';
 import WSAudioPlayer from './WSAudioPlayer';
 import { QueryBuilder } from '@orbit/data';
@@ -49,6 +50,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     row: {
       display: 'flex',
+    },
+    status: {
+      marginRight: theme.spacing(2),
+      alignSelf: 'center',
     },
   })
 );
@@ -111,6 +116,8 @@ function PassageRecord(props: IProps) {
   const [mimeType, setMimeType] = useState('audio/ogg;codecs=opus');
   const { showMessage } = useSnackBar();
   const [converting, setConverting] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [statusText, setStatusText] = useState('');
   const extensions = useMemo(
     () => ['mp3', 'mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'],
     []
@@ -132,6 +139,13 @@ function PassageRecord(props: IProps) {
     reset();
     setOpen(false);
   };
+
+  useEffect(() => {
+    setConverting(false);
+    setUploading(false);
+    setStatusText('');
+  }, []);
+
   useEffect(() => {
     if (mediaId !== mediaState.urlMediaId) fetchMediaUrl({ id: mediaId, auth });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -155,9 +169,12 @@ function PassageRecord(props: IProps) {
 
   useEffect(() => {
     if (convert_status) {
-      if (!isNaN(parseInt(convert_status)))
-        showMessage(t.saving.replace('{0}', convert_status));
-      else showMessage(convert_status);
+      var progress = parseInt(convert_status);
+      if (isNaN(progress)) {
+        showMessage(convert_status);
+      } else {
+        setStatusText(t.compressing.replace('{0}', progress.toString()));
+      }
     }
     if (convert_complete) {
       if (convert_blob)
@@ -166,6 +183,10 @@ function PassageRecord(props: IProps) {
           setConverting(false);
           close();
         });
+      else {
+        setConverting(false);
+        close();
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [convert_status, convert_complete, convert_blob]);
@@ -194,6 +215,8 @@ function PassageRecord(props: IProps) {
   };
 
   const doUpload = async (blob: Blob) => {
+    setUploading(true);
+    setStatusText(t.saving);
     var files = [
       new File([blob], fileName() + '.' + filetype, {
         type: mimeType,
@@ -202,6 +225,7 @@ function PassageRecord(props: IProps) {
     if (uploadMethod && files) {
       await uploadMethod(files);
     }
+    setUploading(false);
   };
   const handleAddOrSave = () => {
     if (audioBlob) {
@@ -310,13 +334,16 @@ function PassageRecord(props: IProps) {
         {metaData}
       </DialogContent>
       <DialogActions>
+        <Typography variant="caption" display="block" gutterBottom>
+          {statusText}
+        </Typography>
         <Button
           id="rec-cancel"
           className={classes.button}
           onClick={handleCancel}
           variant="outlined"
           color="primary"
-          disabled={converting}
+          disabled={converting || uploading}
         >
           {t.cancel}
         </Button>
@@ -331,7 +358,8 @@ function PassageRecord(props: IProps) {
             (ready && !ready()) ||
             name === '' ||
             !filechanged ||
-            converting
+            converting ||
+            uploading
           }
         >
           {t.save}

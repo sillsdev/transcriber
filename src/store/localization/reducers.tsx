@@ -656,13 +656,14 @@ const initialState = {
 		"en": {
 			"cancel": "Cancel",
 			"compressed": "Compressed",
+			"compressing": "Compressing...{0}%",
 			"defaultFilename": "MyRecording",
 			"fileName": "Name",
 			"fileType": "File Type",
 			"loadfile": "Load Existing File",
 			"loading": "Loading...",
 			"save": "Save",
-			"saving": "Saving... {0}%",
+			"saving": "Saving...",
 			"title": "Record/Edit Audio",
 			"uncompressed": "Uncompressed",
 		}
@@ -1159,7 +1160,6 @@ const initialState = {
 			"seconds": "seconds",
 			"silence": "Silence",
 			"slowerTip": "Slower [{0}]",
-			"pause": "Pause [{0}]",
 			"timerTip": "Timestamp [{0}]",
 			"undoTip": "Undo",
 		}
