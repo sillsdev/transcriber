@@ -3,20 +3,29 @@ import { IState, OptionType, IToolStrings } from '../model';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 
-export const toolNames = [
-  'resource',
-  'record',
-  'teamCheck',
-  'keyTerms',
-  'discuss',
-  'transcribe',
-  'segment',
-  'paratext',
+export enum ToolSlug {
+  Resource = 'resource',
+  Record = 'record',
+  TeamCheck = 'teamCheck',
+  Discuss = 'discuss',
+  Transcribe = 'transcribe',
+  Segment = 'segment',
+  Paratext = 'paratext',
+}
+
+const toolSlugs = [
+  ToolSlug.Resource,
+  ToolSlug.Record,
+  ToolSlug.TeamCheck,
+  ToolSlug.Discuss,
+  ToolSlug.Transcribe,
+  ToolSlug.Segment,
+  ToolSlug.Paratext,
 ];
 
 const toolMap = [
-  { from: 'audio', to: 'discuss' },
-  { from: 'backTranslate', to: 'segment' },
+  { from: 'audio', to: ToolSlug.Discuss },
+  { from: 'backTranslate', to: ToolSlug.Segment },
 ];
 
 interface ISwitches {
@@ -50,7 +59,7 @@ export const useTools = () => {
   };
 
   const getToolOptions = () => {
-    return toolNames.map(
+    return toolSlugs.map(
       (v) =>
         ({
           label: localizedTool(v),
