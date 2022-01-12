@@ -1085,7 +1085,6 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "seconds": string;
     "silence": string;
     "slowerTip": string;
-    "pause": string;
     "timerTip": string;
     "undoTip": string;
 };

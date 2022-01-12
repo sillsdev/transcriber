@@ -1160,7 +1160,6 @@ const initialState = {
 			"seconds": "seconds",
 			"silence": "Silence",
 			"slowerTip": "Slower [{0}]",
-			"pause": "Pause [{0}]",
 			"timerTip": "Timestamp [{0}]",
 			"undoTip": "Undo",
 		}
