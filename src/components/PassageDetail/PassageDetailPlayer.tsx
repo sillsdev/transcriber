@@ -1,7 +1,6 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { IState } from '../../model';
 import WSAudioPlayer from '../WSAudioPlayer';
 
@@ -13,13 +12,24 @@ interface IProps extends IStateProps {
 const INIT_PLAYER_HEIGHT = 280;
 
 export function PassageDetailPlayer(props: IProps) {
-  const { loading, pdBusy, setPDBusy, audioBlob, setSegments, segments } =
-    usePassageDetailContext();
-
-  const { playing, setPlaying } = useContext(PassageDetailContext).state;
+  const {
+    loading,
+    pdBusy,
+    setPDBusy,
+    audioBlob,
+    setSegments,
+    setupLocate,
+    playing,
+    setPlaying,
+  } = useContext(PassageDetailContext).state;
 
   const [playerSize] = useState(INIT_PLAYER_HEIGHT);
   const playedSecsRef = useRef<number>(0);
+  const [segments, setLocalSegments] = useState('{}');
+
+  const setPlayerSegments = (segments: string) => {
+    setLocalSegments(segments);
+  };
 
   const onSegmentChange = (segments: string) => {
     setSegments(segments);
@@ -31,6 +41,14 @@ export function PassageDetailPlayer(props: IProps) {
   const onInteraction = () => {
     //focus on add comment?? focusOnTranscription();
   };
+
+  useEffect(() => {
+    setupLocate(setPlayerSegments);
+    return () => {
+      setupLocate();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>
