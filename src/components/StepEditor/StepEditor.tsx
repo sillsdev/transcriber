@@ -15,7 +15,7 @@ import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { CheckedChoice as ShowAll } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
 import { toCamel, useRemoteSave } from '../../utils';
-import { related, useTools } from '../../crud';
+import { related, ToolSlug, useTools } from '../../crud';
 import { AddRecord } from '../../model/baseModel';
 import { useSnackBar } from '../../hoc/SnackBar';
 
@@ -185,7 +185,7 @@ export const StepEditor = ({ process, org }: IProps) => {
       return;
     }
     adding.current = true;
-    const tool = 'discuss';
+    const tool = ToolSlug.Discuss;
     const rec = {
       type: 'orgworkflowstep',
       attributes: {

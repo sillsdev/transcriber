@@ -32,7 +32,7 @@ import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord';
 import PassageBackTranslate from '../components/PassageDetail/PassageBackTranslate';
-import { useStepTool } from '../crud';
+import { ToolSlug, useStepTool } from '../crud';
 import { RoleNames } from '../model';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -191,7 +191,7 @@ const PassageDetailGrids = (props: IProps) => {
         <Grid item className={classes.description} xs={12}>
           <WorkflowSteps />
         </Grid>
-        {tool === 'resource' && (
+        {tool === ToolSlug.Resource && (
           <Grid container direction="row" className={classes.row}>
             {/* <Grid item xs={12}>
                 <PassageDetailToolbar />
@@ -203,23 +203,21 @@ const PassageDetailGrids = (props: IProps) => {
             </Grid>
           </Grid>
         )}
-        {tool === 'record' && (
+        {tool === ToolSlug.Record && (
           <Grid container direction="row" className={classes.row}>
             <Grid item xs={12}>
               <PassageDetailRecord width={width - 20} />
             </Grid>
           </Grid>
         )}
-        {tool === 'segment' && (
+        {tool === ToolSlug.Segment && (
           <Grid container direction="row" className={classes.row}>
             <Grid item xs={12}>
               <PassageBackTranslate width={width - 20} />
             </Grid>
           </Grid>
         )}
-        {(tool === 'discuss' ||
-          tool === 'teamCheck' ||
-          tool === 'keyTerms') && (
+        {(tool === ToolSlug.Discuss || tool === ToolSlug.TeamCheck) && (
           <>
             <Paper className={classes.paper}>
               <Wrapper>
@@ -230,7 +228,7 @@ const PassageDetailGrids = (props: IProps) => {
                   onChange={handleSplitSize}
                 >
                   <Pane className={classes.pane}>
-                    {tool === 'teamCheck' && (
+                    {tool === ToolSlug.TeamCheck && (
                       <Grid item className={classes.description} xs={12}>
                         <TeamCheckReference width={playerWidth} />
                       </Grid>
