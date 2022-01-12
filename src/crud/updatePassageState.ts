@@ -3,7 +3,7 @@ import Memory from '@orbit/memory';
 import { PassageStateChange, ActivityStates, Passage } from '../model';
 import { AddRecord, UpdateLastModifedBy } from '../model/baseModel';
 
-const AddPassageStateChangeToOps = (
+export const AddPassageStateChangeToOps = (
   t: TransformBuilder,
   ops: Operation[],
   passage: string,
@@ -19,7 +19,6 @@ const AddPassageStateChangeToOps = (
       comments: comment,
     },
   } as PassageStateChange;
-
   ops.push(...AddRecord(t, psc, userId, memory));
   const passRecId = { type: 'passage', id: passage };
   ops.push(t.replaceRelatedRecord(psc, 'passage', passRecId));

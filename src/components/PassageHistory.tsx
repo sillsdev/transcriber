@@ -178,7 +178,7 @@ export function PassageHistory(props: IProps) {
             )
           );
         }
-        if (psc.attributes.state !== curState) {
+        if (psc.attributes.state && psc.attributes.state !== curState) {
           curState = psc.attributes.state;
           results.push(
             historyItem(psc, activityStateStr.getString(curState), 's', false)

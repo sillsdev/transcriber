@@ -19,10 +19,11 @@ import {
   ArtifactCategory,
   WorkflowStep,
   IWorkflowStepsStrings,
+  IPassageDetailStepCompleteStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   useFetchMediaUrl,
   remoteIdGuid,
@@ -32,6 +33,7 @@ import {
   useArtifactType,
   findRecord,
   remoteId,
+  AddPassageStateChangeToOps,
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
@@ -57,6 +59,7 @@ export const getPlanName = (plan: Plan) => {
 interface IStateProps {
   wfStr: IWorkflowStepsStrings;
   sharedStr: ISharedStrings;
+  stepCompleteStr: IPassageDetailStepCompleteStrings;
   allBookData: BookName[];
   booksLoaded: boolean;
   lang: string;
@@ -64,6 +67,7 @@ interface IStateProps {
 const mapStateToProps = (state: IState): IStateProps => ({
   wfStr: localStrings(state, { layout: 'workflowSteps' }),
   sharedStr: localStrings(state, { layout: 'shared' }),
+  stepCompleteStr: localStrings(state, { layout: 'passageDetailStepComplete' }),
   allBookData: state.books.bookData,
   booksLoaded: state.books.loaded,
   lang: state.strings.lang,
@@ -204,7 +208,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const [reporter] = useGlobal('errorReporter');
     const { auth, passages, sections, sectionResources, mediafiles } = props;
     const { workflowSteps, orgWorkflowSteps } = props;
-    const { wfStr, sharedStr } = props;
+    const { wfStr, sharedStr, stepCompleteStr } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
     const { pasId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
@@ -233,6 +237,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
     const { localizedArtifactType } = useArtifactType();
     const { localizedArtifactCategory } = useArtifactCategory();
+    const { localizedWorkStep } = useOrgWorkflowSteps();
 
     const setOrgWorkflowSteps = (steps: OrgWorkflowStep[]) => {
       setState((state: ICtxState) => {
@@ -310,14 +315,14 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       var completed = state.psgCompleted;
       var remId = remoteId('orgworkflowstep', stepid, memory.keyMap) || stepid;
       var step = state.psgCompleted.find((s) => s.stepid === remId);
+      var rec = findRecord(
+        memory,
+        'orgworkflowstep',
+        stepid
+      ) as OrgWorkflowStep;
       if (step) {
         step.complete = complete;
       } else {
-        var rec = findRecord(
-          memory,
-          'orgworkflowstep',
-          stepid
-        ) as OrgWorkflowStep;
         completed.push({ stepid: remId, complete, name: rec.attributes.name });
       }
       setState((state: ICtxState) => {
@@ -330,9 +335,27 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         type: 'passage',
         id: remoteIdGuid('passage', pasId, memory.keyMap) || pasId,
       };
-      memory.update((t: TransformBuilder) =>
-        t.replaceAttribute(recId, 'stepComplete', JSON.stringify({ completed }))
+      var tb = new TransformBuilder();
+      var ops = [] as Operation[];
+      ops.push(
+        tb.replaceAttribute(
+          recId,
+          'stepComplete',
+          JSON.stringify({ completed })
+        )
       );
+      AddPassageStateChangeToOps(
+        tb,
+        ops,
+        recId.id,
+        '',
+        `${
+          complete ? stepCompleteStr.title : stepCompleteStr.incomplete
+        } : ${localizedWorkStep(rec.attributes.name)}`,
+        user,
+        memory
+      );
+      memory.update(ops);
     };
 
     const getSharedResources = async () => {

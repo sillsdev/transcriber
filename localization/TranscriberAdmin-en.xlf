@@ -2932,6 +2932,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailStepComplete.incomplete">
+         <segment>
+            <source>Step Incomplete</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailToolbar.add">
          <segment>
             <source>Passage Detail Toolbar</source>
