@@ -368,7 +368,7 @@ export const DiscussionCard = (props: IProps) => {
   };
 
   const handleReset = () => {
-    setEditSubject('');
+    if (!onAddComplete) setEditSubject('');
     setEditRole('');
     setEditUser('');
     setEditCategory('');
@@ -376,6 +376,7 @@ export const DiscussionCard = (props: IProps) => {
 
   useEffect(() => {
     handleReset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentstep]);
 
   const handleDelete = () => {
