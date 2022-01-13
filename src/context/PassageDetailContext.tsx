@@ -238,6 +238,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { localizedArtifactType } = useArtifactType();
     const { localizedArtifactCategory } = useArtifactCategory();
     const { localizedWorkStep } = useOrgWorkflowSteps();
+    const getStepsBusy = useRef<boolean>(false);
 
     const setOrgWorkflowSteps = (steps: OrgWorkflowStep[]) => {
       setState((state: ICtxState) => {
@@ -626,20 +627,25 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
 
     useEffect(() => {
       var wf: SimpleWf[] = [];
-      GetOrgWorkflowSteps({ process: 'ANY' }).then(
-        (orgsteps: OrgWorkflowStep[]) => {
-          setOrgWorkflowSteps(orgsteps);
-          wf = orgsteps.map((s) => {
-            return {
-              id: s.id,
-              label:
-                wfStr.getString(toCamel(s.attributes.name)) ||
-                s.attributes.name,
-            };
-          });
-          setState((state: ICtxState) => ({ ...state, workflow: wf }));
-        }
-      );
+      if (!getStepsBusy.current) {
+        getStepsBusy.current = true;
+
+        GetOrgWorkflowSteps({ process: 'ANY' }).then(
+          (orgsteps: OrgWorkflowStep[]) => {
+            setOrgWorkflowSteps(orgsteps);
+            wf = orgsteps.map((s) => {
+              return {
+                id: s.id,
+                label:
+                  wfStr.getString(toCamel(s.attributes.name)) ||
+                  s.attributes.name,
+              };
+            });
+            setState((state: ICtxState) => ({ ...state, workflow: wf }));
+            getStepsBusy.current = false;
+          }
+        );
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [workflowSteps, orgWorkflowSteps]);
 
