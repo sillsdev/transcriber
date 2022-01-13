@@ -598,6 +598,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
 
 export interface IPassageDetailStepCompleteStrings extends Localize.LocalizedStringsMethods {
     "title": string;
+    "incomplete": string;
 };
 
 export interface IPassageDetailToolbarStrings extends Localize.LocalizedStringsMethods {

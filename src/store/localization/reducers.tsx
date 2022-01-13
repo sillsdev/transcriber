@@ -640,6 +640,7 @@ const initialState = {
 	"passageDetailStepComplete": new LocalizedStrings({
 		"en": {
 			"title": "Step Complete",
+			"incomplete": "Step Incomplete",
 		}
 	}),
 	"passageDetailToolbar": new LocalizedStrings({

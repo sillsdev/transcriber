@@ -10,6 +10,7 @@ export interface Passage extends BaseModel {
     hold: boolean;
     title: string;
     lastComment: string;
+    stepComplete: string; //json
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
@@ -18,7 +19,6 @@ export interface Passage extends BaseModel {
     section: RecordRelationship;
     users: RecordHasManyRelationship;
     media: RecordRelationship;
-    orgworkflowstep: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
   startChapter: number; //calculated

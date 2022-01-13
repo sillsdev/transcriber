@@ -3421,6 +3421,13 @@
                <context context-type="sourcefile">passageDetailStepComplete.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="passageDetailStepComplete.incomplete">
+            <source>Step Incomplete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetailStepComplete.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="passageDetailToolbar.add">
             <source>Passage Detail Toolbar</source>
             <target/>
