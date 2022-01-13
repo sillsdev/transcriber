@@ -326,19 +326,21 @@ export function Loading(props: IProps) {
           const oProjRec = planRec && getOfflineProject(planRec);
           if (!oProjRec?.attributes?.offlineAvailable) fromUrl = null;
         } else {
-          const projectId = related(planRec, 'project') as string;
-          LoadProjData(projectId, () => {
-            setPlan(planId);
-            setProjectType(projectId);
-            setMyProjRole(projectId);
-          });
-          const projRec = memory.cache.query((q: QueryBuilder) =>
-            q.findRecord({ type: 'project', id: projectId })
-          );
-          if (projRec) {
-            setProject(projectId);
-            const orgId = related(projRec, 'organization') as string;
-            setOrganization(orgId);
+          const projectId = related(planRec, 'project') as string | null;
+          if (projectId) {
+            LoadProjData(projectId, () => {
+              setPlan(planId);
+              setProjectType(projectId);
+              setMyProjRole(projectId);
+            });
+            const projRec = memory.cache.query((q: QueryBuilder) =>
+              q.findRecord({ type: 'project', id: projectId })
+            );
+            if (projRec) {
+              setProject(projectId);
+              const orgId = related(projRec, 'organization') as string;
+              setOrganization(orgId);
+            }
           }
         }
       } else if (!/^\/profile/.test(fromUrl)) fromUrl = null;
