@@ -196,6 +196,7 @@ export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods
 
 export interface IDiscussionListStrings extends Localize.LocalizedStringsMethods {
     "add": string;
+    "categoryList": string;
     "collapse": string;
     "discussionFilter": string;
     "filterStatus": string;
@@ -229,8 +230,10 @@ export interface IEmailUnverifiedStrings extends Localize.LocalizedStringsMethod
 };
 
 export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {
+    "all": string;
     "allPassages": string;
     "allSteps": string;
+    "category": string;
     "forYou": string;
     "latestVersion": string;
     "resolved": string;

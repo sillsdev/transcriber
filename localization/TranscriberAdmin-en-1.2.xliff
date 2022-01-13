@@ -1005,6 +1005,13 @@
                <context context-type="sourcefile">discussionList.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="discussionList.categoryList">
+      		<source>Category List</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">discussionList.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="discussionList.collapse">
             <source>Show/Hide All Comments</source>
             <target/>
@@ -1173,6 +1180,13 @@
                <context context-type="sourcefile">EmailUnverified.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="filterMenu.all">
+      		<source>All</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">filterMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="filterMenu.allPassages">
       		<source>All Passages</source>
       		<target/>
@@ -1182,6 +1196,13 @@
       	</trans-unit>
       	<trans-unit id="filterMenu.allSteps">
       		<source>All Steps</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">filterMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="filterMenu.category">
+      		<source>Category</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">filterMenu.tsx</context>

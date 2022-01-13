@@ -23,8 +23,11 @@ import AddIcon from '@material-ui/icons/Add';
 import HideIcon from '@material-ui/icons/ArrowDropUp';
 import ShowIcon from '@material-ui/icons/ArrowDropDown';
 import DiscussionCard from './DiscussionCard';
+import BigDialog from '../../hoc/BigDialog';
+import CategoryList, { CatData } from './CategoryList';
 import { withData } from '../../mods/react-orbitjs';
 import { useGlobal } from 'reactn';
+import { useDiscussionOrg } from '../../crud';
 import FilterMenu, { IFilterState } from './FilterMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -74,13 +77,13 @@ export function DiscussionList(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [planId] = useGlobal('plan');
   const [userId] = useGlobal('user');
-  const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
   const [displayDiscussions, setDisplayDiscussions] = useState<Discussion[]>(
     []
   );
   const [collapsed, setCollapsed] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
   const ctx = useContext(PassageDetailContext);
   const { currentstep, rowData, discussionSize, passage, getSegments } =
     ctx.state;
@@ -98,6 +101,9 @@ export function DiscussionList(props: IProps) {
   });
   const { forYou, resolved, latestVersion, allPassages, allSteps } =
     filterState;
+  const [catFilter, setCatFilter] = useState<CatData[]>([]);
+  const [catSelect, setCatSelect] = useState<string[]>([]);
+  const discussionOrg = useDiscussionOrg();
 
   // All passages is currently giving all passages in all projects.
   // we would need this if we only wanted the passages of this project.
@@ -107,20 +113,23 @@ export function DiscussionList(props: IProps) {
   //   [mediafiles, planId]
   // );
 
+  const handleCategory = () => {
+    setCategoryOpen(!categoryOpen);
+  };
+
+  const handleCatFilter = (catData: CatData[]) => {
+    setCatFilter(catData);
+    setCatSelect(
+      catData.reduce((p, v) => {
+        return v.selected ? p.concat(v.id) : p;
+      }, Array<string>())
+    );
+  };
+
   const currentPassage = (d: Discussion) => {
     const mediaId = related(d, 'mediafile');
     const mediaRec = mediafiles.find((m) => m.id === mediaId);
     return mediaRec && passage && related(mediaRec, 'passage') === passage.id;
-  };
-
-  const discussionOrg = (d: Discussion) => {
-    const id = related(d, 'orgWorkflowStep');
-    if (!id) return '';
-    const stepRecId = { type: 'orgworkflowstep', id };
-    const rec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord(stepRecId)
-    );
-    return related(rec, 'organization');
   };
 
   const projRoleId = useMemo(
@@ -171,7 +180,9 @@ export function DiscussionList(props: IProps) {
                 (allPassages || currentPassage(d)) &&
                 (allSteps
                   ? discussionOrg(d) === organization
-                  : related(d, 'orgWorkflowStep') === currentstep)
+                  : related(d, 'orgWorkflowStep') === currentstep) &&
+                (catSelect.length === 0 ||
+                  catSelect.includes(related(d, 'artifactCategory')))
             )
             .sort((x, y) =>
               x.attributes.dateCreated < y.attributes.dateCreated ? -1 : 1
@@ -180,7 +191,7 @@ export function DiscussionList(props: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [discussions, currentstep, adding, filterState]);
+  }, [discussions, currentstep, adding, filterState, catFilter]);
 
   useEffect(() => {
     if (changed) {
@@ -199,6 +210,7 @@ export function DiscussionList(props: IProps) {
     setAdding(true);
     setChanged(true);
   };
+
   const handleToggleCollapse = () => {
     setCollapsed(!collapsed);
   };
@@ -207,6 +219,9 @@ export function DiscussionList(props: IProps) {
     if (what === 'Close') {
     } else if (Object.keys(filterState).includes(what)) {
       setFilterState({ ...filterState, [what]: !filterState[what] });
+    } else {
+      console.log(what);
+      setCategoryOpen(true);
     }
   };
 
@@ -227,6 +242,7 @@ export function DiscussionList(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [displayDiscussions, discussions]
   );
+
   return (
     <Paper id="DiscussionList" className={classes.root} style={rootWidthStyle}>
       <div className={classes.discussionHead}>
@@ -237,7 +253,11 @@ export function DiscussionList(props: IProps) {
           <Typography>{filterStatus}</Typography>
         </div>
         <div>
-          <FilterMenu state={filterState} action={handleFilterAction} />
+          <FilterMenu
+            state={filterState}
+            action={handleFilterAction}
+            cats={catSelect.length}
+          />
           <IconButton
             id="addDiscussion"
             className={classes.actionButton}
@@ -270,6 +290,13 @@ export function DiscussionList(props: IProps) {
           />
         ))}
       </Grid>
+      <BigDialog
+        title={t.categoryList}
+        isOpen={categoryOpen}
+        onOpen={handleCategory}
+      >
+        <CategoryList catFilter={catFilter} onCatFilter={handleCatFilter} />
+      </BigDialog>
     </Paper>
   );
 }
