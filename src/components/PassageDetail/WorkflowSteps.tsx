@@ -1,4 +1,3 @@
-import React, { useMemo } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { Stage } from '../../control/Stage';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
@@ -13,19 +12,14 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export function WorkflowSteps() {
-  const { workflow, psgCompletedIndex, currentstep, setCurrentStep } =
+  const { workflow, stepComplete, currentstep, setCurrentStep } =
     usePassageDetailContext();
   const classes = useStyles();
 
-  const index = useMemo(
-    () => (workflow ? workflow.findIndex((wf) => wf.id === currentstep) : 0),
-    [currentstep, workflow]
-  );
-
-  const curColor = (i: number) => {
-    return i === index
+  const curColor = (id: string) => {
+    return id === currentstep
       ? '#70DBFF'
-      : i <= psgCompletedIndex
+      : stepComplete(id)
       ? '#D6F5FF'
       : undefined;
   };
@@ -40,14 +34,14 @@ export function WorkflowSteps() {
 
   return (
     <div className={classes.root}>
-      {workflow.map((w, i) => {
+      {workflow.map((w) => {
         return (
           <Stage
             key={w.id}
             id={w.id}
             label={w.label}
-            color={curColor(i)}
-            done={i <= psgCompletedIndex}
+            color={curColor(w.id)}
+            done={stepComplete(w.id)}
             select={handleSelect}
           />
         );
