@@ -589,7 +589,43 @@
             <target>Удалить</target>
          </segment>
       </unit>
-      <unit id="electronImport.allDataOverwritten">
+   	<unit id="discussionList.add">
+   		<segment>
+   			<source>Add Discussion</source>
+   			<target>Добавить обсуждение</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionList.categoryList">
+   		<segment>
+   			<source>Category List</source>
+   			<target>Список категорий</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionList.collapse">
+   		<segment>
+   			<source>Show/Hide All Comments</source>
+   			<target>Показать/Скрыть все комментарии</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionList.discussionFilter">
+   		<segment>
+   			<source>Discussion Filter</source>
+   			<target>Дискуссионный фильтр</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionList.filterStatus">
+   		<segment>
+   			<source>{0} / {1} discussions</source>
+   			<target>{0} / {1} обсуждения</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionList.title">
+   		<segment>
+   			<source>Discussions</source>
+   			<target>Обсуждения</target>
+   		</segment>
+   	</unit>
+   	<unit id="electronImport.allDataOverwritten">
          <segment>
             <source/>
             <target/>
@@ -709,7 +745,49 @@
             <target/>
          </segment>
       </unit>
-     <unit id="grid.all">
+   	<unit id="filterMenu.all">
+   		<segment>
+   			<source>All</source>
+   			<target>Все</target>
+   		</segment>
+   	</unit>
+   	<unit id="filterMenu.allPassages">
+   		<segment>
+   			<source>All Passages</source>
+   			<target>Все отрывки</target>
+   		</segment>
+   	</unit>
+   	<unit id="filterMenu.allSteps">
+   		<segment>
+   			<source>All Steps</source>
+   			<target>Все шаги</target>
+   		</segment>
+   	</unit>
+   	<unit id="filterMenu.category">
+   		<segment>
+   			<source>Category</source>
+   			<target>Категория</target>
+   		</segment>
+   	</unit>
+   	<unit id="filterMenu.forYou">
+   		<segment>
+   			<source>For You</source>
+   			<target>Для тебя</target>
+   		</segment>
+   	</unit>
+   	<unit id="filterMenu.latestVersion">
+   		<segment>
+   			<source>Latest Version</source>
+   			<target>Последняя версия</target>
+   		</segment>
+   	</unit>
+   	<unit id="filterMenu.resolved">
+   		<segment>
+   			<source>Resolved</source>
+   			<target>Решено</target>
+   		</segment>
+   	</unit>
+   	<unit id="grid.all">
          <segment>
             <source>All</source>
             <target>Все</target>

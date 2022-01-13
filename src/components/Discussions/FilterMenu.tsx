@@ -71,11 +71,12 @@ interface IStateProps {
 interface IProps extends IStateProps {
   state: IFilterState;
   action?: (what: string) => void;
+  cats: number;
   stopPlayer?: () => void;
 }
 
 export function FilterMenu(props: IProps) {
-  const { action, t, stopPlayer } = props;
+  const { action, cats, t, stopPlayer } = props;
   const { forYou, resolved, latestVersion, allPassages, allSteps } =
     props.state;
   const classes = useStyles();
@@ -135,6 +136,10 @@ export function FilterMenu(props: IProps) {
         <StyledMenuItem id="all-steps-filt" onClick={handle('allSteps')}>
           <ListItemIcon>{allSteps ? <BoxClose /> : <BoxOpen />}</ListItemIcon>
           <ListItemText primary={t.allSteps} />
+        </StyledMenuItem>
+        <StyledMenuItem id="category-filt" onClick={handle('category')}>
+          <ListItemIcon>{cats === 0 ? t.all : cats.toString()}</ListItemIcon>
+          <ListItemText primary={t.category} />
         </StyledMenuItem>
       </StyledMenu>
     </>

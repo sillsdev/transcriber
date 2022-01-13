@@ -590,7 +590,43 @@
             <target>Supprimer</target>
          </segment>
       </unit>
-      <unit id="electronImport.allDataOverwritten">
+   	<unit id="discussionList.add">
+   		<segment>
+   			<source>Add Discussion</source>
+   			<target>Ajouter une discussion</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionList.categoryList">
+   		<segment>
+   			<source>Category List</source>
+   			<target>Liste des catégories</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionList.collapse">
+   		<segment>
+   			<source>Show/Hide All Comments</source>
+   			<target>Afficher/masquer tous les commentaires</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionList.discussionFilter">
+   		<segment>
+   			<source>Discussion Filter</source>
+   			<target>Filtre de discussion</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionList.filterStatus">
+   		<segment>
+   			<source>{0} / {1} discussions</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="discussionList.title">
+   		<segment>
+   			<source>Discussions</source>
+   			<target>Discussions</target>
+   		</segment>
+   	</unit>
+   	<unit id="electronImport.allDataOverwritten">
          <segment>
             <source>All {name0} data will be overwritten.</source>
             <target>Toutes les données {name0} seront écrasées.</target>
@@ -710,7 +746,49 @@
             <target>Veuillez vérifier en cliquant sur le lien dans l'e-mail d'autorisation envoyé à votre compte.</target>
          </segment>
       </unit>
-      <unit id="grid.all">
+   	<unit id="filterMenu.all">
+   		<segment>
+   			<source>All</source>
+   			<target>Toutes</target>
+   		</segment>
+   	</unit>
+   	<unit id="filterMenu.allPassages">
+   		<segment>
+   			<source>All Passages</source>
+   			<target>Tous les passages</target>
+   		</segment>
+   	</unit>
+   	<unit id="filterMenu.allSteps">
+   		<segment>
+   			<source>All Steps</source>
+   			<target>Toutes les étapes</target>
+   		</segment>
+   	</unit>
+   	<unit id="filterMenu.category">
+   		<segment>
+   			<source>Category</source>
+   			<target>Catégorie</target>
+   		</segment>
+   	</unit>
+   	<unit id="filterMenu.forYou">
+   		<segment>
+   			<source>For You</source>
+   			<target>Pour vous</target>
+   		</segment>
+   	</unit>
+   	<unit id="filterMenu.latestVersion">
+   		<segment>
+   			<source>Latest Version</source>
+   			<target>Dernière version</target>
+   		</segment>
+   	</unit>
+   	<unit id="filterMenu.resolved">
+   		<segment>
+   			<source>Resolved</source>
+   			<target>Résolu</target>
+   		</segment>
+   	</unit>
+   	<unit id="grid.all">
          <segment>
             <source>All</source>
             <target>Tout</target>

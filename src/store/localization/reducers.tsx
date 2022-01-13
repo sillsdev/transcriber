@@ -219,6 +219,7 @@ const initialState = {
 	"discussionList": new LocalizedStrings({
 		"en": {
 			"add": "Add Discussion",
+			"categoryList": "Category List",
 			"collapse": "Show/Hide All Comments",
 			"discussionFilter": "Discussion Filter",
 			"filterStatus": "{0} / {1} discussions",
@@ -255,8 +256,10 @@ const initialState = {
 	}),
 	"filterMenu": new LocalizedStrings({
 		"en": {
+			"all": "All",
 			"allPassages": "All Passages",
 			"allSteps": "All Steps",
+			"category": "Category",
 			"forYou": "For You",
 			"latestVersion": "Latest Version",
 			"resolved": "Resolved",

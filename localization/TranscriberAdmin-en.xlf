@@ -862,6 +862,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionList.categoryList">
+         <segment>
+            <source>Category List</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionList.collapse">
          <segment>
             <source>Show/Hide All Comments</source>
@@ -1006,6 +1012,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="filterMenu.all">
+         <segment>
+            <source>All</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="filterMenu.allPassages">
          <segment>
             <source>All Passages</source>
@@ -1015,6 +1027,12 @@
       <unit id="filterMenu.allSteps">
          <segment>
             <source>All Steps</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.category">
+         <segment>
+            <source>Category</source>
             <target/>
          </segment>
       </unit>
