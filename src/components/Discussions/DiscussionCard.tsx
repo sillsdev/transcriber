@@ -571,17 +571,18 @@ export const DiscussionCard = (props: IProps) => {
           ) : (
             <Grid container className={classes.title}>
               <Grid item className={classes.topicItem}>
-                {startEnd(discussion.attributes?.subject) && (
-                  <IconButton
-                    id="location"
-                    size="small"
-                    className={classes.actionButton}
-                    title={t.locate}
-                    onClick={handleLocate}
-                  >
-                    <LocationIcon fontSize="small" />
-                  </IconButton>
-                )}
+                {startEnd(discussion.attributes?.subject) &&
+                  related(discussion, 'mediafile') === mediafileId && (
+                    <IconButton
+                      id="location"
+                      size="small"
+                      className={classes.actionButton}
+                      title={t.locate}
+                      onClick={handleLocate}
+                    >
+                      <LocationIcon fontSize="small" />
+                    </IconButton>
+                  )}
                 <Typography
                   variant="h6"
                   component="h2"

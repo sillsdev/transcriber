@@ -21,6 +21,7 @@ export function PassageDetailPlayer(props: IProps) {
     setupLocate,
     playing,
     setPlaying,
+    currentstep,
   } = useContext(PassageDetailContext).state;
 
   const [playerSize] = useState(INIT_PLAYER_HEIGHT);
@@ -48,7 +49,7 @@ export function PassageDetailPlayer(props: IProps) {
       setupLocate();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentstep]);
 
   return (
     <div>
