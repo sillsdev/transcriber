@@ -84,16 +84,21 @@ export function CategoryList(props: IProps) {
 
   return (
     <List>
-      {catFilter.map((d) => {
-        return (
-          <ListItem button onClick={handleToggle(d.id)}>
-            <ListItemIcon>
-              {d.selected ? <SelectedIcon /> : <NotSelectedIcon />}
-            </ListItemIcon>
-            <ListItemText primary={`${getCatName(d.category)} (${d.count})`} />
-          </ListItem>
-        );
-      })}
+      {catFilter
+        .sort((i, j) => (i.category < j.category ? -1 : 1))
+        .sort((i, j) => (!i.id ? 1 : 0) - (!j.id ? 1 : 0))
+        .map((d) => {
+          return (
+            <ListItem button onClick={handleToggle(d.id)}>
+              <ListItemIcon>
+                {d.selected ? <SelectedIcon /> : <NotSelectedIcon />}
+              </ListItemIcon>
+              <ListItemText
+                primary={`${getCatName(d.category)} (${d.count})`}
+              />
+            </ListItem>
+          );
+        })}
     </List>
   );
 }

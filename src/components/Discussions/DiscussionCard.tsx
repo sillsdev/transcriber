@@ -377,7 +377,7 @@ export const DiscussionCard = (props: IProps) => {
   useEffect(() => {
     handleReset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentstep]);
+  }, [currentstep, onAddComplete]);
 
   const handleDelete = () => {
     var ops: Operation[] = [];
