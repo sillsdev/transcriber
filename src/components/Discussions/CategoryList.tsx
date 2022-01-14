@@ -67,10 +67,11 @@ export function CategoryList(props: IProps) {
           }
         });
       const catData: CatData[] = Object.keys(catCount).map((id) => {
-        const category = artifactCategory.find((c) => c.id === id)?.attributes
-          ?.categoryname;
+        const category =
+          artifactCategory.find((c) => c.id === id)?.attributes?.categoryname ||
+          t.uncategorized;
         return {
-          id,
+          id: id === 'null' ? null : id,
           category,
           selected: false,
           count: catCount[id],

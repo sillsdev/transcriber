@@ -199,7 +199,145 @@
             <target>Sim</target>
          </segment>
       </unit>
-      <unit id="assignmentTable.assignSec">
+   	<unit id="artifactCategory.activity">
+   		<segment>
+   			<source>Activity</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactCategory.biblestory">
+   		<segment>
+   			<source>Bible Story</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactCategory.cultural">
+   		<segment>
+   			<source>Cultural</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactCategory.geographic">
+   		<segment>
+   			<source>Geographic</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactCategory.grammar">
+   		<segment>
+   			<source>Grammar</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactCategory.person">
+   		<segment>
+   			<source>Person</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactCategory.scripture">
+   		<segment>
+   			<source>Scripture</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactCategory.theology">
+   		<segment>
+   			<source>Theology</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactCategory.uncategorized">
+   		<segment>
+   			<source>Uncategorized</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactCategory.word">
+   		<segment>
+   			<source>Word</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactType.backtranslation">
+   		<segment>
+   			<source>Back Translation</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactType.comment">
+   		<segment>
+   			<source>Comment</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactType.resource">
+   		<segment>
+   			<source>Resource</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactType.sharedresource">
+   		<segment>
+   			<source>Shared Resource</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactType.testing">
+   		<segment>
+   			<source>Testing</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="artifactType.vernacular">
+   		<segment>
+   			<source>Vernacular</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="selectArtifactCategory.addNewCategory">
+   		<segment>
+   			<source>Add New Category</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="selectArtifactCategory.artifactCategory">
+   		<segment>
+   			<source>Category</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="selectArtifactCategory.duplicateCategory">
+   		<segment>
+   			<source>Category already exists.</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="selectArtifactCategory.newArtifactCategory">
+   		<segment>
+   			<source>New Category</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="selectArtifactType.addNewType">
+   		<segment>
+   			<source>Add New Type</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="selectArtifactType.artifactType">
+   		<segment>
+   			<source>Artifact Type</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="selectArtifactType.newArtifactType">
+   		<segment>
+   			<source>New Artifact Type</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="assignmentTable.assignSec">
          <segment>
             <source>Assign {0}</source>
             <target/>

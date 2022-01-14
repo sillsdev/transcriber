@@ -250,6 +250,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactCategory.uncategorized">
+         <segment>
+            <source>Uncategorized</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactCategory.word">
          <segment>
             <source>Word</source>

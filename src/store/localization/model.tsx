@@ -52,6 +52,7 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
     "person": string;
     "scripture": string;
     "theology": string;
+    "uncategorized": string;
     "word": string;
 };
 

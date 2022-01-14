@@ -289,6 +289,13 @@
                <context context-type="sourcefile">artifactCategory.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="artifactCategory.uncategorized">
+      		<source>Uncategorized</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">artifactCategory.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="artifactCategory.word">
             <source>Word</source>
             <target/>

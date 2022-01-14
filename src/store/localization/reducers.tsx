@@ -61,6 +61,7 @@ const initialState = {
 			"person": "Person",
 			"scripture": "Scripture",
 			"theology": "Theology",
+			"uncategorized": "Uncategorized",
 			"word": "Word",
 		}
 	}),
