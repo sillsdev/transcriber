@@ -431,7 +431,7 @@ export const DiscussionCard = (props: IProps) => {
     setChanged(true);
   };
   const handleSave = async () => {
-    if (changed) {
+    if (changed || (editSubject.length !== 0 && onAddComplete)) {
       discussion.attributes.subject = editSubject;
       var ops: Operation[] = [];
       var t = new TransformBuilder();
