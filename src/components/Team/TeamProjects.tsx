@@ -23,7 +23,7 @@ export const TeamProjects = (props: IProps) => {
     <>
       <Grid container>
         {(personalProjects.length > 0 || !offline || offlineOnly) && (
-          <PersonalItem key={1} />
+          <PersonalItem key={1} auth={auth} />
         )}
         {teams.map((i) => {
           return <TeamItem key={i.id} team={i} />;
