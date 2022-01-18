@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, IPassageRecordStrings } from '../model';
@@ -8,10 +14,6 @@ import * as actions from '../store';
 import {
   Button,
   createStyles,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   FormControl,
   FormControlLabel,
   makeStyles,
@@ -19,7 +21,6 @@ import {
   RadioGroup,
   TextField,
   Theme,
-  Typography,
 } from '@material-ui/core';
 import WSAudioPlayer from './WSAudioPlayer';
 import { QueryBuilder } from '@orbit/data';
@@ -69,13 +70,15 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps, IDispatchProps {
-  visible: boolean;
+  doSave: boolean;
+  onReady: () => void;
   mediaId: string;
   auth: Auth;
-  multiple?: boolean;
   metaData?: JSX.Element;
   defaultFilename?: string;
-  ready: () => boolean;
+  setCanSave: (canSave: boolean) => void;
+  setCanCancel: (canCancel: boolean) => void;
+  setStatusText: (status: string) => void;
   uploadMethod?: (files: File[]) => Promise<void>;
   cancelMethod?: () => void;
   allowWave?: boolean;
@@ -85,14 +88,15 @@ interface IProps extends IStateProps, IDispatchProps {
 function PassageRecord(props: IProps) {
   const {
     t,
-    visible,
+    doSave,
+    onReady,
     mediaId,
     auth,
     defaultFilename,
     uploadMethod,
-    cancelMethod,
-    ready,
-    metaData,
+    setCanSave,
+    setCanCancel,
+    setStatusText,
     allowWave,
     showFilename,
     convert_status,
@@ -108,7 +112,6 @@ function PassageRecord(props: IProps) {
   const [filetype, setFiletype] = useState('');
   const [originalBlob, setOriginalBlob] = useState<Blob>();
   const [audioBlob, setAudioBlob] = useState<Blob>();
-  const [open, setOpen] = useState(visible);
   const [loading, setLoading] = useState(false);
   const [memory] = useGlobal('memory');
   const [filechanged, setFilechanged] = useState(false);
@@ -117,7 +120,7 @@ function PassageRecord(props: IProps) {
   const { showMessage } = useSnackBar();
   const [converting, setConverting] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [statusText, setStatusText] = useState('');
+  const saveRef = useRef(false);
   const extensions = useMemo(
     () => ['mp3', 'mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'],
     []
@@ -135,25 +138,20 @@ function PassageRecord(props: IProps) {
     []
   );
   const classes = useStyles();
-  const close = () => {
-    reset();
-    setOpen(false);
-  };
 
   useEffect(() => {
     setConverting(false);
     setUploading(false);
+    saveRef.current = false;
     setStatusText('');
+    setAudioBlob(undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (mediaId !== mediaState.urlMediaId) fetchMediaUrl({ id: mediaId, auth });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
-
-  useEffect(() => {
-    setOpen(visible);
-  }, [visible]);
 
   useEffect(() => {
     setExtension(mimeType);
@@ -166,6 +164,35 @@ function PassageRecord(props: IProps) {
       else setName(t.defaultFilename);
     }
   }, [userHasSetName, defaultFilename, t.defaultFilename]);
+
+  useEffect(() => {
+    setCanSave(
+      blobReady && name !== '' && filechanged && !converting && !uploading
+    );
+  }, [blobReady, name, filechanged, converting, uploading, setCanSave]);
+
+  useEffect(() => {
+    setCanCancel(!converting && !uploading);
+  }, [converting, uploading, setCanCancel]);
+
+  const doUpload = useCallback(
+    async (blob: Blob) => {
+      setUploading(true);
+      setStatusText(t.saving);
+      var files = [
+        new File([blob], name + '.' + filetype, {
+          type: mimeType,
+        }),
+      ];
+      if (uploadMethod && files) {
+        console.log('uploading', files);
+        await uploadMethod(files);
+      }
+      setUploading(false);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [name, filetype, mimeType]
+  );
 
   useEffect(() => {
     if (convert_status) {
@@ -181,15 +208,31 @@ function PassageRecord(props: IProps) {
         doUpload(convert_blob).then(() => {
           resetConvertBlob();
           setConverting(false);
-          close();
+          onReady();
         });
       else {
         setConverting(false);
-        close();
+        onReady();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [convert_status, convert_complete, convert_blob]);
+
+  useEffect(() => {
+    console.log('doSave', doSave, 'audioBlob', audioBlob);
+    if (doSave && !saveRef.current) {
+      if (audioBlob) {
+        saveRef.current = true;
+        if (mimeType !== 'audio/wav') {
+          setConverting(true);
+          convertBlob(audioBlob, mimeType);
+        } else {
+          doUpload(audioBlob).then(() => onReady());
+        }
+        return;
+      }
+    }
+  }, [audioBlob, doSave, mimeType, doUpload, convertBlob, onReady]);
 
   const setExtension = (mimeType: string) => {
     if (mimeType) {
@@ -208,43 +251,11 @@ function PassageRecord(props: IProps) {
     setFilechanged(false);
     setOriginalBlob(undefined);
   };
-  const fileName = () => name; // + '.' + filetype;
 
   const handleChangeMime = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMimeType((event.target as HTMLInputElement).value);
   };
 
-  const doUpload = async (blob: Blob) => {
-    setUploading(true);
-    setStatusText(t.saving);
-    var files = [
-      new File([blob], fileName() + '.' + filetype, {
-        type: mimeType,
-      }),
-    ];
-    if (uploadMethod && files) {
-      await uploadMethod(files);
-    }
-    setUploading(false);
-  };
-  const handleAddOrSave = () => {
-    if (audioBlob) {
-      if (mimeType !== 'audio/wav') {
-        setConverting(true);
-        convertBlob(audioBlob, mimeType);
-      } else {
-        doUpload(audioBlob).then(() => close());
-      }
-      return;
-    }
-    close();
-  };
-  const handleCancel = () => {
-    if (cancelMethod) {
-      cancelMethod();
-    }
-    close();
-  };
   const handleChangeFileName = (e: any) => {
     e.persist();
     setName(e.target.value);
@@ -272,100 +283,60 @@ function PassageRecord(props: IProps) {
   };
 
   return (
-    <Dialog
-      className={classes.root}
-      open={open}
-      onClose={handleCancel}
-      aria-labelledby="recDlg"
-    >
-      <DialogTitle id="recDlg">{t.title}</DialogTitle>
-      <DialogContent>
-        {mediaState.status === MediaSt.FETCHED &&
-          mediaState.urlMediaId === mediaId && (
-            <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
-              {loading ? t.loading : t.loadfile}
-            </Button>
-          )}
-        <WSAudioPlayer
-          allowRecord={true}
-          size={350}
-          blob={originalBlob}
-          onBlobReady={onBlobReady}
-          setChanged={setFilechanged}
-          setBlobReady={setBlobReady}
-        />
-        <div className={classes.row}>
-          {showFilename && (
-            <TextField
-              className={classes.formControl}
-              id="filename"
-              label={t.fileName}
-              value={fileName()}
-              onChange={handleChangeFileName}
-              required={true}
-            />
-          )}
-          {allowWave && (
-            <FormControl component="fieldset" className={classes.formControl}>
-              <RadioGroup
-                row={true}
-                id="filetype"
-                aria-label="filetype"
-                name="filetype"
-                value={mimeType}
-                onChange={handleChangeMime}
-              >
-                <FormControlLabel
-                  id="compressed"
-                  value={'audio/ogg;codecs=opus'}
-                  control={<Radio />}
-                  label={t.compressed}
-                />
-                <FormControlLabel
-                  id="uncompressed"
-                  value={'audio/wav'}
-                  control={<Radio />}
-                  label={t.uncompressed}
-                />
-              </RadioGroup>
-            </FormControl>
-          )}
-        </div>
-        {metaData}
-      </DialogContent>
-      <DialogActions>
-        <Typography variant="caption" display="block" gutterBottom>
-          {statusText}
-        </Typography>
-        <Button
-          id="rec-cancel"
-          className={classes.button}
-          onClick={handleCancel}
-          variant="outlined"
-          color="primary"
-          disabled={converting || uploading}
-        >
-          {t.cancel}
-        </Button>
-        <Button
-          id="rec-save"
-          className={classes.button}
-          onClick={handleAddOrSave}
-          variant="contained"
-          color="primary"
-          disabled={
-            !blobReady ||
-            (ready && !ready()) ||
-            name === '' ||
-            !filechanged ||
-            converting ||
-            uploading
-          }
-        >
-          {t.save}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <>
+      {mediaState.status === MediaSt.FETCHED &&
+        mediaState.urlMediaId === mediaId && (
+          <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
+            {loading ? t.loading : t.loadfile}
+          </Button>
+        )}
+      <WSAudioPlayer
+        allowRecord={true}
+        size={350}
+        blob={originalBlob}
+        onBlobReady={onBlobReady}
+        setChanged={setFilechanged}
+        setBlobReady={setBlobReady}
+      />
+      <div className={classes.row}>
+        {showFilename && (
+          <TextField
+            className={classes.formControl}
+            id="filename"
+            label={t.fileName}
+            value={name}
+            onChange={handleChangeFileName}
+            required={true}
+            fullWidth={true}
+          />
+        )}
+        {allowWave && (
+          <FormControl component="fieldset" className={classes.formControl}>
+            <RadioGroup
+              row={true}
+              id="filetype"
+              aria-label="filetype"
+              name="filetype"
+              value={mimeType}
+              onChange={handleChangeMime}
+            >
+              <FormControlLabel
+                id="compressed"
+                value={'audio/ogg;codecs=opus'}
+                control={<Radio />}
+                label={t.compressed}
+              />
+              <FormControlLabel
+                id="uncompressed"
+                value={'audio/wav'}
+                control={<Radio />}
+                label={t.uncompressed}
+              />
+            </RadioGroup>
+          </FormControl>
+        )}
+      </div>
+    </>
   );
 }
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

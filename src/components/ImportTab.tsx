@@ -839,6 +839,7 @@ export function ImportTab(props: IProps) {
           )}
           <MediaUpload
             visible={uploadVisible}
+            onVisible={setUploadVisible}
             uploadType={UploadType.ITF}
             uploadMethod={uploadITF}
             cancelMethod={uploadCancel}

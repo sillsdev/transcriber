@@ -14,8 +14,8 @@ import JSONAPISource from '@orbit/jsonapi';
 import { currentDateTime } from '../utils';
 import { TransformBuilder } from '@orbit/data';
 import { AddRecord } from '../model/baseModel';
-import PassageRecord from './PassageRecord';
 import { useArtifactType } from '../crud/useArtifactType';
+import PassageRecordDlg from './PassageRecordDlg';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -234,7 +234,6 @@ export const Uploader = (props: IProps) => {
     authRef.current = auth;
     artifactTypeRef.current = artifactType || '';
     doUpload(0);
-    onOpen(false);
   };
 
   const uploadCancel = () => {
@@ -275,13 +274,13 @@ export const Uploader = (props: IProps) => {
   return (
     <div>
       {recordAudio && !importList && (
-        <PassageRecord
+        <PassageRecordDlg
           visible={isOpen}
+          onVisible={onOpen}
           mediaId={mediaId}
           auth={auth}
-          multiple={multiple}
           uploadMethod={uploadMedia}
-          cancelMethod={uploadCancel}
+          onCancel={uploadCancel}
           metaData={metaData}
           ready={ready}
           defaultFilename={defaultFilename}
@@ -292,6 +291,7 @@ export const Uploader = (props: IProps) => {
       {!recordAudio && !importList && (
         <MediaUpload
           visible={isOpen}
+          onVisible={onOpen}
           uploadType={UploadType.Media}
           multiple={multiple}
           uploadMethod={uploadMedia}
