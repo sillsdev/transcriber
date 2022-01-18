@@ -121,6 +121,8 @@ const initState = {
   auth: undefined as any,
   controlStrings: {} as IControlStrings,
   lang: 'en',
+  ts: {} as ISharedStrings,
+  resetOrbitError: (() => {}) as typeof actions.resetOrbitError,
   bookSuggestions: Array<OptionType>(),
   bookMap: {} as BookNameMap,
   allBookData: Array<BookName>(),
@@ -196,6 +198,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       lang,
       controlStrings,
       t,
+      ts,
       sharedStrings,
       cardStrings,
       vProjectStrings,
@@ -230,6 +233,8 @@ const TeamProvider = withData(mapRecordsToProps)(
       pickerStrings,
       projButtonStrings,
       newProjectStrings,
+      ts,
+      resetOrbitError,
     });
     const vProjectCreate = useVProjectCreate();
     const vProjectUpdate = useVProjectUpdate();
