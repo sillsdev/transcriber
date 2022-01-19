@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { SectionResource, OrgWorkflowStep } from '../model';
 import { AddRecord } from '../model/baseModel';
-import { related } from '.';
+import { related, ToolSlug } from '.';
 
 export const useSecResCreate = (section: RecordIdentity) => {
   const [memory] = useGlobal('memory');
@@ -16,7 +16,7 @@ export const useSecResCreate = (section: RecordIdentity) => {
     ) as OrgWorkflowStep[];
     const internalizationStep = workflowsteps
       .filter((s) => related(s, 'organization') === organization)
-      .find((s) => s.attributes?.name === 'Internalization');
+      .find((s) => s.attributes?.tool === ToolSlug.Resource);
     return internalizationStep;
   }, [memory.cache, organization]);
 

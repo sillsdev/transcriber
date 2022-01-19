@@ -26,7 +26,6 @@ import ForwardIcon from '@material-ui/icons/Refresh';
 import ReplayIcon from '@material-ui/icons/Replay';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
-import StopIcon from '@material-ui/icons/Stop';
 import LoopIcon from '@material-ui/icons/Loop';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SilenceIcon from '@material-ui/icons/SpaceBar';
@@ -193,6 +192,7 @@ interface IProps extends IStateProps {
   onSaveProgress?: (progress: number) => void; //user initiated
   onDuration?: (duration: number) => void;
   onInteraction?: () => void;
+  onRecording?: (r: boolean) => void;
 }
 function valuetext(value: number) {
   return `${Math.floor(value)}%`;
@@ -240,6 +240,7 @@ function WSAudioPlayer(props: IProps) {
     onSaveProgress,
     onDuration,
     onInteraction,
+    onRecording,
   } = props;
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
@@ -607,11 +608,13 @@ function WSAudioPlayer(props: IProps) {
   const setRecording = (value: boolean) => {
     recordingRef.current = value;
     setRecordingx(value);
+    if (onRecording) onRecording(value);
   };
   const handleRecorder = () => {
     if (!allowRecord || playingRef.current || processRecordRef.current)
       return false;
     if (!recordingRef.current) {
+      if (setBlobReady) setBlobReady(false);
       wsPause(); //stop if playing
       recordStartPosition.current = wsPosition();
       recordOverwritePosition.current = recordStartPosition.current;
@@ -718,17 +721,7 @@ function WSAudioPlayer(props: IProps) {
                         onClick={handlePlayStatus}
                         disabled={duration === 0 || recording}
                       >
-                        <>
-                          {playing ? (
-                            allowRecord ? (
-                              <StopIcon />
-                            ) : (
-                              <PauseIcon />
-                            )
-                          ) : (
-                            <PlayIcon />
-                          )}
-                        </>
+                        <>{playing ? <PauseIcon /> : <PlayIcon />}</>
                       </IconButton>
                     </span>
                   </LightTooltip>

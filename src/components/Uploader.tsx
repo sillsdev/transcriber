@@ -7,15 +7,17 @@ import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import localStrings from '../selector/localize';
 import MediaUpload, { UploadType } from './MediaUpload';
-import { getMediaInPlans, related, remoteIdNum } from '../crud';
+import {
+  findRecord,
+  pullPlanMedia,
+  related,
+  remoteIdNum,
+  useOfflnMediafileCreate,
+} from '../crud';
 import Auth from '../auth/Auth';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
-import { currentDateTime } from '../utils';
-import { TransformBuilder } from '@orbit/data';
-import { AddRecord } from '../model/baseModel';
-import PassageRecord from './PassageRecord';
-import { useArtifactType } from '../crud/useArtifactType';
+import PassageRecordDlg from './PassageRecordDlg';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -90,7 +92,6 @@ export const Uploader = (props: IProps) => {
   const [errorReporter] = useGlobal('errorReporter');
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
-  const [user] = useGlobal('user');
   const [offline] = useGlobal('offline');
   const planIdRef = useRef<string>(plan);
   const successCount = useRef<number>(0);
@@ -98,7 +99,7 @@ export const Uploader = (props: IProps) => {
   const authRef = useRef<Auth>(auth);
   const mediaIdRef = useRef<string[]>([]);
   const artifactTypeRef = useRef<string>('');
-  const { vernacularId } = useArtifactType();
+  const { createMedia } = useOfflnMediafileCreate();
 
   const finishMessage = () => {
     setTimeout(() => {
@@ -116,24 +117,9 @@ export const Uploader = (props: IProps) => {
     }, 1000);
   };
 
-  const getPlanId = () =>
-    remoteIdNum('plan', planIdRef.current, memory.keyMap) || planIdRef.current;
   const getArtifactTypeId = () =>
     remoteIdNum('artifacttype', artifactType || '', memory.keyMap) ||
     artifactType;
-  const pullPlanMedia = async () => {
-    const planId = getPlanId();
-    if (planId !== undefined) {
-      var filterrec = {
-        attribute: 'plan-id',
-        value: planId,
-      };
-      var t = await remote.pull((q) =>
-        q.findRecords('mediafile').filter(filterrec)
-      );
-      await memory.sync(t);
-    }
-  };
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     if (success) successCount.current += 1;
@@ -142,62 +128,34 @@ export const Uploader = (props: IProps) => {
     if (data?.stringId) mediaIdRef.current.push(data?.stringId);
     else if (success && data) {
       // offlineOnly
-      const planRecId = { type: 'plan', id: planIdRef.current };
-      if (planRecId.id) {
-        var media = getMediaInPlans(
-          [planRecId.id],
-          memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[],
-          artifactTypeRef.current,
-          artifactTypeRef.current === vernacularId
-        ).filter((m) => m.attributes.originalFile === data.originalFile);
-        var num = 1;
-        var psg = '';
-        if (media.length > 0) {
-          var last = media.sort((i, j) =>
-            i.attributes.versionNumber > j.attributes.versionNumber ? -1 : 1
-          )[0];
-          num = last.attributes.versionNumber + 1;
-          psg = related(last, 'passage');
+      var passageId = '';
+      var num = 1;
+      if (mediaId) {
+        const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFile;
+        if (mediaRec) {
+          passageId = related(mediaRec, 'passage');
+          num = mediaRec.attributes.versionNumber + 1;
         }
-        const mediaRec: MediaFile = {
-          type: 'mediafile',
-          attributes: {
-            ...data,
-            versionNumber: num,
-            transcription: '',
-            filesize: uploadList[n].size,
-            position: 0,
-            dateCreated: currentDateTime(),
-            dateUpdated: currentDateTime(),
-          },
-        } as any;
-        const t = new TransformBuilder();
-        await memory.update([
-          ...AddRecord(t, mediaRec, user, memory),
-          t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
-        ]);
-        if (psg && psg !== '')
-          await memory.update([
-            t.replaceRelatedRecord(mediaRec, 'passage', {
-              type: 'passage',
-              id: psg,
-            }),
-          ]);
-        mediaIdRef.current.push(mediaRec.id);
-      } else {
-        throw new Error('Plan Id not set.  Media not created.');
       }
+      const newMediaRec = await createMedia(
+        data,
+        num,
+        uploadList[n].size,
+        passageId
+      );
+      mediaIdRef.current.push(newMediaRec.id);
     }
     setComplete(Math.min((n * 100) / uploadList.length, 100));
     const next = n + 1;
     if (next < uploadList.length && !status.canceled) {
       doUpload(next);
     } else if (!offline) {
-      pullPlanMedia().then(() => finishMessage());
+      pullPlanMedia(plan, memory, remote).then(() => finishMessage());
     } else {
       finishMessage();
     }
   };
+  const getPlanId = () => remoteIdNum('plan', plan, memory.keyMap) || plan;
 
   const doUpload = (currentlyLoading: number) => {
     const uploadList = fileList.current;
@@ -234,7 +192,6 @@ export const Uploader = (props: IProps) => {
     authRef.current = auth;
     artifactTypeRef.current = artifactType || '';
     doUpload(0);
-    onOpen(false);
   };
 
   const uploadCancel = () => {
@@ -275,13 +232,13 @@ export const Uploader = (props: IProps) => {
   return (
     <div>
       {recordAudio && !importList && (
-        <PassageRecord
+        <PassageRecordDlg
           visible={isOpen}
+          onVisible={onOpen}
           mediaId={mediaId}
           auth={auth}
-          multiple={multiple}
           uploadMethod={uploadMedia}
-          cancelMethod={uploadCancel}
+          onCancel={uploadCancel}
           metaData={metaData}
           ready={ready}
           defaultFilename={defaultFilename}
@@ -292,6 +249,7 @@ export const Uploader = (props: IProps) => {
       {!recordAudio && !importList && (
         <MediaUpload
           visible={isOpen}
+          onVisible={onOpen}
           uploadType={UploadType.Media}
           multiple={multiple}
           uploadMethod={uploadMedia}

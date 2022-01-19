@@ -5164,9 +5164,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.withoutSave">
+      <unit id="workflowSteps.saveFirst">
          <segment>
-            <source>Change step without saving?</source>
+            <source>Save before changing step?</source>
             <target/>
          </segment>
       </unit>
