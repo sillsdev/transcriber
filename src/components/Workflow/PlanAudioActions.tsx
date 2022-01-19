@@ -15,7 +15,7 @@ import MicIcon from '@material-ui/icons/Mic';
 import SharedCheckbox from '@material-ui/icons/CheckBoxOutlined';
 import NotSharedCheckbox from '@material-ui/icons/CheckBoxOutlineBlankOutlined';
 import VersionsIcon from '@material-ui/icons/List';
-
+import DetailIcon from '@material-ui/icons/Edit';
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 
@@ -55,6 +55,7 @@ interface IProps extends IStateProps {
   onPlayStatus: (mediaId: string) => void;
   onDelete: (i: number) => () => void;
   onHistory: (i: number) => () => void;
+  onPassageDetail: (i: number) => () => void;
 }
 
 export function PlanAudioActions(props: IProps) {
@@ -72,6 +73,7 @@ export function PlanAudioActions(props: IProps) {
     onPlayStatus,
     onHistory,
     isPlaying,
+    onPassageDetail,
   } = props;
   const classes = useStyles();
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -140,6 +142,15 @@ export function PlanAudioActions(props: IProps) {
           onClick={handlePlayStatus()}
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
+        </IconButton>
+      )}
+      {isPassage && (
+        <IconButton
+          id="planAudDetail"
+          title={t.passageDetail}
+          onClick={onPassageDetail(rowIndex)}
+        >
+          <DetailIcon className={classes.actionButton} />
         </IconButton>
       )}
     </div>

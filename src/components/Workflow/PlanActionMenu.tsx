@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { useGlobal } from 'reactn';
 import {
   ISharedStrings,
   IPlanActionsStrings,
@@ -20,9 +19,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import MoreIcon from '@material-ui/icons/MoreHoriz';
 import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
-// import TranscribeIcon from '@material-ui/icons/EditOutlined';
 import TranscribeIcon from '../../control/TranscribeIcon';
-import DetailIcon from '@material-ui/icons/Edit';
 import { elemOffset } from '../../utils';
 import { isElectron } from '../../api-variable';
 import { AudacityLogo } from '../../control';
@@ -62,7 +59,6 @@ interface IProps extends IStateProps {
   active: boolean;
   onTranscribe: (i: number) => () => void;
   onAudacity: (i: number) => () => void;
-  onPassageDetail: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
 }
@@ -76,7 +72,6 @@ export function PlanActionMenu(props: IProps) {
     readonly,
     onTranscribe,
     onAudacity,
-    onPassageDetail,
     onAssign,
     onDelete,
     canAssign,
@@ -84,7 +79,6 @@ export function PlanActionMenu(props: IProps) {
     active,
   } = props;
   const classes = useStyles();
-  const [offlineOnly] = useGlobal('offlineOnly');
   const [open, setOpen] = React.useState(false);
   const [hover, setHover] = React.useState(false);
   const top = React.useRef<number>(0);
@@ -217,15 +211,6 @@ export function PlanActionMenu(props: IProps) {
                         disabled={(mediaId || '') === ''}
                       >
                         <TranscribeIcon />
-                      </MenuItem>
-                    )}
-                    {isPassage && !offlineOnly && (
-                      <MenuItem
-                        id="planActDetail"
-                        title={t.passageDetail}
-                        onClick={onPassageDetail(rowIndex)}
-                      >
-                        <DetailIcon className={classes.action} />
                       </MenuItem>
                     )}
                     {isElectron && isPassage && !readonly && (

@@ -68,6 +68,8 @@ export const PersonalItem = (props: IProps) => {
   const handleEditWorkflow = () => {
     setShowWorkflow(true);
   };
+  const canModify = (offline: boolean, offlineOnly: boolean) =>
+    !offline || offlineOnly;
 
   useEffect(() => {
     getTeamId(undefined).then((val: string) => {
@@ -84,13 +86,15 @@ export const PersonalItem = (props: IProps) => {
           {t.personalProjects}
         </Typography>
         {'\u00A0'}
-        <Button
-          id="editWorkflow"
-          onClick={handleEditWorkflow}
-          variant="contained"
-        >
-          {t.editWorkflow}
-        </Button>
+        {canModify(isOffline, offlineOnly) && (
+          <Button
+            id="editWorkflow"
+            onClick={handleEditWorkflow}
+            variant="contained"
+          >
+            {t.editWorkflow}
+          </Button>
+        )}
       </div>
       <Grid container className={classes.cardFlow}>
         {personalProjects.map((i) => {
