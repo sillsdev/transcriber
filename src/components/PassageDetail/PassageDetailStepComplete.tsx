@@ -44,11 +44,9 @@ export const PassageDetailStepComplete = (props: IProps) => {
 
   const handleToggleComplete = () => {
     setStepComplete(currentstep, !complete);
-    if (!complete) {
+    if (!complete && currentIndex < orgWorkflowSteps.length - 1) {
       //turning it on so go to next step
-      if (currentIndex < orgWorkflowSteps.length - 1) {
-        setCurrentStep(orgWorkflowSteps[currentIndex + 1].id);
-      }
+      setCurrentStep(orgWorkflowSteps[currentIndex + 1].id);
     } else setComplete(!complete);
   };
 
