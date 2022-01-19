@@ -43,7 +43,6 @@ export const VersionDlg = (props: IProps) => {
   const [data, setData] = useState<IRow[]>([]);
   const [refresh, setRefresh] = useState(false);
   const { vernacularId } = useArtifactType();
-  const [mediaPlaying, setMediaPlaying] = useState(false);
 
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
@@ -75,8 +74,6 @@ export const VersionDlg = (props: IProps) => {
       setRefresh={setRefresh}
       playItem={playItem}
       setPlayItem={setPlayItem}
-      mediaPlaying={mediaPlaying}
-      setMediaPlaying={setMediaPlaying}
     />
   );
 };
