@@ -174,7 +174,7 @@ const PassageDetailGrids = (props: IProps) => {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
-
+  console.log('tool', tool);
   return (
     <div className={classes.panel2}>
       <Grid container direction="row" className={classes.row}>
@@ -206,7 +206,7 @@ const PassageDetailGrids = (props: IProps) => {
         {tool === ToolSlug.Record && (
           <Grid container direction="row" className={classes.row}>
             <Grid item xs={12}>
-              <PassageDetailRecord width={width - 20} />
+              <PassageDetailRecord auth={auth} />
             </Grid>
           </Grid>
         )}

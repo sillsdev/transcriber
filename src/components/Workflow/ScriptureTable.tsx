@@ -40,7 +40,6 @@ import {
   useRemoteSave,
   lookupBook,
   waitForIt,
-  cleanFileName,
   useCheckOnline,
   currentDateTime,
   hasAudacity,
@@ -72,6 +71,7 @@ import { useExternalLink } from '../useExternalLink';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
 import { useArtifactType } from '../../crud/useArtifactType';
+import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 
 const SaveWait = 500;
 
@@ -588,27 +588,11 @@ export function ScriptureTable(props: IProps) {
 
   const handleAssignClose = () => () => setAssignSectionVisible(false);
 
-  const setFilename = (wf: IWorkflow | undefined) => {
-    if (wf?.passageId?.id) {
-      var passageRec = memory.cache.query((q) =>
-        q.findRecord(wf.passageId as RecordIdentity)
-      ) as Passage;
-      var tmp =
-        (passageRec.attributes.book || '') + passageRec.attributes.reference;
-      if (!tmp.length) tmp = passageRec.id.slice(0, 4);
-      if (wf.mediaId) {
-        var mediaRec = memory.cache.query((q) =>
-          q.findRecord(wf.mediaId as RecordIdentity)
-        ) as MediaFile;
-        tmp += '_v' + (mediaRec.attributes.versionNumber + 1).toString();
-      }
-      setDefaultFilename(cleanFileName(tmp));
-    }
-  };
-
   const showUpload = (i: number, record: boolean) => {
     const { wf } = getByIndex(workflow, i);
-    setFilename(wf);
+    setDefaultFilename(
+      passageDefaultFilename(wf?.passageId?.id || '', memory, vernacularId)
+    );
     uploadItem.current = wf;
     setRecordAudio(record);
     setUploadVisible(true);

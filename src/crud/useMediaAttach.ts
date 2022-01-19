@@ -4,6 +4,7 @@ import { orbitErr } from '../utils';
 import * as actions from '../store';
 import { TransformBuilder, Operation } from '@orbit/data';
 import {
+  findRecord,
   getMediaInPlans,
   related,
   UpdatePassageStateOps,
@@ -37,7 +38,7 @@ export const useMediaAttach = (props: IProps) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
     var mediaRI = { type: 'mediafile', id: mediaId };
-    var mediaRec = memory.cache.query((q) => q.findRecord(mediaRI));
+    var mediaRec = findRecord(memory, 'mediafile', mediaId);
     if (!mediaRec) return;
     if (related(mediaRec, 'passage') !== passage) {
       var media = getMediaInPlans(

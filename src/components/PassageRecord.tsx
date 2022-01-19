@@ -77,7 +77,7 @@ interface IProps extends IStateProps, IDispatchProps {
   metaData?: JSX.Element;
   defaultFilename?: string;
   setCanSave: (canSave: boolean) => void;
-  setCanCancel: (canCancel: boolean) => void;
+  setCanCancel?: (canCancel: boolean) => void;
   setStatusText: (status: string) => void;
   uploadMethod?: (files: File[]) => Promise<void>;
   cancelMethod?: () => void;
@@ -172,7 +172,7 @@ function PassageRecord(props: IProps) {
   }, [blobReady, name, filechanged, converting, uploading, setCanSave]);
 
   useEffect(() => {
-    setCanCancel(!converting && !uploading);
+    if (setCanCancel) setCanCancel(!converting && !uploading);
   }, [converting, uploading, setCanCancel]);
 
   const doUpload = useCallback(
@@ -189,6 +189,7 @@ function PassageRecord(props: IProps) {
         await uploadMethod(files);
       }
       setUploading(false);
+      setFilechanged(false);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [name, filetype, mimeType]

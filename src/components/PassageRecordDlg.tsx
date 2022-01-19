@@ -44,6 +44,8 @@ const useStyles = makeStyles((theme: Theme) =>
     status: {
       marginRight: theme.spacing(2),
       alignSelf: 'center',
+      display: 'block',
+      gutterBottom: 'true',
     },
   })
 );
@@ -139,7 +141,7 @@ function PassageRecordDlg(props: IProps) {
         {metaData}
       </DialogContent>
       <DialogActions>
-        <Typography variant="caption" display="block" gutterBottom>
+        <Typography variant="caption" className={classes.status}>
           {statusText}
         </Typography>
         <Button
