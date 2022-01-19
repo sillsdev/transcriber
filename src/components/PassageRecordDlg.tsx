@@ -84,20 +84,19 @@ function PassageRecordDlg(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
-  const [doSave, setDoSave] = useState(false);
+  const [, setDoSave] = useGlobal('doSave');
 
   const [canSave, setCanSave] = useState(false);
   const [canCancel, setCanCancel] = useState(false);
   const classes = useStyles();
 
   const onReady = () => {
-    console.log('passage record says ready...');
+    setDoSave(false);
     close();
   };
 
   const close = () => {
     //reset();
-    console.log('closing...');
     onVisible(false);
   };
 
@@ -136,7 +135,6 @@ function PassageRecordDlg(props: IProps) {
           setCanSave={setCanSave}
           setCanCancel={setCanCancel}
           setStatusText={setStatusText}
-          doSave={doSave}
         />
         {metaData}
       </DialogContent>

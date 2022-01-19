@@ -174,7 +174,7 @@ const PassageDetailGrids = (props: IProps) => {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
-  console.log('tool', tool);
+
   return (
     <div className={classes.panel2}>
       <Grid container direction="row" className={classes.row}>

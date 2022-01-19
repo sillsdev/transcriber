@@ -37,7 +37,7 @@ import {
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
-import { loadBlob, logError, Severity, toCamel } from '../utils';
+import { loadBlob, logError, Severity, toCamel, useRemoteSave } from '../utils';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
@@ -217,6 +217,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const [user] = useGlobal('user');
     const [errorReporter] = useGlobal('errorReporter');
     const [changed] = useGlobal('changed');
+    const [startSave, , waitForSave] = useRemoteSave();
     const [, setComplete] = useGlobal('progress');
     const [status] = useState<IStatus>({ canceled: false });
     const [confirm, setConfirm] = useState('');
@@ -271,8 +272,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       }
     };
     const handleConfirmStep = () => {
-      handleSetCurrentStep(confirm);
-      setConfirm('');
+      startSave();
+      waitForSave(() => {
+        handleSetCurrentStep(confirm);
+        setConfirm('');
+      }, 400);
     };
     const handleRefuseStep = () => {
       setConfirm('');
@@ -736,7 +740,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             open={true}
             onClose={handleRefuseStep}
             title={wfStr.unsaved}
-            text={wfStr.withoutSave}
+            text={wfStr.saveFirst}
             yesResponse={handleConfirmStep}
             noResponse={handleRefuseStep}
           />

@@ -70,7 +70,6 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps, IDispatchProps {
-  doSave: boolean;
   onReady: () => void;
   mediaId: string;
   auth: Auth;
@@ -88,7 +87,6 @@ interface IProps extends IStateProps, IDispatchProps {
 function PassageRecord(props: IProps) {
   const {
     t,
-    doSave,
     onReady,
     mediaId,
     auth,
@@ -105,6 +103,7 @@ function PassageRecord(props: IProps) {
     convertBlob,
     resetConvertBlob,
   } = props;
+  const [doSave] = useGlobal('doSave');
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [name, setName] = useState(t.defaultFilename);
@@ -115,6 +114,7 @@ function PassageRecord(props: IProps) {
   const [loading, setLoading] = useState(false);
   const [memory] = useGlobal('memory');
   const [filechanged, setFilechanged] = useState(false);
+  const [recording, setRecording] = useState(false);
   const [blobReady, setBlobReady] = useState(true);
   const [mimeType, setMimeType] = useState('audio/ogg;codecs=opus');
   const { showMessage } = useSnackBar();
@@ -167,9 +167,22 @@ function PassageRecord(props: IProps) {
 
   useEffect(() => {
     setCanSave(
-      blobReady && name !== '' && filechanged && !converting && !uploading
+      blobReady &&
+        name !== '' &&
+        filechanged &&
+        !converting &&
+        !uploading &&
+        !recording
     );
-  }, [blobReady, name, filechanged, converting, uploading, setCanSave]);
+  }, [
+    blobReady,
+    name,
+    filechanged,
+    converting,
+    uploading,
+    recording,
+    setCanSave,
+  ]);
 
   useEffect(() => {
     if (setCanCancel) setCanCancel(!converting && !uploading);
@@ -185,7 +198,6 @@ function PassageRecord(props: IProps) {
         }),
       ];
       if (uploadMethod && files) {
-        console.log('uploading', files);
         await uploadMethod(files);
       }
       setUploading(false);
@@ -220,7 +232,6 @@ function PassageRecord(props: IProps) {
   }, [convert_status, convert_complete, convert_blob]);
 
   useEffect(() => {
-    console.log('doSave', doSave, 'audioBlob', audioBlob);
     if (doSave && !saveRef.current) {
       if (audioBlob) {
         saveRef.current = true;
@@ -246,6 +257,10 @@ function PassageRecord(props: IProps) {
     setAudioBlob(blob);
     setFilechanged(true);
   }
+  function onRecording(r: boolean) {
+    setRecording(r);
+  }
+
   const reset = () => {
     setMimeType('audio/ogg;codecs=opus');
     setUserHasSetName(false);
@@ -298,6 +313,7 @@ function PassageRecord(props: IProps) {
         onBlobReady={onBlobReady}
         setChanged={setFilechanged}
         setBlobReady={setBlobReady}
+        onRecording={onRecording}
       />
       <div className={classes.row}>
         {showFilename && (

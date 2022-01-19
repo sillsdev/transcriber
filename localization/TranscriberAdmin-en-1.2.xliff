@@ -6026,8 +6026,8 @@
       			<context context-type="sourcefile">passageDetail.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="workflowSteps.withoutSave">
-      		<source>Change step without saving?</source>
+      	<trans-unit id="workflowSteps.saveFirst">
+      		<source>Save before changing step?</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">passageDetail.tsx</context>

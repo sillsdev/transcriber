@@ -192,6 +192,7 @@ interface IProps extends IStateProps {
   onSaveProgress?: (progress: number) => void; //user initiated
   onDuration?: (duration: number) => void;
   onInteraction?: () => void;
+  onRecording?: (r: boolean) => void;
 }
 function valuetext(value: number) {
   return `${Math.floor(value)}%`;
@@ -239,6 +240,7 @@ function WSAudioPlayer(props: IProps) {
     onSaveProgress,
     onDuration,
     onInteraction,
+    onRecording,
   } = props;
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
@@ -606,6 +608,7 @@ function WSAudioPlayer(props: IProps) {
   const setRecording = (value: boolean) => {
     recordingRef.current = value;
     setRecordingx(value);
+    if (onRecording) onRecording(value);
   };
   const handleRecorder = () => {
     if (!allowRecord || playingRef.current || processRecordRef.current)

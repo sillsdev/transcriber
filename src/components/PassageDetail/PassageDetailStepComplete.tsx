@@ -36,7 +36,6 @@ export const PassageDetailStepComplete = (props: IProps) => {
   const [complete, setComplete] = useState(false);
 
   useEffect(() => {
-    console.log('currentstep, orgWorkflowsteps');
     var curIndex = orgWorkflowSteps.findIndex((s) => s.id === currentstep);
     setCurrentIndex(curIndex);
     setComplete(stepComplete(currentstep));

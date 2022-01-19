@@ -37,6 +37,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
+import { useRemoteSave } from '../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -79,13 +80,14 @@ export function PassageDetailRecord(props: IProps) {
   const { uploadFiles, nextUpload, uploadError, uploadComplete, doOrbitError } =
     props;
   const { mediafiles } = props;
+  const [startSave, saveCompleted] = useRemoteSave();
+  const [, setChanged] = useGlobal('changed');
   const [reporter] = useGlobal('errorReporter');
   const [offline] = useGlobal('offline');
   const [plan] = useGlobal('plan');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const { createMedia } = useOfflnMediafileCreate();
   const [statusText, setStatusText] = useState('');
-  const [doSave, setDoSave] = useState(false);
   const fileList = useRef<File[]>();
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
@@ -102,13 +104,14 @@ export function PassageDetailRecord(props: IProps) {
   const [attachPassage] = useMediaAttach({
     doOrbitError,
   });
-  const onReady = () => {
-    console.log('passage record says ready...');
-    setDoSave(false);
-  };
+
+  const onReady = () => {};
 
   useEffect(() => {
-    console.log('mediafileId', mediafileId);
+    setChanged(canSave);
+  }, [canSave]);
+
+  useEffect(() => {
     if (mediafileId !== mediaState.urlMediaId)
       fetchMediaUrl({ id: mediafileId, auth });
     setMediaRec(findRecord(memory, 'mediafile', mediafileId) as MediaFile);
@@ -138,7 +141,7 @@ export function PassageDetailRecord(props: IProps) {
   }, [uploadError]);
 
   const handleSave = () => {
-    setDoSave(true);
+    startSave();
   };
   const finishMessage = () => {
     setTimeout(() => {
@@ -165,7 +168,6 @@ export function PassageDetailRecord(props: IProps) {
       }
       await createMedia(data, num, uploadList[n].size, passage.id);
     }
-    setDoSave(false);
     setStatusText('');
     if (!offline) {
       pullPlanMedia(plan, memory, remote).then(() => {
@@ -177,10 +179,14 @@ export function PassageDetailRecord(props: IProps) {
           related(passage, 'section'),
           plan,
           mediaId
-        ).then(() => finishMessage());
+        ).then(() => {
+          finishMessage();
+          saveCompleted('');
+        });
       });
     } else {
       finishMessage();
+      saveCompleted('');
     }
   };
   const getPlanId = () => remoteIdNum('plan', plan, memory.keyMap) || plan;
@@ -213,7 +219,6 @@ export function PassageDetailRecord(props: IProps) {
         showFilename={true}
         setCanSave={setCanSave}
         setStatusText={setStatusText}
-        doSave={doSave}
       />
       <Typography variant="caption" className={classes.status}>
         {statusText}
