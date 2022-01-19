@@ -150,12 +150,17 @@ export const Uploader = (props: IProps) => {
     if (next < uploadList.length && !status.canceled) {
       doUpload(next);
     } else if (!offline) {
-      pullPlanMedia(plan, memory, remote).then(() => finishMessage());
+      pullPlanMedia(planIdRef.current, memory, remote).then(() => {
+        console.log('here');
+        finishMessage();
+      });
     } else {
       finishMessage();
     }
   };
-  const getPlanId = () => remoteIdNum('plan', plan, memory.keyMap) || plan;
+
+  const getPlanId = () =>
+    remoteIdNum('plan', planIdRef.current, memory.keyMap) || planIdRef.current;
 
   const doUpload = (currentlyLoading: number) => {
     const uploadList = fileList.current;
