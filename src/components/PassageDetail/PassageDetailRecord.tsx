@@ -109,6 +109,7 @@ export function PassageDetailRecord(props: IProps) {
 
   useEffect(() => {
     setChanged(canSave);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSave]);
 
   useEffect(() => {

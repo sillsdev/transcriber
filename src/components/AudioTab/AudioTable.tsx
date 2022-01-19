@@ -39,8 +39,7 @@ interface IProps extends IStateProps {
 }
 export const AudioTable = (props: IProps) => {
   const { data, setRefresh, lang, auth, t } = props;
-  const { playItem, setPlayItem, mediaPlaying, setMediaPlaying, onAttach } =
-    props;
+  const { playItem, setPlayItem, onAttach } = props;
   const ctx = React.useContext(PlanContext);
   const { connected, readonly, shared } = ctx.state;
   const [memory] = useGlobal('memory');
@@ -52,6 +51,7 @@ export const AudioTable = (props: IProps) => {
   const [confirmAction, setConfirmAction] = useState('');
   const [deleteItem, setDeleteItem] = useState(-1);
   const [showId, setShowId] = useState('');
+  const [mediaPlaying, setMediaPlaying] = useState(false);
   const columnDefs = shared
     ? [
         { name: 'planName', title: t.planName },
