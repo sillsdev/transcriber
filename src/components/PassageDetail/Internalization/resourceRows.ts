@@ -26,7 +26,7 @@ interface RowProps extends DataProps {
   media: MediaFile | undefined;
 }
 
-const oneRow = ({
+export const oneMediaRow = ({
   newRow,
   r,
   media,
@@ -87,7 +87,7 @@ export const mediaRows = (props: MediaProps) => {
       const artifactType = artifactTypes.find((t) => t.id === typId);
       const typeNameSlug = artifactType?.attributes?.typename || '';
       if (!isResource(typeNameSlug))
-        oneRow({ ...props, newRow, r: null, media });
+        oneMediaRow({ ...props, newRow, r: null, media });
     });
   return newRow;
 };
@@ -103,7 +103,7 @@ export const resourceRows = (props: IProps) => {
   res.forEach((r) => {
     const id = related(r, 'mediafile');
     const media = mediafiles.find((m) => m.id === id);
-    oneRow({ ...props, newRow, r, media });
+    oneMediaRow({ ...props, newRow, r, media });
   });
   return newRow;
 };

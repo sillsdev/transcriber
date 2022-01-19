@@ -47,6 +47,7 @@ import MediaPlayer from '../components/MediaPlayer';
 import {
   getResources,
   mediaRows,
+  oneMediaRow,
   resourceRows,
 } from '../components/PassageDetail/Internalization';
 import Confirm from '../components/AlertDialog';
@@ -207,6 +208,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
   )((props: IProps) => {
     const [reporter] = useGlobal('errorReporter');
     const { auth, passages, sections, sectionResources, mediafiles } = props;
+    const { artifactTypes, categories, userResources } = props;
     const { workflowSteps, orgWorkflowSteps } = props;
     const { wfStr, sharedStr, stepCompleteStr } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
@@ -372,21 +374,38 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     };
 
     const setSelected = (selected: string, rowData: IRow[] = state.rowData) => {
-      const i = rowData.findIndex((r) => r.mediafile.id === selected);
+      let i = rowData.findIndex((r) => r.mediafile.id === selected);
+      let newRows: IRow[] = [];
       if (i < 0) {
-        setState((state: ICtxState) => {
-          return {
-            ...state,
-            audioBlob: undefined,
-            index: -1,
-            selected,
-            playing: false,
-            mediaPlaying: false,
-            playItem: '',
-            loading: false,
-          };
-        });
-        return;
+        const media = mediafiles.find((m) => m.id === selected);
+        if (media) {
+          newRows = oneMediaRow({
+            newRow: state.rowData,
+            r: null,
+            media,
+            artifactTypes,
+            categories,
+            userResources,
+            user,
+            localizedCategory: localizedArtifactCategory,
+            localizedType: localizedArtifactType,
+          });
+          i = newRows.length - 1;
+        } else {
+          setState((state: ICtxState) => {
+            return {
+              ...state,
+              audioBlob: undefined,
+              index: -1,
+              selected,
+              playing: false,
+              mediaPlaying: false,
+              playItem: '',
+              loading: false,
+            };
+          });
+          return;
+        }
       }
       const r = rowData[i];
       if (state.index !== i || state.selected !== selected) {
@@ -414,6 +433,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
               playing: false,
               mediaPlaying: false,
               loading: fetching.current !== '',
+              rowData: newRows.length > 0 ? newRows : rowData,
             };
           });
         } else {
@@ -425,6 +445,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
               playing: false, //going to play a comment or resource so turn off vernacular
               playItem: r.mediafile.id,
               mediaPlaying: false,
+              rowData: newRows.length > 0 ? newRows : rowData,
             };
           });
         }
