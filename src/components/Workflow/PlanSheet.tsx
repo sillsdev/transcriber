@@ -532,6 +532,7 @@ export function PlanSheet(props: IProps) {
                           mediaId={rowInfo[rowIndex].mediaId?.id}
                           mediaShared={rowInfo[rowIndex].mediaShared}
                           onPlayStatus={handlePlayStatus}
+                          onPassageDetail={handlePassageDetail}
                           online={connected || offlineOnly}
                           readonly={readonly}
                           isPlaying={
@@ -597,7 +598,6 @@ export function PlanSheet(props: IProps) {
                     onDelete={handleConfirmDelete}
                     onTranscribe={handleTranscribe}
                     onAudacity={handleAudacity}
-                    onPassageDetail={handlePassageDetail}
                     readonly={readonly}
                     canAssign={projRole === RoleNames.Admin}
                     canDelete={projRole === RoleNames.Admin}
