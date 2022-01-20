@@ -88,10 +88,12 @@ export function PassageDetailArtifacts(props: IProps) {
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
-      (t) => t.attributes?.typename === 'resource'
+      (t) =>
+        t.attributes?.typename === 'resource' &&
+        Boolean(t?.keys?.remoteId) === !offlineOnly
     );
     return resourceType?.id;
-  }, [artifactTypes]);
+  }, [artifactTypes, offlineOnly]);
 
   const handlePlay = (id: string) => {
     if (id === playItem) setMediaPlaying(!mediaPlaying);
