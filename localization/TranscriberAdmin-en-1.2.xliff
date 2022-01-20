@@ -691,7 +691,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="cards.editWorkflow">
-      		<source>Edit Workflow</source>
+      		<source>Edit Workflow {0}</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TeamDialog.tsx</context>

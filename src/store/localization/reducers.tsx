@@ -150,7 +150,7 @@ const initialState = {
 			"delete": "Delete",
 			"draft": "Oral Drafting",
 			"deleteTeam": "Delete Team",
-			"editWorkflow": "Edit Workflow",
+			"editWorkflow": "Edit Workflow {0}",
 			"explainTeamDelete": "Deleting the team will delete all audio projects of the team.",
 			"import": "Import Audio Project",
 			"language": "Language: {0}",

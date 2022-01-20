@@ -92,7 +92,7 @@ export const PersonalItem = (props: IProps) => {
             onClick={handleEditWorkflow}
             variant="contained"
           >
-            {t.editWorkflow}
+            {t.editWorkflow.replace('{0}', '')}
           </Button>
         )}
       </div>
@@ -103,7 +103,7 @@ export const PersonalItem = (props: IProps) => {
         {(!isOffline || offlineOnly) && <AddCard team={null} />}
       </Grid>
       <BigDialog
-        title={t.editWorkflow}
+        title={t.editWorkflow.replace('{0}', `- ${t.personalProjects}`)}
         isOpen={showWorkflow}
         onOpen={handleWorkflow}
       >
