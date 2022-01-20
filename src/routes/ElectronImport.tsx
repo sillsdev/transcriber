@@ -189,7 +189,7 @@ export const useElectronImport = (
           projectNames += proj.attributes.name + ',';
           var op = getOfflineProject(proj.id);
           if (
-            op &&
+            op.attributes &&
             op.attributes.snapshotDate &&
             moment.utc(op.attributes.snapshotDate) > exportTime
           ) {
@@ -206,7 +206,7 @@ export const useElectronImport = (
               t.allDataOverwritten.replace('{name0}', ret.projectName);
           }
           //has our current data never been exported, or exported after incoming?
-          if (!op.attributes.exportedDate) {
+          if (!op.attributes || !op.attributes.exportedDate) {
             ret.warnMsg +=
               t.neverExported.replace('{name0}', ret.projectName) +
               '  ' +
