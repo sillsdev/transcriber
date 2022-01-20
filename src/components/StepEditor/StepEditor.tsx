@@ -186,10 +186,14 @@ export const StepEditor = ({ process, org }: IProps) => {
     }
     adding.current = true;
     const tool = ToolSlug.Discuss;
+    let mxSeq = 0;
+    rows.forEach((r) => {
+      mxSeq = Math.max(r.seq, mxSeq);
+    });
     const rec = {
       type: 'orgworkflowstep',
       attributes: {
-        sequencenum: rows.length,
+        sequencenum: mxSeq + 1,
         name,
         process: process || 'OBT',
         tool: JSON.stringify({ tool }),
