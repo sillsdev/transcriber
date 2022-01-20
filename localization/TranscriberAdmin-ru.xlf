@@ -571,6 +571,12 @@
             <target/>
          </segment>
       </unit>
+   	<unit id="cards.editWorkflow">
+   		<segment>
+   			<source>Edit Workflow - {0}</source>
+   			<target>Редактирование рабочего процесса {0}</target>
+   		</segment>
+   	</unit>
       <unit id="cards.delete">
          <segment>
             <source>Delete</source>

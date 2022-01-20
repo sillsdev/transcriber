@@ -139,7 +139,7 @@ export const TeamItem = (props: IProps) => {
                 onClick={handleEditWorkflow}
                 variant="contained"
               >
-                {t.editWorkflow}
+                {t.editWorkflow.replace('{0}', '')}
               </Button>
               {' \u00A0'}
               <Button
@@ -170,7 +170,10 @@ export const TeamItem = (props: IProps) => {
         <GroupTabs {...props} />
       </BigDialog>
       <BigDialog
-        title={t.editWorkflow}
+        title={t.editWorkflow.replace(
+          '{0}',
+          `- ${team?.attributes?.name || ''}`
+        )}
         isOpen={showWorkflow}
         onOpen={handleWorkflow}
       >

@@ -584,6 +584,12 @@
             <target>Supprimer l'équipe</target>
          </segment>
       </unit>
+   	<unit id="cards.editWorkflow">
+   		<segment>
+   			<source>Edit Workflow - {0}</source>
+   			<target>Modifier le flux de travail {0}</target>
+   		</segment>
+   	</unit>
       <unit id="cards.explainTeamDelete">
          <segment>
             <source>Deleting the team will delete all audio projects of the team.</source>

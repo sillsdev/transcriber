@@ -594,7 +594,7 @@
       </unit>
       <unit id="cards.editWorkflow">
          <segment>
-            <source>Edit Workflow</source>
+            <source>Edit Workflow {0}</source>
             <target/>
          </segment>
       </unit>
