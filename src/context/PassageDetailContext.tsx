@@ -150,6 +150,9 @@ const initState = {
   setPlaying: (playing: boolean) => {},
   mediaPlaying: false, //resource or comment
   setMediaPlaying: (playing: boolean) => {},
+  mediaPosition: 0, // resource or comment
+  mediaDuration: 0, // resource or comment
+  setMediaPosition: (pos: number) => {},
   playItem: '', //resource or comment
   rowData: Array<IRow>(),
   refresh: () => {},
@@ -242,6 +245,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { localizedArtifactCategory } = useArtifactCategory();
     const { localizedWorkStep } = useOrgWorkflowSteps();
     const getStepsBusy = useRef<boolean>(false);
+    const newMediaPosition = useRef<number>();
 
     const setOrgWorkflowSteps = (steps: OrgWorkflowStep[]) => {
       setState((state: ICtxState) => {
@@ -301,6 +305,26 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     };
     const handlePlayEnd = () => {
       setMediaPlaying(false);
+    };
+
+    const setMediaPosition = (pos: number) => {
+      newMediaPosition.current = pos;
+      setState((state: ICtxState) => {
+        return { ...state, mediaPosition: pos };
+      });
+    };
+
+    const handleMediaPosition = (mediaPosition: number) => {
+      setState((state: ICtxState) => {
+        return { ...state, mediaPosition };
+      });
+      newMediaPosition.current = undefined;
+    };
+
+    const handleMediaDuration = (mediaDuration: number) => {
+      setState((state: ICtxState) => {
+        return { ...state, mediaDuration };
+      });
     };
 
     const setPDBusy = (busy: boolean) => {
@@ -728,6 +752,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setupLocate,
             stepComplete,
             setStepComplete,
+            setMediaPosition,
           },
           setState,
         }}
@@ -740,6 +765,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             srcMediaId={state.playItem}
             requestPlay={state.mediaPlaying}
             onEnded={handlePlayEnd}
+            position={newMediaPosition.current}
+            onPosition={handleMediaPosition}
+            onDuration={handleMediaDuration}
           />
         )}
         <Uploader

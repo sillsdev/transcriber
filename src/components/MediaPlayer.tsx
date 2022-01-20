@@ -15,16 +15,29 @@ interface IProps extends IStateProps {
   srcMediaId: string;
   requestPlay: boolean;
   onEnded: () => void;
+  onPosition?: (timeStamp: number) => void;
+  position?: number;
+  onDuration?: (timeStamp: number) => void;
 }
 
 export function MediaPlayer(props: IProps) {
-  const { auth, srcMediaId, requestPlay, onEnded, ts } = props;
+  const {
+    auth,
+    srcMediaId,
+    requestPlay,
+    onEnded,
+    ts,
+    onPosition,
+    position,
+    onDuration,
+  } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
-  const audioRef = useRef<any>();
+  const audioRef = useRef<HTMLAudioElement>();
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
   const [ready, setReady] = useState(false);
+  const timeTrack = useRef<number>();
   const { showMessage } = useSnackBar();
 
   useEffect(() => {
@@ -60,19 +73,43 @@ export function MediaPlayer(props: IProps) {
       audioRef.current.play();
     } else if (!requestPlay) {
       if (playing) {
-        audioRef.current.pause();
+        if (audioRef.current) audioRef.current.pause();
         setPlaying(false);
       }
     }
   }, [ready, requestPlay, playing, playItem]);
 
+  useEffect(() => {
+    if (audioRef.current && position) audioRef.current.currentTime = position;
+  }, [position]);
+
   const ended = () => {
-    audioRef.current.currentTime = 0;
+    if (audioRef.current) audioRef.current.currentTime = 0;
     if (onEnded) onEnded();
   };
 
+  const timeUpdate = () => {
+    const el = audioRef.current as HTMLMediaElement;
+    const time = Math.round(el.currentTime);
+    if (time === timeTrack.current) return;
+    timeTrack.current = time;
+    if (onPosition) onPosition(time);
+  };
+
+  const durationChange = () => {
+    const el = audioRef.current as HTMLMediaElement;
+    if (onDuration) onDuration(el.duration);
+    timeTrack.current = undefined;
+  };
+
   return ready ? (
-    <audio onEnded={ended} ref={audioRef} src={mediaState.url} />
+    <audio
+      onEnded={ended}
+      ref={audioRef as any}
+      src={mediaState.url}
+      onTimeUpdate={timeUpdate}
+      onDurationChange={durationChange}
+    />
   ) : (
     <></>
   );

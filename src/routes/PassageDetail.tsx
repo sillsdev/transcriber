@@ -150,10 +150,8 @@ const PassageDetailGrids = (props: IProps) => {
   const ctx = useContext(PassageDetailContext);
   const { currentstep, discussionSize, setDiscussionSize } = ctx.state;
   const tool = useStepTool(currentstep);
-  const [playerWidth, setPlayerWidth] = useState(width - discussionSize);
 
   const handleSplitSize = debounce((e: number) => {
-    setPlayerWidth(e);
     setDiscussionSize(width - e);
   }, 50);
 
@@ -193,9 +191,6 @@ const PassageDetailGrids = (props: IProps) => {
         </Grid>
         {tool === ToolSlug.Resource && (
           <Grid container direction="row" className={classes.row}>
-            {/* <Grid item xs={12}>
-                <PassageDetailToolbar />
-              </Grid> */}
             <Grid item xs={12}>
               <Grid container>
                 <PassageDetailArtifacts auth={auth} />
@@ -233,7 +228,7 @@ const PassageDetailGrids = (props: IProps) => {
                     </Grid>
                     {tool === ToolSlug.TeamCheck && (
                       <Grid item className={classes.description} xs={12}>
-                        <TeamCheckReference width={playerWidth} />
+                        <TeamCheckReference />
                       </Grid>
                     )}
                   </Pane>

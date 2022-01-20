@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { ITeamCheckReferenceStrings, IState } from '../../model';
 import localStrings from '../../selector/localize';
@@ -48,17 +48,48 @@ interface IProps extends IStateProps {
 }
 
 export function TeamCheckReference(props: IProps) {
-  const { width, t } = props;
   const classes = useStyles();
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, section } = ctx.state;
-  const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const {
+    setSelected,
+    mediaPlaying,
+    setMediaPlaying,
+    mediaPosition,
+    mediaDuration,
+    setMediaPosition,
+  } = ctx.state;
 
   const handleResource = (id: string) => {
-    console.log(`chosen resource: ${id}`);
+    setSelected(id);
+    setMediaPlaying(false);
   };
+
+  const handlePlay = () => {
+    setMediaPlaying(!mediaPlaying);
+  };
+
+  const handleBack = () => {
+    setMediaPosition(Math.max(mediaPosition - 2, 0));
+  };
+
+  const handleForward = () => {
+    setMediaPosition(Math.min(mediaPosition + 2, Math.floor(mediaDuration)));
+  };
+
+  const handleStart = () => {
+    setMediaPosition(0);
+  };
+
+  const handleToEnd = () => {
+    setMediaPosition(Math.floor(mediaDuration));
+  };
+
+  useEffect(() => {
+    if (mediaDuration) {
+      setMediaPlaying(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mediaDuration]);
 
   return (
     <Grid container direction="row" alignItems="center">
@@ -67,27 +98,29 @@ export function TeamCheckReference(props: IProps) {
       </Grid>
       <Grid item>
         <Typography className={classes.duration}>
-          <Duration id="resPosition" seconds={progress} /> {' / '}
-          <Duration id="resDuration" seconds={duration} />
+          <Duration id="resPosition" seconds={mediaPosition} /> {' / '}
+          <Duration id="resDuration" seconds={mediaDuration} />
         </Typography>
       </Grid>
       <Grid item md={6} sm={12} className={classes.playStatus}>
         <Grid container direction="column">
           <Grid item>
-            <Slider />
+            <Slider value={Math.round((mediaPosition * 100) / mediaDuration)} />
           </Grid>
           <Grid item className={classes.controls}>
-            <IconButton>
+            <IconButton onClick={handleStart}>
               <BeginIcon />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleBack}>
               <BackIcon />
             </IconButton>
-            <IconButton>{!playing ? <PlayIcon /> : <PauseIcon />}</IconButton>
-            <IconButton>
+            <IconButton onClick={handlePlay}>
+              {!mediaPlaying ? <PlayIcon /> : <PauseIcon />}
+            </IconButton>
+            <IconButton onClick={handleForward}>
               <ForwardIcon />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleToEnd}>
               <EndIcon />
             </IconButton>
           </Grid>
