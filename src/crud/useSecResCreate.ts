@@ -9,16 +9,20 @@ export const useSecResCreate = (section: RecordIdentity) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
-
+  const [offlineOnly] = useGlobal('offlineOnly');
   const internalization = useMemo(() => {
     const workflowsteps = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('orgworkflowstep')
     ) as OrgWorkflowStep[];
     const internalizationStep = workflowsteps
       .filter((s) => related(s, 'organization') === organization)
-      .find((s) => s.attributes?.tool === ToolSlug.Resource);
+      .find(
+        (s) =>
+          JSON.parse(s.attributes?.tool).tool === ToolSlug.Resource &&
+          Boolean(s?.keys?.remoteId) === !offlineOnly
+      );
     return internalizationStep;
-  }, [memory.cache, organization]);
+  }, [memory.cache, organization, offlineOnly]);
 
   return async (
     seq: number,
