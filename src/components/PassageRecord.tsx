@@ -172,7 +172,8 @@ function PassageRecord(props: IProps) {
         filechanged &&
         !converting &&
         !uploading &&
-        !recording
+        !recording &&
+        !saveRef.current
     );
   }, [
     blobReady,
@@ -243,7 +244,7 @@ function PassageRecord(props: IProps) {
         }
         return;
       }
-    }
+    } else if (!doSave && saveRef.current) saveRef.current = false;
   }, [audioBlob, doSave, mimeType, doUpload, convertBlob, onReady]);
 
   const setExtension = (mimeType: string) => {
