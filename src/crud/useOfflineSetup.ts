@@ -151,9 +151,11 @@ export const useOfflineSetup = () => {
     if (offlineRecs.length === 0) {
       const t = new TransformBuilder();
       const ops = [
+        'biblestory',
         'cultural',
         'geographic',
         'person',
+        'scripture',
         'theology',
         'word',
         'grammar',

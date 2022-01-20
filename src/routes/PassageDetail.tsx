@@ -228,14 +228,14 @@ const PassageDetailGrids = (props: IProps) => {
                   onChange={handleSplitSize}
                 >
                   <Pane className={classes.pane}>
+                    <Grid item className={classes.description} xs={12}>
+                      <PassageDetailPlayer />
+                    </Grid>
                     {tool === ToolSlug.TeamCheck && (
                       <Grid item className={classes.description} xs={12}>
                         <TeamCheckReference width={playerWidth} />
                       </Grid>
                     )}
-                    <Grid item className={classes.description} xs={12}>
-                      <PassageDetailPlayer />
-                    </Grid>
                   </Pane>
                   <Pane className={classes.pane}>
                     <Grid item xs={12} sm container>
