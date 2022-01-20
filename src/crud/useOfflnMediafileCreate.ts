@@ -30,13 +30,23 @@ export const useOfflnMediafileCreate = () => {
     const t = new TransformBuilder();
     await memory.update([
       ...AddRecord(t, newMediaRec, user, memory),
-      t.replaceRelatedRecord(newMediaRec, 'plan', { type: 'plan', id: plan }),
+      t.replaceRelatedRecord(newMediaRec, 'plan', {
+        type: 'plan',
+        id: plan || data.planId,
+      }),
     ]);
     if (passageId)
       await memory.update([
         t.replaceRelatedRecord(newMediaRec, 'passage', {
           type: 'passage',
           id: passageId,
+        }),
+      ]);
+    if (data.artifactTypeId)
+      await memory.update([
+        t.replaceRelatedRecord(newMediaRec, 'artifactType', {
+          type: 'artifacttype',
+          id: data.artifactTypeId,
         }),
       ]);
     return newMediaRec;
