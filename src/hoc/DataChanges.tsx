@@ -1,12 +1,5 @@
 import { useGlobal, useState, useEffect, useRef } from 'reactn';
-import path from 'path';
-import {
-  infoMsg,
-  logError,
-  PathType,
-  Severity,
-  useCheckOnline,
-} from '../utils';
+import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
 import { useInterval } from '../utils/useInterval';
 import Axios from 'axios';
 import {
@@ -42,10 +35,6 @@ import IndexedDBSource from '@orbit/indexeddb';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { uploadFile } from '../store';
-import { getFileObject } from '../utils/getLocalFile';
-import Mediafile, { MediaFile } from '../model/mediaFile';
-const os = require('os');
 interface IStateProps {}
 
 interface IDispatchProps {
@@ -121,34 +110,6 @@ export const doDataChanges = async (
     );
   };
 
-  const doUpload = (
-    f: File,
-    m: Mediafile,
-    cb: (s: boolean, data: any, status: number, statusText: string) => void
-  ) => {
-    uploadFile(
-      {
-        id: m.id,
-        audioUrl: m.attributes.audioUrl,
-        contentType: m.attributes.contentType,
-        offlineId: m.attributes.offlineId,
-      },
-      f,
-      errorReporter,
-      auth,
-      cb
-    );
-  };
-
-  const safeURL = (path: string) => {
-    if (!path.startsWith('http')) {
-      const start = os.platform() === 'win32' ? 8 : 7;
-      const url = new URL(`file://${path}`).toString().slice(start);
-      return `transcribe-safe://${url}`;
-    }
-    return path;
-  };
-
   const DeleteLocalCopy = (
     offlineId: string | null,
     type: string,
@@ -165,57 +126,6 @@ export const doDataChanges = async (
           })
         );
       }
-    }
-  };
-
-  const CheckUploadLocal = async (upRec: any) => {
-    var myRecord = findRecord(
-      memory,
-      upRec.record.type,
-      upRec.record.attributes?.offlineId
-    ) as MediaFile;
-    if (myRecord) {
-      var curpath = path.join(
-        os.homedir(),
-        process.env.REACT_APP_OFFLINEDATA || '',
-        PathType.MEDIA,
-        upRec.record.attributes?.originalFile
-      );
-      var url = safeURL(curpath);
-      getFileObject(
-        url,
-        myRecord.attributes.originalFile,
-        myRecord.attributes.contentType,
-        // eslint-disable-next-line no-loop-func
-        function (f: File) {
-          doUpload(
-            f,
-            upRec.record as Mediafile,
-            async function (
-              success: boolean,
-              data: any,
-              status: number,
-              statusText: string
-            ) {
-              if (success) {
-                var delOps: Operation[] = [];
-                DeleteLocalCopy(
-                  data.offlineId,
-                  'mediafile',
-                  new TransformBuilder(),
-                  delOps
-                );
-                if (delOps.length > 0) memory.sync(await backup.push(delOps));
-              } else {
-                //what to do here???
-                //not deleting our local comment, which means they'll see both
-                //it would try again only if either comment was edited...
-                console.log(status, statusText);
-              }
-            }
-          );
-        }
-      );
     }
   };
 
