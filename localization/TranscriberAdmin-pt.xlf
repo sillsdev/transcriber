@@ -3385,6 +3385,12 @@
             <target/>
          </segment>
       </unit>
+   	<unit id="shared.mediaError">
+   		<segment>
+   			<source>Meida is missing or has an unaccepted format.</source>
+   			<target>O áudio está faltando ou tem um formato não aceito.</target>
+   		</segment>
+   	</unit>
       <unit id="shared.member">
          <segment>
             <source>Member</source>

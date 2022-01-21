@@ -4,14 +4,11 @@ import { useGlobal } from 'reactn';
 import { useFetchMediaUrl, MediaSt } from '../crud';
 import { logError, Severity } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
-import { ISharedStrings, IState } from '../model';
-import localStrings from '../selector/localize';
-import { connect } from 'react-redux';
+import { ISharedStrings } from '../model';
+import { sharedSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-interface IStateProps {
-  ts: ISharedStrings;
-}
-interface IProps extends IStateProps {
+interface IProps {
   auth: Auth | null;
   srcMediaId: string;
   requestPlay: boolean;
@@ -27,7 +24,6 @@ export function ControledPlayer(props: IProps) {
     srcMediaId,
     requestPlay,
     onEnded,
-    ts,
     onPosition,
     position,
     onDuration,
@@ -40,6 +36,7 @@ export function ControledPlayer(props: IProps) {
   const [ready, setReady] = useState(false);
   const timeTrack = useRef<number>();
   const { showMessage } = useSnackBar();
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   useEffect(() => {
     if (playing) {
@@ -105,7 +102,8 @@ export function ControledPlayer(props: IProps) {
 
   const handleError = (e: any) => {
     logError(Severity.error, reporter, e);
-    showMessage(e.message || e.toString());
+    console.log(e);
+    showMessage(e.target?.error?.message || ts.mediaError);
   };
 
   return ready ? (
@@ -121,7 +119,4 @@ export function ControledPlayer(props: IProps) {
     <></>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  ts: localStrings(state, { layout: 'shared' }),
-});
-export default connect(mapStateToProps)(ControledPlayer) as any;
+export default ControledPlayer as any;

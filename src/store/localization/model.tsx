@@ -754,6 +754,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "editor": string;
     "backtranslator": string;
     "consultant": string;
+    "mediaError": string;
     "observer": string;
     "peerreviewer": string;
     "translator": string;

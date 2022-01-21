@@ -808,6 +808,7 @@ const initialState = {
 			"editor": "Editor",
 			"backtranslator": "Back Translator",
 			"consultant": "Consultant",
+			"mediaError": "Meida is missing or has an unaccepted format.",
 			"observer": "Observer",
 			"peerreviewer": "Peer Reviewer",
 			"translator": "Translator",
