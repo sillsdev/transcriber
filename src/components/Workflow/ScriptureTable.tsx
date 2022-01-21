@@ -335,11 +335,14 @@ export function ScriptureTable(props: IProps) {
     setChanged(true);
   };
 
-  const addSection = (i?: number) => {
+  const addSection = (ix?: number) => {
     if (savingRef.current) {
       showMessage(t.saving);
       return;
     }
+    //find the undeleted index...
+    if (ix !== undefined) var { i } = getByIndex(workflow, ix);
+
     const sequenceNums = workflow.map((row, j) =>
       !i || j < i ? (!row.deleted && row.sectionSeq) || 0 : 0
     ) as number[];
@@ -359,11 +362,13 @@ export function ScriptureTable(props: IProps) {
     addPassageTo(newData, i);
   };
 
-  const addPassage = (i?: number, before?: boolean) => {
+  const addPassage = (ix?: number, before?: boolean) => {
     if (savingRef.current) {
       showMessage(t.saving);
       return;
     }
+    //find the undeleted index...
+    if (ix !== undefined) var { i } = getByIndex(workflow, ix);
     addPassageTo(workflow, i, before);
   };
 
@@ -608,9 +613,10 @@ export function ScriptureTable(props: IProps) {
     });
   };
 
-  const handleVersions = (i: number) => () => {
+  const handleVersions = (ix: number) => () => {
     saveIfChanged(() => {
-      setVersionItem(workflow[i].passageId?.id || '');
+      const { wf } = getByIndex(workflow, ix);
+      setVersionItem(wf?.passageId?.id || '');
     });
   };
 
