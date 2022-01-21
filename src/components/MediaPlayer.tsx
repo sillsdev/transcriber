@@ -3,15 +3,12 @@ import Auth from '../auth/Auth';
 import { useGlobal } from 'reactn';
 import { useFetchMediaUrl, MediaSt } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
-import { ISharedStrings, IState } from '../model';
-import localStrings from '../selector/localize';
-import { connect } from 'react-redux';
+import { ISharedStrings } from '../model';
+import { sharedSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 import { logError, Severity } from '../utils';
 
-interface IStateProps {
-  ts: ISharedStrings;
-}
-interface IProps extends IStateProps {
+interface IProps {
   auth: Auth | null;
   srcMediaId: string;
   requestPlay: boolean;
@@ -19,7 +16,7 @@ interface IProps extends IStateProps {
 }
 
 export function MediaPlayer(props: IProps) {
-  const { auth, srcMediaId, requestPlay, onEnded, ts } = props;
+  const { auth, srcMediaId, requestPlay, onEnded } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const audioRef = useRef<any>();
@@ -27,6 +24,7 @@ export function MediaPlayer(props: IProps) {
   const [playItem, setPlayItem] = useState('');
   const [ready, setReady] = useState(false);
   const { showMessage } = useSnackBar();
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   useEffect(() => {
     if (playing) {
@@ -73,7 +71,7 @@ export function MediaPlayer(props: IProps) {
   };
   const handleError = (e: any) => {
     logError(Severity.error, reporter, e);
-    showMessage(ts.fileNotFound);
+    showMessage(ts.mediaError);
   };
   return ready ? (
     <audio
@@ -86,7 +84,4 @@ export function MediaPlayer(props: IProps) {
     <></>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  ts: localStrings(state, { layout: 'shared' }),
-});
-export default connect(mapStateToProps)(MediaPlayer) as any;
+export default MediaPlayer;
