@@ -157,7 +157,7 @@ export const SelectArtifactCategory = (props: IProps) => {
         required={required}
       >
         {artifactCategorys
-          .sort()
+          .sort((i, j) => (i.category < j.category ? -1 : 1))
           .map((option: IArtifactCategory, i) => (
             <MenuItem key={i} value={option.id}>
               {option.category}

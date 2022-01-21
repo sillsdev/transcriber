@@ -878,7 +878,7 @@ const initialState = {
 	}),
 	"teamCheckReference": new LocalizedStrings({
 		"en": {
-			"reference": "The ability to play the resource here will be added later. For now, play it with another application.",
+			"resource": "Resource",
 		}
 	}),
 	"template": new LocalizedStrings({

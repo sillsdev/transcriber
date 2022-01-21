@@ -820,7 +820,7 @@ export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface ITeamCheckReferenceStrings extends Localize.LocalizedStringsMethods {
-    "reference": string;
+    "resource": string;
 };
 
 export interface ITemplateStrings extends Localize.LocalizedStringsMethods {

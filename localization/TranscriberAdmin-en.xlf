@@ -3976,9 +3976,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="teamCheckReference.reference">
+      <unit id="teamCheckReference.resource">
          <segment>
-            <source>The ability to play the resource here will be added later. For now, play it with another application.</source>
+            <source>Resource</source>
             <target/>
          </segment>
       </unit>
