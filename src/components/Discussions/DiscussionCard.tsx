@@ -354,9 +354,9 @@ export const DiscussionCard = (props: IProps) => {
   const handleDiscussionAction = (what: string) => {
     if (what === 'edit') {
       setEditSubject(discussion.attributes.subject);
-      setEditRole(related(discussion, 'role'));
-      setEditUser(related(discussion, 'user'));
-      setEditCategory(related(discussion, 'artifactCategory'));
+      setEditRole(related(discussion, 'role') || '');
+      setEditUser(related(discussion, 'user') || '');
+      setEditCategory(related(discussion, 'artifactCategory') || '');
       setEditing(true);
     } else if (what === 'delete') {
       setConfirmAction(what);

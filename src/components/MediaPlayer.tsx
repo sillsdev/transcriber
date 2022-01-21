@@ -15,10 +15,11 @@ interface IProps extends IStateProps {
   srcMediaId: string;
   requestPlay: boolean;
   onEnded: () => void;
+  onError: (msg: string) => void;
 }
 
 export function MediaPlayer(props: IProps) {
-  const { auth, srcMediaId, requestPlay, onEnded, ts } = props;
+  const { auth, srcMediaId, requestPlay, onEnded, onError, ts } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const audioRef = useRef<any>();
@@ -70,9 +71,18 @@ export function MediaPlayer(props: IProps) {
     audioRef.current.currentTime = 0;
     if (onEnded) onEnded();
   };
-
+  const handleError = (e: any) => {
+    console.log('MediaPlayer error', e);
+    showMessage(ts.fileNotFound);
+    if (onError) onError(e.MediaError?.message);
+  };
   return ready ? (
-    <audio onEnded={ended} ref={audioRef} src={mediaState.url} />
+    <audio
+      onEnded={ended}
+      ref={audioRef}
+      onError={handleError}
+      src={mediaState.url}
+    />
   ) : (
     <></>
   );
