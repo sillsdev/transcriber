@@ -270,7 +270,13 @@ export const doDataChanges = async (
                         break;
 
                       case 'mediafile':
-                        await CheckUploadLocal(upRec);
+                        //await CheckUploadLocal(upRec);
+                        DeleteLocalCopy(
+                          upRec.record.attributes?.offlineId,
+                          upRec.record.type,
+                          tb,
+                          localOps
+                        );
                         if (upRec.record.relationships?.passage === undefined)
                           resetRelated(localOps, tb, 'passage', upRec.record);
                         break;
