@@ -281,6 +281,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       }, 400);
     };
     const handleRefuseStep = () => {
+      handleSetCurrentStep(confirm);
       setConfirm('');
     };
     const setDiscussionSize = (discussionSize: number) => {
