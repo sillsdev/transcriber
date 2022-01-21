@@ -3,7 +3,6 @@ import { MenuItem, TextField } from '@material-ui/core';
 import { useContext, useEffect, useState } from 'react';
 import {
   ITeamCheckReferenceStrings,
-  IArtifactCategoryStrings,
   IState,
   SectionResource,
 } from '../../../model';
@@ -12,6 +11,7 @@ import { QueryBuilder } from '@orbit/data';
 import { withData } from '../../../mods/react-orbitjs';
 import localStrings from '../../../selector/localize';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
+import { useArtifactCategory } from '../../../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 interface IStateProps {
   t: ITeamCheckReferenceStrings;
-  tc: IArtifactCategoryStrings;
 }
 interface IRecordProps {
   sectionResource: Array<SectionResource>;
@@ -39,11 +38,12 @@ interface IProps extends IStateProps, IRecordProps {
   required?: boolean;
 }
 export const SelectMyResource = (props: IProps) => {
-  const { t, tc, onChange, inResource, required } = props;
+  const { t, onChange, inResource, required } = props;
   const classes = useStyles();
   const ctx = useContext(PassageDetailContext);
   const { rowData } = ctx.state;
   const [resource, setResource] = useState('');
+  const { fromLocalizedArtifactCategory } = useArtifactCategory();
 
   const handleUserChange = (e: any) => {
     setResource(e.target.value);
@@ -60,10 +60,9 @@ export const SelectMyResource = (props: IProps) => {
   };
 
   const checkCategory = (localCat: string) => {
-    for (let c of ['scripture', 'biblestory']) {
-      if (localCat === tc.getString(c)) return true;
-    }
-    return false;
+    return ['scripture', 'biblestory'].includes(
+      fromLocalizedArtifactCategory(localCat)
+    );
   };
 
   return (
@@ -95,7 +94,6 @@ export const SelectMyResource = (props: IProps) => {
 };
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'teamCheckReference' }),
-  tc: localStrings(state, { layout: 'artifactCategory' }),
 });
 
 const mapRecordsToProps = {
