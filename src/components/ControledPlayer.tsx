@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import Auth from '../auth/Auth';
 import { useGlobal } from 'reactn';
 import { useFetchMediaUrl, MediaSt } from '../crud';
+import { logError, Severity } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
 import { ISharedStrings, IState } from '../model';
 import localStrings from '../selector/localize';
@@ -102,6 +103,11 @@ export function ControledPlayer(props: IProps) {
     timeTrack.current = undefined;
   };
 
+  const handleError = (e: any) => {
+    logError(Severity.error, reporter, e);
+    showMessage(e.message || e.toString());
+  };
+
   return ready ? (
     <audio
       onEnded={ended}
@@ -109,6 +115,7 @@ export function ControledPlayer(props: IProps) {
       src={mediaState.url}
       onTimeUpdate={timeUpdate}
       onDurationChange={durationChange}
+      onError={handleError}
     />
   ) : (
     <></>
