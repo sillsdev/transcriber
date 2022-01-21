@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { ISharedStrings, ActivityStates, MediaFile, IState } from '../model';
+import { ISharedStrings, ActivityStates, MediaFile } from '../model';
 import { orbitErr } from '../utils';
 import * as actions from '../store';
 import { TransformBuilder, Operation } from '@orbit/data';
@@ -10,15 +10,12 @@ import {
   UpdatePassageStateOps,
   useArtifactType,
 } from '.';
-import localStrings from '../selector/localize';
+import { sharedSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 
 interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
 }
-
-const sharedSelector = (state: IState) =>
-  localStrings(state as IState, { layout: 'shared' });
 
 interface IProps extends IDispatchProps {}
 

@@ -3380,6 +3380,12 @@
             <target>Audio attachés</target>
          </segment>
       </unit>
+   	<unit id="shared.mediaError">
+   		<segment>
+   			<source>Meida is missing or has an unaccepted format.</source>
+   			<target>L'audio est manquant ou a un format non accepté.</target>
+   		</segment>
+   	</unit>
       <unit id="shared.mediaDetached">
          <segment>
             <source>Audio Detached</source>

@@ -26,7 +26,6 @@ import DiscussionList from '../components/Discussions/DiscussionList';
 import { WorkflowSteps } from '../components/PassageDetail/WorkflowSteps';
 import PassageDetailSectionPassage from '../components/PassageDetail/PassageDetailSectionPassage';
 import PassageDetailStepComplete from '../components/PassageDetail/PassageDetailStepComplete';
-// import PassageDetailToolbar from '../components/PassageDetail/PassageDetailToolbar';
 import PassageDetailArtifacts from '../components/PassageDetail/Internalization/PassageDetailArtifacts';
 import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
@@ -150,10 +149,8 @@ const PassageDetailGrids = (props: IProps) => {
   const ctx = useContext(PassageDetailContext);
   const { currentstep, discussionSize, setDiscussionSize } = ctx.state;
   const tool = useStepTool(currentstep);
-  const [playerWidth, setPlayerWidth] = useState(width - discussionSize);
 
   const handleSplitSize = debounce((e: number) => {
-    setPlayerWidth(e);
     setDiscussionSize(width - e);
   }, 50);
 
@@ -193,9 +190,6 @@ const PassageDetailGrids = (props: IProps) => {
         </Grid>
         {tool === ToolSlug.Resource && (
           <Grid container direction="row" className={classes.row}>
-            {/* <Grid item xs={12}>
-                <PassageDetailToolbar />
-              </Grid> */}
             <Grid item xs={12}>
               <Grid container>
                 <PassageDetailArtifacts auth={auth} />
@@ -228,14 +222,14 @@ const PassageDetailGrids = (props: IProps) => {
                   onChange={handleSplitSize}
                 >
                   <Pane className={classes.pane}>
-                    {tool === ToolSlug.TeamCheck && (
-                      <Grid item className={classes.description} xs={12}>
-                        <TeamCheckReference width={playerWidth} />
-                      </Grid>
-                    )}
                     <Grid item className={classes.description} xs={12}>
                       <PassageDetailPlayer />
                     </Grid>
+                    {tool === ToolSlug.TeamCheck && (
+                      <Grid item className={classes.description} xs={12}>
+                        <TeamCheckReference auth={auth} />
+                      </Grid>
+                    )}
                   </Pane>
                   <Pane className={classes.pane}>
                     <Grid item xs={12} sm container>

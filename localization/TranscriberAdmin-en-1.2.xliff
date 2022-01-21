@@ -4262,6 +4262,13 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="shared.mediaError">
+      		<source>Meida is missing or has an unaccepted format.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
           <trans-unit id="shared.observer">
             <source>Observer</source>
             <target/>
@@ -4640,8 +4647,8 @@
                <context context-type="sourcefile">TaskHead.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="teamCheckReference.reference">
-            <source>The ability to play the resource here will be added later. For now, play it with another application.</source>
+         <trans-unit id="teamCheckReference.resource">
+            <source>Resource</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">template.tsx</context>

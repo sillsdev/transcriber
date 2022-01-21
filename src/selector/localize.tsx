@@ -9,7 +9,7 @@ const langSelector = (state: IState) => state.strings.lang;
 const layoutSelector = (state: IState, props: IStringsSelectorProps) =>
   state.strings[props.layout];
 
-const localStrings = createSelector(
+export const localStrings = createSelector(
   layoutSelector,
   langSelector,
   (layout, lang) => {

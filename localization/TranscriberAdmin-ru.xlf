@@ -3385,6 +3385,12 @@
             <target>Медиа Диссоциировать</target>
          </segment>
       </unit>
+   	<unit id="shared.mediaError">
+   		<segment>
+   			<source>Meida is missing or has an unaccepted format.</source>
+   			<target>Аудио отсутствует или имеет неприемлемый формат.</target>
+   		</segment>
+   	</unit>
       <unit id="shared.member">
          <segment>
             <source>Member</source>
