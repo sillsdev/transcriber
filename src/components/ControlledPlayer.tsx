@@ -18,7 +18,7 @@ interface IProps {
   onDuration?: (timeStamp: number) => void;
 }
 
-export function ControledPlayer(props: IProps) {
+export function ControlledPlayer(props: IProps) {
   const {
     auth,
     srcMediaId,
@@ -119,4 +119,4 @@ export function ControledPlayer(props: IProps) {
     <></>
   );
 }
-export default ControledPlayer as any;
+export default ControlledPlayer;
