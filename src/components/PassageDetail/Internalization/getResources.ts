@@ -10,6 +10,6 @@ export const getResources = (
     .filter((s) => mediafiles.find((m) => m.id === related(s, 'mediafile')))
     .filter((s) => related(s, 'section') === sectionId)
     .sort((p, q) =>
-      p.attributes.sequenceNum > q.attributes.sequenceNum ? 1 : -1
+      p.attributes.sequenceNum >= q.attributes.sequenceNum ? 1 : -1
     );
 };

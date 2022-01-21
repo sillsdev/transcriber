@@ -185,7 +185,7 @@ export function DiscussionList(props: IProps) {
                   catSelect.includes(related(d, 'artifactCategory')))
             )
             .sort((x, y) =>
-              x.attributes.dateCreated < y.attributes.dateCreated ? -1 : 1
+              x.attributes.dateCreated <= y.attributes.dateCreated ? -1 : 1
             )
         );
       }

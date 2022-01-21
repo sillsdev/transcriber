@@ -29,7 +29,7 @@ export const UserList = (props: IProps) => {
         {users
           .filter((u) => u.id !== curId && isSelected(u.id))
           .sort((i, j) =>
-            (i.attributes ? i.attributes.name : '') <
+            (i.attributes ? i.attributes.name : '') <=
             (j.attributes ? j.attributes.name : '')
               ? -1
               : 1

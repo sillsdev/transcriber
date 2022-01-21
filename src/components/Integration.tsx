@@ -640,7 +640,7 @@ export function IntegrationPanel(props: IProps) {
                     required={true}
                   >
                     {paratext_projects
-                      .sort((i, j) => (i.ShortName < j.ShortName ? -1 : 1))
+                      .sort((i, j) => (i.ShortName <= j.ShortName ? -1 : 1))
                       .map((option: ParatextProject) => (
                         <MenuItem key={option.ParatextId} value={option.Name}>
                           {`${option.ShortName ? option.ShortName + '/' : ''}${
@@ -805,7 +805,7 @@ export function IntegrationPanel(props: IProps) {
                     required={true}
                   >
                     {paratext_projects
-                      .sort((i, j) => (i.ShortName < j.ShortName ? -1 : 1))
+                      .sort((i, j) => (i.ShortName <= j.ShortName ? -1 : 1))
                       .map((option: ParatextProject) => (
                         <MenuItem key={option.ParatextId} value={option.Name}>
                           {`${option.ShortName}/${option.Name} (${option.LanguageName}-${option.LanguageTag})`}

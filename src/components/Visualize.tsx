@@ -146,7 +146,7 @@ export function Visualize(props: IProps) {
             : 0;
           return reviewTot + transTot > 0;
         })
-        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+        .sort((i, j) => (i.attributes.name <= j.attributes.name ? -1 : 1))
         .map((pl) => {
           return {
             plan: pl.attributes.name,

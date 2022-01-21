@@ -310,16 +310,17 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       const readyRecs = passages
         .filter((p) => p.attributes?.state === state || role === 'view') //just group the passages within a section together right now
         .sort((a, b) =>
-          related(a, 'section') < related(b, 'section') ? -1 : 1
+          related(a, 'section') <= related(b, 'section') ? -1 : 1
         );
 
       let addRows = Array<IRowData>();
       readyRecs.forEach((p) => {
         const mediaRecs = planMedia
           .filter((m) => related(m, 'passage') === p.id)
-          .sort((i: MediaFile, j: MediaFile) =>
-            // Sort descending
-            i.attributes.versionNumber < j.attributes.versionNumber ? 1 : -1
+          .sort(
+            (i: MediaFile, j: MediaFile) =>
+              // Sort descending
+              j.attributes.versionNumber - i.attributes.versionNumber
           );
         if (mediaRecs.length > 0) {
           const mediaRec = mediaRecs[0];
@@ -413,7 +414,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
             ? -1
             : i.planName > j.planName
             ? 1
-            : i.sectPass < j.sectPass
+            : i.sectPass <= j.sectPass
             ? -1
             : 1
         )

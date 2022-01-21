@@ -232,7 +232,7 @@ export function UserTable(props: IProps) {
           : organizationMemberships.filter(
               (om) => related(om, 'organization') === organization
             )
-      ).sort((i, j) => (getName(i, users) < getName(j, users) ? -1 : 1));
+      ).sort((i, j) => (getName(i, users) <= getName(j, users) ? -1 : 1));
       const rowData: IRow[] = [];
       members.forEach((m) => {
         const user = getUser(m, users);
