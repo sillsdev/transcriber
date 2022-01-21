@@ -82,6 +82,11 @@ export const mediaRows = (props: MediaProps) => {
     .sort((i, j) =>
       i.attributes.versionNumber > j.attributes.versionNumber ? -1 : 1
     )
+    .sort((i, j) =>
+      (i.attributes.artifactType || '') < (j.attributes.artifactType || '')
+        ? -1
+        : 1
+    )
     .forEach((media) => {
       const typId = related(media, 'artifactType');
       const artifactType = artifactTypes.find((t) => t.id === typId);
