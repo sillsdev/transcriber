@@ -1,7 +1,4 @@
-import { useState, useContext } from 'react';
-import { connect } from 'react-redux';
-import { ITeamCheckReferenceStrings, IState } from '../../model';
-import localStrings from '../../selector/localize';
+import { useState, useEffect, useRef } from 'react';
 import {
   Grid,
   Typography,
@@ -19,7 +16,8 @@ import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import ForwardIcon from '@material-ui/icons/Refresh';
 import EndIcon from '@material-ui/icons/SkipNext';
-import { PassageDetailContext } from '../../context/PassageDetailContext';
+import ControledPlayer from '../ControledPlayer';
+import Auth from '../../auth/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,26 +37,67 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IStateProps {
-  t: ITeamCheckReferenceStrings;
+interface IProps {
+  auth: Auth;
 }
 
-interface IProps extends IStateProps {
-  width: number;
-}
-
-export function TeamCheckReference(props: IProps) {
-  const { width, t } = props;
+export function TeamCheckReference({ auth }: IProps) {
   const classes = useStyles();
-  const ctx = useContext(PassageDetailContext);
-  const { currentstep, section } = ctx.state;
-  const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [playItem, setPlayItem] = useState('');
   const [playing, setPlaying] = useState(false);
+  const [position, setPosition] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const newPosition = useRef<number>();
+
+  const setNewPosition = (pos: number) => {
+    newPosition.current = pos;
+    setPosition(pos);
+  };
+
+  const handlePosition = (position: number) => {
+    setPosition(position);
+    newPosition.current = undefined;
+  };
+
+  const handleDuration = (duration: number) => {
+    setDuration(duration);
+  };
+
+  const handleEnded = () => {
+    setPlaying(false);
+  };
 
   const handleResource = (id: string) => {
-    console.log(`chosen resource: ${id}`);
+    setPlayItem(id);
+    setPlaying(false);
   };
+
+  const handlePlay = () => {
+    setPlaying(!playing);
+  };
+
+  const handleBack = () => {
+    setNewPosition(Math.max(position - 2, 0));
+  };
+
+  const handleForward = () => {
+    setNewPosition(Math.min(position + 2, duration - 0.1));
+  };
+
+  const handleStart = () => {
+    setNewPosition(0);
+  };
+
+  const handleToEnd = () => {
+    setNewPosition(duration - 0.1);
+  };
+
+  useEffect(() => {
+    if (duration) {
+      setPlaying(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [duration]);
 
   return (
     <Grid container direction="row" alignItems="center">
@@ -67,38 +106,45 @@ export function TeamCheckReference(props: IProps) {
       </Grid>
       <Grid item>
         <Typography className={classes.duration}>
-          <Duration id="resPosition" seconds={progress} /> {' / '}
+          <Duration id="resPosition" seconds={position} /> {' / '}
           <Duration id="resDuration" seconds={duration} />
         </Typography>
       </Grid>
       <Grid item md={6} sm={12} className={classes.playStatus}>
         <Grid container direction="column">
           <Grid item>
-            <Slider />
+            <Slider value={Math.round((position * 100) / duration)} />
           </Grid>
           <Grid item className={classes.controls}>
-            <IconButton>
+            <IconButton onClick={handleStart}>
               <BeginIcon />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleBack}>
               <BackIcon />
             </IconButton>
-            <IconButton>{!playing ? <PlayIcon /> : <PauseIcon />}</IconButton>
-            <IconButton>
+            <IconButton onClick={handlePlay}>
+              {!playing ? <PlayIcon /> : <PauseIcon />}
+            </IconButton>
+            <IconButton onClick={handleForward}>
               <ForwardIcon />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleToEnd}>
               <EndIcon />
             </IconButton>
           </Grid>
         </Grid>
       </Grid>
+      <ControledPlayer
+        auth={auth}
+        srcMediaId={playItem}
+        requestPlay={playing}
+        onEnded={handleEnded}
+        position={newPosition.current}
+        onPosition={handlePosition}
+        onDuration={handleDuration}
+      />
     </Grid>
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'teamCheckReference' }),
-});
-
-export default connect(mapStateToProps)(TeamCheckReference) as any as any;
+export default TeamCheckReference as any;
