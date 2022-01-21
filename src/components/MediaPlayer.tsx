@@ -6,6 +6,7 @@ import { useSnackBar } from '../hoc/SnackBar';
 import { ISharedStrings, IState } from '../model';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
+import { logError, Severity } from '../utils';
 
 interface IStateProps {
   ts: ISharedStrings;
@@ -15,11 +16,10 @@ interface IProps extends IStateProps {
   srcMediaId: string;
   requestPlay: boolean;
   onEnded: () => void;
-  onError: (msg: string) => void;
 }
 
 export function MediaPlayer(props: IProps) {
-  const { auth, srcMediaId, requestPlay, onEnded, onError, ts } = props;
+  const { auth, srcMediaId, requestPlay, onEnded, ts } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const audioRef = useRef<any>();
@@ -72,9 +72,8 @@ export function MediaPlayer(props: IProps) {
     if (onEnded) onEnded();
   };
   const handleError = (e: any) => {
-    console.log('MediaPlayer error', e);
+    logError(Severity.error, reporter, e);
     showMessage(ts.fileNotFound);
-    if (onError) onError(e.MediaError?.message);
   };
   return ready ? (
     <audio

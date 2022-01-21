@@ -303,11 +303,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setMediaPlaying(false);
     };
 
-    const handleMediaError = () => {
-      //message shown by mediaplayer
-      //anything else we should do??
-    };
-
     const setPDBusy = (busy: boolean) => {
       setState((state: ICtxState) => {
         return {
@@ -745,7 +740,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             srcMediaId={state.playItem}
             requestPlay={state.mediaPlaying}
             onEnded={handlePlayEnd}
-            onError={handleMediaError}
           />
         )}
         <Uploader
