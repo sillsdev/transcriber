@@ -252,7 +252,14 @@ function withData(mapRecordsToProps, mergeProps) {
           try {
             result = dataStore.cache.query(recordQueries[prop]);
           } catch (error) {
-            console.warn(error?.message || JSON.stringify(error));
+            if (
+              error?.message ===
+              `Cannot read properties of undefined (reading 'values')`
+            )
+              console.error(
+                `${recordQueries[prop]} contains an invalid table name.`
+              );
+            else console.warn(error?.message || JSON.stringify(error));
             result = undefined;
           }
           return _extends({}, recordProps, _defineProperty({}, prop, result));

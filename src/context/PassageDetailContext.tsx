@@ -106,8 +106,8 @@ const mapRecordsToProps = {
   userResources: (q: QueryBuilder) => q.findRecords('sectionresourceuser'),
   artifactTypes: (q: QueryBuilder) => q.findRecords('artifacttype'),
   categories: (q: QueryBuilder) => q.findRecords('artifactcategory'),
-  workflowSteps: (q: QueryBuilder) => q.findRecords('workflowsteps'),
-  orgWorkflowSteps: (q: QueryBuilder) => q.findRecords('orgworkflowsteps'),
+  workflowSteps: (q: QueryBuilder) => q.findRecords('workflowstep'),
+  orgWorkflowSteps: (q: QueryBuilder) => q.findRecords('orgworkflowstep'),
 };
 
 export interface IRow {
