@@ -78,14 +78,11 @@ export const mediaRows = (props: MediaProps) => {
   const { mediafiles, artifactTypes } = props;
 
   const newRow = Array<IRow>();
+  // sort takes the greatest version but if their equal, keeps the
+  // one loaded first which is the vernacular media
   mediafiles
     .sort((i, j) =>
-      i.attributes.versionNumber > j.attributes.versionNumber ? -1 : 1
-    )
-    .sort((i, j) =>
-      (i.attributes.artifactType || '') < (j.attributes.artifactType || '')
-        ? -1
-        : 1
+      i.attributes.versionNumber >= j.attributes.versionNumber ? -1 : 1
     )
     .forEach((media) => {
       const typId = related(media, 'artifactType');
