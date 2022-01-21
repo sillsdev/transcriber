@@ -389,9 +389,7 @@ const postPass = (doc: Document, currentPassage: Passage, memory: Memory) => {
       (m) =>
         memory.cache.query((q: QueryBuilder) => q.findRecord(m)) as MediaFile
     )
-    .sort((i, j) =>
-      i.attributes.versionNumber > j.attributes.versionNumber ? -1 : 1
-    );
+    .sort((i, j) => i.attributes.versionNumber - j.attributes.versionNumber);
   var transcription = sortedMedia[0].attributes.transcription || '';
   var parsed = ParseTranscription(currentPassage, transcription);
   if (parsed.length > 1) {
@@ -574,7 +572,7 @@ const doChapter = async (
 
   let usxDom: Document = await getChapter(paths, ptProjName);
 
-  pass = pass.sort((i, j) => (i.startVerse < j.startVerse ? -1 : 1));
+  pass = pass.sort((i, j) => i.startVerse - j.startVerse);
   pass.forEach((p) => {
     postPass(usxDom, p, memory);
   });

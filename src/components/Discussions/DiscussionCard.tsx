@@ -238,7 +238,7 @@ export const DiscussionCard = (props: IProps) => {
         comments
           .filter((c) => related(c, 'discussion') === discussion.id)
           .sort((a, b) =>
-            a.attributes.dateCreated < b.attributes.dateCreated ? -1 : 1
+            a.attributes.dateCreated <= b.attributes.dateCreated ? -1 : 1
           )
       );
   }, [comments, discussion.id]);

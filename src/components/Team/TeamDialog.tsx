@@ -168,7 +168,7 @@ export function TeamDialog(props: IProps) {
               className={classes.process}
             >
               {processOptions
-                .sort((i, j) => (i.label < j.label ? -1 : 1))
+                .sort((i, j) => (i.label <= j.label ? -1 : 1))
                 .map((o: OptionType, i) => (
                   <MenuItem key={i} value={o.value}>
                     {o.label}

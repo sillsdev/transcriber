@@ -61,7 +61,7 @@ function Involvement(props: IProps) {
       <Typography>{t.projectPlans}</Typography>
       <List className={classes.detail}>
         {keys
-          .sort((i, j) => (i < j ? -1 : 1))
+          .sort((i, j) => (i <= j ? -1 : 1))
           .map((p) => {
             return (
               <ListItem className={classes.detail}>

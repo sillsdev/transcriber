@@ -75,7 +75,7 @@ export function PassageHistory(props: IProps) {
       const curStateChanges = passagestatechanges
         .filter((r) => related(r, 'passage') === passageId)
         .sort((i, j) =>
-          i.attributes.dateCreated < j.attributes.dateCreated ? -1 : 1
+          i.attributes.dateCreated <= j.attributes.dateCreated ? -1 : 1
         );
       setCurStateChanges(curStateChanges);
     } else {

@@ -318,7 +318,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             !isPersonal(o.id) &&
             (!isOffline || offlineOnly || teamProjects(o.id).length > 0)
         )
-        .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
+        .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1));
     };
 
     const projectType = (plan: Plan) => {
@@ -339,7 +339,7 @@ const TeamProvider = withData(mapRecordsToProps)(
           .map((p) => p.id);
         return plans
           .filter((p) => projIds.includes(related(p, 'project')))
-          .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1))
+          .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1))
           .map((p) => vProject(p));
       };
       setState((state) => ({
@@ -359,7 +359,7 @@ const TeamProvider = withData(mapRecordsToProps)(
         .map((p) => p.id);
       return plans
         .filter((p) => projIds.includes(related(p, 'project')))
-        .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1))
+        .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1))
         .map((p) => vProject(p));
     };
 

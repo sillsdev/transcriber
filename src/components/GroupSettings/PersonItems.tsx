@@ -59,7 +59,7 @@ function PersonItems(props: IProps) {
         .filter(
           (u) => u.attributes && ids.map((id) => id.user).indexOf(u.id) !== -1
         )
-        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+        .sort((i, j) => (i.attributes.name <= j.attributes.name ? -1 : 1))
         .map((u, index) => (
           <ListItem
             key={u.id}

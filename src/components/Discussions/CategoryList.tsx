@@ -85,7 +85,7 @@ export function CategoryList(props: IProps) {
   return (
     <List>
       {catFilter
-        .sort((i, j) => (i.category < j.category ? -1 : 1))
+        .sort((i, j) => (i.category <= j.category ? -1 : 1))
         .sort((i, j) => (!i.id ? 1 : 0) - (!j.id ? 1 : 0))
         .map((d) => {
           return (

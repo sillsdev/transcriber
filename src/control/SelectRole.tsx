@@ -95,7 +95,7 @@ export const SelectRole = (props: IProps) => {
           },
         }))
         .sort((i, j) =>
-          i.attributes.roleName < j.attributes.roleName ? -1 : 1
+          i.attributes.roleName <= j.attributes.roleName ? -1 : 1
         )
         .map((option: Role) => (
           <MenuItem key={option.id} value={option.id}>

@@ -173,7 +173,7 @@ function Team(props: IProps) {
             allOrgUserIds.indexOf(u.id) !== -1 &&
             roleCheck(u.id, role)
         )
-        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+        .sort((i, j) => (i.attributes.name <= j.attributes.name ? -1 : 1))
         .map((u) => {
           return { label: u.attributes.name, value: u.id } as OptionType;
         })

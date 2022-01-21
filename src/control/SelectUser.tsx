@@ -72,10 +72,10 @@ export const SelectUser = (props: IProps) => {
         .sort((i, j) =>
           (i.attributes.familyName || '') < (j.attributes.familyName || '')
             ? -1
-            : i.attributes.familyName === j.attributes.familyName
-            ? (i.attributes.givenName || '') < (j.attributes.givenName || '')
-              ? -1
-              : 1
+            : (i.attributes.familyName || '') > (j.attributes.familyName || '')
+            ? 1
+            : (i.attributes.givenName || '') <= (j.attributes.givenName || '')
+            ? -1
             : 1
         )
         .map((option: User) => (
