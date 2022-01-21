@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'flex-end',
     },
     button: { margin: theme.spacing(2) },
+    listItem: {
+      margin: theme.spacing(4),
+    },
   })
 );
 
@@ -45,6 +48,7 @@ const Secondary = ({ id, idx, fileName, onCategory }: SecondaryProps) => {
     <div>
       {fileName}
       <SelectCategory
+        allowNew
         initCategory={''}
         onCategoryChange={handleCategory}
         required={false}
@@ -120,7 +124,11 @@ export const SelectResource = (props: IProps) => {
     <div id="selectResource">
       <List component="div">
         {resource.map((r, i) => (
-          <ListItem key={i} onClick={handleClick(i)}>
+          <ListItem
+            key={i}
+            onClick={handleClick(i)}
+            className={classes.listItem}
+          >
             <ListItemIcon>
               {selected.indexOf(i) !== -1 ? <Checked /> : <UnChecked />}
             </ListItemIcon>

@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo } from 'react';
+import { useState, useContext, useMemo, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
@@ -19,7 +19,7 @@ import Auth from '../../../auth/Auth';
 import { withData } from '../../../mods/react-orbitjs';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import Uploader, { IStatus } from '../../Uploader';
 import AddResource from './AddResource';
@@ -39,6 +39,7 @@ import {
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import SelectResource, { CatMap } from './SelectResource';
+import SelectArtifactCategory from '../../Workflow/SelectArtifactCategory';
 
 interface IRecordProps {
   sectionResources: SectionResource[];
@@ -84,6 +85,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [status] = useState<IStatus>({ canceled: false });
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
+  const catIdRef = useRef<string>();
   const { showMessage } = useSnackBar();
 
   const resourceType = useMemo(() => {
@@ -171,12 +173,21 @@ export function PassageDetailArtifacts(props: IProps) {
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     let cnt = rowData.length;
-    if (mediaRemoteIds)
+    if (mediaRemoteIds) {
       for (const remId of mediaRemoteIds) {
         cnt += 1;
         const id = remoteIdGuid('mediafile', remId, memory.keyMap) || remId;
-        await AddSectionResource(cnt, null, { type: 'mediafile', id });
+        const mediaRecId = { type: 'mediafile', id };
+        if (catIdRef.current) {
+          const catRecId = { type: 'artifactcategory', id: catIdRef.current };
+          await memory.update((t: TransformBuilder) => [
+            t.replaceRelatedRecord(mediaRecId, 'artifactCategory', catRecId),
+          ]);
+        }
+        await AddSectionResource(cnt, null, mediaRecId);
       }
+      catIdRef.current = undefined;
+    }
   };
 
   const handleSelectShared = async (res: Resource[], catMap: CatMap) => {
@@ -187,6 +198,10 @@ export function PassageDetailArtifacts(props: IProps) {
       cnt += 1;
       await AddSectionResource(cnt, r.attributes.reference, newMediaRec);
     }
+  };
+
+  const handleCategory = (categoryId: string) => {
+    catIdRef.current = categoryId;
   };
 
   return (
@@ -221,6 +236,14 @@ export function PassageDetailArtifacts(props: IProps) {
         finish={afterUpload}
         status={status}
         artifactType={resourceType}
+        metaData={
+          <SelectArtifactCategory
+            allowNew
+            initCategory=""
+            onCategoryChange={handleCategory}
+            required={false}
+          />
+        }
       />
       <BigDialog
         title={t.sharedResource}
