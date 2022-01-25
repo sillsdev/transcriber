@@ -1,5 +1,5 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import { Discussion, IState, MediaFile, User } from '../../model';
+import { Discussion, MediaFile, User } from '../../model';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
 import { useEffect, useGlobal, useRef, useState, useContext } from 'reactn';
