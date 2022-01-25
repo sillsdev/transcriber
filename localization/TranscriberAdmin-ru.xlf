@@ -4567,7 +4567,103 @@
             <target>Добро пожаловать</target>
          </segment>
       </unit>
-      <unit id="wsAudioPlayer.aheadTip">
+   	<unit id="workflowSteps.backTranslation">
+   		<segment>
+   			<source>Back Translation</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.communityTesting">
+   		<segment>
+   			<source>Community Testing</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.consultantCheck">
+   		<segment>
+   			<source>Consultant Check</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.duplication">
+   		<segment>
+   			<source>Duplication</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.finalRecording">
+   		<segment>
+   			<source>Final Recording</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.finalEdit">
+   		<segment>
+   			<source>Final Edit</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.finalReview">
+   		<segment>
+   			<source>Final Review</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.internalization">
+   		<segment>
+   			<source>Internalization</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.keyTerms">
+   		<segment>
+   			<source>Key Terms</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.paratextSync">
+   		<segment>
+   			<source>Paratext Sync</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.peerReview">
+   		<segment>
+   			<source>Peer Review</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.record">
+   		<segment>
+   			<source>Record</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.review">
+   		<segment>
+   			<source>Review</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.teamCheck">
+   		<segment>
+   			<source>Team Check</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.unsaved">
+   		<segment>
+   			<source>Unsaved content</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.saveFirst">
+   		<segment>
+   			<source>Save before changing step?</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="wsAudioPlayer.aheadTip">
          <segment>
             <source>Ahead {jump} {1} [{0}]</source>
             <target>Перейти вперед {jump} {1} [{0}]</target>
