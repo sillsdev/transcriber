@@ -2738,7 +2738,85 @@
             <target>Télécharger l'audio</target>
          </segment>
       </unit>
-      <unit id="passageMedia.close">
+   	<unit id="passageDetailArtifacts.action">
+   		<segment>
+   			<source>Action</source>
+   			<target>Action</target>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailArtifacts.activity">
+   		<segment>
+   			<source>Add Activity</source>
+   			<target>Ajouter une activité</target>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailArtifacts.add">
+   		<segment>
+   			<source>Add</source>
+   			<target>Ajouter</target>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailArtifacts.category">
+   		<segment>
+   			<source>Category</source>
+   			<target>Catégorie</target>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailArtifacts.completed">
+   		<segment>
+   			<source>Completed</source>
+   			<target>Complété</target>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailArtifacts.resource">
+   		<segment>
+   			<source>Resource</source>
+   			<target>Ressources</target>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailArtifacts.sharedResource">
+   		<segment>
+   			<source>Select Shared Resource</source>
+   			<target>Sélectionner la ressource partagée</target>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailArtifacts.type">
+   		<segment>
+   			<source>Type</source>
+   			<target>Type</target>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailArtifacts.upload">
+   		<segment>
+   			<source>Upload Resource</source>
+   			<target>Télécharger la ressource</target>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailArtifacts.version">
+   		<segment>
+   			<source>Version</source>
+   			<target>Version</target>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailStepComplete.title">
+   		<segment>
+   			<source>Step Complete</source>
+   			<target>Étape complète</target>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailStepComplete.incomplete">
+   		<segment>
+   			<source>Step Incomplete</source>
+   			<target>Étape Incomplète</target>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailToolbar.add">
+   		<segment>
+   			<source>Passage Detail Toolbar</source>
+   			<target>Barre d'outils pour le détail des passages</target>
+   		</segment>
+   	</unit>
+   	<unit id="passageMedia.close">
          <segment>
             <source>Close</source>
             <target>Fermer</target>
@@ -4568,7 +4646,103 @@
          	<target>Démarrage</target>
          </segment>
       </unit>
-      <unit id="wsAudioPlayer.aheadTip">
+   	<unit id="workflowSteps.backTranslation">
+   		<segment>
+   			<source>Back Translation</source>
+   			<target>Traduction du dos</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.communityTesting">
+   		<segment>
+   			<source>Community Testing</source>
+   			<target>Test communautaire</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.consultantCheck">
+   		<segment>
+   			<source>Consultant Check</source>
+   			<target>Contrôle du consultant</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.duplication">
+   		<segment>
+   			<source>Duplication</source>
+   			<target>Duplication</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.finalRecording">
+   		<segment>
+   			<source>Final Recording</source>
+   			<target>Enregistrement final</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.finalEdit">
+   		<segment>
+   			<source>Final Edit</source>
+   			<target>Montage final</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.finalReview">
+   		<segment>
+   			<source>Final Review</source>
+   			<target>Examen final</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.internalization">
+   		<segment>
+   			<source>Internalization</source>
+   			<target>Internalisation</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.keyTerms">
+   		<segment>
+   			<source>Key Terms</source>
+   			<target>Termes clés</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.paratextSync">
+   		<segment>
+   			<source>Paratext Sync</source>
+   			<target>Paratext Sync</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.peerReview">
+   		<segment>
+   			<source>Peer Review</source>
+   			<target>Contrôle des pairs</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.record">
+   		<segment>
+   			<source>Record</source>
+   			<target>Enregistrement</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.review">
+   		<segment>
+   			<source>Review</source>
+   			<target>Examen</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.teamCheck">
+   		<segment>
+   			<source>Team Check</source>
+   			<target>Contrôle de l'équipe</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.unsaved">
+   		<segment>
+   			<source>Unsaved content</source>
+   			<target>Contenu non sauvegardé</target>
+   		</segment>
+   	</unit>
+   	<unit id="workflowSteps.saveFirst">
+   		<segment>
+   			<source>Save before changing step?</source>
+   			<target>Sauvegarder avant de changer d'étape ?</target>
+   		</segment>
+   	</unit>
+   	<unit id="wsAudioPlayer.aheadTip">
          <segment>
             <source>Ahead {jump} {1} [{0}]</source>
             <target>Sauter en avant {jump} {1} [{0}]</target>
