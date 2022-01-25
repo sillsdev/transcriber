@@ -116,19 +116,19 @@ export function TeamCheckReference({ auth }: IProps) {
             <Slider value={Math.round((position * 100) / duration)} />
           </Grid>
           <Grid item className={classes.controls}>
-            <IconButton onClick={handleStart}>
+            <IconButton onClick={handleStart} disabled={!Boolean(playItem)}>
               <BeginIcon />
             </IconButton>
-            <IconButton onClick={handleBack}>
+            <IconButton onClick={handleBack} disabled={!Boolean(playItem)}>
               <BackIcon />
             </IconButton>
-            <IconButton onClick={handlePlay}>
+            <IconButton onClick={handlePlay} disabled={!Boolean(playItem)}>
               {!playing ? <PlayIcon /> : <PauseIcon />}
             </IconButton>
-            <IconButton onClick={handleForward}>
+            <IconButton onClick={handleForward} disabled={!Boolean(playItem)}>
               <ForwardIcon />
             </IconButton>
-            <IconButton onClick={handleToEnd}>
+            <IconButton onClick={handleToEnd} disabled={!Boolean(playItem)}>
               <EndIcon />
             </IconButton>
           </Grid>
