@@ -15,7 +15,7 @@ import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { CheckedChoice as ShowAll } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
 import { toCamel, useRemoteSave } from '../../utils';
-import { related, ToolSlug, useTools } from '../../crud';
+import { getTool, related, ToolSlug, useTools } from '../../crud';
 import { AddRecord } from '../../model/baseModel';
 import { useSnackBar } from '../../hoc/SnackBar';
 
@@ -226,12 +226,11 @@ export const StepEditor = ({ process, org }: IProps) => {
     GetOrgWorkflowSteps({ process: 'ANY', org, showAll }).then((orgSteps) => {
       const newRows = Array<IStepRow>();
       orgSteps.forEach((s) => {
-        const tools = JSON.parse(s.attributes?.tool);
         newRows.push({
           id: s.id,
           seq: s.attributes?.sequencenum,
           name: localName(s.attributes?.name),
-          tool: mapTool(toCamel(tools.tool)),
+          tool: mapTool(toCamel(getTool(s.attributes?.tool))),
         });
       });
       setRows(newRows.sort((i, j) => i.seq - j.seq));

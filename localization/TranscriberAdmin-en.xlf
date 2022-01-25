@@ -742,9 +742,27 @@
             <target/>
          </segment>
       </unit>
-      <unit id="commentCard.reply">
+      <unit id="commentEditor.record">
          <segment>
-            <source>Reply</source>
+            <source>Record Comment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentEditor.recordUnavailable">
+         <segment>
+            <source>Another recorder is open.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentEditor.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentEditor.unsaved">
+         <segment>
+            <source>Unsaved</source>
             <target/>
          </segment>
       </unit>

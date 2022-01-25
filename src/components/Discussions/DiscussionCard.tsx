@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import { useEffect, useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -52,9 +52,10 @@ import SelectRole from '../../control/SelectRole';
 import SelectUser from '../../control/SelectUser';
 import SelectArtifactCategory from '../Workflow/SelectArtifactCategory';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { removeExtension, useRemoteSave, waitForIt } from '../../utils';
+import { removeExtension, waitForIt } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
+import Auth from '../../auth/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -167,6 +168,7 @@ interface IStateProps {
   ts: ISharedStrings;
 }
 interface IProps extends IRecordProps, IStateProps {
+  auth: Auth;
   discussion: Discussion;
   collapsed: boolean;
   showStep: boolean;
@@ -179,6 +181,7 @@ export const DiscussionCard = (props: IProps) => {
   const {
     t,
     ts,
+    auth,
     discussion,
     collapsed,
     showStep,
@@ -194,7 +197,13 @@ export const DiscussionCard = (props: IProps) => {
     users,
   } = props;
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, mediafileId, setPlayerSegments } = ctx.state;
+  const {
+    currentstep,
+    mediafileId,
+    setPlayerSegments,
+    toolChanged,
+    toolSaveCompleted,
+  } = ctx.state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
@@ -212,9 +221,9 @@ export const DiscussionCard = (props: IProps) => {
   const [confirmAction, setConfirmAction] = useState('');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
-  const [changed, setChanged] = useState(false);
+  const [myChanged, setMyChanged] = useState(false);
   const [doSave] = useGlobal('doSave');
-  const [, saveCompleted] = useRemoteSave();
+  const savingRef = useRef(false);
   const [editSubject, setEditSubject] = useState(
     discussion.attributes?.subject
   );
@@ -224,6 +233,12 @@ export const DiscussionCard = (props: IProps) => {
   const [editCard, setEditCard] = useState(false);
   const { localizedArtifactCategory } = useArtifactCategory();
   const { localizedWorkStepFromId } = useOrgWorkflowSteps();
+
+  const myId = useMemo(() => {
+    if (discussion.id) return discussion.id;
+    else return 'newDiscussion';
+  }, [discussion]);
+
   const handleSelect = (discussion: Discussion) => () => {
     selectDiscussion(discussion);
   };
@@ -316,12 +331,6 @@ export const DiscussionCard = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussion, showReference]);
 
-  useEffect(() => {
-    setEditing(onAddComplete !== undefined);
-    if (onAddComplete) setEditSubject(discussion.attributes?.subject);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onAddComplete]);
-
   function selectDiscussion(discussion: Discussion) {}
   function discussionDescription() {
     var media = '';
@@ -368,14 +377,18 @@ export const DiscussionCard = (props: IProps) => {
   };
 
   const handleReset = () => {
-    if (!onAddComplete) setEditSubject('');
+    setEditSubject('');
     setEditRole('');
     setEditUser('');
     setEditCategory('');
   };
 
   useEffect(() => {
-    handleReset();
+    if ((onAddComplete !== undefined) !== editing) {
+      handleReset();
+      setEditing(onAddComplete !== undefined);
+      if (!onAddComplete) setEditSubject(discussion.attributes?.subject);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentstep, onAddComplete]);
 
@@ -413,25 +426,33 @@ export const DiscussionCard = (props: IProps) => {
     setShowComments(!showComments);
   };
   const handleSubjectChange = (e: any) => {
-    setEditSubject(e.target.value);
-    setChanged(true);
+    if (e.target.value !== editSubject) {
+      setEditSubject(e.target.value);
+      setMyChanged(true);
+    }
   };
   const handleRoleChange = (e: string) => {
-    setEditRole(e);
-    setEditUser('');
-    setChanged(true);
+    if (e !== editRole) {
+      setEditRole(e);
+      setEditUser('');
+      setMyChanged(true);
+    }
   };
   const handleUserChange = (e: string) => {
-    setEditUser(e);
-    setEditRole('');
-    setChanged(true);
+    if (e !== editUser) {
+      setEditUser(e);
+      setEditRole('');
+      setMyChanged(true);
+    }
   };
   const onCategoryChange = (cat: string) => {
-    setEditCategory(cat);
-    setChanged(true);
+    if (cat !== editCategory) {
+      setEditCategory(cat);
+      setMyChanged(true);
+    }
   };
   const handleSave = async () => {
-    if (changed || (editSubject.length !== 0 && onAddComplete)) {
+    if (mediafileId && myChanged && editSubject.length > 0) {
       discussion.attributes.subject = editSubject;
       var ops: Operation[] = [];
       var t = new TransformBuilder();
@@ -447,17 +468,16 @@ export const DiscussionCard = (props: IProps) => {
             user
           )
         );
-        if (mediafileId)
-          ops.push(
-            ...UpdateRelatedRecord(
-              t,
-              discussion,
-              'mediafile',
-              'mediafile',
-              mediafileId,
-              user
-            )
-          );
+        ops.push(
+          ...UpdateRelatedRecord(
+            t,
+            discussion,
+            'mediafile',
+            'mediafile',
+            mediafileId,
+            user
+          )
+        );
       } else ops.push(...UpdateRecord(t, discussion, user));
       ops.push(
         ...UpdateRelatedRecord(
@@ -475,23 +495,35 @@ export const DiscussionCard = (props: IProps) => {
     }
     onAddComplete && onAddComplete();
     setEditing(false);
-    setChanged(false);
+    setMyChanged(false);
+    toolSaveCompleted(myId, '');
   };
+
   const handleCancel = (e: any) => {
     onAddComplete && onAddComplete();
     setEditing(false);
-    setChanged(false);
+    setMyChanged(false);
+    toolSaveCompleted(myId, '');
   };
+  useEffect(() => {
+    if (myChanged && editSubject !== '') {
+      toolChanged(myId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [myChanged, editSubject]);
 
   useEffect(() => {
-    if (doSave) {
+    if (doSave && !savingRef.current) {
+      savingRef.current = true;
       handleSave().then(() => {
         waitForIt(
           'category update',
           () => !remote || remote.requestQueue.length === 0,
           () => offline && !offlineOnly,
           200
-        ).then(() => saveCompleted(''));
+        ).then(() => {
+          savingRef.current = false;
+        });
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -645,14 +677,20 @@ export const DiscussionCard = (props: IProps) => {
             <Grid container className={classes.cardFlow}>
               {myComments.map((i, j) => (
                 <CommentCard
+                  auth={auth}
                   key={i.id}
                   comment={i}
+                  discussion={discussion}
                   number={j}
                   onEditing={handleEditCard}
                 />
               ))}
               {!discussion.attributes.resolved && !editCard && (
-                <ReplyCard discussion={discussion} number={myComments.length} />
+                <ReplyCard
+                  auth={auth}
+                  discussion={discussion}
+                  number={myComments.length}
+                />
               )}
             </Grid>
           )}

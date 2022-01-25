@@ -234,7 +234,7 @@ const PassageDetailGrids = (props: IProps) => {
                   <Pane className={classes.pane}>
                     <Grid item xs={12} sm container>
                       <Grid item container direction="column">
-                        <DiscussionList />
+                        <DiscussionList auth={auth} />
                       </Grid>
                     </Grid>
                   </Pane>

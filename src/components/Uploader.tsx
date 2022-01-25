@@ -141,7 +141,8 @@ export const Uploader = (props: IProps) => {
         data,
         num,
         uploadList[n].size,
-        passageId
+        passageId,
+        artifactType || ''
       );
       mediaIdRef.current.push(newMediaRec.id);
     }
@@ -151,7 +152,6 @@ export const Uploader = (props: IProps) => {
       doUpload(next);
     } else if (!offline) {
       pullPlanMedia(planIdRef.current, memory, remote).then(() => {
-        console.log('here');
         finishMessage();
       });
     } else {

@@ -161,7 +161,13 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
 
 export interface ICommentCardStrings extends Localize.LocalizedStringsMethods {
     "confirmDelete": string;
-    "reply": string;
+};
+
+export interface ICommentEditorStrings extends Localize.LocalizedStringsMethods {
+    "record": string;
+    "recordUnavailable": string;
+    "saving": string;
+    "unsaved": string;
 };
 
 export interface IDiscussionMenuStrings extends Localize.LocalizedStringsMethods {
@@ -1132,6 +1138,7 @@ export interface ILocalizedStrings {
 	audioDownload: IAudioDownloadStrings;
 	cards: ICardsStrings;
 	commentCard: ICommentCardStrings;
+	commentEditor: ICommentEditorStrings;
 	discussionMenu: IDiscussionMenuStrings;
 	control: IControlStrings;
 	deleteExpansion: IDeleteExpansionStrings;

@@ -174,6 +174,7 @@ interface IProps extends IStateProps {
   allowZoom?: boolean;
   allowSegment?: boolean;
   allowSpeed?: boolean;
+  allowSilence?: boolean;
   size: number;
   segments: string;
   metaData?: JSX.Element;
@@ -222,6 +223,7 @@ function WSAudioPlayer(props: IProps) {
     allowZoom,
     allowSegment,
     allowSpeed,
+    allowSilence,
     size,
     segments,
     metaData,
@@ -767,53 +769,57 @@ function WSAudioPlayer(props: IProps) {
             )}
             {allowRecord && (
               <>
-                <div className={classes.labeledControl}>
-                  <InputLabel
-                    id="wsAudioAddSilenceLabel"
-                    className={classes.smallFont}
-                  >
-                    {t.silence}
-                  </InputLabel>
-                  <LightTooltip id="wsAudioAddSilenceTip" title={t.silence}>
-                    <span>
-                      <IconButton
-                        id="wsAudioAddSilence"
-                        className={classes.togglebutton}
-                        onClick={handleAddSilence()}
-                        disabled={
-                          !ready ||
-                          recording ||
-                          playingRef.current ||
-                          processRecordRef.current
-                        }
+                {allowSilence && (
+                  <>
+                    <div className={classes.labeledControl}>
+                      <InputLabel
+                        id="wsAudioAddSilenceLabel"
+                        className={classes.smallFont}
                       >
-                        <SilenceIcon />
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
-                </div>
-                <div className={classes.labeledControl}>
-                  <InputLabel
-                    id="wsAudioSilenceLabel"
-                    className={classes.smallFont}
-                  >
-                    {t.seconds}
-                  </InputLabel>
-                  <Input
-                    id="wsAudioSilence"
-                    className={classes.formControl}
-                    type="number"
-                    inputProps={{ min: '0.1', step: '0.1' }}
-                    value={silence}
-                    onChange={handleChangeSilence}
-                  />
-                </div>
-                <Divider
-                  id="wsAudioDiv4"
-                  className={classes.divider}
-                  orientation="vertical"
-                  flexItem
-                />
+                        {t.silence}
+                      </InputLabel>
+                      <LightTooltip id="wsAudioAddSilenceTip" title={t.silence}>
+                        <span>
+                          <IconButton
+                            id="wsAudioAddSilence"
+                            className={classes.togglebutton}
+                            onClick={handleAddSilence()}
+                            disabled={
+                              !ready ||
+                              recording ||
+                              playingRef.current ||
+                              processRecordRef.current
+                            }
+                          >
+                            <SilenceIcon />
+                          </IconButton>
+                        </span>
+                      </LightTooltip>
+                    </div>
+                    <div className={classes.labeledControl}>
+                      <InputLabel
+                        id="wsAudioSilenceLabel"
+                        className={classes.smallFont}
+                      >
+                        {t.seconds}
+                      </InputLabel>
+                      <Input
+                        id="wsAudioSilence"
+                        className={classes.formControl}
+                        type="number"
+                        inputProps={{ min: '0.1', step: '0.1' }}
+                        value={silence}
+                        onChange={handleChangeSilence}
+                      />
+                    </div>
+                    <Divider
+                      id="wsAudioDiv4"
+                      className={classes.divider}
+                      orientation="vertical"
+                      flexItem
+                    />{' '}
+                  </>
+                )}
                 {hasRegion !== 0 && (
                   <LightTooltip
                     id="wsAudioDeleteRegionTip"

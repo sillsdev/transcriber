@@ -75,6 +75,7 @@ interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
   metaData?: JSX.Element;
   defaultFilename?: string;
+  startSave: boolean;
   setCanSave: (canSave: boolean) => void;
   setCanCancel?: (canCancel: boolean) => void;
   setStatusText: (status: string) => void;
@@ -82,12 +83,14 @@ interface IProps extends IStateProps, IDispatchProps {
   cancelMethod?: () => void;
   allowWave?: boolean;
   showFilename?: boolean;
+  size?: number;
 }
 
 function PassageRecord(props: IProps) {
   const {
     t,
     onReady,
+    startSave,
     mediaId,
     auth,
     defaultFilename,
@@ -102,8 +105,8 @@ function PassageRecord(props: IProps) {
     convert_blob,
     convertBlob,
     resetConvertBlob,
+    size,
   } = props;
-  const [doSave] = useGlobal('doSave');
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [name, setName] = useState(t.defaultFilename);
@@ -143,7 +146,6 @@ function PassageRecord(props: IProps) {
     setConverting(false);
     setUploading(false);
     saveRef.current = false;
-    setStatusText('');
     setAudioBlob(undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -222,18 +224,18 @@ function PassageRecord(props: IProps) {
         doUpload(convert_blob).then(() => {
           resetConvertBlob();
           setConverting(false);
-          onReady();
+          if (onReady) onReady();
         });
       else {
         setConverting(false);
-        onReady();
+        if (onReady) onReady();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [convert_status, convert_complete, convert_blob]);
 
   useEffect(() => {
-    if (doSave && !saveRef.current) {
+    if (startSave && !saveRef.current) {
       if (audioBlob) {
         saveRef.current = true;
         if (mimeType !== 'audio/wav') {
@@ -244,8 +246,8 @@ function PassageRecord(props: IProps) {
         }
         return;
       }
-    } else if (!doSave && saveRef.current) saveRef.current = false;
-  }, [audioBlob, doSave, mimeType, doUpload, convertBlob, onReady]);
+    } else if (!startSave && saveRef.current) saveRef.current = false;
+  }, [audioBlob, startSave, mimeType, doUpload, convertBlob, onReady]);
 
   const setExtension = (mimeType: string) => {
     if (mimeType) {
@@ -309,7 +311,8 @@ function PassageRecord(props: IProps) {
         )}
       <WSAudioPlayer
         allowRecord={true}
-        size={350}
+        allowSilence={allowWave}
+        size={size || 350}
         blob={originalBlob}
         onBlobReady={onBlobReady}
         setChanged={setFilechanged}
