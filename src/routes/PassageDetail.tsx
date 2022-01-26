@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(2),
       margin: 'auto',
-      width: '100%',
+      width: `calc(100% - 32px)`,
     },
     panel2: {
       display: 'flex',
