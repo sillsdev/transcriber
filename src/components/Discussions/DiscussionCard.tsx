@@ -388,10 +388,14 @@ export const DiscussionCard = (props: IProps) => {
   };
 
   useEffect(() => {
-    if ((onAddComplete !== undefined) !== editing) {
+    if (Boolean(onAddComplete) !== editing) {
       handleReset();
       setEditing(onAddComplete !== undefined);
       if (!onAddComplete) setEditSubject(discussion.attributes?.subject);
+    }
+    if (Boolean(onAddComplete) && Boolean(discussion.attributes?.subject)) {
+      setEditSubject(discussion.attributes?.subject);
+      setMyChanged(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentstep, onAddComplete]);
@@ -432,6 +436,7 @@ export const DiscussionCard = (props: IProps) => {
   const handleSubjectChange = (e: any) => {
     if (e.target.value !== editSubject) {
       setEditSubject(e.target.value);
+      if (!myChanged) toolChanged(myId);
       setMyChanged(true);
     }
   };
@@ -509,12 +514,6 @@ export const DiscussionCard = (props: IProps) => {
     setMyChanged(false);
     toolSaveCompleted(myId, '');
   };
-  useEffect(() => {
-    if (myChanged && editSubject !== '') {
-      toolChanged(myId);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [myChanged, editSubject]);
 
   useEffect(() => {
     if (doSave && !savingRef.current) {
