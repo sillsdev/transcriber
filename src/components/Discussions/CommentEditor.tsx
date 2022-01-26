@@ -141,6 +141,7 @@ export const CommentEditor = (props: IProps) => {
       setStartSave(true);
       onOk();
       setStatusText(t.saving);
+      if (doRecord) setCommentRecording(false);
     }
   };
   const handleCancel = () => {
