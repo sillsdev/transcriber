@@ -50,7 +50,8 @@ const useStyles = makeStyles((theme: Theme) =>
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-      width: 400,
+      width: 'inherit',
+      maxWidth: '400px',
     },
     newTextField: {
       marginLeft: theme.spacing(1),
