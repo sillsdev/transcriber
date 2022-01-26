@@ -1,14 +1,17 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import { Comment, Discussion, MediaFile, User } from '../../model';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { Discussion, MediaFile, User } from '../../model';
+import { QueryBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
-import { useGlobal, useState } from 'reactn';
+import { useEffect, useGlobal, useRef, useState, useContext } from 'reactn';
 import { CommentEditor } from './CommentEditor';
-import { AddRecord } from '../../model/baseModel';
 import * as actions from '../../store';
 import { useRecordComment } from './useRecordComment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Auth from '../../auth/Auth';
+import { useSaveComment } from '../../crud/useSaveComment';
+import { useMounted } from '../../utils';
+import { PassageDetailContext } from '../../context/PassageDetailContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,52 +59,107 @@ interface IRecordProps {
   mediafiles: Array<MediaFile>;
   users: Array<User>;
 }
+interface IStateProps {}
 interface IDispatchProps {
+  uploadFiles: typeof actions.uploadFiles;
+  nextUpload: typeof actions.nextUpload;
+  uploadComplete: typeof actions.uploadComplete;
   doOrbitError: typeof actions.doOrbitError;
 }
-interface IProps extends IRecordProps, IDispatchProps {
+
+interface IProps extends IRecordProps, IStateProps, IDispatchProps {
+  auth: Auth;
   discussion: Discussion;
   number: number;
 }
 
 export const ReplyCard = (props: IProps) => {
-  const { discussion, number, doOrbitError } = props;
+  const { auth, discussion, number } = props;
+  const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
   const classes = useStyles();
-  const recordComment = useRecordComment({ doOrbitError });
-  const [memory] = useGlobal('memory');
-  const [user] = useGlobal('user');
   const [refresh, setRefresh] = useState(0);
+  const isMounted = useMounted('replycard');
+  const { toolChanged, toolSaveCompleted } =
+    useContext(PassageDetailContext).state;
+  const myId = discussion.id + 'r';
+  const afterSavecb = () => {
+    savingRef.current = false;
+    toolSaveCompleted(myId, '');
+    if (isMounted()) {
+      setMyChanged(false);
+      setRefresh(refresh + 1);
+    }
+  };
+  const saveComment = useSaveComment({
+    discussion: discussion.id,
+    cb: afterSavecb,
+    doOrbitError,
+  });
+  const afterUploadcb = (mediaId: string) => {
+    saveComment('', commentText, mediaId);
+  };
+  const { uploadMedia, fileName } = useRecordComment({
+    auth,
+    discussion,
+    number,
+    afterUploadcb,
+    uploadFiles,
+    nextUpload,
+    uploadComplete,
+    doOrbitError,
+  });
+  const [doSave] = useGlobal('doSave');
+  const savingRef = useRef(false);
+  const [commentText, setCommentText] = useState('');
+  const [canSaveRecording, setCanSaveRecording] = useState(false);
+  const [myChanged, setMyChanged] = useState(false);
 
-  const handleCommentChange = (commentText: string) => {
-    const comment: Comment = {
-      type: 'comment',
-      attributes: {
-        commentText,
-      },
-    } as any;
-    memory.update((t: TransformBuilder) => [
-      ...AddRecord(t, comment, user, memory),
-      t.replaceRelatedRecord(comment, 'discussion', discussion),
-    ]);
-    setRefresh(refresh + 1);
+  const handleSaveEdit = () => {
+    savingRef.current = true;
+    //if we're recording and can save, the comment will save after upload
+    if (!canSaveRecording) {
+      afterUploadcb('');
+    }
   };
   const handleCancelEdit = () => {
     setRefresh(refresh + 1);
   };
-  const handleRecord = () => {
-    recordComment(discussion, number, null, () => {
-      setRefresh(refresh + 1);
-    });
+
+  useEffect(() => {
+    if (myChanged && doSave && !savingRef.current) {
+      handleSaveEdit();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doSave, myChanged]);
+
+  const handleTextChange = (newText: string) => {
+    setCommentText(newText);
+    if (!myChanged) {
+      setMyChanged(true);
+      const valid = newText !== '' || canSaveRecording;
+      if (valid) toolChanged(myId);
+    }
   };
+
+  useEffect(() => {
+    if (canSaveRecording && !myChanged) {
+      setMyChanged(true);
+      toolChanged(myId);
+    }
+  }, [canSaveRecording, myChanged, myId, toolChanged]);
 
   return (
     <div className={classes.root}>
       <CommentEditor
         comment={''}
         refresh={refresh}
-        onOk={handleCommentChange}
+        onOk={handleSaveEdit}
         onCancel={handleCancelEdit}
-        onRecord={handleRecord}
+        setCanSaveRecording={setCanSaveRecording}
+        fileName={fileName}
+        uploadMethod={uploadMedia}
+        onTextChange={handleTextChange}
+        cancelOnlyIfChanged={true}
       />
     </div>
   );
@@ -115,6 +173,9 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       fetchBooks: actions.fetchBooks,
+      uploadFiles: actions.uploadFiles,
+      nextUpload: actions.nextUpload,
+      uploadComplete: actions.uploadComplete,
       doOrbitError: actions.doOrbitError,
       resetOrbitError: actions.resetOrbitError,
     },

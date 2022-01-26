@@ -29,6 +29,7 @@ import { withData } from '../../mods/react-orbitjs';
 import { useGlobal } from 'reactn';
 import { useDiscussionOrg } from '../../crud';
 import FilterMenu, { IFilterState } from './FilterMenu';
+import Auth from '../../auth/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,12 +69,13 @@ interface IRecordProps {
   discussions: Discussion[];
   mediafiles: MediaFile[];
 }
-interface IProps extends IStateProps, IRecordProps {}
+interface IProps extends IStateProps, IRecordProps {
+  auth: Auth;
+}
 
 export function DiscussionList(props: IProps) {
-  const { t, discussions, mediafiles } = props;
+  const { t, auth, discussions, mediafiles } = props;
   const classes = useStyles();
-  const [changed, setChanged] = useGlobal('changed');
   const [projRole] = useGlobal('projRole');
   const [planId] = useGlobal('plan');
   const [userId] = useGlobal('user');
@@ -194,21 +196,16 @@ export function DiscussionList(props: IProps) {
   }, [discussions, currentstep, adding, filterState, catFilter]);
 
   useEffect(() => {
-    if (changed) {
-      setAdding(false);
-      setChanged(false);
-    }
+    setAdding(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentstep]);
 
   const handleAddComplete = () => {
     setAdding(false);
-    setChanged(false);
   };
 
   const handleAddDiscussion = async () => {
     setAdding(true);
-    setChanged(true);
   };
 
   const handleToggleCollapse = () => {
@@ -220,7 +217,6 @@ export function DiscussionList(props: IProps) {
     } else if (Object.keys(filterState).includes(what)) {
       setFilterState({ ...filterState, [what]: !filterState[what] });
     } else {
-      console.log(what);
       setCategoryOpen(true);
     }
   };
@@ -281,6 +277,7 @@ export function DiscussionList(props: IProps) {
       <Grid container className={classes.cardFlow}>
         {displayDiscussions.map((i, j) => (
           <DiscussionCard
+            auth={auth}
             key={j}
             discussion={i}
             collapsed={collapsed}

@@ -34,6 +34,8 @@ import {
   findRecord,
   remoteId,
   AddPassageStateChangeToOps,
+  getTool,
+  ToolSlug,
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
@@ -181,6 +183,11 @@ const initState = {
   setupLocate: (cb?: (segments: string) => void) => {},
   getSegments: () => '',
   setPlayerSegments: (segments: string) => {},
+  commentRecording: false,
+  setCommentRecording: (commentRecording: boolean) => {},
+  toolsChanged: [] as string[],
+  toolChanged: (toolId: string, changed?: boolean, saveErr?: string) => {},
+  toolSaveCompleted: (toolId: string, saveErr: string) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -218,8 +225,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const remote = coordinator.getSource('remote') as JSONAPISource;
     const [user] = useGlobal('user');
     const [errorReporter] = useGlobal('errorReporter');
-    const [changed] = useGlobal('changed');
-    const [startSave, , waitForSave] = useRemoteSave();
+    const [changed, setChanged] = useGlobal('changed');
+    const [startSave, saveCompleted, waitForSave] = useRemoteSave();
     const [, setComplete] = useGlobal('progress');
     const [status] = useState<IStatus>({ canceled: false });
     const [confirm, setConfirm] = useState('');
@@ -242,7 +249,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { localizedArtifactCategory } = useArtifactCategory();
     const { localizedWorkStep } = useOrgWorkflowSteps();
     const getStepsBusy = useRef<boolean>(false);
-
+    const saveErrRef = useRef('');
     const setOrgWorkflowSteps = (steps: OrgWorkflowStep[]) => {
       setState((state: ICtxState) => {
         return { ...state, orgWorkflowSteps: steps };
@@ -254,7 +261,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setState((state: ICtxState) => {
         return { ...state, currentstep: stepId, playing: false };
       });
-      if (step && step.attributes.tool !== 'resource') {
+      if (step && getTool(step.attributes?.tool) !== ToolSlug.Resource) {
         //this does a bunch of stuff...don't just set it in the state above...
         if (
           state.rowData.length > 0 &&
@@ -281,6 +288,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       }, 400);
     };
     const handleRefuseStep = () => {
+      saveCompleted('');
+      handleSetCurrentStep(confirm);
       setConfirm('');
     };
     const setDiscussionSize = (discussionSize: number) => {
@@ -288,6 +297,35 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         return { ...state, discussionSize };
       });
     };
+    const toolSaveCompleted = (toolId: string, saveErr: string) => {
+      toolChanged(toolId, false, saveErr);
+    };
+    const toolChanged = (
+      toolId: string,
+      changed: boolean = true,
+      saveErr: string = ''
+    ) => {
+      var toolsChanged = [...state.toolsChanged];
+      if (changed) toolsChanged.push(toolId);
+      else {
+        toolsChanged = toolsChanged.filter((c) => c !== toolId);
+        if (saveErr) saveErrRef.current = `${saveErr};${saveErrRef.current}`;
+      }
+      setState((state: ICtxState) => {
+        return { ...state, toolsChanged };
+      });
+      if (toolsChanged.length > 0) setChanged(true);
+      else {
+        saveCompleted(saveErrRef.current);
+        saveErrRef.current = '';
+      }
+    };
+    const setCommentRecording = (commentRecording: boolean) => {
+      setState((state: ICtxState) => {
+        return { ...state, commentRecording };
+      });
+    };
+
     //this is for the vernacular only
     const setPlaying = (playing: boolean) => {
       setState((state: ICtxState) => {
@@ -728,6 +766,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setupLocate,
             stepComplete,
             setStepComplete,
+            toolChanged,
+            toolSaveCompleted,
+            setCommentRecording,
           },
           setState,
         }}

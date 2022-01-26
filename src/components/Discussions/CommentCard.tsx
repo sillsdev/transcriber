@@ -20,19 +20,20 @@ import Confirm from '../AlertDialog';
 import localStrings from '../../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
-import { useContext, useEffect, useMemo, useState } from 'react';
-import { related } from '../../crud';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { findRecord, related } from '../../crud';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import UserAvatar from '../UserAvatar';
 import { dateOrTime } from '../../utils';
 import { useGlobal } from 'reactn';
 import { CommentEditor } from './CommentEditor';
-import { UpdateRecord } from '../../model/baseModel';
 import DiscussionMenu from './DiscussionMenu';
 import { useRecordComment } from './useRecordComment';
 import { bindActionCreators } from 'redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
+import Auth from '../../auth/Auth';
+import { useSaveComment } from '../../crud/useSaveComment';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -108,29 +109,82 @@ interface IStateProps {
   t: ICommentCardStrings;
 }
 interface IDispatchProps {
+  uploadFiles: typeof actions.uploadFiles;
+  nextUpload: typeof actions.nextUpload;
+  uploadComplete: typeof actions.uploadComplete;
   doOrbitError: typeof actions.doOrbitError;
 }
 
 interface IProps extends IStateProps, IRecordProps, IDispatchProps {
+  auth: Auth;
   comment: Comment;
+  discussion: Discussion;
   number: number;
   onEditing: (val: boolean) => void;
 }
 
 export const CommentCard = (props: IProps) => {
-  const { t, comment, number, users, onEditing, doOrbitError } = props;
+  const { t, auth, comment, discussion, number, users, onEditing } = props;
+  const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
   const classes = useStyles();
   const [author, setAuthor] = useState<User>();
   const [lang] = useGlobal('lang');
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
-  const { setPlaying, setSelected, mediaPlaying, setMediaPlaying, playItem } =
-    useContext(PassageDetailContext).state;
+  const [doSave] = useGlobal('doSave');
+  const savingRef = useRef(false);
+  const {
+    setPlaying,
+    setSelected,
+    mediaPlaying,
+    setMediaPlaying,
+    playItem,
+    toolChanged,
+    toolSaveCompleted,
+  } = useContext(PassageDetailContext).state;
   const [editing, setEditing] = useState(false);
+  const [myChanged, setMyChanged] = useState(false);
+  const [canSaveRecording, setCanSaveRecording] = useState(false);
+  const [editComment, setEditComment] = useState('');
   const [confirmAction, setConfirmAction] = useState('');
-  const recordComment = useRecordComment({ doOrbitError });
+  const reset = () => {
+    setEditing(false);
+    onEditing(false);
+    setMyChanged(false);
+    savingRef.current = false;
+    toolSaveCompleted(comment.id, '');
+  };
+  const saveComment = useSaveComment({
+    discussion: discussion.id,
+    cb: reset,
+    doOrbitError,
+  });
+  const afterUploadcb = (mediaId: string) => {
+    saveComment(comment.id, editComment, mediaId);
+  };
+  const { uploadMedia, fileName } = useRecordComment({
+    auth,
+    discussion,
+    number,
+    afterUploadcb,
+    uploadFiles,
+    nextUpload,
+    uploadComplete,
+    doOrbitError,
+  });
   const text = comment.attributes?.commentText;
   const [mediaId, setMediaId] = useState('');
+
+  useEffect(() => {
+    setEditComment(comment.attributes.commentText);
+  }, [comment]);
+
+  useEffect(() => {
+    if (myChanged && doSave && !savingRef.current) {
+      handleSaveEdit();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doSave, myChanged]);
 
   const handleCommentAction = (what: string) => {
     if (what === 'edit') {
@@ -149,6 +203,8 @@ export const CommentCard = (props: IProps) => {
     );
     setEditing(false);
     onEditing(false);
+    setMyChanged(false);
+    toolSaveCompleted(comment.id, '');
   };
 
   const handleActionConfirmed = () => {
@@ -162,27 +218,27 @@ export const CommentCard = (props: IProps) => {
     setConfirmAction('');
   };
 
-  const handleCommentChange = (newComment: string) => {
-    comment.attributes.commentText = newComment;
-    memory.update((t: TransformBuilder) => UpdateRecord(t, comment, user));
-    setEditing(false);
-    onEditing(false);
+  const handleSaveEdit = () => {
+    savingRef.current = true;
+    //if we're recording and can save, the comment will save after upload
+    if (!canSaveRecording) {
+      afterUploadcb('');
+    }
   };
   const handleCancelEdit = () => {
     setEditing(false);
     onEditing(false);
   };
-  const handleRecord = () => {
-    const discussion = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'discussion', id: related(comment, 'discussion') })
-    ) as Discussion;
-    recordComment(discussion, number, comment);
+
+  const handleTextChange = (newText: string) => {
+    setEditComment(newText);
+    setMyChanged(true);
+    toolChanged(comment.id);
   };
 
   const media = useMemo(() => {
     if (!mediaId || mediaId === '') return null;
-    const recId = { type: 'mediafile', id: mediaId };
-    return memory.cache.query((q: QueryBuilder) => q.findRecord(recId));
+    return findRecord(memory, 'mediafile', mediaId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment, mediaId]);
 
@@ -237,9 +293,12 @@ export const CommentCard = (props: IProps) => {
             <CommentEditor
               refresh={0}
               comment={comment.attributes?.commentText}
-              onOk={handleCommentChange}
               onCancel={handleCancelEdit}
-              onRecord={handleRecord}
+              onOk={handleSaveEdit}
+              setCanSaveRecording={setCanSaveRecording}
+              onTextChange={handleTextChange}
+              fileName={fileName}
+              uploadMethod={uploadMedia}
             />
           ) : text ? (
             <TextField
@@ -272,6 +331,9 @@ const mapRecordsToProps = {
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
+      uploadFiles: actions.uploadFiles,
+      nextUpload: actions.nextUpload,
+      uploadComplete: actions.uploadComplete,
       doOrbitError: actions.doOrbitError,
     },
     dispatch

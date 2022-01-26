@@ -179,7 +179,14 @@ const initialState = {
 	"commentCard": new LocalizedStrings({
 		"en": {
 			"confirmDelete": "Delete this comment?",
-			"reply": "Reply",
+		}
+	}),
+	"commentEditor": new LocalizedStrings({
+		"en": {
+			"record": "Record Comment",
+			"recordUnavailable": "Another recorder is open.",
+			"saving": "Saving...",
+			"unsaved": "Unsaved",
 		}
 	}),
 	"discussionMenu": new LocalizedStrings({
@@ -1214,6 +1221,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"audioDownload" : new LocalizedStrings(action.payload.data.audioDownload),
 				"cards" : new LocalizedStrings(action.payload.data.cards),
 				"commentCard" : new LocalizedStrings(action.payload.data.commentCard),
+				"commentEditor" : new LocalizedStrings(action.payload.data.commentEditor),
 				"discussionMenu" : new LocalizedStrings(action.payload.data.discussionMenu),
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),

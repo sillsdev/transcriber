@@ -862,14 +862,35 @@
             <source>Delete this comment?</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+               <context context-type="sourcefile">CommentCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="commentCard.reply">
-            <source>Reply</source>
+        <trans-unit id="commentEditor.record">
+            <source>Record Comment</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+               <context context-type="sourcefile">CommentCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="commentEditor.recordUnavailable">
+            <source>Another recorder is open.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">CommentCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="commentEditor.saving">
+            <source>Saving...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">CommentCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="commentEditor.unsaved">
+            <source>Unsaved</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">CommentCard.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="discussionMenu.edit">

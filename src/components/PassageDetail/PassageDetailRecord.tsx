@@ -80,11 +80,11 @@ export function PassageDetailRecord(props: IProps) {
   const { uploadFiles, nextUpload, uploadError, uploadComplete, doOrbitError } =
     props;
   const { mediafiles } = props;
-  const [startSave, saveCompleted] = useRemoteSave();
-  const [, setChanged] = useGlobal('changed');
+  const [startSave] = useRemoteSave();
   const [reporter] = useGlobal('errorReporter');
   const [offline] = useGlobal('offline');
   const [plan] = useGlobal('plan');
+  const [doSave] = useGlobal('doSave');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const { createMedia } = useOfflnMediafileCreate();
   const [statusText, setStatusText] = useState('');
@@ -98,17 +98,18 @@ export function PassageDetailRecord(props: IProps) {
   const [mediaRec, setMediaRec] = useState<MediaFile>();
   const successCount = useRef(0);
   const mediaIdRef = useRef('');
-  const { passage, mediafileId } = usePassageDetailContext();
+  const { passage, mediafileId, toolChanged, toolSaveCompleted } =
+    usePassageDetailContext();
   const { vernacularId } = useArtifactType();
   const { showMessage } = useSnackBar();
   const [attachPassage] = useMediaAttach({
     doOrbitError,
   });
-
+  const myId = 'RecordTool';
   const onReady = () => {};
 
   useEffect(() => {
-    setChanged(canSave);
+    toolChanged(myId, canSave);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSave]);
 
@@ -167,7 +168,7 @@ export function PassageDetailRecord(props: IProps) {
       if (mediaRec) {
         num = mediaRec.attributes.versionNumber + 1;
       }
-      await createMedia(data, num, uploadList[n].size, passage.id);
+      await createMedia(data, num, uploadList[n].size, passage.id, '');
     }
     setStatusText('');
     if (!offline) {
@@ -182,12 +183,12 @@ export function PassageDetailRecord(props: IProps) {
           mediaId
         ).then(() => {
           finishMessage();
-          saveCompleted('');
+          toolSaveCompleted(myId, '');
         });
       });
     } else {
       finishMessage();
-      saveCompleted('');
+      toolSaveCompleted(myId, '');
     }
   };
   const getPlanId = () => remoteIdNum('plan', plan, memory.keyMap) || plan;
@@ -220,6 +221,7 @@ export function PassageDetailRecord(props: IProps) {
         showFilename={true}
         setCanSave={setCanSave}
         setStatusText={setStatusText}
+        startSave={doSave}
       />
       <Typography variant="caption" className={classes.status}>
         {statusText}

@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { SectionResource, OrgWorkflowStep } from '../model';
 import { AddRecord } from '../model/baseModel';
-import { related, ToolSlug } from '.';
+import { getTool, related, ToolSlug } from '.';
 
 export const useSecResCreate = (section: RecordIdentity) => {
   const [memory] = useGlobal('memory');
@@ -18,7 +18,7 @@ export const useSecResCreate = (section: RecordIdentity) => {
       .filter((s) => related(s, 'organization') === organization)
       .find(
         (s) =>
-          JSON.parse(s.attributes?.tool).tool === ToolSlug.Resource &&
+          getTool(s.attributes?.tool) === ToolSlug.Resource &&
           Boolean(s?.keys?.remoteId) === !offlineOnly
       );
     return internalizationStep;

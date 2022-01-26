@@ -1,18 +1,26 @@
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { OrgWorkflowStep } from '../model';
-import { QueryBuilder } from '@orbit/data';
+import { findRecord } from '.';
 
+export const getTool = (jsonTool?: string) => {
+  if (jsonTool) {
+    var tool = JSON.parse(jsonTool);
+    return tool.tool || '';
+  }
+  return '';
+};
 export const useStepTool = (stepId: string) => {
   const [memory] = useGlobal('memory');
 
   return useMemo(() => {
     if (!stepId) return '';
-    const workflowstep = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'orgworkflowstep', id: stepId })
+    const workflowstep = findRecord(
+      memory,
+      'orgworkflowstep',
+      stepId
     ) as OrgWorkflowStep;
-    const tools = JSON.parse(workflowstep.attributes?.tool);
-    return tools.tool;
+    return getTool(workflowstep?.attributes?.tool);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stepId, memory.cache]);
 };

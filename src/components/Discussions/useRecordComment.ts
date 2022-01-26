@@ -1,162 +1,106 @@
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { useContext } from 'react';
+import { useMemo, useRef } from 'react';
 import { useGlobal } from 'reactn';
-import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { findRecord, related, remoteIdGuid, useArtifactType } from '../../crud';
-import { Discussion, Comment, MediaFile } from '../../model';
+import {
+  findRecord,
+  pullPlanMedia,
+  related,
+  remoteIdNum,
+  useArtifactType,
+  useOfflnMediafileCreate,
+} from '../../crud';
+import { Discussion, MediaFile } from '../../model';
 import * as actions from '../../store';
-import { AddRecord, UpdateRelatedRecord } from '../../model/baseModel';
-import { cleanFileName, orbitErr } from '../../utils';
-
+import { cleanFileName } from '../../utils';
+import JSONAPISource from '@orbit/jsonapi';
+import Auth from '../../auth/Auth';
 interface IDispatchProps {
+  uploadFiles: typeof actions.uploadFiles;
+  nextUpload: typeof actions.nextUpload;
+  uploadComplete: typeof actions.uploadComplete;
   doOrbitError: typeof actions.doOrbitError;
 }
-interface IProps extends IDispatchProps {}
 
-export const useRecordComment = ({ doOrbitError }: IProps) => {
+interface IProps extends IDispatchProps {
+  auth: Auth;
+  discussion: Discussion;
+  number: number;
+  afterUploadcb: (mediaId: string) => void;
+}
+
+export const useRecordComment = ({
+  auth,
+  discussion,
+  number,
+  afterUploadcb,
+  uploadFiles,
+  nextUpload,
+  uploadComplete,
+  doOrbitError,
+}: IProps) => {
+  const [reporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
-  const [user] = useGlobal('user');
-  const { showRecord } = useContext(PassageDetailContext).state;
+  const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const [plan] = useGlobal('plan');
+  const [offline] = useGlobal('offline');
   const { commentId } = useArtifactType();
+  const fileList = useRef<File[]>();
+  const mediaIdRef = useRef('');
+  const { createMedia } = useOfflnMediafileCreate();
 
-  const getPassRec = (discussion: Discussion, id: string) => {
+  const passageId = useMemo(() => {
     const vernMediaId = related(discussion, 'mediafile');
-    const vernRecId = { type: 'mediafile', id: vernMediaId };
-    const vernRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord(vernRecId)
-    ) as MediaFile;
-    const passageId = related(vernRec, 'passage') as string;
-    return { type: 'passage', id: passageId };
+    const vernRec = findRecord(memory, 'mediafile', vernMediaId) as MediaFile;
+    return related(vernRec, 'passage') as string;
+  }, [discussion, memory]);
+
+  const fileName = useMemo(() => {
+    return `${cleanFileName(discussion.attributes?.subject)}${(
+      discussion.id + 'xxxx'
+    ).slice(0, 4)}-${number}`;
+  }, [discussion, number]);
+
+  const itemComplete = async (n: number, success: boolean, data?: any) => {
+    const uploadList = fileList.current;
+    if (!uploadList) return; // This should never happen
+    if (data?.stringId) {
+      mediaIdRef.current = data?.stringId;
+    } else if (success && data) {
+      // offlineOnly
+      var num = 1;
+      mediaIdRef.current = (
+        await createMedia(data, num, uploadList[n].size, passageId, commentId)
+      ).id;
+    }
+    if (!offline) {
+      pullPlanMedia(plan, memory, remote).then(() => {
+        uploadComplete();
+        afterUploadcb(mediaIdRef.current);
+      });
+    } else {
+      uploadComplete();
+      afterUploadcb(mediaIdRef.current);
+    }
   };
 
-  const attachNewCommentMedia = async (
-    discussion: Discussion,
-    mediafile: MediaFile
-  ) => {
-    const comment: Comment = {
-      type: 'comment',
-      attributes: {
-        commentText: '',
-      },
+  const uploadMedia = async (files: File[]) => {
+    const getPlanId = () => remoteIdNum('plan', plan, memory.keyMap) || plan;
+    const getArtifactId = () =>
+      remoteIdNum('artifacttype', commentId, memory.keyMap) || commentId;
+    const getPassageId = () =>
+      remoteIdNum('passage', passageId, memory.keyMap) || passageId;
+
+    uploadFiles(files);
+    fileList.current = files;
+    const mediaFile = {
+      planId: getPlanId(),
+      versionNumber: 1,
+      originalFile: files[0].name,
+      contentType: files[0].type,
+      artifactTypeId: getArtifactId(),
+      passageId: getPassageId(),
     } as any;
-    const t = new TransformBuilder();
-    const ops = [
-      ...AddRecord(t, comment, user, memory),
-      t.replaceRelatedRecord(comment, 'discussion', discussion),
-    ];
-    if (mediafile) {
-      ops.push(
-        ...UpdateRelatedRecord(
-          t,
-          comment,
-          'mediafile',
-          'mediafile',
-          mediafile.id,
-          user
-        )
-      );
-      ops.push(
-        ...UpdateRelatedRecord(
-          t,
-          mediafile,
-          'artifactType',
-          'artifacttype',
-          commentId,
-          user
-        )
-      );
-      const passRecId = getPassRec(discussion, mediafile.id);
-      ops.push(
-        ...UpdateRelatedRecord(
-          t,
-          mediafile,
-          'passage',
-          'passage',
-          passRecId.id,
-          user
-        )
-      );
-    }
-    await memory.update(ops);
+    nextUpload(mediaFile, files, 0, auth, offline, reporter, itemComplete);
   };
-
-  const updateCommentMedia = async (
-    discussion: Discussion,
-    comment: Comment,
-    mediafile: MediaFile
-  ) => {
-    const t = new TransformBuilder();
-    if (mediafile) {
-      const ops = [];
-      ops.push(
-        ...UpdateRelatedRecord(
-          t,
-          comment,
-          'mediafile',
-          'mediafile',
-          mediafile.id,
-          user
-        )
-      );
-      ops.push(
-        ...UpdateRelatedRecord(
-          t,
-          mediafile,
-          'artifactType',
-          'artifacttype',
-          commentId,
-          user
-        )
-      );
-      const passRecId = getPassRec(discussion, mediafile.id);
-      ops.push(
-        ...UpdateRelatedRecord(
-          t,
-          mediafile,
-          'passage',
-          'passage',
-          passRecId.id,
-          user
-        )
-      );
-      await memory.update(ops);
-    }
-  };
-
-  return (
-    discussion: Discussion,
-    number: number,
-    comment: Comment | null,
-    cb?: () => void
-  ) => {
-    const name = `${cleanFileName(
-      discussion.attributes?.subject
-    )}${discussion.id.slice(0, 4)}-${number}`;
-    showRecord(name, '', (planId: string, mediaRemId?: string[]) => {
-      if (mediaRemId && mediaRemId.length > 0) {
-        const id =
-          remoteIdGuid('mediafile', mediaRemId[0], memory.keyMap) ||
-          mediaRemId[0];
-        const mediafile = findRecord(memory, 'mediafile', id) as MediaFile;
-
-        if (comment) {
-          updateCommentMedia(discussion, comment, mediafile)
-            .then(() => {
-              cb && cb();
-            })
-            .catch((err: Error) => {
-              doOrbitError(orbitErr(err, 'attach comment media'));
-            });
-        } else {
-          attachNewCommentMedia(discussion, mediafile)
-            .then(() => {
-              cb && cb();
-            })
-            .catch((err: Error) => {
-              doOrbitError(orbitErr(err, 'attach comment media'));
-            });
-        }
-      }
-    });
-  };
+  return { uploadMedia, fileName };
 };
