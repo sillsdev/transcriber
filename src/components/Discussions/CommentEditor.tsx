@@ -196,9 +196,7 @@ export const CommentEditor = (props: IProps) => {
       )}
       <div className={classes.row}>
         {!doRecord && (
-          <Tooltip
-            title={commentRecording ? t.recordUnavailable : (t.record = '')}
-          >
+          <Tooltip title={commentRecording ? t.recordUnavailable : t.record}>
             <span>
               <Button
                 id="record"
