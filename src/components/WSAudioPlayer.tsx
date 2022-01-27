@@ -460,6 +460,8 @@ function WSAudioPlayer(props: IProps) {
   const handlePlayStatus = () => {
     if (durationRef.current === 0 || recordingRef.current) return false;
     const playing = wsTogglePlay();
+    if (playing && wsPosition().toFixed(2) === durationRef.current.toFixed(2))
+      wsGoto(0);
     setPlaying(playing);
     if (onPlayStatus && isPlaying !== undefined && playing !== isPlaying)
       onPlayStatus(playing);
@@ -481,6 +483,7 @@ function WSAudioPlayer(props: IProps) {
     recordOverwritePosition.current = undefined;
     processRecordRef.current = false;
     setReady(true);
+    wsGoto(wsDuration());
     handleChanged();
   }
 
