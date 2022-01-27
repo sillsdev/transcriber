@@ -274,7 +274,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       segmentsCb.current = undefined;
     };
     const setCurrentStep = (stepId: string) => {
-      if (changed) {
+      if (state.commentRecording) {
+        showMessage(sharedStr.recordingInProgress);
+      } else if (changed) {
         setConfirm(stepId);
       } else {
         handleSetCurrentStep(stepId);

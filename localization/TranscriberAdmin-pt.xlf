@@ -3415,6 +3415,12 @@
             <target/>
          </segment>
       </unit>
+   	<unit id="shared.recordingInProgress">
+   		<segment>
+   			<source>Recording in progress...</source>
+   			<target>Gravações em andamento...</target>
+   		</segment>
+   	</unit>
       <unit id="shared.paratextchapterSpan">
          <segment>
             <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>

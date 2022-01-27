@@ -3494,7 +3494,13 @@
             <target>Maître</target>
          </segment>
       </unit>
-      <unit id="shared.paratextchapterSpan">
+   	<unit id="shared.recordingInProgress">
+   		<segment>
+   			<source>Recording in progress...</source>
+   			<target>Enregistrement en cours...</target>
+   		</segment>
+   	</unit>
+   	<unit id="shared.paratextchapterSpan">
          <segment>
             <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
             <target>Passage {0}.{1} {2}: Le passage ne doit pas s'Ã©tendre sur des chapitres.</target>
