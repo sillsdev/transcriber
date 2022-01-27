@@ -31,7 +31,7 @@ import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord';
 import PassageBackTranslate from '../components/PassageDetail/PassageBackTranslate';
-import { ToolSlug, useStepTool } from '../crud';
+import { ToolSlug, useStepTool, useUrlContext } from '../crud';
 import { RoleNames } from '../model';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -143,6 +143,8 @@ interface ParamTypes {
 
 const PassageDetailGrids = (props: IProps) => {
   const { auth } = props;
+  const { prjId } = useParams<ParamTypes>();
+  const setUrlContext = useUrlContext();
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [width, setWidth] = useState(window.innerWidth);
@@ -160,6 +162,7 @@ const PassageDetailGrids = (props: IProps) => {
   };
 
   useEffect(() => {
+    setUrlContext(prjId);
     setDimensions();
     const handleResize = debounce(() => {
       setDimensions();
