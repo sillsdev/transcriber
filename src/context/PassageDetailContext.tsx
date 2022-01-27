@@ -53,7 +53,7 @@ import {
   resourceRows,
 } from '../components/PassageDetail/Internalization';
 import Confirm from '../components/AlertDialog';
-import Uploader, { IStatus } from '../components/Uploader';
+import Uploader from '../components/Uploader';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -228,7 +228,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const [changed, setChanged] = useGlobal('changed');
     const [startSave, saveCompleted, waitForSave] = useRemoteSave();
     const [, setComplete] = useGlobal('progress');
-    const [status] = useState<IStatus>({ canceled: false });
+    const cancelled = useRef(false);
     const [confirm, setConfirm] = useState('');
     const [uploadVisible, setUploadVisible] = useState(false);
     const view = React.useRef('');
@@ -797,7 +797,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           setComplete={setComplete}
           multiple={false}
           finish={state.recordCb}
-          status={status}
+          cancelled={cancelled}
         />
         {confirm !== '' && (
           <Confirm

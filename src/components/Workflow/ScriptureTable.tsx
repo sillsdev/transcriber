@@ -62,7 +62,7 @@ import AudacityManager from './AudacityManager';
 import AssignSection from '../AssignSection';
 import StickyRedirect from '../StickyRedirect';
 import Auth from '../../auth/Auth';
-import Uploader, { IStatus } from '../Uploader';
+import Uploader from '../Uploader';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import { UpdateRecord } from '../../model/baseModel';
 import { PlanContext } from '../../context/PlanContext';
@@ -198,7 +198,7 @@ export function ScriptureTable(props: IProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [recordAudio, setRecordAudio] = useState(true);
   const [importList, setImportList] = useState<File[]>();
-  const [status] = useState<IStatus>({ canceled: false });
+  const cancelled = useRef(false);
   const uploadItem = useRef<IWorkflow>();
   const [versionItem, setVersionItem] = useState('');
   const [defaultFilename, setDefaultFilename] = useState('');
@@ -913,7 +913,7 @@ export function ScriptureTable(props: IProps) {
         setComplete={setComplete}
         multiple={false}
         finish={afterUpload}
-        status={status}
+        cancelled={cancelled}
       />
       {audacityItem?.wf?.passageId && (
         <AudacityManager

@@ -21,7 +21,7 @@ import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../../hoc/SnackBar';
-import Uploader, { IStatus } from '../../Uploader';
+import Uploader from '../../Uploader';
 import AddResource from './AddResource';
 import SortableHeader from './SortableHeader';
 import { IRow } from '../../../context/PassageDetailContext';
@@ -83,7 +83,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const UpdateSectionResource = useSecResUpdate();
   const DeleteSectionResource = useSecResDelete();
   const [uploadVisible, setUploadVisible] = useState(false);
-  const [status] = useState<IStatus>({ canceled: false });
+  const cancelled = useRef(false);
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
   const catIdRef = useRef<string>();
   const { showMessage } = useSnackBar();
@@ -234,7 +234,7 @@ export function PassageDetailArtifacts(props: IProps) {
         setComplete={setComplete}
         multiple={true}
         finish={afterUpload}
-        status={status}
+        cancelled={cancelled}
         artifactType={resourceType}
         metaData={
           <SelectArtifactCategory

@@ -27,10 +27,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export interface IStatus {
-  canceled: boolean;
-}
-
 interface IStateProps {
   t: IMediaTabStrings;
   ts: ISharedStrings;
@@ -56,7 +52,7 @@ interface IProps extends IStateProps, IDispatchProps {
   metaData?: JSX.Element; // component embeded in dialog
   ready?: () => boolean; // if false control is disabled
   createProject?: (file: File[]) => Promise<any>;
-  status: IStatus;
+  cancelled: React.MutableRefObject<boolean>;
   multiple?: boolean;
   mediaId?: string;
   importList?: File[];
@@ -74,7 +70,7 @@ export const Uploader = (props: IProps) => {
     isOpen,
     onOpen,
     showMessage,
-    status,
+    cancelled,
     multiple,
     importList,
     artifactType,
@@ -112,7 +108,7 @@ export const Uploader = (props: IProps) => {
       uploadComplete();
       setComplete(0);
       setBusy(false);
-      status.canceled = successCount.current <= 0;
+      cancelled.current = successCount.current <= 0;
       finish && finish(planIdRef.current, mediaIdRef.current);
     }, 1000);
   };
@@ -148,7 +144,7 @@ export const Uploader = (props: IProps) => {
     }
     setComplete(Math.min((n * 100) / uploadList.length, 100));
     const next = n + 1;
-    if (next < uploadList.length && !status.canceled) {
+    if (next < uploadList.length && !cancelled.current) {
       doUpload(next);
     } else if (!offline) {
       pullPlanMedia(planIdRef.current, memory, remote).then(() => {
@@ -201,7 +197,7 @@ export const Uploader = (props: IProps) => {
 
   const uploadCancel = () => {
     onOpen(false);
-    if (status) status.canceled = true;
+    if (cancelled) cancelled.current = true;
     //what is this???
     document.getElementsByTagName('body')[0].removeAttribute('style');
   };

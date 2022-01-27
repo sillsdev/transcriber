@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -26,7 +26,7 @@ import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
 import { useSnackBar } from '../../hoc/SnackBar';
 import BigDialog from '../../hoc/BigDialog';
 import AudioTable from './AudioTable';
-import Uploader, { IStatus } from '../Uploader';
+import Uploader from '../Uploader';
 import Auth from '../../auth/Auth';
 import {
   getMediaInPlans,
@@ -143,7 +143,7 @@ export function AudioTab(props: IProps) {
   const [pcheck, setPCheck] = useState(-1);
   // const [filter, setFilter] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
-  const [status] = useState<IStatus>({ canceled: false });
+  const cancelled = useRef(false);
   const [complete, setComplete] = useGlobal('progress');
   const [autoMatch, setAutoMatch] = useState(false);
   const [playItem, setPlayItem] = useState('');
@@ -166,7 +166,7 @@ export function AudioTab(props: IProps) {
   };
 
   const handleUpload = () => {
-    status.canceled = false;
+    cancelled.current = false;
     setUploadVisible(true);
   };
 
@@ -190,13 +190,13 @@ export function AudioTab(props: IProps) {
     let n = 0;
     setComplete(n);
     for (let mediaId of Object.keys(map)) {
-      if (status.canceled) break;
+      if (cancelled.current) break;
       await handleRow(mediaId);
       n += 1;
       setComplete(Math.min((n * 100) / total, 100));
     }
     setAttachMap({});
-    if (status.canceled) status.canceled = false;
+    if (cancelled.current) cancelled.current = false;
     else showMessage(t.savingComplete);
     inProcess.current = false;
     saveCompleted('');
@@ -248,7 +248,7 @@ export function AudioTab(props: IProps) {
   // const handleFilter = () => setFilter(!filter);
 
   const handleUploadCancel = () => {
-    status.canceled = true;
+    cancelled.current = true;
   };
 
   useEffect(() => {
@@ -333,7 +333,7 @@ export function AudioTab(props: IProps) {
 
   const afterUpload = (planId: string, mediaRemoteIds?: string[]) => {
     if (mediaRemoteIds && mediaRemoteIds.length === 1) {
-      if (!status.canceled) {
+      if (!cancelled.current) {
         setUploadMedia(
           remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ||
             mediaRemoteIds[0]
@@ -477,7 +477,7 @@ export function AudioTab(props: IProps) {
         setComplete={setComplete}
         multiple={true}
         finish={afterUpload}
-        status={status}
+        cancelled={cancelled}
       />
     </div>
   );
