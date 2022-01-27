@@ -210,7 +210,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'selectArtifactCategory' }),
 });
 const mapRecordsToProps = {
-  artifactCategories: (q: QueryBuilder) => q.findRecords('artifactCategory'),
+  artifactCategories: (q: QueryBuilder) => q.findRecords('artifactcategory'),
 };
 
 export default withData(mapRecordsToProps)(
