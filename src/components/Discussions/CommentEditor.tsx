@@ -8,9 +8,9 @@ import { waitForIt } from '../../utils';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import PassageRecord from '../PassageRecord';
 import { useGlobal } from 'reactn';
-import { ICommentEditorStrings, IState } from '../../model';
+import { ICommentEditorStrings, ISharedStrings, IState } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
-import { localStrings } from '../../selector';
+import { localStrings, sharedSelector } from '../../selector';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -81,6 +81,7 @@ export const CommentEditor = (props: IProps) => {
     commentEditorSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const classes = useStyles();
   const [doSave] = useGlobal('doSave');
@@ -214,22 +215,30 @@ export const CommentEditor = (props: IProps) => {
             {statusText}
           </Typography>
           {(!cancelOnlyIfChanged || doRecord || changed) && (
-            <Button
-              id="cancel"
-              onClick={handleCancel}
-              className={classes.button}
-            >
-              <CancelIcon />
-            </Button>
+            <Tooltip title={ts.cancel}>
+              <span>
+                <Button
+                  id="cancel"
+                  onClick={handleCancel}
+                  className={classes.button}
+                >
+                  <CancelIcon />
+                </Button>
+              </span>
+            </Tooltip>
           )}
-          <Button
-            id="ok"
-            onClick={handleOk}
-            className={classes.button}
-            disabled={(!canSave && !curText.length) || !changed}
-          >
-            <SendIcon />
-          </Button>
+          <Tooltip title={ts.save}>
+            <span>
+              <Button
+                id="ok"
+                onClick={handleOk}
+                className={classes.button}
+                disabled={(!canSave && !curText.length) || !changed}
+              >
+                <SendIcon />
+              </Button>{' '}
+            </span>
+          </Tooltip>
         </div>
       </div>
     </div>
