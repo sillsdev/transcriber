@@ -86,7 +86,7 @@ export function PassageDetailRecord(props: IProps) {
   const [plan] = useGlobal('plan');
   const [doSave] = useGlobal('doSave');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
-  const { createMedia } = useOfflnMediafileCreate();
+  const { createMedia } = useOfflnMediafileCreate(doOrbitError);
   const [statusText, setStatusText] = useState('');
   const fileList = useRef<File[]>();
   const [canSave, setCanSave] = useState(false);

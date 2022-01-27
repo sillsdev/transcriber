@@ -41,6 +41,7 @@ interface IDispatchProps {
   uploadFiles: typeof actions.uploadFiles;
   nextUpload: typeof actions.nextUpload;
   uploadComplete: typeof actions.uploadComplete;
+  doOrbitError: typeof actions.doOrbitError;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -81,7 +82,7 @@ export const Uploader = (props: IProps) => {
   } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
-  const { uploadComplete, setComplete, finish } = props;
+  const { uploadComplete, setComplete, finish, doOrbitError } = props;
   const { uploadFiles } = props;
   const { metaData, ready } = props;
   const { createProject } = props;
@@ -99,7 +100,7 @@ export const Uploader = (props: IProps) => {
   const authRef = useRef<Auth>(auth);
   const mediaIdRef = useRef<string[]>([]);
   const artifactTypeRef = useRef<string>('');
-  const { createMedia } = useOfflnMediafileCreate();
+  const { createMedia } = useOfflnMediafileCreate(doOrbitError);
 
   const finishMessage = () => {
     setTimeout(() => {
@@ -279,6 +280,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       uploadFiles: actions.uploadFiles,
       nextUpload: actions.nextUpload,
       uploadComplete: actions.uploadComplete,
+      doOrbitError: actions.doOrbitError,
     },
     dispatch
   ),
