@@ -391,12 +391,11 @@ export const DiscussionCard = (props: IProps) => {
     if (Boolean(onAddComplete) !== editing) {
       handleReset();
       setEditing(onAddComplete !== undefined);
-      if (!onAddComplete) setEditSubject(discussion.attributes?.subject);
     }
     if (Boolean(onAddComplete) && Boolean(discussion.attributes?.subject)) {
-      setEditSubject(discussion.attributes?.subject);
       setMyChanged(true);
     }
+    setEditSubject(discussion.attributes?.subject);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentstep, onAddComplete]);
 
