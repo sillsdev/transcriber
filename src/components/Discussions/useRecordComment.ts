@@ -46,7 +46,7 @@ export const useRecordComment = ({
   const { commentId } = useArtifactType();
   const fileList = useRef<File[]>();
   const mediaIdRef = useRef('');
-  const { createMedia } = useOfflnMediafileCreate();
+  const { createMedia } = useOfflnMediafileCreate(doOrbitError);
 
   const passageId = useMemo(() => {
     const vernMediaId = related(discussion, 'mediafile');

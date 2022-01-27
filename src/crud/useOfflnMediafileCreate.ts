@@ -1,14 +1,21 @@
 import { TransformBuilder } from '@orbit/data';
 import { useGlobal } from 'reactn';
+import { findRecord, related } from '.';
 import { MediaFile } from '../model';
 import { AddRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils';
+import { useMediaAttach } from './useMediaAttach';
+import * as actions from '../store';
 
-export const useOfflnMediafileCreate = () => {
+export const useOfflnMediafileCreate = (
+  doOrbitError: typeof actions.doOrbitError
+) => {
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
-
+  const [attachPassage] = useMediaAttach({
+    doOrbitError,
+  });
   const createMedia = async (
     data: any, //from upload
     version: number,
@@ -36,13 +43,15 @@ export const useOfflnMediafileCreate = () => {
         id: plan || data.planId,
       }),
     ]);
-    if (passageId)
-      await memory.update([
-        t.replaceRelatedRecord(newMediaRec, 'passage', {
-          type: 'passage',
-          id: passageId,
-        }),
-      ]);
+    if (passageId) {
+      var passage = findRecord(memory, 'passage', passageId);
+      attachPassage(
+        passageId,
+        related(passage, 'section'),
+        plan,
+        newMediaRec.id
+      );
+    }
     if (artifactTypeId)
       await memory.update([
         t.replaceRelatedRecord(newMediaRec, 'artifactType', {
