@@ -3772,6 +3772,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.recordingInProgress">
+         <segment>
+            <source>Recording in progress...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.role">
          <segment>
             <source>Role</source>

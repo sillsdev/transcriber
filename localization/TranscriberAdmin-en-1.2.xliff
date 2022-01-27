@@ -4402,6 +4402,13 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="shared.recordingInProgress">
+      		<source>Recording in progress...</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">integration.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="shared.role">
             <source>Role</source>
             <target/>

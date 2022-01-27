@@ -832,6 +832,7 @@ const initialState = {
 			"no": "No",
 			"NoSaveOffline": "Unable to save while offline.",
 			"owner": "Owner",
+			"recordingInProgress": "Recording in progress...",
 			"role": "Role",
 			"projectrole": "Project Role",
 			"teamrole": "Team Role",

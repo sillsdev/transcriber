@@ -777,6 +777,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "no": string;
     "NoSaveOffline": string;
     "owner": string;
+    "recordingInProgress": string;
     "role": string;
     "projectrole": string;
     "teamrole": string;
