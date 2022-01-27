@@ -420,12 +420,16 @@ export function Profile(props: IProps) {
     );
     const remote = coordinator.getSource('remote');
     //wait to be sure orbit remote is done also
-    await waitForIt(
-      'logout after user delete',
-      () => !remote || !connected || remote.requestQueue.length === 0,
-      () => false,
-      20
-    );
+    try {
+      await waitForIt(
+        'logout after user delete',
+        () => !remote || !connected || remote.requestQueue.length === 0,
+        () => false,
+        200
+      );
+    } catch {
+      //well we tried...
+    }
     setView('Logout');
   };
   const handleDeleteRefused = () => {

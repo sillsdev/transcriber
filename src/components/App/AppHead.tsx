@@ -174,10 +174,10 @@ export const AppHead = (props: IProps) => {
       localStorage.removeItem('user-id');
       checkSavedFn(async () => {
         waitForIt(
-          'logout after user delete',
+          'logout on electron...',
           () => !remote || !connected || remote.requestQueue.length === 0,
           () => false,
-          20
+          200
         ).then(() => setDownloadAlert(true));
       });
       return;
@@ -192,10 +192,10 @@ export const AppHead = (props: IProps) => {
       } else if (/Logout/i.test(what)) {
         checkSavedFn(() => {
           waitForIt(
-            'logout after user delete',
+            'logout on web...',
             () => !remote || !connected || remote.requestQueue.length === 0,
             () => false,
-            20
+            200
           ).then(() => setView('Logout'));
         });
       } else checkSavedFn(() => setView(what));

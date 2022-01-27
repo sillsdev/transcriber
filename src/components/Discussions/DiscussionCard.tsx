@@ -60,7 +60,7 @@ import Auth from '../../auth/Auth';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: '100%',
+      width: `calc(100% - 32px)`,
       display: 'flex',
       '&:hover button': {
         color: 'black',
@@ -145,6 +145,10 @@ const useStyles = makeStyles((theme: Theme) =>
     menu: {},
     edit: {
       backgroundColor: theme.palette.background.paper,
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
+      width: '100%',
     },
     editText: {
       margin: theme.spacing(1),

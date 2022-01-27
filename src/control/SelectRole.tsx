@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
       display: 'flex',
       flexGrow: 1,
+      minWidth: '8rem',
     },
   })
 );
