@@ -182,6 +182,7 @@ export function useWaveSurfer(
       ws.on('finish', function () {
         //we'll get a pause next, so don't set wavesurferPlayingRef here
         setPlaying(false);
+        setProgress(wsDuration());
       });
       ws.on('interaction', function () {
         if (onInteraction) onInteraction();
