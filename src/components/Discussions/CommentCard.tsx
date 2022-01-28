@@ -90,10 +90,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.primary.dark,
       wordBreak: 'break-word',
       '& .MuiInput-underline:before': {
-        borderBottom: 'none',
-      },
-      '& .MuiInput-underline:after': {
-        borderBottom: 'none',
+        content: 'none',
       },
     },
     button: {
