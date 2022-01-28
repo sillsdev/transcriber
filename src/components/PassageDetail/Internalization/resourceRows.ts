@@ -72,18 +72,21 @@ export const oneMediaRow = ({
 
 interface MediaProps extends DataProps {
   mediafiles: MediaFile[];
+  vernacularId: string;
 }
 
 export const mediaRows = (props: MediaProps) => {
-  const { mediafiles, artifactTypes } = props;
+  const { mediafiles, artifactTypes, vernacularId } = props;
 
   const newRow = Array<IRow>();
   // sort takes the greatest version but if their equal, keeps the
   // one loaded first which is the vernacular media
   mediafiles
     .sort((i, j) => {
-      const icmt = Boolean(related(i, 'artifactType'));
-      const jcmt = Boolean(related(j, 'artifactType'));
+      const iType = related(i, 'artifactType');
+      const jType = related(j, 'artifactType');
+      const icmt = Boolean(iType) && iType !== vernacularId;
+      const jcmt = Boolean(jType) && jType !== vernacularId;
       return !icmt && jcmt
         ? -1
         : icmt && !jcmt
