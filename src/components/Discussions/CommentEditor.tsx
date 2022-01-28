@@ -197,7 +197,7 @@ export const CommentEditor = (props: IProps) => {
         />
       )}
       <div className={classes.row}>
-        {!doRecord && (
+        {!doRecord ? (
           <Tooltip title={commentRecording ? t.recordUnavailable : t.record}>
             <span>
               <Button
@@ -209,6 +209,8 @@ export const CommentEditor = (props: IProps) => {
               </Button>
             </span>
           </Tooltip>
+        ) : (
+          <div>{'\u00A0'}</div>
         )}
         <div>
           <Typography variant="caption" className={classes.status}>
