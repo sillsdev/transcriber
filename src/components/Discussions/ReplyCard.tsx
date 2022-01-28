@@ -95,8 +95,10 @@ export const ReplyCard = (props: IProps) => {
     cb: afterSavecb,
     doOrbitError,
   });
+  const commentText = useRef('');
   const afterUploadcb = (mediaId: string) => {
-    saveComment('', commentText, mediaId);
+    saveComment('', commentText.current, mediaId);
+    commentText.current = '';
   };
   const { uploadMedia, fileName } = useRecordComment({
     auth,
@@ -110,7 +112,6 @@ export const ReplyCard = (props: IProps) => {
   });
   const [doSave] = useGlobal('doSave');
   const savingRef = useRef(false);
-  const [commentText, setCommentText] = useState('');
   const [canSaveRecording, setCanSaveRecording] = useState(false);
   const [myChanged, setMyChanged] = useState(false);
 
@@ -120,11 +121,10 @@ export const ReplyCard = (props: IProps) => {
     if (!canSaveRecording) {
       afterUploadcb('');
     }
-    setCommentText('');
   };
   const handleCancelEdit = () => {
     setRefresh(refresh + 1);
-    setCommentText('');
+    commentText.current = '';
   };
 
   useEffect(() => {
@@ -135,7 +135,7 @@ export const ReplyCard = (props: IProps) => {
   }, [doSave, myChanged]);
 
   const handleTextChange = (newText: string) => {
-    setCommentText(newText);
+    commentText.current = newText;
     if (!myChanged) {
       setMyChanged(true);
       const valid = newText !== '' || canSaveRecording;
@@ -153,7 +153,7 @@ export const ReplyCard = (props: IProps) => {
   return (
     <div className={classes.root}>
       <CommentEditor
-        comment={commentText}
+        comment={commentText.current}
         refresh={refresh}
         onOk={handleSaveEdit}
         onCancel={handleCancelEdit}
