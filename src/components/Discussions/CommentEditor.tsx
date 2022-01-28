@@ -1,5 +1,5 @@
 import { Button, TextField, Tooltip } from '@material-ui/core';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
@@ -89,9 +89,17 @@ export const CommentEditor = (props: IProps) => {
   const [canSave, setCanSave] = useState(false);
   const [curText, setCurText] = useState(comment);
   const [startRecord, setStartRecord] = useState(false);
-  const [doRecord, setDoRecord] = useState(false);
   const [statusText, setStatusText] = useState('');
   const [startSave, setStartSave] = useState(false);
+  const doRecordRef = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      console.log('commenteditor is going away', doRecordRef.current);
+      if (doRecordRef.current) setCommentRecording(false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (changed && !startSave) setStatusText(t.unsaved);
@@ -111,12 +119,12 @@ export const CommentEditor = (props: IProps) => {
           () => false,
           100
         ).then(() => {
-          setDoRecord(true);
+          doRecordRef.current = true;
           setStartRecord(false);
         });
       } catch {
         //do it anyway...
-        setDoRecord(true);
+        doRecordRef.current = true;
         setStartRecord(false);
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -142,7 +150,7 @@ export const CommentEditor = (props: IProps) => {
       setStartSave(true);
       onOk();
       setStatusText(t.saving);
-      if (doRecord) setCommentRecording(false);
+      if (doRecordRef.current) setCommentRecording(false);
     }
   };
   const handleCancel = () => {
@@ -158,11 +166,11 @@ export const CommentEditor = (props: IProps) => {
   };
 
   const reset = () => {
-    if (doRecord) setCommentRecording(false);
+    if (doRecordRef.current) setCommentRecording(false);
     setStatusText('');
     setCurText('');
     setChanged(false);
-    setDoRecord(false);
+    doRecordRef.current = false;
     setStartSave(false);
   };
 
@@ -184,7 +192,7 @@ export const CommentEditor = (props: IProps) => {
         fullWidth
         multiline
       />
-      {doRecord && (
+      {doRecordRef.current && (
         <PassageRecord
           uploadMethod={uploadMethod}
           defaultFilename={fileName}
@@ -197,7 +205,7 @@ export const CommentEditor = (props: IProps) => {
         />
       )}
       <div className={classes.row}>
-        {!doRecord ? (
+        {!doRecordRef.current ? (
           <Tooltip title={commentRecording ? t.recordUnavailable : t.record}>
             <span>
               <Button
@@ -216,7 +224,7 @@ export const CommentEditor = (props: IProps) => {
           <Typography variant="caption" className={classes.status}>
             {statusText}
           </Typography>
-          {(!cancelOnlyIfChanged || doRecord || changed) && (
+          {(!cancelOnlyIfChanged || doRecordRef.current || changed) && (
             <Tooltip title={ts.cancel}>
               <span>
                 <Button
