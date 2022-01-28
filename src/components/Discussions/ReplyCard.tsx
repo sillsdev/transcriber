@@ -120,9 +120,11 @@ export const ReplyCard = (props: IProps) => {
     if (!canSaveRecording) {
       afterUploadcb('');
     }
+    setCommentText('');
   };
   const handleCancelEdit = () => {
     setRefresh(refresh + 1);
+    setCommentText('');
   };
 
   useEffect(() => {
@@ -151,7 +153,7 @@ export const ReplyCard = (props: IProps) => {
   return (
     <div className={classes.root}>
       <CommentEditor
-        comment={''}
+        comment={commentText}
         refresh={refresh}
         onOk={handleSaveEdit}
         onCancel={handleCancelEdit}
