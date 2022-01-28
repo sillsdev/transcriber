@@ -199,7 +199,7 @@ export const Uploader = (props: IProps) => {
   const uploadCancel = () => {
     onOpen(false);
     if (cancelled) cancelled.current = true;
-    //what is this???
+    // This makes the scroll bar reappear on the parent
     document.getElementsByTagName('body')[0].removeAttribute('style');
   };
 
