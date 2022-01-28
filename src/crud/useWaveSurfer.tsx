@@ -450,7 +450,12 @@ export function useWaveSurfer(
   };
   const wsUndo = () => {
     if (undoBuffer) loadDecoded(undoBuffer);
-    else wsClear();
+    else {
+      wsClear();
+      wsGoto(0);
+    }
+    //reset any region
+    clearRegions();
     setUndoBuffer(undefined);
     onCanUndo(false);
   };
