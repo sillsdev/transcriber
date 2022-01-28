@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { IHotKeyStrings, IState } from '../model';
 import localStrings from '../selector/localize';
@@ -46,6 +46,14 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
   });
   const isMounted = useMounted('hotkeycontext');
 
+  useEffect(() => {
+    window.addEventListener('keydown', handleKey);
+    return () => {
+      window.removeEventListener('keydown', handleKey);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const hotKeyCallback = (
     key: string,
     ctrl: boolean,
@@ -62,7 +70,8 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
     if (ix !== -1) return hotKeys[ix].cb;
     return undefined;
   };
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+
+  const handleKey = (e: KeyboardEvent) => {
     switch (e.key.toUpperCase()) {
       case 'CONTROL':
       case 'ALT':
@@ -160,7 +169,7 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
         setState,
       }}
     >
-      <div onKeyDown={handleKeyDown}>{props.children}</div>
+      <div>{props.children}</div>
     </HotKeyContext.Provider>
   );
 });
