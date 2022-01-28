@@ -322,7 +322,7 @@ export const AddCard = (props: IProps) => {
       />
       <Progress
         title={t.uploadProgress}
-        open={!uploadVisible && inProgress}
+        open={!uploadVisible && inProgress && !cancelled.current}
         progress={complete}
         steps={steps}
         currentStep={step}
