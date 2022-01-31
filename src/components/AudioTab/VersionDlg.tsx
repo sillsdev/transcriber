@@ -42,15 +42,12 @@ export const VersionDlg = (props: IProps) => {
   const [playItem, setPlayItem] = useState('');
   const [data, setData] = useState<IRow[]>([]);
   const [refresh, setRefresh] = useState(false);
-  const { vernacularId } = useArtifactType();
+  const { IsVernacularMedia } = useArtifactType();
 
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
     const media: MediaFile[] = mediaFiles.filter(
-      (m) =>
-        related(m, 'passage') === passId &&
-        (related(m, 'artifactType') == null ||
-          related(m, 'artifactType') === vernacularId)
+      (m) => related(m, 'passage') === passId && IsVernacularMedia(m)
     );
     //filter
     const mediaData: IGetMedia = {

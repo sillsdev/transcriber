@@ -12,11 +12,11 @@ export const resetConvertBlob = () => (dispatch: any) => {
 };
 
 export const convertBlob =
-  (audioBlob: Blob, mimeType: string) => (dispatch: any) => {
+  (audioBlob: Blob, mimeType: string, guid: string) => (dispatch: any) => {
     const fakeSourceName = 'fname.wav';
     const fakeOggName = 'encoded.ogg';
     dispatch({
-      payload: '',
+      payload: { guid: guid, message: '' },
       type: CONVERT_BLOB_PENDING,
     });
     // Convert to ogg
@@ -55,19 +55,22 @@ export const convertBlob =
       if (message.reply === 'progress') {
         if (message.values[1]) {
           dispatch({
-            payload: (message.values[0] / message.values[1]) * 100,
+            payload: {
+              guid: guid,
+              message: (message.values[0] / message.values[1]) * 100,
+            },
             type: CONVERT_BLOB_PROGRESS,
           });
         }
       } else if (message.reply === 'err') {
         dispatch({
-          payload: message.values.toString(),
+          payload: { guid: guid, message: message.values.toString() },
           type: CONVERT_BLOB_FAILED,
         });
       } else if (message.reply === 'done') {
         var result = message.values[fakeOggName];
         dispatch({
-          payload: result.blob,
+          payload: { guid: guid, blob: result.blob },
           type: CONVERT_BLOB_SUCCEEDED,
         });
         worker?.terminate();

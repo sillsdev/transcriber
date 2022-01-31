@@ -16,6 +16,7 @@ interface IProps {
   onPosition?: (timeStamp: number) => void;
   position?: number;
   onDuration?: (timeStamp: number) => void;
+  controls?: boolean;
 }
 
 export function MediaPlayer(props: IProps) {
@@ -27,6 +28,7 @@ export function MediaPlayer(props: IProps) {
     onPosition,
     position,
     onDuration,
+    controls,
   } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -88,11 +90,12 @@ export function MediaPlayer(props: IProps) {
   };
 
   const timeUpdate = () => {
+    if (!onPosition) return;
     const el = audioRef.current as HTMLMediaElement;
     const time = Math.round(el.currentTime * 10);
     if (time === timeTrack.current) return;
     timeTrack.current = time;
-    if (onPosition) onPosition(time / 10);
+    onPosition(time / 10);
   };
 
   const durationChange = () => {
@@ -109,6 +112,7 @@ export function MediaPlayer(props: IProps) {
 
   return ready ? (
     <audio
+      controls={controls}
       onEnded={ended}
       ref={audioRef as any}
       src={mediaState.url}

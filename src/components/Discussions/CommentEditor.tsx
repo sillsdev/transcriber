@@ -6,7 +6,7 @@ import CancelIcon from '@material-ui/icons/CancelOutlined';
 import MicIcon from '@material-ui/icons/MicOutlined';
 import { waitForIt } from '../../utils';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import PassageRecord from '../PassageRecord';
+import MediaRecord from '../MediaRecord';
 import { useGlobal } from 'reactn';
 import { ICommentEditorStrings, ISharedStrings, IState } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
@@ -95,7 +95,6 @@ export const CommentEditor = (props: IProps) => {
 
   useEffect(() => {
     return () => {
-      console.log('commenteditor is going away', doRecordRef.current);
       if (doRecordRef.current) setCommentRecording(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -193,7 +192,7 @@ export const CommentEditor = (props: IProps) => {
         multiline
       />
       {doRecordRef.current && (
-        <PassageRecord
+        <MediaRecord
           uploadMethod={uploadMethod}
           defaultFilename={fileName}
           allowWave={false}
@@ -246,7 +245,7 @@ export const CommentEditor = (props: IProps) => {
                 disabled={(!canSave && !curText.length) || !changed}
               >
                 <SendIcon />
-              </Button>{' '}
+              </Button>
             </span>
           </Tooltip>
         </div>

@@ -73,9 +73,10 @@ export const UpdatePassageStateOps = (
   memory: Memory,
   psc = true
 ): Operation[] => {
-  ops.push(
-    t.replaceAttribute({ type: 'passage', id: passage }, 'state', state)
-  );
+  if (state)
+    ops.push(
+      t.replaceAttribute({ type: 'passage', id: passage }, 'state', state)
+    );
   const passRecId = { type: 'passage', id: passage };
   ops.push(...UpdateLastModifedBy(t, passRecId, userId));
   if (psc) {

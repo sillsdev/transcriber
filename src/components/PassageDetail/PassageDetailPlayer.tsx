@@ -9,7 +9,6 @@ interface IStateProps {}
 interface IProps extends IStateProps {
   audioBlob: Blob;
 }
-const INIT_PLAYER_HEIGHT = 280;
 
 export function PassageDetailPlayer(props: IProps) {
   const {
@@ -22,9 +21,9 @@ export function PassageDetailPlayer(props: IProps) {
     playing,
     setPlaying,
     currentstep,
+    playerSize,
   } = useContext(PassageDetailContext).state;
 
-  const [playerSize] = useState(INIT_PLAYER_HEIGHT);
   const playedSecsRef = useRef<number>(0);
   const [segments, setLocalSegments] = useState('{}');
 

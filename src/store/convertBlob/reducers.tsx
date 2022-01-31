@@ -9,6 +9,7 @@ import {
 } from './types';
 
 export const convertBlobCleanState = {
+  guid: '',
   blob: {},
   mimeType: 'audio/ogg;codecs=opus',
   statusmsg: '',
@@ -27,18 +28,21 @@ const convertBlobReducers = function (
     case CONVERT_BLOB_PENDING:
       return {
         ...state,
-        statusmsg: action.payload,
+        guid: action.payload.message,
+        statusmsg: action.payload.message,
       };
     case CONVERT_BLOB_PROGRESS:
       return {
         ...state,
+        guid: action.payload.message,
         statusmsg: action.payload.toString(),
       };
     case CONVERT_BLOB_SUCCEEDED:
       return {
         ...state,
         complete: true,
-        blob: action.payload,
+        guid: action.payload.guid,
+        blob: action.payload.blob,
         errmsg: '',
         statusmsg: '',
       };
@@ -46,7 +50,8 @@ const convertBlobReducers = function (
       return {
         ...state,
         complete: true,
-        errmsg: action.payload,
+        guid: action.payload.guid,
+        errmsg: action.payload.message,
       };
 
     default:

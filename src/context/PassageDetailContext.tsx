@@ -171,7 +171,9 @@ const initState = {
     return false;
   },
   discussionSize: 500,
+  playerSize: 280,
   setDiscussionSize: (size: number) => {},
+  setPlayerSize: (size: number) => {},
   defaultFilename: '',
   uploadItem: '',
   showRecord: (
@@ -299,6 +301,12 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const setDiscussionSize = (discussionSize: number) => {
       setState((state: ICtxState) => {
         return { ...state, discussionSize };
+      });
+    };
+
+    const setPlayerSize = (playerSize: number) => {
+      setState((state: ICtxState) => {
+        return { ...state, playerSize };
       });
     };
     const toolSaveCompleted = (toolId: string, saveErr: string) => {
@@ -794,6 +802,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setOrgWorkflowSteps,
             setCurrentStep,
             setDiscussionSize,
+            setPlayerSize,
             setPlaying,
             setMediaPlaying,
             setPDBusy,

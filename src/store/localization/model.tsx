@@ -59,6 +59,8 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
 export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
     "backtranslation": string;
     "comment": string;
+    "qanda": string;
+    "retell": string;
     "resource": string;
     "sharedresource": string;
     "testing": string;
@@ -168,6 +170,14 @@ export interface ICommentEditorStrings extends Localize.LocalizedStringsMethods 
     "recordUnavailable": string;
     "saving": string;
     "unsaved": string;
+};
+
+export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
+    "playTest": string;
+    "record": string;
+    "speaker": string;
+    "unsaved": string;
+    "uploadComplete": string;
 };
 
 export interface IDiscussionMenuStrings extends Localize.LocalizedStringsMethods {
@@ -1142,6 +1152,7 @@ export interface ILocalizedStrings {
 	cards: ICardsStrings;
 	commentCard: ICommentCardStrings;
 	commentEditor: ICommentEditorStrings;
+	community: ICommunityStrings;
 	discussionMenu: IDiscussionMenuStrings;
 	control: IControlStrings;
 	deleteExpansion: IDeleteExpansionStrings;

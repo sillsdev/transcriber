@@ -24,7 +24,7 @@ import {
 } from '@material-ui/core';
 import WSAudioPlayer from './WSAudioPlayer';
 import { QueryBuilder } from '@orbit/data';
-import { loadBlob, removeExtension } from '../utils';
+import { generateUUID, loadBlob, removeExtension, waitForIt } from '../utils';
 import { MediaSt, useFetchMediaUrl } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { bindActionCreators } from 'redux';
@@ -67,6 +67,7 @@ interface IStateProps {
   convert_status: string;
   convert_complete: boolean;
   convert_blob: Blob;
+  convert_guid: string;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -86,7 +87,7 @@ interface IProps extends IStateProps, IDispatchProps {
   size?: number;
 }
 
-function PassageRecord(props: IProps) {
+function MediaRecord(props: IProps) {
   const {
     t,
     onReady,
@@ -103,6 +104,7 @@ function PassageRecord(props: IProps) {
     convert_status,
     convert_complete,
     convert_blob,
+    convert_guid,
     convertBlob,
     resetConvertBlob,
     size,
@@ -124,6 +126,7 @@ function PassageRecord(props: IProps) {
   const [converting, setConverting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const saveRef = useRef(false);
+  const guidRef = useRef('');
   const extensions = useMemo(
     () => ['mp3', 'mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'],
     []
@@ -211,24 +214,39 @@ function PassageRecord(props: IProps) {
   );
 
   useEffect(() => {
-    if (convert_status) {
-      var progress = parseInt(convert_status);
-      if (isNaN(progress)) {
-        showMessage(convert_status);
-      } else {
-        setStatusText(t.compressing.replace('{0}', progress.toString()));
+    //was it me who asked for this?
+    console.log(
+      'convert_complete',
+      convert_complete,
+      'convert_guid',
+      convert_guid,
+      'guidRef.current',
+      guidRef.current,
+      'startSave',
+      startSave,
+      defaultFilename
+    );
+    if (convert_guid === guidRef.current) {
+      if (convert_status) {
+        var progress = parseInt(convert_status);
+        if (isNaN(progress)) {
+          showMessage(convert_status);
+        } else {
+          setStatusText(t.compressing.replace('{0}', progress.toString()));
+        }
       }
-    }
-    if (convert_complete) {
-      if (convert_blob)
-        doUpload(convert_blob).then(() => {
+      if (convert_complete) {
+        if (convert_blob)
+          doUpload(convert_blob).then(() => {
+            resetConvertBlob();
+            setConverting(false);
+            if (onReady) onReady();
+          });
+        else {
           resetConvertBlob();
           setConverting(false);
           if (onReady) onReady();
-        });
-      else {
-        setConverting(false);
-        if (onReady) onReady();
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -240,14 +258,29 @@ function PassageRecord(props: IProps) {
         saveRef.current = true;
         if (mimeType !== 'audio/wav') {
           setConverting(true);
-          convertBlob(audioBlob, mimeType);
+          guidRef.current = generateUUID();
+          console.log('myguid', guidRef.current);
+          waitForIt(
+            'previous convert',
+            () => convert_guid === '',
+            () => false,
+            300
+          ).then(() => convertBlob(audioBlob, mimeType, guidRef.current));
         } else {
           doUpload(audioBlob).then(() => onReady());
         }
         return;
       }
     } else if (!startSave && saveRef.current) saveRef.current = false;
-  }, [audioBlob, startSave, mimeType, doUpload, convertBlob, onReady]);
+  }, [
+    audioBlob,
+    startSave,
+    mimeType,
+    doUpload,
+    convertBlob,
+    onReady,
+    convert_guid,
+  ]);
 
   const setExtension = (mimeType: string) => {
     if (mimeType) {
@@ -374,8 +407,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
   convert_status: state.convertBlob.statusmsg,
   convert_complete: state.convertBlob.complete,
   convert_blob: state.convertBlob.blob,
+  convert_guid: state.convertBlob.guid,
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PassageRecord) as any;
+export default connect(mapStateToProps, mapDispatchToProps)(MediaRecord) as any;
