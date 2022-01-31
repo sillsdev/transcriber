@@ -1012,6 +1012,13 @@
                <context context-type="sourcefile">DiscussionCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="discussionCard.playOrStop">
+      		<source>Play or Stop</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="discussionCard.resolved">
             <source>Resolve</source>
             <target/>
@@ -1026,6 +1033,13 @@
                <context context-type="sourcefile">DiscussionCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="discussionCard.version">
+      		<source>Version</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="discussionList.add">
             <source>Add Discussion</source>
             <target/>

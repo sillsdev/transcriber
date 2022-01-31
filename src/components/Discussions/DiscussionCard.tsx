@@ -32,6 +32,9 @@ import ResolveIcon from '@material-ui/icons/Check';
 import HideIcon from '@material-ui/icons/ArrowDropUp';
 import ShowIcon from '@material-ui/icons/ArrowDropDown';
 import LocationIcon from '@material-ui/icons/LocationSearching';
+import PlayIcon from '@material-ui/icons/PlayArrow';
+import StopIcon from '@material-ui/icons/Stop';
+import { LightTooltip } from '../../control';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -167,6 +170,10 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(3),
       color: theme.palette.primary.dark,
     },
+    oldVersion: {
+      display: 'flex',
+      alignItems: 'center',
+    },
   })
 );
 interface IRecordProps {
@@ -216,9 +223,11 @@ export const DiscussionCard = (props: IProps) => {
   const {
     currentstep,
     mediafileId,
+    mediaPlaying,
     setPlayerSegments,
     toolChanged,
     toolSaveCompleted,
+    setMediaSelected,
   } = ctx.state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
@@ -368,6 +377,17 @@ export const DiscussionCard = (props: IProps) => {
       ]);
       setPlayerSegments(JSON.stringify({ regions }));
     }
+  };
+
+  const handlePlayOldClip = () => {
+    const values = startEnd(discussion.attributes?.subject);
+    let start = 0;
+    let end = 0;
+    if (values) {
+      start = parseFloat(values[1]);
+      end = parseFloat(values[2]);
+    }
+    setMediaSelected(related(discussion, 'mediafile'), start, end);
   };
 
   const handleResolveButton = () => {
@@ -527,6 +547,13 @@ export const DiscussionCard = (props: IProps) => {
     toolSaveCompleted(myId, '');
   };
 
+  const version = useMemo(() => {
+    const mediafile = mediafiles.find(
+      (m) => m.id === related(discussion, 'mediafile')
+    ) as MediaFile;
+    return mediafile?.attributes?.versionNumber;
+  }, [discussion, mediafiles]);
+
   useEffect(() => {
     if (doSave && !savingRef.current) {
       savingRef.current = true;
@@ -621,7 +648,7 @@ export const DiscussionCard = (props: IProps) => {
                 {startEnd(discussion.attributes?.subject) &&
                   related(discussion, 'mediafile') === mediafileId && (
                     <IconButton
-                      id="location"
+                      id={`locate-${discussion.id}`}
                       size="small"
                       className={classes.actionButton}
                       title={t.locate}
@@ -629,6 +656,28 @@ export const DiscussionCard = (props: IProps) => {
                     >
                       <LocationIcon fontSize="small" />
                     </IconButton>
+                  )}
+                {startEnd(discussion.attributes?.subject) &&
+                  related(discussion, 'mediafile') !== mediafileId && (
+                    <div className={classes.oldVersion}>
+                      <LightTooltip title={t.version}>
+                        <Chip label={version.toString()} size="small" />
+                      </LightTooltip>
+                      <LightTooltip title={t.playOrStop}>
+                        <IconButton
+                          id={`play-${discussion.id}`}
+                          size="small"
+                          className={classes.actionButton}
+                          onClick={handlePlayOldClip}
+                        >
+                          {mediaPlaying ? (
+                            <StopIcon fontSize="small" />
+                          ) : (
+                            <PlayIcon fontSize="small" />
+                          )}
+                        </IconButton>
+                      </LightTooltip>
+                    </div>
                   )}
                 <Typography
                   variant="h6"

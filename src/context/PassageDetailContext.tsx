@@ -148,6 +148,7 @@ const initState = {
   index: 0, //row index?
   selected: '',
   setSelected: (selected: string) => {},
+  setMediaSelected: (id: string, start: number, end: number) => {},
   playing: false, //vernacular in wavesurfer
   setPlaying: (playing: boolean) => {},
   mediaPlaying: false, //resource or comment
@@ -250,6 +251,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { localizedWorkStep } = useOrgWorkflowSteps();
     const getStepsBusy = useRef<boolean>(false);
     const saveErrRef = useRef('');
+    const mediaStart = useRef<number | undefined>();
+    const mediaEnd = useRef<number | undefined>();
+    const mediaPosition = useRef<number | undefined>();
     const setOrgWorkflowSteps = (steps: OrgWorkflowStep[]) => {
       setState((state: ICtxState) => {
         return { ...state, orgWorkflowSteps: steps };
@@ -449,7 +453,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       if (state.index !== i || state.selected !== selected) {
         var resetBlob = false;
         //if this is a file that will be played in the wavesurfer..fetch it
-        if (!r.isResource && !r.isComment) {
+        if (!r.isResource && !r.isComment && i === 0) {
           if (
             mediaState.urlMediaId !== r.mediafile.id &&
             fetching.current !== r.mediafile.id
@@ -486,6 +490,41 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
               rowData: newRows.length > 0 ? newRows : rowData,
             };
           });
+        }
+      }
+    };
+    const mediaReset = () => {
+      mediaStart.current = undefined;
+      mediaEnd.current = undefined;
+      mediaPosition.current = undefined;
+      setState((state: ICtxState) => ({
+        ...state,
+        index: 0,
+        selected: state.rowData[0].id,
+        playItem: '',
+        mediaPlaying: false,
+      }));
+    };
+    const setMediaSelected = (id: string, start: number, end: number) => {
+      if (state.mediaPlaying) {
+        mediaReset();
+      } else {
+        mediaStart.current = start;
+        mediaEnd.current = end;
+        setSelected(id, state.rowData);
+      }
+    };
+    const handleDuration = (duration: number) => {
+      if (mediaStart.current) {
+        mediaPosition.current = mediaStart.current;
+        mediaStart.current = undefined;
+        setState((state: ICtxState) => ({ ...state, mediaPlaying: true }));
+      }
+    };
+    const handlePosition = (position: number) => {
+      if (mediaEnd.current) {
+        if (position >= mediaEnd.current) {
+          mediaReset();
         }
       }
     };
@@ -685,7 +724,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     }
     useEffect(() => {
       //if I set playing when I set the mediaId, it plays a bit of the old
-      if (state.playItem) setMediaPlaying(true);
+      if (state.playItem && !mediaEnd.current) setMediaPlaying(true);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.playItem]);
 
@@ -770,18 +809,24 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             toolChanged,
             toolSaveCompleted,
             setCommentRecording,
+            setMediaSelected,
           },
           setState,
         }}
       >
         {props.children}
         {(state.rowData[state.index]?.isResource ||
-          state.rowData[state.index]?.isComment) && (
+          state.rowData[state.index]?.isComment ||
+          mediaEnd.current !== 0 ||
+          state.mediaPlaying) && (
           <MediaPlayer
             auth={auth}
             srcMediaId={state.playItem}
             requestPlay={state.mediaPlaying}
             onEnded={handlePlayEnd}
+            onDuration={handleDuration}
+            onPosition={handlePosition}
+            position={mediaPosition.current}
           />
         )}
         <Uploader

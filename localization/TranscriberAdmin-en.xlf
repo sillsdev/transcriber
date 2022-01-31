@@ -868,6 +868,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionCard.playOrStop">
+         <segment>
+            <source>Play or Stop</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionCard.resolved">
          <segment>
             <source>Resolve</source>
@@ -877,6 +883,12 @@
       <unit id="discussionCard.topic">
          <segment>
             <source>Topic</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.version">
+         <segment>
+            <source>Version</source>
             <target/>
          </segment>
       </unit>
