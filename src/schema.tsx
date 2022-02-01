@@ -373,6 +373,8 @@ const schemaDefinition: SchemaSettings = {
         performedBy: { type: 'string' },
         resourcePassageId: { type: 'number' },
         offlineId: { type: 'string' },
+        sourceSegments: { type: 'string' },
+        sourceMediaOfflineId: { type: 'string' },
       },
       relationships: {
         artifactType: { type: 'hasOne', model: 'artifacttype' },
@@ -382,6 +384,7 @@ const schemaDefinition: SchemaSettings = {
         passage: { type: 'hasOne', model: 'passage', inverse: 'mediafiles' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
         recordedbyUser: { type: 'hasOne', model: 'user' },
+        sourceMedia: { type: 'hasOne', model: 'mediafile' },
       },
     },
     user: {

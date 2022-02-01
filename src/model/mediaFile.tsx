@@ -26,6 +26,8 @@ export interface MediaFile extends BaseModel {
     performedBy: string | null;
     resourcePassageId: number | null;
     offlineId: string;
+    sourceSegments: string;
+    sourceMediaOfflineId: string;
   };
   relationships?: {
     passage: RecordRelationship;
@@ -35,6 +37,7 @@ export interface MediaFile extends BaseModel {
     artifactCategory: RecordRelationship;
     orgWorkflowStep: RecordRelationship;
     recordedbyUser: RecordRelationship;
+    sourceMedia: RecordRelationship;
   };
 }
 export default MediaFile;
