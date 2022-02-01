@@ -119,12 +119,14 @@ export const ReplyCard = (props: IProps) => {
     savingRef.current = true;
     //if we're recording and can save, the comment will save after upload
     if (!canSaveRecording) {
-      afterUploadcb('');
+      if (commentText.current.length > 0) afterUploadcb('');
+      else toolSaveCompleted(myId, '');
     }
   };
   const handleCancelEdit = () => {
     setRefresh(refresh + 1);
     commentText.current = '';
+    toolSaveCompleted(myId, '');
   };
 
   useEffect(() => {
