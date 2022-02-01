@@ -197,8 +197,10 @@ export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods
     "confirmDelete": string;
     "locate": string;
     "or": string;
+    "playOrStop": string;
     "resolved": string;
     "topic": string;
+    "version": string;
 };
 
 export interface IDiscussionListStrings extends Localize.LocalizedStringsMethods {

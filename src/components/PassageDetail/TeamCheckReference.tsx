@@ -16,7 +16,7 @@ import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import ForwardIcon from '@material-ui/icons/Refresh';
 import EndIcon from '@material-ui/icons/SkipNext';
-import { ControlledPlayer } from '../ControlledPlayer';
+import { MediaPlayer } from '../MediaPlayer';
 import Auth from '../../auth/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -134,7 +134,7 @@ export function TeamCheckReference({ auth }: IProps) {
           </Grid>
         </Grid>
       </Grid>
-      <ControlledPlayer
+      <MediaPlayer
         auth={auth}
         srcMediaId={playItem}
         requestPlay={playing}

@@ -220,8 +220,10 @@ const initialState = {
 			"confirmDelete": "Delete this discussion and all commments?",
 			"locate": "Locate discussion subject in audio recording",
 			"or": "or",
+			"playOrStop": "Play or Stop",
 			"resolved": "Resolve",
 			"topic": "Topic",
+			"version": "Version",
 		}
 	}),
 	"discussionList": new LocalizedStrings({
