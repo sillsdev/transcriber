@@ -107,6 +107,10 @@ export const AddCard = (props: IProps) => {
   useEffect(() => {
     setLanguage(initLang);
     setBook(null);
+
+    if (uploadVisible) {
+      cancelled.current = false;
+    }
   }, [uploadVisible]);
 
   const handleForceType = (type: string) => {
