@@ -16,7 +16,11 @@ import path from 'path';
 
 const vernSort = (m: MediaFile) => (!related(m, 'artifactType') ? 0 : 1);
 
-export const getAllMediaRecs = (passageId: string, memory: Memory) => {
+export const getAllMediaRecs = (
+  passageId: string,
+  memory: Memory,
+  artifactTypeId?: string
+) => {
   const mediaRecs = (
     memory.cache.query((q: QueryBuilder) =>
       q.findRecords('mediafile').filter({
@@ -27,6 +31,11 @@ export const getAllMediaRecs = (passageId: string, memory: Memory) => {
   )
     .sort((a, b) => vernSort(a) - vernSort(b))
     .sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
+  if (artifactTypeId) {
+    return mediaRecs.filter(
+      (m) => related(m, 'artifactType') === artifactTypeId
+    );
+  }
   return mediaRecs;
 };
 

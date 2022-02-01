@@ -33,6 +33,7 @@ import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord
 import PassageBackTranslate from '../components/PassageDetail/PassageBackTranslate';
 import { ToolSlug, useStepTool, useUrlContext } from '../crud';
 import { RoleNames } from '../model';
+import PassageDetailCommunity from '../components/PassageDetail/PassageDetailCommunity';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -245,6 +246,15 @@ const PassageDetailGrids = (props: IProps) => {
               </Wrapper>
             </Paper>
           </>
+        )}
+        {tool === ToolSlug.Community && (
+          <Grid container direction="row" className={classes.row}>
+            <Grid item xs={12}>
+              <Grid container>
+                <PassageDetailCommunity auth={auth} width={width} />
+              </Grid>
+            </Grid>
+          </Grid>
         )}
       </Grid>
     </div>

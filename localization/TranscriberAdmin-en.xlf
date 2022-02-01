@@ -274,6 +274,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactType.qanda">
+         <segment>
+            <source>Question and Answer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.retell">
+         <segment>
+            <source>Retelling</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactType.resource">
          <segment>
             <source>Resource</source>
@@ -763,6 +775,36 @@
       <unit id="commentEditor.unsaved">
          <segment>
             <source>Unsaved</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.playTest">
+         <segment>
+            <source>Play Test</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.record">
+         <segment>
+            <source>Record Test</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.speaker">
+         <segment>
+            <source>Speaker</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.unsaved">
+         <segment>
+            <source>Unsaved</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.uploadComplete">
+         <segment>
+            <source>{0} of {1} files uploaded successfully.</source>
             <target/>
          </segment>
       </unit>

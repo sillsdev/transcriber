@@ -24,7 +24,8 @@ export const useMediaAttach = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const { vernacularId } = useArtifactType();
+  const { vernacularId, IsVernacularMedia, localizedArtifactTypeFromId } =
+    useArtifactType();
 
   const attach = async (
     passage: string,
@@ -35,22 +36,25 @@ export const useMediaAttach = (props: IProps) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
     var mediaRI = { type: 'mediafile', id: mediaId };
-    var mediaRec = findRecord(memory, 'mediafile', mediaId);
+    var mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFile;
     if (!mediaRec) return;
+    var isVernacular = IsVernacularMedia(mediaRec);
     if (related(mediaRec, 'passage') !== passage) {
-      var media = getMediaInPlans(
-        [plan],
-        memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[],
-        vernacularId,
-        true
-      ).filter((m) => related(m, 'passage') === passage);
-      ops.push(
-        tb.replaceAttribute(
-          mediaRI,
-          'versionNumber',
-          media.length > 0 ? media[0].attributes.versionNumber + 1 : 1
-        )
-      );
+      if (isVernacular) {
+        var media = getMediaInPlans(
+          [plan],
+          memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[],
+          vernacularId,
+          true
+        ).filter((m) => related(m, 'passage') === passage);
+        ops.push(
+          tb.replaceAttribute(
+            mediaRI,
+            'versionNumber',
+            media.length > 0 ? media[0].attributes.versionNumber + 1 : 1
+          )
+        );
+      }
       ops.push(
         tb.replaceRelatedRecord(mediaRI, 'passage', {
           type: 'passage',
@@ -62,8 +66,10 @@ export const useMediaAttach = (props: IProps) => {
       passage,
       section,
       plan,
-      ActivityStates.TranscribeReady,
-      ts.mediaAttached,
+      isVernacular ? ActivityStates.TranscribeReady : '',
+      isVernacular
+        ? ts.mediaAttached
+        : localizedArtifactTypeFromId(related(mediaRec, 'artifactType')),
       user,
       tb,
       ops,

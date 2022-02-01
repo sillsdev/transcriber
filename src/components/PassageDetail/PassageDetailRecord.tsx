@@ -14,7 +14,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import Auth from '../../auth/Auth';
-import PassageRecord from '../PassageRecord';
 import { useEffect, useRef, useState } from 'react';
 import {
   findRecord,
@@ -38,6 +37,7 @@ import { useMediaAttach } from '../../crud/useMediaAttach';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { useRemoteSave } from '../../utils';
+import MediaRecord from '../MediaRecord';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -211,7 +211,7 @@ export function PassageDetailRecord(props: IProps) {
 
   return (
     <div>
-      <PassageRecord
+      <MediaRecord
         mediaId={mediafileId}
         auth={auth}
         uploadMethod={uploadMedia}

@@ -317,6 +317,20 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactType.qanda">
+            <source>Question and Answer</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.retell">
+            <source>Retelling</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="artifactType.resource">
             <source>Resource</source>
             <target/>
@@ -891,6 +905,41 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">CommentCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="community.playTest">
+            <source>Play Test</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="community.record">
+            <source>Record Test</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="community.speaker">
+            <source>Speaker</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="community.unsaved">
+            <source>Unsaved</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="community.uploadComplete">
+            <source>{0} of {1} files uploaded successfully.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="discussionMenu.edit">

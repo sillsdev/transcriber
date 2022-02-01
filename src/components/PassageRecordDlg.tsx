@@ -16,7 +16,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { useFetchMediaUrl } from '../crud';
-import PassageRecord from './PassageRecord';
+import MediaRecord from './MediaRecord';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -124,7 +124,7 @@ function PassageRecordDlg(props: IProps) {
     >
       <DialogTitle id="recDlg">{t.title}</DialogTitle>
       <DialogContent>
-        <PassageRecord
+        <MediaRecord
           mediaId={mediaId}
           auth={auth}
           uploadMethod={uploadMethod}

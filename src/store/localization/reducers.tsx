@@ -69,6 +69,8 @@ const initialState = {
 		"en": {
 			"backtranslation": "Back Translation",
 			"comment": "Comment",
+			"qanda": "Question and Answer",
+			"retell": "Retelling",
 			"resource": "Resource",
 			"sharedresource": "Shared Resource",
 			"testing": "Testing",
@@ -187,6 +189,15 @@ const initialState = {
 			"recordUnavailable": "Another recorder is open.",
 			"saving": "Saving...",
 			"unsaved": "Unsaved",
+		}
+	}),
+	"community": new LocalizedStrings({
+		"en": {
+			"playTest": "Play Test",
+			"record": "Record Test",
+			"speaker": "Speaker",
+			"unsaved": "Unsaved",
+			"uploadComplete": "{0} of {1} files uploaded successfully.",
 		}
 	}),
 	"discussionMenu": new LocalizedStrings({
@@ -1225,6 +1236,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"cards" : new LocalizedStrings(action.payload.data.cards),
 				"commentCard" : new LocalizedStrings(action.payload.data.commentCard),
 				"commentEditor" : new LocalizedStrings(action.payload.data.commentEditor),
+				"community" : new LocalizedStrings(action.payload.data.community),
 				"discussionMenu" : new LocalizedStrings(action.payload.data.discussionMenu),
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),

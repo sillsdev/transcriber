@@ -11,6 +11,7 @@ export enum ToolSlug {
   Transcribe = 'transcribe',
   Segment = 'segment',
   Paratext = 'paratext',
+  Community = 'community',
 }
 
 const toolSlugs = [
@@ -21,6 +22,7 @@ const toolSlugs = [
   ToolSlug.Transcribe,
   ToolSlug.Segment,
   ToolSlug.Paratext,
+  ToolSlug.Community,
 ];
 
 const toolMap = [
