@@ -551,7 +551,7 @@ export const DiscussionCard = (props: IProps) => {
     const mediafile = mediafiles.find(
       (m) => m.id === related(discussion, 'mediafile')
     ) as MediaFile;
-    return mediafile?.attributes?.versionNumber;
+    return mediafile?.attributes?.versionNumber || 0;
   }, [discussion, mediafiles]);
 
   useEffect(() => {
