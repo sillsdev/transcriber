@@ -21,7 +21,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import Auth from '../../auth/Auth';
-import MediaRecord from '../MediaRecord';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   findRecord,
@@ -33,7 +32,6 @@ import {
   useFetchMediaUrl,
   useOfflnMediafileCreate,
 } from '../../crud';
-import { useGlobal } from 'reactn';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import * as actions from '../../store';
 import { bindActionCreators } from 'redux';
@@ -48,8 +46,10 @@ import styled from 'styled-components';
 import SplitPane, { Pane } from 'react-split-pane';
 import PassageDetailPlayer from './PassageDetailPlayer';
 import DiscussionList from '../Discussions/DiscussionList';
-import ControlledPlayer from '../ControlledPlayer';
-import { SelectCommunityTest } from './SelectCommunityTest';
+import MediaPlayer from '../MediaPlayer';
+import MediaRecord from '../MediaRecord';
+import SelectCommunityTest from './SelectCommunityTest';
+import { useGlobal } from 'reactn';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -425,19 +425,17 @@ export function PassageDetailCommunity(props: IProps) {
                     </div>
                   </Paper>
                   <Paper className={classes.paper}>
-                    <div className={classes.root}>
+                    <div className={classes.row}>
                       <Paper className={classes.paper}>
                         <SelectCommunityTest onChange={handleSelect} t={t} />
+                        <MediaPlayer
+                          auth={auth}
+                          srcMediaId={playItem}
+                          requestPlay={playing}
+                          onEnded={handleEnded}
+                          controls={true}
+                        />
                       </Paper>
-                    </div>
-                    <div className={classes.playStatus}>
-                      <ControlledPlayer
-                        auth={auth}
-                        srcMediaId={playItem}
-                        requestPlay={playing}
-                        onEnded={handleEnded}
-                        controls={true}
-                      />
                     </div>
                   </Paper>
                 </Pane>

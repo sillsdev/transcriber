@@ -921,13 +921,6 @@
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="community.saving">
-            <source>Saving</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Community.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="community.speaker">
             <source>Speaker</source>
             <target/>
