@@ -117,11 +117,23 @@ interface IProps extends IStateProps, IRecordProps, IDispatchProps {
   comment: Comment;
   discussion: Discussion;
   number: number;
+  startSave: boolean;
+  clearSave: boolean;
   onEditing: (val: boolean) => void;
 }
 
 export const CommentCard = (props: IProps) => {
-  const { t, auth, comment, discussion, number, users, onEditing } = props;
+  const {
+    t,
+    auth,
+    comment,
+    discussion,
+    number,
+    startSave,
+    clearSave,
+    users,
+    onEditing,
+  } = props;
   const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
   const classes = useStyles();
   const [author, setAuthor] = useState<User>();
@@ -144,13 +156,25 @@ export const CommentCard = (props: IProps) => {
   const [canSaveRecording, setCanSaveRecording] = useState(false);
   const [editComment, setEditComment] = useState('');
   const [confirmAction, setConfirmAction] = useState('');
+
+  const setChanged = (changed: boolean) => {
+    const valid = editComment !== '' || canSaveRecording;
+    if (changed && valid && !myChanged) {
+      toolChanged(comment.id);
+      setMyChanged(true);
+    } else if ((!changed || !valid) && myChanged) {
+      toolSaveCompleted(comment.id, '');
+      setMyChanged(false);
+    }
+  };
+
   const reset = () => {
     setEditing(false);
     onEditing(false);
-    setMyChanged(false);
+    setChanged(false);
     savingRef.current = false;
-    toolSaveCompleted(comment.id, '');
   };
+
   const saveComment = useSaveComment({
     discussion: discussion.id,
     cb: reset,
@@ -177,11 +201,23 @@ export const CommentCard = (props: IProps) => {
   }, [comment]);
 
   useEffect(() => {
-    if (myChanged && doSave && !savingRef.current) {
+    if (myChanged && (startSave || doSave) && !savingRef.current) {
       handleSaveEdit();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave, myChanged]);
+  }, [doSave, startSave, myChanged]);
+
+  useEffect(() => {
+    if (clearSave) handleCancelEdit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clearSave]);
+
+  useEffect(() => {
+    if (canSaveRecording) {
+      setChanged(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canSaveRecording]);
 
   const handleCommentAction = (what: string) => {
     if (what === 'edit') {
@@ -226,8 +262,7 @@ export const CommentCard = (props: IProps) => {
 
   const handleTextChange = (newText: string) => {
     setEditComment(newText);
-    setMyChanged(true);
-    toolChanged(comment.id);
+    setChanged(true);
   };
 
   const media = useMemo(() => {

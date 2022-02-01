@@ -71,22 +71,24 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   auth: Auth;
   discussion: Discussion;
   number: number;
+  startSave: boolean;
+  clearSave: boolean;
 }
 
 export const ReplyCard = (props: IProps) => {
-  const { auth, discussion, number } = props;
+  const { auth, discussion, number, startSave, clearSave } = props;
   const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
   const classes = useStyles();
   const [refresh, setRefresh] = useState(0);
   const isMounted = useMounted('replycard');
   const { toolChanged, toolSaveCompleted } =
     useContext(PassageDetailContext).state;
-  const myId = discussion.id + 'r';
+  const myId = discussion.id + 'reply';
   const afterSavecb = () => {
     savingRef.current = false;
     toolSaveCompleted(myId, '');
     if (isMounted()) {
-      setMyChanged(false);
+      setChanged(false);
       setRefresh(refresh + 1);
     }
   };
@@ -130,27 +132,40 @@ export const ReplyCard = (props: IProps) => {
   };
 
   useEffect(() => {
-    if (myChanged && doSave && !savingRef.current) {
+    if (myChanged && (doSave || startSave) && !savingRef.current) {
       handleSaveEdit();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave, myChanged]);
+  }, [doSave, startSave, myChanged]);
 
-  const handleTextChange = (newText: string) => {
-    commentText.current = newText;
-    if (!myChanged) {
+  useEffect(() => {
+    if (clearSave) handleCancelEdit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clearSave]);
+
+  const setChanged = (changed: boolean) => {
+    const valid = commentText.current !== '' || canSaveRecording;
+    console.log('reply setChanged', changed, valid, myChanged);
+    if (changed && valid && !myChanged) {
+      toolChanged(myId);
       setMyChanged(true);
-      const valid = newText !== '' || canSaveRecording;
-      if (valid) toolChanged(myId);
+    } else if ((!changed || !valid) && myChanged) {
+      toolSaveCompleted(myId, '');
+      setMyChanged(false);
     }
   };
 
+  const handleTextChange = (newText: string) => {
+    commentText.current = newText;
+    setChanged(true);
+  };
+
   useEffect(() => {
-    if (canSaveRecording && !myChanged) {
-      setMyChanged(true);
-      toolChanged(myId);
+    if (canSaveRecording) {
+      setChanged(true);
     }
-  }, [canSaveRecording, myChanged, myId, toolChanged]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canSaveRecording]);
 
   return (
     <div className={classes.root}>

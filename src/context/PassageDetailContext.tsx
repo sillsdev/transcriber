@@ -253,6 +253,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const mediaStart = useRef<number | undefined>();
     const mediaEnd = useRef<number | undefined>();
     const mediaPosition = useRef<number | undefined>();
+    const toolsChangedRef = useRef<string[]>([]);
     const setOrgWorkflowSteps = (steps: OrgWorkflowStep[]) => {
       setState((state: ICtxState) => {
         return { ...state, orgWorkflowSteps: steps };
@@ -314,16 +315,17 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       changed: boolean = true,
       saveErr: string = ''
     ) => {
-      var toolsChanged = [...state.toolsChanged];
-      if (changed) toolsChanged.push(toolId);
+      if (changed) toolsChangedRef.current.push(toolId);
       else {
-        toolsChanged = toolsChanged.filter((c) => c !== toolId);
+        toolsChangedRef.current = toolsChangedRef.current.filter(
+          (c) => c !== toolId
+        );
         if (saveErr) saveErrRef.current = `${saveErr};${saveErrRef.current}`;
       }
       setState((state: ICtxState) => {
-        return { ...state, toolsChanged };
+        return { ...state, toolsChanged: toolsChangedRef.current };
       });
-      if (toolsChanged.length > 0) setChanged(true);
+      if (toolsChangedRef.current.length > 0) setChanged(true);
       else {
         saveCompleted(saveErrRef.current);
         saveErrRef.current = '';

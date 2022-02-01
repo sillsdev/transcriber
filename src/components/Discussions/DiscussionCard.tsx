@@ -59,6 +59,7 @@ import { removeExtension, waitForIt } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import Auth from '../../auth/Auth';
+import { NewDiscussionToolId } from './DiscussionList';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -187,6 +188,8 @@ interface IProps extends IRecordProps, IStateProps {
   collapsed: boolean;
   showStep: boolean;
   showReference: boolean;
+  startSave: boolean;
+  clearSave: boolean;
   onAddComplete?: () => {};
 }
 
@@ -200,6 +203,8 @@ export const DiscussionCard = (props: IProps) => {
     collapsed,
     showStep,
     showReference,
+    startSave,
+    clearSave,
     onAddComplete,
     comments,
     mediafiles,
@@ -217,6 +222,7 @@ export const DiscussionCard = (props: IProps) => {
     mediaPlaying,
     setPlayerSegments,
     toolChanged,
+    toolsChanged,
     toolSaveCompleted,
     setMediaSelected,
     getSegments,
@@ -253,7 +259,7 @@ export const DiscussionCard = (props: IProps) => {
 
   const myId = useMemo(() => {
     if (discussion.id) return discussion.id;
-    else return 'newDiscussion';
+    else return NewDiscussionToolId;
   }, [discussion]);
 
   const handleSelect = (discussion: Discussion) => () => {
@@ -263,6 +269,17 @@ export const DiscussionCard = (props: IProps) => {
   const handleEditCard = (val: boolean) => {
     if (val !== editCard) setEditCard(val);
   };
+  useEffect(() => {
+    //if any of my comments are changed, add the discussion to the toolChanged list so DiscussionList will pick it up
+    if (!myChanged) {
+      var myIds = myComments.map((d) => d.id);
+      myIds.push(discussion.id + 'reply');
+      var anyChanged = toolsChanged.some((t) => myIds.includes(t));
+      if (anyChanged && !toolsChanged.includes(myId)) toolChanged(myId);
+      if (!anyChanged && toolsChanged.includes(myId)) toolChanged(myId, false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toolsChanged, myComments, myChanged]);
 
   useEffect(() => {
     if (comments)
@@ -446,12 +463,13 @@ export const DiscussionCard = (props: IProps) => {
       handleReset();
       setEditing(onAddComplete !== undefined);
     }
-    if (Boolean(onAddComplete) && Boolean(discussion.attributes?.subject)) {
-      setMyChanged(true);
+    if (Boolean(discussion.attributes?.subject) && !Boolean(discussion.id)) {
+      //I'm adding but I have a subject already (target segment) so mark as changed
+      setChanged(true);
     }
     setEditSubject(discussion.attributes?.subject);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentstep, onAddComplete]);
+  }, [currentstep, discussion.id]);
 
   const handleDelete = () => {
     var ops: Operation[] = [];
@@ -486,31 +504,39 @@ export const DiscussionCard = (props: IProps) => {
   const handleToggleCollapse = () => {
     setShowComments(!showComments);
   };
+  const setChanged = (changed: boolean) => {
+    if (changed && !myChanged) {
+      toolChanged(myId);
+      setMyChanged(true);
+    } else if (!changed && myChanged) {
+      toolSaveCompleted(myId, '');
+      setMyChanged(false);
+    }
+  };
   const handleSubjectChange = (e: any) => {
     if (e.target.value !== editSubject) {
       setEditSubject(e.target.value);
-      if (!myChanged) toolChanged(myId);
-      setMyChanged(true);
+      setChanged(true);
     }
   };
   const handleRoleChange = (e: string) => {
     if (e !== editRole) {
       setEditRole(e);
       setEditUser('');
-      setMyChanged(true);
+      setChanged(true);
     }
   };
   const handleUserChange = (e: string) => {
     if (e !== editUser) {
       setEditUser(e);
       setEditRole('');
-      setMyChanged(true);
+      setChanged(true);
     }
   };
   const onCategoryChange = (cat: string) => {
     if (cat !== editCategory) {
       setEditCategory(cat);
-      setMyChanged(true);
+      setChanged(true);
     }
   };
   const handleSave = async () => {
@@ -518,7 +544,7 @@ export const DiscussionCard = (props: IProps) => {
       discussion.attributes.subject = editSubject;
       var ops: Operation[] = [];
       var t = new TransformBuilder();
-      if (onAddComplete) {
+      if (!discussion.id) {
         ops.push(...AddRecord(t, discussion, user, memory));
         ops.push(
           ...UpdateRelatedRecord(
@@ -557,15 +583,13 @@ export const DiscussionCard = (props: IProps) => {
     }
     onAddComplete && onAddComplete();
     setEditing(false);
-    setMyChanged(false);
-    toolSaveCompleted(myId, '');
+    setChanged(false);
   };
 
   const handleCancel = (e: any) => {
     onAddComplete && onAddComplete();
     setEditing(false);
-    setMyChanged(false);
-    toolSaveCompleted(myId, '');
+    setChanged(false);
   };
 
   const version = useMemo(() => {
@@ -576,7 +600,7 @@ export const DiscussionCard = (props: IProps) => {
   }, [discussion, mediafiles]);
 
   useEffect(() => {
-    if (doSave && !savingRef.current) {
+    if ((doSave || startSave) && !savingRef.current) {
       savingRef.current = true;
       handleSave().then(() => {
         waitForIt(
@@ -590,7 +614,12 @@ export const DiscussionCard = (props: IProps) => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave]);
+  }, [doSave, startSave]);
+
+  useEffect(() => {
+    if (clearSave) handleCancel(clearSave);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clearSave]);
 
   return (
     <div className={classes.root}>
@@ -771,6 +800,8 @@ export const DiscussionCard = (props: IProps) => {
                   discussion={discussion}
                   number={j}
                   onEditing={handleEditCard}
+                  startSave={startSave}
+                  clearSave={clearSave}
                 />
               ))}
               {!discussion.attributes.resolved && !editCard && (
@@ -778,6 +809,8 @@ export const DiscussionCard = (props: IProps) => {
                   auth={auth}
                   discussion={discussion}
                   number={myComments.length}
+                  startSave={startSave}
+                  clearSave={clearSave}
                 />
               )}
             </Grid>

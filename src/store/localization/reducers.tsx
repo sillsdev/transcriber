@@ -245,6 +245,7 @@ const initialState = {
 			"collapse": "Show/Hide All Comments",
 			"discussionFilter": "Discussion Filter",
 			"filterStatus": "{0} / {1} discussions",
+			"saveFirst": "Save changed discussions and comments first?",
 			"title": "Discussions",
 		}
 	}),
@@ -945,6 +946,7 @@ const initialState = {
 			"resource": "Resource",
 			"record": "Record",
 			"teamCheck": "Team Check",
+			"community": "Community Testing",
 			"discuss": "Discuss",
 			"transcribe": "Transcribe",
 			"segment": "Segment",
