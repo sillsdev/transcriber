@@ -660,9 +660,11 @@ export const DiscussionCard = (props: IProps) => {
                 {startEnd(discussion.attributes?.subject) &&
                   related(discussion, 'mediafile') !== mediafileId && (
                     <div className={classes.oldVersion}>
-                      <LightTooltip title={t.version}>
-                        <Chip label={version.toString()} size="small" />
-                      </LightTooltip>
+                      {version && (
+                        <LightTooltip title={t.version}>
+                          <Chip label={version.toString()} size="small" />
+                        </LightTooltip>
+                      )}
                       <LightTooltip title={t.playOrStop}>
                         <IconButton
                           id={`play-${discussion.id}`}

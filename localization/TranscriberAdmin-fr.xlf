@@ -734,6 +734,78 @@
             <target>Supprimer</target>
          </segment>
       </unit>
+   	<unit id="discussionCard.assignRole">
+   		<segment>
+   			<source>Assign to a Role</source>
+   			<target>Affectation à un rôle</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionCard.assignUser">
+   		<segment>
+   			<source>Assign to a User</source>
+   			<target>Affecter à un utilisateur</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionCard.category">
+   		<segment>
+   			<source>Category: {0}</source>
+   			<target>Catégorie : {0}</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionCard.collapse">
+   		<segment>
+   			<source>Show/Hide Comments</source>
+   			<target>Afficher/masquer les commentaires</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionCard.comments">
+   		<segment>
+   			<source>Comments: {0}</source>
+   			<target>Commentaires : {0}</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionCard.confirmDelete">
+   		<segment>
+   			<source>Delete this discussion and all commments?</source>
+   			<target>Supprimer cette discussion et tous les commentaires ?</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionCard.locate">
+   		<segment>
+   			<source>Locate discussion subject in audio recording</source>
+   			<target>Trouver le sujet de discussion dans l'enregistrement audio</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionCard.or">
+   		<segment>
+   			<source>or</source>
+   			<target>ou</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionCard.playOrStop">
+   		<segment>
+   			<source>Play or Stop</source>
+   			<target>Lecture ou arrêt</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionCard.resolved">
+   		<segment>
+   			<source>Resolve</source>
+   			<target>Résolvez</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionCard.topic">
+   		<segment>
+   			<source>Topic</source>
+   			<target>Sujet</target>
+   		</segment>
+   	</unit>
+   	<unit id="discussionCard.version">
+   		<segment>
+   			<source>Version</source>
+   			<target>Version</target>
+   		</segment>
+   	</unit>
    	<unit id="discussionList.add">
    		<segment>
    			<source>Add Discussion</source>
