@@ -198,10 +198,7 @@ export const CommentCard = (props: IProps) => {
         id: comment.id,
       })
     );
-    setEditing(false);
-    onEditing(false);
-    setMyChanged(false);
-    toolSaveCompleted(comment.id, '');
+    reset();
   };
 
   const handleActionConfirmed = () => {
@@ -219,12 +216,12 @@ export const CommentCard = (props: IProps) => {
     savingRef.current = true;
     //if we're recording and can save, the comment will save after upload
     if (!canSaveRecording) {
-      afterUploadcb('');
+      if (editComment.length > 0) afterUploadcb('');
+      else toolSaveCompleted(comment.id, '');
     }
   };
   const handleCancelEdit = () => {
-    setEditing(false);
-    onEditing(false);
+    reset();
   };
 
   const handleTextChange = (newText: string) => {
