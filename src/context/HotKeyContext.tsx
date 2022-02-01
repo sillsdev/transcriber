@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { IHotKeyStrings, IState } from '../model';
 import localStrings from '../selector/localize';
@@ -44,6 +44,7 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
   const [state, setState] = useState({
     ...initState,
   });
+  const lastKeyRef = useRef(0);
   const isMounted = useMounted('hotkeycontext');
 
   useEffect(() => {
@@ -79,13 +80,18 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
       case 'SHIFT':
         return;
       default:
-        var cb = hotKeyCallback(e.key, e.ctrlKey, e.altKey, e.shiftKey);
-        var handled = false;
-        if (cb) handled = cb();
-        if (handled) e.preventDefault();
+        if (e.timeStamp !== lastKeyRef.current) {
+          var cb = hotKeyCallback(e.key, e.ctrlKey, e.altKey, e.shiftKey);
+          var handled = false;
+          if (cb) handled = cb();
+          if (handled) e.preventDefault();
+          lastKeyRef.current = e.timeStamp;
+        }
     }
   };
-
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    handleKey(e.nativeEvent);
+  };
   const newHotKey = (key: string, cb?: () => boolean) => {
     if (!cb)
       cb = () => {
@@ -170,7 +176,7 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
         setState,
       }}
     >
-      <div>{props.children}</div>
+      <div onKeyDown={handleKeyDown}>{props.children}</div>
     </HotKeyContext.Provider>
   );
 });
