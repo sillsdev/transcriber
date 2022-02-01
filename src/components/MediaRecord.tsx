@@ -72,6 +72,7 @@ interface IStateProps {
 
 interface IProps extends IStateProps, IDispatchProps {
   onReady: () => void;
+  onRecording: (r: boolean) => void;
   mediaId: string;
   auth: Auth;
   metaData?: JSX.Element;
@@ -91,6 +92,7 @@ function MediaRecord(props: IProps) {
   const {
     t,
     onReady,
+    onRecording,
     startSave,
     mediaId,
     auth,
@@ -293,8 +295,9 @@ function MediaRecord(props: IProps) {
     setAudioBlob(blob);
     setFilechanged(true);
   }
-  function onRecording(r: boolean) {
+  function myOnRecording(r: boolean) {
     setRecording(r);
+    if (onRecording) onRecording(r);
   }
 
   const reset = () => {
@@ -350,7 +353,7 @@ function MediaRecord(props: IProps) {
         onBlobReady={onBlobReady}
         setChanged={setFilechanged}
         setBlobReady={setBlobReady}
-        onRecording={onRecording}
+        onRecording={myOnRecording}
       />
       <div className={classes.row}>
         {showFilename && (
