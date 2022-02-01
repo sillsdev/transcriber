@@ -107,7 +107,8 @@ export function MediaPlayer(props: IProps) {
   const handleError = (e: any) => {
     logError(Severity.error, reporter, e);
     console.log(e);
-    showMessage(e.target?.error?.message || ts.mediaError);
+    // showMessage(e.target?.error?.message || ts.mediaError);
+    showMessage(ts.mediaError);
   };
 
   return ready ? (
