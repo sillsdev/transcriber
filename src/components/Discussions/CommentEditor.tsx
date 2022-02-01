@@ -92,6 +92,7 @@ export const CommentEditor = (props: IProps) => {
   const [statusText, setStatusText] = useState('');
   const [startSave, setStartSave] = useState(false);
   const doRecordRef = useRef(false);
+  const [recording, setRecording] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -136,7 +137,9 @@ export const CommentEditor = (props: IProps) => {
       if (valid) setChanged(true);
     }
   };
-
+  const onRecording = (r: boolean) => {
+    setRecording(r);
+  };
   const handleTextChange = (e: any) => {
     setCurText(e.target.value);
     onTextChange(e.target.value);
@@ -193,6 +196,7 @@ export const CommentEditor = (props: IProps) => {
       />
       {doRecordRef.current && (
         <MediaRecord
+          onRecording={onRecording}
           uploadMethod={uploadMethod}
           defaultFilename={fileName}
           allowWave={false}
@@ -242,7 +246,9 @@ export const CommentEditor = (props: IProps) => {
                 id="ok"
                 onClick={handleOk}
                 className={classes.button}
-                disabled={(!canSave && !curText.length) || !changed}
+                disabled={
+                  (!canSave && !curText.length) || !changed || recording
+                }
               >
                 <SendIcon />
               </Button>
