@@ -90,8 +90,10 @@ export function TeamDialog(props: IProps) {
   };
 
   const handleDelete = () => {
+    savingRef.current = true;
     const team = { ...values, attributes: { name } } as Organization;
     onDelete && onDelete(team);
+    savingRef.current = false;
   };
 
   const handleProcess = (e: any) => {
@@ -181,6 +183,7 @@ export function TeamDialog(props: IProps) {
               title={t.deleteTeam}
               explain={t.explainTeamDelete}
               handleDelete={handleDelete}
+              inProgress={savingRef.current}
             />
           )}
         </DialogContent>

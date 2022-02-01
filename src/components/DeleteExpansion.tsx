@@ -59,10 +59,11 @@ interface IProps extends IStateProps {
   title: string;
   explain: string;
   handleDelete: () => void;
+  inProgress: boolean;
 }
 
 export function DeleteExpansion(props: IProps) {
-  const { t, handleDelete, title, explain } = props;
+  const { t, handleDelete, title, explain, inProgress } = props;
   const classes = useStyles();
 
   return (
@@ -100,6 +101,7 @@ export function DeleteExpansion(props: IProps) {
                 variant="contained"
                 className={classes.button}
                 onClick={handleDelete}
+                disabled={inProgress}
               >
                 {t.delete}
               </Button>
