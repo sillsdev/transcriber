@@ -72,6 +72,7 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
   };
 
   const handleKey = (e: KeyboardEvent) => {
+    if (!e.key) return;
     switch (e.key.toUpperCase()) {
       case 'CONTROL':
       case 'ALT':

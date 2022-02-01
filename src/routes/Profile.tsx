@@ -414,11 +414,17 @@ export function Profile(props: IProps) {
   };
   const handleDeleteConfirmed = async () => {
     const deleteRec = getUserRec(deleteItem);
+    const remote = coordinator.getSource('remote');
+    await waitForIt(
+      'wait for any changes to finish',
+      () => !remote || !connected || remote.requestQueue.length === 0,
+      () => false,
+      200
+    );
     await RemoveUserFromOrg(memory, deleteRec, undefined, user, teamDelete);
     await memory.update((tb) =>
       tb.removeRecord({ type: 'user', id: deleteItem })
     );
-    const remote = coordinator.getSource('remote');
     //wait to be sure orbit remote is done also
     try {
       await waitForIt(
@@ -806,6 +812,7 @@ export function Profile(props: IProps) {
                 title={t.deleteUser}
                 explain={t.deleteExplained}
                 handleDelete={() => handleDelete()}
+                inProgress={deleteItem !== ''}
               />
             )}
         </div>

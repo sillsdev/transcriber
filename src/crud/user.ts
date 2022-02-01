@@ -131,15 +131,19 @@ export async function RemoveUserFromOrg(
   );
 
   //TODO!  Add removal from discussion (author, assigned)
-  await memory.update(ops);
+  try {
+    await memory.update(ops);
 
-  //now...if any orgs are orphaned (this was the only user) delete those too
-  const orgWithMembers = (
-    memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('organizationmembership')
-    ) as OrganizationMembership[]
-  ).map((om) => related(om, 'organization'));
-  const orphaned = organizationIds.filter((o) => !orgWithMembers.includes(o));
-  console.log(orphaned);
-  orphaned.forEach((o) => teamDelete(o));
+    //now...if any orgs are orphaned (this was the only user) delete those too
+    const orgWithMembers = (
+      memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('organizationmembership')
+      ) as OrganizationMembership[]
+    ).map((om) => related(om, 'organization'));
+    const orphaned = organizationIds.filter((o) => !orgWithMembers.includes(o));
+    console.log(orphaned);
+    orphaned.forEach((o) => teamDelete(o));
+  } catch {
+    //ignore it
+  }
 }
