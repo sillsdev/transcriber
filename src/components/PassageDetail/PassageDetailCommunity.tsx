@@ -161,7 +161,7 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 }
 
 export function PassageDetailCommunity(props: IProps) {
-  const { auth, ready, t, ts, width } = props;
+  const { auth, t, ts, width } = props;
   const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
   const [reporter] = useGlobal('errorReporter');
   const [offline] = useGlobal('offline');
@@ -207,7 +207,6 @@ export function PassageDetailCommunity(props: IProps) {
   const [recordType, setRecordType] = useState<RecordType>(RecordType.Retell);
 
   const myId = 'CommunityTool';
-  const onReady = () => {};
 
   const handleSplitSize = debounce((e: number) => {
     setDiscussionSize(width - e);
