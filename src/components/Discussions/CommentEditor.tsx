@@ -234,6 +234,7 @@ export const CommentEditor = (props: IProps) => {
                   id="cancel"
                   onClick={handleCancel}
                   className={classes.button}
+                  disabled={recording}
                 >
                   <CancelIcon />
                 </Button>
