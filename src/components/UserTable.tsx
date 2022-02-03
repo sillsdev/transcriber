@@ -36,6 +36,7 @@ import {
   useAddToOrgAndGroup,
   useTeamDelete,
   useUser,
+  useRole,
 } from '../crud';
 import SelectRole from '../control/SelectRole';
 import { UpdateRelatedRecord } from '../model/baseModel';
@@ -166,6 +167,7 @@ export function UserTable(props: IProps) {
   const [view, setView] = useState('');
   const addToOrgAndGroup = useAddToOrgAndGroup();
   const teamDelete = useTeamDelete();
+  const { getInviteProjRole } = useRole();
 
   const handleInvite = () => {
     setDialogVisible(true);
@@ -338,9 +340,10 @@ export function UserTable(props: IProps) {
       </>
     </Table.Cell>
   );
-  const canEdit = () =>
-    orgRole === RoleNames.Admin && (!offline || offlineOnly);
-
+  const canEdit = () => {
+    const projRole = getInviteProjRole(organization);
+    return projRole === RoleNames.Admin && (!offline || offlineOnly);
+  };
   const Cell = (props: any) => {
     const { column } = props;
     if (column.name === 'action') {
