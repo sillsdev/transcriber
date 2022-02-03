@@ -7,6 +7,7 @@ import {
   canTranscribe,
   canBeEditor,
   ISharedStrings,
+  Group,
 } from '../model';
 import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import { related } from '../crud';
@@ -144,6 +145,21 @@ export const useRole = () => {
     }
   };
 
+  const getInviteProjRole = (orgId: string) => {
+    try {
+      const groups = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('group')
+      ) as Group[];
+      const allUsersGroup = groups.filter(
+        (g) => g.attributes.allUsers && related(g, 'owner') === orgId
+      );
+      const gMbrRecs = getMbrRoleRec('group', allUsersGroup[0].id, user);
+      return getMbrRole(gMbrRecs);
+    } catch {
+      return RoleNames.Admin;
+    }
+  };
+
   const setMyProjRole = (projectId: string) => {
     const role = getMyProjRole(projectId);
     setProjRole(role as RoleNames);
@@ -158,6 +174,7 @@ export const useRole = () => {
     setMyProjRole,
     getMyOrgRole,
     getMyProjRole,
+    getInviteProjRole,
     getTranscriberRoleIds,
     getEditorRoleIds,
     getLocalizedTranscriberRoles,

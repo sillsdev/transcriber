@@ -13,6 +13,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import useStyles from './GroupSettingsStyles';
 import PersonItems from './PersonItems';
+import { useRole } from '../../crud';
 
 interface IStateProps {
   t: IGroupSettingsStrings;
@@ -36,15 +37,20 @@ function TeamCol(props: IProps) {
   const { detail, people, add, del, allUsers, title, titledetail, roledetail } =
     props;
   const classes = useStyles();
-  const [orgRole] = useGlobal('orgRole');
+  const [organization] = useGlobal('organization');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const { getInviteProjRole } = useRole();
 
-  const canEdit = () =>
-    !detail &&
-    orgRole === RoleNames.Admin &&
-    !allUsers &&
-    (!offline || offlineOnly);
+  const canEdit = () => {
+    const projRole = getInviteProjRole(organization);
+    return (
+      !detail &&
+      projRole === RoleNames.Admin &&
+      !allUsers &&
+      (!offline || offlineOnly)
+    );
+  };
 
   return (
     <Grid item xs={12} md={4}>
