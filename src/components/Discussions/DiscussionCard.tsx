@@ -228,6 +228,7 @@ export const DiscussionCard = (props: IProps) => {
     toolChanged,
     toolSaveCompleted,
     setMediaSelected,
+    getSegments,
   } = ctx.state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
@@ -397,6 +398,30 @@ export const DiscussionCard = (props: IProps) => {
     discussion.attributes.resolved = resolved;
     memory.update((t: TransformBuilder) => UpdateRecord(t, discussion, user));
   };
+  const handleSetSegment = async () => {
+    if (startEnd(discussion.attributes?.subject)) {
+      const subWords = editSubject.split(' ');
+      subWords[0] = getSegments().split(' ')[0];
+      discussion.attributes.subject = subWords.join(' ');
+    } else {
+      discussion.attributes.subject =
+        getSegments() + (discussion.attributes?.subject || '');
+    }
+    let ops: Operation[] = [];
+    let t = new TransformBuilder();
+    ops.push(...UpdateRecord(t, discussion, user));
+    ops.push(
+      ...UpdateRelatedRecord(
+        t,
+        discussion,
+        'mediafile',
+        'mediafile',
+        mediafileId,
+        user
+      )
+    );
+    await memory.update(ops);
+  };
   const handleDiscussionAction = (what: string) => {
     if (what === 'edit') {
       setEditSubject(discussion.attributes.subject);
@@ -410,6 +435,8 @@ export const DiscussionCard = (props: IProps) => {
       handleResolveDiscussion(true);
     } else if (what === 'reopen') {
       handleResolveDiscussion(false);
+    } else if (what === 'set') {
+      handleSetSegment();
     }
   };
 
@@ -710,6 +737,7 @@ export const DiscussionCard = (props: IProps) => {
                 <DiscussionMenu
                   action={handleDiscussionAction}
                   resolved={discussion.attributes.resolved || false}
+                  canSet={getSegments() !== ''}
                 />
               </Grid>
             </Grid>

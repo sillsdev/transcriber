@@ -17,6 +17,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ResolveIcon from '@material-ui/icons/Check';
 import ReopenIcon from '@material-ui/icons/Unarchive';
+import LinkIcon from '@material-ui/icons/Link';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,11 +65,12 @@ interface IStateProps {
 interface IProps extends IStateProps {
   action?: (what: string) => void;
   resolved?: boolean;
+  canSet: boolean;
   stopPlayer?: () => void;
 }
 
 export function DiscussionMenu(props: IProps) {
-  const { action, t, resolved, stopPlayer } = props;
+  const { action, t, resolved, canSet, stopPlayer } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -131,6 +133,14 @@ export function DiscussionMenu(props: IProps) {
               <ReopenIcon />
             </ListItemIcon>
             <ListItemText primary={t.reopen} />
+          </StyledMenuItem>
+        )}
+        {canSet && (
+          <StyledMenuItem id="set" onClick={handle('set')}>
+            <ListItemIcon>
+              <LinkIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.setSegment} />
           </StyledMenuItem>
         )}
       </StyledMenu>

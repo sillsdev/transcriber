@@ -206,6 +206,7 @@ const initialState = {
 			"delete": "Delete",
 			"reopen": "Reopen",
 			"resolve": "Resolve",
+			"setSegment": "Set Segment",
 		}
 	}),
 	"control": new LocalizedStrings({
