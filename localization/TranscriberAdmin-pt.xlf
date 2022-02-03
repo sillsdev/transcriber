@@ -841,6 +841,36 @@
    			<target>Discussões</target>
    		</segment>
    	</unit>
+   	<unit id="discussionMenu.edit">
+   		<segment>
+   			<source>Edit</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="discussionMenu.delete">
+   		<segment>
+   			<source>Delete</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="discussionMenu.reopen">
+   		<segment>
+   			<source>Reopen</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="discussionMenu.resolve">
+   		<segment>
+   			<source>Resolve</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="discussionMenu.setSegment">
+   		<segment>
+   			<source>Set Segment</source>
+   			<target>Segmento do conjunto</target>
+   		</segment>
+   	</unit>
    	<unit id="electronImport.allDataOverwritten">
          <segment>
             <source>All {name0} data will be overwritten.</source>

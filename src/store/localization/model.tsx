@@ -185,6 +185,7 @@ export interface IDiscussionMenuStrings extends Localize.LocalizedStringsMethods
     "delete": string;
     "reopen": string;
     "resolve": string;
+    "setSegment": string;
 };
 
 export interface IControlStrings extends Localize.LocalizedStringsMethods {
