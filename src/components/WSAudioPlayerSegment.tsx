@@ -237,7 +237,7 @@ function WSAudioPlayerSegment(props: IProps) {
           <LightTooltip id="wsDeleteTip" title={t.removeAll}>
             <span>
               <IconButton
-                id="wsSegmentSettings"
+                id="wsSegmentClear"
                 onClick={handleClearSegments}
                 disabled={!ready || busyRef.current}
               >
