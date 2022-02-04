@@ -46,7 +46,7 @@ export const PassageDetailStepComplete = (props: IProps) => {
     setStepComplete(currentstep, !complete);
     if (!complete && currentIndex < orgWorkflowSteps.length - 1) {
       //turning it on so go to next step
-      setCurrentStep(orgWorkflowSteps[currentIndex + 1].id);
+      setCurrentStep(''); // setting to empty jumps to first uncompleted step
     } else setComplete(!complete);
   };
 
