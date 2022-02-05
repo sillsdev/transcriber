@@ -32,7 +32,7 @@ export const PassageDetailStepComplete = (props: IProps) => {
     orgWorkflowSteps,
   } = usePassageDetailContext();
   const classes = useStyles();
-  const [currentIndex, setCurrentIndex] = useState(-1);
+  const [, setCurrentIndex] = useState(-1);
   const [complete, setComplete] = useState(false);
 
   useEffect(() => {
@@ -44,10 +44,7 @@ export const PassageDetailStepComplete = (props: IProps) => {
 
   const handleToggleComplete = () => {
     setStepComplete(currentstep, !complete);
-    if (!complete && currentIndex < orgWorkflowSteps.length - 1) {
-      //turning it on so go to next step
-      setCurrentStep(''); // setting to empty jumps to first uncompleted step
-    } else setComplete(!complete);
+    setCurrentStep(''); // setting to empty jumps to first uncompleted step
   };
 
   return (
