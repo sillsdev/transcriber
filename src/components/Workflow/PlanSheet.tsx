@@ -16,7 +16,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from '../AlertDialog';
 import BookSelect from '../BookSelect';
-import { ProjButtons, LastEdit } from '../../control';
+import { ProjButtons, LastEdit, StageReport } from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
 import { refMatch } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
@@ -503,9 +503,10 @@ export function PlanSheet(props: IProps) {
           return [
             {
               value: (
-                <MemoizedTaskAvatar
-                  assigned={rowInfo[rowIndex].editor?.id || ''}
-                />
+                <StageReport step={rowInfo[rowIndex].step || ''} />
+                // <MemoizedTaskAvatar
+                //   assigned={rowInfo[rowIndex].editor?.id || ''}
+                // />
               ),
               readOnly: true,
               className: section ? 'set' + (passage ? 'p' : '') : 'pass',

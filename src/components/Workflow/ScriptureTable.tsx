@@ -815,7 +815,7 @@ export function ScriptureTable(props: IProps) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plan, sections, passages, mediafiles, flat, shared]);
+  }, [plan, sections, passages, mediafiles, flat, shared, orgSteps]);
 
   interface ILocal {
     [key: string]: string;
