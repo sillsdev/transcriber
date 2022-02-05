@@ -761,38 +761,25 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     }, [workflowSteps, orgWorkflowSteps]);
 
     useEffect(() => {
-      if (state.currentstep === '' && state.workflow.length > 0) {
-        var nextIndex = 0;
-        var lastcompleted = state.psgCompleted
-          .filter((s) => s.complete)
-          .map(
-            (cs) =>
-              findRecord(
-                memory,
-                'orgworkflowstep',
-                remoteIdGuid('orgworkflowstep', cs.stepid, memory.keyMap) ||
-                  cs.stepid
-              ) as OrgWorkflowStep
-          )
-          .sort(
-            (i, j) => j?.attributes?.sequencenum - i?.attributes?.sequencenum
-          );
-
-        if (lastcompleted.length) {
-          var lastIndex = state.workflow.findIndex(
-            (s) => s.id === lastcompleted[0].id
-          );
-          nextIndex =
-            lastIndex + (lastIndex === state.workflow.length - 1 ? 0 : 1);
+      if (state.currentstep === '' && state.orgWorkflowSteps.length > 0) {
+        let nextIndex = 0;
+        let completeLen = state.psgCompleted.length;
+        for (let w of state.orgWorkflowSteps) {
+          const pcItem =
+            nextIndex < completeLen ? state.psgCompleted[nextIndex] : undefined;
+          const id = w.keys?.remoteId || w.id;
+          if (id === pcItem?.stepid && pcItem?.complete) {
+            nextIndex += 1;
+          } else break;
         }
-        const next = state.workflow[nextIndex].id;
+        const next = state.orgWorkflowSteps[nextIndex].id;
         if (state.currentstep !== next) {
           setCurrentStep(next);
         }
         segmentsCb.current = undefined;
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state.currentstep, state.psgCompleted, state.workflow]);
+    }, [state.currentstep, state.psgCompleted, state.orgWorkflowSteps]);
     return (
       <PassageDetailContext.Provider
         value={{
