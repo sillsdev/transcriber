@@ -30,6 +30,7 @@ export interface IWorkflow {
   passageUpdated?: string;
   mediaId?: RecordIdentity;
   mediaShared: IMediaShare;
+  step?: string;
   deleted: boolean;
 }
 

@@ -32,6 +32,8 @@ import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
 import PlanAudioActions from './PlanAudioActions';
 import { HotKeyContext } from '../../context/HotKeyContext';
 
+const MemoizedTaskAvatar = React.memo(TaskAvatar);
+
 const DOWN_ARROW = 'ARROWDOWN';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -465,8 +467,6 @@ export function PlanSheet(props: IProps) {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [changed]);
-
-  const MemoizedTaskAvatar = React.memo(TaskAvatar);
 
   const refErrTest = (ref: any) => typeof ref !== 'string' || !refMatch(ref);
 

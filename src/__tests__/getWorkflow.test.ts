@@ -1,8 +1,10 @@
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { Section, Passage, IWorkflow } from '../model';
+import { Section, Passage, IWorkflow, IWorkflowStepsStrings } from '../model';
 import { getWorkflow } from '../components/Workflow';
 import { memory } from '../schema';
+
+const wfStr = {} as IWorkflowStepsStrings;
 
 const s1: Section = {
   type: 'section',
@@ -182,41 +184,45 @@ const pa11: Passage = {
 afterEach(cleanup);
 
 test('empty input gives empty output', async () => {
-  expect(getWorkflow('', [], [], false, false, memory, 'fakeVId')).toEqual([]);
+  expect(
+    getWorkflow('', [], [], false, false, memory, 'fakeVId', [], wfStr)
+  ).toEqual([]);
 });
 
 test('empty flat input gives empty output', async () => {
-  expect(getWorkflow('', [], [], true, false, memory, 'fakeVId')).toEqual([]);
+  expect(
+    getWorkflow('', [], [], true, false, memory, 'fakeVId', [], wfStr)
+  ).toEqual([]);
 });
 
 test('empty input with plan id gives empty output', async () => {
-  expect(getWorkflow('pl1', [], [], false, false, memory, 'fakeVId')).toEqual(
-    []
-  );
+  expect(
+    getWorkflow('pl1', [], [], false, false, memory, 'fakeVId', [], wfStr)
+  ).toEqual([]);
 });
 
 test('one section gives output', async () => {
-  expect(getWorkflow('pl1', [s1], [], false, false, memory, 'fakeVId')).toEqual(
-    [
-      {
-        level: 0,
-        kind: 0,
-        sectionSeq: 1,
-        title: 'Intro',
-        passageSeq: 0,
-        sectionId: { type: 'section', id: 's1' },
-        sectionUpdated: '2021-09-15',
-        transcriber: undefined,
-        editor: undefined,
-        deleted: false,
-      },
-    ] as IWorkflow[]
-  );
+  expect(
+    getWorkflow('pl1', [s1], [], false, false, memory, 'fakeVId', [], wfStr)
+  ).toEqual([
+    {
+      level: 0,
+      kind: 0,
+      sectionSeq: 1,
+      title: 'Intro',
+      passageSeq: 0,
+      sectionId: { type: 'section', id: 's1' },
+      sectionUpdated: '2021-09-15',
+      transcriber: undefined,
+      editor: undefined,
+      deleted: false,
+    },
+  ] as IWorkflow[]);
 });
 
 test('one section and one passage gives output', async () => {
   expect(
-    getWorkflow('pl1', [s1], [pa1], false, false, memory, 'fakeVId')
+    getWorkflow('pl1', [s1], [pa1], false, false, memory, 'fakeVId', [], wfStr)
   ).toEqual([
     {
       level: 0,
@@ -240,6 +246,8 @@ test('one section and one passage gives output', async () => {
       comment: 'salutation',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
   ] as IWorkflow[]);
@@ -247,7 +255,17 @@ test('one section and one passage gives output', async () => {
 
 test('one section and two passages gives output', async () => {
   expect(
-    getWorkflow('pl1', [s1], [pa1, pa2], false, false, memory, 'fakeVId')
+    getWorkflow(
+      'pl1',
+      [s1],
+      [pa1, pa2],
+      false,
+      false,
+      memory,
+      'fakeVId',
+      [],
+      wfStr
+    )
   ).toEqual([
     {
       level: 0,
@@ -272,6 +290,8 @@ test('one section and two passages gives output', async () => {
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
       deleted: false,
+      mediaId: undefined,
+      mediaShared: 3,
     },
     {
       level: 1,
@@ -284,13 +304,25 @@ test('one section and two passages gives output', async () => {
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa2' },
       deleted: false,
+      mediaId: undefined,
+      mediaShared: 3,
     },
   ] as IWorkflow[]);
 });
 
 test('one section and two passages with flat output', async () => {
   expect(
-    getWorkflow('pl1', [s1], [pa1, pa2], true, false, memory, 'fakeVId')
+    getWorkflow(
+      'pl1',
+      [s1],
+      [pa1, pa2],
+      true,
+      false,
+      memory,
+      'fakeVId',
+      [],
+      wfStr
+    )
   ).toEqual([
     {
       level: 0,
@@ -308,6 +340,7 @@ test('one section and two passages with flat output', async () => {
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
       mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
     {
@@ -321,6 +354,7 @@ test('one section and two passages with flat output', async () => {
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa2' },
       mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
   ] as IWorkflow[]);
@@ -328,7 +362,17 @@ test('one section and two passages with flat output', async () => {
 
 test('one section and three passages out of order', async () => {
   expect(
-    getWorkflow('pl1', [s1], [pa3, pa1, pa2], false, false, memory, 'fakeVId')
+    getWorkflow(
+      'pl1',
+      [s1],
+      [pa3, pa1, pa2],
+      false,
+      false,
+      memory,
+      'fakeVId',
+      [],
+      wfStr
+    )
   ).toEqual([
     {
       level: 0,
@@ -352,6 +396,8 @@ test('one section and three passages out of order', async () => {
       comment: 'salutation',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
     {
@@ -364,6 +410,8 @@ test('one section and three passages out of order', async () => {
       comment: 'introducing John',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa2' },
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
     {
@@ -376,6 +424,8 @@ test('one section and three passages out of order', async () => {
       comment: "John's call",
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa3' },
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
   ] as IWorkflow[]);
@@ -383,7 +433,7 @@ test('one section and three passages out of order', async () => {
 
 test('one flat section and with one passage gives output', async () => {
   expect(
-    getWorkflow('pl1', [s1], [pa1], true, false, memory, 'fakeVId')
+    getWorkflow('pl1', [s1], [pa1], true, false, memory, 'fakeVId', [], wfStr)
   ).toEqual([
     {
       level: 0,
@@ -400,6 +450,8 @@ test('one flat section and with one passage gives output', async () => {
       passageUpdated: '2021-09-15',
       transcriber: undefined,
       editor: undefined,
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
   ] as IWorkflow[]);
@@ -414,7 +466,9 @@ test('two flat sections and one from another plan gives output', async () => {
       true,
       false,
       memory,
-      'fakeVId'
+      'fakeVId',
+      [],
+      wfStr
     )
   ).toEqual([
     {
@@ -432,6 +486,8 @@ test('two flat sections and one from another plan gives output', async () => {
       passageUpdated: '2021-09-15',
       transcriber: undefined,
       editor: undefined,
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
     {
@@ -449,6 +505,8 @@ test('two flat sections and one from another plan gives output', async () => {
       passageUpdated: '2021-09-15',
       transcriber: undefined,
       editor: undefined,
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
   ] as IWorkflow[]);
@@ -463,7 +521,9 @@ test('two sections and passages with one from another plan', async () => {
       false,
       false,
       memory,
-      'fakeVId'
+      'fakeVId',
+      [],
+      wfStr
     )
   ).toEqual([
     {
@@ -488,6 +548,8 @@ test('two sections and passages with one from another plan', async () => {
       comment: 'salutation',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
     {
@@ -500,6 +562,8 @@ test('two sections and passages with one from another plan', async () => {
       comment: 'introducing John',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa2' },
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
     {
@@ -512,6 +576,8 @@ test('two sections and passages with one from another plan', async () => {
       comment: "John's call",
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa3' },
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
     {
@@ -536,6 +602,8 @@ test('two sections and passages with one from another plan', async () => {
       comment: 'Zechariah at the temple',
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa4' },
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
   ] as IWorkflow[]);
@@ -549,7 +617,9 @@ test('update one flat section to two flat section ignoring other plan', async ()
     true,
     false,
     memory,
-    'fakeVId'
+    'fakeVId',
+    [],
+    wfStr
   );
   expect(workflow).toEqual([
     {
@@ -567,6 +637,8 @@ test('update one flat section to two flat section ignoring other plan', async ()
       passageUpdated: '2021-09-15',
       transcriber: undefined,
       editor: undefined,
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
   ] as IWorkflow[]);
@@ -578,6 +650,8 @@ test('update one flat section to two flat section ignoring other plan', async ()
     false,
     memory,
     'fakeVId',
+    [],
+    wfStr,
     workflow
   );
   expect(updated).toEqual([
@@ -596,6 +670,8 @@ test('update one flat section to two flat section ignoring other plan', async ()
       passageUpdated: '2021-09-15',
       transcriber: undefined,
       editor: undefined,
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
     {
@@ -613,6 +689,8 @@ test('update one flat section to two flat section ignoring other plan', async ()
       passageUpdated: '2021-09-15',
       transcriber: undefined,
       editor: undefined,
+      mediaId: undefined,
+      mediaShared: 3,
       deleted: false,
     },
   ] as IWorkflow[]);

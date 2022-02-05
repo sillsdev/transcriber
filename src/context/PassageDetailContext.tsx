@@ -20,6 +20,7 @@ import {
   WorkflowStep,
   IWorkflowStepsStrings,
   IPassageDetailStepCompleteStrings,
+  StepComplete,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -36,6 +37,7 @@ import {
   AddPassageStateChangeToOps,
   getTool,
   ToolSlug,
+  getStepComplete,
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
@@ -54,6 +56,7 @@ import {
 } from '../components/PassageDetail/Internalization';
 import Confirm from '../components/AlertDialog';
 import Uploader from '../components/Uploader';
+import { getNextStep } from '../crud/getNextStep';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -132,12 +135,6 @@ interface SimpleWf {
   id: string;
   label: string;
 }
-interface StepComplete {
-  stepid: string;
-  complete: boolean;
-  name: string; //don't use for querying.  For our readability only
-}
-
 const initState = {
   passage: {} as Passage,
   section: {} as Section,
@@ -584,11 +581,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       const passageId = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
       var p = passages.find((p) => p.id === passageId);
       if (p) {
-        var complete = [] as StepComplete[];
-        if (p.attributes.stepComplete) {
-          var tmp = JSON.parse(p.attributes.stepComplete);
-          if (tmp) complete = tmp.completed;
-        }
+        const complete = getStepComplete(p);
         var s = sections.find((s) => s.id === related(p, 'section'));
         if (s) {
           if (p.id !== state.passage.id || s.id !== state.section.id) {
@@ -762,17 +755,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
 
     useEffect(() => {
       if (state.currentstep === '' && state.orgWorkflowSteps.length > 0) {
-        let nextIndex = 0;
-        let completeLen = state.psgCompleted.length;
-        for (let w of state.orgWorkflowSteps) {
-          const pcItem =
-            nextIndex < completeLen ? state.psgCompleted[nextIndex] : undefined;
-          const id = w.keys?.remoteId || w.id;
-          if (id === pcItem?.stepid && pcItem?.complete) {
-            nextIndex += 1;
-          } else break;
-        }
-        const next = state.orgWorkflowSteps[nextIndex].id;
+        const next = getNextStep(state);
         if (state.currentstep !== next) {
           setCurrentStep(next);
         }

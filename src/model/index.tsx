@@ -50,3 +50,4 @@ export * from './comment';
 export * from './resource';
 export * from './sectionResource';
 export * from './sectionResourceUser';
+export * from './stepComplete';
