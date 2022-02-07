@@ -16,7 +16,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from '../AlertDialog';
 import BookSelect from '../BookSelect';
-import { ProjButtons, LastEdit } from '../../control';
+import { ProjButtons, LastEdit, StageReport } from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
 import { refMatch } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
@@ -26,11 +26,12 @@ import TaskAvatar from '../TaskAvatar';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
 import Auth from '../../auth/Auth';
-import { TranscriberIcon, EditorIcon } from '../RoleIcons';
 import PlanActionMenu from './PlanActionMenu';
 import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
 import PlanAudioActions from './PlanAudioActions';
 import { HotKeyContext } from '../../context/HotKeyContext';
+
+const MemoizedTaskAvatar = React.memo(TaskAvatar);
 
 const DOWN_ARROW = 'ARROWDOWN';
 
@@ -466,8 +467,6 @@ export function PlanSheet(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [changed]);
 
-  const MemoizedTaskAvatar = React.memo(TaskAvatar);
-
   const refErrTest = (ref: any) => typeof ref !== 'string' || !refMatch(ref);
 
   useEffect(() => {
@@ -479,15 +478,15 @@ export function PlanSheet(props: IProps) {
       let data = [
         [
           {
-            value: <EditorIcon />,
+            value: t.step,
             readOnly: true,
           } as ICell,
           {
-            value: <TranscriberIcon />,
+            value: t.assigned,
             readOnly: true,
           } as ICell,
           {
-            value: t.audio,
+            value: t.action,
             readOnly: true,
             width: projRole === RoleNames.Admin ? 50 : 20,
           } as ICell,
@@ -503,9 +502,10 @@ export function PlanSheet(props: IProps) {
           return [
             {
               value: (
-                <MemoizedTaskAvatar
-                  assigned={rowInfo[rowIndex].editor?.id || ''}
-                />
+                <StageReport step={rowInfo[rowIndex].step || ''} />
+                // <MemoizedTaskAvatar
+                //   assigned={rowInfo[rowIndex].editor?.id || ''}
+                // />
               ),
               readOnly: true,
               className: section ? 'set' + (passage ? 'p' : '') : 'pass',
@@ -593,12 +593,14 @@ export function PlanSheet(props: IProps) {
                     rowIndex={rowIndex}
                     isSection={section}
                     isPassage={passage}
+                    readonly={readonly}
+                    online={connected || offlineOnly}
                     mediaId={rowInfo[rowIndex].mediaId?.id}
                     mediaShared={rowInfo[rowIndex].mediaShared}
                     onDelete={handleConfirmDelete}
                     onTranscribe={handleTranscribe}
+                    onPlayStatus={handlePlayStatus}
                     onAudacity={handleAudacity}
-                    readonly={readonly}
                     canAssign={projRole === RoleNames.Admin}
                     canDelete={projRole === RoleNames.Admin}
                     active={active - 1 === rowIndex}

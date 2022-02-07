@@ -1,7 +1,18 @@
-import { IWorkflow, IwfKind, Section, Passage, IMediaShare } from '../../model';
+import {
+  IWorkflow,
+  IwfKind,
+  Section,
+  Passage,
+  IMediaShare,
+  OrgWorkflowStep,
+  IWorkflowStepsStrings,
+} from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
 import { getVernacularMediaRec, getMediaShared } from '../../crud/media';
+import { getNextStep } from '../../crud/getNextStep';
+import { getStepComplete } from '../../crud';
+import { toCamel } from '../../utils';
 
 const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -89,6 +100,8 @@ export const getWorkflow = (
   projectShared: boolean,
   memory: Memory,
   vernacularId: string,
+  orgWorkflowSteps: OrgWorkflowStep[],
+  wfStr: IWorkflowStepsStrings,
   current?: IWorkflow[]
 ) => {
   const myWork = current || Array<IWorkflow>();
@@ -154,6 +167,15 @@ export const getWorkflow = (
           ? getMediaShared(passage.id, memory)
           : IMediaShare.NotPublic;
         item.deleted = false;
+        const stepId = getNextStep({
+          psgCompleted: getStepComplete(passage),
+          orgWorkflowSteps,
+        });
+        const stepRec = orgWorkflowSteps.find((s) => s.id === stepId);
+        if (stepRec)
+          item.step =
+            wfStr.getString(toCamel(stepRec.attributes.name)) ||
+            stepRec.attributes.name;
       }
       //console.log(`item ${JSON.stringify(item, null, 2)}`);
       wfPassageAdd(myWork, item, sectionIndex);

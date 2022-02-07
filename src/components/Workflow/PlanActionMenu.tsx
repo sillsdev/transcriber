@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
+import { useGlobal } from 'reactn';
 import {
   ISharedStrings,
   IPlanActionsStrings,
@@ -20,6 +21,8 @@ import MoreIcon from '@material-ui/icons/MoreHoriz';
 import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import TranscribeIcon from '../../control/TranscribeIcon';
+import AddIcon from '@material-ui/icons/LibraryAddOutlined';
+import MicIcon from '@material-ui/icons/Mic';
 import { elemOffset } from '../../utils';
 import { isElectron } from '../../api-variable';
 import { AudacityLogo } from '../../control';
@@ -58,6 +61,9 @@ interface IProps extends IStateProps {
   canDelete: boolean;
   active: boolean;
   onTranscribe: (i: number) => () => void;
+  onPlayStatus: (mediaId: string) => void;
+  onRecord: (i: number) => () => void;
+  onUpload: (i: number) => () => void;
   onAudacity: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
@@ -65,12 +71,17 @@ interface IProps extends IStateProps {
 export function PlanActionMenu(props: IProps) {
   const {
     t,
+    ts,
+    online,
     rowIndex,
     isSection,
     isPassage,
     mediaId,
     readonly,
     onTranscribe,
+    onPlayStatus,
+    onRecord,
+    onUpload,
     onAudacity,
     onAssign,
     onDelete,
@@ -79,12 +90,18 @@ export function PlanActionMenu(props: IProps) {
     active,
   } = props;
   const classes = useStyles();
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [open, setOpen] = React.useState(false);
   const [hover, setHover] = React.useState(false);
   const top = React.useRef<number>(0);
   const height = React.useRef<number>(0);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const menuRef = React.useRef<HTMLDivElement>(null);
+
+  const handleRecord = (index: number) => () => {
+    onPlayStatus('');
+    onRecord(index);
+  };
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -211,6 +228,30 @@ export function PlanActionMenu(props: IProps) {
                         disabled={(mediaId || '') === ''}
                       >
                         <TranscribeIcon />
+                      </MenuItem>
+                    )}
+                    {isPassage &&
+                      !readonly &&
+                      online && ( //online here is really connected or offlineOnly
+                        <MenuItem
+                          id="planActUpload"
+                          onClick={onUpload(rowIndex)}
+                          title={
+                            !offlineOnly
+                              ? ts.uploadMediaSingular
+                              : ts.importMediaSingular
+                          }
+                        >
+                          <AddIcon className={classes.action} />
+                        </MenuItem>
+                      )}
+                    {isPassage && !readonly && (
+                      <MenuItem
+                        id="planActRec"
+                        onClick={handleRecord(rowIndex)}
+                        title={t.recordAudio}
+                      >
+                        <MicIcon className={classes.action} />
                       </MenuItem>
                     )}
                     {isElectron && isPassage && !readonly && (

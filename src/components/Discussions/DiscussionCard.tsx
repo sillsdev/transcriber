@@ -10,7 +10,6 @@ import {
   IconButton,
   TextField,
   Typography,
-  useTheme,
 } from '@material-ui/core';
 import Confirm from '../AlertDialog';
 import {
@@ -50,10 +49,10 @@ import {
   UpdateRecord,
   UpdateRelatedRecord,
 } from '../../model/baseModel';
-import { Stage } from '../../control/Stage';
 import { useArtifactCategory } from '../../crud/useArtifactCategory';
 import SelectRole from '../../control/SelectRole';
 import SelectUser from '../../control/SelectUser';
+import { StageReport } from '../../control';
 import SelectArtifactCategory from '../Workflow/SelectArtifactCategory';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { removeExtension, waitForIt } from '../../utils';
@@ -97,14 +96,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-    },
-    step: {
-      display: 'flex',
-      flexDirection: 'column',
-      '& svg': {
-        height: '20px',
-        width: '120px',
-      },
     },
     ref: {
       overflow: 'hidden',
@@ -259,7 +250,6 @@ export const DiscussionCard = (props: IProps) => {
   const [editCard, setEditCard] = useState(false);
   const { localizedArtifactCategory } = useArtifactCategory();
   const { localizedWorkStepFromId } = useOrgWorkflowSteps();
-  const theme = useTheme();
 
   const myId = useMemo(() => {
     if (discussion.id) return discussion.id;
@@ -756,11 +746,7 @@ export const DiscussionCard = (props: IProps) => {
                 label={t.category.replace('{0}', artifactCategory)}
               />
             )}
-            {step && (
-              <div className={classes.step}>
-                <Stage id="" label={step} color={theme.palette.grey[300]} />
-              </div>
-            )}
+            {step && <StageReport step={step} />}
             {reference && (
               <Typography variant="body2" component="p" className={classes.ref}>
                 {reference}

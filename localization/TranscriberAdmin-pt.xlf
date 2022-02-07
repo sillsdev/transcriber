@@ -2947,7 +2947,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.audio">
+   	<unit id="planSheet.assigned">
+   		<segment>
+   			<source>Assigned</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="planSheet.audio">
          <segment>
             <source>Audio</source>
             <target/>
@@ -3019,7 +3025,13 @@
             <target>Por favor, selecione linha(s) para {0}.</target>
          </segment>
       </unit>
-      <unit id="planSheet.tablePaste">
+   	<unit id="planSheet.step">
+   		<segment>
+   			<source>Step</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="planSheet.tablePaste">
          <segment>
             <source>Paste Table</source>
             <target/>
@@ -3325,12 +3337,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="scriptureTable.action">
-         <segment>
-            <source>Action</source>
-            <target>Ação</target>
-         </segment>
-      </unit>
       <unit id="scriptureTable.book">
          <segment>
             <source>Book</source>
@@ -3343,7 +3349,13 @@
             <target>Descrição</target>
          </segment>
       </unit>
-      <unit id="scriptureTable.loadingTable">
+   	<unit id="scriptureTable.extras">
+   		<segment>
+   			<source>Extras</source>
+   			<target>Extras</target>
+   		</segment>
+   	</unit>
+   	<unit id="scriptureTable.loadingTable">
          <segment>
             <source>Loading data</source>
             <target>Carregando dados</target>

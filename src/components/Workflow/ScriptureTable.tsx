@@ -18,6 +18,9 @@ import {
   IWorkflow,
   IwfKind,
   IMediaShare,
+  WorkflowStep,
+  OrgWorkflowStep,
+  IWorkflowStepsStrings,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import * as actions from '../../store';
@@ -36,6 +39,7 @@ import {
   useOrganizedBy,
   usePlan,
 } from '../../crud';
+import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import {
   useRemoteSave,
   lookupBook,
@@ -102,6 +106,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: IScriptureTableStrings;
+  wfStr: IWorkflowStepsStrings;
   s: IPlanSheetStrings;
   ts: ISharedStrings;
   lang: string;
@@ -120,6 +125,8 @@ interface IRecordProps {
   passages: Array<Passage>;
   sections: Array<Section>;
   mediafiles: Array<MediaFile>;
+  workflowSteps: WorkflowStep[];
+  orgWorkflowSteps: OrgWorkflowStep[];
 }
 
 interface IProps
@@ -143,6 +150,7 @@ interface AudacityInfo {
 export function ScriptureTable(props: IProps) {
   const {
     t,
+    wfStr,
     s,
     ts,
     lang,
@@ -156,6 +164,8 @@ export function ScriptureTable(props: IProps) {
     passages,
     sections,
     mediafiles,
+    workflowSteps,
+    orgWorkflowSteps,
     auth,
   } = props;
   const classes = useStyles();
@@ -212,6 +222,9 @@ export function ScriptureTable(props: IProps) {
   const checkOnline = useCheckOnline(resetOrbitError);
   const { handleLaunch } = useExternalLink();
   const { vernacularId } = useArtifactType();
+  const getStepsBusy = useRef(false);
+  const [orgSteps, setOrgSteps] = useState<OrgWorkflowStep[]>([]);
+  const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
   const secNumCol = React.useMemo(() => {
     return colNames.indexOf('sectionSeq');
   }, [colNames]);
@@ -690,6 +703,20 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); //do this once to get the default;
 
+  useEffect(() => {
+    if (!getStepsBusy.current) {
+      getStepsBusy.current = true;
+
+      GetOrgWorkflowSteps({ process: 'ANY' }).then(
+        (orgsteps: OrgWorkflowStep[]) => {
+          setOrgSteps(orgsteps);
+          getStepsBusy.current = false;
+        }
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workflowSteps, orgWorkflowSteps]);
+
   // Save locally or online in batches
   useEffect(() => {
     let prevSave = '';
@@ -778,7 +805,9 @@ export function ScriptureTable(props: IProps) {
         flat,
         shared,
         memory,
-        vernacularId
+        vernacularId,
+        orgSteps,
+        wfStr
       );
       setWorkflow(newWorkflow);
       getLastModified(plan);
@@ -786,7 +815,7 @@ export function ScriptureTable(props: IProps) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plan, sections, passages, mediafiles, flat, shared]);
+  }, [plan, sections, passages, mediafiles, flat, shared, orgSteps]);
 
   interface ILocal {
     [key: string]: string;
@@ -802,7 +831,7 @@ export function ScriptureTable(props: IProps) {
       book: t.book,
       reference: t.reference,
       comment: t.description,
-      action: t.action,
+      action: t.extras,
     };
     const minWidth = {
       sectionSeq: 60,
@@ -938,6 +967,7 @@ export function ScriptureTable(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'scriptureTable' }),
+  wfStr: localStrings(state, { layout: 'workflowSteps' }),
   s: localStrings(state, { layout: 'planSheet' }),
   ts: localStrings(state, { layout: 'shared' }),
   lang: state.strings.lang,
@@ -961,6 +991,8 @@ const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  workflowSteps: (q: QueryBuilder) => q.findRecords('workflowsteps'),
+  orgWorkflowSteps: (q: QueryBuilder) => q.findRecords('orgworkflowsteps'),
 };
 
 export default withData(mapRecordsToProps)(
