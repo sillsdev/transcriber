@@ -352,7 +352,11 @@ export const DiscussionCard = (props: IProps) => {
         (s) => s.id === related(sectionRec, 'plan')
       ) as Plan;
       setReference(
-        `${planRec.attributes.name} ${sectionRec?.attributes.sequencenum}.${passageRec?.attributes.sequencenum} ${passageRec?.attributes.reference}`
+        `${planRec?.attributes?.name || ''} ${
+          sectionRec?.attributes?.sequencenum || ''
+        }.${passageRec?.attributes?.sequencenum || ''} ${
+          passageRec?.attributes?.reference || ''
+        }`
       );
     } else setReference('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
