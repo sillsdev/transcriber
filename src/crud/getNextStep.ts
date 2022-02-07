@@ -16,5 +16,6 @@ export const getNextStep = (state: IGetNextStepProps) => {
       nextIndex += 1;
     } else break;
   }
+  nextIndex = Math.min(nextIndex, state.orgWorkflowSteps.length - 1);
   return state.orgWorkflowSteps[nextIndex]?.id;
 };
