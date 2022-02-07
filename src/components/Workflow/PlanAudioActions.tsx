@@ -1,17 +1,9 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
-import {
-  ISharedStrings,
-  IPlanActionsStrings,
-  IState,
-  IMediaShare,
-} from '../../model';
+import { IPlanActionsStrings, IState, IMediaShare } from '../../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 //import AddIcon from '@material-ui/icons/AddCircleOutline';
-import AddIcon from '@material-ui/icons/LibraryAddOutlined';
 import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
 import PauseIcon from '@material-ui/icons/Pause';
-import MicIcon from '@material-ui/icons/Mic';
 import SharedCheckbox from '@material-ui/icons/CheckBoxOutlined';
 import NotSharedCheckbox from '@material-ui/icons/CheckBoxOutlineBlankOutlined';
 import VersionsIcon from '@material-ui/icons/List';
@@ -35,7 +27,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 interface IStateProps {
   t: IPlanActionsStrings;
-  ts: ISharedStrings;
 }
 interface IProps extends IStateProps {
   rowIndex: number;
@@ -50,8 +41,6 @@ interface IProps extends IStateProps {
   canDelete: boolean;
   onTranscribe: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
-  onUpload: (i: number) => () => void;
-  onRecord: (i: number) => () => void;
   onPlayStatus: (mediaId: string) => void;
   onDelete: (i: number) => () => void;
   onHistory: (i: number) => () => void;
@@ -61,29 +50,19 @@ interface IProps extends IStateProps {
 export function PlanAudioActions(props: IProps) {
   const {
     t,
-    ts,
     rowIndex,
     isPassage,
     mediaId,
     mediaShared,
-    online,
-    readonly,
-    onUpload,
-    onRecord,
     onPlayStatus,
     onHistory,
     isPlaying,
     onPassageDetail,
   } = props;
   const classes = useStyles();
-  const [offlineOnly] = useGlobal('offlineOnly');
 
   const handlePlayStatus = () => () => {
     onPlayStatus(mediaId);
-  };
-  const handleRecord = (index: number) => () => {
-    onPlayStatus('');
-    onRecord(index);
   };
 
   return (
@@ -107,30 +86,6 @@ export function PlanAudioActions(props: IProps) {
           ) : (
             <SharedCheckbox />
           )}
-        </IconButton>
-      )}
-      {isPassage &&
-        !readonly &&
-        online && ( //online here is really connected or offlineOnly
-          <IconButton
-            id="planAudUpload"
-            className={classes.actionButton}
-            onClick={onUpload(rowIndex)}
-            title={
-              !offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular
-            }
-          >
-            <AddIcon />
-          </IconButton>
-        )}
-      {isPassage && !readonly && (
-        <IconButton
-          id="planAudRec"
-          className={classes.actionButton}
-          onClick={handleRecord(rowIndex)}
-          title={t.recordAudio}
-        >
-          <MicIcon />
         </IconButton>
       )}
       {isPassage && (
@@ -158,6 +113,5 @@ export function PlanAudioActions(props: IProps) {
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'planActions' }),
-  ts: localStrings(state, { layout: 'shared' }),
 });
 export default connect(mapStateToProps)(PlanAudioActions) as any as any;

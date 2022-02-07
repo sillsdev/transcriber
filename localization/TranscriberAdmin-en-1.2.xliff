@@ -3729,6 +3729,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="planSheet.assigned">
+      		<source>Assigned</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="planSheet.audio">
             <source>Audio</source>
             <target/>
@@ -3813,6 +3820,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="planSheet.step">
+      		<source>Step</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="planSheet.tablePaste">
             <source>Paste Spreadsheet</source>
             <target/>
@@ -4170,13 +4184,6 @@
                <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="scriptureTable.action">
-            <source>Action</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ScriptureTable.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="scriptureTable.book">
             <source>Book</source>
             <target/>
@@ -4191,6 +4198,13 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="scriptureTable.extras">
+      		<source>Extras</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ScriptureTable.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="scriptureTable.installAudacity">
       		<source>Install {Audacity} to use this feature.</source>
       		<target/>

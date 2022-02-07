@@ -712,6 +712,7 @@ const initialState = {
 			"action": "Action",
 			"addPassage": "Add Passage",
 			"addSection": "Add {0}",
+			"assigned": "Assigned",
 			"audio": "Audio",
 			"bookSelect": "Select Book...",
 			"confirm": "{0} {1} Item(s). Are you sure?",
@@ -724,6 +725,7 @@ const initialState = {
 			"saving": "Saving...",
 			"sectionAbove": "Insert {0} above",
 			"selectRows": "Please select row(s) to {0}.",
+			"step": "Step",
 			"tablePaste": "Paste Spreadsheet",
 			"useCtrlV": "Select a column head and use CTRL-V to append table rows.",
 		}
@@ -795,9 +797,9 @@ const initialState = {
 	}),
 	"scriptureTable": new LocalizedStrings({
 		"en": {
-			"action": "Action",
 			"book": "Book",
 			"description": "Description",
+			"extras": "Extras",
 			"installAudacity": "Install {Audacity} to use this feature.",
 			"loadingTable": "Loading data",
 			"passage": "Passage",

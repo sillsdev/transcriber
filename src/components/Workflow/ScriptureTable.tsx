@@ -831,7 +831,7 @@ export function ScriptureTable(props: IProps) {
       book: t.book,
       reference: t.reference,
       comment: t.description,
-      action: t.action,
+      action: t.extras,
     };
     const minWidth = {
       sectionSeq: 60,

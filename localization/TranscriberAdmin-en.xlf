@@ -3196,6 +3196,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.assigned">
+         <segment>
+            <source>Assigned</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.audio">
          <segment>
             <source>Audio</source>
@@ -3265,6 +3271,12 @@
       <unit id="planSheet.selectRows">
          <segment>
             <source>Please select row(s) to {0}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.step">
+         <segment>
+            <source>Step</source>
             <target/>
          </segment>
       </unit>
@@ -3574,12 +3586,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="scriptureTable.action">
-         <segment>
-            <source>Action</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="scriptureTable.book">
          <segment>
             <source>Book</source>
@@ -3589,6 +3595,12 @@
       <unit id="scriptureTable.description">
          <segment>
             <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.extras">
+         <segment>
+            <source>Extras</source>
             <target/>
          </segment>
       </unit>

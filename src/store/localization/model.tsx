@@ -663,6 +663,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "addPassage": string;
     "addSection": string;
+    "assigned": string;
     "audio": string;
     "bookSelect": string;
     "confirm": string;
@@ -675,6 +676,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "saving": string;
     "sectionAbove": string;
     "selectRows": string;
+    "step": string;
     "tablePaste": string;
     "useCtrlV": string;
 };
@@ -741,9 +743,9 @@ export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethod
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
-    "action": string;
     "book": string;
     "description": string;
+    "extras": string;
     "installAudacity": string;
     "loadingTable": string;
     "passage": string;
