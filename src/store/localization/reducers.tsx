@@ -953,6 +953,11 @@ const initialState = {
 			"paratext": "Paratext",
 		}
 	}),
+	"transcribe": new LocalizedStrings({
+		"en": {
+			"switchToTranscriber": "Switch to Transcriber",
+		}
+	}),
 	"transcribeAddNote": new LocalizedStrings({
 		"en": {
 			"addNoteTitle": "Add Note",
@@ -963,6 +968,7 @@ const initialState = {
 	"transcriber": new LocalizedStrings({
 		"en": {
 			"addNote": "Add Note",
+			"backToWorkflow": "Back to Workflow",
 			"comment": "Comment",
 			"congratulation": "Congratulations",
 			"done": "Completed",
@@ -1285,6 +1291,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"template" : new LocalizedStrings(action.payload.data.template),
 				"toDoTable" : new LocalizedStrings(action.payload.data.toDoTable),
 				"tool" : new LocalizedStrings(action.payload.data.tool),
+				"transcribe" : new LocalizedStrings(action.payload.data.transcribe),
 				"transcribeAddNote" : new LocalizedStrings(action.payload.data.transcribeAddNote),
 				"transcriber" : new LocalizedStrings(action.payload.data.transcriber),
 				"transcribeReject" : new LocalizedStrings(action.payload.data.transcribeReject),

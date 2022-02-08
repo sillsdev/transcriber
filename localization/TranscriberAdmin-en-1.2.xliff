@@ -5011,6 +5011,13 @@
       			<context context-type="sourcefile">useTools.ts</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="transcribe.switchToTranscriber">
+      		<source>Switch to Transcriber</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">transcribeAddNote.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="transcribeAddNote.addNoteTitle">
             <source>Add Note</source>
             <target/>
@@ -5039,7 +5046,14 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriber.comment">
+      	<trans-unit id="transcriber.backToWorkflow">
+      		<source>Back to Workflow</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Transcriber.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="transcriber.comment">
             <source>Comment</source>
             <target/>
             <context-group>
