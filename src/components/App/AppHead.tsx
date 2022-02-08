@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'reactn';
 import clsx from 'clsx';
 import { Redirect, useLocation } from 'react-router-dom';
@@ -74,7 +74,7 @@ interface INameProps {
 }
 
 const ProjectName = ({ setView }: INameProps) => {
-  const ctx = React.useContext(UnsavedContext);
+  const ctx = useContext(UnsavedContext);
   const { checkSavedFn } = ctx.state;
   const { getPlanName } = usePlan();
   const [, setProject] = useGlobal('project');
@@ -131,8 +131,8 @@ export const AppHead = (props: IProps) => {
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [connected] = useGlobal('connected');
-  const ctx = React.useContext(UnsavedContext);
-  const { checkSavedFn } = ctx.state;
+  const ctx = useContext(UnsavedContext);
+  const { checkSavedFn, startSave, toolsChanged, anySaving } = ctx.state;
   const [view, setView] = useState('');
   const [busy] = useGlobal('remoteBusy');
   const [dataChangeCount] = useGlobal('dataChangeCount');
@@ -141,7 +141,6 @@ export const AppHead = (props: IProps) => {
   const [isChanged] = useGlobal('changed');
   const [lang] = useGlobal('lang');
   const [exitAlert, setExitAlert] = React.useState(false);
-  const [doSave, setDoSave] = useGlobal('doSave');
   const isMounted = useMounted('apphead');
   const [version, setVersion] = useState('');
   const [updates] = useState(
@@ -153,6 +152,9 @@ export const AppHead = (props: IProps) => {
   const [downloadAlert, setDownloadAlert] = React.useState(false);
   const [updateTipOpen, setUpdateTipOpen] = useState(false);
   const [showTerms, setShowTerms] = useState('');
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const saving = useMemo(() => anySaving(), [toolsChanged]);
   const { showMessage } = useSnackBar();
 
   const handleUserMenuAction = (
@@ -249,9 +251,9 @@ export const AppHead = (props: IProps) => {
         if (isMounted()) {
           setDownloadAlert(true);
         }
-      } else if (!doSave) setDoSave(true);
+      } else startSave();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exitAlert, isChanged, doSave]);
+  }, [exitAlert, isChanged]);
 
   useEffect(() => {
     isMounted() && setVersion(require('../../../package.json').version);
@@ -328,7 +330,7 @@ export const AppHead = (props: IProps) => {
             <LinearProgress id="prog" variant="determinate" value={complete} />
           </div>
         )}
-        {(!busy && !doSave && !dataChangeCount) || complete !== 0 || (
+        {(!busy && !saving && !dataChangeCount) || complete !== 0 || (
           <LinearProgress id="busy" variant="indeterminate" />
         )}
         <Toolbar>

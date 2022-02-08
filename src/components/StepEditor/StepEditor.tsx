@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   IStepEditorStrings,
   IState,
@@ -14,10 +14,11 @@ import { StepItem, StepList } from '.';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { CheckedChoice as ShowAll } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
-import { toCamel, useRemoteSave } from '../../utils';
+import { toCamel } from '../../utils';
 import { getTool, related, ToolSlug, useTools } from '../../crud';
 import { AddRecord } from '../../model/baseModel';
 import { useSnackBar } from '../../hoc/SnackBar';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles({
   row: {
@@ -56,16 +57,16 @@ export const StepEditor = ({ process, org }: IProps) => {
   const se: IStepEditorStrings = useSelector(stepEditorSelector, shallowEqual);
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [changed, setChanged] = useGlobal('changed');
-  const [doSave] = useGlobal('doSave');
-  const [, saveCompleted] = useRemoteSave();
+  const { toolChanged, toolsChanged, saveRequested, saveCompleted } =
+    useContext(UnsavedContext).state;
   const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
   const { mapTool } = useTools();
   const [refresh, setRefresh] = useState(0);
   const { showMessage } = useSnackBar();
   const changeList = useRef(new Set<string>());
   const adding = useRef(false);
-
+  const saving = useRef(false);
+  const toolId = 'stepEditor';
   const handleSortEnd = ({ oldIndex, newIndex }: SortEndProps) => {
     const newRows = arrayMove(rows, oldIndex, newIndex);
     newRows
@@ -83,7 +84,7 @@ export const StepEditor = ({ process, org }: IProps) => {
 
   const handleNameChange = async (id: string, name: string) => {
     setRows(rows.map((r) => (r.id === id ? { ...r, name } : r)));
-    if (!changed) setChanged(true);
+    toolChanged(toolId, true);
     changeList.current.add(id);
   };
 
@@ -109,7 +110,9 @@ export const StepEditor = ({ process, org }: IProps) => {
   };
 
   const saveRecs = async () => {
-    if (changed) showMessage(se.saving);
+    if (saving.current) return;
+    saving.current = true;
+    showMessage(se.saving);
     let orgNames = new Set<string>();
     for (const id of Array.from(changeList.current)) {
       const row = rows.find((r) => r.id === id);
@@ -131,12 +134,13 @@ export const StepEditor = ({ process, org }: IProps) => {
         }
       }
     }
+    saving.current = false;
   };
 
   useEffect(() => {
-    saveRecs().then(() => saveCompleted(''));
+    if (saveRequested(toolId)) saveRecs().then(() => saveCompleted(toolId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave]);
+  }, [toolsChanged]);
 
   const handleToolChange = async (id: string, tool: string) => {
     const recId = { type: 'orgworkflowstep', id };

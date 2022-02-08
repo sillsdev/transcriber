@@ -24,7 +24,6 @@ export * from './toCamel';
 export * from './uiLang';
 export * from './updateXml';
 export * from './useInterval';
-export * from './useRemoteSave';
 export * from './validateEmail';
 export * from './waitForIt';
 export * from './lookupBook';

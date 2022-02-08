@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { Grid, Paper, Typography, Button } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { TeamContext } from '../../context/TeamContext';
 import BigDialog from '../../hoc/BigDialog';
-import { useRemoteSave } from '../../utils';
 import { ProjectCard, AddCard } from '.';
 import { StepEditor } from '../StepEditor';
 import { useNewTeamId } from '../../crud';
 import Auth from '../../auth/Auth';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,7 +53,7 @@ export const PersonalItem = (props: IProps) => {
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [changed] = useGlobal('changed');
-  const [startSave, , waitForSave] = useRemoteSave();
+  const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [showWorkflow, setShowWorkflow] = useState(false);
   const [org, setOrg] = useState('');
   const getTeamId = useNewTeamId({ ...props, ts, resetOrbitError });

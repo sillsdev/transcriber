@@ -970,6 +970,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionList.saveFirst">
+         <segment>
+            <source>Save changed discussions and comments first?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionList.title">
          <segment>
             <source>Discussions</source>
@@ -4255,6 +4261,12 @@
       <unit id="tool.teamCheck">
          <segment>
             <source>Team Check</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.community">
+         <segment>
+            <source>Community Testing</source>
             <target/>
          </segment>
       </unit>

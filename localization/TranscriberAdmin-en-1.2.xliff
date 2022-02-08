@@ -1128,14 +1128,21 @@
       		<source>{0} / {1} discussions</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">DeleteExpansion.tsx</context>
+      			<context context-type="sourcefile">discussionList.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="discussionList.saveFirst">
+            <source>Save changed discussions and comments first?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">discussionList.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="discussionList.title">
             <source>Discussions</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">DeleteExpansion.tsx</context>
+               <context context-type="sourcefile">discussionList.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="electronImport.allDataOverwritten">
@@ -4964,6 +4971,13 @@
       	</trans-unit>
       	<trans-unit id="tool.teamCheck">
       		<source>Team Check</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="tool.community">
+      		<source>Community Testing</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">useTools.ts</context>

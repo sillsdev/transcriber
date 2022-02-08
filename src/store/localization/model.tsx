@@ -220,6 +220,7 @@ export interface IDiscussionListStrings extends Localize.LocalizedStringsMethods
     "collapse": string;
     "discussionFilter": string;
     "filterStatus": string;
+    "saveFirst": string;
     "title": string;
 };
 
@@ -882,6 +883,7 @@ export interface IToolStrings extends Localize.LocalizedStringsMethods {
     "resource": string;
     "record": string;
     "teamCheck": string;
+    "community": string;
     "discuss": string;
     "transcribe": string;
     "segment": string;

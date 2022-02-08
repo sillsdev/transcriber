@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import QueryBuilder from '@orbit/data/dist/types/query-builder';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { getMediaInPlans, related, useArtifactType, useRole } from '../../crud';
@@ -30,6 +30,9 @@ import { useGlobal } from 'reactn';
 import { useDiscussionOrg } from '../../crud';
 import FilterMenu, { IFilterState } from './FilterMenu';
 import Auth from '../../auth/Auth';
+import Confirm from '../AlertDialog';
+import { waitForIt } from '../../utils';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,10 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
     actionButton: {
       color: theme.palette.primary.light,
     },
-    cardFlow: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
+    cardFlow: { paddingLeft: theme.spacing(1) },
   })
 );
 interface IStateProps {
@@ -72,6 +72,7 @@ interface IRecordProps {
 interface IProps extends IStateProps, IRecordProps {
   auth: Auth;
 }
+export const NewDiscussionToolId = 'newDiscussion';
 
 export function DiscussionList(props: IProps) {
   const { t, auth, discussions, mediafiles } = props;
@@ -89,10 +90,11 @@ export function DiscussionList(props: IProps) {
   const ctx = useContext(PassageDetailContext);
   const { currentstep, rowData, discussionSize, passage, getSegments } =
     ctx.state;
+  const { toolsChanged } = useContext(UnsavedContext).state;
   const { getRoleRec } = useRole();
   const { vernacularId } = useArtifactType();
   const [rootWidthStyle, setRootWidthStyle] = useState({
-    width: `${discussionSize}px`,
+    width: `${discussionSize - 25}px`, //leave room for scroll bar
   });
   const [filterState, setFilterState] = useState<IFilterState>({
     forYou: false,
@@ -105,7 +107,17 @@ export function DiscussionList(props: IProps) {
     filterState;
   const [catFilter, setCatFilter] = useState<CatData[]>([]);
   const [catSelect, setCatSelect] = useState<string[]>([]);
+  const [confirmAction, setConfirmAction] = useState<string>('');
+  const [startSave, setStartSave] = useState(false);
+  const [clearSave, setClearSave] = useState(false);
   const discussionOrg = useDiscussionOrg();
+  const anyChangedRef = useRef(false);
+  const enum WaitSave {
+    add = 'add',
+    collapse = 'collapse',
+    category = 'category',
+    filter = 'filter:',
+  }
 
   // All passages is currently giving all passages in all projects.
   // we would need this if we only wanted the passages of this project.
@@ -153,7 +165,7 @@ export function DiscussionList(props: IProps) {
 
   useEffect(() => {
     setRootWidthStyle({
-      width: `${discussionSize}px`,
+      width: `${discussionSize - 25}px`,
     });
   }, [discussionSize]);
 
@@ -200,24 +212,82 @@ export function DiscussionList(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentstep]);
 
+  const doTheThing = () => {
+    switch (confirmAction) {
+      case WaitSave.add:
+        setAdding(true);
+        break;
+      case WaitSave.collapse:
+        setCollapsed(true);
+        break;
+      case WaitSave.category:
+        setCategoryOpen(true);
+        break;
+    }
+    if (confirmAction.startsWith(WaitSave.filter)) {
+      var what = confirmAction.substring(WaitSave.filter.length);
+      setFilterState({ ...filterState, [what]: !filterState[what] });
+    }
+    setConfirmAction('');
+  };
+
+  const waitSaveOrClear = () => {
+    waitForIt(
+      'discussions all saved',
+      () => !anyChangedRef.current,
+      () => false,
+      300
+    ).then(() => {
+      setStartSave(false);
+      setClearSave(false);
+      doTheThing();
+    });
+  };
+  const handleSaveFirstConfirmed = () => {
+    setStartSave(true);
+    waitSaveOrClear();
+  };
+
+  const handleSaveFirstRefused = () => {
+    setClearSave(true);
+    waitSaveOrClear();
+  };
+
+  useEffect(() => {
+    var myIds = displayDiscussions.map((d) => d.id);
+    myIds.push(NewDiscussionToolId);
+    anyChangedRef.current = Object.keys(toolsChanged).some((t) =>
+      myIds.includes(t)
+    );
+  }, [toolsChanged, displayDiscussions]);
+
+  const checkChanged = (whatNext: string) => {
+    if (anyChangedRef.current) {
+      setConfirmAction(whatNext);
+      return true;
+    }
+    return false;
+  };
+
   const handleAddComplete = () => {
     setAdding(false);
   };
 
   const handleAddDiscussion = async () => {
-    setAdding(true);
+    if (!checkChanged(WaitSave.add)) setAdding(true);
   };
 
   const handleToggleCollapse = () => {
-    setCollapsed(!collapsed);
+    if (collapsed || !checkChanged(WaitSave.collapse)) setCollapsed(!collapsed);
   };
 
   const handleFilterAction = (what: string) => {
     if (what === 'Close') {
     } else if (Object.keys(filterState).includes(what)) {
-      setFilterState({ ...filterState, [what]: !filterState[what] });
+      if (!checkChanged(WaitSave.filter + what))
+        setFilterState({ ...filterState, [what]: !filterState[what] });
     } else {
-      setCategoryOpen(true);
+      if (!checkChanged(WaitSave.category)) setCategoryOpen(true);
     }
   };
 
@@ -284,6 +354,8 @@ export function DiscussionList(props: IProps) {
             onAddComplete={adding ? handleAddComplete : undefined}
             showStep={allSteps}
             showReference={allPassages}
+            startSave={startSave}
+            clearSave={clearSave}
           />
         ))}
       </Grid>
@@ -294,6 +366,14 @@ export function DiscussionList(props: IProps) {
       >
         <CategoryList catFilter={catFilter} onCatFilter={handleCatFilter} />
       </BigDialog>
+      {confirmAction === '' || (
+        <Confirm
+          jsx={<span></span>}
+          text={t.saveFirst}
+          yesResponse={handleSaveFirstConfirmed}
+          noResponse={handleSaveFirstRefused}
+        />
+      )}
     </Paper>
   );
 }

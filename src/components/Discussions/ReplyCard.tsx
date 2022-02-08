@@ -2,7 +2,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { Discussion, MediaFile, User } from '../../model';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
-import { useEffect, useGlobal, useRef, useState, useContext } from 'reactn';
+import { useContext, useEffect, useRef, useState } from 'reactn';
 import { CommentEditor } from './CommentEditor';
 import * as actions from '../../store';
 import { useRecordComment } from './useRecordComment';
@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import Auth from '../../auth/Auth';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { useMounted } from '../../utils';
-import { PassageDetailContext } from '../../context/PassageDetailContext';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -79,14 +79,19 @@ export const ReplyCard = (props: IProps) => {
   const classes = useStyles();
   const [refresh, setRefresh] = useState(0);
   const isMounted = useMounted('replycard');
-  const { toolChanged, toolSaveCompleted } =
-    useContext(PassageDetailContext).state;
-  const myId = discussion.id + 'r';
+  const {
+    toolChanged,
+    saveCompleted,
+    toolsChanged,
+    saveRequested,
+    clearRequested,
+  } = useContext(UnsavedContext).state;
+  const myToolId = discussion.id + 'reply';
   const afterSavecb = () => {
     savingRef.current = false;
-    toolSaveCompleted(myId, '');
+    saveCompleted(myToolId);
     if (isMounted()) {
-      setMyChanged(false);
+      setChanged(false);
       setRefresh(refresh + 1);
     }
   };
@@ -110,51 +115,51 @@ export const ReplyCard = (props: IProps) => {
     uploadComplete,
     doOrbitError,
   });
-  const [doSave] = useGlobal('doSave');
   const savingRef = useRef(false);
   const [canSaveRecording, setCanSaveRecording] = useState(false);
-  const [myChanged, setMyChanged] = useState(false);
 
   const handleSaveEdit = () => {
     savingRef.current = true;
     //if we're recording and can save, the comment will save after upload
     if (!canSaveRecording) {
       if (commentText.current.length > 0) afterUploadcb('');
-      else toolSaveCompleted(myId, '');
+      else saveCompleted(myToolId);
     }
   };
   const handleCancelEdit = () => {
     setRefresh(refresh + 1);
     commentText.current = '';
-    toolSaveCompleted(myId, '');
+    toolChanged(myToolId, false);
   };
 
   useEffect(() => {
-    if (myChanged && doSave && !savingRef.current) {
+    if (saveRequested(myToolId) && !savingRef.current) {
       handleSaveEdit();
-    }
+    } else if (clearRequested(myToolId)) handleCancelEdit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave, myChanged]);
+  }, [toolsChanged]);
+
+  const setChanged = (changed: boolean) => {
+    const valid = commentText.current !== '' || canSaveRecording;
+    toolChanged(myToolId, changed && valid);
+  };
 
   const handleTextChange = (newText: string) => {
     commentText.current = newText;
-    if (!myChanged) {
-      setMyChanged(true);
-      const valid = newText !== '' || canSaveRecording;
-      if (valid) toolChanged(myId);
-    }
+    setChanged(true);
   };
 
   useEffect(() => {
-    if (canSaveRecording && !myChanged) {
-      setMyChanged(true);
-      toolChanged(myId);
+    if (canSaveRecording) {
+      setChanged(true);
     }
-  }, [canSaveRecording, myChanged, myId, toolChanged]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canSaveRecording]);
 
   return (
     <div className={classes.root}>
       <CommentEditor
+        toolId={myToolId}
         comment={commentText.current}
         refresh={refresh}
         onOk={handleSaveEdit}

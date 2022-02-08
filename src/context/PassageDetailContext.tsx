@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
@@ -41,7 +41,7 @@ import {
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
-import { loadBlob, logError, Severity, toCamel, useRemoteSave } from '../utils';
+import { loadBlob, logError, Severity, toCamel } from '../utils';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
@@ -57,6 +57,7 @@ import {
 import Confirm from '../components/AlertDialog';
 import Uploader from '../components/Uploader';
 import { getNextStep } from '../crud/getNextStep';
+import { UnsavedContext } from './UnsavedContext';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -185,9 +186,6 @@ const initState = {
   setPlayerSegments: (segments: string) => {},
   commentRecording: false,
   setCommentRecording: (commentRecording: boolean) => {},
-  toolsChanged: [] as string[],
-  toolChanged: (toolId: string, changed?: boolean, saveErr?: string) => {},
-  toolSaveCompleted: (toolId: string, saveErr: string) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -225,8 +223,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const remote = coordinator.getSource('remote') as JSONAPISource;
     const [user] = useGlobal('user');
     const [errorReporter] = useGlobal('errorReporter');
-    const [changed, setChanged] = useGlobal('changed');
-    const [startSave, saveCompleted, waitForSave] = useRemoteSave();
+    const [saveResult, setSaveResult] = useGlobal('saveResult');
     const [, setComplete] = useGlobal('progress');
     const cancelled = useRef(false);
     const [confirm, setConfirm] = useState('');
@@ -249,7 +246,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { localizedArtifactCategory } = useArtifactCategory();
     const { localizedWorkStep } = useOrgWorkflowSteps();
     const getStepsBusy = useRef<boolean>(false);
-    const saveErrRef = useRef('');
+    const [changed] = useGlobal('changed');
     const mediaStart = useRef<number | undefined>();
     const mediaEnd = useRef<number | undefined>();
     const mediaPosition = useRef<number | undefined>();
@@ -258,6 +255,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         return { ...state, orgWorkflowSteps: steps };
       });
     };
+    const { startSave, clearChanged, waitForSave } =
+      useContext(UnsavedContext).state;
 
     const handleSetCurrentStep = (stepId: string) => {
       var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
@@ -291,7 +290,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       }, 400);
     };
     const handleRefuseStep = () => {
-      saveCompleted('');
+      clearChanged();
       handleSetCurrentStep(confirm);
       setConfirm('');
     };
@@ -306,29 +305,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         return { ...state, playerSize };
       });
     };
-    const toolSaveCompleted = (toolId: string, saveErr: string) => {
-      toolChanged(toolId, false, saveErr);
-    };
-    const toolChanged = (
-      toolId: string,
-      changed: boolean = true,
-      saveErr: string = ''
-    ) => {
-      var toolsChanged = [...state.toolsChanged];
-      if (changed) toolsChanged.push(toolId);
-      else {
-        toolsChanged = toolsChanged.filter((c) => c !== toolId);
-        if (saveErr) saveErrRef.current = `${saveErr};${saveErrRef.current}`;
-      }
-      setState((state: ICtxState) => {
-        return { ...state, toolsChanged };
-      });
-      if (toolsChanged.length > 0) setChanged(true);
-      else {
-        saveCompleted(saveErrRef.current);
-        saveErrRef.current = '';
-      }
-    };
+
     const setCommentRecording = (commentRecording: boolean) => {
       setState((state: ICtxState) => {
         return { ...state, commentRecording };
@@ -686,6 +663,14 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mediaState.error]);
+    useEffect(() => {
+      if (saveResult) {
+        logError(Severity.error, errorReporter, saveResult);
+        showMessage(saveResult);
+        setSaveResult('');
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [saveResult]);
 
     useEffect(() => {
       const passageId = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
@@ -785,8 +770,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setupLocate,
             stepComplete,
             setStepComplete,
-            toolChanged,
-            toolSaveCompleted,
             setCommentRecording,
             setMediaSelected,
           },

@@ -59,6 +59,8 @@ import { removeExtension, waitForIt } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import Auth from '../../auth/Auth';
+import { NewDiscussionToolId } from './DiscussionList';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -216,11 +218,17 @@ export const DiscussionCard = (props: IProps) => {
     mediafileId,
     mediaPlaying,
     setPlayerSegments,
-    toolChanged,
-    toolSaveCompleted,
+
     setMediaSelected,
     getSegments,
   } = ctx.state;
+  const {
+    toolChanged,
+    toolsChanged,
+    saveCompleted,
+    saveRequested,
+    clearRequested,
+  } = useContext(UnsavedContext).state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
@@ -239,7 +247,6 @@ export const DiscussionCard = (props: IProps) => {
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [myChanged, setMyChanged] = useState(false);
-  const [doSave] = useGlobal('doSave');
   const savingRef = useRef(false);
   const [editSubject, setEditSubject] = useState(
     discussion.attributes?.subject
@@ -251,9 +258,9 @@ export const DiscussionCard = (props: IProps) => {
   const { localizedArtifactCategory } = useArtifactCategory();
   const { localizedWorkStepFromId } = useOrgWorkflowSteps();
 
-  const myId = useMemo(() => {
+  const myToolId = useMemo(() => {
     if (discussion.id) return discussion.id;
-    else return 'newDiscussion';
+    else return NewDiscussionToolId;
   }, [discussion]);
 
   const handleSelect = (discussion: Discussion) => () => {
@@ -263,6 +270,16 @@ export const DiscussionCard = (props: IProps) => {
   const handleEditCard = (val: boolean) => {
     if (val !== editCard) setEditCard(val);
   };
+  useEffect(() => {
+    //if any of my comments are changed, add the discussion to the toolChanged list so DiscussionList will pick it up
+    if (!myChanged) {
+      var myIds = myComments.map((d) => d.id);
+      myIds.push(discussion.id + 'reply');
+      var anyChanged = Object.keys(toolsChanged).some((t) => myIds.includes(t));
+      toolChanged(myToolId, anyChanged);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toolsChanged, myComments, myChanged]);
 
   useEffect(() => {
     if (comments)
@@ -446,12 +463,13 @@ export const DiscussionCard = (props: IProps) => {
       handleReset();
       setEditing(onAddComplete !== undefined);
     }
-    if (Boolean(onAddComplete) && Boolean(discussion.attributes?.subject)) {
-      setMyChanged(true);
+    if (Boolean(discussion.attributes?.subject) && !Boolean(discussion.id)) {
+      //I'm adding but I have a subject already (target segment) so mark as changed
+      setChanged(true);
     }
     setEditSubject(discussion.attributes?.subject);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentstep, onAddComplete]);
+  }, [currentstep, discussion.id]);
 
   const handleDelete = () => {
     var ops: Operation[] = [];
@@ -486,31 +504,39 @@ export const DiscussionCard = (props: IProps) => {
   const handleToggleCollapse = () => {
     setShowComments(!showComments);
   };
+  const setChanged = (changed: boolean) => {
+    if (changed && !myChanged) {
+      toolChanged(myToolId);
+      setMyChanged(true);
+    } else if (!changed && myChanged) {
+      saveCompleted(myToolId);
+      setMyChanged(false);
+    }
+  };
   const handleSubjectChange = (e: any) => {
     if (e.target.value !== editSubject) {
       setEditSubject(e.target.value);
-      if (!myChanged) toolChanged(myId);
-      setMyChanged(true);
+      setChanged(true);
     }
   };
   const handleRoleChange = (e: string) => {
     if (e !== editRole) {
       setEditRole(e);
       setEditUser('');
-      setMyChanged(true);
+      setChanged(true);
     }
   };
   const handleUserChange = (e: string) => {
     if (e !== editUser) {
       setEditUser(e);
       setEditRole('');
-      setMyChanged(true);
+      setChanged(true);
     }
   };
   const onCategoryChange = (cat: string) => {
     if (cat !== editCategory) {
       setEditCategory(cat);
-      setMyChanged(true);
+      setChanged(true);
     }
   };
   const handleSave = async () => {
@@ -518,7 +544,7 @@ export const DiscussionCard = (props: IProps) => {
       discussion.attributes.subject = editSubject;
       var ops: Operation[] = [];
       var t = new TransformBuilder();
-      if (onAddComplete) {
+      if (!discussion.id) {
         ops.push(...AddRecord(t, discussion, user, memory));
         ops.push(
           ...UpdateRelatedRecord(
@@ -557,15 +583,13 @@ export const DiscussionCard = (props: IProps) => {
     }
     onAddComplete && onAddComplete();
     setEditing(false);
-    setMyChanged(false);
-    toolSaveCompleted(myId, '');
+    setChanged(false);
   };
 
   const handleCancel = (e: any) => {
     onAddComplete && onAddComplete();
     setEditing(false);
-    setMyChanged(false);
-    toolSaveCompleted(myId, '');
+    setChanged(false);
   };
 
   const version = useMemo(() => {
@@ -576,7 +600,7 @@ export const DiscussionCard = (props: IProps) => {
   }, [discussion, mediafiles]);
 
   useEffect(() => {
-    if (doSave && !savingRef.current) {
+    if (saveRequested(myToolId) && !savingRef.current) {
       savingRef.current = true;
       handleSave().then(() => {
         waitForIt(
@@ -588,9 +612,9 @@ export const DiscussionCard = (props: IProps) => {
           savingRef.current = false;
         });
       });
-    }
+    } else if (clearRequested(myToolId)) handleCancel('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave]);
+  }, [toolsChanged]);
 
   return (
     <div className={classes.root}>

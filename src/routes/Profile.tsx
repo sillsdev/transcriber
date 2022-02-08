@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
@@ -54,7 +54,6 @@ import {
   uiLangDev,
   langName,
   localeDefault,
-  useRemoteSave,
   getParatextDataPath,
   waitForIt,
 } from '../utils';
@@ -69,6 +68,7 @@ import AppHead from '../components/App/AppHead';
 import StickyRedirect from '../components/StickyRedirect';
 import { useSnackBar } from '../hoc/SnackBar';
 import SelectRole from '../control/SelectRole';
+import { UnsavedContext } from '../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -211,9 +211,15 @@ export function Profile(props: IProps) {
   const [dupName, setDupName] = useState(false);
   const [hasParatext, setHasParatext] = useState(false);
   const [view, setView] = useState('');
-  const [changed, setChanged] = useGlobal('changed');
-  const [doSave] = useGlobal('doSave');
-  const [, saveCompleted] = useRemoteSave();
+  const {
+    startSave,
+    saveCompleted,
+    toolChanged,
+    toolsChanged,
+    saveRequested,
+    isChanged,
+  } = useContext(UnsavedContext).state;
+  const [myChanged, setMyChanged] = useState(false);
   const [ptPath, setPtPath] = React.useState('');
   const { showMessage } = useSnackBar();
   const addToOrgAndGroup = useAddToOrgAndGroup();
@@ -221,13 +227,14 @@ export function Profile(props: IProps) {
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
   };
-
+  const toolId = 'profile';
+  const saving = useRef(false);
   const handleNameChange = (e: any) => {
     if (e.target.value === email) {
       showMessage(t.nameNotEmail);
       return;
     }
-    setChanged(true);
+    toolChanged(toolId, true);
     setName(e.target.value);
     if (
       !currentUser ||
@@ -250,55 +257,59 @@ export function Profile(props: IProps) {
   };
 
   const handleGivenChange = (e: any) => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setGiven(e.target.value);
   };
 
   const handleFamilyChange = (e: any) => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setFamily(e.target.value);
   };
 
   const handlePhoneChange = (e: any) => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setPhone(e.target.value);
   };
 
   const handleTimezoneChange = (e: any) => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setTimezone(e.target.value);
   };
 
   const handleRoleChange = (e: string) => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setRole(e);
   };
 
   const handleLocaleChange = (e: any) => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setLocale(e.target.value);
   };
 
   const handleLockedChange = () => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setLocked(!locked);
   };
 
   const handleDigestChange = () => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setDigest(
       digest ? DigestPreference.noDigest : DigestPreference.dailyDigest
     );
   };
   useEffect(() => {
-    if (doSave) {
+    if (saveRequested(toolId)) {
       handleSave();
     }
+    var changed = isChanged(toolId);
+    if (changed !== myChanged) setMyChanged(changed);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave]);
+  }, [toolsChanged]);
 
   const handleSave = () => {
-    if (changed) {
+    if (!saving.current && isChanged(toolId)) {
+      startSave(toolId);
+      saving.current = true;
       const currentUserId = currentUser === undefined ? user : currentUser.id; //currentuser will not be undefined here
       memory.update(
         (t: TransformBuilder) =>
@@ -345,17 +356,17 @@ export function Profile(props: IProps) {
         }
       }
       if (!editId) setLanguage(locale);
-      setChanged(false);
     }
-    saveCompleted('');
+    saveCompleted(toolId);
     if (editId) {
       setEditId(null);
     }
+    saving.current = false;
     setView('Team');
   };
 
   const handleAdd = async () => {
-    if (changed) {
+    if (isChanged(toolId)) {
       let userRec: User = {
         type: 'user',
         attributes: {
@@ -385,7 +396,7 @@ export function Profile(props: IProps) {
       } else {
         addToOrgAndGroup(userRec, true);
       }
-      setChanged(false);
+      toolChanged(toolId, false);
     }
     if (finishAdd) {
       finishAdd();
@@ -397,7 +408,7 @@ export function Profile(props: IProps) {
   };
 
   const handleCancel = () => {
-    setChanged(false);
+    toolChanged(toolId, false);
     if (editId) {
       setEditId(null);
       const userId = localStorage.getItem('user-id');
@@ -531,7 +542,7 @@ export function Profile(props: IProps) {
     if (timezone === '') {
       const myZone = moment.tz.guess();
       setTimezone(myZone || '');
-      setChanged(true);
+      toolChanged(toolId, true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timezone]);
@@ -791,7 +802,12 @@ export function Profile(props: IProps) {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  disabled={!requiredComplete() || !changed || dupName}
+                  disabled={
+                    !requiredComplete() ||
+                    !myChanged ||
+                    saveRequested(toolId) ||
+                    dupName
+                  }
                   onClick={currentUser === undefined ? handleAdd : handleSave}
                 >
                   {editId && /Add/i.test(editId)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import clsx from 'clsx';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -35,7 +35,6 @@ import {
   useArtifactType,
 } from '../../crud';
 import { useGlobal } from 'reactn';
-import { useRemoteSave } from '../../utils';
 import { HeadHeight } from '../../App';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
@@ -51,6 +50,7 @@ import {
   IRow,
 } from '.';
 import { IMatchData, makeMatchMap } from './makeRefMap';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -132,8 +132,7 @@ export function AudioTab(props: IProps) {
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [, setChanged] = useGlobal('changed');
-  const [, saveCompleted] = useRemoteSave();
+  const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
   const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
@@ -157,7 +156,7 @@ export function AudioTab(props: IProps) {
   });
   const [refresh, setRefresh] = useState(false);
   const { vernacularId } = useArtifactType();
-
+  const myToolId = 'AudioTab';
   const hasPassage = (pRow: number) => {
     for (let mediaId of Object.keys(attachMap)) {
       if (attachMap[mediaId] === pRow) return true;
@@ -199,7 +198,7 @@ export function AudioTab(props: IProps) {
     if (cancelled.current) cancelled.current = false;
     else showMessage(t.savingComplete);
     inProcess.current = false;
-    saveCompleted('');
+    saveCompleted(myToolId);
   };
 
   const mediaRow = (mediaId: string) => {
@@ -214,7 +213,7 @@ export function AudioTab(props: IProps) {
       const newMap = { ...attachMap };
       delete newMap[mediaId];
       setAttachMap(newMap);
-      setChanged(true);
+      toolChanged(myToolId, true);
     } else {
       const passId = data[mRow].passId;
       if (passId && passId !== '') {
