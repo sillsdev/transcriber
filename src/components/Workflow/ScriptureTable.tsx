@@ -991,8 +991,8 @@ const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  workflowSteps: (q: QueryBuilder) => q.findRecords('workflowsteps'),
-  orgWorkflowSteps: (q: QueryBuilder) => q.findRecords('orgworkflowsteps'),
+  workflowSteps: (q: QueryBuilder) => q.findRecords('workflowstep'),
+  orgWorkflowSteps: (q: QueryBuilder) => q.findRecords('orgworkflowstep'),
 };
 
 export default withData(mapRecordsToProps)(
