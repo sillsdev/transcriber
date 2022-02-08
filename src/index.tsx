@@ -154,7 +154,6 @@ Promise.all(promises)
       memory,
       remoteBusy: true, //prevent datachanges until after login
       dataChangeCount: 0,
-      doSave: false,
       saveResult: undefined,
       snackMessage: (<></>) as JSX.Element,
       snackAlert: undefined,

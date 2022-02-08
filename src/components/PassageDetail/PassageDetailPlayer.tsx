@@ -32,6 +32,7 @@ export function PassageDetailPlayer(props: IProps) {
   };
 
   const onSegmentChange = (segments: string) => {
+    //not saving segments...so don't update changed
     setSegments(segments);
   };
   const onPlayStatus = (newPlaying: boolean) => {

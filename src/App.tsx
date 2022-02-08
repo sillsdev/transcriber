@@ -94,9 +94,9 @@ function App() {
 
   return (
     <TokenCheck auth={auth}>
-      <DataChanges auth={auth}>
-        <SnackBarProvider>
-          <UnsavedProvider>
+      <UnsavedProvider>
+        <DataChanges auth={auth}>
+          <SnackBarProvider>
             <HotKeyProvider>
               <ThemeProvider theme={theme}>
                 <Route
@@ -163,9 +163,9 @@ function App() {
                 <Route path="/neworg" render={(props) => handleNewOrg(props)} />
               </ThemeProvider>
             </HotKeyProvider>
-          </UnsavedProvider>
-        </SnackBarProvider>
-      </DataChanges>
+          </SnackBarProvider>
+        </DataChanges>
+      </UnsavedProvider>
     </TokenCheck>
   );
 }

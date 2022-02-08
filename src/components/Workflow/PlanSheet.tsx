@@ -21,7 +21,6 @@ import 'react-datasheet/lib/react-datasheet.css';
 import { refMatch } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
 import { useOrganizedBy } from '../../crud';
-import { useRemoteSave } from '../../utils/useRemoteSave';
 import TaskAvatar from '../TaskAvatar';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
@@ -30,6 +29,7 @@ import PlanActionMenu from './PlanActionMenu';
 import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
 import PlanAudioActions from './PlanAudioActions';
 import { HotKeyContext } from '../../context/HotKeyContext';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const MemoizedTaskAvatar = React.memo(TaskAvatar);
 
@@ -139,6 +139,7 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps {
+  toolId: string;
   columns: Array<ICell>;
   rowData: Array<Array<string | number>>;
   rowInfo: Array<IWorkflow>;
@@ -166,6 +167,7 @@ interface IProps extends IStateProps {
 
 export function PlanSheet(props: IProps) {
   const {
+    toolId,
     columns,
     rowData,
     rowInfo,
@@ -193,7 +195,6 @@ export function PlanSheet(props: IProps) {
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [global] = useGlobal();
-  const [busy] = useGlobal('remoteBusy');
   const { showMessage } = useSnackBar();
   const [position, setPosition] = useState<{
     mouseX: null | number;
@@ -206,8 +207,6 @@ export function PlanSheet(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const suggestionRef = useRef<Array<OptionType>>();
   const saveTimer = React.useRef<NodeJS.Timeout>();
-  const [doSave] = useGlobal('doSave');
-  const [changed, setChanged] = useGlobal('changed');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
@@ -215,8 +214,8 @@ export function PlanSheet(props: IProps) {
   const sheetRef = useRef<any>();
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
-  const [savingGrid, setSavingGrid] = useState<ICell[][]>();
-  const [startSave] = useRemoteSave();
+  const { startSave, toolsChanged, saveRequested, isChanged } =
+    useContext(UnsavedContext).state;
   const [srcMediaId, setSrcMediaId] = useState('');
   const [mediaPlaying, setMediaPlaying] = useState(false);
   const [warning, setWarning] = useState<string>();
@@ -225,10 +224,11 @@ export function PlanSheet(props: IProps) {
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = bookCol > 0 ? 6 : 5;
-
   const isSection = (i: number) => isSectionRow(rowInfo[i]);
 
   const isPassage = (i: number) => isPassageRow(rowInfo[i]);
+  const [changed, setChanged] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const handleAddSection = () => {
     addSection();
@@ -451,7 +451,11 @@ export function PlanSheet(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (changed) {
+    var myChanged = isChanged(toolId);
+    if (myChanged !== changed) setChanged(myChanged);
+    var isSaving = saveRequested(toolId);
+    if (isSaving !== saving) setSaving(isSaving);
+    if (myChanged) {
       if (saveTimer.current === undefined) startSaveTimer();
       if (!connected && !offlineOnly) showMessage(ts.NoSaveOffline);
     } else {
@@ -465,7 +469,7 @@ export function PlanSheet(props: IProps) {
       }
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [changed]);
+  }, [toolsChanged]);
 
   const refErrTest = (ref: any) => typeof ref !== 'string' || !refMatch(ref);
 
@@ -640,14 +644,6 @@ export function PlanSheet(props: IProps) {
     suggestionRef.current = bookSuggestions;
   }, [bookSuggestions]);
 
-  useEffect(() => {
-    if (!doSave && !busy && savingGrid) {
-      setChanged(true);
-      setSavingGrid(undefined);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave, busy, savingGrid]);
-
   const playEnded = () => {
     setMediaPlaying(false);
   };
@@ -728,7 +724,7 @@ export function PlanSheet(props: IProps) {
                   color={connected ? 'primary' : 'secondary'}
                   className={classes.button}
                   onClick={handleSave}
-                  disabled={doSave || !changed}
+                  disabled={saving || !changed}
                 >
                   {t.save}
                   <SaveIcon className={classes.icon} />

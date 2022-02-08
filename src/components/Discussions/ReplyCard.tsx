@@ -2,7 +2,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { Discussion, MediaFile, User } from '../../model';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
-import { useEffect, useGlobal, useRef, useState, useContext } from 'reactn';
+import { useContext, useEffect, useRef, useState } from 'reactn';
 import { CommentEditor } from './CommentEditor';
 import * as actions from '../../store';
 import { useRecordComment } from './useRecordComment';
@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import Auth from '../../auth/Auth';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { useMounted } from '../../utils';
-import { PassageDetailContext } from '../../context/PassageDetailContext';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -71,22 +71,25 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   auth: Auth;
   discussion: Discussion;
   number: number;
-  startSave: boolean;
-  clearSave: boolean;
 }
 
 export const ReplyCard = (props: IProps) => {
-  const { auth, discussion, number, startSave, clearSave } = props;
+  const { auth, discussion, number } = props;
   const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
   const classes = useStyles();
   const [refresh, setRefresh] = useState(0);
   const isMounted = useMounted('replycard');
-  const { toolChanged, toolSaveCompleted } =
-    useContext(PassageDetailContext).state;
-  const myId = discussion.id + 'reply';
+  const {
+    toolChanged,
+    saveCompleted,
+    toolsChanged,
+    saveRequested,
+    clearRequested,
+  } = useContext(UnsavedContext).state;
+  const myToolId = discussion.id + 'reply';
   const afterSavecb = () => {
     savingRef.current = false;
-    toolSaveCompleted(myId, '');
+    saveCompleted(myToolId);
     if (isMounted()) {
       setChanged(false);
       setRefresh(refresh + 1);
@@ -112,47 +115,33 @@ export const ReplyCard = (props: IProps) => {
     uploadComplete,
     doOrbitError,
   });
-  const [doSave] = useGlobal('doSave');
   const savingRef = useRef(false);
   const [canSaveRecording, setCanSaveRecording] = useState(false);
-  const [myChanged, setMyChanged] = useState(false);
 
   const handleSaveEdit = () => {
     savingRef.current = true;
     //if we're recording and can save, the comment will save after upload
     if (!canSaveRecording) {
       if (commentText.current.length > 0) afterUploadcb('');
-      else toolSaveCompleted(myId, '');
+      else saveCompleted(myToolId);
     }
   };
   const handleCancelEdit = () => {
     setRefresh(refresh + 1);
     commentText.current = '';
-    toolSaveCompleted(myId, '');
+    toolChanged(myToolId, false);
   };
 
   useEffect(() => {
-    if (myChanged && (doSave || startSave) && !savingRef.current) {
+    if (saveRequested(myToolId) && !savingRef.current) {
       handleSaveEdit();
-    }
+    } else if (clearRequested(myToolId)) handleCancelEdit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave, startSave, myChanged]);
-
-  useEffect(() => {
-    if (clearSave) handleCancelEdit();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clearSave]);
+  }, [toolsChanged]);
 
   const setChanged = (changed: boolean) => {
     const valid = commentText.current !== '' || canSaveRecording;
-    console.log('reply setChanged', changed, valid, myChanged);
-    if (changed && valid && !myChanged) {
-      toolChanged(myId);
-      setMyChanged(true);
-    } else if ((!changed || !valid) && myChanged) {
-      toolSaveCompleted(myId, '');
-      setMyChanged(false);
-    }
+    toolChanged(myToolId, changed && valid);
   };
 
   const handleTextChange = (newText: string) => {
@@ -170,6 +159,7 @@ export const ReplyCard = (props: IProps) => {
   return (
     <div className={classes.root}>
       <CommentEditor
+        toolId={myToolId}
         comment={commentText.current}
         refresh={refresh}
         onOk={handleSaveEdit}

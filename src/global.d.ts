@@ -20,7 +20,6 @@ declare module 'reactn/default' {
     memory: Memory;
     remoteBusy: boolean;
     dataChangeCount: int;
-    doSave: boolean;
     saveResult: string | undefined;
     snackMessage: JSX.Element;
     snackAlert: AlertSeverity | undefined;

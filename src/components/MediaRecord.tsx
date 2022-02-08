@@ -4,6 +4,7 @@ import React, {
   useMemo,
   useCallback,
   useRef,
+  useContext,
 } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
@@ -28,6 +29,7 @@ import { generateUUID, loadBlob, removeExtension, waitForIt } from '../utils';
 import { MediaSt, useFetchMediaUrl } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { bindActionCreators } from 'redux';
+import { UnsavedContext } from '../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -71,6 +73,7 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps, IDispatchProps {
+  toolId: string;
   onReady: () => void;
   onRecording: (r: boolean) => void;
   mediaId: string;
@@ -91,9 +94,9 @@ interface IProps extends IStateProps, IDispatchProps {
 function MediaRecord(props: IProps) {
   const {
     t,
+    toolId,
     onReady,
     onRecording,
-    startSave,
     mediaId,
     auth,
     defaultFilename,
@@ -127,6 +130,7 @@ function MediaRecord(props: IProps) {
   const { showMessage } = useSnackBar();
   const [converting, setConverting] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const { toolsChanged, saveRequested } = useContext(UnsavedContext).state;
   const saveRef = useRef(false);
   const guidRef = useRef('');
   const extensions = useMemo(
@@ -217,17 +221,6 @@ function MediaRecord(props: IProps) {
 
   useEffect(() => {
     //was it me who asked for this?
-    console.log(
-      'convert_complete',
-      convert_complete,
-      'convert_guid',
-      convert_guid,
-      'guidRef.current',
-      guidRef.current,
-      'startSave',
-      startSave,
-      defaultFilename
-    );
     if (convert_guid === guidRef.current) {
       if (convert_status) {
         var progress = parseInt(convert_status);
@@ -255,13 +248,12 @@ function MediaRecord(props: IProps) {
   }, [convert_status, convert_complete, convert_blob]);
 
   useEffect(() => {
-    if (startSave && !saveRef.current) {
+    if (saveRequested(toolId) && !saveRef.current) {
       if (audioBlob) {
         saveRef.current = true;
         if (mimeType !== 'audio/wav') {
           setConverting(true);
           guidRef.current = generateUUID();
-          console.log('myguid', guidRef.current);
           waitForIt(
             'previous convert',
             () => convert_guid === '',
@@ -273,15 +265,18 @@ function MediaRecord(props: IProps) {
         }
         return;
       }
-    } else if (!startSave && saveRef.current) saveRef.current = false;
+    } else if (!saveRequested(toolId) && saveRef.current)
+      saveRef.current = false;
   }, [
     audioBlob,
-    startSave,
+    toolsChanged,
     mimeType,
     doUpload,
     convertBlob,
     onReady,
+    saveRequested,
     convert_guid,
+    toolId,
   ]);
 
   const setExtension = (mimeType: string) => {

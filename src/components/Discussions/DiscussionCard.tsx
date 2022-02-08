@@ -60,6 +60,7 @@ import JSONAPISource from '@orbit/jsonapi';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import Auth from '../../auth/Auth';
 import { NewDiscussionToolId } from './DiscussionList';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -188,8 +189,6 @@ interface IProps extends IRecordProps, IStateProps {
   collapsed: boolean;
   showStep: boolean;
   showReference: boolean;
-  startSave: boolean;
-  clearSave: boolean;
   onAddComplete?: () => {};
 }
 
@@ -203,8 +202,6 @@ export const DiscussionCard = (props: IProps) => {
     collapsed,
     showStep,
     showReference,
-    startSave,
-    clearSave,
     onAddComplete,
     comments,
     mediafiles,
@@ -221,12 +218,17 @@ export const DiscussionCard = (props: IProps) => {
     mediafileId,
     mediaPlaying,
     setPlayerSegments,
-    toolChanged,
-    toolsChanged,
-    toolSaveCompleted,
+
     setMediaSelected,
     getSegments,
   } = ctx.state;
+  const {
+    toolChanged,
+    toolsChanged,
+    saveCompleted,
+    saveRequested,
+    clearRequested,
+  } = useContext(UnsavedContext).state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
@@ -245,7 +247,6 @@ export const DiscussionCard = (props: IProps) => {
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [myChanged, setMyChanged] = useState(false);
-  const [doSave] = useGlobal('doSave');
   const savingRef = useRef(false);
   const [editSubject, setEditSubject] = useState(
     discussion.attributes?.subject
@@ -257,7 +258,7 @@ export const DiscussionCard = (props: IProps) => {
   const { localizedArtifactCategory } = useArtifactCategory();
   const { localizedWorkStepFromId } = useOrgWorkflowSteps();
 
-  const myId = useMemo(() => {
+  const myToolId = useMemo(() => {
     if (discussion.id) return discussion.id;
     else return NewDiscussionToolId;
   }, [discussion]);
@@ -274,9 +275,8 @@ export const DiscussionCard = (props: IProps) => {
     if (!myChanged) {
       var myIds = myComments.map((d) => d.id);
       myIds.push(discussion.id + 'reply');
-      var anyChanged = toolsChanged.some((t) => myIds.includes(t));
-      if (anyChanged && !toolsChanged.includes(myId)) toolChanged(myId);
-      if (!anyChanged && toolsChanged.includes(myId)) toolChanged(myId, false);
+      var anyChanged = Object.keys(toolsChanged).some((t) => myIds.includes(t));
+      toolChanged(myToolId, anyChanged);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, myComments, myChanged]);
@@ -506,10 +506,10 @@ export const DiscussionCard = (props: IProps) => {
   };
   const setChanged = (changed: boolean) => {
     if (changed && !myChanged) {
-      toolChanged(myId);
+      toolChanged(myToolId);
       setMyChanged(true);
     } else if (!changed && myChanged) {
-      toolSaveCompleted(myId, '');
+      saveCompleted(myToolId);
       setMyChanged(false);
     }
   };
@@ -600,7 +600,7 @@ export const DiscussionCard = (props: IProps) => {
   }, [discussion, mediafiles]);
 
   useEffect(() => {
-    if ((doSave || startSave) && !savingRef.current) {
+    if (saveRequested(myToolId) && !savingRef.current) {
       savingRef.current = true;
       handleSave().then(() => {
         waitForIt(
@@ -612,14 +612,9 @@ export const DiscussionCard = (props: IProps) => {
           savingRef.current = false;
         });
       });
-    }
+    } else if (clearRequested(myToolId)) handleCancel('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave, startSave]);
-
-  useEffect(() => {
-    if (clearSave) handleCancel(clearSave);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clearSave]);
+  }, [toolsChanged]);
 
   return (
     <div className={classes.root}>
@@ -800,8 +795,6 @@ export const DiscussionCard = (props: IProps) => {
                   discussion={discussion}
                   number={j}
                   onEditing={handleEditCard}
-                  startSave={startSave}
-                  clearSave={clearSave}
                 />
               ))}
               {!discussion.attributes.resolved && !editCard && (
@@ -809,8 +802,6 @@ export const DiscussionCard = (props: IProps) => {
                   auth={auth}
                   discussion={discussion}
                   number={myComments.length}
-                  startSave={startSave}
-                  clearSave={clearSave}
                 />
               )}
             </Grid>

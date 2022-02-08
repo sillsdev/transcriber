@@ -21,7 +21,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import Auth from '../../auth/Auth';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   findRecord,
   pullPlanMedia,
@@ -50,6 +50,7 @@ import MediaPlayer from '../MediaPlayer';
 import MediaRecord from '../MediaRecord';
 import SelectCommunityTest from './SelectCommunityTest';
 import { useGlobal } from 'reactn';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -166,7 +167,6 @@ export function PassageDetailCommunity(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
   const [offline] = useGlobal('offline');
   const [plan] = useGlobal('plan');
-  const [doSave] = useGlobal('doSave');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const { createMedia } = useOfflnMediafileCreate(doOrbitError);
   const [statusText, setStatusText] = useState('');
@@ -183,18 +183,17 @@ export function PassageDetailCommunity(props: IProps) {
   const mediaIdRef = useRef('');
   const [playItem, setPlayItem] = useState('');
   const [playing, setPlaying] = useState(false);
-  const [startSave, setStartSave] = useState(false);
   const {
     passage,
     mediafileId,
-    toolChanged,
-    toolSaveCompleted,
     discussionSize,
     setDiscussionSize,
     playerSize,
     setPlayerSize,
     rowData,
   } = usePassageDetailContext();
+  const { toolChanged, toolsChanged, startSave, saveCompleted, saveRequested } =
+    useContext(UnsavedContext).state;
   const { retellId, qAndaId, localizedArtifactType } = useArtifactType();
   const { showMessage } = useSnackBar();
   const [attachPassage] = useMediaAttach({
@@ -206,7 +205,7 @@ export function PassageDetailCommunity(props: IProps) {
   }
   const [recordType, setRecordType] = useState<RecordType>(RecordType.Retell);
 
-  const myId = 'CommunityTool';
+  const toolId = 'CommunityTool';
 
   const handleSplitSize = debounce((e: number) => {
     setDiscussionSize(width - e);
@@ -217,7 +216,7 @@ export function PassageDetailCommunity(props: IProps) {
   }, 50);
 
   useEffect(() => {
-    toolChanged(myId, canSave);
+    toolChanged(toolId, canSave);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSave]);
 
@@ -246,13 +245,14 @@ export function PassageDetailCommunity(props: IProps) {
   }, [memory, passage, rowData, recordType, speaker]);
 
   useEffect(() => {
-    if (doSave && canSave) handleSave();
+    if (saveRequested(toolId) && canSave) handleSave();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave, canSave]);
+  }, [toolsChanged, canSave]);
 
   const handleSave = () => {
-    if (!startSave) {
-      setStartSave(true);
+    //tell the media recorder to save
+    if (!saveRequested(toolId)) {
+      startSave(toolId);
     }
   };
   const finishMessage = () => {
@@ -289,12 +289,12 @@ export function PassageDetailCommunity(props: IProps) {
           mediaId
         ).then(() => {
           finishMessage();
-          toolSaveCompleted(myId, '');
+          saveCompleted(toolId);
         });
       });
     } else {
       finishMessage();
-      toolSaveCompleted(myId, '');
+      saveCompleted(toolId);
     }
   };
   const getPlanId = () => remoteIdNum('plan', plan, memory.keyMap) || plan;
@@ -317,9 +317,9 @@ export function PassageDetailCommunity(props: IProps) {
     nextUpload(mediaFile, files, 0, auth, offline, reporter, itemComplete);
   };
   const handleSetCanSave = (valid: boolean) => {
+    console.log('handleSetCanSave', valid);
     if (valid !== canSave) {
       setCanSave(valid);
-      if (!valid && startSave) setStartSave(false); //finished saving
     }
   };
   const handleChangeType = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -340,115 +340,120 @@ export function PassageDetailCommunity(props: IProps) {
   return (
     <div>
       <Paper className={classes.paper}>
-        <Wrapper>
-          <SplitPane
-            defaultSize={width - discussionSize}
-            style={{ position: 'static' }}
-            split="vertical"
-            onChange={handleSplitSize}
-          >
-            <Pane className={classes.pane}>
-              <SplitPane
-                split="horizontal"
-                defaultSize={playerSize - 20}
-                minSize={150}
-                style={{ position: 'static' }}
-                onChange={handleHorizonalSplitSize}
-              >
-                <Pane className={classes.pane}>
-                  <PassageDetailPlayer />
-                </Pane>
-                <Pane className={classes.pane}>
-                  <Paper className={classes.paper}>
-                    <div className={classes.row}>
-                      <Typography className={classes.status}>
-                        {'Record'}
-                      </Typography>
-                      <RadioGroup
-                        row={true}
-                        id="filetype"
-                        aria-label="filetype"
-                        name="filetype"
-                        value={recordType}
-                        onChange={handleChangeType}
-                      >
-                        <FormControlLabel
-                          id="retell"
-                          value={RecordType.Retell}
-                          control={<Radio />}
-                          label={localizedArtifactType('retell')}
+        <>
+          <Wrapper>
+            <SplitPane
+              defaultSize={width - discussionSize}
+              style={{ position: 'static' }}
+              split="vertical"
+              onChange={handleSplitSize}
+            >
+              <Pane className={classes.pane}>
+                <SplitPane
+                  split="horizontal"
+                  defaultSize={playerSize - 20}
+                  minSize={150}
+                  style={{ position: 'static' }}
+                  onChange={handleHorizonalSplitSize}
+                >
+                  <Pane className={classes.pane}>
+                    <PassageDetailPlayer />
+                  </Pane>
+                  <Pane className={classes.pane}>
+                    <Paper className={classes.paper}>
+                      <div className={classes.row}>
+                        <Typography className={classes.status}>
+                          {'Record'}
+                        </Typography>
+                        <RadioGroup
+                          row={true}
+                          id="filetype"
+                          aria-label="filetype"
+                          name="filetype"
+                          value={recordType}
+                          onChange={handleChangeType}
+                        >
+                          <FormControlLabel
+                            id="retell"
+                            value={RecordType.Retell}
+                            control={<Radio />}
+                            label={localizedArtifactType('retell')}
+                          />
+                          <FormControlLabel
+                            id="QandA"
+                            value={RecordType.QandA}
+                            control={<Radio />}
+                            label={localizedArtifactType('qanda')}
+                          />
+                        </RadioGroup>
+                        <div className={classes.grow}>{'\u00A0'}</div>
+                        <TextField
+                          className={classes.formControl}
+                          id="filename"
+                          label={t.speaker}
+                          value={speaker}
+                          onChange={handleChangeSpeaker}
+                          required={true}
+                          fullWidth={true}
                         />
-                        <FormControlLabel
-                          id="QandA"
-                          value={RecordType.QandA}
-                          control={<Radio />}
-                          label={localizedArtifactType('qanda')}
-                        />
-                      </RadioGroup>
-                      <div className={classes.grow}>{'\u00A0'}</div>
-                      <TextField
-                        className={classes.formControl}
-                        id="filename"
-                        label={t.speaker}
-                        value={speaker}
-                        onChange={handleChangeSpeaker}
-                        required={true}
-                        fullWidth={true}
+                      </div>
+                      <MediaRecord
+                        toolId={toolId}
+                        uploadMethod={uploadMedia}
+                        defaultFilename={defaultFilename}
+                        allowWave={false}
+                        showFilename={false}
+                        setCanSave={handleSetCanSave}
+                        setStatusText={setStatusText}
+                        size={200}
                       />
-                    </div>
-                    <MediaRecord
-                      uploadMethod={uploadMedia}
-                      defaultFilename={defaultFilename}
-                      allowWave={false}
-                      showFilename={false}
-                      setCanSave={handleSetCanSave}
-                      setStatusText={setStatusText}
-                      startSave={startSave}
-                      size={200}
-                    />
-                    <div className={classes.row}>
-                      <Typography variant="caption" className={classes.status}>
-                        {statusText}
-                      </Typography>
-                      <div className={classes.grow}>{'\u00A0'}</div>
-                      <Button
-                        id="rec-save"
-                        className={classes.button}
-                        onClick={handleSave}
-                        variant="contained"
-                        color="primary"
-                        disabled={!canSave}
-                      >
-                        {ts.save}
-                      </Button>
-                    </div>
-                  </Paper>
-                  <Paper className={classes.paper}>
-                    <div className={classes.row}>
-                      <Paper className={classes.paper}>
-                        <SelectCommunityTest onChange={handleSelect} t={t} />
-                        <MediaPlayer
-                          auth={auth}
-                          srcMediaId={playItem}
-                          requestPlay={playing}
-                          onEnded={handleEnded}
-                          controls={true}
-                        />
-                      </Paper>
-                    </div>
-                  </Paper>
-                </Pane>
-              </SplitPane>
-            </Pane>
-            <Pane className={classes.pane}>
-              <Grid item xs={12} sm container>
-                <Grid item container direction="column">
-                  <DiscussionList auth={auth} />
+                      <div className={classes.row}>
+                        <Typography
+                          variant="caption"
+                          className={classes.status}
+                        >
+                          {statusText}
+                        </Typography>
+                        <div className={classes.grow}>{'\u00A0'}</div>
+                        <Button
+                          id="rec-save"
+                          className={classes.button}
+                          onClick={handleSave}
+                          variant="contained"
+                          color="primary"
+                          disabled={!canSave}
+                        >
+                          {ts.save}
+                        </Button>
+                      </div>
+                    </Paper>
+                    <Paper className={classes.paper}>
+                      <div className={classes.row}>
+                        <Paper className={classes.paper}>
+                          <SelectCommunityTest onChange={handleSelect} t={t} />
+                          <MediaPlayer
+                            auth={auth}
+                            srcMediaId={playItem}
+                            requestPlay={playing}
+                            onEnded={handleEnded}
+                            controls={true}
+                          />
+                        </Paper>
+                      </div>
+                    </Paper>
+                  </Pane>
+                </SplitPane>
+              </Pane>
+              <Pane className={classes.pane}>
+                <Grid item xs={12} sm container>
+                  <Grid item container direction="column">
+                    <DiscussionList auth={auth} />
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Pane>
-          </SplitPane>
-        </Wrapper>
+              </Pane>
+            </SplitPane>
+          </Wrapper>
+        </>
       </Paper>
     </div>
   );

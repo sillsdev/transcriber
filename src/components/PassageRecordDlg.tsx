@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, IPassageRecordStrings } from '../model';
@@ -17,6 +17,7 @@ import {
 } from '@material-ui/core';
 import { useFetchMediaUrl } from '../crud';
 import MediaRecord from './MediaRecord';
+import { UnsavedContext } from '../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -84,14 +85,15 @@ function PassageRecordDlg(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
-  const [doSave, setDoSave] = useGlobal('doSave');
-
   const [canSave, setCanSave] = useState(false);
   const [canCancel, setCanCancel] = useState(false);
   const classes = useStyles();
+  const { startSave, saveCompleted } = useContext(UnsavedContext).state;
+
+  const myToolId = 'PassageRecordDlg';
 
   const onReady = () => {
-    setDoSave(false);
+    saveCompleted(myToolId, '');
     close();
   };
 
@@ -106,7 +108,7 @@ function PassageRecordDlg(props: IProps) {
   }, [mediaId]);
 
   const handleSave = () => {
-    setDoSave(true);
+    startSave(myToolId);
   };
   const handleCancel = () => {
     if (onCancel) {
@@ -125,6 +127,7 @@ function PassageRecordDlg(props: IProps) {
       <DialogTitle id="recDlg">{t.title}</DialogTitle>
       <DialogContent>
         <MediaRecord
+          toolId={myToolId}
           mediaId={mediaId}
           auth={auth}
           uploadMethod={uploadMethod}
@@ -135,7 +138,6 @@ function PassageRecordDlg(props: IProps) {
           setCanSave={setCanSave}
           setCanCancel={setCanCancel}
           setStatusText={setStatusText}
-          startSave={doSave}
         />
         {metaData}
       </DialogContent>

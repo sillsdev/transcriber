@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import Auth from '../../auth/Auth';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import {
   findRecord,
   pullPlanMedia,
@@ -36,8 +36,8 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { useRemoteSave } from '../../utils';
 import MediaRecord from '../MediaRecord';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -80,11 +80,12 @@ export function PassageDetailRecord(props: IProps) {
   const { uploadFiles, nextUpload, uploadError, uploadComplete, doOrbitError } =
     props;
   const { mediafiles } = props;
-  const [startSave] = useRemoteSave();
+  const { startSave, toolChanged, saveCompleted, toolsChanged, saveRequested } =
+    useContext(UnsavedContext).state;
+
   const [reporter] = useGlobal('errorReporter');
   const [offline] = useGlobal('offline');
   const [plan] = useGlobal('plan');
-  const [doSave] = useGlobal('doSave');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const { createMedia } = useOfflnMediafileCreate(doOrbitError);
   const [statusText, setStatusText] = useState('');
@@ -98,20 +99,24 @@ export function PassageDetailRecord(props: IProps) {
   const [mediaRec, setMediaRec] = useState<MediaFile>();
   const successCount = useRef(0);
   const mediaIdRef = useRef('');
-  const { passage, mediafileId, toolChanged, toolSaveCompleted } =
-    usePassageDetailContext();
+  const { passage, mediafileId } = usePassageDetailContext();
   const { vernacularId } = useArtifactType();
   const { showMessage } = useSnackBar();
   const [attachPassage] = useMediaAttach({
     doOrbitError,
   });
-  const myId = 'RecordTool';
+  const toolId = 'RecordTool';
   const onReady = () => {};
 
   useEffect(() => {
-    toolChanged(myId, canSave);
+    toolChanged(toolId, canSave);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSave]);
+
+  useEffect(() => {
+    if (saveRequested(toolId)) handleSave();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toolsChanged]);
 
   useEffect(() => {
     if (mediafileId !== mediaState.urlMediaId)
@@ -143,7 +148,7 @@ export function PassageDetailRecord(props: IProps) {
   }, [uploadError]);
 
   const handleSave = () => {
-    startSave();
+    startSave(toolId);
   };
   const finishMessage = () => {
     setTimeout(() => {
@@ -183,12 +188,12 @@ export function PassageDetailRecord(props: IProps) {
           mediaId
         ).then(() => {
           finishMessage();
-          toolSaveCompleted(myId, '');
+          saveCompleted(toolId);
         });
       });
     } else {
       finishMessage();
-      toolSaveCompleted(myId, '');
+      saveCompleted(toolId);
     }
   };
   const getPlanId = () => remoteIdNum('plan', plan, memory.keyMap) || plan;
@@ -212,6 +217,7 @@ export function PassageDetailRecord(props: IProps) {
   return (
     <div>
       <MediaRecord
+        toolId={toolId}
         mediaId={mediafileId}
         auth={auth}
         uploadMethod={uploadMedia}
@@ -221,7 +227,6 @@ export function PassageDetailRecord(props: IProps) {
         showFilename={true}
         setCanSave={setCanSave}
         setStatusText={setStatusText}
-        startSave={doSave}
       />
       <Typography variant="caption" className={classes.status}>
         {statusText}

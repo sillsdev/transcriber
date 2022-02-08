@@ -1,4 +1,11 @@
-import { useGlobal, useState, useEffect, useRef } from 'reactn';
+import {
+  useGlobal,
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  useMemo,
+} from 'reactn';
 import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
 import { useInterval } from '../utils/useInterval';
 import Axios from 'axios';
@@ -35,6 +42,7 @@ import IndexedDBSource from '@orbit/indexeddb';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { UnsavedContext } from '../context/UnsavedContext';
 interface IStateProps {}
 
 interface IDispatchProps {
@@ -302,7 +310,6 @@ export function DataChanges(props: IProps) {
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const [connected] = useGlobal('connected');
   const [user] = useGlobal('user');
-  const [doSave] = useGlobal('doSave');
   const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
   const [busyDelay, setBusyDelay] = useState<number | null>(null);
@@ -314,8 +321,10 @@ export function DataChanges(props: IProps) {
   const doingChanges = useRef(false);
   const getOfflineProject = useOfflnProjRead();
   const checkOnline = useCheckOnline(resetOrbitError);
-
+  const { anySaving, toolsChanged } = useContext(UnsavedContext).state;
   const defaultBackupDelay = isOffline ? 1000 * 60 * 30 : null; //30 minutes;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const saving = useMemo(() => anySaving(), [toolsChanged]);
 
   useEffect(() => {
     const defaultBusyDelay = 1000;
@@ -348,7 +357,7 @@ export function DataChanges(props: IProps) {
     } else if (checkBusy !== busy) setBusy(checkBusy);
   };
   const updateData = async () => {
-    if (!doingChanges.current && !busy && !doSave && auth?.isAuthenticated()) {
+    if (!doingChanges.current && !busy && !saving && auth?.isAuthenticated()) {
       doingChanges.current = true; //attempt to prevent double calls
       setFirstRun(false);
       await doDataChanges(
@@ -366,7 +375,7 @@ export function DataChanges(props: IProps) {
     }
   };
   const backupElectron = () => {
-    if (!busy && !doSave && project !== '') {
+    if (!busy && !saving && project !== '') {
       electronExport(
         ExportType.ITFBACKUP,
         memory,

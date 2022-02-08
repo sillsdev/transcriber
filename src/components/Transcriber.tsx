@@ -41,7 +41,6 @@ import {
 } from '../crud';
 import {
   insertAtCursor,
-  useRemoteSave,
   logError,
   Severity,
   currentDateTime,
@@ -70,6 +69,7 @@ import PassageHistory from './PassageHistory';
 import { HotKeyContext } from '../context/HotKeyContext';
 import Spelling from './Spelling';
 import { SectionPassageTitle } from '../control/SectionPassageTitle';
+import { UnsavedContext } from '../context/UnsavedContext';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -244,7 +244,7 @@ export function Transcriber(props: IProps) {
     state: '',
     role: '',
   };
-
+  const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -255,8 +255,6 @@ export function Transcriber(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
   const [assigned, setAssigned] = useState('');
-  const [changed, setChanged] = useGlobal('changed');
-  const [doSave] = useGlobal('doSave');
   const [projData, setProjData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
   const playedSecsRef = useRef<number>(0);
@@ -289,7 +287,9 @@ export function Transcriber(props: IProps) {
   const remote = coordinator.getSource('remote');
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
-  const [, saveCompleted] = useRemoteSave();
+  const { toolsChanged, saveRequested, isChanged } =
+    useContext(UnsavedContext).state;
+  const [changed, setChanged] = useState(false);
   const transcriptionRef = React.useRef<any>();
   const playingRef = useRef<Boolean>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
@@ -310,7 +310,7 @@ export function Transcriber(props: IProps) {
     direction: projData?.fontDir as any,
     cursor: 'default',
   });
-
+  const toolId = 'transcriber';
   /* debug what props are changing to force renders
   useRenderingTrace(
     'Transcriber',
@@ -327,7 +327,6 @@ export function Transcriber(props: IProps) {
       busy,
       assigned,
       changed,
-      doSave,
       projData,
       fontStatus,
       totalSeconds,
@@ -438,11 +437,13 @@ export function Transcriber(props: IProps) {
   }, [integrations]);
 
   useEffect(() => {
-    if (doSave) {
+    if (saveRequested(toolId)) {
       handleSave();
     }
+    var newchanged = isChanged(toolId);
+    if (newchanged !== changed) setChanged(newchanged);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [doSave]);
+  }, [toolsChanged]);
 
   useEffect(() => {
     const newBoxHeight = height - (playerSize + 220);
@@ -459,7 +460,7 @@ export function Transcriber(props: IProps) {
     const trans = getTranscription();
     if (trans.transcription !== transcriptionIn.current && !saving.current) {
       //show warning if changed
-      if (changed) showMessage(t.updateByOther);
+      if (isChanged(toolId)) showMessage(t.updateByOther);
       //but do it either way
       showTranscription(trans);
     }
@@ -493,7 +494,7 @@ export function Transcriber(props: IProps) {
         transcription: paratext_textStatus.statusMsg,
         position: 0,
       });
-      setChanged(true);
+      toolChanged(toolId, true);
       save(
         passage.attributes.state,
         0,
@@ -580,7 +581,7 @@ export function Transcriber(props: IProps) {
   };
   const handleChange = (e: any) => {
     setTextValue(e.target.value);
-    if (!changed) setChanged(true);
+    toolChanged(toolId, true);
   };
   const loadStatus = (status: string) => {
     setFontStatus(status);
@@ -797,14 +798,14 @@ export function Transcriber(props: IProps) {
         .update(ops)
         .then(() => {
           //we come here before we get an error because we're non-blocking
-          saveCompleted('');
+          saveCompleted(toolId);
           setLastSaved(currentDateTime());
           saving.current = false;
           handleAssign(curState);
         })
         .catch((err) => {
           //so we don't come here...we go to continue/logout
-          saveCompleted(err.message);
+          saveCompleted(toolId, err.message);
           saving.current = false;
         });
     }
@@ -922,7 +923,7 @@ export function Transcriber(props: IProps) {
 
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
-    setChanged(true);
+    toolChanged(toolId, true);
   };
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {

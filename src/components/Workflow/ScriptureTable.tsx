@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -41,7 +41,6 @@ import {
 } from '../../crud';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import {
-  useRemoteSave,
   lookupBook,
   waitForIt,
   useCheckOnline,
@@ -76,6 +75,7 @@ import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
 import { useArtifactType } from '../../crud/useArtifactType';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const SaveWait = 500;
 
@@ -176,14 +176,12 @@ export function ScriptureTable(props: IProps) {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
-  const [doSave] = useGlobal('doSave');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setBusy] = useGlobal('importexportBusy');
   const [globalStore] = useGlobal();
   const myChangedRef = useRef(false);
   const savingRef = useRef(false);
   const updateRef = useRef(false);
-  const [changed, setChangedx] = useGlobal('changed');
   const { showMessage } = useSnackBar();
   const ctx = React.useContext(PlanContext);
   const { flat, scripture, shared } = ctx.state;
@@ -202,7 +200,16 @@ export function ScriptureTable(props: IProps) {
   const [view, setView] = useState('');
   const [audacityItem, setAudacityItem] = React.useState<AudacityInfo>();
   const [lastSaved, setLastSaved] = React.useState<string>();
-  const [startSave, saveCompleted, waitForSave] = useRemoteSave();
+  const toolId = 'scriptureTable';
+  const {
+    saveRequested,
+    startSave,
+    saveCompleted,
+    waitForSave,
+    toolChanged,
+    toolsChanged,
+    isChanged,
+  } = useContext(UnsavedContext).state;
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
   const [assignSections, setAssignSections] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -249,11 +256,8 @@ export function ScriptureTable(props: IProps) {
 
   const setChanged = (value: boolean) => {
     myChangedRef.current = value;
-    setChangedx(value);
+    toolChanged(toolId, value);
   };
-  useEffect(() => {
-    myChangedRef.current = changed;
-  }, [changed]);
 
   const handleResequence = () => {
     if (savingRef.current) {
@@ -764,18 +768,19 @@ export function ScriptureTable(props: IProps) {
         setLastSaved(currentDateTime());
         showMessage(t.saving);
         handleSave().then(() => {
-          saveCompleted('');
+          saveCompleted(toolId);
           setSaving(false);
         });
       }
     };
-    if (doSave) {
+    myChangedRef.current = isChanged(toolId);
+    if (saveRequested(toolId)) {
       if (offlineOnly) {
         save();
       } else {
         checkOnline((online) => {
           if (!online) {
-            saveCompleted(ts.NoSaveOffline);
+            saveCompleted(toolId, ts.NoSaveOffline);
             showMessage(ts.NoSaveOffline);
             setSaving(false);
           } else {
@@ -785,7 +790,7 @@ export function ScriptureTable(props: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave]);
+  }, [toolsChanged]);
 
   // load data when tables change (and initally)
   useEffect(() => {
@@ -921,6 +926,7 @@ export function ScriptureTable(props: IProps) {
         onHistory={handleVersions}
         lastSaved={lastSaved}
         auth={auth}
+        toolId={toolId}
         t={s}
         ts={ts}
       />

@@ -34,6 +34,7 @@ import { bindActionCreators } from 'redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import Auth from '../../auth/Auth';
 import { useSaveComment } from '../../crud/useSaveComment';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -117,62 +118,41 @@ interface IProps extends IStateProps, IRecordProps, IDispatchProps {
   comment: Comment;
   discussion: Discussion;
   number: number;
-  startSave: boolean;
-  clearSave: boolean;
   onEditing: (val: boolean) => void;
 }
 
 export const CommentCard = (props: IProps) => {
-  const {
-    t,
-    auth,
-    comment,
-    discussion,
-    number,
-    startSave,
-    clearSave,
-    users,
-    onEditing,
-  } = props;
+  const { t, auth, comment, discussion, number, users, onEditing } = props;
   const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
   const classes = useStyles();
   const [author, setAuthor] = useState<User>();
   const [lang] = useGlobal('lang');
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
-  const [doSave] = useGlobal('doSave');
   const savingRef = useRef(false);
+  const { setPlaying, setSelected, mediaPlaying, setMediaPlaying, playItem } =
+    useContext(PassageDetailContext).state;
   const {
-    setPlaying,
-    setSelected,
-    mediaPlaying,
-    setMediaPlaying,
-    playItem,
     toolChanged,
-    toolSaveCompleted,
-  } = useContext(PassageDetailContext).state;
+    toolsChanged,
+    saveCompleted,
+    saveRequested,
+    clearRequested,
+  } = useContext(UnsavedContext).state;
   const [editing, setEditing] = useState(false);
-  const [myChanged, setMyChanged] = useState(false);
   const [canSaveRecording, setCanSaveRecording] = useState(false);
   const [editComment, setEditComment] = useState('');
   const [confirmAction, setConfirmAction] = useState('');
-
-  const setChanged = (changed: boolean) => {
-    const valid = editComment !== '' || canSaveRecording;
-    if (changed && valid && !myChanged) {
-      toolChanged(comment.id);
-      setMyChanged(true);
-    } else if ((!changed || !valid) && myChanged) {
-      toolSaveCompleted(comment.id, '');
-      setMyChanged(false);
-    }
-  };
 
   const reset = () => {
     setEditing(false);
     onEditing(false);
     setChanged(false);
     savingRef.current = false;
+  };
+  const setChanged = (changed: boolean) => {
+    const valid = editComment !== '' || canSaveRecording;
+    toolChanged(comment.id, changed && valid);
   };
 
   const saveComment = useSaveComment({
@@ -201,16 +181,11 @@ export const CommentCard = (props: IProps) => {
   }, [comment]);
 
   useEffect(() => {
-    if (myChanged && (startSave || doSave) && !savingRef.current) {
+    if (saveRequested(comment.id) && !savingRef.current) {
       handleSaveEdit();
-    }
+    } else if (clearRequested(comment.id)) handleCancelEdit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave, startSave, myChanged]);
-
-  useEffect(() => {
-    if (clearSave) handleCancelEdit();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clearSave]);
+  }, [toolsChanged]);
 
   useEffect(() => {
     if (canSaveRecording) {
@@ -253,7 +228,7 @@ export const CommentCard = (props: IProps) => {
     //if we're recording and can save, the comment will save after upload
     if (!canSaveRecording) {
       if (editComment.length > 0) afterUploadcb('');
-      else toolSaveCompleted(comment.id, '');
+      else saveCompleted(comment.id);
     }
   };
   const handleCancelEdit = () => {
@@ -320,6 +295,7 @@ export const CommentCard = (props: IProps) => {
         <Grid item xs={12}>
           {editing ? (
             <CommentEditor
+              toolId={comment.id}
               refresh={0}
               comment={comment.attributes?.commentText}
               onCancel={handleCancelEdit}

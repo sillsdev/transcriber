@@ -7,10 +7,10 @@ import MicIcon from '@material-ui/icons/MicOutlined';
 import { waitForIt } from '../../utils';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import MediaRecord from '../MediaRecord';
-import { useGlobal } from 'reactn';
 import { ICommentEditorStrings, ISharedStrings, IState } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { localStrings, sharedSelector } from '../../selector';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 interface IStateProps {}
 interface IProps extends IStateProps {
+  toolId: string;
   comment: string;
   fileName: string;
   cancelOnlyIfChanged?: boolean;
@@ -59,6 +60,7 @@ export const commentEditorSelector = (state: IState) =>
 
 export const CommentEditor = (props: IProps) => {
   const {
+    toolId,
     comment,
     fileName,
     cancelOnlyIfChanged,
@@ -84,15 +86,21 @@ export const CommentEditor = (props: IProps) => {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const classes = useStyles();
-  const [doSave] = useGlobal('doSave');
-  const [changed, setChanged] = useState(false);
   const [canSave, setCanSave] = useState(false);
   const [curText, setCurText] = useState(comment);
   const [startRecord, setStartRecord] = useState(false);
   const [statusText, setStatusText] = useState('');
-  const [startSave, setStartSave] = useState(false);
   const doRecordRef = useRef(false);
   const [recording, setRecording] = useState(false);
+  const [myChanged, setMyChanged] = useState(false);
+  const {
+    toolsChanged,
+    toolChanged,
+    startSave,
+    clearChanged,
+    saveRequested,
+    isChanged,
+  } = useContext(UnsavedContext).state;
 
   useEffect(() => {
     return () => {
@@ -102,13 +110,12 @@ export const CommentEditor = (props: IProps) => {
   }, []);
 
   useEffect(() => {
-    if (changed && !startSave) setStatusText(t.unsaved);
-  }, [changed, startSave, t.unsaved]);
-
-  useEffect(() => {
-    if (doSave) handleOk();
+    var changed = isChanged(toolId);
+    if (myChanged !== changed) setMyChanged(changed);
+    if (saveRequested(toolId)) handleOk();
+    else if (changed) setStatusText(t.unsaved);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave]);
+  }, [toolsChanged, toolId]);
 
   useEffect(() => {
     if (startRecord)
@@ -134,7 +141,7 @@ export const CommentEditor = (props: IProps) => {
     if (valid !== canSave) {
       setCanSave(valid);
       setCanSaveRecording(valid);
-      if (valid) setChanged(true);
+      if (valid) toolChanged(toolId, true);
     }
   };
   const onRecording = (r: boolean) => {
@@ -143,17 +150,17 @@ export const CommentEditor = (props: IProps) => {
   const handleTextChange = (e: any) => {
     setCurText(e.target.value);
     onTextChange(e.target.value);
-    setChanged(true);
+    toolChanged(toolId, true);
   };
 
   const handleOk = () => {
     //start the passage recorder if it's going...
-    if (!startSave) {
-      setStartSave(true);
-      onOk();
-      setStatusText(t.saving);
-      if (doRecordRef.current) setCommentRecording(false);
+    if (!saveRequested(toolId)) {
+      startSave(toolId);
     }
+    onOk();
+    setStatusText(t.saving);
+    if (doRecordRef.current) setCommentRecording(false);
   };
   const handleCancel = () => {
     onCancel();
@@ -171,9 +178,8 @@ export const CommentEditor = (props: IProps) => {
     if (doRecordRef.current) setCommentRecording(false);
     setStatusText('');
     setCurText('');
-    setChanged(false);
     doRecordRef.current = false;
-    setStartSave(false);
+    clearChanged(toolId);
   };
 
   useEffect(() => {
@@ -196,6 +202,7 @@ export const CommentEditor = (props: IProps) => {
       />
       {doRecordRef.current && (
         <MediaRecord
+          toolId={toolId}
           onRecording={onRecording}
           uploadMethod={uploadMethod}
           defaultFilename={fileName}
@@ -203,7 +210,6 @@ export const CommentEditor = (props: IProps) => {
           showFilename={false}
           setCanSave={handleSetCanSave}
           setStatusText={setStatusText}
-          startSave={startSave}
           size={200}
         />
       )}
@@ -227,7 +233,7 @@ export const CommentEditor = (props: IProps) => {
           <Typography variant="caption" className={classes.status}>
             {statusText}
           </Typography>
-          {(!cancelOnlyIfChanged || doRecordRef.current || changed) && (
+          {(!cancelOnlyIfChanged || doRecordRef.current || myChanged) && (
             <Tooltip title={ts.cancel}>
               <span>
                 <Button
@@ -248,7 +254,7 @@ export const CommentEditor = (props: IProps) => {
                 onClick={handleOk}
                 className={classes.button}
                 disabled={
-                  (!canSave && !curText.length) || !changed || recording
+                  (!canSave && !curText.length) || !myChanged || recording
                 }
               >
                 <SendIcon />

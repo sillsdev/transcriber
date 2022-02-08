@@ -32,6 +32,7 @@ import FilterMenu, { IFilterState } from './FilterMenu';
 import Auth from '../../auth/Auth';
 import Confirm from '../AlertDialog';
 import { waitForIt } from '../../utils';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -87,14 +88,9 @@ export function DiscussionList(props: IProps) {
   const [adding, setAdding] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const ctx = useContext(PassageDetailContext);
-  const {
-    currentstep,
-    rowData,
-    discussionSize,
-    passage,
-    getSegments,
-    toolsChanged,
-  } = ctx.state;
+  const { currentstep, rowData, discussionSize, passage, getSegments } =
+    ctx.state;
+  const { toolsChanged } = useContext(UnsavedContext).state;
   const { getRoleRec } = useRole();
   const { vernacularId } = useArtifactType();
   const [rootWidthStyle, setRootWidthStyle] = useState({
@@ -260,7 +256,9 @@ export function DiscussionList(props: IProps) {
   useEffect(() => {
     var myIds = displayDiscussions.map((d) => d.id);
     myIds.push(NewDiscussionToolId);
-    anyChangedRef.current = toolsChanged.some((t) => myIds.includes(t));
+    anyChangedRef.current = Object.keys(toolsChanged).some((t) =>
+      myIds.includes(t)
+    );
   }, [toolsChanged, displayDiscussions]);
 
   const checkChanged = (whatNext: string) => {

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useGlobal } from 'reactn';
 import WaveSurfer from 'wavesurfer.js';
 import { waitForIt } from '../utils';
 
@@ -32,7 +31,6 @@ export function useWaveSurferRegions(
   progress: () => number,
   setPlaying: (playing: boolean) => void
 ) {
-  const [, setChanged] = useGlobal('changed');
   const [ws, setWaveSurfer] = useState<WaveSurfer>();
   const wavesurferRef = useRef<WaveSurfer>();
   const singleRegionRef = useRef(singleRegionOnly);
@@ -315,7 +313,6 @@ export function useWaveSurferRegions(
     loopingRegionRef.current = undefined;
     loadingRef.current = false;
     onRegion(0, paramsRef.current, true);
-    setChanged(true);
   }
   function loadRegions(
     regions: IRegions | undefined,
@@ -402,7 +399,7 @@ export function useWaveSurferRegions(
     if (r && r.loop && ret.newEnd < ret.end)
       //&& playing
       goto(ret.start + 0.01);
-    setChanged(true);
+    onRegion(numRegions(), paramsRef.current, true);
     return ret;
   };
 
@@ -425,7 +422,7 @@ export function useWaveSurferRegions(
         updateRegion(r, { start: prev.start });
         ret.newStart = prev.start;
         prev.remove();
-        setChanged(true);
+        onRegion(numRegions(), paramsRef.current, true);
         return;
       }
     }
@@ -439,7 +436,7 @@ export function useWaveSurferRegions(
       r.remove();
       singleRegionRef.current = true;
     }
-    setChanged(true);
+    onRegion(numRegions(), paramsRef.current, true);
     return ret;
   };
 
@@ -479,7 +476,7 @@ export function useWaveSurferRegions(
     paramsRef.current = params;
     loadRegions({ params: params, regions: regions }, loop, true);
     if (regions.length) goto(regions[0].start);
-    setChanged(true);
+    onRegion(regions.length, paramsRef.current, true);
     return regions.length;
   }
   const wsPrevRegion = () => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { Grid, Paper, Typography, Button } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
@@ -12,7 +12,7 @@ import { ProjectCard, AddCard } from '.';
 import TeamDialog from './TeamDialog';
 import { useRole, useAllUserGroup } from '../../crud';
 import Confirm from '../AlertDialog';
-import { useRemoteSave } from '../../utils';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,7 +65,7 @@ export const TeamItem = (props: IProps) => {
   const { setMyOrgRole } = useRole();
   const [, setGroup] = useGlobal('group');
   const allUserGroup = useAllUserGroup();
-  const [startSave, , waitForSave] = useRemoteSave();
+  const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [changed] = useGlobal('changed');
 
   const handleMembers = (team: Organization) => () => {
