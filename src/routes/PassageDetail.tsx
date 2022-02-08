@@ -31,6 +31,8 @@ import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord';
 import PassageBackTranslate from '../components/PassageDetail/PassageBackTranslate';
+import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
+import IntegrationTab from '../components/Integration';
 import { ToolSlug, useStepTool, useUrlContext } from '../crud';
 import { RoleNames } from '../model';
 import PassageDetailCommunity from '../components/PassageDetail/PassageDetailCommunity';
@@ -77,6 +79,9 @@ const useStyles = makeStyles((theme: Theme) =>
     textarea: { resize: 'none' },
     actionButton: {
       color: theme.palette.primary.light,
+    },
+    transcriber: {
+      padding: theme.spacing(2),
     },
   })
 );
@@ -214,6 +219,14 @@ const PassageDetailGrids = (props: IProps) => {
               <PassageBackTranslate width={width - 20} />
             </Grid>
           </Grid>
+        )}
+        {tool === ToolSlug.Transcribe && (
+          <Grid item xs={12} className={classes.transcriber}>
+            <PassageDetailTranscribe />
+          </Grid>
+        )}
+        {tool === ToolSlug.Paratext && (
+          <IntegrationTab {...props} auth={auth} />
         )}
         {(tool === ToolSlug.Discuss || tool === ToolSlug.TeamCheck) && (
           <>

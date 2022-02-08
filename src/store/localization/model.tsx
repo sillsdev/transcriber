@@ -890,6 +890,10 @@ export interface IToolStrings extends Localize.LocalizedStringsMethods {
     "paratext": string;
 };
 
+export interface ITranscribeStrings extends Localize.LocalizedStringsMethods {
+    "switchToTranscriber": string;
+};
+
 export interface ITranscribeAddNoteStrings extends Localize.LocalizedStringsMethods {
     "addNoteTitle": string;
     "cancel": string;
@@ -898,6 +902,7 @@ export interface ITranscribeAddNoteStrings extends Localize.LocalizedStringsMeth
 
 export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "addNote": string;
+    "backToWorkflow": string;
     "comment": string;
     "congratulation": string;
     "done": string;
@@ -1201,6 +1206,7 @@ export interface ILocalizedStrings {
 	template: ITemplateStrings;
 	toDoTable: IToDoTableStrings;
 	tool: IToolStrings;
+	transcribe: ITranscribeStrings;
 	transcribeAddNote: ITranscribeAddNoteStrings;
 	transcriber: ITranscriberStrings;
 	transcribeReject: ITranscribeRejectStrings;

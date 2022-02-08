@@ -4294,6 +4294,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcribe.switchToTranscriber">
+         <segment>
+            <source>Switch to Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcribeAddNote.addNoteTitle">
          <segment>
             <source>Add Note</source>
@@ -4315,6 +4321,12 @@
       <unit id="transcriber.addNote">
          <segment>
             <source>Add Note</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.backToWorkflow">
+         <segment>
+            <source>Back to Workflow</source>
             <target/>
          </segment>
       </unit>

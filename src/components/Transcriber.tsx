@@ -50,6 +50,8 @@ import {
   waitForIt,
   dataPath,
   PathType,
+  localUserKey,
+  LocalKey,
 } from '../utils';
 import { isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
@@ -70,6 +72,7 @@ import { HotKeyContext } from '../context/HotKeyContext';
 import Spelling from './Spelling';
 import { SectionPassageTitle } from '../control/SectionPassageTitle';
 import { UnsavedContext } from '../context/UnsavedContext';
+import StickyRedirect from './StickyRedirect';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -300,6 +303,10 @@ export function Transcriber(props: IProps) {
   const [style, setStyle] = useState({
     cursor: 'default',
   });
+  const [jumpBack] = useState(
+    localStorage.getItem(localUserKey(LocalKey.jumpBack))
+  );
+  const [view, setView] = useState('');
   const [textAreaStyle, setTextAreaStyle] = useState({
     overflow: 'auto',
     backgroundColor: '#cfe8fc',
@@ -943,6 +950,15 @@ export function Transcriber(props: IProps) {
     setPlaying(newPlaying);
     playingRef.current = newPlaying;
   };
+
+  const handleWorkflow = async () => {
+    if (changed) await handleSave();
+    localStorage.removeItem(localUserKey(LocalKey.jumpBack));
+    setView(jumpBack || '#');
+  };
+
+  if (view) return <StickyRedirect to={view} />;
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
@@ -950,11 +966,22 @@ export function Transcriber(props: IProps) {
           <AllDone />
         ) : (
           <Grid container direction="column" style={style}>
-            <SectionPassageTitle
-              section={section}
-              passage={passage}
-              allBookData={allBookData}
-            />
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item md={9}>
+                <SectionPassageTitle
+                  section={section}
+                  passage={passage}
+                  allBookData={allBookData}
+                />
+              </Grid>
+              {jumpBack && (
+                <Grid item md={3} alignContent="flex-end">
+                  <Button onClick={handleWorkflow} variant="contained">
+                    {t.backToWorkflow}
+                  </Button>
+                </Grid>
+              )}
+            </Grid>
             <Wrapper>
               <SplitPane
                 defaultSize={INIT_PLAYER_HEIGHT}
