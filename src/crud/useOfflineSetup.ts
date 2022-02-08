@@ -120,7 +120,7 @@ export const useOfflineSetup = () => {
         { name: 'Record', tool: 'record' },
         { name: 'TeamCheck', tool: 'teamCheck' },
         { name: 'PeerReview', tool: 'teamCheck' },
-        { name: 'CommunityTesting', tool: 'discuss' },
+        { name: 'CommunityTesting', tool: 'community' },
         { name: 'BackTranslation', tool: 'segment' },
         { name: 'ConsultantCheck', tool: 'discuss' },
         { name: 'Review', tool: 'discuss' },
@@ -185,7 +185,8 @@ export const useOfflineSetup = () => {
         'backtranslation',
         'vernacular',
         'comment',
-        'testing',
+        'retell',
+        'qanda',
       ].map((n) => {
         let rec = {
           type: 'artifacttype',

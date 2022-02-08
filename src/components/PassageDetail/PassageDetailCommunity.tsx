@@ -274,7 +274,13 @@ export function PassageDetailCommunity(props: IProps) {
       mediaIdRef.current = data?.stringId;
     } else if (success && data) {
       // offlineOnly
-      await createMedia(data, 1, uploadList[n].size, passage.id, '');
+      await createMedia(
+        data,
+        1,
+        uploadList[n].size,
+        passage.id,
+        data.artifactTypeId
+      );
     }
     setStatusText('');
     if (!offline) {
