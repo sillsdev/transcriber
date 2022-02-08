@@ -185,7 +185,8 @@ export const useOfflineSetup = () => {
         'backtranslation',
         'vernacular',
         'comment',
-        'testing',
+        'retell',
+        'qanda',
       ].map((n) => {
         let rec = {
           type: 'artifacttype',
