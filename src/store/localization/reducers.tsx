@@ -830,6 +830,7 @@ const initialState = {
 			"bookNotInParatext": "Passage {0}.{1}: Paratext project does not contain book {2}.",
 			"BookNotSet": "Book was not set for Section {0} Passage {1}",
 			"cancel": "Cancel",
+			"description": "Description",
 			"editor": "Editor",
 			"backtranslator": "Back Translator",
 			"consultant": "Consultant",
@@ -864,11 +865,6 @@ const initialState = {
 			"uploadMediaSingular": "Upload Audio",
 			"user": "User",
 			"yes": "Yes",
-		}
-	}),
-	"shared          ": new LocalizedStrings({
-		"en": {
-			"description": "Description",
 		}
 	}),
 	"spelling": new LocalizedStrings({
@@ -1290,7 +1286,6 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"sectionResources" : new LocalizedStrings(action.payload.data.sectionResources),
 				"shared" : new LocalizedStrings(action.payload.data.shared),
-				"shared          " : new LocalizedStrings(action.payload.data.shared          ),
 				"spelling" : new LocalizedStrings(action.payload.data.spelling),
 				"stepEditor" : new LocalizedStrings(action.payload.data.stepEditor),
 				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),

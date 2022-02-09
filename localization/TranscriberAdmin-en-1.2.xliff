@@ -4359,8 +4359,7 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shared
-         .description">
+         <trans-unit id="shared.description">
             <source>Description</source>
             <target/>
             <context-group>
