@@ -227,7 +227,8 @@ export function PlanSheet(props: IProps) {
   const isSection = (i: number) => isSectionRow(rowInfo[i]);
 
   const isPassage = (i: number) => isPassageRow(rowInfo[i]);
-  const [changed, setChanged] = useState(false);
+  const [changed, setChanged] = useState(false); //for button enabling
+  const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
 
   const handleAddSection = () => {
@@ -427,12 +428,13 @@ export function PlanSheet(props: IProps) {
   };
 
   const handleAutoSave = () => {
-    if (changed && !preventSave.current && !global.alertOpen) {
+    if (changedRef.current && !preventSave.current && !global.alertOpen) {
       handleSave();
     } else {
       startSaveTimer();
     }
   };
+
   const startSaveTimer = () => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
@@ -451,11 +453,11 @@ export function PlanSheet(props: IProps) {
   }, []);
 
   useEffect(() => {
-    var myChanged = isChanged(toolId);
-    if (myChanged !== changed) setChanged(myChanged);
+    changedRef.current = isChanged(toolId);
+    if (changedRef.current !== changed) setChanged(changedRef.current);
     var isSaving = saveRequested(toolId);
     if (isSaving !== saving) setSaving(isSaving);
-    if (myChanged) {
+    if (changedRef.current) {
       if (saveTimer.current === undefined) startSaveTimer();
       if (!connected && !offlineOnly) showMessage(ts.NoSaveOffline);
     } else {
