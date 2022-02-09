@@ -1,8 +1,9 @@
-import { useState, useContext, useMemo, useRef } from 'react';
+import React, { useState, useContext, useMemo, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
   IPassageDetailArtifactsStrings,
+  ISharedStrings,
   IState,
   RoleNames,
 } from '../../../model';
@@ -15,6 +16,7 @@ import {
   SectionResourceUser,
   Resource,
 } from '../../../model';
+import { TextField } from '@material-ui/core';
 import Auth from '../../../auth/Auth';
 import { withData } from '../../../mods/react-orbitjs';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
@@ -51,6 +53,7 @@ interface IRecordProps {
 
 interface IStateProps {
   t: IPassageDetailArtifactsStrings;
+  ts: ISharedStrings;
 }
 
 interface IProps extends IStateProps, IRecordProps {
@@ -58,7 +61,7 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 export function PassageDetailArtifacts(props: IProps) {
-  const { sectionResources, artifactTypes, auth, t } = props;
+  const { sectionResources, artifactTypes, auth, t, ts } = props;
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
   const [offline] = useGlobal('offline');
@@ -85,8 +88,10 @@ export function PassageDetailArtifacts(props: IProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const cancelled = useRef(false);
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
+  const [activityVisible, setActivityVisible] = useState(false);
   const catIdRef = useRef<string>();
   const descriptionRef = useRef<string>('');
+  const [description, setDescription] = useState('');
   const { showMessage } = useSnackBar();
 
   const resourceType = useMemo(() => {
@@ -119,6 +124,16 @@ export function PassageDetailArtifacts(props: IProps) {
     }));
   };
 
+  const maxCount = useMemo(() => {
+    return sectionResources.reduce(
+      (p, c) =>
+        related(c, 'section') === section.id
+          ? Math.max(p, c.attributes?.sequenceNum)
+          : p,
+      0
+    );
+  }, [sectionResources, section]);
+
   const handleDelete = (id: string) => {
     const secRes = sectionResources.find((r) => related(r, 'mediafile') === id);
     secRes && DeleteSectionResource(secRes);
@@ -132,12 +147,32 @@ export function PassageDetailArtifacts(props: IProps) {
     setSharedResourceVisible(v);
   };
 
+  const handleActivityVisible = (v: boolean) => {
+    setActivityVisible(v);
+    descriptionRef.current = '';
+    setDescription('');
+  };
+
+  const handleActivitySave = () => {
+    setActivityVisible(false);
+    AddSectionResource(maxCount + 1, descriptionRef.current);
+    descriptionRef.current = '';
+    setDescription('');
+  };
+
+  const handleActivityCancel = () => {
+    descriptionRef.current = '';
+    setDescription('');
+    setActivityVisible(false);
+  };
+
   const handleAction = (what: string) => {
     if (what === 'upload') {
       setUploadVisible(true);
     } else if (what === 'reference') {
       setSharedResourceVisible(true);
     } else if (what === 'activity') {
+      setActivityVisible(true);
     }
   };
 
@@ -173,7 +208,7 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
-    let cnt = rowData.length;
+    let cnt = maxCount;
     if (mediaRemoteIds) {
       for (const remId of mediaRemoteIds) {
         cnt += 1;
@@ -207,6 +242,12 @@ export function PassageDetailArtifacts(props: IProps) {
 
   const handleDescription = (desc: string) => {
     descriptionRef.current = desc;
+  };
+
+  const handleChangeDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.persist();
+    handleDescription(e.target.value);
+    setDescription(e.target.value);
   };
 
   return (
@@ -263,12 +304,29 @@ export function PassageDetailArtifacts(props: IProps) {
           onOpen={handleSharedResourceVisible}
         />
       </BigDialog>
+      <BigDialog
+        title={t.activity}
+        isOpen={activityVisible}
+        onOpen={handleActivityVisible}
+        onSave={handleActivitySave}
+        onCancel={handleActivityCancel}
+      >
+        <TextField
+          id="description"
+          label={ts.description}
+          value={description}
+          onChange={handleChangeDescription}
+          required={false}
+          fullWidth={true}
+        />
+      </BigDialog>
     </>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'passageDetailArtifacts' }),
+  ts: localStrings(state, { layout: 'shared' }),
 });
 
 const mapRecordsToProps = {

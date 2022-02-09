@@ -29,7 +29,7 @@ interface IStateProps {
   t: ITeamCheckReferenceStrings;
 }
 interface IRecordProps {
-  sectionResource: Array<SectionResource>;
+  sectionResources: Array<SectionResource>;
 }
 interface IProps extends IStateProps, IRecordProps {
   inResource?: string;
@@ -97,7 +97,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
 
 const mapRecordsToProps = {
-  sectionResource: (q: QueryBuilder) => q.findRecords('sectionresource'),
+  sectionResources: (q: QueryBuilder) => q.findRecords('sectionresource'),
 };
 
 export default withData(mapRecordsToProps)(

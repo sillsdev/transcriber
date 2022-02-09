@@ -27,7 +27,7 @@ export const useSecResCreate = (section: RecordIdentity) => {
   return async (
     seq: number,
     desc: string | null,
-    mediafile: RecordIdentity
+    mediafile?: RecordIdentity
   ) => {
     const secRes = {
       type: 'sectionresource',
@@ -41,8 +41,9 @@ export const useSecResCreate = (section: RecordIdentity) => {
     const ops = [
       ...AddRecord(t, secRes, user, memory),
       t.replaceRelatedRecord(secRes, 'section', section),
-      t.replaceRelatedRecord(secRes, 'mediafile', mediafile),
     ];
+    if (mediafile)
+      ops.push(t.replaceRelatedRecord(secRes, 'mediafile', mediafile));
     if (internalization)
       ops.push(
         t.replaceRelatedRecord(secRes, 'orgWorkflowStep', internalization)
