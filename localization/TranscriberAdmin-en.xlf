@@ -238,6 +238,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactCategory.qanda">
+         <segment>
+            <source>Question and Answer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.retelling">
+         <segment>
+            <source>Retelling</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactCategory.scripture">
          <segment>
             <source>Scripture</source>
@@ -4255,6 +4267,18 @@
       <unit id="toDoTable.yes">
          <segment>
             <source>Yes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.export">
+         <segment>
+            <source>Export</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.done">
+         <segment>
+            <source>Done</source>
             <target/>
          </segment>
       </unit>
