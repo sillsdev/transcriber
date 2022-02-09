@@ -12,13 +12,23 @@ const useStyles = makeStyles({
   },
 });
 
-export const StageReport = ({ step }: { step: string }) => {
+interface IProps {
+  step: string;
+  onClick?: any;
+}
+
+export const StageReport = ({ step, onClick }: IProps) => {
   const classes = useStyles();
   const theme = useTheme();
 
   return (
-    <div className={classes.step}>
-      <Stage id="" label={step} color={theme.palette.grey[300]} />
+    <div id="stage-report" className={classes.step}>
+      <Stage
+        id=""
+        label={step}
+        color={theme.palette.grey[300]}
+        select={onClick}
+      />
     </div>
   );
 };

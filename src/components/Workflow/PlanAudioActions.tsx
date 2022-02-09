@@ -4,10 +4,10 @@ import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 //import AddIcon from '@material-ui/icons/AddCircleOutline';
 import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
 import PauseIcon from '@material-ui/icons/Pause';
+import TranscribeIcon from '../../control/TranscribeIcon';
 import SharedCheckbox from '@material-ui/icons/CheckBoxOutlined';
 import NotSharedCheckbox from '@material-ui/icons/CheckBoxOutlineBlankOutlined';
 import VersionsIcon from '@material-ui/icons/List';
-import DetailIcon from '@material-ui/icons/Edit';
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 
@@ -39,12 +39,11 @@ interface IProps extends IStateProps {
   isPlaying: boolean;
   canAssign: boolean;
   canDelete: boolean;
-  onTranscribe: (i: number) => () => void;
+  onTranscribe: (i: number) => void;
   onAssign: (where: number[]) => () => void;
   onPlayStatus: (mediaId: string) => void;
   onDelete: (i: number) => () => void;
   onHistory: (i: number) => () => void;
-  onPassageDetail: (i: number) => () => void;
 }
 
 export function PlanAudioActions(props: IProps) {
@@ -56,13 +55,18 @@ export function PlanAudioActions(props: IProps) {
     mediaShared,
     onPlayStatus,
     onHistory,
+    onTranscribe,
     isPlaying,
-    onPassageDetail,
   } = props;
   const classes = useStyles();
 
   const handlePlayStatus = () => () => {
     onPlayStatus(mediaId);
+  };
+
+  const handleTranscribe = (i: number) => () => {
+    onPlayStatus('');
+    onTranscribe(i);
   };
 
   return (
@@ -101,11 +105,12 @@ export function PlanAudioActions(props: IProps) {
       )}
       {isPassage && (
         <IconButton
-          id="planAudDetail"
-          title={t.passageDetail}
-          onClick={onPassageDetail(rowIndex)}
+          id="planActTrans"
+          title={t.transcribe}
+          onClick={handleTranscribe(rowIndex)}
+          disabled={(mediaId || '') === ''}
         >
-          <DetailIcon className={classes.actionButton} />
+          <TranscribeIcon />
         </IconButton>
       )}
     </div>
