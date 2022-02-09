@@ -774,7 +774,6 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "bookNotInParatext": string;
     "BookNotSet": string;
     "cancel": string;
-    "description": string;
     "editor": string;
     "backtranslator": string;
     "consultant": string;
@@ -809,6 +808,10 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "uploadMediaSingular": string;
     "user": string;
     "yes": string;
+};
+
+export interface IShared          Strings extends Localize.LocalizedStringsMethods {
+    "description": string;
 };
 
 export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
@@ -1201,6 +1204,7 @@ export interface ILocalizedStrings {
 	scriptureTable: IScriptureTableStrings;
 	sectionResources: ISectionResourcesStrings;
 	shared: ISharedStrings;
+	shared          : IShared          Strings;
 	spelling: ISpellingStrings;
 	stepEditor: IStepEditorStrings;
 	taskItem: ITaskItemStrings;
