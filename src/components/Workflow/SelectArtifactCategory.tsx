@@ -17,12 +17,14 @@ import {
   IState,
 } from '../../model';
 import AddIcon from '@material-ui/icons/Add';
+import InfoIcon from '@material-ui/icons/Info';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
+import { LightTooltip } from '../../control';
 
 interface IRecordProps {
   artifactCategories: Array<ArtifactCategory>;
@@ -30,11 +32,16 @@ interface IRecordProps {
 interface IStateProps {
   t: ISelectArtifactCategoryStrings;
 }
+export enum ScriptureEnum {
+  hide,
+  highlight,
+}
 interface IProps extends IStateProps, IRecordProps {
   initCategory: string; //id
   onCategoryChange: (artifactCategoryId: string) => void;
   required: boolean;
   allowNew?: boolean;
+  scripture?: ScriptureEnum;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -68,6 +75,9 @@ const useStyles = makeStyles((theme: Theme) =>
     formTextLabel: {
       fontSize: 'small',
     },
+    info: {
+      color: theme.palette.primary.light,
+    },
   })
 );
 export const SelectArtifactCategory = (props: IProps) => {
@@ -78,13 +88,17 @@ export const SelectArtifactCategory = (props: IProps) => {
     t,
     artifactCategories,
     initCategory,
+    scripture,
   } = props;
   const classes = useStyles();
   const [categoryId, setCategoryId] = useState(initCategory);
   const [newArtifactCategory, setNewArtifactCategory] = useState('');
   const [showNew, setShowNew] = useState(false);
-  const { getArtifactCategorys, addNewArtifactCategory } =
-    useArtifactCategory();
+  const {
+    getArtifactCategorys,
+    addNewArtifactCategory,
+    scriptureTypeCategory,
+  } = useArtifactCategory();
   const [artifactCategorys, setArtifactCategorys] = useState<
     IArtifactCategory[]
   >([]);
@@ -94,8 +108,15 @@ export const SelectArtifactCategory = (props: IProps) => {
     setCategoryId(initCategory);
   }, [initCategory]);
 
+  const getCategorys = async () => {
+    var cats = await getArtifactCategorys();
+    if (scripture === ScriptureEnum.hide)
+      cats = cats.filter((c) => !scriptureTypeCategory(c.slug));
+    return cats;
+  };
+
   useEffect(() => {
-    getArtifactCategorys().then((cats) => setArtifactCategorys(cats));
+    getCategorys().then((cats) => setArtifactCategorys(cats));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [artifactCategories]);
 
@@ -105,7 +126,7 @@ export const SelectArtifactCategory = (props: IProps) => {
         if (newId === 'duplicate') {
           showMessage(t.duplicateCategory);
         } else {
-          getArtifactCategorys().then((cats) => {
+          getCategorys().then((cats) => {
             setArtifactCategorys(cats);
             setCategoryId(newId);
             onCategoryChange(newId);
@@ -162,7 +183,18 @@ export const SelectArtifactCategory = (props: IProps) => {
           .sort((i, j) => (i.category < j.category ? -1 : 1))
           .map((option: IArtifactCategory, i) => (
             <MenuItem key={i} value={option.id}>
-              {option.category}
+              {option.category + '\u00A0\u00A0'}
+              {scripture === ScriptureEnum.highlight ? (
+                scriptureTypeCategory(option.slug) ? (
+                  <LightTooltip title={t.scriptureHighlight}>
+                    <InfoIcon className={classes.info} />
+                  </LightTooltip>
+                ) : (
+                  <></>
+                )
+              ) : (
+                <></>
+              )}
             </MenuItem>
           ))
           .concat(

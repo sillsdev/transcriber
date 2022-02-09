@@ -334,6 +334,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="selectArtifactCategory.scriptureHighlight">
+         <segment>
+            <source>Resources of this type will be available in steps using the Compare tool.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="selectArtifactType.addNewType">
          <segment>
             <source>Add New Type</source>
@@ -3727,6 +3733,12 @@
       <unit id="shared.cancel">
          <segment>
             <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.description">
+         <segment>
+            <source>Description</source>
             <target/>
          </segment>
       </unit>

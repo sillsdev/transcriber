@@ -43,7 +43,7 @@ export const SelectMyResource = (props: IProps) => {
   const ctx = useContext(PassageDetailContext);
   const { rowData } = ctx.state;
   const [resource, setResource] = useState('');
-  const { fromLocalizedArtifactCategory } = useArtifactCategory();
+  const { scriptureTypeCategory } = useArtifactCategory();
 
   const handleUserChange = (e: any) => {
     setResource(e.target.value);
@@ -60,9 +60,7 @@ export const SelectMyResource = (props: IProps) => {
   };
 
   const checkCategory = (localCat: string) => {
-    return ['scripture', 'biblestory'].includes(
-      fromLocalizedArtifactCategory(localCat)
-    );
+    return scriptureTypeCategory(localCat);
   };
 
   return (

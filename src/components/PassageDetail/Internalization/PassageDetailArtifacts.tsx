@@ -39,7 +39,7 @@ import {
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import SelectResource, { CatMap } from './SelectResource';
-import SelectArtifactCategory from '../../Workflow/SelectArtifactCategory';
+import ResourceData from './ResourceData';
 
 interface IRecordProps {
   sectionResources: SectionResource[];
@@ -86,6 +86,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const cancelled = useRef(false);
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
   const catIdRef = useRef<string>();
+  const descriptionRef = useRef<string>('');
   const { showMessage } = useSnackBar();
 
   const resourceType = useMemo(() => {
@@ -184,7 +185,7 @@ export function PassageDetailArtifacts(props: IProps) {
             t.replaceRelatedRecord(mediaRecId, 'artifactCategory', catRecId),
           ]);
         }
-        await AddSectionResource(cnt, null, mediaRecId);
+        await AddSectionResource(cnt, descriptionRef.current, mediaRecId);
       }
       catIdRef.current = undefined;
     }
@@ -202,6 +203,10 @@ export function PassageDetailArtifacts(props: IProps) {
 
   const handleCategory = (categoryId: string) => {
     catIdRef.current = categoryId;
+  };
+
+  const handleDescription = (desc: string) => {
+    descriptionRef.current = desc;
   };
 
   return (
@@ -237,11 +242,13 @@ export function PassageDetailArtifacts(props: IProps) {
         cancelled={cancelled}
         artifactType={resourceType}
         metaData={
-          <SelectArtifactCategory
-            allowNew
+          <ResourceData
+            catAllowNew={true} //if they can upload they can add cat
             initCategory=""
             onCategoryChange={handleCategory}
-            required={false}
+            initDescription=""
+            onDescriptionChange={handleDescription}
+            catRequired={false}
           />
         }
       />

@@ -12,6 +12,7 @@ interface ISwitches {
   [key: string]: any;
 }
 export interface IArtifactCategory {
+  slug: string;
   category: string;
   id: string;
 }
@@ -64,6 +65,7 @@ export const useArtifactCategory = () => {
       )
       .forEach((r) =>
         categorys.push({
+          slug: r.attributes.categoryname,
           category: localizedArtifactCategory(r.attributes.categoryname),
           id: r.id,
         })
@@ -114,10 +116,18 @@ export const useArtifactCategory = () => {
       return artifactCategory.id;
     }
   };
+  const scriptureTypeCategory = (cat: string) => {
+    return (
+      ['scripture', 'biblestory'].includes(cat) ||
+      ['scripture', 'biblestory'].includes(fromLocalizedArtifactCategory(cat))
+    );
+  };
+
   return {
     getArtifactCategorys,
     addNewArtifactCategory,
     localizedArtifactCategory,
     fromLocalizedArtifactCategory,
+    scriptureTypeCategory,
   };
 };

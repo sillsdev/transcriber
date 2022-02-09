@@ -72,6 +72,7 @@ export interface ISelectArtifactCategoryStrings extends Localize.LocalizedString
     "artifactCategory": string;
     "duplicateCategory": string;
     "newArtifactCategory": string;
+    "scriptureHighlight": string;
 };
 
 export interface ISelectArtifactTypeStrings extends Localize.LocalizedStringsMethods {
@@ -773,6 +774,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "bookNotInParatext": string;
     "BookNotSet": string;
     "cancel": string;
+    "description": string;
     "editor": string;
     "backtranslator": string;
     "consultant": string;
