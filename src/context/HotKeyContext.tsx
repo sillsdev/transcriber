@@ -39,7 +39,7 @@ interface hotKeyInfo {
 
 const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
   const { t } = props;
-  const [hotKeys, setHotKeys] = useState<hotKeyInfo[]>([]);
+  const hotKeys = useRef<hotKeyInfo[]>([]);
 
   const [state, setState] = useState({
     ...initState,
@@ -61,14 +61,14 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
     alt: boolean,
     shift: boolean
   ) => {
-    var ix = hotKeys.findIndex(
+    var ix = hotKeys.current.findIndex(
       (hk) =>
         hk.key === key.toUpperCase() &&
         hk.ctrl === ctrl &&
         hk.alt === alt &&
         hk.shift === shift
     );
-    if (ix !== -1) return hotKeys[ix].cb;
+    if (ix !== -1) return hotKeys.current[ix].cb;
     return undefined;
   };
 
@@ -121,7 +121,7 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
   };
   const findHotKey = (key: string) => {
     var thiskey = newHotKey(key);
-    return hotKeys.findIndex(
+    return hotKeys.current.findIndex(
       (hk) =>
         hk.key === thiskey.key &&
         hk.ctrl === thiskey.ctrl &&
@@ -134,9 +134,9 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
     akeys.forEach((key) => {
       var ix = findHotKey(key);
       if (ix !== -1) {
-        hotKeys[ix].cb = cb;
+        hotKeys.current[ix].cb = cb;
       } else {
-        hotKeys.push(newHotKey(key, cb));
+        hotKeys.current.push(newHotKey(key, cb));
       }
     });
   };
@@ -145,7 +145,7 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
     akeys.forEach((key) => {
       var ix = findHotKey(key);
       if (ix !== -1 && isMounted()) {
-        setHotKeys(hotKeys.splice(ix, 1));
+        hotKeys.current.splice(ix, 1);
       }
     });
   };
