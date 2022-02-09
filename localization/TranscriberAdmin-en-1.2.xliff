@@ -377,17 +377,23 @@
             <source>Category already exists.</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">AlertDialog.tsx</context>
+               <context context-type="sourcefile">selectArtifactCategory.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="selectArtifactCategory.newArtifactCategory">
             <source>New Category</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">AlertDialog.tsx</context>
+               <context context-type="sourcefile">selectArtifactCategory.tsx</context>
             </context-group>
          </trans-unit>
-
+         <trans-unit id="selectArtifactCategory.scriptureHighlight">
+            <source>Resources of this type will be available in steps using the Compare tool.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">selectArtifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="selectArtifactType.addNewType">
             <source>Add New Type</source>
             <target/>
@@ -4351,6 +4357,14 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared
+         .description">
+            <source>Description</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ResourceData.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="shared.editor">

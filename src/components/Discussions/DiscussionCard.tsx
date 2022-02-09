@@ -53,7 +53,9 @@ import { useArtifactCategory } from '../../crud/useArtifactCategory';
 import SelectRole from '../../control/SelectRole';
 import SelectUser from '../../control/SelectUser';
 import { StageReport } from '../../control';
-import SelectArtifactCategory from '../Workflow/SelectArtifactCategory';
+import SelectArtifactCategory, {
+  ScriptureEnum,
+} from '../Workflow/SelectArtifactCategory';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { removeExtension, waitForIt } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
@@ -668,6 +670,7 @@ export const DiscussionCard = (props: IProps) => {
                   projRole === RoleNames.Admin && (!offline || offlineOnly)
                 }
                 required={false}
+                scripture={ScriptureEnum.hide}
               />
               <div className={classes.row}>
                 <Button

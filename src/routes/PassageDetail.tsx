@@ -33,9 +33,16 @@ import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord
 import PassageBackTranslate from '../components/PassageDetail/PassageBackTranslate';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
 import IntegrationTab from '../components/Integration';
-import { ToolSlug, useStepTool, useUrlContext } from '../crud';
+import {
+  ToolSlug,
+  useProjectType,
+  useRole,
+  useStepTool,
+  useUrlContext,
+} from '../crud';
 import { RoleNames } from '../model';
 import PassageDetailCommunity from '../components/PassageDetail/PassageDetailCommunity';
+import { forceLogin, LocalKey, localUserKey } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -149,8 +156,6 @@ interface ParamTypes {
 
 const PassageDetailGrids = (props: IProps) => {
   const { auth } = props;
-  const { prjId } = useParams<ParamTypes>();
-  const setUrlContext = useUrlContext();
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [width, setWidth] = useState(window.innerWidth);
@@ -168,12 +173,10 @@ const PassageDetailGrids = (props: IProps) => {
   };
 
   useEffect(() => {
-    setUrlContext(prjId);
     setDimensions();
     const handleResize = debounce(() => {
       setDimensions();
     }, 100);
-
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -278,9 +281,14 @@ export const PassageDetail = (props: IProps) => {
   const classes = useStyles();
   const { prjId } = useParams<ParamTypes>();
   const { pathname } = useLocation();
+  const setUrlContext = useUrlContext();
   const uctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = uctx.state;
   const [view, setView] = useState('');
+  const [projRole] = useGlobal('projRole');
+  const { setMyProjRole } = useRole();
+  const [projType] = useGlobal('projType');
+  const { setProjectType } = useProjectType();
 
   const handleSwitchTo = () => {
     setView(`/plan/${prjId}/0`);
@@ -296,6 +304,19 @@ export const PassageDetail = (props: IProps) => {
       />
     );
   };
+
+  useEffect(() => {
+    const projectId = setUrlContext(prjId);
+    if (!projRole)
+      if (!setMyProjRole(projectId)) {
+        // If after proj role set there is none, force reload
+        localStorage.removeItem(localUserKey(LocalKey.url));
+        forceLogin();
+        setView('/logout');
+      }
+    if (projType === '') setProjectType(projectId);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
 
   if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
 

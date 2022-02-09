@@ -83,6 +83,7 @@ const initialState = {
 			"artifactCategory": "Category",
 			"duplicateCategory": "Category already exists.",
 			"newArtifactCategory": "New Category",
+			"scriptureHighlight": "Resources of this type will be available in steps using the Compare tool.",
 		}
 	}),
 	"selectArtifactType": new LocalizedStrings({
@@ -829,6 +830,7 @@ const initialState = {
 			"bookNotInParatext": "Passage {0}.{1}: Paratext project does not contain book {2}.",
 			"BookNotSet": "Book was not set for Section {0} Passage {1}",
 			"cancel": "Cancel",
+			"description": "Description",
 			"editor": "Editor",
 			"backtranslator": "Back Translator",
 			"consultant": "Consultant",
