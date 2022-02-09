@@ -59,6 +59,8 @@ const initialState = {
 			"geographic": "Geographic",
 			"grammar": "Grammar",
 			"person": "Person",
+			"qanda": "Question and Answer",
+			"retelling": "Retelling",
 			"scripture": "Scripture",
 			"theology": "Theology",
 			"uncategorized": "Uncategorized",
@@ -945,6 +947,8 @@ const initialState = {
 	}),
 	"tool": new LocalizedStrings({
 		"en": {
+			"export": "Export",
+			"done": "Done",
 			"resource": "Internalize",
 			"record": "Record",
 			"teamCheck": "Compare",

@@ -275,6 +275,20 @@
                <context context-type="sourcefile">artifactCategory.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactCategory.qanda">
+            <source>Question and Answer</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.retelling">
+            <source>Retelling</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="artifactCategory.scripture">
             <source>Scripture</source>
             <target/>
@@ -4968,6 +4982,20 @@
                <context context-type="sourcefile">ToDoTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="tool.export">
+      		<source>Export</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="tool.done">
+      		<source>Done</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="tool.resource">
       		<source>Internalize</source>
       		<target/>

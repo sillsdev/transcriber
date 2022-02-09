@@ -50,6 +50,8 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
     "geographic": string;
     "grammar": string;
     "person": string;
+    "qanda": string;
+    "retelling": string;
     "scripture": string;
     "theology": string;
     "uncategorized": string;
@@ -882,6 +884,8 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IToolStrings extends Localize.LocalizedStringsMethods {
+    "export": string;
+    "done": string;
     "resource": string;
     "record": string;
     "teamCheck": string;
