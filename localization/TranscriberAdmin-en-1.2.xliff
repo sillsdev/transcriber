@@ -4786,6 +4786,13 @@
                <context context-type="sourcefile">template.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="teamCheckReference.resourcehelper">
+            <source>Scripture or Bible Story Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">template.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="template.apply">
             <source>Apply</source>
             <target/>
@@ -4961,15 +4968,8 @@
                <context context-type="sourcefile">ToDoTable.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="tool.keyTerms">
-      		<source>Key Terms</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">useTools.ts</context>
-      		</context-group>
-      	</trans-unit>
       	<trans-unit id="tool.resource">
-      		<source>Resource</source>
+      		<source>Internalize</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">useTools.ts</context>
@@ -4983,14 +4983,14 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="tool.teamCheck">
-      		<source>Team Check</source>
+      		<source>Compare</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">useTools.ts</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="tool.community">
-      		<source>Community Testing</source>
+      		<source>Community Test</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">useTools.ts</context>
@@ -5018,7 +5018,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="tool.paratext">
-      		<source>Paratext</source>
+      		<source>Paratext Sync</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">useTools.ts</context>
@@ -6082,14 +6082,14 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="workflowSteps.backTranslation">
-      		<source>Back Translation</source>
+      		<source>Back Translate</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">passageDetail.tsx</context>
       		</context-group>
       	</trans-unit>
          <trans-unit id="workflowSteps.communityTesting">
-            <source>Community Testing</source>
+            <source>Community Test</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
@@ -6103,26 +6103,19 @@
             </context-group>
          </trans-unit>
           <trans-unit id="workflowSteps.duplication">
-            <source>Duplication</source>
+            <source>Duplicate</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="workflowSteps.finalRecording">
-            <source>Final Recording</source>
+            <source>Final Record</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="workflowSteps.finalEdit">
-      		<source>Final Edit</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">passageDetail.tsx</context>
-      		</context-group>
-      	</trans-unit>
       	<trans-unit id="workflowSteps.finalReview">
       		<source>Final Review</source>
       		<target/>
@@ -6131,21 +6124,14 @@
       		</context-group>
       	</trans-unit>
          <trans-unit id="workflowSteps.internalization">
-            <source>Internalization</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">passageDetail.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="workflowSteps.keyTerms">
-            <source>Key Terms</source>
+            <source>Internalize</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
       	<trans-unit id="workflowSteps.paratextSync">
-      		<source>Paratext Sync</source>
+      		<source>Sync to Paratext</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">passageDetail.tsx</context>
@@ -6174,6 +6160,13 @@
          </trans-unit>
          <trans-unit id="workflowSteps.teamCheck">
             <source>Team Check</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.transcribe">
+            <source>Transcribe</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
