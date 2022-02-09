@@ -847,6 +847,7 @@ export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
 
 export interface ITeamCheckReferenceStrings extends Localize.LocalizedStringsMethods {
     "resource": string;
+    "resourcehelper": string;
 };
 
 export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
@@ -881,7 +882,6 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IToolStrings extends Localize.LocalizedStringsMethods {
-    "keyTerms": string;
     "resource": string;
     "record": string;
     "teamCheck": string;
@@ -1088,15 +1088,14 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "consultantCheck": string;
     "duplication": string;
     "finalRecording": string;
-    "finalEdit": string;
     "finalReview": string;
     "internalization": string;
-    "keyTerms": string;
     "paratextSync": string;
     "peerReview": string;
     "record": string;
     "review": string;
     "teamCheck": string;
+    "transcribe": string;
     "unsaved": string;
     "saveFirst": string;
 };

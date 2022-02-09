@@ -69,6 +69,7 @@ export const SelectMyResource = (props: IProps) => {
       className={classes.textField}
       select
       label={t.resource}
+      helperText={t.resourcehelper}
       value={resource}
       onChange={handleUserChange}
       SelectProps={{
@@ -78,6 +79,7 @@ export const SelectMyResource = (props: IProps) => {
       }}
       variant="filled"
       required={required}
+      fullWidth={true}
     >
       {rowData
         .filter((r) => r.isResource && checkCategory(r.artifactCategory))

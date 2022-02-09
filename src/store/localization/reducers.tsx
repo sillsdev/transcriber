@@ -907,6 +907,7 @@ const initialState = {
 	"teamCheckReference": new LocalizedStrings({
 		"en": {
 			"resource": "Resource",
+			"resourcehelper": "Scripture or Bible Story Resource",
 		}
 	}),
 	"template": new LocalizedStrings({
@@ -944,15 +945,14 @@ const initialState = {
 	}),
 	"tool": new LocalizedStrings({
 		"en": {
-			"keyTerms": "Key Terms",
-			"resource": "Resource",
+			"resource": "Internalize",
 			"record": "Record",
-			"teamCheck": "Team Check",
-			"community": "Community Testing",
+			"teamCheck": "Compare",
+			"community": "Community Test",
 			"discuss": "Discuss",
 			"transcribe": "Transcribe",
 			"segment": "Segment",
-			"paratext": "Paratext",
+			"paratext": "Paratext Sync",
 		}
 	}),
 	"transcribe": new LocalizedStrings({
@@ -1160,20 +1160,19 @@ const initialState = {
 	}),
 	"workflowSteps": new LocalizedStrings({
 		"en": {
-			"backTranslation": "Back Translation",
-			"communityTesting": "Community Testing",
+			"backTranslation": "Back Translate",
+			"communityTesting": "Community Test",
 			"consultantCheck": "Consultant Check",
-			"duplication": "Duplication",
-			"finalRecording": "Final Recording",
-			"finalEdit": "Final Edit",
+			"duplication": "Duplicate",
+			"finalRecording": "Final Record",
 			"finalReview": "Final Review",
-			"internalization": "Internalization",
-			"keyTerms": "Key Terms",
-			"paratextSync": "Paratext Sync",
+			"internalization": "Internalize",
+			"paratextSync": "Sync to Paratext",
 			"peerReview": "Peer Review",
 			"record": "Record",
 			"review": "Review",
 			"teamCheck": "Team Check",
+			"transcribe": "Transcribe",
 			"unsaved": "Unsaved content",
 			"saveFirst": "Save before changing step?",
 		}

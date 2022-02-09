@@ -4102,6 +4102,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="teamCheckReference.resourcehelper">
+         <segment>
+            <source>Scripture or Bible Story Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="template.apply">
          <segment>
             <source>Apply</source>
@@ -4252,15 +4258,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="tool.keyTerms">
-         <segment>
-            <source>Key Terms</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="tool.resource">
          <segment>
-            <source>Resource</source>
+            <source>Internalize</source>
             <target/>
          </segment>
       </unit>
@@ -4272,13 +4272,13 @@
       </unit>
       <unit id="tool.teamCheck">
          <segment>
-            <source>Team Check</source>
+            <source>Compare</source>
             <target/>
          </segment>
       </unit>
       <unit id="tool.community">
          <segment>
-            <source>Community Testing</source>
+            <source>Community Test</source>
             <target/>
          </segment>
       </unit>
@@ -4302,7 +4302,7 @@
       </unit>
       <unit id="tool.paratext">
          <segment>
-            <source>Paratext</source>
+            <source>Paratext Sync</source>
             <target/>
          </segment>
       </unit>
@@ -5214,13 +5214,13 @@
       </unit>
       <unit id="workflowSteps.backTranslation">
          <segment>
-            <source>Back Translation</source>
+            <source>Back Translate</source>
             <target/>
          </segment>
       </unit>
       <unit id="workflowSteps.communityTesting">
          <segment>
-            <source>Community Testing</source>
+            <source>Community Test</source>
             <target/>
          </segment>
       </unit>
@@ -5232,19 +5232,13 @@
       </unit>
       <unit id="workflowSteps.duplication">
          <segment>
-            <source>Duplication</source>
+            <source>Duplicate</source>
             <target/>
          </segment>
       </unit>
       <unit id="workflowSteps.finalRecording">
          <segment>
-            <source>Final Recording</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.finalEdit">
-         <segment>
-            <source>Final Edit</source>
+            <source>Final Record</source>
             <target/>
          </segment>
       </unit>
@@ -5256,19 +5250,13 @@
       </unit>
       <unit id="workflowSteps.internalization">
          <segment>
-            <source>Internalization</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.keyTerms">
-         <segment>
-            <source>Key Terms</source>
+            <source>Internalize</source>
             <target/>
          </segment>
       </unit>
       <unit id="workflowSteps.paratextSync">
          <segment>
-            <source>Paratext Sync</source>
+            <source>Sync to Paratext</source>
             <target/>
          </segment>
       </unit>
@@ -5293,6 +5281,12 @@
       <unit id="workflowSteps.teamCheck">
          <segment>
             <source>Team Check</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.transcribe">
+         <segment>
+            <source>Transcribe</source>
             <target/>
          </segment>
       </unit>
