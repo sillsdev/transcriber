@@ -43,7 +43,10 @@ export const Stage = ({
       strokeMiterlimit="10"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g onClick={handleClick}>
+      <g
+        onClick={handleClick}
+        style={{ cursor: select ? 'pointer' : 'default' }}
+      >
         <path
           fill="#eeeeee"
           d="M 0,0 H 276 L 299,24.7 276,49.5 H 0 L 23,24.7 Z"

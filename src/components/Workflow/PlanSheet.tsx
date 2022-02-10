@@ -311,7 +311,7 @@ export function PlanSheet(props: IProps) {
     }
   };
 
-  const handleTranscribe = (i: number) => () => {
+  const handleTranscribe = (i: number) => {
     setSrcMediaId('');
     onTranscribe(i);
   };
@@ -508,10 +508,10 @@ export function PlanSheet(props: IProps) {
           return [
             {
               value: (
-                <StageReport step={rowInfo[rowIndex].step || ''} />
-                // <MemoizedTaskAvatar
-                //   assigned={rowInfo[rowIndex].editor?.id || ''}
-                // />
+                <StageReport
+                  onClick={handlePassageDetail(rowIndex)}
+                  step={rowInfo[rowIndex].step || ''}
+                />
               ),
               readOnly: true,
               className: section ? 'set' + (passage ? 'p' : '') : 'pass',
@@ -539,6 +539,7 @@ export function PlanSheet(props: IProps) {
                           mediaShared={rowInfo[rowIndex].mediaShared}
                           onPlayStatus={handlePlayStatus}
                           onPassageDetail={handlePassageDetail}
+                          onTranscribe={handleTranscribe}
                           online={connected || offlineOnly}
                           readonly={readonly}
                           isPlaying={
@@ -604,7 +605,6 @@ export function PlanSheet(props: IProps) {
                     mediaId={rowInfo[rowIndex].mediaId?.id}
                     mediaShared={rowInfo[rowIndex].mediaShared}
                     onDelete={handleConfirmDelete}
-                    onTranscribe={handleTranscribe}
                     onPlayStatus={handlePlayStatus}
                     onAudacity={handleAudacity}
                     canAssign={projRole === RoleNames.Admin}

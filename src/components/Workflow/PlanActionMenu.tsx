@@ -20,7 +20,6 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import MoreIcon from '@material-ui/icons/MoreHoriz';
 import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
-import TranscribeIcon from '../../control/TranscribeIcon';
 import AddIcon from '@material-ui/icons/LibraryAddOutlined';
 import MicIcon from '@material-ui/icons/Mic';
 import { elemOffset } from '../../utils';
@@ -52,7 +51,6 @@ interface IProps extends IStateProps {
   rowIndex: number;
   isSection: boolean;
   isPassage: boolean;
-  mediaId: string;
   mediaShared: IMediaShare;
   online: boolean;
   readonly: boolean;
@@ -60,7 +58,6 @@ interface IProps extends IStateProps {
   canAssign: boolean;
   canDelete: boolean;
   active: boolean;
-  onTranscribe: (i: number) => () => void;
   onPlayStatus: (mediaId: string) => void;
   onRecord: (i: number) => () => void;
   onUpload: (i: number) => () => void;
@@ -76,9 +73,7 @@ export function PlanActionMenu(props: IProps) {
     rowIndex,
     isSection,
     isPassage,
-    mediaId,
     readonly,
-    onTranscribe,
     onPlayStatus,
     onRecord,
     onUpload,
@@ -218,16 +213,6 @@ export function PlanActionMenu(props: IProps) {
                         onClick={onAssign([rowIndex])}
                       >
                         <AssignIcon className={classes.action} />
-                      </MenuItem>
-                    )}
-                    {isPassage && (
-                      <MenuItem
-                        id="planActTrans"
-                        title={t.transcribe}
-                        onClick={onTranscribe(rowIndex)}
-                        disabled={(mediaId || '') === ''}
-                      >
-                        <TranscribeIcon />
                       </MenuItem>
                     )}
                     {isPassage &&
