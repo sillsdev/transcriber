@@ -333,7 +333,6 @@ export function PassageDetailCommunity(props: IProps) {
     nextUpload(mediaFile, files, 0, auth, offline, reporter, itemComplete);
   };
   const handleSetCanSave = (valid: boolean) => {
-    console.log('handleSetCanSave', valid);
     if (valid !== canSave) {
       setCanSave(valid);
     }
