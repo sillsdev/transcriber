@@ -897,7 +897,7 @@ export interface IToolStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface ITranscribeStrings extends Localize.LocalizedStringsMethods {
-    "switchToTranscriber": string;
+    "openTranscriber": string;
 };
 
 export interface ITranscribeAddNoteStrings extends Localize.LocalizedStringsMethods {

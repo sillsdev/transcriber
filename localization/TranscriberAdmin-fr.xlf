@@ -3896,10 +3896,10 @@
             <target>Sauvegarder</target>
          </segment>
       </unit>
-   	<unit id="transcribe.switchToTranscriber">
+   	<unit id="transcribe.openTranscriber">
    		<segment>
-   			<source>Switch to Transcriber</source>
-   			<target>Passer au transcripteur</target>
+   			<source>Open Transcriber</source>
+   			<target>Transcripteur ouvert</target>
    		</segment>
    	</unit>
       <unit id="transcriber.addNote">

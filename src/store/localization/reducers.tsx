@@ -961,7 +961,7 @@ const initialState = {
 	}),
 	"transcribe": new LocalizedStrings({
 		"en": {
-			"switchToTranscriber": "Switch to Transcriber",
+			"openTranscriber": "Open Transcriber",
 		}
 	}),
 	"transcribeAddNote": new LocalizedStrings({

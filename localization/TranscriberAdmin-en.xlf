@@ -4330,9 +4330,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcribe.switchToTranscriber">
+      <unit id="transcribe.openTranscriber">
          <segment>
-            <source>Switch to Transcriber</source>
+            <source>Open Transcriber</source>
             <target/>
          </segment>
       </unit>

@@ -38,7 +38,7 @@ export function PassageDetailTranscribe(props: IProps) {
 
   return (
     <Button onClick={handleTranscribe} variant="contained" color="primary">
-      {t.switchToTranscriber}
+      {t.openTranscriber}
       <TranscribeIcon className={classes.icon} color="white" />
     </Button>
   );
