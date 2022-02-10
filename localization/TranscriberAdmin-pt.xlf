@@ -703,6 +703,76 @@
             <target/>
          </segment>
       </unit>
+   	<trans-unit id="commentCard.confirmDelete">
+   		<source>Delete this comment?</source>
+   		<target/>
+   		<context-group>
+   			<context context-type="sourcefile">CommentCard.tsx</context>
+   		</context-group>
+   	</trans-unit>
+   	<trans-unit id="commentEditor.record">
+   		<source>Record Comment</source>
+   		<target/>
+   		<context-group>
+   			<context context-type="sourcefile">CommentCard.tsx</context>
+   		</context-group>
+   	</trans-unit>
+   	<trans-unit id="commentEditor.recordUnavailable">
+   		<source>Another recorder is open.</source>
+   		<target/>
+   		<context-group>
+   			<context context-type="sourcefile">CommentCard.tsx</context>
+   		</context-group>
+   	</trans-unit>
+   	<trans-unit id="commentEditor.saving">
+   		<source>Saving...</source>
+   		<target/>
+   		<context-group>
+   			<context context-type="sourcefile">CommentCard.tsx</context>
+   		</context-group>
+   	</trans-unit>
+   	<trans-unit id="commentEditor.unsaved">
+   		<source>Unsaved</source>
+   		<target/>
+   		<context-group>
+   			<context context-type="sourcefile">CommentCard.tsx</context>
+   		</context-group>
+   	</trans-unit>
+   	<trans-unit id="community.playTest">
+   		<source>Play Test</source>
+   		<target/>
+   		<context-group>
+   			<context context-type="sourcefile">Community.tsx</context>
+   		</context-group>
+   	</trans-unit>
+   	<trans-unit id="community.record">
+   		<source>Record</source>
+   		<target/>
+   		<context-group>
+   			<context context-type="sourcefile">Community.tsx</context>
+   		</context-group>
+   	</trans-unit>
+   	<trans-unit id="community.speaker">
+   		<source>Speaker</source>
+   		<target/>
+   		<context-group>
+   			<context context-type="sourcefile">Community.tsx</context>
+   		</context-group>
+   	</trans-unit>
+   	<trans-unit id="community.unsaved">
+   		<source>Unsaved</source>
+   		<target/>
+   		<context-group>
+   			<context context-type="sourcefile">Community.tsx</context>
+   		</context-group>
+   	</trans-unit>
+   	<trans-unit id="community.uploadComplete">
+   		<source>{0} of {1} files uploaded successfully.</source>
+   		<target/>
+   		<context-group>
+   			<context context-type="sourcefile">Community.tsx</context>
+   		</context-group>
+   	</trans-unit>
       <unit id="control.other">
          <segment>
             <source>General Transcription</source>

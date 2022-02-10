@@ -72,6 +72,14 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       margin: 'auto',
       width: `calc(100% - 32px)`,
+      '& audio': {
+        display: 'flex',
+        width: 'inherit',
+      },
+    },
+    playSelect: {
+      paddingRight: theme.spacing(4),
+      paddingBottom: theme.spacing(1),
     },
     pane: {},
     formControl: {
@@ -183,6 +191,7 @@ export function PassageDetailCommunity(props: IProps) {
   const mediaIdRef = useRef('');
   const [playItem, setPlayItem] = useState('');
   const [playing, setPlaying] = useState(false);
+  const [resetMedia, setResetMedia] = useState(0);
   const {
     passage,
     mediafileId,
@@ -264,6 +273,7 @@ export function PassageDetailCommunity(props: IProps) {
             .replace('{1}', fileList.current.length.toString())
         );
       uploadComplete();
+      setResetMedia(resetMedia + 1);
     }, 1000);
   };
   const itemComplete = async (n: number, success: boolean, data?: any) => {
@@ -369,7 +379,7 @@ export function PassageDetailCommunity(props: IProps) {
                     <Paper className={classes.paper}>
                       <div className={classes.row}>
                         <Typography className={classes.status}>
-                          {'Record'}
+                          {t.record}
                         </Typography>
                         <RadioGroup
                           row={true}
@@ -399,7 +409,6 @@ export function PassageDetailCommunity(props: IProps) {
                           label={t.speaker}
                           value={speaker}
                           onChange={handleChangeSpeaker}
-                          required={true}
                           fullWidth={true}
                         />
                       </div>
@@ -411,6 +420,7 @@ export function PassageDetailCommunity(props: IProps) {
                         showFilename={false}
                         setCanSave={handleSetCanSave}
                         setStatusText={setStatusText}
+                        doReset={resetMedia}
                         size={200}
                       />
                       <div className={classes.row}>
@@ -436,7 +446,13 @@ export function PassageDetailCommunity(props: IProps) {
                     <Paper className={classes.paper}>
                       <div className={classes.row}>
                         <Paper className={classes.paper}>
-                          <SelectCommunityTest onChange={handleSelect} t={t} />
+                          <div className={classes.playSelect}>
+                            <SelectCommunityTest
+                              onChange={handleSelect}
+                              t={t}
+                            />
+                          </div>
+
                           <MediaPlayer
                             auth={auth}
                             srcMediaId={playItem}

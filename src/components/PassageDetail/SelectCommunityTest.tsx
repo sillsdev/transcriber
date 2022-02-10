@@ -84,9 +84,7 @@ export const SelectCommunityTest = (props: IProps) => {
         )
         .map((r) => (
           <MenuItem value={r.id} key={r.id}>
-            {`${r.artifactType}:    ${nameOnly(r.artifactName)} ${
-              r.mediafile.attributes?.performedBy
-            }`}
+            {`${r.artifactType}:    ${nameOnly(r.artifactName)}`}
           </MenuItem> //TODO change rows to a table?
         ))}
     </TextField>

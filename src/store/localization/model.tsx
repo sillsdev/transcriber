@@ -183,14 +183,6 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "uploadComplete": string;
 };
 
-export interface IDiscussionMenuStrings extends Localize.LocalizedStringsMethods {
-    "edit": string;
-    "delete": string;
-    "reopen": string;
-    "resolve": string;
-    "setSegment": string;
-};
-
 export interface IControlStrings extends Localize.LocalizedStringsMethods {
     "other": string;
     "scripture": string;
@@ -215,6 +207,14 @@ export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods
     "resolved": string;
     "topic": string;
     "version": string;
+};
+
+export interface IDiscussionMenuStrings extends Localize.LocalizedStringsMethods {
+    "edit": string;
+    "delete": string;
+    "reopen": string;
+    "resolve": string;
+    "setSegment": string;
 };
 
 export interface IDiscussionListStrings extends Localize.LocalizedStringsMethods {
@@ -1168,10 +1168,10 @@ export interface ILocalizedStrings {
 	commentCard: ICommentCardStrings;
 	commentEditor: ICommentEditorStrings;
 	community: ICommunityStrings;
-	discussionMenu: IDiscussionMenuStrings;
 	control: IControlStrings;
 	deleteExpansion: IDeleteExpansionStrings;
 	discussionCard: IDiscussionCardStrings;
+	discussionMenu: IDiscussionMenuStrings;
 	discussionList: IDiscussionListStrings;
 	electronImport: IElectronImportStrings;
 	emailUnverified: IEmailUnverifiedStrings;

@@ -935,7 +935,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="community.record">
-            <source>Record Test</source>
+            <source>Record</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
@@ -962,41 +962,6 @@
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="discussionMenu.edit">
-            <source>Edit</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">DiscussionMenu.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="discussionMenu.delete">
-            <source>Delete</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">DiscussionMenu.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="discussionMenu.reopen">
-            <source>Reopen</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">DiscussionMenu.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="discussionMenu.resolve">
-            <source>Resolve</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">DiscussionMenu.tsx</context>
-            </context-group>
-         </trans-unit>
-      	<trans-unit id="discussionMenu.setSegment">
-      		<source>Set Segment</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">DiscussionMenu.tsx</context>
-      		</context-group>
-      	</trans-unit>
          <trans-unit id="control.other">
             <source>General Transcription</source>
             <target/>
@@ -1114,6 +1079,41 @@
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">DiscussionCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="discussionMenu.edit">
+      		<source>Edit</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="discussionMenu.delete">
+      		<source>Delete</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="discussionMenu.reopen">
+      		<source>Reopen</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="discussionMenu.resolve">
+      		<source>Resolve</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="discussionMenu.setSegment">
+      		<source>Set Segment</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionMenu.tsx</context>
       		</context-group>
       	</trans-unit>
          <trans-unit id="discussionList.add">
