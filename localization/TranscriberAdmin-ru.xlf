@@ -3599,6 +3599,12 @@
             <target>Maître</target>
          </segment>
       </unit>
+   	<unit id="shared.playItem">
+   		<segment>
+   			<source>Play Item</source>
+   			<target>Article de jeu</target>
+   		</segment>
+   	</unit>
    	<unit id="shared.recordingInProgress">
    		<segment>
    			<source>Recording in progress...</source>
@@ -3887,6 +3893,72 @@
             <target>Сохранить</target>
          </segment>
       </unit>
+   	<unit id="tool.export">
+   		<segment>
+   			<source>Export</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="tool.done">
+   		<segment>
+   			<source>Done</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="tool.resource">
+   		<segment>
+   			<source>Internalize</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="tool.record">
+   		<segment>
+   			<source>Record</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="tool.teamCheck">
+   		<segment>
+   			<source>Compare</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="tool.community">
+   		<segment>
+   			<source>Community Test</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="tool.discuss">
+   		<segment>
+   			<source>Discuss</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="tool.transcribe">
+   		<segment>
+   			<source>Transcribe</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="tool.backTranslate">
+   		<segment>
+   			<source>Back Translate</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="tool.segment">
+   		<segment>
+   			<source>Segment</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="tool.paratext">
+   		<segment>
+   			<source>Paratext Sync</source>
+   			<target/>
+   		</segment>
+   	</unit>
    	<unit id="transcribe.openTranscriber">
    		<segment>
    			<source>Open Transcriber</source>

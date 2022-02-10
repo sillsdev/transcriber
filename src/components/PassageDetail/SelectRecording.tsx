@@ -1,9 +1,7 @@
-import { connect } from 'react-redux';
 import { MenuItem, TextField } from '@material-ui/core';
-import { useContext, useEffect, useState } from 'react';
-import { ICommunityStrings, IState } from '../../model';
+import { useContext, useEffect, useState, useMemo } from 'react';
+import { ISharedStrings } from '../../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import localStrings from '../../selector/localize';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { useArtifactType } from '../../crud';
 
@@ -19,18 +17,21 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
 interface IStateProps {
-  t: ICommunityStrings;
+  ts: ISharedStrings;
 }
-interface IRecordProps {}
-interface IProps extends IStateProps, IRecordProps {
+
+interface IProps extends IStateProps {
   inResource?: string;
   label?: string;
   onChange?: (resource: string) => void;
   required?: boolean;
+  tags: string[];
 }
-export const SelectCommunityTest = (props: IProps) => {
-  const { t, onChange, inResource, required } = props;
+
+export const SelectRecording = (props: IProps) => {
+  const { ts, onChange, inResource, required, tags } = props;
   const classes = useStyles();
   const ctx = useContext(PassageDetailContext);
   const { rowData } = ctx.state;
@@ -51,12 +52,16 @@ export const SelectCommunityTest = (props: IProps) => {
     return parts.length > 1 ? parts[0] : n;
   };
 
+  const localTags = useMemo(() => {
+    return tags.map((t) => localizedArtifactType(t));
+  }, [tags, localizedArtifactType]);
+
   return (
     <TextField
-      id="select-community-test"
+      id="select-recording"
       className={classes.textField}
       select
-      label={t.playTest}
+      label={ts.playItem}
       value={resource}
       onChange={handleUserChange}
       SelectProps={{
@@ -68,17 +73,13 @@ export const SelectCommunityTest = (props: IProps) => {
       required={required}
     >
       {rowData
-        .filter(
-          (r) =>
-            r.artifactType === localizedArtifactType('retell') ||
-            r.artifactType === localizedArtifactType('qanda')
-        )
+        .filter((r) => localTags.includes(r.artifactType))
         .sort((i, j) =>
           i.artifactType < j.artifactType
             ? -1
             : i.artifactType > j.artifactType
             ? 1
-            : i.artifactName < j.artifactName
+            : i.artifactName <= j.artifactName
             ? -1
             : 1
         )
@@ -90,8 +91,5 @@ export const SelectCommunityTest = (props: IProps) => {
     </TextField>
   );
 };
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'community' }),
-});
 
-export default connect(mapStateToProps)(SelectCommunityTest) as any;
+export default SelectRecording;

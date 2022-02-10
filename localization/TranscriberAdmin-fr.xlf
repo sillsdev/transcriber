@@ -3678,6 +3678,12 @@
             <target>Maître</target>
          </segment>
       </unit>
+   	<unit id="shared.playItem">
+   		<segment>
+   			<source>Play Item</source>
+   			<target>Article de jeu</target>
+   		</segment>
+   	</unit>
    	<unit id="shared.recordingInProgress">
    		<segment>
    			<source>Recording in progress...</source>
@@ -3966,6 +3972,72 @@
             <target>Sauvegarder</target>
          </segment>
       </unit>
+   	<unit id="tool.export">
+   		<segment>
+   			<source>Export</source>
+   			<target>Exporter</target>
+   		</segment>
+   	</unit>
+   	<unit id="tool.done">
+   		<segment>
+   			<source>Done</source>
+   			<target>Fini</target>
+   		</segment>
+   	</unit>
+   	<unit id="tool.resource">
+   		<segment>
+   			<source>Internalize</source>
+   			<target>Intérioriser</target>
+   		</segment>
+   	</unit>
+   	<unit id="tool.record">
+   		<segment>
+   			<source>Record</source>
+   			<target>Enregistrement</target>
+   		</segment>
+   	</unit>
+   	<unit id="tool.teamCheck">
+   		<segment>
+   			<source>Compare</source>
+   			<target>Comparez</target>
+   		</segment>
+   	</unit>
+   	<unit id="tool.community">
+   		<segment>
+   			<source>Community Test</source>
+   			<target>Test communautaire</target>
+   		</segment>
+   	</unit>
+   	<unit id="tool.discuss">
+   		<segment>
+   			<source>Discuss</source>
+   			<target>Discuter de</target>
+   		</segment>
+   	</unit>
+   	<unit id="tool.transcribe">
+   		<segment>
+   			<source>Transcribe</source>
+   			<target>Transcrire</target>
+   		</segment>
+   	</unit>
+   	<unit id="tool.backTranslate">
+   		<segment>
+   			<source>Back Translate</source>
+   			<target>Traduire en arrière</target>
+   		</segment>
+   	</unit>
+   	<unit id="tool.segment">
+   		<segment>
+   			<source>Segment</source>
+   			<target>Segment</target>
+   		</segment>
+   	</unit>
+   	<unit id="tool.paratext">
+   		<segment>
+   			<source>Paratext Sync</source>
+   			<target>Paratext Sync</target>
+   		</segment>
+   	</unit>
    	<unit id="transcribe.openTranscriber">
    		<segment>
    			<source>Open Transcriber</source>

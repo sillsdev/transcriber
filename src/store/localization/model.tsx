@@ -797,6 +797,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "no": string;
     "NoSaveOffline": string;
     "owner": string;
+    "playItem": string;
     "recordingInProgress": string;
     "role": string;
     "projectrole": string;
@@ -892,6 +893,7 @@ export interface IToolStrings extends Localize.LocalizedStringsMethods {
     "community": string;
     "discuss": string;
     "transcribe": string;
+    "backTranslate": string;
     "segment": string;
     "paratext": string;
 };

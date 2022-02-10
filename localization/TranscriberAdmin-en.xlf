@@ -3874,6 +3874,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.playItem">
+         <segment>
+            <source>Play Item</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.recordingInProgress">
          <segment>
             <source>Recording in progress...</source>
@@ -4315,6 +4321,12 @@
       <unit id="tool.transcribe">
          <segment>
             <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.backTranslate">
+         <segment>
+            <source>Back Translate</source>
             <target/>
          </segment>
       </unit>

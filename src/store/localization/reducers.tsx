@@ -853,6 +853,7 @@ const initialState = {
 			"no": "No",
 			"NoSaveOffline": "Unable to save while offline.",
 			"owner": "Owner",
+			"playItem": "Play Item",
 			"recordingInProgress": "Recording in progress...",
 			"role": "Role",
 			"projectrole": "Project Role",
@@ -955,6 +956,7 @@ const initialState = {
 			"community": "Community Test",
 			"discuss": "Discuss",
 			"transcribe": "Transcribe",
+			"backTranslate": "Back Translate",
 			"segment": "Segment",
 			"paratext": "Paratext Sync",
 		}

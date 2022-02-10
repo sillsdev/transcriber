@@ -9,6 +9,7 @@ export enum ToolSlug {
   TeamCheck = 'teamCheck',
   Discuss = 'discuss',
   Transcribe = 'transcribe',
+  BackTranslate = 'backTranslate',
   Segment = 'segment',
   Paratext = 'paratext',
   Community = 'community',
@@ -22,6 +23,7 @@ const toolSlugs = [
   ToolSlug.TeamCheck,
   ToolSlug.Discuss,
   ToolSlug.Transcribe,
+  ToolSlug.BackTranslate,
   ToolSlug.Segment,
   ToolSlug.Paratext,
   ToolSlug.Community,
@@ -29,10 +31,7 @@ const toolSlugs = [
   ToolSlug.Done,
 ];
 
-const toolMap = [
-  { from: 'audio', to: ToolSlug.Discuss },
-  { from: 'backTranslate', to: ToolSlug.Segment },
-];
+const toolMap = [{ from: 'audio', to: ToolSlug.Discuss }];
 
 interface ISwitches {
   [key: string]: any;

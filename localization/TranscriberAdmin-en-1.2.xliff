@@ -4520,6 +4520,13 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="shared.playItem">
+      		<source>Play Item</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="shared.recordingInProgress">
       		<source>Recording in progress...</source>
       		<target/>
@@ -5033,6 +5040,13 @@
       	</trans-unit>
       	<trans-unit id="tool.transcribe">
       		<source>Transcribe</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="tool.backTranslate">
+      		<source>Back Translate</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">useTools.ts</context>
