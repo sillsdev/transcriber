@@ -18,7 +18,9 @@ import {
 import Checked from '@material-ui/icons/CheckBoxOutlined';
 import UnChecked from '@material-ui/icons/CheckBoxOutlineBlank';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
-import SelectCategory from '../../Workflow/SelectArtifactCategory';
+import SelectCategory, {
+  ScriptureEnum,
+} from '../../Workflow/SelectArtifactCategory';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,6 +54,7 @@ const Secondary = ({ id, idx, fileName, onCategory }: SecondaryProps) => {
         initCategory={''}
         onCategoryChange={handleCategory}
         required={false}
+        scripture={ScriptureEnum.highlight}
       />
     </div>
   );
