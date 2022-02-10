@@ -507,7 +507,7 @@ export function PlanSheet(props: IProps) {
           const passage = isPassage(rowIndex);
           return [
             {
-              value: (
+              value: passage && (
                 <StageReport
                   onClick={handlePassageDetail(rowIndex)}
                   step={rowInfo[rowIndex].step || ''}
