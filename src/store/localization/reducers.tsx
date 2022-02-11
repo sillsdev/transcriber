@@ -866,7 +866,7 @@ const initialState = {
 			"uploadMediaPlural": "Upload Audio",
 			"uploadMediaSingular": "Upload Audio",
 			"user": "User",
-			"versionHistory": "Version History",
+			"versionHistory": "Versions",
 			"yes": "Yes",
 		}
 	}),

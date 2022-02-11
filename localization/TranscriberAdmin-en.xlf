@@ -3954,7 +3954,7 @@
       </unit>
       <unit id="shared.versionHistory">
          <segment>
-            <source>Version History</source>
+            <source>Versions</source>
             <target/>
          </segment>
       </unit>
