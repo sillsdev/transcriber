@@ -3707,13 +3707,6 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="planActions.launchAudacity">
-            <source>Launch Audacity</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">PlanSheet.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="planActions.playpause">
             <source>Play/Pause</source>
             <target/>
@@ -4316,13 +4309,6 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="scriptureTable.versionHistory">
-            <source>Version History</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ScriptureTable.tsx</context>
-            </context-group>
-         </trans-unit>
         <trans-unit id="sectionResources.close">
             <source>Close</source>
             <target/>
@@ -4408,7 +4394,14 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="shared.mediaError">
+         <trans-unit id="shared.launchAudacity">
+            <source>Launch Audacity</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.mediaError">
       		<source>Meida is missing or has an unaccepted format.</source>
       		<target/>
       		<context-group>
@@ -4623,6 +4616,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.versionHistory">
+            <source>Versions</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="shared.yes">

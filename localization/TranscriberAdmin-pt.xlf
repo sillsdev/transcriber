@@ -2699,7 +2699,7 @@
             <target>Versão</target>
          </segment>
       </unit>
-      <unit id="mediaTab.versionHistory">
+      <unit id="shared.versionHistory">
          <segment>
             <source>Version History</source>
             <target>Histórico de versões</target>
@@ -2975,7 +2975,7 @@
             <target>Excluir</target>
          </segment>
       </unit>
-      <unit id="planActions.launchAudacity">
+      <unit id="shared.launchAudacity">
          <segment>
             <source>Launch Audacity</source>
             <target>Audácia de lançamento</target>

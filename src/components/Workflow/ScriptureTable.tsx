@@ -32,13 +32,7 @@ import { Link } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useSnackBar } from '../../hoc/SnackBar';
 import PlanSheet, { ICellChange } from './PlanSheet';
-import {
-  remoteIdNum,
-  remoteIdGuid,
-  related,
-  useOrganizedBy,
-  usePlan,
-} from '../../crud';
+import { remoteIdNum, related, useOrganizedBy, usePlan } from '../../crud';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import {
   lookupBook,
@@ -222,7 +216,7 @@ export function ScriptureTable(props: IProps) {
   const { getPlan } = usePlan();
   const localSave = useWfLocalSave({ setComplete });
   const onlineSave = useWfOnlineSave({ setComplete });
-  const [attachPassage, detachPassage] = useMediaAttach({
+  const [detachPassage] = useMediaAttach({
     ...props,
     doOrbitError,
   });
@@ -872,23 +866,6 @@ export function ScriptureTable(props: IProps) {
   if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
-    if (
-      mediaRemoteIds &&
-      mediaRemoteIds.length > 0 &&
-      uploadItem.current !== undefined
-    ) {
-      const passId = uploadItem.current?.passageId?.id || '';
-      await attachPassage(
-        passId,
-        related(
-          passages.find((p) => p.id === passId),
-          'section'
-        ),
-        plan,
-        remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ||
-          mediaRemoteIds[0]
-      );
-    }
     uploadItem.current = undefined;
     if (importList) {
       setImportList(undefined);
@@ -949,6 +926,7 @@ export function ScriptureTable(props: IProps) {
         multiple={false}
         finish={afterUpload}
         cancelled={cancelled}
+        passageId={uploadItem.current?.passageId?.id}
       />
       {audacityItem?.wf?.passageId && (
         <AudacityManager
@@ -961,7 +939,7 @@ export function ScriptureTable(props: IProps) {
         />
       )}
       <BigDialog
-        title={t.versionHistory}
+        title={ts.versionHistory}
         isOpen={versionItem !== ''}
         onOpen={handleVerHistClose}
       >

@@ -3178,12 +3178,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planActions.launchAudacity">
-         <segment>
-            <source>Launch Audacity</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="planActions.playpause">
          <segment>
             <source>Play/Pause</source>
@@ -3700,12 +3694,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="scriptureTable.versionHistory">
-         <segment>
-            <source>Version History</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="sectionResources.close">
          <segment>
             <source>Close</source>
@@ -3775,6 +3763,12 @@
       <unit id="shared.consultant">
          <segment>
             <source>Consultant</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.launchAudacity">
+         <segment>
+            <source>Launch Audacity</source>
             <target/>
          </segment>
       </unit>
@@ -3961,6 +3955,12 @@
       <unit id="shared.user">
          <segment>
             <source>User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.versionHistory">
+         <segment>
+            <source>Versions</source>
             <target/>
          </segment>
       </unit>

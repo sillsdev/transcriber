@@ -57,7 +57,8 @@ interface IProps extends IStateProps, IDispatchProps {
   multiple?: boolean;
   mediaId?: string;
   importList?: File[];
-  artifactType?: string; //id
+  artifactTypeId?: string; //id
+  passageId?: string;
 }
 
 export const Uploader = (props: IProps) => {
@@ -74,7 +75,8 @@ export const Uploader = (props: IProps) => {
     cancelled,
     multiple,
     importList,
-    artifactType,
+    artifactTypeId,
+    passageId,
   } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
@@ -115,8 +117,10 @@ export const Uploader = (props: IProps) => {
   };
 
   const getArtifactTypeId = () =>
-    remoteIdNum('artifacttype', artifactType || '', memory.keyMap) ||
-    artifactType;
+    remoteIdNum('artifacttype', artifactTypeId || '', memory.keyMap) ||
+    artifactTypeId;
+  const getPassageId = () =>
+    remoteIdNum('passage', passageId || '', memory.keyMap) || passageId;
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     if (success) successCount.current += 1;
@@ -125,21 +129,23 @@ export const Uploader = (props: IProps) => {
     if (data?.stringId) mediaIdRef.current.push(data?.stringId);
     else if (success && data) {
       // offlineOnly
-      var passageId = '';
+      var psgId = passageId || '';
       var num = 1;
       if (mediaId) {
         const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFile;
         if (mediaRec) {
-          passageId = related(mediaRec, 'passage');
-          num = mediaRec.attributes.versionNumber + 1;
+          psgId = related(mediaRec, 'passage');
+          if (!artifactTypeId)
+            //vernacular
+            num = mediaRec.attributes.versionNumber + 1;
         }
       }
       const newMediaRec = await createMedia(
         data,
         num,
         uploadList[n].size,
-        passageId,
-        artifactType || ''
+        psgId,
+        artifactTypeId || '' //does this need to be getArtifactType?
       );
       mediaIdRef.current.push(newMediaRec.id);
     }
@@ -168,7 +174,9 @@ export const Uploader = (props: IProps) => {
       originalFile: uploadList[currentlyLoading].name,
       contentType: uploadList[currentlyLoading].type,
       artifactTypeId: getArtifactTypeId(),
+      passageId: getPassageId(),
     } as any;
+
     nextUpload(
       mediaFile,
       uploadList,
@@ -192,7 +200,7 @@ export const Uploader = (props: IProps) => {
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
     authRef.current = auth;
-    artifactTypeRef.current = artifactType || '';
+    artifactTypeRef.current = artifactTypeId || '';
     doUpload(0);
   };
 

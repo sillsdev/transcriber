@@ -280,7 +280,7 @@ export function PassageDetailArtifacts(props: IProps) {
         multiple={true}
         finish={afterUpload}
         cancelled={cancelled}
-        artifactType={resourceType}
+        artifactTypeId={resourceType}
         metaData={
           <ResourceData
             catAllowNew={true} //if they can upload they can add cat

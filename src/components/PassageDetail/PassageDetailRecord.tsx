@@ -15,35 +15,35 @@ import {
 } from '@material-ui/core';
 import Auth from '../../auth/Auth';
 import { useContext, useEffect, useRef, useState } from 'react';
-import {
-  findRecord,
-  pullPlanMedia,
-  related,
-  remoteIdGuid,
-  remoteIdNum,
-  useArtifactType,
-  useFetchMediaUrl,
-  useOfflnMediafileCreate,
-} from '../../crud';
+import { useArtifactType, useFetchMediaUrl } from '../../crud';
 import { useGlobal } from 'reactn';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import * as actions from '../../store';
 import { bindActionCreators } from 'redux';
 import Memory from '@orbit/memory';
-import JSONAPISource from '@orbit/jsonapi';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { useMediaAttach } from '../../crud/useMediaAttach';
 import { withData } from '../../mods/react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import MediaRecord from '../MediaRecord';
 import { UnsavedContext } from '../../context/UnsavedContext';
+import Uploader from '../Uploader';
+import AudacityManager from '../Workflow/AudacityManager';
+import { isElectron } from '../../api-variable';
+import { AudacityLogo } from '../../control';
+import AddIcon from '@material-ui/icons/LibraryAddOutlined';
+import BigDialog from '../../hoc/BigDialog';
+import VersionDlg from '../AudioTab/VersionDlg';
+import VersionsIcon from '@material-ui/icons/List';
+import { PlanProvider } from '../../context/PlanContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     button: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
+      maxHeight: '40px',
+      alignSelf: 'center',
     },
     status: {
       marginRight: theme.spacing(2),
@@ -74,39 +74,33 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   auth: Auth;
   ready?: () => boolean;
 }
-
+const SaveWait = 500;
 export function PassageDetailRecord(props: IProps) {
-  const { auth, ready, t, ts } = props;
-  const { uploadFiles, nextUpload, uploadError, uploadComplete, doOrbitError } =
-    props;
+  const { auth, ready, ts } = props;
   const { mediafiles } = props;
-  const { startSave, toolChanged, saveCompleted, toolsChanged, saveRequested } =
+  const { startSave, toolChanged, toolsChanged, saveRequested, waitForSave } =
     useContext(UnsavedContext).state;
 
   const [reporter] = useGlobal('errorReporter');
-  const [offline] = useGlobal('offline');
-  const [plan] = useGlobal('plan');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
-  const { createMedia } = useOfflnMediafileCreate(doOrbitError);
   const [statusText, setStatusText] = useState('');
-  const fileList = useRef<File[]>();
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
   const classes = useStyles();
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const [mediaRec, setMediaRec] = useState<MediaFile>();
-  const successCount = useRef(0);
-  const mediaIdRef = useRef('');
   const { passage, mediafileId } = usePassageDetailContext();
   const { vernacularId } = useArtifactType();
   const { showMessage } = useSnackBar();
-  const [attachPassage] = useMediaAttach({
-    doOrbitError,
-  });
   const toolId = 'RecordTool';
   const onReady = () => {};
+  const [importList, setImportList] = useState<File[]>();
+  const cancelled = useRef(false);
+  const [uploadVisible, setUploadVisible] = useState(false);
+  const [audacityVisible, setAudacityVisible] = useState(false);
+  const [versionVisible, setVersionVisible] = useState(false);
+  const [, setComplete] = useGlobal('progress');
 
   useEffect(() => {
     toolChanged(toolId, canSave);
@@ -121,7 +115,6 @@ export function PassageDetailRecord(props: IProps) {
   useEffect(() => {
     if (mediafileId !== mediaState.urlMediaId)
       fetchMediaUrl({ id: mediafileId, auth });
-    setMediaRec(findRecord(memory, 'mediafile', mediafileId) as MediaFile);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafileId]);
 
@@ -131,117 +124,155 @@ export function PassageDetailRecord(props: IProps) {
     );
   }, [memory, passage, vernacularId, mediafiles]);
 
-  useEffect(() => {
-    if (uploadError !== '') {
-      if (uploadError.indexOf('unsupported') > 0)
-        showMessage(
-          <span className={classes.unsupported}>
-            {t.unsupported.replace(
-              '{0}',
-              uploadError.substring(0, uploadError.indexOf(':unsupported'))
-            )}
-          </span>
-        );
-      else showMessage(uploadError);
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [uploadError]);
-
   const handleSave = () => {
     startSave(toolId);
   };
-  const finishMessage = () => {
-    setTimeout(() => {
-      if (fileList.current)
-        showMessage(
-          t.uploadComplete
-            .replace('{0}', successCount.current.toString())
-            .replace('{1}', fileList.current.length.toString())
-        );
-      uploadComplete();
-    }, 1000);
-  };
-  const itemComplete = async (n: number, success: boolean, data?: any) => {
-    if (success) successCount.current += 1;
-    const uploadList = fileList.current;
-    if (!uploadList) return; // This should never happen
-    if (data?.stringId) {
-      mediaIdRef.current = data?.stringId;
-    } else if (success && data) {
-      // offlineOnly
-      var num = 1;
-      if (mediaRec) {
-        num = mediaRec.attributes.versionNumber + 1;
-      }
-      await createMedia(data, num, uploadList[n].size, passage.id, '');
-    }
-    setStatusText('');
-    if (!offline) {
-      pullPlanMedia(plan, memory, remote).then(() => {
-        var mediaId =
-          remoteIdGuid('mediafile', mediaIdRef.current, memory.keyMap) ||
-          mediaIdRef.current;
-        attachPassage(
-          passage.id,
-          related(passage, 'section'),
-          plan,
-          mediaId
-        ).then(() => {
-          finishMessage();
-          saveCompleted(toolId);
-        });
-      });
-    } else {
-      finishMessage();
-      saveCompleted(toolId);
-    }
-  };
-  const getPlanId = () => remoteIdNum('plan', plan, memory.keyMap) || plan;
-  const getArtifactTypeId = () =>
-    remoteIdNum('artifacttype', vernacularId || '', memory.keyMap) ||
-    vernacularId;
 
+  const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
+    setStatusText('');
+    if (importList) {
+      setImportList(undefined);
+      setUploadVisible(false);
+      setAudacityVisible(false);
+    }
+  };
+
+  const saveIfChanged = (cb: () => void) => {
+    if (canSave) {
+      startSave(toolId);
+      waitForSave(() => cb(), SaveWait);
+    } else cb();
+  };
+
+  //from the on screen recorder...send it off to the uploader
   const uploadMedia = async (files: File[]) => {
-    uploadFiles(files);
-    fileList.current = files;
-    const mediaFile = {
-      planId: getPlanId(),
-      versionNumber: 1,
-      originalFile: files[0].name,
-      contentType: files[0].type,
-      artifactTypeId: getArtifactTypeId(),
-    } as any;
-    nextUpload(mediaFile, files, 0, auth, offline, reporter, itemComplete);
+    setImportList(files);
+    setUploadVisible(true);
+  };
+  const handleAudacityImport = (i: number, list: File[]) => {
+    saveIfChanged(() => {
+      console.log('audacity import', list);
+      setImportList(list);
+      setUploadVisible(true);
+    });
+  };
+
+  const handleAudacityClose = () => {
+    setAudacityVisible(false);
+  };
+  const handleUploadVisible = (v: boolean) => {
+    setUploadVisible(v);
+  };
+  const handleUpload = () => {
+    saveIfChanged(() => {
+      setUploadVisible(true);
+    });
+  };
+  const handleAudacity = () => {
+    saveIfChanged(() => {
+      setAudacityVisible(true);
+    });
+  };
+  const handleVersions = () => {
+    setVersionVisible(true);
+  };
+  const handleVerHistClose = () => {
+    setVersionVisible(false);
   };
 
   return (
-    <div>
-      <MediaRecord
-        toolId={toolId}
-        mediaId={mediafileId}
-        auth={auth}
-        uploadMethod={uploadMedia}
-        onReady={onReady}
-        defaultFilename={defaultFilename}
-        allowWave={true}
-        showFilename={true}
-        setCanSave={setCanSave}
-        setStatusText={setStatusText}
-      />
-      <Typography variant="caption" className={classes.status}>
-        {statusText}
-      </Typography>
-      <Button
-        id="rec-save"
-        className={classes.button}
-        onClick={handleSave}
-        variant="contained"
-        color="primary"
-        disabled={(ready && !ready()) || !canSave}
-      >
-        {ts.save}
-      </Button>
-    </div>
+    <PlanProvider {...props}>
+      <div>
+        <Button
+          className={classes.button}
+          id="pdRecordVersions"
+          onClick={handleVersions}
+          title={ts.versionHistory}
+        >
+          <VersionsIcon />
+          {ts.versionHistory}
+        </Button>
+        <Button
+          className={classes.button}
+          id="pdRecordUpload"
+          onClick={handleUpload}
+          title={!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
+        >
+          <AddIcon />
+          {!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
+        </Button>
+
+        {isElectron && (
+          <Button
+            className={classes.button}
+            id="pdAudacity"
+            onClick={handleAudacity}
+            title={ts.launchAudacity}
+          >
+            <AudacityLogo />
+            {ts.launchAudacity}
+          </Button>
+        )}
+        <MediaRecord
+          toolId={toolId}
+          mediaId={mediafileId}
+          auth={auth}
+          uploadMethod={uploadMedia}
+          onReady={onReady}
+          defaultFilename={defaultFilename}
+          allowWave={true}
+          showFilename={true}
+          setCanSave={setCanSave}
+          setStatusText={setStatusText}
+          metaData={
+            <>
+              <Typography variant="caption" className={classes.status}>
+                {statusText}
+              </Typography>
+              <Button
+                id="rec-save"
+                className={classes.button}
+                onClick={handleSave}
+                variant="contained"
+                color="primary"
+                disabled={(ready && !ready()) || !canSave}
+              >
+                {ts.save}
+              </Button>
+            </>
+          }
+        />
+
+        <Uploader
+          recordAudio={false}
+          auth={auth}
+          importList={importList}
+          isOpen={uploadVisible}
+          onOpen={handleUploadVisible}
+          showMessage={showMessage}
+          setComplete={setComplete}
+          multiple={false}
+          finish={afterUpload}
+          cancelled={cancelled}
+          passageId={passage.id}
+        />
+        <AudacityManager
+          item={1}
+          open={audacityVisible}
+          onClose={handleAudacityClose}
+          passageId={{ type: 'passage', id: passage.id } as RecordIdentity}
+          mediaId={mediafileId}
+          onImport={handleAudacityImport}
+        />
+        <BigDialog
+          title={ts.versionHistory}
+          isOpen={versionVisible}
+          onOpen={handleVerHistClose}
+        >
+          <VersionDlg auth={auth} passId={passage.id} />
+        </BigDialog>
+      </div>
+    </PlanProvider>
   );
 }
 
