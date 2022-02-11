@@ -3602,7 +3602,7 @@
    	<unit id="shared.playItem">
    		<segment>
    			<source>Play Item</source>
-   			<target>Article de jeu</target>
+   			<target/>
    		</segment>
    	</unit>
    	<unit id="shared.recordingInProgress">
