@@ -150,7 +150,7 @@ function App() {
                 <PrivateRoute
                   auth={auth}
                   exact
-                  path="/work/:prjId/:pasId/:slug"
+                  path="/work/:prjId/:pasId/:slug/:medId"
                 >
                   <WorkScreen auth={auth} />
                 </PrivateRoute>

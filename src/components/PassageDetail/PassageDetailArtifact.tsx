@@ -388,7 +388,14 @@ export function PassageDetailCommunity(props: IProps) {
     setView(pathname.replace('detail', 'work'));
   };
 
-  if (view) return <StickyRedirect to={`${view}/${recordType}`} />;
+  const playItemId = useMemo(
+    () => remoteIdNum('mediafile', playItem, memory.keyMap) || playItem,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [playItem]
+  );
+
+  if (view)
+    return <StickyRedirect to={`${view}/${recordType}/${playItemId}`} />;
 
   return (
     <div>
@@ -527,7 +534,7 @@ export function PassageDetailCommunity(props: IProps) {
         </>
         {confirm && (
           <Confirm
-            text={'Delete Item'}
+            text={t.deleteItem}
             yesResponse={handleDeleteConfirmed}
             noResponse={handleDeleteRefused}
           />

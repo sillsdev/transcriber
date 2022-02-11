@@ -168,6 +168,7 @@ interface ParamTypes {
   prjId: string;
   pasId: string;
   slug?: string;
+  medId?: string;
 }
 const TranscriberProvider = withData(mapRecordsToProps)(
   connect(
@@ -185,7 +186,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       projButtonStr,
       sharedStr,
     } = props;
-    const { prjId, pasId, slug } = useParams<ParamTypes>();
+    const { prjId, pasId, slug, medId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
@@ -268,6 +269,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         const remId = remoteId('passage', selected, memory.keyMap) || selected;
         if (pasId !== remId) {
           view.current = `/work/${prjId}/${remId}`;
+          if (slug) view.current += `/${slug}/${medId}`;
         }
         setTrackedTask(selected);
         var resetBlob = false;
@@ -394,9 +396,18 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                         state: curState,
                         sectPass: secNum + '.' + passageNumber(p).trim(),
                         mediaRemoteId:
-                          remoteId('mediafile', mediaRec.id, memory.keyMap) ||
-                          mediaRec.id,
-                        mediaId: mediaRec.id,
+                          medId && (p.keys?.remoteId || p.id) === pasId
+                            ? medId
+                            : remoteId(
+                                'mediafile',
+                                mediaRec.id,
+                                memory.keyMap
+                              ) || mediaRec.id,
+                        mediaId:
+                          medId && (p.keys?.remoteId || p.id) === pasId
+                            ? remoteIdGuid('mediafile', medId, memory.keyMap) ||
+                              medId
+                            : mediaRec.id,
                         playItem,
                         duration: mediaRec.attributes.duration,
                         role,
