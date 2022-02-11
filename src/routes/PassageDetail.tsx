@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation, useParams } from 'react-router-dom';
 import {
@@ -34,6 +34,7 @@ import PassageDetailArtifact from '../components/PassageDetail/PassageDetailArti
 import PassageBackTranslate from '../components/PassageDetail/PassageBackTranslate';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
 import IntegrationTab from '../components/Integration';
+import TranscriptionTab from '../components/TranscriptionTab';
 import {
   ArtifactTypeSlug,
   ToolSlug,
@@ -42,8 +43,10 @@ import {
   useStepTool,
   useUrlContext,
 } from '../crud';
-import { RoleNames } from '../model';
+import { RoleNames, Plan } from '../model';
 import { forceLogin, LocalKey, localUserKey } from '../utils';
+import { memory } from '../schema';
+import { QueryBuilder } from '@orbit/data';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -159,6 +162,7 @@ const PassageDetailGrids = (props: IProps) => {
   const { auth } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
+  const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
   const ctx = useContext(PassageDetailContext);
   const { currentstep, discussionSize, setDiscussionSize } = ctx.state;
@@ -189,6 +193,13 @@ const PassageDetailGrids = (props: IProps) => {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  const plans = useMemo(() => {
+    const plans = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('plan')
+    ) as Plan[];
+    return plans.filter((p) => p.id === plan);
+  }, [plan]);
 
   return (
     <div className={classes.panel2}>
@@ -292,6 +303,13 @@ const PassageDetailGrids = (props: IProps) => {
                   slugs={backTranslationSlugs}
                 />
               </Grid>
+            </Grid>
+          </Grid>
+        )}
+        {tool === ToolSlug.Export && (
+          <Grid container>
+            <Grid item xs={12}>
+              <TranscriptionTab {...props} projectPlans={plans} floatTop />
             </Grid>
           </Grid>
         )}

@@ -177,6 +177,7 @@ interface IProps
   auth: Auth;
   projectPlans: Plan[];
   planColumn?: boolean;
+  floatTop?: boolean;
 }
 
 export function TranscriptionTab(props: IProps) {
@@ -197,6 +198,7 @@ export function TranscriptionTab(props: IProps) {
     exportStatus,
     exportFile,
     allBookData,
+    floatTop,
   } = props;
   const classes = useStyles();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -686,12 +688,12 @@ export function TranscriptionTab(props: IProps) {
         <AppBar
           position="fixed"
           className={clsx(classes.bar, {
-            [classes.highBar]: planColumn,
+            [classes.highBar]: planColumn || floatTop,
           })}
           color="default"
         >
           <div className={classes.actions}>
-            {planColumn && (
+            {(planColumn || floatTop) && (
               <Button
                 id="transExp"
                 key="export"
