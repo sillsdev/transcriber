@@ -5278,9 +5278,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.duplication">
+      <unit id="workflowSteps.export">
          <segment>
-            <source>Duplicate</source>
+            <source>Export</source>
             <target/>
          </segment>
       </unit>

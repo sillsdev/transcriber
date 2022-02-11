@@ -6158,8 +6158,8 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-          <trans-unit id="workflowSteps.duplication">
-            <source>Duplicate</source>
+          <trans-unit id="workflowSteps.export">
+            <source>Export</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
