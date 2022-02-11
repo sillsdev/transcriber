@@ -58,7 +58,7 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 export function PassageDetailArtifacts(props: IProps) {
-  const { sectionResources, artifactTypes, auth, t } = props;
+  const { sectionResources, mediafiles, artifactTypes, auth, t } = props;
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
   const [offline] = useGlobal('offline');
@@ -85,6 +85,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const cancelled = useRef(false);
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
+  const [editResource, setEditResource] = useState<SectionResource>();
   const catIdRef = useRef<string>();
   const descriptionRef = useRef<string>('');
   const { showMessage } = useSnackBar();
@@ -123,7 +124,6 @@ export function PassageDetailArtifacts(props: IProps) {
     const secRes = sectionResources.find((r) => related(r, 'mediafile') === id);
     secRes && DeleteSectionResource(secRes);
   };
-
   const handleUploadVisible = (v: boolean) => {
     setUploadVisible(v);
   };
@@ -132,6 +132,45 @@ export function PassageDetailArtifacts(props: IProps) {
     setSharedResourceVisible(v);
   };
 
+  const handleEdit = (id: string) => {
+    const secRes = sectionResources.find((r) => related(r, 'mediafile') === id);
+    setEditResource(secRes);
+    descriptionRef.current = secRes?.attributes.description || '';
+    const mf = mediafiles.find((m) => m.id === related(secRes, 'mediafile'));
+    catIdRef.current = mf ? related(mf, 'artifactCategory') : undefined;
+  };
+  const resetEdit = () => {
+    setEditResource(undefined);
+    catIdRef.current = undefined;
+    descriptionRef.current = '';
+  };
+  const handleEditResourceVisible = (v: boolean) => {
+    if (!v) resetEdit();
+  };
+  const handleEditSave = async () => {
+    if (editResource) {
+      UpdateSectionResource({
+        ...editResource,
+        attributes: {
+          ...editResource.attributes,
+          description: descriptionRef.current,
+        },
+      });
+      const mf = mediafiles.find(
+        (m) => m.id === related(editResource, 'mediafile')
+      );
+      if (mf && catIdRef.current) {
+        const catRecId = { type: 'artifactcategory', id: catIdRef.current };
+        await memory.update((t: TransformBuilder) => [
+          t.replaceRelatedRecord(mf, 'artifactCategory', catRecId),
+        ]);
+      }
+    }
+    resetEdit();
+  };
+  const handleEditCancel = () => {
+    resetEdit();
+  };
   const handleAction = (what: string) => {
     if (what === 'upload') {
       setUploadVisible(true);
@@ -227,6 +266,7 @@ export function PassageDetailArtifacts(props: IProps) {
               onPlay={handlePlay}
               onDone={handleDone}
               onDelete={handleDelete}
+              onEdit={handleEdit}
             />
           ))}
       </SortableList>
@@ -261,6 +301,23 @@ export function PassageDetailArtifacts(props: IProps) {
         <SelectResource
           onSelect={handleSelectShared}
           onOpen={handleSharedResourceVisible}
+        />
+      </BigDialog>
+      <BigDialog
+        title={t.editResource}
+        isOpen={Boolean(editResource)}
+        onOpen={handleEditResourceVisible}
+        onSave={handleEditSave}
+        onCancel={handleEditCancel}
+        bp={BigDialogBp.sm}
+      >
+        <ResourceData
+          catAllowNew={true}
+          initCategory={catIdRef.current}
+          onCategoryChange={handleCategory}
+          initDescription={descriptionRef.current}
+          onDescriptionChange={handleDescription}
+          catRequired={false}
         />
       </BigDialog>
     </>
