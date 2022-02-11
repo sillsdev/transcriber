@@ -4944,10 +4944,10 @@
    			<target>Contrôle du consultant</target>
    		</segment>
    	</unit>
-   	<unit id="workflowSteps.duplication">
+   	<unit id="workflowSteps.export">
    		<segment>
-   			<source>Duplication</source>
-   			<target>Duplication</target>
+   			<source>Export</source>
+   			<target>Export</target>
    		</segment>
    	</unit>
    	<unit id="workflowSteps.finalRecording">

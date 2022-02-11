@@ -1171,7 +1171,7 @@ const initialState = {
 			"backTranslation": "Back Translate",
 			"communityTesting": "Community Test",
 			"consultantCheck": "Consultant Check",
-			"duplication": "Duplicate",
+			"export": "Export",
 			"finalRecording": "Final Record",
 			"finalReview": "Final Review",
 			"internalization": "Internalize",

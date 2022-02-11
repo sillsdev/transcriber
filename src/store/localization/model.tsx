@@ -1094,7 +1094,7 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "backTranslation": string;
     "communityTesting": string;
     "consultantCheck": string;
-    "duplication": string;
+    "export": string;
     "finalRecording": string;
     "finalReview": string;
     "internalization": string;
