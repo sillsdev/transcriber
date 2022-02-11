@@ -23,6 +23,7 @@ import {
 import Auth from '../../auth/Auth';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  ArtifactTypeSlug,
   findRecord,
   pullPlanMedia,
   related,
@@ -48,7 +49,7 @@ import PassageDetailPlayer from './PassageDetailPlayer';
 import DiscussionList from '../Discussions/DiscussionList';
 import MediaPlayer from '../MediaPlayer';
 import MediaRecord from '../MediaRecord';
-import SelectCommunityTest from './SelectCommunityTest';
+import SelectRecording from './SelectRecording';
 import { useGlobal } from 'reactn';
 import { UnsavedContext } from '../../context/UnsavedContext';
 
@@ -72,10 +73,19 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       margin: 'auto',
       width: `calc(100% - 32px)`,
+      '& audio': {
+        display: 'flex',
+        width: 'inherit',
+      },
+    },
+    playSelect: {
+      paddingRight: theme.spacing(4),
+      paddingBottom: theme.spacing(1),
     },
     pane: {},
     formControl: {
       margin: theme.spacing(1),
+      paddingBottom: theme.spacing(2),
     },
     playStatus: {
       margin: theme.spacing(1),
@@ -159,10 +169,11 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   auth: Auth;
   ready?: () => boolean;
   width: number;
+  slugs: ArtifactTypeSlug[];
 }
 
 export function PassageDetailCommunity(props: IProps) {
-  const { auth, t, ts, width } = props;
+  const { auth, t, ts, width, slugs } = props;
   const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
   const [reporter] = useGlobal('errorReporter');
   const [offline] = useGlobal('offline');
@@ -183,6 +194,7 @@ export function PassageDetailCommunity(props: IProps) {
   const mediaIdRef = useRef('');
   const [playItem, setPlayItem] = useState('');
   const [playing, setPlaying] = useState(false);
+  const [resetMedia, setResetMedia] = useState(0);
   const {
     passage,
     mediafileId,
@@ -194,16 +206,12 @@ export function PassageDetailCommunity(props: IProps) {
   } = usePassageDetailContext();
   const { toolChanged, toolsChanged, startSave, saveCompleted, saveRequested } =
     useContext(UnsavedContext).state;
-  const { retellId, qAndaId, localizedArtifactType } = useArtifactType();
+  const { getTypeId, localizedArtifactType } = useArtifactType();
   const { showMessage } = useSnackBar();
   const [attachPassage] = useMediaAttach({
     doOrbitError,
   });
-  const enum RecordType {
-    Retell = 'retell',
-    QandA = 'qanda',
-  }
-  const [recordType, setRecordType] = useState<RecordType>(RecordType.Retell);
+  const [recordType, setRecordType] = useState<ArtifactTypeSlug>(slugs[0]);
 
   const toolId = 'CommunityTool';
 
@@ -228,8 +236,8 @@ export function PassageDetailCommunity(props: IProps) {
   }, [mediafileId]);
 
   const recordTypeId = useMemo(
-    () => (recordType === RecordType.Retell ? retellId : qAndaId),
-    [RecordType.Retell, qAndaId, recordType, retellId]
+    () => getTypeId(recordType),
+    [recordType, getTypeId]
   );
 
   useEffect(() => {
@@ -264,6 +272,7 @@ export function PassageDetailCommunity(props: IProps) {
             .replace('{1}', fileList.current.length.toString())
         );
       uploadComplete();
+      setResetMedia(resetMedia + 1);
     }, 1000);
   };
   const itemComplete = async (n: number, success: boolean, data?: any) => {
@@ -323,13 +332,12 @@ export function PassageDetailCommunity(props: IProps) {
     nextUpload(mediaFile, files, 0, auth, offline, reporter, itemComplete);
   };
   const handleSetCanSave = (valid: boolean) => {
-    console.log('handleSetCanSave', valid);
     if (valid !== canSave) {
       setCanSave(valid);
     }
   };
   const handleChangeType = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRecordType((event.target as HTMLInputElement).value as RecordType);
+    setRecordType((event.target as HTMLInputElement).value as ArtifactTypeSlug);
   };
   const handleChangeSpeaker = (e: any) => {
     e.persist();
@@ -369,29 +377,27 @@ export function PassageDetailCommunity(props: IProps) {
                     <Paper className={classes.paper}>
                       <div className={classes.row}>
                         <Typography className={classes.status}>
-                          {'Record'}
+                          {t.record}
                         </Typography>
-                        <RadioGroup
-                          row={true}
-                          id="filetype"
-                          aria-label="filetype"
-                          name="filetype"
-                          value={recordType}
-                          onChange={handleChangeType}
-                        >
-                          <FormControlLabel
-                            id="retell"
-                            value={RecordType.Retell}
-                            control={<Radio />}
-                            label={localizedArtifactType('retell')}
-                          />
-                          <FormControlLabel
-                            id="QandA"
-                            value={RecordType.QandA}
-                            control={<Radio />}
-                            label={localizedArtifactType('qanda')}
-                          />
-                        </RadioGroup>
+                        {slugs.length > 1 && (
+                          <RadioGroup
+                            row={true}
+                            id="filetype"
+                            aria-label="filetype"
+                            name="filetype"
+                            value={recordType}
+                            onChange={handleChangeType}
+                          >
+                            {slugs.map((s) => (
+                              <FormControlLabel
+                                id={s}
+                                value={s}
+                                control={<Radio />}
+                                label={localizedArtifactType(s)}
+                              />
+                            ))}
+                          </RadioGroup>
+                        )}
                         <div className={classes.grow}>{'\u00A0'}</div>
                         <TextField
                           className={classes.formControl}
@@ -399,7 +405,6 @@ export function PassageDetailCommunity(props: IProps) {
                           label={t.speaker}
                           value={speaker}
                           onChange={handleChangeSpeaker}
-                          required={true}
                           fullWidth={true}
                         />
                       </div>
@@ -411,6 +416,7 @@ export function PassageDetailCommunity(props: IProps) {
                         showFilename={false}
                         setCanSave={handleSetCanSave}
                         setStatusText={setStatusText}
+                        doReset={resetMedia}
                         size={200}
                       />
                       <div className={classes.row}>
@@ -436,7 +442,14 @@ export function PassageDetailCommunity(props: IProps) {
                     <Paper className={classes.paper}>
                       <div className={classes.row}>
                         <Paper className={classes.paper}>
-                          <SelectCommunityTest onChange={handleSelect} t={t} />
+                          <div className={classes.playSelect}>
+                            <SelectRecording
+                              onChange={handleSelect}
+                              ts={ts}
+                              tags={slugs}
+                            />
+                          </div>
+
                           <MediaPlayer
                             auth={auth}
                             srcMediaId={playItem}

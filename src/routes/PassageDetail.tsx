@@ -30,10 +30,12 @@ import PassageDetailArtifacts from '../components/PassageDetail/Internalization/
 import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord';
+import PassageDetailArtifact from '../components/PassageDetail/PassageDetailArtifact';
 import PassageBackTranslate from '../components/PassageDetail/PassageBackTranslate';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
 import IntegrationTab from '../components/Integration';
 import {
+  ArtifactTypeSlug,
   ToolSlug,
   useProjectType,
   useRole,
@@ -41,7 +43,6 @@ import {
   useUrlContext,
 } from '../crud';
 import { RoleNames } from '../model';
-import PassageDetailCommunity from '../components/PassageDetail/PassageDetailCommunity';
 import { forceLogin, LocalKey, localUserKey } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -162,6 +163,11 @@ const PassageDetailGrids = (props: IProps) => {
   const ctx = useContext(PassageDetailContext);
   const { currentstep, discussionSize, setDiscussionSize } = ctx.state;
   const tool = useStepTool(currentstep);
+  const [communitySlugs] = useState([
+    ArtifactTypeSlug.Retell,
+    ArtifactTypeSlug.QandA,
+  ]);
+  const [backTranslationSlugs] = useState([ArtifactTypeSlug.BackTranslation]);
 
   const handleSplitSize = debounce((e: number) => {
     setDiscussionSize(width - e);
@@ -267,7 +273,24 @@ const PassageDetailGrids = (props: IProps) => {
           <Grid container direction="row" className={classes.row}>
             <Grid item xs={12}>
               <Grid container>
-                <PassageDetailCommunity auth={auth} width={width} />
+                <PassageDetailArtifact
+                  auth={auth}
+                  width={width}
+                  slugs={communitySlugs}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
+        {tool === ToolSlug.BackTranslate && (
+          <Grid container direction="row" className={classes.row}>
+            <Grid item xs={12}>
+              <Grid container>
+                <PassageDetailArtifact
+                  auth={auth}
+                  width={width}
+                  slugs={backTranslationSlugs}
+                />
               </Grid>
             </Grid>
           </Grid>

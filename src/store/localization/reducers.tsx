@@ -197,19 +197,10 @@ const initialState = {
 	"community": new LocalizedStrings({
 		"en": {
 			"playTest": "Play Test",
-			"record": "Record Test",
+			"record": "Record",
 			"speaker": "Speaker",
 			"unsaved": "Unsaved",
 			"uploadComplete": "{0} of {1} files uploaded successfully.",
-		}
-	}),
-	"discussionMenu": new LocalizedStrings({
-		"en": {
-			"edit": "Edit",
-			"delete": "Delete",
-			"reopen": "Reopen",
-			"resolve": "Resolve",
-			"setSegment": "Set Segment",
 		}
 	}),
 	"control": new LocalizedStrings({
@@ -239,6 +230,15 @@ const initialState = {
 			"resolved": "Resolve",
 			"topic": "Topic",
 			"version": "Version",
+		}
+	}),
+	"discussionMenu": new LocalizedStrings({
+		"en": {
+			"edit": "Edit",
+			"delete": "Delete",
+			"reopen": "Reopen",
+			"resolve": "Resolve",
+			"setSegment": "Set Segment",
 		}
 	}),
 	"discussionList": new LocalizedStrings({
@@ -853,6 +853,7 @@ const initialState = {
 			"no": "No",
 			"NoSaveOffline": "Unable to save while offline.",
 			"owner": "Owner",
+			"playItem": "Play Item",
 			"recordingInProgress": "Recording in progress...",
 			"role": "Role",
 			"projectrole": "Project Role",
@@ -955,6 +956,7 @@ const initialState = {
 			"community": "Community Test",
 			"discuss": "Discuss",
 			"transcribe": "Transcribe",
+			"backTranslate": "Back Translate",
 			"segment": "Segment",
 			"paratext": "Paratext Sync",
 		}
@@ -1253,10 +1255,10 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"commentCard" : new LocalizedStrings(action.payload.data.commentCard),
 				"commentEditor" : new LocalizedStrings(action.payload.data.commentEditor),
 				"community" : new LocalizedStrings(action.payload.data.community),
-				"discussionMenu" : new LocalizedStrings(action.payload.data.discussionMenu),
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
 				"discussionCard" : new LocalizedStrings(action.payload.data.discussionCard),
+				"discussionMenu" : new LocalizedStrings(action.payload.data.discussionMenu),
 				"discussionList" : new LocalizedStrings(action.payload.data.discussionList),
 				"electronImport" : new LocalizedStrings(action.payload.data.electronImport),
 				"emailUnverified" : new LocalizedStrings(action.payload.data.emailUnverified),

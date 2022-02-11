@@ -9,6 +9,7 @@ export enum ToolSlug {
   TeamCheck = 'teamCheck',
   Discuss = 'discuss',
   Transcribe = 'transcribe',
+  BackTranslate = 'backTranslate',
   Segment = 'segment',
   Paratext = 'paratext',
   Community = 'community',
@@ -22,16 +23,12 @@ const toolSlugs = [
   ToolSlug.TeamCheck,
   ToolSlug.Discuss,
   ToolSlug.Transcribe,
+  ToolSlug.BackTranslate,
   ToolSlug.Segment,
   ToolSlug.Paratext,
   ToolSlug.Community,
   ToolSlug.Export,
   ToolSlug.Done,
-];
-
-const toolMap = [
-  { from: 'audio', to: ToolSlug.Discuss },
-  { from: 'backTranslate', to: ToolSlug.Segment },
 ];
 
 interface ISwitches {
@@ -57,13 +54,6 @@ export const useTools = () => {
     return fromLocal[val] || val;
   };
 
-  const mapTool = (tool: string) => {
-    for (const { from, to } of toolMap) {
-      if (tool === from) return to;
-    }
-    return tool;
-  };
-
   const getToolOptions = () => {
     return toolSlugs.map(
       (v) =>
@@ -76,7 +66,6 @@ export const useTools = () => {
 
   return {
     getToolOptions,
-    mapTool,
     localizedTool,
     fromLocalizedTool,
   };

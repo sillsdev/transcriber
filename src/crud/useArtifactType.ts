@@ -11,6 +11,16 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { findRecord, related } from '.';
 import { AddRecord } from '../model/baseModel';
 
+export enum ArtifactTypeSlug {
+  Vernacular = 'vernacular',
+  BackTranslation = 'backtranslation',
+  Retell = 'retell',
+  QandA = 'qanda',
+  Comment = 'comment',
+  Activity = 'activity',
+  Resource = 'resource',
+  SharedResource = 'sharedResource',
+}
 interface ISwitches {
   [key: string]: any;
 }
@@ -74,7 +84,7 @@ export const useArtifactType = () => {
     var types = memory.cache.query((q: QueryBuilder) =>
       q
         .findRecords('artifacttype')
-        .filter({ attribute: 'typename', value: 'vernacular' })
+        .filter({ attribute: 'typename', value: ArtifactTypeSlug.Vernacular })
     ) as ArtifactType[];
     var v = types.find((r) => Boolean(r?.keys?.remoteId) !== offlineOnly);
     if (v) return v.id;
@@ -100,17 +110,22 @@ export const useArtifactType = () => {
   };
 
   const commentId = useMemo(() => {
-    return getTypeId('comment');
+    return getTypeId(ArtifactTypeSlug.Comment);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offlineOnly]);
 
   const retellId = useMemo(() => {
-    return getTypeId('retell');
+    return getTypeId(ArtifactTypeSlug.Retell);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offlineOnly]);
 
   const qAndaId = useMemo(() => {
-    return getTypeId('qanda');
+    return getTypeId(ArtifactTypeSlug.QandA);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offlineOnly]);
+
+  const backTranslationId = useMemo(() => {
+    return getTypeId(ArtifactTypeSlug.BackTranslation);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offlineOnly]);
 
@@ -144,6 +159,7 @@ export const useArtifactType = () => {
     commentId,
     retellId,
     qAndaId,
+    backTranslationId,
     getTypeId,
     IsVernacularMedia,
   };

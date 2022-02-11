@@ -804,7 +804,7 @@
       </unit>
       <unit id="community.record">
          <segment>
-            <source>Record Test</source>
+            <source>Record</source>
             <target/>
          </segment>
       </unit>
@@ -823,36 +823,6 @@
       <unit id="community.uploadComplete">
          <segment>
             <source>{0} of {1} files uploaded successfully.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="discussionMenu.edit">
-         <segment>
-            <source>Edit</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="discussionMenu.delete">
-         <segment>
-            <source>Delete</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="discussionMenu.reopen">
-         <segment>
-            <source>Reopen</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="discussionMenu.resolve">
-         <segment>
-            <source>Resolve</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="discussionMenu.setSegment">
-         <segment>
-            <source>Set Segment</source>
             <target/>
          </segment>
       </unit>
@@ -955,6 +925,36 @@
       <unit id="discussionCard.version">
          <segment>
             <source>Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.edit">
+         <segment>
+            <source>Edit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.reopen">
+         <segment>
+            <source>Reopen</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.resolve">
+         <segment>
+            <source>Resolve</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.setSegment">
+         <segment>
+            <source>Set Segment</source>
             <target/>
          </segment>
       </unit>
@@ -3874,6 +3874,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.playItem">
+         <segment>
+            <source>Play Item</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.recordingInProgress">
          <segment>
             <source>Recording in progress...</source>
@@ -4315,6 +4321,12 @@
       <unit id="tool.transcribe">
          <segment>
             <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.backTranslate">
+         <segment>
+            <source>Back Translate</source>
             <target/>
          </segment>
       </unit>

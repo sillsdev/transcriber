@@ -15,7 +15,7 @@ import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { CheckedChoice as ShowAll } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
 import { toCamel } from '../../utils';
-import { getTool, related, ToolSlug, useTools } from '../../crud';
+import { getTool, related, ToolSlug } from '../../crud';
 import { AddRecord } from '../../model/baseModel';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -60,7 +60,6 @@ export const StepEditor = ({ process, org }: IProps) => {
   const { toolChanged, toolsChanged, saveRequested, saveCompleted } =
     useContext(UnsavedContext).state;
   const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
-  const { mapTool } = useTools();
   const [refresh, setRefresh] = useState(0);
   const { showMessage } = useSnackBar();
   const changeList = useRef(new Set<string>());
@@ -234,7 +233,7 @@ export const StepEditor = ({ process, org }: IProps) => {
           id: s.id,
           seq: s.attributes?.sequencenum,
           name: localName(s.attributes?.name),
-          tool: mapTool(toCamel(getTool(s.attributes?.tool))),
+          tool: toCamel(getTool(s.attributes?.tool)),
         });
       });
       setRows(newRows.sort((i, j) => i.seq - j.seq));
