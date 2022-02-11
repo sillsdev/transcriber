@@ -2975,7 +2975,7 @@
             <target>Удалить</target>
          </segment>
       </unit>
-      <unit id="planActions.launchAudacity">
+      <unit id="shared.launchAudacity">
          <segment>
             <source>Launch Audacity</source>
             <target>Запуск Audacity</target>
@@ -3651,6 +3651,12 @@
          <segment>
             <source>Upload Audio</source>
             <target>Загрузить аудио</target>
+         </segment>
+      </unit>
+      <unit id="shared.versionHistory">
+         <segment>
+            <source>Version History</source>
+            <target>История версий</target>
          </segment>
       </unit>
       <unit id="shared.yes">
