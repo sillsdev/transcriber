@@ -22,10 +22,9 @@ import { FaCopy } from 'react-icons/fa';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
   getMediaProjRec,
-  getVernacularMediaRec,
   FontData,
   getFontData,
-  useArtifactType,
+  useTranscription,
 } from '../crud';
 
 const useStyles = makeStyles({
@@ -48,11 +47,12 @@ interface IProps extends IRecordProps, IStateProps {
   isMediaId?: boolean;
   visible: boolean;
   closeMethod?: () => void;
+  exportId?: string;
 }
 
 function TranscriptionShow(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
-  const { id, isMediaId, t, visible, closeMethod } = props;
+  const { id, isMediaId, t, visible, closeMethod, exportId } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -61,7 +61,7 @@ function TranscriptionShow(props: IProps) {
   const [transcription, setTranscription] = useState('');
   const [fontData, setFontData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
-  const { vernacularId } = useArtifactType();
+  const getTranscription = useTranscription();
   const loadStatus = (status: string) => {
     setFontStatus(status);
   };
@@ -92,9 +92,7 @@ function TranscriptionShow(props: IProps) {
             q.findRecord({ type: 'mediafile', id })
           ) as MediaFile)
         : null;
-      if (!mediaRec) mediaRec = getVernacularMediaRec(id, memory, vernacularId);
-      const attr = mediaRec && mediaRec.attributes;
-      setTranscription(attr && attr.transcription ? attr.transcription : '');
+      setTranscription(getTranscription(id, exportId));
       const projRec = getMediaProjRec(mediaRec, memory, reporter);
       if (projRec) setFontData(getFontData(projRec, offline));
     }
