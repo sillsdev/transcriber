@@ -147,6 +147,13 @@ function App() {
                 <PrivateRoute auth={auth} exact path="/work/:prjId/:pasId">
                   <WorkScreen auth={auth} />
                 </PrivateRoute>
+                <PrivateRoute
+                  auth={auth}
+                  exact
+                  path="/work/:prjId/:pasId/:slug/:medId"
+                >
+                  <WorkScreen auth={auth} />
+                </PrivateRoute>
                 <PrivateRoute auth={auth} exact path="/work/:prjId">
                   <WorkScreen auth={auth} />
                 </PrivateRoute>

@@ -796,6 +796,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.deleteItem">
+         <segment>
+            <source>Delete Item</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.playTest">
          <segment>
             <source>Play Test</source>

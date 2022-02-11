@@ -738,6 +738,12 @@
    			<context context-type="sourcefile">CommentCard.tsx</context>
    		</context-group>
    	</trans-unit>
+   	<unit id="community.deleteItem">
+   		<segment>
+   			<source>Delete Item</source>
+   			<target>Supprimer l'élément</target>
+   		</segment>
+   	</unit>
    	<trans-unit id="community.playTest">
    		<source>Play Test</source>
    		<target/>

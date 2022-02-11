@@ -4,7 +4,9 @@ import {
   ISharedStrings,
   IState,
   MediaFile,
+  RoleNames,
 } from '../../model';
+import { useLocation } from 'react-router-dom';
 import localStrings from '../../selector/localize';
 import {
   Button,
@@ -12,6 +14,7 @@ import {
   debounce,
   FormControlLabel,
   Grid,
+  IconButton,
   makeStyles,
   Paper,
   Radio,
@@ -20,6 +23,8 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
+import TranscribeIcon from '../../control/TranscribeIcon';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Auth from '../../auth/Auth';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -38,6 +43,7 @@ import * as actions from '../../store';
 import { bindActionCreators } from 'redux';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
+import { TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import { withData } from '../../mods/react-orbitjs';
@@ -52,6 +58,9 @@ import MediaRecord from '../MediaRecord';
 import SelectRecording from './SelectRecording';
 import { useGlobal } from 'reactn';
 import { UnsavedContext } from '../../context/UnsavedContext';
+import { LocalKey, localUserKey } from '../../utils';
+import StickyRedirect from '../StickyRedirect';
+import Confirm from '../AlertDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -94,6 +103,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     grow: { flexGrow: 1 },
+    playerRow: { width: '100%', display: 'flex' },
   })
 );
 const Wrapper = styled.div`
@@ -175,9 +185,12 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 export function PassageDetailCommunity(props: IProps) {
   const { auth, t, ts, width, slugs } = props;
   const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
+  const { pathname } = useLocation();
+  const [view, setView] = useState('');
   const [reporter] = useGlobal('errorReporter');
   const [offline] = useGlobal('offline');
   const [plan] = useGlobal('plan');
+  const [projRole] = useGlobal('projRole');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const { createMedia } = useOfflnMediafileCreate(doOrbitError);
   const [statusText, setStatusText] = useState('');
@@ -195,6 +208,7 @@ export function PassageDetailCommunity(props: IProps) {
   const [playItem, setPlayItem] = useState('');
   const [playing, setPlaying] = useState(false);
   const [resetMedia, setResetMedia] = useState(0);
+  const [confirm, setConfirm] = useState('');
   const {
     passage,
     mediafileId,
@@ -351,6 +365,38 @@ export function PassageDetailCommunity(props: IProps) {
     setPlaying(false);
   };
 
+  const handleDelete = (id: string) => () => {
+    setConfirm(id);
+  };
+
+  const handleDeleteConfirmed = () => {
+    memory
+      .update((t: TransformBuilder) =>
+        t.removeRecord({ type: 'mediafile', id: confirm })
+      )
+      .finally(() => {
+        setConfirm('');
+        setPlayItem('');
+      });
+  };
+  const handleDeleteRefused = () => {
+    setConfirm('');
+  };
+
+  const handleTranscribe = () => {
+    localStorage.setItem(localUserKey(LocalKey.jumpBack), pathname);
+    setView(pathname.replace('detail', 'work'));
+  };
+
+  const playItemId = useMemo(
+    () => remoteIdNum('mediafile', playItem, memory.keyMap) || playItem,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [playItem]
+  );
+
+  if (view)
+    return <StickyRedirect to={`${view}/${recordType}/${playItemId}`} />;
+
   return (
     <div>
       <Paper className={classes.paper}>
@@ -449,14 +495,27 @@ export function PassageDetailCommunity(props: IProps) {
                               tags={slugs}
                             />
                           </div>
-
-                          <MediaPlayer
-                            auth={auth}
-                            srcMediaId={playItem}
-                            requestPlay={playing}
-                            onEnded={handleEnded}
-                            controls={true}
-                          />
+                          <div className={classes.playerRow}>
+                            <MediaPlayer
+                              auth={auth}
+                              srcMediaId={playItem}
+                              requestPlay={playing}
+                              onEnded={handleEnded}
+                              controls={true}
+                            />
+                            {playItem && (
+                              <>
+                                <IconButton onClick={handleTranscribe}>
+                                  <TranscribeIcon />
+                                </IconButton>
+                                {projRole === RoleNames.Admin && (
+                                  <IconButton onClick={handleDelete(playItem)}>
+                                    <DeleteIcon />
+                                  </IconButton>
+                                )}
+                              </>
+                            )}
+                          </div>
                         </Paper>
                       </div>
                     </Paper>
@@ -473,6 +532,13 @@ export function PassageDetailCommunity(props: IProps) {
             </SplitPane>
           </Wrapper>
         </>
+        {confirm && (
+          <Confirm
+            text={t.deleteItem}
+            yesResponse={handleDeleteConfirmed}
+            noResponse={handleDeleteRefused}
+          />
+        )}
       </Paper>
     </div>
   );

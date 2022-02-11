@@ -927,6 +927,13 @@
                <context context-type="sourcefile">CommentCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="community.deleteItem">
+      		<source>Delete Item</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Community.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="community.playTest">
             <source>Play Test</source>
             <target/>

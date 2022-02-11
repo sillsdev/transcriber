@@ -176,6 +176,7 @@ export interface ICommentEditorStrings extends Localize.LocalizedStringsMethods 
 };
 
 export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
+    "deleteItem": string;
     "playTest": string;
     "record": string;
     "speaker": string;

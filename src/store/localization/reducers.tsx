@@ -196,6 +196,7 @@ const initialState = {
 	}),
 	"community": new LocalizedStrings({
 		"en": {
+			"deleteItem": "Delete Item",
 			"playTest": "Play Test",
 			"record": "Record",
 			"speaker": "Speaker",
