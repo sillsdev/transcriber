@@ -5388,6 +5388,13 @@
                <context context-type="sourcefile">TranscriptionShow.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="transcriptionTab.availableOnClipboard">
+      		<source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ExportTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="transcriptionTab.cancel">
             <source>Cancel</source>
             <target/>

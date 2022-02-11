@@ -35,6 +35,8 @@ import {
   DialogContentText,
   DialogActions,
   AppBar,
+  TextField,
+  MenuItem,
 } from '@material-ui/core';
 // import CopyIcon from '@material-ui/icons/FileCopy';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -54,11 +56,13 @@ import {
   passageCompare,
   passageDescription,
   getVernacularMediaRec,
+  getAllMediaRecs,
   getMediaEaf,
   getMediaName,
   getMediaInPlans,
   useOrganizedBy,
   useArtifactType,
+  ArtifactTypeSlug,
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -104,6 +108,9 @@ const useStyles = makeStyles((theme: Theme) =>
     downloadButtons: {
       display: 'flex',
       alignItems: 'center',
+    },
+    typeSelect: {
+      paddingRight: theme.spacing(2),
     },
   })
 );
@@ -217,7 +224,16 @@ export function TranscriptionTab(props: IProps) {
   const [fingerprint] = useGlobal('fingerprint');
   const getOfflineProject = useOfflnProjRead();
   const [globalStore] = useGlobal();
-  const { vernacularId } = useArtifactType();
+  const { vernacularId, getTypeId, localizedArtifactType } = useArtifactType();
+  const [exportTypes] = useState<ArtifactTypeSlug[]>([
+    ArtifactTypeSlug.Vernacular,
+    ArtifactTypeSlug.Retell,
+    ArtifactTypeSlug.QandA,
+    ArtifactTypeSlug.BackTranslation,
+  ]);
+  const [exportType, setExportType] = useState<ArtifactTypeSlug>(
+    exportTypes[0]
+  );
   const columnDefs = [
     { name: 'name', title: getOrganizedBy(true) },
     { name: 'state', title: t.sectionstate },
@@ -307,9 +323,25 @@ export function TranscriptionTab(props: IProps) {
     else doProjectExport(ExportType.PTF);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const exportId = useMemo(() => getTypeId(exportType), [exportType]);
+
   const getTranscription = (passageId: string) => {
-    const mediaRec = getVernacularMediaRec(passageId, memory, vernacularId);
-    return mediaRec?.attributes?.transcription || '';
+    if (exportId === vernacularId) {
+      const mediaRec = getVernacularMediaRec(passageId, memory, vernacularId);
+      return mediaRec?.attributes?.transcription || '';
+    } else {
+      const transcriptions = getAllMediaRecs(passageId, memory, exportId)
+        .sort((i, j) =>
+          i.attributes?.dateCreated <= j.attributes?.dateCreated ? -1 : 1
+        )
+        .filter((m) => m.attributes?.transcription)
+        .map(
+          (m) =>
+            `${m.attributes?.performedBy || ''}: ${m.attributes?.transcription}`
+        );
+      return transcriptions.join('\n');
+    }
   };
 
   const getCopy = (
@@ -357,6 +389,9 @@ export function TranscriptionTab(props: IProps) {
       .writeText(
         getCopy(projectPlans, passages, sections, allBookData).join('\n')
       )
+      .then(() => {
+        showMessage(t.availableOnClipboard);
+      })
       .catch((err) => {
         showMessage(t.cantCopy);
       });
@@ -374,11 +409,21 @@ export function TranscriptionTab(props: IProps) {
     setPassageId('');
   };
 
+  const handleExportType = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setExportType(e.target.value as ArtifactTypeSlug);
+  };
+
   const hasTranscription = (passageId: string) => {
-    const mediaRec = getVernacularMediaRec(passageId, memory, vernacularId);
-    const mediaAttr = mediaRec && mediaRec.attributes;
-    const transcription =
-      mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
+    let transcription = '';
+    if (exportId === vernacularId) {
+      const mediaRec = getVernacularMediaRec(passageId, memory, vernacularId);
+      transcription = mediaRec?.attributes?.transcription || '';
+    } else {
+      const transcriptions = getAllMediaRecs(passageId, memory, exportId).map(
+        (m) => m.attributes?.transcription
+      );
+      transcription = transcriptions.join('\n');
+    }
     return transcription.length > 0;
   };
 
@@ -704,6 +749,18 @@ export function TranscriptionTab(props: IProps) {
               </Button>
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
+            <TextField
+              select
+              value={exportType}
+              onChange={handleExportType}
+              className={classes.typeSelect}
+            >
+              {exportTypes.map((t) => (
+                <MenuItem key={t} value={t}>
+                  {localizedArtifactType(t)}
+                </MenuItem>
+              ))}
+            </TextField>
             <Button
               id="transFilt"
               key="filter"

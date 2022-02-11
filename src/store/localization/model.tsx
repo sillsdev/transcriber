@@ -960,6 +960,7 @@ export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMeth
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
+    "availableOnClipboard": string;
     "cancel": string;
     "cantCopy": string;
     "copyTip": string;

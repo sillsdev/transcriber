@@ -4290,6 +4290,12 @@
             <target>Cet affichage vous permet de consulter la transcription qui est stockée.</target>
          </segment>
       </unit>
+   	<unit id="transcriptionTab.availableOnClipboard">
+   		<segment>
+   			<source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
+   			<target>Les données exportées sont disponibles dans le presse-papiers. Utilisez la fonction coller pour les insérer dans un autre programme.</target>
+   		</segment>
+   	</unit>
       <unit id="transcriptionTab.cancel">
          <segment>
             <source>Cancel</source>
