@@ -63,6 +63,7 @@ import {
   useOrganizedBy,
   useArtifactType,
   ArtifactTypeSlug,
+  useTranscription,
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -234,6 +235,7 @@ export function TranscriptionTab(props: IProps) {
   const [exportType, setExportType] = useState<ArtifactTypeSlug>(
     exportTypes[0]
   );
+  const getTranscription = useTranscription();
   const columnDefs = [
     { name: 'name', title: getOrganizedBy(true) },
     { name: 'state', title: t.sectionstate },
@@ -326,24 +328,6 @@ export function TranscriptionTab(props: IProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const exportId = useMemo(() => getTypeId(exportType), [exportType]);
 
-  const getTranscription = (passageId: string) => {
-    if (exportId === vernacularId) {
-      const mediaRec = getVernacularMediaRec(passageId, memory, vernacularId);
-      return mediaRec?.attributes?.transcription || '';
-    } else {
-      const transcriptions = getAllMediaRecs(passageId, memory, exportId)
-        .sort((i, j) =>
-          i.attributes?.dateCreated <= j.attributes?.dateCreated ? -1 : 1
-        )
-        .filter((m) => m.attributes?.transcription)
-        .map(
-          (m) =>
-            `${m.attributes?.performedBy || ''}: ${m.attributes?.transcription}`
-        );
-      return transcriptions.join('\n');
-    }
-  };
-
   const getCopy = (
     projectPlans: Plan[],
     passages: Array<Passage>,
@@ -364,7 +348,7 @@ export function TranscriptionTab(props: IProps) {
           sectionpassages.forEach((passage: Passage) => {
             // const state = passage?.attributes?.state ||'';
             const ref = getReference(passage, bookData);
-            const transcription = getTranscription(passage.id);
+            const transcription = getTranscription(passage.id, exportId);
             if (transcription !== '') {
               if (planName && planName !== '') {
                 copyData.push(`*****\n${planName}\n`);
@@ -815,6 +799,7 @@ export function TranscriptionTab(props: IProps) {
           id={passageId}
           visible={passageId !== ''}
           closeMethod={handleCloseTranscription}
+          exportId={exportId}
         />
       )}
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
