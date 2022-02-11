@@ -4217,6 +4217,12 @@
             <target/>
          </segment>
       </unit>
+   	<unit id="transcriptionTab.availableOnClipboard">
+   		<segment>
+   			<source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
+   			<target/>
+   		</segment>
+   	</unit>
       <unit id="transcriptionTab.cancel">
          <segment>
             <source/>

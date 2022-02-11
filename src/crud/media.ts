@@ -147,8 +147,7 @@ export const getMediaEaf = (
   let encoder = new Encoder('numerical');
 
   const mediaAttr = mediaRec && mediaRec.attributes;
-  const transcription =
-    mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
+  const transcription = mediaAttr?.transcription || '';
   const encTranscript = encoder
     .htmlEncode(transcription)
     .replace(/\([0-9]{1,2}:[0-9]{2}(:[0-9]{2})?\)/g, '');
