@@ -20,7 +20,6 @@ export enum ArtifactTypeSlug {
   Activity = 'activity',
   Resource = 'resource',
   SharedResource = 'sharedResource',
-  Testing = 'testing',
 }
 interface ISwitches {
   [key: string]: any;

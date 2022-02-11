@@ -31,8 +31,6 @@ const toolSlugs = [
   ToolSlug.Done,
 ];
 
-const toolMap = [{ from: 'audio', to: ToolSlug.Discuss }];
-
 interface ISwitches {
   [key: string]: any;
 }
@@ -56,13 +54,6 @@ export const useTools = () => {
     return fromLocal[val] || val;
   };
 
-  const mapTool = (tool: string) => {
-    for (const { from, to } of toolMap) {
-      if (tool === from) return to;
-    }
-    return tool;
-  };
-
   const getToolOptions = () => {
     return toolSlugs.map(
       (v) =>
@@ -75,7 +66,6 @@ export const useTools = () => {
 
   return {
     getToolOptions,
-    mapTool,
     localizedTool,
     fromLocalizedTool,
   };
