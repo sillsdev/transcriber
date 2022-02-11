@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
@@ -167,6 +167,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
 interface ParamTypes {
   prjId: string;
   pasId: string;
+  slug?: string;
 }
 const TranscriberProvider = withData(mapRecordsToProps)(
   connect(
@@ -184,7 +185,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       projButtonStr,
       sharedStr,
     } = props;
-    const { prjId, pasId } = useParams<ParamTypes>();
+    const { prjId, pasId, slug } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
@@ -210,16 +211,19 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       sharedStr,
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
-    const { vernacularId } = useArtifactType();
+    const { vernacularId, getTypeId } = useArtifactType();
     const fetching = useRef('');
+
+    const artifactId = useMemo(
+      () => (slug ? getTypeId(slug) : vernacularId),
+      [slug, vernacularId, getTypeId]
+    );
 
     useEffect(() => {
       if (devPlan && mediafiles.length > 0) {
-        setPlanMedia(
-          getMediaInPlans([devPlan], mediafiles, vernacularId, true)
-        );
+        setPlanMedia(getMediaInPlans([devPlan], mediafiles, artifactId, true));
       }
-    }, [mediafiles, devPlan, vernacularId]);
+    }, [mediafiles, devPlan, artifactId]);
 
     const setRows = (rowData: IRowData[]) => {
       setState((state: ICtxState) => {
