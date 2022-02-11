@@ -656,7 +656,6 @@ export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
     "delete": string;
     "passageDetail": string;
     "resources": string;
-    "launchAudacity": string;
     "playpause": string;
     "recordAudio": string;
     "transcribe": string;
@@ -761,7 +760,6 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "saveFirst": string;
     "saving": string;
     "title": string;
-    "versionHistory": string;
 };
 
 export interface ISectionResourcesStrings extends Localize.LocalizedStringsMethods {
@@ -780,6 +778,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "editor": string;
     "backtranslator": string;
     "consultant": string;
+    "launchAudacity": string;
     "mediaError": string;
     "observer": string;
     "peerreviewer": string;
@@ -811,6 +810,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "uploadMediaPlural": string;
     "uploadMediaSingular": string;
     "user": string;
+    "versionHistory": string;
     "yes": string;
 };
 

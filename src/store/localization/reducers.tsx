@@ -704,7 +704,6 @@ const initialState = {
 			"delete": "Delete",
 			"passageDetail": "Passage Detail",
 			"resources": "Resources",
-			"launchAudacity": "Launch Audacity",
 			"playpause": "Play/Pause",
 			"recordAudio": "Record/Edit Audio",
 			"transcribe": "Transcribe",
@@ -815,7 +814,6 @@ const initialState = {
 			"saveFirst": "You must save changes first!",
 			"saving": "Saving...",
 			"title": "Title",
-			"versionHistory": "Version History",
 		}
 	}),
 	"sectionResources": new LocalizedStrings({
@@ -836,6 +834,7 @@ const initialState = {
 			"editor": "Editor",
 			"backtranslator": "Back Translator",
 			"consultant": "Consultant",
+			"launchAudacity": "Launch Audacity",
 			"mediaError": "Meida is missing or has an unaccepted format.",
 			"observer": "Observer",
 			"peerreviewer": "Peer Reviewer",
@@ -867,6 +866,7 @@ const initialState = {
 			"uploadMediaPlural": "Upload Audio",
 			"uploadMediaSingular": "Upload Audio",
 			"user": "User",
+			"versionHistory": "Version History",
 			"yes": "Yes",
 		}
 	}),

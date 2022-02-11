@@ -18,6 +18,7 @@ import {
   FormControl,
   FormControlLabel,
   makeStyles,
+  Paper,
   Radio,
   RadioGroup,
   TextField,
@@ -113,6 +114,7 @@ function MediaRecord(props: IProps) {
     convertBlob,
     resetConvertBlob,
     size,
+    metaData,
   } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -333,7 +335,7 @@ function MediaRecord(props: IProps) {
   };
 
   return (
-    <>
+    <Paper>
       {mediaState.status === MediaSt.FETCHED &&
         mediaState.urlMediaId === mediaId && (
           <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
@@ -387,8 +389,9 @@ function MediaRecord(props: IProps) {
             </RadioGroup>
           </FormControl>
         )}
+        {metaData}
       </div>
-    </>
+    </Paper>
   );
 }
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

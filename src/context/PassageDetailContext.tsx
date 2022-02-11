@@ -55,7 +55,6 @@ import {
   resourceRows,
 } from '../components/PassageDetail/Internalization';
 import Confirm from '../components/AlertDialog';
-import Uploader from '../components/Uploader';
 import { getNextStep } from '../crud/getNextStep';
 import { UnsavedContext } from './UnsavedContext';
 
@@ -174,11 +173,6 @@ const initState = {
   setPlayerSize: (size: number) => {},
   defaultFilename: '',
   uploadItem: '',
-  showRecord: (
-    defaultFilename: string,
-    uploadItem: string,
-    recordCb: (planId: string, MediaRemId?: string[]) => void
-  ) => {},
   recordCb: (planId: string, MediaRemId?: string[]) => {},
   setSegments: (segments: string) => {},
   setupLocate: (cb?: (segments: string) => void) => {},
@@ -224,10 +218,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const [user] = useGlobal('user');
     const [errorReporter] = useGlobal('errorReporter');
     const [saveResult, setSaveResult] = useGlobal('saveResult');
-    const [, setComplete] = useGlobal('progress');
-    const cancelled = useRef(false);
     const [confirm, setConfirm] = useState('');
-    const [uploadVisible, setUploadVisible] = useState(false);
     const view = React.useRef('');
     const [, setRefreshed] = useState(0);
     const mediaUrlRef = useRef('');
@@ -510,18 +501,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         }
       }
     };
-    const showRecord = (
-      defaultFilename: string,
-      uploadItem: any,
-      recordCb: (planId: string, MediaRemId?: string[]) => void
-    ) => {
-      setState({ ...state, defaultFilename, uploadItem, recordCb });
-      setUploadVisible(true);
-    };
-
-    const handleUploadVisible = (v: boolean) => {
-      setUploadVisible(v);
-    };
 
     const refresh = () => {
       setRefreshed((refreshed) => {
@@ -762,7 +741,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setMediaPlaying,
             setPDBusy,
             getSharedResources,
-            showRecord,
             refresh,
             setSegments,
             getSegments,
@@ -791,20 +769,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             position={mediaPosition.current}
           />
         )}
-        <Uploader
-          recordAudio={true}
-          defaultFilename={state.defaultFilename}
-          auth={auth}
-          mediaId={state.uploadItem || ''}
-          importList={undefined}
-          isOpen={uploadVisible}
-          onOpen={handleUploadVisible}
-          showMessage={showMessage}
-          setComplete={setComplete}
-          multiple={false}
-          finish={state.recordCb}
-          cancelled={cancelled}
-        />
         {confirm !== '' && (
           <Confirm
             open={true}

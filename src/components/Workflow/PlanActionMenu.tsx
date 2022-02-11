@@ -69,7 +69,6 @@ export function PlanActionMenu(props: IProps) {
   const {
     t,
     ts,
-    online,
     rowIndex,
     isSection,
     isPassage,
@@ -215,22 +214,20 @@ export function PlanActionMenu(props: IProps) {
                         <AssignIcon className={classes.action} />
                       </MenuItem>
                     )}
-                    {isPassage &&
-                      !readonly &&
-                      online && ( //online here is really connected or offlineOnly
-                        <MenuItem
-                          id="planActUpload"
-                          onClick={onUpload(rowIndex)}
-                          title={
-                            !offlineOnly
-                              ? ts.uploadMediaSingular
-                              : ts.importMediaSingular
-                          }
-                        >
-                          <AddIcon className={classes.action} />
-                        </MenuItem>
-                      )}
-                    {isPassage && !readonly && (
+                    {isPassage && (
+                      <MenuItem
+                        id="planActUpload"
+                        onClick={onUpload(rowIndex)}
+                        title={
+                          !offlineOnly
+                            ? ts.uploadMediaSingular
+                            : ts.importMediaSingular
+                        }
+                      >
+                        <AddIcon className={classes.action} />
+                      </MenuItem>
+                    )}
+                    {isPassage && (
                       <MenuItem
                         id="planActRec"
                         onClick={handleRecord(rowIndex)}
@@ -239,10 +236,10 @@ export function PlanActionMenu(props: IProps) {
                         <MicIcon className={classes.action} />
                       </MenuItem>
                     )}
-                    {isElectron && isPassage && !readonly && (
+                    {isElectron && isPassage && (
                       <MenuItem
                         id="planActAud"
-                        title={t.launchAudacity}
+                        title={ts.launchAudacity}
                         onClick={onAudacity(rowIndex)}
                       >
                         <AudacityLogo />
