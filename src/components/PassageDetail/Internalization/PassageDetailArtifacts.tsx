@@ -304,7 +304,7 @@ export function PassageDetailArtifacts(props: IProps) {
         />
       </BigDialog>
       <BigDialog
-        title={'Edit Resource'}
+        title={t.editResource}
         isOpen={Boolean(editResource)}
         onOpen={handleEditResourceVisible}
         onSave={handleEditSave}

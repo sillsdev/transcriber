@@ -659,6 +659,7 @@ const initialState = {
 			"add": "Add",
 			"category": "Category",
 			"completed": "Completed",
+			"editResource": "Edit Resource",
 			"resource": "Resource",
 			"sharedResource": "Select Shared Resource",
 			"type": "Type",

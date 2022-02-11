@@ -3525,6 +3525,13 @@
       			<context context-type="sourcefile">PassageMedia.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.editResource">
+      		<source>Edit Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.resource">
       		<source>Resource</source>
       		<target/>

@@ -616,6 +616,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "add": string;
     "category": string;
     "completed": string;
+    "editResource": string;
     "resource": string;
     "sharedResource": string;
     "type": string;
