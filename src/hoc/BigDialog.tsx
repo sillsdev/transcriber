@@ -31,6 +31,12 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingBottom: 0,
       },
     },
+    rootSm: {
+      '& .MuiDialog-paper': {
+        minWidth: '600px',
+        minHeight: '50%',
+      },
+    },
     rootMd: {
       '& .MuiDialog-paper': {
         minWidth: '960px',
@@ -64,6 +70,7 @@ interface IStateProps {
 }
 
 export enum BigDialogBp {
+  'sm',
   'md',
   'lg',
   'xl',
@@ -106,6 +113,7 @@ export function BigDialog({
       open={isOpen}
       onClose={handleClose}
       className={clsx(classes.root, {
+        [classes.rootSm]: bp === BigDialogBp.sm,
         [classes.rootMd]: bp === BigDialogBp.md,
         [classes.rootLg]: bp === BigDialogBp.lg,
         [classes.rootXl]: bp === BigDialogBp.xl,
