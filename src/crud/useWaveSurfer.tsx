@@ -5,6 +5,7 @@ import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
 import { logError, Severity, waitForIt } from '../utils';
 import {
+  IRegion,
   IRegionParams,
   IRegions,
   useWaveSurferRegions,
@@ -29,7 +30,8 @@ export function useWaveSurfer(
   onError: (e: any) => void = noop,
   height: number = 128,
   singleRegionOnly: boolean = false,
-  timelineContainer?: any
+  timelineContainer?: any,
+  onCurrentRegion?: (currentRegion: IRegion | undefined) => void
 ) {
   //const isMounted = useMounted('wavesurfer');
   const [globalStore] = useGlobal();
@@ -132,7 +134,8 @@ export function useWaveSurfer(
     isNear,
     wsGoto,
     progress,
-    setPlaying
+    setPlaying,
+    onCurrentRegion
   );
 
   const wavesurfer = () =>
@@ -228,13 +231,16 @@ export function useWaveSurfer(
     onProgress(value);
   };
 
-  const wsClear = () => {
+  const wsClear = (preventUndo: boolean = false) => {
     if (wavesurferPlayingRef.current) wavesurferRef.current?.stop();
-    setUndoBuffer(copyOriginal());
-    onCanUndo(true);
+    if (!preventUndo) {
+      setUndoBuffer(copyOriginal());
+    } else setUndoBuffer(undefined);
+    onCanUndo(!preventUndo);
     wavesurfer()?.loadDecodedBuffer();
     durationRef.current = 0;
-    setProgress(0);
+    clearRegions();
+    wsGoto(0);
   };
 
   const wsIsReady = () => wavesurfer()?.isReady || false;
@@ -452,7 +458,6 @@ export function useWaveSurfer(
     if (undoBuffer) loadDecoded(undoBuffer);
     else {
       wsClear();
-      wsGoto(0);
     }
     //reset any region
     clearRegions();

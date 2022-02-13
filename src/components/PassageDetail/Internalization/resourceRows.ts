@@ -66,6 +66,7 @@ export const oneMediaRow = ({
     resource: r,
     isResource: isResource(typeNameSlug),
     isComment: typeNameSlug === 'comment',
+    isVernacular: typeNameSlug === '' || typeNameSlug === 'vernacular',
   });
   return newRow;
 };

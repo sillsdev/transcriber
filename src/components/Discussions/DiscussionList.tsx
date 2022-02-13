@@ -88,7 +88,7 @@ export function DiscussionList(props: IProps) {
   const [adding, setAdding] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, rowData, discussionSize, passage, getSegments } =
+  const { currentstep, rowData, discussionSize, passage, currentSegment } =
     ctx.state;
   const { toolsChanged } = useContext(UnsavedContext).state;
   const { getRoleRec } = useRole();
@@ -176,7 +176,7 @@ export function DiscussionList(props: IProps) {
           {
             type: 'discussion',
             attributes: {
-              subject: getSegments() || '',
+              subject: currentSegment || '',
             },
           } as any as Discussion,
         ]);
@@ -292,7 +292,7 @@ export function DiscussionList(props: IProps) {
   };
 
   const isMediaMissing = () => {
-    return rowData.length === 0 || rowData[0].isResource;
+    return rowData.length === 0 || !rowData[0].isVernacular;
   };
 
   const filterStatus = useMemo(

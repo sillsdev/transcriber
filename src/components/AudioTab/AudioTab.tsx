@@ -473,7 +473,6 @@ export function AudioTab(props: IProps) {
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}
-        setComplete={setComplete}
         multiple={true}
         finish={afterUpload}
         cancelled={cancelled}

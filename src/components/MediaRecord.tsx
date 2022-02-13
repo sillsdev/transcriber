@@ -77,6 +77,7 @@ interface IProps extends IStateProps, IDispatchProps {
   toolId: string;
   onReady: () => void;
   onRecording: (r: boolean) => void;
+  onPlayStatus: (p: boolean) => void;
   mediaId: string;
   auth: Auth;
   metaData?: JSX.Element;
@@ -90,6 +91,8 @@ interface IProps extends IStateProps, IDispatchProps {
   allowWave?: boolean;
   showFilename?: boolean;
   size?: number;
+  doReset?: boolean;
+  setDoReset?: (r: boolean) => void;
 }
 
 function MediaRecord(props: IProps) {
@@ -98,6 +101,7 @@ function MediaRecord(props: IProps) {
     toolId,
     onReady,
     onRecording,
+    onPlayStatus,
     mediaId,
     auth,
     defaultFilename,
@@ -107,6 +111,8 @@ function MediaRecord(props: IProps) {
     setStatusText,
     allowWave,
     showFilename,
+    doReset,
+    setDoReset,
     convert_status,
     convert_complete,
     convert_blob,
@@ -296,12 +302,20 @@ function MediaRecord(props: IProps) {
     setRecording(r);
     if (onRecording) onRecording(r);
   }
+  useEffect(() => {
+    if (doReset) {
+      reset();
+      setDoReset && setDoReset(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doReset]);
 
   const reset = () => {
     setMimeType('audio/ogg;codecs=opus');
     setUserHasSetName(false);
     setFilechanged(false);
     setOriginalBlob(undefined);
+    setAudioBlob(undefined);
   };
 
   const handleChangeMime = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -351,6 +365,8 @@ function MediaRecord(props: IProps) {
         setChanged={setFilechanged}
         setBlobReady={setBlobReady}
         onRecording={myOnRecording}
+        onPlayStatus={onPlayStatus}
+        doReset={doReset}
       />
       <div className={classes.row}>
         {showFilename && (

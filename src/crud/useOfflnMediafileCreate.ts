@@ -21,7 +21,8 @@ export const useOfflnMediafileCreate = (
     version: number,
     size: number,
     passageId: string,
-    artifactTypeId: string
+    artifactTypeId: string,
+    sourceMediaId: string
   ) => {
     const newMediaRec: MediaFile = {
       type: 'mediafile',
@@ -59,6 +60,14 @@ export const useOfflnMediafileCreate = (
           id: artifactTypeId,
         }),
       ]);
+    if (sourceMediaId)
+      await memory.update([
+        t.replaceRelatedRecord(newMediaRec, 'sourceMedia', {
+          type: 'mediafile',
+          id: sourceMediaId,
+        }),
+      ]);
+
     return newMediaRec;
   };
   return { createMedia };

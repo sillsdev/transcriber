@@ -63,7 +63,6 @@ export function PassageDetailArtifacts(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [, setComplete] = useGlobal('progress');
   const ctx = useContext(PassageDetailContext);
   const {
     rowData,
@@ -276,7 +275,6 @@ export function PassageDetailArtifacts(props: IProps) {
         isOpen={uploadVisible}
         onOpen={handleUploadVisible}
         showMessage={showMessage}
-        setComplete={setComplete}
         multiple={true}
         finish={afterUpload}
         cancelled={cancelled}

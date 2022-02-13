@@ -179,6 +179,8 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "deleteItem": string;
     "playTest": string;
     "record": string;
+    "saveFirst": string;
+    "segment": string;
     "speaker": string;
     "unsaved": string;
     "uploadComplete": string;
@@ -771,6 +773,16 @@ export interface ISectionResourcesStrings extends Localize.LocalizedStringsMetho
     "users": string;
 };
 
+export interface ISelectRecordingStrings extends Localize.LocalizedStringsMethods {
+    "artifactType": string;
+    "created": string;
+    "filename": string;
+    "playItem": string;
+    "sourceSegment": string;
+    "sourceVersion": string;
+    "speaker": string;
+};
+
 export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "admin": string;
     "bookNotInParatext": string;
@@ -798,7 +810,6 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "no": string;
     "NoSaveOffline": string;
     "owner": string;
-    "playItem": string;
     "recordingInProgress": string;
     "role": string;
     "projectrole": string;
@@ -1208,6 +1219,7 @@ export interface ILocalizedStrings {
 	projectDownload: IProjectDownloadStrings;
 	scriptureTable: IScriptureTableStrings;
 	sectionResources: ISectionResourcesStrings;
+	selectRecording: ISelectRecordingStrings;
 	shared: ISharedStrings;
 	spelling: ISpellingStrings;
 	stepEditor: IStepEditorStrings;

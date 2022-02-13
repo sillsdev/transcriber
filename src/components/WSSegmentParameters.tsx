@@ -202,7 +202,7 @@ function WSSegmentParameters(props: IProps) {
             step={0.5}
             marks
             min={0.5}
-            max={5}
+            max={8}
             value={segLength}
             valueLabelDisplay="auto"
             onChange={handleSegTimeChange}

@@ -314,7 +314,6 @@ export const AddCard = (props: IProps) => {
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}
-        setComplete={setComplete}
         multiple={true}
         metaData={MetaData}
         ready={handleReady}

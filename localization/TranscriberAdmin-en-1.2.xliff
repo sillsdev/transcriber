@@ -948,6 +948,20 @@
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="community.saveFirst">
+            <source>Save or Clear your recording before uploading.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="community.segment">
+            <source>Segment</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="community.speaker">
             <source>Speaker</source>
             <target/>
@@ -4344,7 +4358,55 @@
                <context context-type="sourcefile">sectionResources.tsx</context>
             </context-group>
          </trans-unit>
-
+         <trans-unit id="selectRecording.artifactType">
+            <source>Type</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="selectRecording.created">
+            <source>Created</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">selectRecording.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="selectRecording.filename">
+            <source>File Name</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">selectRecording.tsx</context>
+            </context-group>
+         </trans-unit>
+      	<trans-unit id="selectRecording.playItem">
+      		<source>Play Item</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="selectRecording.sourceSegment">
+            <source>Source Segment</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">selectRecording.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="selectRecording.sourceVersion">
+            <source>Source Version</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">selectRecording.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="selectRecording.speaker">
+            <source>Speaker</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">selectRecording.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.admin">
             <source>Admin</source>
             <target/>
@@ -4527,13 +4589,6 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="shared.playItem">
-      		<source>Play Item</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">Access.tsx</context>
-      		</context-group>
-      	</trans-unit>
       	<trans-unit id="shared.recordingInProgress">
       		<source>Recording in progress...</source>
       		<target/>

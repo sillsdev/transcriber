@@ -199,6 +199,8 @@ const initialState = {
 			"deleteItem": "Delete Item",
 			"playTest": "Play Test",
 			"record": "Record",
+			"saveFirst": "Save or Clear your recording before uploading.",
+			"segment": "Segment",
 			"speaker": "Speaker",
 			"unsaved": "Unsaved",
 			"uploadComplete": "{0} of {1} files uploaded successfully.",
@@ -826,6 +828,17 @@ const initialState = {
 			"users": "Members",
 		}
 	}),
+	"selectRecording": new LocalizedStrings({
+		"en": {
+			"artifactType": "Type",
+			"created": "Created",
+			"filename": "File Name",
+			"playItem": "Play Item",
+			"sourceSegment": "Source Segment",
+			"sourceVersion": "Source Version",
+			"speaker": "Speaker",
+		}
+	}),
 	"shared": new LocalizedStrings({
 		"en": {
 			"admin": "Admin",
@@ -854,7 +867,6 @@ const initialState = {
 			"no": "No",
 			"NoSaveOffline": "Unable to save while offline.",
 			"owner": "Owner",
-			"playItem": "Play Item",
 			"recordingInProgress": "Recording in progress...",
 			"role": "Role",
 			"projectrole": "Project Role",
@@ -1293,6 +1305,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"projectDownload" : new LocalizedStrings(action.payload.data.projectDownload),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"sectionResources" : new LocalizedStrings(action.payload.data.sectionResources),
+				"selectRecording" : new LocalizedStrings(action.payload.data.selectRecording),
 				"shared" : new LocalizedStrings(action.payload.data.shared),
 				"spelling" : new LocalizedStrings(action.payload.data.spelling),
 				"stepEditor" : new LocalizedStrings(action.payload.data.stepEditor),

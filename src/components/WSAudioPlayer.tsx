@@ -49,7 +49,11 @@ import { connect } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
 import WSAudioPlayerZoom from './WSAudioPlayerZoom';
-import { IRegionChange, IRegionParams } from '../crud/useWavesurferRegions';
+import {
+  IRegion,
+  IRegionChange,
+  IRegionParams,
+} from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
 
@@ -181,6 +185,8 @@ interface IProps extends IStateProps {
   isPlaying?: boolean;
   loading: boolean;
   busy?: boolean;
+  defaultRegionParams?: IRegionParams;
+  doReset?: boolean;
   setBusy?: (busy: boolean) => void;
   setMimeType?: (type: string) => void;
   setAcceptedMimes?: (types: MimeInfo[]) => void;
@@ -194,6 +200,7 @@ interface IProps extends IStateProps {
   onDuration?: (duration: number) => void;
   onInteraction?: () => void;
   onRecording?: (r: boolean) => void;
+  onCurrentSegment?: (currentSegment: IRegion | undefined) => void;
 }
 function valuetext(value: number) {
   return `${Math.floor(value)}%`;
@@ -230,6 +237,8 @@ function WSAudioPlayer(props: IProps) {
     isPlaying,
     loading,
     busy,
+    defaultRegionParams,
+    doReset,
     setBusy,
     setMimeType,
     setAcceptedMimes,
@@ -243,6 +252,7 @@ function WSAudioPlayer(props: IProps) {
     onDuration,
     onInteraction,
     onRecording,
+    onCurrentSegment,
   } = props;
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
@@ -258,7 +268,9 @@ function WSAudioPlayer(props: IProps) {
   const [looping, setLoopingx] = useState(false);
   const [hasRegion, setHasRegion] = useState(0);
   const [canUndo, setCanUndo] = useState(false);
-  const [regionParams, setRegionParams] = useState<IRegionParams>();
+  const [regionParams, setRegionParams] = useState<IRegionParams | undefined>(
+    defaultRegionParams
+  );
   const recordStartPosition = useRef(0);
   const recordOverwritePosition = useRef<number | undefined>(undefined);
   const recordingRef = useRef(false);
@@ -321,7 +333,8 @@ function WSAudioPlayer(props: IProps) {
     () => {}, //on error...probably should report?
     size - 150,
     allowRecord,
-    timelineRef.current
+    timelineRef.current,
+    onCurrentSegment
   );
   //because we have to call hooks consistently, call this even if we aren't going to record
   const { startRecording, stopRecording, acceptedMimes } = useMediaRecorder(
@@ -436,11 +449,12 @@ function WSAudioPlayer(props: IProps) {
       wsLoad(blob, undefined);
     } else {
       if (setBusy) setBusy(false);
-      wsClear();
+      wsClear(true);
       initialPosRef.current = undefined;
+      recordStartPosition.current = 0;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blob]); //passed in by user
+  }, [blob, doReset]); //passed in by user
 
   useEffect(() => {
     if (setAcceptedMimes) setAcceptedMimes(acceptedMimes);
@@ -665,7 +679,8 @@ function WSAudioPlayer(props: IProps) {
     setConfirmAction(t.deleteRecording);
   };
   const handleDeleteRegion = () => {
-    setConfirmAction(t.deleteRegion);
+    wsRegionDelete();
+    handleChanged();
   };
   const handleUndo = () => {
     wsUndo();
@@ -1136,6 +1151,7 @@ function WSAudioPlayer(props: IProps) {
               <Grid item className={classes.grow}>
                 {'\u00A0'}
               </Grid>
+              {!onSaveProgress && <>{metaData}</>}
             </Grid>
           )}
           {confirmAction === '' || (
