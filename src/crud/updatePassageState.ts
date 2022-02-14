@@ -1,6 +1,12 @@
 import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { PassageStateChange, ActivityStates, Passage } from '../model';
+import { findRecord } from '.';
+import {
+  PassageStateChange,
+  ActivityStates,
+  Passage,
+  MediaFile,
+} from '../model';
 import { AddRecord, UpdateLastModifedBy } from '../model/baseModel';
 
 export const AddPassageStateChangeToOps = (
@@ -59,6 +65,37 @@ export const UpdateRelatedPassageOps = (
 ) => {
   ops.push(...UpdateLastModifedBy(t, { type: 'section', id: section }, userId));
   ops.push(...UpdateLastModifedBy(t, { type: 'plan', id: plan }, userId));
+};
+export const UpdateMediaStateOps = (
+  mediaFile: string,
+  passage: string,
+  state: string,
+  userId: string,
+  t: TransformBuilder,
+  ops: Operation[],
+  memory: Memory
+): Operation[] => {
+  if (state)
+    ops.push(
+      t.replaceAttribute(
+        { type: 'mediafile', id: mediaFile },
+        'transcriptionstate',
+        state
+      )
+    );
+  const mediaRec = findRecord(memory, 'mediafile', mediaFile) as MediaFile;
+  const mediaRecId = { type: 'mediafile', id: mediaFile };
+  ops.push(...UpdateLastModifedBy(t, mediaRecId, userId));
+  AddPassageStateChangeToOps(
+    t,
+    ops,
+    passage,
+    state,
+    mediaRec.attributes.originalFile,
+    userId,
+    memory
+  );
+  return ops;
 };
 
 export const UpdatePassageStateOps = (

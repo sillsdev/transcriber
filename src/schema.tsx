@@ -375,6 +375,8 @@ const schemaDefinition: SchemaSettings = {
         offlineId: { type: 'string' },
         sourceSegments: { type: 'string' },
         sourceMediaOfflineId: { type: 'string' },
+        transcriptionstate: { type: 'string' },
+        topic: { type: 'string' },
       },
       relationships: {
         artifactType: { type: 'hasOne', model: 'artifacttype' },
