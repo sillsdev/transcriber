@@ -6,7 +6,6 @@ export interface Passage extends BaseModel {
     sequencenum: number;
     book: string;
     reference: string;
-    xxstate: string; //ActivityStates
     hold: boolean;
     title: string;
     lastComment: string;

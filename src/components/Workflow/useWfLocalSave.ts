@@ -2,7 +2,7 @@ import { useGlobal } from 'reactn';
 import { Section, Passage, ActivityStates, IWorkflow } from '../../model';
 import { AddRecord, UpdateRecord } from '../../model/baseModel';
 import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
-import { UpdateRelatedPassageOps, UpdatePassageStateOps } from '../../crud';
+import { UpdateRelatedPassageOps } from '../../crud';
 import {
   isPassageAdding,
   isPassageRow,
@@ -122,18 +122,6 @@ export const useWfLocalSave = (props: IProps) => {
             ...AddRecord(t, passRec, user, memory),
             t.replaceRelatedRecord(passRec, 'section', secRecId),
           ];
-          item.passageId = { type: 'passage', id: passRec.id };
-          UpdatePassageStateOps(
-            passRec.id,
-            lastSec.id,
-            plan,
-            ActivityStates.NoMedia,
-            '',
-            user,
-            t,
-            ops,
-            memory
-          );
           await memory.update(ops);
         }
       }

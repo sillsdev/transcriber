@@ -8,6 +8,7 @@ import {
   Project,
   Passage,
   ISharedStrings,
+  MediaFile,
 } from '../model';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -141,6 +142,7 @@ interface IRecordProps {
   integrations: Array<Integration>;
   projects: Array<Project>;
   passages: Array<Passage>;
+  mediafiles: Array<MediaFile>;
 }
 interface IProps
   extends IStateProps,
@@ -178,7 +180,8 @@ export function IntegrationPanel(props: IProps) {
     setLanguage,
     resetOrbitError,
   } = props;
-  const { projectintegrations, integrations, projects, passages } = props;
+  const { projectintegrations, integrations, projects, passages, mediafiles } =
+    props;
   const classes = useStyles();
   const [connected] = useGlobal('connected');
   const [hasPtProj, setHasPtProj] = useState(false);
@@ -349,10 +352,12 @@ export function IntegrationPanel(props: IProps) {
     var err = await localSync(
       plan,
       ptShortName,
+      mediafiles,
       passages,
       memory,
       user,
-      vernacularId
+      vernacularId,
+      true //false for bt
     );
     showMessage(err || t.syncComplete);
     resetCount();
@@ -434,17 +439,16 @@ export function IntegrationPanel(props: IProps) {
       resetProjects();
       resetCount();
       setMyProject(project);
-      getLocalCount(passages, project, memory, errorReporter, t, vernacularId);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
 
   useEffect(() => {
     resetCount();
-    if (project)
-      getLocalCount(passages, project, memory, errorReporter, t, vernacularId);
+    if (plan)
+      getLocalCount(mediafiles, plan, memory, errorReporter, t, vernacularId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passages, project]);
+  }, [mediafiles, plan]);
 
   /* do this once */
   useEffect(() => {
@@ -938,6 +942,7 @@ const mapRecordsToProps = {
   integrations: (q: QueryBuilder) => q.findRecords('integration'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
 
 export default withData(mapRecordsToProps)(

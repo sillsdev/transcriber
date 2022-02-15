@@ -10,7 +10,8 @@ import IndexedDBSource from '@orbit/indexeddb';
 import Coordinator from '@orbit/coordinator';
 import { isElectron } from './api-variable';
 import { getFingerprint } from './utils';
-import { offlineProjectCreate } from './crud';
+import { offlineProjectCreate, related } from './crud';
+import { MediaFile } from './model';
 
 const schemaDefinition: SchemaSettings = {
   models: {
@@ -291,7 +292,6 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         sequencenum: { type: 'number' },
         name: { type: 'string' },
-        state: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
@@ -783,6 +783,34 @@ const UpdatePublicFlags = async (backup: IndexedDBSource, memory: Memory) => {
     ops.push(tb.updateRecord(r.record));
   });
   await memory.sync(await backup.push(ops));
+};
+const MoveTranscriptionState = async (
+  backup: IndexedDBSource,
+  memory: Memory
+) => {
+  var p = await backup.pull((q) => q.findRecords('passage'));
+  var m = await backup.pull((q) => q.findRecords('mediafile'));
+  var mediafiles = m[0].operations.map((o: any) => o.record as MediaFile);
+
+  const ops: Operation[] = [];
+  const tb = new TransformBuilder();
+  p[0].operations.forEach((r: any) => {
+    //find the latest mediafile
+    var meds = mediafiles
+      .filter((m) => related(m, 'passage') === r.record.id)
+      .sort(
+        (a, b) => b.attributes?.versionNumber - a.attributes?.versionNumber
+      );
+    if (meds.length > 0) {
+      var mediafile = meds[0];
+      mediafile.attributes = {
+        ...mediafile.attributes,
+        transcriptionstate: r.record.attributes.state,
+      };
+      ops.push(tb.updateRecord(mediafile));
+    }
+  });
+  await memory.sync(await backup.push(ops));
   console.log('done with upgrade to v4');
 };
 export const backup = window.indexedDB
@@ -821,9 +849,11 @@ if (backup.cache)
       }
     }
     if (event.newVersion === 4) {
-      //Dec 2021
+      //Mar 2022
       // update public flags to false because we're going to start using them
-      UpdatePublicFlags(backup, memory);
+      UpdatePublicFlags(backup, memory).then(() => {
+        MoveTranscriptionState(backup, memory);
+      });
     }
   };
 

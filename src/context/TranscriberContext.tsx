@@ -102,6 +102,7 @@ export interface IRowData {
   mediafile: MediaFile;
   state: string;
   sectPass: string;
+  fileDescription: string;
   playItem: string;
   duration: number;
   role: string;
@@ -112,7 +113,7 @@ export interface IRowData {
 
 const initState = {
   index: 0,
-  selected: '',
+  selected: '', //was passageid...now mediafileid
   setSelected: (selected: string) => {},
   playing: false,
   setPlaying: (playing: boolean) => {},
@@ -176,7 +177,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const { prjId, pasId, slug, medId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
-    const [project] = useGlobal('project');
     const [devPlan] = useGlobal('plan');
     const { getPlan } = usePlan();
     const [projRole] = useGlobal('projRole');
@@ -188,6 +188,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [trackedTask, setTrackedTask] = useGlobal('trackedTask');
     const { userCanTranscribe, userCanBeEditor } = useRole();
     const [planMedia, setPlanMedia] = useState<MediaFile[]>([]);
+    const planMediaRef = useRef<MediaFile[]>([]);
+    const passageMediaRef = useRef<MediaFile[]>([]);
     const [planRec, setPlanRec] = useState<Plan>({} as Plan);
     const [state, setState] = useState({
       ...initState,
@@ -210,8 +212,16 @@ const TranscriberProvider = withData(mapRecordsToProps)(
 
     useEffect(() => {
       if (devPlan && mediafiles.length > 0) {
-        setPlanMedia(getMediaInPlans([devPlan], mediafiles, artifactId, true));
+        var m = getMediaInPlans(
+          [devPlan],
+          mediafiles,
+          artifactId,
+          artifactId === vernacularId
+        );
+        setPlanMedia(m);
+        planMediaRef.current = m;
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mediafiles, devPlan, artifactId]);
 
     const setRows = (rowData: IRowData[]) => {
@@ -250,13 +260,17 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       selected: string,
       rowData: IRowData[] = state.rowData
     ) => {
-      const i = rowData.findIndex((r) => r.passage.id === selected);
+      const i = rowData.findIndex((r) => r.mediafile.id === selected);
       if (i < 0) return;
       const r = rowData[i];
+
       if (state.index !== i || state.selected !== selected) {
-        const remId = remoteId('passage', selected, memory.keyMap) || selected;
-        if (pasId !== remId) {
-          view.current = `/work/${prjId}/${remId}`;
+        var psgId =
+          remoteId('passage', r.passage.id, memory.keyMap) || r.passage.id;
+        const remId =
+          remoteId('mediafile', selected, memory.keyMap) || selected;
+        if (pasId !== psgId || (slug && remId !== medId)) {
+          view.current = `/work/${prjId}/${psgId}`;
           if (slug) view.current += `/${slug}/${medId}`;
         }
         setTrackedTask(selected);
@@ -292,8 +306,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       });
     };
 
-    let curSec = '';
-
     const getPlanType = (planRec: Plan) => {
       const planType = findRecord(
         memory,
@@ -313,12 +325,14 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       const planName = getPlanName(planRec);
       const planType = getPlanType(planRec);
 
-      const mediaRecs = planMedia.filter(
-        (m) => m.attributes?.transcriptionstate === state || role === 'view'
+      const mediaRecs = passageMediaRef.current.filter(
+        (m) =>
+          role === 'view' ||
+          (m.attributes?.transcriptionstate || 'transcribeReady') === state
       );
       const passIds = mediaRecs.map((m) => related(m, 'passage') as string);
       let readyRecs = passages
-        .filter((p) => passIds.findIndex((pid) => pid === p.id) > 0)
+        .filter((p) => passIds.findIndex((pid) => pid === p.id) >= 0)
         .sort((a, b) =>
           related(a, 'section') <= related(b, 'section') ? -1 : 1
         );
@@ -329,6 +343,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       let secRec = {} as Section;
       let transcriber = '';
       let editor = '';
+      let curSec = '';
       readyRecs.forEach((p) => {
         const passageMediaRecs = mediaRecs
           .filter((m) => related(m, 'passage') === p.id)
@@ -337,6 +352,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
               // Sort descending
               j.attributes.versionNumber - i.attributes.versionNumber
           );
+
         if (related(p, 'section') !== curSec) {
           curSec = related(p, 'section');
           secRec = findRecord(
@@ -352,25 +368,28 @@ const TranscriberProvider = withData(mapRecordsToProps)(
             allowed = onlyAvailable
               ? assigned === user || !assigned || assigned === ''
               : role === 'view';
-            addRows.push({
-              planName,
-              planType,
-              section: { ...secRec },
-              passage: {} as Passage,
-              state: '',
-              sectPass: secNum + '.',
-              mediafile: {} as MediaFile,
-              playItem: '',
-              duration: 0,
-              role,
-              assigned,
-              transcriber,
-              editor,
-            });
+
+            if (allowed && !rowList.find((r) => r.sectPass === secNum + '.'))
+              addRows.push({
+                planName,
+                planType,
+                section: { ...secRec },
+                passage: {} as Passage,
+                state: '',
+                sectPass: secNum + '.',
+                fileDescription: '',
+                mediafile: {} as MediaFile,
+                playItem: '',
+                duration: 0,
+                role,
+                assigned,
+                transcriber,
+                editor,
+              });
           }
         }
-        passageMediaRecs.forEach((mediaRec) => {
-          if (allowed) {
+        if (allowed)
+          passageMediaRecs.forEach((mediaRec) => {
             let already: IRowData[] = [];
             if (role === 'view') {
               already = rowList.filter((r) => r.mediafile.id === mediaRec.id);
@@ -387,6 +406,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                 passage: { ...p },
                 state: curState,
                 sectPass: secNum + '.' + passageNumber(p).trim(),
+                fileDescription: mediaRec.attributes.sourceSegments, //something here to distinguish the files...whatever greg comes up with in Play Item
                 mediafile: mediaRec,
                 playItem,
                 duration: mediaRec.attributes.duration,
@@ -396,8 +416,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                 editor,
               });
             }
-          }
-        });
+          });
       });
       addRows
         .sort((i, j) =>
@@ -409,7 +428,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
             ? -1
             : 1
         )
-        .forEach((r) => rowList.push(r));
+        .forEach((r) => {
+          rowList.push(r);
+        });
     };
 
     const role = React.useMemo(() => {
@@ -481,15 +502,21 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         item
       );
       if (state.selected !== '' && state.index < rowList.length) {
-        if (rowList[state.index].passage.id !== state.selected) {
+        if (rowList[state.index].mediafile.id !== state.selected) {
           setSelected(state.selected);
         }
       }
     };
-
     useEffect(() => {
       const playItem = state.playItem;
       const rowList: IRowData[] = [];
+      if (pasId && slug) {
+        var psg = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+        passageMediaRef.current = planMediaRef.current.filter(
+          (m) => related(m, 'passage') === psg
+        );
+      } else passageMediaRef.current = planMediaRef.current;
+
       if (role !== '') {
         selectTasks(true, rowList, playItem); // assigned
         selectTasks(false, rowList, playItem); // unassigned
@@ -506,16 +533,25 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         if (!exGrp.includes(r.planName)) exGrp.push(r.planName);
       });
       setExpandedGroups(exGrp);
-
       if (rowList.length > 0) {
-        let selected =
-          state.selected !== ''
-            ? state.selected
-            : remoteIdGuid('passage', pasId, memory.keyMap) ||
-              pasId ||
-              trackedTask;
+        let selected = state.selected;
+        if (!selected) {
+          let mediaId = medId;
+          if (!mediaId) {
+            //vernacular so should just be one
+            var p = rowList.filter((r) => r.passage.id === pasId);
+            if (p.length > 0) mediaId = p[0].mediafile.id;
+          }
+          selected =
+            remoteIdGuid('mediafile', mediaId || '', memory.keyMap) ||
+            mediaId ||
+            trackedTask;
+        }
+
         if (selected !== '') {
-          const selectedRow = rowList.filter((r) => r.passage.id === selected);
+          const selectedRow = rowList.filter(
+            (r) => r.mediafile.id === selected
+          );
           if (selectedRow.length > 0) {
             setSelected(selected, rowList);
           } else {
@@ -523,11 +559,11 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           }
         }
         if (selected === '') {
-          setSelected(rowList[1].passage.id, rowList);
+          setSelected(rowList[1].mediafile.id, rowList);
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [role, project, sections, planMedia, refreshed]);
+    }, [role, planMedia, refreshed, pasId, medId]);
 
     const actor: { [key: string]: string } = {
       [ActivityStates.TranscribeReady]: 'transcriber',

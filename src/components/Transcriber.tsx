@@ -464,12 +464,14 @@ export function Transcriber(props: IProps) {
   }, [selected]);
 
   useEffect(() => {
-    const trans = getTranscription();
-    if (trans.transcription !== transcriptionIn.current && !saving.current) {
-      //show warning if changed
-      if (isChanged(toolId)) showMessage(t.updateByOther);
-      //but do it either way
-      showTranscription(trans);
+    if (mediafile && mediafile.attributes) {
+      const trans = getTranscription();
+      if (trans.transcription !== transcriptionIn.current && !saving.current) {
+        //show warning if changed
+        if (isChanged(toolId)) showMessage(t.updateByOther);
+        //but do it either way
+        showTranscription(trans);
+      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediafiles]);
@@ -635,17 +637,18 @@ export function Transcriber(props: IProps) {
     }
     setRejectVisible(true);
   };
-  const handleRejected = async (media: MediaFile, pass: Passage) => {
+  const handleRejected = async (media: MediaFile, comment: string) => {
     setRejectVisible(false);
     await memory.update(
       UpdateMediaStateOps(
         media.id,
-        pass.id,
+        passage.id,
         media.attributes.transcriptionstate,
         user,
         new TransformBuilder(),
         [],
-        memory
+        memory,
+        comment
       )
     );
     //todo ?? if (IsVernacular(media))
@@ -842,7 +845,8 @@ export function Transcriber(props: IProps) {
           user,
           new TransformBuilder(),
           [],
-          memory
+          memory,
+          ''
         )
       );
       setLastSaved(currentDateTime());
@@ -863,11 +867,11 @@ export function Transcriber(props: IProps) {
   };
 
   const getTranscription = () => {
-    const attr = mediafile.attributes;
+    const attr = mediafile.attributes || {};
     segmentsRef.current = attr.segments || '{}';
     setInitialSegments(segmentsRef.current);
     return {
-      transcription: attr.transcription ? attr.transcription : '',
+      transcription: attr.transcription || '',
       position: attr.position,
     };
   };
@@ -1207,7 +1211,7 @@ export function Transcriber(props: IProps) {
         )}
         <TranscribeReject
           visible={rejectVisible}
-          passageIn={passage}
+          mediaIn={mediafile}
           editMethod={handleRejected}
           cancelMethod={handleRejectCancel}
         />

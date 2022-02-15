@@ -1,6 +1,6 @@
 import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { findRecord } from '.';
+import { findRecord, related } from '.';
 import {
   PassageStateChange,
   ActivityStates,
@@ -73,52 +73,23 @@ export const UpdateMediaStateOps = (
   userId: string,
   t: TransformBuilder,
   ops: Operation[],
-  memory: Memory
+  memory: Memory,
+  comment: string
 ): Operation[] => {
-  if (state)
-    ops.push(
-      t.replaceAttribute(
-        { type: 'mediafile', id: mediaFile },
-        'transcriptionstate',
-        state
-      )
-    );
-  const mediaRec = findRecord(memory, 'mediafile', mediaFile) as MediaFile;
   const mediaRecId = { type: 'mediafile', id: mediaFile };
+  if (state)
+    ops.push(t.replaceAttribute(mediaRecId, 'transcriptionstate', state));
+  const mediaRec = findRecord(memory, 'mediafile', mediaFile) as MediaFile;
+  const isVernacular = !related(mediaRec, 'artifacttype');
   ops.push(...UpdateLastModifedBy(t, mediaRecId, userId));
   AddPassageStateChangeToOps(
     t,
     ops,
     passage,
-    state,
-    mediaRec.attributes.originalFile,
+    isVernacular && state ? state : '',
+    mediaRec.attributes.originalFile + (comment ? ':' + comment : ''),
     userId,
     memory
   );
-  return ops;
-};
-
-export const UpdatePassageStateOps = (
-  passage: string,
-  section: string,
-  plan: string,
-  state: string,
-  comment: string,
-  userId: string,
-  t: TransformBuilder,
-  ops: Operation[],
-  memory: Memory,
-  psc = true
-): Operation[] => {
-  if (state)
-    ops.push(
-      t.replaceAttribute({ type: 'passage', id: passage }, 'state', state)
-    );
-  const passRecId = { type: 'passage', id: passage };
-  ops.push(...UpdateLastModifedBy(t, passRecId, userId));
-  if (psc) {
-    UpdateRelatedPassageOps(section, plan, userId, t, ops);
-    AddPassageStateChangeToOps(t, ops, passage, state, comment, userId, memory);
-  }
   return ops;
 };

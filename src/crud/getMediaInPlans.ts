@@ -26,13 +26,16 @@ export const getMediaInPlans = (
         (nullTypeId ? related(m, 'artifactType') === null : false)
     );
   }
-  media.forEach((f) => {
-    const name = versionName(f);
-    latest[name] = latest[name]
-      ? Math.max(latest[name], f.attributes.versionNumber)
-      : f.attributes.versionNumber;
-  });
-  return media.filter(
-    (f) => latest[versionName(f)] === f.attributes.versionNumber
-  );
+  if (nullTypeId) {
+    //vernacular
+    media.forEach((f) => {
+      const name = versionName(f);
+      latest[name] = latest[name]
+        ? Math.max(latest[name], f.attributes.versionNumber)
+        : f.attributes.versionNumber;
+    });
+    return media.filter(
+      (f) => latest[versionName(f)] === f.attributes.versionNumber
+    );
+  } else return media;
 };

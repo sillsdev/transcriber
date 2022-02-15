@@ -43,10 +43,11 @@ export const useArtifactType = () => {
     return (t as ISwitches)[val] || val;
   };
   const localizedArtifactTypeFromId = (id: string) => {
-    var at = findRecord(memory, 'artifacttype', id) as ArtifactType;
+    var at = {} as ArtifactType;
+    if (id) at = findRecord(memory, 'artifacttype', id) as ArtifactType;
     return at && at.attributes
       ? localizedArtifactType(at.attributes.typename)
-      : '';
+      : localizedArtifactType('vernacular');
   };
 
   const fromLocalizedArtifactType = (val: string) => {
@@ -98,6 +99,7 @@ export const useArtifactType = () => {
       related(m, 'artifactType') === vernacularId
     );
   };
+
   const getTypeId = (typeSlug: string) => {
     var types = memory.cache.query((q: QueryBuilder) =>
       q

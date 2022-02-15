@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
   IState,
-  Passage,
   ITranscribeRejectStrings,
   ActivityStates,
+  MediaFile,
 } from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -44,18 +44,18 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps {
-  passageIn: Passage;
+  mediaIn: MediaFile;
   visible: boolean;
-  editMethod?: (passageRec: Passage) => void;
+  editMethod?: (mediaRec: MediaFile, comment: string) => void;
   cancelMethod?: () => void;
 }
 
 function TranscribeReject(props: IProps) {
-  const { t, visible, editMethod, cancelMethod, passageIn } = props;
+  const { t, visible, editMethod, cancelMethod, mediaIn } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(visible);
   const [next, setNext] = useState<ActivityStates>();
-  const [comment, setComment] = useState(passageIn?.attributes?.lastComment);
+  const [comment, setComment] = useState('');
   const [inProcess, setInProcess] = useState(false);
 
   const handleSave = () => {
@@ -67,20 +67,16 @@ function TranscribeReject(props: IProps) {
   const handleCommentChange = (e: any) => setComment(e.target.value);
   const doAddOrSave = async () => {
     setInProcess(true);
-    if (
-      next !== passageIn.attributes.state ||
-      comment !== passageIn.attributes.lastComment
-    ) {
-      let passage = {
-        ...passageIn,
+    if (next !== mediaIn.attributes.transcriptionstate || comment !== '') {
+      let mediafile = {
+        ...mediaIn,
         attributes: {
-          ...passageIn.attributes,
-          state: next,
-          lastComment: comment,
+          ...mediaIn.attributes,
+          transcriptionstate: next,
         },
-      } as Passage;
+      } as MediaFile;
       if (editMethod) {
-        editMethod(passage);
+        editMethod(mediafile, comment);
       }
     }
     setOpen(false);
@@ -95,13 +91,13 @@ function TranscribeReject(props: IProps) {
 
   useEffect(() => {
     setNext(
-      passageIn?.attributes?.state === ActivityStates.Transcribing
+      mediaIn?.attributes?.transcriptionstate === ActivityStates.Transcribing
         ? ActivityStates.NeedsNewRecording
         : ActivityStates.NeedsNewTranscription
     );
-    setComment(passageIn?.attributes?.lastComment);
+    setComment('');
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [passageIn]);
+  }, [mediaIn]);
 
   useEffect(() => {
     setOpen(visible);
@@ -168,7 +164,7 @@ function TranscribeReject(props: IProps) {
             color="primary"
             disabled={
               next === undefined ||
-              next === passageIn?.attributes?.state ||
+              next === mediaIn?.attributes?.transcriptionstate ||
               comment === '' ||
               inProcess
             }
