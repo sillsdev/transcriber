@@ -666,6 +666,7 @@ function WSAudioPlayer(props: IProps) {
       setDuration(0);
       if (setChanged) setChanged(false);
       if (setBlobReady) setBlobReady(true);
+      setReady(false);
     } else {
       wsRegionDelete();
       handleChanged();

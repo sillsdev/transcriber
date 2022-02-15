@@ -442,7 +442,7 @@ export function useWaveSurfer(
     if (!wavesurfer()) return;
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
-    if (originalBuffer !== null) {
+    if (originalBuffer) {
       var new_len = ((seconds / 1.0) * originalBuffer.sampleRate) >> 0;
       var newBuffer = backend.ac.createBuffer(
         originalBuffer.numberOfChannels,
@@ -471,11 +471,12 @@ export function useWaveSurfer(
     var start = trimTo(currentRegion().start, 3);
     var end = trimTo(currentRegion().end, 3);
     var len = end - start;
+    if (!len) return wsClear();
+
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
     setUndoBuffer(copyOriginal());
     onCanUndo(true);
-
     var new_len = ((len / 1) * originalBuffer.sampleRate) >> 0;
     var new_offset = ((start / 1) * originalBuffer.sampleRate) >> 0;
     var emptySegment = backend.ac.createBuffer(
