@@ -57,6 +57,7 @@ export function MediaPlayer(props: IProps) {
   }, [srcMediaId]);
 
   useEffect(() => {
+    if (mediaState.urlMediaId !== srcMediaId) return;
     if (mediaState.status === MediaSt.FETCHED) setReady(true);
     if (mediaState.error) {
       if (mediaState.error.startsWith('no offline file'))
@@ -75,7 +76,6 @@ export function MediaPlayer(props: IProps) {
       if (playing) {
         if (audioRef.current) audioRef.current.pause();
         setPlaying(false);
-        setPlayItem('');
       }
     }
   }, [ready, requestPlay, playing, playItem]);

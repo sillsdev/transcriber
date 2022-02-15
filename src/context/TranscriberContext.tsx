@@ -644,7 +644,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     }, [mediafiles]);
 
     useEffect(() => {
-      if (mediaState.url) {
+      if (mediaState.url && mediaState.urlMediaId === fetching.current) {
         mediaUrlRef.current = mediaState.url;
         fetching.current = '';
         try {
