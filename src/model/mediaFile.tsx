@@ -28,6 +28,8 @@ export interface MediaFile extends BaseModel {
     offlineId: string;
     sourceSegments: string;
     sourceMediaOfflineId: string;
+    transcriptionstate: string;
+    topic: string;
   };
   relationships?: {
     passage: RecordRelationship;

@@ -5,7 +5,6 @@ export interface Section extends BaseModel {
   attributes: {
     sequencenum: number;
     name: string;
-    state: string;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;

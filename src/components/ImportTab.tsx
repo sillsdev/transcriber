@@ -447,29 +447,34 @@ export function ImportTab(props: IProps) {
               if (section)
                 plan = planFromSection(section, false)?.attributes.name || '';
             }
-            imported =
-              t.transcription + ':' + mediafile.attributes.transcription;
-            old =
-              t.transcription +
-              ':' +
-              (c.online.data as MediaFile).attributes.transcription;
-            break;
-          case 'passage':
-            passage = c.imported.data as Passage;
-            section = sectionFromPassage(passage, true);
-            if (section)
-              plan = planFromSection(section, false)?.attributes.name || '';
-            imported =
-              t.state +
-              ':' +
-              localizeActivityState(passage.attributes.state, ta);
-            old =
-              t.state +
-              ':' +
-              localizeActivityState(
-                (c.online.data as Passage).attributes.state,
-                ta
-              );
+            var online = c.online.data as MediaFile;
+            if (
+              online.attributes.transcription !==
+              mediafile.attributes.transcription
+            ) {
+              imported =
+                t.transcription + ':' + mediafile.attributes.transcription;
+              old =
+                t.transcription +
+                ':' +
+                (c.online.data as MediaFile).attributes.transcription;
+            }
+            if (
+              online.attributes.transcriptionstate !==
+              mediafile.attributes.transcriptionstate
+            ) {
+              imported +=
+                t.state +
+                ':' +
+                localizeActivityState(
+                  mediafile.attributes.transcriptionstate,
+                  ta
+                );
+              old +=
+                t.state +
+                ':' +
+                localizeActivityState(online.attributes.transcriptionstate, ta);
+            }
             break;
           case 'section':
             var oldsection = c.online.data as Section;

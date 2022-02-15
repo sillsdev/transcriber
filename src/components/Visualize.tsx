@@ -11,6 +11,7 @@ import {
   ISharedStrings,
   IActivityStateStrings,
   localizeActivityState,
+  MediaFile,
 } from '../model';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -33,6 +34,7 @@ interface IRecordProps {
   roles: Array<Role>;
   passages: Array<Passage>;
   users: Array<User>;
+  mediafiles: Array<MediaFile>;
 }
 
 interface IProps extends IStateProps, IRecordProps, WithDataProps {
@@ -40,8 +42,17 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 }
 
 export function Visualize(props: IProps) {
-  const { plans, sections, roles, passages, users, selectedPlan, ts, ta } =
-    props;
+  const {
+    plans,
+    sections,
+    roles,
+    passages,
+    mediafiles,
+    users,
+    selectedPlan,
+    ts,
+    ta,
+  } = props;
   const [project] = useGlobal('project');
   const [rows, setRows] = useState<Array<IPlanRow>>([]);
   const [data1, setData1] = useState<Array<IWork>>([]);
@@ -85,6 +96,7 @@ export function Visualize(props: IProps) {
     selPlans.forEach((pl) => {
       const planName = pl.attributes.name;
       const selSections = sections.filter((s) => related(s, 'plan') === pl.id);
+      const selMedia = mediafiles.filter((m) => related(m, 'plan') === pl.id);
       selSections.forEach((s) => {
         const selPassages = passages.filter(
           (ps) => related(ps, 'section') === s.id
@@ -121,16 +133,14 @@ export function Visualize(props: IProps) {
             ? personTot[personKey] + selPassages.length
             : selPassages.length;
         }
-        selPassages.forEach((selPassage) => {
-          const stateName = selPassage.attributes
-            ? selPassage.attributes.state
-            : '';
-          const statusKey =
-            localizeActivityState(stateName, ta) + ':' + planName + ':status';
-          statusTot[statusKey] = statusTot.hasOwnProperty(statusKey)
-            ? statusTot[statusKey] + 1
-            : 1;
-        });
+      });
+      selMedia.forEach((m) => {
+        const stateName = m.attributes ? m.attributes.transcriptionstate : '';
+        const statusKey =
+          localizeActivityState(stateName, ta) + ':' + planName + ':status';
+        statusTot[statusKey] = statusTot.hasOwnProperty(statusKey)
+          ? statusTot[statusKey] + 1
+          : 1;
       });
     });
     setRows(
@@ -155,7 +165,18 @@ export function Visualize(props: IProps) {
     );
     setData1(getData(personTot));
     setData2(getData(statusTot));
-  }, [project, passages, plans, roles, sections, users, selectedPlan, ta, ts]);
+  }, [
+    project,
+    mediafiles,
+    passages,
+    plans,
+    roles,
+    sections,
+    users,
+    selectedPlan,
+    ta,
+    ts,
+  ]);
 
   return <TreeChart rows={rows} data1={data1} data2={data2} />;
 }
@@ -170,6 +191,7 @@ const mapRecordsToProps = {
   sections: (q: QueryBuilder) => q.findRecords('section'),
   roles: (q: QueryBuilder) => q.findRecords('role'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafiles'),
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 

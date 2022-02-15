@@ -117,7 +117,7 @@ interface IRow {
   length: string;
   state: string;
   assigned: string;
-  mediaRemoteId: string;
+  mediaId: string;
   rowKey: string;
 }
 
@@ -376,11 +376,10 @@ export function TaskTable(props: IProps) {
           ? ChipText({ state: r.state, ta: activityStateStr })
           : '',
       assigned: r.assigned === user ? t.yes : t.no,
-      mediaId: r.mediaId,
-      mediaRemoteId: r.mediaRemoteId,
+      mediaId: r.mediafile.id,
       rowKey:
         sectionNumber(r.section) +
-        (r.mediaRemoteId ? passageNumber(r.passage) : '   '),
+        (r.mediafile.id ? passageNumber(r.passage) : '   '),
     }));
     setRows(newRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -430,8 +429,8 @@ export function TaskTable(props: IProps) {
       if (column.name === 'composite') {
         let curId = '';
         if (typeof value?.props?.item === 'number')
-          if (row.mediaRemoteId !== '')
-            curId = rowData[value.props.item]?.passage?.id;
+          if (row.mediaId !== '')
+            curId = rowData[value.props.item]?.mediafile.id;
         return (
           <td
             ref={curId === selected ? selectedRef : notSelectedRef}
@@ -448,7 +447,7 @@ export function TaskTable(props: IProps) {
       } else if (column.name === 'play') {
         // if there is no audio file to play put nothing in the play column
         return row.length !== '' ? (
-          <PlayCell {...props} mediaId={row.mediaRemoteId || props.mediaId} />
+          <PlayCell {...props} mediaId={row.mediaId || props.mediaId} />
         ) : (
           <Table.Cell {...props} value="" />
         );

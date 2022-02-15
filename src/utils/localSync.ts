@@ -2,15 +2,14 @@ import xpath from 'xpath';
 import { DOMParser, XMLSerializer } from 'xmldom';
 import { Passage, ActivityStates, MediaFile, Section } from '../model';
 import Memory from '@orbit/memory';
-import { Operation, QueryBuilder, Record, TransformBuilder } from '@orbit/data';
-import {
-  related,
-  getVernacularMediaRec,
-  parseRef,
-  UpdatePassageStateOps,
-} from '../crud';
+import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { related, parseRef, UpdateMediaStateOps } from '../crud';
 import { getReadWriteProg } from './paratextPath';
 
+interface PassageInfo {
+  passage: Passage;
+  mediafile: MediaFile;
+}
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 const path = require('path');
@@ -381,20 +380,13 @@ const ParseTranscription = (currentPassage: Passage, transcription: string) => {
   ret.forEach((p) => parseRef(p));
   return ret;
 };
-const postPass = (doc: Document, currentPassage: Passage, memory: Memory) => {
+const postPass = (doc: Document, currentPI: PassageInfo, memory: Memory) => {
   //get transcription
-  const media = related(currentPassage, 'mediafiles') as Record[];
-  const sortedMedia = media
-    .map(
-      (m) =>
-        memory.cache.query((q: QueryBuilder) => q.findRecord(m)) as MediaFile
-    )
-    .sort((i, j) => i.attributes.versionNumber - j.attributes.versionNumber);
-  var transcription = sortedMedia[0].attributes.transcription || '';
-  var parsed = ParseTranscription(currentPassage, transcription);
+  var transcription = currentPI.mediafile.attributes.transcription || '';
+  var parsed = ParseTranscription(currentPI.passage, transcription);
   if (parsed.length > 1) {
     //remove original range if it exists and we're replacing with multiple
-    var existing = getExistingVerses(doc, currentPassage);
+    var existing = getExistingVerses(doc, currentPI.passage);
     if (existing.exactVerse) removeVerse(existing.exactVerse);
     existing.allVerses.forEach((v) => {
       if (isSection(v)) removeSection(v);
@@ -562,7 +554,7 @@ const writeChapter = async (
 const doChapter = async (
   plan: string,
   chap: string,
-  pass: Passage[],
+  passInfo: PassageInfo[],
   ptProjName: string,
   memory: Memory,
   userId: string,
@@ -572,8 +564,10 @@ const doChapter = async (
 
   let usxDom: Document = await getChapter(paths, ptProjName);
 
-  pass = pass.sort((i, j) => i.startVerse - j.startVerse);
-  pass.forEach((p) => {
+  passInfo = passInfo.sort(
+    (i, j) => i.passage.startVerse - j.passage.startVerse
+  );
+  passInfo.forEach((p) => {
     postPass(usxDom, p, memory);
   });
 
@@ -581,19 +575,18 @@ const doChapter = async (
   if (stdoutw) console.log(stdoutw);
   var ops: Operation[] = [];
   var tb = new TransformBuilder();
-  for (let p of pass) {
-    var cmt = p.attributes.lastComment;
-    p.attributes.lastComment = '';
-    UpdatePassageStateOps(
-      p.id,
-      related(p, 'section'),
-      plan,
+  for (let p of passInfo) {
+    var cmt = p.passage.attributes.lastComment;
+    p.passage.attributes.lastComment = '';
+    UpdateMediaStateOps(
+      p.mediafile.id,
+      p.passage.id,
       ActivityStates.Done,
-      'Paratext-' + cmt,
       userId,
       tb,
       ops,
-      memory
+      memory,
+      'Paratext-' + cmt
     );
   }
   await memory.update(ops);
@@ -616,43 +609,50 @@ export const getLocalParatextText = async (
 export const localSync = async (
   plan: string,
   ptProjName: string,
+  mediafiles: MediaFile[],
   passages: Passage[],
   memory: Memory,
   userId: string,
-  vernacularId: string,
-  addNumberToSection: boolean = true
+  artifactId: string,
+  checkVersion: boolean
 ) => {
-  let chapChg: { [key: string]: Passage[] } = {};
-  passages
-    .filter((p) => p.attributes?.state === ActivityStates.Approved)
-    .filter(
-      (p) =>
-        related(getVernacularMediaRec(p.id, memory, vernacularId), 'plan') ===
-        plan
-    )
-    .forEach((p) => {
-      parseRef(p);
-      let chap = p.startChapter;
-      if (chap) {
-        const k = p.attributes?.book + '-' + chap;
-        if (chapChg.hasOwnProperty(k)) {
-          chapChg[k].push(p);
-        } else {
-          chapChg[k] = [p];
-        }
+  let chapChg: { [key: string]: PassageInfo[] } = {};
+  let probablyready = mediafiles.filter(
+    (m) =>
+      related(m, 'plan') === plan &&
+      related(m, 'artifacttype') === artifactId && //will this find vernacular?
+      m.attributes?.transcriptionstate === ActivityStates.Approved
+  );
+  //ensure this is the latest mediafile for the passage
+  let ready: PassageInfo[] = [];
+  probablyready.forEach((pr) => {
+    var psgs = passages.filter((p) => related(p, 'mediafile') === pr.id);
+    var passage = psgs.length > 0 ? psgs[0] : ({} as Passage); //never happen
+    var newer = [];
+    if (checkVersion) {
+      newer = mediafiles.filter(
+        (m) =>
+          related(m, 'passage') === passage.id &&
+          m.attributes.versionNumber > pr.attributes.versionNumber
+      );
+    }
+    if (newer.length === 0) ready.push({ passage: passage, mediafile: pr });
+  });
+  ready.forEach((r) => {
+    parseRef(r.passage);
+    let chap = r.passage.startChapter;
+    if (chap) {
+      const k = r.passage.attributes?.book + '-' + chap;
+      if (chapChg.hasOwnProperty(k)) {
+        chapChg[k].push(r);
+      } else {
+        chapChg[k] = [r];
       }
-    });
+    }
+  });
   for (let c of Object.keys(chapChg)) {
     try {
-      await doChapter(
-        plan,
-        c,
-        chapChg[c],
-        ptProjName,
-        memory,
-        userId,
-        addNumberToSection
-      );
+      await doChapter(plan, c, chapChg[c], ptProjName, memory, userId, false);
     } catch (error: any) {
       return error.message.replace(
         'Missing Localizer implementation. English text will be used instead.',

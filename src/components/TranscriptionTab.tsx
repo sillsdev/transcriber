@@ -64,6 +64,7 @@ import {
   useArtifactType,
   ArtifactTypeSlug,
   useTranscription,
+  usePassageState,
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -259,6 +260,7 @@ export function TranscriptionTab(props: IProps) {
     { columnName: 'action', width: 150 },
   ];
   const [filter, setFilter] = useState(false);
+  const getPassageState = usePassageState();
 
   const defaultHiddenColumnNames = useMemo(
     () =>
@@ -515,10 +517,7 @@ export function TranscriptionTab(props: IProps) {
             parentId: '',
           });
           sectionpassages.forEach((passage: Passage) => {
-            const state =
-              passage.attributes && passage.attributes.state
-                ? activityState.getString(passage.attributes.state)
-                : '';
+            const state = activityState.getString(getPassageState(passage));
             rowData.push({
               id: passage.id,
               name: getReference(passage, bookData),
@@ -627,7 +626,7 @@ export function TranscriptionTab(props: IProps) {
         const passRec = memory.cache.query((q: QueryBuilder) =>
           q.findRecord({ type: 'passage', id: row.id })
         ) as Passage;
-        const state = passRec && passRec.attributes && passRec.attributes.state;
+        const state = getPassageState(passRec);
         const media = memory.cache.query((q: QueryBuilder) =>
           q
             .findRecords('mediafile')

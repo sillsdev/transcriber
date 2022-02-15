@@ -35,9 +35,10 @@ import {
   related,
   FontData,
   getFontData,
-  UpdatePassageStateOps,
   remoteIdNum,
   useFetchMediaUrl,
+  UpdateMediaStateOps,
+  AddPassageStateChangeToOps,
 } from '../crud';
 import {
   insertAtCursor,
@@ -237,13 +238,13 @@ export function Transcriber(props: IProps) {
     loading,
   } = useTodo();
   const { safeURL } = useFetchMediaUrl();
-  const { section, passage, duration, mediaId, state, role } = rowData[
+  const { section, passage, duration, mediafile, state, role } = rowData[
     index
   ] || {
     section: {} as Section,
     passage: {} as Passage,
     duration: 0,
-    mediaId: '',
+    mediafile: {} as MediaFile,
     state: '',
     role: '',
   };
@@ -253,7 +254,6 @@ export function Transcriber(props: IProps) {
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
   const [projType] = useGlobal('projType');
-  const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
@@ -464,12 +464,14 @@ export function Transcriber(props: IProps) {
   }, [selected]);
 
   useEffect(() => {
-    const trans = getTranscription();
-    if (trans.transcription !== transcriptionIn.current && !saving.current) {
-      //show warning if changed
-      if (isChanged(toolId)) showMessage(t.updateByOther);
-      //but do it either way
-      showTranscription(trans);
+    if (mediafile && mediafile.attributes) {
+      const trans = getTranscription();
+      if (trans.transcription !== transcriptionIn.current && !saving.current) {
+        //show warning if changed
+        if (isChanged(toolId)) showMessage(t.updateByOther);
+        //but do it either way
+        showTranscription(trans);
+      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediafiles]);
@@ -488,7 +490,7 @@ export function Transcriber(props: IProps) {
       }
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediaId]);
+  }, [mediafile]);
 
   useEffect(() => {
     if (paratext_textStatus?.errStatus) {
@@ -503,7 +505,7 @@ export function Transcriber(props: IProps) {
       });
       toolChanged(toolId, true);
       save(
-        passage.attributes.state,
+        mediafile.attributes.transcriptionstate,
         0,
         segmentsRef.current,
         t.pullParatextStatus
@@ -552,7 +554,7 @@ export function Transcriber(props: IProps) {
         q.findRecords('mediafile')
       ) as MediaFile[];
       //check if the url we have loaded is for the current mediaId
-      const oldRec = mediaRecs.filter((m) => m.id === mediaId);
+      const oldRec = mediaRecs.filter((m) => m.id === mediafile.id);
       var mediaRecUrl =
         oldRec.length > 0
           ? safeURL(dataPath(oldRec[0].attributes.audioUrl, PathType.MEDIA))
@@ -635,41 +637,38 @@ export function Transcriber(props: IProps) {
     }
     setRejectVisible(true);
   };
-  const handleRejected = async (pass: Passage) => {
+  const handleRejected = async (media: MediaFile, comment: string) => {
     setRejectVisible(false);
     await memory.update(
-      UpdatePassageStateOps(
-        pass.id,
-        section.id,
-        plan,
-        pass.attributes.state,
-        pass.attributes.lastComment,
-        user,
-        new TransformBuilder(),
-        [],
-        memory
-      )
-    );
-    pass.attributes.lastComment = '';
-    setLastSaved(currentDateTime());
-  };
-  const handleRejectCancel = () => setRejectVisible(false);
-  const handleAddNote = async (pass: Passage) => {
-    setAddNoteVisible(false);
-    await memory.update(
-      UpdatePassageStateOps(
-        pass.id,
-        section.id,
-        plan,
-        pass.attributes.state,
-        pass.attributes.lastComment,
+      UpdateMediaStateOps(
+        media.id,
+        passage.id,
+        media.attributes.transcriptionstate,
         user,
         new TransformBuilder(),
         [],
         memory,
-        pass.attributes.lastComment !== ''
+        comment
       )
     );
+    //todo ?? if (IsVernacular(media))
+    setLastSaved(currentDateTime());
+  };
+  const handleRejectCancel = () => setRejectVisible(false);
+
+  const handleAddNote = async (pass: Passage) => {
+    setAddNoteVisible(false);
+    var ops = [] as Operation[];
+    AddPassageStateChangeToOps(
+      new TransformBuilder(),
+      ops,
+      pass.id,
+      '',
+      pass.attributes.lastComment,
+      user,
+      memory
+    );
+    await memory.update(ops);
     pass.attributes.lastComment = '';
   };
   const handleAddNoteCancel = () => setAddNoteVisible(false);
@@ -771,29 +770,30 @@ export function Transcriber(props: IProps) {
       const curState = stateRef.current;
       const tb = new TransformBuilder();
       let ops: Operation[] = [];
+      //todo
       //always update the state, because we need the dateupdated to be updated
-      ops = UpdatePassageStateOps(
-        passage.id,
-        section.id,
-        plan,
-        nextState,
-        thiscomment || '',
-        user,
-        tb,
-        ops,
-        memory,
-        nextState !== stateRef.current || (thiscomment || '') !== ''
-      );
+      if (stateRef.current !== nextState || thiscomment)
+        AddPassageStateChangeToOps(
+          tb,
+          ops,
+          passage.id,
+          stateRef.current !== nextState ? nextState : '',
+          thiscomment || '',
+          user,
+          memory
+        );
+
       ops.push(
         ...UpdateRecord(
           tb,
           {
             type: 'mediafile',
-            id: mediaId,
+            id: mediafile.id,
             attributes: {
               transcription: transcription,
               position: newPosition,
               segments: segments,
+              transcriptionstate: nextState,
             },
           } as any as MediaFile,
           user
@@ -838,16 +838,15 @@ export function Transcriber(props: IProps) {
   const doReopen = async () => {
     if (previous.hasOwnProperty(state)) {
       await memory.update(
-        UpdatePassageStateOps(
+        UpdateMediaStateOps(
+          mediafile.id,
           passage.id,
-          section.id,
-          plan,
           previous[state],
-          '',
           user,
           new TransformBuilder(),
           [],
-          memory
+          memory,
+          ''
         )
       );
       setLastSaved(currentDateTime());
@@ -868,17 +867,15 @@ export function Transcriber(props: IProps) {
   };
 
   const getTranscription = () => {
-    const mediaRec = mediafiles.filter((m) => m.id === mediaId);
-    if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
-      const attr = mediaRec[0].attributes;
-      segmentsRef.current = attr.segments || '{}';
-      setInitialSegments(segmentsRef.current);
-      return {
-        transcription: attr.transcription ? attr.transcription : '',
-        position: attr.position,
-      };
-    } else return { transcription: '', position: 0 }; //shouldn't ever happen
+    const attr = mediafile.attributes || {};
+    segmentsRef.current = attr.segments || '{}';
+    setInitialSegments(segmentsRef.current);
+    return {
+      transcription: attr.transcription || '',
+      position: attr.position,
+    };
   };
+
   const showTranscription = (val: {
     transcription: string;
     position: number;
@@ -1214,7 +1211,7 @@ export function Transcriber(props: IProps) {
         )}
         <TranscribeReject
           visible={rejectVisible}
-          passageIn={passage}
+          mediaIn={mediafile}
           editMethod={handleRejected}
           cancelMethod={handleRejectCancel}
         />
