@@ -606,10 +606,10 @@ export function ScriptureTable(props: IProps) {
 
   const showUpload = (i: number, record: boolean) => {
     const { wf } = getByIndex(workflow, i);
+    uploadItem.current = wf;
     setDefaultFilename(
       passageDefaultFilename(wf?.passageId?.id || '', memory, vernacularId)
     );
-    uploadItem.current = wf;
     setRecordAudio(record);
     setUploadVisible(true);
   };
@@ -633,8 +633,8 @@ export function ScriptureTable(props: IProps) {
 
   const handleAudacityImport = (i: number, list: File[]) => {
     saveIfChanged(() => {
-      setImportList(list);
       showUpload(i, false);
+      setImportList(list);
     });
   };
 
