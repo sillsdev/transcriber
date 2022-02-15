@@ -178,7 +178,7 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   slugs: ArtifactTypeSlug[];
 }
 
-export function PassageDetailCommunity(props: IProps) {
+export function PassageDetailItem(props: IProps) {
   const { auth, t, ts, width, slugs } = props;
   const { pathname } = useLocation();
   const [view, setView] = useState('');
@@ -573,5 +573,5 @@ const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(PassageDetailCommunity) as any
+  connect(mapStateToProps, mapDispatchToProps)(PassageDetailItem) as any
 ) as any;

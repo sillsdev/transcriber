@@ -30,8 +30,7 @@ import PassageDetailArtifacts from '../components/PassageDetail/Internalization/
 import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord';
-import PassageDetailArtifact from '../components/PassageDetail/PassageDetailArtifact';
-import PassageBackTranslate from '../components/PassageDetail/PassageBackTranslate';
+import PassageDetailArtifact from '../components/PassageDetail/PassageDetailItem';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
 import IntegrationTab from '../components/Integration';
 import TranscriptionTab from '../components/TranscriptionTab';
@@ -230,13 +229,6 @@ const PassageDetailGrids = (props: IProps) => {
           <Grid container direction="row" className={classes.row}>
             <Grid item xs={12}>
               <PassageDetailRecord auth={auth} />
-            </Grid>
-          </Grid>
-        )}
-        {tool === ToolSlug.Segment && (
-          <Grid container direction="row" className={classes.row}>
-            <Grid item xs={12}>
-              <PassageBackTranslate width={width - 20} />
             </Grid>
           </Grid>
         )}
