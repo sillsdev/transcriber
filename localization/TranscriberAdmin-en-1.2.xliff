@@ -6423,6 +6423,13 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="wsAudioPlayer.saveSegments">
+      		<source>Save Segments</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">wsAudioPlayer.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="wsAudioPlayer.seconds">
             <source>seconds</source>
             <target/>

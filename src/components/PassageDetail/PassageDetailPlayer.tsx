@@ -1,11 +1,12 @@
 import { Button } from '@material-ui/core';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { IRegion } from '../../crud/useWavesurferRegions';
-import { IState } from '../../model';
 import WSAudioPlayer from '../WSAudioPlayer';
+import { useSelector, shallowEqual } from 'react-redux';
+import { IWsAudioPlayerStrings } from '../../model';
+import { playerSelector } from '../../selector';
 
 interface IStateProps {}
 
@@ -18,6 +19,7 @@ export function PassageDetailPlayer(props: IProps) {
   const { allowSegment, saveSegments } = props;
   const { toolChanged, toolsChanged, isChanged, saveRequested, startSave } =
     useContext(UnsavedContext).state;
+  const t: IWsAudioPlayerStrings = useSelector(playerSelector, shallowEqual);
   const toolId = 'ArtifactSegments';
   const {
     loading,
@@ -120,7 +122,7 @@ export function PassageDetailPlayer(props: IProps) {
               color="primary"
               disabled={isChanged(toolId)}
             >
-              {'save segments'}
+              {t.saveSegments}
             </Button>
           ) : (
             <></>
@@ -131,6 +133,4 @@ export function PassageDetailPlayer(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({});
-
-export default connect(mapStateToProps)(PassageDetailPlayer) as any as any;
+export default PassageDetailPlayer as any;

@@ -1217,6 +1217,7 @@ const initialState = {
 			"playTip": "Play [{0}]",
 			"record": "Record [{0}]",
 			"resume": "Resume",
+			"saveSegments": "Save Segments",
 			"seconds": "seconds",
 			"silence": "Silence",
 			"slowerTip": "Slower [{0}]",

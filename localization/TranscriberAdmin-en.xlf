@@ -5506,6 +5506,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.saveSegments">
+         <segment>
+            <source>Save Segments</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.seconds">
          <segment>
             <source>seconds</source>

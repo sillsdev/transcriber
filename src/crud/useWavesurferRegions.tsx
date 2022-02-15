@@ -96,6 +96,7 @@ export function useWaveSurferRegions(
             onRegion(numRegions(), paramsRef.current, true);
             setCurrentRegion(r);
           });
+          //TODO: handle time out case
         }
       });
       ws.on('region-removed', function (r: any) {

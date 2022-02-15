@@ -165,12 +165,8 @@ const UnsavedProvider = connect(
   };
   const saveError = () => saveErr.current || '';
 
-  const SaveComplete = () => {
-    console.log('SaveComplete?', toolsChangedRef.current);
-    return (
-      Object.keys(toolsChangedRef.current).length === 0 || completeWithErrors()
-    );
-  };
+  const SaveComplete = () =>
+    Object.keys(toolsChangedRef.current).length === 0 || completeWithErrors();
   const SaveUnsuccessful = () => (saveResult || '') !== '';
 
   const saveCompleted = (toolId: string, saveErr?: string) => {
