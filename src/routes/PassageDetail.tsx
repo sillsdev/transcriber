@@ -249,36 +249,34 @@ const PassageDetailGrids = (props: IProps) => {
           <IntegrationTab {...props} auth={auth} />
         )}
         {(tool === ToolSlug.Discuss || tool === ToolSlug.TeamCheck) && (
-          <>
-            <Paper className={classes.paper}>
-              <Wrapper>
-                <SplitPane
-                  defaultSize={width - discussionSize}
-                  style={{ position: 'static' }}
-                  split="vertical"
-                  onChange={handleSplitSize}
-                >
-                  <Pane className={classes.pane}>
+          <Paper className={classes.paper}>
+            <Wrapper>
+              <SplitPane
+                defaultSize={width - discussionSize}
+                style={{ position: 'static' }}
+                split="vertical"
+                onChange={handleSplitSize}
+              >
+                <Pane className={classes.pane}>
+                  <Grid item className={classes.description} xs={12}>
+                    <PassageDetailPlayer />
+                  </Grid>
+                  {tool === ToolSlug.TeamCheck && (
                     <Grid item className={classes.description} xs={12}>
-                      <PassageDetailPlayer />
+                      <TeamCheckReference auth={auth} />
                     </Grid>
-                    {tool === ToolSlug.TeamCheck && (
-                      <Grid item className={classes.description} xs={12}>
-                        <TeamCheckReference auth={auth} />
-                      </Grid>
-                    )}
-                  </Pane>
-                  <Pane className={classes.pane}>
-                    <Grid item xs={12} sm container>
-                      <Grid item container direction="column">
-                        <DiscussionList auth={auth} />
-                      </Grid>
+                  )}
+                </Pane>
+                <Pane className={classes.pane}>
+                  <Grid item xs={12} sm container>
+                    <Grid item container direction="column">
+                      <DiscussionList auth={auth} />
                     </Grid>
-                  </Pane>
-                </SplitPane>
-              </Wrapper>
-            </Paper>
-          </>
+                  </Grid>
+                </Pane>
+              </SplitPane>
+            </Wrapper>
+          </Paper>
         )}
         {tool === ToolSlug.Community && (
           <Grid container direction="row" className={classes.row}>

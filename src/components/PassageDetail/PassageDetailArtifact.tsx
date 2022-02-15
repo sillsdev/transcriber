@@ -362,7 +362,7 @@ export function PassageDetailCommunity(props: IProps) {
   return (
     <div>
       <Paper className={classes.paper}>
-        <>
+        <div>
           <Wrapper>
             <SplitPane
               defaultSize={width - discussionSize}
@@ -418,6 +418,7 @@ export function PassageDetailCommunity(props: IProps) {
                           >
                             {slugs.map((s) => (
                               <FormControlLabel
+                                key={s}
                                 id={s}
                                 value={s}
                                 control={<Radio />}
@@ -523,14 +524,14 @@ export function PassageDetailCommunity(props: IProps) {
               </Pane>
             </SplitPane>
           </Wrapper>
-        </>
-        {confirm && (
-          <Confirm
-            text={t.deleteItem}
-            yesResponse={handleDeleteConfirmed}
-            noResponse={handleDeleteRefused}
-          />
-        )}
+          {confirm && (
+            <Confirm
+              text={t.deleteItem}
+              yesResponse={handleDeleteConfirmed}
+              noResponse={handleDeleteRefused}
+            />
+          )}
+        </div>
       </Paper>
       <Uploader
         noBusy={true}

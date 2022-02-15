@@ -311,69 +311,71 @@ export function DiscussionList(props: IProps) {
 
   return (
     <Paper id="DiscussionList" className={classes.root} style={rootWidthStyle}>
-      <div className={classes.discussionHead}>
-        <div>
-          <Typography variant="h6" className={classes.name}>
-            {t.title}
-          </Typography>
-          <Typography>{filterStatus}</Typography>
+      <>
+        <div className={classes.discussionHead}>
+          <div>
+            <Typography variant="h6" className={classes.name}>
+              {t.title}
+            </Typography>
+            <Typography>{filterStatus}</Typography>
+          </div>
+          <div>
+            <FilterMenu
+              state={filterState}
+              action={handleFilterAction}
+              cats={catSelect.length}
+            />
+            <IconButton
+              id="addDiscussion"
+              className={classes.actionButton}
+              title={t.add}
+              onClick={handleAddDiscussion}
+              disabled={adding || isMediaMissing()}
+            >
+              <AddIcon />
+            </IconButton>
+            <IconButton
+              id="collapseDiscussion"
+              className={classes.actionButton}
+              title={t.collapse}
+              onClick={handleToggleCollapse}
+            >
+              {collapsed ? <ShowIcon /> : <HideIcon />}
+            </IconButton>
+          </div>
         </div>
-        <div>
-          <FilterMenu
-            state={filterState}
-            action={handleFilterAction}
-            cats={catSelect.length}
-          />
-          <IconButton
-            id="addDiscussion"
-            className={classes.actionButton}
-            title={t.add}
-            onClick={handleAddDiscussion}
-            disabled={adding || isMediaMissing()}
-          >
-            <AddIcon />
-          </IconButton>
-          <IconButton
-            id="collapseDiscussion"
-            className={classes.actionButton}
-            title={t.collapse}
-            onClick={handleToggleCollapse}
-          >
-            {collapsed ? <ShowIcon /> : <HideIcon />}
-          </IconButton>
-        </div>
-      </div>
 
-      <Grid container className={classes.cardFlow}>
-        {displayDiscussions.map((i, j) => (
-          <DiscussionCard
-            auth={auth}
-            key={j}
-            discussion={i}
-            collapsed={collapsed}
-            onAddComplete={adding ? handleAddComplete : undefined}
-            showStep={allSteps}
-            showReference={allPassages}
-            startSave={startSave}
-            clearSave={clearSave}
+        <Grid container className={classes.cardFlow}>
+          {displayDiscussions.map((i, j) => (
+            <DiscussionCard
+              auth={auth}
+              key={j}
+              discussion={i}
+              collapsed={collapsed}
+              onAddComplete={adding ? handleAddComplete : undefined}
+              showStep={allSteps}
+              showReference={allPassages}
+              startSave={startSave}
+              clearSave={clearSave}
+            />
+          ))}
+        </Grid>
+        <BigDialog
+          title={t.categoryList}
+          isOpen={categoryOpen}
+          onOpen={handleCategory}
+        >
+          <CategoryList catFilter={catFilter} onCatFilter={handleCatFilter} />
+        </BigDialog>
+        {confirmAction === '' || (
+          <Confirm
+            jsx={<span></span>}
+            text={t.saveFirst}
+            yesResponse={handleSaveFirstConfirmed}
+            noResponse={handleSaveFirstRefused}
           />
-        ))}
-      </Grid>
-      <BigDialog
-        title={t.categoryList}
-        isOpen={categoryOpen}
-        onOpen={handleCategory}
-      >
-        <CategoryList catFilter={catFilter} onCatFilter={handleCatFilter} />
-      </BigDialog>
-      {confirmAction === '' || (
-        <Confirm
-          jsx={<span></span>}
-          text={t.saveFirst}
-          yesResponse={handleSaveFirstConfirmed}
-          noResponse={handleSaveFirstRefused}
-        />
-      )}
+        )}
+      </>
     </Paper>
   );
 }
