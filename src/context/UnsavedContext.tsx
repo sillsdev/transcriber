@@ -165,7 +165,8 @@ const UnsavedProvider = connect(
   };
   const saveError = () => saveErr.current || '';
 
-  const SaveComplete = () => Object.keys(toolsChangedRef.current).length === 0;
+  const SaveComplete = () =>
+    Object.keys(toolsChangedRef.current).length === 0 || completeWithErrors();
   const SaveUnsuccessful = () => (saveResult || '') !== '';
 
   const saveCompleted = (toolId: string, saveErr?: string) => {
@@ -242,8 +243,9 @@ const UnsavedProvider = connect(
     resolvedMethod: undefined | (() => any),
     waitCount: number
   ): Promise<any> => {
-    return waitForIt('Save', SaveComplete, SaveUnsuccessful, waitCount)
+    return waitForIt('Save', SaveComplete, () => false, waitCount)
       .then(() => {
+        if (SaveUnsuccessful()) throw new Error(saveError());
         if (resolvedMethod) return resolvedMethod();
       })
       .catch((err) => {

@@ -80,7 +80,6 @@ export function PassageDetailRecord(props: IProps) {
   const { mediafiles } = props;
   const { startSave, toolChanged, toolsChanged, saveRequested, waitForSave } =
     useContext(UnsavedContext).state;
-
   const [reporter] = useGlobal('errorReporter');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -100,7 +99,6 @@ export function PassageDetailRecord(props: IProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [audacityVisible, setAudacityVisible] = useState(false);
   const [versionVisible, setVersionVisible] = useState(false);
-  const [, setComplete] = useGlobal('progress');
 
   useEffect(() => {
     toolChanged(toolId, canSave);
@@ -250,7 +248,6 @@ export function PassageDetailRecord(props: IProps) {
           isOpen={uploadVisible}
           onOpen={handleUploadVisible}
           showMessage={showMessage}
-          setComplete={setComplete}
           multiple={false}
           finish={afterUpload}
           cancelled={cancelled}

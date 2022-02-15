@@ -814,6 +814,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.saveFirst">
+         <segment>
+            <source>Save or Clear your recording before uploading.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.segment">
+         <segment>
+            <source>Segment</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.speaker">
          <segment>
             <source>Speaker</source>
@@ -3724,6 +3736,48 @@
             <target/>
          </segment>
       </unit>
+      <unit id="selectRecording.artifactType">
+         <segment>
+            <source>Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectRecording.created">
+         <segment>
+            <source>Created</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectRecording.filename">
+         <segment>
+            <source>File Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectRecording.playItem">
+         <segment>
+            <source>Play Item</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectRecording.sourceSegment">
+         <segment>
+            <source>Source Segment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectRecording.sourceVersion">
+         <segment>
+            <source>Source Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectRecording.speaker">
+         <segment>
+            <source>Speaker</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.admin">
          <segment>
             <source>Admin</source>
@@ -3877,12 +3931,6 @@
       <unit id="shared.owner">
          <segment>
             <source>Owner</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="shared.playItem">
-         <segment>
-            <source>Play Item</source>
             <target/>
          </segment>
       </unit>
@@ -5455,6 +5503,12 @@
       <unit id="wsAudioPlayer.resume">
          <segment>
             <source>Resume</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.saveSegments">
+         <segment>
+            <source>Save Segments</source>
             <target/>
          </segment>
       </unit>

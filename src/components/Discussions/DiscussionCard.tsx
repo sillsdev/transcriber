@@ -222,7 +222,7 @@ export const DiscussionCard = (props: IProps) => {
     setPlayerSegments,
 
     setMediaSelected,
-    getSegments,
+    currentSegment,
   } = ctx.state;
   const {
     toolChanged,
@@ -414,11 +414,11 @@ export const DiscussionCard = (props: IProps) => {
   const handleSetSegment = async () => {
     if (startEnd(discussion.attributes?.subject)) {
       const subWords = editSubject.split(' ');
-      subWords[0] = getSegments().split(' ')[0];
+      subWords[0] = currentSegment.split(' ')[0];
       discussion.attributes.subject = subWords.join(' ');
     } else {
       discussion.attributes.subject =
-        getSegments() + (discussion.attributes?.subject || '');
+        currentSegment + (discussion.attributes?.subject || '');
     }
     let ops: Operation[] = [];
     let t = new TransformBuilder();
@@ -758,7 +758,7 @@ export const DiscussionCard = (props: IProps) => {
                 <DiscussionMenu
                   action={handleDiscussionAction}
                   resolved={discussion.attributes.resolved || false}
-                  canSet={getSegments() !== ''}
+                  canSet={currentSegment}
                 />
               </Grid>
             </Grid>

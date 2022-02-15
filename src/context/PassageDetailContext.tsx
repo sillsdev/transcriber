@@ -57,6 +57,7 @@ import {
 import Confirm from '../components/AlertDialog';
 import { getNextStep } from '../crud/getNextStep';
 import { UnsavedContext } from './UnsavedContext';
+import { IRegion } from '../crud/useWavesurferRegions';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -127,6 +128,7 @@ export interface IRow {
   done: boolean;
   editAction: JSX.Element | null;
   resource: SectionResource | null;
+  isVernacular: boolean;
   isResource: boolean;
   isComment: boolean;
 }
@@ -174,9 +176,12 @@ const initState = {
   defaultFilename: '',
   uploadItem: '',
   recordCb: (planId: string, MediaRemId?: string[]) => {},
-  setSegments: (segments: string) => {},
+  currentSegment: '',
+  currentSegmentIndex: -1,
+  setCurrentSegment: (segment: IRegion | undefined, index: number) => {}, //replace the above two
   setupLocate: (cb?: (segments: string) => void) => {},
-  getSegments: () => '',
+  getCurrentSegment: () => undefined as IRegion | undefined,
+  prettySegment: (region: IRegion | string) => '',
   setPlayerSegments: (segments: string) => {},
   commentRecording: false,
   setCommentRecording: (commentRecording: boolean) => {},
@@ -230,7 +235,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const fetching = useRef('');
-    const segmentsRef = useRef('{}');
     const segmentsCb = useRef<(segments: string) => void>();
     const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
     const { localizedArtifactType, vernacularId } = useArtifactType();
@@ -246,21 +250,23 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         return { ...state, orgWorkflowSteps: steps };
       });
     };
+    const currentSegmentRef = useRef<IRegion | undefined>();
     const { startSave, clearChanged, waitForSave } =
       useContext(UnsavedContext).state;
 
     const handleSetCurrentStep = (stepId: string) => {
       var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
+      setCurrentSegment(undefined, 0);
       setState((state: ICtxState) => {
-        return { ...state, currentstep: stepId, playing: false };
+        return {
+          ...state,
+          currentstep: stepId,
+          playing: false,
+        };
       });
       if (step && getTool(step.attributes?.tool) !== ToolSlug.Resource) {
         //this does a bunch of stuff...don't just set it in the state above...
-        if (
-          state.rowData.length > 0 &&
-          !state.rowData[0].isResource &&
-          !state.rowData[0].isComment
-        )
+        if (state.rowData.length > 0 && state.rowData[0].isVernacular)
           setSelected(state.rowData[0].id);
         else setSelected('');
       }
@@ -426,7 +432,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       if (state.index !== i || state.selected !== selected) {
         var resetBlob = false;
         //if this is a file that will be played in the wavesurfer..fetch it
-        if (!r.isResource && !r.isComment && i === 0) {
+        if (r.isVernacular && i === 0) {
           if (
             mediaState.urlMediaId !== r.mediafile.id &&
             fetching.current !== r.mediafile.id
@@ -439,6 +445,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             });
             resetBlob = true;
           }
+          currentSegmentRef.current = undefined;
           setState((state: ICtxState) => {
             return {
               ...state,
@@ -449,6 +456,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
               mediaPlaying: false,
               loading: fetching.current !== '',
               rowData: newRows.length > 0 ? newRows : rowData,
+              currentSegment: '',
+              currentSegmentIndex: 0,
             };
           });
         } else {
@@ -508,29 +517,38 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       });
     };
 
-    const setSegments = (segments: string) => {
-      segmentsRef.current = segments;
+    const setCurrentSegment = (
+      segment: IRegion | undefined,
+      currentSegmentIndex: number
+    ) => {
+      currentSegmentRef.current = segment;
+      setState((state: ICtxState) => ({
+        ...state,
+        currentSegment: prettySegment(segment),
+        currentSegmentIndex,
+      }));
     };
-
     const setupLocate = (cb?: (segments: string) => void) => {
       segmentsCb.current = cb;
     };
-
+    //set the player segment to the specified segment??
     const setPlayerSegments = (segments: string) => {
       if (segmentsCb.current) segmentsCb.current(segments);
     };
 
     const onePlace = (n: number) => (Math.round(n * 10) / 10).toFixed(1);
 
-    const getSegments = () => {
-      const segs = JSON.parse(segmentsRef.current);
-      const region = segs.regions ? JSON.parse(segs.regions) : [];
-      if (region.length > 0) {
-        const start: number = region[0].start;
-        const end: number = region[0].end;
-        return `${onePlace(start)}-${onePlace(end)} `;
-      }
+    const prettySegment = (region: IRegion | undefined | string) => {
+      var rgn: IRegion | undefined = undefined;
+      if (typeof region === 'string') {
+        if (region) rgn = JSON.parse(region) as IRegion;
+      } else rgn = region;
+      if (rgn) return `${onePlace(rgn.start)}-${onePlace(rgn.end)} `;
       return '';
+    };
+
+    const getCurrentSegment = () => {
+      return currentSegmentRef.current;
     };
 
     useEffect(() => {
@@ -672,9 +690,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         resourceRows({ ...props, res, user, ...localize })
       );
       const mediafileId =
-        newData.length > 0 && !newData[0].isResource && !newData[0].isComment
-          ? newData[0].id
-          : '';
+        newData.length > 0 && newData[0].isVernacular ? newData[0].id : '';
       setState((state: ICtxState) => {
         return { ...state, rowData: newData, mediafileId };
       });
@@ -742,8 +758,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setPDBusy,
             getSharedResources,
             refresh,
-            setSegments,
-            getSegments,
+            setCurrentSegment,
+            getCurrentSegment,
+            prettySegment,
             setPlayerSegments,
             setupLocate,
             stepComplete,

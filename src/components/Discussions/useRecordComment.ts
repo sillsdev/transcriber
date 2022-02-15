@@ -69,7 +69,14 @@ export const useRecordComment = ({
       // offlineOnly
       var num = 1;
       mediaIdRef.current = (
-        await createMedia(data, num, uploadList[n].size, passageId, commentId)
+        await createMedia(
+          data,
+          num,
+          uploadList[n].size,
+          passageId,
+          commentId,
+          ''
+        )
       ).id;
     }
     if (!offline) {

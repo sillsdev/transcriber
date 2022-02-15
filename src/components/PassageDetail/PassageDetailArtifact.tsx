@@ -30,22 +30,17 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArtifactTypeSlug,
   findRecord,
-  pullPlanMedia,
   related,
-  remoteIdGuid,
   remoteIdNum,
   useArtifactType,
   useFetchMediaUrl,
-  useOfflnMediafileCreate,
 } from '../../crud';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import * as actions from '../../store';
 import { bindActionCreators } from 'redux';
 import Memory from '@orbit/memory';
-import JSONAPISource from '@orbit/jsonapi';
 import { TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { useMediaAttach } from '../../crud/useMediaAttach';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { cleanFileName } from '../../utils';
@@ -61,6 +56,8 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import { LocalKey, localUserKey } from '../../utils';
 import StickyRedirect from '../StickyRedirect';
 import Confirm from '../AlertDialog';
+import Uploader from '../Uploader';
+import AddIcon from '@material-ui/icons/LibraryAddOutlined';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -164,7 +161,6 @@ const Wrapper = styled.div`
 interface IStateProps {
   t: ICommunityStrings;
   ts: ISharedStrings;
-  uploadError: string;
 }
 interface IDispatchProps {
   uploadFiles: typeof actions.uploadFiles;
@@ -184,30 +180,24 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 
 export function PassageDetailCommunity(props: IProps) {
   const { auth, t, ts, width, slugs } = props;
-  const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
   const { pathname } = useLocation();
   const [view, setView] = useState('');
   const [reporter] = useGlobal('errorReporter');
-  const [offline] = useGlobal('offline');
-  const [plan] = useGlobal('plan');
   const [projRole] = useGlobal('projRole');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
-  const { createMedia } = useOfflnMediafileCreate(doOrbitError);
   const [statusText, setStatusText] = useState('');
-  const fileList = useRef<File[]>();
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
   const classes = useStyles();
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const [, setMediaRec] = useState<MediaFile>();
   const [speaker, setSpeaker] = useState('');
-  const successCount = useRef(0);
-  const mediaIdRef = useRef('');
+  const [importList, setImportList] = useState<File[]>();
+  const [uploadVisible, setUploadVisible] = useState(false);
   const [playItem, setPlayItem] = useState('');
-  const [playing, setPlaying] = useState(false);
-  const [resetMedia, setResetMedia] = useState(0);
+  const [itemPlaying, setItemPlaying] = useState(false);
+  const [resetMedia, setResetMedia] = useState(false);
   const [confirm, setConfirm] = useState('');
   const {
     passage,
@@ -217,17 +207,21 @@ export function PassageDetailCommunity(props: IProps) {
     playerSize,
     setPlayerSize,
     rowData,
+    currentSegment,
+    currentSegmentIndex,
+    getCurrentSegment,
+    setPlaying,
   } = usePassageDetailContext();
   const { toolChanged, toolsChanged, startSave, saveCompleted, saveRequested } =
     useContext(UnsavedContext).state;
+
   const { getTypeId, localizedArtifactType } = useArtifactType();
   const { showMessage } = useSnackBar();
-  const [attachPassage] = useMediaAttach({
-    doOrbitError,
-  });
   const [recordType, setRecordType] = useState<ArtifactTypeSlug>(slugs[0]);
+  const [currentVersion, setCurrentVersion] = useState(1);
+  const cancelled = useRef(false);
 
-  const toolId = 'CommunityTool';
+  const toolId = 'RecordArtifactTool';
 
   const handleSplitSize = debounce((e: number) => {
     setDiscussionSize(width - e);
@@ -245,7 +239,8 @@ export function PassageDetailCommunity(props: IProps) {
   useEffect(() => {
     if (mediafileId !== mediaState.urlMediaId)
       fetchMediaUrl({ id: mediafileId, auth });
-    setMediaRec(findRecord(memory, 'mediafile', mediafileId) as MediaFile);
+    var mediaRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
+    setCurrentVersion(mediaRec.attributes.versionNumber);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafileId]);
 
@@ -260,11 +255,13 @@ export function PassageDetailCommunity(props: IProps) {
     var mediaRec = rowData.filter(
       (r) => related(r.mediafile, 'artifactType') === recordTypeId
     );
-    tmp += recordType + '_' + (mediaRec.length + 1).toString();
-    if (speaker) tmp += '_' + speaker;
+    tmp += recordType + (mediaRec.length + 1).toString();
+    tmp += '_v' + currentVersion.toString();
+    if (currentSegmentIndex > 0) tmp += 's' + currentSegmentIndex.toString();
+    //if (speaker) tmp += '_' + speaker;
     setDefaultFileName(cleanFileName(tmp));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [memory, passage, rowData, recordType, speaker]);
+  }, [memory, passage, rowData, recordType, speaker, currentSegmentIndex]);
 
   useEffect(() => {
     if (saveRequested(toolId) && canSave) handleSave();
@@ -277,74 +274,34 @@ export function PassageDetailCommunity(props: IProps) {
       startSave(toolId);
     }
   };
-  const finishMessage = () => {
-    setTimeout(() => {
-      if (fileList.current)
-        showMessage(
-          t.uploadComplete
-            .replace('{0}', successCount.current.toString())
-            .replace('{1}', fileList.current.length.toString())
-        );
-      uploadComplete();
-      setResetMedia(resetMedia + 1);
-    }, 1000);
-  };
-  const itemComplete = async (n: number, success: boolean, data?: any) => {
-    if (success) successCount.current += 1;
-    const uploadList = fileList.current;
-    if (!uploadList) return; // This should never happen
-    if (data?.stringId) {
-      mediaIdRef.current = data?.stringId;
-    } else if (success && data) {
-      // offlineOnly
-      await createMedia(
-        data,
-        1,
-        uploadList[n].size,
-        passage.id,
-        data.artifactTypeId
-      );
-    }
+
+  const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     setStatusText('');
-    if (!offline) {
-      pullPlanMedia(plan, memory, remote).then(() => {
-        var mediaId =
-          remoteIdGuid('mediafile', mediaIdRef.current, memory.keyMap) ||
-          mediaIdRef.current;
-        attachPassage(
-          passage.id,
-          related(passage, 'section'),
-          plan,
-          mediaId
-        ).then(() => {
-          finishMessage();
-          saveCompleted(toolId);
-        });
-      });
-    } else {
-      finishMessage();
-      saveCompleted(toolId);
+    saveCompleted(toolId);
+    if (importList) {
+      setImportList(undefined);
+      setUploadVisible(false);
+      setResetMedia(true);
     }
   };
-  const getPlanId = () => remoteIdNum('plan', plan, memory.keyMap) || plan;
-  const getArtifactTypeId = () =>
-    remoteIdNum('artifacttype', recordTypeId, memory.keyMap) || recordTypeId;
-  const getPassageId = () =>
-    remoteIdNum('passage', passage.id, memory.keyMap) || passage.id;
-  const uploadMedia = async (files: File[]) => {
-    uploadFiles(files);
-    fileList.current = files;
-    const mediaFile = {
-      planId: getPlanId(),
-      passageId: getPassageId(),
-      versionNumber: 1,
-      originalFile: files[0].name,
-      contentType: files[0].type,
-      artifactTypeId: getArtifactTypeId(),
-      performedBy: speaker,
-    } as any;
-    nextUpload(mediaFile, files, 0, auth, offline, reporter, itemComplete);
+
+  const handleUploadVisible = (v: boolean) => {
+    setUploadVisible(v);
   };
+  const handleUpload = () => {
+    if (canSave) {
+      showMessage(t.saveFirst);
+      return;
+    }
+    setImportList(undefined);
+    setUploadVisible(true);
+  };
+  //from recorder...send it on to uploader
+  const uploadMedia = async (files: File[]) => {
+    setImportList(files);
+    setUploadVisible(true);
+  };
+
   const handleSetCanSave = (valid: boolean) => {
     if (valid !== canSave) {
       setCanSave(valid);
@@ -359,10 +316,10 @@ export function PassageDetailCommunity(props: IProps) {
   };
   const handleSelect = (id: string) => {
     setPlayItem(id);
-    setPlaying(false);
+    setItemPlaying(false);
   };
   const handleEnded = () => {
-    setPlaying(false);
+    setItemPlaying(false);
   };
 
   const handleDelete = (id: string) => () => {
@@ -393,6 +350,11 @@ export function PassageDetailCommunity(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [playItem]
   );
+  const onRecordingOrPlaying = (doingsomething: boolean) => {
+    if (doingsomething) {
+      setPlaying(false); //stop the vernacular
+    }
+  };
 
   if (view)
     return <StickyRedirect to={`${view}/${recordType}/${playItemId}`} />;
@@ -400,7 +362,7 @@ export function PassageDetailCommunity(props: IProps) {
   return (
     <div>
       <Paper className={classes.paper}>
-        <>
+        <div>
           <Wrapper>
             <SplitPane
               defaultSize={width - discussionSize}
@@ -417,10 +379,30 @@ export function PassageDetailCommunity(props: IProps) {
                   onChange={handleHorizonalSplitSize}
                 >
                   <Pane className={classes.pane}>
-                    <PassageDetailPlayer />
+                    <PassageDetailPlayer
+                      allowSegment={true}
+                      saveSegments={false} //todo
+                    />
                   </Pane>
                   <Pane className={classes.pane}>
                     <Paper className={classes.paper}>
+                      <div className={classes.row}>
+                        <Button
+                          className={classes.button}
+                          id="pdRecordUpload"
+                          onClick={handleUpload}
+                          title={
+                            !offlineOnly
+                              ? ts.uploadMediaSingular
+                              : ts.importMediaSingular
+                          }
+                        >
+                          <AddIcon />
+                          {!offlineOnly
+                            ? ts.uploadMediaSingular
+                            : ts.importMediaSingular}
+                        </Button>
+                      </div>
                       <div className={classes.row}>
                         <Typography className={classes.status}>
                           {t.record}
@@ -436,6 +418,7 @@ export function PassageDetailCommunity(props: IProps) {
                           >
                             {slugs.map((s) => (
                               <FormControlLabel
+                                key={s}
                                 id={s}
                                 value={s}
                                 control={<Radio />}
@@ -447,7 +430,14 @@ export function PassageDetailCommunity(props: IProps) {
                         <div className={classes.grow}>{'\u00A0'}</div>
                         <TextField
                           className={classes.formControl}
-                          id="filename"
+                          id="segment"
+                          label={t.segment}
+                          value={currentSegment}
+                          fullWidth={true}
+                        />
+                        <TextField
+                          className={classes.formControl}
+                          id="speaker"
                           label={t.speaker}
                           value={speaker}
                           onChange={handleChangeSpeaker}
@@ -463,7 +453,10 @@ export function PassageDetailCommunity(props: IProps) {
                         setCanSave={handleSetCanSave}
                         setStatusText={setStatusText}
                         doReset={resetMedia}
+                        setDoReset={setResetMedia}
                         size={200}
+                        onRecording={onRecordingOrPlaying}
+                        onPlayStatus={onRecordingOrPlaying}
                       />
                       <div className={classes.row}>
                         <Typography
@@ -499,7 +492,7 @@ export function PassageDetailCommunity(props: IProps) {
                             <MediaPlayer
                               auth={auth}
                               srcMediaId={playItem}
-                              requestPlay={playing}
+                              requestPlay={itemPlaying}
                               onEnded={handleEnded}
                               controls={true}
                             />
@@ -531,21 +524,37 @@ export function PassageDetailCommunity(props: IProps) {
               </Pane>
             </SplitPane>
           </Wrapper>
-        </>
-        {confirm && (
-          <Confirm
-            text={t.deleteItem}
-            yesResponse={handleDeleteConfirmed}
-            noResponse={handleDeleteRefused}
-          />
-        )}
+          {confirm && (
+            <Confirm
+              text={t.deleteItem}
+              yesResponse={handleDeleteConfirmed}
+              noResponse={handleDeleteRefused}
+            />
+          )}
+        </div>
       </Paper>
+      <Uploader
+        noBusy={true}
+        recordAudio={false}
+        auth={auth}
+        importList={importList}
+        isOpen={uploadVisible}
+        onOpen={handleUploadVisible}
+        showMessage={showMessage}
+        multiple={false}
+        finish={afterUpload}
+        cancelled={cancelled}
+        passageId={passage.id}
+        sourceSegments={JSON.stringify(getCurrentSegment())}
+        sourceMediaId={mediafileId}
+        artifactTypeId={recordTypeId}
+        performedBy={speaker}
+      />
     </div>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  uploadError: state.upload.errmsg,
   t: localStrings(state, { layout: 'community' }),
   ts: localStrings(state, { layout: 'shared' }),
 });

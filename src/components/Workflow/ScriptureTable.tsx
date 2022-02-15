@@ -922,7 +922,6 @@ export function ScriptureTable(props: IProps) {
         isOpen={uploadVisible}
         onOpen={handleUploadVisible}
         showMessage={showMessage}
-        setComplete={setComplete}
         multiple={false}
         finish={afterUpload}
         cancelled={cancelled}

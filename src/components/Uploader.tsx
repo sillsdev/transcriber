@@ -41,6 +41,7 @@ interface IDispatchProps {
 }
 
 interface IProps extends IStateProps, IDispatchProps {
+  noBusy?: boolean;
   auth: Auth;
   recordAudio: boolean;
   allowWave?: boolean;
@@ -48,7 +49,6 @@ interface IProps extends IStateProps, IDispatchProps {
   isOpen: boolean;
   onOpen: (visible: boolean) => void;
   showMessage: (msg: string | JSX.Element) => void;
-  setComplete: (amount: number) => void; // 0 to 100
   finish?: (planId: string, mediaRemoteIds?: string[]) => void; // logic when upload complete
   metaData?: JSX.Element; // component embeded in dialog
   ready?: () => boolean; // if false control is disabled
@@ -57,12 +57,16 @@ interface IProps extends IStateProps, IDispatchProps {
   multiple?: boolean;
   mediaId?: string;
   importList?: File[];
-  artifactTypeId?: string; //id
+  artifactTypeId?: string;
   passageId?: string;
+  sourceMediaId?: string;
+  sourceSegments?: string;
+  performedBy?: string;
 }
 
 export const Uploader = (props: IProps) => {
   const {
+    noBusy,
     auth,
     mediaId,
     recordAudio,
@@ -77,10 +81,13 @@ export const Uploader = (props: IProps) => {
     importList,
     artifactTypeId,
     passageId,
+    sourceMediaId,
+    sourceSegments,
+    performedBy,
   } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
-  const { uploadComplete, setComplete, finish, doOrbitError } = props;
+  const { uploadComplete, finish, doOrbitError } = props;
   const { uploadFiles } = props;
   const { metaData, ready } = props;
   const { createProject } = props;
@@ -99,6 +106,7 @@ export const Uploader = (props: IProps) => {
   const mediaIdRef = useRef<string[]>([]);
   const artifactTypeRef = useRef<string>('');
   const { createMedia } = useOfflnMediafileCreate(doOrbitError);
+  const [, setComplete] = useGlobal('progress');
 
   const finishMessage = () => {
     setTimeout(() => {
@@ -121,6 +129,9 @@ export const Uploader = (props: IProps) => {
     artifactTypeId;
   const getPassageId = () =>
     remoteIdNum('passage', passageId || '', memory.keyMap) || passageId;
+  const getSourceMediaId = () =>
+    remoteIdNum('mediafile', sourceMediaId || '', memory.keyMap) ||
+    sourceMediaId;
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     if (success) successCount.current += 1;
@@ -145,7 +156,8 @@ export const Uploader = (props: IProps) => {
         num,
         uploadList[n].size,
         psgId,
-        artifactTypeId || '' //does this need to be getArtifactType?
+        artifactTypeId || '',
+        sourceMediaId || ''
       );
       mediaIdRef.current.push(newMediaRec.id);
     }
@@ -175,6 +187,9 @@ export const Uploader = (props: IProps) => {
       contentType: uploadList[currentlyLoading].type,
       artifactTypeId: getArtifactTypeId(),
       passageId: getPassageId(),
+      sourceMediaId: getSourceMediaId(),
+      sourceSegments: sourceSegments,
+      performedBy: performedBy,
     } as any;
 
     nextUpload(
@@ -194,7 +209,7 @@ export const Uploader = (props: IProps) => {
       showMessage(t.selectFiles);
       return;
     }
-    setBusy(true);
+    if (!noBusy) setBusy(true);
     if (createProject) planIdRef.current = await createProject(files);
     uploadFiles(files);
     fileList.current = files;

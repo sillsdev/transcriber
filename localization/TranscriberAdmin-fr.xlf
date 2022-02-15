@@ -745,41 +745,48 @@
    			<target/>
    		</segment>
    	</unit>
-   	<trans-unit id="community.playTest">
-   		<source>Play Test</source>
-   		<target/>
-   		<context-group>
-   			<context context-type="sourcefile">Community.tsx</context>
-   		</context-group>
-   	</trans-unit>
-   	<trans-unit id="community.record">
-   		<source>Record</source>
-   		<target/>
-   		<context-group>
-   			<context context-type="sourcefile">Community.tsx</context>
-   		</context-group>
-   	</trans-unit>
-   	<trans-unit id="community.speaker">
-   		<source>Speaker</source>
-   		<target/>
-   		<context-group>
-   			<context context-type="sourcefile">Community.tsx</context>
-   		</context-group>
-   	</trans-unit>
-   	<trans-unit id="community.unsaved">
-   		<source>Unsaved</source>
-   		<target/>
-   		<context-group>
-   			<context context-type="sourcefile">Community.tsx</context>
-   		</context-group>
-   	</trans-unit>
-   	<trans-unit id="community.uploadComplete">
-   		<source>{0} of {1} files uploaded successfully.</source>
-   		<target/>
-   		<context-group>
-   			<context context-type="sourcefile">Community.tsx</context>
-   		</context-group>
-   	</trans-unit>
+   	<unit id="community.playTest">
+   		<segment>
+   			<source>Play Test</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="community.record">
+   		<segment>
+   			<source>Record</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="community.saveFirst">
+   		<segment>
+   			<source>Save or Clear your recording before uploading.</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="community.segment">
+   		<segment>
+   			<source>Segment</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="community.speaker">
+   		<segment>
+   			<source>Speaker</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="community.unsaved">
+   		<segment>
+   			<source>Unsaved</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="community.uploadComplete">
+   		<segment>
+   			<source>{0} of {1} files uploaded successfully.</source>
+   			<target/>
+   		</segment>
+   	</unit>
       <unit id="control.other">
          <segment>
             <source>General Transcription</source>
@@ -2706,12 +2713,6 @@
             <target>Version</target>
          </segment>
       </unit>
-      <unit id="shared.versionHistory">
-         <segment>
-            <source>Version History</source>
-            <target>Historique des versions</target>
-         </segment>
-      </unit>
       <unit id="mediaTab.viewAssociations">
          <segment>
             <source>View Associations</source>
@@ -3570,6 +3571,48 @@
             <target>Titre</target>
          </segment>
       </unit>
+   	<unit id="selectRecording.artifactType">
+   		<segment>
+   			<source>Type</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="selectRecording.created">
+   		<segment>
+   			<source>Created</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="selectRecording.filename">
+   		<segment>
+   			<source>File Name</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="selectRecording.playItem">
+   		<segment>
+   			<source>Play Item</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="selectRecording.sourceSegment">
+   		<segment>
+   			<source>Source Segment</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="selectRecording.sourceVersion">
+   		<segment>
+   			<source>Source Version</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="selectRecording.speaker">
+   		<segment>
+   			<source>Speaker</source>
+   			<target/>
+   		</segment>
+   	</unit>
       <unit id="shared.admin">
          <segment>
             <source>Admin</source>
@@ -3736,6 +3779,12 @@
          <segment>
             <source>Upload Audio</source>
             <target>Télécharger de audio</target>
+         </segment>
+      </unit>
+      <unit id="shared.versionHistory">
+         <segment>
+            <source>Version History</source>
+            <target>Historique des versions</target>
          </segment>
       </unit>
       <unit id="shared.yes">
@@ -5130,6 +5179,12 @@
             <target>Reprendre</target>
          </segment>
       </unit>
+   	<unit id="wsAudioPlayer.saveSegments">
+   		<segment>
+   			<source>Save Segments</source>
+   			<target>Sauvegarder les segments</target>
+   		</segment>
+   	</unit>
       <unit id="wsAudioPlayer.seconds">
          <segment>
             <source>seconds</source>
