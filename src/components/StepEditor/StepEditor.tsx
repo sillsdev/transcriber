@@ -15,7 +15,7 @@ import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { CheckedChoice as ShowAll } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
 import { toCamel } from '../../utils';
-import { getTool, related, ToolSlug } from '../../crud';
+import { getTool, ToolSlug } from '../../crud';
 import { AddRecord } from '../../model/baseModel';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -60,52 +60,90 @@ export const StepEditor = ({ process, org }: IProps) => {
   const { toolChanged, toolsChanged, saveRequested, saveCompleted } =
     useContext(UnsavedContext).state;
   const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
-  const [refresh, setRefresh] = useState(0);
   const { showMessage } = useSnackBar();
-  const changeList = useRef(new Set<string>());
-  const adding = useRef(false);
   const saving = useRef(false);
   const toolId = 'stepEditor';
-  const handleSortEnd = ({ oldIndex, newIndex }: SortEndProps) => {
-    const newRows = arrayMove(rows, oldIndex, newIndex);
-    newRows
-      .filter((r) => r.seq >= 0)
-      .forEach((r, i) => {
-        if (r.seq !== i) {
-          const recId = { type: 'orgworkflowstep', id: r.id };
-          memory.update((t: TransformBuilder) =>
-            t.replaceAttribute(recId, 'sequencenum', i)
-          );
-        }
-      });
-    setRows(newRows);
-  };
 
-  const handleNameChange = async (id: string, name: string) => {
-    setRows(rows.map((r) => (r.id === id ? { ...r, name } : r)));
-    toolChanged(toolId, true);
-    changeList.current.add(id);
-  };
+  const mxSeq = useMemo(() => {
+    let max = 0;
+    rows.forEach((r) => {
+      max = Math.max(r.seq, max);
+    });
+    return max;
+  }, [rows]);
+
+  const visible = useMemo(() => {
+    return rows.filter((r) => r.seq >= 0).length;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows]);
+
+  const hidden = useMemo(() => {
+    return rows.filter((r) => r.seq < 0).length;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows]);
+
+  const hiddenMessage = useMemo(
+    () => se.stepsHidden.replace('{0}', hidden.toString()),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [hidden]
+  );
 
   const getOrgNames = (exceptId?: string) => {
-    const names = (
-      memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('orgworkflowstep')
-      ) as OrgWorkflowStep[]
-    )
-      .filter((r) => related(r, 'organization') === org && r.id !== exceptId)
-      .map((r) => r.attributes?.name);
-    return names;
+    return rows.filter((r) => r.id !== exceptId).map((r) => r.name);
   };
 
-  const mangleName = (name: string, orgNames: string[]) => {
+  const mangleName = (name: string, orgNames: string[], index?: number) => {
     const baseName = name;
     let count = 1;
-    while (orgNames.indexOf(name) >= 0) {
+    while (true) {
+      const i = orgNames.indexOf(name);
+      if (i < 0 || i === index) break;
       count += 1;
       name = `${baseName} ${count}`;
     }
     return name;
+  };
+
+  const handleSortEnd = ({ oldIndex, newIndex }: SortEndProps) => {
+    setRows(arrayMove(rows, oldIndex, newIndex));
+  };
+
+  const handleNameChange = async (name: string, index: number) => {
+    setRows(rows.map((r, i) => (i === index ? { ...r, name } : r)));
+    toolChanged(toolId, true);
+  };
+
+  const handleToolChange = async (tool: string, index: number) => {
+    setRows(rows.map((r, i) => (i === index ? { ...r, tool } : r)));
+    toolChanged(toolId, true);
+  };
+
+  const handleHide = async (index: number) => {
+    if (visible === 1) {
+      showMessage(se.lastStep);
+      return;
+    }
+    setRows(rows.map((r, i) => (i === index ? { ...r, seq: -1 } : r)));
+    showMessage(se.oneHidden);
+    toolChanged(toolId, true);
+  };
+
+  const handleVisible = async (index: number) => {
+    setRows(rows.map((r, i) => (i === index ? { ...r, seq: mxSeq + 1 } : r)));
+    showMessage(se.oneVisible);
+    toolChanged(toolId, true);
+  };
+
+  const handleShow = () => {
+    setShowALl(!showAll);
+  };
+
+  const handleAdd = async () => {
+    let name = mangleName(se.nextStep, getOrgNames());
+    const tool = ToolSlug.Discuss;
+    setRows([...rows, { id: '', name, tool, seq: mxSeq + 1 }]);
+    showMessage(se.stepAdded);
+    toolChanged(toolId, true);
   };
 
   const saveRecs = async () => {
@@ -113,26 +151,72 @@ export const StepEditor = ({ process, org }: IProps) => {
     saving.current = true;
     showMessage(se.saving);
     let orgNames = new Set<string>();
-    for (const id of Array.from(changeList.current)) {
-      const row = rows.find((r) => r.id === id);
-      const recId = { type: 'orgworkflowstep', id };
-      const rec = memory.cache.query((q: QueryBuilder) =>
-        q.findRecord(recId)
-      ) as OrgWorkflowStep | undefined;
-      if (rec && row) {
-        const recName = rec.attributes?.name;
-        if (recName !== row.name) {
-          const name = mangleName(
-            row.name,
-            getOrgNames(id).concat(Array.from(orgNames))
-          );
-          await memory.update((t: TransformBuilder) =>
-            t.replaceAttribute(recId, 'name', name)
-          );
-          orgNames.add(name);
+    let count = 0;
+    for (let ix = 0; ix < rows.length; ix += 1) {
+      const row = rows[ix];
+      const id = row.id;
+      if (id) {
+        const recId = { type: 'orgworkflowstep', id };
+        const rec = memory.cache.query((q: QueryBuilder) =>
+          q.findRecord(recId)
+        ) as OrgWorkflowStep | undefined;
+        if (rec) {
+          let name = rec.attributes?.name;
+          if (name !== row.name) {
+            name = mangleName(
+              row.name,
+              getOrgNames(id).concat(Array.from(orgNames))
+            );
+            orgNames.add(name);
+          }
+          const tool = JSON.stringify({ tool: row.tool });
+          if (
+            name !== row.name ||
+            rec.attributes?.sequencenum !== row.seq ||
+            tool !== rec.attributes?.tool
+          ) {
+            await memory.update((t: TransformBuilder) =>
+              t.updateRecord({
+                ...rec,
+                attributes: {
+                  ...rec.attributes,
+                  name,
+                  sequencenum: row.seq,
+                  tool: JSON.stringify({ tool: row.tool }),
+                },
+              })
+            );
+            count += 1;
+          }
         }
+      } else {
+        const name = mangleName(
+          row.name,
+          getOrgNames().concat(Array.from(orgNames)),
+          ix
+        );
+        const tool = row.tool;
+        const rec = {
+          type: 'orgworkflowstep',
+          attributes: {
+            sequencenum: row.seq,
+            name,
+            process: process || 'OBT',
+            tool: JSON.stringify({ tool }),
+            permissions: '{}',
+          },
+        } as OrgWorkflowStep;
+        if (org) {
+          const orgRec = { type: 'organization', id: org };
+          await memory.update((t: TransformBuilder) => [
+            ...AddRecord(t, rec, user, memory),
+            t.replaceRelatedRecord(rec, 'organization', orgRec),
+          ]);
+        }
+        count += 1;
       }
     }
+    showMessage('{0} changes'.replace('{0}', count.toString()));
     saving.current = false;
   };
 
@@ -141,88 +225,9 @@ export const StepEditor = ({ process, org }: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
-  const handleToolChange = async (id: string, tool: string) => {
-    const recId = { type: 'orgworkflowstep', id };
-    await memory.update((t: TransformBuilder) =>
-      t.replaceAttribute(recId, 'tool', JSON.stringify({ tool }))
-    );
-    setRefresh(refresh + 1);
-  };
-
-  const visible = useMemo(() => {
-    const recs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('orgworkflowstep')
-    ) as OrgWorkflowStep[];
-    return recs.filter(
-      (r) => related(r, 'organization') === org && r.attributes.sequencenum >= 0
-    ).length;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [org, refresh]);
-
-  const handleHide = async (id: string) => {
-    if (visible === 1) {
-      showMessage(se.lastStep);
-      return;
-    }
-    const recId = { type: 'orgworkflowstep', id };
-    await memory.update((t: TransformBuilder) =>
-      t.replaceAttribute(recId, 'sequencenum', -1)
-    );
-    showMessage(se.oneHidden);
-    setRefresh(refresh + 1);
-  };
-
-  const handleVisible = async (id: string) => {
-    const recId = { type: 'orgworkflowstep', id };
-    await memory.update((t: TransformBuilder) =>
-      t.replaceAttribute(recId, 'sequencenum', rows.length)
-    );
-    showMessage(se.oneVisible);
-    setRefresh(refresh + 1);
-  };
-
-  const handleAdd = async () => {
-    let name = mangleName(se.nextStep, getOrgNames());
-    if (adding.current) {
-      showMessage(se.inProgress);
-      return;
-    }
-    adding.current = true;
-    const tool = ToolSlug.Discuss;
-    let mxSeq = 0;
-    rows.forEach((r) => {
-      mxSeq = Math.max(r.seq, mxSeq);
-    });
-    const rec = {
-      type: 'orgworkflowstep',
-      attributes: {
-        sequencenum: mxSeq + 1,
-        name,
-        process: process || 'OBT',
-        tool: JSON.stringify({ tool }),
-        permissions: '{}',
-      },
-    } as OrgWorkflowStep;
-    if (org) {
-      const orgRec = { type: 'organization', id: org };
-      await memory.update((t: TransformBuilder) => [
-        ...AddRecord(t, rec, user, memory),
-        t.replaceRelatedRecord(rec, 'organization', orgRec),
-      ]);
-    }
-    showMessage(se.stepAdded);
-    adding.current = false;
-    setRefresh(refresh + 1);
-  };
-
   const localName = (name: string) => {
     const lookUp = toCamel(name);
     return t.hasOwnProperty(lookUp) ? t.getString(lookUp) : name;
-  };
-
-  const handleShow = () => {
-    setShowALl(!showAll);
-    setRefresh(refresh + 1);
   };
 
   useEffect(() => {
@@ -239,32 +244,12 @@ export const StepEditor = ({ process, org }: IProps) => {
       setRows(newRows.sort((i, j) => i.seq - j.seq));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh]);
-
-  const hidden = useMemo(() => {
-    const recs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('orgworkflowstep')
-    ) as OrgWorkflowStep[];
-    return recs.filter(
-      (r) => related(r, 'organization') === org && r.attributes.sequencenum < 0
-    ).length;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [org, refresh]);
-
-  const hiddenMessage = useMemo(
-    () => se.stepsHidden.replace('{0}', hidden.toString()),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [hidden]
-  );
+  }, []);
 
   return (
     <div>
       <div className={classes.row}>
-        <Button
-          onClick={handleAdd}
-          variant="contained"
-          disabled={adding.current}
-        >
+        <Button onClick={handleAdd} variant="contained">
           {se.add}
         </Button>
         <div title={hiddenMessage}>
@@ -277,17 +262,20 @@ export const StepEditor = ({ process, org }: IProps) => {
         </div>
       </div>
       <StepList onSortEnd={handleSortEnd} useDragHandle>
-        {rows.map((value, index) => (
-          <StepItem
-            key={index}
-            index={index}
-            value={value}
-            onNameChange={handleNameChange}
-            onToolChange={handleToolChange}
-            onDelete={handleHide}
-            onRestore={handleVisible}
-          />
-        ))}
+        {rows
+          .map((r, i) => ({ r, i }))
+          .filter(({ r }) => r.seq >= 0 || showAll)
+          .map(({ r, i }) => (
+            <StepItem
+              key={`si-${i}`}
+              index={i}
+              value={{ r, i }}
+              onNameChange={handleNameChange}
+              onToolChange={handleToolChange}
+              onDelete={handleHide}
+              onRestore={handleVisible}
+            />
+          ))}
       </StepList>
     </div>
   );

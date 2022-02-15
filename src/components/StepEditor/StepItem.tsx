@@ -14,11 +14,12 @@ const useStyles = makeStyles({
 });
 
 interface IProps {
-  value: IStepRow;
-  onNameChange: (id: string, name: string) => void;
-  onToolChange: (id: string, tool: string) => void;
-  onDelete: (id: string) => void;
-  onRestore: (id: string) => void;
+  value: { r: IStepRow; i: number };
+  index: number;
+  onNameChange: (name: string, index: number) => void;
+  onToolChange: (tool: string, index: number) => void;
+  onDelete: (index: number) => void;
+  onRestore: (index: number) => void;
 }
 
 export const StepItem = SortableElement(
@@ -30,30 +31,30 @@ export const StepItem = SortableElement(
     );
 
     const handleNameChange = (name: string) => {
-      onNameChange(value.id, name);
+      onNameChange(name, value.i);
     };
     const handleToolChange = (tool: string) => {
-      onToolChange(value.id, tool);
+      onToolChange(tool, value.i);
     };
     const handleDeleteOrRestore = () => {
-      if (value.seq >= 0) onDelete(value.id);
-      else onRestore(value.id);
+      if (value.r.seq >= 0) onDelete(value.i);
+      else onRestore(value.i);
     };
 
     return (
       <ListItem>
         <DragHandle />
         <span className={classes.step}>
-          <StepName name={value.name} onChange={handleNameChange} />
+          <StepName name={value.r.name} onChange={handleNameChange} />
         </span>
         <span className={classes.tool}>
-          <ToolChoice tool={value.tool} onChange={handleToolChange} />
+          <ToolChoice tool={value.r.tool} onChange={handleToolChange} />
         </span>
         <IconButton
           onClick={handleDeleteOrRestore}
-          title={value.seq >= 0 ? se.hide : se.show}
+          title={value.r.seq >= 0 ? se.hide : se.show}
         >
-          {value.seq < 0 ? <HideIcon /> : <ShowIcon />}
+          {value.r.seq < 0 ? <HideIcon /> : <ShowIcon />}
         </IconButton>
       </ListItem>
     );
