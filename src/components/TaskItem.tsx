@@ -113,13 +113,19 @@ export function TaskItem(props: IProps) {
           disableTypography
           primary={
             <div>
-              <Typography>{passageReference(passage, allBookData)}</Typography>
-              <ItemDescription
-                mediafile={
-                  related(mediafile, 'artifactType') ? mediafile : undefined
-                }
-                col={true}
-              />
+              <div className={classes.row}>
+                <Typography>
+                  {passageReference(passage, allBookData)}
+                </Typography>
+                <div className={classes.grow}> </div>
+                {'\u00A0'}
+                {'{1}.{2}'
+                  .replace('{1}', sectionNumber(section))
+                  .replace('{2}', passageNumber(passage).trim())}
+              </div>
+              {related(mediafile, 'artifactType') && (
+                <ItemDescription mediafile={mediafile} col={true} />
+              )}
             </div>
           }
           secondary={
@@ -136,17 +142,6 @@ export function TaskItem(props: IProps) {
             </div>
           }
         />
-        <ListItemSecondaryAction>
-          <div className={classes.detail}>
-            {!flat && (
-              <div className={classes.detailAlign}>
-                {'{1}.{2}'
-                  .replace('{1}', sectionNumber(section))
-                  .replace('{2}', passageNumber(passage).trim())}
-              </div>
-            )}
-          </div>
-        </ListItemSecondaryAction>
       </ListItem>
       {/* <Divider variant="inset" component="li" /> */}
     </List>
