@@ -41,7 +41,7 @@ import {
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
-import { loadBlob, logError, Severity, toCamel } from '../utils';
+import { loadBlob, logError, prettySegment, Severity, toCamel } from '../utils';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
@@ -181,7 +181,6 @@ const initState = {
   setCurrentSegment: (segment: IRegion | undefined, index: number) => {}, //replace the above two
   setupLocate: (cb?: (segments: string) => void) => {},
   getCurrentSegment: () => undefined as IRegion | undefined,
-  prettySegment: (region: IRegion | string) => '',
   setPlayerSegments: (segments: string) => {},
   commentRecording: false,
   setCommentRecording: (commentRecording: boolean) => {},
@@ -536,17 +535,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       if (segmentsCb.current) segmentsCb.current(segments);
     };
 
-    const onePlace = (n: number) => (Math.round(n * 10) / 10).toFixed(1);
-
-    const prettySegment = (region: IRegion | undefined | string) => {
-      var rgn: IRegion | undefined = undefined;
-      if (typeof region === 'string') {
-        if (region) rgn = JSON.parse(region) as IRegion;
-      } else rgn = region;
-      if (rgn) return `${onePlace(rgn.start)}-${onePlace(rgn.end)} `;
-      return '';
-    };
-
     const getCurrentSegment = () => {
       return currentSegmentRef.current;
     };
@@ -760,7 +748,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             refresh,
             setCurrentSegment,
             getCurrentSegment,
-            prettySegment,
             setPlayerSegments,
             setupLocate,
             stepComplete,

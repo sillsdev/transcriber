@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import useTodo from '../context/useTodo';
 import TaskFlag from './TaskFlag';
-import { Duration } from '../control';
+import { Duration, ItemDescription } from '../control';
 import {
   related,
   sectionNumber,
@@ -21,12 +21,17 @@ import { NextAction } from './TaskFlag';
 import TaskAvatar from './TaskAvatar';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { TaskItemWidth } from './TaskTable';
+import { ActivityStates } from '../model';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
       minWidth: `${TaskItemWidth}px`,
+    },
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
     },
     detail: {
       display: 'flex',
@@ -38,6 +43,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     listAvatar: {
       minWidth: theme.spacing(4),
+    },
+    grow: {
+      flexGrow: 1,
     },
   })
 );
@@ -66,8 +74,7 @@ export function TaskItem(props: IProps) {
 
   // TT-1749 during refresh the index went out of range.
   if (props.item >= rowData.length) return <></>;
-  const { mediafile, passage, section, duration, fileDescription } =
-    rowData[props.item];
+  const { mediafile, passage, section, duration } = rowData[props.item];
 
   const handleSelect = (select: string) => () => {
     //if we're all done, we can't need to save
@@ -85,7 +92,7 @@ export function TaskItem(props: IProps) {
   if (attr) {
     const next = NextAction({
       ta: activityStateStr,
-      state: attr.transcriptionstate,
+      state: attr.transcriptionstate || ActivityStates.TranscribeReady,
     });
     if (next === activityStateStr.transcribe)
       assigned = related(section, 'transcriber');
@@ -105,20 +112,32 @@ export function TaskItem(props: IProps) {
         <ListItemText
           disableTypography
           primary={
-            <>
+            <div>
               <Typography>{passageReference(passage, allBookData)}</Typography>
-              <Typography>{fileDescription}</Typography>
-            </>
+              <ItemDescription
+                mediafile={
+                  related(mediafile, 'artifactType') ? mediafile : undefined
+                }
+                col={true}
+              />
+            </div>
           }
           secondary={
-            <TaskFlag ta={activityStateStr} state={attr?.transcriptionstate} />
+            <div className={classes.row}>
+              <TaskFlag
+                ta={activityStateStr}
+                state={
+                  attr?.transcriptionstate || ActivityStates.TranscribeReady
+                }
+              />
+              <div className={classes.grow}> </div>
+              {'\u00A0'}
+              <Duration seconds={duration} />
+            </div>
           }
         />
         <ListItemSecondaryAction>
           <div className={classes.detail}>
-            <div className={classes.detailAlign}>
-              <Duration seconds={duration} />
-            </div>
             {!flat && (
               <div className={classes.detailAlign}>
                 {'{1}.{2}'

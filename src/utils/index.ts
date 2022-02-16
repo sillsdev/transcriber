@@ -55,3 +55,4 @@ export * from './useInterval';
 export * from './generateUUID';
 export * from './isProcessRunning';
 export * from './useDebounce';
+export * from './prettySegment';
