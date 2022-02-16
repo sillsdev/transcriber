@@ -240,7 +240,7 @@ export function PassageDetailItem(props: IProps) {
     if (mediafileId !== mediaState.urlMediaId)
       fetchMediaUrl({ id: mediafileId, auth });
     var mediaRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
-    setCurrentVersion(mediaRec.attributes.versionNumber);
+    setCurrentVersion(mediaRec?.attributes?.versionNumber || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafileId]);
 

@@ -607,7 +607,7 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="connected">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {!connected || <CheckIcon />}
+                  <>{!connected || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -618,11 +618,16 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="hasProj" className={classes.listItem}>
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {!hasPtProj || <CheckIcon />}
+                  <>{!hasPtProj || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={formatWithLanguage(t.questionProject)}
+                disableTypography
+                primary={
+                  <Typography>
+                    {formatWithLanguage(t.questionProject)}
+                  </Typography>
+                }
                 secondary={
                   <TextField
                     ref={pRef}
@@ -677,7 +682,7 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="hasParatext">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {!hasParatext || <CheckIcon />}
+                  <>{!hasParatext || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -697,7 +702,7 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="hasPermission">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {!hasPermission || <CheckIcon />}
+                  <>{!hasPermission || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -714,7 +719,7 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="ready">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {count <= 0 || <CheckIcon />}
+                  <>{count <= 0 || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -772,7 +777,7 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="installed">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {!ptPath || <CheckIcon />}
+                  <>{!ptPath || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -783,11 +788,16 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="hasLocalProj" className={classes.listItem}>
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {!hasPtProj || <CheckIcon />}
+                  <>{!hasPtProj || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={formatWithLanguage(t.questionProject)}
+                disableTypography
+                primary={
+                  <Typography>
+                    {formatWithLanguage(t.questionProject)}
+                  </Typography>
+                }
                 secondary={
                   <TextField
                     ref={pRef}
@@ -840,7 +850,7 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="localReady">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {count <= 0 || <CheckIcon />}
+                  <>{count <= 0 || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText

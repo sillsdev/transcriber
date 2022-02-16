@@ -718,11 +718,12 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           (orgsteps: OrgWorkflowStep[]) => {
             setOrgWorkflowSteps(orgsteps);
             wf = orgsteps.map((s) => {
+              const camelName = toCamel(s.attributes.name);
               return {
                 id: s.id,
-                label:
-                  wfStr.getString(toCamel(s.attributes.name)) ||
-                  s.attributes.name,
+                label: wfStr.hasOwnProperty(camelName)
+                  ? wfStr.getString(camelName)
+                  : s.attributes.name,
               };
             });
             setState((state: ICtxState) => ({ ...state, workflow: wf }));

@@ -58,7 +58,7 @@ export async function restoreBackup() {
     await waitForIt(
       'migration',
       () => {
-        console.log(schema.version, backup.schema.version);
+        // console.log(schema.version, backup.schema.version);
         return schema.version === backup.schema.version;
       },
       () => false,
