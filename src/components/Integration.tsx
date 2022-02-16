@@ -446,7 +446,15 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     resetCount();
     if (plan)
-      getLocalCount(mediafiles, plan, memory, errorReporter, t, vernacularId);
+      getLocalCount(
+        mediafiles,
+        plan,
+        memory,
+        errorReporter,
+        t,
+        vernacularId,
+        true
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafiles, plan]);
 

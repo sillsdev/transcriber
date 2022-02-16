@@ -315,7 +315,7 @@ const schemaDefinition: SchemaSettings = {
         sequencenum: { type: 'number' },
         book: { type: 'string' },
         reference: { type: 'string' },
-        state: { type: 'string' },
+        state: { type: 'string' }, //not used anymore bkwd compat only
         hold: { type: 'boolean' },
         title: { type: 'string' },
         lastComment: { type: 'string' },
