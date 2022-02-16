@@ -32,7 +32,13 @@ import { Link } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useSnackBar } from '../../hoc/SnackBar';
 import PlanSheet, { ICellChange } from './PlanSheet';
-import { remoteIdNum, related, useOrganizedBy, usePlan } from '../../crud';
+import {
+  remoteIdNum,
+  related,
+  useOrganizedBy,
+  usePlan,
+  remoteIdGuid,
+} from '../../crud';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import {
   lookupBook,
@@ -208,7 +214,7 @@ export function ScriptureTable(props: IProps) {
   const [assignSections, setAssignSections] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [recordAudio, setRecordAudio] = useState(true);
-  const [importList, setImportList] = useState<File[]>();
+  const importList = useRef<File[]>();
   const cancelled = useRef(false);
   const uploadItem = useRef<IWorkflow>();
   const [versionItem, setVersionItem] = useState('');
@@ -216,7 +222,7 @@ export function ScriptureTable(props: IProps) {
   const { getPlan } = usePlan();
   const localSave = useWfLocalSave({ setComplete });
   const onlineSave = useWfOnlineSave({ setComplete });
-  const [detachPassage] = useMediaAttach({
+  const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
     doOrbitError,
   });
@@ -644,8 +650,8 @@ export function ScriptureTable(props: IProps) {
 
   const handleAudacityImport = (i: number, list: File[]) => {
     saveIfChanged(() => {
+      importList.current = list;
       showUpload(i, false);
-      setImportList(list);
     });
   };
 
@@ -877,9 +883,26 @@ export function ScriptureTable(props: IProps) {
   if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
+    if (
+      mediaRemoteIds &&
+      mediaRemoteIds.length > 0 &&
+      uploadItem.current !== undefined
+    ) {
+      const passId = uploadItem.current?.passageId?.id || '';
+      await attachPassage(
+        passId,
+        related(
+          passages.find((p) => p.id === passId),
+          'section'
+        ),
+        plan,
+        remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ||
+          mediaRemoteIds[0]
+      );
+    }
     uploadItem.current = undefined;
-    if (importList) {
-      setImportList(undefined);
+    if (importList.current) {
+      importList.current = undefined;
       setUploadVisible(false);
     }
   };
@@ -929,7 +952,7 @@ export function ScriptureTable(props: IProps) {
         defaultFilename={defaultFilename}
         auth={auth}
         mediaId={uploadItem.current?.mediaId?.id || ''}
-        importList={importList}
+        importList={importList.current}
         isOpen={uploadVisible}
         onOpen={handleUploadVisible}
         showMessage={showMessage}

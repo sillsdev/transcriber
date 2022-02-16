@@ -94,7 +94,7 @@ export function PassageDetailRecord(props: IProps) {
   const { showMessage } = useSnackBar();
   const toolId = 'RecordTool';
   const onReady = () => {};
-  const [importList, setImportList] = useState<File[]>();
+  const importList = useRef<File[]>();
   const cancelled = useRef(false);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [audacityVisible, setAudacityVisible] = useState(false);
@@ -128,8 +128,8 @@ export function PassageDetailRecord(props: IProps) {
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     setStatusText('');
-    if (importList) {
-      setImportList(undefined);
+    if (importList.current) {
+      importList.current = undefined;
       setUploadVisible(false);
       setAudacityVisible(false);
     }
@@ -144,13 +144,14 @@ export function PassageDetailRecord(props: IProps) {
 
   //from the on screen recorder...send it off to the uploader
   const uploadMedia = async (files: File[]) => {
-    setImportList(files);
+    importList.current = files;
     setUploadVisible(true);
   };
   const handleAudacityImport = (i: number, list: File[]) => {
+    console.log(`Audacity Import n=${i}`, list);
     saveIfChanged(() => {
       console.log('audacity import', list);
-      setImportList(list);
+      importList.current = list;
       setUploadVisible(true);
     });
   };
@@ -244,7 +245,7 @@ export function PassageDetailRecord(props: IProps) {
         <Uploader
           recordAudio={false}
           auth={auth}
-          importList={importList}
+          importList={importList.current}
           isOpen={uploadVisible}
           onOpen={handleUploadVisible}
           showMessage={showMessage}
