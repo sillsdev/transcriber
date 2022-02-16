@@ -26,6 +26,7 @@ import {
   useOrganizedBy,
   useOfflnProjRead,
   useOfflineAvailToggle,
+  related,
 } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
 import OfflineIcon from '@material-ui/icons/OfflinePin';
@@ -151,7 +152,7 @@ export const ProjectCard = (props: IProps) => {
           setOpenReports(true);
           break;
         case 'offlineAvail':
-          offlineAvailToggle(project.id);
+          offlineAvailToggle(related(project, 'project'));
           break;
       }
     });
