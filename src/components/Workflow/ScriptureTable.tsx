@@ -775,6 +775,7 @@ export function ScriptureTable(props: IProps) {
           setSaving(false);
           setLastSaved(currentDateTime()); //force refresh the workflow
           saveCompleted(toolId);
+          setComplete(100);
         });
       }
     };
