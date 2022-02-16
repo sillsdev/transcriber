@@ -7,7 +7,6 @@ import {
   TableHead,
   TableRow,
   Button,
-  Chip,
 } from '@material-ui/core';
 import BigDialog from '../../hoc/BigDialog';
 import { useContext, useEffect, useState, useMemo } from 'react';
@@ -15,10 +14,11 @@ import { ISelectRecordingStrings, IState, MediaFile } from '../../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { IRow, PassageDetailContext } from '../../context/PassageDetailContext';
 import { findRecord, related, useArtifactType } from '../../crud';
-import { dateOrTime } from '../../utils';
+import { dateOrTime, prettySegment } from '../../utils';
 import { connect } from 'react-redux';
 import { localStrings } from '../../selector';
 import { useGlobal } from 'reactn';
+import { ItemDescription } from '../../control/MediaDescription';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,57 +39,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-const PerformedBy = ({ r }: { r?: IRow }) => {
-  const speaker = r?.mediafile?.attributes?.performedBy;
-  return speaker ? (
-    <span>
-      {speaker}:{'\u00A0'}
-    </span>
-  ) : (
-    <></>
-  );
-};
-
-const Segments = ({ r }: { r?: IRow }) => {
-  const ctx = useContext(PassageDetailContext);
-  const { prettySegment } = ctx.state;
-
-  return (
-    <span>
-      {r?.version && <Chip label={r?.version} size="small" />}
-      {'\u00A0'}
-      {prettySegment(r?.mediafile.attributes?.sourceSegments || '')}
-      {'\u00A0'}
-    </span>
-  );
-};
-
-const Created = ({ r, lang }: { r?: IRow; lang: string }) => {
-  const date = r?.mediafile?.attributes?.dateCreated;
-
-  return date ? <span>({dateOrTime(date, lang)})</span> : <></>;
-};
-
-const ItemDescription = ({ id, lang }: { id: string; lang: string }) => {
-  const ctx = useContext(PassageDetailContext);
-  const { rowData } = ctx.state;
-  const classes = useStyles();
-
-  const r = rowData.find((r) => r.id === id);
-
-  return (
-    <div className={classes.description}>
-      <span>
-        {r?.artifactType}
-        {'\u00A0'}
-      </span>
-      <PerformedBy r={r} />
-      <Segments r={r} />
-      <Created r={r} lang={lang} />
-    </div>
-  );
-};
 
 const RecordingHeader = ({ t }: { t: ISelectRecordingStrings }) => {
   return (
@@ -112,8 +61,6 @@ interface IInfoProps {
 
 const RecordingInfo = (iprops: IInfoProps) => {
   const { row, lang, onClick } = iprops;
-  const ctx = useContext(PassageDetailContext);
-  const { prettySegment } = ctx.state;
   const [memory] = useGlobal('memory');
 
   const nameOnly = (n: string) => {
@@ -193,7 +140,9 @@ export const SelectRecording = (props: IProps) => {
         <Button onClick={handleItem} variant="contained">
           {t.playItem}
         </Button>
-        <ItemDescription id={item} lang={lang} />
+        <ItemDescription
+          mediafile={rowData.find((r) => r.id === item)?.mediafile}
+        />
       </div>
       {chooser && (
         <BigDialog title={'Select Item'} isOpen={chooser} onOpen={setChooser}>

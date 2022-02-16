@@ -102,7 +102,6 @@ export interface IRowData {
   mediafile: MediaFile;
   state: string;
   sectPass: string;
-  fileDescription: string;
   playItem: string;
   duration: number;
   role: string;
@@ -377,7 +376,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                 passage: {} as Passage,
                 state: '',
                 sectPass: secNum + '.',
-                fileDescription: '',
                 mediafile: {} as MediaFile,
                 playItem: '',
                 duration: 0,
@@ -406,7 +404,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                 passage: { ...p },
                 state: curState,
                 sectPass: secNum + '.' + passageNumber(p).trim(),
-                fileDescription: mediaRec.attributes.sourceSegments, //something here to distinguish the files...whatever greg comes up with in Play Item
                 mediafile: mediaRec,
                 playItem,
                 duration: mediaRec.attributes.duration,
