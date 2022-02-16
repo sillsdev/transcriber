@@ -255,8 +255,7 @@ export const doDataChanges = async (
       var p = projectsLoaded[ix];
       var op = getOfflineProject(p);
       if (
-        op?.attributes &&
-        op.attributes.snapshotDate &&
+        op.attributes?.snapshotDate &&
         Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
       ) {
         start = 1;

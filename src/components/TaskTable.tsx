@@ -26,7 +26,6 @@ import {
   passageNumber,
   useOrganizedBy,
   usePlan,
-  useOfflnProjRead,
   useOfflineAvailToggle,
 } from '../crud';
 import { numCompare } from '../utils';
@@ -149,7 +148,6 @@ export function TaskTable(props: IProps) {
   const [user] = useGlobal('user');
   const [width, setWidth] = useState(window.innerWidth);
   const { getPlan, getPlanName } = usePlan();
-  const offlineProjectRead = useOfflnProjRead();
   const offlineAvailableToggle = useOfflineAvailToggle();
   const [planId] = useGlobal('plan');
   const [planName, setPlanName] = useState('');
@@ -230,7 +228,7 @@ export function TaskTable(props: IProps) {
 
   const handleProjectMenu = (what: string) => {
     if (what === 'offlineAvail') {
-      offlineAvailableToggle(offlineProjectRead(projectId));
+      offlineAvailableToggle(projectId);
     } else if (what === 'integration') {
       setOpenIntegration(true);
     } else if (what === 'export') {
