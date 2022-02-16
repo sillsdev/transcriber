@@ -324,6 +324,7 @@ export function DiscussionList(props: IProps) {
               state={filterState}
               action={handleFilterAction}
               cats={catSelect.length}
+              disabled={adding || isMediaMissing()}
             />
             <IconButton
               id="addDiscussion"
