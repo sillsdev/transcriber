@@ -5,7 +5,6 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  ListItemSecondaryAction,
   Typography,
 } from '@material-ui/core';
 import useTodo from '../context/useTodo';
@@ -117,11 +116,15 @@ export function TaskItem(props: IProps) {
                 <Typography>
                   {passageReference(passage, allBookData)}
                 </Typography>
-                <div className={classes.grow}> </div>
-                {'\u00A0'}
-                {'{1}.{2}'
-                  .replace('{1}', sectionNumber(section))
-                  .replace('{2}', passageNumber(passage).trim())}
+                {!flat && (
+                  <>
+                    <div className={classes.grow}> </div>
+                    {'\u00A0'}
+                    {'{1}.{2}'
+                      .replace('{1}', sectionNumber(section))
+                      .replace('{2}', passageNumber(passage).trim())}
+                  </>
+                )}
               </div>
               {related(mediafile, 'artifactType') && (
                 <ItemDescription mediafile={mediafile} col={true} />
