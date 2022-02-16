@@ -73,10 +73,11 @@ interface IProps extends IStateProps {
   action?: (what: string) => void;
   cats: number;
   stopPlayer?: () => void;
+  disabled?: boolean;
 }
 
 export function FilterMenu(props: IProps) {
-  const { action, cats, t, stopPlayer } = props;
+  const { action, cats, t, stopPlayer, disabled } = props;
   const { forYou, resolved, latestVersion, allPassages, allSteps } =
     props.state;
   const classes = useStyles();
@@ -103,6 +104,7 @@ export function FilterMenu(props: IProps) {
         aria-haspopup="true"
         className={classes.icon}
         onClick={handleClick}
+        disabled={disabled}
       >
         <FilterIcon />
       </IconButton>
