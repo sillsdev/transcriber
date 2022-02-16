@@ -10,7 +10,7 @@ import { StepEditor } from '../StepEditor';
 import GroupTabs from '../GroupTabs';
 import { ProjectCard, AddCard } from '.';
 import TeamDialog from './TeamDialog';
-import { useRole, useAllUserGroup } from '../../crud';
+import { useRole, useAllUserGroup, defaultWorkflow } from '../../crud';
 import Confirm from '../AlertDialog';
 import { UnsavedContext } from '../../context/UnsavedContext';
 
@@ -177,7 +177,7 @@ export const TeamItem = (props: IProps) => {
         isOpen={showWorkflow}
         onOpen={handleWorkflow}
       >
-        <StepEditor process={'OBT'} org={team.id} />
+        <StepEditor process={defaultWorkflow} org={team.id} />
       </BigDialog>
       {deleteItem && (
         <Confirm

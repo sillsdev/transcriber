@@ -15,7 +15,7 @@ import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { CheckedChoice as ShowAll } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
 import { toCamel } from '../../utils';
-import { getTool, ToolSlug } from '../../crud';
+import { getTool, ToolSlug, defaultWorkflow } from '../../crud';
 import { AddRecord } from '../../model/baseModel';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -209,7 +209,7 @@ export const StepEditor = ({ process, org }: IProps) => {
           attributes: {
             sequencenum: row.seq,
             name,
-            process: process || 'OBT',
+            process: process || defaultWorkflow,
             tool: JSON.stringify({ tool }),
             permissions: '{}',
           },

@@ -24,7 +24,6 @@ const s1: Section = {
   attributes: {
     sequencenum: 1,
     name: 'Intro',
-    state: 'transcribeReady',
     dateCreated: '2021-09-14',
     dateUpdated: '2021-09-15',
     lastModifiedBy: 1,
@@ -52,6 +51,7 @@ const pa1: Passage = {
     dateCreated: '2021-09-14',
     dateUpdated: '2021-09-15',
     lastModifiedBy: 1,
+    stepComplete: '',
   },
   relationships: {
     section: { data: { type: 'section', id: 's1' } },
@@ -75,6 +75,7 @@ const pa2: Passage = {
     dateCreated: '2021-09-14',
     dateUpdated: '2021-09-15',
     lastModifiedBy: 1,
+    stepComplete: '',
   },
   relationships: {
     section: { data: { type: 'section', id: 's1' } },
@@ -98,6 +99,7 @@ const pa3: Passage = {
     dateCreated: '2021-09-14',
     dateUpdated: '2021-09-15',
     lastModifiedBy: 1,
+    stepComplete: '',
   },
   relationships: {
     section: { data: { type: 'section', id: 's1' } },
@@ -113,7 +115,6 @@ const s2: Section = {
   attributes: {
     sequencenum: 2,
     name: 'Birth of John',
-    state: 'transcribeReady',
     dateCreated: '2021-09-14',
     dateUpdated: '2021-09-15',
     lastModifiedBy: 1,
@@ -141,6 +142,7 @@ const pa4: Passage = {
     dateCreated: '2021-09-14',
     dateUpdated: '2021-09-15',
     lastModifiedBy: 1,
+    stepComplete: '',
   },
   relationships: {
     section: { data: { type: 'section', id: 's2' } },
@@ -156,7 +158,6 @@ const s3: Section = {
   attributes: {
     sequencenum: 3,
     name: 'Birth of Jesus',
-    state: 'transcribeReady',
     dateCreated: '2021-09-14',
     dateUpdated: '2021-09-15',
     lastModifiedBy: 1,
@@ -184,6 +185,7 @@ const pa11: Passage = {
     dateCreated: '2021-09-14',
     dateUpdated: '2021-09-15',
     lastModifiedBy: 1,
+    stepComplete: '',
   },
   relationships: {
     section: { data: { type: 'section', id: 's3' } },

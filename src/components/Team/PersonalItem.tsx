@@ -7,7 +7,7 @@ import { TeamContext } from '../../context/TeamContext';
 import BigDialog from '../../hoc/BigDialog';
 import { ProjectCard, AddCard } from '.';
 import { StepEditor } from '../StepEditor';
-import { useNewTeamId } from '../../crud';
+import { useNewTeamId, defaultWorkflow } from '../../crud';
 import Auth from '../../auth/Auth';
 import { UnsavedContext } from '../../context/UnsavedContext';
 
@@ -107,7 +107,7 @@ export const PersonalItem = (props: IProps) => {
         isOpen={showWorkflow}
         onOpen={handleWorkflow}
       >
-        <StepEditor process={'OBT'} org={org} />
+        <StepEditor process={defaultWorkflow} org={org} />
       </BigDialog>
     </Paper>
   );

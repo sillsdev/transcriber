@@ -22,7 +22,7 @@ import {
 } from '../../model';
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
-import { useTeamApiPull } from '../../crud';
+import { useTeamApiPull, defaultWorkflow } from '../../crud';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -77,7 +77,7 @@ export function TeamDialog(props: IProps) {
     } as Organization;
     onCommit(team, async () => {
       if (mode === DialogMode.add) {
-        await GetOrgWorkflowSteps({ process: process || 'OBT' });
+        await GetOrgWorkflowSteps({ process: process || defaultWorkflow });
       }
       setProcess(undefined);
       savingRef.current = false;

@@ -115,7 +115,34 @@ export const useOfflineSetup = () => {
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineRecs.length === 0) {
       const t = new TransformBuilder();
-      const ops = [
+      let ops = [
+        { name: 'Internalization', tool: 'resource' },
+        { name: 'Record', tool: 'record' },
+        { name: 'TeamCheck', tool: 'teamCheck' },
+        { name: 'PeerReview', tool: 'teamCheck' },
+        { name: 'CommunityTesting', tool: 'community' },
+        { name: 'BackTranslation', tool: 'segment' },
+        { name: 'ConsultantCheck', tool: 'discuss' },
+        { name: 'FinalRecording', tool: 'discuss' },
+        { name: 'FinalReview', tool: 'discuss' },
+        { name: 'Export', tool: 'discuss' },
+        { name: 'Done', tool: 'done' },
+      ].map((step, ix) => {
+        let rec = {
+          type: 'workflowstep',
+          attributes: {
+            process: 'OBT',
+            name: step.name,
+            sequencenum: ix + 1,
+            tool: `{"tool": "${step.tool}"}`,
+            permissions: '{"role": "any", "signoffrole": "none"}',
+          },
+        } as WorkflowStep;
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
+      });
+      await memory.sync(await backup.push(ops));
+      ops = [
         { name: 'Internalization', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TeamCheck', tool: 'teamCheck' },
@@ -124,13 +151,62 @@ export const useOfflineSetup = () => {
         { name: 'BackTranslation', tool: 'segment' },
         { name: 'ConsultantCheck', tool: 'discuss' },
         { name: 'Review', tool: 'discuss' },
-        { name: 'FinalEdit', tool: 'discuss' },
-        { name: 'ReadThrough', tool: 'discuss' },
+        { name: 'FinalRecording', tool: 'discuss' },
+        { name: 'FinalReview', tool: 'discuss' },
+        { name: 'Export', tool: 'discuss' },
+        { name: 'Done', tool: 'done' },
       ].map((step, ix) => {
         let rec = {
           type: 'workflowstep',
           attributes: {
-            process: 'OBT',
+            process: 'OBS',
+            name: step.name,
+            sequencenum: ix + 1,
+            tool: `{"tool": "${step.tool}"}`,
+            permissions: '{"role": "any", "signoffrole": "none"}',
+          },
+        } as WorkflowStep;
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
+      });
+      await memory.sync(await backup.push(ops));
+      ops = [
+        { name: 'Internalization', tool: 'resource' },
+        { name: 'Record', tool: 'record' },
+        { name: 'Transcribe', tool: 'teamCheck' },
+        { name: 'PeerReview', tool: 'teamCheck' },
+        { name: 'CommunityTesting', tool: 'community' },
+        { name: 'BackTranslation', tool: 'segment' },
+        { name: 'ConsultantCheck', tool: 'discuss' },
+        { name: 'ParatextSync', tool: 'discuss' },
+        { name: 'Export', tool: 'discuss' },
+        { name: 'Done', tool: 'done' },
+      ].map((step, ix) => {
+        let rec = {
+          type: 'workflowstep',
+          attributes: {
+            process: 'draft',
+            name: step.name,
+            sequencenum: ix + 1,
+            tool: `{"tool": "${step.tool}"}`,
+            permissions: '{"role": "any", "signoffrole": "none"}',
+          },
+        } as WorkflowStep;
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
+      });
+      await memory.sync(await backup.push(ops));
+      ops = [
+        { name: 'Record', tool: 'record' },
+        { name: 'Transcribe', tool: 'teamCheck' },
+        { name: 'ParatextSync', tool: 'discuss' },
+        { name: 'Export', tool: 'discuss' },
+        { name: 'Done', tool: 'done' },
+      ].map((step, ix) => {
+        let rec = {
+          type: 'workflowstep',
+          attributes: {
+            process: 'transcriber',
             name: step.name,
             sequencenum: ix + 1,
             tool: `{"tool": "${step.tool}"}`,

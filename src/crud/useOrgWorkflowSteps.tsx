@@ -13,6 +13,8 @@ import JSONAPISource from '@orbit/jsonapi';
 import { shallowEqual, useSelector } from 'react-redux';
 import localStrings from '../selector/localize';
 
+export const defaultWorkflow = 'transcriber';
+
 interface ISwitches {
   [key: string]: any;
 }
@@ -125,7 +127,7 @@ export const useOrgWorkflowSteps = () => {
     var orgsteps = await QueryOrgWorkflowSteps(process, org);
     if (orgsteps.length === 0) {
       orgsteps = await CreateOrgWorkflowSteps(
-        process === 'ANY' ? 'OBT' : process,
+        process === 'ANY' ? defaultWorkflow : process,
         org
       );
     }
