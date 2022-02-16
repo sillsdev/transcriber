@@ -18,7 +18,14 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../hoc/SnackBar';
 import Progress from '../control/UploadProgress';
 import { offlineProjectUpdateFilesDownloaded, useProjecExport } from '../crud';
-import { currentDateTime, dataPath, downloadFile, PathType } from '../utils';
+import {
+  currentDateTime,
+  dataPath,
+  downloadFile,
+  logError,
+  PathType,
+  Severity,
+} from '../utils';
 import AdmZip from 'adm-zip';
 import { Operation } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -52,6 +59,7 @@ interface IProps extends IStateProps, IDispatchProps {
 export const ProjectDownload = (props: IProps) => {
   const { open, projectIds, auth, t, ts, finish } = props;
   const { exportProject, exportComplete, exportStatus, exportFile } = props;
+  const [errorReporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
@@ -140,6 +148,7 @@ export const ProjectDownload = (props: IProps) => {
         .then(() => {
           setProgress(Steps.Import);
         })
+        .catch((ex) => logError(Severity.error, errorReporter, ex))
         .finally(() => {
           URL.revokeObjectURL(exportUrl);
         });

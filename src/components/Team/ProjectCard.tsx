@@ -151,7 +151,7 @@ export const ProjectCard = (props: IProps) => {
           setOpenReports(true);
           break;
         case 'offlineAvail':
-          offlineAvailToggle(offlineProjectRead(projectId));
+          offlineAvailToggle(project.id);
           break;
       }
     });
@@ -304,7 +304,7 @@ export const ProjectCard = (props: IProps) => {
         {project?.attributes?.tags && (
           <CardActions>
             <>
-              {offlineProjectRead(project)?.attributes?.offlineAvailable && (
+              {offlineProjectRead(project).attributes?.offlineAvailable && (
                 <div className={classes.offline}>
                   <OfflineIcon />
                   {'\u00A0'}

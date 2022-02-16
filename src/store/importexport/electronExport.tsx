@@ -524,7 +524,7 @@ export async function electronExport(
         updateableFiles.forEach(
           (info) => (numRecs += AddChanged(info, limit, needsRemoteIds))
         );
-        if (exportType !== ExportType.ITFBACKUP && backup) {
+        if (exportType !== ExportType.ITFBACKUP && backup && op.attributes) {
           op.attributes.exportedDate = exported;
           await backup.push((t: TransformBuilder) => t.updateRecord(op));
         }
