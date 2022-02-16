@@ -22,8 +22,10 @@ const vrefRe = /^([0-9]+)[^0-9]?([0-9]+)?$/;
 const vInt = (s: string) => (typeof s === 'string' ? parseInt(s) : s);
 
 const passageVerses = (p: Passage) =>
-  p.startVerse.toString() +
-  (p.endVerse > p.startVerse ? '-' + p.endVerse.toString() : '');
+  (p?.startVerse || 0).toString() +
+  ((p?.endVerse || 0) > (p?.startVerse || 0)
+    ? '-' + (p?.endVerse || 0).toString()
+    : '');
 
 const domVnum = (v: Element) => {
   const vrefAttr = v.getAttribute('number');
@@ -368,7 +370,7 @@ const ParseTranscription = (currentPassage: Passage, transcription: string) => {
       attributes: {
         book: currentPassage.attributes.book,
         reference:
-          currentPassage.startChapter.toString() +
+          (currentPassage.startChapter || 0).toString() +
           ':' +
           match[0].replace('\\v', '').trimStart(),
         lastComment: t.trimStart().trimEnd(),
@@ -401,7 +403,12 @@ const postPass = (doc: Document, currentPI: PassageInfo, memory: Memory) => {
       ReplaceText(doc, thisVerse, p.attributes.lastComment);
     } else {
       let verses = getVerses(doc.documentElement);
-      var nextVerse = findNodeAfterVerse(doc, verses, p.startVerse, p.endVerse);
+      var nextVerse = findNodeAfterVerse(
+        doc,
+        verses,
+        p?.startVerse || 0,
+        p?.endVerse || 0
+      );
       thisVerse = addParatextVerse(
         doc,
         nextVerse,
@@ -446,8 +453,8 @@ const getExistingVerses = (
 ) => {
   var verses = getVerses(doc.documentElement);
   const allVerses = Array<Element>();
-  var first = p.startVerse;
-  var last = p.endVerse;
+  var first = p?.startVerse || 0;
+  var last = p?.endVerse || 0;
   var exactVerse: Element | undefined;
   verses.forEach((v) => {
     var [vstart, vend] = domVnum(v);
@@ -565,7 +572,7 @@ const doChapter = async (
   let usxDom: Document = await getChapter(paths, ptProjName);
 
   passInfo = passInfo.sort(
-    (i, j) => i.passage.startVerse - j.passage.startVerse
+    (i, j) => (i.passage?.startVerse || 0) - (j.passage?.startVerse || 0)
   );
   passInfo.forEach((p) => {
     postPass(usxDom, p, memory);
