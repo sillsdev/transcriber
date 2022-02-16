@@ -4757,6 +4757,13 @@
       			<context context-type="sourcefile">StepName.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="stepEditor.changes">
+      		<source>{0} change(s)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">StepName.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="stepEditor.hide">
       		<source>Hide</source>
       		<target/>

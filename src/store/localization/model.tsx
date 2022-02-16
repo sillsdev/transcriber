@@ -840,6 +840,7 @@ export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
 
 export interface IStepEditorStrings extends Localize.LocalizedStringsMethods {
     "add": string;
+    "changes": string;
     "hide": string;
     "inProgress": string;
     "lastStep": string;

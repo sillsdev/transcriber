@@ -32,6 +32,7 @@ export interface IStepRow {
   seq: number;
   name: string;
   tool: string;
+  rIdx: number;
 }
 
 interface SortEndProps {
@@ -105,20 +106,24 @@ export const StepEditor = ({ process, org }: IProps) => {
   };
 
   const handleSortEnd = ({ oldIndex, newIndex }: SortEndProps) => {
-    setRows(arrayMove(rows, oldIndex, newIndex));
+    let newRows = arrayMove(rows, oldIndex, newIndex).map((r, i) =>
+      r.seq !== i ? { ...r, seq: i } : r
+    );
+    setRows(newRows);
+    toolChanged(toolId, true);
   };
 
-  const handleNameChange = async (name: string, index: number) => {
+  const handleNameChange = (name: string, index: number) => {
     setRows(rows.map((r, i) => (i === index ? { ...r, name } : r)));
     toolChanged(toolId, true);
   };
 
-  const handleToolChange = async (tool: string, index: number) => {
+  const handleToolChange = (tool: string, index: number) => {
     setRows(rows.map((r, i) => (i === index ? { ...r, tool } : r)));
     toolChanged(toolId, true);
   };
 
-  const handleHide = async (index: number) => {
+  const handleHide = (index: number) => {
     if (visible === 1) {
       showMessage(se.lastStep);
       return;
@@ -141,7 +146,10 @@ export const StepEditor = ({ process, org }: IProps) => {
   const handleAdd = async () => {
     let name = mangleName(se.nextStep, getOrgNames());
     const tool = ToolSlug.Discuss;
-    setRows([...rows, { id: '', name, tool, seq: mxSeq + 1 }]);
+    setRows([
+      ...rows,
+      { id: '', name, tool, seq: mxSeq + 1, rIdx: rows.length },
+    ]);
     showMessage(se.stepAdded);
     toolChanged(toolId, true);
   };
@@ -171,8 +179,8 @@ export const StepEditor = ({ process, org }: IProps) => {
           }
           const tool = JSON.stringify({ tool: row.tool });
           if (
-            name !== row.name ||
-            rec.attributes?.sequencenum !== row.seq ||
+            name !== rec.attributes?.name ||
+            row.seq !== rec.attributes?.sequencenum ||
             tool !== rec.attributes?.tool
           ) {
             await memory.update((t: TransformBuilder) =>
@@ -216,7 +224,7 @@ export const StepEditor = ({ process, org }: IProps) => {
         count += 1;
       }
     }
-    showMessage('{0} changes'.replace('{0}', count.toString()));
+    showMessage(se.changes.replace('{0}', count.toString()));
     saving.current = false;
   };
 
@@ -239,6 +247,7 @@ export const StepEditor = ({ process, org }: IProps) => {
           seq: s.attributes?.sequencenum,
           name: localName(s.attributes?.name),
           tool: toCamel(getTool(s.attributes?.tool)),
+          rIdx: newRows.length,
         });
       });
       setRows(newRows.sort((i, j) => i.seq - j.seq));
@@ -263,13 +272,13 @@ export const StepEditor = ({ process, org }: IProps) => {
       </div>
       <StepList onSortEnd={handleSortEnd} useDragHandle>
         {rows
-          .map((r, i) => ({ r, i }))
-          .filter(({ r }) => r.seq >= 0 || showAll)
-          .map(({ r, i }) => (
+          .map((r, i) => ({ ...r, rIdx: i }))
+          .filter((r) => r.seq >= 0 || showAll)
+          .map((r) => (
             <StepItem
-              key={`si-${i}`}
-              index={i}
-              value={{ r, i }}
+              key={`si-${r.rIdx}`}
+              index={r.rIdx}
+              value={r}
               onNameChange={handleNameChange}
               onToolChange={handleToolChange}
               onDelete={handleHide}
