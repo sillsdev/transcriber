@@ -4078,6 +4078,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="stepEditor.changes">
+         <segment>
+            <source>{0} change(s)</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="stepEditor.hide">
          <segment>
             <source>Hide</source>

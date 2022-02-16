@@ -3762,6 +3762,96 @@
             <target>Escolher idiomas de verificação ortográfica</target>
          </segment>
       </unit>
+   	<unit id="stepEditor.add">
+   		<segment>
+   			<source>Add</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.changes">
+   		<segment>
+   			<source>{0} change(s)</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.hide">
+   		<segment>
+   			<source>Hide</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.inProgress">
+   		<segment>
+   			<source>In progress...</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.lastStep">
+   		<segment>
+   			<source>Unable to hide the last step.</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.name">
+   		<segment>
+   			<source>Name</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.nextStep">
+   		<segment>
+   			<source>Next Step</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.oneHidden">
+   		<segment>
+   			<source>One step hidden</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.oneVisible">
+   		<segment>
+   			<source>One step visible and added to the end of the list.</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.saving">
+   		<segment>
+   			<source>Saving ...</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.show">
+   		<segment>
+   			<source>Show</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.showAll">
+   		<segment>
+   			<source>Show all</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.stepAdded">
+   		<segment>
+   			<source>Step added to the end of the list.</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.stepsHidden">
+   		<segment>
+   			<source>{0} steps hidden</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="stepEditor.tool">
+   		<segment>
+   			<source>Tool</source>
+   			<target/>
+   		</segment>
+   	</unit>
       <unit id="taskItem.assign">
          <segment>
             <source>Assign {0}</source>

@@ -15,10 +15,11 @@ const useStyles = makeStyles({
 
 interface IProps {
   value: IStepRow;
-  onNameChange: (id: string, name: string) => void;
-  onToolChange: (id: string, tool: string) => void;
-  onDelete: (id: string) => void;
-  onRestore: (id: string) => void;
+  index: number;
+  onNameChange: (name: string, index: number) => void;
+  onToolChange: (tool: string, index: number) => void;
+  onDelete: (index: number) => void;
+  onRestore: (index: number) => void;
 }
 
 export const StepItem = SortableElement(
@@ -30,14 +31,14 @@ export const StepItem = SortableElement(
     );
 
     const handleNameChange = (name: string) => {
-      onNameChange(value.id, name);
+      onNameChange(name, value.rIdx);
     };
     const handleToolChange = (tool: string) => {
-      onToolChange(value.id, tool);
+      onToolChange(tool, value.rIdx);
     };
     const handleDeleteOrRestore = () => {
-      if (value.seq >= 0) onDelete(value.id);
-      else onRestore(value.id);
+      if (value.seq >= 0) onDelete(value.rIdx);
+      else onRestore(value.rIdx);
     };
 
     return (

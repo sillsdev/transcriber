@@ -899,6 +899,7 @@ const initialState = {
 	"stepEditor": new LocalizedStrings({
 		"en": {
 			"add": "Add",
+			"changes": "{0} change(s)",
 			"hide": "Hide",
 			"inProgress": "In progress...",
 			"lastStep": "Unable to hide the last step.",
