@@ -47,7 +47,7 @@ export const useProjecExport = (props: IProps) => {
       projectplans.map((p) => p.id),
       mediaFiles,
       undefined,
-      true
+      false
     );
     exportProject(
       exportType,

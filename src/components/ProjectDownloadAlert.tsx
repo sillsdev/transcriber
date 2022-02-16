@@ -59,7 +59,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
         });
       }
     });
-    const mediaRecs = getMediaInPlans(planIds, mediafiles, undefined, true);
+    const mediaRecs = getMediaInPlans(planIds, mediafiles, undefined, false);
     const needyProject = new Set<string>();
     let totalSize = 0;
     mediaRecs.forEach((m) => {

@@ -309,7 +309,8 @@ export const getLocalCount =
     memory: MemorySource,
     errorReporter: any,
     t: IIntegrationStrings,
-    artifactId: string //'' for vernacular
+    artifactId: string,
+    orNull: boolean
   ) =>
   (dispatch: any) => {
     dispatch({
@@ -321,7 +322,7 @@ export const getLocalCount =
       [plan],
       mediafiles,
       artifactId,
-      artifactId === ''
+      orNull
     ).filter(
       (m) => m.attributes?.transcriptionstate === ActivityStates.Approved
     );

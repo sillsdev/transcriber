@@ -17,11 +17,7 @@ export const dataPath = (
   type?: PathType,
   local_out?: { localname: string }
 ): string => {
-  if (
-    isElectron &&
-    relPath?.startsWith('http') &&
-    process.env.REACT_APP_OFFLINEDATA
-  ) {
+  if (isElectron && process.env.REACT_APP_OFFLINEDATA) {
     var localName = '';
     switch (type) {
       case PathType.AVATARS:
@@ -31,12 +27,13 @@ export const dataPath = (
           os.homedir(),
           process.env.REACT_APP_OFFLINEDATA,
           type,
-          local_out?.localname || ''
+          local_out?.localname || path.basename(relPath || '')
         );
         break;
       case PathType.MEDIA:
-        const fileName =
-          url.parse(relPath).pathname?.split('?')[0].split('/').pop() || '';
+        const fileName = relPath?.startsWith('http')
+          ? url.parse(relPath).pathname?.split('?')[0].split('/').pop() || ''
+          : path.basename(relPath || '');
         localName = path.join(
           os.homedir(),
           process.env.REACT_APP_OFFLINEDATA,
@@ -48,7 +45,7 @@ export const dataPath = (
         localName = path.join(
           os.homedir(),
           process.env.REACT_APP_OFFLINEDATA,
-          local_out?.localname || ''
+          local_out?.localname || path.basename(relPath || '')
         );
         break;
     }
@@ -58,9 +55,7 @@ export const dataPath = (
   return relPath?.startsWith('http')
     ? relPath
     : process.env.REACT_APP_OFFLINEDATA
-    ? relPath
-      ? path.join(os.homedir(), process.env.REACT_APP_OFFLINEDATA, relPath)
-      : path.join(os.homedir(), process.env.REACT_APP_OFFLINEDATA)
+    ? path.join(os.homedir(), process.env.REACT_APP_OFFLINEDATA, relPath || '')
     : '';
 };
 
