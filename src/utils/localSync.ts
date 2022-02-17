@@ -627,23 +627,27 @@ export const localSync = async (
   let probablyready = mediafiles.filter(
     (m) =>
       related(m, 'plan') === plan &&
-      related(m, 'artifacttype') === artifactId && //will this find vernacular?
+      related(m, 'artifactType') === artifactId && //will this find vernacular?
       m.attributes?.transcriptionstate === ActivityStates.Approved
   );
   //ensure this is the latest mediafile for the passage
   let ready: PassageInfo[] = [];
   probablyready.forEach((pr) => {
-    var psgs = passages.filter((p) => related(p, 'mediafile') === pr.id);
-    var passage = psgs.length > 0 ? psgs[0] : ({} as Passage); //never happen
+    const passageId = related(pr, 'passage');
+    const prVer = pr.attributes?.versionNumber;
     var newer = [];
     if (checkVersion) {
       newer = mediafiles.filter(
         (m) =>
-          related(m, 'passage') === passage.id &&
-          m.attributes.versionNumber > pr.attributes.versionNumber
+          related(m, 'passage') === passageId &&
+          related(m, 'artifactType') === artifactId &&
+          m.attributes.versionNumber > prVer
       );
     }
-    if (newer.length === 0) ready.push({ passage: passage, mediafile: pr });
+    if (newer.length === 0) {
+      const passage = passages.find((p) => p.id === passageId);
+      if (passage) ready.push({ passage: passage, mediafile: pr });
+    }
   });
   ready.forEach((r) => {
     parseRef(r.passage);
