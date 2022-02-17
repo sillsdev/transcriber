@@ -536,7 +536,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           let mediaId = medId;
           if (!mediaId) {
             //vernacular so should just be one
-            var p = rowList.filter((r) => r.passage.id === pasId);
+            const psg = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+            const p = rowList.filter((r) => r.passage.id === psg);
             if (p.length > 0) mediaId = p[0].mediafile.id;
           }
           selected =
