@@ -47,7 +47,7 @@ interface IProps extends IRecordProps, IStateProps {
   isMediaId?: boolean;
   visible: boolean;
   closeMethod?: () => void;
-  exportId?: string;
+  exportId?: string | null;
 }
 
 function TranscriptionShow(props: IProps) {
@@ -97,7 +97,7 @@ function TranscriptionShow(props: IProps) {
       if (projRec) setFontData(getFontData(projRec, offline));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [id, isMediaId]);
+  }, [id, isMediaId, exportId]);
 
   const textStyle = {
     fontFamily: fontData?.fontFamily || 'CharisSIL',

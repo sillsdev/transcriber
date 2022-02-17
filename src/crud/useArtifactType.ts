@@ -11,6 +11,8 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { findRecord, related } from '.';
 import { AddRecord } from '../model/baseModel';
 
+export const VernacularTag = null; // used to test the relationship
+
 export enum ArtifactTypeSlug {
   Vernacular = 'vernacular',
   BackTranslation = 'backtranslation',
@@ -81,23 +83,8 @@ export const useArtifactType = () => {
     return types;
   };
 
-  const vernacularId = useMemo(() => {
-    var types = memory.cache.query((q: QueryBuilder) =>
-      q
-        .findRecords('artifacttype')
-        .filter({ attribute: 'typename', value: ArtifactTypeSlug.Vernacular })
-    ) as ArtifactType[];
-    var v = types.find((r) => Boolean(r?.keys?.remoteId) !== offlineOnly);
-    if (v) return v.id;
-    return '';
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [offlineOnly]);
-
   const IsVernacularMedia = (m: MediaFile) => {
-    return (
-      related(m, 'artifactType') === null ||
-      related(m, 'artifactType') === vernacularId
-    );
+    return related(m, 'artifactType') === VernacularTag;
   };
 
   const getTypeId = (typeSlug: string) => {
@@ -157,7 +144,6 @@ export const useArtifactType = () => {
     localizedArtifactType,
     localizedArtifactTypeFromId,
     fromLocalizedArtifactType,
-    vernacularId,
     commentId,
     retellId,
     qAndaId,

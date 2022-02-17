@@ -6,7 +6,7 @@ import { cleanFileName } from '.';
 export const passageDefaultFilename = (
   passageId: string,
   memory: Memory,
-  vernacularId: string | undefined
+  vernacularId: string | null | undefined
 ) => {
   if (passageId) {
     var passageRec = memory.cache.query((q) =>
@@ -16,8 +16,8 @@ export const passageDefaultFilename = (
       (passageRec.attributes.book || '') + passageRec.attributes.reference;
     if (!tmp.length) tmp = passageRec.id.slice(0, 4);
 
-    if (vernacularId) {
-      const mediaRec = getVernacularMediaRec(passageId, memory, vernacularId);
+    if (vernacularId !== undefined) {
+      const mediaRec = getVernacularMediaRec(passageId, memory);
       if (mediaRec) {
         tmp += '_v' + (mediaRec.attributes.versionNumber + 1).toString();
       }

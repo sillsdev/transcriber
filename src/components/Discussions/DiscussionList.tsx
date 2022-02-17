@@ -11,7 +11,7 @@ import QueryBuilder from '@orbit/data/dist/types/query-builder';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { getMediaInPlans, related, useArtifactType, useRole } from '../../crud';
+import { getMediaInPlans, related, useRole, VernacularTag } from '../../crud';
 import {
   Discussion,
   IDiscussionListStrings,
@@ -92,7 +92,6 @@ export function DiscussionList(props: IProps) {
     ctx.state;
   const { toolsChanged } = useContext(UnsavedContext).state;
   const { getRoleRec } = useRole();
-  const { vernacularId } = useArtifactType();
   const [rootWidthStyle, setRootWidthStyle] = useState({
     width: `${discussionSize - 25}px`, //leave room for scroll bar
   });
@@ -157,7 +156,7 @@ export function DiscussionList(props: IProps) {
   );
 
   const latestMedia: string[] = useMemo(() => {
-    return getMediaInPlans([planId], mediafiles, vernacularId, true).map(
+    return getMediaInPlans([planId], mediafiles, VernacularTag).map(
       (r) => r.id
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -236,7 +236,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const fetching = useRef('');
     const segmentsCb = useRef<(segments: string) => void>();
     const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
-    const { localizedArtifactType, vernacularId } = useArtifactType();
+    const { localizedArtifactType } = useArtifactType();
     const { localizedArtifactCategory } = useArtifactCategory();
     const { localizedWorkStep } = useOrgWorkflowSteps();
     const getStepsBusy = useRef<boolean>(false);
@@ -669,7 +669,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         mediafiles: allMedia,
         user,
         ...localize,
-        vernacularId,
       });
       const passRec = passages.find((p) => p.id === passageId);
       const sectId = related(passRec, 'section');

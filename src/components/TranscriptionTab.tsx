@@ -65,6 +65,7 @@ import {
   ArtifactTypeSlug,
   useTranscription,
   usePassageState,
+  VernacularTag,
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -228,7 +229,7 @@ export function TranscriptionTab(props: IProps) {
   const [fingerprint] = useGlobal('fingerprint');
   const getOfflineProject = useOfflnProjRead();
   const [globalStore] = useGlobal();
-  const { vernacularId, getTypeId, localizedArtifactType } = useArtifactType();
+  const { getTypeId, localizedArtifactType } = useArtifactType();
   const [exportTypes] = useState<ArtifactTypeSlug[]>([
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.Retell,
@@ -292,8 +293,7 @@ export function TranscriptionTab(props: IProps) {
     let media: MediaFile[] = getMediaInPlans(
       projectplans.map((p) => p.id),
       mediaFiles,
-      vernacularId,
-      true
+      VernacularTag
     );
     const attached = media
       .map((m) => related(m, 'passage'))
@@ -307,8 +307,7 @@ export function TranscriptionTab(props: IProps) {
     media = getMediaInPlans(
       projectplans.map((p) => p.id),
       mediaFiles,
-      undefined,
-      false
+      undefined
     );
     exportProject(
       exportType,
@@ -330,7 +329,11 @@ export function TranscriptionTab(props: IProps) {
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const exportId = useMemo(() => getTypeId(exportType), [exportType]);
+  const exportId = useMemo(
+    () => (exportType ? getTypeId(exportType) : VernacularTag),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [exportType]
+  );
 
   const getCopy = (
     projectPlans: Plan[],
@@ -403,8 +406,8 @@ export function TranscriptionTab(props: IProps) {
 
   const hasTranscription = (passageId: string) => {
     let transcription = '';
-    if (exportId === vernacularId) {
-      const mediaRec = getVernacularMediaRec(passageId, memory, vernacularId);
+    if (exportId === VernacularTag) {
+      const mediaRec = getVernacularMediaRec(passageId, memory);
       transcription = mediaRec?.attributes?.transcription || '';
     } else {
       const transcriptions = getAllMediaRecs(passageId, memory, exportId).map(
@@ -416,7 +419,7 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const handleEaf = (passageId: string) => () => {
-    const mediaRec = getVernacularMediaRec(passageId, memory, vernacularId);
+    const mediaRec = getVernacularMediaRec(passageId, memory);
     if (!mediaRec) return;
     const eafCode = btoa(
       getMediaEaf(mediaRec, memory, globalStore.errorReporter)

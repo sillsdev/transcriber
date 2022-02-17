@@ -277,45 +277,41 @@ const owf: OrgWorkflowStep[] = [
 afterEach(cleanup);
 
 test('empty input gives empty output', async () => {
-  expect(
-    getWorkflow('', [], [], false, false, memory, 'fakeVId', [], wfStr)
-  ).toEqual([]);
+  expect(getWorkflow('', [], [], false, false, memory, [], wfStr)).toEqual([]);
 });
 
 test('empty flat input gives empty output', async () => {
-  expect(
-    getWorkflow('', [], [], true, false, memory, 'fakeVId', [], wfStr)
-  ).toEqual([]);
+  expect(getWorkflow('', [], [], true, false, memory, [], wfStr)).toEqual([]);
 });
 
 test('empty input with plan id gives empty output', async () => {
-  expect(
-    getWorkflow('pl1', [], [], false, false, memory, 'fakeVId', [], wfStr)
-  ).toEqual([]);
+  expect(getWorkflow('pl1', [], [], false, false, memory, [], wfStr)).toEqual(
+    []
+  );
 });
 
 test('one section gives output', async () => {
-  expect(
-    getWorkflow('pl1', [s1], [], false, false, memory, 'fakeVId', [], wfStr)
-  ).toEqual([
-    {
-      level: 0,
-      kind: 0,
-      sectionSeq: 1,
-      title: 'Intro',
-      passageSeq: 0,
-      sectionId: { type: 'section', id: 's1' },
-      sectionUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      deleted: false,
-    },
-  ] as IWorkflow[]);
+  expect(getWorkflow('pl1', [s1], [], false, false, memory, [], wfStr)).toEqual(
+    [
+      {
+        level: 0,
+        kind: 0,
+        sectionSeq: 1,
+        title: 'Intro',
+        passageSeq: 0,
+        sectionId: { type: 'section', id: 's1' },
+        sectionUpdated: '2021-09-15',
+        transcriber: undefined,
+        editor: undefined,
+        deleted: false,
+      },
+    ] as IWorkflow[]
+  );
 });
 
 test('one section and one passage gives output', async () => {
   expect(
-    getWorkflow('pl1', [s1], [pa1], false, false, memory, 'fakeVId', [], wfStr)
+    getWorkflow('pl1', [s1], [pa1], false, false, memory, [], wfStr)
   ).toEqual([
     {
       level: 0,
@@ -355,7 +351,7 @@ test('one section and two passages gives output', async () => {
       false,
       false,
       memory,
-      'fakeVId',
+
       [],
       wfStr
     )
@@ -412,7 +408,7 @@ test('one section and two passages with flat output', async () => {
       true,
       false,
       memory,
-      'fakeVId',
+
       [],
       wfStr
     )
@@ -462,7 +458,7 @@ test('one section and three passages out of order', async () => {
       false,
       false,
       memory,
-      'fakeVId',
+
       [],
       wfStr
     )
@@ -526,7 +522,7 @@ test('one section and three passages out of order', async () => {
 
 test('one flat section and with one passage gives output', async () => {
   expect(
-    getWorkflow('pl1', [s1], [pa1], true, false, memory, 'fakeVId', [], wfStr)
+    getWorkflow('pl1', [s1], [pa1], true, false, memory, [], wfStr)
   ).toEqual([
     {
       level: 0,
@@ -559,7 +555,7 @@ test('two flat sections and one from another plan gives output', async () => {
       true,
       false,
       memory,
-      'fakeVId',
+
       [],
       wfStr
     )
@@ -614,7 +610,7 @@ test('two sections and passages with one from another plan', async () => {
       false,
       false,
       memory,
-      'fakeVId',
+
       [],
       wfStr
     )
@@ -710,7 +706,7 @@ test('update one flat section to two flat section ignoring other plan', async ()
     true,
     false,
     memory,
-    'fakeVId',
+
     [],
     wfStr
   );
@@ -742,7 +738,7 @@ test('update one flat section to two flat section ignoring other plan', async ()
     true,
     false,
     memory,
-    'fakeVId',
+
     [],
     wfStr,
     workflow
@@ -791,7 +787,7 @@ test('update one flat section to two flat section ignoring other plan', async ()
 
 test('one section and one passage with step gives output', async () => {
   expect(
-    getWorkflow('pl1', [s1], [pa1], false, false, memory, 'fakeVId', owf, wfStr)
+    getWorkflow('pl1', [s1], [pa1], false, false, memory, owf, wfStr)
   ).toEqual([
     {
       level: 0,
@@ -840,7 +836,7 @@ test('two flat sections with steps gives output', async () => {
       true,
       false,
       memory,
-      'fakeVId',
+
       owf,
       wfStr
     )

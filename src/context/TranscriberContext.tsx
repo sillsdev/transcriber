@@ -38,6 +38,7 @@ import {
   useArtifactType,
   getMediaInPlans,
   findRecord,
+  VernacularTag,
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob, logError, Severity } from '../utils';
@@ -201,22 +202,17 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       sharedStr,
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
-    const { vernacularId, getTypeId } = useArtifactType();
+    const { getTypeId } = useArtifactType();
     const fetching = useRef('');
 
     const artifactId = useMemo(
-      () => (slug ? getTypeId(slug) : vernacularId),
-      [slug, vernacularId, getTypeId]
+      () => (slug ? getTypeId(slug) : VernacularTag),
+      [slug, getTypeId]
     );
 
     useEffect(() => {
       if (devPlan && mediafiles.length > 0) {
-        var m = getMediaInPlans(
-          [devPlan],
-          mediafiles,
-          artifactId,
-          artifactId === vernacularId
-        );
+        var m = getMediaInPlans([devPlan], mediafiles, artifactId);
         setPlanMedia(m);
         planMediaRef.current = m;
       }

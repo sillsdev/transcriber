@@ -32,7 +32,7 @@ import {
   getMediaInPlans,
   usePlan,
   remoteIdGuid,
-  useArtifactType,
+  VernacularTag,
 } from '../../crud';
 import { useGlobal } from 'reactn';
 import { HeadHeight } from '../../App';
@@ -155,7 +155,6 @@ export function AudioTab(props: IProps) {
     doOrbitError,
   });
   const [refresh, setRefresh] = useState(false);
-  const { vernacularId } = useArtifactType();
   const myToolId = 'AudioTab';
   const hasPassage = (pRow: number) => {
     for (let mediaId of Object.keys(attachMap)) {
@@ -267,9 +266,9 @@ export function AudioTab(props: IProps) {
 
   useEffect(() => {
     if (plan && mediaFiles.length > 0) {
-      setPlanMedia(getMediaInPlans([plan], mediaFiles, vernacularId, true));
+      setPlanMedia(getMediaInPlans([plan], mediaFiles, VernacularTag));
     }
-  }, [mediaFiles, plan, vernacularId]);
+  }, [mediaFiles, plan]);
 
   // Check if playItem changes
   useEffect(() => {

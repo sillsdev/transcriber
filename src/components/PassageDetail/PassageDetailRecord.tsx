@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import Auth from '../../auth/Auth';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { useArtifactType, useFetchMediaUrl } from '../../crud';
+import { useFetchMediaUrl, VernacularTag } from '../../crud';
 import { useGlobal } from 'reactn';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
@@ -90,7 +90,6 @@ export function PassageDetailRecord(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const { passage, mediafileId } = usePassageDetailContext();
-  const { vernacularId } = useArtifactType();
   const { showMessage } = useSnackBar();
   const toolId = 'RecordTool';
   const onReady = () => {};
@@ -118,9 +117,9 @@ export function PassageDetailRecord(props: IProps) {
 
   useEffect(() => {
     setDefaultFileName(
-      passageDefaultFilename(passage?.id, memory, vernacularId)
+      passageDefaultFilename(passage?.id, memory, VernacularTag)
     );
-  }, [memory, passage, vernacularId, mediafiles]);
+  }, [memory, passage, mediafiles]);
 
   const handleSave = () => {
     startSave(toolId);

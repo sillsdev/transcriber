@@ -10,6 +10,7 @@ import {
   related,
   UpdateRelatedPassageOps,
   useArtifactType,
+  VernacularTag,
 } from '.';
 import { sharedSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -26,8 +27,7 @@ export const useMediaAttach = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const { vernacularId, IsVernacularMedia, localizedArtifactTypeFromId } =
-    useArtifactType();
+  const { IsVernacularMedia, localizedArtifactTypeFromId } = useArtifactType();
 
   const attach = async (
     passage: string,
@@ -46,8 +46,7 @@ export const useMediaAttach = (props: IProps) => {
         var media = getMediaInPlans(
           [plan],
           memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[],
-          vernacularId,
-          true
+          VernacularTag
         ).filter((m) => related(m, 'passage') === passage);
         ops.push(
           tb.replaceAttribute(
