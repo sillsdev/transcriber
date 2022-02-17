@@ -620,7 +620,7 @@ export const localSync = async (
   passages: Passage[],
   memory: Memory,
   userId: string,
-  artifactId: string,
+  artifactId: string | null,
   checkVersion: boolean
 ) => {
   let chapChg: { [key: string]: PassageInfo[] } = {};

@@ -46,7 +46,7 @@ import {
   related,
   useOfflnProjRead,
   remoteId,
-  useArtifactType,
+  VernacularTag,
 } from '../crud';
 import { localSync, getParatextDataPath, useCheckOnline } from '../utils';
 import Auth from '../auth/Auth';
@@ -214,7 +214,6 @@ export function IntegrationPanel(props: IProps) {
   const setSyncing = (state: boolean) => (syncing.current = state);
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const checkOnline = useCheckOnline(resetOrbitError);
-  const { vernacularId } = useArtifactType();
   const getProject = () => {
     if (!project) return undefined;
     const projfind: Project[] = projects.filter((p) => p.id === project);
@@ -356,8 +355,8 @@ export function IntegrationPanel(props: IProps) {
       passages,
       memory,
       user,
-      vernacularId,
-      true //false for bt
+      VernacularTag,
+      true // check version of vernacular
     );
     showMessage(err || t.syncComplete);
     resetCount();
@@ -446,15 +445,7 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     resetCount();
     if (plan)
-      getLocalCount(
-        mediafiles,
-        plan,
-        memory,
-        errorReporter,
-        t,
-        vernacularId,
-        true
-      );
+      getLocalCount(mediafiles, plan, memory, errorReporter, t, VernacularTag);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafiles, plan]);
 

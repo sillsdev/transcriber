@@ -1,5 +1,5 @@
 import { MediaFile } from '../model';
-import { related } from '.';
+import { related, VernacularTag } from '.';
 
 interface ILatest {
   [planName: string]: number;
@@ -12,22 +12,16 @@ const versionName = (mf: MediaFile) => {
 export const getMediaInPlans = (
   planids: Array<string>,
   mediaFiles: Array<MediaFile>,
-  onlyTypeId: string | undefined,
-  nullTypeId: boolean
+  onlyTypeId: string | null | undefined // null for vernacular
 ) => {
   const latest: ILatest = {};
   var media = mediaFiles.filter(
     (m) => planids.indexOf(related(m, 'plan')) >= 0
   );
-  if (onlyTypeId) {
-    media = media.filter(
-      (m) =>
-        related(m, 'artifactType') === onlyTypeId ||
-        (nullTypeId ? related(m, 'artifactType') === null : false)
-    );
+  if (onlyTypeId !== undefined) {
+    media = media.filter((m) => related(m, 'artifactType') === onlyTypeId);
   }
-  if (nullTypeId) {
-    //vernacular
+  if (onlyTypeId === VernacularTag) {
     media.forEach((f) => {
       const name = versionName(f);
       latest[name] = latest[name]

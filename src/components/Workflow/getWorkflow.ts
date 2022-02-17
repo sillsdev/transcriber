@@ -99,7 +99,6 @@ export const getWorkflow = (
   flat: boolean,
   projectShared: boolean,
   memory: Memory,
-  vernacularId: string,
   orgWorkflowSteps: OrgWorkflowStep[],
   wfStr: IWorkflowStepsStrings,
   current?: IWorkflow[]
@@ -155,11 +154,7 @@ export const getWorkflow = (
         item.comment = passAttr.title;
         item.passageUpdated = passage.attributes.dateUpdated;
         item.passageId = { type: 'passage', id: passage.id };
-        const mediaRec = getVernacularMediaRec(
-          passage.id,
-          memory,
-          vernacularId
-        );
+        const mediaRec = getVernacularMediaRec(passage.id, memory);
         item.mediaId = mediaRec
           ? { type: 'mediafile', id: mediaRec.id }
           : undefined;

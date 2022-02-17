@@ -1,12 +1,11 @@
 import { useGlobal } from 'reactn';
-import { useArtifactType, getVernacularMediaRec, getAllMediaRecs } from '.';
+import { getVernacularMediaRec, getAllMediaRecs, VernacularTag } from '.';
 export const useTranscription = () => {
   const [memory] = useGlobal('memory');
-  const { vernacularId } = useArtifactType();
 
-  return (passageId: string, exportId?: string) => {
-    if (exportId === vernacularId) {
-      const mediaRec = getVernacularMediaRec(passageId, memory, vernacularId);
+  return (passageId: string, exportId?: string | null) => {
+    if (exportId === VernacularTag) {
+      const mediaRec = getVernacularMediaRec(passageId, memory);
       return mediaRec?.attributes?.transcription || '';
     } else {
       const transcriptions = getAllMediaRecs(passageId, memory, exportId)

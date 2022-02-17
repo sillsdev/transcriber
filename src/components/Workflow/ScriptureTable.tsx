@@ -32,7 +32,13 @@ import { Link } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useSnackBar } from '../../hoc/SnackBar';
 import PlanSheet, { ICellChange } from './PlanSheet';
-import { remoteIdNum, related, useOrganizedBy, usePlan } from '../../crud';
+import {
+  remoteIdNum,
+  related,
+  useOrganizedBy,
+  usePlan,
+  VernacularTag,
+} from '../../crud';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import {
   lookupBook,
@@ -67,7 +73,6 @@ import stringReplace from 'react-string-replace';
 import { useExternalLink } from '../useExternalLink';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
-import { useArtifactType } from '../../crud/useArtifactType';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import { UnsavedContext } from '../../context/UnsavedContext';
 
@@ -222,7 +227,6 @@ export function ScriptureTable(props: IProps) {
   });
   const checkOnline = useCheckOnline(resetOrbitError);
   const { handleLaunch } = useExternalLink();
-  const { vernacularId } = useArtifactType();
   const getStepsBusy = useRef(false);
   const [orgSteps, setOrgSteps] = useState<OrgWorkflowStep[]>([]);
   const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
@@ -616,7 +620,7 @@ export function ScriptureTable(props: IProps) {
       const { wf } = getByIndex(workflowRef.current, i);
       uploadItem.current = wf;
       setDefaultFilename(
-        passageDefaultFilename(wf?.passageId?.id || '', memory, vernacularId)
+        passageDefaultFilename(wf?.passageId?.id || '', memory, VernacularTag)
       );
       setRecordAudio(record);
       setImportList(list);
@@ -816,7 +820,6 @@ export function ScriptureTable(props: IProps) {
         flat,
         shared,
         memory,
-        vernacularId,
         orgSteps,
         wfStr
       );

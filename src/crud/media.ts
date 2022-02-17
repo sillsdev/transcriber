@@ -8,7 +8,7 @@ import {
 } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { related } from '.';
+import { related, VernacularTag } from '.';
 import { cleanFileName, updateXml } from '../utils';
 import moment from 'moment';
 import eaf from '../utils/transcriptionEaf';
@@ -19,7 +19,7 @@ const vernSort = (m: MediaFile) => (!related(m, 'artifactType') ? 0 : 1);
 export const getAllMediaRecs = (
   passageId: string,
   memory: Memory,
-  artifactTypeId?: string
+  artifactTypeId?: string | null
 ) => {
   const mediaRecs = (
     memory.cache.query((q: QueryBuilder) =>
@@ -31,7 +31,7 @@ export const getAllMediaRecs = (
   )
     .sort((a, b) => vernSort(a) - vernSort(b))
     .sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
-  if (artifactTypeId) {
+  if (artifactTypeId !== undefined) {
     return mediaRecs.filter(
       (m) => related(m, 'artifactType') === artifactTypeId
     );
@@ -39,17 +39,9 @@ export const getAllMediaRecs = (
   return mediaRecs;
 };
 
-export const getVernacularMediaRec = (
-  passageId: string,
-  memory: Memory,
-  vernacularId: string
-) => {
+export const getVernacularMediaRec = (passageId: string, memory: Memory) => {
   const mediaRecs = getAllMediaRecs(passageId, memory)
-    .filter(
-      (m) =>
-        related(m, 'artifactType') === vernacularId ||
-        related(m, 'artifactType') === null
-    )
+    .filter((m) => related(m, 'artifactType') === VernacularTag)
     .sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
   return mediaRecs.length > 0 ? mediaRecs[0] : null;
 };

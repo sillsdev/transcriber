@@ -309,8 +309,7 @@ export const getLocalCount =
     memory: MemorySource,
     errorReporter: any,
     t: IIntegrationStrings,
-    artifactId: string,
-    orNull: boolean
+    artifactId: string | null
   ) =>
   (dispatch: any) => {
     dispatch({
@@ -318,12 +317,7 @@ export const getLocalCount =
       type: COUNT_PENDING,
     });
     //todo throw out old versions that are ready?
-    const ready = getMediaInPlans(
-      [plan],
-      mediafiles,
-      artifactId,
-      orNull
-    ).filter(
+    const ready = getMediaInPlans([plan], mediafiles, artifactId).filter(
       (m) => m.attributes?.transcriptionstate === ActivityStates.Approved
     );
     const refMissing = ready.filter((m) => {

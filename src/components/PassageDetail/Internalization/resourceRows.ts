@@ -5,7 +5,7 @@ import {
   SectionResource,
   SectionResourceUser,
 } from '../../../model';
-import { related } from '../../../crud';
+import { related, VernacularTag } from '../../../crud';
 import { IRow } from '../../../context/PassageDetailContext';
 
 const isResource = (typeSlug: string) =>
@@ -73,11 +73,10 @@ export const oneMediaRow = ({
 
 interface MediaProps extends DataProps {
   mediafiles: MediaFile[];
-  vernacularId: string;
 }
 
 export const mediaRows = (props: MediaProps) => {
-  const { mediafiles, artifactTypes, vernacularId } = props;
+  const { mediafiles, artifactTypes } = props;
 
   const newRow = Array<IRow>();
   // sort takes the greatest version but if their equal, keeps the
@@ -86,8 +85,8 @@ export const mediaRows = (props: MediaProps) => {
     .sort((i, j) => {
       const iType = related(i, 'artifactType');
       const jType = related(j, 'artifactType');
-      const icmt = Boolean(iType) && iType !== vernacularId;
-      const jcmt = Boolean(jType) && jType !== vernacularId;
+      const icmt = iType !== VernacularTag;
+      const jcmt = jType !== VernacularTag;
       return !icmt && jcmt
         ? -1
         : icmt && !jcmt
