@@ -609,7 +609,7 @@ export function Transcriber(props: IProps) {
       showMessage(t.invalidReference);
       return;
     }
-    if (offline)
+    if (offline) {
       getParatextDataPath().then((ptPath: string) =>
         getParatextTextLocal(
           ptPath,
@@ -619,13 +619,14 @@ export function Transcriber(props: IProps) {
           t.pullParatextStart
         )
       );
-    else
+    } else {
       getParatextText(
         auth,
-        remoteIdNum('passage', selected, memory.keyMap),
+        remoteIdNum('passage', passage.id, memory.keyMap),
         errorReporter,
         t.pullParatextStart
       );
+    }
   };
   const handleShowAddNote = () => {
     setAddNoteVisible(true);
