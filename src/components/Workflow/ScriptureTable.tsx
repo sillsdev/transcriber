@@ -611,7 +611,7 @@ export function ScriptureTable(props: IProps) {
 
   const handleAssignClose = () => () => setAssignSectionVisible(false);
 
-  const showUpload = (i: number, record: boolean) => {
+  const showUpload = (i: number, record: boolean, list?: File[]) => {
     waitForPassageId(i, () => {
       const { wf } = getByIndex(workflowRef.current, i);
       uploadItem.current = wf;
@@ -619,6 +619,7 @@ export function ScriptureTable(props: IProps) {
         passageDefaultFilename(wf?.passageId?.id || '', memory, vernacularId)
       );
       setRecordAudio(record);
+      setImportList(list);
       setUploadVisible(true);
     });
   };
@@ -644,8 +645,7 @@ export function ScriptureTable(props: IProps) {
 
   const handleAudacityImport = (i: number, list: File[]) => {
     saveIfChanged(() => {
-      showUpload(i, false);
-      setImportList(list);
+      showUpload(i, false, list);
     });
   };
 
