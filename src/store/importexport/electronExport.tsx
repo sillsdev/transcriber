@@ -290,6 +290,8 @@ export async function electronExport(
         ds.forEach((d) => {
           if (!remoteId('discussion', d.id, memory.keyMap) && d.attributes)
             d.attributes.offlineId = d.id;
+          if (!remoteId('mediafile', related(d, 'mediafile'), memory.keyMap))
+            d.attributes.offlineMediafileId = related(d, 'mediafile');
         });
       }
       return ds;
