@@ -191,7 +191,7 @@ const mapRecordsToProps = {
   sections: (q: QueryBuilder) => q.findRecords('section'),
   roles: (q: QueryBuilder) => q.findRecords('role'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafiles'),
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
