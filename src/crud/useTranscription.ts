@@ -1,6 +1,6 @@
 import { useGlobal } from 'reactn';
 import { getVernacularMediaRec, getAllMediaRecs, VernacularTag } from '.';
-export const useTranscription = () => {
+export const useTranscription = (addSpeaker: boolean) => {
   const [memory] = useGlobal('memory');
 
   return (passageId: string, exportId?: string | null) => {
@@ -13,10 +13,14 @@ export const useTranscription = () => {
           i.attributes?.dateCreated <= j.attributes?.dateCreated ? -1 : 1
         )
         .filter((m) => m.attributes?.transcription)
-        .map(
-          (m) =>
-            `${m.attributes?.performedBy || ''}: ${m.attributes?.transcription}`
-        );
+        .map((m) => {
+          const speaker = m.attributes?.performedBy;
+          let transcription = '';
+          if (addSpeaker && speaker) {
+            transcription = `${speaker}: `;
+          }
+          return transcription + m.attributes?.transcription;
+        });
       return transcriptions.join('\n');
     }
   };

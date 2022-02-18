@@ -46,9 +46,9 @@ import {
   related,
   useOfflnProjRead,
   remoteId,
-  VernacularTag,
   ArtifactTypeSlug,
   useArtifactType,
+  useTranscription,
 } from '../crud';
 import { localSync, getParatextDataPath, useCheckOnline } from '../utils';
 import Auth from '../auth/Auth';
@@ -223,6 +223,7 @@ export function IntegrationPanel(props: IProps) {
   ]);
   const [exportType, setExportType] = useState(exportTypes[0]);
   const { getTypeId } = useArtifactType();
+  const getTranscription = useTranscription(false);
 
   const getProject = () => {
     if (!project) return undefined;
@@ -365,7 +366,8 @@ export function IntegrationPanel(props: IProps) {
       passages,
       memory,
       user,
-      VernacularTag,
+      getTypeId(exportType),
+      getTranscription,
       true // check version
     );
     showMessage(err || t.syncComplete);

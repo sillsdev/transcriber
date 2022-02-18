@@ -238,7 +238,7 @@ export function TranscriptionTab(props: IProps) {
   const [exportType, setExportType] = useState<ArtifactTypeSlug>(
     exportTypes[0]
   );
-  const getTranscription = useTranscription();
+  const getTranscription = useTranscription(true);
   const columnDefs = [
     { name: 'name', title: getOrganizedBy(true) },
     { name: 'state', title: t.sectionstate },
