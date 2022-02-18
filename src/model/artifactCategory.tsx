@@ -4,6 +4,8 @@ import { BaseModel } from './baseModel';
 export interface ArtifactCategory extends BaseModel {
   attributes: {
     categoryname: string;
+    discussion: boolean;
+    resource: boolean;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;

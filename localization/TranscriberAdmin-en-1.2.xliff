@@ -247,43 +247,15 @@
                <context context-type="sourcefile">artifactCategory.tsx</context>
             </context-group>
          </trans-unit>
-          <trans-unit id="artifactCategory.cultural">
-            <source>Cultural</source>
+         <trans-unit id="artifactCategory.bookintro">
+            <source>Book Introduction</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">artifactCategory.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="artifactCategory.geographic">
-            <source>Geographic</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">artifactCategory.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="artifactCategory.grammar">
-            <source>Grammar</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">artifactCategory.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="artifactCategory.person">
-            <source>Person</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">artifactCategory.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="artifactCategory.qanda">
-            <source>Question and Answer</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">artifactCategory.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="artifactCategory.retelling">
-            <source>Retelling</source>
+         <trans-unit id="artifactCategory.translationresource">
+            <source>Translation Resource</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">artifactCategory.tsx</context>
@@ -296,13 +268,6 @@
                <context context-type="sourcefile">artifactCategory.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="artifactCategory.theology">
-            <source>Theology</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">artifactCategory.tsx</context>
-            </context-group>
-         </trans-unit>
       	<trans-unit id="artifactCategory.uncategorized">
       		<source>Uncategorized</source>
       		<target/>
@@ -310,13 +275,6 @@
       			<context context-type="sourcefile">artifactCategory.tsx</context>
       		</context-group>
       	</trans-unit>
-         <trans-unit id="artifactCategory.word">
-            <source>Word</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">artifactCategory.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="artifactType.backtranslation">
             <source>Back Translation</source>
             <target/>
@@ -781,7 +739,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="cards.OBS">
-      		<source>Oral Storying</source>
+      		<source>Storying</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TeamDialog.tsx</context>
@@ -879,7 +837,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="cards.transcriber">
-      		<source>Transcription</source>
+      		<source>Transcribing</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TeamDialog.tsx</context>
@@ -6213,8 +6171,36 @@
       			<context context-type="sourcefile">passageDetail.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="workflowSteps.phraseBackTranslation">
+      		<source>Phrase Back Translate</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.wholeBackTranslation">
+      		<source>Whole Back Translate</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.communityTesting">
             <source>Community Test</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.communityTest1">
+            <source>Community Test 1</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.communityTest2">
+            <source>Community Test 2</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
@@ -6269,15 +6255,15 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-        <trans-unit id="workflowSteps.record">
-            <source>Record</source>
+         <trans-unit id="workflowSteps.preliminaryApproval">
+            <source>Preliminary Approval</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.review">
-            <source>Review</source>
+        <trans-unit id="workflowSteps.record">
+            <source>Record</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>

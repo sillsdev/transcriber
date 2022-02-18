@@ -55,16 +55,10 @@ const initialState = {
 		"en": {
 			"activity": "Activity",
 			"biblestory": "Bible Story",
-			"cultural": "Cultural",
-			"geographic": "Geographic",
-			"grammar": "Grammar",
-			"person": "Person",
-			"qanda": "Question and Answer",
-			"retelling": "Retelling",
+			"bookintro": "Book Introduction",
+			"translationresource": "Translation Resource",
 			"scripture": "Scripture",
-			"theology": "Theology",
 			"uncategorized": "Uncategorized",
-			"word": "Word",
 		}
 	}),
 	"artifactType": new LocalizedStrings({
@@ -163,7 +157,7 @@ const initialState = {
 			"members": "Members ({0})",
 			"nameInUse": "Name in use",
 			"newProject": "New Audio Project",
-			"OBS": "Oral Storying",
+			"OBS": "Storying",
 			"OBT": "Oral Bible Translation",
 			"offline": "Offline",
 			"offlineAvail": "Offline Available",
@@ -177,7 +171,7 @@ const initialState = {
 			"sync": "Sync ({0})",
 			"teamName": "Team Name",
 			"teamSettings": "Team Settings",
-			"transcriber": "Transcription",
+			"transcriber": "Transcribing",
 			"uploadProgress": "Upload Progress",
 		}
 	}),
@@ -1183,7 +1177,11 @@ const initialState = {
 	"workflowSteps": new LocalizedStrings({
 		"en": {
 			"backTranslation": "Back Translate",
+			"phraseBackTranslation": "Phrase Back Translate",
+			"wholeBackTranslation": "Whole Back Translate",
 			"communityTesting": "Community Test",
+			"communityTest1": "Community Test 1",
+			"communityTest2": "Community Test 2",
 			"consultantCheck": "Consultant Check",
 			"export": "Export",
 			"finalRecording": "Final Record",
@@ -1191,8 +1189,8 @@ const initialState = {
 			"internalization": "Internalize",
 			"paratextSync": "Sync to Paratext",
 			"peerReview": "Peer Review",
+			"preliminaryApproval": "Preliminary Approval",
 			"record": "Record",
-			"review": "Review",
 			"teamCheck": "Team Check",
 			"transcribe": "Transcribe",
 			"unsaved": "Unsaved content",

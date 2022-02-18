@@ -214,39 +214,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="artifactCategory.cultural">
+      <unit id="artifactCategory.bookintro">
          <segment>
-            <source>Cultural</source>
+            <source>Book Introduction</source>
             <target/>
          </segment>
       </unit>
-      <unit id="artifactCategory.geographic">
+      <unit id="artifactCategory.translationresource">
          <segment>
-            <source>Geographic</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="artifactCategory.grammar">
-         <segment>
-            <source>Grammar</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="artifactCategory.person">
-         <segment>
-            <source>Person</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="artifactCategory.qanda">
-         <segment>
-            <source>Question and Answer</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="artifactCategory.retelling">
-         <segment>
-            <source>Retelling</source>
+            <source>Translation Resource</source>
             <target/>
          </segment>
       </unit>
@@ -256,21 +232,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="artifactCategory.theology">
-         <segment>
-            <source>Theology</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="artifactCategory.uncategorized">
          <segment>
             <source>Uncategorized</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="artifactCategory.word">
-         <segment>
-            <source>Word</source>
             <target/>
          </segment>
       </unit>
@@ -672,7 +636,7 @@
       </unit>
       <unit id="cards.OBS">
          <segment>
-            <source>Oral Storying</source>
+            <source>Storying</source>
             <target/>
          </segment>
       </unit>
@@ -756,7 +720,7 @@
       </unit>
       <unit id="cards.transcriber">
          <segment>
-            <source>Transcription</source>
+            <source>Transcribing</source>
             <target/>
          </segment>
       </unit>
@@ -5326,9 +5290,33 @@
             <target/>
          </segment>
       </unit>
+      <unit id="workflowSteps.phraseBackTranslation">
+         <segment>
+            <source>Phrase Back Translate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.wholeBackTranslation">
+         <segment>
+            <source>Whole Back Translate</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="workflowSteps.communityTesting">
          <segment>
             <source>Community Test</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.communityTest1">
+         <segment>
+            <source>Community Test 1</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.communityTest2">
+         <segment>
+            <source>Community Test 2</source>
             <target/>
          </segment>
       </unit>
@@ -5374,15 +5362,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.record">
+      <unit id="workflowSteps.preliminaryApproval">
          <segment>
-            <source>Record</source>
+            <source>Preliminary Approval</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.review">
+      <unit id="workflowSteps.record">
          <segment>
-            <source>Review</source>
+            <source>Record</source>
             <target/>
          </segment>
       </unit>
