@@ -48,6 +48,7 @@ import {
   remoteId,
   VernacularTag,
   ArtifactTypeSlug,
+  useArtifactType,
 } from '../crud';
 import { localSync, getParatextDataPath, useCheckOnline } from '../utils';
 import Auth from '../auth/Auth';
@@ -221,6 +222,7 @@ export function IntegrationPanel(props: IProps) {
     ArtifactTypeSlug.BackTranslation,
   ]);
   const [exportType, setExportType] = useState(exportTypes[0]);
+  const { getTypeId } = useArtifactType();
 
   const getProject = () => {
     if (!project) return undefined;
@@ -453,9 +455,16 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     resetCount();
     if (plan)
-      getLocalCount(mediafiles, plan, memory, errorReporter, t, VernacularTag);
+      getLocalCount(
+        mediafiles,
+        plan,
+        memory,
+        errorReporter,
+        t,
+        getTypeId(exportType)
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediafiles, plan]);
+  }, [mediafiles, plan, exportType]);
 
   /* do this once */
   useEffect(() => {
@@ -464,7 +473,7 @@ export function IntegrationPanel(props: IProps) {
       getParatextIntegration(offline ? 'paratextLocal' : 'paratext');
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [integrations, paratextIntegration]);
+  }, [integrations, paratextIntegration, exportType]);
 
   useEffect(() => {
     if (paratext_countStatus) {

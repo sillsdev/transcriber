@@ -57,7 +57,7 @@ interface IProps extends IStateProps, IDispatchProps {
   multiple?: boolean;
   mediaId?: string;
   importList?: File[];
-  artifactTypeId?: string;
+  artifactTypeId?: string | null;
   passageId?: string;
   sourceMediaId?: string;
   sourceSegments?: string;
@@ -126,8 +126,10 @@ export const Uploader = (props: IProps) => {
   };
 
   const getArtifactTypeId = () =>
-    remoteIdNum('artifacttype', artifactTypeId || '', memory.keyMap) ||
-    artifactTypeId;
+    artifactTypeId
+      ? remoteIdNum('artifacttype', artifactTypeId, memory.keyMap) ||
+        artifactTypeId
+      : artifactTypeId;
   const getPassageId = () =>
     remoteIdNum('passage', passageId || '', memory.keyMap) || passageId;
   const getSourceMediaId = () =>
@@ -159,7 +161,7 @@ export const Uploader = (props: IProps) => {
         num,
         uploadList[n].size,
         psgId,
-        artifactTypeId || '',
+        artifactTypeId !== undefined ? artifactTypeId : '',
         sourceMediaId || '',
         recordAudio ? user : ''
       );
