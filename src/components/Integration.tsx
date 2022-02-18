@@ -9,6 +9,7 @@ import {
   Passage,
   ISharedStrings,
   MediaFile,
+  ActivityStates,
 } from '../model';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -223,7 +224,7 @@ export function IntegrationPanel(props: IProps) {
   ]);
   const [exportType, setExportType] = useState(exportTypes[0]);
   const { getTypeId } = useArtifactType();
-  const getTranscription = useTranscription(false);
+  const getTranscription = useTranscription(false, ActivityStates.Approved);
 
   const getProject = () => {
     if (!project) return undefined;

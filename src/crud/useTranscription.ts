@@ -1,6 +1,10 @@
 import { useGlobal } from 'reactn';
+import { ActivityStates } from '../model';
 import { getVernacularMediaRec, getAllMediaRecs, VernacularTag } from '.';
-export const useTranscription = (addSpeaker: boolean) => {
+export const useTranscription = (
+  addSpeaker: boolean,
+  state?: ActivityStates
+) => {
   const [memory] = useGlobal('memory');
 
   return (passageId: string, exportId?: string | null) => {
@@ -12,7 +16,11 @@ export const useTranscription = (addSpeaker: boolean) => {
         .sort((i, j) =>
           i.attributes?.dateCreated <= j.attributes?.dateCreated ? -1 : 1
         )
-        .filter((m) => m.attributes?.transcription)
+        .filter(
+          (m) =>
+            m.attributes?.transcription &&
+            (!state || m.attributes?.transcriptionstate === state)
+        )
         .map((m) => {
           const speaker = m.attributes?.performedBy;
           let transcription = '';
