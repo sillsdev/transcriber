@@ -121,16 +121,19 @@ function TranscribeReject(props: IProps) {
               onChange={handleChange}
             >
               <FormControlLabel
+                id="needsAudio"
                 value={ActivityStates.NeedsNewRecording}
                 control={<Radio color="primary" />}
                 label={t.needsAudio}
               />
               <FormControlLabel
+                id="needsCorrection"
                 value={ActivityStates.NeedsNewTranscription}
                 control={<Radio color="primary" />}
                 label={t.needsCorrection}
               />
               <FormControlLabel
+                id="incomplete"
                 value={ActivityStates.Incomplete}
                 control={<Radio color="primary" />}
                 label={t.incomplete}
@@ -138,6 +141,7 @@ function TranscribeReject(props: IProps) {
             </RadioGroup>
           </FormControl>
           <TextField
+            id="reject-comment"
             label={t.comment}
             variant="filled"
             multiline
