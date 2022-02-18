@@ -552,6 +552,8 @@ if (
     keys: { remoteId: {} },
     attributes: {
       categoryname: { type: 'string' },
+      discussion: { type: 'bool' },
+      resource: { type: 'bool' },
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
       lastModifiedBy: { type: 'number' }, //bkwd compat only

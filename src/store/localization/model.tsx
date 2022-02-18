@@ -46,16 +46,10 @@ export interface IAlertStrings extends Localize.LocalizedStringsMethods {
 export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMethods {
     "activity": string;
     "biblestory": string;
-    "cultural": string;
-    "geographic": string;
-    "grammar": string;
-    "person": string;
-    "qanda": string;
-    "retelling": string;
+    "bookintro": string;
+    "translationresource": string;
     "scripture": string;
-    "theology": string;
     "uncategorized": string;
-    "word": string;
 };
 
 export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
@@ -1105,7 +1099,11 @@ export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
 
 export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods {
     "backTranslation": string;
+    "phraseBackTranslation": string;
+    "wholeBackTranslation": string;
     "communityTesting": string;
+    "communityTest1": string;
+    "communityTest2": string;
     "consultantCheck": string;
     "export": string;
     "finalRecording": string;
@@ -1113,8 +1111,8 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "internalization": string;
     "paratextSync": string;
     "peerReview": string;
+    "preliminaryApproval": string;
     "record": string;
-    "review": string;
     "teamCheck": string;
     "transcribe": string;
     "unsaved": string;

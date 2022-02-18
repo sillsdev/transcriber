@@ -43,6 +43,7 @@ export const useOfflineSetup = () => {
       );
     }
   };
+
   const makeRoleRecs = async () => {
     const allRoleRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('role')
@@ -72,7 +73,7 @@ export const useOfflineSetup = () => {
         attributes: {
           orgRole: false,
           groupRole: true,
-          roleName: 'Editor',
+          roleName: RoleNames.Editor,
         },
       } as Role;
       memory.schema.initializeRecord(editorRec);
@@ -84,10 +85,24 @@ export const useOfflineSetup = () => {
         ])
       );
     }
-    if (offlineRoleRecs.length === 0 || offlineRoleRecs.length === 3) {
+    if (offlineRoleRecs.length < 4) {
+      let transRec = {
+        type: 'role',
+        attributes: {
+          orgRole: false,
+          groupRole: true,
+          roleName: RoleNames.Transcriber,
+        },
+      } as Role;
+      memory.schema.initializeRecord(transRec);
+      await memory.sync(
+        await backup.push((t: TransformBuilder) => [t.addRecord(transRec)])
+      );
+    }
+    /*
+    if (offlineRoleRecs.length < 5) {
       const t = new TransformBuilder();
       const ops = [
-        'Transcriber',
         'Translator',
         'BackTranslator',
         'Consultant',
@@ -106,8 +121,9 @@ export const useOfflineSetup = () => {
         return t.addRecord(rec);
       });
       await memory.sync(await backup.push(ops));
-    }
+    } */
   };
+
   const makeWorkflowStepsRecs = async () => {
     const allRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('workflowstep')
@@ -115,102 +131,107 @@ export const useOfflineSetup = () => {
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineRecs.length === 0) {
       const t = new TransformBuilder();
+      var process = 'OBT';
       let ops = [
         { name: 'Internalization', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TeamCheck', tool: 'teamCheck' },
         { name: 'PeerReview', tool: 'teamCheck' },
+        { name: 'Transcribe', tool: 'transcribe' },
+        { name: 'ParatextSync', tool: 'paratext' },
         { name: 'CommunityTesting', tool: 'community' },
-        { name: 'BackTranslation', tool: 'segment' },
+        { name: 'WholeBackTranslation', tool: 'backTranslate' },
+        { name: 'PhraseBackTranslation', tool: 'backTranslate' },
         { name: 'ConsultantCheck', tool: 'discuss' },
-        { name: 'FinalRecording', tool: 'discuss' },
         { name: 'FinalReview', tool: 'discuss' },
-        { name: 'Export', tool: 'discuss' },
+        { name: 'FinalRecording', tool: 'discuss' },
+        { name: 'Export', tool: 'export' },
         { name: 'Done', tool: 'done' },
       ].map((step, ix) => {
         let rec = {
           type: 'workflowstep',
           attributes: {
-            process: 'OBT',
+            process: process,
             name: step.name,
             sequencenum: ix + 1,
             tool: `{"tool": "${step.tool}"}`,
-            permissions: '{"role": "any", "signoffrole": "none"}',
+            permissions: '{}',
           },
         } as WorkflowStep;
         memory.schema.initializeRecord(rec);
         return t.addRecord(rec);
       });
       await memory.sync(await backup.push(ops));
+
+      process = 'OBS';
       ops = [
         { name: 'Internalization', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TeamCheck', tool: 'teamCheck' },
         { name: 'PeerReview', tool: 'teamCheck' },
-        { name: 'CommunityTesting', tool: 'community' },
-        { name: 'BackTranslation', tool: 'segment' },
+        { name: 'CommunityTest1', tool: 'community' },
+        { name: 'CommunityTest2', tool: 'community' },
+        { name: 'PhraseBackTranslation', tool: 'backTranslate' },
         { name: 'ConsultantCheck', tool: 'discuss' },
-        { name: 'Review', tool: 'discuss' },
-        { name: 'FinalRecording', tool: 'discuss' },
+        { name: 'PreliminaryApproval', tool: 'export' },
         { name: 'FinalReview', tool: 'discuss' },
-        { name: 'Export', tool: 'discuss' },
+        { name: 'FinalRecording', tool: 'discuss' },
+        { name: 'Export', tool: 'export' },
         { name: 'Done', tool: 'done' },
       ].map((step, ix) => {
         let rec = {
           type: 'workflowstep',
           attributes: {
-            process: 'OBS',
+            process: process,
             name: step.name,
             sequencenum: ix + 1,
             tool: `{"tool": "${step.tool}"}`,
-            permissions: '{"role": "any", "signoffrole": "none"}',
+            permissions: '{}',
           },
         } as WorkflowStep;
         memory.schema.initializeRecord(rec);
         return t.addRecord(rec);
       });
       await memory.sync(await backup.push(ops));
+      process = 'draft';
       ops = [
-        { name: 'Internalization', tool: 'resource' },
-        { name: 'Record', tool: 'record' },
-        { name: 'Transcribe', tool: 'teamCheck' },
-        { name: 'PeerReview', tool: 'teamCheck' },
-        { name: 'CommunityTesting', tool: 'community' },
-        { name: 'BackTranslation', tool: 'segment' },
-        { name: 'ConsultantCheck', tool: 'discuss' },
-        { name: 'ParatextSync', tool: 'discuss' },
-        { name: 'Export', tool: 'discuss' },
-        { name: 'Done', tool: 'done' },
+        { name: 'Internalization', tool: '{"tool": "resource"}' },
+        { name: 'Record', tool: '{"tool": "record"}' },
+        { name: 'TeamCheck', tool: '{"tool": "teamCheck"}' },
+        { name: 'Transcribe', tool: '{"tool": "transcribe"}' },
+        { name: 'ParatextSync', tool: '{"tool": "paratext"}' },
+        { name: 'Done', tool: '{"tool": "done"}' },
       ].map((step, ix) => {
         let rec = {
           type: 'workflowstep',
           attributes: {
-            process: 'draft',
+            process: process,
             name: step.name,
             sequencenum: ix + 1,
             tool: `{"tool": "${step.tool}"}`,
-            permissions: '{"role": "any", "signoffrole": "none"}',
+            permissions: '{}',
           },
         } as WorkflowStep;
         memory.schema.initializeRecord(rec);
         return t.addRecord(rec);
       });
       await memory.sync(await backup.push(ops));
+      process = 'transcriber';
       ops = [
         { name: 'Record', tool: 'record' },
-        { name: 'Transcribe', tool: 'teamCheck' },
-        { name: 'ParatextSync', tool: 'discuss' },
-        { name: 'Export', tool: 'discuss' },
+        { name: 'Transcribe', tool: 'transcribe' },
+        { name: 'ParatextSync', tool: 'paratext' },
+        { name: 'Export', tool: 'export' },
         { name: 'Done', tool: 'done' },
       ].map((step, ix) => {
         let rec = {
           type: 'workflowstep',
           attributes: {
-            process: 'transcriber',
+            process: process,
             name: step.name,
             sequencenum: ix + 1,
             tool: `{"tool": "${step.tool}"}`,
-            permissions: '{"role": "any", "signoffrole": "none"}',
+            permissions: '{}',
           },
         } as WorkflowStep;
         memory.schema.initializeRecord(rec);
@@ -227,18 +248,17 @@ export const useOfflineSetup = () => {
     if (offlineRecs.length === 0) {
       const t = new TransformBuilder();
       const ops = [
+        'activity',
         'biblestory',
-        'cultural',
-        'geographic',
-        'person',
+        'bookintro',
         'scripture',
-        'theology',
-        'word',
-        'grammar',
+        'translationresource',
       ].map((n) => {
         let rec = {
           type: 'artifactcategory',
           attributes: {
+            discussion: false,
+            resource: true,
             categoryname: n,
           },
         } as ArtifactCategory;
@@ -257,12 +277,12 @@ export const useOfflineSetup = () => {
       const t = new TransformBuilder();
       const ops = [
         'activity',
-        'resource',
         'backtranslation',
-        'vernacular',
         'comment',
-        'retell',
         'qanda',
+        'resource',
+        'retell',
+        'sharedresource',
       ].map((n) => {
         let rec = {
           type: 'artifacttype',
