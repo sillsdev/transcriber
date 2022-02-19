@@ -99,6 +99,7 @@ export const Uploader = (props: IProps) => {
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
   const [offline] = useGlobal('offline');
+  const [user] = useGlobal('user');
   const planIdRef = useRef<string>(plan);
   const successCount = useRef<number>(0);
   const fileList = useRef<File[]>();
@@ -132,6 +133,8 @@ export const Uploader = (props: IProps) => {
   const getSourceMediaId = () =>
     remoteIdNum('mediafile', sourceMediaId || '', memory.keyMap) ||
     sourceMediaId;
+  const getUserId = () =>
+    remoteIdNum('user', user || '', memory.keyMap) || user;
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     if (success) successCount.current += 1;
@@ -157,10 +160,12 @@ export const Uploader = (props: IProps) => {
         uploadList[n].size,
         psgId,
         artifactTypeId || '',
-        sourceMediaId || ''
+        sourceMediaId || '',
+        recordAudio ? user : ''
       );
       mediaIdRef.current.push(newMediaRec.id);
     }
+
     setComplete(Math.min((n * 100) / uploadList.length, 100));
     const next = n + 1;
     if (next < uploadList.length && !cancelled.current) {
@@ -191,7 +196,7 @@ export const Uploader = (props: IProps) => {
       sourceSegments: sourceSegments,
       performedBy: performedBy,
     } as any;
-
+    if (recordAudio) mediaFile.recordedbyUserId = getUserId();
     nextUpload(
       mediaFile,
       uploadList,

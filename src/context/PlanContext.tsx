@@ -126,7 +126,10 @@ const PlanProvider = withData(mapRecordsToProps)(
     }, [projRole]);
 
     //do this every 30 seconds to warn they can't save
-    useInterval(() => checkOnline((result: boolean) => {}), 1000 * 30);
+    useInterval(
+      () => checkOnline((result: boolean) => {}),
+      offlineOnly ? null : 1000 * 30
+    );
 
     return (
       <PlanContext.Provider
