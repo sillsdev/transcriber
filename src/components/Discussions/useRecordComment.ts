@@ -42,6 +42,7 @@ export const useRecordComment = ({
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [plan] = useGlobal('plan');
+  const [user] = useGlobal('user');
   const [offline] = useGlobal('offline');
   const { commentId } = useArtifactType();
   const fileList = useRef<File[]>();
@@ -75,7 +76,8 @@ export const useRecordComment = ({
           uploadList[n].size,
           passageId,
           commentId,
-          ''
+          '',
+          user
         )
       ).id;
     }
