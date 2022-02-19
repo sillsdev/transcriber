@@ -93,7 +93,7 @@ export function PassageHistory(props: IProps) {
     ) => {
       const userFromId = (psc: PassageStateChange): User => {
         var id = related(psc, 'lastModifiedByUser');
-        if (!id) {
+        if (!id && psc.attributes?.lastModifiedBy) {
           id = remoteIdGuid(
             'user',
             psc.attributes.lastModifiedBy.toString(),
