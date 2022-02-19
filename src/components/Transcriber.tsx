@@ -890,7 +890,7 @@ export function Transcriber(props: IProps) {
       transcriptionRef.current.firstChild.value = val.transcription;
       focusOnTranscription();
     }
-    setLastSaved(passage.attributes?.dateUpdated || '');
+    setLastSaved(mediafile.attributes?.dateUpdated || '');
     setTotalSeconds(duration);
   };
 
