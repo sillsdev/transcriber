@@ -98,6 +98,7 @@ export const useRecordComment = ({
       remoteIdNum('artifacttype', commentId, memory.keyMap) || commentId;
     const getPassageId = () =>
       remoteIdNum('passage', passageId, memory.keyMap) || passageId;
+    const getUserId = () => remoteIdNum('user', user, memory.keyMap) || user;
 
     uploadFiles(files);
     fileList.current = files;
@@ -108,6 +109,7 @@ export const useRecordComment = ({
       contentType: files[0].type,
       artifactTypeId: getArtifactId(),
       passageId: getPassageId(),
+      recordedByUserId: getUserId(),
     } as any;
     nextUpload(mediaFile, files, 0, auth, offline, reporter, itemComplete);
   };
