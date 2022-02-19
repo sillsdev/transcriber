@@ -82,13 +82,18 @@ const UnsavedProvider = connect(
   });
   const saveErr = useRef<string>();
   const [saveResult, setSaveResult] = useGlobal('saveResult');
-  const [changed, setChanged] = useGlobal('changed');
+  const [, setChangedx] = useGlobal('changed');
+  const changedRef = useRef(false);
   const [toolsChanged, setToolsChanged] = useState<
     IIndexableSaveInfo<SaveInfo>
   >({});
   const [, setComplete] = useGlobal('progress');
   const toolsChangedRef = useRef<IIndexableSaveInfo<SaveInfo>>({});
 
+  const setChanged = (c: boolean) => {
+    setChangedx(c);
+    changedRef.current = c;
+  };
   useEffect(() => {
     saveErr.current = saveResult;
   }, [saveResult]);
@@ -152,7 +157,7 @@ const UnsavedProvider = connect(
   };
 
   const allSaveCompleted = () => {
-    if (!saveErr.current && changed) {
+    if (!saveErr.current && changedRef.current) {
       setChanged(false);
     } /* else //there was an error {
       Object.keys(toolsChanged).forEach((id) =>
@@ -227,7 +232,7 @@ const UnsavedProvider = connect(
     if (setit) {
       setToolsChanged({ ...toolsChangedRef.current });
       var anyChanged = Object.keys(toolsChangedRef.current).length > 0;
-      if (changed !== anyChanged) {
+      if (changedRef.current !== anyChanged) {
         setChanged(anyChanged);
       }
       if (
@@ -258,7 +263,7 @@ const UnsavedProvider = connect(
       showMessage(t.loadingTable);
       return;
     }
-    if (changed) {
+    if (changedRef.current) {
       if (anySaving()) {
         showMessage(t.saving);
         return;
