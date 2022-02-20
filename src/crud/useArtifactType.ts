@@ -45,11 +45,13 @@ export const useArtifactType = () => {
     return (t as ISwitches)[val] || val;
   };
   const localizedArtifactTypeFromId = (id: string) => {
+    return localizedArtifactType(slugFromId(id));
+  };
+
+  const slugFromId = (id: string) => {
     var at = {} as ArtifactType;
     if (id) at = findRecord(memory, 'artifacttype', id) as ArtifactType;
-    return at && at.attributes
-      ? localizedArtifactType(at.attributes.typename)
-      : localizedArtifactType('vernacular');
+    return at && at.attributes ? at.attributes.typename : 'vernacular';
   };
 
   const fromLocalizedArtifactType = (val: string) => {
@@ -142,6 +144,7 @@ export const useArtifactType = () => {
     getArtifactTypes,
     addNewArtifactType,
     localizedArtifactType,
+    slugFromId,
     localizedArtifactTypeFromId,
     fromLocalizedArtifactType,
     commentId,
