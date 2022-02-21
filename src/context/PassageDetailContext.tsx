@@ -339,9 +339,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     };
 
     const setStepComplete = (stepid: string, complete: boolean) => {
-      var completed = state.psgCompleted;
+      var completed = [...state.psgCompleted];
       var remId = remoteId('orgworkflowstep', stepid, memory.keyMap) || stepid;
-      var step = state.psgCompleted.find((s) => s.stepid === remId);
+      var step = completed.find((s) => s.stepid === remId);
       var rec = findRecord(
         memory,
         'orgworkflowstep',
@@ -355,7 +355,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setState((state: ICtxState) => {
         return {
           ...state,
-          psgCompleted: [...completed],
+          psgCompleted: completed,
         };
       });
       const recId = {
