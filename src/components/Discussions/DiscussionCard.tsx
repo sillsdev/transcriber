@@ -634,7 +634,7 @@ export const DiscussionCard = (props: IProps) => {
               <TextField
                 autoFocus
                 margin="dense"
-                id="topic"
+                id={`topic-${discussion.id}`}
                 value={editSubject}
                 onChange={handleSubjectChange}
                 placeholder={t.topic}
@@ -643,6 +643,7 @@ export const DiscussionCard = (props: IProps) => {
               />
               <div className={classes.row}>
                 <SelectRole
+                  id={`role-${discussion.id}`}
                   org={false}
                   initRole={editRole}
                   onChange={handleRoleChange}
@@ -657,6 +658,7 @@ export const DiscussionCard = (props: IProps) => {
                   {t.or}
                 </Typography>
                 <SelectUser
+                  id={`user-${discussion.id}`}
                   initUser={editUser}
                   onChange={handleUserChange}
                   required={false}
@@ -664,6 +666,7 @@ export const DiscussionCard = (props: IProps) => {
                 />
               </div>
               <SelectArtifactCategory
+                id={`category-${discussion.id}`}
                 initCategory={editCategory}
                 onCategoryChange={onCategoryChange}
                 allowNew={
@@ -674,7 +677,7 @@ export const DiscussionCard = (props: IProps) => {
               />
               <div className={classes.row}>
                 <Button
-                  id="ok"
+                  id={`ok-${discussion.id}`}
                   onClick={handleSave}
                   className={classes.actionButton}
                   disabled={editSubject === ''}
@@ -682,7 +685,7 @@ export const DiscussionCard = (props: IProps) => {
                   {ts.save}
                 </Button>
                 <Button
-                  id="cancel"
+                  id={`cancel-${discussion.id}`}
                   onClick={handleCancel}
                   className={classes.actionButton}
                 >
@@ -747,7 +750,7 @@ export const DiscussionCard = (props: IProps) => {
 
                 {!discussion.attributes.resolved && (
                   <IconButton
-                    id="resolveDiscussion"
+                    id={`resolveDiscussion-${discussion.id}`}
                     className={classes.actionButton}
                     title={t.resolved}
                     onClick={handleResolveButton}
@@ -756,6 +759,7 @@ export const DiscussionCard = (props: IProps) => {
                   </IconButton>
                 )}
                 <DiscussionMenu
+                  id={`menu-${discussion.id}`}
                   action={handleDiscussionAction}
                   resolved={discussion.attributes.resolved || false}
                   canSet={currentSegment}
@@ -780,7 +784,7 @@ export const DiscussionCard = (props: IProps) => {
               </Typography>
             )}
             <IconButton
-              id="collapseDiscussion"
+              id={`collapseDiscussion-${discussion.id}`}
               className={classes.smallButton}
               title={t.collapse}
               onClick={handleToggleCollapse}
@@ -802,6 +806,7 @@ export const DiscussionCard = (props: IProps) => {
               ))}
               {!discussion.attributes.resolved && !editCard && (
                 <ReplyCard
+                  id={`reply-${discussion.id}`}
                   auth={auth}
                   discussion={discussion}
                   number={myComments.length}
