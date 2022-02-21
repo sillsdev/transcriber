@@ -61,6 +61,7 @@ export function ResourceData(props: IProps) {
         onCategoryChange={onCategoryChange}
         required={catRequired}
         scripture={ScriptureEnum.highlight}
+        resource={true}
       />
     </div>
   );

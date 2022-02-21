@@ -44,7 +44,10 @@ export const useArtifactCategory = () => {
     return fromLocal[val] || val;
   };
 
-  const getArtifactCategorys = async () => {
+  const getArtifactCategorys = async (
+    resource: boolean,
+    discussion: boolean
+  ) => {
     const categorys: IArtifactCategory[] = [];
     /* wait for new categories remote id to fill in */
     await waitForIt(
@@ -61,7 +64,9 @@ export const useArtifactCategory = () => {
         (r) =>
           (related(r, 'organization') === organization ||
             related(r, 'organization') === null) &&
-          Boolean(r.keys?.remoteId) !== offlineOnly
+          Boolean(r.keys?.remoteId) !== offlineOnly &&
+          r.attributes.resource === resource &&
+          r.attributes.discussion === discussion
       )
       .forEach((r) =>
         categorys.push({
@@ -73,7 +78,11 @@ export const useArtifactCategory = () => {
     return categorys;
   };
 
-  const addNewArtifactCategory = async (newArtifactCategory: string) => {
+  const addNewArtifactCategory = async (
+    newArtifactCategory: string,
+    resource: boolean,
+    discussion: boolean
+  ) => {
     if (newArtifactCategory.length > 0) {
       //check for duplicate
       const orgrecs: ArtifactCategory[] = memory.cache.query(
@@ -89,7 +98,7 @@ export const useArtifactCategory = () => {
       });
       if (dup) return 'duplicate';
       //now check duplicate localized
-      const ac = (await getArtifactCategorys()).filter(
+      const ac = (await getArtifactCategorys(resource, discussion)).filter(
         (c) => c.category === newArtifactCategory
       );
       if (ac.length > 0) return 'duplicate';
@@ -98,6 +107,8 @@ export const useArtifactCategory = () => {
         type: 'artifactcategory',
         attributes: {
           categoryname: newArtifactCategory,
+          resource: resource,
+          discussion: discussion,
         },
       } as any;
       const t = new TransformBuilder();
