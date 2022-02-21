@@ -239,19 +239,21 @@ export const StepEditor = ({ process, org }: IProps) => {
   };
 
   useEffect(() => {
-    GetOrgWorkflowSteps({ process: 'ANY', org, showAll }).then((orgSteps) => {
-      const newRows = Array<IStepRow>();
-      orgSteps.forEach((s) => {
-        newRows.push({
-          id: s.id,
-          seq: s.attributes?.sequencenum,
-          name: localName(s.attributes?.name),
-          tool: toCamel(getTool(s.attributes?.tool)),
-          rIdx: newRows.length,
+    GetOrgWorkflowSteps({ process: 'ANY', org, showAll: true }).then(
+      (orgSteps) => {
+        const newRows = Array<IStepRow>();
+        orgSteps.forEach((s) => {
+          newRows.push({
+            id: s.id,
+            seq: s.attributes?.sequencenum,
+            name: localName(s.attributes?.name),
+            tool: toCamel(getTool(s.attributes?.tool)),
+            rIdx: newRows.length,
+          });
         });
-      });
-      setRows(newRows.sort((i, j) => i.seq - j.seq));
-    });
+        setRows(newRows.sort((i, j) => i.seq - j.seq));
+      }
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
