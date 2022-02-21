@@ -219,7 +219,7 @@ export const AudioTable = (props: IProps) => {
       <MediaActions
         t={t}
         rowIndex={row.index}
-        mediaId={mediaId}
+        mediaId={row.id}
         online={connected || offlineOnly}
         readonly={onAttach ? readonly : true}
         attached={Boolean(row.passId)}
