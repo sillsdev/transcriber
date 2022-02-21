@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import * as actions from '../store';
 import { useGlobal, useState } from 'reactn';
 import { connect } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import {
   IState,
   IIntegrationStrings,
@@ -188,6 +189,7 @@ export function IntegrationPanel(props: IProps) {
     props;
   const classes = useStyles();
   const [connected] = useGlobal('connected');
+  const { pathname } = useLocation();
   const [hasPtProj, setHasPtProj] = useState(false);
   const [ptProj, setPtProj] = useState(-1);
   const [ptProjName, setPtProjName] = useState('');
@@ -222,7 +224,11 @@ export function IntegrationPanel(props: IProps) {
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.BackTranslation,
   ]);
-  const [exportType, setExportType] = useState(exportTypes[0]);
+  const [exportType, setExportType] = useState(
+    pathname.indexOf(ArtifactTypeSlug.BackTranslation) !== -1
+      ? ArtifactTypeSlug.BackTranslation
+      : exportTypes[0]
+  );
   const { getTypeId } = useArtifactType();
   const getTranscription = useTranscription(false, ActivityStates.Approved);
 
@@ -402,12 +408,27 @@ export function IntegrationPanel(props: IProps) {
       : t.offline;
   };
   const findConnectedProject = () => {
-    let index = paratext_projects.findIndex(
-      (p) =>
-        p.ProjectIds.indexOf(
-          remoteId('project', project, memory.keyMap) || project
-        ) >= 0
-    );
+    if (paratext_projects.length === 0) return;
+    const curInt = projectintegrations.filter(
+      (pi) =>
+        related(pi, 'integration') === paratextIntegration &&
+        pi.attributes &&
+        related(pi, 'project') === project
+    ) as ProjectIntegration[];
+    let index = 0;
+    if (curInt.length > 0) {
+      index = paratext_projects.findIndex((p) => {
+        const settings = JSON.parse(curInt[0].attributes.settings);
+        return p.Name === settings.name;
+      });
+    }
+    if (curInt.length === 0 || index === -1) {
+      index = paratext_projects.findIndex(
+        (p) =>
+          Boolean(p.BaseProject) ===
+          (exportType === ArtifactTypeSlug.BackTranslation)
+      );
+    }
     setPtProj(index);
     setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
     setPtShortName(index >= 0 ? paratext_projects[index].ShortName : '');
@@ -451,6 +472,7 @@ export function IntegrationPanel(props: IProps) {
       resetProjects();
       resetCount();
       setMyProject(project);
+      resetSync();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
@@ -471,12 +493,19 @@ export function IntegrationPanel(props: IProps) {
 
   /* do this once */
   useEffect(() => {
-    if (integrations.length > 0 && !paratextIntegration) {
-      resetSync();
-      getParatextIntegration(offline ? 'paratextLocal' : 'paratext');
+    if (integrations.length > 0) {
+      getParatextIntegration(
+        exportType === ArtifactTypeSlug.BackTranslation && offline
+          ? 'paratextlocalbacktranslation'
+          : exportType === ArtifactTypeSlug.BackTranslation
+          ? 'paratextbacktranslation'
+          : offline
+          ? 'paratextLocal'
+          : 'paratext'
+      );
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [integrations, paratextIntegration, exportType]);
+  }, [integrations, exportType]);
 
   useEffect(() => {
     if (paratext_countStatus) {
@@ -516,11 +545,11 @@ export function IntegrationPanel(props: IProps) {
         const langTag =
           proj && proj.attributes ? proj.attributes.language : undefined;
         if (offline) {
-          const localprojs: ProjectIntegration[] = projectintegrations.filter(
+          const localprojs = projectintegrations.filter(
             (pi) =>
               related(pi, 'integration') === paratextIntegration &&
               pi.attributes
-          );
+          ) as ProjectIntegration[];
           var projIds = localprojs.map((pi) => {
             var settings = JSON.parse(pi.attributes.settings);
             return {
@@ -548,12 +577,12 @@ export function IntegrationPanel(props: IProps) {
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [busy, paratext_projects, paratext_projectsStatus]);
+  }, [busy, paratext_projects, paratext_projectsStatus, paratextIntegration]);
 
   useEffect(() => {
     if (project) findConnectedProject();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectintegrations, project]);
+  }, [projectintegrations, paratext_projects, paratextIntegration, project]);
 
   useEffect(() => {
     if (paratext_syncStatus) {
@@ -566,7 +595,6 @@ export function IntegrationPanel(props: IProps) {
       }
       if (paratext_syncStatus.complete) {
         resetCount();
-        resetSync();
         setSyncing(false);
         doDataChanges(
           auth,
