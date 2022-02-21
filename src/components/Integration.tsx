@@ -47,6 +47,7 @@ import {
   useOfflnProjRead,
   remoteId,
   VernacularTag,
+  ArtifactTypeSlug,
 } from '../crud';
 import { localSync, getParatextDataPath, useCheckOnline } from '../utils';
 import Auth from '../auth/Auth';
@@ -60,6 +61,7 @@ import localStrings from '../selector/localize';
 import { doDataChanges } from '../hoc/DataChanges';
 import Memory from '@orbit/memory';
 import { translateParatextError } from '../utils/translateParatextError';
+import { SelectExportType } from '../control';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -214,6 +216,12 @@ export function IntegrationPanel(props: IProps) {
   const setSyncing = (state: boolean) => (syncing.current = state);
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const checkOnline = useCheckOnline(resetOrbitError);
+  const [exportTypes] = useState([
+    ArtifactTypeSlug.Vernacular,
+    ArtifactTypeSlug.BackTranslation,
+  ]);
+  const [exportType, setExportType] = useState(exportTypes[0]);
+
   const getProject = () => {
     if (!project) return undefined;
     const projfind: Project[] = projects.filter((p) => p.id === project);
@@ -356,7 +364,7 @@ export function IntegrationPanel(props: IProps) {
       memory,
       user,
       VernacularTag,
-      true // check version of vernacular
+      true // check version
     );
     showMessage(err || t.syncComplete);
     resetCount();
@@ -765,6 +773,22 @@ export function IntegrationPanel(props: IProps) {
         </AccordionSummary>
         <AccordionDetails className={classes.panel}>
           <List dense component="div">
+            <ListItem key="export-type">
+              <ListItemAvatar>
+                <Avatar className={classes.avatar}>
+                  <CheckIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <SelectExportType
+                    exportType={exportType}
+                    exportTypes={exportTypes}
+                    setExportType={setExportType}
+                  />
+                }
+              />
+            </ListItem>
             <ListItem key="installed">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
