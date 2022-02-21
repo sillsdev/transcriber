@@ -505,7 +505,8 @@ export function Transcriber(props: IProps) {
       });
       toolChanged(toolId, true);
       save(
-        mediafile.attributes.transcriptionstate,
+        mediafile.attributes.transcriptionstate ||
+          ActivityStates.TranscribeReady,
         0,
         segmentsRef.current,
         t.pullParatextStatus
