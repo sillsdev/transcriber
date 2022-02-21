@@ -1,7 +1,7 @@
 {
   "name": "sil-transcriber",
-  "version": "2.13.5",
-  "description": "transcribe audio files for Paratext or Elan",
+  "version": "2.14.0",
+  "description": "transcribe and manage audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^1.6.0",
