@@ -9,6 +9,7 @@ import {
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import WorkflowStep from '../model/workflowStep';
+import { findRecord } from '.';
 
 export const useOfflineSetup = () => {
   const [memory] = useGlobal('memory');
@@ -85,7 +86,11 @@ export const useOfflineSetup = () => {
         ])
       );
     }
-    if (offlineRoleRecs.length < 4) {
+    if (
+      offlineRoleRecs.findIndex(
+        (r) => r.attributes?.roleName === RoleNames.Transcriber
+      ) < 0
+    ) {
       let transRec = {
         type: 'role',
         attributes: {
@@ -100,7 +105,9 @@ export const useOfflineSetup = () => {
       );
     }
     /*
-    if (offlineRoleRecs.length < 5) {
+    if (offlineRoleRecs.findIndex(
+        (r) => r.attributes?.roleName === RoleNames.Transcriber
+      ) < 0) {
       const t = new TransformBuilder();
       const ops = [
         'Translator',
