@@ -357,6 +357,13 @@ export function IntegrationPanel(props: IProps) {
     syncProject(
       auth,
       remoteIdNum('project', project, memory.keyMap),
+      getTypeId(exportType)
+        ? remoteIdNum(
+            'artifacttype',
+            getTypeId(exportType) || '',
+            memory.keyMap
+          )
+        : 0,
       errorReporter,
       t.syncPending,
       t.syncComplete
@@ -642,6 +649,22 @@ export function IntegrationPanel(props: IProps) {
         </AccordionSummary>
         <AccordionDetails className={classes.panel}>
           <List dense component="div">
+            <ListItem id="onlineexporttype" key="export-type">
+              <ListItemAvatar>
+                <Avatar className={classes.avatar}>
+                  <CheckIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <SelectExportType
+                    exportType={exportType}
+                    exportTypes={exportTypes}
+                    setExportType={setExportType}
+                  />
+                }
+              />
+            </ListItem>
             <ListItem key="connected">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
