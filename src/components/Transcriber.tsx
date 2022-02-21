@@ -106,6 +106,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     pane: {},
     textarea: { resize: 'none' },
+    grow: {
+      flexGrow: 1,
+      display: 'flex',
+      flexDirection: 'row',
+    },
   })
 );
 const Wrapper = styled.div`
@@ -962,7 +967,17 @@ export function Transcriber(props: IProps) {
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
         {allDone ? (
-          <AllDone />
+          <div>
+            {jumpBack && (
+              <div className={classes.grow}>
+                <div className={classes.grow}>{'\u00A0'}</div>
+                <Button onClick={handleWorkflow} variant="contained">
+                  {t.backToWorkflow}
+                </Button>
+              </div>
+            )}
+            <AllDone />
+          </div>
         ) : (
           <Grid container direction="column" style={style}>
             <Grid container alignItems="center" justifyContent="space-between">
