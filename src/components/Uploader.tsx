@@ -12,7 +12,9 @@ import {
   pullPlanMedia,
   related,
   remoteIdNum,
+  useArtifactType,
   useOfflnMediafileCreate,
+  VernacularTag,
 } from '../crud';
 import Auth from '../auth/Auth';
 import Memory from '@orbit/memory';
@@ -73,6 +75,7 @@ export const Uploader = (props: IProps) => {
     allowWave,
     defaultFilename,
     t,
+    ts,
     isOpen,
     onOpen,
     showMessage,
@@ -108,7 +111,7 @@ export const Uploader = (props: IProps) => {
   const artifactTypeRef = useRef<string>('');
   const { createMedia } = useOfflnMediafileCreate(doOrbitError);
   const [, setComplete] = useGlobal('progress');
-
+  const { localizedArtifactTypeFromId } = useArtifactType();
   const finishMessage = () => {
     setTimeout(() => {
       if (fileList.current)
@@ -197,6 +200,9 @@ export const Uploader = (props: IProps) => {
       sourceMediaId: getSourceMediaId(),
       sourceSegments: sourceSegments,
       performedBy: performedBy,
+      eafUrl: !artifactTypeId
+        ? ts.mediaAttached
+        : localizedArtifactTypeFromId(artifactTypeId), //put psc message here
     } as any;
     if (recordAudio) mediaFile.recordedbyUserId = getUserId();
     nextUpload(
