@@ -374,8 +374,7 @@ export function IntegrationPanel(props: IProps) {
       memory,
       user,
       getTypeId(exportType),
-      getTranscription,
-      true // check version
+      getTranscription
     );
     showMessage(err || t.syncComplete);
     resetCount();

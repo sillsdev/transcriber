@@ -622,8 +622,7 @@ export const localSync = async (
   memory: Memory,
   userId: string,
   artifactId: string | null,
-  getTranscription: (passId: string, artifactId: string | null) => string,
-  checkVersion: boolean
+  getTranscription: (passId: string, artifactId: string | null) => string
 ) => {
   let chapChg: { [key: string]: PassageInfo[] } = {};
   let probablyready = mediafiles.filter(
@@ -638,7 +637,8 @@ export const localSync = async (
     const passageId = related(pr, 'passage');
     const prVer = pr.attributes?.versionNumber;
     var newer = [];
-    if (checkVersion) {
+    if (!artifactId) {
+      // only check version on vernacular
       newer = mediafiles.filter(
         (m) =>
           related(m, 'passage') === passageId &&
