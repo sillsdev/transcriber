@@ -120,7 +120,7 @@ export function useMediaRecorder(
   }
   function handleError(e: any) {
     logError(Severity.error, reporter, e.error);
-    onError(e.error);
+    onError(e?.error || 'Recorder error');
   }
 
   function startRecorder() {

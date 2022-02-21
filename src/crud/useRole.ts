@@ -1,16 +1,24 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { Role, Project, RoleNames } from '../model';
+import {
+  Role,
+  Project,
+  RoleNames,
+  canTranscribe,
+  canBeEditor,
+  ISharedStrings,
+  Group,
+} from '../model';
 import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import { related } from '../crud';
-import { logError, Severity } from '../utils';
+import { localizeRole, logError, Severity } from '../utils';
 
 export const useRole = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setOrgRole] = useGlobal('orgRole');
-  const [, setProjRole] = useGlobal('projRole');
+  const [projRole, setProjRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
 
   interface IUniqueRoles {
@@ -37,6 +45,24 @@ export const useRole = () => {
     if (findit.length > 0) return findit[0].id;
     return '';
   };
+  const getTranscriberRoleIds = () => {
+    return canTranscribe.map((rn) => getRoleId(rn));
+  };
+  const getEditorRoleIds = () => {
+    return canBeEditor.map((rn) => getRoleId(rn));
+  };
+  const getLocalizedTranscriberRoles = (ts: ISharedStrings) => {
+    return canTranscribe.map((rn) => localizeRole(rn, ts, true));
+  };
+  const getLocalizedEditorRoles = (ts: ISharedStrings) => {
+    return canBeEditor.map((rn) => localizeRole(rn, ts, true));
+  };
+
+  const userCanTranscribe = () =>
+    projRole ? canTranscribe.includes(projRole) : false;
+  const userCanBeEditor = () =>
+    projRole ? canBeEditor.includes(projRole) : false;
+  const userIsProjAdmin = () => projRole === RoleNames.Admin;
 
   const getRoleRec = (kind: string, orgRole: boolean) => {
     const lcKind = kind.toLowerCase();
@@ -89,9 +115,9 @@ export const useRole = () => {
       ) as Role;
 
       const roleName = roleRec?.attributes?.roleName;
-      if (roleName) return roleName.toLocaleLowerCase();
+      if (roleName) return roleName as RoleNames;
     }
-    return '';
+    return undefined;
   };
 
   const getMyOrgRole = (orgId: string) => {
@@ -115,14 +141,29 @@ export const useRole = () => {
       const gMbrRecs = getMbrRoleRec('group', related(proj, 'group'), user);
       return getMbrRole(gMbrRecs);
     } catch {
-      return 'Admin';
+      return RoleNames.Admin;
+    }
+  };
+
+  const getInviteProjRole = (orgId: string) => {
+    try {
+      const groups = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('group')
+      ) as Group[];
+      const allUsersGroup = groups.filter(
+        (g) => g.attributes.allUsers && related(g, 'owner') === orgId
+      );
+      const gMbrRecs = getMbrRoleRec('group', allUsersGroup[0].id, user);
+      return getMbrRole(gMbrRecs);
+    } catch {
+      return RoleNames.Admin;
     }
   };
 
   const setMyProjRole = (projectId: string) => {
     const role = getMyProjRole(projectId);
-    setProjRole(role);
-    return role;
+    setProjRole(role as RoleNames);
+    return role as RoleNames;
   };
 
   return {
@@ -133,5 +174,13 @@ export const useRole = () => {
     setMyProjRole,
     getMyOrgRole,
     getMyProjRole,
+    getInviteProjRole,
+    getTranscriberRoleIds,
+    getEditorRoleIds,
+    getLocalizedTranscriberRoles,
+    getLocalizedEditorRoles,
+    userCanTranscribe,
+    userCanBeEditor,
+    userIsProjAdmin,
   };
 };

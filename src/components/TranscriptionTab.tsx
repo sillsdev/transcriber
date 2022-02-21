@@ -53,17 +53,24 @@ import {
   sectionCompare,
   passageCompare,
   passageDescription,
-  getMediaRec,
+  getVernacularMediaRec,
+  getAllMediaRecs,
   getMediaEaf,
   getMediaName,
   getMediaInPlans,
   useOrganizedBy,
+  useArtifactType,
+  ArtifactTypeSlug,
+  useTranscription,
+  usePassageState,
+  VernacularTag,
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
 import { dateOrTime } from '../utils';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 import AudioDownload from './AudioDownload';
+import { SelectExportType } from '../control';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -103,6 +110,9 @@ const useStyles = makeStyles((theme: Theme) =>
     downloadButtons: {
       display: 'flex',
       alignItems: 'center',
+    },
+    typeSelect: {
+      paddingRight: theme.spacing(2),
     },
   })
 );
@@ -168,6 +178,7 @@ interface IProps
   auth: Auth;
   projectPlans: Plan[];
   planColumn?: boolean;
+  floatTop?: boolean;
 }
 
 export function TranscriptionTab(props: IProps) {
@@ -188,6 +199,7 @@ export function TranscriptionTab(props: IProps) {
     exportStatus,
     exportFile,
     allBookData,
+    floatTop,
   } = props;
   const classes = useStyles();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -216,7 +228,17 @@ export function TranscriptionTab(props: IProps) {
   const [fingerprint] = useGlobal('fingerprint');
   const getOfflineProject = useOfflnProjRead();
   const [globalStore] = useGlobal();
-
+  const { getTypeId } = useArtifactType();
+  const [exportTypes] = useState<ArtifactTypeSlug[]>([
+    ArtifactTypeSlug.Vernacular,
+    ArtifactTypeSlug.Retell,
+    ArtifactTypeSlug.QandA,
+    ArtifactTypeSlug.BackTranslation,
+  ]);
+  const [exportType, setExportType] = useState<ArtifactTypeSlug>(
+    exportTypes[0]
+  );
+  const getTranscription = useTranscription(true);
   const columnDefs = [
     { name: 'name', title: getOrganizedBy(true) },
     { name: 'state', title: t.sectionstate },
@@ -238,6 +260,7 @@ export function TranscriptionTab(props: IProps) {
     { columnName: 'action', width: 150 },
   ];
   const [filter, setFilter] = useState(false);
+  const getPassageState = usePassageState();
 
   const defaultHiddenColumnNames = useMemo(
     () =>
@@ -268,7 +291,8 @@ export function TranscriptionTab(props: IProps) {
     var projectplans = plans.filter((pl) => related(pl, 'project') === project);
     let media: MediaFile[] = getMediaInPlans(
       projectplans.map((p) => p.id),
-      mediaFiles
+      mediaFiles,
+      VernacularTag
     );
     const attached = media
       .map((m) => related(m, 'passage'))
@@ -278,6 +302,12 @@ export function TranscriptionTab(props: IProps) {
       setBusy(false);
       return;
     }
+    /* get correct count */
+    media = getMediaInPlans(
+      projectplans.map((p) => p.id),
+      mediaFiles,
+      undefined
+    );
     exportProject(
       exportType,
       memory,
@@ -297,10 +327,12 @@ export function TranscriptionTab(props: IProps) {
     else doProjectExport(ExportType.PTF);
   };
 
-  const getTranscription = (passageId: string) => {
-    const mediaRec = getMediaRec(passageId, memory);
-    return mediaRec?.attributes?.transcription || '';
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const exportId = useMemo(
+    () => (exportType ? getTypeId(exportType) : VernacularTag),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [exportType]
+  );
 
   const getCopy = (
     projectPlans: Plan[],
@@ -322,7 +354,7 @@ export function TranscriptionTab(props: IProps) {
           sectionpassages.forEach((passage: Passage) => {
             // const state = passage?.attributes?.state ||'';
             const ref = getReference(passage, bookData);
-            const transcription = getTranscription(passage.id);
+            const transcription = getTranscription(passage.id, exportId);
             if (transcription !== '') {
               if (planName && planName !== '') {
                 copyData.push(`*****\n${planName}\n`);
@@ -347,6 +379,9 @@ export function TranscriptionTab(props: IProps) {
       .writeText(
         getCopy(projectPlans, passages, sections, allBookData).join('\n')
       )
+      .then(() => {
+        showMessage(t.availableOnClipboard);
+      })
       .catch((err) => {
         showMessage(t.cantCopy);
       });
@@ -365,15 +400,21 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const hasTranscription = (passageId: string) => {
-    const mediaRec = getMediaRec(passageId, memory);
-    const mediaAttr = mediaRec && mediaRec.attributes;
-    const transcription =
-      mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
+    let transcription = '';
+    if (exportId === VernacularTag) {
+      const mediaRec = getVernacularMediaRec(passageId, memory);
+      transcription = mediaRec?.attributes?.transcription || '';
+    } else {
+      const transcriptions = getAllMediaRecs(passageId, memory, exportId).map(
+        (m) => m.attributes?.transcription
+      );
+      transcription = transcriptions.join('\n');
+    }
     return transcription.length > 0;
   };
 
   const handleEaf = (passageId: string) => () => {
-    const mediaRec = getMediaRec(passageId, memory);
+    const mediaRec = getVernacularMediaRec(passageId, memory);
     if (!mediaRec) return;
     const eafCode = btoa(
       getMediaEaf(mediaRec, memory, globalStore.errorReporter)
@@ -474,10 +515,7 @@ export function TranscriptionTab(props: IProps) {
             parentId: '',
           });
           sectionpassages.forEach((passage: Passage) => {
-            const state =
-              passage.attributes && passage.attributes.state
-                ? activityState.getString(passage.attributes.state)
-                : '';
+            const state = activityState.getString(getPassageState(passage));
             rowData.push({
               id: passage.id,
               name: getReference(passage, bookData),
@@ -586,7 +624,7 @@ export function TranscriptionTab(props: IProps) {
         const passRec = memory.cache.query((q: QueryBuilder) =>
           q.findRecord({ type: 'passage', id: row.id })
         ) as Passage;
-        const state = passRec && passRec.attributes && passRec.attributes.state;
+        const state = getPassageState(passRec);
         const media = memory.cache.query((q: QueryBuilder) =>
           q
             .findRecords('mediafile')
@@ -647,12 +685,12 @@ export function TranscriptionTab(props: IProps) {
         <AppBar
           position="fixed"
           className={clsx(classes.bar, {
-            [classes.highBar]: planColumn,
+            [classes.highBar]: planColumn || floatTop,
           })}
           color="default"
         >
           <div className={classes.actions}>
-            {planColumn && (
+            {(planColumn || floatTop) && (
               <Button
                 id="transExp"
                 key="export"
@@ -694,6 +732,11 @@ export function TranscriptionTab(props: IProps) {
               </Button>
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
+            <SelectExportType
+              exportType={exportType}
+              exportTypes={exportTypes}
+              setExportType={setExportType}
+            />
             <Button
               id="transFilt"
               key="filter"
@@ -748,6 +791,7 @@ export function TranscriptionTab(props: IProps) {
           id={passageId}
           visible={passageId !== ''}
           closeMethod={handleCloseTranscription}
+          exportId={exportId}
         />
       )}
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}

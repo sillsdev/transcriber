@@ -60,7 +60,6 @@ export const WorkScreen = (props: IProps) => {
   const setUrlContext = useUrlContext();
   const [projRole] = useGlobal('projRole');
   const [projType] = useGlobal('projType');
-  const [memory] = useGlobal('memory');
   const { setProjectType } = useProjectType();
   const [topFilter, setTopFilter] = React.useState(false);
   const { setMyProjRole } = useRole();
@@ -73,7 +72,6 @@ export const WorkScreen = (props: IProps) => {
   };
 
   const SwitchTo = () => {
-    //if (projRole !== 'admin') return <></>;
     return (
       <ViewMode
         mode={ViewOption.Transcribe}
@@ -88,10 +86,10 @@ export const WorkScreen = (props: IProps) => {
 
   React.useEffect(() => {
     const projectId = setUrlContext(prjId);
-    if (projRole === '')
-      if (setMyProjRole(projectId) === '') {
+    if (!projRole)
+      if (!setMyProjRole(projectId)) {
         // If after proj role set there is none, force reload
-        localStorage.removeItem(localUserKey(LocalKey.url, memory));
+        localStorage.removeItem(localUserKey(LocalKey.url));
         forceLogin();
         setView('/logout');
       }

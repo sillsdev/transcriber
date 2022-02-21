@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'reactn';
 import clsx from 'clsx';
 import { Redirect, useLocation } from 'react-router-dom';
@@ -74,7 +74,7 @@ interface INameProps {
 }
 
 const ProjectName = ({ setView }: INameProps) => {
-  const ctx = React.useContext(UnsavedContext);
+  const ctx = useContext(UnsavedContext);
   const { checkSavedFn } = ctx.state;
   const { getPlanName } = usePlan();
   const [, setProject] = useGlobal('project');
@@ -85,7 +85,7 @@ const ProjectName = ({ setView }: INameProps) => {
   const handleHome = () => {
     setProject('');
     setPlan('');
-    setProjRole('');
+    setProjRole(undefined);
     setProjType('');
     setView('Home');
   };
@@ -127,23 +127,20 @@ export const AppHead = (props: IProps) => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const [errorReporter] = useGlobal('errorReporter');
-  const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [connected] = useGlobal('connected');
-  const ctx = React.useContext(UnsavedContext);
-  const { checkSavedFn } = ctx.state;
+  const ctx = useContext(UnsavedContext);
+  const { checkSavedFn, startSave, toolsChanged, anySaving } = ctx.state;
   const [view, setView] = useState('');
   const [busy] = useGlobal('remoteBusy');
   const [dataChangeCount] = useGlobal('dataChangeCount');
   const [importexportBusy] = useGlobal('importexportBusy');
-  const [doSave] = useGlobal('doSave');
   const [globalStore] = useGlobal();
   const [isChanged] = useGlobal('changed');
   const [lang] = useGlobal('lang');
   const [exitAlert, setExitAlert] = React.useState(false);
-  const [dosave, setDoSave] = useGlobal('doSave');
   const isMounted = useMounted('apphead');
   const [version, setVersion] = useState('');
   const [updates] = useState(
@@ -155,6 +152,9 @@ export const AppHead = (props: IProps) => {
   const [downloadAlert, setDownloadAlert] = React.useState(false);
   const [updateTipOpen, setUpdateTipOpen] = useState(false);
   const [showTerms, setShowTerms] = useState('');
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const saving = useMemo(() => anySaving(), [toolsChanged]);
   const { showMessage } = useSnackBar();
 
   const handleUserMenuAction = (
@@ -176,15 +176,15 @@ export const AppHead = (props: IProps) => {
       localStorage.removeItem('user-id');
       checkSavedFn(async () => {
         waitForIt(
-          'logout after user delete',
+          'logout on electron...',
           () => !remote || !connected || remote.requestQueue.length === 0,
           () => false,
-          20
+          200
         ).then(() => setDownloadAlert(true));
       });
       return;
     }
-    localStorage.setItem(localUserKey(LocalKey.url, memory), lastpath);
+    localStorage.setItem(localUserKey(LocalKey.url), lastpath);
     if (!/Close/i.test(what)) {
       if (/ClearLogout/i.test(what)) {
         forceLogin();
@@ -194,10 +194,10 @@ export const AppHead = (props: IProps) => {
       } else if (/Logout/i.test(what)) {
         checkSavedFn(() => {
           waitForIt(
-            'logout after user delete',
+            'logout on web...',
             () => !remote || !connected || remote.requestQueue.length === 0,
             () => false,
-            20
+            200
           ).then(() => setView('Logout'));
         });
       } else checkSavedFn(() => setView(what));
@@ -251,9 +251,9 @@ export const AppHead = (props: IProps) => {
         if (isMounted()) {
           setDownloadAlert(true);
         }
-      } else if (!dosave) setDoSave(true);
+      } else startSave();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exitAlert, isChanged, dosave]);
+  }, [exitAlert, isChanged]);
 
   useEffect(() => {
     isMounted() && setVersion(require('../../../package.json').version);
@@ -330,12 +330,12 @@ export const AppHead = (props: IProps) => {
             <LinearProgress id="prog" variant="determinate" value={complete} />
           </div>
         )}
-        {(!busy && !doSave && !dataChangeCount) || complete !== 0 || (
+        {(!busy && !saving && !dataChangeCount) || complete !== 0 || (
           <LinearProgress id="busy" variant="indeterminate" />
         )}
         <Toolbar>
-          {projRole !== '' && <ProjectName setView={setView} />}
-          {projRole === '' && (
+          {projRole && <ProjectName setView={setView} />}
+          {!projRole && (
             <span
               className={clsx(classes.twoIcon, {
                 [classes.threeIcon]:

@@ -30,6 +30,7 @@ import { HTMLPage } from './components/HTMLPage';
 import { termsContent } from './routes/TermsContent';
 import { privacyContent } from './routes/privacyContent';
 import { isElectron } from './api-variable';
+import PassageDetail from './routes/PassageDetail';
 
 export const HeadHeight = 64;
 
@@ -93,9 +94,9 @@ function App() {
 
   return (
     <TokenCheck auth={auth}>
-      <DataChanges auth={auth}>
-        <SnackBarProvider>
-          <UnsavedProvider>
+      <UnsavedProvider>
+        <DataChanges auth={auth}>
+          <SnackBarProvider>
             <HotKeyProvider>
               <ThemeProvider theme={theme}>
                 <Route
@@ -146,15 +147,32 @@ function App() {
                 <PrivateRoute auth={auth} exact path="/work/:prjId/:pasId">
                   <WorkScreen auth={auth} />
                 </PrivateRoute>
+                <PrivateRoute
+                  auth={auth}
+                  exact
+                  path="/work/:prjId/:pasId/:slug/:medId"
+                >
+                  <WorkScreen auth={auth} />
+                </PrivateRoute>
                 <PrivateRoute auth={auth} exact path="/work/:prjId">
                   <WorkScreen auth={auth} />
+                </PrivateRoute>
+                <PrivateRoute auth={auth} exact path="/detail/:prjId/:pasId">
+                  <PassageDetail auth={auth} />
+                </PrivateRoute>
+                <PrivateRoute
+                  auth={auth}
+                  exact
+                  path="/detail/:prjId/:pasId/:mediaId"
+                >
+                  <PassageDetail auth={auth} />
                 </PrivateRoute>
                 <Route path="/neworg" render={(props) => handleNewOrg(props)} />
               </ThemeProvider>
             </HotKeyProvider>
-          </UnsavedProvider>
-        </SnackBarProvider>
-      </DataChanges>
+          </SnackBarProvider>
+        </DataChanges>
+      </UnsavedProvider>
     </TokenCheck>
   );
 }

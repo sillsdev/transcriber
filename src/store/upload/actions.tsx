@@ -60,6 +60,46 @@ export const writeFileLocal = (file: File, remoteName?: string) => {
   reader.readAsBinaryString(file);
   return path.join(PathType.MEDIA, fullName.split(path.sep).pop());
 };
+export const uploadFile = (
+  data: any,
+  file: File,
+  errorReporter: any,
+  auth: Auth,
+  cb?: (
+    success: boolean,
+    data: any,
+    statusNum: number,
+    statusText: string
+  ) => void
+) => {
+  const xhr = new XMLHttpRequest();
+  xhr.open('PUT', data.audioUrl, true);
+  xhr.setRequestHeader('Content-Type', data.contentType);
+  xhr.send(file.slice());
+  xhr.onload = () => {
+    if (xhr.status < 300) {
+      if (cb) cb(true, data, 0, '');
+    } else {
+      logError(
+        Severity.error,
+        errorReporter,
+        `upload ${file.name}: (${xhr.status}) ${xhr.responseText}`
+      );
+      Axios.delete(API_CONFIG.host + '/api/mediafiles/' + data.id, {
+        headers: {
+          Authorization: 'Bearer ' + auth.accessToken,
+        },
+      }).catch((err) => {
+        logError(
+          Severity.error,
+          errorReporter,
+          infoMsg(err, `unable to remove orphaned mediafile ${data.id}`)
+        );
+      });
+      if (cb) cb(false, data, xhr.status, xhr.statusText);
+    }
+  };
+};
 export const nextUpload =
   (
     record: any,
@@ -98,6 +138,27 @@ export const nextUpload =
       }
       return;
     }
+    const completeCB = (
+      success: boolean,
+      data: any,
+      statusNum: number,
+      statusText: string
+    ) => {
+      if (success) {
+        dispatch({ payload: n, type: UPLOAD_ITEM_SUCCEEDED });
+        if (cb) cb(n, true, data);
+      } else {
+        dispatch({
+          payload: {
+            current: n,
+            error: `upload ${files[n].name}: (${statusNum}) ${statusText}`,
+          },
+          type: UPLOAD_ITEM_FAILED,
+        });
+        if (cb) cb(n, false, data);
+      }
+    };
+
     Axios.post(API_CONFIG.host + '/api/mediafiles', record, {
       headers: {
         Authorization: 'Bearer ' + auth.accessToken,
@@ -105,8 +166,7 @@ export const nextUpload =
     })
       .then((response) => {
         dispatch({ payload: n, type: UPLOAD_ITEM_CREATED });
-        const xhr = new XMLHttpRequest();
-        xhr.open('PUT', response.data.audioUrl, true);
+        uploadFile(response.data, files[n], errorReporter, auth, completeCB);
         if (isElectron) {
           try {
             writeFileLocal(files[n], response.data.audioUrl);
@@ -118,45 +178,6 @@ export const nextUpload =
             );
           }
         }
-        xhr.setRequestHeader('Content-Type', response.data.contentType);
-        xhr.send(files[n].slice());
-        xhr.onload = () => {
-          if (xhr.status < 300) {
-            dispatch({ payload: n, type: UPLOAD_ITEM_SUCCEEDED });
-            if (cb) cb(n, true, response.data);
-          } else {
-            logError(
-              Severity.error,
-              errorReporter,
-              `upload ${files[n].name}: (${xhr.status}) ${xhr.responseText}`
-            );
-            Axios.delete(
-              API_CONFIG.host + '/api/mediafiles/' + response.data.id,
-              {
-                headers: {
-                  Authorization: 'Bearer ' + auth.accessToken,
-                },
-              }
-            ).catch((err) => {
-              logError(
-                Severity.error,
-                errorReporter,
-                infoMsg(
-                  err,
-                  `unable to remove orphaned mediafile ${response.data.id}`
-                )
-              );
-            });
-            dispatch({
-              payload: {
-                current: n,
-                error: `upload ${files[n].name}: (${xhr.status}) ${xhr.statusText}`,
-              },
-              type: UPLOAD_ITEM_FAILED,
-            });
-            if (cb) cb(n, false);
-          }
-        };
       })
       .catch((err) => {
         logError(

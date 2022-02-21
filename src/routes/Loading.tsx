@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Axios from 'axios';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
 import { Redirect, useHistory } from 'react-router-dom';
@@ -39,6 +40,9 @@ import {
   usePlan,
   useLoadProjectData,
   SetUserLanguage,
+  useOfflineSetup,
+  useRole,
+  useProjectType,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -133,6 +137,9 @@ export function Loading(props: IProps) {
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [loadComplete, setLoadComplete] = useGlobal('loadComplete');
   const [isDeveloper] = useGlobal('developer');
+  const [, setPlan] = useGlobal('plan');
+  const [, setOrganization] = useGlobal('organization');
+  const [, setProject] = useGlobal('project');
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [, setCompleted] = useGlobal('progress');
   const { showMessage } = useSnackBar();
@@ -143,6 +150,9 @@ export function Loading(props: IProps) {
   const [doSync, setDoSync] = useState(false);
   const [syncComplete, setSyncComplete] = useState(false);
   const [, setBusy] = useGlobal('importexportBusy');
+  const offlineSetup = useOfflineSetup();
+  const { setMyProjRole } = useRole();
+  const { setProjectType } = useProjectType();
   const LoadProjData = useLoadProjectData(
     auth,
     t,
@@ -184,16 +194,20 @@ export function Loading(props: IProps) {
                 .findRecords('invitation')
                 .filter({ attribute: 'silId', value: parseInt(inviteId) })
           )) as any;
-
-          //if previously accepted just roll with it
-          if (
-            thisinvite[0].attributes.email.toLowerCase() !==
-            userEmail.toLowerCase()
-          ) {
-            /* they must have logged in with another email */
-            inviteErr = t.inviteError;
+          if (!thisinvite.length) {
+            //it's either deleted, or I don't have access to it
+            //check if my paratext email is linked
+            if (!(await checkAlternateParatextEmail(inviteId))) {
+              inviteErr = t.inviteError;
+            }
           } else {
-            invite = thisinvite[0];
+            if (
+              thisinvite[0].attributes.email.toLowerCase() !==
+              userEmail.toLowerCase()
+            ) {
+              /* they must have logged in with another email */
+              inviteErr = t.inviteError;
+            }
           }
         } catch {
           inviteErr = t.deletedInvitation;
@@ -209,6 +223,21 @@ export function Loading(props: IProps) {
     }
   };
 
+  const checkAlternateParatextEmail = async (inviteId: string) => {
+    try {
+      let response = await Axios.get(
+        API_CONFIG.host + '/api/paratext/useremail/' + inviteId,
+        {
+          headers: {
+            Authorization: 'Bearer ' + auth.accessToken,
+          },
+        }
+      );
+      if (response.data === inviteId) return true;
+    } catch (err: any) {
+      return false;
+    }
+  };
   useEffect(() => {
     if (!offline && !auth?.isAuthenticated()) return;
     if (!offline) {
@@ -227,7 +256,8 @@ export function Loading(props: IProps) {
       setOrbitRetries,
       setLang,
       globalStore,
-      getOfflineProject
+      getOfflineProject,
+      offlineSetup
     );
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
@@ -258,12 +288,12 @@ export function Loading(props: IProps) {
   }, [doSync, importOpen, setBusy]);
 
   const getGotoUrl = () => {
-    let fromUrl = localStorage.getItem(localUserKey(LocalKey.deeplink, memory));
+    let fromUrl = localStorage.getItem(localUserKey(LocalKey.url));
     if (fromUrl) {
-      localStorage.removeItem(localUserKey(LocalKey.deeplink, memory));
+      localStorage.removeItem(localUserKey(LocalKey.deeplink));
       return fromUrl;
     }
-    return localStorage.getItem(localUserKey(LocalKey.url, memory));
+    return localStorage.getItem(localUserKey(LocalKey.deeplink));
   };
   const LoadComplete = () => {
     setCompleted(100);
@@ -285,9 +315,10 @@ export function Loading(props: IProps) {
     }
     let fromUrl = getGotoUrl();
 
-    if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
+    if (fromUrl && !/^\/profile|^\/work|^\/plan|^\/detail/.test(fromUrl))
+      fromUrl = null;
     if (fromUrl) {
-      const m = /^\/[workplan]+\/([0-9a-f-]+)/.exec(fromUrl);
+      const m = /^\/[workplandetail]+\/([0-9a-f-]+)/.exec(fromUrl);
       if (m) {
         const planId = remoteIdGuid('plan', m[1], memory.keyMap) || m[1];
         const planRec = getPlan(planId);
@@ -295,7 +326,22 @@ export function Loading(props: IProps) {
           const oProjRec = planRec && getOfflineProject(planRec);
           if (!oProjRec?.attributes?.offlineAvailable) fromUrl = null;
         } else {
-          LoadProjData(related(planRec, 'project'));
+          const projectId = related(planRec, 'project') as string | null;
+          if (projectId) {
+            LoadProjData(projectId, () => {
+              setPlan(planId);
+              setProjectType(projectId);
+              setMyProjRole(projectId);
+            });
+            const projRec = memory.cache.query((q: QueryBuilder) =>
+              q.findRecord({ type: 'project', id: projectId })
+            );
+            if (projRec) {
+              setProject(projectId);
+              const orgId = related(projRec, 'organization') as string;
+              setOrganization(orgId);
+            }
+          }
         }
       } else if (!/^\/profile/.test(fromUrl)) fromUrl = null;
     }
@@ -322,10 +368,7 @@ export function Loading(props: IProps) {
     //sync was either not needed, or is done
     if (syncComplete && orbitFetchResults) {
       if (orbitFetchResults.goRemote) {
-        localStorage.setItem(
-          localUserKey(LocalKey.time, memory),
-          currentDateTime()
-        );
+        localStorage.setItem(localUserKey(LocalKey.time), currentDateTime());
         if (isElectron) finishRemoteLoad();
         else
           backup.reset().then(() => {

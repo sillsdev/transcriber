@@ -131,7 +131,7 @@ export function UserMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handleAction('Close')}
       >
-        {projRole !== '' && (
+        {projRole && (
           <StyledMenuItem>
             <ListItemText
               primary={
@@ -184,7 +184,7 @@ export function UserMenu(props: IProps) {
         </StyledMenuItem>
         <Divider />
         <StyledMenuItem
-          id="terms"
+          id="privacy"
           onClick={handleAction('Privacy')}
           className={classes.terms}
         >

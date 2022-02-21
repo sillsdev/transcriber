@@ -1,3 +1,564 @@
+sil-transcriber (2.14.0.0)  experimental; urgency=high
+
+  * TT-3476 allow unhiding steps
+  * TT-3447 playing on audio table
+  * TT-3397b only check version for vernacular
+  * TT-3397, 3413 paratext export (#678)
+  * TT-3397 Partext export vernacular
+  * local Paratext Sync by Artifact type
+  * Update to handle different artifact types
+  * update to handle posting back translations
+  * look at the state
+  * Default based on location
+  * no integration for retell or q and a
+  * No Paratext sync on general projects
+  * TT-3372 update the state correctly when complete turned off, and then notice the state change in the context (#690)
+  * TT-3022 use resource, discussion flags to limit categories shown (#688)
+  * Add control ids to discussion cards for automated testing (#687)
+  * TT-3408 show jumpBack with AllDone (#686)
+  * TT-3414 default state if pull paratext is the first action on the mediafile (#685)
+  * TT-3417 use playitem type instead of the radio button type (#684)
+  * TT-3388 use a ref for the changedflag inside unsavedcontext (#683)
+  * add a clear in the team screen for Michael Pelley's testcases
+  * TT-3448 check lastModifiedBy exists (#682)
+  * TT-3425b (#681)
+  * TT-3425 update createmedia with userid
+  * add recordedbyuserid
+  * TT-3425 update createmedia with userid (#680)
+  * TT=3425 ensure all new fields are captured correctly (#679)
+  * TT-3282 finalize offline data (#677)
+  * Add discussion,resource flags to artifactcategory
+  * add ids to Reject dialog (#676)
+  * TT-3416 Select passage (#675)
+  * Use no artifactType on mediafile to be vernacular (#673)
+  * TT-3414 fix Pull paratext - use passage.id (#674)
+  * TT-3392 don't set the list (which starts the upload) until the passage is set (#672)
+  * TT-3424 Fix spelling of table name (#671)
+  * TT-3320 add offline media id to discussions for offline recorded vernacular (#670)
+  * TT-3413 Local Sync (#669)
+  * TT-3377 finish progress bar
+  * TT-3319 Discussion filter disable (#668)
+  * TT-3423b remove passage numbers from flat tasks
+  * TT-3423, 3415 task list media description (#665)
+  * TT-3423 create MediaDescription control for SelectRecording and Task Item
+  * TT-3415 default to transcribeReady if state not set
+  * improve TaskItem for hierarchical
+  * TT-3142b another unsaved file that didn't get in the commit (#666)
+  * TT-3421 Remove console errors when no media (#664)
+  * fix getLocalCount call
+  * TT-3279 handle local filenames better (#663)
+  * analyzed uses of getMediaInPlans and fixed some
+  * handle start and end verses being optional
+  * TT-3142 Create offline project record if needed (#662)
+  * Update default workflow(s)
+  * TT-3409 update step editor (#661)
+  * first attempt at step editor
+  * Adjust editing and deleting
+  * add localization
+  * add message about changes
+  * TT-3159 setReady to false when recording is deleted (#660)
+  * if deleteRegion is deleting all then clear
+  * TT-3282 player confused after playing comment once (#659)
+  * TT-3391 TT-3392 TT-3383 Save callbacks need a ref for workflow (#658)
+  * wait for workflow to be refreshed after save before getting row info
+  * TT-3392 make sure passage is set before giving importList (#657)
+  * TT-3394b remove unused segment component
+  * TT-3396, 3402 add state to media for retelling, q and a, and back translation transcriptions (#656)
+  * add mediafile transcriptionstate in progress
+  * TT-3396 TT-3402 use mediafile transcriptionstate, remove passage state
+  * use mediafile id to track selected in transcriber
+  * TT-3394, 3328, 3340, 3394, 3399, 3339  allow segementing in artifact tool (#655)
+  * allow segementing in artifact tool
+  * Save current segement with recording.
+  * Add upload of audio
+  * Make SelectRecording look better
+  * Fix item chooser
+  * Update localization
+  *
+  * TT-3382 Export tool on workflow (#654)
+  * TT-3381b Transcription in dialog (#653)
+  * also show transcription in dialog based on choice.
+  * TT-3381 Copy Retell q and a and back trans (#652)
+  * these items are placed on the clipboard
+  * rename duplicate step to export (#651)
+  * TT-3006b transcribe delete (#650)
+  * TT-3006b Add Transcription and Delete
+  * when an item is seleted, it can be transcribed or deleted.
+  * Add logic to TranscriberContext to play artifact
+  * add localization
+  * Allow edit of resource description and category (#648)
+  * Allow edit of resource description and category
+  * add title to strings
+  * TT-3271 Add upload and Audacity and version history to Detail Record (#647)
+  * add version history, upload, audacity to passage detail record
+  * redo strings after rebase
+  * updated localizations
+  * TT-3006 back translation (#646)
+  * TT-3329 fix speaker required
+  * add strings
+  * make player wider
+  * remove unneeded console log
+  * TT-3006 Back Translation
+  * TT-3329 speaker not required
+  * widen player
+  * Clean up changes
+  * latest help
+  * TT-3365 highlight scripture/bible story on shared resources (#644)
+  * TT-3371 step on passage only
+  * TT-3185b Change to Open Transcriber wording (#643)
+  * TT-3272b Make stage clickable (#642)
+  * move transcriber to Actions
+  * use correct cursor
+  * TT-3380 use changed ref for autosave callback (#641)
+  * TT-3362 finding next step
+  * add export and done steps (#640)
+  * TT-3368 standardize step and tool names to verbs (#639)
+  * TT-3366 add helperText for resource select
+  * TT-3305 use splice correctly (#638)
+  * TT-3310 use ref for hotkeys instead of state variable
+  * TT-3367 Add description to uploaded resources (#637)
+  * TT-3367 Add description to uploaded resources
+  * TT-3365 Add info icon by Scripture and Bible Story, remove from discussion dropdown
+  * set ProjRole on PassageDetail in deep linking
+  * redo strings
+  * remove shared screwup
+  * TT-3185 Add Transcriber and Sync tools (#636)
+  * TT-3344 (#635)
+  * TT-3344 change community tool
+  * TT-3345 add retell and qanda artifacttype to offline.
+  * TT-3310 check discussion comment status before refreshing list (#629)
+  * TT-3310 check discussion comment status before refreshing list
+  * remove doSave,useRemoteSave
+  * use toolChanged functions in UnsavedContext
+  * TT-3370 update table names
+  * TT-3362b handle all steps checked
+  * TT-3272 show workflow step (#634)
+  * TT-3272 show workflow steop
+  * put stage on plan sheet
+  * TT-3271 move action buttons and localization
+  * Add tests for step lookup
+  * TT-3347 check for undefined
+  * TT-3362 set step to first uncompleted (#633)
+  * TT-3362 set step to first uncompleted step
+  * remove test for length
+  * TT-3335 Clear segments id (#632)
+  * TT-3079 handle member-owners (#631)
+  * add localization for DiscussionMenu (#630)
+  * add menu item to reattach discussion to new seleted segment
+  * TT-3308b disable cancel while recording
+  * TT-3307b Remove unused code
+  * TT-3308 comment editor track recording status and disable save (#628)
+  * TT-2786 reset cancelled flag each time dialog is opened (#627)
+  * TT-3306 reset toolChanged on cancel edit (#626)
+  * TT-3305 capture keys all the ways and then sift through them if we get them more than once (#625)
+  * TT-3303b add localization (#623)
+  * check for undefined
+  * use more precise error
+  * TT-3006 add fields needed for audio based on another audio's segment (back translations) (#622)
+  * TT-2999x  try waiting for all requests before proceeding. (#621)
+  * TT-3307 Community Testing tool (#620)
+  * TT-3307 Community Testing tool
+  * TT-3303 Play clips from previous versions (#619)
+  * TT-3274b fix media sorting for multiple vernacular
+  * No extra lines for comments
+  * TT-3302 text comment before or after recording
+  * TT-3301 clear regions on undo (#618)
+  * TT-3299 Cancel project add (#617)
+  * TT-3293b reset recording flag when the recording comment closes for whΓÇª (#616)
+  * TT-3293 reset recording flag when the recording comment closes for whatever reason
+  * remove recording message when changing steps...only care if changed
+  * TT-3300 capture keydown for the whole window instead of using a div (#615)
+  * TT-3292 Reset comment (#614)
+  * TT-3295 Jump to end after a record (#613)
+  * Start at beginning if at end when start to play
+  * TT-3284 use attachMedia for offline record because it updates passage and adds passagestate ops (#612)
+  * TT-3288 Don't abort cancel (#611)
+  * previous code had a time out that aborted the cancel
+  * TT-3296 add tooltips (#610)
+  * TT-3230 width of ref info on hard (#609)
+  * step uses stage control
+  * reference displays what it can
+  * TT-3293 no step move while recording (#608)
+  * TT-3239 set org etc on deep link (#607)
+  * TT-3290 fix table name (#606)
+  * TT-3281b use duration instead of selected item (#605)
+  * TT-3274 sorting audio (#604)
+  * TT-3274 sorting audio
+  * simplify subject setting logic
+  * fix micIcon tooltip
+  * TT-3119 Adjust widths to prevent overflows (#603)
+  * TT-2999 wait longer after user delete - there might be lots of deletes to do (#602)
+  * eat the error if we didn't wait long enough
+  * TT-3140b Editing existing comment doesn't send refresh, so turn off commentRecording on ok and cancel. (#601)
+  * TT-3140 ask about save when changing steps (#600)
+  * TT-3140 move to next step if they don't want to save
+  * TT-3139 TT-3140 TT-3125
+  * PassageDetailContext knows how many tools need to be saved.  Only completes save when all are finished.
+  * TT-3106 add workflow localizations (#599)
+  * TT-3096 Fix table loading (#597)
+  * workflowstep and orgworkflowstep in Contenxt
+  * TT-3281 Disable controls until resource selected (#598)
+  * TT-3130b remove CheckUploadLocal
+  * TT-2997 handle deleted rows in addSection, addPassage, versions (#596)
+  * TT-3247 team check, fix TT-3276, TT-3277 (#593)
+  * Team Check UI
+  * use fromLocalizedArtifactCategory
+  * controlled media player
+  * Capture category on uploaded media
+  * handle error
+  * clearer error message
+  * update media player with prettier message
+  * spelling and type changes
+  *
+  * TT-3130 itf upload created files now so remove CheckUploadLocal (#595)
+  * TT-3130 itf upload created files now so remove CheckUploadLocal
+  * catch src missing error on mediaplayer
+  * avoid console errors on discussion selects
+  * handle error inside MediaPlayer
+  * TT-3274 make sure vernacular is first (#594)
+  * TT-3274 make sure vernacular is first
+  * resource type is empty
+  * use equal sign to keep first things first
+  * handle other sort equal cases
+  * TT-3061 set artifact type for offline media (#588)
+  * TT-3270 turn off saveRef when doSave is turned off (#589)
+  * TT-2956 handle project exists but no offline project (#591)
+  * TT-3094 check offline matches remoteId (#590)
+  * TT-3128 Add new item to end of workflow (#587)
+  * TT-3229 Edit Workflow title with team name (#586)
+  * TT-3255 fix setting of last step complete (#584)
+  * TT-3262 fix error playing ogg from version screen (#583)
+  * add mediaPlaying props
+  * move mediaPlaying inside AudioTable
+  * TT-3256, TT-3257 Handle offline EditWorkflow cases (#585)
+  * move detail button to left side.
+  * TT-3261 Playing comment from another passage (#582)
+  * TT-3246b fix planid reference for new projects (#581)
+  * TT-3246 Passage Detail Record Tool (#580)
+  * Separate PassageRecord and PassageRecordDlg
+  * use tool instead of name to search for Internalization
+  * TT-3260 use useRemoteSave and change confirm message to match existing confirm message
+  * TT-3251 add edit workflow to personal projects (#579)
+  * TT-3242 Allow discussion add with just range (#578)
+  * TT-3245 only locate on current (#577)
+  * TT-3109 reset discussion fields on add (#576)
+  * TT-3055b uncategorized
+  * update localization strings, especially for French
+  * TT-3055 add category filter menu item (#575)
+  * bring up dialog with active categories with counts
+  * selecting a category includes those items
+  * if no categories are selected, all items are included
+  * TT-3251 make sure steps complete
+  * TT-3200b show workflow steps colors
+  * TT-3250 check for projectId as null (#574)
+  * TT-3200 track whether each step is complete - track completion history (#573)
+  * Save completed steps in array
+  * add step complete change to passage history
+  * remove orgworkflowstep relationship from passage
+  * Use Enum for tool slugs (#572)
+  * TT-3210b (#568)
+  * TT-3219b change stop tooltips to pause (#566)
+  * change stop to pause in mediaActions
+  * remove stop on wsPlayer
+  * show status message on record
+  * disable save while working
+  * updated strings
+  * remove pause
+  * TT-3180 discussion ux subject segments (#571)
+  * Revert "TT-3108 refactor and simplify (#550)"
+  * This reverts commit e49c82b5a20642a938fcf21462e4cba0f9b4115b.
+  * TT-3180 don't reset after setting subject
+  * TT-1513 Set Project too (#569)
+  * TT-3198 Offline discussions, comments, mediafiles (#564)
+  * handle discussions, comments, mediafiles created offline in the sync
+  * mediafile will be uploaded during datachange
+  * cleanup console.logs
+  * fix react-orbitjs
+  * TT-3219b change stop tooltips to pause (#566)
+  * change stop to pause in mediaActions
+  * remove stop on wsPlayer
+  * TT-2103 (TC318) - handle error property of null (#565)
+  * TT-3127 Deep links (#563)
+  * TT-2287 Version 1 (#562)
+  *
+  * TT-3204 Connection Mode (#561)
+  * make choice look like button
+  * change text on user menu
+  * TT-3127 navigate to detail (#560)
+  * TT-3127 navigate to detail page
+  * TT-3127 remove deep link when user deleted
+  * TT-3201 reset artifactCategory (#559)
+  * TT-3211 do not remember loaded file extension (#558)
+  * TT-3195 turn editing off if comment deleted (#557)
+  * TT-3222 show steps/reference if needed (#556)
+  * TT-3193 Handle play/pause for MediaPlayer (#554)
+  * use passage id only if empty try 2 (#553)
+  * TC325 use passage id only if no reference (#552)
+  * TT-3193 play/pause icon in comment (#551)
+  * TT-3108 refactor and simplify (#550)
+  * TT-3203 call cb on team edit (#549)
+  * TT-3180b localization of discussion card tip (#548)
+  * TT-3205 ogg encoding (#547)
+  * try again...
+  * Save most audio as ogg.  Only allow choice for vernacular.
+  * allow wave from add project
+  * cleanup
+  * add license for opusenc
+  * unexpected error handler passed in to export functions (#546)
+  * handle error on one project of multiple project download
+  *
+  * TT-3180 show selected segment (#545)
+  * Put segment bounds on subject of new discussion
+  * always add 0 for decimal place
+  * TT-3180 handle title wrap (#544)
+  * put file name in tool tip
+  * put category as chip on comment count line
+  * TT-3045 Recording comments (#543)
+  * TT-3045 Recording comments
+  * attach comment
+  * to passage
+  * to comment artifact
+  * plays comment
+  * without disturbing passage
+  * Allow editing comment
+  * TT-3174 3187 3188 strings and busy saving team (#542)
+  * TT-3187TT-3188 updated strings
+  * TT-3174 disable add,cancel while saving add busy bar
+  * remove old string file
+  * TT-1742b update plan last updated when updating section last updated -- only when state changes (#541)
+  * TT-3166 subscribe more often for hotkeys to work here (#540)
+  * close Team dialog after edit (#539)
+  * TT-3157b change tool tip
+  * TT-3183 cleaned up strings file
+  * TT-3183 load correct steps
+  * TT-3180 discussion UX
+  * TT-3157 detail based on workflow tool
+  * TT-3174 fix team create cancel
+  * add workflow steps to data for:
+  * storying
+  * drafting
+  * transcribing
+  * add key terms tool
+  * (plan to set filter based on tool.)
+  * updated icons so eye open when shown and closed when hidden
+  * TT-3171 create workflow before close team create
+  * colorize brackets
+  * remove selected from filter message
+  * TT-3136 congratulations update to last refresh
+  * TT-3169 count discussions of team
+  * TT-3168 Display latest discussions
+  * TT-3049 discussion filtering
+  * the filter menu allows the user to enable or disable 5 filters
+  * the status message is updated
+  * the selected discussions are displayed.
+  * TT-3141 don't include offline only users
+  * TT-3149, TT-3150 change name mangling logic
+  * TT-3150 save on exit
+  * TT-3156, TT-3153, TT-3152, TT-3151, TT-3150
+  * debounce name change
+  * change vixibility icons
+  * tip showing steps hidden
+  * disable show all if none
+  * can't hide all steps
+  * update ids
+  * TT-3049 Discussion filter (#537)
+  * TT-3021 workflow step editor (#536)
+  * choose by process when adding
+  * allow editing names or tools
+  * allow changing order
+  * allow removing steps
+  * add and restore
+  * use edited workflow
+  * handle name change better
+  * move edit button to team screen
+  * update tool names
+  * simplify team dialog
+  * TT-3126 save if user requests save (#535)
+  * TT-3103b fix test for complete (#534)
+  * TT-3137 exiting comment more (#533)
+  * TT-3036 Initialize mediaShared when pasting (#532)
+  * TT-3131 can't store widths in a state variable?  weird. (#531)
+  * TT-3103 completed resources (#527)
+  * TT-3103 completed resources
+  * Save Recource record in row
+  * TT-3125, TT-3126 reset changed when comment done (#530)
+  * TT-3128 don't attempt to move past last step (#529)
+  * auto advance to next step when marked complete
+  * TT-2295 wait for pause before going to end (#528)
+  * TT-3124 limit transcriber to vernacular media and reload media after internalization (#526)
+  * reload vernacular if moving from internalization to another step
+  * limit transcriber context to vernacular
+  * change everywhere we were getting media based on passage to only get the vernacular (for now at least)
+  * TT-3118 add a start index to datachanges.  Track where to start along with the date. (#525)
+  * TT-3121 adjust height for header
+  * TT-3098 check for null in rowData
+  * TT-3091 disable ready to share when passage.id is null also (#524)
+  * TT-3064, TT-3109 Discussion fields cleared (#523)
+  * TT-3064, TT-3109 Discussion fields cleared
+  * add localization
+  * TT-3099 Show new sections as unassigned
+  * TT-3063 subscribe hotkeys judiciously (#522)
+  * TT-3112 Only load the vernacular media on audio tab and version dlg.  Load all in export. (#521)
+  * "Available offline is untested as of yet because desktop is not logging in
+  * Uploader also not tested well...perhaps we shouldn't be versioning resource uploads?
+  * TT-3086 Only save recording if content (#520)
+  * TT-3099 No avatar if null (#519)
+  * TT-3066 Don't allow detail screens for offline only (#518)
+  * they are primarily oriented towards collaboration and
+  * don't make sense for a single user project
+  * TT-37117 Show Versions dialog from audio actions (#517)
+  * TT-3098 Reorder to account for non resource
+  * Check Paratext for the invite's email (#516)
+  * MUST ADD users:read to the Paratext-Transcriber scope on auth0
+  * update help
+  * Split datachanges into 2 calls (#515)
+  * for electron, do each project separately
+  * TT-3010 Load and refresh workflow steps (#512)
+  * TT-3052 No error without avatar (#513)
+  * use topic for discussion
+  * fix missing key on discussion list
+  * TT-3027 Look up user or return dummy user (#510)
+  * Look up user or return dummy user
+  * handle user already deleted case
+  * TT-3088, TT-3089 Shared media resource (#511)
+  * TT-3088, TT-3089 Shared media resource
+  * select category selects resource
+  * resource category is not required
+  * only enable select when one selected
+  * use resourcePassageId because we won't have the passage locally
+  * TT-3060 wait for remoteid, only allow category add for admins (#509)
+  * only allow category add for admins
+  * wait for remoteId before checking matching offline status
+  * don't wait if they've gone offline since offering add category and adding a category
+  * TT-3036 initialize mediaShared on new passage (#508)
+  * disable ready to share until associated with a passage
+  * TT-3087 allow clear to be undone (#507)
+  * TT-3061 offline add in offline projects (#506)
+  * TT-3078 cannot be going back and forth from lowercase to camelcase. (#505)
+  * keep all roles as is using RoleNames
+  * TT-3081 teams are not deleted by foreign key now, so delete any teams the deleted user was the only member of (#504)
+  * add PeerReviewer to editor role for testing (#503)
+  * try to wait for database migration
+  * TT-3076 don't use findRecord when it might not be there (#502)
+  * TT-3074, TT-3075 (#501)
+  * Handle new roles in audio project and transcriber
+  * use canTranscribe and canBeEditor to determine what roles can do those
+  * Add userTable to roles tab in member settings
+  * TT-3047b simple left aligned sect and pass desc
+  * TT-3033 don't save empty comments (#500)
+  * TT-3031 resize discussions better
+  * category not required in discussion (can't find the issue)
+  * localize before creating role avatar (#499)
+  * TT-3047 Section and reference title
+  * force pull roles if not at least 9 (#498)
+  * add new role localization strings
+  * TT-3042 use shades of theme colors
+  * TT-3058 avoid duplicates from online and offline (#497)
+  * use offline data when offline
+  * the duplication was caused by
+  * the presence of both online and offline data.
+  * refactor useOfflineSetup
+  * tool names as look up keys
+  * string tweaks (#496)
+  * TT-3039 check blank and duplicate new categories (#495)
+  * TT-30229 No discussions without media (#493)
+  * TT-3038 role dropdown now returns id (#494)
+  * TT-3009 Delete local data and API data for teams and projects (#492)
+  * delete all data when deleting project or team
+  * delete all data if offline
+  * Fix passage and section data on Detail Context
+  * TT-3043 Create more space for text on wokflow step (#491)
+  * try again on unique id (#490)
+  * TT-2978 don't copy mediafile when copying row (#489)
+  * TT-3015 refresh Audio tab after media delete (#483)
+  * TT-3015 refresh Audio tab after media delete
+  * wait for delete before setting busy flag
+  * TT-3013 Don't auto play if no vernacular (#488)
+  * Project Admin to Owner (#487)
+  * TT-2976 handle Shift hotkey correctly (#486)
+  * TT-3007 handle empty recording (#484)
+  * only capture before buffer on stop and start recording, not on every buffer push
+  * TT-3016 delete resource media with resource (#482)
+  * TT-3020b Admin only completion and reordering (#481)
+  * TT-3014 change wfIndex to psgCompletedIndex (#480)
+  * fix unsetting complete flag
+  * TT-3018 display workflow offline (#479)
+  * TT-3005b Only show Ready to share in AudioTable if project shared (#478)
+  * more shared flag in expansion
+  * TT-3020 Only admin modifies internalization (#477)
+  * TT-3025 Don't save empty discussion until user saves (#476)
+  * TT-3005 Add isPublic/Shared to projects (#475)
+  * Add readyToShare to mediafiles
+  * make role id unique on invitations where both are shown (#474)
+  * remove activity for now
+  * other typography style changes
+  * more fontWeight changes
+  * all fontWeight string
+  * allow types on about box
+  * Add Passage Detail screens (#473)
+  * Add artifacttype, artifactcategory, workflowstep
+  * org versions of above
+  * discussion,comment
+  * populate first 3 online and offline
+  * Artifact Type on upload
+  * remove artifactType and artifactCategory
+  * move ArtifactType into a component
+  * remove org from artifact type and category
+  * add version filter to orgdata and projdata
+  * add more mediafile fields
+  * Passage Detail screen with Placeholder components
+  * Add Passage Detail Player
+  * Add PassageDetailContext
+  * workflow stage demo
+  * Clicking current item marks it as done
+  * updates to stages
+  * Integrate passage stage into workflow step
+  * Add workflow step to passage
+  * Passage Detail player
+  * add route for specific mediafile
+  * add section passage title
+  * add allBookData, section and passage to detail context
+  * move controls around
+  * useOrgWorkflowSteps
+  * update passage with completed stage
+  * new transcriber control
+  * add strings file
+  * update datachanges to use dbversion
+  * Rough draft comments
+  * cleanup comments
+  * Add resources to PassageDetailContext
+  * add getResources to PassageDetailToolbar for demo only
+  * create SelectRole and SelectUser controls
+  * utilize SelectRole in invites and profile
+  * finish version 1 of discussions - w/o mediafile source or audio comments
+  * sortable resource table
+  * refactor internalization
+  * uploaded and shared resources
+  * enable playing
+  * remove unused dependency
+  * fix strings
+  * fix strings again
+  * Only show latest resource
+  * Add Resource Delete
+  * add category to shared resources
+  * fix some console warnings
+  * fix race condition!
+  * use recordProp for discussions
+  * remove warning on comment list
+  * lay out passage detail logic
+  * Load vernacular file
+  * load default vernacular into player
+  * update localization
+  * add select to shared string
+  * adjusted width of discusison
+  * Add missing steps
+  * TT-2985 unassign when removing user from org or deleting user (#471)
+  * move user delete to user RemoveUserFromOrg to be consistent
+  * Undo on delete or insert (#472)
+  * Update Help
+
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 21 Feb 2022 15:56:00 -0600
+
 sil-transcriber (2.13.5.0)  experimental; urgency=high
 
   * TT-2955 Audacity Integration

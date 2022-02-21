@@ -5,7 +5,7 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import clsx from 'clsx';
 import { IconButton, Typography } from '@material-ui/core';
 import PlayIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
+import PauseIcon from '@material-ui/icons/Pause';
 import CloseIcon from '@material-ui/icons/Close';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import useTodo from '../context/useTodo';
@@ -26,13 +26,13 @@ import {
   passageNumber,
   useOrganizedBy,
   usePlan,
-  useOfflnProjRead,
   useOfflineAvailToggle,
 } from '../crud';
 import { numCompare } from '../utils';
 import { useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
 import MediaPlayer from './MediaPlayer';
+import { RoleNames } from '../model';
 
 export const TaskItemWidth = 240;
 
@@ -116,7 +116,7 @@ interface IRow {
   length: string;
   state: string;
   assigned: string;
-  mediaRemoteId: string;
+  mediaId: string;
   rowKey: string;
 }
 
@@ -148,7 +148,6 @@ export function TaskTable(props: IProps) {
   const [user] = useGlobal('user');
   const [width, setWidth] = useState(window.innerWidth);
   const { getPlan, getPlanName } = usePlan();
-  const offlineProjectRead = useOfflnProjRead();
   const offlineAvailableToggle = useOfflineAvailToggle();
   const [planId] = useGlobal('plan');
   const [planName, setPlanName] = useState('');
@@ -229,7 +228,7 @@ export function TaskTable(props: IProps) {
 
   const handleProjectMenu = (what: string) => {
     if (what === 'offlineAvail') {
-      offlineAvailableToggle(offlineProjectRead(projectId));
+      offlineAvailableToggle(projectId);
     } else if (what === 'integration') {
       setOpenIntegration(true);
     } else if (what === 'export') {
@@ -245,7 +244,7 @@ export function TaskTable(props: IProps) {
     if (id !== playItem) {
       setPlayItem(id);
     } else {
-      setPlayItem('');
+      setPlaying(!playing);
     }
   };
 
@@ -375,15 +374,20 @@ export function TaskTable(props: IProps) {
           ? ChipText({ state: r.state, ta: activityStateStr })
           : '',
       assigned: r.assigned === user ? t.yes : t.no,
-      mediaId: r.mediaId,
-      mediaRemoteId: r.mediaRemoteId,
+      mediaId: r.mediafile.id,
       rowKey:
         sectionNumber(r.section) +
-        (r.mediaRemoteId ? passageNumber(r.passage) : '   '),
+        (r.mediafile.id ? passageNumber(r.passage) : '   '),
     }));
     setRows(newRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowData, playItem]);
+
+  useEffect(() => {
+    //if I set playing when I set the mediaId, it plays a bit of the old
+    if (playItem) setPlaying(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playItem]);
 
   interface ICell {
     value: any;
@@ -403,10 +407,10 @@ export function TaskTable(props: IProps) {
         aria-label={'audio-' + mediaId}
         color="primary"
         className={classes.link}
-        onClick={handlePlay(mediaId ? mediaId : '')}
+        onClick={handlePlay(mediaId || '')}
       >
-        {value === mediaId ? (
-          <StopIcon className={classes.playIcon} />
+        {value === mediaId && playing ? (
+          <PauseIcon className={classes.playIcon} />
         ) : (
           <PlayIcon className={classes.playIcon} />
         )}
@@ -423,8 +427,8 @@ export function TaskTable(props: IProps) {
       if (column.name === 'composite') {
         let curId = '';
         if (typeof value?.props?.item === 'number')
-          if (row.mediaRemoteId !== '')
-            curId = rowData[value.props.item]?.passage?.id;
+          if (row.mediaId !== '')
+            curId = rowData[value.props.item]?.mediafile.id;
         return (
           <td
             ref={curId === selected ? selectedRef : notSelectedRef}
@@ -441,7 +445,7 @@ export function TaskTable(props: IProps) {
       } else if (column.name === 'play') {
         // if there is no audio file to play put nothing in the play column
         return row.length !== '' ? (
-          <PlayCell {...props} mediaId={row.mediaRemoteId || props.mediaId} />
+          <PlayCell {...props} mediaId={row.mediaId || props.mediaId} />
         ) : (
           <Table.Cell {...props} value="" />
         );
@@ -450,7 +454,7 @@ export function TaskTable(props: IProps) {
     }
   };
   const playEnded = () => {
-    setPlayItem('');
+    setPlaying(false);
   };
 
   return (
@@ -474,7 +478,7 @@ export function TaskTable(props: IProps) {
               action={handleProjectMenu}
               stopPlayer={handleStopPlayer}
               inProject={true}
-              isOwner={projRole === 'admin'}
+              isOwner={projRole === RoleNames.Admin}
               project={projectId}
             />
             {filter && (
@@ -503,7 +507,12 @@ export function TaskTable(props: IProps) {
           />
         </div>
       </div>
-      <MediaPlayer auth={auth} srcMediaId={playItem} onEnded={playEnded} />
+      <MediaPlayer
+        auth={auth}
+        srcMediaId={playItem}
+        requestPlay={playing}
+        onEnded={playEnded}
+      />
       <BigDialog
         title={tpb.integrationsTitle.replace('{0}', planName)}
         isOpen={openIntegration}

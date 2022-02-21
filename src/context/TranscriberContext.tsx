@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
@@ -7,12 +7,9 @@ import { connect } from 'react-redux';
 import * as actions from '../store';
 import {
   IState,
-  GroupMembership,
   Passage,
   Plan,
   PlanType,
-  Project,
-  Role,
   Section,
   MediaFile,
   ITaskItemStrings,
@@ -37,6 +34,11 @@ import {
   useFetchMediaUrl,
   MediaSt,
   usePlan,
+  useRole,
+  useArtifactType,
+  getMediaInPlans,
+  findRecord,
+  VernacularTag,
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob, logError, Severity } from '../utils';
@@ -83,22 +85,12 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 
 interface IRecordProps {
-  groupMemberships: GroupMembership[];
   passages: Passage[];
-  plans: Plan[];
-  planTypes: PlanType[];
-  projects: Project[];
-  roles: Role[];
   sections: Section[];
   mediafiles: MediaFile[];
 }
 const mapRecordsToProps = {
-  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
-  plans: (q: QueryBuilder) => q.findRecords('plan'),
-  planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
-  roles: (q: QueryBuilder) => q.findRecords('role'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
@@ -108,10 +100,9 @@ export interface IRowData {
   planType: string;
   section: Section;
   passage: Passage;
+  mediafile: MediaFile;
   state: string;
   sectPass: string;
-  mediaRemoteId: string;
-  mediaId: string;
   playItem: string;
   duration: number;
   role: string;
@@ -122,7 +113,7 @@ export interface IRowData {
 
 const initState = {
   index: 0,
-  selected: '',
+  selected: '', //was passageid...now mediafileid
   setSelected: (selected: string) => {},
   playing: false,
   setPlaying: (playing: boolean) => {},
@@ -164,6 +155,8 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
 interface ParamTypes {
   prjId: string;
   pasId: string;
+  slug?: string;
+  medId?: string;
 }
 const TranscriberProvider = withData(mapRecordsToProps)(
   connect(
@@ -171,8 +164,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     mapDispatchToProps
   )((props: IProps) => {
     const [reporter] = useGlobal('errorReporter');
-    const { passages, mediafiles, sections, plans, planTypes } = props;
-    const { projects, groupMemberships, roles } = props;
+    const { passages, mediafiles, sections } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
     const {
       todoStr,
@@ -182,10 +174,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       projButtonStr,
       sharedStr,
     } = props;
-    const { prjId, pasId } = useParams<ParamTypes>();
+    const { prjId, pasId, slug, medId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
-    const [project] = useGlobal('project');
     const [devPlan] = useGlobal('plan');
     const { getPlan } = usePlan();
     const [projRole] = useGlobal('projRole');
@@ -195,6 +186,11 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const mediaUrlRef = useRef('');
     const { showMessage } = useSnackBar();
     const [trackedTask, setTrackedTask] = useGlobal('trackedTask');
+    const { userCanTranscribe, userCanBeEditor } = useRole();
+    const [planMedia, setPlanMedia] = useState<MediaFile[]>([]);
+    const planMediaRef = useRef<MediaFile[]>([]);
+    const passageMediaRef = useRef<MediaFile[]>([]);
+    const [planRec, setPlanRec] = useState<Plan>({} as Plan);
     const [state, setState] = useState({
       ...initState,
       allBookData,
@@ -206,7 +202,22 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       sharedStr,
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
+    const { getTypeId } = useArtifactType();
     const fetching = useRef('');
+
+    const artifactId = useMemo(
+      () => (slug ? getTypeId(slug) : VernacularTag),
+      [slug, getTypeId]
+    );
+
+    useEffect(() => {
+      if (devPlan && mediafiles.length > 0) {
+        var m = getMediaInPlans([devPlan], mediafiles, artifactId);
+        setPlanMedia(m);
+        planMediaRef.current = m;
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mediafiles, devPlan, artifactId]);
 
     const setRows = (rowData: IRowData[]) => {
       setState((state: ICtxState) => {
@@ -244,23 +255,28 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       selected: string,
       rowData: IRowData[] = state.rowData
     ) => {
-      const i = rowData.findIndex((r) => r.passage.id === selected);
+      const i = rowData.findIndex((r) => r.mediafile.id === selected);
       if (i < 0) return;
       const r = rowData[i];
+
       if (state.index !== i || state.selected !== selected) {
-        const remId = remoteId('passage', selected, memory.keyMap) || selected;
-        if (pasId !== remId) {
-          view.current = `/work/${prjId}/${remId}`;
+        var psgId =
+          remoteId('passage', r.passage.id, memory.keyMap) || r.passage.id;
+        const remId =
+          remoteId('mediafile', selected, memory.keyMap) || selected;
+        if (pasId !== psgId || (slug && remId !== medId)) {
+          view.current = `/work/${prjId}/${psgId}`;
+          if (slug) view.current += `/${slug}/${medId}`;
         }
         setTrackedTask(selected);
         var resetBlob = false;
         if (
-          mediaState.urlMediaId !== r.mediaId &&
-          fetching.current !== r.mediaId
+          mediaState.urlMediaId !== r.mediafile.id &&
+          fetching.current !== r.mediafile.id
         ) {
-          fetching.current = r.mediaId;
+          fetching.current = r.mediafile.id;
           fetchMediaUrl({
-            id: r.mediaId,
+            id: r.mediafile.id,
             auth: props.auth,
           });
           resetBlob = true;
@@ -272,7 +288,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
             index: i,
             selected,
             playing: false,
-            playItem: r.mediaId,
+            playItem: r.mediafile.id,
             loading: fetching.current !== '',
           };
         });
@@ -285,7 +301,14 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       });
     };
 
-    let curSec = '';
+    const getPlanType = (planRec: Plan) => {
+      const planType = findRecord(
+        memory,
+        'plantype',
+        related(planRec, 'plantype')
+      ) as PlanType;
+      return planType?.attributes.name || '';
+    };
 
     const addTasks = (
       state: string,
@@ -294,105 +317,99 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       onlyAvailable: boolean,
       playItem: string
     ) => {
-      const readyRecs = passages
-        .filter((p) => p.attributes?.state === state || role === 'view') //just group the passages within a section together right now
-        .sort((a, b) =>
-          related(a, 'section') < related(b, 'section') ? -1 : 1
-        );
+      const planName = getPlanName(planRec);
+      const planType = getPlanType(planRec);
 
+      const mediaRecs = passageMediaRef.current.filter(
+        (m) =>
+          role === 'view' ||
+          (m.attributes?.transcriptionstate || 'transcribeReady') === state
+      );
+      const passIds = mediaRecs.map((m) => related(m, 'passage') as string);
+      let readyRecs = passages
+        .filter((p) => passIds.findIndex((pid) => pid === p.id) >= 0)
+        .sort((a, b) =>
+          related(a, 'section') <= related(b, 'section') ? -1 : 1
+        );
       let addRows = Array<IRowData>();
+      let assigned = '';
+      let allowed = false;
+      let secNum = '';
+      let secRec = {} as Section;
+      let transcriber = '';
+      let editor = '';
+      let curSec = '';
       readyRecs.forEach((p) => {
-        const mediaRecs = mediafiles
+        const passageMediaRecs = mediaRecs
           .filter((m) => related(m, 'passage') === p.id)
-          .sort((i: MediaFile, j: MediaFile) =>
-            // Sort descending
-            i.attributes.versionNumber < j.attributes.versionNumber ? 1 : -1
+          .sort(
+            (i: MediaFile, j: MediaFile) =>
+              // Sort descending
+              j.attributes.versionNumber - i.attributes.versionNumber
           );
-        if (mediaRecs.length > 0) {
-          const mediaRec = mediaRecs[0];
-          const secId = related(p, 'section');
-          const secRecs = sections.filter((sr) => sr.id === secId);
-          if (secRecs.length > 0) {
-            const planId = related(secRecs[0], 'plan');
-            if (planId === devPlan) {
-              const planRecs = plans.filter((pl) => pl.id === planId);
-              if (planRecs.length > 0) {
-                if (related(planRecs[0], 'project') === project) {
-                  const assigned = related(secRecs[0], role);
-                  const allowed = onlyAvailable
-                    ? assigned === user || !assigned || assigned === ''
-                    : role === 'view';
-                  if (allowed) {
-                    let already: IRowData[] = [];
-                    if (role === 'view') {
-                      already = rowList.filter(
-                        (r) => r.mediaId === mediaRec.id
-                      );
-                    }
-                    if (role !== 'view' || already.length === 0) {
-                      const curState: ActivityStates | string =
-                        role === 'view' ? p.attributes?.state || state : state;
-                      const planName = getPlanName(planRecs[0]);
-                      const planTypeRecs = planTypes.filter(
-                        (pt) => pt.id === related(planRecs[0], 'plantype')
-                      );
-                      const planType =
-                        planTypeRecs.length > 0
-                          ? planTypeRecs[0].attributes.name
-                          : '';
-                      const secNum = sectionNumber(secRecs[0]);
-                      const nextSecId = secRecs[0].id;
-                      const transcriber = related(secRecs[0], 'transcriber');
-                      const editor = related(secRecs[0], 'editor');
-                      if (
-                        nextSecId !== curSec &&
-                        rowList.findIndex(
-                          (r) => r.sectPass === secNum + '.'
-                        ) === -1
-                      ) {
-                        curSec = nextSecId;
-                        addRows.push({
-                          planName,
-                          planType,
-                          section: { ...secRecs[0] },
-                          passage: {} as Passage,
-                          state: '',
-                          sectPass: secNum + '.',
-                          mediaRemoteId: '',
-                          mediaId: mediaRec.id,
-                          playItem: '',
-                          duration: 0,
-                          role,
-                          assigned,
-                          transcriber,
-                          editor,
-                        });
-                      }
-                      addRows.push({
-                        planName,
-                        planType,
-                        section: { ...secRecs[0] },
-                        passage: { ...p },
-                        state: curState,
-                        sectPass: secNum + '.' + passageNumber(p).trim(),
-                        mediaRemoteId:
-                          remoteId('mediafile', mediaRec.id, memory.keyMap) ||
-                          mediaRec.id,
-                        mediaId: mediaRec.id,
-                        playItem,
-                        duration: mediaRec.attributes.duration,
-                        role,
-                        assigned,
-                        transcriber,
-                        editor,
-                      });
-                    }
-                  }
-                }
-              }
-            }
+
+        if (related(p, 'section') !== curSec) {
+          curSec = related(p, 'section');
+          secRec = findRecord(
+            memory,
+            'section',
+            related(p, 'section')
+          ) as Section;
+          if (secRec) {
+            secNum = sectionNumber(secRec);
+            assigned = related(secRec, role);
+            transcriber = related(secRec, 'transcriber');
+            editor = related(secRec, 'editor');
+            allowed = onlyAvailable
+              ? assigned === user || !assigned || assigned === ''
+              : role === 'view';
+
+            if (allowed && !rowList.find((r) => r.sectPass === secNum + '.'))
+              addRows.push({
+                planName,
+                planType,
+                section: { ...secRec },
+                passage: {} as Passage,
+                state: '',
+                sectPass: secNum + '.',
+                mediafile: {} as MediaFile,
+                playItem: '',
+                duration: 0,
+                role,
+                assigned,
+                transcriber,
+                editor,
+              });
           }
         }
+        if (allowed)
+          passageMediaRecs.forEach((mediaRec) => {
+            let already: IRowData[] = [];
+            if (role === 'view') {
+              already = rowList.filter((r) => r.mediafile.id === mediaRec.id);
+            }
+            if (role !== 'view' || already.length === 0) {
+              const curState: ActivityStates | string =
+                role === 'view'
+                  ? mediaRec.attributes?.transcriptionstate || state
+                  : state;
+              addRows.push({
+                planName,
+                planType,
+                section: { ...secRec },
+                passage: { ...p },
+                state: curState,
+                sectPass: secNum + '.' + passageNumber(p).trim(),
+                mediafile: mediaRec,
+                playItem,
+                duration: mediaRec.attributes.duration,
+                role,
+                assigned,
+                transcriber,
+                editor,
+              });
+            }
+          });
       });
       addRows
         .sort((i, j) =>
@@ -400,36 +417,23 @@ const TranscriberProvider = withData(mapRecordsToProps)(
             ? -1
             : i.planName > j.planName
             ? 1
-            : i.sectPass < j.sectPass
+            : i.sectPass <= j.sectPass
             ? -1
             : 1
         )
-        .forEach((r) => rowList.push(r));
-    };
-
-    const getUserRole = (user: string, project: string) => {
-      const projectRecs = projects.filter((p) => p.id === project);
-      if (projectRecs.length === 0) {
-        return '';
-      }
-      const groupId = related(projectRecs[0], 'group');
-      const memberships = groupMemberships.filter(
-        (gm) => related(gm, 'group') === groupId && related(gm, 'user') === user
-      );
-      if (memberships.length === 0) {
-        return '';
-      }
-      const memberRole: string = related(memberships[0], 'role');
-      const roleRecs = roles.filter((r) => r.id === memberRole);
-      return roleRecs.length > 0 && roleRecs[0].attributes
-        ? roleRecs[0].attributes.roleName
-        : '';
+        .forEach((r) => {
+          rowList.push(r);
+        });
     };
 
     const role = React.useMemo(() => {
-      return getUserRole(user, project);
+      if (userCanTranscribe()) {
+        if (userCanBeEditor()) return RoleNames.Editor;
+        else return RoleNames.Transcriber;
+      } else return '';
+
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [user, project, projects.length, groupMemberships.length, roles.length]);
+    }, [projRole]);
 
     const selectTasks = (
       onlyAvailable: boolean,
@@ -437,8 +441,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       item: string
     ) => {
       // IN PROGRESS TASKS
-      if (role !== RoleNames.Transcriber) {
-        // editor or admin
+      if (role === RoleNames.Editor) {
         addTasks(
           ActivityStates.Reviewing,
           'editor',
@@ -474,8 +477,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       );
 
       // READY TO BEGIN TASKS
-      if (role !== RoleNames.Transcriber) {
-        // editor or admin
+      if (role === RoleNames.Editor) {
         addTasks(
           ActivityStates.Transcribed,
           'editor',
@@ -493,22 +495,29 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         item
       );
       if (state.selected !== '' && state.index < rowList.length) {
-        if (rowList[state.index].passage.id !== state.selected) {
+        if (rowList[state.index].mediafile.id !== state.selected) {
           setSelected(state.selected);
         }
       }
     };
-
     useEffect(() => {
       const playItem = state.playItem;
       const rowList: IRowData[] = [];
+      if (pasId && slug) {
+        var psg = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+        passageMediaRef.current = planMediaRef.current.filter(
+          (m) => related(m, 'passage') === psg
+        );
+      } else passageMediaRef.current = planMediaRef.current;
+
       if (role !== '') {
         selectTasks(true, rowList, playItem); // assigned
         selectTasks(false, rowList, playItem); // unassigned
-        if (rowList.length === 0) {
-          setAllDone(true);
-        }
+        const newAllDone = rowList.length === 0;
+        if (newAllDone !== state.allDone) setAllDone(newAllDone);
         // ALL OTHERS
+        addTasks('', 'view', rowList, false, playItem);
+      } else {
         addTasks('', 'view', rowList, false, playItem);
       }
       setRows(rowList.map((r) => r));
@@ -517,16 +526,26 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         if (!exGrp.includes(r.planName)) exGrp.push(r.planName);
       });
       setExpandedGroups(exGrp);
-
       if (rowList.length > 0) {
-        let selected =
-          state.selected !== ''
-            ? state.selected
-            : remoteIdGuid('passage', pasId, memory.keyMap) ||
-              pasId ||
-              trackedTask;
+        let selected = state.selected;
+        if (!selected) {
+          let mediaId = medId;
+          if (!mediaId) {
+            //vernacular so should just be one
+            const psg = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+            const p = rowList.filter((r) => r.passage.id === psg);
+            if (p.length > 0) mediaId = p[0].mediafile.id;
+          }
+          selected =
+            remoteIdGuid('mediafile', mediaId || '', memory.keyMap) ||
+            mediaId ||
+            trackedTask;
+        }
+
         if (selected !== '') {
-          const selectedRow = rowList.filter((r) => r.passage.id === selected);
+          const selectedRow = rowList.filter(
+            (r) => r.mediafile.id === selected
+          );
           if (selectedRow.length > 0) {
             setSelected(selected, rowList);
           } else {
@@ -534,11 +553,11 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           }
         }
         if (selected === '') {
-          setSelected(rowList[1].passage.id, rowList);
+          setSelected(rowList[1].mediafile.id, rowList);
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [role, project, sections, refreshed]);
+    }, [role, planMedia, refreshed, pasId, medId]);
 
     const actor: { [key: string]: string } = {
       [ActivityStates.TranscribeReady]: 'transcriber',
@@ -561,11 +580,19 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           if (transcriber !== r.transcriber) changed = true;
           const editor = related(section, 'editor');
           if (editor !== r.editor) changed = true;
-          const state = r.passage.attributes?.state || '';
-          let role = actor[state] || 'view';
-          if (projRole === 'transcriber' && role === 'editor') role = 'view';
-          const assigned = related(section, role);
-          rowData.push({ ...r, section, role, assigned, transcriber, editor });
+          const state = r.mediafile.attributes?.transcriptionstate || '';
+          let rowRole = actor[state] || 'view';
+          if (rowRole === 'editor' && role !== RoleNames.Editor)
+            rowRole = 'view';
+          const assigned = related(section, rowRole);
+          rowData.push({
+            ...r,
+            section,
+            role: rowRole,
+            assigned,
+            transcriber,
+            editor,
+          });
         }
       });
       if (changed) setState({ ...state, rowData });
@@ -586,12 +613,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         //section
         if (!r.passage.id) rowData.push({ ...r });
         else {
-          const passRecs = passages.filter((p) => p.id === r.passage.id);
-          if (passRecs.length > 0) {
-            const passage = { ...passRecs[0] };
+          const mediaRecs = mediafiles.filter((m) => m.id === r.mediafile.id);
+          if (mediaRecs.length > 0) {
+            const mediafile = { ...mediaRecs[0] };
             let role = r.role;
-            const newState = passage?.attributes?.state;
-            if (newState !== r.passage?.attributes?.state) {
+            const newState = mediafile?.attributes?.transcriptionstate;
+            if (newState !== r.mediafile?.attributes?.transcriptionstate) {
               changed = true;
               role = actor[newState] || 'view';
               forcerefresh =
@@ -599,7 +626,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                 noNewSelection.indexOf(newState) === -1 ||
                 role !== r.role;
             }
-            rowData.push({ ...r, passage, role });
+            rowData.push({ ...r, mediafile, role });
           }
         }
       });
@@ -608,10 +635,10 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         if (forcerefresh) refresh(); //force the transcriber pane to refresh also
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [passages]);
+    }, [mediafiles]);
 
     useEffect(() => {
-      if (mediaState.url) {
+      if (mediaState.url && mediaState.urlMediaId === fetching.current) {
         mediaUrlRef.current = mediaState.url;
         fetching.current = '';
         try {
@@ -684,22 +711,23 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [lang, booksLoaded, allBookData]);
 
-    const isFlat = (plan: string) => {
-      if (plan !== '') {
-        var planRec = getPlan(plan);
-        if (planRec !== null) return planRec.attributes?.flat;
-      }
+    const isFlat = (planRec: Plan) => {
+      if (planRec !== null) return planRec.attributes?.flat;
       return false;
     };
 
     React.useEffect(() => {
       if (devPlan !== '') {
-        const newFlat = isFlat(devPlan);
-        if (state.flat !== newFlat)
-          setState((state) => ({
-            ...state,
-            flat: newFlat,
-          }));
+        const planRec = getPlan(devPlan);
+        if (planRec) {
+          setPlanRec(planRec);
+          const newFlat = isFlat(planRec);
+          if (state.flat !== newFlat)
+            setState((state) => ({
+              ...state,
+              flat: newFlat,
+            }));
+        }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [devPlan]);

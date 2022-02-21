@@ -26,6 +26,7 @@ import {
   useOrganizedBy,
   useOfflnProjRead,
   useOfflineAvailToggle,
+  related,
 } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
 import OfflineIcon from '@material-ui/icons/OfflinePin';
@@ -151,7 +152,7 @@ export const ProjectCard = (props: IProps) => {
           setOpenReports(true);
           break;
         case 'offlineAvail':
-          offlineAvailToggle(offlineProjectRead(projectId));
+          offlineAvailToggle(related(project, 'project'));
           break;
       }
     });
@@ -194,6 +195,7 @@ export const ProjectCard = (props: IProps) => {
       description,
       type,
       languageName,
+      isPublic,
       spellCheck,
       rtl,
       tags,
@@ -208,6 +210,7 @@ export const ProjectCard = (props: IProps) => {
         type,
         language: values.bcp47,
         languageName,
+        isPublic,
         spellCheck,
         defaultFont: values.font,
         defaultFontSize: values.fontSize,
@@ -238,6 +241,7 @@ export const ProjectCard = (props: IProps) => {
       book: '',
       bcp47: attr.language,
       languageName: attr.languageName || '',
+      isPublic: attr.isPublic,
       spellCheck: attr.spellCheck || false,
       font: attr.defaultFont || '',
       rtl: attr.rtl,
@@ -301,7 +305,7 @@ export const ProjectCard = (props: IProps) => {
         {project?.attributes?.tags && (
           <CardActions>
             <>
-              {offlineProjectRead(project)?.attributes?.offlineAvailable && (
+              {offlineProjectRead(project).attributes?.offlineAvailable && (
                 <div className={classes.offline}>
                   <OfflineIcon />
                   {'\u00A0'}

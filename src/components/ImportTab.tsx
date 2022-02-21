@@ -310,7 +310,7 @@ export function ImportTab(props: IProps) {
           files,
           remoteIdNum('project', project, memory.keyMap),
           auth,
-          orbitError,
+          errorReporter,
           t.importPending,
           t.importComplete
         );
@@ -324,7 +324,7 @@ export function ImportTab(props: IProps) {
       fileName,
       buffer,
       auth,
-      orbitError,
+      errorReporter,
       t.importPending,
       t.importComplete
     );
@@ -353,7 +353,7 @@ export function ImportTab(props: IProps) {
     logError(Severity.error, errorReporter, axiosError(err));
     switch (err.errStatus) {
       case 301:
-        localStorage.setItem(localUserKey(LocalKey.url, memory), '/');
+        localStorage.setItem(localUserKey(LocalKey.url), '/');
         return t.projectDeleted.replace('{0}', err.errMsg);
       case 401:
         return ts.expiredToken;
@@ -430,7 +430,7 @@ export function ImportTab(props: IProps) {
             var project = c.imported.data as Project;
             imported = ' ';
             old = t.projectDeleted.replace('{0}', project.attributes.name);
-            localStorage.setItem(localUserKey(LocalKey.url, memory), '/');
+            localStorage.setItem(localUserKey(LocalKey.url), '/');
             break;
           case 'mediafile':
             var mediafile = c.imported.data as MediaFile;
@@ -447,29 +447,34 @@ export function ImportTab(props: IProps) {
               if (section)
                 plan = planFromSection(section, false)?.attributes.name || '';
             }
-            imported =
-              t.transcription + ':' + mediafile.attributes.transcription;
-            old =
-              t.transcription +
-              ':' +
-              (c.online.data as MediaFile).attributes.transcription;
-            break;
-          case 'passage':
-            passage = c.imported.data as Passage;
-            section = sectionFromPassage(passage, true);
-            if (section)
-              plan = planFromSection(section, false)?.attributes.name || '';
-            imported =
-              t.state +
-              ':' +
-              localizeActivityState(passage.attributes.state, ta);
-            old =
-              t.state +
-              ':' +
-              localizeActivityState(
-                (c.online.data as Passage).attributes.state,
-                ta
-              );
+            var online = c.online.data as MediaFile;
+            if (
+              online.attributes.transcription !==
+              mediafile.attributes.transcription
+            ) {
+              imported =
+                t.transcription + ':' + mediafile.attributes.transcription;
+              old =
+                t.transcription +
+                ':' +
+                (c.online.data as MediaFile).attributes.transcription;
+            }
+            if (
+              online.attributes.transcriptionstate !==
+              mediafile.attributes.transcriptionstate
+            ) {
+              imported +=
+                t.state +
+                ':' +
+                localizeActivityState(
+                  mediafile.attributes.transcriptionstate,
+                  ta
+                );
+              old +=
+                t.state +
+                ':' +
+                localizeActivityState(online.attributes.transcriptionstate, ta);
+            }
             break;
           case 'section':
             var oldsection = c.online.data as Section;
@@ -839,6 +844,7 @@ export function ImportTab(props: IProps) {
           )}
           <MediaUpload
             visible={uploadVisible}
+            onVisible={setUploadVisible}
             uploadType={UploadType.ITF}
             uploadMethod={uploadITF}
             cancelMethod={uploadCancel}

@@ -20,11 +20,26 @@ export interface MediaFile extends BaseModel {
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
+    languagebcp47: string | null;
+    link: boolean;
+    readyToShare: boolean;
+    performedBy: string | null;
+    resourcePassageId: number | null;
+    offlineId: string;
+    sourceSegments: string;
+    sourceMediaOfflineId: string;
+    transcriptionstate: string;
+    topic: string;
   };
   relationships?: {
     passage: RecordRelationship;
     plan: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
+    artifactType: RecordRelationship;
+    artifactCategory: RecordRelationship;
+    orgWorkflowStep: RecordRelationship;
+    recordedbyUser: RecordRelationship;
+    sourceMedia: RecordRelationship;
   };
 }
 export default MediaFile;

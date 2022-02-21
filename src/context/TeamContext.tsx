@@ -23,6 +23,7 @@ import {
   INewProjectStrings,
   BookNameMap,
   BookName,
+  RoleNames,
 } from '../model';
 import { isElectron } from '../api-variable';
 import { OptionType } from '../model';
@@ -120,13 +121,15 @@ const initState = {
   auth: undefined as any,
   controlStrings: {} as IControlStrings,
   lang: 'en',
+  ts: {} as ISharedStrings,
+  resetOrbitError: (() => {}) as typeof actions.resetOrbitError,
   bookSuggestions: Array<OptionType>(),
   bookMap: {} as BookNameMap,
   allBookData: Array<BookName>(),
   planTypes: Array<PlanType>(),
   isDeleting: false,
   teams: Array<Organization>(),
-  personalProjects: () => Array<VProject>(),
+  personalProjects: Array<VProject>(),
   teamProjects: (teamId: string) => Array<VProject>(),
   teamMembers: (teamId: string) => 0,
   loadProject: (plan: Plan, cb: () => void) => {},
@@ -142,7 +145,7 @@ const initState = {
   projectCreate: async (project: VProject, team: TeamIdType) => '',
   projectUpdate: (project: VProject) => {},
   projectDelete: (project: VProject) => {},
-  teamCreate: (team: Organization) => {},
+  teamCreate: (team: Organization, cb?: (org: string) => Promise<void>) => {},
   teamUpdate: (team: Organization) => {},
   teamDelete: async (team: Organization) => {},
   isAdmin: (team: Organization) => false,
@@ -195,6 +198,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       lang,
       controlStrings,
       t,
+      ts,
       sharedStrings,
       cardStrings,
       vProjectStrings,
@@ -229,6 +233,8 @@ const TeamProvider = withData(mapRecordsToProps)(
       pickerStrings,
       projButtonStrings,
       newProjectStrings,
+      ts,
+      resetOrbitError,
     });
     const vProjectCreate = useVProjectCreate();
     const vProjectUpdate = useVProjectUpdate();
@@ -282,12 +288,12 @@ const TeamProvider = withData(mapRecordsToProps)(
     const isOwner = (plan: Plan) => {
       const projectId = related(plan, 'project');
       const role = getMyProjRole(projectId);
-      return /admin/i.test(role);
+      return role === RoleNames.Admin;
     };
 
     const isAdmin = (org: Organization) => {
       const role = getMyOrgRole(org.id);
-      return /admin/i.test(role);
+      return role === RoleNames.Admin;
     };
 
     const teamMembers = (teamId: string) => {
@@ -312,7 +318,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             !isPersonal(o.id) &&
             (!isOffline || offlineOnly || teamProjects(o.id).length > 0)
         )
-        .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
+        .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1));
     };
 
     const projectType = (plan: Plan) => {
@@ -322,20 +328,26 @@ const TeamProvider = withData(mapRecordsToProps)(
         'Training'
       );
     };
-
-    const personalProjects = () => {
-      const projIds = userProjects
-        .filter(
-          (p) =>
-            isPersonal(related(p, 'organization')) &&
-            (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
-        )
-        .map((p) => p.id);
-      return plans
-        .filter((p) => projIds.includes(related(p, 'project')))
-        .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1))
-        .map((p) => vProject(p));
-    };
+    useEffect(() => {
+      const getPersonalProjects = () => {
+        const projIds = userProjects
+          .filter(
+            (p) =>
+              isPersonal(related(p, 'organization')) &&
+              (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
+          )
+          .map((p) => p.id);
+        return plans
+          .filter((p) => projIds.includes(related(p, 'project')))
+          .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1))
+          .map((p) => vProject(p));
+      };
+      setState((state) => ({
+        ...state,
+        personalProjects: getPersonalProjects(),
+      }));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOffline, plans, userProjects]);
 
     const teamProjects = (teamId: string) => {
       const projIds = userProjects
@@ -347,7 +359,7 @@ const TeamProvider = withData(mapRecordsToProps)(
         .map((p) => p.id);
       return plans
         .filter((p) => projIds.includes(related(p, 'project')))
-        .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1))
+        .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1))
         .map((p) => vProject(p));
     };
 
@@ -393,8 +405,11 @@ const TeamProvider = withData(mapRecordsToProps)(
       setPlan('');
     };
 
-    const teamCreate = (team: Organization) => {
-      orbitTeamCreate(team);
+    const teamCreate = (
+      team: Organization,
+      cb?: (org: string) => Promise<void>
+    ) => {
+      orbitTeamCreate(team, cb);
     };
 
     const teamUpdate = (team: Organization) => {
@@ -403,7 +418,7 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const teamDelete = async (team: Organization) => {
       setState((state) => ({ ...state, isDeleting: true }));
-      await orbitTeamDelete(team);
+      await orbitTeamDelete(team.id);
       setState((state) => ({ ...state, isDeleting: false }));
     };
 
@@ -456,7 +471,10 @@ const TeamProvider = withData(mapRecordsToProps)(
     }, [projects, groupMemberships, user, isOffline]);
 
     useEffect(() => {
-      setState((state) => ({ ...state, teams: getTeams() }));
+      setState((state) => ({
+        ...state,
+        teams: getTeams(),
+      }));
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [organizations, orgMembers, user, isOffline]);
 
@@ -469,8 +487,6 @@ const TeamProvider = withData(mapRecordsToProps)(
             bookMap,
             allBookData,
             planTypes: getPlanTypes,
-            teams: getTeams(),
-            personalProjects,
             teamProjects,
             teamMembers,
             projectType,

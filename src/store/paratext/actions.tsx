@@ -1,7 +1,12 @@
 import Axios from 'axios';
 import { API_CONFIG } from '../../api-variable';
 import Auth from '../../auth/Auth';
-import { Passage, ActivityStates, IIntegrationStrings } from '../../model';
+import {
+  Passage,
+  ActivityStates,
+  IIntegrationStrings,
+  MediaFile,
+} from '../../model';
 import {
   USERNAME_PENDING,
   USERNAME_SUCCESS,
@@ -21,7 +26,7 @@ import {
 } from './types';
 import { ParatextProject } from '../../model/paratextProject';
 import { pendingStatus, errStatus, errorStatus } from '../AxiosStatus';
-import { getMediaProjRec, getMediaRec } from '../../crud';
+import { findRecord, getMediaInPlans, related } from '../../crud';
 import {
   fileJson,
   getLocalParatextText,
@@ -299,33 +304,33 @@ export const getCount =
 
 export const getLocalCount =
   (
-    passages: Passage[],
-    project: string,
+    mediafiles: MediaFile[],
+    plan: string,
     memory: MemorySource,
     errorReporter: any,
-    t: IIntegrationStrings
+    t: IIntegrationStrings,
+    artifactId: string | null
   ) =>
   (dispatch: any) => {
     dispatch({
       payload: pendingStatus(t.countPending),
       type: COUNT_PENDING,
     });
-    const ready = passages
-      .filter(
-        (p) => p.attributes && p.attributes?.state === ActivityStates.Approved
-      )
-      .filter((p) => {
-        const projRec = getMediaProjRec(
-          getMediaRec(p.id, memory),
-          memory,
-          errorReporter
-        );
-        return projRec && projRec.id === project;
-      });
-    const refMissing = ready.filter(
-      (r) =>
-        !refMatch(r?.attributes?.reference || 'Err') || !r?.attributes?.book
+    //todo throw out old versions that are ready?
+    const ready = getMediaInPlans([plan], mediafiles, artifactId).filter(
+      (m) => m.attributes?.transcriptionstate === ActivityStates.Approved
     );
+    const refMissing = ready.filter((m) => {
+      var passage = findRecord(
+        memory,
+        'passage',
+        related(m, 'passage')
+      ) as Passage;
+      return (
+        !refMatch(passage?.attributes?.reference || 'Err') ||
+        !passage?.attributes?.book
+      );
+    });
     if (refMissing.length > 0) {
       const err = errorStatus(
         101,

@@ -1,12 +1,13 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
-import { ISharedStrings, IPlanActionsStrings, IState } from '../../model';
+import { IPlanActionsStrings, IState, IMediaShare } from '../../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 //import AddIcon from '@material-ui/icons/AddCircleOutline';
-import AddIcon from '@material-ui/icons/LibraryAddOutlined';
 import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
-import StopIcon from '@material-ui/icons/Stop';
-import MicIcon from '@material-ui/icons/Mic';
+import PauseIcon from '@material-ui/icons/Pause';
+import TranscribeIcon from '../../control/TranscribeIcon';
+import SharedCheckbox from '@material-ui/icons/CheckBoxOutlined';
+import NotSharedCheckbox from '@material-ui/icons/CheckBoxOutlineBlankOutlined';
+import VersionsIcon from '@material-ui/icons/List';
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 
@@ -19,79 +20,76 @@ const useStyles = makeStyles((theme: Theme) =>
     actionButton: {
       color: theme.palette.primary.light,
     },
+    oldShared: {
+      color: theme.palette.secondary.light,
+    },
   })
 );
 interface IStateProps {
   t: IPlanActionsStrings;
-  ts: ISharedStrings;
 }
 interface IProps extends IStateProps {
   rowIndex: number;
   isSection: boolean;
   isPassage: boolean;
   mediaId: string;
+  mediaShared: IMediaShare;
   online: boolean;
   readonly: boolean;
   isPlaying: boolean;
   canAssign: boolean;
   canDelete: boolean;
-  onTranscribe: (i: number) => () => void;
+  onTranscribe: (i: number) => void;
   onAssign: (where: number[]) => () => void;
-  onUpload: (i: number) => () => void;
-  onRecord: (i: number) => () => void;
   onPlayStatus: (mediaId: string) => void;
   onDelete: (i: number) => () => void;
+  onHistory: (i: number) => () => void;
 }
 
 export function PlanAudioActions(props: IProps) {
   const {
     t,
-    ts,
     rowIndex,
     isPassage,
     mediaId,
-    online,
-    readonly,
-    onUpload,
-    onRecord,
+    mediaShared,
     onPlayStatus,
+    onHistory,
+    onTranscribe,
     isPlaying,
   } = props;
   const classes = useStyles();
-  const [offlineOnly] = useGlobal('offlineOnly');
 
   const handlePlayStatus = () => () => {
-    onPlayStatus(isPlaying ? '' : mediaId);
+    onPlayStatus(mediaId);
   };
-  const handleRecord = (index: number) => () => {
+
+  const handleTranscribe = (i: number) => () => {
     onPlayStatus('');
-    onRecord(index);
+    onTranscribe(i);
   };
 
   return (
     <div className={classes.arrangeActions}>
-      {isPassage &&
-        !readonly &&
-        online && ( //online here is really connected or offlineOnly
-          <IconButton
-            id="planAudUpload"
-            className={classes.actionButton}
-            onClick={onUpload(rowIndex)}
-            title={
-              !offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular
-            }
-          >
-            <AddIcon />
-          </IconButton>
-        )}
-      {isPassage && !readonly && (
+      {isPassage && (
         <IconButton
-          id="planAudRec"
-          className={classes.actionButton}
-          onClick={handleRecord(rowIndex)}
-          title={t.recordAudio}
+          id="passageShare"
+          className={
+            mediaShared === IMediaShare.OldVersionOnly
+              ? classes.oldShared
+              : classes.actionButton
+          }
+          title={t.versions}
+          disabled={(mediaId || '') === ''}
+          onClick={onHistory(rowIndex)}
         >
-          <MicIcon />
+          {mediaShared === IMediaShare.NotPublic ? (
+            <VersionsIcon />
+          ) : mediaShared === IMediaShare.None ? (
+            <NotSharedCheckbox />
+          ) : (
+            <SharedCheckbox />
+          )}
         </IconButton>
       )}
       {isPassage && (
@@ -102,7 +100,17 @@ export function PlanAudioActions(props: IProps) {
           disabled={(mediaId || '') === ''}
           onClick={handlePlayStatus()}
         >
-          {isPlaying ? <StopIcon /> : <PlayIcon />}
+          {isPlaying ? <PauseIcon /> : <PlayIcon />}
+        </IconButton>
+      )}
+      {isPassage && (
+        <IconButton
+          id="planActTrans"
+          title={t.transcribe}
+          onClick={handleTranscribe(rowIndex)}
+          disabled={(mediaId || '') === ''}
+        >
+          <TranscribeIcon />
         </IconButton>
       )}
     </div>
@@ -110,6 +118,5 @@ export function PlanAudioActions(props: IProps) {
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'planActions' }),
-  ts: localStrings(state, { layout: 'shared' }),
 });
 export default connect(mapStateToProps)(PlanAudioActions) as any as any;

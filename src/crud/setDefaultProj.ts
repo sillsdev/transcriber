@@ -8,7 +8,7 @@ export const setDefaultProj = async (
   orgId: string,
   memory: Memory,
   setProject: (value: string) => void,
-  setProjectType: (projectId: string) => string,
+  setProjectType: (projectId: string) => string
 ) => {
   let projs: Project[] | null = memory.cache.query((q: QueryBuilder) =>
     q.findRecords('project')
@@ -17,7 +17,7 @@ export const setDefaultProj = async (
     projs &&
     projs
       .filter((p) => related(p, 'organization') === orgId && p.attributes)
-      .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
+      .sort((i, j) => (i.attributes.name <= j.attributes.name ? -1 : 1));
   if (projs && projs.length > 0) {
     let projKey =
       remoteIdGuid(
@@ -25,7 +25,7 @@ export const setDefaultProj = async (
         localStorage.getItem('lastProj') || '',
         memory.keyMap
       ) || '';
-    var p = projs.find(p => p.id === projKey) || projs[0];
+    var p = projs.find((p) => p.id === projKey) || projs[0];
     setProject(p.id);
     setProjectType(p.id);
   }

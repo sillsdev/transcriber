@@ -5,6 +5,9 @@ import {
   AccordionSummary,
   AccordionDetails,
   Typography,
+  FormControlLabel,
+  Checkbox,
+  FormLabel,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { TeamContext } from '../../../context/TeamContext';
@@ -30,8 +33,8 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     heading: {
-      fontSize: theme.typography.pxToRem(18),
-      fontWeight: theme.typography.fontWeightRegular,
+      fontSize: theme.typography.pxToRem(18) as any,
+      fontWeight: theme.typography.fontWeightRegular as any,
     },
     logo: {
       width: '16px',
@@ -40,13 +43,22 @@ const useStyles = makeStyles((theme: Theme) =>
     render: {
       display: 'flex',
     },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      marginBottom: theme.spacing(1),
+    },
+    label: {
+      color: theme.palette.secondary.main,
+      paddingTop: theme.spacing(4),
+    },
   })
 );
 
 export function ProjectExpansion(props: IProjectDialogState) {
   const classes = useStyles();
   const { state, setState } = props;
-  const { organizedBy } = state;
+  const { organizedBy, isPublic } = state;
   const { localizedOrganizedBy, fromLocalizedOrganizedBy } = useOrganizedBy();
   const [localOrgBy, setLocalOrgBy] = useState('');
   const ctx = React.useContext(TeamContext);
@@ -60,6 +72,9 @@ export function ProjectExpansion(props: IProjectDialogState) {
   ]);
   const { SnackBar, message, showMessage } = useSnackBar();
 
+  const handleShareable = (e: any, val: boolean) => {
+    setState((state) => ({ ...state, isPublic: val }));
+  };
   const handleLayoutChange = (val: string) => {
     setState((state) => ({ ...state, flat: val === t.flat }));
   };
@@ -126,6 +141,7 @@ export function ProjectExpansion(props: IProjectDialogState) {
         </AccordionSummary>
         <AccordionDetails className={classes.panel}>
           <EditorSettings state={state} setState={setState} />
+
           <Options
             label={t.layout}
             defaultValue={state.flat ? t.flat : t.hierarchical}
@@ -141,6 +157,18 @@ export function ProjectExpansion(props: IProjectDialogState) {
             addOption={options.length === 5 ? handleAddOption : undefined}
             otherLabel={t.other}
             decorations={decoration}
+          />
+          <FormLabel className={classes.label}>{t.sharedResources}</FormLabel>
+          <FormControlLabel
+            className={classes.textField}
+            control={
+              <Checkbox
+                id="checkbox-shared"
+                checked={isPublic}
+                onChange={handleShareable}
+              />
+            }
+            label={t.isPublic}
           />
         </AccordionDetails>
       </Accordion>

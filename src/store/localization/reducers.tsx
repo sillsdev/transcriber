@@ -22,7 +22,7 @@ const initialState = {
 			"noOnlineUsers3": "To create an online audio project for working alone:",
 			"noOnlineUsers4": "Create a personal audio project.",
 			"offlineUsers": "Offline Users",
-			"title": "User List",
+			"title": "Connection Mode",
 		}
 	}),
 	"activityState": new LocalizedStrings({
@@ -49,6 +49,44 @@ const initialState = {
 			"delete": "Continue with Delete?",
 			"no": "No",
 			"yes": "Yes",
+		}
+	}),
+	"artifactCategory": new LocalizedStrings({
+		"en": {
+			"activity": "Activity",
+			"biblestory": "Bible Story",
+			"bookintro": "Book Introduction",
+			"translationresource": "Translation Resource",
+			"scripture": "Scripture",
+			"uncategorized": "Uncategorized",
+		}
+	}),
+	"artifactType": new LocalizedStrings({
+		"en": {
+			"backtranslation": "Back Translation",
+			"comment": "Comment",
+			"qanda": "Question and Answer",
+			"retell": "Retelling",
+			"resource": "Resource",
+			"sharedresource": "Shared Resource",
+			"testing": "Testing",
+			"vernacular": "Vernacular",
+		}
+	}),
+	"selectArtifactCategory": new LocalizedStrings({
+		"en": {
+			"addNewCategory": "Add New Category",
+			"artifactCategory": "Category",
+			"duplicateCategory": "Category already exists.",
+			"newArtifactCategory": "New Category",
+			"scriptureHighlight": "Resources of this type will be available in steps using the Compare tool.",
+		}
+	}),
+	"selectArtifactType": new LocalizedStrings({
+		"en": {
+			"addNewType": "Add New Type",
+			"artifactType": "Artifact Type",
+			"newArtifactType": "New Artifact Type",
 		}
 	}),
 	"assignmentTable": new LocalizedStrings({
@@ -109,7 +147,9 @@ const initialState = {
 			"cancel": "Cancel",
 			"connectParatext": "Connect a Paratext Project",
 			"delete": "Delete",
+			"draft": "Oral Drafting",
 			"deleteTeam": "Delete Team",
+			"editWorkflow": "Edit Workflow {0}",
 			"explainTeamDelete": "Deleting the team will delete all audio projects of the team.",
 			"import": "Import Audio Project",
 			"language": "Language: {0}",
@@ -117,10 +157,13 @@ const initialState = {
 			"members": "Members ({0})",
 			"nameInUse": "Name in use",
 			"newProject": "New Audio Project",
+			"OBS": "Storying",
+			"OBT": "Oral Bible Translation",
 			"offline": "Offline",
 			"offlineAvail": "Offline Available",
 			"passagesCreated": "Passages Created",
 			"personalProjects": "Personal Audio Projects",
+			"process": "Default Workflow",
 			"projectCreated": "Audio Project Created",
 			"save": "Save",
 			"sectionStatus": "{0} {1}",
@@ -128,7 +171,33 @@ const initialState = {
 			"sync": "Sync ({0})",
 			"teamName": "Team Name",
 			"teamSettings": "Team Settings",
+			"transcriber": "Transcribing",
 			"uploadProgress": "Upload Progress",
+		}
+	}),
+	"commentCard": new LocalizedStrings({
+		"en": {
+			"confirmDelete": "Delete this comment?",
+		}
+	}),
+	"commentEditor": new LocalizedStrings({
+		"en": {
+			"record": "Record Comment",
+			"recordUnavailable": "Another recorder is open.",
+			"saving": "Saving...",
+			"unsaved": "Unsaved",
+		}
+	}),
+	"community": new LocalizedStrings({
+		"en": {
+			"deleteItem": "Delete Item",
+			"playTest": "Play Test",
+			"record": "Record",
+			"saveFirst": "Save or Clear your recording before uploading.",
+			"segment": "Segment",
+			"speaker": "Speaker",
+			"unsaved": "Unsaved",
+			"uploadComplete": "{0} of {1} files uploaded successfully.",
 		}
 	}),
 	"control": new LocalizedStrings({
@@ -142,6 +211,42 @@ const initialState = {
 			"advanced": "Advanced",
 			"dangerZone": "Danger Zone",
 			"delete": "Delete",
+		}
+	}),
+	"discussionCard": new LocalizedStrings({
+		"en": {
+			"assignRole": "Assign to a Role",
+			"assignUser": "Assign to a User",
+			"category": "Category: {0}",
+			"collapse": "Show/Hide Comments",
+			"comments": "Comments: {0}",
+			"confirmDelete": "Delete this discussion and all commments?",
+			"locate": "Locate discussion subject in audio recording",
+			"or": "or",
+			"playOrStop": "Play or Stop",
+			"resolved": "Resolve",
+			"topic": "Topic",
+			"version": "Version",
+		}
+	}),
+	"discussionMenu": new LocalizedStrings({
+		"en": {
+			"edit": "Edit",
+			"delete": "Delete",
+			"reopen": "Reopen",
+			"resolve": "Resolve",
+			"setSegment": "Set Segment",
+		}
+	}),
+	"discussionList": new LocalizedStrings({
+		"en": {
+			"add": "Add Discussion",
+			"categoryList": "Category List",
+			"collapse": "Show/Hide All Comments",
+			"discussionFilter": "Discussion Filter",
+			"filterStatus": "{0} / {1} discussions",
+			"saveFirst": "Save changed discussions and comments first?",
+			"title": "Discussions",
 		}
 	}),
 	"electronImport": new LocalizedStrings({
@@ -170,6 +275,17 @@ const initialState = {
 			"resend": "Resend the authorization email",
 			"verified": "I'm verified!  Carry on!",
 			"verify": "Please verify by clicking on the link in the authorization email sent to your account.",
+		}
+	}),
+	"filterMenu": new LocalizedStrings({
+		"en": {
+			"all": "All",
+			"allPassages": "All Passages",
+			"allSteps": "All Steps",
+			"category": "Category",
+			"forYou": "For You",
+			"latestVersion": "Latest Version",
+			"resolved": "Resolved",
 		}
 	}),
 	"grid": new LocalizedStrings({
@@ -217,7 +333,9 @@ const initialState = {
 			"owners": "Owners",
 			"ownersDetail": "(Manage + Review + Transcribe)",
 			"projectPlans": "Audio Project Plans",
+			"roles": "Roles:{0}",
 			"save": "Save",
+			"transcriptionTitle": "Users in Transcription Roles",
 			"transcribers": "Transcribers",
 			"transcribersDetail": "(Transcribe)",
 		}
@@ -240,6 +358,7 @@ const initialState = {
 			"or": "or",
 			"leftArrow": "Left Arrow",
 			"rightArrow": "Right Arrow",
+			"shiftKey": "Shift",
 			"spaceKey": "Space",
 		}
 	}),
@@ -423,7 +542,7 @@ const initialState = {
 			"sessionExpiring": "Session Expiring",
 			"settings": "Settings",
 			"switchTo": "Switch to:",
-			"switchUser": "Switch User",
+			"switchUser": "Switch Mode or User",
 			"tasks": "Tasks",
 			"team": "Team",
 			"terms": "Terms of Use",
@@ -442,7 +561,7 @@ const initialState = {
 			"detach": "Disassociate",
 			"download": "Download",
 			"play": "Play",
-			"stop": "Stop",
+			"pause": "Pause",
 		}
 	}),
 	"mediaTab": new LocalizedStrings({
@@ -473,6 +592,7 @@ const initialState = {
 			"passageAttached": "Passage already attached",
 			"planName": "Plan",
 			"proposed": "Proposed",
+			"readyToShare": "Ready to Share",
 			"reference": "Reference",
 			"save": "Save",
 			"saving": "Saving...",
@@ -529,6 +649,32 @@ const initialState = {
 			"uploadAudio": "Upload Audio",
 		}
 	}),
+	"passageDetailArtifacts": new LocalizedStrings({
+		"en": {
+			"action": "Action",
+			"activity": "Add Activity",
+			"add": "Add",
+			"category": "Category",
+			"completed": "Completed",
+			"editResource": "Edit Resource",
+			"resource": "Resource",
+			"sharedResource": "Select Shared Resource",
+			"type": "Type",
+			"upload": "Upload Resource",
+			"version": "Version",
+		}
+	}),
+	"passageDetailStepComplete": new LocalizedStrings({
+		"en": {
+			"title": "Step Complete",
+			"incomplete": "Step Incomplete",
+		}
+	}),
+	"passageDetailToolbar": new LocalizedStrings({
+		"en": {
+			"add": "Passage Detail Toolbar",
+		}
+	}),
 	"passageMedia": new LocalizedStrings({
 		"en": {
 			"close": "Close",
@@ -537,23 +683,29 @@ const initialState = {
 	"passageRecord": new LocalizedStrings({
 		"en": {
 			"cancel": "Cancel",
+			"compressed": "Compressed",
+			"compressing": "Compressing...{0}%",
 			"defaultFilename": "MyRecording",
 			"fileName": "Name",
 			"fileType": "File Type",
 			"loadfile": "Load Existing File",
 			"loading": "Loading...",
 			"save": "Save",
+			"saving": "Saving...",
 			"title": "Record/Edit Audio",
+			"uncompressed": "Uncompressed",
 		}
 	}),
 	"planActions": new LocalizedStrings({
 		"en": {
 			"assign": "Assign",
 			"delete": "Delete",
-			"launchAudacity": "Launch Audacity",
-			"playpause": "Play/Stop",
+			"passageDetail": "Passage Detail",
+			"resources": "Resources",
+			"playpause": "Play/Pause",
 			"recordAudio": "Record/Edit Audio",
 			"transcribe": "Transcribe",
+			"versions": "Versions",
 		}
 	}),
 	"planSheet": new LocalizedStrings({
@@ -561,6 +713,7 @@ const initialState = {
 			"action": "Action",
 			"addPassage": "Add Passage",
 			"addSection": "Add {0}",
+			"assigned": "Assigned",
 			"audio": "Audio",
 			"bookSelect": "Select Book...",
 			"confirm": "{0} {1} Item(s). Are you sure?",
@@ -573,6 +726,7 @@ const initialState = {
 			"saving": "Saving...",
 			"sectionAbove": "Insert {0} above",
 			"selectRows": "Please select row(s) to {0}.",
+			"step": "Step",
 			"tablePaste": "Paste Spreadsheet",
 			"useCtrlV": "Select a column head and use CTRL-V to append table rows.",
 		}
@@ -644,9 +798,9 @@ const initialState = {
 	}),
 	"scriptureTable": new LocalizedStrings({
 		"en": {
-			"action": "Action",
 			"book": "Book",
 			"description": "Description",
+			"extras": "Extras",
 			"installAudacity": "Install {Audacity} to use this feature.",
 			"loadingTable": "Loading data",
 			"passage": "Passage",
@@ -660,13 +814,40 @@ const initialState = {
 			"title": "Title",
 		}
 	}),
+	"sectionResources": new LocalizedStrings({
+		"en": {
+			"close": "Close",
+			"role": "Role",
+			"title": "Assign {0}",
+			"users": "Members",
+		}
+	}),
+	"selectRecording": new LocalizedStrings({
+		"en": {
+			"artifactType": "Type",
+			"created": "Created",
+			"filename": "File Name",
+			"playItem": "Play Item",
+			"sourceSegment": "Source Segment",
+			"sourceVersion": "Source Version",
+			"speaker": "Speaker",
+		}
+	}),
 	"shared": new LocalizedStrings({
 		"en": {
 			"admin": "Admin",
 			"bookNotInParatext": "Passage {0}.{1}: Paratext project does not contain book {2}.",
 			"BookNotSet": "Book was not set for Section {0} Passage {1}",
 			"cancel": "Cancel",
+			"description": "Description",
 			"editor": "Editor",
+			"backtranslator": "Back Translator",
+			"consultant": "Consultant",
+			"launchAudacity": "Launch Audacity",
+			"mediaError": "Meida is missing or has an unaccepted format.",
+			"observer": "Observer",
+			"peerreviewer": "Peer Reviewer",
+			"translator": "Translator",
 			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please log out and login again.",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",
 			"fileNotFound": "The audio file has not been downloaded or has been deleted.",
@@ -680,13 +861,20 @@ const initialState = {
 			"no": "No",
 			"NoSaveOffline": "Unable to save while offline.",
 			"owner": "Owner",
+			"recordingInProgress": "Recording in progress...",
+			"role": "Role",
+			"projectrole": "Project Role",
+			"teamrole": "Team Role",
 			"paratextchapterSpan": "Passage {0}.{1} {2}: Passage must not span chapters.",
 			"part": "Part {0}",
 			"referenceNotFound": "Reference does not exist in Paratext chapter, or reference is within a larger verse range.",
 			"save": "Save",
+			"select": "Select",
 			"transcriber": "Transcriber",
 			"uploadMediaPlural": "Upload Audio",
 			"uploadMediaSingular": "Upload Audio",
+			"user": "User",
+			"versionHistory": "Versions",
 			"yes": "Yes",
 		}
 	}),
@@ -702,11 +890,36 @@ const initialState = {
 			"spellingLangsTip": "Choose spell checking languages",
 		}
 	}),
+	"stepEditor": new LocalizedStrings({
+		"en": {
+			"add": "Add",
+			"changes": "{0} change(s)",
+			"hide": "Hide",
+			"inProgress": "In progress...",
+			"lastStep": "Unable to hide the last step.",
+			"name": "Name",
+			"nextStep": "Next Step",
+			"oneHidden": "One step hidden",
+			"oneVisible": "One step visible and added to the end of the list.",
+			"saving": "Saving ...",
+			"show": "Show",
+			"showAll": "Show all",
+			"stepAdded": "Step added to the end of the list.",
+			"stepsHidden": "{0} steps hidden",
+			"tool": "Tool",
+		}
+	}),
 	"taskItem": new LocalizedStrings({
 		"en": {
 			"assign": "Assign {0}",
 			"section": "{0} {1}.{2}",
 			"unassign": "Unassign {0}",
+		}
+	}),
+	"teamCheckReference": new LocalizedStrings({
+		"en": {
+			"resource": "Resource",
+			"resourcehelper": "Scripture or Bible Story Resource",
 		}
 	}),
 	"template": new LocalizedStrings({
@@ -742,6 +955,26 @@ const initialState = {
 			"yes": "Yes",
 		}
 	}),
+	"tool": new LocalizedStrings({
+		"en": {
+			"export": "Export",
+			"done": "Done",
+			"resource": "Internalize",
+			"record": "Record",
+			"teamCheck": "Compare",
+			"community": "Community Test",
+			"discuss": "Discuss",
+			"transcribe": "Transcribe",
+			"backTranslate": "Back Translate",
+			"segment": "Segment",
+			"paratext": "Paratext Sync",
+		}
+	}),
+	"transcribe": new LocalizedStrings({
+		"en": {
+			"openTranscriber": "Open Transcriber",
+		}
+	}),
 	"transcribeAddNote": new LocalizedStrings({
 		"en": {
 			"addNoteTitle": "Add Note",
@@ -752,6 +985,7 @@ const initialState = {
 	"transcriber": new LocalizedStrings({
 		"en": {
 			"addNote": "Add Note",
+			"backToWorkflow": "Back to Workflow",
 			"comment": "Comment",
 			"congratulation": "Congratulations",
 			"done": "Completed",
@@ -802,6 +1036,7 @@ const initialState = {
 	}),
 	"transcriptionTab": new LocalizedStrings({
 		"en": {
+			"availableOnClipboard": "Exported data is available on the clipboard. Use paste to insert it into another program.",
 			"cancel": "Cancel",
 			"cantCopy": "Unable to copy to clipboard",
 			"copyTip": "Copy transcriptions to Clipboard",
@@ -864,7 +1099,6 @@ const initialState = {
 			"locale": "Locale",
 			"name": "Name",
 			"phone": "Phone",
-			"role": "Team Role",
 			"selectRows": "Please select row(s) to {0}.",
 			"selectUser": "Select User",
 			"showHideFilter": "Show/Hide filter rows",
@@ -892,6 +1126,7 @@ const initialState = {
 			"font": "Font",
 			"fontSize": "Font Size",
 			"hierarchical": "Hierarchical",
+			"isPublic": "This project contains resources that can be used in other projects for Internalization.",
 			"language": "Language",
 			"layout": "Layout",
 			"nameInUse": "Name in use",
@@ -908,6 +1143,7 @@ const initialState = {
 			"scenes": "Scene/Scenes",
 			"sections": "Section/Sections",
 			"sets": "Set/Sets",
+			"sharedResources": "Shared Resources",
 			"spellCheck": "Spell Check",
 			"stories": "Story/Stories",
 			"tags": "Tags",
@@ -938,6 +1174,29 @@ const initialState = {
 			"title": "Getting Started",
 		}
 	}),
+	"workflowSteps": new LocalizedStrings({
+		"en": {
+			"backTranslation": "Back Translate",
+			"phraseBackTranslation": "Phrase Back Translate",
+			"wholeBackTranslation": "Whole Back Translate",
+			"communityTesting": "Community Test",
+			"communityTest1": "Community Test 1",
+			"communityTest2": "Community Test 2",
+			"consultantCheck": "Consultant Check",
+			"export": "Export",
+			"finalRecording": "Final Record",
+			"finalReview": "Final Review",
+			"internalization": "Internalize",
+			"paratextSync": "Sync to Paratext",
+			"peerReview": "Peer Review",
+			"preliminaryApproval": "Preliminary Approval",
+			"record": "Record",
+			"teamCheck": "Team Check",
+			"transcribe": "Transcribe",
+			"unsaved": "Unsaved content",
+			"saveFirst": "Save before changing step?",
+		}
+	}),
 	"wsAudioPlayer": new LocalizedStrings({
 		"en": {
 			"aheadTip": "Ahead {jump} {1} [{0}]",
@@ -957,11 +1216,12 @@ const initialState = {
 			"playTip": "Play [{0}]",
 			"record": "Record [{0}]",
 			"resume": "Resume",
+			"saveSegments": "Save Segments",
 			"seconds": "seconds",
 			"silence": "Silence",
 			"slowerTip": "Slower [{0}]",
-			"stop": "Stop [{0}]",
 			"timerTip": "Timestamp [{0}]",
+			"undoTip": "Undo",
 		}
 	}),
 	"wsAudioPlayerSegment": new LocalizedStrings({
@@ -998,15 +1258,26 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"access" : new LocalizedStrings(action.payload.data.access),
 				"activityState" : new LocalizedStrings(action.payload.data.activityState),
 				"alert" : new LocalizedStrings(action.payload.data.alert),
+				"artifactCategory" : new LocalizedStrings(action.payload.data.artifactCategory),
+				"artifactType" : new LocalizedStrings(action.payload.data.artifactType),
+				"selectArtifactCategory" : new LocalizedStrings(action.payload.data.selectArtifactCategory),
+				"selectArtifactType" : new LocalizedStrings(action.payload.data.selectArtifactType),
 				"assignmentTable" : new LocalizedStrings(action.payload.data.assignmentTable),
 				"assignSection" : new LocalizedStrings(action.payload.data.assignSection),
 				"audacityManager" : new LocalizedStrings(action.payload.data.audacityManager),
 				"audioDownload" : new LocalizedStrings(action.payload.data.audioDownload),
 				"cards" : new LocalizedStrings(action.payload.data.cards),
+				"commentCard" : new LocalizedStrings(action.payload.data.commentCard),
+				"commentEditor" : new LocalizedStrings(action.payload.data.commentEditor),
+				"community" : new LocalizedStrings(action.payload.data.community),
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
+				"discussionCard" : new LocalizedStrings(action.payload.data.discussionCard),
+				"discussionMenu" : new LocalizedStrings(action.payload.data.discussionMenu),
+				"discussionList" : new LocalizedStrings(action.payload.data.discussionList),
 				"electronImport" : new LocalizedStrings(action.payload.data.electronImport),
 				"emailUnverified" : new LocalizedStrings(action.payload.data.emailUnverified),
+				"filterMenu" : new LocalizedStrings(action.payload.data.filterMenu),
 				"grid" : new LocalizedStrings(action.payload.data.grid),
 				"groupSettings" : new LocalizedStrings(action.payload.data.groupSettings),
 				"groupTabs" : new LocalizedStrings(action.payload.data.groupTabs),
@@ -1021,6 +1292,9 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
 				"mediaUpload" : new LocalizedStrings(action.payload.data.mediaUpload),
 				"newProject" : new LocalizedStrings(action.payload.data.newProject),
+				"passageDetailArtifacts" : new LocalizedStrings(action.payload.data.passageDetailArtifacts),
+				"passageDetailStepComplete" : new LocalizedStrings(action.payload.data.passageDetailStepComplete),
+				"passageDetailToolbar" : new LocalizedStrings(action.payload.data.passageDetailToolbar),
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),
 				"planActions" : new LocalizedStrings(action.payload.data.planActions),
@@ -1030,11 +1304,17 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"projButtons" : new LocalizedStrings(action.payload.data.projButtons),
 				"projectDownload" : new LocalizedStrings(action.payload.data.projectDownload),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
+				"sectionResources" : new LocalizedStrings(action.payload.data.sectionResources),
+				"selectRecording" : new LocalizedStrings(action.payload.data.selectRecording),
 				"shared" : new LocalizedStrings(action.payload.data.shared),
 				"spelling" : new LocalizedStrings(action.payload.data.spelling),
+				"stepEditor" : new LocalizedStrings(action.payload.data.stepEditor),
 				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),
+				"teamCheckReference" : new LocalizedStrings(action.payload.data.teamCheckReference),
 				"template" : new LocalizedStrings(action.payload.data.template),
 				"toDoTable" : new LocalizedStrings(action.payload.data.toDoTable),
+				"tool" : new LocalizedStrings(action.payload.data.tool),
+				"transcribe" : new LocalizedStrings(action.payload.data.transcribe),
 				"transcribeAddNote" : new LocalizedStrings(action.payload.data.transcribeAddNote),
 				"transcriber" : new LocalizedStrings(action.payload.data.transcriber),
 				"transcribeReject" : new LocalizedStrings(action.payload.data.transcribeReject),
@@ -1047,6 +1327,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"viewMode" : new LocalizedStrings(action.payload.data.viewMode),
 				"vProject" : new LocalizedStrings(action.payload.data.vProject),
 				"welcome" : new LocalizedStrings(action.payload.data.welcome),
+				"workflowSteps" : new LocalizedStrings(action.payload.data.workflowSteps),
 				"wsAudioPlayer" : new LocalizedStrings(action.payload.data.wsAudioPlayer),
 				"wsAudioPlayerSegment" : new LocalizedStrings(action.payload.data.wsAudioPlayerSegment),
 				"wsAudioPlayerZoom" : new LocalizedStrings(action.payload.data.wsAudioPlayerZoom),

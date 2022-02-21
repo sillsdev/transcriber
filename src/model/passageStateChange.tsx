@@ -9,6 +9,7 @@ export interface PassageStateChange extends BaseModel {
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
+    offlineId: string;
   };
   relationships?: {
     passage: RecordRelationship;

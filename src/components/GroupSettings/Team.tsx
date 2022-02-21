@@ -12,11 +12,18 @@ import {
   Group,
   RoleNames,
   Project,
+  ISharedStrings,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { Grid } from '@material-ui/core';
+import {
+  createStyles,
+  Grid,
+  makeStyles,
+  Theme,
+  Typography,
+} from '@material-ui/core';
 import useOwnerIds from './useOwnerIds';
 import useReviewerIds from './useReviewerIds';
 import useTranscriberIds from './useTranscriberIds';
@@ -25,9 +32,27 @@ import GroupMemberAdd from './GroupMemberAdd';
 import Confirm from '../AlertDialog';
 import { OptionType } from '../../model';
 import { related, useRole } from '../../crud';
+import { localizeRole } from '../../utils';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%',
+      backgroundColor: theme.palette.background.default,
+      marginTop: theme.spacing(3),
+      '& .MuiPaper-rounded': {
+        borderRadius: '8px',
+      },
+    },
+    title: {
+      marginBottom: theme.spacing(3),
+    },
+  })
+);
 
 interface IStateProps {
   t: IGroupSettingsStrings;
+  ts: ISharedStrings;
 }
 
 interface IRecordProps {
@@ -44,28 +69,39 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 function Team(props: IProps) {
-  const {
-    groups,
-    roles,
-    groupMemberships,
-    users,
-    orgMemberships,
-    t,
-    selectedGroup,
-  } = props;
+  const { groupMemberships, users, orgMemberships, t, ts, selectedGroup } =
+    props;
+  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [project] = useGlobal('project');
   const [group, setGroup] = useGlobal('group');
   const [organization] = useGlobal('organization');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const { getRoleId } = useRole();
+  const {
+    getRoleId,
+    getTranscriberRoleIds,
+    getEditorRoleIds,
+    getLocalizedTranscriberRoles,
+    getLocalizedEditorRoles,
+  } = useRole();
   const [open, setOpen] = useState(false);
   const [role, setRole] = useState('');
   const [orgPeople, setOrgPeople] = useState(Array<OptionType>());
   const [confirmItem, setConfirmItem] = useState<IDeleteItem | null>(null);
-  const [allUsers, setAllUsers] = useState(false);
+  // const [allUsers, setAllUsers] = useState(false);
 
+  const ownerRole = localizeRole(RoleNames.Admin, ts, true);
+  const editorRoles = getLocalizedEditorRoles(ts);
+  const transcriberRoles = getLocalizedTranscriberRoles(ts);
+  const editorRoleDesc = t.roles.replace(
+    '{0}',
+    editorRoles.filter((r) => r !== ownerRole).join(', ')
+  );
+  const transcriberRoleDesc = t.roles.replace(
+    '{0}',
+    transcriberRoles.filter((r) => !editorRoles.includes(r)).join(', ')
+  );
   const handleRemove = (id: string, name: string) => {
     setConfirmItem({ id, name });
   };
@@ -106,23 +142,23 @@ function Team(props: IProps) {
 
   const roleCheck = (userId: string, role: RoleNames) => {
     const groupRoles = [
-      RoleNames.Admin,
-      RoleNames.Editor,
-      RoleNames.Transcriber,
+      [getRoleId(RoleNames.Admin)],
+      getEditorRoleIds(),
+      getTranscriberRoleIds(),
     ];
-    const roleIndex = groupRoles.indexOf(role);
-    const groupRole = groupMemberships
+
+    const incl = groupRoles.map((gr) => gr.includes(getRoleId(role)));
+    const roleIndex = incl.indexOf(true);
+    const userRoleId = groupMemberships
       .filter(
         (gm) => related(gm, 'group') === group && related(gm, 'user') === userId
       )
       .map((gm) => related(gm, 'role'));
-    if (groupRole.length === 0) return true;
-    const roleName = roles
-      .filter((r) => r.id === groupRole[0])
-      .map((r) => r.attributes && r.attributes.roleName);
-    if (roleName.length === 0) return false; // This should not happen
-    const roleKey = roleName[0];
-    return groupRoles.indexOf(roleKey as RoleNames) > roleIndex;
+    if (userRoleId.length === 0) return true;
+    const userincl = groupRoles.map((gr) => gr.includes(userRoleId[0]));
+    const userRoleIndex = userincl.indexOf(true);
+    //Do we want to let them change the user from a non-transcription
+    return userRoleIndex === -1 || userRoleIndex > roleIndex;
   };
 
   const handleAdd = (role: RoleNames) => {
@@ -137,7 +173,7 @@ function Team(props: IProps) {
             allOrgUserIds.indexOf(u.id) !== -1 &&
             roleCheck(u.id, role)
         )
-        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+        .sort((i, j) => (i.attributes.name <= j.attributes.name ? -1 : 1))
         .map((u) => {
           return { label: u.attributes.name, value: u.id } as OptionType;
         })
@@ -146,13 +182,13 @@ function Team(props: IProps) {
     setOpen(true);
   };
 
-  useEffect(() => {
-    const groupAll = groups
-      .filter((g) => g.id === group && g.attributes)
-      .map((g) => g.attributes.allUsers);
-    if (groupAll.length > 0) setAllUsers(groupAll[0]);
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [group]);
+  //useEffect(() => {
+  //  const groupAll = groups
+  //    .filter((g) => g.id === group && g.attributes)
+  //    .map((g) => g.attributes.allUsers);
+  //  if (groupAll.length > 0) setAllUsers(groupAll[0]);
+  //  /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  //}, [group]);
 
   useEffect(() => {
     if (!selectedGroup || selectedGroup === '') {
@@ -167,12 +203,16 @@ function Team(props: IProps) {
   }, [project, selectedGroup]);
 
   return (
-    <>
+    <div className={classes.root}>
+      <Typography variant="h6" className={classes.title}>
+        {t.transcriptionTitle}
+      </Typography>
       <Grid container>
         <TeamCol
           {...props}
           title={t.owners}
           titledetail={t.ownersDetail}
+          roledetail={' '}
           people={useOwnerIds(props)}
           add={() => handleAdd(RoleNames.Admin)}
           del={
@@ -186,6 +226,7 @@ function Team(props: IProps) {
           {...props}
           title={t.editors}
           titledetail={t.editorsDetail}
+          roledetail={editorRoleDesc}
           people={useReviewerIds(props)}
           add={() => handleAdd(RoleNames.Editor)}
           del={
@@ -200,10 +241,10 @@ function Team(props: IProps) {
           {...props}
           title={t.transcribers}
           titledetail={t.transcribersDetail}
+          roledetail={transcriberRoleDesc}
           people={useTranscriberIds(props)}
           add={() => handleAdd(RoleNames.Transcriber)}
           del={offline && !offlineOnly ? undefined : handleRemove}
-          allUsers={allUsers}
           noDeleteInfo={t.noDeleteInfo}
           noDeleteAllUsersInfo={t.noDeleteAllUsersInfo}
         />
@@ -224,12 +265,13 @@ function Team(props: IProps) {
       ) : (
         <></>
       )}
-    </>
+    </div>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'groupSettings' }),
+  ts: localStrings(state, { layout: 'shared' }),
 });
 
 const mapRecordsToProps = {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { IState, IUploadProgressStrings } from '../model';
 import localStrings from '../selector/localize';
@@ -53,6 +53,9 @@ export function UploadProgress(props: IProps) {
       if (action) action(choice);
     }
   };
+  useEffect(() => {
+    if (open) cancelRef.current = false;
+  }, [open]);
 
   return (
     <Dialog

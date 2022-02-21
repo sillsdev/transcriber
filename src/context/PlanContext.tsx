@@ -6,14 +6,14 @@ import { connect } from 'react-redux';
 import {
   IState,
   IMainStrings,
-  Plan,
-  PlanType,
   IProjButtonsStrings,
+  Project,
+  RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { related, usePlan } from '../crud';
+import { usePlanType } from '../crud';
 import { useCheckOnline, useInterval } from '../utils';
 import Auth from '../auth/Auth';
 import * as actions from '../store';
@@ -44,6 +44,7 @@ const initState = {
   projButtonStr: {} as IProjButtonsStrings,
   scripture: false,
   flat: false,
+  shared: false,
 };
 
 export type ICtxState = typeof initState;
@@ -68,13 +69,14 @@ const PlanProvider = withData(mapRecordsToProps)(
     const { projButtonStr, resetOrbitError } = props;
     const [memory] = useGlobal('memory');
     const [plan] = useGlobal('plan');
+    const [project] = useGlobal('project');
     const [connected] = useGlobal('connected');
     const [projRole] = useGlobal('projRole');
     const [isOffline] = useGlobal('offline');
     const [offlineOnly] = useGlobal('offlineOnly');
-    const { getPlan } = usePlan();
+    const getPlanType = usePlanType();
     const [readonly, setReadOnly] = useState(
-      (isOffline && !offlineOnly) || projRole !== 'admin'
+      (isOffline && !offlineOnly) || projRole !== RoleNames.Admin
     );
     const [state, setState] = useState({
       ...initState,
@@ -83,31 +85,38 @@ const PlanProvider = withData(mapRecordsToProps)(
     const checkOnline = useCheckOnline(resetOrbitError);
 
     useEffect(() => {
-      let planRec: Plan | null = null;
-      if (plan && plan !== '') planRec = getPlan(plan);
-      const typeId = planRec && related(planRec, 'plantype');
-      let typeRec: PlanType | null = null;
-      if (typeId)
-        typeRec = memory.cache.query((q: QueryBuilder) =>
-          q.findRecord({ type: 'plantype', id: typeId })
-        ) as PlanType;
-      const flat = planRec ? planRec?.attributes?.flat : false;
-      const scripture = typeRec
-        ? typeRec?.attributes?.name?.toLowerCase()?.indexOf('scripture') !== -1
-        : false;
+      const { scripture, flat } = getPlanType(plan);
       if (flat !== state.flat || scripture !== state.scripture)
         setState((state) => ({ ...state, flat, scripture }));
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [plan]);
 
+    useEffect(() => {
+      let projRec: Project | null = null;
+      if (project && project !== '')
+        projRec = memory.cache.query((q: QueryBuilder) =>
+          q.findRecord({ type: 'project', id: project })
+        ) as Project;
+      if (projRec !== null && projRec.attributes.isPublic !== state.shared)
+        setState((state) => ({
+          ...state,
+          shared: projRec?.attributes.isPublic || false,
+        }));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [project]);
+
     React.useEffect(() => {
-      const newValue = (isOffline && !offlineOnly) || projRole !== 'admin';
+      const newValue =
+        (isOffline && !offlineOnly) || projRole !== RoleNames.Admin;
       if (readonly !== newValue) setReadOnly(newValue);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [projRole]);
 
     //do this every 30 seconds to warn they can't save
-    useInterval(() => checkOnline((result: boolean) => {}), 1000 * 30);
+    useInterval(
+      () => checkOnline((result: boolean) => {}),
+      offlineOnly ? null : 1000 * 30
+    );
 
     return (
       <PlanContext.Provider

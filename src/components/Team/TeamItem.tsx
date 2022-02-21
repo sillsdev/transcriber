@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { Grid, Paper, Typography, Button } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
@@ -6,11 +6,13 @@ import GroupIcon from '@material-ui/icons/Group';
 import { Organization, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
+import { StepEditor } from '../StepEditor';
 import GroupTabs from '../GroupTabs';
 import { ProjectCard, AddCard } from '.';
 import TeamDialog from './TeamDialog';
-import { useRole, useAllUserGroup } from '../../crud';
+import { useRole, useAllUserGroup, defaultWorkflow } from '../../crud';
 import Confirm from '../AlertDialog';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,6 +55,7 @@ export const TeamItem = (props: IProps) => {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setOrganization] = useGlobal('organization');
   const [editOpen, setEditOpen] = React.useState(false);
+  const [showWorkflow, setShowWorkflow] = React.useState(false);
   const [deleteItem, setDeleteItem] = React.useState<Organization>();
   const ctx = React.useContext(TeamContext);
   const { teamProjects, teamMembers, teamUpdate, teamDelete, isAdmin } =
@@ -62,6 +65,8 @@ export const TeamItem = (props: IProps) => {
   const { setMyOrgRole } = useRole();
   const [, setGroup] = useGlobal('group');
   const allUserGroup = useAllUserGroup();
+  const { startSave, waitForSave } = useContext(UnsavedContext).state;
+  const [changed] = useGlobal('changed');
 
   const handleMembers = (team: Organization) => () => {
     setOrganization(team.id);
@@ -74,8 +79,13 @@ export const TeamItem = (props: IProps) => {
     setEditOpen(true);
   };
 
-  const handleCommitSettings = (team: Organization) => {
+  const handleCommitSettings = (
+    team: Organization,
+    cb?: (id: string) => Promise<void>
+  ) => {
     teamUpdate(team);
+    cb && cb(team.id);
+    setEditOpen(false);
   };
 
   const handleDeleteTeam = (team: Organization) => {
@@ -88,6 +98,17 @@ export const TeamItem = (props: IProps) => {
   };
 
   const handleDeleteRefused = () => setDeleteItem(undefined);
+
+  const handleWorkflow = (isOpen: boolean) => {
+    if (changed) {
+      startSave();
+      waitForSave(() => setShowWorkflow(isOpen), 500);
+    } else setShowWorkflow(isOpen);
+  };
+
+  const handleEditWorkflow = () => {
+    setShowWorkflow(true);
+  };
 
   const canModify = (
     offline: boolean,
@@ -110,16 +131,25 @@ export const TeamItem = (props: IProps) => {
           >
             {t.members.replace('{0}', teamMembers(team.id).toString())}
           </Button>
-
           {' \u00A0'}
           {canModify(offline, team, offlineOnly) && (
-            <Button
-              id="teamSettings"
-              variant="contained"
-              onClick={handleSettings(team)}
-            >
-              {t.settings}
-            </Button>
+            <>
+              <Button
+                id="editWorkflow"
+                onClick={handleEditWorkflow}
+                variant="contained"
+              >
+                {t.editWorkflow.replace('{0}', '')}
+              </Button>
+              {' \u00A0'}
+              <Button
+                id="teamSettings"
+                variant="contained"
+                onClick={handleSettings(team)}
+              >
+                {t.settings}
+              </Button>
+            </>
           )}
         </div>
       </div>
@@ -138,6 +168,16 @@ export const TeamItem = (props: IProps) => {
         bp={BigDialogBp.md}
       >
         <GroupTabs {...props} />
+      </BigDialog>
+      <BigDialog
+        title={t.editWorkflow.replace(
+          '{0}',
+          `- ${team?.attributes?.name || ''}`
+        )}
+        isOpen={showWorkflow}
+        onOpen={handleWorkflow}
+      >
+        <StepEditor process={defaultWorkflow} org={team.id} />
       </BigDialog>
       {deleteItem && (
         <Confirm

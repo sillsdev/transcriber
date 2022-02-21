@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { ISharedStrings, IPlanActionsStrings, IState } from '../../model';
+import { useGlobal } from 'reactn';
+import {
+  ISharedStrings,
+  IPlanActionsStrings,
+  IState,
+  IMediaShare,
+} from '../../model';
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
@@ -14,7 +20,8 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import MoreIcon from '@material-ui/icons/MoreHoriz';
 import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
-import TranscribeIcon from '@material-ui/icons/EditOutlined';
+import AddIcon from '@material-ui/icons/LibraryAddOutlined';
+import MicIcon from '@material-ui/icons/Mic';
 import { elemOffset } from '../../utils';
 import { isElectron } from '../../api-variable';
 import { AudacityLogo } from '../../control';
@@ -44,14 +51,16 @@ interface IProps extends IStateProps {
   rowIndex: number;
   isSection: boolean;
   isPassage: boolean;
-  mediaId: string;
+  mediaShared: IMediaShare;
   online: boolean;
   readonly: boolean;
   isPlaying: boolean;
   canAssign: boolean;
   canDelete: boolean;
   active: boolean;
-  onTranscribe: (i: number) => () => void;
+  onPlayStatus: (mediaId: string) => void;
+  onRecord: (i: number) => () => void;
+  onUpload: (i: number) => () => void;
   onAudacity: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
@@ -59,12 +68,14 @@ interface IProps extends IStateProps {
 export function PlanActionMenu(props: IProps) {
   const {
     t,
+    ts,
     rowIndex,
     isSection,
     isPassage,
-    mediaId,
     readonly,
-    onTranscribe,
+    onPlayStatus,
+    onRecord,
+    onUpload,
     onAudacity,
     onAssign,
     onDelete,
@@ -73,12 +84,18 @@ export function PlanActionMenu(props: IProps) {
     active,
   } = props;
   const classes = useStyles();
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [open, setOpen] = React.useState(false);
   const [hover, setHover] = React.useState(false);
   const top = React.useRef<number>(0);
   const height = React.useRef<number>(0);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const menuRef = React.useRef<HTMLDivElement>(null);
+
+  const handleRecord = (index: number) => () => {
+    onPlayStatus('');
+    onRecord(index);
+  };
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -199,18 +216,30 @@ export function PlanActionMenu(props: IProps) {
                     )}
                     {isPassage && (
                       <MenuItem
-                        id="planActTrans"
-                        title={t.transcribe}
-                        onClick={onTranscribe(rowIndex)}
-                        disabled={(mediaId || '') === ''}
+                        id="planActUpload"
+                        onClick={onUpload(rowIndex)}
+                        title={
+                          !offlineOnly
+                            ? ts.uploadMediaSingular
+                            : ts.importMediaSingular
+                        }
                       >
-                        <TranscribeIcon className={classes.action} />
+                        <AddIcon className={classes.action} />
                       </MenuItem>
                     )}
-                    {isElectron && isPassage && !readonly && (
+                    {isPassage && (
+                      <MenuItem
+                        id="planActRec"
+                        onClick={handleRecord(rowIndex)}
+                        title={t.recordAudio}
+                      >
+                        <MicIcon className={classes.action} />
+                      </MenuItem>
+                    )}
+                    {isElectron && isPassage && (
                       <MenuItem
                         id="planActAud"
-                        title={t.launchAudacity}
+                        title={ts.launchAudacity}
                         onClick={onAudacity(rowIndex)}
                       >
                         <AudacityLogo />

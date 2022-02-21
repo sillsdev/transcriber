@@ -6,6 +6,7 @@ import {
   BookNameMap,
   OptionType,
   IWorkflow,
+  RoleNames,
 } from '../../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem, AppBar } from '@material-ui/core';
@@ -15,21 +16,22 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from '../AlertDialog';
 import BookSelect from '../BookSelect';
-import { ProjButtons, LastEdit } from '../../control';
+import { ProjButtons, LastEdit, StageReport } from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
 import { refMatch } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
 import { useOrganizedBy } from '../../crud';
-import { useRemoteSave } from '../../utils/useRemoteSave';
 import TaskAvatar from '../TaskAvatar';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
 import Auth from '../../auth/Auth';
-import { TranscriberIcon, EditorIcon } from '../RoleIcons';
 import PlanActionMenu from './PlanActionMenu';
 import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
 import PlanAudioActions from './PlanAudioActions';
 import { HotKeyContext } from '../../context/HotKeyContext';
+import { UnsavedContext } from '../../context/UnsavedContext';
+
+const MemoizedTaskAvatar = React.memo(TaskAvatar);
 
 const DOWN_ARROW = 'ARROWDOWN';
 
@@ -137,6 +139,7 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps {
+  toolId: string;
   columns: Array<ICell>;
   rowData: Array<Array<string | number>>;
   rowInfo: Array<IWorkflow>;
@@ -154,14 +157,17 @@ interface IProps extends IStateProps {
   inlinePassages: boolean;
   onTranscribe: (i: number) => void;
   onAudacity?: (i: number) => void;
+  onPassageDetail: (i: number) => void;
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
   onRecord: (i: number) => void;
+  onHistory: (i: number) => () => void;
   auth: Auth;
 }
 
 export function PlanSheet(props: IProps) {
   const {
+    toolId,
     columns,
     rowData,
     rowInfo,
@@ -181,6 +187,7 @@ export function PlanSheet(props: IProps) {
     auth,
     onTranscribe,
     onAudacity,
+    onPassageDetail,
   } = props;
   const classes = useStyles();
   const ctx = React.useContext(PlanContext);
@@ -188,7 +195,6 @@ export function PlanSheet(props: IProps) {
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [global] = useGlobal();
-  const [busy] = useGlobal('remoteBusy');
   const { showMessage } = useSnackBar();
   const [position, setPosition] = useState<{
     mouseX: null | number;
@@ -201,8 +207,6 @@ export function PlanSheet(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const suggestionRef = useRef<Array<OptionType>>();
   const saveTimer = React.useRef<NodeJS.Timeout>();
-  const [doSave] = useGlobal('doSave');
-  const [changed, setChanged] = useGlobal('changed');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
@@ -210,19 +214,22 @@ export function PlanSheet(props: IProps) {
   const sheetRef = useRef<any>();
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
-  const [savingGrid, setSavingGrid] = useState<ICell[][]>();
-  const [startSave] = useRemoteSave();
+  const { startSave, toolsChanged, saveRequested, isChanged } =
+    useContext(UnsavedContext).state;
   const [srcMediaId, setSrcMediaId] = useState('');
+  const [mediaPlaying, setMediaPlaying] = useState(false);
   const [warning, setWarning] = useState<string>();
   const [active, setActive] = useState(-1);
   const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = bookCol > 0 ? 6 : 5;
-
   const isSection = (i: number) => isSectionRow(rowInfo[i]);
 
   const isPassage = (i: number) => isPassageRow(rowInfo[i]);
+  const [changed, setChanged] = useState(false); //for button enabling
+  const changedRef = useRef(false); //for autosave
+  const [saving, setSaving] = useState(false);
 
   const handleAddSection = () => {
     addSection();
@@ -297,16 +304,24 @@ export function PlanSheet(props: IProps) {
   };
 
   const handlePlayStatus = (mediaId: string) => {
-    setSrcMediaId(mediaId);
+    if (mediaId === srcMediaId) {
+      setMediaPlaying(!mediaPlaying);
+    } else {
+      setSrcMediaId(mediaId);
+    }
   };
 
-  const handleTranscribe = (i: number) => () => {
+  const handleTranscribe = (i: number) => {
     setSrcMediaId('');
     onTranscribe(i);
   };
 
   const handleAudacity = (i: number) => () => {
     onAudacity && onAudacity(i);
+  };
+
+  const handlePassageDetail = (i: number) => () => {
+    onPassageDetail && onPassageDetail(i);
   };
 
   const handleCellsChanged = (changes: Array<ICellChange>) => {
@@ -326,7 +341,7 @@ export function PlanSheet(props: IProps) {
     j: number
   ) => {
     e.preventDefault();
-    if (i > 0 && (!isOffline || offlineOnly) && projRole === 'admin') {
+    if (i > 0 && (!isOffline || offlineOnly) && projRole === RoleNames.Admin) {
       setPosition({ mouseX: e.clientX - 2, mouseY: e.clientY - 4, i, j });
     }
   };
@@ -413,12 +428,13 @@ export function PlanSheet(props: IProps) {
   };
 
   const handleAutoSave = () => {
-    if (changed && !preventSave.current && !global.alertOpen) {
+    if (changedRef.current && !preventSave.current && !global.alertOpen) {
       handleSave();
     } else {
       startSaveTimer();
     }
   };
+
   const startSaveTimer = () => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
@@ -437,7 +453,11 @@ export function PlanSheet(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (changed) {
+    changedRef.current = isChanged(toolId);
+    if (changedRef.current !== changed) setChanged(changedRef.current);
+    var isSaving = saveRequested(toolId);
+    if (isSaving !== saving) setSaving(isSaving);
+    if (changedRef.current) {
       if (saveTimer.current === undefined) startSaveTimer();
       if (!connected && !offlineOnly) showMessage(ts.NoSaveOffline);
     } else {
@@ -451,9 +471,7 @@ export function PlanSheet(props: IProps) {
       }
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [changed]);
-
-  const MemoizedTaskAvatar = React.memo(TaskAvatar);
+  }, [toolsChanged]);
 
   const refErrTest = (ref: any) => typeof ref !== 'string' || !refMatch(ref);
 
@@ -466,17 +484,17 @@ export function PlanSheet(props: IProps) {
       let data = [
         [
           {
-            value: <EditorIcon />,
+            value: t.step,
             readOnly: true,
           } as ICell,
           {
-            value: <TranscriberIcon />,
+            value: t.assigned,
             readOnly: true,
           } as ICell,
           {
-            value: t.audio,
+            value: t.action,
             readOnly: true,
-            width: projRole === 'admin' ? 50 : 20,
+            width: projRole === RoleNames.Admin ? 50 : 20,
           } as ICell,
         ].concat(
           columns.map((col) => {
@@ -489,9 +507,10 @@ export function PlanSheet(props: IProps) {
           const passage = isPassage(rowIndex);
           return [
             {
-              value: (
-                <MemoizedTaskAvatar
-                  assigned={rowInfo[rowIndex].editor?.id || ''}
+              value: passage && (
+                <StageReport
+                  onClick={handlePassageDetail(rowIndex)}
+                  step={rowInfo[rowIndex].step || ''}
                 />
               ),
               readOnly: true,
@@ -517,12 +536,15 @@ export function PlanSheet(props: IProps) {
                           rowIndex={rowIndex}
                           isPassage={passage}
                           mediaId={rowInfo[rowIndex].mediaId?.id}
+                          mediaShared={rowInfo[rowIndex].mediaShared}
                           onPlayStatus={handlePlayStatus}
+                          onPassageDetail={handlePassageDetail}
+                          onTranscribe={handleTranscribe}
                           online={connected || offlineOnly}
                           readonly={readonly}
                           isPlaying={
-                            (rowInfo[rowIndex].mediaId?.id || '') !== '' &&
-                            srcMediaId === rowInfo[rowIndex].mediaId?.id
+                            srcMediaId === rowInfo[rowIndex].mediaId?.id &&
+                            mediaPlaying
                           }
                         />
                       ),
@@ -578,13 +600,15 @@ export function PlanSheet(props: IProps) {
                     rowIndex={rowIndex}
                     isSection={section}
                     isPassage={passage}
-                    mediaId={rowInfo[rowIndex].mediaId?.id}
-                    onDelete={handleConfirmDelete}
-                    onTranscribe={handleTranscribe}
-                    onAudacity={handleAudacity}
                     readonly={readonly}
-                    canAssign={projRole === 'admin'}
-                    canDelete={projRole === 'admin'}
+                    online={connected || offlineOnly}
+                    mediaId={rowInfo[rowIndex].mediaId?.id}
+                    mediaShared={rowInfo[rowIndex].mediaShared}
+                    onDelete={handleConfirmDelete}
+                    onPlayStatus={handlePlayStatus}
+                    onAudacity={handleAudacity}
+                    canAssign={projRole === RoleNames.Admin}
+                    canDelete={projRole === RoleNames.Admin}
                     active={active - 1 === rowIndex}
                   />
                 ),
@@ -611,27 +635,25 @@ export function PlanSheet(props: IProps) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, rowInfo, bookCol, columns, srcMediaId, projRole]);
+  }, [rowData, rowInfo, bookCol, columns, srcMediaId, mediaPlaying, projRole]);
+
+  useEffect(() => {
+    //if I set playing when I set the mediaId, it plays a bit of the old
+    if (srcMediaId) setMediaPlaying(true);
+  }, [srcMediaId]);
 
   useEffect(() => {
     suggestionRef.current = bookSuggestions;
   }, [bookSuggestions]);
 
-  useEffect(() => {
-    if (!doSave && !busy && savingGrid) {
-      setChanged(true);
-      setSavingGrid(undefined);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave, busy, savingGrid]);
-
   const playEnded = () => {
-    setSrcMediaId('');
+    setMediaPlaying(false);
   };
+
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
-        {projRole === 'admin' && (
+        {projRole === RoleNames.Admin && (
           <AppBar position="fixed" className={classes.bar} color="default">
             <div className={classes.actions}>
               <>
@@ -704,7 +726,7 @@ export function PlanSheet(props: IProps) {
                   color={connected ? 'primary' : 'secondary'}
                   className={classes.button}
                   onClick={handleSave}
-                  disabled={doSave || !changed}
+                  disabled={saving || !changed}
                 >
                   {t.save}
                   <SaveIcon className={classes.icon} />
@@ -727,7 +749,7 @@ export function PlanSheet(props: IProps) {
         </div>
         <Menu
           keepMounted
-          open={position.mouseY !== null && projRole === 'admin'}
+          open={position.mouseY !== null && projRole === RoleNames.Admin}
           onClose={handleNoContextMenu}
           anchorReference="anchorPosition"
           anchorPosition={
@@ -765,7 +787,12 @@ export function PlanSheet(props: IProps) {
       ) : (
         <></>
       )}
-      <MediaPlayer auth={auth} srcMediaId={srcMediaId} onEnded={playEnded} />
+      <MediaPlayer
+        auth={auth}
+        srcMediaId={srcMediaId}
+        onEnded={playEnded}
+        requestPlay={mediaPlaying}
+      />
     </div>
   );
 }

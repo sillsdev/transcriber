@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -7,14 +7,19 @@ import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import localStrings from '../selector/localize';
 import MediaUpload, { UploadType } from './MediaUpload';
-import { getMediaInPlans, related, remoteIdNum } from '../crud';
+import {
+  findRecord,
+  pullPlanMedia,
+  related,
+  remoteIdNum,
+  useArtifactType,
+  useOfflnMediafileCreate,
+  VernacularTag,
+} from '../crud';
 import Auth from '../auth/Auth';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
-import { currentDateTime } from '../utils';
-import { TransformBuilder } from '@orbit/data';
-import { AddRecord } from '../model/baseModel';
-import PassageRecord from './PassageRecord';
+import PassageRecordDlg from './PassageRecordDlg';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,10 +28,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-export interface IStatus {
-  canceled: boolean;
-}
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -38,43 +39,58 @@ interface IDispatchProps {
   uploadFiles: typeof actions.uploadFiles;
   nextUpload: typeof actions.nextUpload;
   uploadComplete: typeof actions.uploadComplete;
+  doOrbitError: typeof actions.doOrbitError;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
+  noBusy?: boolean;
   auth: Auth;
   recordAudio: boolean;
+  allowWave?: boolean;
   defaultFilename?: string;
   isOpen: boolean;
   onOpen: (visible: boolean) => void;
   showMessage: (msg: string | JSX.Element) => void;
-  setComplete: (amount: number) => void; // 0 to 100
   finish?: (planId: string, mediaRemoteIds?: string[]) => void; // logic when upload complete
   metaData?: JSX.Element; // component embeded in dialog
   ready?: () => boolean; // if false control is disabled
   createProject?: (file: File[]) => Promise<any>;
-  status: IStatus;
+  cancelled: React.MutableRefObject<boolean>;
   multiple?: boolean;
   mediaId?: string;
   importList?: File[];
+  artifactTypeId?: string | null;
+  passageId?: string;
+  sourceMediaId?: string;
+  sourceSegments?: string;
+  performedBy?: string;
 }
 
 export const Uploader = (props: IProps) => {
   const {
+    noBusy,
     auth,
     mediaId,
     recordAudio,
+    allowWave,
     defaultFilename,
     t,
+    ts,
     isOpen,
     onOpen,
     showMessage,
-    status,
+    cancelled,
     multiple,
     importList,
+    artifactTypeId,
+    passageId,
+    sourceMediaId,
+    sourceSegments,
+    performedBy,
   } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
-  const { uploadComplete, setComplete, finish } = props;
+  const { uploadComplete, finish, doOrbitError } = props;
   const { uploadFiles } = props;
   const { metaData, ready } = props;
   const { createProject } = props;
@@ -85,14 +101,17 @@ export const Uploader = (props: IProps) => {
   const [errorReporter] = useGlobal('errorReporter');
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
+  const [offline] = useGlobal('offline');
   const [user] = useGlobal('user');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const planIdRef = React.useRef<string>(plan);
-  const successCount = React.useRef<number>(0);
-  const fileList = React.useRef<File[]>();
-  const authRef = React.useRef<Auth>(auth);
-  const mediaIdRef = React.useRef<string[]>([]);
-
+  const planIdRef = useRef<string>(plan);
+  const successCount = useRef<number>(0);
+  const fileList = useRef<File[]>();
+  const authRef = useRef<Auth>(auth);
+  const mediaIdRef = useRef<string[]>([]);
+  const artifactTypeRef = useRef<string>('');
+  const { createMedia } = useOfflnMediafileCreate(doOrbitError);
+  const [, setComplete] = useGlobal('progress');
+  const { localizedArtifactTypeFromId } = useArtifactType();
   const finishMessage = () => {
     setTimeout(() => {
       if (fileList.current)
@@ -104,27 +123,23 @@ export const Uploader = (props: IProps) => {
       uploadComplete();
       setComplete(0);
       setBusy(false);
-      status.canceled = successCount.current <= 0;
+      cancelled.current = successCount.current <= 0;
       finish && finish(planIdRef.current, mediaIdRef.current);
     }, 1000);
   };
 
-  const getPlanId = () =>
-    remoteIdNum('plan', planIdRef.current, memory.keyMap) || planIdRef.current;
-
-  const pullPlanMedia = async () => {
-    const planId = getPlanId();
-    if (planId !== undefined) {
-      var filterrec = {
-        attribute: 'plan-id',
-        value: planId,
-      };
-      var t = await remote.pull((q) =>
-        q.findRecords('mediafile').filter(filterrec)
-      );
-      await memory.sync(t);
-    }
-  };
+  const getArtifactTypeId = () =>
+    artifactTypeId
+      ? remoteIdNum('artifacttype', artifactTypeId, memory.keyMap) ||
+        artifactTypeId
+      : artifactTypeId;
+  const getPassageId = () =>
+    remoteIdNum('passage', passageId || '', memory.keyMap) || passageId;
+  const getSourceMediaId = () =>
+    remoteIdNum('mediafile', sourceMediaId || '', memory.keyMap) ||
+    sourceMediaId;
+  const getUserId = () =>
+    remoteIdNum('user', user || '', memory.keyMap) || user;
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     if (success) successCount.current += 1;
@@ -133,75 +148,69 @@ export const Uploader = (props: IProps) => {
     if (data?.stringId) mediaIdRef.current.push(data?.stringId);
     else if (success && data) {
       // offlineOnly
-      const planRecId = { type: 'plan', id: planIdRef.current };
-      if (planRecId.id) {
-        var media = getMediaInPlans(
-          [planRecId.id],
-          memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
-        ).filter((m) => m.attributes.originalFile === data.originalFile);
-        var num = 1;
-        var psg = '';
-        if (media.length > 0) {
-          var last = media.sort((i, j) =>
-            i.attributes.versionNumber > j.attributes.versionNumber ? -1 : 1
-          )[0];
-          num = last.attributes.versionNumber + 1;
-          psg = related(last, 'passage');
+      var psgId = passageId || '';
+      var num = 1;
+      if (mediaId) {
+        const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFile;
+        if (mediaRec) {
+          psgId = related(mediaRec, 'passage');
+          if (!artifactTypeId)
+            //vernacular
+            num = mediaRec.attributes.versionNumber + 1;
         }
-        const mediaRec: MediaFile = {
-          type: 'mediafile',
-          attributes: {
-            ...data,
-            versionNumber: num,
-            transcription: '',
-            filesize: uploadList[n].size,
-            position: 0,
-            dateCreated: currentDateTime(),
-            dateUpdated: currentDateTime(),
-          },
-        } as any;
-        const t = new TransformBuilder();
-        await memory.update([
-          ...AddRecord(t, mediaRec, user, memory),
-          t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
-        ]);
-        if (psg && psg !== '')
-          await memory.update([
-            t.replaceRelatedRecord(mediaRec, 'passage', {
-              type: 'passage',
-              id: psg,
-            }),
-          ]);
-        mediaIdRef.current.push(mediaRec.id);
-      } else {
-        throw new Error('Plan Id not set.  Media not created.');
       }
+      const newMediaRec = await createMedia(
+        data,
+        num,
+        uploadList[n].size,
+        psgId,
+        artifactTypeId !== undefined ? artifactTypeId : '',
+        sourceMediaId || '',
+        recordAudio ? user : ''
+      );
+      mediaIdRef.current.push(newMediaRec.id);
     }
+
     setComplete(Math.min((n * 100) / uploadList.length, 100));
     const next = n + 1;
-    if (next < uploadList.length && !status.canceled) {
+    if (next < uploadList.length && !cancelled.current) {
       doUpload(next);
-    } else if (!offlineOnly) {
-      pullPlanMedia().then(() => finishMessage());
+    } else if (!offline) {
+      pullPlanMedia(planIdRef.current, memory, remote).then(() => {
+        finishMessage();
+      });
     } else {
       finishMessage();
     }
   };
+
+  const getPlanId = () =>
+    remoteIdNum('plan', planIdRef.current, memory.keyMap) || planIdRef.current;
 
   const doUpload = (currentlyLoading: number) => {
     const uploadList = fileList.current;
     if (!uploadList) return; // This should never happen
     const mediaFile = {
       planId: getPlanId(),
+      versionNumber: 1,
       originalFile: uploadList[currentlyLoading].name,
       contentType: uploadList[currentlyLoading].type,
+      artifactTypeId: getArtifactTypeId(),
+      passageId: getPassageId(),
+      sourceMediaId: getSourceMediaId(),
+      sourceSegments: sourceSegments,
+      performedBy: performedBy,
+      eafUrl: !artifactTypeId
+        ? ts.mediaAttached
+        : localizedArtifactTypeFromId(artifactTypeId), //put psc message here
     } as any;
+    if (recordAudio) mediaFile.recordedbyUserId = getUserId();
     nextUpload(
       mediaFile,
       uploadList,
       currentlyLoading,
       authRef.current,
-      offlineOnly,
+      offline,
       errorReporter,
       itemComplete
     );
@@ -213,20 +222,20 @@ export const Uploader = (props: IProps) => {
       showMessage(t.selectFiles);
       return;
     }
-    setBusy(true);
+    if (!noBusy) setBusy(true);
     if (createProject) planIdRef.current = await createProject(files);
     uploadFiles(files);
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
     authRef.current = auth;
+    artifactTypeRef.current = artifactTypeId || '';
     doUpload(0);
-    onOpen(false);
   };
 
   const uploadCancel = () => {
     onOpen(false);
-    if (status) status.canceled = true;
-    //what is this???
+    if (cancelled) cancelled.current = true;
+    // This makes the scroll bar reappear on the parent
     document.getElementsByTagName('body')[0].removeAttribute('style');
   };
 
@@ -261,21 +270,24 @@ export const Uploader = (props: IProps) => {
   return (
     <div>
       {recordAudio && !importList && (
-        <PassageRecord
+        <PassageRecordDlg
           visible={isOpen}
+          onVisible={onOpen}
           mediaId={mediaId}
           auth={auth}
-          multiple={multiple}
           uploadMethod={uploadMedia}
-          cancelMethod={uploadCancel}
+          onCancel={uploadCancel}
           metaData={metaData}
           ready={ready}
           defaultFilename={defaultFilename}
+          allowWave={allowWave}
+          showFilename={allowWave}
         />
       )}
       {!recordAudio && !importList && (
         <MediaUpload
           visible={isOpen}
+          onVisible={onOpen}
           uploadType={UploadType.Media}
           multiple={multiple}
           uploadMethod={uploadMedia}
@@ -300,6 +312,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       uploadFiles: actions.uploadFiles,
       nextUpload: actions.nextUpload,
       uploadComplete: actions.uploadComplete,
+      doOrbitError: actions.doOrbitError,
     },
     dispatch
   ),

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { IHotKeyStrings, IState } from '../model';
 import localStrings from '../selector/localize';
@@ -33,39 +33,65 @@ interface hotKeyInfo {
   key: string;
   ctrl?: boolean;
   alt?: boolean;
+  shift?: boolean;
   cb: () => boolean;
 }
 
 const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
   const { t } = props;
-  const [hotKeys, setHotKeys] = useState<hotKeyInfo[]>([]);
+  const hotKeys = useRef<hotKeyInfo[]>([]);
 
   const [state, setState] = useState({
     ...initState,
   });
+  const lastKeyRef = useRef(0);
   const isMounted = useMounted('hotkeycontext');
 
-  const hotKeyCallback = (key: string, ctrl: boolean, alt: boolean) => {
-    var ix = hotKeys.findIndex(
-      (hk) => hk.key === key.toUpperCase() && hk.ctrl === ctrl && hk.alt === alt
+  useEffect(() => {
+    window.addEventListener('keydown', handleKey);
+    return () => {
+      window.removeEventListener('keydown', handleKey);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const hotKeyCallback = (
+    key: string,
+    ctrl: boolean,
+    alt: boolean,
+    shift: boolean
+  ) => {
+    var ix = hotKeys.current.findIndex(
+      (hk) =>
+        hk.key === key.toUpperCase() &&
+        hk.ctrl === ctrl &&
+        hk.alt === alt &&
+        hk.shift === shift
     );
-    if (ix !== -1) return hotKeys[ix].cb;
+    if (ix !== -1) return hotKeys.current[ix].cb;
     return undefined;
   };
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+
+  const handleKey = (e: KeyboardEvent) => {
+    if (!e.key) return;
     switch (e.key.toUpperCase()) {
       case 'CONTROL':
       case 'ALT':
       case 'SHIFT':
         return;
       default:
-        var cb = hotKeyCallback(e.key, e.ctrlKey, e.altKey);
-        var handled = false;
-        if (cb) handled = cb();
-        if (handled) e.preventDefault();
+        if (e.timeStamp !== lastKeyRef.current) {
+          var cb = hotKeyCallback(e.key, e.ctrlKey, e.altKey, e.shiftKey);
+          var handled = false;
+          if (cb) handled = cb();
+          if (handled) e.preventDefault();
+          lastKeyRef.current = e.timeStamp;
+        }
     }
   };
-
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    handleKey(e.nativeEvent);
+  };
   const newHotKey = (key: string, cb?: () => boolean) => {
     if (!cb)
       cb = () => {
@@ -81,6 +107,9 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
         case 'ALT':
           hk.alt = true;
           break;
+        case 'SHIFT':
+          hk.shift = true;
+          break;
         case 'SPACE':
           hk.key = ' ';
           break;
@@ -92,11 +121,12 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
   };
   const findHotKey = (key: string) => {
     var thiskey = newHotKey(key);
-    return hotKeys.findIndex(
+    return hotKeys.current.findIndex(
       (hk) =>
         hk.key === thiskey.key &&
         hk.ctrl === thiskey.ctrl &&
-        hk.alt === thiskey.alt
+        hk.alt === thiskey.alt &&
+        hk.shift === thiskey.shift
     );
   };
   const subscribe = (keys: string, cb: () => boolean) => {
@@ -104,9 +134,9 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
     akeys.forEach((key) => {
       var ix = findHotKey(key);
       if (ix !== -1) {
-        hotKeys[ix].cb = cb;
+        hotKeys.current[ix].cb = cb;
       } else {
-        hotKeys.push(newHotKey(key, cb));
+        hotKeys.current.push(newHotKey(key, cb));
       }
     });
   };
@@ -115,7 +145,7 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
     akeys.forEach((key) => {
       var ix = findHotKey(key);
       if (ix !== -1 && isMounted()) {
-        setHotKeys(hotKeys.splice(ix, 1));
+        hotKeys.current.splice(ix, 1);
       }
     });
   };
@@ -129,6 +159,7 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
       .replace('ARROWLEFT', t.leftArrow)
       .replace('ARROWRIGHT', t.rightArrow)
       .replace('ARROWDOWN', t.downArrow)
+      .replace('SHIFT', t.shiftKey)
       .split(',')
       .join(` ${t.or} `);
   };

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { PlanContext } from '../../context/PlanContext';
-import { IState, IMediaTabStrings } from '../../model';
-import { Button } from '@material-ui/core';
+import { IState, IMediaTabStrings, MediaFile } from '../../model';
+import { Button, Checkbox, FormControlLabel } from '@material-ui/core';
 import localStrings from '../../selector/localize';
 import { TransformBuilder } from '@orbit/data';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
@@ -20,6 +20,7 @@ import { remoteId, useOrganizedBy } from '../../crud';
 import { numCompare, dateCompare, dateOrTime } from '../../utils';
 import { IRow } from '.';
 import { Sorting } from '@devexpress/dx-react-grid';
+import { UpdateRecord } from '../../model/baseModel';
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -32,45 +33,78 @@ interface IProps extends IStateProps {
   setRefresh: (refresh: boolean) => void;
   playItem: string;
   setPlayItem: (item: string) => void;
+  mediaPlaying: boolean;
+  setMediaPlaying: (playing: boolean) => void;
   onAttach?: (checks: number[], attach: boolean) => void;
 }
 export const AudioTable = (props: IProps) => {
   const { data, setRefresh, lang, auth, t } = props;
   const { playItem, setPlayItem, onAttach } = props;
   const ctx = React.useContext(PlanContext);
-  const { connected, readonly } = ctx.state;
+  const { connected, readonly, shared } = ctx.state;
   const [memory] = useGlobal('memory');
+  const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const [, setBusy] = useGlobal('remoteBusy');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const [confirmAction, setConfirmAction] = useState('');
   const [deleteItem, setDeleteItem] = useState(-1);
   const [showId, setShowId] = useState('');
+  const [mediaPlaying, setMediaPlaying] = useState(false);
+  const columnDefs = shared
+    ? [
+        { name: 'planName', title: t.planName },
+        { name: 'actions', title: '\u00A0' },
+        { name: 'fileName', title: t.fileName },
+        { name: 'sectionDesc', title: organizedBy },
+        { name: 'reference', title: t.reference },
+        { name: 'duration', title: t.duration },
+        { name: 'size', title: t.size },
+        { name: 'version', title: t.version },
+        { name: 'date', title: t.date },
+        { name: 'readyToShare', title: t.readyToShare },
+        { name: 'detach', title: '\u00A0' },
+      ]
+    : [
+        { name: 'planName', title: t.planName },
+        { name: 'actions', title: '\u00A0' },
+        { name: 'fileName', title: t.fileName },
+        { name: 'sectionDesc', title: organizedBy },
+        { name: 'reference', title: t.reference },
+        { name: 'duration', title: t.duration },
+        { name: 'size', title: t.size },
+        { name: 'version', title: t.version },
+        { name: 'date', title: t.date },
+        { name: 'detach', title: '\u00A0' },
+      ];
+  const columnWidths = shared
+    ? [
+        { columnName: 'planName', width: 150 },
+        { columnName: 'actions', width: onAttach ? 120 : 50 },
+        { columnName: 'fileName', width: 220 },
+        { columnName: 'sectionDesc', width: 150 },
+        { columnName: 'reference', width: 150 },
+        { columnName: 'duration', width: 100 },
+        { columnName: 'size', width: 100 },
+        { columnName: 'version', width: 100 },
+        { columnName: 'date', width: 100 },
+        { columnName: 'readyToShare', width: 100 },
+        { columnName: 'detach', width: 120 },
+      ]
+    : [
+        { columnName: 'planName', width: 150 },
+        { columnName: 'actions', width: onAttach ? 120 : 50 },
+        { columnName: 'fileName', width: 220 },
+        { columnName: 'sectionDesc', width: 150 },
+        { columnName: 'reference', width: 150 },
+        { columnName: 'duration', width: 100 },
+        { columnName: 'size', width: 100 },
+        { columnName: 'version', width: 100 },
+        { columnName: 'date', width: 100 },
+        { columnName: 'detach', width: 120 },
+      ];
 
-  const columnDefs = [
-    { name: 'planName', title: t.planName },
-    { name: 'actions', title: '\u00A0' },
-    { name: 'fileName', title: t.fileName },
-    { name: 'sectionDesc', title: organizedBy },
-    { name: 'reference', title: t.reference },
-    { name: 'duration', title: t.duration },
-    { name: 'size', title: t.size },
-    { name: 'version', title: t.version },
-    { name: 'date', title: t.date },
-    { name: 'detach', title: '\u00A0' },
-  ];
-  const columnWidths = [
-    { columnName: 'planName', width: 150 },
-    { columnName: 'actions', width: onAttach ? 120 : 50 },
-    { columnName: 'fileName', width: 220 },
-    { columnName: 'sectionDesc', width: 150 },
-    { columnName: 'reference', width: 150 },
-    { columnName: 'duration', width: 100 },
-    { columnName: 'size', width: 100 },
-    { columnName: 'version', width: 100 },
-    { columnName: 'date', width: 100 },
-    { columnName: 'detach', width: 120 },
-  ];
   const columnFormatting = [
     { columnName: 'actions', aligh: 'center', wordWrapEnabled: false },
     { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
@@ -102,7 +136,14 @@ export const AudioTable = (props: IProps) => {
   const handleShowTranscription = (id: string) => () => {
     setShowId(id);
   };
-
+  const handleChangeReadyToShare = (id: string) => () => {
+    const mediaRec = memory.cache.query((q) =>
+      q.findRecord({ type: 'mediafile', id: id })
+    ) as MediaFile;
+    mediaRec.attributes.readyToShare = !mediaRec.attributes.readyToShare;
+    memory.update((t: TransformBuilder) => UpdateRecord(t, mediaRec, user));
+    setRefresh(true);
+  };
   const handleCloseTranscription = () => {
     setShowId('');
   };
@@ -112,13 +153,14 @@ export const AudioTable = (props: IProps) => {
     setConfirmAction('Delete');
   };
 
-  const handleDelete = (i: number) => {
-    memory.update((t: TransformBuilder) =>
+  const handleDelete = async (i: number) => {
+    await memory.update((t: TransformBuilder) =>
       t.removeRecord({
         type: 'mediafile',
         id: data[i].id,
       })
     );
+    setBusy(false); // forces refresh of plan tabs
   };
 
   const handleActionConfirmed = () => {
@@ -136,9 +178,17 @@ export const AudioTable = (props: IProps) => {
   };
 
   const handleSelect = (id: string) => {
-    if (id === playItem) setPlayItem('');
-    else setPlayItem(id);
+    if (id === playItem) {
+      setMediaPlaying(!mediaPlaying);
+    } else {
+      setPlayItem(id);
+    }
   };
+  useEffect(() => {
+    //if I set playing when I set the mediaId, it plays a bit of the old
+    if (playItem) setMediaPlaying(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playItem]);
 
   const handleVerHistOpen = (passId: string) => () => {
     setVerHist(passId);
@@ -148,7 +198,7 @@ export const AudioTable = (props: IProps) => {
   };
 
   const playEnded = () => {
-    setPlayItem('');
+    setMediaPlaying(false);
   };
 
   interface ICell {
@@ -169,13 +219,13 @@ export const AudioTable = (props: IProps) => {
       <MediaActions
         t={t}
         rowIndex={row.index}
-        mediaId={mediaId}
+        mediaId={row.id}
         online={connected || offlineOnly}
         readonly={onAttach ? readonly : true}
         attached={Boolean(row.passId)}
         onAttach={onAttach}
         onPlayStatus={handleSelect}
-        isPlaying={mediaId !== '' && playItem === mediaId}
+        isPlaying={playItem === mediaId && mediaPlaying}
       />
     </Table.Cell>
   );
@@ -219,7 +269,21 @@ export const AudioTable = (props: IProps) => {
       {dateOrTime(value, lang)}
     </Table.Cell>
   );
-
+  const ReadyToShareCell = ({ row, value, ...props }: ICell) => (
+    <Table.Cell row {...props} value>
+      <FormControlLabel
+        control={
+          <Checkbox
+            id="checkbox-rts"
+            checked={value as any as boolean}
+            onChange={handleChangeReadyToShare(row.id)}
+            disabled={(row.passId || '') === ''}
+          />
+        }
+        label=""
+      />
+    </Table.Cell>
+  );
   const Cell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'actions') {
@@ -230,7 +294,7 @@ export const AudioTable = (props: IProps) => {
       const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
       return <DetachCell {...props} mediaId={mediaId} />;
     }
-    if (column.name === 'version' && row.version !== '1' && onAttach) {
+    if (column.name === 'version' && onAttach) {
       return <VersionCell {...props} />;
     }
     if (column.name === 'reference') {
@@ -238,6 +302,9 @@ export const AudioTable = (props: IProps) => {
     }
     if (column.name === 'date') {
       return <DateCell {...props} />;
+    }
+    if (column.name === 'readyToShare') {
+      return <ReadyToShareCell {...props} />;
     }
     return <Table.Cell {...props} />;
   };
@@ -287,7 +354,12 @@ export const AudioTable = (props: IProps) => {
           noResponse={handleActionRefused}
         />
       )}
-      <MediaPlayer auth={auth} srcMediaId={playItem} onEnded={playEnded} />
+      <MediaPlayer
+        auth={auth}
+        srcMediaId={playItem}
+        requestPlay={mediaPlaying}
+        onEnded={playEnded}
+      />
     </div>
   );
 };

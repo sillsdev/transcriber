@@ -2,12 +2,15 @@ import React, { useEffect } from 'react';
 import * as actions from '../store';
 import { useGlobal, useState } from 'reactn';
 import { connect } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import {
   IState,
   IIntegrationStrings,
   Project,
   Passage,
   ISharedStrings,
+  MediaFile,
+  ActivityStates,
 } from '../model';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -40,7 +43,15 @@ import CheckIcon from '@material-ui/icons/Check';
 import { useSnackBar } from '../hoc/SnackBar';
 import ParatextLogo from '../control/ParatextLogo';
 // import RenderLogo from '../control/RenderLogo';
-import { remoteIdNum, related, useOfflnProjRead, remoteId } from '../crud';
+import {
+  remoteIdNum,
+  related,
+  useOfflnProjRead,
+  remoteId,
+  ArtifactTypeSlug,
+  useArtifactType,
+  useTranscription,
+} from '../crud';
 import { localSync, getParatextDataPath, useCheckOnline } from '../utils';
 import Auth from '../auth/Auth';
 import { bindActionCreators } from 'redux';
@@ -53,6 +64,7 @@ import localStrings from '../selector/localize';
 import { doDataChanges } from '../hoc/DataChanges';
 import Memory from '@orbit/memory';
 import { translateParatextError } from '../utils/translateParatextError';
+import { SelectExportType } from '../control';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -63,8 +75,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
     },
     heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightRegular,
+      fontSize: theme.typography.pxToRem(15) as any,
+      fontWeight: theme.typography.fontWeightRegular as any,
     },
     legend: {
       paddingTop: theme.spacing(4),
@@ -135,6 +147,7 @@ interface IRecordProps {
   integrations: Array<Integration>;
   projects: Array<Project>;
   passages: Array<Passage>;
+  mediafiles: Array<MediaFile>;
 }
 interface IProps
   extends IStateProps,
@@ -172,9 +185,11 @@ export function IntegrationPanel(props: IProps) {
     setLanguage,
     resetOrbitError,
   } = props;
-  const { projectintegrations, integrations, projects, passages } = props;
+  const { projectintegrations, integrations, projects, passages, mediafiles } =
+    props;
   const classes = useStyles();
   const [connected] = useGlobal('connected');
+  const { pathname } = useLocation();
   const [hasPtProj, setHasPtProj] = useState(false);
   const [ptProj, setPtProj] = useState(-1);
   const [ptProjName, setPtProjName] = useState('');
@@ -205,6 +220,17 @@ export function IntegrationPanel(props: IProps) {
   const setSyncing = (state: boolean) => (syncing.current = state);
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const checkOnline = useCheckOnline(resetOrbitError);
+  const [exportTypes] = useState([
+    ArtifactTypeSlug.Vernacular,
+    ArtifactTypeSlug.BackTranslation,
+  ]);
+  const [exportType, setExportType] = useState(
+    pathname.indexOf(ArtifactTypeSlug.BackTranslation) !== -1
+      ? ArtifactTypeSlug.BackTranslation
+      : exportTypes[0]
+  );
+  const { getTypeId } = useArtifactType();
+  const getTranscription = useTranscription(false, ActivityStates.Approved);
 
   const getProject = () => {
     if (!project) return undefined;
@@ -340,7 +366,16 @@ export function IntegrationPanel(props: IProps) {
     if (stopPlayer) stopPlayer();
     setSyncing(true);
     showMessage(t.syncPending);
-    var err = await localSync(plan, ptShortName, passages, memory, user);
+    var err = await localSync(
+      plan,
+      ptShortName,
+      mediafiles,
+      passages,
+      memory,
+      user,
+      getTypeId(exportType),
+      getTranscription
+    );
     showMessage(err || t.syncComplete);
     resetCount();
     setSyncing(false);
@@ -372,12 +407,27 @@ export function IntegrationPanel(props: IProps) {
       : t.offline;
   };
   const findConnectedProject = () => {
-    let index = paratext_projects.findIndex(
-      (p) =>
-        p.ProjectIds.indexOf(
-          remoteId('project', project, memory.keyMap) || project
-        ) >= 0
-    );
+    if (paratext_projects.length === 0) return;
+    const curInt = projectintegrations.filter(
+      (pi) =>
+        related(pi, 'integration') === paratextIntegration &&
+        pi.attributes &&
+        related(pi, 'project') === project
+    ) as ProjectIntegration[];
+    let index = 0;
+    if (curInt.length > 0) {
+      index = paratext_projects.findIndex((p) => {
+        const settings = JSON.parse(curInt[0].attributes.settings);
+        return p.Name === settings.name;
+      });
+    }
+    if (curInt.length === 0 || index === -1) {
+      index = paratext_projects.findIndex(
+        (p) =>
+          Boolean(p.BaseProject) ===
+          (exportType === ArtifactTypeSlug.BackTranslation)
+      );
+    }
     setPtProj(index);
     setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
     setPtShortName(index >= 0 ? paratext_projects[index].ShortName : '');
@@ -421,25 +471,40 @@ export function IntegrationPanel(props: IProps) {
       resetProjects();
       resetCount();
       setMyProject(project);
-      getLocalCount(passages, project, memory, errorReporter, t);
+      resetSync();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
 
   useEffect(() => {
     resetCount();
-    if (project) getLocalCount(passages, project, memory, errorReporter, t);
+    if (plan)
+      getLocalCount(
+        mediafiles,
+        plan,
+        memory,
+        errorReporter,
+        t,
+        getTypeId(exportType)
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passages, project]);
+  }, [mediafiles, plan, exportType]);
 
   /* do this once */
   useEffect(() => {
-    if (integrations.length > 0 && !paratextIntegration) {
-      resetSync();
-      getParatextIntegration(offline ? 'paratextLocal' : 'paratext');
+    if (integrations.length > 0) {
+      getParatextIntegration(
+        exportType === ArtifactTypeSlug.BackTranslation && offline
+          ? 'paratextlocalbacktranslation'
+          : exportType === ArtifactTypeSlug.BackTranslation
+          ? 'paratextbacktranslation'
+          : offline
+          ? 'paratextLocal'
+          : 'paratext'
+      );
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [integrations, paratextIntegration]);
+  }, [integrations, exportType]);
 
   useEffect(() => {
     if (paratext_countStatus) {
@@ -479,11 +544,11 @@ export function IntegrationPanel(props: IProps) {
         const langTag =
           proj && proj.attributes ? proj.attributes.language : undefined;
         if (offline) {
-          const localprojs: ProjectIntegration[] = projectintegrations.filter(
+          const localprojs = projectintegrations.filter(
             (pi) =>
               related(pi, 'integration') === paratextIntegration &&
               pi.attributes
-          );
+          ) as ProjectIntegration[];
           var projIds = localprojs.map((pi) => {
             var settings = JSON.parse(pi.attributes.settings);
             return {
@@ -511,12 +576,12 @@ export function IntegrationPanel(props: IProps) {
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [busy, paratext_projects, paratext_projectsStatus]);
+  }, [busy, paratext_projects, paratext_projectsStatus, paratextIntegration]);
 
   useEffect(() => {
     if (project) findConnectedProject();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectintegrations, project]);
+  }, [projectintegrations, paratext_projects, paratextIntegration, project]);
 
   useEffect(() => {
     if (paratext_syncStatus) {
@@ -529,7 +594,6 @@ export function IntegrationPanel(props: IProps) {
       }
       if (paratext_syncStatus.complete) {
         resetCount();
-        resetSync();
         setSyncing(false);
         doDataChanges(
           auth,
@@ -581,7 +645,7 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="connected">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {!connected || <CheckIcon />}
+                  <>{!connected || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -592,11 +656,16 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="hasProj" className={classes.listItem}>
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {!hasPtProj || <CheckIcon />}
+                  <>{!hasPtProj || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={formatWithLanguage(t.questionProject)}
+                disableTypography
+                primary={
+                  <Typography>
+                    {formatWithLanguage(t.questionProject)}
+                  </Typography>
+                }
                 secondary={
                   <TextField
                     ref={pRef}
@@ -626,7 +695,7 @@ export function IntegrationPanel(props: IProps) {
                     required={true}
                   >
                     {paratext_projects
-                      .sort((i, j) => (i.ShortName < j.ShortName ? -1 : 1))
+                      .sort((i, j) => (i.ShortName <= j.ShortName ? -1 : 1))
                       .map((option: ParatextProject) => (
                         <MenuItem key={option.ParatextId} value={option.Name}>
                           {`${option.ShortName ? option.ShortName + '/' : ''}${
@@ -651,7 +720,7 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="hasParatext">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {!hasParatext || <CheckIcon />}
+                  <>{!hasParatext || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -671,7 +740,7 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="hasPermission">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {!hasPermission || <CheckIcon />}
+                  <>{!hasPermission || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -688,7 +757,7 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="ready">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {count <= 0 || <CheckIcon />}
+                  <>{count <= 0 || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -743,10 +812,26 @@ export function IntegrationPanel(props: IProps) {
         </AccordionSummary>
         <AccordionDetails className={classes.panel}>
           <List dense component="div">
+            <ListItem key="export-type">
+              <ListItemAvatar>
+                <Avatar className={classes.avatar}>
+                  <CheckIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <SelectExportType
+                    exportType={exportType}
+                    exportTypes={exportTypes}
+                    setExportType={setExportType}
+                  />
+                }
+              />
+            </ListItem>
             <ListItem key="installed">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {!ptPath || <CheckIcon />}
+                  <>{!ptPath || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -757,11 +842,16 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="hasLocalProj" className={classes.listItem}>
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {!hasPtProj || <CheckIcon />}
+                  <>{!hasPtProj || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={formatWithLanguage(t.questionProject)}
+                disableTypography
+                primary={
+                  <Typography>
+                    {formatWithLanguage(t.questionProject)}
+                  </Typography>
+                }
                 secondary={
                   <TextField
                     ref={pRef}
@@ -791,7 +881,7 @@ export function IntegrationPanel(props: IProps) {
                     required={true}
                   >
                     {paratext_projects
-                      .sort((i, j) => (i.ShortName < j.ShortName ? -1 : 1))
+                      .sort((i, j) => (i.ShortName <= j.ShortName ? -1 : 1))
                       .map((option: ParatextProject) => (
                         <MenuItem key={option.ParatextId} value={option.Name}>
                           {`${option.ShortName}/${option.Name} (${option.LanguageName}-${option.LanguageTag})`}
@@ -814,7 +904,7 @@ export function IntegrationPanel(props: IProps) {
             <ListItem key="localReady">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {count <= 0 || <CheckIcon />}
+                  <>{count <= 0 || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -924,6 +1014,7 @@ const mapRecordsToProps = {
   integrations: (q: QueryBuilder) => q.findRecords('integration'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
 
 export default withData(mapRecordsToProps)(

@@ -35,7 +35,7 @@ const detailContainerStyles = (theme: Theme) =>
     },
     title: {
       color: theme.palette.text.primary,
-      fontSize: theme.typography.fontSize,
+      fontSize: theme.typography.fontSize as any,
     },
     paper: {
       paddingTop: theme.spacing(3.5),

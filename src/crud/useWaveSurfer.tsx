@@ -1,17 +1,16 @@
 import _, { debounce } from 'lodash';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
-import { logError, Severity } from '../utils';
-//import { useMounted } from '../utils';
-//import { convertToMP3 } from '../utils/mp3';
-import { convertToWav } from '../utils/wav';
+import { logError, Severity, waitForIt } from '../utils';
 import {
+  IRegion,
   IRegionParams,
   IRegions,
   useWaveSurferRegions,
 } from './useWavesurferRegions';
+import { convertToWav } from '../utils/wav';
 
 const noop = () => {};
 const noop1 = (x: any) => {};
@@ -25,12 +24,14 @@ export function useWaveSurfer(
     params: IRegionParams | undefined,
     newRegion: boolean
   ) => void = noop1,
+  onCanUndo: (canUndo: boolean) => void = noop1,
   onPlayStatus: (playing: boolean) => void = noop,
   onInteraction: () => void = noop,
   onError: (e: any) => void = noop,
   height: number = 128,
   singleRegionOnly: boolean = false,
-  timelineContainer?: any
+  timelineContainer?: any,
+  onCurrentRegion?: (currentRegion: IRegion | undefined) => void
 ) {
   //const isMounted = useMounted('wavesurfer');
   const [globalStore] = useGlobal();
@@ -42,11 +43,12 @@ export function useWaveSurfer(
   const wavesurferPlayingRef = useRef(false); //don't trust ws.isPlaying()
   const durationRef = useRef(0);
   const userInteractionRef = useRef(true);
-
+  const [undoBuffer, setUndoBuffer] = useState();
   const inputRegionsRef = useRef<IRegions>();
   const regionsLoadedRef = useRef(false);
   const widthRef = useRef(0);
   const containerRef = useRef(container);
+
   const isNear = (position: number) => {
     return Math.abs(position - progressRef.current) < 0.3;
   };
@@ -54,13 +56,31 @@ export function useWaveSurfer(
     durationRef.current || wavesurfer()?.getDuration() || 0;
 
   const wsGoto = (position: number) => {
-    if (position > wsDuration()) position = wsDuration();
+    var duration = wsDuration();
+    if (position > duration) position = duration;
     onRegionGoTo(position);
-    if (wsDuration()) position = position / wsDuration();
-
-    userInteractionRef.current = false;
-    wavesurfer()?.seekAndCenter(position);
-    userInteractionRef.current = true;
+    if (duration) position = position / duration;
+    if (position === 1 && wavesurfer()?.isPlaying()) {
+      //if playing, position messages come in after this one that set it back to previously playing position.  Turn this off first in hopes that all messages are done before we set the position...
+      wavesurfer()?.pause();
+      waitForIt(
+        'wavesurfer stop',
+        () => !wavesurfer()?.isPlaying(),
+        () => {
+          console.log('waiting for pause');
+          return false;
+        },
+        100
+      ).then(() => {
+        userInteractionRef.current = false;
+        wavesurfer()?.seekAndCenter(position);
+        userInteractionRef.current = true;
+      });
+    } else {
+      userInteractionRef.current = false;
+      wavesurfer()?.seekAndCenter(position);
+      userInteractionRef.current = true;
+    }
   };
   const progress = () => progressRef.current;
   const setPlaying = (value: boolean) => {
@@ -114,7 +134,8 @@ export function useWaveSurfer(
     isNear,
     wsGoto,
     progress,
-    setPlaying
+    setPlaying,
+    onCurrentRegion
   );
 
   const wavesurfer = () =>
@@ -155,7 +176,7 @@ export function useWaveSurfer(
         wavesurferPlayingRef.current = true;
       });
       ws.on('pause', function () {
-        wavesurferPlayingRef.current = true;
+        wavesurferPlayingRef.current = false;
       });
       ws.on('seek', function (e: number) {
         onRegionSeek(e, !userInteractionRef.current);
@@ -164,6 +185,7 @@ export function useWaveSurfer(
       ws.on('finish', function () {
         //we'll get a pause next, so don't set wavesurferPlayingRef here
         setPlaying(false);
+        setProgress(wsDuration());
       });
       ws.on('interaction', function () {
         if (onInteraction) onInteraction();
@@ -176,13 +198,13 @@ export function useWaveSurfer(
       // });
       return ws;
     }
-
     if (container && !wavesurferRef.current) {
       create(container, height);
       containerRef.current = container;
       if (blobToLoad.current) {
         wsLoad();
       }
+      onCanUndo && onCanUndo(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [container, wavesurferRef.current]);
@@ -209,11 +231,16 @@ export function useWaveSurfer(
     onProgress(value);
   };
 
-  const wsClear = () => {
+  const wsClear = (preventUndo: boolean = false) => {
     if (wavesurferPlayingRef.current) wavesurferRef.current?.stop();
+    if (!preventUndo) {
+      setUndoBuffer(copyOriginal());
+    } else setUndoBuffer(undefined);
+    onCanUndo(!preventUndo);
     wavesurfer()?.loadDecodedBuffer();
     durationRef.current = 0;
-    setProgress(0);
+    clearRegions();
+    wsGoto(0);
   };
 
   const wsIsReady = () => wavesurfer()?.isReady || false;
@@ -288,8 +315,8 @@ export function useWaveSurfer(
   };
   const wsBlob = async () => {
     var backend = wavesurfer()?.backend as any;
-    if (backend) {
-      var originalBuffer = backend.buffer;
+    var originalBuffer = backend?.buffer;
+    if (originalBuffer) {
       var channels = originalBuffer.numberOfChannels;
       var data_left = originalBuffer.getChannelData(0);
       var data_right = null;
@@ -301,11 +328,12 @@ export function useWaveSurfer(
           channels = 1;
         }
       }
-      return convertToWav(data_left, data_right, {
+      var wavblob = await convertToWav(data_left, data_right, {
         isFloat: true, // floating point or 16-bit integer (WebAudio API decodes to Float32Array) ???
         numChannels: channels,
         sampleRate: originalBuffer.sampleRate,
       });
+      return wavblob;
     }
     return undefined;
   };
@@ -320,7 +348,27 @@ export function useWaveSurfer(
   function loadDecoded(new_buffer: any) {
     wavesurfer()?.loadDecodedBuffer(new_buffer);
   }
+  const copyOriginal = () => {
+    if (!wavesurfer()) return 0;
+    var backend = wavesurfer()?.backend as any;
+    var originalBuffer = backend?.buffer;
+    if (originalBuffer) {
+      var len = originalBuffer.length;
+      var uberSegment = null;
+      uberSegment = backend.ac.createBuffer(
+        originalBuffer.numberOfChannels,
+        len,
+        originalBuffer.sampleRate
+      );
+      for (var ix = 0; ix < originalBuffer.numberOfChannels; ++ix) {
+        var chan_data = originalBuffer.getChannelData(ix);
+        var uber_chan_data = uberSegment.getChannelData(ix);
 
+        uber_chan_data.set(chan_data);
+      }
+      return uberSegment;
+    } else return null;
+  };
   const insertBuffer = (
     newBuffer: any,
     startposition: number,
@@ -329,6 +377,7 @@ export function useWaveSurfer(
     if (!wavesurfer()) return 0;
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
+
     if (startposition === 0 && (originalBuffer?.length | 0) === 0) {
       loadDecoded(newBuffer);
       return newBuffer.length / newBuffer.sampleRate;
@@ -383,18 +432,37 @@ export function useWaveSurfer(
       });
     });
   };
-
+  const wsStartRecord = () => {
+    setUndoBuffer(copyOriginal());
+  };
+  const wsStopRecord = () => {
+    onCanUndo(true);
+  };
   const wsInsertSilence = (seconds: number, position: number) => {
     if (!wavesurfer()) return;
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
-    var new_len = ((seconds / 1.0) * originalBuffer.sampleRate) >> 0;
-    var newBuffer = backend.ac.createBuffer(
-      originalBuffer.numberOfChannels,
-      new_len,
-      originalBuffer.sampleRate
-    );
+    if (originalBuffer) {
+      var new_len = ((seconds / 1.0) * originalBuffer.sampleRate) >> 0;
+      var newBuffer = backend.ac.createBuffer(
+        originalBuffer.numberOfChannels,
+        new_len,
+        originalBuffer.sampleRate
+      );
+      setUndoBuffer(copyOriginal());
+      onCanUndo(true);
+    }
     insertBuffer(newBuffer, position, position);
+  };
+  const wsUndo = () => {
+    if (undoBuffer) loadDecoded(undoBuffer);
+    else {
+      wsClear();
+    }
+    //reset any region
+    clearRegions();
+    setUndoBuffer(undefined);
+    onCanUndo(false);
   };
 
   //delete the audio in the current region
@@ -403,8 +471,12 @@ export function useWaveSurfer(
     var start = trimTo(currentRegion().start, 3);
     var end = trimTo(currentRegion().end, 3);
     var len = end - start;
+    if (!len) return wsClear();
+
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
+    setUndoBuffer(copyOriginal());
+    onCanUndo(true);
     var new_len = ((len / 1) * originalBuffer.sampleRate) >> 0;
     var new_offset = ((start / 1) * originalBuffer.sampleRate) >> 0;
     var emptySegment = backend.ac.createBuffer(
@@ -460,6 +532,7 @@ export function useWaveSurfer(
     wsClearRegions,
     wsLoopRegion,
     wsRegionDelete,
+    wsUndo,
     wsInsertAudio,
     wsInsertSilence,
     wsZoom,
@@ -471,5 +544,7 @@ export function useWaveSurfer(
     wsSplitRegion,
     wsAddOrRemoveRegion,
     wsRemoveSplitRegion,
+    wsStartRecord,
+    wsStopRecord,
   };
 }

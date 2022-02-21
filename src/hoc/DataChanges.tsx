@@ -1,4 +1,11 @@
-import { useGlobal, useState, useEffect } from 'reactn';
+import {
+  useGlobal,
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  useMemo,
+} from 'reactn';
 import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
 import { useInterval } from '../utils/useInterval';
 import Axios from 'axios';
@@ -8,6 +15,7 @@ import {
   TransformBuilder,
   Operation,
   UpdateRecordOperation,
+  RecordIdentity,
 } from '@orbit/data';
 import Coordinator from '@orbit/coordinator';
 import Memory from '@orbit/memory';
@@ -20,6 +28,7 @@ import {
 } from '../api-variable';
 import Auth from '../auth/Auth';
 import {
+  findRecord,
   offlineProjectUpdateSnapshot,
   remoteId,
   remoteIdGuid,
@@ -33,7 +42,7 @@ import IndexedDBSource from '@orbit/indexeddb';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import { UnsavedContext } from '../context/UnsavedContext';
 interface IStateProps {}
 
 interface IDispatchProps {
@@ -71,17 +80,20 @@ export const doDataChanges = async (
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
-  const userLastTimeKey = localUserKey(LocalKey.time, memory);
+  const userLastTimeKey = localUserKey(LocalKey.time);
+  const userNextStartKey = localUserKey(LocalKey.start);
   if (!remote || !remote.activated) return;
+  let startNext = 0;
   let lastTime = localStorage.getItem(userLastTimeKey) || currentDateTime(); // should not happen
   let nextTime = currentDateTime();
 
-  const updateSnapshotDates = async () => {
+  const updateSnapshotDate = async (
+    pid: string,
+    newDate: string,
+    start: number
+  ) => {
     const oparray: Operation[] = [];
-
-    projectsLoaded.forEach((p) => {
-      offlineProjectUpdateSnapshot(p, oparray, memory, nextTime, false);
-    });
+    offlineProjectUpdateSnapshot(pid, oparray, memory, newDate, start, false);
     await memory.sync(await backup.push((t: TransformBuilder) => oparray));
   };
 
@@ -89,7 +101,7 @@ export const doDataChanges = async (
     newOps: Operation[],
     tb: TransformBuilder,
     relationship: string,
-    upRec: UpdateRecordOperation
+    record: RecordIdentity
   ) => {
     var table = relationship;
     switch (relationship) {
@@ -99,14 +111,37 @@ export const doDataChanges = async (
     }
 
     newOps.push(
-      tb.replaceRelatedRecord(upRec.record, relationship, {
+      tb.replaceRelatedRecord(record, relationship, {
         type: table,
         id: '',
       })
     );
   };
 
-  const processDataChanges = async (api: string, params: any) => {
+  const DeleteLocalCopy = (
+    offlineId: string | null,
+    type: string,
+    tb: TransformBuilder,
+    localOps: Operation[]
+  ) => {
+    if (offlineId) {
+      var myRecord = findRecord(memory, type, offlineId);
+      if (myRecord) {
+        localOps.push(
+          tb.removeRecord({
+            type: type,
+            id: offlineId,
+          })
+        );
+      }
+    }
+  };
+
+  const processDataChanges = async (
+    api: string,
+    params: any,
+    started: number
+  ) => {
     try {
       var response = await Axios.get(api, {
         params: params,
@@ -116,7 +151,7 @@ export const doDataChanges = async (
       });
       var data = response.data.data as DataChange;
       const changes = data?.attributes?.changes;
-      const deletes = data.attributes.deleted;
+      const deletes = data?.attributes?.deleted;
       setDataChangeCount(changes.length + deletes.length);
       for (const table of changes) {
         if (table.ids.length > 0) {
@@ -129,33 +164,59 @@ export const doDataChanges = async (
             .then(async (t: Transform[]) => {
               for (const tr of t) {
                 var tb = new TransformBuilder();
+                var localOps: Operation[] = [];
                 var newOps: Operation[] = [];
+                var upRec: UpdateRecordOperation;
+                //await UpdateOfflineIds(tr.operations, tb, newOps);
                 await memory.sync(await backup.push(tr.operations));
                 for (const o of tr.operations) {
                   if (o.op === 'updateRecord') {
-                    var upRec = o as UpdateRecordOperation;
+                    upRec = o as UpdateRecordOperation;
                     switch (upRec.record.type) {
                       case 'section':
                         if (
                           upRec.record.relationships?.transcriber === undefined
                         )
-                          resetRelated(newOps, tb, 'transcriber', upRec);
-
+                          resetRelated(
+                            localOps,
+                            tb,
+                            'transcriber',
+                            upRec.record
+                          );
                         if (upRec.record.relationships?.editor === undefined)
-                          resetRelated(newOps, tb, 'editor', upRec);
+                          resetRelated(localOps, tb, 'editor', upRec.record);
+                        break;
 
-                        break;
                       case 'mediafile':
+                        //await CheckUploadLocal(upRec);
+                        DeleteLocalCopy(
+                          upRec.record.attributes?.offlineId,
+                          upRec.record.type,
+                          tb,
+                          localOps
+                        );
                         if (upRec.record.relationships?.passage === undefined)
-                          resetRelated(newOps, tb, 'passage', upRec);
+                          resetRelated(localOps, tb, 'passage', upRec.record);
                         break;
+
                       case 'user':
                         SetUserLanguage(memory, user, setLanguage);
                         break;
+
+                      case 'discussion':
+                      case 'comment':
+                        DeleteLocalCopy(
+                          upRec.record.attributes?.offlineId,
+                          upRec.record.type,
+                          tb,
+                          localOps
+                        );
                     }
                   }
                 }
-                if (newOps.length > 0) memory.sync(await backup.push(newOps));
+                if (localOps.length > 0)
+                  memory.sync(await backup.push(localOps));
+                if (newOps.length > 0) memory.update(newOps);
               }
             });
         }
@@ -178,46 +239,63 @@ export const doDataChanges = async (
         }
       }
       setDataChangeCount(0);
-      return true;
+      return data?.attributes?.startnext;
     } catch (e: any) {
       logError(Severity.error, errorReporter, e);
-      return false;
+      return started;
     }
   };
+  var version = backup.cache.dbVersion;
 
-  var api = API_CONFIG.host + '/api/datachanges/';
+  var api = API_CONFIG.host + '/api/datachanges/v' + version.toString() + '/';
+  var start = 1;
+  var tries = 5;
   if (isElectron) {
-    var records: { id: string; since: string }[] = [];
-    projectsLoaded.forEach((p) => {
+    for (var ix = 0; ix < projectsLoaded.length; ix++) {
+      var p = projectsLoaded[ix];
       var op = getOfflineProject(p);
       if (
-        op?.attributes &&
-        op.attributes.snapshotDate &&
+        op.attributes?.snapshotDate &&
         Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
-      )
-        records.push({
-          id: remoteId('project', p, memory.keyMap),
-          since: op.attributes.snapshotDate,
-        });
-    });
-    if (records.length) {
-      if (
-        await processDataChanges(
-          api + 'projects/' + fingerprint,
-          new URLSearchParams([['projlist', JSON.stringify(records)]])
-        )
-      )
-        await updateSnapshotDates();
+      ) {
+        start = 1;
+        startNext = 0;
+        tries = 5;
+        while (startNext >= 0 && tries > 0) {
+          startNext = await processDataChanges(
+            `${api}${startNext}/project/${fingerprint}`,
+            new URLSearchParams([
+              [
+                'projlist',
+                JSON.stringify({
+                  id: remoteId('project', p, memory.keyMap),
+                  since: op.attributes.snapshotDate,
+                }),
+              ],
+            ]),
+            start
+          );
+          if (startNext === start) tries--;
+          else start = startNext;
+        }
+        await updateSnapshotDate(p, nextTime, startNext + 1);
+      }
     }
   }
-  if (
-    await processDataChanges(
-      api + 'since/' + lastTime + '?origin=' + fingerprint,
-      undefined
-    )
-  ) {
-    localStorage.setItem(userLastTimeKey, nextTime);
+  startNext = parseInt(localStorage.getItem(userNextStartKey) || '0', 10);
+  start = 1;
+  tries = 5;
+  while (startNext >= 0 && tries > 0) {
+    startNext = await processDataChanges(
+      `${api}${startNext}/since/${lastTime}?origin=${fingerprint}`,
+      undefined,
+      start
+    );
+    if (startNext === start) tries--;
+    else start = startNext;
   }
+  if (startNext < 0) localStorage.setItem(userLastTimeKey, nextTime);
+  localStorage.setItem(userNextStartKey, (startNext + 1).toString());
 };
 
 export function DataChanges(props: IProps) {
@@ -231,7 +309,6 @@ export function DataChanges(props: IProps) {
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const [connected] = useGlobal('connected');
   const [user] = useGlobal('user');
-  const [doSave] = useGlobal('doSave');
   const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
   const [busyDelay, setBusyDelay] = useState<number | null>(null);
@@ -240,11 +317,13 @@ export function DataChanges(props: IProps) {
   const [project] = useGlobal('project');
   const [projectsLoaded] = useGlobal('projectsLoaded');
   const [orbitRetries] = useGlobal('orbitRetries');
-
+  const doingChanges = useRef(false);
   const getOfflineProject = useOfflnProjRead();
   const checkOnline = useCheckOnline(resetOrbitError);
-
+  const { anySaving, toolsChanged } = useContext(UnsavedContext).state;
   const defaultBackupDelay = isOffline ? 1000 * 60 * 30 : null; //30 minutes;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const saving = useMemo(() => anySaving(), [toolsChanged]);
 
   useEffect(() => {
     const defaultBusyDelay = 1000;
@@ -276,11 +355,11 @@ export function DataChanges(props: IProps) {
       });
     } else if (checkBusy !== busy) setBusy(checkBusy);
   };
-  const updateData = () => {
-    if (!busy && !doSave && auth?.isAuthenticated()) {
-      setBusy(true); //attempt to prevent double calls
+  const updateData = async () => {
+    if (!doingChanges.current && !busy && !saving && auth?.isAuthenticated()) {
+      doingChanges.current = true; //attempt to prevent double calls
       setFirstRun(false);
-      doDataChanges(
+      await doDataChanges(
         auth,
         coordinator,
         fingerprint,
@@ -291,10 +370,11 @@ export function DataChanges(props: IProps) {
         setLanguage,
         setDataChangeCount
       );
+      doingChanges.current = false; //attempt to prevent double calls
     }
   };
   const backupElectron = () => {
-    if (!busy && !doSave && project !== '') {
+    if (!busy && !saving && project !== '') {
       electronExport(
         ExportType.ITFBACKUP,
         memory,

@@ -40,7 +40,7 @@ import { TransformBuilder, Operation } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import { electronExport } from './electronExport';
 import { remoteIdGuid, related, insertData, remoteId } from '../../crud';
-import { orbitInfo } from '../../utils';
+import { logError, orbitInfo, Severity } from '../../utils';
 import Coordinator from '@orbit/coordinator';
 
 export const exportComplete = () => (dispatch: any) => {
@@ -60,7 +60,7 @@ export const exportProject =
     userid: number | string,
     numberOfMedia: number,
     auth: Auth,
-    reportError: typeof actions.doOrbitError,
+    errorReporter: any, //global errorReporter
     pendingmsg: string,
     getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
   ) =>
@@ -87,7 +87,7 @@ export const exportProject =
           });
         })
         .catch((err: Error) => {
-          reportError(orbitInfo(err, 'Export failed: '));
+          logError(Severity.error, errorReporter, err);
           dispatch({
             payload: errorStatus(-1, err.message),
             type: EXPORT_ERROR,
@@ -135,7 +135,7 @@ export const exportProject =
                 dispatch({
                   payload: pendingmsg.replace(
                     '{0}',
-                    Math.round((start / (numberOfMedia + 10)) * 100).toString()
+                    Math.round((start / (numberOfMedia + 15)) * 100).toString()
                   ),
                   type: EXPORT_PENDING,
                 });
@@ -143,7 +143,11 @@ export const exportProject =
           })
           // eslint-disable-next-line no-loop-func
           .catch((err: AxiosError) => {
-            reportError(orbitInfo(err, 'Export failed: '));
+            logError(
+              Severity.error,
+              errorReporter,
+              'Export Failed:' + (err.message || err.toString())
+            );
             start = -1;
             dispatch({
               payload: errStatus(err),
@@ -165,7 +169,7 @@ const importFromElectron =
     file: Blob,
     projectid: number,
     auth: Auth,
-    reportError: typeof actions.doOrbitError,
+    errorReporter: any, //global errorReporter
     pendingmsg: string,
     completemsg: string
   ) =>
@@ -222,14 +226,10 @@ const importFromElectron =
                     type: IMPORT_SUCCESS,
                   });
                 else {
-                  reportError(
-                    orbitInfo(
-                      {
-                        name: response.data.status,
-                        message: response.data.message,
-                      },
-                      'import error'
-                    )
+                  logError(
+                    Severity.error,
+                    errorReporter,
+                    'import error' + response.data.message
                   );
                   dispatch({
                     payload: errorStatus(
@@ -241,19 +241,23 @@ const importFromElectron =
                 }
               })
               .catch((reason) => {
-                reportError(orbitInfo(reason, 'import error'));
+                logError(
+                  Severity.error,
+                  errorReporter,
+                  'import error' + reason
+                );
                 dispatch({
                   payload: errorStatus(-1, reason.toString()),
                   type: IMPORT_ERROR,
                 });
               });
           } else {
-            reportError(
-              orbitInfo(
-                { name: xhr.status.toString(), message: xhr.responseText },
-                `upload ${filename}: `
-              )
+            logError(
+              Severity.error,
+              errorReporter,
+              `upload ${filename}: ${xhr.responseText}`
             );
+
             dispatch({
               payload: errorStatus(xhr.status, xhr.responseText),
               type: IMPORT_ERROR,
@@ -262,7 +266,7 @@ const importFromElectron =
         };
       })
       .catch((reason) => {
-        reportError(orbitInfo(reason, 'Import Error'));
+        logError(Severity.error, errorReporter, `Import Error: ${reason}`);
         dispatch({
           payload: errorStatus(-1, reason.toString()),
           type: IMPORT_ERROR,
@@ -275,7 +279,7 @@ export const importSyncFromElectron =
     filename: string,
     file: Buffer,
     auth: Auth,
-    reportError: typeof actions.doOrbitError,
+    errorReporter: any,
     pendingmsg: string,
     completemsg: string
   ) =>
@@ -286,7 +290,7 @@ export const importSyncFromElectron =
         new Blob([file]),
         0,
         auth,
-        reportError,
+        errorReporter,
         pendingmsg,
         completemsg
       )
@@ -298,7 +302,7 @@ export const importProjectFromElectron =
     files: File[],
     projectid: number,
     auth: Auth,
-    reportError: typeof actions.doOrbitError,
+    errorReporter: any,
     pendingmsg: string,
     completemsg: string
   ) =>
@@ -309,7 +313,7 @@ export const importProjectFromElectron =
         files[0],
         projectid,
         auth,
-        reportError,
+        errorReporter,
         pendingmsg,
         completemsg
       )

@@ -20,7 +20,12 @@ import {
 } from '@material-ui/core';
 import { FaCopy } from 'react-icons/fa';
 import { useSnackBar } from '../hoc/SnackBar';
-import { getMediaProjRec, getMediaRec, FontData, getFontData } from '../crud';
+import {
+  getMediaProjRec,
+  FontData,
+  getFontData,
+  useTranscription,
+} from '../crud';
 
 const useStyles = makeStyles({
   actions: {
@@ -42,11 +47,12 @@ interface IProps extends IRecordProps, IStateProps {
   isMediaId?: boolean;
   visible: boolean;
   closeMethod?: () => void;
+  exportId?: string | null;
 }
 
 function TranscriptionShow(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
-  const { id, isMediaId, t, visible, closeMethod } = props;
+  const { id, isMediaId, t, visible, closeMethod, exportId } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -55,7 +61,7 @@ function TranscriptionShow(props: IProps) {
   const [transcription, setTranscription] = useState('');
   const [fontData, setFontData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
-
+  const getTranscription = useTranscription(true);
   const loadStatus = (status: string) => {
     setFontStatus(status);
   };
@@ -86,14 +92,12 @@ function TranscriptionShow(props: IProps) {
             q.findRecord({ type: 'mediafile', id })
           ) as MediaFile)
         : null;
-      if (!mediaRec) mediaRec = getMediaRec(id, memory);
-      const attr = mediaRec && mediaRec.attributes;
-      setTranscription(attr && attr.transcription ? attr.transcription : '');
+      setTranscription(getTranscription(id, exportId));
       const projRec = getMediaProjRec(mediaRec, memory, reporter);
       if (projRec) setFontData(getFontData(projRec, offline));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [id, isMediaId]);
+  }, [id, isMediaId, exportId]);
 
   const textStyle = {
     fontFamily: fontData?.fontFamily || 'CharisSIL',

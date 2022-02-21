@@ -32,18 +32,16 @@ import { formatTime, LightTooltip } from '../control';
 import TranscribeReject from './TranscribeReject';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
-  sectionDescription,
-  passageDescription,
   related,
   FontData,
   getFontData,
-  UpdatePassageStateOps,
   remoteIdNum,
   useFetchMediaUrl,
+  UpdateMediaStateOps,
+  AddPassageStateChangeToOps,
 } from '../crud';
 import {
   insertAtCursor,
-  useRemoteSave,
   logError,
   Severity,
   currentDateTime,
@@ -53,6 +51,8 @@ import {
   waitForIt,
   dataPath,
   PathType,
+  localUserKey,
+  LocalKey,
 } from '../utils';
 import { isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
@@ -71,6 +71,9 @@ import WSAudioPlayer from './WSAudioPlayer';
 import PassageHistory from './PassageHistory';
 import { HotKeyContext } from '../context/HotKeyContext';
 import Spelling from './Spelling';
+import { SectionPassageTitle } from '../control/SectionPassageTitle';
+import { UnsavedContext } from '../context/UnsavedContext';
+import StickyRedirect from './StickyRedirect';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -103,6 +106,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     pane: {},
     textarea: { resize: 'none' },
+    grow: {
+      flexGrow: 1,
+      display: 'flex',
+      flexDirection: 'row',
+    },
   })
 );
 const Wrapper = styled.div`
@@ -235,29 +243,26 @@ export function Transcriber(props: IProps) {
     loading,
   } = useTodo();
   const { safeURL } = useFetchMediaUrl();
-  const { section, passage, duration, mediaId, state, role } = rowData[
+  const { section, passage, duration, mediafile, state, role } = rowData[
     index
   ] || {
     section: {} as Section,
     passage: {} as Passage,
     duration: 0,
-    mediaId: '',
+    mediafile: {} as MediaFile,
     state: '',
     role: '',
   };
-
+  const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
   const [projType] = useGlobal('projType');
-  const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
   const [assigned, setAssigned] = useState('');
-  const [changed, setChanged] = useGlobal('changed');
-  const [doSave] = useGlobal('doSave');
   const [projData, setProjData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
   const playedSecsRef = useRef<number>(0);
@@ -290,7 +295,9 @@ export function Transcriber(props: IProps) {
   const remote = coordinator.getSource('remote');
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
-  const [, saveCompleted] = useRemoteSave();
+  const { toolsChanged, saveRequested, isChanged } =
+    useContext(UnsavedContext).state;
+  const [changed, setChanged] = useState(false);
   const transcriptionRef = React.useRef<any>();
   const playingRef = useRef<Boolean>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
@@ -301,6 +308,10 @@ export function Transcriber(props: IProps) {
   const [style, setStyle] = useState({
     cursor: 'default',
   });
+  const [jumpBack] = useState(
+    localStorage.getItem(localUserKey(LocalKey.jumpBack))
+  );
+  const [view, setView] = useState('');
   const [textAreaStyle, setTextAreaStyle] = useState({
     overflow: 'auto',
     backgroundColor: '#cfe8fc',
@@ -311,7 +322,7 @@ export function Transcriber(props: IProps) {
     direction: projData?.fontDir as any,
     cursor: 'default',
   });
-
+  const toolId = 'transcriber';
   /* debug what props are changing to force renders
   useRenderingTrace(
     'Transcriber',
@@ -328,7 +339,6 @@ export function Transcriber(props: IProps) {
       busy,
       assigned,
       changed,
-      doSave,
       projData,
       fontStatus,
       totalSeconds,
@@ -382,6 +392,13 @@ export function Transcriber(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trBusy, loading, boxHeight, projData]);
 
+  const handleShowHistory = () => {
+    setShowHistory(!showHistoryRef.current);
+    return true;
+  };
+
+  const keys = [{ key: HISTORY_KEY, cb: handleShowHistory }];
+
   useEffect(() => {
     const getParatextIntegration = () => {
       const intfind = integrations.findIndex(
@@ -399,7 +416,6 @@ export function Transcriber(props: IProps) {
     const handleResize = debounce(() => {
       setDimensions();
     }, 100);
-    const keys = [{ key: HISTORY_KEY, cb: handleShowHistory }];
     keys.forEach((k) => subscribe(k.key, k.cb));
 
     window.addEventListener('resize', handleResize);
@@ -409,6 +425,13 @@ export function Transcriber(props: IProps) {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    if (!allDone) {
+      keys.forEach((k) => subscribe(k.key, k.cb));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allDone]);
 
   useEffect(() => {
     const getParatextIntegration = () => {
@@ -426,14 +449,16 @@ export function Transcriber(props: IProps) {
   }, [integrations]);
 
   useEffect(() => {
-    if (doSave) {
+    if (saveRequested(toolId)) {
       handleSave();
     }
+    var newchanged = isChanged(toolId);
+    if (newchanged !== changed) setChanged(newchanged);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [doSave]);
+  }, [toolsChanged]);
 
   useEffect(() => {
-    const newBoxHeight = height - (playerSize + 200);
+    const newBoxHeight = height - (playerSize + 220);
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, playerSize]);
@@ -444,12 +469,14 @@ export function Transcriber(props: IProps) {
   }, [selected]);
 
   useEffect(() => {
-    const trans = getTranscription();
-    if (trans.transcription !== transcriptionIn.current && !saving.current) {
-      //show warning if changed
-      if (changed) showMessage(t.updateByOther);
-      //but do it either way
-      showTranscription(trans);
+    if (mediafile && mediafile.attributes) {
+      const trans = getTranscription();
+      if (trans.transcription !== transcriptionIn.current && !saving.current) {
+        //show warning if changed
+        if (isChanged(toolId)) showMessage(t.updateByOther);
+        //but do it either way
+        showTranscription(trans);
+      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediafiles]);
@@ -468,7 +495,7 @@ export function Transcriber(props: IProps) {
       }
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediaId]);
+  }, [mediafile]);
 
   useEffect(() => {
     if (paratext_textStatus?.errStatus) {
@@ -481,9 +508,10 @@ export function Transcriber(props: IProps) {
         transcription: paratext_textStatus.statusMsg,
         position: 0,
       });
-      setChanged(true);
+      toolChanged(toolId, true);
       save(
-        passage.attributes.state,
+        mediafile.attributes.transcriptionstate ||
+          ActivityStates.TranscribeReady,
         0,
         segmentsRef.current,
         t.pullParatextStatus
@@ -532,7 +560,7 @@ export function Transcriber(props: IProps) {
         q.findRecords('mediafile')
       ) as MediaFile[];
       //check if the url we have loaded is for the current mediaId
-      const oldRec = mediaRecs.filter((m) => m.id === mediaId);
+      const oldRec = mediaRecs.filter((m) => m.id === mediafile.id);
       var mediaRecUrl =
         oldRec.length > 0
           ? safeURL(dataPath(oldRec[0].attributes.audioUrl, PathType.MEDIA))
@@ -568,7 +596,7 @@ export function Transcriber(props: IProps) {
   };
   const handleChange = (e: any) => {
     setTextValue(e.target.value);
-    if (!changed) setChanged(true);
+    toolChanged(toolId, true);
   };
   const loadStatus = (status: string) => {
     setFontStatus(status);
@@ -577,10 +605,6 @@ export function Transcriber(props: IProps) {
   const setShowHistory = (value: boolean) => {
     showHistoryRef.current = value;
     setShowHistoryx(value);
-  };
-  const handleShowHistory = () => {
-    setShowHistory(!showHistoryRef.current);
-    return true;
   };
 
   const handlePullParatext = () => {
@@ -591,7 +615,7 @@ export function Transcriber(props: IProps) {
       showMessage(t.invalidReference);
       return;
     }
-    if (offline)
+    if (offline) {
       getParatextDataPath().then((ptPath: string) =>
         getParatextTextLocal(
           ptPath,
@@ -601,13 +625,14 @@ export function Transcriber(props: IProps) {
           t.pullParatextStart
         )
       );
-    else
+    } else {
       getParatextText(
         auth,
-        remoteIdNum('passage', selected, memory.keyMap),
+        remoteIdNum('passage', passage.id, memory.keyMap),
         errorReporter,
         t.pullParatextStart
       );
+    }
   };
   const handleShowAddNote = () => {
     setAddNoteVisible(true);
@@ -619,41 +644,38 @@ export function Transcriber(props: IProps) {
     }
     setRejectVisible(true);
   };
-  const handleRejected = async (pass: Passage) => {
+  const handleRejected = async (media: MediaFile, comment: string) => {
     setRejectVisible(false);
     await memory.update(
-      UpdatePassageStateOps(
-        pass.id,
-        section.id,
-        plan,
-        pass.attributes.state,
-        pass.attributes.lastComment,
-        user,
-        new TransformBuilder(),
-        [],
-        memory
-      )
-    );
-    pass.attributes.lastComment = '';
-    setLastSaved(currentDateTime());
-  };
-  const handleRejectCancel = () => setRejectVisible(false);
-  const handleAddNote = async (pass: Passage) => {
-    setAddNoteVisible(false);
-    await memory.update(
-      UpdatePassageStateOps(
-        pass.id,
-        section.id,
-        plan,
-        pass.attributes.state,
-        pass.attributes.lastComment,
+      UpdateMediaStateOps(
+        media.id,
+        passage.id,
+        media.attributes.transcriptionstate,
         user,
         new TransformBuilder(),
         [],
         memory,
-        pass.attributes.lastComment !== ''
+        comment
       )
     );
+    //todo ?? if (IsVernacular(media))
+    setLastSaved(currentDateTime());
+  };
+  const handleRejectCancel = () => setRejectVisible(false);
+
+  const handleAddNote = async (pass: Passage) => {
+    setAddNoteVisible(false);
+    var ops = [] as Operation[];
+    AddPassageStateChangeToOps(
+      new TransformBuilder(),
+      ops,
+      pass.id,
+      '',
+      pass.attributes.lastComment,
+      user,
+      memory
+    );
+    await memory.update(ops);
     pass.attributes.lastComment = '';
   };
   const handleAddNoteCancel = () => setAddNoteVisible(false);
@@ -705,8 +727,9 @@ export function Transcriber(props: IProps) {
     const role = stateRole[curState];
     if (
       role &&
+      projRole &&
       roleHierarchy.indexOf(camel2Title(role) as RoleNames) <=
-        roleHierarchy.indexOf(camel2Title(projRole) as RoleNames)
+        roleHierarchy.indexOf(projRole)
     ) {
       const assigned = related(secRec, role);
       if (!assigned || assigned === '') {
@@ -754,29 +777,30 @@ export function Transcriber(props: IProps) {
       const curState = stateRef.current;
       const tb = new TransformBuilder();
       let ops: Operation[] = [];
+      //todo
       //always update the state, because we need the dateupdated to be updated
-      ops = UpdatePassageStateOps(
-        passage.id,
-        section.id,
-        plan,
-        nextState,
-        thiscomment || '',
-        user,
-        tb,
-        ops,
-        memory,
-        nextState !== stateRef.current || (thiscomment || '') !== ''
-      );
+      if (stateRef.current !== nextState || thiscomment)
+        AddPassageStateChangeToOps(
+          tb,
+          ops,
+          passage.id,
+          stateRef.current !== nextState ? nextState : '',
+          thiscomment || '',
+          user,
+          memory
+        );
+
       ops.push(
         ...UpdateRecord(
           tb,
           {
             type: 'mediafile',
-            id: mediaId,
+            id: mediafile.id,
             attributes: {
               transcription: transcription,
               position: newPosition,
               segments: segments,
+              transcriptionstate: nextState,
             },
           } as any as MediaFile,
           user
@@ -788,14 +812,14 @@ export function Transcriber(props: IProps) {
         .update(ops)
         .then(() => {
           //we come here before we get an error because we're non-blocking
-          saveCompleted('');
+          saveCompleted(toolId);
           setLastSaved(currentDateTime());
           saving.current = false;
           handleAssign(curState);
         })
         .catch((err) => {
           //so we don't come here...we go to continue/logout
-          saveCompleted(err.message);
+          saveCompleted(toolId, err.message);
           saving.current = false;
         });
     }
@@ -821,16 +845,15 @@ export function Transcriber(props: IProps) {
   const doReopen = async () => {
     if (previous.hasOwnProperty(state)) {
       await memory.update(
-        UpdatePassageStateOps(
+        UpdateMediaStateOps(
+          mediafile.id,
           passage.id,
-          section.id,
-          plan,
           previous[state],
-          '',
           user,
           new TransformBuilder(),
           [],
-          memory
+          memory,
+          ''
         )
       );
       setLastSaved(currentDateTime());
@@ -851,17 +874,15 @@ export function Transcriber(props: IProps) {
   };
 
   const getTranscription = () => {
-    const mediaRec = mediafiles.filter((m) => m.id === mediaId);
-    if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
-      const attr = mediaRec[0].attributes;
-      segmentsRef.current = attr.segments || '{}';
-      setInitialSegments(segmentsRef.current);
-      return {
-        transcription: attr.transcription ? attr.transcription : '',
-        position: attr.position,
-      };
-    } else return { transcription: '', position: 0 }; //shouldn't ever happen
+    const attr = mediafile.attributes || {};
+    segmentsRef.current = attr.segments || '{}';
+    setInitialSegments(segmentsRef.current);
+    return {
+      transcription: attr.transcription || '',
+      position: attr.position,
+    };
   };
+
   const showTranscription = (val: {
     transcription: string;
     position: number;
@@ -875,7 +896,7 @@ export function Transcriber(props: IProps) {
       transcriptionRef.current.firstChild.value = val.transcription;
       focusOnTranscription();
     }
-    setLastSaved(passage.attributes?.dateUpdated || '');
+    setLastSaved(mediafile.attributes?.dateUpdated || '');
     setTotalSeconds(duration);
   };
 
@@ -913,7 +934,7 @@ export function Transcriber(props: IProps) {
 
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
-    setChanged(true);
+    toolChanged(toolId, true);
   };
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {
@@ -933,18 +954,47 @@ export function Transcriber(props: IProps) {
     setPlaying(newPlaying);
     playingRef.current = newPlaying;
   };
+
+  const handleWorkflow = async () => {
+    if (changed) await handleSave();
+    localStorage.removeItem(localUserKey(LocalKey.jumpBack));
+    setView(jumpBack || '#');
+  };
+
+  if (view) return <StickyRedirect to={view} />;
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
         {allDone ? (
-          <AllDone />
+          <div>
+            {jumpBack && (
+              <div className={classes.grow}>
+                <div className={classes.grow}>{'\u00A0'}</div>
+                <Button onClick={handleWorkflow} variant="contained">
+                  {t.backToWorkflow}
+                </Button>
+              </div>
+            )}
+            <AllDone />
+          </div>
         ) : (
           <Grid container direction="column" style={style}>
-            <Grid container direction="row" className={classes.row}>
-              <Grid item xs={9} className={classes.description}>
-                {sectionDescription(section)}
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item md={9}>
+                <SectionPassageTitle
+                  section={section}
+                  passage={passage}
+                  allBookData={allBookData}
+                />
               </Grid>
-              <Grid item>{passageDescription(passage, allBookData)}</Grid>
+              {jumpBack && (
+                <Grid item md={3} alignContent="flex-end">
+                  <Button onClick={handleWorkflow} variant="contained">
+                    {t.backToWorkflow}
+                  </Button>
+                </Grid>
+              )}
             </Grid>
             <Wrapper>
               <SplitPane
@@ -984,6 +1034,9 @@ export function Transcriber(props: IProps) {
                         <WSAudioPlayer
                           id="audioPlayer"
                           allowRecord={false}
+                          allowSegment={selected !== '' && role !== 'view'}
+                          allowZoom={true}
+                          allowSpeed={true}
                           size={playerSize}
                           blob={audioBlob}
                           initialposition={defaultPosition}
@@ -1161,7 +1214,7 @@ export function Transcriber(props: IProps) {
                           !previous.hasOwnProperty(state) ||
                           playing ||
                           (user !== related(section, 'transcriber') &&
-                            !/admin/i.test(projRole))
+                            projRole !== RoleNames.Admin)
                         }
                       >
                         {t.reopen}
@@ -1175,7 +1228,7 @@ export function Transcriber(props: IProps) {
         )}
         <TranscribeReject
           visible={rejectVisible}
-          passageIn={passage}
+          mediaIn={mediafile}
           editMethod={handleRejected}
           cancelMethod={handleRejectCancel}
         />

@@ -39,6 +39,7 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
       ? f.attributes.versionNumber.toString()
       : '',
     date: updateddt,
+    readyToShare: f.attributes.readyToShare,
   } as IRow;
 };
 

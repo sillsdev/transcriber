@@ -98,6 +98,7 @@ export const Language = (props: IProps) => {
       <FormLabel className={classes.label}>{t.language}</FormLabel>
       <FormGroup className={classes.group}>
         <FormControlLabel
+          id="language-code"
           ref={langEl}
           className={classes.languageField}
           control={

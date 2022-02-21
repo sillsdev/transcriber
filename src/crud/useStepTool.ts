@@ -1,0 +1,26 @@
+import { useMemo } from 'react';
+import { useGlobal } from 'reactn';
+import { OrgWorkflowStep } from '../model';
+import { findRecord } from '.';
+
+export const getTool = (jsonTool?: string) => {
+  if (jsonTool) {
+    var tool = JSON.parse(jsonTool);
+    return tool.tool || '';
+  }
+  return '';
+};
+export const useStepTool = (stepId: string) => {
+  const [memory] = useGlobal('memory');
+
+  return useMemo(() => {
+    if (!stepId) return '';
+    const workflowstep = findRecord(
+      memory,
+      'orgworkflowstep',
+      stepId
+    ) as OrgWorkflowStep;
+    return getTool(workflowstep?.attributes?.tool);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stepId, memory.cache]);
+};

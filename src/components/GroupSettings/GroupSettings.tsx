@@ -5,6 +5,7 @@ import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import useStyles from './GroupSettingsStyles';
 import Team from './Team';
+import UserTable from '../UserTable';
 
 interface IRecordProps {
   groups: Array<Group>;
@@ -19,6 +20,7 @@ export function GroupSettings(props: IProps) {
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
+        <UserTable projectRole={true} {...props} />
         <Team selectedGroup={group} detail={false} />
       </div>
     </div>

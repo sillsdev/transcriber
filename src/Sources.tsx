@@ -6,6 +6,7 @@ import {
   OfflineProject,
   VProject,
   ExportType,
+  WorkflowStep,
 } from './model';
 import Coordinator, {
   RequestStrategy,
@@ -36,7 +37,8 @@ export const Sources = async (
   setOrbitRetries: (r: number) => void,
   setLang: (locale: string) => void,
   globalStore: any,
-  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
+  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+  offlineSetup: () => Promise<void>
 ) => {
   const memory = coordinator.getSource('memory') as Memory;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
@@ -177,7 +179,8 @@ export const Sources = async (
                   data?.errors &&
                   Array.isArray(data.errors) &&
                   data.errors.length > 0 &&
-                  data.errors[0].detail;
+                  data.errors[0].meta &&
+                  data.errors[0].meta.stackTrace[0];
                 if (url && detail) {
                   orbitError(
                     orbitErr(
@@ -262,7 +265,35 @@ export const Sources = async (
         goRemote = true;
       }
     }
+    //get v4 data
+    if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 3) {
+      if (offline) {
+        await offlineSetup();
+      } else {
+        const recs: WorkflowStep[] = (await backup.cache.query(
+          (q: QueryBuilder) => q.findRecords('artifactcategory')
+        )) as any;
+        if (recs.filter((r) => r?.keys?.remoteId).length === 0) {
+          await memory.sync(
+            await remote.pull((q) => q.findRecords('workflowstep'))
+          );
+          await memory.sync(
+            await remote.pull((q) => q.findRecords('artifactcategory'))
+          );
+          await memory.sync(
+            await remote.pull((q) => q.findRecords('artifacttype'))
+          );
+        }
+        const roles: Role[] = (await backup.cache.query((q: QueryBuilder) =>
+          q.findRecords('role')
+        )) as any;
+        if (roles.filter((r) => r?.keys?.remoteId).length < 9) {
+          await memory.sync(await remote.pull((q) => q.findRecords('role')));
+        }
+      }
+    }
   }
+
   var syncBuffer: Buffer | undefined = undefined;
   var syncFile = '';
   if (!offline && isElectron) {

@@ -1,7 +1,18 @@
-import { IWorkflow, IwfKind, Section, Passage } from '../../model';
+import {
+  IWorkflow,
+  IwfKind,
+  Section,
+  Passage,
+  IMediaShare,
+  OrgWorkflowStep,
+  IWorkflowStepsStrings,
+} from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
-import { getMediaRec } from '../../crud/media';
+import { getVernacularMediaRec, getMediaShared } from '../../crud/media';
+import { getNextStep } from '../../crud/getNextStep';
+import { getStepComplete } from '../../crud';
+import { toCamel } from '../../utils';
 
 const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -86,7 +97,10 @@ export const getWorkflow = (
   sections: Section[],
   passages: Passage[],
   flat: boolean,
+  projectShared: boolean,
   memory: Memory,
+  orgWorkflowSteps: OrgWorkflowStep[],
+  wfStr: IWorkflowStepsStrings,
   current?: IWorkflow[]
 ) => {
   const myWork = current || Array<IWorkflow>();
@@ -105,11 +119,13 @@ export const getWorkflow = (
       item.sectionSeq = section.attributes.sequencenum;
       item.title = section?.attributes?.name;
       const transcriber = related(section, 'transcriber');
-      item.transcriber = transcriber
-        ? { ...userid, id: transcriber }
-        : undefined;
+      item.transcriber =
+        transcriber && transcriber.id !== ''
+          ? { ...userid, id: transcriber }
+          : undefined;
       const editor = related(section, 'editor');
-      item.editor = editor ? { ...userid, id: editor } : undefined;
+      item.editor =
+        editor && editor.id !== '' ? { ...userid, id: editor } : undefined;
       item.sectionUpdated = section.attributes.dateUpdated;
       item.passageSeq = 0;
       item.deleted = false;
@@ -138,13 +154,25 @@ export const getWorkflow = (
         item.comment = passAttr.title;
         item.passageUpdated = passage.attributes.dateUpdated;
         item.passageId = { type: 'passage', id: passage.id };
-        const mediaRec = getMediaRec(passage.id, memory);
+        const mediaRec = getVernacularMediaRec(passage.id, memory);
         item.mediaId = mediaRec
           ? { type: 'mediafile', id: mediaRec.id }
           : undefined;
+        item.mediaShared = projectShared
+          ? getMediaShared(passage.id, memory)
+          : IMediaShare.NotPublic;
         item.deleted = false;
+        const stepId = getNextStep({
+          psgCompleted: getStepComplete(passage),
+          orgWorkflowSteps,
+        });
+        const stepRec = orgWorkflowSteps.find((s) => s.id === stepId);
+        if (stepRec)
+          item.step =
+            wfStr.getString(toCamel(stepRec.attributes.name)) ||
+            stepRec.attributes.name;
       }
-      // console.log(`item ${JSON.stringify(item, null, 2)}`);
+      //console.log(`item ${JSON.stringify(item, null, 2)}`);
       wfPassageAdd(myWork, item, sectionIndex);
       item = { ...initItem };
     });

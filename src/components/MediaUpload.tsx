@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { IState, IMediaUploadStrings } from '../model';
 import localStrings from '../selector/localize';
@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import path from 'path';
 import { useSnackBar } from '../hoc/SnackBar';
+
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
 
@@ -33,6 +34,20 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(1),
       margin: theme.spacing(1),
     },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 400,
+    },
+    menu: {
+      width: 300,
+    },
+    formTextInput: {
+      fontSize: 'small',
+    },
+    formTextLabel: {
+      fontSize: 'small',
+    },
   })
 );
 
@@ -49,6 +64,7 @@ export enum UploadType {
 
 interface IProps extends IStateProps {
   visible: boolean;
+  onVisible: (v: boolean) => void;
   uploadType: UploadType;
   uploadMethod?: (files: File[]) => void;
   multiple?: boolean;
@@ -61,6 +77,7 @@ function MediaUpload(props: IProps) {
   const {
     t,
     visible,
+    onVisible,
     uploadType,
     multiple,
     uploadMethod,
@@ -69,7 +86,6 @@ function MediaUpload(props: IProps) {
     ready,
   } = props;
   const classes = useStyles();
-  const [open, setOpen] = useState(visible);
   const [name, setName] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const { showMessage } = useSnackBar();
@@ -93,14 +109,14 @@ function MediaUpload(props: IProps) {
       uploadMethod(files);
     }
     handleFiles(undefined);
-    setOpen(false);
+    onVisible(false);
   };
   const handleCancel = () => {
     handleFiles(undefined);
     if (cancelMethod) {
       cancelMethod();
     }
-    setOpen(false);
+    onVisible(false);
   };
   const fileName = (files: File[]) => {
     return files.length === 1
@@ -149,9 +165,6 @@ function MediaUpload(props: IProps) {
     handleFiles(files);
   };
 
-  useEffect(() => {
-    setOpen(visible);
-  }, [visible]);
   const inputStyle = { display: 'none' };
   const dropTarget =
     process.env.NODE_ENV !== 'test' ? (
@@ -204,7 +217,11 @@ function MediaUpload(props: IProps) {
 
   return (
     <div>
-      <Dialog open={open} onClose={handleCancel} aria-labelledby="audUploadDlg">
+      <Dialog
+        open={visible}
+        onClose={handleCancel}
+        aria-labelledby="audUploadDlg"
+      >
         <DialogTitle id="audUploadDlg">{title[uploadType]}</DialogTitle>
         <DialogContent>
           <DialogContentText>{text[uploadType]}</DialogContentText>

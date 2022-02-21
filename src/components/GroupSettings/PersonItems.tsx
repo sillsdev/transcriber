@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { User } from '../../model';
+import { RoleNames, User } from '../../model';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
@@ -59,7 +59,7 @@ function PersonItems(props: IProps) {
         .filter(
           (u) => u.attributes && ids.map((id) => id.user).indexOf(u.id) !== -1
         )
-        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+        .sort((i, j) => (i.attributes.name <= j.attributes.name ? -1 : 1))
         .map((u, index) => (
           <ListItem
             key={u.id}
@@ -76,7 +76,7 @@ function PersonItems(props: IProps) {
             />
             {del &&
               !detail &&
-              orgRole === 'admin' &&
+              orgRole === RoleNames.Admin &&
               ids.filter((id) => id.user === u.id)[0].canDelete &&
               !allUsers && (
                 <ListItemSecondaryAction>
@@ -93,7 +93,7 @@ function PersonItems(props: IProps) {
               )}
             {del &&
               !detail &&
-              orgRole === 'admin' &&
+              orgRole === RoleNames.Admin &&
               (!ids.filter((id) => id.user === u.id)[0].canDelete ||
                 allUsers) && (
                 <ListItemSecondaryAction>

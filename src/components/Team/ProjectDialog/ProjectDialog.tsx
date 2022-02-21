@@ -37,6 +37,7 @@ const initState = {
   book: '',
   bcp47: 'und',
   languageName: '',
+  isPublic: false,
   spellCheck: false,
   font: '',
   rtl: false,

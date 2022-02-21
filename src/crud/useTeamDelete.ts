@@ -1,39 +1,45 @@
 import { useGlobal } from 'reactn';
 import {
+  ArtifactCategory,
+  ArtifactType,
+  Discussion,
   Group,
   GroupMembership,
-  Organization,
   OrganizationMembership,
+  OrgWorkflowStep,
   Project,
+  Comment,
 } from '../model';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { related } from '.';
-import { useOfflnProjDelete } from './useOfflnProjDelete';
+import { useProjectDelete } from './useProjectDelete';
 export const useTeamDelete = () => {
   const [memory] = useGlobal('memory');
-  const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
-  const offlineDelete = useOfflnProjDelete();
+  const [offlineOnly] = useGlobal('offlineOnly');
+  const projectDelete = useProjectDelete();
 
-  return async (team: Organization) => {
-    const teamgrpIds = (memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('group')
-    ) as Group[])
-      .filter((g) => related(g, 'owner') === team.id)
+  return async (teamid: string) => {
+    const teamgrpIds = (
+      memory.cache.query((q: QueryBuilder) => q.findRecords('group')) as Group[]
+    )
+      .filter((g) => related(g, 'owner') === teamid)
       .map((tg) => tg.id);
-    const teamgms = (memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('groupmembership')
-    ) as GroupMembership[]).filter((gm) =>
-      teamgrpIds.includes(related(gm, 'group'))
-    );
-    const teamprojs = (memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('project')
-    ) as Project[]).filter((p) => teamgrpIds.includes(related(p, 'group')));
+    const teamgms = (
+      memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('groupmembership')
+      ) as GroupMembership[]
+    ).filter((gm) => teamgrpIds.includes(related(gm, 'group')));
+    const teamprojs = (
+      memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('project')
+      ) as Project[]
+    ).filter((p) => teamgrpIds.includes(related(p, 'group')));
     const projIds = teamprojs.map((p) => p.id);
-    const teamoms = (memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('organizationmembership')
-    ) as OrganizationMembership[]).filter((om) =>
-      teamgrpIds.includes(related(om, 'organization'))
-    );
+    const teamoms = (
+      memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('organizationmembership')
+      ) as OrganizationMembership[]
+    ).filter((om) => teamgrpIds.includes(related(om, 'organization')));
     /* remove the memberships first so that refreshing happens before projects and teams disappear and causes problems */
     let ops: Operation[] = [];
     const t: TransformBuilder = new TransformBuilder();
@@ -41,16 +47,71 @@ export const useTeamDelete = () => {
     teamgms.forEach((gm) => ops.push(t.removeRecord(gm)));
     await memory.update(ops);
     ops = [];
-    teamprojs.forEach((tp) => ops.push(t.removeRecord(tp)));
-    await memory.update(ops);
+    for (let ix = 0; ix < projIds.length; ix++)
+      await projectDelete(projIds[ix]);
     ops = [];
     teamgrpIds.forEach((tg) =>
       ops.push(t.removeRecord({ type: 'group', id: tg }))
     );
-    ops.push(t.removeRecord(team));
-    for (let ix = 0; ix < projIds.length; ix++)
-      await offlineDelete(projIds[ix]);
+    if (offlineOnly) {
+      const orgSteps = (
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('orgworkflowstep').filter({
+            relation: 'organization',
+            record: { type: 'organization', id: teamid },
+          })
+        ) as OrgWorkflowStep[]
+      ).map((s) => s.id);
+
+      const artifactcats = (
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('artifactcategory').filter({
+            relation: 'organization',
+            record: { type: 'organization', id: teamid },
+          })
+        ) as ArtifactCategory[]
+      ).map((c) => c.id);
+      const artifacttypes = (
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('artifacttype').filter({
+            relation: 'organization',
+            record: { type: 'organization', id: teamid },
+          })
+        ) as ArtifactType[]
+      ).map((s) => s.id);
+
+      const discussions = (
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('discussion')
+        ) as Discussion[]
+      )
+        .filter((d) => orgSteps.includes(related(d, 'orgWorkflowStep')))
+        .map((s) => s.id);
+
+      const comments = (
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('comment')
+        ) as Comment[]
+      )
+        .filter((d) => discussions.includes(related(d, 'discussion')))
+        .map((s) => s.id);
+
+      comments.forEach((id) =>
+        ops.push(t.removeRecord({ type: 'comment', id }))
+      );
+      discussions.forEach((id) =>
+        ops.push(t.removeRecord({ type: 'discussion', id }))
+      );
+
+      artifacttypes.forEach((id) =>
+        ops.push(t.removeRecord({ type: 'artifacttype', id }))
+      );
+      artifactcats.forEach((id) =>
+        ops.push(t.removeRecord({ type: 'artifactcategory', id }))
+      );
+    }
+    ops.push(t.removeRecord({ type: 'organization', id: teamid }));
+
     await memory.update(ops);
-    setProjectsLoaded(projectsLoaded.filter((p) => !projIds.includes(p)));
   };
 };

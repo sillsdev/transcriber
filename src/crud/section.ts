@@ -1,4 +1,4 @@
-import { Section, User } from '../model';
+import { Section, Passage, User } from '../model';
 import { related } from '.';
 import { numCompare } from '../utils/sort';
 
@@ -25,7 +25,8 @@ export function sectionCompare(a: Section, b: Section) {
   return numCompare(a.attributes.sequencenum, b.attributes.sequencenum);
 }
 /* build the section name = sequence + name */
-export function sectionDescription(section: Section) {
+export function sectionDescription(section: Section, passage?: Passage) {
   const name = section?.attributes?.name || '';
-  return sectionNumber(section) + '\u00A0\u00A0 ' + name;
+  const passNum = passage ? `.${passage.attributes?.sequencenum}` : '';
+  return sectionNumber(section) + passNum + '\u00A0\u00A0 ' + name;
 }

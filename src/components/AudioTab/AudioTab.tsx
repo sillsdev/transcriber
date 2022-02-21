@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import clsx from 'clsx';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -12,6 +12,7 @@ import {
   Plan,
   BookName,
   ISharedStrings,
+  RoleNames,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import { withData, WithDataProps } from '../../mods/react-orbitjs';
@@ -25,11 +26,15 @@ import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
 import { useSnackBar } from '../../hoc/SnackBar';
 import BigDialog from '../../hoc/BigDialog';
 import AudioTable from './AudioTable';
-import Uploader, { IStatus } from '../Uploader';
+import Uploader from '../Uploader';
 import Auth from '../../auth/Auth';
-import { getMediaInPlans, usePlan, remoteIdGuid } from '../../crud';
+import {
+  getMediaInPlans,
+  usePlan,
+  remoteIdGuid,
+  VernacularTag,
+} from '../../crud';
 import { useGlobal } from 'reactn';
-import { useRemoteSave } from '../../utils';
 import { HeadHeight } from '../../App';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
@@ -45,6 +50,7 @@ import {
   IRow,
 } from '.';
 import { IMatchData, makeMatchMap } from './makeRefMap';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -126,8 +132,7 @@ export function AudioTab(props: IProps) {
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [, setChanged] = useGlobal('changed');
-  const [, saveCompleted] = useRemoteSave();
+  const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
   const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
@@ -137,7 +142,7 @@ export function AudioTab(props: IProps) {
   const [pcheck, setPCheck] = useState(-1);
   // const [filter, setFilter] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
-  const [status] = useState<IStatus>({ canceled: false });
+  const cancelled = useRef(false);
   const [complete, setComplete] = useGlobal('progress');
   const [autoMatch, setAutoMatch] = useState(false);
   const [playItem, setPlayItem] = useState('');
@@ -147,11 +152,10 @@ export function AudioTab(props: IProps) {
   const inProcess = React.useRef<boolean>(false);
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
-    ts,
     doOrbitError,
   });
   const [refresh, setRefresh] = useState(false);
-
+  const myToolId = 'AudioTab';
   const hasPassage = (pRow: number) => {
     for (let mediaId of Object.keys(attachMap)) {
       if (attachMap[mediaId] === pRow) return true;
@@ -160,7 +164,7 @@ export function AudioTab(props: IProps) {
   };
 
   const handleUpload = () => {
-    status.canceled = false;
+    cancelled.current = false;
     setUploadVisible(true);
   };
 
@@ -184,16 +188,16 @@ export function AudioTab(props: IProps) {
     let n = 0;
     setComplete(n);
     for (let mediaId of Object.keys(map)) {
-      if (status.canceled) break;
+      if (cancelled.current) break;
       await handleRow(mediaId);
       n += 1;
       setComplete(Math.min((n * 100) / total, 100));
     }
     setAttachMap({});
-    if (status.canceled) status.canceled = false;
+    if (cancelled.current) cancelled.current = false;
     else showMessage(t.savingComplete);
     inProcess.current = false;
-    saveCompleted('');
+    saveCompleted(myToolId);
   };
 
   const mediaRow = (mediaId: string) => {
@@ -208,7 +212,7 @@ export function AudioTab(props: IProps) {
       const newMap = { ...attachMap };
       delete newMap[mediaId];
       setAttachMap(newMap);
-      setChanged(true);
+      toolChanged(myToolId, true);
     } else {
       const passId = data[mRow].passId;
       if (passId && passId !== '') {
@@ -242,7 +246,7 @@ export function AudioTab(props: IProps) {
   // const handleFilter = () => setFilter(!filter);
 
   const handleUploadCancel = () => {
-    status.canceled = true;
+    cancelled.current = true;
   };
 
   useEffect(() => {
@@ -262,7 +266,7 @@ export function AudioTab(props: IProps) {
 
   useEffect(() => {
     if (plan && mediaFiles.length > 0) {
-      setPlanMedia(getMediaInPlans([plan], mediaFiles));
+      setPlanMedia(getMediaInPlans([plan], mediaFiles, VernacularTag));
     }
   }, [mediaFiles, plan]);
 
@@ -327,7 +331,7 @@ export function AudioTab(props: IProps) {
 
   const afterUpload = (planId: string, mediaRemoteIds?: string[]) => {
     if (mediaRemoteIds && mediaRemoteIds.length === 1) {
-      if (!status.canceled) {
+      if (!cancelled.current) {
         setUploadMedia(
           remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ||
             mediaRemoteIds[0]
@@ -363,7 +367,7 @@ export function AudioTab(props: IProps) {
           color="default"
         >
           <div className={classes.actions}>
-            {projRole === 'admin' && (!isOffline || offlineOnly) && (
+            {projRole === RoleNames.Admin && (!isOffline || offlineOnly) && (
               <>
                 <Button
                   id="audUpload"
@@ -468,10 +472,9 @@ export function AudioTab(props: IProps) {
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}
-        setComplete={setComplete}
         multiple={true}
         finish={afterUpload}
-        status={status}
+        cancelled={cancelled}
       />
     </div>
   );

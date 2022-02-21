@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Card, CardContent } from '@material-ui/core';
@@ -6,7 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { VProject, DialogMode, OptionType } from '../../model';
 import { ProjectDialog, IProjectDialog, ProjectType } from './ProjectDialog';
 import { Language, ILanguage } from '../../control';
-import Uploader, { IStatus } from '../Uploader';
+import Uploader from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
 import { waitForRemoteId, remoteId, useOrganizedBy } from '../../crud';
@@ -88,7 +88,7 @@ export const AddCard = (props: IProps) => {
   ]);
   const { fromLocalizedOrganizedBy } = useOrganizedBy();
   const [step, setStep] = React.useState(0);
-  const [status] = React.useState<IStatus>({ canceled: false });
+  const cancelled = useRef(false);
   const [, setPlan] = useGlobal('plan');
   const [pickOpen, setPickOpen] = React.useState(false);
   const preventBoth = React.useRef(false);
@@ -105,19 +105,12 @@ export const AddCard = (props: IProps) => {
   }, []);
 
   useEffect(() => {
-    if (status.canceled) {
-      setInProgress(false);
-      setTimeout(() => {
-        // Allow time for everyone to notice canceled
-        status.canceled = false;
-      }, 500);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status.canceled]);
-
-  useEffect(() => {
     setLanguage(initLang);
     setBook(null);
+
+    if (uploadVisible) {
+      cancelled.current = false;
+    }
   }, [uploadVisible]);
 
   const handleForceType = (type: string) => {
@@ -169,7 +162,7 @@ export const AddCard = (props: IProps) => {
   };
 
   const nameInUse = (newName: string) => {
-    const projects = team ? teamProjects(team.id) : personalProjects();
+    const projects = team ? teamProjects(team.id) : personalProjects;
     const sameNameRec = projects.filter((p) => p?.attributes?.name === newName);
     return sameNameRec.length > 0;
   };
@@ -180,6 +173,7 @@ export const AddCard = (props: IProps) => {
       description,
       type,
       languageName,
+      isPublic,
       spellCheck,
       rtl,
       tags,
@@ -193,6 +187,7 @@ export const AddCard = (props: IProps) => {
           type,
           language: values.bcp47,
           languageName,
+          isPublic,
           spellCheck,
           defaultFont: values.font,
           defaultFontSize: values.fontSize,
@@ -217,6 +212,7 @@ export const AddCard = (props: IProps) => {
           type,
           language: language.bcp47,
           languageName: language.languageName,
+          isPublic: false,
           spellCheck: language.spellCheck,
           defaultFont: language.font,
           defaultFontSize: 'large',
@@ -259,7 +255,7 @@ export const AddCard = (props: IProps) => {
   };
 
   const cancelUpload = (what: string) => {
-    status.canceled = true;
+    cancelled.current = true;
   };
 
   const MetaData = React.useMemo(
@@ -318,18 +314,18 @@ export const AddCard = (props: IProps) => {
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}
-        setComplete={setComplete}
         multiple={true}
         metaData={MetaData}
         ready={handleReady}
         createProject={createProject}
         finish={makeSectionsAndPassages}
-        status={status}
+        cancelled={cancelled}
         defaultFilename={book?.value}
+        allowWave={true}
       />
       <Progress
         title={t.uploadProgress}
-        open={!uploadVisible && inProgress}
+        open={!uploadVisible && inProgress && !cancelled.current}
         progress={complete}
         steps={steps}
         currentStep={step}

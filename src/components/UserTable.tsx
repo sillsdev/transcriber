@@ -10,10 +10,9 @@ import {
   Role,
   OrganizationMembership,
   IUsertableStrings,
-  Group,
-  GroupMembership,
-  Invitation,
   ISharedStrings,
+  GroupMembership,
+  RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -31,7 +30,16 @@ import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import UserAdd from './UserAdd';
 import StickyRedirect from './StickyRedirect';
-import { related, useAddToOrgAndGroup } from '../crud';
+import {
+  related,
+  RemoveUserFromOrg,
+  useAddToOrgAndGroup,
+  useTeamDelete,
+  useUser,
+  useRole,
+} from '../crud';
+import SelectRole from '../control/SelectRole';
+import { UpdateRelatedRecord } from '../model/baseModel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -75,49 +83,18 @@ interface IRow {
   id: RecordIdentity;
 }
 
-const getUser = (om: OrganizationMembership, users: User[]) => {
+const getUser = (
+  om: OrganizationMembership | GroupMembership,
+  users: User[]
+) => {
   return users.filter((u) => u.id === related(om, 'user'));
 };
-const getName = (om: OrganizationMembership, users: User[]) => {
+const getName = (
+  om: OrganizationMembership | GroupMembership,
+  users: User[]
+) => {
   const u = getUser(om, users);
   return u && u.length > 0 && u[0].attributes && u[0].attributes.name;
-};
-
-const getMedia = (
-  organization: string,
-  users: Array<User>,
-  roles: Array<Role>,
-  organizationMemberships: Array<OrganizationMembership>,
-  t: IUsertableStrings,
-  ts: ISharedStrings
-) => {
-  const members = organizationMemberships
-    .filter((om) => related(om, 'organization') === organization)
-    .sort((i, j) => (getName(i, users) < getName(j, users) ? -1 : 1));
-  const rowData: IRow[] = [];
-  members.forEach((m) => {
-    const user = getUser(m, users);
-    const role = roles.filter((r) => r.id === related(m, 'role'));
-    if (user.length === 1) {
-      const u = user[0];
-      if (u.attributes) {
-        rowData.push({
-          name: u.attributes.name,
-          email: u.attributes.email ? u.attributes.email : t.addMember,
-          locale: u.attributes.locale ? u.attributes.locale : '',
-          // phone: u.attributes.phone ? u.attributes.phone : '',
-          timezone: u.attributes.timezone ? u.attributes.timezone : '',
-          role: localizeRole(
-            role.length > 0 ? role[0].attributes.roleName : 'member',
-            ts
-          ),
-          action: u.id,
-          id: { type: 'user', id: u.id },
-        } as IRow);
-      }
-    }
-  });
-  return rowData;
 };
 
 interface IStateProps {
@@ -131,21 +108,34 @@ interface IRecordProps {
   users: Array<User>;
   roles: Array<Role>;
   organizationMemberships: Array<OrganizationMembership>;
+  groupMemberships: Array<GroupMembership>;
 }
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+  projectRole?: boolean;
+}
 
 export function UserTable(props: IProps) {
-  const { t, ts, users, roles, organizationMemberships } = props;
+  const {
+    t,
+    ts,
+    users,
+    roles,
+    organizationMemberships,
+    groupMemberships,
+    projectRole,
+  } = props;
   const classes = useStyles();
   const { pathname } = useLocation();
   const [organization] = useGlobal('organization');
+  const [group] = useGlobal('group');
   const [user] = useGlobal('user');
   const [, setEditId] = useGlobal('editUserId');
   const [memory] = useGlobal('memory');
   const [orgRole] = useGlobal('orgRole');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [offline] = useGlobal('offline');
+  const { getUserRec } = useUser();
   const [data, setData] = useState(Array<IRow>());
   const columnDefs = [
     { name: 'name', title: t.name },
@@ -153,10 +143,10 @@ export function UserTable(props: IProps) {
     { name: 'locale', title: t.locale },
     // { name: 'phone', title: t.phone },
     { name: 'timezone', title: t.timezone },
-    { name: 'role', title: t.role },
+    { name: 'role', title: projectRole ? ts.projectrole : ts.teamrole },
     {
       name: 'action',
-      title: orgRole === 'admin' ? t.action : '\u00A0',
+      title: orgRole === RoleNames.Admin ? t.action : '\u00A0',
     },
   ];
   const columnWidths = [
@@ -165,7 +155,7 @@ export function UserTable(props: IProps) {
     { columnName: 'locale', width: 100 },
     // { columnName: 'phone', width: 100 },
     { columnName: 'timezone', width: 100 },
-    { columnName: 'role', width: 100 },
+    { columnName: 'role', width: projectRole ? 200 : 100 },
     { columnName: 'action', width: 150 },
   ];
   const sortingEnabled = [{ columnName: 'action', sortingEnabled: false }];
@@ -176,6 +166,8 @@ export function UserTable(props: IProps) {
   const [addOpen, setAddOpen] = useState(false);
   const [view, setView] = useState('');
   const addToOrgAndGroup = useAddToOrgAndGroup();
+  const teamDelete = useTeamDelete();
+  const { getInviteProjRole } = useRole();
 
   const handleInvite = () => {
     setDialogVisible(true);
@@ -189,7 +181,7 @@ export function UserTable(props: IProps) {
   };
 
   const doEdit = (userId: string) => {
-    localStorage.setItem(localUserKey(LocalKey.url, memory), pathname);
+    localStorage.setItem(localUserKey(LocalKey.url), pathname);
     setEditId(userId);
     setView('Profile');
   };
@@ -221,50 +213,12 @@ export function UserTable(props: IProps) {
     setDeleteItem(value);
   };
   const handleDeleteConfirmed = () => {
-    const orgMemberRecs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('organizationmembership')
-    ) as OrganizationMembership[];
-    const userOrgRec = orgMemberRecs.filter(
-      (o) =>
-        related(o, 'user') === deleteItem &&
-        related(o, 'organization') === organization
-    );
-    if (userOrgRec.length === 1) {
-      memory.update((t: TransformBuilder) => t.removeRecord(userOrgRec[0]));
-    }
-    const invites = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('invitation')
-    ) as Invitation[];
-    const user = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'user', id: deleteItem })
-    ) as User;
-    const inviteRec = invites.filter(
-      (i) =>
-        i.attributes.email === user.attributes.email &&
-        related(i, 'organization') === organization
-    );
-    inviteRec.forEach((i) => {
-      memory.update((t: TransformBuilder) => t.removeRecord(i));
-    });
-    const groupRecs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('group')
-    ) as Group[];
-    const orgGroups = groupRecs
-      .filter((g) => related(g, 'owner') === organization)
-      .map((og) => og.id);
-    const grpMbrRecs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('groupmembership')
-    ) as GroupMembership[];
-    const userGrpOrgRecs = grpMbrRecs.filter(
-      (g) =>
-        related(g, 'user') === deleteItem &&
-        orgGroups.includes(related(g, 'group'))
-    );
-    userGrpOrgRecs.forEach((g) => {
-      memory.update((t: TransformBuilder) => t.removeRecord(g));
-    });
+    const deleteRec = getUserRec(deleteItem);
+    RemoveUserFromOrg(memory, deleteRec, organization, user, teamDelete);
+    localStorage.setItem(localUserKey(LocalKey.url), '/');
     setDeleteItem('');
   };
+
   const handleDeleteRefused = () => {
     setDeleteItem('');
   };
@@ -273,11 +227,48 @@ export function UserTable(props: IProps) {
   const isCurrentUser = (userId: string) => userId === user;
 
   useEffect(() => {
-    setData(
-      getMedia(organization, users, roles, organizationMemberships, t, ts)
-    );
+    const getMedia = () => {
+      const members = (
+        projectRole
+          ? groupMemberships.filter((gm) => related(gm, 'group') === group)
+          : organizationMemberships.filter(
+              (om) => related(om, 'organization') === organization
+            )
+      ).sort((i, j) => (getName(i, users) <= getName(j, users) ? -1 : 1));
+      const rowData: IRow[] = [];
+      members.forEach((m) => {
+        const user = getUser(m, users);
+        const role = roles.filter((r) => r.id === related(m, 'role'));
+        if (user.length === 1) {
+          const u = user[0];
+          if (u.attributes) {
+            rowData.push({
+              name: u.attributes.name,
+              email: u.attributes.email ? u.attributes.email : t.addMember,
+              locale: u.attributes.locale ? u.attributes.locale : '',
+              // phone: u.attributes.phone ? u.attributes.phone : '',
+              timezone: u.attributes.timezone ? u.attributes.timezone : '',
+              role:
+                projectRole && canEdit()
+                  ? role.length > 0
+                    ? role[0].id
+                    : ''
+                  : localizeRole(
+                      role.length > 0 ? role[0].attributes.roleName : 'member',
+                      ts,
+                      projectRole
+                    ),
+              action: u.id,
+              id: { type: 'user', id: u.id },
+            } as IRow);
+          }
+        }
+      });
+      return rowData;
+    };
+    setData(getMedia());
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, users, roles, organizationMemberships]);
+  }, [organization, users, roles, organizationMemberships, groupMemberships]);
 
   interface ICell {
     value: string;
@@ -287,6 +278,39 @@ export function UserTable(props: IProps) {
     tableRow: any;
     tableColumn: any;
   }
+  const handleRoleChange = (e: string, rowid: string) => {
+    var index = parseInt(rowid);
+    if (index !== undefined) {
+      var userid = data[index].id.id;
+
+      const gms = groupMemberships.filter(
+        (gm) => related(gm, 'user') === userid && related(gm, 'group') === group
+      );
+      if (gms.length > 0) {
+        memory.update((t: TransformBuilder) =>
+          UpdateRelatedRecord(t, gms[0], 'role', 'role', e, user)
+        );
+      }
+    }
+  };
+  const RoleCell = ({ value, style, row, tableRow, ...restProps }: ICell) => (
+    <Table.Cell
+      {...restProps}
+      style={{ ...style }}
+      tableRow={tableRow}
+      row
+      value
+    >
+      <SelectRole
+        org={false}
+        initRole={row.role}
+        onChange={handleRoleChange}
+        required={false}
+        disabled={isCurrentUser((row as IRow).id.id)}
+        rowid={tableRow.rowId}
+      />
+    </Table.Cell>
+  );
 
   const ActionCell = ({ value, style, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
@@ -316,14 +340,17 @@ export function UserTable(props: IProps) {
       </>
     </Table.Cell>
   );
-  const canEdit = () => orgRole === 'admin' && (!offline || offlineOnly);
-
+  const canEdit = () => {
+    const projRole = getInviteProjRole(organization);
+    return projRole === RoleNames.Admin && (!offline || offlineOnly);
+  };
   const Cell = (props: any) => {
     const { column } = props;
     if (column.name === 'action') {
       if (canEdit()) return <ActionCell {...props} />;
       else return <></>;
-    }
+    } else if (column.name === 'role' && projectRole && canEdit())
+      return <RoleCell {...props} />;
     return <Table.Cell {...props} />;
   };
 
@@ -428,6 +455,7 @@ const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
   organizationMemberships: (q: QueryBuilder) =>
     q.findRecords('organizationmembership'),
+  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
 
 export default withData(mapRecordsToProps)(

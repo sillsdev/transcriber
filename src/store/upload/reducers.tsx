@@ -53,7 +53,7 @@ const UploadReducers = function (
         ...state,
         loaded: true,
         current: action.payload.current,
-        errmsg: action.payload.error,
+        errmsg: action.payload?.error || '',
         success: state.success.map((v, ix) =>
           ix === action.payload.current ? false : v || false
         ),

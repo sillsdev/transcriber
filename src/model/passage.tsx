@@ -6,10 +6,10 @@ export interface Passage extends BaseModel {
     sequencenum: number;
     book: string;
     reference: string;
-    state: string; //ActivityStates
     hold: boolean;
     title: string;
     lastComment: string;
+    stepComplete: string; //json
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
@@ -20,9 +20,9 @@ export interface Passage extends BaseModel {
     media: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
-  startChapter: number; //calculated
-  endChapter: number; //calculated
-  startVerse: number; //calculated
-  endVerse: number; //calculated
+  startChapter?: number; //calculated
+  endChapter?: number; //calculated
+  startVerse?: number; //calculated
+  endVerse?: number; //calculated
 }
 export default Passage;

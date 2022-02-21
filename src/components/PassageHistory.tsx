@@ -23,6 +23,7 @@ import useTodo from '../context/useTodo';
 import TranscribeAddNote from './TranscribeAddNote';
 import { UpdateRecord } from '../model/baseModel';
 import { dateOrTime } from '../utils';
+import { useUser } from '../crud';
 
 interface IStateProps {}
 interface IDispatchProps {}
@@ -60,6 +61,7 @@ export function PassageHistory(props: IProps) {
   );
   const [user] = useGlobal('user');
   const [locale] = useGlobal('lang');
+  const { getUserRec } = useUser();
   const [editNoteVisible, setEditNoteVisible] = useState(false);
   const historyStyle = { height: boxHeight };
   const [selectedId, setSelectedId] = React.useState('');
@@ -73,7 +75,7 @@ export function PassageHistory(props: IProps) {
       const curStateChanges = passagestatechanges
         .filter((r) => related(r, 'passage') === passageId)
         .sort((i, j) =>
-          i.attributes.dateCreated < j.attributes.dateCreated ? -1 : 1
+          i.attributes.dateCreated <= j.attributes.dateCreated ? -1 : 1
         );
       setCurStateChanges(curStateChanges);
     } else {
@@ -91,28 +93,14 @@ export function PassageHistory(props: IProps) {
     ) => {
       const userFromId = (psc: PassageStateChange): User => {
         var id = related(psc, 'lastModifiedByUser');
-        if (!id) {
+        if (!id && psc.attributes?.lastModifiedBy) {
           id = remoteIdGuid(
             'user',
             psc.attributes.lastModifiedBy.toString(),
             memory.keyMap
           );
         }
-        let user = {
-          id: '',
-          attributes: { avatarUrl: null, name: 'Unknown', familyName: '' },
-        } as any;
-        if (!id) {
-          return user;
-        }
-        try {
-          user = memory.cache.query((q: QueryBuilder) =>
-            q.findRecord({ type: 'user', id })
-          ) as User;
-        } catch (error) {
-          // leave default user data
-        }
-        return user;
+        return getUserRec(id);
       };
 
       const nameFromId = (psc: PassageStateChange) => {
@@ -190,7 +178,7 @@ export function PassageHistory(props: IProps) {
             )
           );
         }
-        if (psc.attributes.state !== curState) {
+        if (psc.attributes.state && psc.attributes.state !== curState) {
           curState = psc.attributes.state;
           results.push(
             historyItem(psc, activityStateStr.getString(curState), 's', false)

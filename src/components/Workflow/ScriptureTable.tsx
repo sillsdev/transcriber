@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -17,6 +17,10 @@ import {
   Plan,
   IWorkflow,
   IwfKind,
+  IMediaShare,
+  WorkflowStep,
+  OrgWorkflowStep,
+  IWorkflowStepsStrings,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import * as actions from '../../store';
@@ -30,16 +34,15 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import PlanSheet, { ICellChange } from './PlanSheet';
 import {
   remoteIdNum,
-  remoteIdGuid,
   related,
   useOrganizedBy,
   usePlan,
+  VernacularTag,
 } from '../../crud';
+import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import {
-  useRemoteSave,
   lookupBook,
   waitForIt,
-  cleanFileName,
   useCheckOnline,
   currentDateTime,
   hasAudacity,
@@ -62,12 +65,16 @@ import AudacityManager from './AudacityManager';
 import AssignSection from '../AssignSection';
 import StickyRedirect from '../StickyRedirect';
 import Auth from '../../auth/Auth';
-import Uploader, { IStatus } from '../Uploader';
+import Uploader from '../Uploader';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import { UpdateRecord } from '../../model/baseModel';
 import { PlanContext } from '../../context/PlanContext';
 import stringReplace from 'react-string-replace';
 import { useExternalLink } from '../useExternalLink';
+import BigDialog from '../../hoc/BigDialog';
+import VersionDlg from '../AudioTab/VersionDlg';
+import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const SaveWait = 500;
 
@@ -98,6 +105,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: IScriptureTableStrings;
+  wfStr: IWorkflowStepsStrings;
   s: IPlanSheetStrings;
   ts: ISharedStrings;
   lang: string;
@@ -116,6 +124,8 @@ interface IRecordProps {
   passages: Array<Passage>;
   sections: Array<Section>;
   mediafiles: Array<MediaFile>;
+  workflowSteps: WorkflowStep[];
+  orgWorkflowSteps: OrgWorkflowStep[];
 }
 
 interface IProps
@@ -139,6 +149,7 @@ interface AudacityInfo {
 export function ScriptureTable(props: IProps) {
   const {
     t,
+    wfStr,
     s,
     ts,
     lang,
@@ -152,6 +163,8 @@ export function ScriptureTable(props: IProps) {
     passages,
     sections,
     mediafiles,
+    workflowSteps,
+    orgWorkflowSteps,
     auth,
   } = props;
   const classes = useStyles();
@@ -162,17 +175,14 @@ export function ScriptureTable(props: IProps) {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
-  const [doSave] = useGlobal('doSave');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setBusy] = useGlobal('importexportBusy');
-  const [globalStore] = useGlobal();
   const myChangedRef = useRef(false);
   const savingRef = useRef(false);
   const updateRef = useRef(false);
-  const [changed, setChangedx] = useGlobal('changed');
   const { showMessage } = useSnackBar();
   const ctx = React.useContext(PlanContext);
-  const { flat, scripture } = ctx.state;
+  const { flat, scripture, shared } = ctx.state;
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState<string>(getOrganizedBy(true));
   const [saveColAdd, setSaveColAdd] = useState<number[]>();
@@ -183,35 +193,51 @@ export function ScriptureTable(props: IProps) {
     { value: t.reference, readOnly: true, width: 180 },
     { value: t.description, readOnly: true, width: 280 },
   ]);
-  const [workflow, setWorkflow] = useState<IWorkflow[]>([]);
+  const [workflow, setWorkflowx] = useState<IWorkflow[]>([]);
+  const workflowRef = useRef<IWorkflow[]>([]);
   const [, setComplete] = useGlobal('progress');
   const [view, setView] = useState('');
   const [audacityItem, setAudacityItem] = React.useState<AudacityInfo>();
   const [lastSaved, setLastSaved] = React.useState<string>();
-  const [startSave, saveCompleted, waitForSave] = useRemoteSave();
+  const toolId = 'scriptureTable';
+  const {
+    saveRequested,
+    startSave,
+    saveCompleted,
+    waitForSave,
+    toolChanged,
+    toolsChanged,
+    isChanged,
+  } = useContext(UnsavedContext).state;
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
   const [assignSections, setAssignSections] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [recordAudio, setRecordAudio] = useState(true);
   const [importList, setImportList] = useState<File[]>();
-  const [status] = useState<IStatus>({ canceled: false });
+  const cancelled = useRef(false);
   const uploadItem = useRef<IWorkflow>();
+  const [versionItem, setVersionItem] = useState('');
   const [defaultFilename, setDefaultFilename] = useState('');
   const { getPlan } = usePlan();
   const localSave = useWfLocalSave({ setComplete });
   const onlineSave = useWfOnlineSave({ setComplete });
-  const [attachPassage, detachPassage] = useMediaAttach({
+  const [detachPassage] = useMediaAttach({
     ...props,
-    ts,
     doOrbitError,
   });
   const checkOnline = useCheckOnline(resetOrbitError);
   const { handleLaunch } = useExternalLink();
-
+  const getStepsBusy = useRef(false);
+  const [orgSteps, setOrgSteps] = useState<OrgWorkflowStep[]>([]);
+  const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
   const secNumCol = React.useMemo(() => {
     return colNames.indexOf('sectionSeq');
   }, [colNames]);
 
+  const setWorkflow = (wf: IWorkflow[]) => {
+    workflowRef.current = wf;
+    setWorkflowx(wf);
+  };
   const passNumCol = React.useMemo(() => {
     return colNames.indexOf('passageSeq');
   }, [colNames]);
@@ -224,6 +250,7 @@ export function ScriptureTable(props: IProps) {
     passNumCol,
     scripture,
     flat,
+    shared,
     colNames,
     findBook,
     t,
@@ -231,11 +258,8 @@ export function ScriptureTable(props: IProps) {
 
   const setChanged = (value: boolean) => {
     myChangedRef.current = value;
-    setChangedx(value);
+    toolChanged(toolId, value);
   };
-  useEffect(() => {
-    myChangedRef.current = changed;
-  }, [changed]);
 
   const handleResequence = () => {
     if (savingRef.current) {
@@ -295,9 +319,11 @@ export function ScriptureTable(props: IProps) {
       kind: flat ? IwfKind.SectionPassage : IwfKind.Passage,
       book: workflow[lastRow]?.book || workflow[lastRow - 1]?.book || '',
       reference: '',
+      mediaId: undefined,
       comment: '',
       passageUpdated: currentDateTime(),
       passageId: undefined,
+      mediaShared: shared ? IMediaShare.None : IMediaShare.NotPublic,
     } as IWorkflow;
 
     if (flat && isSectionRow(myWorkflow[index])) {
@@ -328,11 +354,14 @@ export function ScriptureTable(props: IProps) {
     setChanged(true);
   };
 
-  const addSection = (i?: number) => {
+  const addSection = (ix?: number) => {
     if (savingRef.current) {
       showMessage(t.saving);
       return;
     }
+    //find the undeleted index...
+    if (ix !== undefined) var { i } = getByIndex(workflow, ix);
+
     const sequenceNums = workflow.map((row, j) =>
       !i || j < i ? (!row.deleted && row.sectionSeq) || 0 : 0
     ) as number[];
@@ -352,11 +381,13 @@ export function ScriptureTable(props: IProps) {
     addPassageTo(newData, i);
   };
 
-  const addPassage = (i?: number, before?: boolean) => {
+  const addPassage = (ix?: number, before?: boolean) => {
     if (savingRef.current) {
       showMessage(t.saving);
       return;
     }
+    //find the undeleted index...
+    if (ix !== undefined) var { i } = getByIndex(workflow, ix);
     addPassageTo(workflow, i, before);
   };
 
@@ -511,19 +542,34 @@ export function ScriptureTable(props: IProps) {
       waitForSave(() => cb(), SaveWait);
     } else cb();
   };
-
+  const waitForPassageId = (i: number, cb: () => void) => {
+    waitForIt(
+      'passageId to be set',
+      () => {
+        return getByIndex(workflowRef.current, i).wf?.passageId !== undefined;
+      },
+      () => false,
+      SaveWait
+    ).then(() => cb());
+  };
   const handleTranscribe = (i: number) => {
-    const { wf } = getByIndex(workflow, i);
     saveIfChanged(async () => {
-      const id = wf?.passageId?.id || '';
-      const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
-      await waitForIt(
-        'busy or saving',
-        () => !globalStore.importexportBusy && !savingRef.current,
-        () => false,
-        200
-      );
-      setView(`/work/${prjId}/${passageRemoteId}`);
+      waitForPassageId(i, () => {
+        const { wf } = getByIndex(workflowRef.current, i);
+        const id = wf?.passageId?.id || '';
+        const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
+        setView(`/work/${prjId}/${passageRemoteId}`);
+      });
+    });
+  };
+  const handlePassageDetail = (i: number) => {
+    saveIfChanged(async () => {
+      waitForPassageId(i, () => {
+        const { wf } = getByIndex(workflowRef.current, i);
+        const id = wf?.passageId?.id || '';
+        const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
+        setView(`/detail/${prjId}/${passageRemoteId}`);
+      });
     });
   };
 
@@ -545,9 +591,11 @@ export function ScriptureTable(props: IProps) {
       );
       return;
     }
-    const { wf } = getByIndex(workflow, index);
     saveIfChanged(() => {
-      setAudacityItem({ wf: wf as IWorkflow, index });
+      waitForPassageId(index, () => {
+        const { wf } = getByIndex(workflowRef.current, index);
+        setAudacityItem({ wf: wf as IWorkflow, index });
+      });
     });
   };
 
@@ -567,25 +615,17 @@ export function ScriptureTable(props: IProps) {
 
   const handleAssignClose = () => () => setAssignSectionVisible(false);
 
-  const setFilename = (wf: IWorkflow | undefined) => {
-    if (wf?.passageId?.id) {
-      var passageRec = memory.cache.query((q) =>
-        q.findRecord(wf.passageId as RecordIdentity)
-      ) as Passage;
+  const showUpload = (i: number, record: boolean, list?: File[]) => {
+    waitForPassageId(i, () => {
+      const { wf } = getByIndex(workflowRef.current, i);
+      uploadItem.current = wf;
       setDefaultFilename(
-        cleanFileName(
-          (passageRec.attributes.book || '') + passageRec.attributes.reference
-        )
+        passageDefaultFilename(wf?.passageId?.id || '', memory, VernacularTag)
       );
-    }
-  };
-
-  const showUpload = (i: number, record: boolean) => {
-    const { wf } = getByIndex(workflow, i);
-    setFilename(wf);
-    uploadItem.current = wf;
-    setRecordAudio(record);
-    setUploadVisible(true);
+      setRecordAudio(record);
+      setImportList(list);
+      setUploadVisible(true);
+    });
   };
 
   const handleUploadVisible = (v: boolean) => {
@@ -598,10 +638,18 @@ export function ScriptureTable(props: IProps) {
     });
   };
 
+  const handleVersions = (i: number) => () => {
+    saveIfChanged(() => {
+      waitForPassageId(i, () => {
+        const { wf } = getByIndex(workflowRef.current, i);
+        setVersionItem(wf?.passageId?.id || '');
+      });
+    });
+  };
+
   const handleAudacityImport = (i: number, list: File[]) => {
     saveIfChanged(() => {
-      setImportList(list);
-      showUpload(i, false);
+      showUpload(i, false, list);
     });
   };
 
@@ -609,6 +657,10 @@ export function ScriptureTable(props: IProps) {
     saveIfChanged(() => {
       showUpload(i, true);
     });
+  };
+
+  const handleVerHistClose = () => {
+    setVersionItem('');
   };
 
   const updateLastModified = async () => {
@@ -664,6 +716,20 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); //do this once to get the default;
 
+  useEffect(() => {
+    if (!getStepsBusy.current) {
+      getStepsBusy.current = true;
+
+      GetOrgWorkflowSteps({ process: 'ANY' }).then(
+        (orgsteps: OrgWorkflowStep[]) => {
+          setOrgSteps(orgsteps);
+          getStepsBusy.current = false;
+        }
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workflowSteps, orgWorkflowSteps]);
+
   // Save locally or online in batches
   useEffect(() => {
     let prevSave = '';
@@ -708,21 +774,23 @@ export function ScriptureTable(props: IProps) {
         setSaving(true);
         setChanged(false);
         prevSave = lastSaved || '';
-        setLastSaved(currentDateTime());
         showMessage(t.saving);
         handleSave().then(() => {
-          saveCompleted('');
           setSaving(false);
+          setLastSaved(currentDateTime()); //force refresh the workflow
+          saveCompleted(toolId);
+          setComplete(100);
         });
       }
     };
-    if (doSave) {
+    myChangedRef.current = isChanged(toolId);
+    if (saveRequested(toolId)) {
       if (offlineOnly) {
         save();
       } else {
         checkOnline((online) => {
           if (!online) {
-            saveCompleted(ts.NoSaveOffline);
+            saveCompleted(toolId, ts.NoSaveOffline);
             showMessage(ts.NoSaveOffline);
             setSaving(false);
           } else {
@@ -732,7 +800,7 @@ export function ScriptureTable(props: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave]);
+  }, [toolsChanged]);
 
   // load data when tables change (and initally)
   useEffect(() => {
@@ -745,13 +813,23 @@ export function ScriptureTable(props: IProps) {
       !updateRef.current
     ) {
       setUpdate(true);
-      const newWorkflow = getWorkflow(plan, sections, passages, flat, memory);
+      const newWorkflow = getWorkflow(
+        plan,
+        sections,
+        passages,
+        flat,
+        shared,
+        memory,
+        orgSteps,
+        wfStr
+      );
       setWorkflow(newWorkflow);
       getLastModified(plan);
       setUpdate(false);
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [plan, sections, passages, flat]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plan, sections, passages, mediafiles, flat, shared, orgSteps, lastSaved]);
 
   interface ILocal {
     [key: string]: string;
@@ -767,7 +845,7 @@ export function ScriptureTable(props: IProps) {
       book: t.book,
       reference: t.reference,
       comment: t.description,
-      action: t.action,
+      action: t.extras,
     };
     const minWidth = {
       sectionSeq: 60,
@@ -803,23 +881,6 @@ export function ScriptureTable(props: IProps) {
   if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
-    if (
-      mediaRemoteIds &&
-      mediaRemoteIds.length > 0 &&
-      uploadItem.current !== undefined
-    ) {
-      const passId = uploadItem.current?.passageId?.id || '';
-      await attachPassage(
-        passId,
-        related(
-          passages.find((p) => p.id === passId),
-          'section'
-        ),
-        plan,
-        remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ||
-          mediaRemoteIds[0]
-      );
-    }
     uploadItem.current = undefined;
     if (importList) {
       setImportList(undefined);
@@ -850,11 +911,14 @@ export function ScriptureTable(props: IProps) {
         inlinePassages={flat}
         onTranscribe={handleTranscribe}
         onAudacity={handleAudacity}
+        onPassageDetail={handlePassageDetail}
         onAssign={handleAssign}
         onUpload={handleUpload}
         onRecord={handleRecord}
+        onHistory={handleVersions}
         lastSaved={lastSaved}
         auth={auth}
+        toolId={toolId}
         t={s}
         ts={ts}
       />
@@ -865,6 +929,7 @@ export function ScriptureTable(props: IProps) {
       />
       <Uploader
         recordAudio={recordAudio}
+        allowWave={true}
         defaultFilename={defaultFilename}
         auth={auth}
         mediaId={uploadItem.current?.mediaId?.id || ''}
@@ -872,10 +937,10 @@ export function ScriptureTable(props: IProps) {
         isOpen={uploadVisible}
         onOpen={handleUploadVisible}
         showMessage={showMessage}
-        setComplete={setComplete}
         multiple={false}
         finish={afterUpload}
-        status={status}
+        cancelled={cancelled}
+        passageId={uploadItem.current?.passageId?.id}
       />
       {audacityItem?.wf?.passageId && (
         <AudacityManager
@@ -887,12 +952,20 @@ export function ScriptureTable(props: IProps) {
           onImport={handleAudacityImport}
         />
       )}
+      <BigDialog
+        title={ts.versionHistory}
+        isOpen={versionItem !== ''}
+        onOpen={handleVerHistClose}
+      >
+        <VersionDlg auth={auth} passId={versionItem} />
+      </BigDialog>
     </div>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'scriptureTable' }),
+  wfStr: localStrings(state, { layout: 'workflowSteps' }),
   s: localStrings(state, { layout: 'planSheet' }),
   ts: localStrings(state, { layout: 'shared' }),
   lang: state.strings.lang,
@@ -916,6 +989,8 @@ const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  workflowSteps: (q: QueryBuilder) => q.findRecords('workflowstep'),
+  orgWorkflowSteps: (q: QueryBuilder) => q.findRecords('orgworkflowstep'),
 };
 
 export default withData(mapRecordsToProps)(

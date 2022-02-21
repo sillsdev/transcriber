@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useGlobal } from 'reactn';
 import { LocalKey, localUserKey } from '../utils';
@@ -10,6 +10,8 @@ import StickyRedirect from '../components/StickyRedirect';
 import Auth from '../auth/Auth';
 import { remoteId } from '../crud';
 import TeamActions from '../components/Team/TeamActions';
+import { RoleNames } from '../model';
+import { UnsavedContext } from '../context/UnsavedContext';
 
 const useStyles = makeStyles({
   root: {
@@ -37,20 +39,26 @@ export const TeamScreen = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const [view, setView] = useState('');
+  const { clearChanged } = useContext(UnsavedContext).state;
 
   useEffect(() => {
-    if (project !== '' && projRole !== '') {
+    clearChanged();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (project !== '' && projRole) {
       const remProjId = remoteId('plan', plan, memory.keyMap);
       const loc =
-        projRole === 'admin' && (!isOffline || offlineOnly)
+        projRole === RoleNames.Admin && (!isOffline || offlineOnly)
           ? `/plan/${remProjId || plan}/0`
           : `/work/${remProjId || plan}`;
-      if (loc !== localStorage.getItem(localUserKey(LocalKey.url, memory))) {
+      if (loc !== localStorage.getItem(localUserKey(LocalKey.url))) {
         setView(loc);
       } else {
-        localStorage.setItem(localUserKey(LocalKey.url, memory), '/team');
+        localStorage.setItem(localUserKey(LocalKey.url), '/team');
         if (project !== '') setProject('');
-        if (projRole !== '') setProjRole('');
+        if (projRole) setProjRole(undefined);
         if (projType !== '') setProjType('');
       }
     }

@@ -3,7 +3,7 @@ import { IMediaActionsStrings, IState } from '../../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
 import { FaPaperclip, FaUnlink } from 'react-icons/fa';
-import StopIcon from '@material-ui/icons/Stop';
+import PauseIcon from '@material-ui/icons/Pause';
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 import { isElectron } from '../../api-variable';
@@ -51,7 +51,7 @@ export function MediaActions(props: IProps) {
   const classes = useStyles();
 
   const handlePlayStatus = () => {
-    onPlayStatus(isPlaying ? '' : mediaId);
+    onPlayStatus(mediaId);
   };
 
   const handleAttach = () => {
@@ -78,11 +78,11 @@ export function MediaActions(props: IProps) {
         <IconButton
           id="audActPlayStop"
           className={classes.actionButton}
-          title={isPlaying ? t.stop : t.play}
+          title={isPlaying ? t.pause : t.play}
           disabled={(mediaId || '') === ''}
           onClick={handlePlayStatus}
         >
-          {isPlaying ? <StopIcon /> : <PlayIcon />}
+          {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </IconButton>
       )}
     </div>
@@ -91,4 +91,4 @@ export function MediaActions(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaActions' }),
 });
-export default (connect(mapStateToProps)(MediaActions) as any) as any;
+export default connect(mapStateToProps)(MediaActions) as any as any;

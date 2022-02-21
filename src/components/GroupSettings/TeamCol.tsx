@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IGroupSettingsStrings } from '../../model';
+import { IState, IGroupSettingsStrings, RoleNames } from '../../model';
 import localStrings from '../../selector/localize';
 import {
   FormLabel,
@@ -13,6 +13,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import useStyles from './GroupSettingsStyles';
 import PersonItems from './PersonItems';
+import { useRole } from '../../crud';
 
 interface IStateProps {
   t: IGroupSettingsStrings;
@@ -25,6 +26,7 @@ interface IProps extends IStateProps {
   detail: boolean;
   title: string;
   titledetail: string;
+  roledetail?: string;
   people: IPerson[];
   add: () => void;
   del?: (id: string, name: string) => void;
@@ -32,14 +34,23 @@ interface IProps extends IStateProps {
 }
 
 function TeamCol(props: IProps) {
-  const { detail, people, add, del, allUsers, title, titledetail } = props;
+  const { detail, people, add, del, allUsers, title, titledetail, roledetail } =
+    props;
   const classes = useStyles();
-  const [orgRole] = useGlobal('orgRole');
+  const [organization] = useGlobal('organization');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const { getInviteProjRole } = useRole();
 
-  const canEdit = () =>
-    !detail && orgRole === 'admin' && !allUsers && (!offline || offlineOnly);
+  const canEdit = () => {
+    const projRole = getInviteProjRole(organization);
+    return (
+      !detail &&
+      projRole === RoleNames.Admin &&
+      !allUsers &&
+      (!offline || offlineOnly)
+    );
+  };
 
   return (
     <Grid item xs={12} md={4}>
@@ -58,6 +69,9 @@ function TeamCol(props: IProps) {
             </IconButton>
           )}
         </FormLabel>
+        {roledetail && (
+          <FormLabel className={classes.label}>{roledetail}</FormLabel>
+        )}
         <List dense={true}>
           <PersonItems
             {...props}

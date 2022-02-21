@@ -49,6 +49,7 @@ const saveOfflineProject = async (
       oparray,
       memory,
       dataDate,
+      0,
       isImport
     )
   ) {
@@ -171,21 +172,25 @@ async function processData(
 
   for (let ti = 0; ti < tables.length; ti += 1) {
     const t = tables[ti];
-    var jsonData = ser.deserialize(t).data;
-    if (!Array.isArray(jsonData)) jsonData = [jsonData];
-    for (let ji = 0; ji < jsonData.length; ji += 1) {
-      const item = jsonData[ji];
-      await insertData(
-        item,
-        memory,
-        backup,
-        tb,
-        oparray,
-        orbitError,
-        false,
-        false,
-        undefined
-      );
+    try {
+      var jsonData = ser.deserialize(t).data;
+      if (!Array.isArray(jsonData)) jsonData = [jsonData];
+      for (let ji = 0; ji < jsonData.length; ji += 1) {
+        const item = jsonData[ji];
+        await insertData(
+          item,
+          memory,
+          backup,
+          tb,
+          oparray,
+          orbitError,
+          false,
+          false,
+          undefined
+        );
+      }
+    } catch {
+      //ignore it
     }
     completed += completePerTable;
     if (setCompleted && completed < 90) setCompleted(completed);
@@ -251,9 +256,13 @@ export async function LoadData(
       var transform: OrgData[] = (await remote.query(
         // eslint-disable-next-line no-loop-func
         (q: QueryBuilder) =>
-          q
-            .findRecords('orgdata')
-            .filter({ attribute: 'start-index', value: start }),
+          q.findRecords('orgdata').filter(
+            {
+              attribute: 'json',
+              value: `{version: ${backup.schema.version}}`,
+            },
+            { attribute: 'start-index', value: start }
+          ),
         {
           label: 'Get Data',
           sources: {
@@ -316,12 +325,14 @@ export async function LoadProjectData(
       var transform: ProjData[] = (await remote.query(
         // eslint-disable-next-line no-loop-func
         (q: QueryBuilder) =>
-          q
-            .findRecords('projdata')
-            .filter(
-              { attribute: 'start-index', value: start },
-              { attribute: 'project-id', value: projectid }
-            ),
+          q.findRecords('projdata').filter(
+            {
+              attribute: 'json',
+              value: `{version: ${backup.schema.version}}`,
+            },
+            { attribute: 'start-index', value: start },
+            { attribute: 'project-id', value: projectid }
+          ),
         {
           label: 'Get Project Data',
           sources: {
@@ -353,6 +364,7 @@ export async function LoadProjectData(
             oparray,
             memory,
             r.attributes.snapshotdate || currentDateTime(),
+            0,
             false
           );
           await memory.sync(await backup.push(oparray));

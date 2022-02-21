@@ -1,13 +1,14 @@
-import Memory from '@orbit/memory';
 import { isElectron } from '../api-variable';
 
 export enum LocalKey {
   time = 'lastTime',
   url = 'fromUrl',
   deeplink = 'deeplink',
+  start = 'startNext',
+  jumpBack = 'jumpBack',
 }
 
-export const localUserKey = (id: LocalKey, memory: Memory) => {
+export const localUserKey = (id: LocalKey) => {
   var userId = '';
   switch (id) {
     case LocalKey.time:

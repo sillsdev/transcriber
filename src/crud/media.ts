@@ -1,24 +1,60 @@
-import { MediaFile, Plan, Project, Passage, Section } from '../model';
+import {
+  MediaFile,
+  Plan,
+  Project,
+  Passage,
+  Section,
+  IMediaShare,
+} from '../model';
 import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { related } from '.';
+import { related, VernacularTag } from '.';
 import { cleanFileName, updateXml } from '../utils';
 import moment from 'moment';
 import eaf from '../utils/transcriptionEaf';
 import path from 'path';
 
-export const getMediaRec = (passageId: string, memory: Memory) => {
-  const mediaRecs = memory.cache.query((q: QueryBuilder) =>
-    q.findRecords('mediafile').filter({
-      relation: 'passage',
-      record: { type: 'passage', id: passageId },
-    })
-  ) as MediaFile[];
+const vernSort = (m: MediaFile) => (!related(m, 'artifactType') ? 0 : 1);
+
+export const getAllMediaRecs = (
+  passageId: string,
+  memory: Memory,
+  artifactTypeId?: string | null
+) => {
+  const mediaRecs = (
+    memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('mediafile').filter({
+        relation: 'passage',
+        record: { type: 'passage', id: passageId },
+      })
+    ) as MediaFile[]
+  )
+    .sort((a, b) => vernSort(a) - vernSort(b))
+    .sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
+  if (artifactTypeId !== undefined) {
+    return mediaRecs.filter(
+      (m) => related(m, 'artifactType') === artifactTypeId
+    );
+  }
+  return mediaRecs;
+};
+
+export const getVernacularMediaRec = (passageId: string, memory: Memory) => {
+  const mediaRecs = getAllMediaRecs(passageId, memory)
+    .filter((m) => related(m, 'artifactType') === VernacularTag)
+    .sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
+  return mediaRecs.length > 0 ? mediaRecs[0] : null;
+};
+
+export const getMediaShared = (passageId: string, memory: Memory) => {
+  const mediaRecs = getAllMediaRecs(passageId, memory);
   return mediaRecs.length > 0
-    ? mediaRecs.sort(
-        (a, b) => b.attributes.versionNumber - a.attributes.versionNumber
-      )[0]
-    : null;
+    ? mediaRecs[0].attributes.readyToShare
+      ? IMediaShare.Latest
+      : mediaRecs.findIndex((m) => m.attributes.readyToShare) > 0
+      ? IMediaShare.OldVersionOnly
+      : IMediaShare.None
+    : IMediaShare.None;
 };
 
 const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {
@@ -103,8 +139,7 @@ export const getMediaEaf = (
   let encoder = new Encoder('numerical');
 
   const mediaAttr = mediaRec && mediaRec.attributes;
-  const transcription =
-    mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
+  const transcription = mediaAttr?.transcription || '';
   const encTranscript = encoder
     .htmlEncode(transcription)
     .replace(/\([0-9]{1,2}:[0-9]{2}(:[0-9]{2})?\)/g, '');

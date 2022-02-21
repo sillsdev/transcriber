@@ -11,6 +11,8 @@ import {
   Role,
   BookName,
   ISharedStrings,
+  RoleNames,
+  MediaFile,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -33,6 +35,7 @@ import {
   passageDescription,
   passageCompare,
   useOrganizedBy,
+  usePassageState,
 } from '../crud';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 import { UpdateLastModifedBy } from '../model/baseModel';
@@ -80,53 +83,6 @@ const getChildRows = (row: any, rootRows: any[]) => {
   return childRows.length ? childRows : null;
 };
 
-const getAssignments = (
-  plan: string,
-  passages: Array<Passage>,
-  sections: Array<Section>,
-  users: Array<User>,
-  activityState: IActivityStateStrings,
-  bookData: BookName[]
-) => {
-  let sectionRow: IRow;
-  const rowData: IRow[] = [];
-  const plansections = sections
-    .filter((s) => related(s, 'plan') === plan && s.attributes)
-    .sort(sectionCompare);
-
-  plansections.forEach(function (section) {
-    sectionRow = {
-      id: section.id,
-      name: sectionDescription(section),
-      state: '',
-      editor: sectionEditorName(section, users),
-      transcriber: sectionTranscriberName(section, users),
-      passages: '0', //string so we can have blank, alternatively we could format in the tree to not show on passage rows
-      parentId: '',
-    };
-    rowData.push(sectionRow);
-    const sectionps = passages
-      .filter((p) => related(p, 'section') === section.id)
-      .sort(passageCompare);
-    sectionRow.passages = sectionps.length.toString();
-    sectionps.forEach(function (passage: Passage) {
-      const state = passage.attributes
-        ? activityState.getString(passage.attributes.state)
-        : '';
-      rowData.push({
-        id: passage.id,
-        name: passageDescription(passage, bookData),
-        state: state,
-        editor: '',
-        transcriber: '',
-        passages: '',
-        parentId: section.id,
-      } as IRow);
-    });
-  });
-  return rowData as Array<IRow>;
-};
-
 interface IStateProps {
   activityState: IActivityStateStrings;
   t: IAssignmentTableStrings;
@@ -136,6 +92,7 @@ interface IStateProps {
 
 interface IRecordProps {
   passages: Array<Passage>;
+  mediafiles: Array<MediaFile>;
   sections: Array<Section>;
   users: Array<User>;
   roles: Array<Role>;
@@ -152,6 +109,7 @@ export function AssignmentTable(props: IProps) {
     t,
     ts,
     passages,
+    mediafiles,
     sections,
     users,
     roles,
@@ -180,7 +138,7 @@ export function AssignmentTable(props: IProps) {
   ];
   const [filter, setFilter] = useState(false);
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
-
+  const getPassageState = usePassageState();
   const columnWidths = useMemo(
     () => [
       { columnName: 'name', width: 300 },
@@ -191,6 +149,43 @@ export function AssignmentTable(props: IProps) {
     ],
     [flat]
   );
+
+  const getAssignments = () => {
+    let sectionRow: IRow;
+    const rowData: IRow[] = [];
+    const plansections = sections
+      .filter((s) => related(s, 'plan') === plan && s.attributes)
+      .sort(sectionCompare);
+
+    plansections.forEach(function (section) {
+      sectionRow = {
+        id: section.id,
+        name: sectionDescription(section),
+        state: '',
+        editor: sectionEditorName(section, users),
+        transcriber: sectionTranscriberName(section, users),
+        passages: '0', //string so we can have blank, alternatively we could format in the tree to not show on passage rows
+        parentId: '',
+      };
+      rowData.push(sectionRow);
+      const sectionps = passages
+        .filter((p) => related(p, 'section') === section.id)
+        .sort(passageCompare);
+      sectionRow.passages = sectionps.length.toString();
+      sectionps.forEach(function (passage: Passage) {
+        rowData.push({
+          id: passage.id,
+          name: passageDescription(passage, allBookData),
+          state: activityState.getString(getPassageState(passage)),
+          editor: '',
+          transcriber: '',
+          passages: '',
+          parentId: section.id,
+        } as IRow);
+      });
+    });
+    return rowData as Array<IRow>;
+  };
 
   const handleAssignSection = (status: boolean) => () => {
     if (check.length === 0) {
@@ -258,24 +253,25 @@ export function AssignmentTable(props: IProps) {
   const handleFilter = () => setFilter(!filter);
 
   useEffect(() => {
-    setData(
-      getAssignments(
-        plan,
-        passages,
-        sections,
-        users,
-        activityState,
-        allBookData
-      )
-    );
-  }, [plan, passages, sections, users, roles, activityState, allBookData]);
+    setData(getAssignments());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    plan,
+    passages,
+    mediafiles,
+    sections,
+    users,
+    roles,
+    activityState,
+    allBookData,
+  ]);
 
   return (
     <div id="AssignmentTable" className={classes.container}>
       <div className={classes.paper}>
         <AppBar position="fixed" className={classes.bar} color="default">
           <div className={classes.actions}>
-            {projRole === 'admin' && (
+            {projRole === RoleNames.Admin && (
               <>
                 <Button
                   id="assignAdd"
@@ -373,6 +369,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
 
 const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   users: (q: QueryBuilder) => q.findRecords('user'),
   roles: (q: QueryBuilder) => q.findRecords('role'),

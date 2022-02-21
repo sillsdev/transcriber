@@ -1,10 +1,10 @@
 import { MediaFile } from '../model';
-import { getMediaInPlans, related } from '.';
+import { getMediaInPlans, related, VernacularTag } from '.';
 
 export const useMediaCounts = (plan: string, mediafiles: MediaFile[]) => {
-  const planMedia = (plan
-    ? getMediaInPlans([plan], mediafiles)
-    : []) as MediaFile[];
+  const planMedia = (
+    plan ? getMediaInPlans([plan], mediafiles, VernacularTag) : []
+  ) as MediaFile[];
   const attached = planMedia
     .map((m) => related(m, 'passage'))
     .filter((p) => p && p !== '');

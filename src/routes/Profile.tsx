@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
@@ -10,14 +10,13 @@ import {
   IProfileStrings,
   DigestPreference,
   OrganizationMembership,
-  Role,
-  Invitation,
+  RoleNames,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
-import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   withStyles,
   makeStyles,
@@ -41,14 +40,20 @@ import SaveIcon from '@material-ui/icons/Save';
 import Confirm from '../components/AlertDialog';
 import ParatextLinked from '../components/ParatextLinked';
 import DeleteExpansion from '../components/DeleteExpansion';
-import { related, useRole, useAddToOrgAndGroup } from '../crud';
+import {
+  related,
+  useRole,
+  useAddToOrgAndGroup,
+  RemoveUserFromOrg,
+  useTeamDelete,
+  useUser,
+} from '../crud';
 import {
   makeAbbr,
   uiLang,
   uiLangDev,
   langName,
   localeDefault,
-  useRemoteSave,
   getParatextDataPath,
   waitForIt,
 } from '../utils';
@@ -62,6 +67,8 @@ import {
 import AppHead from '../components/App/AppHead';
 import StickyRedirect from '../components/StickyRedirect';
 import { useSnackBar } from '../hoc/SnackBar';
+import SelectRole from '../control/SelectRole';
+import { UnsavedContext } from '../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -178,17 +185,16 @@ export function Profile(props: IProps) {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
-  const { getRoleRec, getMbrRoleRec } = useRole();
+  const { getUserRec } = useUser();
+  const { getMbrRoleRec } = useRole();
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [name, setName] = useState('');
   const [given, setGiven] = useState<string | null>(null);
   const [family, setFamily] = useState<string | null>(null);
   const [email, setEmail] = useState('');
-  const [timezone, setTimezone] = useState<string | null>(
-    moment.tz.guess() || ''
-  );
-  const [role, setRole] = useState('member');
+  const [timezone, setTimezone] = useState<string>(moment.tz.guess() || '');
+  const [role, setRole] = useState('');
   const [locale, setLocale] = useState<string>(localeDefault(isDeveloper));
   const [news, setNews] = useState<boolean | null>(null);
   const [digest, setDigest] = useState<DigestPreference | null>(null);
@@ -205,23 +211,30 @@ export function Profile(props: IProps) {
   const [dupName, setDupName] = useState(false);
   const [hasParatext, setHasParatext] = useState(false);
   const [view, setView] = useState('');
-  const [changed, setChanged] = useGlobal('changed');
-  const [doSave] = useGlobal('doSave');
-  const [, saveCompleted] = useRemoteSave();
+  const {
+    startSave,
+    saveCompleted,
+    toolChanged,
+    toolsChanged,
+    saveRequested,
+    isChanged,
+  } = useContext(UnsavedContext).state;
+  const [myChanged, setMyChanged] = useState(false);
   const [ptPath, setPtPath] = React.useState('');
   const { showMessage } = useSnackBar();
   const addToOrgAndGroup = useAddToOrgAndGroup();
-
+  const teamDelete = useTeamDelete();
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
   };
-
+  const toolId = 'profile';
+  const saving = useRef(false);
   const handleNameChange = (e: any) => {
     if (e.target.value === email) {
       showMessage(t.nameNotEmail);
       return;
     }
-    setChanged(true);
+    toolChanged(toolId, true);
     setName(e.target.value);
     if (
       !currentUser ||
@@ -244,55 +257,59 @@ export function Profile(props: IProps) {
   };
 
   const handleGivenChange = (e: any) => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setGiven(e.target.value);
   };
 
   const handleFamilyChange = (e: any) => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setFamily(e.target.value);
   };
 
   const handlePhoneChange = (e: any) => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setPhone(e.target.value);
   };
 
   const handleTimezoneChange = (e: any) => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setTimezone(e.target.value);
   };
 
-  const handleRoleChange = (e: any) => {
-    setChanged(true);
-    setRole(e.target.value);
+  const handleRoleChange = (e: string) => {
+    toolChanged(toolId, true);
+    setRole(e);
   };
 
   const handleLocaleChange = (e: any) => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setLocale(e.target.value);
   };
 
   const handleLockedChange = () => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setLocked(!locked);
   };
 
   const handleDigestChange = () => {
-    setChanged(true);
+    toolChanged(toolId, true);
     setDigest(
       digest ? DigestPreference.noDigest : DigestPreference.dailyDigest
     );
   };
   useEffect(() => {
-    if (doSave) {
+    if (saveRequested(toolId)) {
       handleSave();
     }
+    var changed = isChanged(toolId);
+    if (changed !== myChanged) setMyChanged(changed);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave]);
+  }, [toolsChanged]);
 
   const handleSave = () => {
-    if (changed) {
+    if (!saving.current && isChanged(toolId)) {
+      startSave(toolId);
+      saving.current = true;
       const currentUserId = currentUser === undefined ? user : currentUser.id; //currentuser will not be undefined here
       memory.update(
         (t: TransformBuilder) =>
@@ -325,40 +342,31 @@ export function Profile(props: IProps) {
         // we aren't allowing them to change owner oraganization currently
       );
       setLang(locale);
-      const newRoleRec = getRoleRec(role, true);
       const mbrRec = getMbrRoleRec(
         'organization',
         organization,
         currentUserId
       ) as OrganizationMembership[];
-      if (newRoleRec.length > 0 && mbrRec.length > 0) {
+      if (mbrRec.length > 0) {
         const curRoleId = related(mbrRec[0], 'role');
-        if (curRoleId !== newRoleRec[0].id) {
+        if (curRoleId !== role) {
           memory.update((t: TransformBuilder) =>
-            UpdateRelatedRecord(
-              t,
-              mbrRec[0],
-              'role',
-              'role',
-              newRoleRec[0].id,
-              user
-            )
+            UpdateRelatedRecord(t, mbrRec[0], 'role', 'role', role, user)
           );
-          // setOrgRole(role);
         }
       }
       if (!editId) setLanguage(locale);
-      setChanged(false);
     }
-    saveCompleted('');
+    saveCompleted(toolId);
     if (editId) {
       setEditId(null);
     }
+    saving.current = false;
     setView('Team');
   };
 
   const handleAdd = async () => {
-    if (changed) {
+    if (isChanged(toolId)) {
       let userRec: User = {
         type: 'user',
         attributes: {
@@ -388,7 +396,7 @@ export function Profile(props: IProps) {
       } else {
         addToOrgAndGroup(userRec, true);
       }
-      setChanged(false);
+      toolChanged(toolId, false);
     }
     if (finishAdd) {
       finishAdd();
@@ -400,7 +408,7 @@ export function Profile(props: IProps) {
   };
 
   const handleCancel = () => {
-    setChanged(false);
+    toolChanged(toolId, false);
     if (editId) {
       setEditId(null);
       const userId = localStorage.getItem('user-id');
@@ -416,29 +424,29 @@ export function Profile(props: IProps) {
     if (currentUser) setDeleteItem(currentUser.id);
   };
   const handleDeleteConfirmed = async () => {
-    const tb: TransformBuilder = new TransformBuilder();
-    const ops: Operation[] = [];
-    const current = users.filter((u) => u.id === deleteItem)[0];
-    /* delete any invitations for this user
-    so they can't rejoin orgs without a new invite */
-    const invites: Invitation[] = memory.cache.query((q: QueryBuilder) =>
-      q
-        .findRecords('invitation')
-        .filter({ attribute: 'email', value: current.attributes.email })
-    ) as any;
-    invites.forEach((i) =>
-      ops.push(tb.removeRecord({ type: 'invitation', id: i.id }))
-    );
-    ops.push(tb.removeRecord({ type: 'user', id: deleteItem }));
-    await memory.update(ops);
+    const deleteRec = getUserRec(deleteItem);
     const remote = coordinator.getSource('remote');
-    //wait to be sure orbit remote is done also
     await waitForIt(
-      'logout after user delete',
+      'wait for any changes to finish',
       () => !remote || !connected || remote.requestQueue.length === 0,
       () => false,
-      20
+      200
     );
+    await RemoveUserFromOrg(memory, deleteRec, undefined, user, teamDelete);
+    await memory.update((tb) =>
+      tb.removeRecord({ type: 'user', id: deleteItem })
+    );
+    //wait to be sure orbit remote is done also
+    try {
+      await waitForIt(
+        'logout after user delete',
+        () => !remote || !connected || remote.requestQueue.length === 0,
+        () => false,
+        200
+      );
+    } catch {
+      //well we tried...
+    }
     setView('Logout');
   };
   const handleDeleteRefused = () => {
@@ -505,14 +513,7 @@ export function Profile(props: IProps) {
             related(r, 'organization') === organization
         );
         if (mbrRec.length > 0) {
-          const roleId = related(mbrRec[0], 'role');
-          const roleRec = memory.cache.query((q: QueryBuilder) =>
-            q.findRecord({ type: 'role', id: roleId })
-          ) as Role;
-          const roleName = roleRec?.attributes?.roleName;
-          if (roleName) {
-            setRole(roleName);
-          }
+          setRole(related(mbrRec[0], 'role'));
         }
       }
     }
@@ -523,7 +524,7 @@ export function Profile(props: IProps) {
     setFamily(attr.familyName ? attr.familyName : '');
     setEmail(attr.email);
     setPhone(attr.phone);
-    setTimezone(attr.timezone);
+    setTimezone(attr.timezone || '');
     setLocale(attr.locale ? attr.locale : localeDefault(isDeveloper));
     setNews(attr.newsPreference);
     setDigest(attr.digestPreference);
@@ -538,10 +539,10 @@ export function Profile(props: IProps) {
   }, [user]);
 
   useEffect(() => {
-    if (timezone === null) {
+    if (timezone === '') {
       const myZone = moment.tz.guess();
       setTimezone(myZone || '');
-      setChanged(true);
+      toolChanged(toolId, true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timezone]);
@@ -570,8 +571,6 @@ export function Profile(props: IProps) {
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
   if (/access/i.test(view)) return <Redirect to="/" />;
   if (/Team/i.test(view)) return <StickyRedirect to="/team" />;
-
-  const orgRoles = ['Admin', 'Member'];
 
   return (
     <div id="Profile" className={classes.root}>
@@ -663,31 +662,15 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
-                  {orgRole === 'admin' && editId && email !== '' && (
+                  {orgRole === RoleNames.Admin && editId && email !== '' && (
                     <FormControlLabel
                       control={
-                        <TextField
-                          id="select-org-role"
-                          select
-                          label={t.role}
-                          className={classes.locale}
-                          value={role}
+                        <SelectRole
+                          org={true}
+                          initRole={role}
                           onChange={handleRoleChange}
-                          SelectProps={{
-                            MenuProps: {
-                              className: classes.menu,
-                            },
-                          }}
-                          margin="normal"
-                          variant="filled"
                           required={true}
-                        >
-                          {orgRoles.map((option: string, idx: number) => (
-                            <MenuItem key={'role' + idx} value={option}>
-                              {option}
-                            </MenuItem>
-                          ))}
-                        </TextField>
+                        />
                       }
                       label=""
                     />
@@ -778,7 +761,7 @@ export function Profile(props: IProps) {
                         }
                         label=""
                       />
-                      {orgRole === 'admin' && (
+                      {orgRole === RoleNames.Admin && (
                         <FormControlLabel
                           className={classes.textField}
                           control={
@@ -819,7 +802,12 @@ export function Profile(props: IProps) {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  disabled={!requiredComplete() || !changed || dupName}
+                  disabled={
+                    !requiredComplete() ||
+                    !myChanged ||
+                    saveRequested(toolId) ||
+                    dupName
+                  }
                   onClick={currentUser === undefined ? handleAdd : handleSave}
                 >
                   {editId && /Add/i.test(editId)
@@ -840,6 +828,7 @@ export function Profile(props: IProps) {
                 title={t.deleteUser}
                 explain={t.deleteExplained}
                 handleDelete={() => handleDelete()}
+                inProgress={deleteItem !== ''}
               />
             )}
         </div>

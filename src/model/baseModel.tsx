@@ -37,7 +37,6 @@ export const AddRecord = (
   memory.schema.initializeRecord(rec);
   if (!rec.attributes) rec.attributes = {} as any;
   rec.attributes.dateCreated = currentDateTime();
-  rec.attributes.dateUpdated = rec.attributes.dateCreated;
   return [t.addRecord(rec), ...UpdateLastModifedBy(t, rec, user)];
 };
 export const UpdateLastModifedBy = (
@@ -68,19 +67,25 @@ export const UpdateRelatedRecord = (
   rec: BaseModel,
   relationship: string,
   relatedType: string,
-  newId: string,
+  newId: string | undefined,
   user: string
 ): any => {
   rec.attributes.dateUpdated = currentDateTime();
   if (related(rec, relationship) !== undefined)
     return [
       ...UpdateLastModifedBy(t, rec, user),
-      t.replaceRelatedRecord(rec, relationship, {
-        type: relatedType,
-        id: newId,
-      }),
+      t.replaceRelatedRecord(
+        rec,
+        relationship,
+        newId
+          ? {
+              type: relatedType,
+              id: newId,
+            }
+          : null
+      ),
     ];
-  else
+  else if (newId)
     return [
       ...UpdateLastModifedBy(t, rec, user),
       t.addToRelatedRecords(rec, relationship, {

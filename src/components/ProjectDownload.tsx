@@ -18,7 +18,14 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../hoc/SnackBar';
 import Progress from '../control/UploadProgress';
 import { offlineProjectUpdateFilesDownloaded, useProjecExport } from '../crud';
-import { currentDateTime, dataPath, downloadFile, PathType } from '../utils';
+import {
+  currentDateTime,
+  dataPath,
+  downloadFile,
+  logError,
+  PathType,
+  Severity,
+} from '../utils';
 import AdmZip from 'adm-zip';
 import { Operation } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -27,6 +34,7 @@ enum Steps {
   Download,
   Import,
   Finished,
+  Error,
 }
 
 interface IStateProps {
@@ -51,6 +59,7 @@ interface IProps extends IStateProps, IDispatchProps {
 export const ProjectDownload = (props: IProps) => {
   const { open, projectIds, auth, t, ts, finish } = props;
   const { exportProject, exportComplete, exportStatus, exportFile } = props;
+  const [errorReporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
@@ -113,7 +122,7 @@ export const ProjectDownload = (props: IProps) => {
       if (exportStatus.errStatus) {
         showTitledMessage(t.error, translateError(exportStatus));
         exportComplete();
-        setBusy(false);
+        setProgress(Steps.Error);
       } else {
         if (!enableOffsite) setEnableOffsite(true);
         if (exportStatus?.statusMsg) {
@@ -129,8 +138,8 @@ export const ProjectDownload = (props: IProps) => {
         }
       }
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [exportStatus, progress]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exportFile, exportStatus]);
 
   React.useEffect(() => {
     if (progress === Steps.Download) {
@@ -139,6 +148,7 @@ export const ProjectDownload = (props: IProps) => {
         .then(() => {
           setProgress(Steps.Import);
         })
+        .catch((ex) => logError(Severity.error, errorReporter, ex))
         .finally(() => {
           URL.revokeObjectURL(exportUrl);
         });
@@ -163,7 +173,11 @@ export const ProjectDownload = (props: IProps) => {
       );
       setProgress(Steps.Prepare);
       setCurrentStep(currentStep + 1);
-    } /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    } else if (progress === Steps.Error) {
+      setProgress(Steps.Prepare);
+      setCurrentStep(currentStep + 1);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [progress]);
 
   const percent = (count: number, total: number) => {
