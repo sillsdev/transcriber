@@ -30,6 +30,7 @@ export const PassageDetailStepComplete = (props: IProps) => {
     stepComplete,
     setStepComplete,
     orgWorkflowSteps,
+    psgCompleted,
   } = usePassageDetailContext();
   const classes = useStyles();
   const [, setCurrentIndex] = useState(-1);
@@ -40,7 +41,7 @@ export const PassageDetailStepComplete = (props: IProps) => {
     setCurrentIndex(curIndex);
     setComplete(stepComplete(currentstep));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentstep, orgWorkflowSteps]);
+  }, [currentstep, orgWorkflowSteps, psgCompleted]);
 
   const handleToggleComplete = () => {
     setStepComplete(currentstep, !complete);
