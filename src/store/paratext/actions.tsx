@@ -351,6 +351,7 @@ export const syncProject =
   (
     auth: Auth,
     projectId: number,
+    typeId: number, //0 for vernacular?
     errorReporter: any,
     pendingmsg: string,
     successmsg: string
@@ -358,11 +359,15 @@ export const syncProject =
   (dispatch: any) => {
     dispatch({ payload: pendingStatus(pendingmsg), type: SYNC_PENDING });
 
-    Axios.post(API_CONFIG.host + '/api/paratext/project/' + projectId, null, {
-      headers: {
-        Authorization: 'Bearer ' + auth.accessToken,
-      },
-    })
+    Axios.post(
+      `${API_CONFIG.host}/api/paratext/project/${projectId}/${typeId}`,
+      null,
+      {
+        headers: {
+          Authorization: 'Bearer ' + auth.accessToken,
+        },
+      }
+    )
       .then((response) => {
         dispatch({ payload: successmsg, type: SYNC_SUCCESS });
         getCount(auth, projectId, errorReporter, '');
