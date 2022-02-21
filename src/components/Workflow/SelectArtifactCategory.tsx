@@ -42,6 +42,8 @@ interface IProps extends IStateProps, IRecordProps {
   required: boolean;
   allowNew?: boolean;
   scripture?: ScriptureEnum;
+  resource?: boolean;
+  discussion?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -89,6 +91,8 @@ export const SelectArtifactCategory = (props: IProps) => {
     artifactCategories,
     initCategory,
     scripture,
+    resource,
+    discussion,
   } = props;
   const classes = useStyles();
   const [categoryId, setCategoryId] = useState(initCategory);
@@ -109,9 +113,13 @@ export const SelectArtifactCategory = (props: IProps) => {
   }, [initCategory]);
 
   const getCategorys = async () => {
-    var cats = await getArtifactCategorys();
+    var cats = await getArtifactCategorys(
+      resource || false,
+      discussion || false
+    );
     if (scripture === ScriptureEnum.hide)
       cats = cats.filter((c) => !scriptureTypeCategory(c.slug));
+
     return cats;
   };
 
@@ -121,7 +129,11 @@ export const SelectArtifactCategory = (props: IProps) => {
   }, [artifactCategories]);
 
   const addNewCategory = () => {
-    addNewArtifactCategory(newArtifactCategory).then((newId) => {
+    addNewArtifactCategory(
+      newArtifactCategory,
+      resource || false,
+      discussion || false
+    ).then((newId) => {
       if (newId) {
         if (newId === 'duplicate') {
           showMessage(t.duplicateCategory);

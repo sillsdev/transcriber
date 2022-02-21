@@ -55,6 +55,7 @@ const Secondary = ({ id, idx, fileName, onCategory }: SecondaryProps) => {
         onCategoryChange={handleCategory}
         required={false}
         scripture={ScriptureEnum.highlight}
+        resource={true}
       />
     </div>
   );

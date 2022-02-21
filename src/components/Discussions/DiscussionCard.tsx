@@ -674,6 +674,7 @@ export const DiscussionCard = (props: IProps) => {
                 }
                 required={false}
                 scripture={ScriptureEnum.hide}
+                discussion={true}
               />
               <div className={classes.row}>
                 <Button
