@@ -179,7 +179,7 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 }
 
 export function PassageDetailItem(props: IProps) {
-  const { auth, t, ts, width, slugs } = props;
+  const { auth, t, ts, width, slugs, mediafiles } = props;
   const { pathname } = useLocation();
   const [view, setView] = useState('');
   const [reporter] = useGlobal('errorReporter');
@@ -215,7 +215,7 @@ export function PassageDetailItem(props: IProps) {
   const { toolChanged, toolsChanged, startSave, saveCompleted, saveRequested } =
     useContext(UnsavedContext).state;
 
-  const { getTypeId, localizedArtifactType } = useArtifactType();
+  const { getTypeId, slugFromId, localizedArtifactType } = useArtifactType();
   const { showMessage } = useSnackBar();
   const [recordType, setRecordType] = useState<ArtifactTypeSlug>(slugs[0]);
   const [currentVersion, setCurrentVersion] = useState(1);
@@ -350,14 +350,20 @@ export function PassageDetailItem(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [playItem]
   );
+  const playType = useMemo(() => {
+    var pi = mediafiles.find((m) => m.id === playItem);
+    if (pi) return slugFromId(related(pi, 'artifactType'));
+    return '';
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playItem, mediafiles]);
+
   const onRecordingOrPlaying = (doingsomething: boolean) => {
     if (doingsomething) {
       setPlaying(false); //stop the vernacular
     }
   };
 
-  if (view)
-    return <StickyRedirect to={`${view}/${recordType}/${playItemId}`} />;
+  if (view) return <StickyRedirect to={`${view}/${playType}/${playItemId}`} />;
 
   return (
     <div>
