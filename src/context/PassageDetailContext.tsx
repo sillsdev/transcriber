@@ -38,6 +38,7 @@ import {
   getTool,
   ToolSlug,
   getStepComplete,
+  usePlanType,
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
@@ -252,6 +253,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const currentSegmentRef = useRef<IRegion | undefined>();
     const { startSave, clearChanged, waitForSave } =
       useContext(UnsavedContext).state;
+    const [plan] = useGlobal('plan');
+    const getPlanType = usePlanType();
 
     const handleSetCurrentStep = (stepId: string) => {
       var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
@@ -701,25 +704,31 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       if (!getStepsBusy.current) {
         getStepsBusy.current = true;
 
+        const { scripture } = getPlanType(plan);
         GetOrgWorkflowSteps({ process: 'ANY' }).then(
           (orgsteps: OrgWorkflowStep[]) => {
             setOrgWorkflowSteps(orgsteps);
-            wf = orgsteps.map((s) => {
-              const camelName = toCamel(s.attributes.name);
-              return {
-                id: s.id,
-                label: wfStr.hasOwnProperty(camelName)
-                  ? wfStr.getString(camelName)
-                  : s.attributes.name,
-              };
-            });
+            wf = orgsteps
+              .filter(
+                (s) =>
+                  scripture || toCamel(s.attributes.name) !== 'syncToParatext'
+              )
+              .map((s) => {
+                const camelName = toCamel(s.attributes.name);
+                return {
+                  id: s.id,
+                  label: wfStr.hasOwnProperty(camelName)
+                    ? wfStr.getString(camelName)
+                    : s.attributes.name,
+                };
+              });
             setState((state: ICtxState) => ({ ...state, workflow: wf }));
             getStepsBusy.current = false;
           }
         );
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [workflowSteps, orgWorkflowSteps]);
+    }, [workflowSteps, orgWorkflowSteps, plan]);
 
     useEffect(() => {
       if (state.currentstep === '' && state.orgWorkflowSteps.length > 0) {
