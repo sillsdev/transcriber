@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import {
   IState,
   ICardsStrings,
@@ -31,7 +32,7 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import UncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import CheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import { isElectron } from '../../api-variable';
-import { useOfflnProjRead, useProjectType } from '../../crud';
+import { useOfflnProjRead, useProjectType, ArtifactTypeSlug } from '../../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -91,6 +92,7 @@ export function ProjectMenu(props: IProps) {
   const classes = useStyles();
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const { pathname } = useLocation();
   const { getProjType } = useProjectType();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const offlineProjectRead = useOfflnProjRead();
@@ -167,14 +169,16 @@ export function ProjectMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={tpb.reports} />
         </StyledMenuItem>
-        {projectType.toLowerCase() === 'scripture' && (
-          <StyledMenuItem id="projMenuInt" onClick={handle('integration')}>
-            <ListItemIcon>
-              <ParatextLogo />
-            </ListItemIcon>
-            <ListItemText primary={tpb.integrations} />
-          </StyledMenuItem>
-        )}
+        {projectType.toLowerCase() === 'scripture' &&
+          pathname.indexOf(ArtifactTypeSlug.Retell) === -1 &&
+          pathname.indexOf(ArtifactTypeSlug.QandA) === -1 && (
+            <StyledMenuItem id="projMenuInt" onClick={handle('integration')}>
+              <ListItemIcon>
+                <ParatextLogo />
+              </ListItemIcon>
+              <ListItemText primary={tpb.integrations} />
+            </StyledMenuItem>
+          )}
         {isOwner && !inProject && (
           <StyledMenuItem id="projMenuImp" onClick={handle('import')}>
             <ListItemIcon>

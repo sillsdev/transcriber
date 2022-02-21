@@ -21,7 +21,7 @@ export const useOfflnMediafileCreate = (
     version: number,
     size: number,
     passageId: string,
-    artifactTypeId: string,
+    artifactTypeId: string | null,
     sourceMediaId: string,
     recordedbyUserId: string
   ) => {

@@ -8,7 +8,8 @@ import { getReadWriteProg } from './paratextPath';
 
 interface PassageInfo {
   passage: Passage;
-  mediafile: MediaFile;
+  mediaId: string;
+  transcription: string;
 }
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 const ipc = isElectron ? require('electron').ipcRenderer : null;
@@ -384,7 +385,7 @@ const ParseTranscription = (currentPassage: Passage, transcription: string) => {
 };
 const postPass = (doc: Document, currentPI: PassageInfo, memory: Memory) => {
   //get transcription
-  var transcription = currentPI.mediafile.attributes.transcription || '';
+  var transcription = currentPI.transcription;
   var parsed = ParseTranscription(currentPI.passage, transcription);
   if (parsed.length > 1) {
     //remove original range if it exists and we're replacing with multiple
@@ -586,7 +587,7 @@ const doChapter = async (
     var cmt = p.passage.attributes.lastComment;
     p.passage.attributes.lastComment = '';
     UpdateMediaStateOps(
-      p.mediafile.id,
+      p.mediaId,
       p.passage.id,
       ActivityStates.Done,
       userId,
@@ -621,6 +622,7 @@ export const localSync = async (
   memory: Memory,
   userId: string,
   artifactId: string | null,
+  getTranscription: (passId: string, artifactId: string | null) => string,
   checkVersion: boolean
 ) => {
   let chapChg: { [key: string]: PassageInfo[] } = {};
@@ -646,7 +648,15 @@ export const localSync = async (
     }
     if (newer.length === 0) {
       const passage = passages.find((p) => p.id === passageId);
-      if (passage) ready.push({ passage: passage, mediafile: pr });
+      if (passage)
+        ready.push({
+          passage: passage,
+          mediaId: pr.id,
+          transcription: getTranscription(passage.id, artifactId).replace(
+            '\n',
+            ' '
+          ),
+        });
     }
   });
   ready.forEach((r) => {

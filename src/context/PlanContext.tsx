@@ -6,8 +6,6 @@ import { connect } from 'react-redux';
 import {
   IState,
   IMainStrings,
-  Plan,
-  PlanType,
   IProjButtonsStrings,
   Project,
   RoleNames,
@@ -15,7 +13,7 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { related, usePlan } from '../crud';
+import { usePlanType } from '../crud';
 import { useCheckOnline, useInterval } from '../utils';
 import Auth from '../auth/Auth';
 import * as actions from '../store';
@@ -76,7 +74,7 @@ const PlanProvider = withData(mapRecordsToProps)(
     const [projRole] = useGlobal('projRole');
     const [isOffline] = useGlobal('offline');
     const [offlineOnly] = useGlobal('offlineOnly');
-    const { getPlan } = usePlan();
+    const getPlanType = usePlanType();
     const [readonly, setReadOnly] = useState(
       (isOffline && !offlineOnly) || projRole !== RoleNames.Admin
     );
@@ -87,18 +85,7 @@ const PlanProvider = withData(mapRecordsToProps)(
     const checkOnline = useCheckOnline(resetOrbitError);
 
     useEffect(() => {
-      let planRec: Plan | null = null;
-      if (plan && plan !== '') planRec = getPlan(plan);
-      const typeId = planRec && related(planRec, 'plantype');
-      let typeRec: PlanType | null = null;
-      if (typeId)
-        typeRec = memory.cache.query((q: QueryBuilder) =>
-          q.findRecord({ type: 'plantype', id: typeId })
-        ) as PlanType;
-      const flat = planRec ? planRec?.attributes?.flat : false;
-      const scripture = typeRec
-        ? typeRec?.attributes?.name?.toLowerCase()?.indexOf('scripture') !== -1
-        : false;
+      const { scripture, flat } = getPlanType(plan);
       if (flat !== state.flat || scripture !== state.scripture)
         setState((state) => ({ ...state, flat, scripture }));
       // eslint-disable-next-line react-hooks/exhaustive-deps

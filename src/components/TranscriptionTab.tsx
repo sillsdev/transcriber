@@ -35,8 +35,6 @@ import {
   DialogContentText,
   DialogActions,
   AppBar,
-  TextField,
-  MenuItem,
 } from '@material-ui/core';
 // import CopyIcon from '@material-ui/icons/FileCopy';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -72,6 +70,7 @@ import IndexedDBSource from '@orbit/indexeddb';
 import { dateOrTime } from '../utils';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 import AudioDownload from './AudioDownload';
+import { SelectExportType } from '../control';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -229,7 +228,7 @@ export function TranscriptionTab(props: IProps) {
   const [fingerprint] = useGlobal('fingerprint');
   const getOfflineProject = useOfflnProjRead();
   const [globalStore] = useGlobal();
-  const { getTypeId, localizedArtifactType } = useArtifactType();
+  const { getTypeId } = useArtifactType();
   const [exportTypes] = useState<ArtifactTypeSlug[]>([
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.Retell,
@@ -239,7 +238,7 @@ export function TranscriptionTab(props: IProps) {
   const [exportType, setExportType] = useState<ArtifactTypeSlug>(
     exportTypes[0]
   );
-  const getTranscription = useTranscription();
+  const getTranscription = useTranscription(true);
   const columnDefs = [
     { name: 'name', title: getOrganizedBy(true) },
     { name: 'state', title: t.sectionstate },
@@ -398,10 +397,6 @@ export function TranscriptionTab(props: IProps) {
 
   const handleCloseTranscription = () => {
     setPassageId('');
-  };
-
-  const handleExportType = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setExportType(e.target.value as ArtifactTypeSlug);
   };
 
   const hasTranscription = (passageId: string) => {
@@ -737,18 +732,11 @@ export function TranscriptionTab(props: IProps) {
               </Button>
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
-            <TextField
-              select
-              value={exportType}
-              onChange={handleExportType}
-              className={classes.typeSelect}
-            >
-              {exportTypes.map((t) => (
-                <MenuItem key={t} value={t}>
-                  {localizedArtifactType(t)}
-                </MenuItem>
-              ))}
-            </TextField>
+            <SelectExportType
+              exportType={exportType}
+              exportTypes={exportTypes}
+              setExportType={setExportType}
+            />
             <Button
               id="transFilt"
               key="filter"

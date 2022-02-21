@@ -61,7 +61,7 @@ function TranscriptionShow(props: IProps) {
   const [transcription, setTranscription] = useState('');
   const [fontData, setFontData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
-  const getTranscription = useTranscription();
+  const getTranscription = useTranscription(true);
   const loadStatus = (status: string) => {
     setFontStatus(status);
   };

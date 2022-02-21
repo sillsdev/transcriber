@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import * as actions from '../store';
 import { useGlobal, useState } from 'reactn';
 import { connect } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import {
   IState,
   IIntegrationStrings,
@@ -9,6 +10,7 @@ import {
   Passage,
   ISharedStrings,
   MediaFile,
+  ActivityStates,
 } from '../model';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -46,7 +48,9 @@ import {
   related,
   useOfflnProjRead,
   remoteId,
-  VernacularTag,
+  ArtifactTypeSlug,
+  useArtifactType,
+  useTranscription,
 } from '../crud';
 import { localSync, getParatextDataPath, useCheckOnline } from '../utils';
 import Auth from '../auth/Auth';
@@ -60,6 +64,7 @@ import localStrings from '../selector/localize';
 import { doDataChanges } from '../hoc/DataChanges';
 import Memory from '@orbit/memory';
 import { translateParatextError } from '../utils/translateParatextError';
+import { SelectExportType } from '../control';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -184,6 +189,7 @@ export function IntegrationPanel(props: IProps) {
     props;
   const classes = useStyles();
   const [connected] = useGlobal('connected');
+  const { pathname } = useLocation();
   const [hasPtProj, setHasPtProj] = useState(false);
   const [ptProj, setPtProj] = useState(-1);
   const [ptProjName, setPtProjName] = useState('');
@@ -214,6 +220,18 @@ export function IntegrationPanel(props: IProps) {
   const setSyncing = (state: boolean) => (syncing.current = state);
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const checkOnline = useCheckOnline(resetOrbitError);
+  const [exportTypes] = useState([
+    ArtifactTypeSlug.Vernacular,
+    ArtifactTypeSlug.BackTranslation,
+  ]);
+  const [exportType, setExportType] = useState(
+    pathname.indexOf(ArtifactTypeSlug.BackTranslation) !== -1
+      ? ArtifactTypeSlug.BackTranslation
+      : exportTypes[0]
+  );
+  const { getTypeId } = useArtifactType();
+  const getTranscription = useTranscription(false, ActivityStates.Approved);
+
   const getProject = () => {
     if (!project) return undefined;
     const projfind: Project[] = projects.filter((p) => p.id === project);
@@ -355,8 +373,9 @@ export function IntegrationPanel(props: IProps) {
       passages,
       memory,
       user,
-      VernacularTag,
-      true // check version of vernacular
+      getTypeId(exportType),
+      getTranscription,
+      true // check version
     );
     showMessage(err || t.syncComplete);
     resetCount();
@@ -389,12 +408,27 @@ export function IntegrationPanel(props: IProps) {
       : t.offline;
   };
   const findConnectedProject = () => {
-    let index = paratext_projects.findIndex(
-      (p) =>
-        p.ProjectIds.indexOf(
-          remoteId('project', project, memory.keyMap) || project
-        ) >= 0
-    );
+    if (paratext_projects.length === 0) return;
+    const curInt = projectintegrations.filter(
+      (pi) =>
+        related(pi, 'integration') === paratextIntegration &&
+        pi.attributes &&
+        related(pi, 'project') === project
+    ) as ProjectIntegration[];
+    let index = 0;
+    if (curInt.length > 0) {
+      index = paratext_projects.findIndex((p) => {
+        const settings = JSON.parse(curInt[0].attributes.settings);
+        return p.Name === settings.name;
+      });
+    }
+    if (curInt.length === 0 || index === -1) {
+      index = paratext_projects.findIndex(
+        (p) =>
+          Boolean(p.BaseProject) ===
+          (exportType === ArtifactTypeSlug.BackTranslation)
+      );
+    }
     setPtProj(index);
     setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
     setPtShortName(index >= 0 ? paratext_projects[index].ShortName : '');
@@ -438,6 +472,7 @@ export function IntegrationPanel(props: IProps) {
       resetProjects();
       resetCount();
       setMyProject(project);
+      resetSync();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
@@ -445,18 +480,32 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     resetCount();
     if (plan)
-      getLocalCount(mediafiles, plan, memory, errorReporter, t, VernacularTag);
+      getLocalCount(
+        mediafiles,
+        plan,
+        memory,
+        errorReporter,
+        t,
+        getTypeId(exportType)
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediafiles, plan]);
+  }, [mediafiles, plan, exportType]);
 
   /* do this once */
   useEffect(() => {
-    if (integrations.length > 0 && !paratextIntegration) {
-      resetSync();
-      getParatextIntegration(offline ? 'paratextLocal' : 'paratext');
+    if (integrations.length > 0) {
+      getParatextIntegration(
+        exportType === ArtifactTypeSlug.BackTranslation && offline
+          ? 'paratextlocalbacktranslation'
+          : exportType === ArtifactTypeSlug.BackTranslation
+          ? 'paratextbacktranslation'
+          : offline
+          ? 'paratextLocal'
+          : 'paratext'
+      );
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [integrations, paratextIntegration]);
+  }, [integrations, exportType]);
 
   useEffect(() => {
     if (paratext_countStatus) {
@@ -496,11 +545,11 @@ export function IntegrationPanel(props: IProps) {
         const langTag =
           proj && proj.attributes ? proj.attributes.language : undefined;
         if (offline) {
-          const localprojs: ProjectIntegration[] = projectintegrations.filter(
+          const localprojs = projectintegrations.filter(
             (pi) =>
               related(pi, 'integration') === paratextIntegration &&
               pi.attributes
-          );
+          ) as ProjectIntegration[];
           var projIds = localprojs.map((pi) => {
             var settings = JSON.parse(pi.attributes.settings);
             return {
@@ -528,12 +577,12 @@ export function IntegrationPanel(props: IProps) {
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [busy, paratext_projects, paratext_projectsStatus]);
+  }, [busy, paratext_projects, paratext_projectsStatus, paratextIntegration]);
 
   useEffect(() => {
     if (project) findConnectedProject();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectintegrations, project]);
+  }, [projectintegrations, paratext_projects, paratextIntegration, project]);
 
   useEffect(() => {
     if (paratext_syncStatus) {
@@ -546,7 +595,6 @@ export function IntegrationPanel(props: IProps) {
       }
       if (paratext_syncStatus.complete) {
         resetCount();
-        resetSync();
         setSyncing(false);
         doDataChanges(
           auth,
@@ -765,6 +813,22 @@ export function IntegrationPanel(props: IProps) {
         </AccordionSummary>
         <AccordionDetails className={classes.panel}>
           <List dense component="div">
+            <ListItem key="export-type">
+              <ListItemAvatar>
+                <Avatar className={classes.avatar}>
+                  <CheckIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <SelectExportType
+                    exportType={exportType}
+                    exportTypes={exportTypes}
+                    setExportType={setExportType}
+                  />
+                }
+              />
+            </ListItem>
             <ListItem key="installed">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>

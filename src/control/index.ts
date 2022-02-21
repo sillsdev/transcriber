@@ -15,3 +15,4 @@ export * from './CheckedChoice';
 export * from './Stage';
 export * from './StageReport';
 export * from './MediaDescription';
+export * from './SelectExportType';

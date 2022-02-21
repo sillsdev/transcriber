@@ -90,33 +90,33 @@ export const useArtifactType = () => {
   };
 
   const getTypeId = (typeSlug: string) => {
-    var types = memory.cache.query((q: QueryBuilder) =>
+    if (typeSlug === ArtifactTypeSlug.Vernacular) return null;
+    const types = memory.cache.query((q: QueryBuilder) =>
       q
         .findRecords('artifacttype')
         .filter({ attribute: 'typename', value: typeSlug })
     ) as ArtifactType[];
-    var v = types.find((r) => Boolean(r?.keys?.remoteId) !== offlineOnly);
-    if (v) return v.id;
-    return '';
+    const v = types.find((r) => Boolean(r?.keys?.remoteId) !== offlineOnly);
+    return v?.id || '';
   };
 
   const commentId = useMemo(() => {
-    return getTypeId(ArtifactTypeSlug.Comment);
+    return getTypeId(ArtifactTypeSlug.Comment) as string;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offlineOnly]);
 
   const retellId = useMemo(() => {
-    return getTypeId(ArtifactTypeSlug.Retell);
+    return getTypeId(ArtifactTypeSlug.Retell) as string;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offlineOnly]);
 
   const qAndaId = useMemo(() => {
-    return getTypeId(ArtifactTypeSlug.QandA);
+    return getTypeId(ArtifactTypeSlug.QandA) as string;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offlineOnly]);
 
   const backTranslationId = useMemo(() => {
-    return getTypeId(ArtifactTypeSlug.BackTranslation);
+    return getTypeId(ArtifactTypeSlug.BackTranslation) as string;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offlineOnly]);
 
