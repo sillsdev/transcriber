@@ -218,9 +218,8 @@ export const DiscussionCard = (props: IProps) => {
   const {
     currentstep,
     mediafileId,
-    mediaPlaying,
+    playItem,
     setPlayerSegments,
-
     setMediaSelected,
     currentSegment,
   } = ctx.state;
@@ -724,7 +723,7 @@ export const DiscussionCard = (props: IProps) => {
                           className={classes.actionButton}
                           onClick={handlePlayOldClip}
                         >
-                          {mediaPlaying ? (
+                          {playItem === related(discussion, 'mediafile') ? (
                             <StopIcon fontSize="small" />
                           ) : (
                             <PlayIcon fontSize="small" />
