@@ -280,7 +280,7 @@ const initialState = {
 	"filterMenu": new LocalizedStrings({
 		"en": {
 			"all": "All",
-			"allPassages": "All Passages",
+			"allPassages": "All Passages on all team projects",
 			"allSteps": "All Steps",
 			"category": "Category",
 			"forYou": "For You",

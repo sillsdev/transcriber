@@ -1083,8 +1083,8 @@
    	</unit>
    	<unit id="filterMenu.allPassages">
    		<segment>
-   			<source>All Passages</source>
-   			<target>Tous les passages</target>
+   			<source>All Passages on all team projects</source>
+   			<target>Tous les Passages sur tous les projets de l'équipe</target>
    		</segment>
    	</unit>
    	<unit id="filterMenu.allSteps">

@@ -1082,8 +1082,8 @@
    	</unit>
    	<unit id="filterMenu.allPassages">
    		<segment>
-   			<source>All Passages</source>
-   			<target>Все отрывки</target>
+   			<source>All Passages on all team projects</source>
+   			<target>Все переходы по всем командным проектам</target>
    		</segment>
    	</unit>
    	<unit id="filterMenu.allSteps">
