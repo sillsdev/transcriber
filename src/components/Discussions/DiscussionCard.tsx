@@ -779,7 +779,12 @@ export const DiscussionCard = (props: IProps) => {
             )}
             {step && <StageReport step={step} />}
             {reference && (
-              <Typography variant="body2" component="p" className={classes.ref}>
+              <Typography
+                variant="body2"
+                component="p"
+                title={reference}
+                className={classes.ref}
+              >
                 {reference}
               </Typography>
             )}
