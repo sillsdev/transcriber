@@ -297,9 +297,9 @@ export function useWaveSurfer(
     }
   };
 
-  const wsLoadRegions = (regions: string) => {
+  const wsLoadRegions = (regions: string, loop: boolean) => {
     if (wavesurfer()?.isReady) {
-      loadRegions(JSON.parse(regions), false);
+      loadRegions(JSON.parse(regions), loop);
       regionsLoadedRef.current = true;
     } else {
       inputRegionsRef.current = JSON.parse(regions);
