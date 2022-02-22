@@ -422,7 +422,7 @@ function WSAudioPlayer(props: IProps) {
   useEffect(() => {
     if (segments !== segmentsRef.current) {
       segmentsRef.current = segments;
-      if (ready) {
+      if (ready && segmentsRef.current !== wsGetRegions()) {
         wsLoadRegions(segments, loopingRef.current);
         var regions = JSON.parse(segments)?.regions;
         if (regions) {
