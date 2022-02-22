@@ -93,6 +93,7 @@ interface IProps extends IStateProps, IDispatchProps {
   size?: number;
   doReset?: boolean;
   setDoReset?: (r: boolean) => void;
+  preload?: boolean;
 }
 
 function MediaRecord(props: IProps) {
@@ -121,6 +122,7 @@ function MediaRecord(props: IProps) {
     resetConvertBlob,
     size,
     metaData,
+    preload,
   } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -347,6 +349,13 @@ function MediaRecord(props: IProps) {
     ) as MediaFile;
     setName(removeExtension(mediaRec.attributes.originalFile).name);
   };
+
+  useEffect(() => {
+    if (preload && !loading) {
+      handleLoadAudio();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [preload]);
 
   return (
     <Paper>
