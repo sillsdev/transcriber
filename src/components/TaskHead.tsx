@@ -62,7 +62,7 @@ export function TaskHead(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [menuItem, setMenuItem] = React.useState(null);
   const { getOrganizedBy } = useOrganizedBy();
-  const { userCanTranscribe } = useRole();
+  const { userCanBeEditor } = useRole();
 
   const t = taskItemStr;
   const ts = sharedStr;
@@ -148,7 +148,7 @@ export function TaskHead(props: IProps) {
               (editAction === unassignAction &&
                 editor !== user &&
                 projRole !== RoleNames.Admin) ||
-              (editAction === assignAction && userCanTranscribe())
+              (editAction === assignAction && !userCanBeEditor())
             }
           >
             {
