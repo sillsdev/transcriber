@@ -56,11 +56,11 @@ export function PassageDetailPlayer(props: IProps) {
           .sort((a: IRegion, b: IRegion) => a.start - b.start)
           .findIndex((r: IRegion) => r.start === segment.start) + 1;
     }
-    console.log('index', index);
     setCurrentSegment && setCurrentSegment(segment, index);
   };
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
+    setDefaultSegments(segments); //now we'll notice if we reset them in SetPlayerSegments
     if (saveSegments) {
       toolChanged(toolId);
     } else {
