@@ -14,7 +14,6 @@ import {
   remoteIdNum,
   useArtifactType,
   useOfflnMediafileCreate,
-  VernacularTag,
 } from '../crud';
 import Auth from '../auth/Auth';
 import Memory from '@orbit/memory';
