@@ -1082,8 +1082,8 @@
    	</unit>
    	<unit id="filterMenu.allPassages">
    		<segment>
-   			<source>All Passages</source>
-   			<target>Все отрывки</target>
+   			<source>All Passages on all team projects</source>
+   			<target>Все переходы по всем командным проектам</target>
    		</segment>
    	</unit>
    	<unit id="filterMenu.allSteps">
@@ -2828,8 +2828,8 @@
       </unit>
       <unit id="newProject.general">
          <segment>
-            <source>General Transcription</source>
-            <target>Общая транскрипция</target>
+         	<source>General Quick Start</source>
+         	<target>Общий краткий старт</target>
          </segment>
       </unit>
       <unit id="newProject.generalFactor1">
@@ -2882,8 +2882,8 @@
       </unit>
       <unit id="newProject.scripture">
          <segment>
-            <source>Scripture Transcription</source>
-            <target>Транскрипция Писания</target>
+         	<source>Scripture Quick Start</source>
+         	<target>Краткое начало Писания</target>
          </segment>
       </unit>
       <unit id="newProject.scriptureFactor1">
@@ -2895,7 +2895,7 @@
       <unit id="newProject.scriptureFactor2">
          <segment>
             <source>Workflow syncs with Paratext for checking</source>
-            <target>Рабочий процесс синхронизируется с Paratext для проверки</target>
+         	<target>Рабочий процесс синхронизируется с Paratext</target>
          </segment>
       </unit>
       <unit id="newProject.scriptureTip">
@@ -5121,7 +5121,7 @@
       <unit id="wsAudioPlayer.deleteRegion">
          <segment>
             <source>Delete Region</source>
-            <target>Удалить регион</target>
+         	<target>Удалить регион</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.endTip">
@@ -5156,8 +5156,8 @@
       </unit>
       <unit id="wsAudioPlayer.nextRegion">
          <segment>
-            <source>Next Region [{0}]</source>
-            <target>Следующий регион [{0}]</target>
+            <source>Next Segment [{0}]</source>
+         	<target>Следующий сегмент [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.pauseRecord">
@@ -5180,8 +5180,8 @@
       </unit>
       <unit id="wsAudioPlayer.prevRegion">
          <segment>
-            <source>Previous Region [{0}]</source>
-            <target>Предыдущий регион [{0}]</target>
+            <source>Previous Segment [{0}]</source>
+         	<target>Предыдущий сегмент [{0}]</target>
           </segment>
       </unit>
       <unit id="wsAudioPlayer.record">

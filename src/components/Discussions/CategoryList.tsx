@@ -54,7 +54,7 @@ export function CategoryList(props: IProps) {
   }
 
   useEffect(() => {
-    if (catFilter.length === 0 && artifactCategory.length !== 0) {
+    if (artifactCategory.length !== 0) {
       const catCount: CatCount = {};
       discussions
         .filter((d) => discussionOrg(d) === organization)

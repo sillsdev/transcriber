@@ -3,6 +3,7 @@ import {
   IconButton,
   makeStyles,
   MenuItem,
+  Paper,
   TextField,
   Theme,
 } from '@material-ui/core';
@@ -221,31 +222,33 @@ export const SelectArtifactCategory = (props: IProps) => {
           )}
       </TextField>
       {showNew && (
-        <div className={classes.row}>
-          <TextField
-            id="new-artifact-cat"
-            label={t.newArtifactCategory}
-            className={classes.newTextField}
-            value={newArtifactCategory}
-            onChange={handleNewArtifactCategoryChange}
-          ></TextField>
-          <IconButton
-            id="addnew"
-            color="secondary"
-            aria-label="addnew"
-            onClick={addNewCategory}
-          >
-            <AddIcon />
-          </IconButton>
-          <IconButton
-            id="cancelnew"
-            color="secondary"
-            aria-label="cancelnew"
-            onClick={cancelNewCategory}
-          >
-            <CancelIcon />
-          </IconButton>
-        </div>
+        <Paper>
+          <div className={classes.row}>
+            <TextField
+              id="new-artifact-cat"
+              label={t.newArtifactCategory}
+              className={classes.newTextField}
+              value={newArtifactCategory}
+              onChange={handleNewArtifactCategoryChange}
+            ></TextField>
+            <IconButton
+              id="addnew"
+              color="secondary"
+              aria-label="addnew"
+              onClick={addNewCategory}
+            >
+              <AddIcon />
+            </IconButton>
+            <IconButton
+              id="cancelnew"
+              color="secondary"
+              aria-label="cancelnew"
+              onClick={cancelNewCategory}
+            >
+              <CancelIcon />
+            </IconButton>
+          </div>
+        </Paper>
       )}
     </div>
   );

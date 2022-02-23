@@ -198,6 +198,7 @@ export const AudioTable = (props: IProps) => {
   };
 
   const playEnded = () => {
+    setPlayItem('');
     setMediaPlaying(false);
   };
 
@@ -225,7 +226,7 @@ export const AudioTable = (props: IProps) => {
         attached={Boolean(row.passId)}
         onAttach={onAttach}
         onPlayStatus={handleSelect}
-        isPlaying={playItem === mediaId && mediaPlaying}
+        isPlaying={playItem === row.id && mediaPlaying}
       />
     </Table.Cell>
   );

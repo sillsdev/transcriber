@@ -1082,8 +1082,8 @@
    	</unit>
    	<unit id="filterMenu.allPassages">
    		<segment>
-   			<source>All Passages</source>
-   			<target>Todas as passagens</target>
+   			<source>All Passages on all team projects</source>
+   			<target>Todas as passagens em todos os projetos da equipe</target>
    		</segment>
    	</unit>
    	<unit id="filterMenu.allSteps">
@@ -2822,8 +2822,8 @@
       </unit>
       <unit id="newProject.general">
          <segment>
-            <source>General Transcription</source>
-            <target>Transcrição geral</target>
+         	<source>General Quick Start</source>
+         	<target>Início rápido geral</target>
          </segment>
       </unit>
       <unit id="newProject.generalFactor1">
@@ -2876,8 +2876,8 @@
       </unit>
       <unit id="newProject.scripture">
          <segment>
-            <source>Scripture Transcription</source>
-            <target>Transcrição das Escrituras</target>
+         	<source>Scripture Quick Start</source>
+         	<target>Início Rápido das Escrituras</target>
          </segment>
       </unit>
       <unit id="newProject.scriptureFactor1">
@@ -2889,7 +2889,7 @@
       <unit id="newProject.scriptureFactor2">
          <segment>
             <source>Workflow syncs with Paratext for checking</source>
-            <target>Sincronização do fluxo de trabalho com Paratext para verificação</target>
+         	<target>Sincronização do fluxo de trabalho com o Paratext</target>
          </segment>
       </unit>
       <unit id="newProject.scriptureTip">
@@ -5108,14 +5108,14 @@
       </unit>
       <unit id="wsAudioPlayer.prevRegion">
          <segment>
-            <source>Previous Region [{0}]</source>
-            <target>Região Anterior [{0}]</target>
+            <source>Previous Segment [{0}]</source>
+            <target>Segmento Anterior [{0}]</target>
           </segment>
       </unit>
       <unit id="wsAudioPlayer.nextRegion">
          <segment>
-            <source>Next Region [{0}]</source>
-            <target>Próximo região [{0}]</target>
+            <source>Next Segment [{0}]</source>
+            <target>Próximo segmento [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.deleteRecording">
@@ -5127,7 +5127,7 @@
       <unit id="wsAudioPlayer.deleteRegion">
          <segment>
             <source>Delete Region</source>
-            <target>Excluir região</target>
+         	<target>Eliminar Região</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.endTip">

@@ -148,6 +148,7 @@
     "md5-file": "^5.0.0",
     "npm-watch": "^0.10.0",
     "prop-types": "^15.7.2",
+    "react-error-overlay": "^6.0.9",
     "react-test-renderer": "^16.13.0",
     "redux-devtools-extension": "^2.13.8",
     "rimraf": "^3.0.2",

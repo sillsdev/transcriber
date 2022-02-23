@@ -1292,7 +1292,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="filterMenu.allPassages">
-      		<source>All Passages</source>
+      		<source>All Passages on all team projects</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">filterMenu.tsx</context>
@@ -3358,7 +3358,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.general">
-            <source>General Transcription</source>
+            <source>General Quick Start</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
@@ -3421,7 +3421,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.scripture">
-            <source>Scripture Transcription</source>
+            <source>Scripture Quick Start</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
@@ -3435,7 +3435,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.scriptureFactor2">
-            <source>Workflow syncs with Paratext for checking</source>
+            <source>Workflow syncs with Paratext</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
@@ -6319,14 +6319,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.prevRegion">
-            <source>Previous Region [{0}]</source>
+            <source>Previous Segment [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.nextRegion">
-            <source>Next Region [{0}]</source>
+            <source>Next Segment [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

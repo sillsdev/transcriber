@@ -422,8 +422,8 @@ function WSAudioPlayer(props: IProps) {
   useEffect(() => {
     if (segments !== segmentsRef.current) {
       segmentsRef.current = segments;
-      if (ready) {
-        wsLoadRegions(segments);
+      if (ready && segmentsRef.current !== wsGetRegions()) {
+        wsLoadRegions(segments, loopingRef.current);
         var regions = JSON.parse(segments)?.regions;
         if (regions) {
           regions = JSON.parse(regions);
@@ -435,7 +435,7 @@ function WSAudioPlayer(props: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [segments]);
+  }, [segments, looping]);
 
   useEffect(() => {
     onSaveProgressRef.current = onSaveProgress;
@@ -517,7 +517,8 @@ function WSAudioPlayer(props: IProps) {
   function onWSReady() {
     setReady(true);
     setDuration(wsDuration());
-    if (segmentsRef.current?.length > 2) wsLoadRegions(segmentsRef.current);
+    if (segmentsRef.current?.length > 2)
+      wsLoadRegions(segmentsRef.current, loopingRef.current);
     if (setBusy) setBusy(false);
     if (initialPosRef.current) wsGoto(initialPosRef.current);
   }

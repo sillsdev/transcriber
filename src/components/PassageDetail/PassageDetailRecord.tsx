@@ -98,6 +98,7 @@ export function PassageDetailRecord(props: IProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [audacityVisible, setAudacityVisible] = useState(false);
   const [versionVisible, setVersionVisible] = useState(false);
+  const [preload, setPreload] = useState(false);
 
   useEffect(() => {
     toolChanged(toolId, canSave);
@@ -132,6 +133,7 @@ export function PassageDetailRecord(props: IProps) {
       setUploadVisible(false);
       setAudacityVisible(false);
     }
+    setPreload(true);
   };
 
   const saveIfChanged = (cb: () => void) => {
@@ -219,6 +221,7 @@ export function PassageDetailRecord(props: IProps) {
           defaultFilename={defaultFilename}
           allowWave={true}
           showFilename={true}
+          preload={preload}
           setCanSave={setCanSave}
           setStatusText={setStatusText}
           metaData={
@@ -241,7 +244,7 @@ export function PassageDetailRecord(props: IProps) {
         />
 
         <Uploader
-          recordAudio={true}
+          recordAudio={false}
           auth={auth}
           importList={importList}
           isOpen={uploadVisible}
