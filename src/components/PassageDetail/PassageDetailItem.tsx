@@ -199,9 +199,7 @@ export function PassageDetailItem(props: IProps) {
   const [topic, setTopic] = useState('');
   const [importList, setImportList] = useState<File[]>();
   const [uploadVisible, setUploadVisible] = useState(false);
-  const [playItem, setPlayItem] = useState('');
   const [playItemSourceIsLatest, setPlayItemSourceIsLatest] = useState(false);
-  const [itemPlaying, setItemPlaying] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [confirm, setConfirm] = useState('');
   const {
@@ -216,6 +214,13 @@ export function PassageDetailItem(props: IProps) {
     currentSegmentIndex,
     getCurrentSegment,
     setPlaying,
+    setCommentPlaying,
+    playItem,
+    setPlayItem,
+    itemPlaying,
+    setItemPlaying,
+    handleItemTogglePlay,
+    handleItemPlayEnd,
   } = usePassageDetailContext();
   const { toolChanged, toolsChanged, startSave, saveCompleted, saveRequested } =
     useContext(UnsavedContext).state;
@@ -325,9 +330,7 @@ export function PassageDetailItem(props: IProps) {
     setPlayItem(id);
     setPlayItemSourceIsLatest(latest);
     setItemPlaying(false);
-  };
-  const handleEnded = () => {
-    setItemPlaying(false);
+    setCommentPlaying(false);
   };
 
   const handleDelete = (id: string) => () => {
@@ -368,6 +371,8 @@ export function PassageDetailItem(props: IProps) {
   const onRecordingOrPlaying = (doingsomething: boolean) => {
     if (doingsomething) {
       setPlaying(false); //stop the vernacular
+      setItemPlaying(false);
+      setCommentPlaying(false);
     }
   };
 
@@ -522,7 +527,8 @@ export function PassageDetailItem(props: IProps) {
                               auth={auth}
                               srcMediaId={playItem}
                               requestPlay={itemPlaying}
-                              onEnded={handleEnded}
+                              onEnded={handleItemPlayEnd}
+                              onTogglePlay={handleItemTogglePlay}
                               controls={true}
                             />
                             {playItem && playItemSourceIsLatest && (

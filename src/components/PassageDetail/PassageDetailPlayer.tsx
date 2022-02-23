@@ -21,6 +21,10 @@ export function PassageDetailPlayer(props: IProps) {
     useContext(UnsavedContext).state;
   const t: IWsAudioPlayerStrings = useSelector(playerSelector, shallowEqual);
   const toolId = 'ArtifactSegments';
+  const ctx = useContext(PassageDetailContext);
+  const [requestPlay, setRequestPlay] = useState<boolean | undefined>(
+    undefined
+  );
   const {
     loading,
     pdBusy,
@@ -32,7 +36,8 @@ export function PassageDetailPlayer(props: IProps) {
     currentstep,
     playerSize,
     setCurrentSegment,
-  } = useContext(PassageDetailContext).state;
+  } = ctx.state;
+
   const defaultSegParams = {
     silenceThreshold: 0.004,
     timeThreshold: 0.12,
@@ -40,9 +45,11 @@ export function PassageDetailPlayer(props: IProps) {
   };
   const [defaultSegments, setDefaultSegments] = useState('{}');
   const segmentsRef = useRef('');
+  const playingRef = useRef(playing);
 
   const setPlayerSegments = (segments: string) => {
     setDefaultSegments(segments);
+    if (!playingRef.current) setRequestPlay(true);
   };
 
   const onCurrentSegment = (segment: IRegion | undefined) => {
@@ -68,12 +75,20 @@ export function PassageDetailPlayer(props: IProps) {
     }
   };
   const onPlayStatus = (newPlaying: boolean) => {
-    setPlaying(newPlaying);
+    if (playingRef.current !== newPlaying) {
+      setPlaying(newPlaying);
+      playingRef.current = newPlaying;
+      setRequestPlay(undefined);
+    }
   };
 
   const onInteraction = () => {
     //focus on add comment?? focusOnTranscription();
   };
+
+  useEffect(() => {
+    if (playing !== playingRef.current) setRequestPlay(playing);
+  }, [playing]);
 
   useEffect(() => {
     setupLocate(setPlayerSegments);
@@ -94,6 +109,7 @@ export function PassageDetailPlayer(props: IProps) {
     }
     //save the segments here
   };
+
   return (
     <div id="detailplayer">
       <WSAudioPlayer
@@ -102,7 +118,7 @@ export function PassageDetailPlayer(props: IProps) {
         size={playerSize}
         blob={audioBlob}
         initialposition={0}
-        isPlaying={playing}
+        isPlaying={requestPlay}
         loading={loading}
         busy={pdBusy}
         allowSegment={allowSegment}

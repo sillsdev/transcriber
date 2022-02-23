@@ -153,9 +153,14 @@ const initState = {
   setMediaSelected: (id: string, start: number, end: number) => {},
   playing: false, //vernacular in wavesurfer
   setPlaying: (playing: boolean) => {},
-  mediaPlaying: false, //resource or comment
-  setMediaPlaying: (playing: boolean) => {},
-  playItem: '', //resource or comment
+  itemPlaying: false, //resource, bt, retell etc
+  setItemPlaying: (playing: boolean) => {},
+  playItem: '', //resource
+  setPlayItem: (item: string) => {},
+  commentPlaying: false,
+  setCommentPlaying: (playing: boolean, ended?: boolean) => {},
+  commentPlayId: '',
+  setCommentPlayId: (mediaId: string) => {},
   rowData: Array<IRow>(),
   refresh: () => {},
   sharedStr: {} as ISharedStrings,
@@ -188,6 +193,10 @@ const initState = {
   commentRecording: false,
   setCommentRecording: (commentRecording: boolean) => {},
   wfStr: {} as IWorkflowStepsStrings,
+  handleItemPlayEnd: () => {},
+  handleItemTogglePlay: () => {},
+  handleCommentPlayEnd: () => {},
+  handleCommentTogglePlay: () => {},
 };
 
 export type ICtxState = typeof initState;
@@ -231,7 +240,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const [, setRefreshed] = useState(0);
     const mediaUrlRef = useRef('');
     const { showMessage } = useSnackBar();
-    const [, setTrackedTask] = useGlobal('trackedTask');
     const [state, setState] = useState({
       ...initState,
       allBookData,
@@ -259,7 +267,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       useContext(UnsavedContext).state;
     const [plan] = useGlobal('plan');
     const getPlanType = usePlanType();
-
+    const [oldVernacularPlayItem, setOldVernacularPlayItem] = useState('');
+    const [oldVernacularPlaying, setOldVernacularPlaying] = useState(false);
     const handleSetCurrentStep = (stepId: string) => {
       var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
       setCurrentSegment(undefined, 0);
@@ -268,6 +277,10 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           ...state,
           currentstep: stepId,
           playing: false,
+          itemPlaying: false,
+          commentPlaying: false,
+          playItem: '',
+          commentPlayId: '',
         };
       });
       if (step && getTool(step.attributes?.tool) !== ToolSlug.Resource) {
@@ -317,19 +330,64 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
 
     //this is for the vernacular only
     const setPlaying = (playing: boolean) => {
-      setState((state: ICtxState) => {
-        return { ...state, playing: playing };
-      });
+      if (playing !== state.playing) {
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            playing,
+            itemPlaying: playing ? false : state.itemPlaying,
+            commentPlaying: playing ? false : state.commentPlaying,
+          };
+        });
+        if (playing) setOldVernacularPlayItem('');
+      }
     };
-    const setMediaPlaying = (mediaPlaying: boolean) => {
-      setState((state: ICtxState) => {
-        return { ...state, mediaPlaying };
-      });
+    const setItemPlaying = (itemPlaying: boolean) => {
+      if (itemPlaying !== state.itemPlaying) {
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            itemPlaying,
+            playing: itemPlaying ? false : state.playing,
+            commentPlaying: itemPlaying ? false : state.commentPlaying,
+          };
+        });
+        if (itemPlaying) setOldVernacularPlayItem('');
+      }
     };
-    const handlePlayEnd = () => {
-      setMediaPlaying(false);
+    const setCommentPlaying = (
+      commentPlaying: boolean,
+      ended: boolean = false
+    ) => {
+      if (commentPlaying !== state.commentPlaying) {
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            commentPlaying,
+            commentPlayId: ended ? '' : state.commentPlayId,
+            playing: commentPlaying ? false : state.playing,
+            itemPlaying: commentPlaying ? false : state.itemPlaying,
+          };
+        });
+        if (commentPlaying) setOldVernacularPlayItem('');
+      }
     };
 
+    const handleItemPlayEnd = () => {
+      setItemPlaying(false);
+    };
+    const handleItemTogglePlay = () => {
+      setItemPlaying(!state.itemPlaying);
+    };
+    const handleCommentPlayEnd = () => {
+      if (state.commentPlaying) setCommentPlaying(false, true);
+      else setCommentPlayId('');
+    };
+
+    const handleCommentTogglePlay = () => {
+      setCommentPlaying(!state.commentPlaying);
+    };
+    const handleOldVernacularPlayEnd = () => setOldVernacularPlayItem('');
     const setPDBusy = (busy: boolean) => {
       setState((state: ICtxState) => {
         return {
@@ -420,6 +478,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           });
           i = newRows.length - 1;
         } else {
+          oldVernReset();
           setState((state: ICtxState) => {
             return {
               ...state,
@@ -427,8 +486,10 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
               index: -1,
               selected,
               playing: false,
-              mediaPlaying: false,
+              itemPlaying: false,
+              commentPlaying: false,
               playItem: '',
+              commentPlayId: '',
               loading: false,
             };
           });
@@ -436,88 +497,118 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         }
       }
       const r = rowData[i];
-      if (state.index !== i || state.selected !== selected) {
-        var resetBlob = false;
-        //if this is a file that will be played in the wavesurfer..fetch it
-        if (r.isVernacular && i === 0) {
-          if (
-            mediaState.id !== r.mediafile.id &&
-            fetching.current !== r.mediafile.id
-          ) {
-            setTrackedTask(selected);
-            fetching.current = r.mediafile.id;
-            fetchMediaUrl({
-              id: r.mediafile.id,
-              auth: props.auth,
-            });
-            resetBlob = true;
-          }
-          currentSegmentRef.current = undefined;
-          setState((state: ICtxState) => {
-            return {
-              ...state,
-              audioBlob: resetBlob ? undefined : state.audioBlob,
-              index: i,
-              selected,
-              playing: false,
-              mediaPlaying: false,
-              loading: fetching.current !== '',
-              rowData: newRows.length > 0 ? newRows : rowData,
-              currentSegment: '',
-              currentSegmentIndex: 0,
-            };
+      var resetBlob = false;
+      //if this is a file that will be played in the wavesurfer..fetch it
+      if (r.isVernacular && i === 0) {
+        if (
+          mediaState.id !== r.mediafile.id &&
+          fetching.current !== r.mediafile.id
+        ) {
+          fetching.current = r.mediafile.id;
+          fetchMediaUrl({
+            id: r.mediafile.id,
+            auth: props.auth,
           });
-        } else {
-          setState((state: ICtxState) => {
-            return {
-              ...state,
-              index: i,
-              selected,
-              playing: false, //going to play a comment or resource so turn off vernacular
-              playItem: r.mediafile.id,
-              mediaPlaying: false,
-              rowData: newRows.length > 0 ? newRows : rowData,
-            };
-          });
+          resetBlob = true;
         }
+        currentSegmentRef.current = undefined;
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            audioBlob: resetBlob ? undefined : state.audioBlob,
+            index: i,
+            selected,
+            playing: false,
+            loading: fetching.current !== '',
+            rowData: newRows.length > 0 ? newRows : rowData,
+            currentSegment: '',
+            currentSegmentIndex: 0,
+          };
+        });
+      } else if (r.isVernacular) {
+        //play just the segment of an old one
+        setOldVernacularPlayItem(r.mediafile.id);
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            index: i,
+            selected,
+            playing: false,
+            commentPlaying: false,
+            itemPlaying: false,
+            rowData: newRows.length > 0 ? newRows : rowData,
+          };
+        });
+      } else if (r.isComment) {
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            index: i,
+            selected,
+            playing: false,
+            commentPlayId: r.mediafile.id,
+            commentPlaying: true, //should I have a useEffect like playItem?
+            itemPlaying: false,
+            rowData: newRows.length > 0 ? newRows : rowData,
+          };
+        });
+      } else {
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            index: i,
+            selected,
+            playing: false,
+            commentPlaying: false,
+            playItem: r.mediafile.id,
+            itemPlaying: false, //useEffect will turn this on
+            rowData: newRows.length > 0 ? newRows : rowData,
+          };
+        });
       }
     };
-    const mediaReset = () => {
+    const setPlayItem = (playItem: string) => {
+      setState((state: ICtxState) => {
+        return {
+          ...state,
+          playItem: playItem,
+        };
+      });
+    };
+    const setCommentPlayId = (mediaId: string) => {
+      setState((state: ICtxState) => {
+        return {
+          ...state,
+          commentPlayId: mediaId,
+        };
+      });
+    };
+    const oldVernReset = () => {
       mediaStart.current = undefined;
       mediaEnd.current = undefined;
       mediaPosition.current = undefined;
-      setState((state: ICtxState) => ({
-        ...state,
-        index: 0,
-        selected: state.rowData[0].id,
-        playItem: '',
-        mediaPlaying: false,
-      }));
+      setOldVernacularPlayItem('');
+      setOldVernacularPlaying(false);
     };
     const setMediaSelected = (id: string, start: number, end: number) => {
-      if (state.mediaPlaying) {
-        mediaReset();
-      } else {
-        mediaStart.current = start;
-        mediaEnd.current = end;
-        setSelected(id, state.rowData);
-      }
+      mediaStart.current = start;
+      mediaEnd.current = end;
+      setSelected(id, state.rowData);
     };
     const handleDuration = (duration: number) => {
       if (mediaStart.current) {
         mediaPosition.current = mediaStart.current;
         mediaStart.current = undefined;
-        setState((state: ICtxState) => ({ ...state, mediaPlaying: true }));
+        setOldVernacularPlaying(true);
       }
     };
     const handlePosition = (position: number) => {
       if (mediaEnd.current) {
         if (position >= mediaEnd.current) {
-          mediaReset();
+          oldVernReset();
         }
       }
     };
-
     const refresh = () => {
       setRefreshed((refreshed) => {
         return refreshed + 1;
@@ -702,7 +793,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     }
     useEffect(() => {
       //if I set playing when I set the mediaId, it plays a bit of the old
-      if (state.playItem && !mediaEnd.current) setMediaPlaying(true);
+      if (state.playItem) setItemPlaying(true);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.playItem]);
 
@@ -745,6 +836,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.currentstep, state.psgCompleted, state.orgWorkflowSteps]);
+
     return (
       <PassageDetailContext.Provider
         value={{
@@ -756,7 +848,10 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setDiscussionSize,
             setPlayerSize,
             setPlaying,
-            setMediaPlaying,
+            setItemPlaying,
+            setPlayItem,
+            setCommentPlaying,
+            setCommentPlayId,
             setPDBusy,
             getSharedResources,
             refresh,
@@ -768,25 +863,25 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setStepComplete,
             setCommentRecording,
             setMediaSelected,
+            handleItemPlayEnd,
+            handleItemTogglePlay,
+            handleCommentPlayEnd,
+            handleCommentTogglePlay,
           },
           setState,
         }}
       >
         {props.children}
-        {(state.rowData[state.index]?.isResource ||
-          state.rowData[state.index]?.isComment ||
-          mediaEnd.current !== 0 ||
-          state.mediaPlaying) && (
-          <MediaPlayer
-            auth={auth}
-            srcMediaId={state.playItem}
-            requestPlay={state.mediaPlaying}
-            onEnded={handlePlayEnd}
-            onDuration={handleDuration}
-            onPosition={handlePosition}
-            position={mediaPosition.current}
-          />
-        )}
+        {/*this is only used to play old vernacular file segments*/}
+        <MediaPlayer
+          auth={auth}
+          srcMediaId={oldVernacularPlayItem}
+          requestPlay={oldVernacularPlaying}
+          onEnded={handleOldVernacularPlayEnd}
+          onDuration={handleDuration}
+          onPosition={handlePosition}
+          position={mediaPosition.current}
+        />
         {confirm !== '' && (
           <Confirm
             open={true}
