@@ -5418,13 +5418,13 @@
       </unit>
       <unit id="wsAudioPlayer.prevRegion">
          <segment>
-            <source>Previous Region [{0}]</source>
+            <source>Previous Segment [{0}]</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.nextRegion">
          <segment>
-            <source>Next Region [{0}]</source>
+            <source>Next Segment [{0}]</source>
             <target/>
          </segment>
       </unit>

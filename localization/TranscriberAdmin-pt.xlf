@@ -5108,14 +5108,14 @@
       </unit>
       <unit id="wsAudioPlayer.prevRegion">
          <segment>
-            <source>Previous Region [{0}]</source>
-            <target>Região Anterior [{0}]</target>
+            <source>Previous Segment [{0}]</source>
+            <target>Segmento Anterior [{0}]</target>
           </segment>
       </unit>
       <unit id="wsAudioPlayer.nextRegion">
          <segment>
-            <source>Next Region [{0}]</source>
-            <target>Próximo região [{0}]</target>
+            <source>Next Segment [{0}]</source>
+            <target>Próximo segmento [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.deleteRecording">
@@ -5127,7 +5127,7 @@
       <unit id="wsAudioPlayer.deleteRegion">
          <segment>
             <source>Delete Region</source>
-            <target>Excluir região</target>
+         	<target>Eliminar Região</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.endTip">

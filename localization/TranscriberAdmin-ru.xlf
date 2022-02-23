@@ -5121,7 +5121,7 @@
       <unit id="wsAudioPlayer.deleteRegion">
          <segment>
             <source>Delete Region</source>
-            <target>Удалить регион</target>
+         	<target>Удалить регион</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.endTip">
@@ -5156,8 +5156,8 @@
       </unit>
       <unit id="wsAudioPlayer.nextRegion">
          <segment>
-            <source>Next Region [{0}]</source>
-            <target>Следующий регион [{0}]</target>
+            <source>Next Segment [{0}]</source>
+         	<target>Следующий сегмент [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.pauseRecord">
@@ -5180,8 +5180,8 @@
       </unit>
       <unit id="wsAudioPlayer.prevRegion">
          <segment>
-            <source>Previous Region [{0}]</source>
-            <target>Предыдущий регион [{0}]</target>
+            <source>Previous Segment [{0}]</source>
+         	<target>Предыдущий сегмент [{0}]</target>
           </segment>
       </unit>
       <unit id="wsAudioPlayer.record">

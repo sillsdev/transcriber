@@ -4311,7 +4311,7 @@
       </unit>
       <unit id="transcriber.saveReviewTip">
          <segment>
-            <source>Save transcription, regions and position</source>
+            <source>Save transcription, segments and position</source>
             <target>Sauvegarder la transcription, les régions et la position</target>
          </segment>
       </unit>
@@ -5187,14 +5187,14 @@
       </unit>
       <unit id="wsAudioPlayer.prevRegion">
          <segment>
-            <source>Previous Region [{0}]</source>
-            <target>Région précédent [{0}]</target>
+            <source>Previous Segment [{0}]</source>
+            <target>Segment précédent [{0}]</target>
           </segment>
       </unit>
       <unit id="wsAudioPlayer.nextRegion">
          <segment>
-            <source>Next Region [{0}]</source>
-            <target>Région suivant [{0}]</target>
+            <source>Next Segment [{0}]</source>
+            <target>Segment suivant [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.deleteRecording">
@@ -5206,7 +5206,7 @@
       <unit id="wsAudioPlayer.deleteRegion">
          <segment>
             <source>Delete Region</source>
-            <target>Supprimer la région</target>
+         	<target>Supprimer la région</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.endTip">
