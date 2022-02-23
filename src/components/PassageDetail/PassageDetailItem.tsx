@@ -504,11 +504,17 @@ export function PassageDetailItem(props: IProps) {
                             />
                             {playItem && (
                               <>
-                                <IconButton onClick={handleTranscribe}>
+                                <IconButton
+                                  id="load-transcriber"
+                                  onClick={handleTranscribe}
+                                >
                                   <TranscribeIcon />
                                 </IconButton>
                                 {projRole === RoleNames.Admin && (
-                                  <IconButton onClick={handleDelete(playItem)}>
+                                  <IconButton
+                                    id="delete-recording"
+                                    onClick={handleDelete(playItem)}
+                                  >
                                     <DeleteIcon />
                                   </IconButton>
                                 )}

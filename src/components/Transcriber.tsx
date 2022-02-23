@@ -971,7 +971,11 @@ export function Transcriber(props: IProps) {
             {jumpBack && (
               <div className={classes.grow}>
                 <div className={classes.grow}>{'\u00A0'}</div>
-                <Button onClick={handleWorkflow} variant="contained">
+                <Button
+                  id="back-to-workflow"
+                  onClick={handleWorkflow}
+                  variant="contained"
+                >
                   {t.backToWorkflow}
                 </Button>
               </div>
@@ -989,7 +993,7 @@ export function Transcriber(props: IProps) {
                 />
               </Grid>
               {jumpBack && (
-                <Grid item md={3} alignContent="flex-end">
+                <Grid item md={3} container alignContent="flex-end">
                   <Button onClick={handleWorkflow} variant="contained">
                     {t.backToWorkflow}
                   </Button>
