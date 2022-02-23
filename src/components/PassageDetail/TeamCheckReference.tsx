@@ -55,7 +55,7 @@ export function TeamCheckReference({ auth }: IProps) {
   return (
     <Grid container direction="row" alignItems="center">
       <Grid item md={4} sm={12} className={classes.resource}>
-        <SelectMyResource required onChange={handleResource} />
+        <SelectMyResource onChange={handleResource} />
       </Grid>
       <Grid item md={6} sm={12} className={classes.playStatus}>
         <MediaPlayer
