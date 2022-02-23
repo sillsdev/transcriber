@@ -2822,8 +2822,8 @@
       </unit>
       <unit id="newProject.general">
          <segment>
-            <source>General Transcription</source>
-            <target>Transcrição geral</target>
+         	<source>General Quick Start</source>
+         	<target>Início rápido geral</target>
          </segment>
       </unit>
       <unit id="newProject.generalFactor1">
@@ -2876,8 +2876,8 @@
       </unit>
       <unit id="newProject.scripture">
          <segment>
-            <source>Scripture Transcription</source>
-            <target>Transcrição das Escrituras</target>
+         	<source>Scripture Quick Start</source>
+         	<target>Início Rápido das Escrituras</target>
          </segment>
       </unit>
       <unit id="newProject.scriptureFactor1">
@@ -2889,7 +2889,7 @@
       <unit id="newProject.scriptureFactor2">
          <segment>
             <source>Workflow syncs with Paratext for checking</source>
-            <target>Sincronização do fluxo de trabalho com Paratext para verificação</target>
+         	<target>Sincronização do fluxo de trabalho com o Paratext</target>
          </segment>
       </unit>
       <unit id="newProject.scriptureTip">

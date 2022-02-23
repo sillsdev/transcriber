@@ -2880,7 +2880,7 @@
       </unit>
       <unit id="newProject.general">
          <segment>
-            <source>General Transcription</source>
+            <source>General Quick Start</source>
             <target/>
          </segment>
       </unit>
@@ -2934,7 +2934,7 @@
       </unit>
       <unit id="newProject.scripture">
          <segment>
-            <source>Scripture Transcription</source>
+            <source>Scripture Quick Start</source>
             <target/>
          </segment>
       </unit>
@@ -2946,7 +2946,7 @@
       </unit>
       <unit id="newProject.scriptureFactor2">
          <segment>
-            <source>Workflow syncs with Paratext for checking</source>
+            <source>Workflow syncs with Paratext</source>
             <target/>
          </segment>
       </unit>
