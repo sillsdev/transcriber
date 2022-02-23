@@ -58,6 +58,7 @@ import StickyRedirect from '../StickyRedirect';
 import Confirm from '../AlertDialog';
 import Uploader from '../Uploader';
 import AddIcon from '@material-ui/icons/LibraryAddOutlined';
+import { LightTooltip } from '../StepEditor';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -504,19 +505,25 @@ export function PassageDetailItem(props: IProps) {
                             />
                             {playItem && (
                               <>
-                                <IconButton
-                                  id="load-transcriber"
-                                  onClick={handleTranscribe}
-                                >
-                                  <TranscribeIcon />
-                                </IconButton>
                                 {projRole === RoleNames.Admin && (
-                                  <IconButton
-                                    id="delete-recording"
-                                    onClick={handleDelete(playItem)}
-                                  >
-                                    <DeleteIcon />
-                                  </IconButton>
+                                  <LightTooltip title={t.transcribe}>
+                                    <IconButton
+                                      id="load-transcriber"
+                                      onClick={handleTranscribe}
+                                    >
+                                      <TranscribeIcon />
+                                    </IconButton>
+                                  </LightTooltip>
+                                )}
+                                {projRole === RoleNames.Admin && (
+                                  <LightTooltip title={t.deleteItem}>
+                                    <IconButton
+                                      id="delete-recording"
+                                      onClick={handleDelete(playItem)}
+                                    >
+                                      <DeleteIcon />
+                                    </IconButton>
+                                  </LightTooltip>
                                 )}
                               </>
                             )}

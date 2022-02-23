@@ -774,6 +774,12 @@
    			<target/>
    		</segment>
    	</unit>
+   	<unit id="community.transcribe">
+   		<segment>
+   			<source>Transcribe</source>
+   			<target>Транскрибировать</target>
+   		</segment>
+   	</unit>
    	<unit id="community.unsaved">
    		<segment>
    			<source>Unsaved</source>
