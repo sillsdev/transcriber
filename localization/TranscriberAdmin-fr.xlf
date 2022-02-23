@@ -789,14 +789,14 @@
    	</unit>
       <unit id="control.other">
          <segment>
-            <source>General Transcription</source>
-            <target>Transcription générale</target>
+            <source>General</source>
+            <target>Générale</target>
          </segment>
       </unit>
       <unit id="control.scripture">
          <segment>
-            <source>Scripture Transcription</source>
-            <target>Transcription des Écritures</target>
+            <source>Scripture</source>
+            <target>Écritures</target>
          </segment>
       </unit>
       <unit id="deleteExpansion.advanced">

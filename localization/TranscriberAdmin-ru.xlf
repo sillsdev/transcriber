@@ -788,13 +788,13 @@
    	</unit>
       <unit id="control.other">
          <segment>
-            <source/>
+            <source>General</source>
             <target/>
          </segment>
       </unit>
       <unit id="control.scripture">
          <segment>
-            <source/>
+            <source>Scripture</source>
             <target/>
          </segment>
       </unit>
