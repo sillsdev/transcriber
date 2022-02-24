@@ -176,6 +176,7 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "saveFirst": string;
     "segment": string;
     "speaker": string;
+    "transcribe": string;
     "unsaved": string;
     "uploadComplete": string;
 };

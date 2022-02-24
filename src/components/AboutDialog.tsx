@@ -25,7 +25,6 @@ import { API_CONFIG } from '../api-variable';
 import about from '../assets/about.json';
 import stringReplace from 'react-string-replace';
 import { useSnackBar } from '../hoc/SnackBar';
-import { useExternalLink } from './useExternalLink';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -65,6 +64,76 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface ItemsProps {
+  items: string[];
+}
+const ListItems = ({ items }: ItemsProps) => {
+  const part = (s: string, i: number) => s.split('|')[i];
+
+  return (
+    <List dense>
+      {items.map((i) => (
+        <ListItem>
+          <ListItemText>
+            {stringReplace(part(i, 0), part(i, 1), (m: string) => (
+              <Link href={part(i, 2)} target="_blank" rel="noopener noreferrer">
+                {m}
+              </Link>
+            ))}
+          </ListItemText>
+        </ListItem>
+      ))}
+    </List>
+  );
+};
+
+const ParaItems = ({ items }: ItemsProps) => {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.column}>
+      {items.map((i) => (
+        <Typography className={classes.para}>{i}</Typography>
+      ))}
+    </div>
+  );
+};
+
+interface LicenseProps {
+  title: string;
+  url: string;
+  text: string[];
+  product: string[];
+}
+
+const LicenseAccordion = (lic: LicenseProps) => {
+  const classes = useStyles();
+
+  return (
+    <>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+        >
+          <Typography className={classes.heading}>
+            {
+              <Link href={lic.url} target="_blank" rel="noopener noreferrer">
+                {lic.title}
+              </Link>
+            }
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <ParaItems items={lic.text} />
+        </AccordionDetails>
+      </Accordion>
+      <ListItems items={lic.product} />
+    </>
+  );
+};
+
 interface IStateProps {
   t: IMainStrings;
 }
@@ -78,7 +147,6 @@ function AboutDialog(props: AboutDialogProps) {
   const { onClose, open, t } = props;
   const classes = useStyles();
   const { showMessage } = useSnackBar();
-  const { handleLaunch, ExternalLink, externalUrl } = useExternalLink();
 
   const handleClose = () => onClose();
   const handleExit = () => onClose();
@@ -89,82 +157,6 @@ function AboutDialog(props: AboutDialogProps) {
       .catch(() => {
         showMessage(t.cantCopy);
       });
-  };
-
-  interface ItemsProps {
-    items: string[];
-  }
-  const ListItems = ({ items }: ItemsProps) => {
-    const part = (s: string, i: number) => s.split('|')[i];
-
-    return (
-      <List dense>
-        {items.map((i) => (
-          <ListItem>
-            <ListItemText>
-              {stringReplace(part(i, 0), part(i, 1), (m: string) => (
-                <Link
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleLaunch(part(i, 2))}
-                >
-                  {m}
-                </Link>
-              ))}
-            </ListItemText>
-          </ListItem>
-        ))}
-      </List>
-    );
-  };
-
-  const ParaItems = ({ items }: ItemsProps) => {
-    return (
-      <div className={classes.column}>
-        {items.map((i) => (
-          <Typography className={classes.para}>{i}</Typography>
-        ))}
-      </div>
-    );
-  };
-
-  interface LicenseProps {
-    title: string;
-    url: string;
-    text: string[];
-    product: string[];
-  }
-
-  const LicenseAccordion = (lic: LicenseProps) => {
-    return (
-      <>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1-content"
-            id="panel1-header"
-          >
-            <Typography className={classes.heading}>
-              {
-                <Link
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleLaunch(lic.url)}
-                >
-                  {lic.title}
-                </Link>
-              }
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <ParaItems items={lic.text} />
-          </AccordionDetails>
-        </Accordion>
-        <ListItems items={lic.product} />
-      </>
-    );
   };
 
   return (
@@ -205,7 +197,6 @@ function AboutDialog(props: AboutDialogProps) {
         <LicenseAccordion {...about.mpl} />
         <LicenseAccordion {...about.LGPLv21} />
         <LicenseAccordion {...about.icons8} />
-        <ExternalLink externalUrl={externalUrl} />
       </DialogContentText>
       <DialogActions>
         <Button id="aboutExit" variant="outlined" onClick={handleExit}>

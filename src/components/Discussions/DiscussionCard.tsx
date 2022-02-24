@@ -186,6 +186,7 @@ interface IStateProps {
   ts: ISharedStrings;
 }
 interface IProps extends IRecordProps, IStateProps {
+  id: string;
   auth: Auth;
   discussion: Discussion;
   collapsed: boolean;
@@ -197,6 +198,7 @@ interface IProps extends IRecordProps, IStateProps {
 export const DiscussionCard = (props: IProps) => {
   const classes = useStyles();
   const {
+    id,
     t,
     ts,
     auth,
@@ -621,7 +623,7 @@ export const DiscussionCard = (props: IProps) => {
     <div className={classes.root}>
       <Card
         key={discussion.id}
-        id={`card-${discussion.id}`}
+        id={id}
         className={
           discussion.attributes.resolved ? classes.resolvedcard : classes.card
         }

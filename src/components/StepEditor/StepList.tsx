@@ -3,6 +3,6 @@ import { SortableContainer } from 'react-sortable-hoc';
 
 export const StepList = SortableContainer(
   ({ children }: { children: JSX.Element[] }) => {
-    return <List>{children}</List>;
+    return <List id="sortable-steps">{children}</List>;
   }
 );

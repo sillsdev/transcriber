@@ -4,29 +4,32 @@ export const Stage = ({
   id,
   label,
   color,
+  textColor,
   done,
   select,
 }: {
   id: string;
   label: string;
   color?: string;
+  textColor?: string;
   done?: boolean;
   select?: (id: string) => void;
 }) => {
   const lineProps = { strokeWidth: 1.1 };
-  const textProps = {
-    fontStyle: 'normal',
-    fontSize: '16px',
-    lineHeight: 1.25,
-    fontFamily: 'sans-serif',
-    textAlign: 'center',
-    textAnchor: 'middle',
-    whiteSpace: 'pre',
-    inlineSize: 173,
-    fill: '#000000',
-    fillOpacity: 1,
-    stroke: 'none',
-  } as CSSProperties;
+  const textProps = (textColor?: string) =>
+    ({
+      fontStyle: 'normal',
+      fontSize: '16px',
+      lineHeight: 1.25,
+      fontFamily: 'sans-serif',
+      textAlign: 'center',
+      textAnchor: 'middle',
+      whiteSpace: 'pre',
+      inlineSize: 173,
+      fill: textColor || '#000000',
+      fillOpacity: 1,
+      stroke: 'none',
+    } as CSSProperties);
 
   const handleClick = () => {
     select && select(id);
@@ -63,7 +66,7 @@ export const Stage = ({
           fillRule="evenodd"
         />
         <text
-          style={textProps}
+          style={textProps(textColor)}
           x="85.3"
           y="25.6"
           transform="matrix(1.3,0,0,2.2,34.5,-21.3)"

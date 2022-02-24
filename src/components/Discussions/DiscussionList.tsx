@@ -348,6 +348,7 @@ export function DiscussionList(props: IProps) {
         <Grid container className={classes.cardFlow}>
           {displayDiscussions.map((i, j) => (
             <DiscussionCard
+              id={`card-${j}`}
               auth={auth}
               key={j}
               discussion={i}

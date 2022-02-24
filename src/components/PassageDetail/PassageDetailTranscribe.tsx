@@ -37,7 +37,12 @@ export function PassageDetailTranscribe(props: IProps) {
   if (view) return <StickyRedirect to={view} />;
 
   return (
-    <Button onClick={handleTranscribe} variant="contained" color="primary">
+    <Button
+      id="transcriber-step"
+      onClick={handleTranscribe}
+      variant="contained"
+      color="primary"
+    >
       {t.openTranscriber}
       <TranscribeIcon className={classes.icon} color="white" />
     </Button>

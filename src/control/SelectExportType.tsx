@@ -26,13 +26,14 @@ export const SelectExportType = (props: IProps) => {
 
   return (
     <TextField
+      id="select-export-type"
       select
       value={exportType}
       onChange={handleExportType}
       className={classes.typeSelect}
     >
       {exportTypes.map((t) => (
-        <MenuItem key={t} value={t}>
+        <MenuItem id={`exp-${t}`} key={t} value={t}>
           {localizedArtifactType(t)}
         </MenuItem>
       ))}

@@ -17,7 +17,7 @@ import IntegrationTab from './Integration';
 import ExportTab from './TranscriptionTab';
 import Visualize from './Visualize';
 import ProjectMenu from './Team/ProjectMenu';
-import { formatTime } from '../control';
+import { formatTime, LightTooltip } from '../control';
 import { ChipText } from './TaskFlag';
 import Auth from '../auth/Auth';
 import {
@@ -32,7 +32,9 @@ import { numCompare } from '../utils';
 import { useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
 import MediaPlayer from './MediaPlayer';
-import { RoleNames } from '../model';
+import { RoleNames, IMediaActionsStrings } from '../model';
+import { mediaActionsSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
 export const TaskItemWidth = 240;
 
@@ -146,6 +148,10 @@ export function TaskTable(props: IProps) {
   const tpb = projButtonStr;
   const classes = useStyles();
   const [user] = useGlobal('user');
+  const tm: IMediaActionsStrings = useSelector(
+    mediaActionsSelector,
+    shallowEqual
+  );
   const [width, setWidth] = useState(window.innerWidth);
   const { getPlan, getPlanName } = usePlan();
   const offlineAvailableToggle = useOfflineAvailToggle();
@@ -410,9 +416,13 @@ export function TaskTable(props: IProps) {
         onClick={handlePlay(mediaId || '')}
       >
         {value === mediaId && playing ? (
-          <PauseIcon className={classes.playIcon} />
+          <LightTooltip title={tm.pause}>
+            <PauseIcon className={classes.playIcon} />
+          </LightTooltip>
         ) : (
-          <PlayIcon className={classes.playIcon} />
+          <LightTooltip title={tm.play}>
+            <PlayIcon className={classes.playIcon} />
+          </LightTooltip>
         )}
       </IconButton>
     </Table.Cell>

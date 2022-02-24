@@ -196,14 +196,15 @@ const initialState = {
 			"saveFirst": "Save or Clear your recording before uploading.",
 			"segment": "Segment",
 			"speaker": "Speaker",
+			"transcribe": "Transcribe",
 			"unsaved": "Unsaved",
 			"uploadComplete": "{0} of {1} files uploaded successfully.",
 		}
 	}),
 	"control": new LocalizedStrings({
 		"en": {
-			"other": "General Transcription",
-			"scripture": "Scripture Transcription",
+			"other": "General",
+			"scripture": "Scripture",
 		}
 	}),
 	"deleteExpansion": new LocalizedStrings({

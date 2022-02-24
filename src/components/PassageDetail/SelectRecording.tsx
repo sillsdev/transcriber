@@ -137,7 +137,7 @@ export const SelectRecording = (props: IProps) => {
   return (
     <>
       <div className={classes.choice}>
-        <Button onClick={handleItem} variant="contained">
+        <Button id="select-recording" onClick={handleItem} variant="contained">
           {t.playItem}
         </Button>
         <ItemDescription
