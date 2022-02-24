@@ -927,7 +927,14 @@
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="community.unsaved">
+      	<trans-unit id="community.transcribe">
+      		<source>Transcribe</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Community.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.unsaved">
             <source>Unsaved</source>
             <target/>
             <context-group>
