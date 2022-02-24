@@ -346,55 +346,127 @@ function WSAudioPlayer(props: IProps) {
   );
 
   const paperStyle = {};
+  //#region hotkey handlers
+  const handleFaster = () => {
+    if (playbackRef.current === MAX_SPEED || recordingRef.current) return false;
+    setPlaybackRate(Math.min(MAX_SPEED, playbackRef.current + SPEED_STEP));
+    return true;
+  };
+  const handleSlower = () => {
+    if (playbackRef.current === MIN_SPEED || recordingRef.current) return false;
+    setPlaybackRate(Math.max(MIN_SPEED, playbackRef.current - SPEED_STEP));
+    return true;
+  };
+  const handleJumpForward = () => {
+    return handleJumpFn(jump);
+  };
+  const handleJumpBackward = () => {
+    return handleJumpFn(-1 * jump);
+  };
+  const handleJumpFn = (amount: number) => {
+    if (!readyRef.current || recordingRef.current) return false;
+    wsSkip(amount);
+    return true;
+  };
+  const handleJumpEv = (amount: number) => () => handleJumpFn(amount);
+  const handleGotoEv = (place: number) => () => wsGoto(place);
+
+  const handleToggleLoop = () => {
+    setLooping(wsLoopRegion(!looping));
+  };
+  const handlePrevRegion = () => {
+    setPlaying(wsPrevRegion());
+    return true;
+  };
+  const handleNextRegion = () => {
+    setPlaying(wsNextRegion());
+    return true;
+  };
+
+  const gotoEnd = () => {
+    wsPause();
+    setPlaying(false);
+    wsGoto(durationRef.current);
+  };
+  const handleGoToEnd = () => {
+    gotoEnd();
+  };
+  const handleSendProgress = () => {
+    if (onSaveProgressRef.current) {
+      onSaveProgressRef.current(wsPosition());
+      return true;
+    }
+    return false;
+  };
+  const handleRecorder = () => {
+    if (!allowRecord || playingRef.current || processRecordRef.current)
+      return false;
+    if (!recordingRef.current) {
+      if (setBlobReady) setBlobReady(false);
+      wsPause(); //stop if playing
+      recordStartPosition.current = wsPosition();
+      recordOverwritePosition.current = recordStartPosition.current;
+      initialPosRef.current = recordStartPosition.current;
+      wsStartRecord();
+      startRecording(500);
+    } else {
+      processRecordRef.current = true;
+      stopRecording();
+      wsStopRecord();
+    }
+    setRecording(!recordingRef.current);
+    return true;
+  };
+
+  const setRecording = (value: boolean) => {
+    recordingRef.current = value;
+    setRecordingx(value);
+    if (onRecording) onRecording(value);
+  };
+  //#endregion
+
+  const playerKeys = [
+    {
+      key: PLAY_PAUSE_KEY,
+      cb: () => {
+        handlePlayStatus();
+        return true;
+      },
+    },
+    {
+      key: HOME_KEY,
+      cb: () => {
+        if (!readyRef.current || recordingRef.current) return false;
+        wsGoto(0);
+        return true;
+      },
+    },
+    {
+      key: END_KEY,
+      cb: () => {
+        if (!readyRef.current || recordingRef.current) return false;
+        gotoEnd();
+        return true;
+      },
+    },
+    { key: BACK_KEY, cb: handleJumpBackward },
+    { key: AHEAD_KEY, cb: handleJumpForward },
+    { key: TIMER_KEY, cb: handleSendProgress },
+  ];
+
+  const speedKeys = [
+    { key: FASTER_KEY, cb: handleFaster },
+    { key: SLOWER_KEY, cb: handleSlower },
+  ];
+
+  const recordKeys = [{ key: RECORD_KEY, cb: handleRecorder }];
+
+  const segmentKeys = [
+    { key: LEFT_KEY, cb: handlePrevRegion },
+    { key: RIGHT_KEY, cb: handleNextRegion },
+  ];
 
   useEffect(() => {
-    const playerKeys = [
-      {
-        key: PLAY_PAUSE_KEY,
-        cb: () => {
-          handlePlayStatus();
-          return true;
-        },
-      },
-      {
-        key: HOME_KEY,
-        cb: () => {
-          if (!readyRef.current || recordingRef.current) return false;
-          wsGoto(0);
-          return true;
-        },
-      },
-      {
-        key: END_KEY,
-        cb: () => {
-          if (!readyRef.current || recordingRef.current) return false;
-          gotoEnd();
-          return true;
-        },
-      },
-      { key: BACK_KEY, cb: handleJumpBackward },
-      { key: AHEAD_KEY, cb: handleJumpForward },
-      { key: TIMER_KEY, cb: handleSendProgress },
-    ];
-
-    const speedKeys = [
-      { key: FASTER_KEY, cb: handleFaster },
-      { key: SLOWER_KEY, cb: handleSlower },
-    ];
-
-    const recordKeys = [{ key: RECORD_KEY, cb: handleRecorder }];
-
-    const segmentKeys = [
-      { key: LEFT_KEY, cb: handlePrevRegion },
-      { key: RIGHT_KEY, cb: handleNextRegion },
-    ];
-
-    if (allowRecord) recordKeys.forEach((k) => subscribe(k.key, k.cb));
-
-    if (allowSegment) segmentKeys.forEach((k) => subscribe(k.key, k.cb));
-
-    if (allowSpeed) speedKeys.forEach((k) => subscribe(k.key, k.cb));
-
     playerKeys.forEach((k) => subscribe(k.key, k.cb));
 
     return () => {
@@ -406,6 +478,18 @@ function WSAudioPlayer(props: IProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (allowRecord) recordKeys.forEach((k) => subscribe(k.key, k.cb));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allowRecord]);
+  useEffect(() => {
+    if (allowSegment) segmentKeys.forEach((k) => subscribe(k.key, k.cb));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allowSegment]);
+  useEffect(() => {
+    if (allowSpeed) speedKeys.forEach((k) => subscribe(k.key, k.cb));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allowSpeed]);
 
   useEffect(() => {
     wsSetHeight(size - 150); //does this need to be smarter?
@@ -550,11 +634,7 @@ function WSAudioPlayer(props: IProps) {
     if (Array.isArray(value)) value = value[0]; //won't be
     setPlaybackRate(value / 100);
   };
-  const handleSlower = () => {
-    if (playbackRef.current === MIN_SPEED || recordingRef.current) return false;
-    setPlaybackRate(Math.max(MIN_SPEED, playbackRef.current - SPEED_STEP));
-    return true;
-  };
+
   const setPlaying = (value: boolean) => {
     playingRef.current = value;
     setPlayingx(value);
@@ -577,77 +657,6 @@ function WSAudioPlayer(props: IProps) {
   const setReady = (value: boolean) => {
     setReadyx(value);
     readyRef.current = value;
-  };
-  const handleFaster = () => {
-    if (playbackRef.current === MAX_SPEED || recordingRef.current) return false;
-    setPlaybackRate(Math.min(MAX_SPEED, playbackRef.current + SPEED_STEP));
-    return true;
-  };
-
-  const handleJumpForward = () => {
-    return handleJumpFn(jump);
-  };
-  const handleJumpBackward = () => {
-    return handleJumpFn(-1 * jump);
-  };
-  const handleJumpFn = (amount: number) => {
-    if (!readyRef.current || recordingRef.current) return false;
-    wsSkip(amount);
-    return true;
-  };
-  const handleJumpEv = (amount: number) => () => handleJumpFn(amount);
-  const handleGotoEv = (place: number) => () => wsGoto(place);
-  const handleToggleLoop = () => {
-    setLooping(wsLoopRegion(!looping));
-  };
-  const handlePrevRegion = () => {
-    setPlaying(wsPrevRegion());
-    return true;
-  };
-  const handleNextRegion = () => {
-    setPlaying(wsNextRegion());
-    return true;
-  };
-
-  const gotoEnd = () => {
-    wsPause();
-    setPlaying(false);
-    wsGoto(durationRef.current);
-  };
-  const handleGoToEnd = () => {
-    gotoEnd();
-  };
-  const handleSendProgress = () => {
-    if (onSaveProgressRef.current) {
-      onSaveProgressRef.current(wsPosition());
-      return true;
-    }
-    return false;
-  };
-
-  const setRecording = (value: boolean) => {
-    recordingRef.current = value;
-    setRecordingx(value);
-    if (onRecording) onRecording(value);
-  };
-  const handleRecorder = () => {
-    if (!allowRecord || playingRef.current || processRecordRef.current)
-      return false;
-    if (!recordingRef.current) {
-      if (setBlobReady) setBlobReady(false);
-      wsPause(); //stop if playing
-      recordStartPosition.current = wsPosition();
-      recordOverwritePosition.current = recordStartPosition.current;
-      initialPosRef.current = recordStartPosition.current;
-      wsStartRecord();
-      startRecording(500);
-    } else {
-      processRecordRef.current = true;
-      stopRecording();
-      wsStopRecord();
-    }
-    setRecording(!recordingRef.current);
-    return true;
   };
 
   const handleChanged = async () => {
