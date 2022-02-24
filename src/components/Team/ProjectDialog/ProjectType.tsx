@@ -22,7 +22,6 @@ export const ProjectType = (props: IProps) => {
 
   return (
     <Options
-      required
       label={t.type}
       defaultValue={type}
       options={planTypes

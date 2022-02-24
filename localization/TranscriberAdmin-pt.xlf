@@ -788,13 +788,13 @@
    	</unit>
       <unit id="control.other">
          <segment>
-            <source>General Transcription</source>
-            <target>Transcrição Geral</target>
+            <source>General</source>
+            <target>Geral</target>
          </segment>
       </unit>
       <unit id="control.scripture">
          <segment>
-            <source>Scripture Transcription</source>
+            <source>Scripture</source>
             <target/>
          </segment>
       </unit>
