@@ -31,7 +31,7 @@ import { termsContent } from './routes/TermsContent';
 import { privacyContent } from './routes/privacyContent';
 import { isElectron } from './api-variable';
 import PassageDetail from './routes/PassageDetail';
-
+import { useExternalLink } from './components/useExternalLink';
 export const HeadHeight = 64;
 
 const auth = new Auth();
@@ -70,6 +70,7 @@ function App() {
   const { isLoading, isAuthenticated, error, user, getAccessTokenSilently } =
     useAuth0();
   const [errorReporter] = useGlobal('errorReporter');
+  const { ExternalLink, externalUrl } = useExternalLink();
 
   React.useEffect(() => {
     (async () => {
@@ -93,87 +94,95 @@ function App() {
   }
 
   return (
-    <TokenCheck auth={auth}>
-      <UnsavedProvider>
-        <DataChanges auth={auth}>
-          <SnackBarProvider>
-            <HotKeyProvider>
-              <ThemeProvider theme={theme}>
-                <Route
-                  path="/"
-                  exact={true}
-                  render={(props) => {
-                    handleParameters(props);
-                    return <Welcome auth={auth} {...props} />;
-                  }}
-                />
-                <Route
-                  path="/access/:users"
-                  render={(props) => {
-                    return <Access auth={auth} {...props} />;
-                  }}
-                />
-                <Route path="/error" exact render={(props) => <Buggy />} />
-                <Route
-                  path="/emailunverified"
-                  exact={true}
-                  render={(props) => <EmailUnverified auth={auth} {...props} />}
-                />
-                <Route
-                  path="/logout"
-                  exact={true}
-                  render={(props) => <Logout auth={auth} {...props} />}
-                />
-                <Route
-                  path="/terms"
-                  render={() => <HTMLPage text={termsContent} />}
-                />
-                <Route
-                  path="/privacy"
-                  render={() => <HTMLPage text={privacyContent} />}
-                />
-                <PrivateRoute auth={auth} path="/loading">
-                  <Loading auth={auth} />
-                </PrivateRoute>
-                <PrivateRoute auth={auth} path="/profile">
-                  <Profile auth={auth} />
-                </PrivateRoute>
-                <PrivateRoute auth={auth} path="/team">
-                  <TeamScreen auth={auth} />
-                </PrivateRoute>
-                <PrivateRoute auth={auth} path="/plan/:prjId/:tabNm">
-                  <PlanScreen auth={auth} />
-                </PrivateRoute>
-                <PrivateRoute auth={auth} exact path="/work/:prjId/:pasId">
-                  <WorkScreen auth={auth} />
-                </PrivateRoute>
-                <PrivateRoute
-                  auth={auth}
-                  exact
-                  path="/work/:prjId/:pasId/:slug/:medId"
-                >
-                  <WorkScreen auth={auth} />
-                </PrivateRoute>
-                <PrivateRoute auth={auth} exact path="/work/:prjId">
-                  <WorkScreen auth={auth} />
-                </PrivateRoute>
-                <PrivateRoute auth={auth} exact path="/detail/:prjId/:pasId">
-                  <PassageDetail auth={auth} />
-                </PrivateRoute>
-                <PrivateRoute
-                  auth={auth}
-                  exact
-                  path="/detail/:prjId/:pasId/:mediaId"
-                >
-                  <PassageDetail auth={auth} />
-                </PrivateRoute>
-                <Route path="/neworg" render={(props) => handleNewOrg(props)} />
-              </ThemeProvider>
-            </HotKeyProvider>
-          </SnackBarProvider>
-        </DataChanges>
-      </UnsavedProvider>
-    </TokenCheck>
+    <>
+      <TokenCheck auth={auth}>
+        <UnsavedProvider>
+          <DataChanges auth={auth}>
+            <SnackBarProvider>
+              <HotKeyProvider>
+                <ThemeProvider theme={theme}>
+                  <Route
+                    path="/"
+                    exact={true}
+                    render={(props) => {
+                      handleParameters(props);
+                      return <Welcome auth={auth} {...props} />;
+                    }}
+                  />
+                  <Route
+                    path="/access/:users"
+                    render={(props) => {
+                      return <Access auth={auth} {...props} />;
+                    }}
+                  />
+                  <Route path="/error" exact render={(props) => <Buggy />} />
+                  <Route
+                    path="/emailunverified"
+                    exact={true}
+                    render={(props) => (
+                      <EmailUnverified auth={auth} {...props} />
+                    )}
+                  />
+                  <Route
+                    path="/logout"
+                    exact={true}
+                    render={(props) => <Logout auth={auth} {...props} />}
+                  />
+                  <Route
+                    path="/terms"
+                    render={() => <HTMLPage text={termsContent} />}
+                  />
+                  <Route
+                    path="/privacy"
+                    render={() => <HTMLPage text={privacyContent} />}
+                  />
+                  <PrivateRoute auth={auth} path="/loading">
+                    <Loading auth={auth} />
+                  </PrivateRoute>
+                  <PrivateRoute auth={auth} path="/profile">
+                    <Profile auth={auth} />
+                  </PrivateRoute>
+                  <PrivateRoute auth={auth} path="/team">
+                    <TeamScreen auth={auth} />
+                  </PrivateRoute>
+                  <PrivateRoute auth={auth} path="/plan/:prjId/:tabNm">
+                    <PlanScreen auth={auth} />
+                  </PrivateRoute>
+                  <PrivateRoute auth={auth} exact path="/work/:prjId/:pasId">
+                    <WorkScreen auth={auth} />
+                  </PrivateRoute>
+                  <PrivateRoute
+                    auth={auth}
+                    exact
+                    path="/work/:prjId/:pasId/:slug/:medId"
+                  >
+                    <WorkScreen auth={auth} />
+                  </PrivateRoute>
+                  <PrivateRoute auth={auth} exact path="/work/:prjId">
+                    <WorkScreen auth={auth} />
+                  </PrivateRoute>
+                  <PrivateRoute auth={auth} exact path="/detail/:prjId/:pasId">
+                    <PassageDetail auth={auth} />
+                  </PrivateRoute>
+                  <PrivateRoute
+                    auth={auth}
+                    exact
+                    path="/detail/:prjId/:pasId/:mediaId"
+                  >
+                    <PassageDetail auth={auth} />
+                  </PrivateRoute>
+                  <Route
+                    path="/neworg"
+                    render={(props) => handleNewOrg(props)}
+                  />
+                </ThemeProvider>
+              </HotKeyProvider>
+            </SnackBarProvider>
+          </DataChanges>
+        </UnsavedProvider>
+      </TokenCheck>
+      <ExternalLink externalUrl={externalUrl} />
+    </>
   );
 }
 
