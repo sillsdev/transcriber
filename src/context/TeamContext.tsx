@@ -150,7 +150,7 @@ const initState = {
   teamDelete: async (team: Organization) => {},
   isAdmin: (team: Organization) => false,
   isProjectAdmin: (team: Organization) => false,
-  flatAdd: (
+  flatAdd: async (
     planId: string,
     mediaRemoteIds: string[],
     book: string | undefined,
