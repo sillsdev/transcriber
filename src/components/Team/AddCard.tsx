@@ -78,10 +78,8 @@ export const AddCard = (props: IProps) => {
   const [inProgress, setInProgress] = React.useState(false);
   const [uploadVisible, setUploadVisible] = React.useState(false);
   const [type, setType] = React.useState('');
-  const [language, setLanguagex] = React.useState<ILanguage>(initLang);
-  const [book, setBookx] = React.useState<OptionType | null>(null);
-  const bookRef = useRef<OptionType | null>();
-  const languageRef = useRef<ILanguage>(initLang);
+  const [language, setLanguage] = React.useState<ILanguage>(initLang);
+  const [book, setBook] = React.useState<OptionType | null>(null);
   const [complete, setComplete] = useGlobal('progress');
   const [steps] = React.useState([
     t.projectCreated,
@@ -106,14 +104,6 @@ export const AddCard = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const setBook = (book: OptionType | null) => {
-    bookRef.current = book;
-    setBookx(book);
-  };
-  const setLanguage = (language: ILanguage) => {
-    languageRef.current = language;
-    setLanguagex(language);
-  };
   useEffect(() => {
     setLanguage(initLang);
     setBook(null);
@@ -161,8 +151,8 @@ export const AddCard = (props: IProps) => {
 
   const handleReady = () =>
     type !== '' &&
-    languageRef.current?.bcp47 !== 'und' &&
-    (type !== 'scripture' || bookRef.current !== null);
+    language.bcp47 !== 'und' &&
+    (type !== 'scripture' || book !== null);
 
   const handleClickOpen = (e: React.MouseEvent) => {
     setOpen(true);
@@ -217,14 +207,14 @@ export const AddCard = (props: IProps) => {
     const planId = await projectCreate(
       {
         attributes: {
-          name: bookRef.current?.label || name,
+          name: book?.label || name,
           description: '',
           type,
-          language: languageRef.current.bcp47,
-          languageName: languageRef.current.languageName,
+          language: language.bcp47,
+          languageName: language.languageName,
           isPublic: false,
-          spellCheck: languageRef.current.spellCheck,
-          defaultFont: languageRef.current.font,
+          spellCheck: language.spellCheck,
+          defaultFont: language.font,
           defaultFontSize: 'large',
           rtl: false,
           tags: {},
@@ -247,18 +237,13 @@ export const AddCard = (props: IProps) => {
   ) => {
     setStep(2);
     mediaRemoteIds &&
-      (await flatAdd(
-        planId,
-        mediaRemoteIds,
-        bookRef.current?.value,
-        setComplete
-      ));
+      (await flatAdd(planId, mediaRemoteIds, book?.value, setComplete));
     setStep(3);
     setTimeout(() => {
       // Allow time for last check mark
       setInProgress(false);
       setStep(0);
-      if (bookRef.current?.value)
+      if (book?.value)
         setView(`/plan/${remoteId('plan', planId, memory.keyMap) || planId}/0`);
       else
         setView(`/work/${remoteId('plan', planId, memory.keyMap) || planId}`);
