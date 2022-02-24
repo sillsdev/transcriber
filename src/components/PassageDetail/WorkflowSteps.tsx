@@ -1,4 +1,4 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core';
 import { Stage } from '../../control/Stage';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 
@@ -15,12 +15,13 @@ export function WorkflowSteps() {
   const { workflow, stepComplete, currentstep, setCurrentStep } =
     usePassageDetailContext();
   const classes = useStyles();
+  const theme = useTheme();
 
   const curColor = (id: string) => {
     return id === currentstep
-      ? '#70DBFF'
+      ? theme.palette.secondary.light
       : stepComplete(id)
-      ? '#D6F5FF'
+      ? theme.palette.grey[300]
       : undefined;
   };
 
@@ -41,6 +42,11 @@ export function WorkflowSteps() {
             id={w.id}
             label={w.label}
             color={curColor(w.id)}
+            textColor={
+              w.id === currentstep
+                ? theme.palette.secondary.contrastText
+                : '#000000'
+            }
             done={stepComplete(w.id)}
             select={handleSelect}
           />
