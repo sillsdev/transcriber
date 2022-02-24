@@ -16,9 +16,7 @@ import {
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import DeleteIcon from '@material-ui/icons/Delete';
 import { AddRecord, UpdateRecord } from '../model/baseModel';
-import Confirm from './AlertDialog';
 import {
   Accordion,
   AccordionSummary,
@@ -206,7 +204,6 @@ export function IntegrationPanel(props: IProps) {
   const [count, setCount] = useState(-1);
 
   const [paratextIntegration, setParatextIntegration] = useState('');
-  const [confirmItem, setConfirmItem] = useState<string | null>(null);
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const [plan] = useGlobal('plan');
@@ -321,10 +318,6 @@ export function IntegrationPanel(props: IProps) {
     );
   };
   const handleParatextProjectChange = (e: any) => {
-    if (e.target.value === t.removeProject) {
-      handleRemoveIntegration();
-      return;
-    }
     let index: number = paratext_projects.findIndex(
       (p) => p.Name === e.target.value
     );
@@ -388,19 +381,6 @@ export function IntegrationPanel(props: IProps) {
     setSyncing(false);
   };
 
-  const handleRemoveIntegration = () => {
-    setConfirmItem(t.paratextAssociation);
-  };
-
-  const handleDeleteConfirmed = () => {
-    updateProjectIntegration(getProjectIntegration(paratextIntegration), '{}');
-    setConfirmItem(null);
-    removeProjectFromParatextList(ptProj);
-    setPtProj(-1);
-    setPtProjName('');
-    setPtShortName('');
-  };
-  const handleDeleteRefused = () => setConfirmItem(null);
   const getProjectLabel = (): string => {
     if (offline) return t.selectProject;
     return connected
@@ -725,17 +705,7 @@ export function IntegrationPanel(props: IProps) {
                             option.Name
                           } (${option.LanguageTag})`}
                         </MenuItem>
-                      ))
-                      .concat(
-                        <MenuItem
-                          key={t.removeProject}
-                          value={t.removeProject}
-                          disabled={!hasPtProj}
-                        >
-                          {t.removeProject + '\u00A0\u00A0'}
-                          <DeleteIcon />
-                        </MenuItem>
-                      )}
+                      ))}
                   </TextField>
                 }
               />
@@ -909,17 +879,7 @@ export function IntegrationPanel(props: IProps) {
                         <MenuItem key={option.ParatextId} value={option.Name}>
                           {`${option.ShortName}/${option.Name} (${option.LanguageName}-${option.LanguageTag})`}
                         </MenuItem>
-                      ))
-                      .concat(
-                        <MenuItem
-                          key={t.removeProject}
-                          value={t.removeProject}
-                          disabled={!hasPtProj}
-                        >
-                          {t.removeProject + '\u00A0\u00A0'}
-                          <DeleteIcon />
-                        </MenuItem>
-                      )}
+                      ))}
                   </TextField>
                 }
               />
@@ -990,16 +950,6 @@ export function IntegrationPanel(props: IProps) {
           <Typography className={classes.heading}>{t.onestory}</Typography>
         </AccordionSummary>
       </Accordion> */}
-      {confirmItem !== null ? (
-        <Confirm
-          title={t.removeProject}
-          text={confirmItem}
-          yesResponse={handleDeleteConfirmed}
-          noResponse={handleDeleteRefused}
-        />
-      ) : (
-        <></>
-      )}
     </div>
   );
 }
