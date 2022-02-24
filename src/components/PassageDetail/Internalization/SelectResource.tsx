@@ -134,7 +134,11 @@ export const SelectResource = (props: IProps) => {
             className={classes.listItem}
           >
             <ListItemIcon>
-              {selected.indexOf(i) !== -1 ? <Checked /> : <UnChecked />}
+              {selected.indexOf(i) !== -1 ? (
+                <Checked id={`res-${i}-yes`} />
+              ) : (
+                <UnChecked id={`res-${i}-no`} />
+              )}
             </ListItemIcon>
             <ListItemText
               primary={r.attributes?.reference}
@@ -148,6 +152,7 @@ export const SelectResource = (props: IProps) => {
       </List>
       <div className={classes.actions}>
         <Button
+          id="res-selected"
           onClick={handleSelect}
           variant="contained"
           className={classes.button}
@@ -157,6 +162,7 @@ export const SelectResource = (props: IProps) => {
           {ts.select}
         </Button>
         <Button
+          id="res-select-cancel"
           onClick={handleCancel}
           variant="contained"
           className={classes.button}

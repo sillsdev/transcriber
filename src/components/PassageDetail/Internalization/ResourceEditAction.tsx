@@ -20,11 +20,11 @@ export const ResourceEditAction = ({ item, onEdit, onDelete }: IProps) => {
   return (
     <span>
       {onEdit && (
-        <IconButton onClick={handleEdit(item)}>
+        <IconButton id={`res-edit`} onClick={handleEdit(item)}>
           <EditIcon />
         </IconButton>
       )}
-      <IconButton onClick={handleDelete(item)}>
+      <IconButton id={`res-delete`} onClick={handleDelete(item)}>
         <DeleteIcon />
       </IconButton>
     </span>

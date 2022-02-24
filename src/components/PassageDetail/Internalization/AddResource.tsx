@@ -75,6 +75,7 @@ export const AddResource = (props: IProps) => {
   return (
     <div>
       <Button
+        id="add-resource"
         onClick={handleClick}
         variant="contained"
         color="primary"

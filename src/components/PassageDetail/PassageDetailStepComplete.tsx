@@ -57,7 +57,11 @@ export const PassageDetailStepComplete = (props: IProps) => {
         title={t.title}
         onClick={handleToggleComplete}
       >
-        {complete ? <CompleteIcon /> : <NotCompleteIcon />}
+        {complete ? (
+          <CompleteIcon id="step-yes" />
+        ) : (
+          <NotCompleteIcon id="step-no" />
+        )}
       </IconButton>
     </div>
   );

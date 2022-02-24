@@ -636,7 +636,7 @@ export function IntegrationPanel(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <Accordion defaultExpanded={!offline} disabled={offline}>
+      <Accordion id="int-online" defaultExpanded={!offline} disabled={offline}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={t.paratext}
@@ -648,7 +648,7 @@ export function IntegrationPanel(props: IProps) {
           </Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.panel}>
-          <List dense component="div">
+          <List id="onl-criteria" dense component="div">
             <ListItem id="onlineexporttype" key="export-type">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
@@ -822,7 +822,7 @@ export function IntegrationPanel(props: IProps) {
           </FormControl>
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded={offline} disabled={!offline}>
+      <Accordion id="int-offln" defaultExpanded={offline} disabled={!offline}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={t.paratextLocal}
@@ -834,7 +834,7 @@ export function IntegrationPanel(props: IProps) {
           </Typography>
         </AccordionSummary>
         <AccordionDetails className={classes.panel}>
-          <List dense component="div">
+          <List id="offln-criteria" dense component="div">
             <ListItem key="export-type">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>

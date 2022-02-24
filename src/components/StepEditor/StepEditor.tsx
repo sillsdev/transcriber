@@ -260,7 +260,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   return (
     <div>
       <div className={classes.row}>
-        <Button onClick={handleAdd} variant="contained">
+        <Button id="wk-step-add" onClick={handleAdd} variant="contained">
           {se.add}
         </Button>
         <div title={hiddenMessage}>

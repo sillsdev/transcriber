@@ -17,7 +17,7 @@ const handleDone =
   };
 
 export const DoneButton = (props: IProps) => (
-  <IconButton onClick={handleDone(props)}>
-    {props.value ? <DoneIcon /> : <OpenIcon />}
+  <IconButton id="item-done" onClick={handleDone(props)}>
+    {props.value ? <DoneIcon id="done-yes" /> : <OpenIcon id="done-no" />}
   </IconButton>
 );
