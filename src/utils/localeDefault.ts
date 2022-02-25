@@ -24,7 +24,7 @@ interface ILdml {
     };
   };
 }
-const ldmlProd: ILdml = { en, fr, pt, ru };
+const ldmlProd: ILdml = { en, fr, id, pt, ru };
 const ldmlDev: ILdml = { en, fr, ar, es, ha, id, ru, sw, pt, ta };
 
 export const localeDefault = (isDev: boolean, bcp47?: string) => {

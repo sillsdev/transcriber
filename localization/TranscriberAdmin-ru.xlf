@@ -3,7 +3,7 @@
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.availableUsers">
          <segment>
-            <source/>
+            <source>Other Users</source>
             <target/>
          </segment>
       </unit>
@@ -15,31 +15,31 @@
       </unit>
       <unit id="access.cancel">
          <segment>
-            <source/>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
       <unit id="access.createUser">
          <segment>
-            <source/>
+            <source>Add a new user</source>
             <target/>
          </segment>
       </unit>
       <unit id="access.currentUser">
          <segment>
-            <source/>
+            <source>Current User</source>
             <target/>
          </segment>
       </unit>
       <unit id="access.importSnapshot">
          <segment>
-            <source/>
+            <source>Import Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="access.logIn">
          <segment>
-            <source/>
+            <source>Log In</source>
             <target/>
          </segment>
       </unit>
@@ -51,7 +51,7 @@
       </unit>
       <unit id="access.mustBeOnline">
          <segment>
-            <source/>
+            <source>You must be connected to the Internet to Log In!</source>
             <target/>
          </segment>
       </unit>
@@ -63,67 +63,85 @@
       </unit>
       <unit id="access.noOnlineUsers2">
          <segment>
-            <source>Log in and select Offline Available in the project card menu and then log out. Or, click IMPORT PROJECT to import a project your admin exported.</source>
+            <source>Log in and select Offline Available in the audio project card menu and then log out. Or, click IMPORT AUDIO PROJECT to import an audio project your admin exported.</source>
             <target>Войдите в систему и выберите «Доступен в автономном режиме» в меню карточки проекта, а затем выйдите из системы. Или щелкните ИМПОРТ ПРОЕКТА, чтобы импортировать проект, экспортированный администратором.</target>
          </segment>
       </unit>
       <unit id="access.noOnlineUsers3">
          <segment>
-            <source/>
+            <source>To create an online audio project for working alone:</source>
             <target/>
          </segment>
       </unit>
       <unit id="access.noOnlineUsers4">
          <segment>
-            <source/>
+            <source>Create a personal audio project.</source>
             <target/>
          </segment>
       </unit>
       <unit id="access.offlineUsers">
          <segment>
             <source>Offline Users</source>
-            <target>Автономные пользователи</target>
+            <target/>
          </segment>
       </unit>
       <unit id="access.title">
          <segment>
-            <source>Connection Mode</source>
-         	<target>Режим подключения</target>
+            <source>User List</source>
+            <target>Список пользователей</target>
+         </segment>
+      </unit>
+      <unit id="access.withInternet">
+         <segment>
+            <source>With an Internet connection</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.withoutInternet">
+         <segment>
+            <source>Without an Internet connection</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.withoutInternetTip">
+         <segment>
+            <source>Project must be set up online.  Changes made offline will be automatically synced to the online project if a user on this computer logs in online, or changes can be exported and then imported to the online project.  If your user avatar does not appear here, you must login online and mark your project as 'Offline Available' and then exit, or import a project that has been exported while online.</source>
+            <target>Проект должен быть настроен онлайн. Изменения, внесенные в автономном режиме, будут автоматически синхронизироваться с онлайн-проектом, если пользователь на этом компьютере входит в онлайн-систему, или изменения могут быть экспортированы, а затем импортированы в онлайн-проект. Если ваш пользователь не отображается здесь, вы должны войти в систему и пометить свой проект как доступный в автономном режиме, а затем выйти или импортировать проект, который был экспортирован в интерактивном режиме.Проект должен быть настроен онлайн. Изменения, внесенные в автономном режиме, будут автоматически синхронизироваться с онлайн-проектом, если пользователь на этом компьютере входит в онлайн-систему, или изменения могут быть экспортированы, а затем импортированы в онлайн-проект. Если ваш пользователь не отображается здесь, вы должны войти в систему и пометить свой проект как доступный в автономном режиме, а затем выйти или импортировать проект, который был экспортирован в интерактивном режиме.</target>
          </segment>
       </unit>
       <unit id="activityState.approved">
          <segment>
-            <source/>
+            <source>Ready to Sync</source>
             <target/>
          </segment>
       </unit>
       <unit id="activityState.done">
          <segment>
-            <source/>
+            <source>Done</source>
             <target/>
          </segment>
       </unit>
       <unit id="activityState.incomplete">
          <segment>
-            <source/>
+            <source>Incomplete</source>
             <target/>
          </segment>
       </unit>
       <unit id="activityState.needsNewRecording">
          <segment>
-            <source/>
+            <source>Recording Needed</source>
             <target/>
          </segment>
       </unit>
       <unit id="activityState.needsNewTranscription">
          <segment>
-            <source/>
+            <source>Correction Needed</source>
             <target/>
          </segment>
       </unit>
       <unit id="activityState.noMedia">
          <segment>
-            <source/>
+            <source>No Recording</source>
             <target/>
          </segment>
       </unit>
@@ -135,13 +153,13 @@
       </unit>
       <unit id="activityState.reviewing">
          <segment>
-            <source/>
+            <source>Reviewing</source>
             <target/>
          </segment>
       </unit>
       <unit id="activityState.synced">
          <segment>
-            <source/>
+            <source>Synced</source>
             <target/>
          </segment>
       </unit>
@@ -159,25 +177,25 @@
       </unit>
       <unit id="activityState.transcribeReady">
          <segment>
-            <source/>
+            <source>Ready to Transcribe</source>
             <target/>
          </segment>
       </unit>
       <unit id="activityState.transcribing">
          <segment>
-            <source/>
+            <source>Transcribing</source>
             <target/>
          </segment>
       </unit>
       <unit id="alert.areYouSure">
          <segment>
-            <source/>
+            <source>Are you sure?</source>
             <target/>
          </segment>
       </unit>
       <unit id="alert.confirmation">
          <segment>
-            <source/>
+            <source>Confirmation</source>
             <target/>
          </segment>
       </unit>
@@ -189,157 +207,151 @@
       </unit>
       <unit id="alert.no">
          <segment>
-            <source/>
+            <source>No</source>
             <target/>
          </segment>
       </unit>
       <unit id="alert.yes">
          <segment>
-            <source/>
+            <source>Yes</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="artifactCategory.activity">
-   		<segment>
-   			<source>Activity</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactCategory.biblestory">
-   		<segment>
-   			<source>Bible Story</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactCategory.cultural">
-   		<segment>
-   			<source>Cultural</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactCategory.geographic">
-   		<segment>
-   			<source>Geographic</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactCategory.grammar">
-   		<segment>
-   			<source>Grammar</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactCategory.person">
-   		<segment>
-   			<source>Person</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactCategory.scripture">
-   		<segment>
-   			<source>Scripture</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactCategory.theology">
-   		<segment>
-   			<source>Theology</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactCategory.uncategorized">
-   		<segment>
-   			<source>Uncategorized</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactCategory.word">
-   		<segment>
-   			<source>Word</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactType.backtranslation">
-   		<segment>
-   			<source>Back Translation</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactType.comment">
-   		<segment>
-   			<source>Comment</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactType.resource">
-   		<segment>
-   			<source>Resource</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactType.sharedresource">
-   		<segment>
-   			<source>Shared Resource</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactType.testing">
-   		<segment>
-   			<source>Testing</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="artifactType.vernacular">
-   		<segment>
-   			<source>Vernacular</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="selectArtifactCategory.addNewCategory">
-   		<segment>
-   			<source>Add New Category</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="selectArtifactCategory.artifactCategory">
-   		<segment>
-   			<source>Category</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="selectArtifactCategory.duplicateCategory">
-   		<segment>
-   			<source>Category already exists.</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="selectArtifactCategory.newArtifactCategory">
-   		<segment>
-   			<source>New Category</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="selectArtifactType.addNewType">
-   		<segment>
-   			<source>Add New Type</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="selectArtifactType.artifactType">
-   		<segment>
-   			<source>Artifact Type</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="selectArtifactType.newArtifactType">
-   		<segment>
-   			<source>New Artifact Type</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="assignmentTable.assignSec">
+      <unit id="artifactCategory.activity">
          <segment>
-            <source/>
+            <source>Activity</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.biblestory">
+         <segment>
+            <source>Bible Story</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.bookintro">
+         <segment>
+            <source>Book Introduction</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.translationresource">
+         <segment>
+            <source>Translation Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.scripture">
+         <segment>
+            <source>Scripture</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.uncategorized">
+         <segment>
+            <source>Uncategorized</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.backtranslation">
+         <segment>
+            <source>Back Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.comment">
+         <segment>
+            <source>Comment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.qanda">
+         <segment>
+            <source>Question and Answer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.retell">
+         <segment>
+            <source>Retelling</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.resource">
+         <segment>
+            <source>Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.sharedresource">
+         <segment>
+            <source>Shared Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.testing">
+         <segment>
+            <source>Testing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.vernacular">
+         <segment>
+            <source>Vernacular</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactCategory.addNewCategory">
+         <segment>
+            <source>Add New Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactCategory.artifactCategory">
+         <segment>
+            <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactCategory.duplicateCategory">
+         <segment>
+            <source>Category already exists.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactCategory.newArtifactCategory">
+         <segment>
+            <source>New Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactCategory.scriptureHighlight">
+         <segment>
+            <source>Resources of this type will be available in steps using the Compare tool.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactType.addNewType">
+         <segment>
+            <source>Add New Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactType.artifactType">
+         <segment>
+            <source>Artifact Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectArtifactType.newArtifactType">
+         <segment>
+            <source>New Artifact Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.assignSec">
+         <segment>
+            <source>Assign {0}</source>
             <target/>
          </segment>
       </unit>
@@ -351,19 +363,19 @@
       </unit>
       <unit id="assignmentTable.filter">
          <segment>
-            <source/>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.passages">
          <segment>
-            <source/>
+            <source>Passages</source>
             <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.removeSec">
          <segment>
-            <source/>
+            <source>Remove Assignment</source>
             <target/>
          </segment>
       </unit>
@@ -375,37 +387,37 @@
       </unit>
       <unit id="assignmentTable.sectionstate">
          <segment>
-            <source/>
+            <source>State</source>
             <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.selectRowsToAssign">
          <segment>
-            <source/>
+            <source>Please select row(s) to assign.</source>
             <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.selectRowsToRemove">
          <segment>
-            <source/>
+            <source>Please select row(s) to remove assignment.</source>
             <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.showHideFilter">
          <segment>
-            <source/>
+            <source>Show/Hide filter rows</source>
             <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.title">
          <segment>
-            <source/>
+            <source>Assignments</source>
             <target/>
          </segment>
       </unit>
       <unit id="assignSection.close">
          <segment>
-            <source/>
+            <source>Close</source>
             <target/>
          </segment>
       </unit>
@@ -417,17 +429,17 @@
       </unit>
       <unit id="assignSection.title">
          <segment>
-            <source/>
+            <source>Assign {0}</source>
             <target/>
          </segment>
       </unit>
       <unit id="assignSection.users">
          <segment>
-            <source/>
+            <source>Members</source>
             <target/>
          </segment>
       </unit>
-     <unit id="audacityManager.audacityProject">
+      <unit id="audacityManager.audacityProject">
          <segment>
             <source>Audacity Project</source>
             <target>Проект Audacity</target>
@@ -463,12 +475,12 @@
             <target>Закрыть</target>
          </segment>
       </unit>
-   	<unit id="audacityManager.closeAudacity">
-   		<segment>
-   			<source>Audacity is current running. Close before using this function.</source>
-   			<target>В данный момент запущена программа Audacity. Закройте его перед использованием этой функции.</target>
-   		</segment>
-   	</unit>
+      <unit id="audacityManager.closeAudacity">
+         <segment>
+            <source>Audacity is current running. Close before using this function.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="audacityManager.create">
          <segment>
             <source>Create</source>
@@ -478,7 +490,7 @@
       <unit id="audacityManager.exportFirst">
          <segment>
             <source>Open Audacity and use File:Export before importing</source>
-         	<target>Откройте Audacity и используйте Файл:Экспорт перед импортом</target>
+            <target/>
          </segment>
       </unit>
       <unit id="audacityManager.import">
@@ -490,19 +502,19 @@
       <unit id="audacityManager.installError">
          <segment>
             <source>Audacity install error</source>
-         	<target>Ошибка установки Audacity</target>
+            <target/>
          </segment>
       </unit>
       <unit id="audacityManager.loadingAudio">
          <segment>
             <source>Use File:Import in Audacity to load current audio if desired.</source>
-         	<target>Используйте Файл:Импорт в Audacity для загрузки текущего аудио, если это необходимо</target>
+            <target/>
          </segment>
       </unit>
       <unit id="audacityManager.missingImport">
          <segment>
             <source>Missing import file: {0}</source>
-         	<target>Отсутствует файл импорта: {0}</target>
+            <target/>
          </segment>
       </unit>
       <unit id="audacityManager.missingProject">
@@ -520,13 +532,13 @@
       <unit id="audacityManager.saveFirst">
          <segment>
             <source>Save before editing</source>
-         	<target>Сохранить перед редактированием</target>
+            <target/>
          </segment>
       </unit>
       <unit id="audacityManager.tip">
          <segment>
             <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
-            <target>Если у вас есть существующий проект Audacity, который вы хотите связать с этим отрывком, нажмите BROWSE. Чтобы создать новый проект Audacity с автоматически созданным именем, нажмите СОЗДАТЬ.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="audacityManager.title">
@@ -549,61 +561,67 @@
       </unit>
       <unit id="cards.add">
          <segment>
-            <source/>
+            <source>Add</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.addTeam">
          <segment>
-            <source/>
+            <source>Add Team</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.cancel">
          <segment>
-            <source/>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.connectParatext">
          <segment>
-            <source/>
+            <source>Connect a Paratext Project</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="cards.editWorkflow">
-   		<segment>
-   			<source>Edit Workflow - {0}</source>
-   			<target>Редактирование рабочего процесса {0}</target>
-   		</segment>
-   	</unit>
       <unit id="cards.delete">
          <segment>
             <source>Delete</source>
             <target>Удалить</target>
          </segment>
       </unit>
+      <unit id="cards.draft">
+         <segment>
+            <source>Oral Drafting</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.deleteTeam">
          <segment>
-            <source/>
+            <source>Delete Team</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.editWorkflow">
+         <segment>
+            <source>Edit Workflow {0}</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.explainTeamDelete">
          <segment>
-            <source/>
+            <source>Deleting the team will delete all audio projects of the team.</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.import">
          <segment>
-            <source/>
+            <source>Import Audio Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.language">
          <segment>
-            <source/>
+            <source>Language: {0}</source>
             <target/>
          </segment>
       </unit>
@@ -615,49 +633,67 @@
       </unit>
       <unit id="cards.members">
          <segment>
-            <source/>
+            <source>Members ({0})</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.nameInUse">
          <segment>
-            <source/>
+            <source>Name in use</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.newProject">
          <segment>
-            <source/>
+            <source>New Audio Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.OBS">
+         <segment>
+            <source>Storying</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.OBT">
+         <segment>
+            <source>Oral Bible Translation</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.offline">
          <segment>
-            <source/>
+            <source>Offline</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.offlineAvail">
          <segment>
-            <source/>
+            <source>Offline Available</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.passagesCreated">
          <segment>
-            <source/>
+            <source>Passages Created</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.personalProjects">
          <segment>
-            <source/>
+            <source>Personal Audio Projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.process">
+         <segment>
+            <source>Default Workflow</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.projectCreated">
          <segment>
-            <source/>
+            <source>Audio Project Created</source>
             <target/>
          </segment>
       </unit>
@@ -669,129 +705,130 @@
       </unit>
       <unit id="cards.sectionStatus">
          <segment>
-            <source/>
+            <source>{0} {1}</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.settings">
          <segment>
-            <source/>
+            <source>Settings</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.sync">
          <segment>
-            <source/>
+            <source>Sync ({0})</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.teamName">
          <segment>
-            <source/>
+            <source>Team Name</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.teamSettings">
          <segment>
-            <source/>
+            <source>Team Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.transcriber">
+         <segment>
+            <source>Transcribing</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.uploadProgress">
          <segment>
-            <source/>
+            <source>Upload Progress</source>
             <target/>
          </segment>
       </unit>
-   	<trans-unit id="commentCard.confirmDelete">
-   		<source>Delete this comment?</source>
-   		<target/>
-   		<context-group>
-   			<context context-type="sourcefile">CommentCard.tsx</context>
-   		</context-group>
-   	</trans-unit>
-   	<trans-unit id="commentEditor.record">
-   		<source>Record Comment</source>
-   		<target/>
-   		<context-group>
-   			<context context-type="sourcefile">CommentCard.tsx</context>
-   		</context-group>
-   	</trans-unit>
-   	<trans-unit id="commentEditor.recordUnavailable">
-   		<source>Another recorder is open.</source>
-   		<target/>
-   		<context-group>
-   			<context context-type="sourcefile">CommentCard.tsx</context>
-   		</context-group>
-   	</trans-unit>
-   	<trans-unit id="commentEditor.saving">
-   		<source>Saving...</source>
-   		<target/>
-   		<context-group>
-   			<context context-type="sourcefile">CommentCard.tsx</context>
-   		</context-group>
-   	</trans-unit>
-   	<trans-unit id="commentEditor.unsaved">
-   		<source>Unsaved</source>
-   		<target/>
-   		<context-group>
-   			<context context-type="sourcefile">CommentCard.tsx</context>
-   		</context-group>
-   	</trans-unit>
-   	<unit id="community.deleteItem">
-   		<segment>
-   			<source>Delete Item</source>
-   			<target>Supprimer l'élément</target>
-   		</segment>
-   	</unit>
-   	<unit id="community.playTest">
-   		<segment>
-   			<source>Play Test</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="community.record">
-   		<segment>
-   			<source>Record</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="community.saveFirst">
-   		<segment>
-   			<source>Save or Clear your recording before uploading.</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="community.segment">
-   		<segment>
-   			<source>Segment</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="community.speaker">
-   		<segment>
-   			<source>Speaker</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="community.transcribe">
-   		<segment>
-   			<source>Transcribe</source>
-   			<target>Транскрибировать</target>
-   		</segment>
-   	</unit>
-   	<unit id="community.unsaved">
-   		<segment>
-   			<source>Unsaved</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="community.uploadComplete">
-   		<segment>
-   			<source>{0} of {1} files uploaded successfully.</source>
-   			<target/>
-   		</segment>
-   	</unit>
+      <unit id="commentCard.confirmDelete">
+         <segment>
+            <source>Delete this comment?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentEditor.record">
+         <segment>
+            <source>Record Comment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentEditor.recordUnavailable">
+         <segment>
+            <source>Another recorder is open.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentEditor.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentEditor.unsaved">
+         <segment>
+            <source>Unsaved</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.deleteItem">
+         <segment>
+            <source>Delete Item</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.playTest">
+         <segment>
+            <source>Play Test</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.record">
+         <segment>
+            <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.saveFirst">
+         <segment>
+            <source>Save or Clear your recording before uploading.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.segment">
+         <segment>
+            <source>Segment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.speaker">
+         <segment>
+            <source>Speaker</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.transcribe">
+         <segment>
+            <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.unsaved">
+         <segment>
+            <source>Unsaved</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.uploadComplete">
+         <segment>
+            <source>{0} of {1} files uploaded successfully.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="control.other">
          <segment>
             <source>General</source>
@@ -806,13 +843,13 @@
       </unit>
       <unit id="deleteExpansion.advanced">
          <segment>
-            <source/>
+            <source>Advanced</source>
             <target/>
          </segment>
       </unit>
       <unit id="deleteExpansion.dangerZone">
          <segment>
-            <source/>
+            <source>Danger Zone</source>
             <target/>
          </segment>
       </unit>
@@ -822,195 +859,201 @@
             <target>Удалить</target>
          </segment>
       </unit>
-   	<unit id="discussionCard.assignRole">
-   		<segment>
-   			<source>Assign to a Role</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionCard.assignUser">
-   		<segment>
-   			<source>Assign to a User</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionCard.category">
-   		<segment>
-   			<source>Category: {0}</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionCard.collapse">
-   		<segment>
-   			<source>Show/Hide Comments</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionCard.comments">
-   		<segment>
-   			<source>Comments: {0}</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionCard.confirmDelete">
-   		<segment>
-   			<source>Delete this discussion and all commments?</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionCard.locate">
-   		<segment>
-   			<source>Locate discussion subject in audio recording</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionCard.or">
-   		<segment>
-   			<source>or</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionCard.playOrStop">
-   		<segment>
-   			<source>Play or Stop</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionCard.resolved">
-   		<segment>
-   			<source>Resolve</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionCard.topic">
-   		<segment>
-   			<source>Topic</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionCard.version">
-   		<segment>
-   			<source>Version</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionList.add">
-   		<segment>
-   			<source>Add Discussion</source>
-   			<target>Добавить обсуждение</target>
-   		</segment>
-   	</unit>
-   	<unit id="discussionList.categoryList">
-   		<segment>
-   			<source>Category List</source>
-   			<target>Список категорий</target>
-   		</segment>
-   	</unit>
-   	<unit id="discussionList.collapse">
-   		<segment>
-   			<source>Show/Hide All Comments</source>
-   			<target>Показать/Скрыть все комментарии</target>
-   		</segment>
-   	</unit>
-   	<unit id="discussionList.discussionFilter">
-   		<segment>
-   			<source>Discussion Filter</source>
-   			<target>Дискуссионный фильтр</target>
-   		</segment>
-   	</unit>
-   	<unit id="discussionList.filterStatus">
-   		<segment>
-   			<source>{0} / {1} discussions</source>
-   			<target>{0} / {1} обсуждения</target>
-   		</segment>
-   	</unit>
-   	<unit id="discussionList.title">
-   		<segment>
-   			<source>Discussions</source>
-   			<target>Обсуждения</target>
-   		</segment>
-   	</unit>
-   	<unit id="discussionMenu.edit">
-   		<segment>
-   			<source>Edit</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionMenu.delete">
-   		<segment>
-   			<source>Delete</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionMenu.reopen">
-   		<segment>
-   			<source>Reopen</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionMenu.resolve">
-   		<segment>
-   			<source>Resolve</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="discussionMenu.setSegment">
-   		<segment>
-   			<source>Set Segment</source>
-   			<target>Установить сегмент</target>
-   		</segment>
-   	</unit>
-   	<unit id="electronImport.allDataOverwritten">
+      <unit id="discussionCard.assignRole">
          <segment>
-            <source/>
+            <source>Assign to a Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.assignUser">
+         <segment>
+            <source>Assign to a User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.category">
+         <segment>
+            <source>Category: {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.collapse">
+         <segment>
+            <source>Show/Hide Comments</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.comments">
+         <segment>
+            <source>Comments: {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.confirmDelete">
+         <segment>
+            <source>Delete this discussion and all commments?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.locate">
+         <segment>
+            <source>Locate discussion subject in audio recording</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.or">
+         <segment>
+            <source>or</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.playOrStop">
+         <segment>
+            <source>Play or Stop</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.resolved">
+         <segment>
+            <source>Resolve</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.topic">
+         <segment>
+            <source>Topic</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.version">
+         <segment>
+            <source>Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.edit">
+         <segment>
+            <source>Edit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.reopen">
+         <segment>
+            <source>Reopen</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.resolve">
+         <segment>
+            <source>Resolve</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.setSegment">
+         <segment>
+            <source>Set Segment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.add">
+         <segment>
+            <source>Add Discussion</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.categoryList">
+         <segment>
+            <source>Category List</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.collapse">
+         <segment>
+            <source>Show/Hide All Comments</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.discussionFilter">
+         <segment>
+            <source>Discussion Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.filterStatus">
+         <segment>
+            <source>{0} / {1} discussions</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.saveFirst">
+         <segment>
+            <source>Save changed discussions and comments first?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionList.title">
+         <segment>
+            <source>Discussions</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.allDataOverwritten">
+         <segment>
+            <source>All {name0} data will be overwritten.</source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.exportedLost">
          <segment>
-            <source/>
+            <source>Import file will not include latest exported data.</source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.importComplete">
          <segment>
-            <source/>
+            <source>Import Complete</source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.importCreated">
          <segment>
-            <source/>
+            <source>Import file was created: {date0}.</source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source/>
+            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.importPending">
          <segment>
-            <source/>
+            <source>Import In Progress...{0}%</source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.importProject">
          <segment>
-            <source/>
+            <source>Import Audio Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.invalidProject">
          <segment>
-            <source/>
+            <source>Import File does not contain current audio project.</source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.lastExported">
          <segment>
-            <source/>
+            <source>Current data in audio project {name0} was last exported {date0}.</source>
             <target/>
          </segment>
       </unit>
@@ -1022,107 +1065,107 @@
       </unit>
       <unit id="electronImport.neverExported">
          <segment>
-            <source>Current data in project {name0} has never been exported to an itf file to preserve changes.</source>
+            <source>Current data in audio project {name0} has never been exported to an itf file to preserve changes.</source>
             <target>Текущие данные в проекте {name0} никогда не экспортировались в itf-файл для сохранения изменений.</target>
          </segment>
       </unit>
       <unit id="electronImport.project">
          <segment>
-            <source>Project</source>
+            <source>Audio Project</source>
             <target>Проект</target>
          </segment>
       </unit>
       <unit id="electronImport.projectImported">
          <segment>
-            <source/>
+            <source>Audio Project {name0} was previously imported with a newer file: {date1} </source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.ptfError">
          <segment>
-            <source/>
+            <source>Not a valid Portable Transcriber File</source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.userWontSeeProject">
          <segment>
-            <source>You are not a member of this project team. This project will not be accessible after import.</source>
+            <source>You are not a member of this audio project team. This audio project will not be accessible after import.</source>
             <target>Вы не являетесь членом этой проектной команды. Этот проект будет недоступен после импорта.</target>
          </segment>
       </unit>
       <unit id="emailUnverified.emailUnverified">
          <segment>
-            <source/>
+            <source>Your email is unverified.</source>
             <target/>
          </segment>
       </unit>
       <unit id="emailUnverified.logout">
          <segment>
-            <source/>
+            <source>Logout</source>
             <target/>
          </segment>
       </unit>
       <unit id="emailUnverified.resend">
          <segment>
-            <source/>
+            <source>Resend the authorization email</source>
             <target/>
          </segment>
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source/>
+            <source>I'm verified!  Carry on!</source>
             <target/>
          </segment>
       </unit>
       <unit id="emailUnverified.verify">
          <segment>
-            <source/>
+            <source>Please verify by clicking on the link in the authorization email sent to your account.</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="filterMenu.all">
-   		<segment>
-   			<source>All</source>
-   			<target>Все</target>
-   		</segment>
-   	</unit>
-   	<unit id="filterMenu.allPassages">
-   		<segment>
-   			<source>All Passages on all team projects</source>
-   			<target>Все переходы по всем командным проектам</target>
-   		</segment>
-   	</unit>
-   	<unit id="filterMenu.allSteps">
-   		<segment>
-   			<source>All Steps</source>
-   			<target>Все шаги</target>
-   		</segment>
-   	</unit>
-   	<unit id="filterMenu.category">
-   		<segment>
-   			<source>Category</source>
-   			<target>Категория</target>
-   		</segment>
-   	</unit>
-   	<unit id="filterMenu.forYou">
-   		<segment>
-   			<source>For You</source>
-   			<target>Для тебя</target>
-   		</segment>
-   	</unit>
-   	<unit id="filterMenu.latestVersion">
-   		<segment>
-   			<source>Latest Version</source>
-   			<target>Последняя версия</target>
-   		</segment>
-   	</unit>
-   	<unit id="filterMenu.resolved">
-   		<segment>
-   			<source>Resolved</source>
-   			<target>Решено</target>
-   		</segment>
-   	</unit>
-   	<unit id="grid.all">
+      <unit id="filterMenu.all">
+         <segment>
+            <source>All</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.allPassages">
+         <segment>
+            <source>All Passages on all team projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.allSteps">
+         <segment>
+            <source>All Steps</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.category">
+         <segment>
+            <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.forYou">
+         <segment>
+            <source>For You</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.latestVersion">
+         <segment>
+            <source>Latest Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.resolved">
+         <segment>
+            <source>Resolved</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="grid.all">
          <segment>
             <source>All</source>
             <target>Все</target>
@@ -1250,43 +1293,43 @@
       </unit>
       <unit id="grid.sum">
          <segment>
-            <source/>
+            <source>Sum</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.add">
          <segment>
-            <source/>
+            <source>Ok</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.addGroupMember">
          <segment>
-            <source/>
+            <source>Choose {0}</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.addMemberInstruction">
          <segment>
-            <source/>
+            <source>Choose a person who will act as a {0} for audio projects in this group.</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.allReviewersCanTranscribe">
          <segment>
-            <source/>
+            <source>All Editors are allowed to transcribe.</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.assignedSections">
          <segment>
-            <source/>
+            <source>  Assigned {0}: </source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.cancel">
          <segment>
-            <source/>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
@@ -1298,19 +1341,19 @@
       </unit>
       <unit id="groupSettings.editors">
          <segment>
-            <source/>
+            <source>Editors</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.editorsDetail">
          <segment>
-            <source/>
+            <source>(Review + Transcribe)</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.loadingTable">
          <segment>
-            <source/>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>
@@ -1323,66 +1366,78 @@
       <unit id="groupSettings.noDeleteAdmin">
          <segment>
             <source>The only Administrator cannot be deleted.</source>
-            <target>Единственного администратора удалить нельзя.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupSettings.noDeleteAllUsersInfo">
          <segment>
-            <source/>
+            <source>Cannot delete members from the All Members group</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.noDeleteInfo">
          <segment>
-            <source/>
+            <source>This role is included in a higher role and cannot be deleted.</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.owners">
          <segment>
-            <source/>
+            <source>Owners</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.ownersDetail">
          <segment>
-            <source/>
+            <source>(Manage + Review + Transcribe)</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.projectPlans">
          <segment>
-            <source/>
+            <source>Audio Project Plans</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.roles">
+         <segment>
+            <source>Roles:{0}</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.save">
          <segment>
-            <source/>
+            <source>Save</source>
+            <target>Сохранить</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.transcriptionTitle">
+         <segment>
+            <source>Users in Transcription Roles</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.transcribers">
          <segment>
-            <source/>
+            <source>Transcribers</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.transcribersDetail">
          <segment>
-            <source/>
+            <source>(Transcribe)</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupTabs.groups">
          <segment>
-            <source/>
+            <source>Groups</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupTabs.invitations">
          <segment>
-            <source/>
+            <source>Invitations</source>
             <target/>
          </segment>
       </unit>
@@ -1394,31 +1449,37 @@
       </unit>
       <unit id="groupTabs.users">
          <segment>
-            <source/>
+            <source>Members</source>
             <target/>
          </segment>
       </unit>
       <unit id="hotKey.altKey">
          <segment>
-            <source/>
+            <source>Alt</source>
             <target/>
          </segment>
       </unit>
       <unit id="hotKey.ctrlKey">
          <segment>
-            <source/>
+            <source>Ctrl</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.downArrow">
+         <segment>
+            <source>Down Arrow</source>
             <target/>
          </segment>
       </unit>
       <unit id="hotKey.endKey">
          <segment>
-            <source/>
+            <source>End</source>
             <target/>
          </segment>
       </unit>
       <unit id="hotKey.homeKey">
          <segment>
-            <source/>
+            <source>Home</source>
             <target/>
          </segment>
       </unit>
@@ -1428,153 +1489,153 @@
             <target>or</target>
          </segment>
       </unit>
-      <unit id="hotKey.spaceKey">
-         <segment>
-            <source/>
-            <target/>
-         </segment>
-      </unit>
       <unit id="hotKey.leftArrow">
          <segment>
             <source>Left Arrow</source>
-            <target>Стрелка влево</target>
+            <target/>
          </segment>
       </unit>
       <unit id="hotKey.rightArrow">
          <segment>
-            <source/>
+            <source>Right Arrow</source>
             <target/>
          </segment>
       </unit>
-      <unit id="hotKey.downArrow">
+      <unit id="hotKey.shiftKey">
          <segment>
-            <source/>
+            <source>Shift</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.spaceKey">
+         <segment>
+            <source>Space</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.close">
          <segment>
-            <source/>
+            <source>Close</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.continue">
          <segment>
-            <source/>
+            <source>Continue?</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.copy">
          <segment>
-            <source/>
+            <source>Copy Report</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.copyfail">
          <segment>
-            <source/>
+            <source>Copy Failed</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.error">
          <segment>
-            <source/>
+            <source>Import Error</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.family">
          <segment>
-            <source/>
+            <source>Family Name</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.filter">
          <segment>
-            <source/>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.fontsize">
          <segment>
-            <source/>
+            <source>Font Size</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.given">
          <segment>
-            <source/>
+            <source>Given Name</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.import">
          <segment>
-            <source/>
+            <source>Import</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.importComplete">
          <segment>
-            <source/>
+            <source>Import Complete</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.imported">
          <segment>
-            <source/>
+            <source>Imported Value</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.importPending">
          <segment>
-            <source/>
+            <source>Import In Progress...</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.importProject">
          <segment>
-            <source/>
+            <source>Import Audio Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.importSync">
          <segment>
-            <source/>
+            <source>Syncing offline changes</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.invalidITF">
          <segment>
-            <source/>
+            <source>Not a valid Incremental Transcriber File (ITF).</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.invalidProject">
          <segment>
-            <source/>
+            <source>Import File does not contain current audio project.</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.locale">
          <segment>
-            <source/>
+            <source>Preferred Language</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.noFile">
          <segment>
-            <source/>
+            <source>Please select file to be uploaded.</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.old">
          <segment>
-            <source/>
+            <source>Previous Value</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.onlineChangeReport">
          <segment>
-            <source/>
+            <source>Changes made since data provided to offline member:</source>
             <target/>
          </segment>
       </unit>
@@ -1586,97 +1647,97 @@
       </unit>
       <unit id="import.passage">
          <segment>
-            <source/>
+            <source>Passage</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.phone">
          <segment>
-            <source/>
+            <source>Phone</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.plan">
          <segment>
-            <source/>
+            <source>Audio Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.projectDeleted">
          <segment>
-            <source/>
+            <source>Audio Project {0} has been deleted online.</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source/>
+            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.showHideFilter">
          <segment>
-            <source/>
+            <source>Show/Hide filter rows</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.state">
          <segment>
-            <source/>
+            <source>State</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.timezone">
          <segment>
-            <source/>
+            <source>Time zone</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.transcription">
          <segment>
-            <source/>
+            <source>Transcription</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.unassigned">
          <segment>
-            <source/>
+            <source>unassigned</source>
             <target/>
          </segment>
       </unit>
       <unit id="import.username">
          <segment>
-            <source/>
+            <source>Name</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.allCriteria">
          <segment>
-            <source/>
+            <source>You must satisfy all criteria to sync.</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.countError">
          <segment>
-            <source/>
+            <source>Count query error: </source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.countPending">
          <segment>
-            <source/>
+            <source>Querying count...</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.countReady">
          <segment>
-            <source/>
+            <source>Passages ready to sync: </source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.emptyBook">
          <segment>
-            <source/>
+            <source>Passage {0}.{1}: Book is missing.</source>
             <target/>
          </segment>
       </unit>
@@ -1688,163 +1749,163 @@
       </unit>
       <unit id="integration.no">
          <segment>
-            <source/>
+            <source>No</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.noProject">
          <segment>
-            <source/>
+            <source>You are not a member of a {lang0} Paratext Project.</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.offline">
          <segment>
-            <source/>
+            <source>Offline</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.onestory">
          <segment>
-            <source/>
+            <source>One Story</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.paratext">
          <segment>
-            <source/>
+            <source>Paratext</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.paratextAssociation">
          <segment>
-            <source/>
+            <source>Paratext association</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.paratextLocal">
          <segment>
-            <source/>
+            <source>Paratext Local</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.projectError">
          <segment>
-            <source/>
+            <source>Audio Project Query error:</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.projectsPending">
          <segment>
-            <source/>
+            <source>Querying Paratext projects...</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.questionAccount">
          <segment>
-            <source/>
+            <source>Do you have a Paratext Account?</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.questionInstalled">
          <segment>
-            <source/>
+            <source>Is Paratext installed locally?</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.questionOnline">
          <segment>
-            <source/>
+            <source>Are you connected to the Internet?</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.questionPermission">
          <segment>
-            <source/>
+            <source>Do you have permission to edit the Paratext project text?</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.questionProject">
          <segment>
-            <source/>
+            <source>Are you connected to a {lang0} Paratext project?</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.removeProject">
          <segment>
-            <source/>
+            <source>Remove Paratext Project Association</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.render">
          <segment>
-            <source/>
+            <source>Render</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.selectProject">
          <segment>
-            <source/>
+            <source>Select Paratext Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.showHideFilter">
          <segment>
-            <source/>
+            <source>Show/Hide filter rows</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.sync">
          <segment>
-            <source/>
+            <source>Sync</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.syncComplete">
          <segment>
-            <source/>
+            <source>Sync Complete!</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.syncError">
          <segment>
-            <source/>
+            <source>Sync error:</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.syncPending">
          <segment>
-            <source/>
+            <source>Syncing...</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.usernameError">
          <segment>
-            <source/>
+            <source>Username error:</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.usernamePending">
          <segment>
-            <source/>
+            <source>Querying username...</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.yes">
          <segment>
-            <source/>
+            <source>Yes</source>
             <target/>
          </segment>
       </unit>
       <unit id="invitationTable.accepted">
          <segment>
-            <source/>
+            <source>Accepted</source>
             <target/>
          </segment>
       </unit>
       <unit id="invitationTable.action">
          <segment>
-            <source/>
+            <source>Action</source>
             <target/>
          </segment>
       </unit>
@@ -1856,67 +1917,67 @@
       </unit>
       <unit id="invitationTable.email">
          <segment>
-            <source/>
+            <source>Email</source>
             <target/>
          </segment>
       </unit>
       <unit id="invitationTable.filter">
          <segment>
-            <source/>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
       <unit id="invitationTable.invite">
          <segment>
-            <source/>
+            <source>Invite</source>
             <target/>
          </segment>
       </unit>
       <unit id="invitationTable.noData">
          <segment>
-            <source/>
+            <source>No invitations</source>
             <target/>
          </segment>
       </unit>
       <unit id="invitationTable.role">
          <segment>
-            <source/>
+            <source>Team Role</source>
             <target/>
          </segment>
       </unit>
       <unit id="invitationTable.selectRows">
          <segment>
-            <source/>
+            <source>Please select row(s) to {0}.</source>
             <target/>
          </segment>
       </unit>
       <unit id="invitationTable.showHideFilter">
          <segment>
-            <source/>
+            <source>Show/Hide filter rows</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.addInvite">
          <segment>
-            <source/>
+            <source>Invite Member</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.allUsersProjects">
          <segment>
-            <source/>
+            <source>Audio Projects</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.alreadyInvited">
          <segment>
-            <source/>
+            <source>Already invited!</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.cancel">
          <segment>
-            <source/>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
@@ -1928,55 +1989,55 @@
       </unit>
       <unit id="invite.editInvite">
          <segment>
-            <source/>
+            <source>Edit Invite</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.email">
          <segment>
-            <source/>
+            <source>Email</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.emailsubject">
          <segment>
-            <source/>
+            <source>{0} Invitation</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.groupRole">
          <segment>
-            <source/>
+            <source>Audio Project Role</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.groups">
          <segment>
-            <source/>
+            <source>Audio Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.instructions">
          <segment>
-            <source/>
+            <source>Please click the following link to accept the invitation:</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.invalidEmail">
          <segment>
-            <source/>
+            <source>Invalid email address</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.invitation">
          <segment>
-            <source/>
+            <source>has invited you to join</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.join">
          <segment>
-            <source/>
+            <source>Join</source>
             <target/>
          </segment>
       </unit>
@@ -1988,37 +2049,37 @@
       </unit>
       <unit id="invite.newInviteTask">
          <segment>
-            <source/>
+            <source>Enter the email address of the member to invite.</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.noProjects">
          <segment>
-            <source/>
+            <source>No audio projects are associated with this group.</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.organization">
          <segment>
-            <source/>
+            <source>Team</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.questions">
          <segment>
-            <source/>
+            <source>Questions? Contact</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.resend">
          <segment>
-            <source/>
+            <source>Resend</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.role">
          <segment>
-            <source/>
+            <source>Team Role</source>
             <target/>
          </segment>
       </unit>
@@ -2030,49 +2091,49 @@
       </unit>
       <unit id="invite.selectProjectRole">
          <segment>
-            <source/>
+            <source>Select audio project role.</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.selectTeamRole">
          <segment>
-            <source/>
+            <source>Select team role.</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.send">
          <segment>
-            <source/>
+            <source>Send</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.sil">
          <segment>
-            <source/>
+            <source>SIL International</source>
             <target/>
          </segment>
       </unit>
       <unit id="languagePicker.cancel">
          <segment>
-            <source/>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
       <unit id="languagePicker.codeExplained">
          <segment>
-            <source/>
+            <source>Code Explained</source>
             <target/>
          </segment>
       </unit>
       <unit id="languagePicker.details">
          <segment>
-            <source/>
+            <source>Details</source>
             <target/>
          </segment>
       </unit>
       <unit id="languagePicker.findALanguage">
          <segment>
-            <source/>
+            <source>Find a language by name, code, or country</source>
             <target/>
          </segment>
       </unit>
@@ -2084,7 +2145,7 @@
       </unit>
       <unit id="languagePicker.inScript">
          <segment>
-            <source/>
+            <source> in the $1 script</source>
             <target/>
          </segment>
       </unit>
@@ -2096,19 +2157,19 @@
       </unit>
       <unit id="languagePicker.languageOf">
          <segment>
-            <source/>
+            <source>A Language of $1$2.</source>
             <target/>
          </segment>
       </unit>
       <unit id="languagePicker.phonetic">
          <segment>
-            <source/>
+            <source>Phonetic</source>
             <target/>
          </segment>
       </unit>
       <unit id="languagePicker.script">
          <segment>
-            <source/>
+            <source>Script</source>
             <target/>
          </segment>
       </unit>
@@ -2120,19 +2181,19 @@
       </unit>
       <unit id="languagePicker.selectLanguage">
          <segment>
-            <source/>
+            <source>Choose Language Details</source>
             <target/>
          </segment>
       </unit>
       <unit id="languagePicker.subtags">
          <segment>
-            <source/>
+            <source>Subtags</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.about">
          <segment>
-            <source/>
+            <source>About</source>
             <target/>
          </segment>
       </unit>
@@ -2144,31 +2205,31 @@
       </unit>
       <unit id="main.apiError">
          <segment>
-            <source/>
+            <source>API Error:</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.cancel">
          <segment>
-            <source/>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.cantCopy">
          <segment>
-            <source/>
+            <source>Unable to copy to clipboard</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.clearCache">
          <segment>
-            <source/>
+            <source>Clear cache</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.clearLogout">
          <segment>
-            <source/>
+            <source>Log Out and Force Data Reload</source>
             <target/>
          </segment>
       </unit>
@@ -2181,114 +2242,114 @@
       <unit id="main.continueCurrentUser">
          <segment>
             <source>Continue as current user</source>
-            <target>Продолжить как текущий пользователь</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.copyClipboard">
          <segment>
-            <source/>
+            <source>Copy Version to Clipboard</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.crashMessage">
          <segment>
-            <source/>
+            <source>Something went wrong. The developers need to address this issue.</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.deletedInvitation">
          <segment>
-            <source/>
+            <source>Invitation is no longer valid.</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="main.details">
-   		<segment>
-   			<source>Details</source>
-   			<target>Подробности</target>
-   		</segment>
-   	</unit>
+      <unit id="main.details">
+         <segment>
+            <source>Details</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.developer">
          <segment>
-            <source/>
+            <source>Developer mode</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.exit">
          <segment>
             <source>Exit</source>
-            <target>Выход</target>
+            <target>Поменять пользователя</target>
          </segment>
       </unit>
       <unit id="main.export">
          <segment>
-            <source/>
+            <source>Export</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.flatSample">
          <segment>
-            <source/>
+            <source>Scripture flat sample spreadsheet</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.genFlatSample">
          <segment>
-            <source/>
+            <source>General flat sample spreadsheet</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.genHierarchicalSample">
          <segment>
-            <source/>
+            <source>General hierarchical sample spreadsheet</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.helpCenter">
          <segment>
-            <source/>
+            <source>Help Center</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.helpSpreadsheet">
          <segment>
-            <source/>
+            <source>View spreadsheet convention</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.hierarchicalSample">
          <segment>
-            <source/>
+            <source>Scripture hierarchical sample spreadsheet</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.import">
          <segment>
-            <source/>
+            <source>Import</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.integrations">
          <segment>
-            <source/>
+            <source>Integrations</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source/>
+            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.loadingTable">
          <segment>
-            <source/>
+            <source>Busy...please wait.</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.loadingTranscriber">
          <segment>
-            <source/>
+            <source>Loading {0}</source>
             <target/>
          </segment>
       </unit>
@@ -2306,104 +2367,104 @@
       </unit>
       <unit id="main.myAccount">
          <segment>
-            <source/>
+            <source>My Account</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.NoLoadOffline">
          <segment>
-            <source/>
+            <source>Unable to load audio project data offline.</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.owner">
          <segment>
-            <source/>
+            <source>Owner</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.passages">
          <segment>
-            <source/>
+            <source>Passages</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.project">
          <segment>
-            <source/>
+            <source>Audio Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.projRole">
          <segment>
-            <source/>
+            <source>Role in Audio Project:</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.reliesOn">
          <segment>
-            <source/>
+            <source>{0} relies on other works</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.reportIssue">
          <segment>
-            <source/>
+            <source>Report an Issue</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.reports">
          <segment>
-            <source/>
+            <source>Reports</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.reportWhenOnline">
          <segment>
-            <source/>
+            <source>You must be online to report an problem.</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.saveFirst">
          <segment>
-            <source/>
+            <source>Do you want to save before leaving this page?</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.saving">
          <segment>
-            <source/>
+            <source>Saving...</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.sessionExpireTask">
          <segment>
-            <source/>
+            <source>Your session will expire in {0} seconds. Would you like to continue?</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.sessionExpiring">
          <segment>
-            <source/>
+            <source>Session Expiring</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.settings">
          <segment>
-            <source/>
+            <source>Settings</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.switchTo">
          <segment>
-            <source/>
+            <source>Switch to:</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.switchUser">
          <segment>
             <source>Switch Mode or User</source>
-         	<target>Изменить режим или пользователя</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.tasks">
@@ -2414,25 +2475,25 @@
       </unit>
       <unit id="main.team">
          <segment>
-            <source/>
+            <source>Team</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="main.terms">
-   		<segment>
-   			<source>Terms of Use</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="main.privacy">
-   		<segment>
-   			<source>Privacy Policy</source>
-   			<target/>
-   		</segment>
-   	</unit>
+      <unit id="main.terms">
+         <segment>
+            <source>Terms of Use</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.privacy">
+         <segment>
+            <source>Privacy Policy</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.thanks">
          <segment>
-            <source/>
+            <source>Thanks to</source>
             <target/>
          </segment>
       </unit>
@@ -2444,31 +2505,31 @@
       </unit>
       <unit id="main.UnsavedData">
          <segment>
-            <source/>
+            <source>Unsaved Data</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.updateAvailable">
          <segment>
-            <source/>
+            <source>Update available: Version {0} was released {1}</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.version">
          <segment>
-            <source/>
+            <source>Version: {0} - {1}</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaActions.attach">
          <segment>
-            <source/>
+            <source>Associate</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaActions.delete">
          <segment>
-            <source/>
+            <source>Delete</source>
             <target/>
          </segment>
       </unit>
@@ -2498,19 +2559,19 @@
       </unit>
       <unit id="mediaTab.action">
          <segment>
-            <source/>
+            <source>Action</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.actions">
          <segment>
-            <source/>
+            <source>Actions</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.all">
          <segment>
-            <source/>
+            <source>All</source>
             <target/>
          </segment>
       </unit>
@@ -2528,31 +2589,31 @@
       </unit>
       <unit id="mediaTab.autoMatch">
          <segment>
-            <source/>
+            <source>Auto Match</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.availablePassages">
          <segment>
-            <source/>
+            <source>Available Passages</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.book">
          <segment>
-            <source/>
+            <source>Book</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.choosePassage">
          <segment>
-            <source/>
-            <target/>
+            <source>Choose Passage</source>
+            <target>Выберите Проход</target>
          </segment>
       </unit>
       <unit id="mediaTab.date">
          <segment>
-            <source/>
+            <source>Date</source>
             <target/>
          </segment>
       </unit>
@@ -2570,47 +2631,47 @@
       </unit>
       <unit id="mediaTab.detach">
          <segment>
-            <source/>
+            <source>Detach</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.duration">
          <segment>
-            <source/>
+            <source>Length (s)</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.fileAttached">
          <segment>
-            <source/>
+            <source>File already attached</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.fileName">
          <segment>
-            <source/>
+            <source>File Name</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.filter">
          <segment>
-            <source/>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.loadingTable">
          <segment>
-            <source/>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.matchAdded">
          <segment>
-            <source/>
+            <source>Match complete: {0} new associations</source>
             <target/>
          </segment>
       </unit>
-     <unit id="mediaTab.mediaAssociations">
+      <unit id="mediaTab.mediaAssociations">
          <segment>
             <source>Audio Associations</source>
             <target>Аудио ассоциации</target>
@@ -2630,25 +2691,31 @@
       </unit>
       <unit id="mediaTab.noPassageAttached">
          <segment>
-            <source/>
+            <source>{0} has no passage attached</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.passageAttached">
          <segment>
-            <source/>
+            <source>Passage already attached</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.planName">
          <segment>
-            <source/>
+            <source>Plan</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.proposed">
          <segment>
-            <source/>
+            <source>Proposed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.readyToShare">
+         <segment>
+            <source>Ready to Share</source>
             <target/>
          </segment>
       </unit>
@@ -2666,55 +2733,55 @@
       </unit>
       <unit id="mediaTab.saving">
          <segment>
-            <source/>
+            <source>Saving...</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.savingComplete">
          <segment>
-            <source/>
+            <source>Saving complete.</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.selectFiles">
          <segment>
-            <source/>
+            <source>Please select files to be uploaded.</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.selectRows">
          <segment>
-            <source/>
+            <source>Please select row(s) to {0}.</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.showHideFilter">
          <segment>
-            <source/>
+            <source>Show/Hide filter rows</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.size">
          <segment>
-            <source/>
+            <source>Size (KB)</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.unsupported">
          <segment>
-            <source/>
+            <source>File {0} is an unsupported file type.</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.uploadComplete">
          <segment>
-            <source/>
+            <source>{0} of {1} files uploaded successfully.</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.version">
          <segment>
-            <source/>
+            <source>Version</source>
             <target/>
          </segment>
       </unit>
@@ -2726,65 +2793,65 @@
       </unit>
       <unit id="mediaTab.viewAssociations">
          <segment>
-            <source/>
+            <source>View Associations</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.cancel">
          <segment>
-            <source/>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.dragDropMultiple">
          <segment>
-            <source/>
+            <source>Drag and drop files here, or click here to browse for the files.</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.dragDropSingle">
          <segment>
-            <source/>
+            <source>Drag and drop a file here, or click here to browse for the file.</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.invalidFile">
          <segment>
-            <source/>
+            <source>Not valid for this operation: {0} </source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.ITFtask">
          <segment>
-            <source/>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop app.</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.ITFtitle">
          <segment>
-            <source/>
+            <source>Upload Change Data from Desktop app.</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.PTFtask">
          <segment>
-            <source/>
+            <source>Upload a Portable Transcriber File (ptf).</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.PTFtitle">
          <segment>
-            <source/>
+            <source>Upload complete Audio Project Data from PTF</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.task">
          <segment>
-            <source/>
+            <source>You can upload audio files in .mp3, .m4a, .wav or .ogg format.</source>
             <target/>
          </segment>
       </unit>
-     <unit id="mediaUpload.title">
+      <unit id="mediaUpload.title">
          <segment>
             <source>Upload Audio</source>
             <target>Загрузить аудио</target>
@@ -2804,7 +2871,7 @@
       </unit>
       <unit id="newProject.blank">
          <segment>
-            <source>Blank Project</source>
+            <source>Blank Audio Project</source>
             <target>Пустой проект</target>
          </segment>
       </unit>
@@ -2834,8 +2901,8 @@
       </unit>
       <unit id="newProject.general">
          <segment>
-         	<source>General Quick Start</source>
-         	<target>Общий краткий старт</target>
+            <source>General Quick Start</source>
+            <target>Общая транскрипция</target>
          </segment>
       </unit>
       <unit id="newProject.generalFactor1">
@@ -2864,13 +2931,13 @@
       </unit>
       <unit id="newProject.likeTemplate">
          <segment>
-            <source>These options present different templates for getting started. Choices made here can be changed in the Edit Project Settings dialog box.</source>
+            <source>These options present different templates for getting started. Choices made here can be changed in the Edit Audio Project Settings dialog.</source>
             <target>Эти опции представляют собой различные шаблоны для начала работы. Сделанный здесь выбор можно изменить в диалоговом окне Edit Project Settings.</target>
          </segment>
       </unit>
       <unit id="newProject.newProject">
          <segment>
-            <source>New Project</source>
+            <source>New Audio Project</source>
             <target>Новый проект</target>
          </segment>
       </unit>
@@ -2888,8 +2955,8 @@
       </unit>
       <unit id="newProject.scripture">
          <segment>
-         	<source>Scripture Quick Start</source>
-         	<target>Краткое начало Писания</target>
+            <source>Scripture Quick Start</source>
+            <target>Транскрипция Писания</target>
          </segment>
       </unit>
       <unit id="newProject.scriptureFactor1">
@@ -2900,8 +2967,8 @@
       </unit>
       <unit id="newProject.scriptureFactor2">
          <segment>
-            <source>Workflow syncs with Paratext for checking</source>
-         	<target>Рабочий процесс синхронизируется с Paratext</target>
+            <source>Workflow syncs with Paratext</source>
+            <target>Рабочий процесс синхронизируется с Paratext для проверки</target>
          </segment>
       </unit>
       <unit id="newProject.scriptureTip">
@@ -2928,6 +2995,90 @@
             <target>Загрузить аудио</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.action">
+         <segment>
+            <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.activity">
+         <segment>
+            <source>Add Activity</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.category">
+         <segment>
+            <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.completed">
+         <segment>
+            <source>Completed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.editResource">
+         <segment>
+            <source>Edit Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.resource">
+         <segment>
+            <source>Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.sharedResource">
+         <segment>
+            <source>Select Shared Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.type">
+         <segment>
+            <source>Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.upload">
+         <segment>
+            <source>Upload Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.version">
+         <segment>
+            <source>Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailStepComplete.title">
+         <segment>
+            <source>Step Complete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailStepComplete.incomplete">
+         <segment>
+            <source>Step Incomplete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailToolbar.add">
+         <segment>
+            <source>Passage Detail Toolbar</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageMedia.close">
          <segment>
             <source>Close</source>
@@ -2938,6 +3089,18 @@
          <segment>
             <source>Cancel</source>
             <target>Отмена</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.compressed">
+         <segment>
+            <source>Compressed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageRecord.compressing">
+         <segment>
+            <source>Compressing...{0}%</source>
+            <target/>
          </segment>
       </unit>
       <unit id="passageRecord.defaultFilename">
@@ -2976,10 +3139,22 @@
             <target>Сохранять</target>
          </segment>
       </unit>
+      <unit id="passageRecord.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageRecord.title">
          <segment>
             <source>Record/Edit Audio</source>
             <target>Запись / редактирование аудио</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.uncompressed">
+         <segment>
+            <source>Uncompressed</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planActions.assign">
@@ -2994,16 +3169,22 @@
             <target>Удалить</target>
          </segment>
       </unit>
-      <unit id="shared.launchAudacity">
+      <unit id="planActions.passageDetail">
          <segment>
-            <source>Launch Audacity</source>
-            <target>Запуск Audacity</target>
+            <source>Passage Detail</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planActions.resources">
+         <segment>
+            <source>Resources</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planActions.playpause">
          <segment>
             <source>Play/Pause</source>
-         	<target>Воспроизведение/Остановка</target>
+            <target>Играть / Пауза</target>
          </segment>
       </unit>
       <unit id="planActions.recordAudio">
@@ -3018,75 +3199,81 @@
             <target>Tранскрибировать</target>
          </segment>
       </unit>
+      <unit id="planActions.versions">
+         <segment>
+            <source>Versions</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.action">
          <segment>
-            <source/>
+            <source>Action</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.addPassage">
          <segment>
-            <source/>
+            <source>Add Passage</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.addSection">
          <segment>
-            <source/>
+            <source>Add {0}</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="planSheet.assigned">
-   		<segment>
-   			<source>Assigned</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="planSheet.audio">
+      <unit id="planSheet.assigned">
          <segment>
-            <source/>
+            <source>Assigned</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.audio">
+         <segment>
+            <source>Audio</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.bookSelect">
          <segment>
-            <source/>
+            <source>Select Book...</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.confirm">
          <segment>
-            <source/>
+            <source>{0} {1} Item(s). Are you sure?</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.nonNumber">
          <segment>
-            <source/>
+            <source>Do not change to non-number.</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.passageBelow">
          <segment>
-            <source/>
+            <source>Insert passage below {0}</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.pasting">
          <segment>
-            <source/>
+            <source>Pasting</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.refErr">
          <segment>
-            <source/>
+            <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.resequence">
          <segment>
-            <source/>
+            <source>Resequence</source>
             <target/>
          </segment>
       </unit>
@@ -3098,49 +3285,49 @@
       </unit>
       <unit id="planSheet.saving">
          <segment>
-            <source/>
+            <source>Saving...</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.sectionAbove">
          <segment>
-            <source/>
+            <source>Insert {0} above</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.selectRows">
          <segment>
-            <source/>
+            <source>Please select row(s) to {0}.</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="planSheet.step">
-   		<segment>
-   			<source>Step</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="planSheet.tablePaste">
+      <unit id="planSheet.step">
          <segment>
-            <source/>
+            <source>Step</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.tablePaste">
+         <segment>
+            <source>Paste Spreadsheet</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.useCtrlV">
          <segment>
-            <source/>
+            <source>Select a column head and use CTRL-V to append table rows.</source>
             <target/>
          </segment>
       </unit>
       <unit id="planTabs.assignments">
          <segment>
-            <source/>
+            <source>Assignments</source>
             <target/>
          </segment>
       </unit>
       <unit id="planTabs.associations">
          <segment>
-            <source/>
+            <source>Associations</source>
             <target/>
          </segment>
       </unit>
@@ -3153,138 +3340,138 @@
       <unit id="planTabs.mediaStatus">
          <segment>
             <source>{1} of {2} associations</source>
-            <target>{1} из {2} ассоциаций</target>
+            <target>{1} из {2} медиафайлов</target>
          </segment>
       </unit>
       <unit id="planTabs.passageStatus">
          <segment>
-            <source/>
+            <source>{1} of {2} passages</source>
             <target/>
          </segment>
       </unit>
       <unit id="planTabs.sectionsPassages">
          <segment>
-            <source/>
+            <source>{0} &amp; Passages</source>
             <target/>
          </segment>
       </unit>
       <unit id="planTabs.sectionStatus">
          <segment>
-            <source/>
+            <source>{1} of {2} {0}</source>
             <target/>
          </segment>
       </unit>
       <unit id="planTabs.transcriptions">
          <segment>
-            <source/>
+            <source>Transcriptions</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.add">
          <segment>
-            <source/>
+            <source>Add</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.addMember">
          <segment>
-            <source/>
+            <source>Complete User Profile</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.cancel">
          <segment>
-            <source/>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.checkingParatext">
          <segment>
-            <source/>
+            <source>Checking for Paratext account...</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.close">
          <segment>
-            <source/>
+            <source>Close</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.completeProfile">
          <segment>
-            <source/>
+            <source>Complete User Profile</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.deleteExplained">
          <segment>
-            <source/>
+            <source>Deleting your user will block you from using the program and remove references to your work.</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.deleteUser">
          <segment>
-            <source/>
+            <source>Delete User</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.email">
          <segment>
-            <source/>
+            <source>Email</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.family">
          <segment>
-            <source/>
+            <source>Family Name</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.given">
          <segment>
-            <source/>
+            <source>Given Name</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.installParatext">
          <segment>
-            <source/>
+            <source>Install Paratext to be able to sync.</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.linkingExplained">
          <segment>
-            <source/>
+            <source>Log out and log in with Paratext button</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.locale">
          <segment>
-            <source/>
+            <source>Preferred Language</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.locked">
          <segment>
-            <source/>
+            <source>Locked</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.logout">
          <segment>
-            <source/>
+            <source>Logout</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.name">
          <segment>
-            <source/>
+            <source>Full Name</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.nameNotEmail">
          <segment>
-            <source/>
+            <source>Please choose a name other than your email address.</source>
             <target/>
          </segment>
       </unit>
@@ -3296,37 +3483,37 @@
       </unit>
       <unit id="profile.notLinked">
          <segment>
-            <source/>
+            <source>Not linked to Paratext</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.paratextLinked">
          <segment>
-            <source/>
+            <source>Linked to Paratext</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.paratextLinking">
          <segment>
-            <source/>
+            <source>Linking to Paratext</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.paratextNotLinked">
          <segment>
-            <source/>
+            <source>Link to Paratext</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.phone">
          <segment>
-            <source/>
+            <source>Phone</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.role">
          <segment>
-            <source/>
+            <source>Team Role</source>
             <target/>
          </segment>
       </unit>
@@ -3338,145 +3525,151 @@
       </unit>
       <unit id="profile.sendDigest">
          <segment>
-            <source/>
+            <source>Receive daily digests</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.timezone">
          <segment>
-            <source/>
+            <source>Time zone</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.userExists">
          <segment>
-            <source/>
+            <source>This offline user exists.</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.userProfile">
          <segment>
-            <source/>
+            <source>User profile</source>
             <target/>
          </segment>
       </unit>
       <unit id="projButtons.export">
          <segment>
-            <source/>
+            <source>Export</source>
             <target/>
          </segment>
       </unit>
       <unit id="projButtons.exportTitle">
          <segment>
-            <source/>
+            <source>{0} Export</source>
             <target/>
          </segment>
       </unit>
       <unit id="projButtons.import">
          <segment>
-            <source/>
+            <source>Import</source>
             <target/>
          </segment>
       </unit>
       <unit id="projButtons.importExport">
          <segment>
-            <source/>
+            <source>Import / Export</source>
             <target/>
          </segment>
       </unit>
       <unit id="projButtons.integrations">
          <segment>
-            <source/>
+            <source>Paratext Integration</source>
             <target/>
          </segment>
       </unit>
       <unit id="projButtons.integrationsTitle">
          <segment>
-            <source/>
+            <source>{0} Integrations</source>
             <target/>
          </segment>
       </unit>
       <unit id="projButtons.reports">
          <segment>
-            <source/>
+            <source>Reports</source>
             <target/>
          </segment>
       </unit>
       <unit id="projButtons.reportsTitle">
          <segment>
-            <source/>
+            <source>{0} Reports</source>
             <target/>
          </segment>
       </unit>
       <unit id="projectDownload.download">
          <segment>
-            <source/>
+            <source>Download?</source>
             <target/>
          </segment>
       </unit>
       <unit id="projectDownload.downloadLater">
          <segment>
-            <source/>
+            <source>Download Later</source>
             <target/>
          </segment>
       </unit>
       <unit id="projectDownload.downloadMb">
          <segment>
-            <source/>
+            <source>Download {0}MB of offline audio project files?</source>
             <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.book">
          <segment>
-            <source/>
+            <source>Book</source>
             <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.description">
          <segment>
-            <source/>
+            <source>Description</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="scriptureTable.extras">
-   		<segment>
-   			<source>Extras</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="scriptureTable.loadingTable">
+      <unit id="scriptureTable.extras">
          <segment>
-            <source/>
+            <source>Extras</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.installAudacity">
+         <segment>
+            <source>Install {Audacity} to use this feature.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.loadingTable">
+         <segment>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.passage">
          <segment>
-            <source/>
+            <source>Passage</source>
             <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidColumnsGeneral">
          <segment>
-            <source/>
+            <source>Invalid number of columns ({0}). Expecting 5 columns.</source>
             <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidColumnsScripture">
          <segment>
-            <source/>
+            <source>Invalid number of columns ({0}). Expecting 6 columns.</source>
             <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidSections">
          <segment>
-            <source/>
+            <source>Invalid {0} number(s):</source>
             <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteNoRows">
          <segment>
-            <source/>
+            <source>No Rows in clipboard.</source>
             <target/>
          </segment>
       </unit>
@@ -3488,64 +3681,88 @@
       </unit>
       <unit id="scriptureTable.saveFirst">
          <segment>
-            <source/>
+            <source>You must save changes first!</source>
             <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.saving">
          <segment>
-            <source/>
+            <source>Saving...</source>
             <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.title">
          <segment>
-            <source/>
+            <source>Title</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="selectRecording.artifactType">
-   		<segment>
-   			<source>Type</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="selectRecording.created">
-   		<segment>
-   			<source>Created</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="selectRecording.filename">
-   		<segment>
-   			<source>File Name</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="selectRecording.playItem">
-   		<segment>
-   			<source>Play Item</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="selectRecording.sourceSegment">
-   		<segment>
-   			<source>Source Segment</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="selectRecording.sourceVersion">
-   		<segment>
-   			<source>Source Version</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="selectRecording.speaker">
-   		<segment>
-   			<source>Speaker</source>
-   			<target/>
-   		</segment>
-   	</unit>
+      <unit id="sectionResources.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sectionResources.role">
+         <segment>
+            <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sectionResources.title">
+         <segment>
+            <source>Assign {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sectionResources.users">
+         <segment>
+            <source>Members</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectRecording.artifactType">
+         <segment>
+            <source>Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectRecording.created">
+         <segment>
+            <source>Created</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectRecording.filename">
+         <segment>
+            <source>File Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectRecording.playItem">
+         <segment>
+            <source>Play Item</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectRecording.sourceSegment">
+         <segment>
+            <source>Source Segment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectRecording.sourceVersion">
+         <segment>
+            <source>Source Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="selectRecording.speaker">
+         <segment>
+            <source>Speaker</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.admin">
          <segment>
             <source>Admin</source>
@@ -3570,10 +3787,58 @@
             <target>Отменить</target>
          </segment>
       </unit>
+      <unit id="shared.description">
+         <segment>
+            <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.editor">
          <segment>
             <source>Editor</source>
             <target>редактор</target>
+         </segment>
+      </unit>
+      <unit id="shared.backtranslator">
+         <segment>
+            <source>Back Translator</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.consultant">
+         <segment>
+            <source>Consultant</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.launchAudacity">
+         <segment>
+            <source>Launch Audacity</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.mediaError">
+         <segment>
+            <source>Meida is missing or has an unaccepted format.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.observer">
+         <segment>
+            <source>Observer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.peerreviewer">
+         <segment>
+            <source>Peer Reviewer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.translator">
+         <segment>
+            <source>Translator</source>
+            <target/>
          </segment>
       </unit>
       <unit id="shared.expiredParatextToken">
@@ -3591,7 +3856,7 @@
       <unit id="shared.fileNotFound">
          <segment>
             <source>The audio file has not been downloaded or has been deleted.</source>
-            <target>Аудиофайл не был загружен или был удален.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="shared.importMediaSingular">
@@ -3602,23 +3867,23 @@
       </unit>
       <unit id="shared.invalidParatextLogin">
          <segment>
-            <source/>
+            <source>You must login with a valid paratext login.</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.invalidReference">
          <segment>
-            <source/>
+            <source>Passage {0}.{1} {2}: Invalid Reference</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.lastEdit">
          <segment>
-            <source/>
+            <source>Last save {0}</source>
             <target/>
          </segment>
       </unit>
-    <unit id="shared.mediaAttached">
+      <unit id="shared.mediaAttached">
          <segment>
             <source>Audio Attached</source>
             <target>Аудиоприложение</target>
@@ -3630,12 +3895,6 @@
             <target>Медиа Диссоциировать</target>
          </segment>
       </unit>
-   	<unit id="shared.mediaError">
-   		<segment>
-   			<source>Meida is missing or has an unaccepted format.</source>
-   			<target>Аудио отсутствует или имеет неприемлемый формат.</target>
-   		</segment>
-   	</unit>
       <unit id="shared.member">
          <segment>
             <source>Member</source>
@@ -3660,18 +3919,30 @@
             <target>Maître</target>
          </segment>
       </unit>
-   	<unit id="shared.playItem">
-   		<segment>
-   			<source>Play Item</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="shared.recordingInProgress">
-   		<segment>
-   			<source>Recording in progress...</source>
-   			<target>Запись продолжается...</target>
-   		</segment>
-   	</unit>
+      <unit id="shared.recordingInProgress">
+         <segment>
+            <source>Recording in progress...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.role">
+         <segment>
+            <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.projectrole">
+         <segment>
+            <source>Project Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.teamrole">
+         <segment>
+            <source>Team Role</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.paratextchapterSpan">
          <segment>
             <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
@@ -3696,6 +3967,12 @@
             <target>Сохранить</target>
          </segment>
       </unit>
+      <unit id="shared.select">
+         <segment>
+            <source>Select</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.transcriber">
          <segment>
             <source>Transcriber</source>
@@ -3714,10 +3991,16 @@
             <target>Загрузить аудио</target>
          </segment>
       </unit>
+      <unit id="shared.user">
+         <segment>
+            <source>User</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.versionHistory">
          <segment>
-            <source>Version History</source>
-            <target>История версий</target>
+            <source>Versions</source>
+            <target/>
          </segment>
       </unit>
       <unit id="shared.yes">
@@ -3774,171 +4057,183 @@
             <target>Выберите языки проверки орфографии</target>
          </segment>
       </unit>
-   	<unit id="stepEditor.add">
-   		<segment>
-   			<source>Add</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.changes">
-   		<segment>
-   			<source>{0} change(s)</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.hide">
-   		<segment>
-   			<source>Hide</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.inProgress">
-   		<segment>
-   			<source>In progress...</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.lastStep">
-   		<segment>
-   			<source>Unable to hide the last step.</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.name">
-   		<segment>
-   			<source>Name</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.nextStep">
-   		<segment>
-   			<source>Next Step</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.oneHidden">
-   		<segment>
-   			<source>One step hidden</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.oneVisible">
-   		<segment>
-   			<source>One step visible and added to the end of the list.</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.saving">
-   		<segment>
-   			<source>Saving ...</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.show">
-   		<segment>
-   			<source>Show</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.showAll">
-   		<segment>
-   			<source>Show all</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.stepAdded">
-   		<segment>
-   			<source>Step added to the end of the list.</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.stepsHidden">
-   		<segment>
-   			<source>{0} steps hidden</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="stepEditor.tool">
-   		<segment>
-   			<source>Tool</source>
-   			<target/>
-   		</segment>
-   	</unit>
+      <unit id="stepEditor.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.changes">
+         <segment>
+            <source>{0} change(s)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.hide">
+         <segment>
+            <source>Hide</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.inProgress">
+         <segment>
+            <source>In progress...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.lastStep">
+         <segment>
+            <source>Unable to hide the last step.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.name">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.nextStep">
+         <segment>
+            <source>Next Step</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.oneHidden">
+         <segment>
+            <source>One step hidden</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.oneVisible">
+         <segment>
+            <source>One step visible and added to the end of the list.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.saving">
+         <segment>
+            <source>Saving ...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.show">
+         <segment>
+            <source>Show</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.showAll">
+         <segment>
+            <source>Show all</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.stepAdded">
+         <segment>
+            <source>Step added to the end of the list.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.stepsHidden">
+         <segment>
+            <source>{0} steps hidden</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.tool">
+         <segment>
+            <source>Tool</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="taskItem.assign">
          <segment>
-            <source/>
+            <source>Assign {0}</source>
             <target/>
          </segment>
       </unit>
       <unit id="taskItem.section">
          <segment>
-            <source/>
+            <source>{0} {1}.{2}</source>
             <target/>
          </segment>
       </unit>
       <unit id="taskItem.unassign">
          <segment>
-            <source/>
+            <source>Unassign {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="teamCheckReference.resource">
+         <segment>
+            <source>Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="teamCheckReference.resourcehelper">
+         <segment>
+            <source>Scripture or Bible Story Resource</source>
             <target/>
          </segment>
       </unit>
       <unit id="template.apply">
          <segment>
-            <source/>
+            <source>Apply</source>
             <target/>
          </segment>
       </unit>
       <unit id="template.beginning">
          <segment>
-            <source/>
+            <source>Starting verse number</source>
             <target/>
          </segment>
       </unit>
       <unit id="template.book">
          <segment>
-            <source/>
+            <source>Paratext book identifier</source>
             <target/>
          </segment>
       </unit>
       <unit id="template.chapter">
          <segment>
-            <source/>
+            <source>Chapter number</source>
             <target/>
          </segment>
       </unit>
       <unit id="template.end">
          <segment>
-            <source/>
+            <source>Ending verse number</source>
             <target/>
          </segment>
       </unit>
       <unit id="template.fileTemplate">
          <segment>
-            <source/>
+            <source>File Name Template</source>
             <target/>
          </segment>
       </unit>
       <unit id="template.language">
          <segment>
-            <source/>
+            <source>Language BCP47 code</source>
             <target/>
          </segment>
       </unit>
       <unit id="template.passage">
          <segment>
-            <source/>
+            <source>Passage number(within {0})</source>
             <target/>
          </segment>
       </unit>
       <unit id="template.templateCodes">
          <segment>
-            <source/>
+            <source>Template Codes</source>
             <target/>
          </segment>
       </unit>
       <unit id="toDoTable.action">
          <segment>
-            <source/>
+            <source>Action</source>
             <target/>
          </segment>
       </unit>
@@ -3962,49 +4257,49 @@
       </unit>
       <unit id="toDoTable.filter">
          <segment>
-            <source/>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
       <unit id="toDoTable.length">
          <segment>
-            <source/>
+            <source>Duration</source>
             <target/>
          </segment>
       </unit>
       <unit id="toDoTable.loadingTable">
          <segment>
-            <source/>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>
       <unit id="toDoTable.no">
          <segment>
-            <source/>
+            <source>No</source>
             <target/>
          </segment>
       </unit>
       <unit id="toDoTable.passage">
          <segment>
-            <source/>
+            <source>Passage</source>
             <target/>
          </segment>
       </unit>
       <unit id="toDoTable.plan">
          <segment>
-            <source/>
+            <source>Plan</source>
             <target/>
          </segment>
       </unit>
       <unit id="toDoTable.project">
          <segment>
-            <source/>
+            <source>Audio Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="toDoTable.state">
          <segment>
-            <source/>
+            <source>State</source>
             <target/>
          </segment>
       </unit>
@@ -4032,6 +4327,78 @@
             <target/>
          </segment>
       </unit>
+      <unit id="tool.export">
+         <segment>
+            <source>Export</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.done">
+         <segment>
+            <source>Done</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.resource">
+         <segment>
+            <source>Internalize</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.record">
+         <segment>
+            <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.teamCheck">
+         <segment>
+            <source>Compare</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.community">
+         <segment>
+            <source>Community Test</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.discuss">
+         <segment>
+            <source>Discuss</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.transcribe">
+         <segment>
+            <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.backTranslate">
+         <segment>
+            <source>Back Translate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.segment">
+         <segment>
+            <source>Segment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.paratext">
+         <segment>
+            <source>Paratext Sync</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcribe.openTranscriber">
+         <segment>
+            <source>Open Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcribeAddNote.addNoteTitle">
          <segment>
             <source>Add Note</source>
@@ -4050,90 +4417,18 @@
             <target>Сохранить</target>
          </segment>
       </unit>
-   	<unit id="tool.export">
-   		<segment>
-   			<source>Export</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="tool.done">
-   		<segment>
-   			<source>Done</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="tool.resource">
-   		<segment>
-   			<source>Internalize</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="tool.record">
-   		<segment>
-   			<source>Record</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="tool.teamCheck">
-   		<segment>
-   			<source>Compare</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="tool.community">
-   		<segment>
-   			<source>Community Test</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="tool.discuss">
-   		<segment>
-   			<source>Discuss</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="tool.transcribe">
-   		<segment>
-   			<source>Transcribe</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="tool.backTranslate">
-   		<segment>
-   			<source>Back Translate</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="tool.segment">
-   		<segment>
-   			<source>Segment</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="tool.paratext">
-   		<segment>
-   			<source>Paratext Sync</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="transcribe.openTranscriber">
-   		<segment>
-   			<source>Open Transcriber</source>
-   			<target>Открытый транскриптор</target>
-   		</segment>
-   	</unit>
       <unit id="transcriber.addNote">
          <segment>
             <source>Add Note</source>
             <target>Добавить Примечание</target>
          </segment>
       </unit>
-   	<unit id="transcriber.backToWorkflow">
-   		<segment>
-   			<source>Back to Workflow</source>
-   			<target>Назад к рабочему процессу</target>
-   		</segment>
-   	</unit>
+      <unit id="transcriber.backToWorkflow">
+         <segment>
+            <source>Back to Workflow</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriber.comment">
          <segment>
             <source>Comment</source>
@@ -4172,19 +4467,19 @@
       </unit>
       <unit id="transcriber.needsNewRecording">
          <segment>
-            <source/>
+            <source>Rejected recording</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.needsNewTranscription">
          <segment>
-            <source/>
+            <source>Rejected transcription</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.noMedia">
          <segment>
-            <source/>
+            <source>Created task</source>
             <target/>
          </segment>
       </unit>
@@ -4244,19 +4539,19 @@
       </unit>
       <unit id="transcriber.saveReviewTip">
          <segment>
-            <source/>
+            <source>Save position and comment</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.saveTip">
          <segment>
-            <source/>
+            <source>Save changes and comment</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.saving">
          <segment>
-            <source/>
+            <source>Saving...</source>
             <target/>
          </segment>
       </unit>
@@ -4268,55 +4563,55 @@
       </unit>
       <unit id="transcriber.submitReviewTip">
          <segment>
-            <source/>
+            <source>Submit as complete</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.submitTranscriptionTip">
          <segment>
-            <source/>
+            <source>Submit for review</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.transcribing">
          <segment>
-            <source/>
+            <source>Started to transcribe</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.updateByOther">
          <segment>
-            <source/>
+            <source>Transcription updated by another person or process.</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcribeReject.cancel">
          <segment>
-            <source/>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcribeReject.comment">
          <segment>
-            <source/>
+            <source>Additional Comment</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcribeReject.incomplete">
          <segment>
-            <source/>
+            <source>Incomplete</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcribeReject.needsAudio">
          <segment>
-            <source/>
+            <source>Recording Needed</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcribeReject.needsCorrection">
          <segment>
-            <source/>
+            <source>Correction Needed</source>
             <target/>
          </segment>
       </unit>
@@ -4328,157 +4623,157 @@
       </unit>
       <unit id="transcribeReject.rejectReason">
          <segment>
-            <source/>
+            <source>Reject Reason</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcribeReject.rejectTitle">
          <segment>
-            <source/>
+            <source>Rejection</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionShow.cantCopy">
          <segment>
-            <source/>
+            <source>Unable to copy to clipboard</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionShow.close">
          <segment>
-            <source/>
+            <source>Close</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionShow.transcription">
          <segment>
-            <source/>
+            <source>Transcription</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionShow.transcriptionDisplay">
          <segment>
-            <source/>
+            <source>This display allows you to review the transcription that is stored.</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="transcriptionTab.availableOnClipboard">
-   		<segment>
-   			<source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
-   			<target/>
-   		</segment>
-   	</unit>
+      <unit id="transcriptionTab.availableOnClipboard">
+         <segment>
+            <source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.cancel">
          <segment>
-            <source/>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.cantCopy">
          <segment>
-            <source/>
+            <source>Unable to copy to clipboard</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.copyTip">
          <segment>
-            <source/>
+            <source>Copy transcriptions to Clipboard</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.copyTranscriptions">
          <segment>
-            <source/>
+            <source>Copy Transcriptions</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.downloading">
          <segment>
-            <source/>
+            <source>Creation complete. Downloading {0}</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.downloadingProject">
          <segment>
-            <source/>
+            <source>Downloading...{0}%</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.downloadProject">
          <segment>
-            <source/>
+            <source>Download Audio Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.elan">
          <segment>
-            <source/>
+            <source>ELAN</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.electronBackup">
          <segment>
-            <source/>
+            <source>Back up All Audio Projects</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.error">
          <segment>
-            <source/>
+            <source>Export Error</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.export">
          <segment>
-            <source/>
+            <source>Export</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportExplanation">
          <segment>
-            <source/>
+            <source>Export the full audio project to store locally or share with another offline member. Export incremental file to import changes into online app.</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportingProject">
          <segment>
-            <source/>
+            <source>Exporting...{0}%</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportITFtype">
          <segment>
-            <source/>
+            <source>Incremental Changes (itf)</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportProject">
          <segment>
-            <source/>
+            <source>Export Audio Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportPTFtype">
          <segment>
-            <source/>
+            <source>Export Audio Project (ptf)</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source/>
+            <source>The audio project cannot be exported.  The export file is too large.</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportType">
          <segment>
-            <source/>
+            <source>Which export type?</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.filter">
          <segment>
-            <source/>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
@@ -4490,113 +4785,113 @@
       </unit>
       <unit id="transcriptionTab.passages">
          <segment>
-            <source/>
+            <source>Passages</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.plan">
          <segment>
-            <source/>
+            <source>Plan</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.sectionstate">
          <segment>
-            <source/>
+            <source>State</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.showHideFilter">
          <segment>
-            <source/>
+            <source>Show/Hide filter rows</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.updated">
          <segment>
-            <source/>
+            <source>Updated</source>
             <target/>
          </segment>
       </unit>
       <unit id="treeChart.contributions">
          <segment>
-            <source/>
+            <source>Contributions toward</source>
             <target/>
          </segment>
       </unit>
       <unit id="treeChart.noData">
          <segment>
-            <source/>
+            <source>No Transcription Data Yet</source>
             <target/>
          </segment>
       </unit>
       <unit id="treeChart.status">
          <segment>
-            <source/>
+            <source>Status of</source>
             <target/>
          </segment>
       </unit>
       <unit id="uploadProgress.cancel">
          <segment>
-            <source/>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
       <unit id="uploadProgress.canceling">
          <segment>
-            <source/>
+            <source>Canceling...</source>
             <target/>
          </segment>
       </unit>
       <unit id="uploadProgress.progressTitle">
          <segment>
-            <source/>
+            <source>Progress</source>
             <target/>
          </segment>
       </unit>
       <unit id="userListMode.logOut">
          <segment>
             <source>Log Out</source>
-            <target>Выйти из системы</target>
+            <target/>
          </segment>
       </unit>
       <unit id="userListMode.switchUser">
          <segment>
-            <source>Switch User</source>
-            <target>Изменить пользователя</target>
+            <source>Work Online</source>
+            <target/>
          </segment>
       </unit>
       <unit id="userListMode.workOffline">
          <segment>
             <source>Work Offline</source>
-            <target>Работа в автономном режиме</target>
+            <target/>
          </segment>
       </unit>
       <unit id="usertable.action">
          <segment>
-            <source/>
+            <source>Action</source>
             <target/>
          </segment>
       </unit>
       <unit id="usertable.addMember">
          <segment>
-            <source/>
+            <source>Add Member</source>
             <target/>
          </segment>
       </unit>
       <unit id="usertable.addNewUser">
          <segment>
-            <source/>
+            <source>Add New User</source>
             <target/>
          </segment>
       </unit>
       <unit id="usertable.cancel">
          <segment>
-            <source/>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
-     <unit id="usertable.continue">
+      <unit id="usertable.continue">
          <segment>
             <source>Continue</source>
             <target>Продолжать</target>
@@ -4610,25 +4905,25 @@
       </unit>
       <unit id="usertable.email">
          <segment>
-            <source/>
+            <source>Email</source>
             <target/>
          </segment>
       </unit>
       <unit id="usertable.filter">
          <segment>
-            <source/>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
       <unit id="usertable.invite">
          <segment>
-            <source/>
+            <source>Invite</source>
             <target/>
          </segment>
       </unit>
       <unit id="usertable.locale">
          <segment>
-            <source/>
+            <source>Locale</source>
             <target/>
          </segment>
       </unit>
@@ -4640,73 +4935,67 @@
       </unit>
       <unit id="usertable.phone">
          <segment>
-            <source/>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="usertable.role">
-         <segment>
-            <source/>
+            <source>Phone</source>
             <target/>
          </segment>
       </unit>
       <unit id="usertable.selectRows">
          <segment>
-            <source/>
+            <source>Please select row(s) to {0}.</source>
             <target/>
          </segment>
       </unit>
       <unit id="usertable.selectUser">
          <segment>
-            <source/>
+            <source>Select User</source>
             <target/>
          </segment>
       </unit>
       <unit id="usertable.showHideFilter">
          <segment>
-            <source/>
+            <source>Show/Hide filter rows</source>
             <target/>
          </segment>
       </unit>
       <unit id="usertable.timezone">
          <segment>
-            <source/>
+            <source>Timezone</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="viewMode.audioProject">
-   		<segment>
-   			<source>Audio Project</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="viewMode.transcribe">
-   		<segment>
-   			<source>Transcribe</source>
-   			<target/>
-   		</segment>
-   	</unit>
+      <unit id="viewMode.audioProject">
+         <segment>
+            <source>Audio Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="viewMode.transcribe">
+         <segment>
+            <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.add">
          <segment>
-            <source/>
+            <source>Add</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.advanced">
          <segment>
-            <source/>
+            <source>Advanced</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.backtranslation">
          <segment>
-            <source/>
+            <source>Back Translation</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.cancel">
          <segment>
-            <source/>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
@@ -4736,13 +5025,13 @@
       </unit>
       <unit id="vProject.editorSettings">
          <segment>
-            <source/>
+            <source>Editor Settings</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.flat">
          <segment>
-            <source/>
+            <source>Flat</source>
             <target/>
          </segment>
       </unit>
@@ -4761,6 +5050,12 @@
       <unit id="vProject.hierarchical">
          <segment>
             <source>Hierarchical</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.isPublic">
+         <segment>
+            <source>This project contains resources that can be used in other projects for Internalization.</source>
             <target/>
          </segment>
       </unit>
@@ -4784,7 +5079,7 @@
       </unit>
       <unit id="vProject.newProject">
          <segment>
-            <source>{0} Project Settings</source>
+            <source>{0} Audio Project Settings</source>
             <target>{0} настроек проекта</target>
          </segment>
       </unit>
@@ -4814,7 +5109,7 @@
       </unit>
       <unit id="vProject.projectName">
          <segment>
-            <source>Project Name</source>
+            <source>Audio Project Name</source>
             <target>название проекта</target>
          </segment>
       </unit>
@@ -4844,19 +5139,25 @@
       </unit>
       <unit id="vProject.scenes">
          <segment>
-            <source/>
+            <source>Scene/Scenes</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.sections">
          <segment>
-            <source/>
+            <source>Section/Sections</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.sets">
          <segment>
-            <source/>
+            <source>Set/Sets</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.sharedResources">
+         <segment>
+            <source>Shared Resources</source>
             <target/>
          </segment>
       </unit>
@@ -4868,31 +5169,31 @@
       </unit>
       <unit id="vProject.stories">
          <segment>
-            <source/>
+            <source>Story/Stories</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.tags">
          <segment>
-            <source/>
+            <source>Tags</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.testing">
          <segment>
-            <source/>
+            <source>Testing</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.training">
          <segment>
-            <source/>
+            <source>Training</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.type">
          <segment>
-            <source/>
+            <source>Audio Project Type</source>
             <target/>
          </segment>
       </unit>
@@ -4904,20 +5205,20 @@
       </unit>
       <unit id="welcome.aloneFactor">
          <segment>
-            <source>Projects cannot be changed to team projects later</source>
+            <source>Audio Projects cannot be changed to team audio projects later</source>
             <target>Проекты не могут быть изменены на командные проекты позже</target>
          </segment>
       </unit>
       <unit id="welcome.import">
          <segment>
-            <source>Import Project</source>
+            <source>Import Audio Project</source>
             <target>Импорт проекта</target>
          </segment>
       </unit>
       <unit id="welcome.keyFactor">
          <segment>
             <source>Key Factor(s)</source>
-            <target>Ключевой фактор(ы)</target>
+            <target>Ключевой фактор</target>
          </segment>
       </unit>
       <unit id="welcome.offline">
@@ -4958,149 +5259,167 @@
       </unit>
       <unit id="welcome.setupFactor2">
          <segment>
-            <source>Supports projects that are offline available</source>
+            <source>Supports audio projects that are offline available</source>
             <target>Поддерживает проекты, доступные в автономном режиме</target>
          </segment>
       </unit>
       <unit id="welcome.setupFactor2Help">
          <segment>
-            <source>Select the Offline Available option on the project card menu.</source>
-            <target>Выберите опцию Offline Available в меню карточки проекта.</target>
+            <source>Select the Offline Available option on the audio project card menu.</source>
+            <target>Проекты доступны в автономном режиме через меню "Больше" с тремя точками на каждой карточке проекта.</target>
          </segment>
       </unit>
       <unit id="welcome.setupTeam">
          <segment>
-            <source>Set up a team project</source>
+            <source>Set up a team audio project</source>
             <target>Создайте командный проект</target>
          </segment>
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target>Настройте проект, разделив работу на отрывки, которые можно поручить различным транскрибаторам и редакторам.  Транскрибаторы и редакторы могут работать онлайн или офлайн, загружая или импортируя проект.</target>
          </segment>
       </unit>
       <unit id="welcome.team">
          <segment>
-            <source>Work in a team project</source>
+            <source>Work in a team audio project</source>
             <target>Работа в командном проекте</target>
          </segment>
       </unit>
       <unit id="welcome.teamFactor">
          <segment>
-            <source>Project has been set up online</source>
+            <source>Audio Project has been set up online</source>
             <target>Проект был создан в режиме онлайн</target>
          </segment>
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the project card menu, or offline by importing it.</source>
-            <target>Проект был создан в режиме онлайн.  Транскриберы и редакторы могут работать онлайн, офлайн, выбрав опцию Offline Available в меню карточки проекта, или офлайн, импортировав его.</target>
+            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <target>Проект был создан в режиме онлайн.  Транскрайберы и редакторы могут работать онлайн, офлайн, загрузив проект, или офлайн, импортировав его.</target>
          </segment>
       </unit>
       <unit id="welcome.title">
          <segment>
-            <source>Welcome</source>
+            <source>Getting Started</source>
             <target>Добро пожаловать</target>
          </segment>
       </unit>
-   	<unit id="workflowSteps.backTranslation">
-   		<segment>
-   			<source>Back Translation</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.communityTesting">
-   		<segment>
-   			<source>Community Testing</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.consultantCheck">
-   		<segment>
-   			<source>Consultant Check</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.export">
-   		<segment>
-   			<source>Export</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.finalRecording">
-   		<segment>
-   			<source>Final Recording</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.finalEdit">
-   		<segment>
-   			<source>Final Edit</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.finalReview">
-   		<segment>
-   			<source>Final Review</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.internalization">
-   		<segment>
-   			<source>Internalization</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.keyTerms">
-   		<segment>
-   			<source>Key Terms</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.paratextSync">
-   		<segment>
-   			<source>Paratext Sync</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.peerReview">
-   		<segment>
-   			<source>Peer Review</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.record">
-   		<segment>
-   			<source>Record</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.review">
-   		<segment>
-   			<source>Review</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.teamCheck">
-   		<segment>
-   			<source>Team Check</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.unsaved">
-   		<segment>
-   			<source>Unsaved content</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="workflowSteps.saveFirst">
-   		<segment>
-   			<source>Save before changing step?</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="wsAudioPlayer.aheadTip">
+      <unit id="workflowSteps.backTranslation">
+         <segment>
+            <source>Back Translate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.phraseBackTranslation">
+         <segment>
+            <source>Phrase Back Translate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.wholeBackTranslation">
+         <segment>
+            <source>Whole Back Translate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.communityTesting">
+         <segment>
+            <source>Community Test</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.communityTest1">
+         <segment>
+            <source>Community Test 1</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.communityTest2">
+         <segment>
+            <source>Community Test 2</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.consultantCheck">
+         <segment>
+            <source>Consultant Check</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.export">
+         <segment>
+            <source>Export</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.finalRecording">
+         <segment>
+            <source>Final Record</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.finalReview">
+         <segment>
+            <source>Final Review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.internalization">
+         <segment>
+            <source>Internalize</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.paratextSync">
+         <segment>
+            <source>Sync to Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.peerReview">
+         <segment>
+            <source>Peer Review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.preliminaryApproval">
+         <segment>
+            <source>Preliminary Approval</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.record">
+         <segment>
+            <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.teamCheck">
+         <segment>
+            <source>Team Check</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.transcribe">
+         <segment>
+            <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.unsaved">
+         <segment>
+            <source>Unsaved content</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.saveFirst">
+         <segment>
+            <source>Save before changing step?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aheadTip">
          <segment>
             <source>Ahead {jump} {1} [{0}]</source>
             <target>Перейти вперед {jump} {1} [{0}]</target>
@@ -5115,25 +5434,37 @@
       <unit id="wsAudioPlayer.beginningTip">
          <segment>
             <source>Go to Beginning [{0}]</source>
-            <target>SНачало [{0}]</target>
+            <target>SНачало</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.prevRegion">
+         <segment>
+            <source>Previous Segment [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.nextRegion">
+         <segment>
+            <source>Next Segment [{0}]</source>
+            <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.deleteRecording">
          <segment>
             <source>Delete Entire Recording</source>
-            <target>Удалить всю запись</target>
+            <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.deleteRegion">
          <segment>
             <source>Delete Region</source>
-         	<target>Удалить регион</target>
+            <target>Удалить регион</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.endTip">
          <segment>
             <source>Go to End [{0}]</source>
-            <target/>
+            <target>Конец</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.fasterTip">
@@ -5160,12 +5491,6 @@
             <target>Петля на</target>
          </segment>
       </unit>
-      <unit id="wsAudioPlayer.nextRegion">
-         <segment>
-            <source>Next Segment [{0}]</source>
-         	<target>Следующий сегмент [{0}]</target>
-         </segment>
-      </unit>
       <unit id="wsAudioPlayer.pauseRecord">
          <segment>
             <source>Pause</source>
@@ -5184,12 +5509,6 @@
             <target>Играть в [{0}]</target>
          </segment>
       </unit>
-      <unit id="wsAudioPlayer.prevRegion">
-         <segment>
-            <source>Previous Segment [{0}]</source>
-         	<target>Предыдущий сегмент [{0}]</target>
-          </segment>
-      </unit>
       <unit id="wsAudioPlayer.record">
          <segment>
             <source>Record [{0}]</source>
@@ -5199,18 +5518,18 @@
       <unit id="wsAudioPlayer.resume">
          <segment>
             <source>Resume</source>
-            <target>Продолжить</target>
+            <target>Продолжить[{0}]</target>
          </segment>
       </unit>
-   	<unit id="wsAudioPlayer.saveSegments">
-   		<segment>
-   			<source>Save Segments</source>
-   			<target/>
-   		</segment>
-   	</unit>
+      <unit id="wsAudioPlayer.saveSegments">
+         <segment>
+            <source>Save Segments</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.seconds">
          <segment>
-            <source>Seconds</source>
+            <source>seconds</source>
             <target>Секунды</target>
          </segment>
       </unit>
@@ -5229,96 +5548,102 @@
       <unit id="wsAudioPlayer.timerTip">
          <segment>
             <source>Timestamp [{0}]</source>
-            <target>Отметка времени [{0}]</target>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.undoTip">
+         <segment>
+            <source>Undo</source>
+            <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.apply">
          <segment>
             <source>Apply</source>
-            <target>Подать заявление</target>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.autoSegment">
+         <segment>
+            <source>Auto Segment [{0}]</source>
+            <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.close">
          <segment>
             <source>Close</source>
-             <target>Закрывать</target>
-         </segment>
-      </unit>
-      <unit id="wsAudioPlayerSegment.autoSegment">
-         <segment>
-            <source/>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="wsAudioPlayerSegment.segmentSettings">
-         <segment>
-            <source/>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="wsAudioPlayerSegment.silenceThreshold">
-         <segment>
-            <source/>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="wsAudioPlayerSegment.silenceLength">
-         <segment>
-            <source/>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="wsAudioPlayerSegment.splitSegment">
-         <segment>
-            <source/>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.removeAll">
          <segment>
             <source>Clear Segments</source>
-            <target>Очистить сегменты</target>
+            <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.removeSegment">
          <segment>
-            <source/>
+            <source>Remove Next Boundary [{0}]</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.segmentsCreated">
          <segment>
             <source>{0} segments created</source>
-            <target>Создано {0} сегментов</target>
-          </segment>
+            <target/>
+         </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.segmentLength">
          <segment>
-            <source>Minimum segment length (sec)</source>
-            <target>Минимальная длина сегмента (секунды)</target>
-          </segment>
+            <source>Minimum Segment Length (sec)</source>
+            <target/>
+         </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.segmentNumber">
          <segment>
             <source>{0} segments</source>
-            <target>{0} сегментов</target>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.segmentSettings">
+         <segment>
+            <source>Auto Segment Parameters</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.silenceLength">
+         <segment>
+            <source>Minimum Length of Silence (100ths second)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.silenceThreshold">
+         <segment>
+            <source>Silence Threshold (1000th dB)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.splitSegment">
+         <segment>
+            <source>Add/Remove Boundary [Double Click/{0}]</source>
+            <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayerZoom.fitToWidth">
          <segment>
-            <source/>
+            <source>Fit to Width</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayerZoom.zoomIn">
          <segment>
-            <source/>
+            <source>Zoom In [{0}]</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayerZoom.zoomOut">
          <segment>
-            <source/>
+            <source>Zoom Out [{0}]</source>
             <target/>
          </segment>
       </unit>
