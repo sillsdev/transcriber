@@ -9,7 +9,6 @@ import {
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import WorkflowStep from '../model/workflowStep';
-import { findRecord } from '.';
 
 export const useOfflineSetup = () => {
   const [memory] = useGlobal('memory');
