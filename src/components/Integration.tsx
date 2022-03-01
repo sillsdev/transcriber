@@ -50,7 +50,12 @@ import {
   useArtifactType,
   useTranscription,
 } from '../crud';
-import { localSync, getParatextDataPath, useCheckOnline } from '../utils';
+import {
+  localSync,
+  getParatextDataPath,
+  useCheckOnline,
+  integrationSlug,
+} from '../utils';
 import Auth from '../auth/Auth';
 import { bindActionCreators } from 'redux';
 import ParatextProject from '../model/paratextProject';
@@ -496,15 +501,7 @@ export function IntegrationPanel(props: IProps) {
   /* do this once */
   useEffect(() => {
     if (integrations.length > 0) {
-      getParatextIntegration(
-        exportType === ArtifactTypeSlug.BackTranslation && offline
-          ? 'paratextlocalbacktranslation'
-          : exportType === ArtifactTypeSlug.BackTranslation
-          ? 'paratextbacktranslation'
-          : offline
-          ? 'paratextLocal'
-          : 'paratext'
-      );
+      getParatextIntegration(integrationSlug(exportType, offline));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [integrations, exportType]);

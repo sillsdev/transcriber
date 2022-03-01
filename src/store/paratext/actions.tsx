@@ -51,21 +51,27 @@ export const resetParatextText = () => async (dispatch: any) => {
   });
 };
 export const getParatextText =
-  (auth: Auth, passageId: number, errorReporter: any, pendingmsg: string) =>
+  (
+    auth: Auth,
+    passageId: number,
+    artifactId: string | null,
+    errorReporter: any,
+    pendingmsg: string
+  ) =>
   async (dispatch: any) => {
     dispatch({
       payload: pendingStatus(pendingmsg),
       type: TEXT_PENDING,
     });
     try {
-      let response = await Axios.get(
-        API_CONFIG.host + '/api/paratext/passage/' + passageId.toString(),
-        {
-          headers: {
-            Authorization: 'Bearer ' + auth.accessToken,
-          },
-        }
-      );
+      let url =
+        API_CONFIG.host + '/api/paratext/passage/' + passageId.toString();
+      if (artifactId) url += `/${artifactId}`;
+      let response = await Axios.get(url, {
+        headers: {
+          Authorization: 'Bearer ' + auth.accessToken,
+        },
+      });
       dispatch({ payload: response.data, type: TEXT_SUCCESS });
     } catch (err: any) {
       if (err.errMsg !== 'no range')
