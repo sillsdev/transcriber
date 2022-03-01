@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd" version="1.2">
    <file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
       <body>
@@ -2739,6 +2739,13 @@
                <context context-type="sourcefile">AboutDialog.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="main.reloadStatic">
+      		<source>Reload static tables</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">UserMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="main.reportIssue">
             <source>Report an Issue</source>
             <target/>

@@ -2348,6 +2348,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="main.reloadStatic">
+			<segment>
+				<source>Reload static tables</source>
+				<target>Recarregar tabelas estáticas</target>
+			</segment>
+		</unit>
 		<unit id="main.reportIssue">
 			<segment>
 				<source>Report an Issue</source>

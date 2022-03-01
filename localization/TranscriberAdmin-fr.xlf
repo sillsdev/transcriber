@@ -2348,6 +2348,12 @@
 				<target>{0} s'appuie sur d'autres travaux</target>
 			</segment>
 		</unit>
+		<unit id="main.reloadStatic">
+			<segment>
+				<source>Reload static tables</source>
+				<target>Recharger les tables statiques</target>
+			</segment>
+		</unit>
 		<unit id="main.reportIssue">
 			<segment>
 				<source>Report an Issue</source>

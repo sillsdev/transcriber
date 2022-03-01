@@ -519,6 +519,7 @@ const initialState = {
 			"project": "Audio Project",
 			"projRole": "Role in Audio Project:",
 			"reliesOn": "{0} relies on other works",
+			"reloadStatic": "Reload static tables",
 			"reportIssue": "Report an Issue",
 			"reports": "Reports",
 			"reportWhenOnline": "You must be online to report an problem.",
