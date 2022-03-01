@@ -994,7 +994,11 @@ export function Transcriber(props: IProps) {
               </Grid>
               {jumpBack && (
                 <Grid item md={3} container alignContent="flex-end">
-                  <Button onClick={handleWorkflow} variant="contained">
+                  <Button
+                    id="back-to-workflow"
+                    onClick={handleWorkflow}
+                    variant="contained"
+                  >
                     {t.backToWorkflow}
                   </Button>
                 </Grid>
