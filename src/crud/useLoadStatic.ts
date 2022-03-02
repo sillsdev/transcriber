@@ -14,6 +14,7 @@ export const useLoadStatic = () => {
     );
     await memory.sync(await remote.pull((q) => q.findRecords('artifacttype')));
     await memory.sync(await remote.pull((q) => q.findRecords('role')));
+    await memory.sync(await remote.pull((q) => q.findRecords('integration')));
     return true;
   };
 
