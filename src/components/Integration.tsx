@@ -579,7 +579,9 @@ export function IntegrationPanel(props: IProps) {
   }, [busy, paratext_projects, paratext_projectsStatus, paratextIntegration]);
 
   useEffect(() => {
-    if (project) findConnectedProject();
+    if (paratext_projectsStatus?.complete) {
+      if (project) findConnectedProject();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectintegrations, paratext_projects, paratextIntegration, project]);
 
