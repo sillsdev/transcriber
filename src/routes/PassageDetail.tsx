@@ -42,9 +42,11 @@ import {
   useStepTool,
   useUrlContext,
 } from '../crud';
-import { RoleNames, Plan } from '../model';
+import { RoleNames, Plan, IToolStrings } from '../model';
 import { forceLogin, LocalKey, localUserKey } from '../utils';
 import { memory } from '../schema';
+import { useSelector, shallowEqual } from 'react-redux';
+import { toolSelector } from '../selector';
 import { QueryBuilder } from '@orbit/data';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -171,6 +173,7 @@ const PassageDetailGrids = (props: IProps) => {
     ArtifactTypeSlug.QandA,
   ]);
   const [backTranslationSlugs] = useState([ArtifactTypeSlug.BackTranslation]);
+  const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
   const handleSplitSize = debounce((e: number) => {
     setDiscussionSize(width - e);
@@ -204,8 +207,11 @@ const PassageDetailGrids = (props: IProps) => {
     <div className={classes.panel2}>
       <Grid container direction="row" className={classes.row}>
         <Grid container direction="row" className={classes.row}>
-          <Grid item className={classes.row} xs={9}>
+          <Grid item className={classes.row} xs={6}>
             <PassageDetailSectionPassage />
+          </Grid>
+          <Grid item className={classes.row} xs={3}>
+            {t.getString(tool)}
           </Grid>
           {projRole === RoleNames.Admin && (
             <Grid item className={classes.right} xs={3}>
