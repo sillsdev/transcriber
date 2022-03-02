@@ -2977,6 +2977,13 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaTab.cloudSync">
+      		<source>Cloud Sync</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="mediaTab.date">
             <source>Date</source>
             <target/>

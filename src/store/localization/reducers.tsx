@@ -561,6 +561,7 @@ const initialState = {
 			"availablePassages": "Available Passages",
 			"book": "Book",
 			"choosePassage": "Choose Passage",
+			"cloudSync": "Cloud Sync",
 			"date": "Date",
 			"delete": "Delete",
 			"deleteConfirm": "Delete {0}? Are you sure?",

@@ -17,6 +17,7 @@ import {
 import localStrings from '../../selector/localize';
 import { withData, WithDataProps } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
+import JSONAPISource from '@orbit/jsonapi';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, AppBar } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -128,6 +129,8 @@ export function AudioTab(props: IProps) {
   const [plan] = useGlobal('plan');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const requests = React.useRef(0);
   const { getPlan } = usePlan();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [isOffline] = useGlobal('offline');
@@ -198,6 +201,20 @@ export function AudioTab(props: IProps) {
     else showMessage(t.savingComplete);
     inProcess.current = false;
     saveCompleted(myToolId);
+    showMessage('Cloud Sync');
+    requests.current = remote?.requestQueue.length;
+    const progressMessage = () => {
+      setTimeout(() => {
+        setComplete(
+          Math.round(
+            ((requests.current - remote.requestQueue.length) * 100) /
+              requests.current
+          )
+        );
+        if (remote.requestQueue.length !== 0) progressMessage();
+      }, 3000);
+    };
+    if (remote) progressMessage();
   };
 
   const mediaRow = (mediaId: string) => {

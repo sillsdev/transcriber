@@ -2554,6 +2554,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.cloudSync">
+         <segment>
+            <source>Cloud Sync</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.date">
          <segment>
             <source>Date</source>

@@ -523,6 +523,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "availablePassages": string;
     "book": string;
     "choosePassage": string;
+    "cloudSync": string;
     "date": string;
     "delete": string;
     "deleteConfirm": string;
