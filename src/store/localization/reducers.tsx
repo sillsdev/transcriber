@@ -56,8 +56,8 @@ const initialState = {
 			"activity": "Activity",
 			"biblestory": "Bible Story",
 			"bookintro": "Book Introduction",
-			"translationresource": "Translation Resource",
 			"scripture": "Scripture",
+			"translationresource": "Translation Resource",
 			"uncategorized": "Uncategorized",
 		}
 	}),
@@ -66,27 +66,11 @@ const initialState = {
 			"backtranslation": "Back Translation",
 			"comment": "Comment",
 			"qanda": "Question and Answer",
-			"retell": "Retelling",
 			"resource": "Resource",
+			"retell": "Retelling",
 			"sharedresource": "Shared Resource",
 			"testing": "Testing",
 			"vernacular": "Vernacular",
-		}
-	}),
-	"selectArtifactCategory": new LocalizedStrings({
-		"en": {
-			"addNewCategory": "Add New Category",
-			"artifactCategory": "Category",
-			"duplicateCategory": "Category already exists.",
-			"newArtifactCategory": "New Category",
-			"scriptureHighlight": "Resources of this type will be available in steps using the Compare tool.",
-		}
-	}),
-	"selectArtifactType": new LocalizedStrings({
-		"en": {
-			"addNewType": "Add New Type",
-			"artifactType": "Artifact Type",
-			"newArtifactType": "New Artifact Type",
 		}
 	}),
 	"assignmentTable": new LocalizedStrings({
@@ -147,8 +131,8 @@ const initialState = {
 			"cancel": "Cancel",
 			"connectParatext": "Connect a Paratext Project",
 			"delete": "Delete",
-			"draft": "Oral Drafting",
 			"deleteTeam": "Delete Team",
+			"draft": "Oral Drafting",
 			"editWorkflow": "Edit Workflow {0}",
 			"explainTeamDelete": "Deleting the team will delete all audio projects of the team.",
 			"import": "Import Audio Project",
@@ -230,15 +214,6 @@ const initialState = {
 			"version": "Version",
 		}
 	}),
-	"discussionMenu": new LocalizedStrings({
-		"en": {
-			"edit": "Edit",
-			"delete": "Delete",
-			"reopen": "Reopen",
-			"resolve": "Resolve",
-			"setSegment": "Set Segment",
-		}
-	}),
 	"discussionList": new LocalizedStrings({
 		"en": {
 			"add": "Add Discussion",
@@ -248,6 +223,15 @@ const initialState = {
 			"filterStatus": "{0} / {1} discussions",
 			"saveFirst": "Save changed discussions and comments first?",
 			"title": "Discussions",
+		}
+	}),
+	"discussionMenu": new LocalizedStrings({
+		"en": {
+			"delete": "Delete",
+			"edit": "Edit",
+			"reopen": "Reopen",
+			"resolve": "Resolve",
+			"setSegment": "Set Segment",
 		}
 	}),
 	"electronImport": new LocalizedStrings({
@@ -336,9 +320,9 @@ const initialState = {
 			"projectPlans": "Audio Project Plans",
 			"roles": "Roles:{0}",
 			"save": "Save",
-			"transcriptionTitle": "Users in Transcription Roles",
 			"transcribers": "Transcribers",
 			"transcribersDetail": "(Transcribe)",
+			"transcriptionTitle": "Users in Transcription Roles",
 		}
 	}),
 	"groupTabs": new LocalizedStrings({
@@ -356,8 +340,8 @@ const initialState = {
 			"downArrow": "Down Arrow",
 			"endKey": "End",
 			"homeKey": "Home",
-			"or": "or",
 			"leftArrow": "Left Arrow",
+			"or": "or",
 			"rightArrow": "Right Arrow",
 			"shiftKey": "Shift",
 			"spaceKey": "Space",
@@ -531,9 +515,11 @@ const initialState = {
 			"NoLoadOffline": "Unable to load audio project data offline.",
 			"owner": "Owner",
 			"passages": "Passages",
+			"privacy": "Privacy Policy",
 			"project": "Audio Project",
 			"projRole": "Role in Audio Project:",
 			"reliesOn": "{0} relies on other works",
+			"reloadStatic": "Reload static tables",
 			"reportIssue": "Report an Issue",
 			"reports": "Reports",
 			"reportWhenOnline": "You must be online to report an problem.",
@@ -547,7 +533,6 @@ const initialState = {
 			"tasks": "Tasks",
 			"team": "Team",
 			"terms": "Terms of Use",
-			"privacy": "Privacy Policy",
 			"thanks": "Thanks to",
 			"transcribe": "Transcribe",
 			"UnsavedData": "Unsaved Data",
@@ -561,8 +546,8 @@ const initialState = {
 			"delete": "Delete",
 			"detach": "Disassociate",
 			"download": "Download",
-			"play": "Play",
 			"pause": "Pause",
+			"play": "Play",
 		}
 	}),
 	"mediaTab": new LocalizedStrings({
@@ -576,6 +561,7 @@ const initialState = {
 			"availablePassages": "Available Passages",
 			"book": "Book",
 			"choosePassage": "Choose Passage",
+			"cloudSync": "Cloud Sync",
 			"date": "Date",
 			"delete": "Delete",
 			"deleteConfirm": "Delete {0}? Are you sure?",
@@ -667,8 +653,8 @@ const initialState = {
 	}),
 	"passageDetailStepComplete": new LocalizedStrings({
 		"en": {
-			"title": "Step Complete",
 			"incomplete": "Step Incomplete",
+			"title": "Step Complete",
 		}
 	}),
 	"passageDetailToolbar": new LocalizedStrings({
@@ -702,9 +688,9 @@ const initialState = {
 			"assign": "Assign",
 			"delete": "Delete",
 			"passageDetail": "Passage Detail",
-			"resources": "Resources",
 			"playpause": "Play/Pause",
 			"recordAudio": "Record/Edit Audio",
+			"resources": "Resources",
 			"transcribe": "Transcribe",
 			"versions": "Versions",
 		}
@@ -823,6 +809,22 @@ const initialState = {
 			"users": "Members",
 		}
 	}),
+	"selectArtifactCategory": new LocalizedStrings({
+		"en": {
+			"addNewCategory": "Add New Category",
+			"artifactCategory": "Category",
+			"duplicateCategory": "Category already exists.",
+			"newArtifactCategory": "New Category",
+			"scriptureHighlight": "Resources of this type will be available in steps using the Compare tool.",
+		}
+	}),
+	"selectArtifactType": new LocalizedStrings({
+		"en": {
+			"addNewType": "Add New Type",
+			"artifactType": "Artifact Type",
+			"newArtifactType": "New Artifact Type",
+		}
+	}),
 	"selectRecording": new LocalizedStrings({
 		"en": {
 			"artifactType": "Type",
@@ -837,18 +839,13 @@ const initialState = {
 	"shared": new LocalizedStrings({
 		"en": {
 			"admin": "Admin",
+			"backtranslator": "Back Translator",
 			"bookNotInParatext": "Passage {0}.{1}: Paratext project does not contain book {2}.",
 			"BookNotSet": "Book was not set for Section {0} Passage {1}",
 			"cancel": "Cancel",
+			"consultant": "Consultant",
 			"description": "Description",
 			"editor": "Editor",
-			"backtranslator": "Back Translator",
-			"consultant": "Consultant",
-			"launchAudacity": "Launch Audacity",
-			"mediaError": "Meida is missing or has an unaccepted format.",
-			"observer": "Observer",
-			"peerreviewer": "Peer Reviewer",
-			"translator": "Translator",
 			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please log out and login again.",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",
 			"fileNotFound": "The audio file has not been downloaded or has been deleted.",
@@ -856,22 +853,27 @@ const initialState = {
 			"invalidParatextLogin": "You must login with a valid paratext login.",
 			"invalidReference": "Passage {0}.{1} {2}: Invalid Reference",
 			"lastEdit": "Last save {0}",
+			"launchAudacity": "Launch Audacity",
 			"mediaAttached": "Audio Attached",
 			"mediaDetached": "Audio Detached",
+			"mediaError": "Meida is missing or has an unaccepted format.",
 			"member": "Member",
 			"no": "No",
 			"NoSaveOffline": "Unable to save while offline.",
+			"observer": "Observer",
 			"owner": "Owner",
-			"recordingInProgress": "Recording in progress...",
-			"role": "Role",
-			"projectrole": "Project Role",
-			"teamrole": "Team Role",
 			"paratextchapterSpan": "Passage {0}.{1} {2}: Passage must not span chapters.",
 			"part": "Part {0}",
+			"peerreviewer": "Peer Reviewer",
+			"projectrole": "Project Role",
+			"recordingInProgress": "Recording in progress...",
 			"referenceNotFound": "Reference does not exist in Paratext chapter, or reference is within a larger verse range.",
+			"role": "Role",
 			"save": "Save",
 			"select": "Select",
+			"teamrole": "Team Role",
 			"transcriber": "Transcriber",
+			"translator": "Translator",
 			"uploadMediaPlural": "Upload Audio",
 			"uploadMediaSingular": "Upload Audio",
 			"user": "User",
@@ -958,17 +960,17 @@ const initialState = {
 	}),
 	"tool": new LocalizedStrings({
 		"en": {
-			"export": "Export",
-			"done": "Done",
-			"resource": "Internalize",
-			"record": "Record",
-			"teamCheck": "Compare",
+			"backTranslate": "Back Translate",
 			"community": "Community Test",
 			"discuss": "Discuss",
-			"transcribe": "Transcribe",
-			"backTranslate": "Back Translate",
-			"segment": "Segment",
+			"done": "Done",
+			"export": "Export",
 			"paratext": "Paratext Sync",
+			"record": "Record",
+			"resource": "Internalize",
+			"segment": "Segment",
+			"teamCheck": "Compare",
+			"transcribe": "Transcribe",
 		}
 	}),
 	"transcribe": new LocalizedStrings({
@@ -1178,11 +1180,9 @@ const initialState = {
 	"workflowSteps": new LocalizedStrings({
 		"en": {
 			"backTranslation": "Back Translate",
-			"phraseBackTranslation": "Phrase Back Translate",
-			"wholeBackTranslation": "Whole Back Translate",
-			"communityTesting": "Community Test",
 			"communityTest1": "Community Test 1",
 			"communityTest2": "Community Test 2",
+			"communityTesting": "Community Test",
 			"consultantCheck": "Consultant Check",
 			"export": "Export",
 			"finalRecording": "Final Record",
@@ -1190,12 +1190,14 @@ const initialState = {
 			"internalization": "Internalize",
 			"paratextSync": "Sync to Paratext",
 			"peerReview": "Peer Review",
+			"phraseBackTranslation": "Phrase Back Translate",
 			"preliminaryApproval": "Preliminary Approval",
 			"record": "Record",
+			"saveFirst": "Save before changing step?",
 			"teamCheck": "Team Check",
 			"transcribe": "Transcribe",
 			"unsaved": "Unsaved content",
-			"saveFirst": "Save before changing step?",
+			"wholeBackTranslation": "Whole Back Translate",
 		}
 	}),
 	"wsAudioPlayer": new LocalizedStrings({
@@ -1203,8 +1205,6 @@ const initialState = {
 			"aheadTip": "Ahead {jump} {1} [{0}]",
 			"backTip": "Rewind {jump} {1} [{0}]",
 			"beginningTip": "Go to Beginning [{0}]",
-			"prevRegion": "Previous Segment [{0}]",
-			"nextRegion": "Next Segment [{0}]",
 			"deleteRecording": "Delete Entire Recording",
 			"deleteRegion": "Delete Region",
 			"endTip": "Go to End [{0}]",
@@ -1212,9 +1212,11 @@ const initialState = {
 			"insertoverwrite": "Insert/Overwrite",
 			"loopoff": "Loop Off",
 			"loopon": "Loop On",
+			"nextRegion": "Next Segment [{0}]",
 			"pauseRecord": "Pause",
 			"pauseTip": "Pause [{0}]",
 			"playTip": "Play [{0}]",
+			"prevRegion": "Previous Segment [{0}]",
 			"record": "Record [{0}]",
 			"resume": "Resume",
 			"saveSegments": "Save Segments",
@@ -1232,9 +1234,9 @@ const initialState = {
 			"close": "Close",
 			"removeAll": "Clear Segments",
 			"removeSegment": "Remove Next Boundary [{0}]",
-			"segmentsCreated": "{0} segments created",
 			"segmentLength": "Minimum Segment Length (sec)",
 			"segmentNumber": "{0} segments",
+			"segmentsCreated": "{0} segments created",
 			"segmentSettings": "Auto Segment Parameters",
 			"silenceLength": "Minimum Length of Silence (100ths second)",
 			"silenceThreshold": "Silence Threshold (1000th dB)",
@@ -1261,8 +1263,6 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"alert" : new LocalizedStrings(action.payload.data.alert),
 				"artifactCategory" : new LocalizedStrings(action.payload.data.artifactCategory),
 				"artifactType" : new LocalizedStrings(action.payload.data.artifactType),
-				"selectArtifactCategory" : new LocalizedStrings(action.payload.data.selectArtifactCategory),
-				"selectArtifactType" : new LocalizedStrings(action.payload.data.selectArtifactType),
 				"assignmentTable" : new LocalizedStrings(action.payload.data.assignmentTable),
 				"assignSection" : new LocalizedStrings(action.payload.data.assignSection),
 				"audacityManager" : new LocalizedStrings(action.payload.data.audacityManager),
@@ -1274,8 +1274,8 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
 				"discussionCard" : new LocalizedStrings(action.payload.data.discussionCard),
-				"discussionMenu" : new LocalizedStrings(action.payload.data.discussionMenu),
 				"discussionList" : new LocalizedStrings(action.payload.data.discussionList),
+				"discussionMenu" : new LocalizedStrings(action.payload.data.discussionMenu),
 				"electronImport" : new LocalizedStrings(action.payload.data.electronImport),
 				"emailUnverified" : new LocalizedStrings(action.payload.data.emailUnverified),
 				"filterMenu" : new LocalizedStrings(action.payload.data.filterMenu),
@@ -1306,6 +1306,8 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"projectDownload" : new LocalizedStrings(action.payload.data.projectDownload),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"sectionResources" : new LocalizedStrings(action.payload.data.sectionResources),
+				"selectArtifactCategory" : new LocalizedStrings(action.payload.data.selectArtifactCategory),
+				"selectArtifactType" : new LocalizedStrings(action.payload.data.selectArtifactType),
 				"selectRecording" : new LocalizedStrings(action.payload.data.selectRecording),
 				"shared" : new LocalizedStrings(action.payload.data.shared),
 				"spelling" : new LocalizedStrings(action.payload.data.spelling),

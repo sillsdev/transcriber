@@ -32,7 +32,7 @@ export const loadBlob = (
   if (url.startsWith('http')) {
     fetch(url)
       .then(async (r) => setBlob(url, await r.blob()))
-      .catch((e) => setBlob(e as string, undefined));
+      .catch((e) => setBlob(e?.message || e.toString(), undefined));
   } else {
     try {
       const source = fs.readFileSync(

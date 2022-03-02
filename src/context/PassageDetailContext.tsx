@@ -711,7 +711,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             wf = orgsteps
               .filter(
                 (s) =>
-                  scripture || toCamel(s.attributes.name) !== 'syncToParatext'
+                  scripture ||
+                  s.attributes.name.toLowerCase().indexOf('paratext') === -1
               )
               .map((s) => {
                 const camelName = toCamel(s.attributes.name);

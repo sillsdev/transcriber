@@ -35,7 +35,7 @@ import {
   exitApp,
 } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
-import { usePlan } from '../../crud';
+import { usePlan, useLoadStatic } from '../../crud';
 import Busy from '../Busy';
 import StickyRedirect from '../StickyRedirect';
 import CloudOffIcon from '@material-ui/icons/CloudOff';
@@ -156,6 +156,7 @@ export const AppHead = (props: IProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const saving = useMemo(() => anySaving(), [toolsChanged]);
   const { showMessage } = useSnackBar();
+  const { loadStatic, checkStaticTables } = useLoadStatic();
 
   const handleUserMenuAction = (
     what: string,
@@ -165,6 +166,10 @@ export const AppHead = (props: IProps) => {
   ) => {
     if (/terms|privacy/i.test(what)) {
       setShowTerms(what);
+      return;
+    }
+    if (/ReloadStatic/.test(what)) {
+      loadStatic();
       return;
     }
     if (isElectron && /ClearLogout/i.test(what)) {
@@ -270,6 +275,7 @@ export const AppHead = (props: IProps) => {
           var lr = response?.data['dateUpdated'];
           if (!lr.endsWith('Z')) lr += 'Z';
           lr = moment(lr).locale(lang).format('L');
+          checkStaticTables(lv);
           setLatestVersion(lv);
           setLatestRelease(lr);
           if (isElectron && lv !== version)

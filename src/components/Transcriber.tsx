@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useGlobal } from 'reactn';
+import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import SplitPane, { Pane } from 'react-split-pane';
@@ -39,6 +40,8 @@ import {
   useFetchMediaUrl,
   UpdateMediaStateOps,
   AddPassageStateChangeToOps,
+  remoteId,
+  ArtifactTypeSlug,
 } from '../crud';
 import {
   insertAtCursor,
@@ -53,6 +56,7 @@ import {
   PathType,
   localUserKey,
   LocalKey,
+  integrationSlug,
 } from '../utils';
 import { isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
@@ -168,6 +172,14 @@ const Wrapper = styled.div`
     min-height: 0;
   }
 `;
+
+interface ParamTypes {
+  prjId: string;
+  pasId: string;
+  slug?: string;
+  medId?: string;
+}
+
 interface IRecordProps {
   mediafiles: MediaFile[];
   integrations: Integration[];
@@ -241,7 +253,9 @@ export function Transcriber(props: IProps) {
     mediaUrl,
     audioBlob,
     loading,
+    artifactId,
   } = useTodo();
+  const { slug } = useParams<ParamTypes>();
   const { safeURL } = useFetchMediaUrl();
   const { section, passage, duration, mediafile, state, role } = rowData[
     index
@@ -404,7 +418,7 @@ export function Transcriber(props: IProps) {
       const intfind = integrations.findIndex(
         (i) =>
           i.attributes &&
-          i.attributes.name === (offline ? 'paratextLocal' : 'paratext') &&
+          i.attributes.name === integrationSlug(slug, offline) &&
           Boolean(i.keys?.remoteId) !== offline
       );
       if (intfind > -1) setParatextIntegration(integrations[intfind].id);
@@ -438,7 +452,7 @@ export function Transcriber(props: IProps) {
       const intfind = integrations.findIndex(
         (i) =>
           i.attributes &&
-          i.attributes.name === (offline ? 'paratextLocal' : 'paratext') &&
+          i.attributes.name === integrationSlug(slug, offline) &&
           Boolean(i.keys?.remoteId) !== offline
       );
       if (intfind > -1) setParatextIntegration(integrations[intfind].id);
@@ -629,6 +643,7 @@ export function Transcriber(props: IProps) {
       getParatextText(
         auth,
         remoteIdNum('passage', passage.id, memory.keyMap),
+        artifactId && remoteId('artifacttype', artifactId, memory.keyMap),
         errorReporter,
         t.pullParatextStart
       );
@@ -961,6 +976,14 @@ export function Transcriber(props: IProps) {
     setView(jumpBack || '#');
   };
 
+  const noPull = React.useMemo(
+    () =>
+      [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
+        (slug || '') as ArtifactTypeSlug
+      ),
+    [slug]
+  );
+
   if (view) return <StickyRedirect to={view} />;
 
   return (
@@ -994,7 +1017,11 @@ export function Transcriber(props: IProps) {
               </Grid>
               {jumpBack && (
                 <Grid item md={3} container alignContent="flex-end">
-                  <Button onClick={handleWorkflow} variant="contained">
+                  <Button
+                    id="back-to-workflow"
+                    onClick={handleWorkflow}
+                    variant="contained"
+                  >
                     {t.backToWorkflow}
                   </Button>
                 </Grid>
@@ -1013,7 +1040,8 @@ export function Transcriber(props: IProps) {
                   <Grid container direction="row" className={classes.row}>
                     {role === 'transcriber' &&
                       hasParatextName &&
-                      paratextProject && (
+                      paratextProject &&
+                      !noPull && (
                         <Grid item>
                           <LightTooltip title={t.pullParatextTip}>
                             <span>

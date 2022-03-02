@@ -137,6 +137,7 @@ const initState = {
   trBusy: false,
   setTrBusy: (trBusy: boolean) => {},
   flat: false,
+  artifactId: null as string | null,
 };
 
 export type ICtxState = typeof initState;
@@ -745,6 +746,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
             ...state,
             hasUrl: mediaState.status === MediaSt.FETCHED,
             mediaUrl: mediaState.url,
+            artifactId,
             setSelected,
             setPlaying,
             setAllDone,

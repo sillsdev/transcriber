@@ -505,16 +505,14 @@ export function PassageDetailItem(props: IProps) {
                             />
                             {playItem && (
                               <>
-                                {projRole === RoleNames.Admin && (
-                                  <LightTooltip title={t.transcribe}>
-                                    <IconButton
-                                      id="load-transcriber"
-                                      onClick={handleTranscribe}
-                                    >
-                                      <TranscribeIcon />
-                                    </IconButton>
-                                  </LightTooltip>
-                                )}
+                                <LightTooltip title={t.transcribe}>
+                                  <IconButton
+                                    id="load-transcriber"
+                                    onClick={handleTranscribe}
+                                  >
+                                    <TranscribeIcon />
+                                  </IconButton>
+                                </LightTooltip>
                                 {projRole === RoleNames.Admin && (
                                   <LightTooltip title={t.deleteItem}>
                                     <IconButton

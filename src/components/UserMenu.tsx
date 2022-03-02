@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import AccountIcon from '@material-ui/icons/AccountCircle';
+import ReloadIcon from '@material-ui/icons/Refresh';
 import ClearIcon from '@material-ui/icons/Clear';
 import UserAvatar from './UserAvatar';
 import { isElectron } from '../api-variable';
@@ -150,6 +151,14 @@ export function UserMenu(props: IProps) {
               <AccountIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary={t.myAccount} />
+          </StyledMenuItem>
+        )}
+        {shift && (
+          <StyledMenuItem id="reload" onClick={handleAction('ReloadStatic')}>
+            <ListItemIcon>
+              <ReloadIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary={t.reloadStatic} />
           </StyledMenuItem>
         )}
         {shift && !isElectron && (

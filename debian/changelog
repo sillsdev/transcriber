@@ -1,3 +1,31 @@
+sil-transcriber (2.14.1.0)  experimental; urgency=high
+
+  * Match reporting progress
+  * add integration to static pull (#715)
+  * TT-3591 No Paratext Pull (#713)
+  * for retell or q and a
+  * TT-3688 Show tool name (#714)
+  * Fix offline draft tools (#712)
+  * TT-3426 check for undefined
+  * TT-3592 Wait for project list load (#711)
+  * TT-3426 Reload static tables
+  * TT-3588 no sync to paratext for general projects
+  * TT-3589 Pulling back translation from Paratext
+  * updated help
+  * TT-3551, 3586 Set up Paratext Integration
+  * allow user to select any project with the right settings
+  * allow pulling while offline
+  * TT-3562 back to workflow id
+  * updated help
+  * Remove unused method
+  * TT-1948 Update French, Portuguese and Russian
+  * Updated localization strings
+  * added Indonesian
+  * TT-3313 use Refs for callbacks (#710)
+  * TT-3581 do not reset values when hiding dialog
+
+ -- Greg Trihus <greg_trihus@sil.org>  Wed, 2 Mar 2022 14:21:00 -0600
+
 sil-transcriber (2.14.0.0)  experimental; urgency=high
 
   * TT-3476 allow unhiding steps

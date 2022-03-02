@@ -9,7 +9,6 @@ import {
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import WorkflowStep from '../model/workflowStep';
-import { findRecord } from '.';
 
 export const useOfflineSetup = () => {
   const [memory] = useGlobal('memory');
@@ -202,12 +201,12 @@ export const useOfflineSetup = () => {
       await memory.sync(await backup.push(ops));
       process = 'draft';
       ops = [
-        { name: 'Internalization', tool: '{"tool": "resource"}' },
-        { name: 'Record', tool: '{"tool": "record"}' },
-        { name: 'TeamCheck', tool: '{"tool": "teamCheck"}' },
-        { name: 'Transcribe', tool: '{"tool": "transcribe"}' },
-        { name: 'ParatextSync', tool: '{"tool": "paratext"}' },
-        { name: 'Done', tool: '{"tool": "done"}' },
+        { name: 'Internalization', tool: 'resource' },
+        { name: 'Record', tool: 'record' },
+        { name: 'TeamCheck', tool: 'teamCheck' },
+        { name: 'Transcribe', tool: 'transcribe"}' },
+        { name: 'ParatextSync', tool: 'paratext' },
+        { name: 'Done', tool: 'done' },
       ].map((step, ix) => {
         let rec = {
           type: 'workflowstep',

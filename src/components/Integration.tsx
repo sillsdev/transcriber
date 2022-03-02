@@ -50,7 +50,12 @@ import {
   useArtifactType,
   useTranscription,
 } from '../crud';
-import { localSync, getParatextDataPath, useCheckOnline } from '../utils';
+import {
+  localSync,
+  getParatextDataPath,
+  useCheckOnline,
+  integrationSlug,
+} from '../utils';
 import Auth from '../auth/Auth';
 import { bindActionCreators } from 'redux';
 import ParatextProject from '../model/paratextProject';
@@ -228,6 +233,7 @@ export function IntegrationPanel(props: IProps) {
   );
   const { getTypeId } = useArtifactType();
   const getTranscription = useTranscription(false, ActivityStates.Approved);
+  const intSave = React.useRef('');
 
   const getProject = () => {
     if (!project) return undefined;
@@ -403,9 +409,9 @@ export function IntegrationPanel(props: IProps) {
     ) as ProjectIntegration[];
     let index = 0;
     if (curInt.length > 0) {
+      const settings = JSON.parse(curInt[0].attributes.settings);
       index = paratext_projects.findIndex((p) => {
-        const settings = JSON.parse(curInt[0].attributes.settings);
-        return p.Name === settings.name;
+        return p.Name === settings.Name;
       });
     }
     if (curInt.length === 0 || index === -1) {
@@ -414,6 +420,21 @@ export function IntegrationPanel(props: IProps) {
           Boolean(p.BaseProject) ===
           (exportType === ArtifactTypeSlug.BackTranslation)
       );
+      if (index >= 0 && !intSave.current) {
+        if (
+          intSave.current !== paratext_projects[index].Name &&
+          paratextIntegration
+        ) {
+          intSave.current = paratext_projects[index].Name;
+          const setting = {
+            Name: paratext_projects[index].Name,
+            ParatextId: paratext_projects[index].ParatextId,
+            LanguageTag: paratext_projects[index].LanguageTag,
+            LanguageName: paratext_projects[index].LanguageName,
+          };
+          addProjectIntegration(paratextIntegration, JSON.stringify(setting));
+        }
+      }
     }
     setPtProj(index);
     setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
@@ -480,15 +501,7 @@ export function IntegrationPanel(props: IProps) {
   /* do this once */
   useEffect(() => {
     if (integrations.length > 0) {
-      getParatextIntegration(
-        exportType === ArtifactTypeSlug.BackTranslation && offline
-          ? 'paratextlocalbacktranslation'
-          : exportType === ArtifactTypeSlug.BackTranslation
-          ? 'paratextbacktranslation'
-          : offline
-          ? 'paratextLocal'
-          : 'paratext'
-      );
+      getParatextIntegration(integrationSlug(exportType, offline));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [integrations, exportType]);
@@ -566,7 +579,9 @@ export function IntegrationPanel(props: IProps) {
   }, [busy, paratext_projects, paratext_projectsStatus, paratextIntegration]);
 
   useEffect(() => {
-    if (project) findConnectedProject();
+    if (paratext_projectsStatus?.complete) {
+      if (project) findConnectedProject();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectintegrations, paratext_projects, paratextIntegration, project]);
 
