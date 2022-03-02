@@ -41,6 +41,7 @@ import {
   UpdateMediaStateOps,
   AddPassageStateChangeToOps,
   remoteId,
+  ArtifactTypeSlug,
 } from '../crud';
 import {
   insertAtCursor,
@@ -975,6 +976,14 @@ export function Transcriber(props: IProps) {
     setView(jumpBack || '#');
   };
 
+  const noPull = React.useMemo(
+    () =>
+      [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
+        (slug || '') as ArtifactTypeSlug
+      ),
+    [slug]
+  );
+
   if (view) return <StickyRedirect to={view} />;
 
   return (
@@ -1031,7 +1040,8 @@ export function Transcriber(props: IProps) {
                   <Grid container direction="row" className={classes.row}>
                     {role === 'transcriber' &&
                       hasParatextName &&
-                      paratextProject && (
+                      paratextProject &&
+                      !noPull && (
                         <Grid item>
                           <LightTooltip title={t.pullParatextTip}>
                             <span>
