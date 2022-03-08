@@ -1,12 +1,13 @@
 import { MenuItem, TextField } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import { ISharedStrings, IState, User } from '../model';
+import { ISharedStrings, IState, OrganizationMembership, User } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { QueryBuilder } from '@orbit/data';
 import { useGlobal } from 'reactn';
 import { withData } from '../mods/react-orbitjs';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
+import { related } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,6 +28,7 @@ interface IStateProps {
 }
 interface IRecordProps {
   users: Array<User>;
+  orgmems: Array<OrganizationMembership>;
 }
 interface IProps extends IStateProps, IRecordProps {
   initUser?: string;
@@ -35,9 +37,11 @@ interface IProps extends IStateProps, IRecordProps {
   required?: boolean;
 }
 export const SelectUser = (props: IProps) => {
-  const { ts, users, onChange, initUser, required, label } = props;
+  const { ts, users, orgmems, onChange, initUser, required, label } = props;
   const classes = useStyles();
   const [offlineOnly] = useGlobal('offlineOnly');
+  const [organization] = useGlobal('organization');
+  const [orgUsers, setOrgUsers] = useState<User[]>([]);
   const [role, setUser] = useState(initUser);
 
   const handleUserChange = (e: any) => {
@@ -48,6 +52,30 @@ export const SelectUser = (props: IProps) => {
   useEffect(() => {
     setUser(initUser);
   }, [initUser]);
+
+  useEffect(() => {
+    var orgusers = orgmems
+      .filter((om) => related(om, 'organization') === organization)
+      .map((om) => related(om, 'user'));
+    setOrgUsers(
+      users
+        .filter(
+          (u) =>
+            u.attributes &&
+            Boolean(u?.keys?.remoteId) !== offlineOnly &&
+            orgusers.includes(u.id)
+        )
+        .sort((i, j) =>
+          (i.attributes.familyName || '') < (j.attributes.familyName || '')
+            ? -1
+            : (i.attributes.familyName || '') > (j.attributes.familyName || '')
+            ? 1
+            : (i.attributes.givenName || '') <= (j.attributes.givenName || '')
+            ? -1
+            : 1
+        )
+    );
+  }, [organization, users, orgmems, offlineOnly]);
 
   return (
     <TextField
@@ -67,24 +95,11 @@ export const SelectUser = (props: IProps) => {
       variant="filled"
       required={required}
     >
-      {users
-        .filter(
-          (u) => u.attributes && Boolean(u?.keys?.remoteId) !== offlineOnly
-        )
-        .sort((i, j) =>
-          (i.attributes.familyName || '') < (j.attributes.familyName || '')
-            ? -1
-            : (i.attributes.familyName || '') > (j.attributes.familyName || '')
-            ? 1
-            : (i.attributes.givenName || '') <= (j.attributes.givenName || '')
-            ? -1
-            : 1
-        )
-        .map((option: User) => (
-          <MenuItem key={option.id} value={option.id}>
-            {`${option.attributes.name} ${option.attributes.email}`}
-          </MenuItem>
-        ))}
+      {orgUsers.map((option: User) => (
+        <MenuItem key={option.id} value={option.id}>
+          {`${option.attributes.name} ${option.attributes.email}`}
+        </MenuItem>
+      ))}
     </TextField>
   );
 };
@@ -94,6 +109,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
 
 const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
+  orgmems: (q: QueryBuilder) => q.findRecords('organizationmembership'),
 };
 
 export default withData(mapRecordsToProps)(
