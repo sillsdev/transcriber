@@ -254,14 +254,16 @@ export const useElectronImport = (
       if (zipRef.current) {
         const where = dataPath();
         fs.mkdirSync(where, { recursive: true });
-        //delete any old passagesection files
+        //delete any old files
         try {
-          fs.unlinkSync(path.join(where, 'data', 'H_passagesections.json'));
+          var datapath = path.join(where, 'data');
+          const files = fs.readdirSync(datapath);
+          for (const file of files) {
+            fs.unlinkSync(path.join(datapath, file));
+          }
         } catch (err: any) {
           if (err.errno !== -4058)
-            reportError(
-              orbitInfo(err, `Delete failed for ${where} passage sections`)
-            );
+            reportError(orbitInfo(err, `Delete failed for ${where}`));
         }
         zipRef.current.extractAllTo(where, true);
         //get the exported date from SILTranscriber file
