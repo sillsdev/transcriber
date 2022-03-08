@@ -26,7 +26,7 @@ import PeopleIconOutline from '@material-ui/icons/PeopleAltOutlined';
 import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
 import { TaskItemWidth } from './TaskTable';
-import { RoleNames } from '../model';
+import { RoleNames, Section } from '../model';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,11 +51,11 @@ interface IProps {
 export function TaskHead(props: IProps) {
   const { item } = props;
   const { rowData, taskItemStr, sharedStr } = useTodo();
-  const { transcriber, editor } = rowData[item] || {
+  const { transcriber, editor, section } = rowData[item] || {
     transcriber: '',
     editor: '',
+    section: {} as Section,
   };
-  const { section } = rowData[props.item];
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
