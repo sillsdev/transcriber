@@ -18,6 +18,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ResolveIcon from '@material-ui/icons/Check';
 import ReopenIcon from '@material-ui/icons/Unarchive';
 import LinkIcon from '@material-ui/icons/Link';
+import { useGlobal } from 'reactn';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -71,6 +72,8 @@ interface IProps extends IStateProps {
 
 export function DiscussionMenu(props: IProps) {
   const { action, t, resolved, canSet, stopPlayer } = props;
+  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline');
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -113,12 +116,14 @@ export function DiscussionMenu(props: IProps) {
             <ListItemText primary={t.edit} />
           </StyledMenuItem>
         )}
-        <StyledMenuItem id="commentMenu" onClick={handle('delete')}>
-          <ListItemIcon>
-            <DeleteIcon />
-          </ListItemIcon>
-          <ListItemText primary={t.delete} />
-        </StyledMenuItem>
+        {(!offline || offlineOnly) && (
+          <StyledMenuItem id="commentMenu" onClick={handle('delete')}>
+            <ListItemIcon>
+              <DeleteIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.delete} />
+          </StyledMenuItem>
+        )}
         {resolved === false && (
           <StyledMenuItem id="resolve" onClick={handle('resolve')}>
             <ListItemIcon>
