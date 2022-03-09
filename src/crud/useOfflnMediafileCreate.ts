@@ -6,6 +6,7 @@ import { AddRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils';
 import { useMediaAttach } from './useMediaAttach';
 import * as actions from '../store';
+import path from 'path';
 
 export const useOfflnMediafileCreate = (
   doOrbitError: typeof actions.doOrbitError
@@ -37,6 +38,10 @@ export const useOfflnMediafileCreate = (
         dateUpdated: currentDateTime(),
       },
     } as any;
+    //check new comment version
+    if (path.basename(data.audioUrl) !== data.originalFile) {
+      newMediaRec.attributes.originalFile = path.basename(data.audioUrl);
+    }
     const t = new TransformBuilder();
     await memory.update([
       ...AddRecord(t, newMediaRec, user, memory),
