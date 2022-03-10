@@ -501,8 +501,6 @@ export const importProjectToElectron =
       tb: TransformBuilder,
       oparray: Operation[]
     ) {
-      //await memory.sync(await backup.pull((q) => q.findRecords()));
-      console.log(project.id, project.keys);
       var plans = memory.cache.query((q) => q.findRecords('plan')) as Plan[];
       var planids = plans
         .filter((p) => related(p, 'project') === project.id)

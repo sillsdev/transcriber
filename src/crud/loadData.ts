@@ -96,7 +96,6 @@ export async function insertData(
       orbitError(orbitInfo(err, item.keys ? item.keys['remoteId'] : ''));
     }
   } finally {
-    console.log('existing rec', rec);
     if (rec) {
       if (Array.isArray(rec)) rec = rec[0]; //won't be...
       rec.attributes = { ...item.attributes };
@@ -148,7 +147,6 @@ export async function insertData(
       }
     }
   }
-  console.log(item, oparray);
   return project;
 }
 /*
