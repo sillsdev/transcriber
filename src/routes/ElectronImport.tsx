@@ -256,6 +256,10 @@ export const useElectronImport = (
         fs.mkdirSync(where, { recursive: true });
         //delete any old files
         try {
+          if (fs.existsSync(path.join(where, 'SILTranscriber')))
+            fs.unlinkSync(path.join(where, 'SILTranscriber'));
+          if (fs.existsSync(path.join(where, 'Version')))
+            fs.unlinkSync(path.join(where, 'Version'));
           var datapath = path.join(where, 'data');
           const files = fs.readdirSync(datapath);
           for (const file of files) {
@@ -273,9 +277,17 @@ export const useElectronImport = (
             flag: 'r',
           })
           .replace(/(\r\n|\n|\r)/gm, '');
+        var versionstr = '3';
+        if (fs.existsSync(path.join(where, 'Version')))
+          versionstr = fs.readFileSync(path.join(where, 'Version'), {
+            encoding: 'utf8',
+            flag: 'r',
+          });
+        var version = parseInt(versionstr);
         importProjectToElectron(
           path.join(where, 'data'),
           dataDate,
+          version,
           coordinator,
           isOfflinePtf.current,
           AddProjectLoaded,

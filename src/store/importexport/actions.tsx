@@ -39,7 +39,13 @@ import Memory from '@orbit/memory';
 import { TransformBuilder, Operation } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import { electronExport } from './electronExport';
-import { remoteIdGuid, related, insertData, remoteId } from '../../crud';
+import {
+  remoteIdGuid,
+  related,
+  insertData,
+  remoteId,
+  findRecord,
+} from '../../crud';
 import { logError, orbitInfo, Severity } from '../../utils';
 import Coordinator from '@orbit/coordinator';
 
@@ -324,6 +330,7 @@ export const importProjectToElectron =
   (
     filepath: string,
     dataDate: string,
+    version: number,
     coordinator: Coordinator,
     offlineOnly: boolean,
     AddProjectLoaded: (project: string) => void,
@@ -489,6 +496,36 @@ export const importProjectToElectron =
       }
       return null;
     }
+    async function syncPassageState(
+      project: Project,
+      tb: TransformBuilder,
+      oparray: Operation[]
+    ) {
+      //await memory.sync(await backup.pull((q) => q.findRecords()));
+      console.log(project.id, project.keys);
+      var plans = memory.cache.query((q) => q.findRecords('plan')) as Plan[];
+      var planids = plans
+        .filter((p) => related(p, 'project') === project.id)
+        .map((p) => p.id);
+
+      var media = (
+        memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
+      ).filter(
+        (m) => planids.includes(related(m, 'plan')) && related(m, 'passage')
+      );
+
+      media.forEach((m) => {
+        var passage = findRecord(
+          memory,
+          'passage',
+          related(m, 'passage')
+        ) as Passage;
+        if (passage) {
+          m.attributes.transcriptionstate = passage.attributes.state;
+          oparray.push(tb.updateRecord(m));
+        }
+      });
+    }
 
     async function processFile(
       file: string,
@@ -499,21 +536,24 @@ export const importProjectToElectron =
       var json = ser.deserialize(
         JSON.parse(data.toString()) as ResourceDocument
       );
+      var project: Project | undefined = undefined;
       if (!Array.isArray(json.data)) json.data = [json.data];
       for (let n = 0; n < json.data.length; n += 1) {
         const item = json.data[n];
-        await insertData(
-          item,
-          memory,
-          backup,
-          tb,
-          oparray,
-          reportError,
-          true,
-          true,
-          dataDate
-        );
+        project =
+          (await insertData(
+            item,
+            memory,
+            backup,
+            tb,
+            oparray,
+            reportError,
+            true,
+            true,
+            dataDate
+          )) || project;
       }
+      return project;
     }
 
     if (fs.existsSync(path.join(filepath, 'H_passagesections.json'))) {
@@ -542,9 +582,14 @@ export const importProjectToElectron =
             payload: pendingmsg.replace('{0}', '20'),
             type: IMPORT_PENDING,
           });
-
+          var project: Project | undefined = undefined;
           for (let index = 0; index < files.length; index++) {
-            await processFile(path.join(filepath, files[index]), ser, dataDate);
+            project =
+              (await processFile(
+                path.join(filepath, files[index]),
+                ser,
+                dataDate
+              )) || project;
           }
           dispatch({
             payload: pendingmsg.replace('{0}', '25'),
@@ -567,6 +612,9 @@ export const importProjectToElectron =
               );
             }
           });
+          if (version < 4 && project) {
+            syncPassageState(project, tb, oparray);
+          }
           dispatch({
             payload: pendingmsg.replace('{0}', '90'),
             type: IMPORT_PENDING,
@@ -575,8 +623,7 @@ export const importProjectToElectron =
             await saveToMemory(oparray, 'remove extra records');
             await saveToBackup(oparray, 'remove extra records from backup');
           }
-          var proj = getProjectFromFile(ser);
-          AddProjectLoaded(proj?.id || '');
+          AddProjectLoaded(project?.id || '');
           dispatch({
             payload: { status: completemsg, msg: '' },
             type: IMPORT_SUCCESS,

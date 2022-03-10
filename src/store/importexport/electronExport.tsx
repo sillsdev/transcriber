@@ -487,8 +487,8 @@ export async function electronExport(
       { table: 'passage', sort: 'G' },
       { table: 'mediafile', sort: 'H' },
       { table: 'passagestatechange', sort: 'H' },
-      { table: 'discussion', sort: 'D' },
-      { table: 'comment', sort: 'E' },
+      { table: 'discussion', sort: 'I' },
+      { table: 'comment', sort: 'J' },
       { table: 'sectionresourceuser', sort: 'H' },
     ];
     /* If these can change in electron, they must extend BaseModel instead of Record,
