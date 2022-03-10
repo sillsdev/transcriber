@@ -447,6 +447,7 @@ export function Profile(props: IProps) {
     } catch {
       //well we tried...
     }
+    localStorage.removeItem('user-id');
     setView('Logout');
   };
   const handleDeleteRefused = () => {
