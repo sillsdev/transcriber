@@ -2,6 +2,7 @@ import Axios, { AxiosError } from 'axios';
 import fs from 'fs';
 import path from 'path';
 import {
+  Comment,
   Project,
   Plan,
   Section,
@@ -13,6 +14,7 @@ import {
   ProjectIntegration,
   OfflineProject,
   VProject,
+  Discussion,
 } from '../../model';
 import * as actions from '../../store';
 import { API_CONFIG } from '../../api-variable';
@@ -324,6 +326,7 @@ export const importProjectToElectron =
   (
     filepath: string,
     dataDate: string,
+    version: string,
     coordinator: Coordinator,
     offlineOnly: boolean,
     AddProjectLoaded: (project: string) => void,
@@ -429,12 +432,29 @@ export const importProjectToElectron =
       )
         .filter((m) => planids.includes(related(m, 'plan')))
         .map((m) => m.id);
+      var discussionids = (
+        memory.cache.query((q) => q.findRecords('discussion')) as Discussion[]
+      )
+        .filter((d) => mediaids.includes(related(d, 'mediafile')))
+        .map((d) => d.id);
+      var commentids = (
+        memory.cache.query((q) => q.findRecords('comment')) as Comment[]
+      )
+        .filter((c) => discussionids.includes(related(c, 'discussion')))
+        .map((c) => c.id);
+
       dispatch({
         payload: pendingmsg.replace('{0}', '5'),
         type: IMPORT_PENDING,
       });
 
       var delOpArray: Operation[] = [];
+      commentids.forEach((id) =>
+        delOpArray.push(tb.removeRecord({ type: 'comment', id: id }))
+      );
+      discussionids.forEach((id) =>
+        delOpArray.push(tb.removeRecord({ type: 'discussion', id: id }))
+      );
       mediaids.forEach((id) =>
         delOpArray.push(tb.removeRecord({ type: 'mediafile', id: id }))
       );
