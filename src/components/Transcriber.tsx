@@ -255,7 +255,7 @@ export function Transcriber(props: IProps) {
     loading,
     artifactId,
   } = useTodo();
-  const { slug } = useParams<ParamTypes>();
+  const { pasId, slug } = useParams<ParamTypes>();
   const { safeURL } = useFetchMediaUrl();
   const { section, passage, duration, mediafile, state, role } = rowData[
     index
@@ -984,6 +984,10 @@ export function Transcriber(props: IProps) {
     [slug]
   );
 
+  const allowBack = React.useMemo(() => {
+    return jumpBack && jumpBack.split('/').pop() === pasId;
+  }, [jumpBack, pasId]);
+
   if (view) return <StickyRedirect to={view} />;
 
   return (
@@ -991,7 +995,7 @@ export function Transcriber(props: IProps) {
       <Paper className={classes.paper} style={paperStyle}>
         {allDone ? (
           <div>
-            {jumpBack && (
+            {allowBack && (
               <div className={classes.grow}>
                 <div className={classes.grow}>{'\u00A0'}</div>
                 <Button
@@ -1015,7 +1019,7 @@ export function Transcriber(props: IProps) {
                   allBookData={allBookData}
                 />
               </Grid>
-              {jumpBack && (
+              {allowBack && (
                 <Grid item md={3} container alignContent="flex-end">
                   <Button
                     id="back-to-workflow"
