@@ -44,6 +44,7 @@ import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
 import { useSnackBar, AlertSeverity } from '../../hoc/SnackBar';
 import PolicyDialog from '../PolicyDialog';
+import JSONAPISource from '@orbit/jsonapi';
 
 const shell = isElectron ? require('electron').shell : null;
 
@@ -128,6 +129,7 @@ export const AppHead = (props: IProps) => {
   const { pathname } = useLocation();
   const [errorReporter] = useGlobal('errorReporter');
   const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [connected] = useGlobal('connected');
@@ -275,7 +277,6 @@ export const AppHead = (props: IProps) => {
           var lr = response?.data['dateUpdated'];
           if (!lr.endsWith('Z')) lr += 'Z';
           lr = moment(lr).locale(lang).format('L');
-          checkStaticTables(lv);
           setLatestVersion(lv);
           setLatestRelease(lr);
           if (isElectron && lv !== version)
@@ -303,6 +304,11 @@ export const AppHead = (props: IProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updates, version, lang]);
+
+  useEffect(() => {
+    if (remote && latestVersion) checkStaticTables(latestVersion);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remote, latestVersion]);
 
   useEffect(() => {
     logError(Severity.info, errorReporter, pathname);
