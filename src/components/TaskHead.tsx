@@ -26,7 +26,7 @@ import PeopleIconOutline from '@material-ui/icons/PeopleAltOutlined';
 import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
 import { TaskItemWidth } from './TaskTable';
-import { RoleNames, Section } from '../model';
+import { Section } from '../model';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,7 +59,6 @@ export function TaskHead(props: IProps) {
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [projRole] = useGlobal('projRole');
   const [menuItem, setMenuItem] = React.useState(null);
   const { getOrganizedBy } = useOrganizedBy();
   const { userCanBeEditor } = useRole();
@@ -124,11 +123,6 @@ export function TaskHead(props: IProps) {
           <MenuItem
             id="taskTrans"
             onClick={handleAction(tranAction, 'transcriber')}
-            disabled={
-              tranAction === unassignAction &&
-              transcriber !== user &&
-              projRole !== RoleNames.Admin
-            }
           >
             {
               <div className={classes.menuItem}>
@@ -144,12 +138,7 @@ export function TaskHead(props: IProps) {
           <MenuItem
             id="taskEditor"
             onClick={handleAction(editAction, 'editor')}
-            disabled={
-              (editAction === unassignAction &&
-                editor !== user &&
-                projRole !== RoleNames.Admin) ||
-              (editAction === assignAction && !userCanBeEditor())
-            }
+            disabled={!userCanBeEditor()}
           >
             {
               <div className={classes.menuItem}>
