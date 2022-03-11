@@ -63,6 +63,7 @@ interface IProps extends IStateProps, IDispatchProps {
   sourceMediaId?: string;
   sourceSegments?: string;
   performedBy?: string;
+  topic?: string;
 }
 
 export const Uploader = (props: IProps) => {
@@ -86,6 +87,7 @@ export const Uploader = (props: IProps) => {
     sourceMediaId,
     sourceSegments,
     performedBy,
+    topic,
   } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
@@ -199,6 +201,7 @@ export const Uploader = (props: IProps) => {
       sourceMediaId: getSourceMediaId(),
       sourceSegments: sourceSegments,
       performedBy: performedBy,
+      topic: topic,
       eafUrl: !artifactTypeId
         ? ts.mediaAttached
         : localizedArtifactTypeFromId(artifactTypeId), //put psc message here

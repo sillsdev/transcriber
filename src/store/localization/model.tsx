@@ -162,6 +162,7 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "saveFirst": string;
     "segment": string;
     "speaker": string;
+    "topic": string;
     "transcribe": string;
     "unsaved": string;
     "uploadComplete": string;
@@ -778,6 +779,7 @@ export interface ISelectRecordingStrings extends Localize.LocalizedStringsMethod
     "sourceSegment": string;
     "sourceVersion": string;
     "speaker": string;
+    "topic": string;
 };
 
 export interface ISharedStrings extends Localize.LocalizedStringsMethods {
@@ -896,17 +898,18 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IToolStrings extends Localize.LocalizedStringsMethods {
-    "backTranslate": string;
     "community": string;
     "discuss": string;
     "done": string;
     "export": string;
     "paratext": string;
+    "phraseBackTranslate": string;
     "record": string;
     "resource": string;
     "segment": string;
     "teamCheck": string;
     "transcribe": string;
+    "wholeBackTranslate": string;
 };
 
 export interface ITranscribeStrings extends Localize.LocalizedStringsMethods {

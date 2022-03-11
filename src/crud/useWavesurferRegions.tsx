@@ -91,12 +91,13 @@ export function useWaveSurferRegions(
             'region created',
             () => region(r.id) !== undefined,
             () => false,
-            400
-          ).then(() => {
-            onRegion(numRegions(), paramsRef.current, true);
-            setCurrentRegion(r);
-          });
-          //TODO: handle time out case
+            500
+          )
+            .then(() => {
+              onRegion(numRegions(), paramsRef.current, true);
+            })
+            .catch((reason) => console.log(reason))
+            .finally(() => setCurrentRegion(r));
         }
       });
       ws.on('region-removed', function (r: any) {

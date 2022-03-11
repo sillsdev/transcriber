@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?><xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr" version="1.0">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr" version="1.0">
 	<file id="TranscriberAdmin" original="TranscriberAdmin-en.xlf">
 		<unit id="access.availableUsers">
 			<segment>
@@ -68,13 +69,13 @@
 		</unit>
 		<unit id="access.noOnlineUsers3">
 			<segment>
-				<source>To create an online project for working alone:</source>
+				<source>To create an online audio project for working alone:</source>
 				<target>Créer un projet en ligne pour travailler seul :</target>
 			</segment>
 		</unit>
 		<unit id="access.noOnlineUsers4">
 			<segment>
-				<source>Create a personal project.</source>
+				<source>Create a personal audio project.</source>
 				<target>Créez un projet personnel.</target>
 			</segment>
 		</unit>
@@ -744,7 +745,13 @@
 				<target>Intervenant</target>
 			</segment>
 		</unit>
-		<unit id="community.transcribe">
+		<unit id="community.topic">
+         <segment>
+            <source>Topic</source>
+            <target>Sujet</target>
+         </segment>
+      </unit>
+      <unit id="community.transcribe">
 			<segment>
 				<source>Transcribe</source>
 				<target>Transcrire</target>
@@ -3758,7 +3765,13 @@
 				<target>Intervenant</target>
 			</segment>
 		</unit>
-		<unit id="shared.admin">
+		<unit id="selectRecording.topic">
+         <segment>
+            <source>Topic</source>
+            <target>Sujet</target>
+         </segment>
+      </unit>
+      <unit id="shared.admin">
 			<segment>
 				<source>Admin</source>
 				<target>Admin</target>
@@ -4322,12 +4335,6 @@
 				<target>Oui</target>
 			</segment>
 		</unit>
-		<unit id="tool.backTranslate">
-			<segment>
-				<source>Back Translate</source>
-				<target>Traduire en arrière</target>
-			</segment>
-		</unit>
 		<unit id="tool.community">
 			<segment>
 				<source>Community Test</source>
@@ -4358,7 +4365,13 @@
 				<target>Paratext Sync</target>
 			</segment>
 		</unit>
-		<unit id="tool.record">
+		<unit id="tool.phraseBackTranslate">
+         <segment>
+            <source>Phrase Back Translate</source>
+            <target>Phrase Retour Traduire</target>
+         </segment>
+      </unit>
+      <unit id="tool.record">
 			<segment>
 				<source>Record</source>
 				<target>Enregistrement</target>
@@ -4388,7 +4401,13 @@
 				<target>Transcrire</target>
 			</segment>
 		</unit>
-		<unit id="transcribe.openTranscriber">
+		<unit id="tool.wholeBackTranslate">
+         <segment>
+            <source>Whole Back Translate</source>
+            <target>Traduire en arrière</target>
+         </segment>
+      </unit>
+      <unit id="transcribe.openTranscriber">
 			<segment>
 				<source>Open Transcriber</source>
 				<target>Transcripteur ouvert</target>
@@ -5301,12 +5320,12 @@
 			</segment>
 		</unit>
 		<unit id="workflowSteps.backTranslation">
-			<segment>
-				<source>Back Translate</source>
-				<target>Traduction du dos</target>
-			</segment>
-		</unit>
-		<unit id="workflowSteps.communityTest1">
+         <segment>
+            <source>Back Translate</source>
+            <target>Traduire en arrière</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.communityTest1">
 			<segment>
 				<source>Community Test 1</source>
 				<target>Test communautaire 1</target>
@@ -5369,7 +5388,7 @@
 		<unit id="workflowSteps.phraseBackTranslation">
 			<segment>
 				<source>Phrase Back Translate</source>
-				<target>Phrase Back Translate</target>
+				<target>Traduction du dos par phrase</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.preliminaryApproval">

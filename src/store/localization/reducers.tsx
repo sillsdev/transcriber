@@ -180,6 +180,7 @@ const initialState = {
 			"saveFirst": "Save or Clear your recording before uploading.",
 			"segment": "Segment",
 			"speaker": "Speaker",
+			"topic": "Topic",
 			"transcribe": "Transcribe",
 			"unsaved": "Unsaved",
 			"uploadComplete": "{0} of {1} files uploaded successfully.",
@@ -834,6 +835,7 @@ const initialState = {
 			"sourceSegment": "Source Segment",
 			"sourceVersion": "Source Version",
 			"speaker": "Speaker",
+			"topic": "Topic",
 		}
 	}),
 	"shared": new LocalizedStrings({
@@ -960,17 +962,18 @@ const initialState = {
 	}),
 	"tool": new LocalizedStrings({
 		"en": {
-			"backTranslate": "Back Translate",
 			"community": "Community Test",
 			"discuss": "Discuss",
 			"done": "Done",
 			"export": "Export",
 			"paratext": "Paratext Sync",
+			"phraseBackTranslate": "Phrase Back Translate",
 			"record": "Record",
 			"resource": "Internalize",
 			"segment": "Segment",
 			"teamCheck": "Compare",
 			"transcribe": "Transcribe",
+			"wholeBackTranslate": "Whole Back Translate",
 		}
 	}),
 	"transcribe": new LocalizedStrings({
