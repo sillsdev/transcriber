@@ -1009,6 +1009,12 @@
             <target>Текущие данные в проекте {name0} никогда не экспортировались в itf-файл для сохранения изменений.</target>
          </segment>
       </unit>
+      <unit id="electronImport.newerVersion">
+         <segment>
+            <source>This file was exported with a newer version of the program.You should download the latest version before importing.  If you continue, some data may not be imported correctly.</source>
+            <target>Этот файл был экспортирован с помощью более новой версии программы. Перед импортом следует загрузить последнюю версию.  Если вы продолжите, некоторые данные могут быть импортированы неправильно.</target>
+         </segment>
+      </unit>
       <unit id="electronImport.project">
          <segment>
             <source>Audio Project</source>

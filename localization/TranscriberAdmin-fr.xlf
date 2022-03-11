@@ -1009,7 +1009,13 @@
 				<target>Les données actuelles du projet audio {nom0} n'ont jamais été exportées vers un fichier itf pour préserver les modifications.</target>
 			</segment>
 		</unit>
-		<unit id="electronImport.project">
+		<unit id="electronImport.newerVersion">
+         <segment>
+            <source>This file was exported with a newer version of the program.You should download the latest version before importing.  If you continue, some data may not be imported correctly.</source>
+            <target>Ce fichier a été exporté avec une version plus récente du programme, vous devez télécharger la dernière version avant de l'importer.  Si vous continuez, certaines données risquent de ne pas être importées correctement.</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.project">
 			<segment>
 				<source>Audio Project</source>
 				<target>Projet audio</target>
