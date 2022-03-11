@@ -272,7 +272,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         setTrackedTask(selected);
         var resetBlob = false;
         if (
-          mediaState.urlMediaId !== r.mediafile.id &&
+          mediaState.id !== r.mediafile.id &&
           fetching.current !== r.mediafile.id
         ) {
           fetching.current = r.mediafile.id;
@@ -639,7 +639,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     }, [mediafiles]);
 
     useEffect(() => {
-      if (mediaState.url && mediaState.urlMediaId === fetching.current) {
+      if (mediaState.url && mediaState.id === fetching.current) {
         mediaUrlRef.current = mediaState.url;
         fetching.current = '';
         try {

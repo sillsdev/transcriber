@@ -132,6 +132,7 @@ export interface IRow {
   isVernacular: boolean;
   isResource: boolean;
   isComment: boolean;
+  isText: boolean;
 }
 
 interface SimpleWf {
@@ -436,7 +437,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         //if this is a file that will be played in the wavesurfer..fetch it
         if (r.isVernacular && i === 0) {
           if (
-            mediaState.urlMediaId !== r.mediafile.id &&
+            mediaState.id !== r.mediafile.id &&
             fetching.current !== r.mediafile.id
           ) {
             setTrackedTask(selected);
@@ -719,7 +720,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
                 return {
                   id: s.id,
                   label: wfStr.hasOwnProperty(camelName)
-                    ? wfStr.getString(camelName)
+                    ? (wfStr as any).getString(camelName)
                     : s.attributes.name,
                 };
               });
