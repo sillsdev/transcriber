@@ -224,6 +224,7 @@ export interface IElectronImportStrings extends Localize.LocalizedStringsMethods
     "lastExported": string;
     "members": string;
     "neverExported": string;
+    "newerVersion": string;
     "project": string;
     "projectImported": string;
     "ptfError": string;

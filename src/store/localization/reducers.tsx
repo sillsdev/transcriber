@@ -248,6 +248,7 @@ const initialState = {
 			"lastExported": "Current data in audio project {name0} was last exported {date0}.",
 			"members": "Members",
 			"neverExported": "Current data in audio project {name0} has never been exported to an itf file to preserve changes.",
+			"newerVersion": "This file was exported with a newer version of the program.You should download the latest version before importing.  If you continue, some data may not be imported correctly.",
 			"project": "Audio Project",
 			"projectImported": "Audio Project {name0} was previously imported with a newer file: {date1} ",
 			"ptfError": "Not a valid Portable Transcriber File",
