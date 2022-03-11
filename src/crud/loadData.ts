@@ -83,6 +83,7 @@ export async function insertData(
   snapshotDate?: string
 ) {
   var rec: Record | Record[] | null = null;
+  var project: Project | undefined = undefined;
   try {
     if (item.keys && checkExisting) {
       var id = remoteIdGuid(item.type, item.keys['remoteId'], memory.keyMap);
@@ -100,8 +101,9 @@ export async function insertData(
       rec.attributes = { ...item.attributes };
       oparray.push(tb.updateRecord(rec));
       if (rec.type === 'project') {
+        project = rec as Project;
         await saveOfflineProject(
-          rec as Project,
+          project,
           memory,
           backup,
           snapshotDate,
@@ -131,8 +133,9 @@ export async function insertData(
         if (typeof item.id === 'number') memory.schema.initializeRecord(item);
         oparray.push(tb.addRecord(item));
         if (item.type === 'project') {
+          project = item as Project;
           await saveOfflineProject(
-            item as Project,
+            project,
             memory,
             backup,
             snapshotDate,
@@ -144,6 +147,7 @@ export async function insertData(
       }
     }
   }
+  return project;
 }
 /*
   async function asyncForEach(
