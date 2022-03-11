@@ -279,7 +279,7 @@ export function PassageDetailArtifacts(props: IProps) {
         finish={afterUpload}
         cancelled={cancelled}
         artifactTypeId={resourceType}
-        extraExt="pdf"
+        extraExt=".pdf"
         extraMime="application/pdf"
         metaData={
           <ResourceData
