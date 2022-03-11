@@ -9,8 +9,8 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { IStepEditorStrings } from '../../model';
 
 const useStyles = makeStyles({
-  step: { minWidth: 200 },
-  tool: { minWidth: 200 },
+  step: { minWidth: 250 },
+  tool: { minWidth: 250 },
 });
 
 interface IProps {
