@@ -46,6 +46,7 @@ const RecordingHeader = ({ t }: { t: ISelectRecordingStrings }) => {
       <TableCell>{t.artifactType}</TableCell>
       <TableCell align="right">{t.sourceVersion}</TableCell>
       <TableCell align="left">{t.sourceSegment}</TableCell>
+      <TableCell align="left">{t.topic}</TableCell>
       <TableCell align="left">{t.created}</TableCell>
       <TableCell align="left">{t.speaker}</TableCell>
       <TableCell align="left">{t.filename}</TableCell>
@@ -83,6 +84,7 @@ const RecordingInfo = (iprops: IInfoProps) => {
       <TableCell align="left">
         {prettySegment(row.mediafile.attributes?.sourceSegments || '')}
       </TableCell>
+      <TableCell align="left">{row.mediafile.attributes?.topic}</TableCell>
       <TableCell align="left">
         {dateOrTime(row.mediafile.attributes?.dateCreated, lang)}
       </TableCell>

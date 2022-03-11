@@ -5306,6 +5306,18 @@
 				<target>Traduction du dos</target>
 			</segment>
 		</unit>
+		<unit id="workflowSteps.phraseBackTranslation">
+			<segment>
+				<source>Phrase Back Translate</source>
+				<target>Traduction du dos par phrase</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.wholeBackTranslation">
+			<segment>
+				<source>Whole Back Translate</source>
+				<target>Traduction du dos</target>
+			</segment>
+		</unit>
 		<unit id="workflowSteps.communityTest1">
 			<segment>
 				<source>Community Test 1</source>

@@ -870,6 +870,13 @@
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="community.topic">
+            <source>Topic</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="community.transcribe">
             <source>Transcribe</source>
             <target/>
@@ -4384,6 +4391,13 @@
                <context context-type="sourcefile">selectRecording.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="selectRecording.topic">
+            <source>Topic</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">selectRecording.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.admin">
             <source>Admin</source>
             <target/>
@@ -5042,8 +5056,15 @@
                <context context-type="sourcefile">ToDoTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="tool.backTranslate">
-            <source>Back Translate</source>
+         <trans-unit id="tool.phraseBackTranslate">
+            <source>Phrase Back Translate</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">useTools.ts</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="tool.wholeBackTranslate">
+            <source>Whole Back Translate</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">useTools.ts</context>

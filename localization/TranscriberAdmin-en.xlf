@@ -748,6 +748,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.topic">
+         <segment>
+            <source>Topic</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.transcribe">
          <segment>
             <source>Transcribe</source>
@@ -3760,6 +3766,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="selectRecording.topic">
+         <segment>
+            <source>Topic</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.admin">
          <segment>
             <source>Admin</source>
@@ -4324,9 +4336,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="tool.backTranslate">
+      <unit id="tool.phraseBackTranslate">
          <segment>
-            <source>Back Translate</source>
+            <source>Phrase Back Translate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.wholeBackTranslate">
+         <segment>
+            <source>Whole Back Translate</source>
             <target/>
          </segment>
       </unit>
