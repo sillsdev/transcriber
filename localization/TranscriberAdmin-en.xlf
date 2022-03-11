@@ -1014,7 +1014,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program.You should download the latest version before importing.  If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
             <target/>
          </segment>
       </unit>
