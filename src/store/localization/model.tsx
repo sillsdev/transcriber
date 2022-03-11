@@ -898,18 +898,18 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IToolStrings extends Localize.LocalizedStringsMethods {
-    "phraseBackTranslate": string;
-    "wholeBackTranslate": string;
     "community": string;
     "discuss": string;
     "done": string;
     "export": string;
     "paratext": string;
+    "phraseBackTranslate": string;
     "record": string;
     "resource": string;
     "segment": string;
     "teamCheck": string;
     "transcribe": string;
+    "wholeBackTranslate": string;
 };
 
 export interface ITranscribeStrings extends Localize.LocalizedStringsMethods {

@@ -962,18 +962,18 @@ const initialState = {
 	}),
 	"tool": new LocalizedStrings({
 		"en": {
-			"phraseBackTranslate": "Phrase Back Translate",
-			"wholeBackTranslate": "Whole Back Translate",
 			"community": "Community Test",
 			"discuss": "Discuss",
 			"done": "Done",
 			"export": "Export",
 			"paratext": "Paratext Sync",
+			"phraseBackTranslate": "Phrase Back Translate",
 			"record": "Record",
 			"resource": "Internalize",
 			"segment": "Segment",
 			"teamCheck": "Compare",
 			"transcribe": "Transcribe",
+			"wholeBackTranslate": "Whole Back Translate",
 		}
 	}),
 	"transcribe": new LocalizedStrings({

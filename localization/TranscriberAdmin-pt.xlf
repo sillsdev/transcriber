@@ -745,7 +745,13 @@
 				<target>Orador</target>
 			</segment>
 		</unit>
-		<unit id="community.transcribe">
+		<unit id="community.topic">
+         <segment>
+            <source>Topic</source>
+            <target>Tema</target>
+         </segment>
+      </unit>
+      <unit id="community.transcribe">
 			<segment>
 				<source>Transcribe</source>
 				<target>Transcrição</target>
@@ -3758,7 +3764,13 @@
 				<target>Orador</target>
 			</segment>
 		</unit>
-		<unit id="shared.admin">
+		<unit id="selectRecording.topic">
+         <segment>
+            <source>Topic</source>
+            <target>Tema</target>
+         </segment>
+      </unit>
+      <unit id="shared.admin">
 			<segment>
 				<source>Admin</source>
 				<target>Admin</target>
@@ -3986,7 +3998,13 @@
 				<target>Upload de áudio</target>
 			</segment>
 		</unit>
-		<unit id="shared.versionHistory">
+		<unit id="shared.user">
+         <segment>
+            <source>User</source>
+            <target>Usuário</target>
+         </segment>
+      </unit>
+      <unit id="shared.versionHistory">
 			<segment>
 				<source>Versions</source>
 				<target>Versões</target>
@@ -4316,12 +4334,6 @@
 				<target>Sim</target>
 			</segment>
 		</unit>
-		<unit id="tool.backTranslate">
-			<segment>
-				<source>Back Translate</source>
-				<target>Voltar Traduzir</target>
-			</segment>
-		</unit>
 		<unit id="tool.community">
 			<segment>
 				<source>Community Test</source>
@@ -4352,7 +4364,13 @@
 				<target>Paratext Sync</target>
 			</segment>
 		</unit>
-		<unit id="tool.record">
+		<unit id="tool.phraseBackTranslate">
+         <segment>
+            <source>Phrase Back Translate</source>
+            <target>Tradução de Frase Traseiro</target>
+         </segment>
+      </unit>
+      <unit id="tool.record">
 			<segment>
 				<source>Record</source>
 				<target>Registro</target>
@@ -4382,7 +4400,13 @@
 				<target>Transcrição</target>
 			</segment>
 		</unit>
-		<unit id="transcribe.openTranscriber">
+		<unit id="tool.wholeBackTranslate">
+         <segment>
+            <source>Whole Back Translate</source>
+            <target>Voltar Traduzir</target>
+         </segment>
+      </unit>
+      <unit id="transcribe.openTranscriber">
 			<segment>
 				<source>Open Transcriber</source>
 				<target>Transcriber aberto</target>

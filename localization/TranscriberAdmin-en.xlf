@@ -4336,18 +4336,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="tool.phraseBackTranslate">
-         <segment>
-            <source>Phrase Back Translate</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="tool.wholeBackTranslate">
-         <segment>
-            <source>Whole Back Translate</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="tool.community">
          <segment>
             <source>Community Test</source>
@@ -4378,6 +4366,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="tool.phraseBackTranslate">
+         <segment>
+            <source>Phrase Back Translate</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="tool.record">
          <segment>
             <source>Record</source>
@@ -4405,6 +4399,12 @@
       <unit id="tool.transcribe">
          <segment>
             <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.wholeBackTranslate">
+         <segment>
+            <source>Whole Back Translate</source>
             <target/>
          </segment>
       </unit>
