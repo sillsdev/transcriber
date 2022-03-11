@@ -19,6 +19,7 @@ import { useGlobal, useRef } from 'reactn';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
+import IndexedDBSource from '@orbit/indexeddb';
 
 export interface IImportData {
   fileName: string;
@@ -47,6 +48,7 @@ export const useElectronImport = (
   const AddProjectLoaded = useProjectsLoaded();
   const zipRef = useRef<AdmZip>();
   const t = useSelector(stringSelector, shallowEqual) as IElectronImportStrings;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
 
   const invalidReturn = {
     fileName: '',
@@ -87,6 +89,7 @@ export const useElectronImport = (
       let valid = false;
       var exportTime: Moment = moment.utc();
       var exportDate = '';
+      var version = '3';
       var zipEntries = zip.getEntries();
       for (let entry of zipEntries) {
         if (entry.entryName === 'SILTranscriber') {
@@ -97,6 +100,8 @@ export const useElectronImport = (
         } else if (entry.entryName === 'Offline') {
           isOfflinePtf.current = true;
           if (valid) break;
+        } else if (entry.entryName === 'Version') {
+          version = entry.getData().toString('utf8');
         }
       }
       if (!valid) {
@@ -105,6 +110,7 @@ export const useElectronImport = (
         isOfflinePtf.current = false;
         return { ...invalidReturn, errMsg: t.ptfError };
       }
+
       //we have a valid file
       zipRef.current = zip;
       var ret: IImportData = {
@@ -116,6 +122,9 @@ export const useElectronImport = (
         exportDate: exportDate,
       };
       var infoMsg;
+      if ((backup?.schema.version || 1) < parseInt(version)) {
+        ret.warnMsg = t.newerVersion;
+      }
       var userInProject = false;
       var users: Array<string> = [];
       var importUsers = JSON.parse(zip.readAsText('data/A_users.json'));

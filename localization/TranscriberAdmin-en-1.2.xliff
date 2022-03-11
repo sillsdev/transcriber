@@ -1178,6 +1178,13 @@
                <context context-type="sourcefile">electronImport.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="electronImport.newerVersion">
+            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">electronImport.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="electronImport.project">
             <source>Audio Project</source>
             <target/>

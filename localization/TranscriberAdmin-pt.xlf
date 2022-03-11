@@ -1009,7 +1009,13 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="electronImport.project">
+		<unit id="electronImport.newerVersion">
+         <segment>
+            <source>This file was exported with a newer version of the program.You should download the latest version before importing.  If you continue, some data may not be imported correctly.</source>
+            <target>Este arquivo foi exportado com uma versão mais recente do programa. Você deve baixar a versão mais recente antes de importar.  Se você continuar, alguns dados podem não ser importados corretamente.</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.project">
 			<segment>
 				<source>Audio Project</source>
 				<target/>
