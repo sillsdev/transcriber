@@ -343,10 +343,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       readyRecs.forEach((p) => {
         const passageMediaRecs = mediaRecs
           .filter((m) => related(m, 'passage') === p.id)
-          .sort(
-            (i: MediaFile, j: MediaFile) =>
-              // Sort descending
-              j.attributes.versionNumber - i.attributes.versionNumber
+          .sort((i: MediaFile, j: MediaFile) =>
+            // Sort ascending--vernacular will only have the latest.  All others sort by date created (possible upgrade would be segment start if available)
+            j.attributes.dateCreated <= i.attributes.dateCreated ? -1 : 1
           );
 
         if (related(p, 'section') !== curSec) {
