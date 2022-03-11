@@ -284,12 +284,15 @@ const PassageDetailGrids = (props: IProps) => {
                   auth={auth}
                   width={width}
                   slugs={communitySlugs}
+                  segments={false}
+                  showTopic={true}
                 />
               </Grid>
             </Grid>
           </Grid>
         )}
-        {tool === ToolSlug.BackTranslate && (
+        {(tool === ToolSlug.PhraseBackTranslate ||
+          tool === ToolSlug.WholeBackTranslate) && (
           <Grid container direction="row" className={classes.row}>
             <Grid item xs={12}>
               <Grid container>
@@ -297,11 +300,13 @@ const PassageDetailGrids = (props: IProps) => {
                   auth={auth}
                   width={width}
                   slugs={backTranslationSlugs}
+                  segments={tool === ToolSlug.PhraseBackTranslate}
                 />
               </Grid>
             </Grid>
           </Grid>
         )}
+
         {tool === ToolSlug.Export && (
           <Grid container>
             <Grid item xs={12}>

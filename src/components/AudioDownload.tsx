@@ -58,7 +58,7 @@ export const AudioDownload = (props: IProps) => {
     const { name, ext } = removeExtension(fullName);
     const version = mediaRec?.attributes?.versionNumber || '1';
     setAudName(`${name}-ver${version}.${ext}`);
-    if (id !== mediaState.urlMediaId) {
+    if (id !== mediaState.id) {
       fetchMediaUrl({ id, auth });
     }
   };

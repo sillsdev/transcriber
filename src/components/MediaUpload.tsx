@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { IState, IMediaUploadStrings } from '../model';
 import localStrings from '../selector/localize';
@@ -62,6 +62,82 @@ export enum UploadType {
   LOGO = 3 /* do we need separate ones for org and avatar? */,
 }
 
+interface ITargetProps extends IStateProps {
+  name: string;
+  acceptextension: string;
+  acceptmime: string;
+  multiple?: boolean;
+  handleFiles: (files: FileList | undefined) => void;
+}
+
+const DropTarget = (targetProps: ITargetProps) => {
+  const { name, multiple, acceptextension, acceptmime, handleFiles, t } =
+    targetProps;
+  const classes = useStyles();
+  const inputStyle = { display: 'none' };
+
+  const handleNameChange = (
+    e: React.FormEvent<HTMLInputElement | HTMLLabelElement>
+  ) => {
+    const inputEl = e.target as HTMLInputElement;
+    if (inputEl && inputEl.files) {
+      handleFiles(inputEl.files);
+    }
+  };
+
+  const handleDrop = (files: FileList) => {
+    handleFiles(files);
+  };
+
+  return process.env.NODE_ENV !== 'test' ? (
+    <FileDrop onDrop={handleDrop}>
+      <label
+        id="file"
+        className={classes.label}
+        htmlFor="upload"
+        onChange={handleNameChange}
+      >
+        {name === ''
+          ? multiple
+            ? t.dragDropMultiple
+            : t.dragDropSingle
+          : name}
+      </label>
+      <input
+        id="upload"
+        style={inputStyle}
+        type="file"
+        accept={acceptextension}
+        multiple={multiple}
+        onChange={handleNameChange}
+      />
+    </FileDrop>
+  ) : (
+    <div>
+      <label
+        id="file"
+        className={classes.label}
+        htmlFor="upload"
+        onChange={handleNameChange}
+      >
+        {name === ''
+          ? multiple
+            ? t.dragDropMultiple
+            : t.dragDropSingle
+          : name}
+      </label>
+      <input
+        id="upload"
+        style={inputStyle}
+        type="file"
+        accept={acceptmime}
+        multiple={multiple}
+        onChange={handleNameChange}
+      />
+    </div>
+  );
+};
+
 interface IProps extends IStateProps {
   visible: boolean;
   onVisible: (v: boolean) => void;
@@ -71,6 +147,8 @@ interface IProps extends IStateProps {
   cancelMethod?: () => void;
   metaData?: JSX.Element;
   ready?: () => boolean;
+  extraExt?: string;
+  extraMime?: string;
 }
 
 function MediaUpload(props: IProps) {
@@ -84,23 +162,15 @@ function MediaUpload(props: IProps) {
     cancelMethod,
     metaData,
     ready,
+    extraExt,
+    extraMime,
   } = props;
   const classes = useStyles();
   const [name, setName] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const { showMessage } = useSnackBar();
-  const acceptextension = [
-    '.mp3, .m4a, .wav, .ogg',
-    '.itf',
-    '.ptf',
-    '.jpg, .svg, .png',
-  ];
-  const acceptmime = [
-    'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg',
-    'application/itf',
-    'application/ptf',
-    'image/jpeg, image/svg+xml, image/png',
-  ];
+  const [acceptextension, setAcceptExtension] = useState('');
+  const [acceptmime, setAcceptMime] = useState('');
   const title = [t.title, t.ITFtitle, t.PTFtitle, 'FUTURE TODO'];
   const text = [t.task, t.ITFtask, t.PTFtask, 'FUTURE TODO'];
 
@@ -127,14 +197,14 @@ function MediaUpload(props: IProps) {
   const handleFiles = (files: FileList | undefined) => {
     if (files) {
       var goodFiles = Array.from(files).filter((s) =>
-        acceptextension[uploadType].includes(
+        acceptextension.includes(
           (path.extname(s.name) || '.xxx').substring(1).toLowerCase()
         )
       );
       if (goodFiles.length < files.length) {
         var rejectedFiles = Array.from(files).filter(
           (s) =>
-            !acceptextension[uploadType].includes(
+            !acceptextension.includes(
               (path.extname(s.name) || '.xxx').substring(1).toLowerCase()
             )
         );
@@ -152,68 +222,29 @@ function MediaUpload(props: IProps) {
       setName('');
     }
   };
-  const handleNameChange = (
-    e: React.FormEvent<HTMLInputElement | HTMLLabelElement>
-  ) => {
-    const inputEl = e.target as HTMLInputElement;
-    if (inputEl && inputEl.files) {
-      handleFiles(inputEl.files);
-    }
-  };
 
-  const handleDrop = (files: FileList) => {
-    handleFiles(files);
-  };
-
-  const inputStyle = { display: 'none' };
-  const dropTarget =
-    process.env.NODE_ENV !== 'test' ? (
-      <FileDrop onDrop={handleDrop}>
-        <label
-          id="file"
-          className={classes.label}
-          htmlFor="upload"
-          onChange={handleNameChange}
-        >
-          {name === ''
-            ? multiple
-              ? t.dragDropMultiple
-              : t.dragDropSingle
-            : name}
-        </label>
-        <input
-          id="upload"
-          style={inputStyle}
-          type="file"
-          accept={acceptextension[uploadType]}
-          multiple={multiple}
-          onChange={handleNameChange}
-        />
-      </FileDrop>
-    ) : (
-      <div>
-        <label
-          id="file"
-          className={classes.label}
-          htmlFor="upload"
-          onChange={handleNameChange}
-        >
-          {name === ''
-            ? multiple
-              ? t.dragDropMultiple
-              : t.dragDropSingle
-            : name}
-        </label>
-        <input
-          id="upload"
-          style={inputStyle}
-          type="file"
-          accept={acceptmime[uploadType]}
-          multiple={multiple}
-          onChange={handleNameChange}
-        />
-      </div>
+  useEffect(() => {
+    setAcceptExtension(
+      [
+        '.mp3, .m4a, .wav, .ogg' + (extraExt ? `, ${extraExt}` : ''),
+        '.itf',
+        '.ptf',
+        '.jpg, .svg, .png',
+      ].map((s) => s)[uploadType]
     );
+  }, [extraExt, uploadType]);
+
+  useEffect(() => {
+    setAcceptMime(
+      [
+        'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg' +
+          (extraMime ? `, ${extraMime}` : ''),
+        'application/itf',
+        'application/ptf',
+        'image/jpeg, image/svg+xml, image/png',
+      ].map((s) => s)[uploadType]
+    );
+  }, [extraMime, uploadType]);
 
   return (
     <div>
@@ -225,7 +256,16 @@ function MediaUpload(props: IProps) {
         <DialogTitle id="audUploadDlg">{title[uploadType]}</DialogTitle>
         <DialogContent>
           <DialogContentText>{text[uploadType]}</DialogContentText>
-          <div className={classes.drop}>{dropTarget}</div>
+          <div className={classes.drop}>
+            <DropTarget
+              name={name}
+              handleFiles={handleFiles}
+              acceptextension={acceptextension}
+              acceptmime={acceptmime}
+              multiple={multiple}
+              t={t}
+            />
+          </div>
           {metaData}
         </DialogContent>
         <DialogActions>

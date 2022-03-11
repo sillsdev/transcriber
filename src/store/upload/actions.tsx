@@ -112,7 +112,7 @@ export const nextUpload =
   ) =>
   (dispatch: any) => {
     dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
-    const acceptExtPat = /\.wav$|\.mp3$|\.m4a$|\.ogg$|\.webm$/i;
+    const acceptExtPat = /\.wav$|\.mp3$|\.m4a$|\.ogg$|\.webm$|\.pdf$/i;
     if (!acceptExtPat.test(record.originalFile)) {
       dispatch({
         payload: {

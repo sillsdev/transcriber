@@ -177,10 +177,12 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   ready?: () => boolean;
   width: number;
   slugs: ArtifactTypeSlug[];
+  segments: boolean;
+  showTopic: boolean;
 }
 
 export function PassageDetailItem(props: IProps) {
-  const { auth, t, ts, width, slugs, mediafiles } = props;
+  const { auth, t, ts, width, slugs, segments, showTopic, mediafiles } = props;
   const { pathname } = useLocation();
   const [view, setView] = useState('');
   const [reporter] = useGlobal('errorReporter');
@@ -194,6 +196,7 @@ export function PassageDetailItem(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const [speaker, setSpeaker] = useState('');
+  const [topic, setTopic] = useState('');
   const [importList, setImportList] = useState<File[]>();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [playItem, setPlayItem] = useState('');
@@ -238,8 +241,7 @@ export function PassageDetailItem(props: IProps) {
   }, [canSave]);
 
   useEffect(() => {
-    if (mediafileId !== mediaState.urlMediaId)
-      fetchMediaUrl({ id: mediafileId, auth });
+    if (mediafileId !== mediaState.id) fetchMediaUrl({ id: mediafileId, auth });
     var mediaRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
     setCurrentVersion(mediaRec?.attributes?.versionNumber || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -259,7 +261,6 @@ export function PassageDetailItem(props: IProps) {
     tmp += recordType + (mediaRec.length + 1).toString();
     tmp += '_v' + currentVersion.toString();
     if (currentSegmentIndex > 0) tmp += 's' + currentSegmentIndex.toString();
-    //if (speaker) tmp += '_' + speaker;
     setDefaultFileName(cleanFileName(tmp));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memory, passage, rowData, recordType, speaker, currentSegmentIndex]);
@@ -314,6 +315,10 @@ export function PassageDetailItem(props: IProps) {
   const handleChangeSpeaker = (e: any) => {
     e.persist();
     setSpeaker(e.target.value);
+  };
+  const handleChangeTopic = (e: any) => {
+    e.persist();
+    setTopic(e.target.value);
   };
   const handleSelect = (id: string) => {
     setPlayItem(id);
@@ -387,7 +392,7 @@ export function PassageDetailItem(props: IProps) {
                 >
                   <Pane className={classes.pane}>
                     <PassageDetailPlayer
-                      allowSegment={true}
+                      allowSegment={segments}
                       saveSegments={false} //todo
                     />
                   </Pane>
@@ -409,6 +414,16 @@ export function PassageDetailItem(props: IProps) {
                             ? ts.uploadMediaSingular
                             : ts.importMediaSingular}
                         </Button>
+                        <div className={classes.grow}>{'\u00A0'}</div>
+                        {currentSegment && (
+                          <TextField
+                            className={classes.formControl}
+                            id="segment"
+                            value={currentSegment}
+                            size={'small'}
+                            label={t.segment}
+                          />
+                        )}
                       </div>
                       <div className={classes.row}>
                         <Typography className={classes.status}>
@@ -435,13 +450,16 @@ export function PassageDetailItem(props: IProps) {
                           </RadioGroup>
                         )}
                         <div className={classes.grow}>{'\u00A0'}</div>
-                        <TextField
-                          className={classes.formControl}
-                          id="segment"
-                          label={t.segment}
-                          value={currentSegment}
-                          fullWidth={true}
-                        />
+                        {showTopic && (
+                          <TextField
+                            className={classes.formControl}
+                            id="topic"
+                            label={t.topic}
+                            value={topic}
+                            fullWidth={true}
+                            onChange={handleChangeTopic}
+                          />
+                        )}
                         <TextField
                           className={classes.formControl}
                           id="speaker"
@@ -566,6 +584,7 @@ export function PassageDetailItem(props: IProps) {
         sourceMediaId={mediafileId}
         artifactTypeId={recordTypeId}
         performedBy={speaker}
+        topic={topic}
       />
     </div>
   );
