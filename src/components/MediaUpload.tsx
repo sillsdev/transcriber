@@ -71,6 +71,8 @@ interface IProps extends IStateProps {
   cancelMethod?: () => void;
   metaData?: JSX.Element;
   ready?: () => boolean;
+  extraExt?: string;
+  extraMime?: string;
 }
 
 function MediaUpload(props: IProps) {
@@ -84,16 +86,18 @@ function MediaUpload(props: IProps) {
     cancelMethod,
     metaData,
     ready,
+    extraExt,
+    extraMime,
   } = props;
   const classes = useStyles();
   const [name, setName] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const { showMessage } = useSnackBar();
   const acceptextension = [
-    '.mp3, .m4a, .wav, .ogg',
+    '.mp3, .m4a, .wav, .ogg' + (extraExt ? `, ${extraExt}` : ''),
     '.itf',
     '.ptf',
-    '.jpg, .svg, .png',
+    '.jpg, .svg, .png' + (extraMime ? `, ${extraMime}` : ''),
   ];
   const acceptmime = [
     'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg',
