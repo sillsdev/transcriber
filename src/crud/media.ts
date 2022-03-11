@@ -122,9 +122,7 @@ export const getMediaName = (
     rec.attributes.versionNumber.toString();
   const planRec = getMediaPlanRec(rec, memory);
   const planName = planRec && planRec.attributes && planRec.attributes.name;
-  const projRec = getMediaProjRec(rec, memory, reporter);
-  const projName = projRec && projRec.attributes && projRec.attributes.name;
-  let val = projName + '_' + planName + '_';
+  let val = planName + '_';
   if (book && book !== '') val = val + book + '_';
   val = val + secSeq + '-' + seq + '_' + ref + 'v' + ver;
   return cleanFileName(val);
