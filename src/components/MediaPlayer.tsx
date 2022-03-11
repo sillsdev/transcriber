@@ -57,7 +57,7 @@ export function MediaPlayer(props: IProps) {
   }, [srcMediaId]);
 
   useEffect(() => {
-    if (mediaState.urlMediaId !== srcMediaId) return;
+    if (mediaState.id !== srcMediaId) return;
     if (mediaState.status === MediaSt.FETCHED) setReady(true);
     if (mediaState.error) {
       if (mediaState.error.startsWith('no offline file'))

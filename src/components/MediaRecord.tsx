@@ -170,7 +170,7 @@ function MediaRecord(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (mediaId !== mediaState.urlMediaId) fetchMediaUrl({ id: mediaId, auth });
+    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId, auth });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
 
@@ -359,12 +359,11 @@ function MediaRecord(props: IProps) {
 
   return (
     <Paper>
-      {mediaState.status === MediaSt.FETCHED &&
-        mediaState.urlMediaId === mediaId && (
-          <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
-            {loading ? t.loading : t.loadfile}
-          </Button>
-        )}
+      {mediaState.status === MediaSt.FETCHED && mediaState.id === mediaId && (
+        <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
+          {loading ? t.loading : t.loadfile}
+        </Button>
+      )}
       <WSAudioPlayer
         allowRecord={true}
         allowSilence={allowWave}

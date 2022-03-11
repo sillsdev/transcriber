@@ -38,6 +38,7 @@ import {
   useSecResUserDelete,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
+import MediaDisplay from '../../MediaDisplay';
 import SelectResource, { CatMap } from './SelectResource';
 import ResourceData from './ResourceData';
 
@@ -83,6 +84,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const DeleteSectionResource = useSecResDelete();
   const [uploadVisible, setUploadVisible] = useState(false);
   const cancelled = useRef(false);
+  const [displayId, setDisplayId] = useState('');
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
   const [editResource, setEditResource] = useState<SectionResource>();
   const catIdRef = useRef<string>();
@@ -101,6 +103,14 @@ export function PassageDetailArtifacts(props: IProps) {
   const handlePlay = (id: string) => {
     if (id === playItem) setMediaPlaying(!mediaPlaying);
     else setSelected(id);
+  };
+
+  const handleDisplayId = (id: string) => {
+    setDisplayId(id);
+  };
+
+  const handleFinish = () => {
+    setDisplayId('');
   };
 
   const handleDone = async (id: string, res: SectionResource | null) => {
@@ -263,6 +273,7 @@ export function PassageDetailArtifacts(props: IProps) {
               value={value as any}
               isPlaying={playItem === value.id && mediaPlaying}
               onPlay={handlePlay}
+              onView={handleDisplayId}
               onDone={handleDone}
               onDelete={handleDelete}
               onEdit={handleEdit}
@@ -279,6 +290,8 @@ export function PassageDetailArtifacts(props: IProps) {
         finish={afterUpload}
         cancelled={cancelled}
         artifactTypeId={resourceType}
+        extraExt=".pdf"
+        extraMime="application/pdf"
         metaData={
           <ResourceData
             catAllowNew={true} //if they can upload they can add cat
@@ -318,6 +331,13 @@ export function PassageDetailArtifacts(props: IProps) {
           catRequired={false}
         />
       </BigDialog>
+      {displayId && (
+        <MediaDisplay
+          srcMediaId={displayId}
+          finish={handleFinish}
+          auth={auth}
+        />
+      )}
     </>
   );
 }

@@ -67,6 +67,7 @@ export const oneMediaRow = ({
     isResource: isResource(typeNameSlug),
     isComment: typeNameSlug === 'comment',
     isVernacular: typeNameSlug === '' || typeNameSlug === 'vernacular',
+    isText: mediaAttr?.originalFile?.endsWith('.pdf') || false,
   });
   return newRow;
 };

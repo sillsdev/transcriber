@@ -103,7 +103,7 @@ function PassageRecordDlg(props: IProps) {
   };
 
   useEffect(() => {
-    if (mediaId !== mediaState.urlMediaId) fetchMediaUrl({ id: mediaId, auth });
+    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId, auth });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
 

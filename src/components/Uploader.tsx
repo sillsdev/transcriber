@@ -64,6 +64,8 @@ interface IProps extends IStateProps, IDispatchProps {
   sourceSegments?: string;
   performedBy?: string;
   topic?: string;
+  extraExt?: string;
+  extraMime?: string;
 }
 
 export const Uploader = (props: IProps) => {
@@ -88,6 +90,8 @@ export const Uploader = (props: IProps) => {
     sourceSegments,
     performedBy,
     topic,
+    extraExt,
+    extraMime,
   } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
@@ -296,6 +300,8 @@ export const Uploader = (props: IProps) => {
           cancelMethod={uploadCancel}
           metaData={metaData}
           ready={ready}
+          extraExt={extraExt}
+          extraMime={extraMime}
         />
       )}
     </div>

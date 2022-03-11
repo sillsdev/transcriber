@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from 'react';
+import { useEffect, useReducer } from 'react';
 import { useGlobal } from 'reactn';
 import Axios from 'axios';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -21,17 +21,23 @@ export interface IMediaState {
   status: MediaSt;
   error: null | string;
   url: string; // temporary url
-  urlMediaId: string; // media id
+  id: string; // media id
+  remoteId: string;
+  auth: Auth | null;
+  cancelled: boolean;
 }
 export const mediaClean: IMediaState = {
   status: MediaSt.IDLE,
   error: null,
   url: '',
-  urlMediaId: '',
+  id: '',
+  remoteId: '',
+  auth: null,
+  cancelled: false,
 };
 
 type Action =
-  | { type: MediaSt.PENDING; payload: string } // mediaId
+  | { type: MediaSt.PENDING; payload: IMediaState } // mediaId
   | { type: MediaSt.FETCHED; payload: string } // temporary url
   | { type: MediaSt.ERROR; payload: string }
   | { type: MediaSt.IDLE; payload: undefined };
@@ -41,8 +47,8 @@ const stateReducer = (state: IMediaState, action: Action): IMediaState => {
     case MediaSt.PENDING:
       return {
         ...mediaClean,
+        ...action.payload,
         status: MediaSt.PENDING,
-        urlMediaId: action.payload,
         error: '',
       };
     case MediaSt.FETCHED:
@@ -55,10 +61,10 @@ const stateReducer = (state: IMediaState, action: Action): IMediaState => {
       return {
         ...state,
         status: MediaSt.ERROR,
-        error: action.payload + ' ' + state.urlMediaId,
+        error: action.payload + ' ' + state.id,
       };
     case MediaSt.IDLE:
-      return { ...state, status: MediaSt.IDLE, urlMediaId: '', error: '' };
+      return { ...mediaClean, status: MediaSt.IDLE };
 
     default:
       return state;
@@ -69,13 +75,8 @@ interface IProps {
   id: string;
   auth: Auth | null;
 }
-const clean: IProps = {
-  id: '',
-  auth: null,
-};
 
 export const useFetchMediaUrl = (reporter?: any) => {
-  const props = useRef<IProps>(clean);
   const [state, dispatch] = useReducer(stateReducer, mediaClean);
   const [memory] = useGlobal('memory');
 
@@ -100,8 +101,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
 
   useEffect(() => {
     let cancelRequest = false;
-    let id = props.current.id;
-    if (!id) return;
+    if (!state.id) return;
 
     const cancelled = () => {
       if (cancelRequest) {
@@ -112,18 +112,13 @@ export const useFetchMediaUrl = (reporter?: any) => {
     };
 
     const fetchData = () => {
-      const remoteid = remId(id);
-      id = guidId(id);
-      if (cancelled()) return;
-      dispatch({ payload: id, type: MediaSt.PENDING });
-
       if (isElectron) {
         try {
           if (cancelled()) return;
           const mediarec = memory.cache.query((q) =>
             q.findRecord({
               type: 'mediafile',
-              id: id,
+              id: state.id,
             })
           ) as MediaFile;
           if (mediarec && mediarec.attributes) {
@@ -134,7 +129,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
               if (cancelled()) return;
               dispatch({ payload: safeURL(path), type: MediaSt.FETCHED });
               return;
-            } else if (!props.current.auth?.accessToken) {
+            } else if (!state.auth?.accessToken) {
               dispatch({
                 payload: 'no offline file',
                 type: MediaSt.ERROR,
@@ -150,9 +145,9 @@ export const useFetchMediaUrl = (reporter?: any) => {
         }
       }
       if (cancelled()) return;
-      Axios.get(`${API_CONFIG.host}/api/mediafiles/${remoteid}/fileurl`, {
+      Axios.get(`${API_CONFIG.host}/api/mediafiles/${state.remoteId}/fileurl`, {
         headers: {
-          Authorization: 'Bearer ' + props.current.auth?.accessToken,
+          Authorization: 'Bearer ' + state.auth?.accessToken,
         },
       })
         .then((strings) => {
@@ -173,10 +168,16 @@ export const useFetchMediaUrl = (reporter?: any) => {
       cancelRequest = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.current]);
+  }, [state.id]);
 
-  const fetchMediaUrl = (aProps: IProps) => {
-    props.current = { ...aProps };
+  const fetchMediaUrl = (props: IProps) => {
+    let { id, auth } = props;
+    const remoteId = remId(id);
+    id = guidId(id);
+    dispatch({
+      payload: { ...mediaClean, id, remoteId, auth },
+      type: MediaSt.PENDING,
+    });
   };
 
   return { fetchMediaUrl, safeURL, mediaState: state };
