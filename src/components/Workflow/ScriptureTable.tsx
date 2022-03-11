@@ -70,7 +70,6 @@ import { useMediaAttach } from '../../crud/useMediaAttach';
 import { UpdateRecord } from '../../model/baseModel';
 import { PlanContext } from '../../context/PlanContext';
 import stringReplace from 'react-string-replace';
-import { useExternalLink } from '../useExternalLink';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
@@ -226,7 +225,6 @@ export function ScriptureTable(props: IProps) {
     doOrbitError,
   });
   const checkOnline = useCheckOnline(resetOrbitError);
-  const { handleLaunch } = useExternalLink();
   const getStepsBusy = useRef(false);
   const [orgSteps, setOrgSteps] = useState<OrgWorkflowStep[]>([]);
   const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
@@ -579,10 +577,9 @@ export function ScriptureTable(props: IProps) {
         <span>
           {stringReplace(t.installAudacity, '{Audacity}', () => (
             <Link
-              href="#"
+              href="https://www.audacityteam.org/download/"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={handleLaunch('https://www.audacityteam.org/download/')}
             >
               'Audacity'
             </Link>
