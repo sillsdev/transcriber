@@ -53,7 +53,7 @@ export const stepEditorSelector = (state: IState) =>
 export const StepEditor = ({ process, org }: IProps) => {
   const classes = useStyles();
   const [rows, setRows] = useState<IStepRow[]>([]);
-  const [showAll, setShowALl] = useState(false);
+  const [showAll, setShowAll] = useState(false);
   const t: IWorkflowStepsStrings = useSelector(wfStepsSelector, shallowEqual);
   const se: IStepEditorStrings = useSelector(stepEditorSelector, shallowEqual);
   const [memory] = useGlobal('memory');
@@ -134,13 +134,17 @@ export const StepEditor = ({ process, org }: IProps) => {
   };
 
   const handleVisible = async (index: number) => {
-    setRows(rows.map((r, i) => (i === index ? { ...r, seq: mxSeq + 1 } : r)));
+    setRows(
+      rows
+        .map((r, i) => (i === index ? { ...r, seq: mxSeq + 1 } : r))
+        .sort((i, j) => i.seq - j.seq)
+    );
     showMessage(se.oneVisible);
     toolChanged(toolId, true);
   };
 
   const handleShow = () => {
-    setShowALl(!showAll);
+    setShowAll(!showAll);
   };
 
   const handleAdd = async () => {
