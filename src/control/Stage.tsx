@@ -1,5 +1,5 @@
+import { Button } from '@material-ui/core';
 import { CSSProperties } from 'styled-components';
-
 export const Stage = ({
   id,
   label,
@@ -7,6 +7,7 @@ export const Stage = ({
   textColor,
   done,
   select,
+  moveStep,
 }: {
   id: string;
   label: string;
@@ -14,6 +15,7 @@ export const Stage = ({
   textColor?: string;
   done?: boolean;
   select?: (id: string) => void;
+  moveStep?: (forward: boolean) => void;
 }) => {
   const lineProps = { strokeWidth: 1.1 };
   const textProps = (textColor?: string) =>
@@ -34,8 +36,19 @@ export const Stage = ({
   const handleClick = () => {
     select && select(id);
   };
-
-  return (
+  const handleMove = (forward: boolean) => () => {
+    moveStep && moveStep(forward);
+  };
+  return id === 'prev' || id === 'next' ? (
+    <Button
+      disabled={label === ''}
+      color="secondary"
+      onClick={handleMove(id === 'next')}
+      style={{ minWidth: '20px' }}
+    >
+      {label}
+    </Button>
+  ) : (
     <svg
       width="300px"
       height="50px"
