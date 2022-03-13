@@ -1,6 +1,7 @@
 import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core';
 import { Stage } from '../../control/Stage';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
+import { toCamel } from '../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -12,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export function WorkflowSteps() {
-  const { workflow, stepComplete, currentstep, setCurrentStep } =
+  const { workflow, stepComplete, currentstep, setCurrentStep, wfStr } =
     usePassageDetailContext();
   const classes = useStyles();
   const theme = useTheme();
@@ -36,11 +37,15 @@ export function WorkflowSteps() {
   return (
     <div className={classes.root}>
       {workflow.map((w) => {
+        const cameLabel = toCamel(w.label);
+        const label = wfStr.hasOwnProperty(cameLabel)
+          ? wfStr.getString(cameLabel)
+          : w.label;
         return (
           <Stage
             key={w.id}
             id={w.id}
-            label={w.label}
+            label={label}
             color={curColor(w.id)}
             textColor={
               w.id === currentstep

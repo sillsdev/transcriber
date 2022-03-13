@@ -1110,20 +1110,21 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "communityTest2": string;
     "communityTesting": string;
     "consultantCheck": string;
+    "done": string;
     "export": string;
-    "finalRecording": string;
+    "finalRecord": string;
     "finalReview": string;
     "internalization": string;
     "paratextSync": string;
     "peerReview": string;
-    "phraseBackTranslation": string;
+    "phraseBackTranslate": string;
     "preliminaryApproval": string;
     "record": string;
     "saveFirst": string;
     "teamCheck": string;
     "transcribe": string;
     "unsaved": string;
-    "wholeBackTranslation": string;
+    "wholeBackTranslate": string;
 };
 
 export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods {

@@ -6246,6 +6246,13 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.done">
+      		<source>Done</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.export">
             <source>Export</source>
             <target/>
@@ -6253,7 +6260,7 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.finalRecording">
+         <trans-unit id="workflowSteps.finalRecord">
             <source>Final Record</source>
             <target/>
             <context-group>
@@ -6288,7 +6295,7 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.phraseBackTranslation">
+         <trans-unit id="workflowSteps.phraseBackTranslate">
             <source>Phrase Back Translate</source>
             <target/>
             <context-group>
@@ -6337,7 +6344,7 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.wholeBackTranslation">
+         <trans-unit id="workflowSteps.wholeBackTranslate">
             <source>Whole Back Translate</source>
             <target/>
             <context-group>

@@ -42,7 +42,7 @@ import {
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
-import { loadBlob, logError, prettySegment, Severity, toCamel } from '../utils';
+import { loadBlob, logError, prettySegment, Severity } from '../utils';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
@@ -186,6 +186,7 @@ const initState = {
   setPlayerSegments: (segments: string) => {},
   commentRecording: false,
   setCommentRecording: (commentRecording: boolean) => {},
+  wfStr: {} as IWorkflowStepsStrings,
 };
 
 export type ICtxState = typeof initState;
@@ -233,6 +234,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const [state, setState] = useState({
       ...initState,
       allBookData,
+      wfStr,
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const fetching = useRef('');
@@ -716,12 +718,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
                   s.attributes.name.toLowerCase().indexOf('paratext') === -1
               )
               .map((s) => {
-                const camelName = toCamel(s.attributes.name);
                 return {
                   id: s.id,
-                  label: wfStr.hasOwnProperty(camelName)
-                    ? (wfStr as any).getString(camelName)
-                    : s.attributes.name,
+                  label: s.attributes.name,
                 };
               });
             setState((state: ICtxState) => ({ ...state, workflow: wf }));
