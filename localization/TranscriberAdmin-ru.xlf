@@ -5354,13 +5354,19 @@
             <target>Проверка консультанта</target>
          </segment>
       </unit>
+   	<unit id="workflowSteps.done">
+   		<segment>
+   			<source>Done</source>
+   			<target>Готово</target>
+   		</segment>
+   	</unit>
       <unit id="workflowSteps.export">
          <segment>
             <source>Export</source>
             <target>Экспорт</target>
          </segment>
       </unit>
-      <unit id="workflowSteps.finalRecording">
+      <unit id="workflowSteps.finalRecord">
          <segment>
             <source>Final Record</source>
             <target>Окончательная запись</target>
@@ -5390,7 +5396,7 @@
             <target>Экспертиза</target>
          </segment>
       </unit>
-      <unit id="workflowSteps.phraseBackTranslation">
+      <unit id="workflowSteps.phraseBackTranslate">
          <segment>
             <source>Phrase Back Translate</source>
             <target>Обратный перевод фразы</target>
@@ -5432,7 +5438,7 @@
             <target>Несохраненное содержимое</target>
          </segment>
       </unit>
-      <unit id="workflowSteps.wholeBackTranslation">
+      <unit id="workflowSteps.wholeBackTranslate">
          <segment>
             <source>Whole Back Translate</source>
             <target>Обратный перевод целиком</target>

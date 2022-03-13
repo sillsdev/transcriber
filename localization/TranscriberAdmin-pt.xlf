@@ -5354,13 +5354,19 @@
 				<target>Verificação do consultor</target>
 			</segment>
 		</unit>
+		<unit id="workflowSteps.done">
+			<segment>
+				<source>Done</source>
+				<target>Concluído</target>
+			</segment>
+		</unit>
 		<unit id="workflowSteps.export">
 			<segment>
 				<source>Export</source>
 				<target>Exportação</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.finalRecording">
+		<unit id="workflowSteps.finalRecord">
 			<segment>
 				<source>Final Record</source>
 				<target>Registro Final</target>
@@ -5390,7 +5396,7 @@
 				<target>Revisão por pares</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.phraseBackTranslation">
+		<unit id="workflowSteps.phraseBackTranslate">
 			<segment>
 				<source>Phrase Back Translate</source>
 				<target>Traduzir Frase Voltar</target>
@@ -5432,7 +5438,7 @@
 				<target>Conteúdo não guardado</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.wholeBackTranslation">
+		<unit id="workflowSteps.wholeBackTranslate">
 			<segment>
 				<source>Whole Back Translate</source>
 				<target>Traduzir todo o verso</target>
