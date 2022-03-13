@@ -1,3 +1,41 @@
+sil-transcriber (2.14.2.0)  experimental; urgency=high
+
+  * PDF Resources
+  * TT-1282-TC425 Remove user-id on delete (#726)
+  * TT-1948b update workflow localization
+  * TT-3282 If we updated the name down below, remember it here.  We use originalFile locally. (#720)
+  * TT-3283, TT-3321
+  * TT-3321 Do not allow discussion or comment to be deleted from online projects when offline (#721)
+  * TT-3411 back only on original passage (#722)
+  * TT-3426 pull static tables when remote present (#724)
+  * TT-3767 handle case where item index is temporarily past rowData length after a delete (#718)
+  * TT-3769 Calculating step complete (#723)
+  * TT-3771 clear import directory of old files before new import (#719)
+  * TT-3774 Add warning if import file is from a newer schema version. (#733)
+  * TT-3777 Importing old versions (#728)
+  * TT-3777 if version of import file is < 4, move passage.state to mediafile
+  * TT-3780 PDF Resources (#729)
+  * TT-3781 Remove unneeded schema (#725)
+  * TT-3782 limit user list to current org's users (#716)
+  * TT-3784 allow anyone (of that role or higher) to unassign section (#735)
+  * TT-3786 split backtranslate tool into whole/phrase.  Add topic to com (#730)
+  * TT-3793 delete discussions and comments before loading project (#727)
+  * TT-3794 BT,Retell,QA sort by creation date in transcription task list (#732)
+  * TT-3794b widen columns for tool names (#734)
+  * TT-3798a sort checked resources to the bottom of the list
+  * TT-3799 remove project name from elan export name (#731)
+  * Update localization
+  * Uploading PDF
+  * latest supported typescript is 4.4.4
+  * prevent over populating orgWorkflowsteps (#717)
+  * refactor useExternalLink logic
+  * remove autosegment from community test.  Single segment still available.
+  * split backtranslate tool into whole/phrase.  Add topic to community test.
+  * update dependencies for release
+  * updated help
+
+ -- Greg Trihus <greg_trihus@sil.org>  Wed, 12 Mar 2022 19:21:00 -0600
+
 sil-transcriber (2.14.1.0)  experimental; urgency=high
 
   * Match reporting progress
