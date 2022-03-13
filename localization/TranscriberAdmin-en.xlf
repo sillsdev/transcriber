@@ -5356,13 +5356,19 @@
             <target/>
          </segment>
       </unit>
+      <unit id="workflowSteps.done">
+         <segment>
+            <source>Done</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="workflowSteps.export">
          <segment>
             <source>Export</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.finalRecording">
+      <unit id="workflowSteps.finalRecord">
          <segment>
             <source>Final Record</source>
             <target/>
@@ -5392,7 +5398,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.phraseBackTranslation">
+      <unit id="workflowSteps.phraseBackTranslate">
          <segment>
             <source>Phrase Back Translate</source>
             <target/>
@@ -5434,7 +5440,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.wholeBackTranslation">
+      <unit id="workflowSteps.wholeBackTranslate">
          <segment>
             <source>Whole Back Translate</source>
             <target/>
