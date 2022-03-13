@@ -680,7 +680,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       const sectId = related(passRec, 'section');
       let res = getResources(sectionResources, mediafiles, sectId);
       newData = newData.concat(
-        resourceRows({ ...props, res, user, ...localize })
+        resourceRows({ ...props, res, user, ...localize }).sort((i, j) =>
+          i.done ? 1 : -1
+        )
       );
       const mediafileId =
         newData.length > 0 && newData[0].isVernacular ? newData[0].id : '';
