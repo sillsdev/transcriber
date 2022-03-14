@@ -1,0 +1,9 @@
+/**
+ * Throw an exception if `test` is not truthy.
+ */
+export function assert(description, test) {
+  if (!test) {
+    throw new Error('Assertion failed: ' + description);
+  }
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFzc2VydC5qcyJdLCJuYW1lcyI6WyJhc3NlcnQiLCJkZXNjcmlwdGlvbiIsInRlc3QiLCJFcnJvciJdLCJtYXBwaW5ncyI6IkFBQUE7OztBQUdBLE9BQU8sU0FBU0EsTUFBVCxDQUFnQkMsV0FBaEIsRUFBNkJDLElBQTdCLEVBQW1DO0FBQ3hDLE1BQUksQ0FBQ0EsSUFBTCxFQUFXO0FBQ1QsVUFBTSxJQUFJQyxLQUFKLENBQVUsdUJBQXVCRixXQUFqQyxDQUFOO0FBQ0Q7QUFDRiIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogVGhyb3cgYW4gZXhjZXB0aW9uIGlmIGB0ZXN0YCBpcyBub3QgdHJ1dGh5LlxuICovXG5leHBvcnQgZnVuY3Rpb24gYXNzZXJ0KGRlc2NyaXB0aW9uLCB0ZXN0KSB7XG4gIGlmICghdGVzdCkge1xuICAgIHRocm93IG5ldyBFcnJvcignQXNzZXJ0aW9uIGZhaWxlZDogJyArIGRlc2NyaXB0aW9uKTtcbiAgfVxufSJdfQ==
