@@ -1,4 +1,10 @@
-import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core';
+import {
+  createStyles,
+  debounce,
+  makeStyles,
+  Theme,
+  useTheme,
+} from '@material-ui/core';
 import { Stage } from '../../control/Stage';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { toCamel } from '../../utils';
@@ -27,7 +33,7 @@ export function WorkflowSteps() {
   const classes = useStyles();
   const theme = useTheme();
   const [shownWorkflow, setShownWorkflow] = useState<SimpleWf[]>([]);
-  const show = 5;
+  const [width, setWidth] = useState(0);
   const prevWF = {
     id: 'prev',
     label: '<<',
@@ -37,7 +43,26 @@ export function WorkflowSteps() {
     label: '>>',
   };
 
+  // keep track of screen width
+  const setDimensions = () => {
+    setWidth(window.innerWidth);
+  };
+
   useEffect(() => {
+    setDimensions();
+    const handleResize = debounce(() => {
+      setDimensions();
+    }, 100);
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); //do this once to get the default;
+
+  useEffect(() => {
+    var show = Math.ceil(width / 200);
     if (!workflow || !workflow.length) return;
     var tempFirstStep = firstStepIndex;
     if (firstStepIndex < 0) {
@@ -56,7 +81,7 @@ export function WorkflowSteps() {
     });
     setShownWorkflow(wf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentstep, firstStepIndex, workflow, setFirstStepIndex]);
+  }, [currentstep, firstStepIndex, workflow, width, setFirstStepIndex]);
 
   const curColor = (id: string) => {
     return id === currentstep
