@@ -698,6 +698,42 @@ if (
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
+  schemaDefinition.models.resource = {
+    keys: { remoteId: {} },
+    attributes: {
+      projectName: { type: 'string' },
+      organization: { type: 'string' },
+      language: { type: 'string' },
+      plan: { type: 'string' },
+      plantype: { type: 'string' },
+      section: { type: 'string' },
+      sectionSequencenum: { type: 'number' },
+      passageDesc: { type: 'string' },
+      passageSequencenum: { type: 'number' },
+      book: { type: 'string' },
+      passageId: { type: 'string' },
+      reference: { type: 'string' },
+      versionNumber: { type: 'number' },
+      audioUrl: { type: 'string' },
+      duration: { type: 'number' },
+      contentType: { type: 'string' },
+      transcription: { type: 'string' },
+      originalFile: { type: 'string' },
+      filesize: { type: 'number' },
+      languagebcp47: { type: 'string' },
+      categoryName: { type: 'string' },
+      typeName: { type: 'string' },
+      latest: { type: 'boolean' },
+      s3file: { type: 'string' },
+      dateCreated: { type: 'string' },
+      dateUpdated: { type: 'string' },
+      lastModifiedBy: { type: 'number' },
+    },
+    relationships: {
+      passage: { type: 'hasOne', model: 'passage' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
 
   schemaDefinition.version = 4;
 }
