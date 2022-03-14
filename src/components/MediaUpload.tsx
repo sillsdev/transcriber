@@ -57,9 +57,10 @@ interface IStateProps {
 
 export enum UploadType {
   Media = 0,
-  ITF = 1,
-  PTF = 2,
-  LOGO = 3 /* do we need separate ones for org and avatar? */,
+  Resource = 1,
+  ITF = 2,
+  PTF = 3,
+  LOGO = 4 /* do we need separate ones for org and avatar? */,
 }
 
 interface ITargetProps extends IStateProps {
@@ -147,8 +148,6 @@ interface IProps extends IStateProps {
   cancelMethod?: () => void;
   metaData?: JSX.Element;
   ready?: () => boolean;
-  extraExt?: string;
-  extraMime?: string;
 }
 
 function MediaUpload(props: IProps) {
@@ -162,8 +161,6 @@ function MediaUpload(props: IProps) {
     cancelMethod,
     metaData,
     ready,
-    extraExt,
-    extraMime,
   } = props;
   const classes = useStyles();
   const [name, setName] = useState('');
@@ -171,8 +168,21 @@ function MediaUpload(props: IProps) {
   const { showMessage } = useSnackBar();
   const [acceptextension, setAcceptExtension] = useState('');
   const [acceptmime, setAcceptMime] = useState('');
-  const title = [t.title, t.ITFtitle, t.PTFtitle, 'FUTURE TODO'];
-  const text = [t.task, t.ITFtask, t.PTFtask, 'FUTURE TODO'];
+  const title = [
+    t.title,
+    t.resourceTitle,
+    t.ITFtitle,
+    t.PTFtitle,
+    'FUTURE TODO',
+  ];
+  const text = [
+    t.task,
+    t.resourceTask,
+    t.task,
+    t.ITFtask,
+    t.PTFtask,
+    'FUTURE TODO',
+  ];
 
   const handleAddOrSave = () => {
     if (uploadMethod && files) {
@@ -226,25 +236,26 @@ function MediaUpload(props: IProps) {
   useEffect(() => {
     setAcceptExtension(
       [
-        '.mp3, .m4a, .wav, .ogg' + (extraExt ? `, ${extraExt}` : ''),
+        '.mp3, .m4a, .wav, .ogg',
+        '.mp3, .m4a, .wav, .ogg, .pdf',
         '.itf',
         '.ptf',
         '.jpg, .svg, .png',
       ].map((s) => s)[uploadType]
     );
-  }, [extraExt, uploadType]);
+  }, [uploadType]);
 
   useEffect(() => {
     setAcceptMime(
       [
-        'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg' +
-          (extraMime ? `, ${extraMime}` : ''),
+        'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg',
+        'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf',
         'application/itf',
         'application/ptf',
         'image/jpeg, image/svg+xml, image/png',
       ].map((s) => s)[uploadType]
     );
-  }, [extraMime, uploadType]);
+  }, [uploadType]);
 
   return (
     <div>

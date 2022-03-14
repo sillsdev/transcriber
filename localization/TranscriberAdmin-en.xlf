@@ -2806,6 +2806,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.resourceTask">
+         <segment>
+            <source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.resourceTitle">
+         <segment>
+            <source>Upload Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.task">
          <segment>
             <source>You can upload audio files in .mp3, .m4a, .wav or .ogg format.</source>

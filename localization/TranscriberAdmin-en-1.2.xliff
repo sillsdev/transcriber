@@ -3271,6 +3271,20 @@
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaUpload.resourceTask">
+      		<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaUpload.resourceTitle">
+      		<source>Upload Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="mediaUpload.task">
             <source>You can upload audio files in .mp3, .m4a, .wav or .ogg format.</source>
             <target/>
