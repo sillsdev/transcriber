@@ -92,7 +92,7 @@ export const useElectronImport = (
       var version = '3';
       var zipEntries = zip.getEntries();
       for (let entry of zipEntries) {
-        if (entry.entryName === 'SILTranscriber') {
+        if (entry.entryName === 'audiotext') {
           exportDate = entry.getData().toString('utf8');
           exportTime = moment.utc(exportDate, 'YYYY-MM-DDTHH:MM:SS.SSSSSSSZ');
           valid = true;
@@ -279,9 +279,9 @@ export const useElectronImport = (
             reportError(orbitInfo(err, `Delete failed for ${where}`));
         }
         zipRef.current.extractAllTo(where, true);
-        //get the exported date from SILTranscriber file
+        //get the exported date from audiotext file
         var dataDate = fs
-          .readFileSync(path.join(where, 'SILTranscriber'), {
+          .readFileSync(path.join(where, 'audiotext'), {
             encoding: 'utf8',
             flag: 'r',
           })

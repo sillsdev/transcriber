@@ -1,7 +1,7 @@
 {
-  "name": "sil-transcriber",
-  "version": "2.14.3-rc.0",
-  "description": "transcribe and manage audio files for Paratext or Elan",
+  "name": "audiotext",
+  "version": "2.14.3-rc.1",
+  "description": "Flexibly manage translation, stories, and draft audio files for Paratext, Elan, or Audacity",
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^1.9.0",
@@ -163,15 +163,15 @@
     "url": "http://sil.org"
   },
   "build": {
-    "appId": "sil.lsdev.sil-transcriber-electron",
-    "productName": "SIL Transcriber Desktop",
+    "appId": "sil.lsdev.audiotext-electron",
+    "productName": "Audio Text Desktop",
     "copyright": "Copyright © 2020-2022 ${author}",
     "win": {
       "icon": "public/favicon.png"
     },
     "linux": {
-      "icon": "debian/sil-transcriber.png",
-      "desktop": "debian/sil-transcriber.desktop",
+      "icon": "debian/audiotext.png",
+      "desktop": "debian/audiotext.desktop",
       "target": [
         "deb"
       ]

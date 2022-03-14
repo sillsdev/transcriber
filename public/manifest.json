@@ -1,6 +1,6 @@
 {
-  "short_name": "sil-transcriber",
-  "name": "SIL Transcriber",
+  "short_name": "audiotext",
+  "name": "Audio Text",
   "icons": [
     {
       "src": "favicon.ico",

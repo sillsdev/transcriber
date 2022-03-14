@@ -1,27 +1,27 @@
-Source: sil-transcriber
+Source: audiotext
 Section: sound
 Priority: extra
 Maintainer: Greg Trihus <greg_trihus@sil.org>
 Build-Depends: debhelper (>= 7)
 Standards-Version: 3.9.7
-Homepage: http://software.sil.org/siltranscriber
+Homepage: http://software.sil.org/audiotext
 Vcs-Git: git://github.com/sillsdev/web-transcriber-admin.git
 Vcs-Browser: http://github.com/sillsdev/web-transcriber-admin/
 
-Package: sil-transcriber
+Package: audiotext
 Architecture: all
 Depends: xchm
 Recommends:
 Description: Transcription of minority audio for review by Paratext or Elan
- SIL Transcriber is a web application you can use to manage a project to
- prepare text copies of audio files. Oral translation projects must take
- extra steps to ensure quality and consistency because other tools are text
- based. Even text projects may benefit from the naturalness of creating an
- oral draft by a native speaker and then transcribing it. SIL Transcriber
- is integrated with Paratext but can also export transcription to ELAN files
- if the goals are primarily related to language documentation.
-    This application is the SIL Transcriber Desktop Extension for Ubuntu Linx
- It allows the user to transcribe while not connected to the Internet. The
- setup is done with the web app. Then the project is exported to a Portable
- Transcriber Format (PTF) file. This file is imported in this Desktop
- Extension to get the program setup.
+  Audio Text is a web application you can use to manage a project to
+  prepare text copies of audio files. Oral translation projects must take
+  extra steps to ensure quality and consistency because other tools are text
+  based. Even text projects may benefit from the naturalness of creating an
+  oral draft by a native speaker and then transcribing it. Audio Text
+  is integrated with Paratext but can also export transcription to ELAN files
+  if the goals are primarily related to language documentation.
+  This application is the Audio Text Desktop Extension for Ubuntu Linx
+  It allows the user to transcribe while not connected to the Internet. The
+  setup is done with the web app. Then the project is exported to a Portable
+  Transcriber Format (PTF) file. This file is imported in this Desktop
+  Extension to get the program setup.

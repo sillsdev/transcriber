@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Audio Text Desktop
+Name[fr]=Audio Text de bureau
+Name[pt]=Área de trabalho de texto de áudio
+Name[ru]=Аудио Текстовый рабочий стол
+Comment=Flexibly Manage translation, stories, and draft audio files for Paratext, Elan, or Audacity.
+Comment[fr]=Gérez en toute souplesse les traductions, les récits et les brouillons de fichiers audio pour Paratext, Elan ou Audacity.
+Comment[pt]=Gerenciar com flexibilidade traduções, histórias e rascunhos de arquivos de áudio para Paratext, Elan, ou Audacity.
+Comment[ru]=Гибко управляйте переводами, историями и черновыми аудиофайлами для Paratext, Elan или Audacity,
+Exec=/usr/bin/audiotext
+Icon=audiotext
+Categories=GTK;GNOME;Education;
+Terminal=false

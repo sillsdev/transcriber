@@ -4,14 +4,14 @@ var fs = isElectron ? require('fs-extra') : null;
 
 export const linuxProgPath = () => {
   if (os.platform() === 'win32') return undefined;
-  if (fs.existsSync('/snap/sil-transcriber/current/resources')) {
-    return '/snap/sil-transcriber/current';
+  if (fs.existsSync('/snap/audiotext/current/resources')) {
+    return '/snap/audiotext/current';
   }
-  if (fs.existsSync('/usr/lib/sil-transcriber/resources')) {
-    return '/usr/lib/sil-transcriber';
+  if (fs.existsSync('/usr/lib/audiotext/resources')) {
+    return '/usr/lib/audiotext';
   }
-  if (fs.existsSync('/opt/SIL Transcriber Desktop Extension')) {
-    return '/opt/SIL Transcriber Desktop Extension/sil-transcriber';
+  if (fs.existsSync('/opt/Audio Text Desktop')) {
+    return '/opt/Audio Text Desktop/audiotext';
   }
   return undefined;
 };

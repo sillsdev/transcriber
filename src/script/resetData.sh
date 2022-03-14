@@ -1,26 +1,26 @@
 #!/bin/bash
 
-if [ -d "${HOME}/.config/sil-transcriber" ]; then
+if [ -d "${HOME}/.config/audiotext" ]; then
 	echo "# Removing .deb user data"
-	rm -rf "${HOME}/.config/sil-transcriber"
+	rm -rf "${HOME}/.config/audiotext"
 fi
 
-if [ -d "${HOME}/snap/sil-transcriber/x1/.config/sil-transcriber" ]; then
+if [ -d "${HOME}/snap/audiotext/x1/.config/audiotext" ]; then
 	echo "# Removing snap user data"
-	rm -rf "${HOME}/snap/sil-transcriber/x1/.config/sil-transcriber"
+	rm -rf "${HOME}/snap/audiotext/x1/.config/audiotext"
 fi
 
-if [ -d "/opt/SIL Transcriber Desktop Extension" ]; then
-	echo "# Launching builder SIL Transcriber Desktop Extension"
-	"/opt/SIL Transcriber Desktop Extension/sil-transcriber"
+if [ -d "/opt/Audio Text Desktop" ]; then
+	echo "# Launching builder Audio Text Desktop"
+	"/opt/Audio Text Desktop Extension/audiotext"
 fi
 
-if [ -d "/usr/lib/sil-transcriber" ]; then
-	echo "# Launching script SIL Transcriber Desktop Extension"
-	/usr/bin/sil-transcriber
+if [ -d "/usr/lib/audiotext" ]; then
+	echo "# Launching script Audio Text Desktop"
+	/usr/bin/audiotext
 fi
 
-if [ -d "/snap/sil-transcriber/x1" ]; then
-	echo "# Launching snap SIL Transcriber Desktop Extension"
-	/usr/bin/snap run sil-transcriber
+if [ -d "/snap/audiotext/x1" ]; then
+	echo "# Launching snap Audio Text Desktop"
+	/usr/bin/snap run audiotext
 fi

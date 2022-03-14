@@ -118,11 +118,7 @@ export async function electronExport(
     };
 
     const AddSourceEntry = (dt: string): string => {
-      zip.addFile(
-        'SILTranscriber',
-        Buffer.alloc(dt.length, dt),
-        'Imported Date'
-      );
+      zip.addFile('audiotext', Buffer.alloc(dt.length, dt), 'Imported Date');
       return dt;
     };
     const AddVersionEntry = (ver: string): string => {

@@ -1,2 +1,2 @@
-powershell rm -Force -Recurse %APPDATA%\sil-transcriber
-powershell Invoke-Item "%APPDATA%\..\Local\Programs\sil-transcriber\SIL` Transcriber` Desktop.exe"
+powershell rm -Force -Recurse %APPDATA%\audiotext
+powershell Invoke-Item "%APPDATA%\..\Local\Programs\audiotext\Audio` Text` Desktop.exe"

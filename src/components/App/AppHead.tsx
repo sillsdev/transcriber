@@ -230,7 +230,7 @@ export const AppHead = (props: IProps) => {
 
   const handleDownloadClick = (event: React.MouseEvent<HTMLElement>) => {
     if (shell)
-      shell.openExternal('https://software.sil.org/siltranscriber/download/');
+      shell.openExternal('https://software.sil.org/audiotext/download/');
     // remote?.getCurrentWindow().close();
   };
 
