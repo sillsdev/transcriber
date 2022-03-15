@@ -82,7 +82,9 @@ export const SelectMyResource = (props: IProps) => {
       fullWidth={true}
     >
       {rowData
-        .filter((r) => r.isResource && checkCategory(r.artifactCategory))
+        .filter(
+          (r) => r.isResource && !r.isText && checkCategory(r.artifactCategory)
+        )
         .sort((i, j) => (i.artifactName < j.artifactName ? -1 : 1))
         .map((r, k) => (
           <MenuItem id={`my-res-${k}`} value={r.id} key={r.id}>

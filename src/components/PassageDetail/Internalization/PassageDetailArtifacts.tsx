@@ -41,6 +41,7 @@ import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
 import SelectResource, { CatMap } from './SelectResource';
 import ResourceData from './ResourceData';
+import { UploadType } from '../../MediaUpload';
 
 interface IRecordProps {
   sectionResources: SectionResource[];
@@ -290,8 +291,7 @@ export function PassageDetailArtifacts(props: IProps) {
         finish={afterUpload}
         cancelled={cancelled}
         artifactTypeId={resourceType}
-        extraExt=".pdf"
-        extraMime="application/pdf"
+        uploadType={UploadType.Resource}
         metaData={
           <ResourceData
             catAllowNew={true} //if they can upload they can add cat

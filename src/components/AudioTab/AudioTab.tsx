@@ -205,6 +205,12 @@ export function AudioTab(props: IProps) {
     requests.current = remote?.requestQueue.length;
     const progressMessage = () => {
       setTimeout(() => {
+        if (cancelled.current) {
+          remote.requestQueue.clear();
+          setComplete(0);
+          cancelled.current = false;
+          return;
+        }
         setComplete(
           Math.round(
             ((requests.current - remote.requestQueue.length) * 100) /

@@ -64,8 +64,7 @@ interface IProps extends IStateProps, IDispatchProps {
   sourceSegments?: string;
   performedBy?: string;
   topic?: string;
-  extraExt?: string;
-  extraMime?: string;
+  uploadType?: UploadType;
 }
 
 export const Uploader = (props: IProps) => {
@@ -90,8 +89,7 @@ export const Uploader = (props: IProps) => {
     sourceSegments,
     performedBy,
     topic,
-    extraExt,
-    extraMime,
+    uploadType,
   } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
@@ -294,14 +292,12 @@ export const Uploader = (props: IProps) => {
         <MediaUpload
           visible={isOpen}
           onVisible={onOpen}
-          uploadType={UploadType.Media}
+          uploadType={uploadType || UploadType.Media}
           multiple={multiple}
           uploadMethod={uploadMedia}
           cancelMethod={uploadCancel}
           metaData={metaData}
           ready={ready}
-          extraExt={extraExt}
-          extraMime={extraMime}
         />
       )}
     </div>

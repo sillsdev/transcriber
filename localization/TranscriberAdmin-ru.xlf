@@ -2804,6 +2804,18 @@
             <target>Загрузить полные данные аудиопроекта из PTF</target>
          </segment>
       </unit>
+   	<unit id="mediaUpload.resourceTask">
+   		<segment>
+   			<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+   			<target>Загружайте аудиофайлы в формате .mp3, .m4a, .wav или .ogg или визуальный контент в формате .pdf.</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaUpload.resourceTitle">
+   		<segment>
+   			<source>Upload Resource</source>
+   			<target>Загрузить ресурс</target>
+   		</segment>
+   	</unit>
       <unit id="mediaUpload.task">
          <segment>
             <source>You can upload audio files in .mp3, .m4a, .wav or .ogg format.</source>

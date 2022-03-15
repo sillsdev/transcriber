@@ -607,6 +607,8 @@ const initialState = {
 			"ITFtitle": "Upload Change Data from Desktop app.",
 			"PTFtask": "Upload a Portable Transcriber File (ptf).",
 			"PTFtitle": "Upload complete Audio Project Data from PTF",
+			"resourceTask": "Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.",
+			"resourceTitle": "Upload Resource",
 			"task": "You can upload audio files in .mp3, .m4a, .wav or .ogg format.",
 			"title": "Upload Audio",
 			"upload": "Upload",
