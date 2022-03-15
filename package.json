@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "2.14.2",
+  "version": "2.14.3-beta.2",
   "description": "transcribe and manage audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
@@ -165,7 +165,7 @@
   "build": {
     "appId": "sil.lsdev.sil-transcriber-electron",
     "productName": "SIL Transcriber Desktop",
-    "copyright": "Copyright © 2020-2021 ${author}",
+    "copyright": "Copyright © 2020-2022 ${author}",
     "win": {
       "icon": "public/favicon.png"
     },
