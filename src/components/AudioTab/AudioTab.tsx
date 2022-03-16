@@ -158,7 +158,10 @@ export function AudioTab(props: IProps) {
     doOrbitError,
   });
   const [refresh, setRefresh] = useState(false);
+  const cloudSync = useRef(false);
+
   const myToolId = 'AudioTab';
+
   const hasPassage = (pRow: number) => {
     for (let mediaId of Object.keys(attachMap)) {
       if (attachMap[mediaId] === pRow) return true;
@@ -203,21 +206,17 @@ export function AudioTab(props: IProps) {
     saveCompleted(myToolId);
     showMessage('Cloud Sync');
     requests.current = remote?.requestQueue.length;
+    cloudSync.current = Boolean(requests.current);
     const progressMessage = () => {
       setTimeout(() => {
-        if (cancelled.current) {
-          remote.requestQueue.clear();
-          setComplete(0);
-          cancelled.current = false;
-          return;
-        }
         setComplete(
           Math.round(
             ((requests.current - remote.requestQueue.length) * 100) /
               requests.current
           )
         );
-        if (remote.requestQueue.length !== 0) progressMessage();
+        cloudSync.current = remote.requestQueue.length !== 0;
+        if (cloudSync.current) progressMessage();
       }, 3000);
     };
     if (remote) progressMessage();
@@ -418,7 +417,7 @@ export function AudioTab(props: IProps) {
               </>
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
-            {complete !== 0 && complete !== 100 && (
+            {complete !== 0 && complete !== 100 && !cloudSync.current && (
               <Button
                 id="uploadCancel"
                 aria-label={ts.cancel}
