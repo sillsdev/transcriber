@@ -59,6 +59,7 @@ const ParatextReducers = function (
         ...state,
         projects: [],
         projectsStatus: action.payload,
+        syncStatus: undefined,
       };
     case type.PROJECTS_SUCCESS:
       return {
