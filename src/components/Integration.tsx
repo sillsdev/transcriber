@@ -596,6 +596,7 @@ export function IntegrationPanel(props: IProps) {
       }
       if (paratext_syncStatus.complete) {
         resetCount();
+        resetSync();
         setSyncing(false);
         doDataChanges(
           auth,
