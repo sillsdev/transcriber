@@ -454,7 +454,7 @@ export function TaskTable(props: IProps) {
         return <td>{'\u00a0'}</td>;
       } else if (column.name === 'play') {
         // if there is no audio file to play put nothing in the play column
-        return row.length !== '' ? (
+        return filter && row.mediaId ? (
           <PlayCell {...props} mediaId={row.mediaId || props.mediaId} />
         ) : (
           <Table.Cell {...props} value="" />
