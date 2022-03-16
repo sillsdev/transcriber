@@ -913,7 +913,6 @@ export function ScriptureTable(props: IProps) {
         onUpload={handleUpload}
         onRecord={handleRecord}
         onHistory={handleVersions}
-        lastSaved={lastSaved}
         auth={auth}
         toolId={toolId}
         t={s}

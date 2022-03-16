@@ -16,7 +16,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from '../AlertDialog';
 import BookSelect from '../BookSelect';
-import { ProjButtons, LastEdit, StageReport } from '../../control';
+import { ProjButtons, StageReport } from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
 import { refMatch } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
@@ -146,7 +146,6 @@ interface IProps extends IStateProps {
   bookCol: number;
   bookSuggestions?: OptionType[];
   bookMap?: BookNameMap;
-  lastSaved?: string;
   updateData: (changes: ICellChange[]) => void;
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => Promise<boolean>;
@@ -173,7 +172,6 @@ export function PlanSheet(props: IProps) {
     rowInfo,
     t,
     ts,
-    lastSaved,
     bookCol,
     bookSuggestions,
     bookMap,
@@ -717,7 +715,6 @@ export function PlanSheet(props: IProps) {
                   t={projButtonStr}
                 />
                 <div className={classes.grow}>{'\u00A0'}</div>
-                <LastEdit when={lastSaved} t={ts} />
                 <Button
                   id="planSheetSave"
                   key="save"
