@@ -56,7 +56,11 @@ export const SectionPassageTitle = (props: IProps) => {
   return (
     <Grid container direction="row" className={classes.root}>
       <Grid item xs={12}>
-        <Typography variant="h6" className={classes.description}>
+        <Typography
+          variant="h6"
+          id="sectionpassagetitle"
+          className={classes.description}
+        >
           {sectionDescription(section, passNum) + refText}
         </Typography>
       </Grid>

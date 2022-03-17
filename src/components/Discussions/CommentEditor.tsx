@@ -190,7 +190,7 @@ export const CommentEditor = (props: IProps) => {
   }, [refresh]);
 
   return (
-    <div className={classes.column}>
+    <div id="commentedit" className={classes.column}>
       <TextField
         autoFocus
         margin="dense"

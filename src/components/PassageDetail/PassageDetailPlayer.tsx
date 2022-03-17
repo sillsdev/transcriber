@@ -95,7 +95,7 @@ export function PassageDetailPlayer(props: IProps) {
     //save the segments here
   };
   return (
-    <div>
+    <div id="detailplayer">
       <WSAudioPlayer
         id="audioPlayer"
         allowRecord={false}

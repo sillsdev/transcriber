@@ -635,7 +635,7 @@ export const DiscussionCard = (props: IProps) => {
               <TextField
                 autoFocus
                 margin="dense"
-                id={`topic-${discussion.id}`}
+                id={`topic-${discussion.id || 'new'}`}
                 value={editSubject}
                 onChange={handleSubjectChange}
                 placeholder={t.topic}

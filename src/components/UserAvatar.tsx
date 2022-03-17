@@ -61,17 +61,19 @@ export function UserAvatar(props: IProps) {
         })
       : '';
   if (src && isElectron && !src.startsWith('http')) {
-    const url = os.platform() === 'win32' ? new URL(src).toString().slice(8): src;
+    const url =
+      os.platform() === 'win32' ? new URL(src).toString().slice(8) : src;
     src = `transcribe-safe://${url}`;
   }
   return src ? (
     <Avatar
+      id="srcuser"
       alt={curUser.attributes.name}
       src={src}
       className={small ? classes.small : classes.medium}
     />
   ) : curUser.attributes && curUser.attributes.name !== '' ? (
-    <Avatar className={small ? classes.small : classes.medium}>
+    <Avatar id="abbruser" className={small ? classes.small : classes.medium}>
       {makeAbbr(curUser.attributes.name)}
     </Avatar>
   ) : (
