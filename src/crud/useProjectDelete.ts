@@ -32,8 +32,8 @@ export const useProjectDelete = () => {
     if (!plans.length) return;
 
     const planid = plans[0];
-    var ops: Operation[] = [];
-    var t = new TransformBuilder();
+    const t = new TransformBuilder();
+    const ops: Operation[] = [];
     if (offlineOnly) {
       const mediafiles = (
         memory.cache.query((q: QueryBuilder) =>

@@ -49,10 +49,10 @@ export const useOrgWorkflowSteps = () => {
 
   const AddOrgWFToOps = async (
     t: TransformBuilder,
+    ops: Operation[],
     wf: WorkflowStep,
     org?: string
   ) => {
-    var ops: Operation[] = [];
     const wfs = {
       type: 'orgworkflowstep',
       attributes: {
@@ -62,11 +62,6 @@ export const useOrgWorkflowSteps = () => {
     ops.push(...AddRecord(t, wfs, user, memory));
     const orgRecId = { type: 'organization', id: org || global.organization };
     ops.push(t.replaceRelatedRecord(wfs, 'organization', orgRecId));
-    try {
-      await memory.update(ops);
-    } catch (ex) {
-      logError(Severity.error, errorReporter, ex as Error);
-    }
   };
 
   const QueryOrgWorkflowSteps = async (process: string, org?: string) => {
@@ -106,11 +101,17 @@ export const useOrgWorkflowSteps = () => {
           .filter({ attribute: 'process', value: process })
       ) as WorkflowStep[]
     ).filter((s) => Boolean(s.keys?.remoteId) !== offlineOnly);
-    var tb = new TransformBuilder();
+
+    const tb = new TransformBuilder();
+    var ops: Operation[] = [];
     //originally had them all in one ops, but it was too fast
     //we have checks on the back end for duplicate entries (using just type, datecreated, dateupdated) because orbit sometimes sends twice
-    for (var ix = 0; ix < workflowsteps.length; ix++)
-      await AddOrgWFToOps(tb, workflowsteps[ix], org);
+    workflowsteps.forEach((step) => AddOrgWFToOps(tb, ops, step, org));
+    try {
+      await memory.update(ops);
+    } catch (ex) {
+      logError(Severity.error, errorReporter, ex as Error);
+    }
     creatingRef.current = false;
     return await QueryOrgWorkflowSteps(process, org);
   };
