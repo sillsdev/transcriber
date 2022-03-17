@@ -42,7 +42,7 @@ export const useOfflnMediafileCreate = (
     if (path.basename(data.audioUrl) !== data.originalFile) {
       newMediaRec.attributes.originalFile = path.basename(data.audioUrl);
     }
-    const t = new TransformBuilder();
+    let t = new TransformBuilder();
     await memory.update([
       ...AddRecord(t, newMediaRec, user, memory),
       t.replaceRelatedRecord(newMediaRec, 'plan', {
@@ -59,27 +59,34 @@ export const useOfflnMediafileCreate = (
         newMediaRec.id
       );
     }
-    if (artifactTypeId)
+
+    if (artifactTypeId) {
+      t = new TransformBuilder();
       await memory.update([
         t.replaceRelatedRecord(newMediaRec, 'artifactType', {
           type: 'artifacttype',
           id: artifactTypeId,
         }),
       ]);
-    if (sourceMediaId)
+    }
+    if (sourceMediaId) {
+      t = new TransformBuilder();
       await memory.update([
         t.replaceRelatedRecord(newMediaRec, 'sourceMedia', {
           type: 'mediafile',
           id: sourceMediaId,
         }),
       ]);
-    if (recordedbyUserId)
+    }
+    if (recordedbyUserId) {
+      t = new TransformBuilder();
       await memory.update([
         t.replaceRelatedRecord(newMediaRec, 'recordedbyUser', {
           type: 'user',
           id: recordedbyUserId,
         }),
       ]);
+    }
     return newMediaRec;
   };
   return { createMedia };
