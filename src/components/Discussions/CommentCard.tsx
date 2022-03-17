@@ -267,21 +267,23 @@ export const CommentCard = (props: IProps) => {
       <Grid container className={classes.row}>
         <Grid container className={classes.spreadIt}>
           <Grid item className={classes.row}>
-            <Grid item className={classes.avatar}>
+            <Grid item id="user" className={classes.avatar}>
               <UserAvatar {...props} userRec={author} />
             </Grid>
             {media && (
-              <IconButton onClick={handlePlayComment}>
+              <IconButton id="playpause" onClick={handlePlayComment}>
                 {mediaId === playItem && mediaPlaying ? (
-                  <PauseIcon />
+                  <PauseIcon id="pause" />
                 ) : (
-                  <PlayIcon />
+                  <PlayIcon id="play" />
                 )}
               </IconButton>
             )}
             <Grid item className={classes.column}>
-              <Grid item>{author?.attributes?.name}</Grid>
-              <Grid item>
+              <Grid item id="author">
+                {author?.attributes?.name}
+              </Grid>
+              <Grid item id="dateupdated">
                 {dateOrTime(comment.attributes.dateUpdated, lang)}
               </Grid>
             </Grid>

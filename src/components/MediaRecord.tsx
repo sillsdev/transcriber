@@ -358,7 +358,7 @@ function MediaRecord(props: IProps) {
   }, [preload]);
 
   return (
-    <Paper>
+    <Paper id="mediaRecord">
       {mediaState.status === MediaSt.FETCHED && mediaState.id === mediaId && (
         <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
           {loading ? t.loading : t.loadfile}

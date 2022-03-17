@@ -116,27 +116,33 @@ export function FilterMenu(props: IProps) {
         onClose={handle('Close')}
       >
         <StyledMenuItem id="for-you-filt" onClick={handle('forYou')}>
-          <ListItemIcon>{forYou ? <BoxClose /> : <BoxOpen />}</ListItemIcon>
+          <ListItemIcon>
+            {forYou ? <BoxClose id="yesyou" /> : <BoxOpen id="noyou" />}
+          </ListItemIcon>
           <ListItemText primary={t.forYou} />
         </StyledMenuItem>
         <StyledMenuItem id="resolved-filt" onClick={handle('resolved')}>
-          <ListItemIcon>{resolved ? <BoxClose /> : <BoxOpen />}</ListItemIcon>
+          <ListItemIcon>
+            {resolved ? <BoxClose id="yesres" /> : <BoxOpen id="nores" />}
+          </ListItemIcon>
           <ListItemText primary={t.resolved} />
         </StyledMenuItem>
         <StyledMenuItem id="latest-filt" onClick={handle('latestVersion')}>
           <ListItemIcon>
-            {latestVersion ? <BoxClose /> : <BoxOpen />}
+            {latestVersion ? <BoxClose id="yeslat" /> : <BoxOpen id="nolat" />}
           </ListItemIcon>
           <ListItemText primary={t.latestVersion} />
         </StyledMenuItem>
         <StyledMenuItem id="all-pass-filt" onClick={handle('allPassages')}>
           <ListItemIcon>
-            {allPassages ? <BoxClose /> : <BoxOpen />}
+            {allPassages ? <BoxClose id="yespass" /> : <BoxOpen id="nopass" />}
           </ListItemIcon>
           <ListItemText primary={t.allPassages} />
         </StyledMenuItem>
         <StyledMenuItem id="all-steps-filt" onClick={handle('allSteps')}>
-          <ListItemIcon>{allSteps ? <BoxClose /> : <BoxOpen />}</ListItemIcon>
+          <ListItemIcon>
+            {allSteps ? <BoxClose id="yesstep" /> : <BoxOpen id="nostep" />}
+          </ListItemIcon>
           <ListItemText primary={t.allSteps} />
         </StyledMenuItem>
         <StyledMenuItem id="category-filt" onClick={handle('category')}>
