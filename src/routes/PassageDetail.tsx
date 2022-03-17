@@ -210,11 +210,11 @@ const PassageDetailGrids = (props: IProps) => {
           <Grid item className={classes.row} xs={6}>
             <PassageDetailSectionPassage />
           </Grid>
-          <Grid item className={classes.row} xs={3}>
+          <Grid item id="tool" className={classes.row} xs={3}>
             {tool && t.hasOwnProperty(tool) ? t.getString(tool) : tool}
           </Grid>
           {projRole === RoleNames.Admin && (
-            <Grid item className={classes.right} xs={3}>
+            <Grid item id="stepcomplete" className={classes.right} xs={3}>
               <PassageDetailStepComplete />
             </Grid>
           )}

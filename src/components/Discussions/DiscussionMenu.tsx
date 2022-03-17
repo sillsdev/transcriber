@@ -109,7 +109,11 @@ export function DiscussionMenu(props: IProps) {
         onClose={handle('Close')}
       >
         {!resolved && (
-          <StyledMenuItem id="commentEdit" onClick={handle('edit')}>
+          <StyledMenuItem
+            id="commentEdit"
+            aria-hidden={!Boolean(anchorEl)}
+            onClick={handle('edit')}
+          >
             <ListItemIcon>
               <EditIcon />
             </ListItemIcon>
@@ -117,7 +121,11 @@ export function DiscussionMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {(!offline || offlineOnly) && (
-          <StyledMenuItem id="commentMenu" onClick={handle('delete')}>
+          <StyledMenuItem
+            id="commentMenudelete"
+            aria-hidden={!Boolean(anchorEl)}
+            onClick={handle('delete')}
+          >
             <ListItemIcon>
               <DeleteIcon />
             </ListItemIcon>
@@ -125,7 +133,11 @@ export function DiscussionMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {resolved === false && (
-          <StyledMenuItem id="resolve" onClick={handle('resolve')}>
+          <StyledMenuItem
+            id="resolve"
+            aria-hidden={!Boolean(anchorEl)}
+            onClick={handle('resolve')}
+          >
             <ListItemIcon>
               <ResolveIcon />
             </ListItemIcon>
@@ -133,7 +145,11 @@ export function DiscussionMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {resolved && (
-          <StyledMenuItem id="reopen" onClick={handle('reopen')}>
+          <StyledMenuItem
+            id="reopen"
+            aria-hidden={!Boolean(anchorEl)}
+            onClick={handle('reopen')}
+          >
             <ListItemIcon>
               <ReopenIcon />
             </ListItemIcon>
@@ -141,7 +157,11 @@ export function DiscussionMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {canSet && (
-          <StyledMenuItem id="set" onClick={handle('set')}>
+          <StyledMenuItem
+            id="set"
+            aria-hidden={!Boolean(anchorEl)}
+            onClick={handle('set')}
+          >
             <ListItemIcon>
               <LinkIcon />
             </ListItemIcon>

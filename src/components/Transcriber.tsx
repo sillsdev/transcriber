@@ -1065,7 +1065,7 @@ export function Transcriber(props: IProps) {
                           </LightTooltip>
                         </Grid>
                       )}
-                    <Grid item xs>
+                    <Grid item xs id="transcriberplayer">
                       <Grid container justifyContent="center">
                         <WSAudioPlayer
                           id="audioPlayer"

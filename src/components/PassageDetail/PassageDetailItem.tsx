@@ -453,7 +453,7 @@ export function PassageDetailItem(props: IProps) {
                         {showTopic && (
                           <TextField
                             className={classes.formControl}
-                            id="topic"
+                            id="itemtopic"
                             label={t.topic}
                             value={topic}
                             fullWidth={true}
@@ -470,6 +470,7 @@ export function PassageDetailItem(props: IProps) {
                         />
                       </div>
                       <MediaRecord
+                        id="mediarecord"
                         toolId={toolId}
                         uploadMethod={uploadMedia}
                         defaultFilename={defaultFilename}
@@ -506,14 +507,14 @@ export function PassageDetailItem(props: IProps) {
                     <Paper className={classes.paper}>
                       <div className={classes.row}>
                         <Paper className={classes.paper}>
-                          <div className={classes.playSelect}>
+                          <div id="playselect" className={classes.playSelect}>
                             <SelectRecording
                               onChange={handleSelect}
                               ts={ts}
                               tags={slugs}
                             />
                           </div>
-                          <div className={classes.playerRow}>
+                          <div id="rowplayer" className={classes.playerRow}>
                             <MediaPlayer
                               auth={auth}
                               srcMediaId={playItem}
