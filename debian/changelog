@@ -1,3 +1,23 @@
+sil-transcriber (2.14.3.0)  experimental; urgency=high
+
+  * TT-1282 TC425 Check for missing team id (#751)
+  * TT-1523 Resetting sync message (#745)
+  * TT-1742 Remove last saved from data sheet (#747)
+  * TT-1948b Update workflow localization
+  * TT-2835 Display Play and Pause icons (#746)
+  * TT-3766 Cancelling Auto associate (#740)
+  * TT-3766b No cloud sync cancel (#744)
+  * TT-3798a sort check resources to bottom
+  * TT-3800 sort list after unhiding a step (#736)
+  * TT-3803 notice when done changes, sort by sequence num within undone (#742)
+  * TT-3804 Update resource upload messaging (#738)
+  * TT-3805 No PDF on Team Check (#737)
+  * TT-3806 reset description also after save (#741)
+  * TT-3809 make transcribe icon look disabled when it is disabled (#743)
+  * TT-3811 add ids for automated testing (#750)
+
+ -- Greg Trihus <greg_trihus@sil.org>  Wed, 18 Mar 2022 16:15:00 -0600
+
 sil-transcriber (2.14.2.0)  experimental; urgency=high
 
   * PDF Resources
