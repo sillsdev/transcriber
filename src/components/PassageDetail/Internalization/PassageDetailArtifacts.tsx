@@ -236,7 +236,7 @@ export function PassageDetailArtifacts(props: IProps) {
         }
         await AddSectionResource(cnt, descriptionRef.current, mediaRecId);
       }
-      catIdRef.current = undefined;
+      resetEdit();
     }
   };
 

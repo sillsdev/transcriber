@@ -681,7 +681,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       let res = getResources(sectionResources, mediafiles, sectId);
       newData = newData.concat(
         resourceRows({ ...props, res, user, ...localize }).sort((i, j) =>
-          i.done ? 1 : -1
+          i.done === j.done ? i.sequenceNum - j.sequenceNum : i.done ? 1 : -1
         )
       );
       const mediafileId =
@@ -691,7 +691,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       });
       if (mediafileId) setSelected(mediafileId, newData);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sectionResources, mediafiles, pasId]);
+    }, [sectionResources, mediafiles, pasId, userResources]);
 
     if (view.current !== '') {
       const target = view.current;

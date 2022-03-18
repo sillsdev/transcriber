@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { IPlanActionsStrings, IState, IMediaShare } from '../../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 //import AddIcon from '@material-ui/icons/AddCircleOutline';
@@ -69,6 +69,10 @@ export function PlanAudioActions(props: IProps) {
     onTranscribe(i);
   };
 
+  const disabled = useMemo(() => {
+    return (mediaId || '') === '';
+  }, [mediaId]);
+
   return (
     <div className={classes.arrangeActions}>
       {isPassage && (
@@ -80,7 +84,7 @@ export function PlanAudioActions(props: IProps) {
               : classes.actionButton
           }
           title={t.versions}
-          disabled={(mediaId || '') === ''}
+          disabled={disabled}
           onClick={onHistory(rowIndex)}
         >
           {mediaShared === IMediaShare.NotPublic ? (
@@ -97,7 +101,7 @@ export function PlanAudioActions(props: IProps) {
           id="planAudPlayStop"
           className={classes.actionButton}
           title={t.playpause}
-          disabled={(mediaId || '') === ''}
+          disabled={disabled}
           onClick={handlePlayStatus()}
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
@@ -106,11 +110,12 @@ export function PlanAudioActions(props: IProps) {
       {isPassage && (
         <IconButton
           id="planActTrans"
+          className={classes.actionButton}
           title={t.transcribe}
           onClick={handleTranscribe(rowIndex)}
-          disabled={(mediaId || '') === ''}
+          disabled={disabled}
         >
-          <TranscribeIcon />
+          <TranscribeIcon color={disabled ? 'grey' : undefined} />
         </IconButton>
       )}
     </div>
