@@ -342,7 +342,7 @@ export const importProjectToElectron =
     oldfilemsg: string
   ) =>
   (dispatch: any) => {
-    let tb: TransformBuilder = new TransformBuilder();
+    var tb: TransformBuilder = new TransformBuilder();
     var oparray: Operation[] = [];
 
     const memory = coordinator.getSource('memory') as Memory;
@@ -374,45 +374,6 @@ export const importProjectToElectron =
         return undefined;
       }
     }
-    function delIds(
-      ids: string[],
-      table: string,
-      tb: TransformBuilder,
-      ops: Operation[]
-    ) {
-      ids.forEach((id) => ops.push(tb.removeRecord({ type: table, id: id })));
-    }
-    interface DelSpec {
-      ids: string[];
-      table: string;
-    }
-    function delAllIds(spec: DelSpec[], tb: TransformBuilder) {
-      const delOpArray: Operation[] = [];
-      spec.forEach(({ ids, table }) => {
-        delIds(ids, table, tb, delOpArray);
-      });
-      return delOpArray;
-    }
-    async function saveToMemory(oparray: Operation[], title: string) {
-      try {
-        return await memory.update(oparray);
-      } catch (err: any) {
-        reportError(orbitInfo(err, title));
-        throw err;
-      }
-    }
-    async function saveToBackup(oparray: Operation[], title: string) {
-      if (!coordinator.activated) {
-        try {
-          return await backup.push(oparray);
-        } catch (err: any) {
-          reportError(orbitInfo(err, title));
-          throw err;
-        }
-      }
-      return null;
-    }
-
     async function removeProject(ser: JSONAPISerializerCustom) {
       var rec = getProjectFromFile(ser);
 
@@ -493,33 +454,66 @@ export const importProjectToElectron =
         type: IMPORT_PENDING,
       });
 
-      const delSpec: DelSpec[] = [];
-      delSpec.push({ ids: commentids, table: 'comment' });
-      delSpec.push({ ids: discussionids, table: 'discussion' });
-      delSpec.push({ ids: mediaids, table: 'mediafile' });
-      delSpec.push({ ids: pscids, table: 'passagestatechange' });
-      delSpec.push({ ids: passageids, table: 'passage' });
-      delSpec.push({ ids: sectionids, table: 'section' });
-      delSpec.push({ ids: planids, table: 'plan' });
-      delSpec.push({ ids: projintids, table: 'projectintegration' });
-      delSpec.push({ ids: gmids, table: 'groupmembership' });
-      delSpec.push({ ids: userids, table: 'user' });
+      var delOpArray: Operation[] = [];
+      commentids.forEach((id) =>
+        delOpArray.push(tb.removeRecord({ type: 'comment', id: id }))
+      );
+      discussionids.forEach((id) =>
+        delOpArray.push(tb.removeRecord({ type: 'discussion', id: id }))
+      );
+      mediaids.forEach((id) =>
+        delOpArray.push(tb.removeRecord({ type: 'mediafile', id: id }))
+      );
+      pscids.forEach((id) =>
+        delOpArray.push(tb.removeRecord({ type: 'passagestatechange', id: id }))
+      );
+      passageids.forEach((id) =>
+        delOpArray.push(tb.removeRecord({ type: 'passage', id: id }))
+      );
+      sectionids.forEach((id) =>
+        delOpArray.push(tb.removeRecord({ type: 'section', id: id }))
+      );
+      planids.forEach((id) =>
+        delOpArray.push(tb.removeRecord({ type: 'plan', id: id }))
+      );
+      projintids.forEach((id) =>
+        delOpArray.push(tb.removeRecord({ type: 'projectintegration', id: id }))
+      );
+      gmids.forEach((id) =>
+        delOpArray.push(tb.removeRecord({ type: 'groupmembership', id: id }))
+      );
+      userids.forEach((id) =>
+        delOpArray.push(tb.removeRecord({ type: 'user', id: id }))
+      );
       dispatch({
         payload: pendingmsg.replace('{0}', '10'),
         type: IMPORT_PENDING,
       });
-      await saveToMemory(
-        delAllIds(delSpec, new TransformBuilder()),
-        'remove project'
-      );
-      await saveToBackup(
-        delAllIds(delSpec, new TransformBuilder()),
-        'remove project from backup'
-      );
+      await saveToMemory(delOpArray, 'remove project');
+      await saveToBackup(delOpArray, 'remove project from backup');
       dispatch({
         payload: pendingmsg.replace('{0}', '15'),
         type: IMPORT_PENDING,
       });
+    }
+    async function saveToMemory(oparray: Operation[], title: string) {
+      try {
+        return await memory.update(oparray);
+      } catch (err: any) {
+        reportError(orbitInfo(err, title));
+        throw err;
+      }
+    }
+    async function saveToBackup(oparray: Operation[], title: string) {
+      if (!coordinator.activated) {
+        try {
+          return await backup.push(oparray);
+        } catch (err: any) {
+          reportError(orbitInfo(err, title));
+          throw err;
+        }
+      }
+      return null;
     }
     async function syncPassageState(
       project: Project,
