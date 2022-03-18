@@ -180,7 +180,7 @@ function AboutDialog(props: AboutDialogProps) {
               {t.version.replace('{0}', version).replace('{1}', buildDate)}
             </div>
             <Typography className={classes.row}>
-              {'Copyright \u00A9 2019-2021 SIL International'}
+              {'Copyright \u00A9 2019-2022 SIL International'}
             </Typography>
           </div>
         </Tooltip>
