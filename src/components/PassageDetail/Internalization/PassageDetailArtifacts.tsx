@@ -42,6 +42,16 @@ import MediaDisplay from '../../MediaDisplay';
 import SelectResource, { CatMap } from './SelectResource';
 import ResourceData from './ResourceData';
 import { UploadType } from '../../MediaUpload';
+import MediaPlayer from '../../MediaPlayer';
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+  })
+);
 
 interface IRecordProps {
   sectionResources: SectionResource[];
@@ -60,6 +70,7 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 export function PassageDetailArtifacts(props: IProps) {
+  const classes = useStyles();
   const { sectionResources, mediafiles, artifactTypes, auth, t } = props;
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
@@ -72,9 +83,12 @@ export function PassageDetailArtifacts(props: IProps) {
     passage,
     setSelected,
     playItem,
-    mediaPlaying,
-    setMediaPlaying,
+    setPlayItem,
+    itemPlaying,
+    setItemPlaying,
     currentstep,
+    handleItemPlayEnd,
+    handleItemTogglePlay,
   } = ctx.state;
   const AddSectionResource = useSecResCreate(section);
   const AddSectionResourceUser = useSecResUserCreate();
@@ -102,8 +116,9 @@ export function PassageDetailArtifacts(props: IProps) {
   }, [artifactTypes, offlineOnly]);
 
   const handlePlay = (id: string) => {
-    if (id === playItem) setMediaPlaying(!mediaPlaying);
-    else setSelected(id);
+    if (id === playItem) {
+      setItemPlaying(!itemPlaying);
+    } else setSelected(id);
   };
 
   const handleDisplayId = (id: string) => {
@@ -257,12 +272,25 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleDescription = (desc: string) => {
     descriptionRef.current = desc;
   };
-
+  const handleEnded = () => {
+    setPlayItem('');
+    handleItemPlayEnd();
+  };
   return (
     <>
-      {projRole === RoleNames.Admin && (!offline || offlineOnly) && (
-        <AddResource action={handleAction} />
-      )}
+      <div className={classes.row}>
+        {projRole === RoleNames.Admin && (!offline || offlineOnly) && (
+          <AddResource action={handleAction} />
+        )}
+        <MediaPlayer
+          auth={auth}
+          srcMediaId={playItem}
+          requestPlay={itemPlaying}
+          onEnded={handleEnded}
+          onTogglePlay={handleItemTogglePlay}
+          controls={playItem !== ''}
+        />
+      </div>
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
         {rowData
@@ -272,7 +300,7 @@ export function PassageDetailArtifacts(props: IProps) {
               key={`item-${index}`}
               index={index}
               value={value as any}
-              isPlaying={playItem === value.id && mediaPlaying}
+              isPlaying={playItem === value.id && itemPlaying}
               onPlay={handlePlay}
               onView={handleDisplayId}
               onDone={handleDone}

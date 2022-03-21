@@ -561,12 +561,14 @@ function WSAudioPlayer(props: IProps) {
     if (playing && wsPosition().toFixed(2) === durationRef.current.toFixed(2))
       wsGoto(0);
     setPlaying(playing);
-    if (onPlayStatus && isPlaying !== undefined && playing !== isPlaying)
+    if (onPlayStatus && isPlaying !== undefined && playing !== isPlaying) {
       onPlayStatus(playing);
+    }
   };
 
   useEffect(() => {
-    if (isPlaying !== undefined && playing !== isPlaying) handlePlayStatus();
+    if (isPlaying !== undefined && playingRef.current !== isPlaying)
+      handlePlayStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying]);
 

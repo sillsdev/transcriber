@@ -67,20 +67,26 @@ export function useWaveSurfer(
         'wavesurfer stop',
         () => !wavesurfer()?.isPlaying(),
         () => {
-          console.log('waiting for pause');
+          //console.log('waiting for pause');
           return false;
         },
         100
-      ).then(() => {
-        userInteractionRef.current = false;
-        wavesurfer()?.seekAndCenter(position);
-        userInteractionRef.current = true;
-      });
+      )
+        .catch()
+        .finally(() => {
+          userInteractionRef.current = false;
+          wavesurfer()?.seekAndCenter(position);
+          userInteractionRef.current = true;
+        });
     } else {
       userInteractionRef.current = false;
       wavesurfer()?.seekAndCenter(position);
       userInteractionRef.current = true;
     }
+  };
+  const onRegionPlayStatus = (value: boolean) => {
+    playingRef.current = value;
+    if (onPlayStatus) onPlayStatus(playingRef.current);
   };
   const progress = () => progressRef.current;
   const setPlaying = (value: boolean) => {
@@ -129,7 +135,7 @@ export function useWaveSurfer(
   } = useWaveSurferRegions(
     singleRegionOnly,
     onRegion,
-    onPlayStatus,
+    onRegionPlayStatus,
     wsDuration,
     isNear,
     wsGoto,
@@ -194,7 +200,6 @@ export function useWaveSurfer(
         widthRef.current = width;
       });
       // ws.drawer.on('click', (event: any, progress: number) => {
-      //   console.log('Clicking now', progress);
       // });
       return ws;
     }
