@@ -133,6 +133,7 @@ export interface IRow {
   isResource: boolean;
   isComment: boolean;
   isText: boolean;
+  sourceVersion: number;
 }
 
 interface SimpleWf {
@@ -409,6 +410,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             newRow: state.rowData,
             r: null,
             media,
+            sourceversion: 0,
             artifactTypes,
             categories,
             userResources,

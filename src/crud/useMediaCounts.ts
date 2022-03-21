@@ -3,7 +3,7 @@ import { getMediaInPlans, related, VernacularTag } from '.';
 
 export const useMediaCounts = (plan: string, mediafiles: MediaFile[]) => {
   const planMedia = (
-    plan ? getMediaInPlans([plan], mediafiles, VernacularTag) : []
+    plan ? getMediaInPlans([plan], mediafiles, VernacularTag, true) : []
   ) as MediaFile[];
   const attached = planMedia
     .map((m) => related(m, 'passage'))

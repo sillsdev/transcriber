@@ -156,7 +156,7 @@ export function DiscussionList(props: IProps) {
   );
 
   const latestMedia: string[] = useMemo(() => {
-    return getMediaInPlans([planId], mediafiles, VernacularTag).map(
+    return getMediaInPlans([planId], mediafiles, VernacularTag, true).map(
       (r) => r.id
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps

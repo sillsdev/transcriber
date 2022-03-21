@@ -292,7 +292,8 @@ export function TranscriptionTab(props: IProps) {
     let media: MediaFile[] = getMediaInPlans(
       projectplans.map((p) => p.id),
       mediaFiles,
-      VernacularTag
+      VernacularTag,
+      true
     );
     const attached = media
       .map((m) => related(m, 'passage'))
@@ -306,7 +307,8 @@ export function TranscriptionTab(props: IProps) {
     media = getMediaInPlans(
       projectplans.map((p) => p.id),
       mediaFiles,
-      undefined
+      undefined,
+      false
     );
     exportProject(
       exportType,
