@@ -1,5 +1,7 @@
-import { Button } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import { CSSProperties } from 'styled-components';
+import PrevIcon from '@material-ui/icons/NavigateBefore';
+import NextIcon from '@material-ui/icons/NavigateNext';
 export const Stage = ({
   id,
   label,
@@ -40,14 +42,21 @@ export const Stage = ({
     moveStep && moveStep(forward);
   };
   return id === 'prev' || id === 'next' ? (
-    <Button
+    <IconButton
+      id={id}
       disabled={label === ''}
       color="secondary"
       onClick={handleMove(id === 'next')}
       style={{ minWidth: '20px' }}
     >
-      {label}
-    </Button>
+      {label === '' ? (
+        <></>
+      ) : id === 'prev' ? (
+        <PrevIcon fontSize="large" />
+      ) : (
+        <NextIcon fontSize="large" />
+      )}
+    </IconButton>
   ) : (
     <svg
       width="300px"

@@ -1,10 +1,6 @@
-import {
-  Checkbox,
-  createStyles,
-  FormControlLabel,
-  makeStyles,
-  Theme,
-} from '@material-ui/core';
+import { createStyles, IconButton, makeStyles, Theme } from '@material-ui/core';
+import CompleteIcon from '@material-ui/icons/CheckBoxOutlined';
+import NotCompleteIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import { useEffect, useState } from 'react';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { IPassageDetailStepCompleteStrings, IState } from '../../model';
@@ -14,7 +10,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     actionButton: {
       color: theme.palette.primary.light,
-      margin: theme.spacing(3),
     },
     icon: {
       fontSize: '16px',
@@ -52,19 +47,7 @@ export const PassageDetailStepComplete = (props: IProps) => {
     setStepComplete(currentstep, !complete);
     setCurrentStep(''); // setting to empty jumps to first uncompleted step
   };
-  return (
-    <FormControlLabel
-      control={
-        <Checkbox
-          className={classes.actionButton}
-          checked={complete}
-          onChange={handleToggleComplete}
-        />
-      }
-      labelPlacement="start"
-      label={t.title}
-    />
-  ); /*
+
   return (
     <div>
       {t.title}
@@ -81,7 +64,7 @@ export const PassageDetailStepComplete = (props: IProps) => {
         )}
       </IconButton>
     </div>
-  ); */
+  );
 };
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'passageDetailStepComplete' }),
