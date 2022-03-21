@@ -46,7 +46,8 @@ export const useMediaAttach = (props: IProps) => {
         var media = getMediaInPlans(
           [plan],
           memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[],
-          VernacularTag
+          VernacularTag,
+          true
         ).filter((m) => related(m, 'passage') === passage);
         ops.push(
           tb.replaceAttribute(

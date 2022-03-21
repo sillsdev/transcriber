@@ -200,6 +200,7 @@ export function PassageDetailItem(props: IProps) {
   const [importList, setImportList] = useState<File[]>();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [playItem, setPlayItem] = useState('');
+  const [playItemSourceIsLatest, setPlayItemSourceIsLatest] = useState(false);
   const [itemPlaying, setItemPlaying] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [confirm, setConfirm] = useState('');
@@ -320,8 +321,9 @@ export function PassageDetailItem(props: IProps) {
     e.persist();
     setTopic(e.target.value);
   };
-  const handleSelect = (id: string) => {
+  const handleSelect = (id: string, latest: boolean) => {
     setPlayItem(id);
+    setPlayItemSourceIsLatest(latest);
     setItemPlaying(false);
   };
   const handleEnded = () => {
@@ -512,6 +514,7 @@ export function PassageDetailItem(props: IProps) {
                               onChange={handleSelect}
                               ts={ts}
                               tags={slugs}
+                              latestVernacular={currentVersion}
                             />
                           </div>
                           <div id="rowplayer" className={classes.playerRow}>
@@ -522,27 +525,25 @@ export function PassageDetailItem(props: IProps) {
                               onEnded={handleEnded}
                               controls={true}
                             />
-                            {playItem && (
-                              <>
-                                <LightTooltip title={t.transcribe}>
-                                  <IconButton
-                                    id="load-transcriber"
-                                    onClick={handleTranscribe}
-                                  >
-                                    <TranscribeIcon />
-                                  </IconButton>
-                                </LightTooltip>
-                                {projRole === RoleNames.Admin && (
-                                  <LightTooltip title={t.deleteItem}>
-                                    <IconButton
-                                      id="delete-recording"
-                                      onClick={handleDelete(playItem)}
-                                    >
-                                      <DeleteIcon />
-                                    </IconButton>
-                                  </LightTooltip>
-                                )}
-                              </>
+                            {playItem && playItemSourceIsLatest && (
+                              <LightTooltip title={t.transcribe}>
+                                <IconButton
+                                  id="load-transcriber"
+                                  onClick={handleTranscribe}
+                                >
+                                  <TranscribeIcon />
+                                </IconButton>
+                              </LightTooltip>
+                            )}
+                            {playItem && projRole === RoleNames.Admin && (
+                              <LightTooltip title={t.deleteItem}>
+                                <IconButton
+                                  id="delete-recording"
+                                  onClick={handleDelete(playItem)}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              </LightTooltip>
                             )}
                           </div>
                         </Paper>

@@ -322,8 +322,7 @@ export const getLocalCount =
       payload: pendingStatus(t.countPending),
       type: COUNT_PENDING,
     });
-    //todo throw out old versions that are ready?
-    const ready = getMediaInPlans([plan], mediafiles, artifactId).filter(
+    const ready = getMediaInPlans([plan], mediafiles, artifactId, true).filter(
       (m) => m.attributes?.transcriptionstate === ActivityStates.Approved
     );
     const refMissing = ready.filter((m) => {

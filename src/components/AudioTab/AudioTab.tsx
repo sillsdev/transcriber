@@ -288,7 +288,7 @@ export function AudioTab(props: IProps) {
 
   useEffect(() => {
     if (plan && mediaFiles.length > 0) {
-      setPlanMedia(getMediaInPlans([plan], mediaFiles, VernacularTag));
+      setPlanMedia(getMediaInPlans([plan], mediaFiles, VernacularTag, true));
     }
   }, [mediaFiles, plan]);
 

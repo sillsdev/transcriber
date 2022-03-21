@@ -213,7 +213,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
 
     useEffect(() => {
       if (devPlan && mediafiles.length > 0) {
-        var m = getMediaInPlans([devPlan], mediafiles, artifactId);
+        var m = getMediaInPlans([devPlan], mediafiles, artifactId, true);
         setPlanMedia(m);
         planMediaRef.current = m;
       }
