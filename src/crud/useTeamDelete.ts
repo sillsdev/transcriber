@@ -46,15 +46,13 @@ export const useTeamDelete = () => {
     ).filter((om) => teamgrpIds.includes(related(om, 'organization')));
     /* remove the memberships first so that refreshing happens before projects and teams disappear and causes problems */
     let ops: Operation[] = [];
-    let t: TransformBuilder = new TransformBuilder();
+    const t: TransformBuilder = new TransformBuilder();
     teamoms.forEach((gm) => ops.push(t.removeRecord(gm)));
     teamgms.forEach((gm) => ops.push(t.removeRecord(gm)));
     await memory.update(ops);
-    t = new TransformBuilder();
     ops = [];
     for (let ix = 0; ix < projIds.length; ix++)
       await projectDelete(projIds[ix]);
-    t = new TransformBuilder();
     ops = [];
     teamgrpIds.forEach((tg) =>
       ops.push(t.removeRecord({ type: 'group', id: tg }))

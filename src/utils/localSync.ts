@@ -581,8 +581,8 @@ const doChapter = async (
 
   const { stdoutw } = await writeChapter(paths, ptProjName, usxDom);
   if (stdoutw) console.log(stdoutw);
-  const tb = new TransformBuilder();
-  const ops: Operation[] = [];
+  var ops: Operation[] = [];
+  var tb = new TransformBuilder();
   for (let p of passInfo) {
     var cmt = p.passage.attributes.lastComment;
     p.passage.attributes.lastComment = '';
