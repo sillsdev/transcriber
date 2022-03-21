@@ -916,6 +916,14 @@ export function Transcriber(props: IProps) {
   };
 
   const handleAutosave = async () => {
+    console.log(
+      'do autosave? not playing',
+      !playingRef.current,
+      'not saving',
+      !saving.current,
+      'changed',
+      transcriptionIn.current !== transcriptionRef.current?.firstChild?.value
+    );
     if (
       !playingRef.current &&
       !saving.current &&
