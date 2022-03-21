@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 import React from 'react';
 import { IMainStrings, IState } from '../model';
 import { connect } from 'react-redux';
@@ -26,6 +27,8 @@ import about from '../assets/about.json';
 import stringReplace from 'react-string-replace';
 import { useSnackBar } from '../hoc/SnackBar';
 const version = require('../../package.json').version;
+const copyright = require('../../package.json').build.copyright;
+const author = require('../../package.json').author.name;
 const buildDate = require('../buildDate.json').date;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -180,7 +183,7 @@ function AboutDialog(props: AboutDialogProps) {
               {t.version.replace('{0}', version).replace('{1}', buildDate)}
             </div>
             <Typography className={classes.row}>
-              {'Copyright \u00A9 2019-2022 SIL International'}
+              {copyright.replace('${author}', author)}
             </Typography>
           </div>
         </Tooltip>
