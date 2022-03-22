@@ -136,7 +136,7 @@ export interface IRow {
   sourceVersion: number;
 }
 
-interface SimpleWf {
+export interface SimpleWf {
   id: string;
   label: string;
 }
@@ -147,6 +147,8 @@ const initState = {
   orgWorkflowSteps: [] as OrgWorkflowStep[],
   setOrgWorkflowSteps: (steps: OrgWorkflowStep[]) => {},
   setCurrentStep: (step: string) => {}, //what the user is looking at
+  firstStepIndex: -1,
+  setFirstStepIndex: (step: number) => {},
   index: 0, //row index?
   selected: '',
   setSelected: (selected: string) => {},
@@ -297,6 +299,14 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       } else {
         handleSetCurrentStep(stepId);
       }
+    };
+    const setFirstStepIndex = (stepIndex: number) => {
+      setState((state: ICtxState) => {
+        return {
+          ...state,
+          firstStepIndex: stepIndex,
+        };
+      });
     };
     const handleConfirmStep = () => {
       startSave();
@@ -845,6 +855,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setSelected,
             setOrgWorkflowSteps,
             setCurrentStep,
+            setFirstStepIndex,
             setDiscussionSize,
             setPlayerSize,
             setPlaying,
