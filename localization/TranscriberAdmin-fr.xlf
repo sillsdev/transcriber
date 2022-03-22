@@ -5409,7 +5409,7 @@
 				<target>Contrôle des pairs</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.phraseBackTranslate">
+		<unit id="workflowSteps.phraseBackTranslation">
 			<segment>
 				<source>Phrase Back Translate</source>
 				<target>Traduction du dos par phrase</target>
@@ -5451,7 +5451,7 @@
 				<target>Contenu non sauvegardé</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.wholeBackTranslate">
+		<unit id="workflowSteps.wholeBackTranslation">
 			<segment>
 				<source>Whole Back Translate</source>
 				<target>Traduire en entier</target>

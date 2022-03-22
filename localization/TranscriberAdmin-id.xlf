@@ -5317,13 +5317,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.phraseBackTranslate">
+      <unit id="workflowSteps.phraseBackTranslation">
          <segment>
             <source>Phrase Back Translate</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.wholeBackTranslate">
+      <unit id="workflowSteps.wholeBackTranslation">
          <segment>
             <source>Whole Back Translate</source>
             <target/>

@@ -5408,7 +5408,7 @@
             <target>Экспертиза</target>
          </segment>
       </unit>
-      <unit id="workflowSteps.phraseBackTranslate">
+      <unit id="workflowSteps.phraseBackTranslation">
          <segment>
             <source>Phrase Back Translate</source>
             <target>Обратный перевод фразы</target>
@@ -5450,7 +5450,7 @@
             <target>Несохраненное содержимое</target>
          </segment>
       </unit>
-      <unit id="workflowSteps.wholeBackTranslate">
+      <unit id="workflowSteps.wholeBackTranslation">
          <segment>
             <source>Whole Back Translate</source>
             <target>Обратный перевод целиком</target>
