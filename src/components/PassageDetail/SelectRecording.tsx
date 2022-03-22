@@ -14,7 +14,7 @@ import { ISelectRecordingStrings, IState, MediaFile } from '../../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { IRow, PassageDetailContext } from '../../context/PassageDetailContext';
 import { findRecord, related, useArtifactType } from '../../crud';
-import { dateOrTime, prettySegment } from '../../utils';
+import { dateOrTime, prettySegment, removeExtension } from '../../utils';
 import { connect } from 'react-redux';
 import { localStrings } from '../../selector';
 import { useGlobal } from 'reactn';
@@ -64,11 +64,6 @@ const RecordingInfo = (iprops: IInfoProps) => {
   const { row, lang, onClick } = iprops;
   const [memory] = useGlobal('memory');
 
-  const nameOnly = (n: string) => {
-    const parts = n.split('.');
-    return parts.length > 1 ? parts[0] : n;
-  };
-
   let version = '';
   const relatedMedia = related(row.mediafile, 'sourceMedia');
   if (relatedMedia) {
@@ -91,7 +86,9 @@ const RecordingInfo = (iprops: IInfoProps) => {
       <TableCell align="left">
         {row.mediafile.attributes?.performedBy}
       </TableCell>
-      <TableCell align="left">{nameOnly(row.artifactName)}</TableCell>
+      <TableCell align="left">
+        {removeExtension(row.artifactName).name}
+      </TableCell>
     </TableRow>
   );
 };
