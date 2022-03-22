@@ -5408,7 +5408,7 @@
 				<target>Revisão por pares</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.phraseBackTranslate">
+		<unit id="workflowSteps.phraseBackTranslation">
 			<segment>
 				<source>Phrase Back Translate</source>
 				<target>Traduzir Frase Voltar</target>
@@ -5450,7 +5450,7 @@
 				<target>Conteúdo não guardado</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.wholeBackTranslate">
+		<unit id="workflowSteps.wholeBackTranslation">
 			<segment>
 				<source>Whole Back Translate</source>
 				<target>Traduzir todo o verso</target>
