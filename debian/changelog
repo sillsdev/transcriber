@@ -1,3 +1,10 @@
+sil-transcriber (2.14.4.0)  experimental; urgency=high
+
+  * TT-3823 compare tool sort (#755)
+  * TT-3822 fix strings (#755)
+
+ -- Greg Trihus <greg_trihus@sil.org>  Wed, 22 Mar 2022 16:19:00 -0600
+
 sil-transcriber (2.14.3.0)  experimental; urgency=high
 
   * TT-1282 TC425 Check for missing team id (#751)

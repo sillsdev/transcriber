@@ -12,6 +12,7 @@ import { withData } from '../../../mods/react-orbitjs';
 import localStrings from '../../../selector/localize';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { useArtifactCategory } from '../../../crud';
+import { removeExtension } from '../../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,13 +55,40 @@ export const SelectMyResource = (props: IProps) => {
     if (inResource) setResource(inResource);
   }, [inResource]);
 
-  const nameOnly = (n: string) => {
-    const parts = n.split('.');
-    return parts.length > 1 ? parts[0] : n;
-  };
-
   const checkCategory = (localCat: string) => {
     return scriptureTypeCategory(localCat);
+  };
+
+  const sortName = (i: string, j: string) => {
+    const pat = /^(.*)([0-9]+)[\\.\\:]([0-9]+)?-?([0-9]+)?(.*)$/i;
+    const iPat = pat.exec(removeExtension(i).name);
+    const jPat = pat.exec(removeExtension(j).name);
+    if (iPat && jPat) {
+      if (iPat[1] === jPat[1]) {
+        const i2 = parseInt(iPat[2]);
+        const j2 = parseInt(jPat[2]);
+        const i3 = parseInt(iPat[3]);
+        const j3 = parseInt(jPat[3]);
+        const i4 = parseInt(iPat[4]);
+        const j4 = parseInt(jPat[4]);
+        return i2 > j2
+          ? 1
+          : i2 < j2
+          ? -1
+          : i3 > j3
+          ? 1
+          : i3 < j3
+          ? -1
+          : i4 > j4
+          ? 1
+          : i4 < j4
+          ? -1
+          : iPat[5] > jPat[5]
+          ? 1
+          : -1;
+      }
+    }
+    return i > j ? 1 : -1;
   };
 
   return (
@@ -86,10 +114,10 @@ export const SelectMyResource = (props: IProps) => {
           (r) =>
             r?.isResource && !r?.isText && checkCategory(r?.artifactCategory)
         )
-        .sort((i, j) => (i.artifactName < j.artifactName ? -1 : 1))
+        .sort((i, j) => sortName(i.artifactName, j.artifactName))
         .map((r, k) => (
           <MenuItem id={`my-res-${k}`} value={r.id} key={r.id}>
-            {nameOnly(r.artifactName)}
+            {removeExtension(r.artifactName).name}
           </MenuItem>
         ))}
     </TextField>
