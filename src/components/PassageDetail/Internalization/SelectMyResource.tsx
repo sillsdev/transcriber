@@ -83,7 +83,8 @@ export const SelectMyResource = (props: IProps) => {
     >
       {rowData
         .filter(
-          (r) => r.isResource && !r.isText && checkCategory(r.artifactCategory)
+          (r) =>
+            r?.isResource && !r?.isText && checkCategory(r?.artifactCategory)
         )
         .sort((i, j) => (i.artifactName < j.artifactName ? -1 : 1))
         .map((r, k) => (
