@@ -8,7 +8,7 @@ ifndef binsrc
 binsrc=${PWD}
 endif
 build:
-	npx yarn
+	npm install --legacy-peer-deps
 	npm run stamp
 	npm run electron-pack
 	npm run dist
