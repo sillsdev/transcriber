@@ -285,6 +285,7 @@ export function PassageDetailItem(props: IProps) {
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     setStatusText('');
+    setTopic('');
     saveCompleted(toolId);
     if (importList) {
       setImportList(undefined);
