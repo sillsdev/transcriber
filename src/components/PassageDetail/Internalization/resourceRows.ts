@@ -7,6 +7,7 @@ import {
 } from '../../../model';
 import { related, VernacularTag } from '../../../crud';
 import { IRow } from '../../../context/PassageDetailContext';
+import { removeExtension } from '../../../utils';
 
 const isResource = (typeSlug: string) =>
   ['resource', 'sharedresource'].indexOf(typeSlug) !== -1;
@@ -58,7 +59,9 @@ export const oneMediaRow = ({
     playItem: '',
     sequenceNum: r?.attributes.sequenceNum || 0,
     version: mediaAttr?.versionNumber || 0,
-    artifactName: r?.attributes.description || mediaAttr?.originalFile || '',
+    artifactName:
+      r?.attributes.description ||
+      removeExtension(mediaAttr?.originalFile || '').name,
     artifactType: localizedType(typeNameSlug),
     artifactCategory: localizedCategory(catNameSlug),
     done,
