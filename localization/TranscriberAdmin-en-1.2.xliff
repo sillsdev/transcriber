@@ -4546,7 +4546,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="shared.mediaError">
-            <source>Meida is missing or has an unaccepted format.</source>
+            <source>Media is missing or has an unaccepted format.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
