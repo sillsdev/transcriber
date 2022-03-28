@@ -13,7 +13,7 @@ import { useContext, useEffect, useState, useMemo } from 'react';
 import { ISelectRecordingStrings, IState } from '../../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { IRow, PassageDetailContext } from '../../context/PassageDetailContext';
-import { useArtifactType } from '../../crud';
+import { ArtifactTypeSlug, useArtifactType } from '../../crud';
 import { dateOrTime, prettySegment, removeExtension } from '../../utils';
 import { connect } from 'react-redux';
 import { localStrings } from '../../selector';
@@ -43,13 +43,21 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const RecordingHeader = ({ t }: { t: ISelectRecordingStrings }) => {
+const RecordingHeader = ({
+  t,
+  showTopic,
+  showType,
+}: {
+  t: ISelectRecordingStrings;
+  showTopic: boolean;
+  showType: boolean;
+}) => {
   return (
     <TableRow key={0}>
-      <TableCell>{t.artifactType}</TableCell>
+      {showType && <TableCell>{t.artifactType}</TableCell>}
       <TableCell align="right">{t.sourceVersion}</TableCell>
       <TableCell align="left">{t.sourceSegment}</TableCell>
-      <TableCell align="left">{t.topic}</TableCell>
+      {showTopic && <TableCell align="left">{t.topic}</TableCell>}
       <TableCell align="left">{t.created}</TableCell>
       <TableCell align="left">{t.speaker}</TableCell>
       <TableCell align="left">{t.filename}</TableCell>
@@ -62,10 +70,12 @@ interface IInfoProps {
   lang: string;
   onClick: (id: string, latest: boolean) => () => void;
   latestVernacular: number;
+  showTopic: boolean;
+  showType: boolean;
 }
 
 const RecordingInfo = (iprops: IInfoProps) => {
-  const { row, lang, onClick, latestVernacular } = iprops;
+  const { row, lang, onClick, latestVernacular, showTopic, showType } = iprops;
   const classes = useStyles();
 
   return (
@@ -73,9 +83,11 @@ const RecordingInfo = (iprops: IInfoProps) => {
       key={row.id}
       onClick={onClick(row.id, row.sourceVersion === latestVernacular)}
     >
-      <TableCell component="th" scope="row">
-        {row.artifactType}
-      </TableCell>
+      {showType && (
+        <TableCell component="th" scope="row">
+          {row.artifactType}
+        </TableCell>
+      )}
       <TableCell
         align="right"
         className={
@@ -89,7 +101,9 @@ const RecordingInfo = (iprops: IInfoProps) => {
       <TableCell align="left">
         {prettySegment(row.mediafile.attributes?.sourceSegments || '')}
       </TableCell>
-      <TableCell align="left">{row.mediafile.attributes?.topic}</TableCell>
+      {showTopic && (
+        <TableCell align="left">{row.mediafile.attributes?.topic}</TableCell>
+      )}
       <TableCell align="left">
         {dateOrTime(row.mediafile.attributes?.dateCreated, lang)}
       </TableCell>
@@ -125,6 +139,14 @@ export const SelectRecording = (props: IProps) => {
   const [chooser, setChooser] = useState(false);
   const { localizedArtifactType } = useArtifactType();
 
+  const showTopic = useMemo(() => {
+    return tags[0] !== ArtifactTypeSlug.BackTranslation;
+  }, [tags]);
+
+  const showType = useMemo(() => {
+    return tags.length > 1;
+  }, [tags]);
+
   const handleClick = (id: string, latest: boolean) => () => {
     setItem(id);
     onChange && onChange(id, latest);
@@ -158,7 +180,11 @@ export const SelectRecording = (props: IProps) => {
           <TableContainer component={Paper}>
             <Table size="small" aria-label="a dense table">
               <TableHead>
-                <RecordingHeader t={t} />
+                <RecordingHeader
+                  t={t}
+                  showTopic={showTopic}
+                  showType={showType}
+                />
               </TableHead>
               <TableBody>
                 {rowData
@@ -181,6 +207,8 @@ export const SelectRecording = (props: IProps) => {
                       lang={lang}
                       onClick={handleClick}
                       latestVernacular={latestVernacular}
+                      showTopic={showTopic}
+                      showType={showType}
                     />
                   ))}
               </TableBody>
