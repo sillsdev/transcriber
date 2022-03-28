@@ -222,7 +222,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
 
     const setRows = (rowData: IRowData[]) => {
       setState((state: ICtxState) => {
-        return { ...state, rowData, playing: false };
+        return { ...state, rowData };
       });
     };
 
