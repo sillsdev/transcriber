@@ -59,6 +59,7 @@ import Confirm from '../components/AlertDialog';
 import { getNextStep } from '../crud/getNextStep';
 import { UnsavedContext } from './UnsavedContext';
 import { IRegion } from '../crud/useWavesurferRegions';
+import { UpdateLastModifedBy } from '../model/baseModel';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -446,6 +447,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           JSON.stringify({ completed })
         )
       );
+      ops.push(...UpdateLastModifedBy(tb, recId, user));
       AddPassageStateChangeToOps(
         tb,
         ops,
