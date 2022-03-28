@@ -27,10 +27,6 @@ export const TableRow = ({ value, header }: IProps) => {
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
 
-  const nameParts = value.artifactName?.split('.');
-  if (nameParts.length > 1) nameParts?.pop();
-  const name = nameParts?.join('.');
-
   return (
     <ListItem>
       {projRole === RoleNames.Admin && (
@@ -43,7 +39,7 @@ export const TableRow = ({ value, header }: IProps) => {
         {value.playItem}
       </div>
       <div className={clsx(classes.resource, { [classes.bold]: header })}>
-        {name}
+        {value.artifactName}
       </div>
       <div className={clsx(classes.version, { [classes.bold]: header })}>
         {value.version}
