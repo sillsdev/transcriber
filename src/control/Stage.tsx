@@ -41,6 +41,7 @@ export const Stage = ({
   const handleMove = (forward: boolean) => () => {
     moveStep && moveStep(forward);
   };
+  const shortLabel = label.length > 22 ? `${label.slice(0, 22)}...` : label;
   return id === 'prev' || id === 'next' ? (
     <IconButton
       id={id}
@@ -94,7 +95,7 @@ export const Stage = ({
           transform="matrix(1.3,0,0,2.2,34.5,-21.3)"
         >
           <tspan x="85.3" y="25.6">
-            {`${done ? '\u2714 ' : ''}${label}`}
+            {`${done ? '\u2714 ' : ''}${shortLabel}`}
           </tspan>
         </text>
       </g>
