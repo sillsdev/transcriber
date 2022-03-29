@@ -323,7 +323,9 @@ export const getLocalCount =
       type: COUNT_PENDING,
     });
     const ready = getMediaInPlans([plan], mediafiles, artifactId, true).filter(
-      (m) => m.attributes?.transcriptionstate === ActivityStates.Approved
+      (m) =>
+        m.attributes?.transcriptionstate === ActivityStates.Approved &&
+        Boolean(related(m, 'passage'))
     );
     const refMissing = ready.filter((m) => {
       var passage = findRecord(
