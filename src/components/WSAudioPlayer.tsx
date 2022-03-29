@@ -56,6 +56,7 @@ import {
 } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
+import { clearTimeout } from 'timers';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -187,6 +188,7 @@ interface IProps extends IStateProps {
   busy?: boolean;
   defaultRegionParams?: IRegionParams;
   doReset?: boolean;
+  autoStart?: boolean;
   setBusy?: (busy: boolean) => void;
   setMimeType?: (type: string) => void;
   setAcceptedMimes?: (types: MimeInfo[]) => void;
@@ -239,6 +241,7 @@ function WSAudioPlayer(props: IProps) {
     busy,
     defaultRegionParams,
     doReset,
+    autoStart,
     setBusy,
     setMimeType,
     setAcceptedMimes,
@@ -289,6 +292,7 @@ function WSAudioPlayer(props: IProps) {
   const [style, setStyle] = useState({
     cursor: busy || loading ? 'progress' : 'default',
   });
+  const autostartTimer = React.useRef<NodeJS.Timeout>();
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
@@ -408,13 +412,13 @@ function WSAudioPlayer(props: IProps) {
       recordOverwritePosition.current = recordStartPosition.current;
       initialPosRef.current = recordStartPosition.current;
       wsStartRecord();
-      startRecording(500);
+      setRecording(startRecording(500));
     } else {
       processRecordRef.current = true;
       stopRecording();
       wsStopRecord();
+      setRecording(false);
     }
-    setRecording(!recordingRef.current);
     return true;
   };
 
@@ -490,6 +494,27 @@ function WSAudioPlayer(props: IProps) {
     if (allowSpeed) speedKeys.forEach((k) => subscribe(k.key, k.cb));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSpeed]);
+
+  const cleanupAutoStart = () => {
+    if (autostartTimer.current) {
+      clearTimeout(autostartTimer.current);
+      autostartTimer.current = undefined;
+    }
+  };
+  const launchTimer = () => {
+    autostartTimer.current = setTimeout(() => {
+      handleRecorder();
+    }, 1000 * 0.5);
+  };
+  useEffect(() => {
+    if (autoStart) {
+      launchTimer();
+    }
+    return () => {
+      cleanupAutoStart();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoStart]);
 
   useEffect(() => {
     wsSetHeight(size - 150); //does this need to be smarter?
@@ -588,8 +613,12 @@ function WSAudioPlayer(props: IProps) {
   }
 
   function onRecordError(e: any) {
-    showMessage(e.error);
+    if (autostartTimer.current && e.error === 'No mediaRecorder') {
+      cleanupAutoStart();
+      launchTimer();
+    } else showMessage(e.error);
   }
+
   async function onRecordDataAvailable(e: any, blob: Blob) {
     var newPos = await wsInsertAudio(
       blob,

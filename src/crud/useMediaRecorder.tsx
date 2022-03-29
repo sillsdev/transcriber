@@ -9,7 +9,8 @@ const CAPTURE_OPTIONS = {
   audio: true,
   video: false,
 };
-const noop = async () => {};
+const noop = () => {};
+const noopasync = async () => {};
 export interface MimeInfo {
   mimeType: string;
   extension: string;
@@ -19,7 +20,7 @@ export function useMediaRecorder(
   onStart: () => void = noop,
   onStop: (blob: Blob) => void = noop,
   onError: (e: any) => void = noop,
-  onDataAvailable: (e: any, blob: Blob) => Promise<void> = noop
+  onDataAvailable: (e: any, blob: Blob) => Promise<void> = noopasync
 ) {
   const mediaChunks = useRef<any>([]);
   const [playerUrl, setPlayerUrl] = useState('');
@@ -143,8 +144,10 @@ export function useMediaRecorder(
     if (recorder) {
       recorder.start(timeSlice);
       onStart();
+      return true;
     } else {
       onError({ error: 'No mediaRecorder' });
+      return false;
     }
   }
 
@@ -169,7 +172,7 @@ export function useMediaRecorder(
     }
   }
   return {
-    startRecording: allowRecord ? startRecording : noop,
+    startRecording: allowRecord ? startRecording : () => false,
     stopRecording: allowRecord ? stopRecording : noop,
     pauseRecording: allowRecord ? pauseRecording : noop,
     resumeRecording: allowRecord ? resumeRecording : noop,

@@ -214,6 +214,7 @@ export const CommentEditor = (props: IProps) => {
           setCanSave={handleSetCanSave}
           setStatusText={setStatusText}
           size={200}
+          autoStart={true}
         />
       )}
       <div className={classes.row}>
