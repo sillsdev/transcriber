@@ -94,6 +94,7 @@ interface IProps extends IStateProps, IDispatchProps {
   doReset?: boolean;
   setDoReset?: (r: boolean) => void;
   preload?: boolean;
+  autoStart: boolean;
 }
 
 function MediaRecord(props: IProps) {
@@ -112,6 +113,7 @@ function MediaRecord(props: IProps) {
     setStatusText,
     allowWave,
     showFilename,
+    autoStart,
     doReset,
     setDoReset,
     convert_status,
@@ -375,6 +377,7 @@ function MediaRecord(props: IProps) {
         onRecording={myOnRecording}
         onPlayStatus={onPlayStatus}
         doReset={doReset}
+        autoStart={autoStart}
       />
       <div className={classes.row}>
         {showFilename && (
