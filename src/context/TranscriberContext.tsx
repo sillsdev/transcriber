@@ -324,7 +324,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       const mediaRecs = passageMediaRef.current.filter(
         (m) =>
           role === 'view' ||
-          (m.attributes?.transcriptionstate || 'transcribeReady') === state
+          (m.attributes?.transcriptionstate ||
+            ActivityStates.TranscribeReady) === state
       );
       const passIds = mediaRecs.map((m) => related(m, 'passage') as string);
       let readyRecs = passages
@@ -580,7 +581,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           if (transcriber !== r.transcriber) changed = true;
           const editor = related(section, 'editor');
           if (editor !== r.editor) changed = true;
-          const state = r.mediafile.attributes?.transcriptionstate || '';
+          const state =
+            r.mediafile.attributes?.transcriptionstate ||
+            ActivityStates.TranscribeReady;
           let rowRole = actor[state] || 'view';
           if (rowRole === 'editor' && role !== RoleNames.Editor)
             rowRole = 'view';
