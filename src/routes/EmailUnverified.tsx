@@ -66,18 +66,18 @@ export const EmailUnverified = (props: IProps) => {
       });
   };
 
-  const handleVerified = async (e: any) => {
-    localStorage.setItem('email_verified', 'true');
-    !isElectron && (await getAccessTokenSilently({ ignoreCache: true }));
-    if (isElectron) {
-      goOnline();
-    }
-  };
   const handleLogout = (e: any) => {
     doLogout();
     setView('Logout');
   };
 
+  const handleVerified = async (e: any) => {
+    if (!isElectron) {
+      handleLogout(e);
+    } else {
+      goOnline();
+    }
+  };
   React.useEffect(() => {
     if (user?.email_verified) {
       (async () => {
