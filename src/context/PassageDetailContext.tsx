@@ -260,11 +260,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const mediaStart = useRef<number | undefined>();
     const mediaEnd = useRef<number | undefined>();
     const mediaPosition = useRef<number | undefined>();
-    const setOrgWorkflowSteps = (steps: OrgWorkflowStep[]) => {
-      setState((state: ICtxState) => {
-        return { ...state, orgWorkflowSteps: steps };
-      });
-    };
     const currentSegmentRef = useRef<IRegion | undefined>();
     const { startSave, clearChanged, waitForSave } =
       useContext(UnsavedContext).state;
@@ -810,33 +805,36 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     }, [state.playItem]);
 
     useEffect(() => {
-      var wf: SimpleWf[] = [];
       if (!getStepsBusy.current) {
         getStepsBusy.current = true;
 
         const { scripture } = getPlanType(plan);
         GetOrgWorkflowSteps({ process: 'ANY' }).then(
           (orgsteps: OrgWorkflowStep[]) => {
-            setOrgWorkflowSteps(orgsteps);
-            wf = orgsteps
-              .filter(
-                (s) =>
-                  scripture ||
-                  s.attributes.name.toLowerCase().indexOf('paratext') === -1
-              )
-              .map((s) => {
-                return {
-                  id: s.id,
-                  label: s.attributes.name,
-                };
-              });
-            setState((state: ICtxState) => ({ ...state, workflow: wf }));
+            const wf = orgsteps.filter(
+              (s) =>
+                scripture ||
+                s.attributes.name.toLowerCase().indexOf('paratext') === -1
+            );
+            setState((state: ICtxState) => ({
+              ...state,
+              orgWorkflowSteps: wf,
+            }));
             getStepsBusy.current = false;
           }
         );
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [workflowSteps, orgWorkflowSteps, plan]);
+    }, [plan, orgWorkflowSteps, workflowSteps]);
+
+    useEffect(() => {
+      const wf: SimpleWf[] = state.orgWorkflowSteps.map((s) => ({
+        id: s.id,
+        label: s.attributes.name,
+      }));
+      setState((state: ICtxState) => ({ ...state, workflow: wf }));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state.orgWorkflowSteps]);
 
     useEffect(() => {
       if (state.currentstep === '' && state.orgWorkflowSteps.length > 0) {
@@ -855,7 +853,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           state: {
             ...state,
             setSelected,
-            setOrgWorkflowSteps,
             setCurrentStep,
             setFirstStepIndex,
             setDiscussionSize,
