@@ -117,7 +117,7 @@ export const SelectMyResource = (props: IProps) => {
         .sort((i, j) => sortName(i.artifactName, j.artifactName))
         .map((r, k) => (
           <MenuItem id={`my-res-${k}`} value={r.id} key={r.id}>
-            {removeExtension(r.artifactName).name}
+            {r.artifactName}
           </MenuItem>
         ))}
     </TextField>
