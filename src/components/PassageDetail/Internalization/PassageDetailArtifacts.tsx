@@ -140,7 +140,7 @@ export function PassageDetailArtifacts(props: IProps) {
     ctx.setState((state) => ({
       ...state,
       rowData: (rowData as any).map((r: IRow) =>
-        r.id === id ? { ...r, done: !r.done } : r
+        r?.id === id ? { ...r, done: !r.done } : r
       ),
     }));
   };
@@ -214,7 +214,7 @@ export function PassageDetailArtifacts(props: IProps) {
   }) => {
     const indexes = Array<number>();
     rowData.forEach((r, i) => {
-      if (r.isResource) indexes.push(i);
+      if (r?.isResource) indexes.push(i);
     });
     const newIndexes = arrayMove(indexes, oldIndex, newIndex) as number[];
     for (let i = 0; i < newIndexes.length; i += 1) {
@@ -228,9 +228,9 @@ export function PassageDetailArtifacts(props: IProps) {
         });
       }
     }
-    const newRows = rowData.map((r, i) =>
-      r.isResource ? rowData[newIndexes[i]] : r
-    );
+    const newRows = rowData
+      .map((r, i) => (r?.isResource ? rowData[newIndexes[i]] : r))
+      .filter((r) => r !== undefined);
     ctx.setState((state) => {
       return { ...state, rowData: newRows };
     });
