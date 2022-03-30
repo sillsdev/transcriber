@@ -15,6 +15,31 @@ import { convertToWav } from '../utils/wav';
 const noop = () => {};
 const noop1 = (x: any) => {};
 
+export interface IMarker {
+  time: number;
+  label?: string;
+  color?: string;
+  position?: 'top' | 'bottom';
+}
+
+function randomHex() {
+  const rgb2hex = (r: number, g: number, b: number) =>
+    '#' +
+    [r, g, b]
+      .map((x) =>
+        Math.round(x * 255)
+          .toString(16)
+          .padStart(2, '0')
+      )
+      .join('')
+      .slice(0, 6);
+
+  return rgb2hex(
+    ~~(Math.random() * 255),
+    ~~(Math.random() * 255),
+    ~~(Math.random() * 255)
+  );
+}
 export function useWaveSurfer(
   container: any,
   onReady: () => void = noop,
@@ -27,6 +52,7 @@ export function useWaveSurfer(
   onCanUndo: (canUndo: boolean) => void = noop1,
   onPlayStatus: (playing: boolean) => void = noop,
   onInteraction: () => void = noop,
+  onMarkerClick: (time: number) => void = noop1,
   onError: (e: any) => void = noop,
   height: number = 128,
   singleRegionOnly: boolean = false,
@@ -47,6 +73,7 @@ export function useWaveSurfer(
   const inputRegionsRef = useRef<IRegions>();
   const regionsLoadedRef = useRef(false);
   const widthRef = useRef(0);
+  const markersRef = useRef([] as IMarker[]);
   const containerRef = useRef(container);
 
   const isNear = (position: number) => {
@@ -197,7 +224,13 @@ export function useWaveSurfer(
         if (onInteraction) onInteraction();
       });
       ws.on('redraw', function (peaks: any, width: number) {
-        widthRef.current = width;
+        if (widthRef.current !== width) {
+          widthRef.current = width;
+          wsAddMarkers(markersRef.current);
+        }
+      });
+      ws.on('marker-click', function (marker: any, e: any) {
+        onMarkerClick(marker.time);
       });
       // ws.drawer.on('click', (event: any, progress: number) => {
       // });
@@ -469,6 +502,14 @@ export function useWaveSurfer(
     setUndoBuffer(undefined);
     onCanUndo(false);
   };
+  const wsAddMarkers = (markers: IMarker[]) => {
+    markersRef.current = markers;
+    wavesurfer()?.clearMarkers();
+    markers.forEach((m) => {
+      if (!m.color) m.color = randomHex();
+      wavesurfer()?.addMarker(m);
+    });
+  };
 
   //delete the audio in the current region
   const wsRegionDelete = () => {
@@ -551,5 +592,6 @@ export function useWaveSurfer(
     wsRemoveSplitRegion,
     wsStartRecord,
     wsStopRecord,
+    wsAddMarkers,
   };
 }

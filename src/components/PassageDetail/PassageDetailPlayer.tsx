@@ -36,6 +36,8 @@ export function PassageDetailPlayer(props: IProps) {
     currentstep,
     playerSize,
     setCurrentSegment,
+    discussionMarkers,
+    handleHighlightDiscussion,
   } = ctx.state;
 
   const defaultSegParams = {
@@ -44,6 +46,7 @@ export function PassageDetailPlayer(props: IProps) {
     segLenThreshold: 4.5,
   };
   const [defaultSegments, setDefaultSegments] = useState('{}');
+
   const segmentsRef = useRef('');
   const playingRef = useRef(playing);
 
@@ -74,6 +77,7 @@ export function PassageDetailPlayer(props: IProps) {
       //not saving segments...so don't update changed
     }
   };
+
   const onPlayStatus = (newPlaying: boolean) => {
     if (playingRef.current !== newPlaying) {
       setPlaying(newPlaying);
@@ -124,6 +128,8 @@ export function PassageDetailPlayer(props: IProps) {
         allowSegment={allowSegment}
         defaultRegionParams={defaultSegParams}
         segments={defaultSegments}
+        markers={discussionMarkers}
+        onMarkerClick={handleHighlightDiscussion}
         setBusy={setPDBusy}
         onSegmentChange={onSegmentChange}
         onPlayStatus={onPlayStatus}

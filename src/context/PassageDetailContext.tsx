@@ -60,6 +60,7 @@ import { getNextStep } from '../crud/getNextStep';
 import { UnsavedContext } from './UnsavedContext';
 import { IRegion } from '../crud/useWavesurferRegions';
 import { UpdateLastModifedBy } from '../model/baseModel';
+import { IMarker } from '../crud/useWaveSurfer';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -200,6 +201,10 @@ const initState = {
   handleItemTogglePlay: () => {},
   handleCommentPlayEnd: () => {},
   handleCommentTogglePlay: () => {},
+  discussionMarkers: [] as IMarker[],
+  setDiscussionMarkers: (markers: IMarker[]) => {},
+  handleHighlightDiscussion: (time: number) => {},
+  highlightDiscussion: undefined as number | undefined,
 };
 
 export type ICtxState = typeof initState;
@@ -403,6 +408,16 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       });
     };
 
+    const setDiscussionMarkers = (discussionMarkers: IMarker[]) => {
+      setState((state: ICtxState) => {
+        return { ...state, discussionMarkers };
+      });
+    };
+    const handleHighlightDiscussion = (time: number) => {
+      setState((state: ICtxState) => {
+        return { ...state, highlightDiscussion: time };
+      });
+    };
     const stepComplete = (stepid: string) => {
       stepid = remoteId('orgworkflowstep', stepid, memory.keyMap) || stepid;
       var step = state.psgCompleted.find((s) => s.stepid === stepid);
@@ -877,6 +892,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             handleItemTogglePlay,
             handleCommentPlayEnd,
             handleCommentTogglePlay,
+            setDiscussionMarkers,
+            handleHighlightDiscussion,
           },
           setState,
         }}
