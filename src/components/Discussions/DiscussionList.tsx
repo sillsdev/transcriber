@@ -38,15 +38,16 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       backgroundColor: theme.palette.background.default,
-      marginBottom: theme.spacing(2),
+      marginBottom: theme.spacing(1),
       '& .MuiPaper-rounded': {
         borderRadius: '8px',
       },
+      overflow: 'auto',
     },
     discussionHead: {
       display: 'flex',
       justifyContent: 'space-between',
-      padding: theme.spacing(2),
+      padding: theme.spacing(1),
     },
     name: {
       display: 'flex',
@@ -59,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) =>
     actionButton: {
       color: theme.palette.primary.light,
     },
-    cardFlow: { paddingLeft: theme.spacing(1) },
+    cardFlow: {},
   })
 );
 interface IStateProps {
@@ -100,7 +101,8 @@ export function DiscussionList(props: IProps) {
   const { toolsChanged } = useContext(UnsavedContext).state;
   const { getRoleRec } = useRole();
   const [rootWidthStyle, setRootWidthStyle] = useState({
-    width: `${discussionSize - 25}px`, //leave room for scroll bar
+    width: `${discussionSize.width - 30}px`, //leave room for scroll bar
+    maxHeight: discussionSize.height,
   });
   const [filterState, setFilterState] = useState<IFilterState>({
     forYou: false,
@@ -171,7 +173,8 @@ export function DiscussionList(props: IProps) {
 
   useEffect(() => {
     setRootWidthStyle({
-      width: `${discussionSize - 25}px`,
+      width: `${discussionSize.width - 30}px`,
+      maxHeight: discussionSize.height,
     });
   }, [discussionSize]);
 

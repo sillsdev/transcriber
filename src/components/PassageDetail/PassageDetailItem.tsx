@@ -234,7 +234,7 @@ export function PassageDetailItem(props: IProps) {
   const toolId = 'RecordArtifactTool';
 
   const handleSplitSize = debounce((e: number) => {
-    setDiscussionSize(width - e);
+    setDiscussionSize({ width: width - e, height: discussionSize.height });
   }, 50);
 
   const handleHorizonalSplitSize = debounce((e: number) => {
@@ -385,7 +385,7 @@ export function PassageDetailItem(props: IProps) {
         <div>
           <Wrapper>
             <SplitPane
-              defaultSize={width - discussionSize}
+              defaultSize={width - discussionSize.width}
               style={{ position: 'static' }}
               split="vertical"
               onChange={handleSplitSize}
