@@ -181,9 +181,9 @@ const initState = {
   stepComplete: (stepId: string) => {
     return false;
   },
-  discussionSize: 500,
+  discussionSize: { width: 500, height: 800 },
   playerSize: 280,
-  setDiscussionSize: (size: number) => {},
+  setDiscussionSize: (size: { width: number; height: number }) => {},
   setPlayerSize: (size: number) => {},
   defaultFilename: '',
   uploadItem: '',
@@ -321,7 +321,10 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       handleSetCurrentStep(confirm);
       setConfirm('');
     };
-    const setDiscussionSize = (discussionSize: number) => {
+    const setDiscussionSize = (discussionSize: {
+      width: number;
+      height: number;
+    }) => {
       setState((state: ICtxState) => {
         return { ...state, discussionSize };
       });

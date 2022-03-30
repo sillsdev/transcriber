@@ -67,7 +67,7 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: `calc(100% - 32px)`,
+      width: '100%',
       display: 'flex',
       '&:hover button': {
         color: 'black',

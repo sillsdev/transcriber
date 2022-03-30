@@ -176,11 +176,15 @@ const PassageDetailGrids = (props: IProps) => {
   const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
   const handleSplitSize = debounce((e: number) => {
-    setDiscussionSize(width - e);
+    setDiscussionSize({ width: width - e, height: discussionSize.height });
   }, 50);
 
   const setDimensions = () => {
     setWidth(window.innerWidth);
+    setDiscussionSize({
+      width: discussionSize.width, //should we be smarter here?
+      height: window.innerHeight - 240,
+    });
     // setPaperStyle({ width: window.innerWidth - 10 });
   };
 
@@ -250,7 +254,7 @@ const PassageDetailGrids = (props: IProps) => {
           <Paper className={classes.paper}>
             <Wrapper>
               <SplitPane
-                defaultSize={width - discussionSize}
+                defaultSize={width - discussionSize.width}
                 style={{ position: 'static' }}
                 split="vertical"
                 onChange={handleSplitSize}
@@ -371,5 +375,4 @@ export const PassageDetail = (props: IProps) => {
     </div>
   );
 };
-
 export default PassageDetail;
