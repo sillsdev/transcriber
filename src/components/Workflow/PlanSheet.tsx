@@ -9,7 +9,7 @@ import {
   RoleNames,
 } from '../../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem, AppBar } from '@material-ui/core';
+import { Button, Menu, MenuItem, AppBar, Badge } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from '@material-ui/icons/Add';
 import { useSnackBar } from '../../hoc/SnackBar';
@@ -20,7 +20,7 @@ import { ProjButtons, StageReport } from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
 import { refMatch } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
-import { useOrganizedBy } from '../../crud';
+import { useOrganizedBy, useDiscussionCount } from '../../crud';
 import TaskAvatar from '../TaskAvatar';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
@@ -189,7 +189,9 @@ export function PlanSheet(props: IProps) {
   } = props;
   const classes = useStyles();
   const ctx = React.useContext(PlanContext);
-  const { projButtonStr, connected, readonly } = ctx.state;
+  const { projButtonStr, mediafiles, discussions, connected, readonly } =
+    ctx.state;
+  const getDiscussionCount = useDiscussionCount({ mediafiles, discussions });
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [global] = useGlobal();
@@ -506,10 +508,18 @@ export function PlanSheet(props: IProps) {
           return [
             {
               value: passage && (
-                <StageReport
-                  onClick={handlePassageDetail(rowIndex)}
-                  step={rowInfo[rowIndex].step || ''}
-                />
+                <Badge
+                  badgeContent={getDiscussionCount(
+                    rowInfo[rowIndex].passageId?.id || '',
+                    rowInfo[rowIndex]?.stepId || ''
+                  )}
+                  color="secondary"
+                >
+                  <StageReport
+                    onClick={handlePassageDetail(rowIndex)}
+                    step={rowInfo[rowIndex].step || ''}
+                  />
+                </Badge>
               ),
               readOnly: true,
               className: section ? 'set' + (passage ? 'p' : '') : 'pass',

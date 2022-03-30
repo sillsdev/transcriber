@@ -31,6 +31,7 @@ export interface IWorkflow {
   mediaId?: RecordIdentity;
   mediaShared: IMediaShare;
   step?: string;
+  stepId?: string;
   deleted: boolean;
 }
 
