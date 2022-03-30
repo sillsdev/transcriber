@@ -21,6 +21,11 @@ export interface IRegions {
   params: IRegionParams;
   regions: IRegion[];
 }
+export interface INamedRegion {
+  name: string;
+  regionInfo: IRegions;
+}
+
 export function useWaveSurferRegions(
   singleRegionOnly: boolean,
   onRegion: (
