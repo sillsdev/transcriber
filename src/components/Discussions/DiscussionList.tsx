@@ -22,7 +22,7 @@ import localStrings from '../../selector/localize';
 import AddIcon from '@material-ui/icons/Add';
 import HideIcon from '@material-ui/icons/ArrowDropUp';
 import ShowIcon from '@material-ui/icons/ArrowDropDown';
-import DiscussionCard from './DiscussionCard';
+import DiscussionCard, { DiscussionRegion } from './DiscussionCard';
 import BigDialog from '../../hoc/BigDialog';
 import CategoryList, { CatData } from './CategoryList';
 import { withData } from '../../mods/react-orbitjs';
@@ -88,8 +88,15 @@ export function DiscussionList(props: IProps) {
   const [adding, setAdding] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, rowData, discussionSize, passage, currentSegment } =
-    ctx.state;
+  const {
+    currentstep,
+    rowData,
+    discussionSize,
+    passage,
+    currentSegment,
+    mediafileId,
+    setDiscussionMarkers,
+  } = ctx.state;
   const { toolsChanged } = useContext(UnsavedContext).state;
   const { getRoleRec } = useRole();
   const [rootWidthStyle, setRootWidthStyle] = useState({
@@ -205,6 +212,25 @@ export function DiscussionList(props: IProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussions, currentstep, adding, filterState, catFilter]);
+
+  useEffect(() => {
+    function onlyUnique(value: any, index: number, self: any) {
+      return self.indexOf(value) === index;
+    }
+    var markers = displayDiscussions
+      .filter(
+        (d) => DiscussionRegion(d) && related(d, 'mediafile') === mediafileId
+      )
+      .map((d) => DiscussionRegion(d)?.start || 0)
+      .filter(onlyUnique)
+      .map((t) => {
+        return {
+          time: t,
+        };
+      });
+    setDiscussionMarkers(markers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [displayDiscussions, mediafileId]);
 
   useEffect(() => {
     setAdding(false);

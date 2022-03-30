@@ -43,7 +43,7 @@ import {
 } from 'react-icons/fa';
 
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
-import { useWaveSurfer } from '../crud/useWaveSurfer';
+import { IMarker, useWaveSurfer } from '../crud/useWaveSurfer';
 import { Duration, LightTooltip } from '../control';
 import { connect } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -182,6 +182,7 @@ interface IProps extends IStateProps {
   allowSilence?: boolean;
   size: number;
   segments: string;
+  markers?: IMarker[];
   metaData?: JSX.Element;
   isPlaying?: boolean;
   loading: boolean;
@@ -203,6 +204,7 @@ interface IProps extends IStateProps {
   onInteraction?: () => void;
   onRecording?: (r: boolean) => void;
   onCurrentSegment?: (currentSegment: IRegion | undefined) => void;
+  onMarkerClick?: (time: number) => void;
 }
 function valuetext(value: number) {
   return `${Math.floor(value)}%`;
@@ -235,6 +237,7 @@ function WSAudioPlayer(props: IProps) {
     allowSilence,
     size,
     segments,
+    markers,
     metaData,
     isPlaying,
     loading,
@@ -256,6 +259,7 @@ function WSAudioPlayer(props: IProps) {
     onInteraction,
     onRecording,
     onCurrentSegment,
+    onMarkerClick,
   } = props;
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
@@ -285,6 +289,7 @@ function WSAudioPlayer(props: IProps) {
   const durationRef = useRef(0);
   const initialPosRef = useRef(initialposition);
   const segmentsRef = useRef(segments);
+  const markersRef = useRef<IMarker[]>([]);
   const [duration, setDurationx] = useState(0);
   const justPlayButton = allowRecord;
   const processRecordRef = useRef(false);
@@ -326,6 +331,7 @@ function WSAudioPlayer(props: IProps) {
     wsSetHeight,
     wsStartRecord,
     wsStopRecord,
+    wsAddMarkers,
   } = useWaveSurfer(
     waveformRef.current,
     onWSReady,
@@ -334,6 +340,7 @@ function WSAudioPlayer(props: IProps) {
     onWSCanUndo,
     onWSPlayStatus,
     onInteraction,
+    onMarkerClick,
     () => {}, //on error...probably should report?
     size - 150,
     allowRecord,
@@ -527,6 +534,14 @@ function WSAudioPlayer(props: IProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialposition]);
+
+  useEffect(() => {
+    if (ready && markers && markers !== markersRef.current) {
+      markersRef.current = markers;
+      wsAddMarkers(markers);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [markers, ready]);
 
   useEffect(() => {
     if (segments !== segmentsRef.current) {
