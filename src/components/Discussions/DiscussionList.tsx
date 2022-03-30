@@ -219,7 +219,10 @@ export function DiscussionList(props: IProps) {
     }
     var markers = displayDiscussions
       .filter(
-        (d) => DiscussionRegion(d) && related(d, 'mediafile') === mediafileId
+        (d) =>
+          !Boolean(d.attributes?.resolved) &&
+          DiscussionRegion(d) &&
+          related(d, 'mediafile') === mediafileId
       )
       .map((d) => DiscussionRegion(d)?.start || 0)
       .filter(onlyUnique)
