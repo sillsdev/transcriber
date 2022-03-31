@@ -399,6 +399,10 @@ export const DiscussionCard = (props: IProps) => {
     return media;
   }
 
+  const handleLocateClick = () => {
+    handleHighlightDiscussion(myRegion?.start);
+  };
+
   const handleLocate = () => {
     if (myRegion) {
       const regions = JSON.stringify([myRegion]);
@@ -734,7 +738,7 @@ export const DiscussionCard = (props: IProps) => {
                     size="small"
                     className={classes.actionButton}
                     title={t.locate}
-                    onClick={handleLocate}
+                    onClick={handleLocateClick}
                   >
                     <LocationIcon fontSize="small" />
                   </IconButton>

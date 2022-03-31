@@ -272,6 +272,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const [oldVernacularPlayItem, setOldVernacularPlayItem] = useState('');
     const [oldVernacularPlaying, setOldVernacularPlaying] = useState(false);
     const highlightRef = useRef<number>();
+    const refreshRef = useRef<number>(0);
+    const settingSegmentRef = useRef(false);
     const handleSetCurrentStep = (stepId: string) => {
       var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
       setCurrentSegment(undefined, 0);
@@ -417,6 +419,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       });
     };
     const handleHighlightDiscussion = (time: number | undefined) => {
+      if (settingSegmentRef.current) return;
+
+      settingSegmentRef.current = true;
       if (highlightRef.current !== time) {
         highlightRef.current = time;
         setState((state: ICtxState) => {
@@ -426,8 +431,10 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           };
         });
       } else if (time !== undefined) {
+        //force refresh if they've hit the same locate button again
+        refreshRef.current = refreshRef.current + 1;
         setState((state: ICtxState) => {
-          return { ...state, refresh: state.refresh + 1 };
+          return { ...state, refresh: refreshRef.current };
         });
       }
     };
@@ -649,6 +656,19 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       segment: IRegion | undefined,
       currentSegmentIndex: number
     ) => {
+      if (
+        settingSegmentRef.current &&
+        ((!segment && highlightRef.current === undefined) ||
+          (segment && segment.start === highlightRef.current))
+      ) {
+        settingSegmentRef.current = false;
+      }
+      if (
+        !settingSegmentRef.current &&
+        segment?.start !== highlightRef.current
+      ) {
+        handleHighlightDiscussion(undefined);
+      }
       currentSegmentRef.current = segment;
       setState((state: ICtxState) => ({
         ...state,

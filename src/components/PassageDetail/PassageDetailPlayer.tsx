@@ -67,7 +67,6 @@ export function PassageDetailPlayer(props: IProps) {
     var index = 0;
     if (segment && segmentsRef.current) {
       var segs = parseRegions(segmentsRef.current);
-
       index =
         segs.regions
           .sort((a: IRegion, b: IRegion) => a.start - b.start)
@@ -78,13 +77,6 @@ export function PassageDetailPlayer(props: IProps) {
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
     setDefaultSegments(segments); //now we'll notice if we reset them in SetPlayerSegments
-    var regions = parseRegions(segments);
-    if (
-      regions.regions.length > 0 &&
-      regions.regions[0].start !== highlightRef.current
-    ) {
-      handleHighlightDiscussion(undefined);
-    }
     if (saveSegments) {
       toolChanged(toolId);
     } else {
