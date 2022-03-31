@@ -21,7 +21,8 @@ export function updateSegments(
     return JSON.stringify(json);
   } else {
     //old style
-    if (allsegs.length === 0 || name === NamedRegions.Transcription)
+
+    if (!allsegs || allsegs.length === 0 || name === NamedRegions.Transcription)
       return JSON.stringify([{ name: name, regionInfo: fornamesegs }]);
     else {
       return JSON.stringify([
