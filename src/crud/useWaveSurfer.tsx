@@ -8,6 +8,7 @@ import {
   IRegion,
   IRegionParams,
   IRegions,
+  parseRegions,
   useWaveSurferRegions,
 } from './useWavesurferRegions';
 import { convertToWav } from '../utils/wav';
@@ -22,24 +23,6 @@ export interface IMarker {
   position?: 'top' | 'bottom';
 }
 
-function randomHex() {
-  const rgb2hex = (r: number, g: number, b: number) =>
-    '#' +
-    [r, g, b]
-      .map((x) =>
-        Math.round(x * 255)
-          .toString(16)
-          .padStart(2, '0')
-      )
-      .join('')
-      .slice(0, 6);
-
-  return rgb2hex(
-    ~~(Math.random() * 255),
-    ~~(Math.random() * 255),
-    ~~(Math.random() * 255)
-  );
-}
 export function useWaveSurfer(
   container: any,
   onReady: () => void = noop,
@@ -230,7 +213,22 @@ export function useWaveSurfer(
         }
       });
       ws.on('marker-click', function (marker: any, e: any) {
-        onMarkerClick(marker.time);
+        //the seek right before this will cause any regions to be removed
+        //wait for that...
+        waitForIt(
+          'wavesurfer region clear',
+          () => {
+            return wsGetRegions().length <= '{"regions":"[]"}'.length;
+          },
+          () => {
+            return false;
+          },
+          100
+        )
+          .catch()
+          .finally(() => {
+            onMarkerClick(marker.time);
+          });
       });
       // ws.drawer.on('click', (event: any, progress: number) => {
       // });
@@ -315,7 +313,7 @@ export function useWaveSurfer(
 
   const wsLoad = (blob?: Blob, regions: string = '') => {
     durationRef.current = 0;
-    if (regions) inputRegionsRef.current = JSON.parse(regions);
+    if (regions) inputRegionsRef.current = parseRegions(regions);
     regionsLoadedRef.current = false;
     if (!wavesurfer() || !wavesurfer()?.backend) {
       blobToLoad.current = blob;
@@ -337,10 +335,10 @@ export function useWaveSurfer(
 
   const wsLoadRegions = (regions: string, loop: boolean) => {
     if (wavesurfer()?.isReady) {
-      loadRegions(JSON.parse(regions), loop);
+      loadRegions(parseRegions(regions), loop);
       regionsLoadedRef.current = true;
     } else {
-      inputRegionsRef.current = JSON.parse(regions);
+      inputRegionsRef.current = parseRegions(regions);
       regionsLoadedRef.current = false;
     }
   };
@@ -506,7 +504,6 @@ export function useWaveSurfer(
     markersRef.current = markers;
     wavesurfer()?.clearMarkers();
     markers.forEach((m) => {
-      if (!m.color) m.color = randomHex();
       wavesurfer()?.addMarker(m);
     });
   };

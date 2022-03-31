@@ -240,6 +240,7 @@ export const DiscussionCard = (props: IProps) => {
     currentSegment,
     handleHighlightDiscussion,
     highlightDiscussion,
+    refresh,
   } = ctx.state;
   const {
     toolChanged,
@@ -634,15 +635,15 @@ export const DiscussionCard = (props: IProps) => {
   }, [discussion]);
 
   useEffect(() => {
-    //can I scroll myself into view here???
-    //we need to make the discussion list scrollable, instead of having the
-    //whole window scroll
-
     //locate my region
-    if (myRegion?.start && myRegion?.start === highlightDiscussion)
+    if (
+      myRegion?.start !== undefined &&
+      myRegion?.start === highlightDiscussion
+    ) {
       handleLocate();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlightDiscussion, myRegion?.start]);
+  }, [highlightDiscussion, myRegion?.start, refresh]);
 
   return (
     <div className={classes.root}>

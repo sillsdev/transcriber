@@ -166,7 +166,6 @@ const initState = {
   commentPlayId: '',
   setCommentPlayId: (mediaId: string) => {},
   rowData: Array<IRow>(),
-  refresh: () => {},
   sharedStr: {} as ISharedStrings,
   mediafileId: '',
   loading: false,
@@ -203,8 +202,9 @@ const initState = {
   handleCommentTogglePlay: () => {},
   discussionMarkers: [] as IMarker[],
   setDiscussionMarkers: (markers: IMarker[]) => {},
-  handleHighlightDiscussion: (time: number) => {},
+  handleHighlightDiscussion: (time: number | undefined) => {},
   highlightDiscussion: undefined as number | undefined,
+  refresh: 0,
 };
 
 export type ICtxState = typeof initState;
@@ -245,7 +245,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const [saveResult, setSaveResult] = useGlobal('saveResult');
     const [confirm, setConfirm] = useState('');
     const view = React.useRef('');
-    const [, setRefreshed] = useState(0);
     const mediaUrlRef = useRef('');
     const { showMessage } = useSnackBar();
     const [state, setState] = useState({
@@ -272,6 +271,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const getPlanType = usePlanType();
     const [oldVernacularPlayItem, setOldVernacularPlayItem] = useState('');
     const [oldVernacularPlaying, setOldVernacularPlaying] = useState(false);
+    const highlightRef = useRef<number>();
     const handleSetCurrentStep = (stepId: string) => {
       var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
       setCurrentSegment(undefined, 0);
@@ -416,10 +416,20 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         return { ...state, discussionMarkers };
       });
     };
-    const handleHighlightDiscussion = (time: number) => {
-      setState((state: ICtxState) => {
-        return { ...state, highlightDiscussion: time };
-      });
+    const handleHighlightDiscussion = (time: number | undefined) => {
+      if (highlightRef.current !== time) {
+        highlightRef.current = time;
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            highlightDiscussion: time,
+          };
+        });
+      } else if (time !== undefined) {
+        setState((state: ICtxState) => {
+          return { ...state, refresh: state.refresh + 1 };
+        });
+      }
     };
     const stepComplete = (stepid: string) => {
       stepid = remoteId('orgworkflowstep', stepid, memory.keyMap) || stepid;
@@ -633,11 +643,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           oldVernReset();
         }
       }
-    };
-    const refresh = () => {
-      setRefreshed((refreshed) => {
-        return refreshed + 1;
-      });
     };
 
     const setCurrentSegment = (
@@ -882,7 +887,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setCommentPlayId,
             setPDBusy,
             getSharedResources,
-            refresh,
             setCurrentSegment,
             getCurrentSegment,
             setPlayerSegments,

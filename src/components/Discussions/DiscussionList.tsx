@@ -6,6 +6,7 @@ import {
   Paper,
   Theme,
   Typography,
+  useTheme,
 } from '@material-ui/core';
 import QueryBuilder from '@orbit/data/dist/types/query-builder';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
@@ -83,6 +84,7 @@ export const NewDiscussionToolId = 'newDiscussion';
 export function DiscussionList(props: IProps) {
   const { t, auth, discussions, mediafiles, users, roles } = props;
   const classes = useStyles();
+  const theme = useTheme();
   const [projRole] = useGlobal('projRole');
   const [planId] = useGlobal('plan');
   const [userId] = useGlobal('user');
@@ -137,7 +139,7 @@ export function DiscussionList(props: IProps) {
     filter = 'filter:',
     sort = 'sort',
   }
-
+  const formRef = useRef<any>();
   // All passages is currently giving all passages in all projects.
   // we would need this if we only wanted the passages of this project.
   // const planMedia = useMemo(
@@ -279,6 +281,7 @@ export function DiscussionList(props: IProps) {
       .map((t) => {
         return {
           time: t,
+          color: theme.palette.secondary.light,
         };
       });
     setDiscussionMarkers(markers);
@@ -436,7 +439,7 @@ export function DiscussionList(props: IProps) {
           </div>
         </div>
 
-        <Grid container className={classes.cardFlow}>
+        <Grid ref={formRef} container className={classes.cardFlow}>
           {displayDiscussions.map((i, j) => (
             <DiscussionCard
               id={`card-${j}`}

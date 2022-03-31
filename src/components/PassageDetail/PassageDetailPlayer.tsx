@@ -2,7 +2,7 @@ import { Button } from '@material-ui/core';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { IRegion } from '../../crud/useWavesurferRegions';
+import { IRegion, parseRegions } from '../../crud/useWavesurferRegions';
 import WSAudioPlayer from '../WSAudioPlayer';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IWsAudioPlayerStrings } from '../../model';
@@ -25,6 +25,7 @@ export function PassageDetailPlayer(props: IProps) {
   const [requestPlay, setRequestPlay] = useState<boolean | undefined>(
     undefined
   );
+  const [initialposition, setInitialPosition] = useState<number | undefined>(0);
   const {
     loading,
     pdBusy,
@@ -37,9 +38,10 @@ export function PassageDetailPlayer(props: IProps) {
     playerSize,
     setCurrentSegment,
     discussionMarkers,
+    highlightDiscussion,
     handleHighlightDiscussion,
   } = ctx.state;
-
+  const highlightRef = useRef(highlightDiscussion);
   const defaultSegParams = {
     silenceThreshold: 0.004,
     timeThreshold: 0.12,
@@ -52,15 +54,20 @@ export function PassageDetailPlayer(props: IProps) {
 
   const setPlayerSegments = (segments: string) => {
     setDefaultSegments(segments);
-    if (!playingRef.current) setRequestPlay(true);
+    if (!playingRef.current) {
+      var segs = parseRegions(segments);
+      if (segs.regions.length > 0) {
+        setInitialPosition(segs.regions[0].start);
+        setRequestPlay(true);
+      }
+    }
   };
 
   const onCurrentSegment = (segment: IRegion | undefined) => {
     var index = 0;
     if (segment && segmentsRef.current) {
-      var segs = JSON.parse(segmentsRef.current);
-      if (segs.regions) segs.regions = JSON.parse(segs.regions);
-      else segs.regions = [];
+      var segs = parseRegions(segmentsRef.current);
+
       index =
         segs.regions
           .sort((a: IRegion, b: IRegion) => a.start - b.start)
@@ -71,6 +78,13 @@ export function PassageDetailPlayer(props: IProps) {
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
     setDefaultSegments(segments); //now we'll notice if we reset them in SetPlayerSegments
+    var regions = parseRegions(segments);
+    if (
+      regions.regions.length > 0 &&
+      regions.regions[0].start !== highlightRef.current
+    ) {
+      handleHighlightDiscussion(undefined);
+    }
     if (saveSegments) {
       toolChanged(toolId);
     } else {
@@ -83,12 +97,17 @@ export function PassageDetailPlayer(props: IProps) {
       setPlaying(newPlaying);
       playingRef.current = newPlaying;
       setRequestPlay(undefined);
+      setInitialPosition(undefined);
     }
   };
 
   const onInteraction = () => {
     //focus on add comment?? focusOnTranscription();
   };
+
+  useEffect(() => {
+    highlightRef.current = highlightDiscussion;
+  }, [highlightDiscussion]);
 
   useEffect(() => {
     if (playing !== playingRef.current) setRequestPlay(playing);
@@ -121,7 +140,7 @@ export function PassageDetailPlayer(props: IProps) {
         allowRecord={false}
         size={playerSize}
         blob={audioBlob}
-        initialposition={0}
+        initialposition={initialposition}
         isPlaying={requestPlay}
         loading={loading}
         busy={pdBusy}
