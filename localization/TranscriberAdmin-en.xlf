@@ -3900,7 +3900,7 @@
       </unit>
       <unit id="shared.mediaError">
          <segment>
-            <source>Meida is missing or has an unaccepted format.</source>
+            <source>Media is missing or has an unaccepted format.</source>
             <target/>
          </segment>
       </unit>
@@ -4033,6 +4033,24 @@
       <unit id="shared.yes">
          <segment>
             <source>Yes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sortMenu.assignment">
+         <segment>
+            <source>Assigned To</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sortMenu.lastUpdated">
+         <segment>
+            <source>Last Updated</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sortMenu.topic">
+         <segment>
+            <source>Topic</source>
             <target/>
          </segment>
       </unit>

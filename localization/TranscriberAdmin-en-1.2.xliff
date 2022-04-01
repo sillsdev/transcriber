@@ -4706,6 +4706,27 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="sortMenu.assignment">
+            <source>Assigned To</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">filterMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="sortMenu.lastUpdated">
+            <source>Last Updated</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">filterMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="sortMenu.topic">
+            <source>Topic</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">filterMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="spelling.addToDict">
             <source>Add to dictionary</source>
             <target/>

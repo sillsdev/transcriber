@@ -17,6 +17,8 @@ import {
   IDiscussionListStrings,
   IState,
   MediaFile,
+  Role,
+  User,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import AddIcon from '@material-ui/icons/Add';
@@ -33,6 +35,7 @@ import Auth from '../../auth/Auth';
 import Confirm from '../AlertDialog';
 import { waitForIt } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
+import SortMenu, { ISortState } from './SortMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -69,6 +72,8 @@ interface IStateProps {
 interface IRecordProps {
   discussions: Discussion[];
   mediafiles: MediaFile[];
+  users: User[];
+  roles: Role[];
 }
 interface IProps extends IStateProps, IRecordProps {
   auth: Auth;
@@ -76,7 +81,7 @@ interface IProps extends IStateProps, IRecordProps {
 export const NewDiscussionToolId = 'newDiscussion';
 
 export function DiscussionList(props: IProps) {
-  const { t, auth, discussions, mediafiles } = props;
+  const { t, auth, discussions, mediafiles, users, roles } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [planId] = useGlobal('plan');
@@ -113,6 +118,11 @@ export function DiscussionList(props: IProps) {
   });
   const { forYou, resolved, latestVersion, allPassages, allSteps } =
     filterState;
+  const [sortState, setSortState] = useState<ISortState>({
+    topic: true,
+    assignedTo: false,
+    lastUpdated: false,
+  });
   const [catFilter, setCatFilter] = useState<CatData[]>([]);
   const [catSelect, setCatSelect] = useState<string[]>([]);
   const [confirmAction, setConfirmAction] = useState<string>('');
@@ -125,6 +135,7 @@ export function DiscussionList(props: IProps) {
     collapse = 'collapse',
     category = 'category',
     filter = 'filter:',
+    sort = 'sort',
   }
 
   // All passages is currently giving all passages in all projects.
@@ -178,6 +189,44 @@ export function DiscussionList(props: IProps) {
     });
   }, [discussionSize]);
 
+  const discussionSort = (x: Discussion, y: Discussion) => {
+    const topicSort = () => {
+      var xreg = DiscussionRegion(x);
+      var yreg = DiscussionRegion(y);
+      return xreg && yreg
+        ? xreg.start - yreg.start
+        : xreg
+        ? -1
+        : yreg
+        ? 1
+        : x.attributes.subject <= y.attributes.subject
+        ? -1
+        : 1;
+    };
+    if (sortState.lastUpdated)
+      return x.attributes.dateUpdated > y.attributes.dateUpdated ? -1 : 1;
+    else if (sortState.assignedTo) {
+      var xat =
+        users.find((u) => u.id === related(x, 'user'))?.attributes?.name ||
+        roles.find((r) => r.id === related(x, 'role'))?.attributes?.roleName;
+      var yat =
+        users.find((u) => u.id === related(y, 'user'))?.attributes?.name ||
+        roles.find((r) => r.id === related(y, 'role'))?.attributes?.roleName;
+      return (!xat && !yat) || xat === yat
+        ? topicSort()
+        : xat && yat
+        ? xat <= yat
+          ? -1
+          : 1
+        : xat
+        ? -1
+        : 1;
+    }
+    //topic
+    else {
+      return topicSort();
+    }
+  };
   useEffect(() => {
     if (currentstep !== '') {
       if (adding) {
@@ -207,14 +256,12 @@ export function DiscussionList(props: IProps) {
                 (catSelect.length === 0 ||
                   catSelect.includes(related(d, 'artifactCategory')))
             )
-            .sort((x, y) =>
-              x.attributes.dateCreated <= y.attributes.dateCreated ? -1 : 1
-            )
+            .sort((x, y) => discussionSort(x, y))
         );
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [discussions, currentstep, adding, filterState, catFilter]);
+  }, [discussions, currentstep, adding, filterState, sortState, catFilter]);
 
   useEffect(() => {
     function onlyUnique(value: any, index: number, self: any) {
@@ -321,7 +368,14 @@ export function DiscussionList(props: IProps) {
       if (!checkChanged(WaitSave.category)) setCategoryOpen(true);
     }
   };
-
+  const handleSortAction = (what: string) => {
+    if (what === 'Close') {
+    } else if (!checkChanged(WaitSave.sort + what)) {
+      var newSort = { ...sortState };
+      Object.keys(sortState).forEach((key) => (newSort[key] = key === what));
+      setSortState(newSort);
+    }
+  };
   const isMediaMissing = () => {
     return rowData.length === 0 || !rowData[0].isVernacular;
   };
@@ -351,6 +405,11 @@ export function DiscussionList(props: IProps) {
             <Typography>{filterStatus}</Typography>
           </div>
           <div>
+            <SortMenu
+              state={sortState}
+              action={handleSortAction}
+              disabled={adding || isMediaMissing()}
+            />
             <FilterMenu
               state={filterState}
               action={handleFilterAction}
@@ -419,6 +478,8 @@ const mapStateToProps = (state: IState): IStateProps => ({
 const mapRecordsToProps = {
   discussions: (q: QueryBuilder) => q.findRecords('discussion'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  users: (q: QueryBuilder) => q.findRecords('user'),
+  roles: (q: QueryBuilder) => q.findRecords('role'),
 };
 
 export default withData(mapRecordsToProps)(
