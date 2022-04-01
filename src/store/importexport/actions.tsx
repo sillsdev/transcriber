@@ -61,6 +61,7 @@ export const exportComplete = () => (dispatch: any) => {
 export const exportProject =
   (
     exportType: ExportType,
+    artifactType: string | null | undefined,
     memory: Memory,
     backup: IndexedDBSource,
     projectid: number | string,
@@ -81,6 +82,7 @@ export const exportProject =
       // equivalent to offline ie isElectron and not online
       electronExport(
         exportType,
+        artifactType,
         memory,
         backup,
         projectid,

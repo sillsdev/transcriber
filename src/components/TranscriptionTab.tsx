@@ -247,14 +247,14 @@ export function TranscriptionTab(props: IProps) {
   const getOfflineProject = useOfflnProjRead();
   const [globalStore] = useGlobal();
   const { getTypeId } = useArtifactType();
-  const [exportTypes] = useState<ArtifactTypeSlug[]>([
+  const [artifactTypes] = useState<ArtifactTypeSlug[]>([
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.Retell,
     ArtifactTypeSlug.QandA,
     ArtifactTypeSlug.BackTranslation,
   ]);
-  const [exportType, setExportType] = useState<ArtifactTypeSlug>(
-    exportTypes[0]
+  const [artifactType, setArtifactType] = useState<ArtifactTypeSlug>(
+    artifactTypes[0]
   );
   const getTranscription = useTranscription(true);
   const columnDefs = [
@@ -322,14 +322,21 @@ export function TranscriptionTab(props: IProps) {
       return;
     }
     /* get correct count */
+    const onlyTypeId = [ExportType.DBL, ExportType.BURRITO].includes(exportType)
+      ? VernacularTag
+      : exportType === ExportType.AUDIO
+      ? getTypeId(artifactType)
+      : undefined;
+    const onlyLatest = onlyTypeId === VernacularTag;
     media = getMediaInPlans(
       projectplans.map((p) => p.id),
       mediaFiles,
-      undefined,
-      false
+      onlyTypeId,
+      onlyLatest
     );
     exportProject(
       exportType,
+      onlyTypeId,
       memory,
       backup,
       project,
@@ -349,9 +356,9 @@ export function TranscriptionTab(props: IProps) {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const exportId = useMemo(
-    () => (exportType ? getTypeId(exportType) : VernacularTag),
+    () => (artifactType ? getTypeId(artifactType) : VernacularTag),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [exportType]
+    [artifactType]
   );
 
   const getCopy = (
@@ -408,15 +415,21 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const handleDbl = () => {
-    showMessage(`DBL Export not implemented`);
+    setActionMenuItem(null);
+    setBusy(true);
+    doProjectExport(ExportType.DBL);
   };
 
   const handleBurrito = () => {
-    showMessage(`Scripture Burrito Export not implemented`);
+    setActionMenuItem(null);
+    setBusy(true);
+    doProjectExport(ExportType.BURRITO);
   };
 
-  const handleZipExport = () => {
-    showMessage(`Zip Export not implemented`);
+  const handleAudioExport = () => {
+    setActionMenuItem(null);
+    setBusy(true);
+    doProjectExport(ExportType.AUDIO);
   };
 
   const handleBackup = () => {
@@ -769,16 +782,16 @@ export function TranscriptionTab(props: IProps) {
               anchorOrigin={anchorSpec}
               transformOrigin={transformSpec}
             >
-              <MenuItem id="dblExport" onClick={handleDbl}>
+              <MenuItem id="dblExport" key={1} onClick={handleDbl}>
                 {`Digital Bible Library`}
               </MenuItem>
 
-              <MenuItem id="burritoExport" onClick={handleBurrito}>
+              <MenuItem id="burritoExport" key={2} onClick={handleBurrito}>
                 {`Scripture Burrito`}
               </MenuItem>
 
-              <MenuItem id="zipExport" onClick={handleZipExport}>
-                {'Zip'}
+              <MenuItem id="zipExport" key={3} onClick={handleAudioExport}>
+                {'Latest Audio'}
               </MenuItem>
             </Menu>
             {planColumn && offline && projects.length > 1 && (
@@ -797,9 +810,9 @@ export function TranscriptionTab(props: IProps) {
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
             <SelectExportType
-              exportType={exportType}
-              exportTypes={exportTypes}
-              setExportType={setExportType}
+              exportType={artifactType}
+              exportTypes={artifactTypes}
+              setExportType={setArtifactType}
             />
             <Button
               id="transFilt"

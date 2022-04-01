@@ -1,11 +1,14 @@
 import { IAxiosStatus } from '../AxiosStatus';
 
 export enum ExportType {
-  PTF = "ptf",  //one full project
-  ITF = "itf",  //one project incremental changes
-  ITFBACKUP = "itfb", //one project incremental backup
-  FULLBACKUP = "zip",   //all offline projects - zip of ptfs
-  ITFSYNC = "itfs" //all projects incremental changes to send online
+  PTF = 'ptf', //one full project
+  ITF = 'itf', //one project incremental changes
+  ITFBACKUP = 'itfb', //one project incremental backup
+  FULLBACKUP = 'zip', //all offline projects - zip of ptfs
+  ITFSYNC = 'itfs', //all projects incremental changes to send online
+  DBL = 'dbl', //Digital Bible Library Package
+  BURRITO = 'burrito', //Scripture Burrito package
+  AUDIO = 'audio', //Latest audio export
 }
 
 export interface FileResponse {

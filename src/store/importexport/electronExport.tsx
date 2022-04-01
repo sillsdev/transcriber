@@ -25,18 +25,28 @@ import {
   Record,
   TransformBuilder,
 } from '@orbit/data';
-import { related, remoteId, getMediaEaf, remoteIdGuid } from '../../crud';
+import {
+  related,
+  remoteId,
+  getMediaEaf,
+  remoteIdGuid,
+  getMediaInPlans,
+  findRecord,
+  parseRef,
+} from '../../crud';
 import {
   dataPath,
   cleanFileName,
   currentDateTime,
   PathType,
   createFolder,
+  removeExtension,
 } from '../../utils';
 import IndexedDBSource from '@orbit/indexeddb';
 
 export async function electronExport(
   exportType: ExportType,
+  artifactType: string | null | undefined,
   memory: Memory,
   backup: IndexedDBSource | undefined,
   projectid: number | string,
@@ -46,6 +56,9 @@ export async function electronExport(
 ): Promise<FileResponse | null> {
   const onlineSerlzr = getSerializer(memory, false);
   const offlineSrlzr = getSerializer(memory, true);
+  const scripturePackage = [ExportType.DBL, ExportType.BURRITO].includes(
+    exportType
+  );
   const BuildFileResponse = (
     fullpath: string,
     fileName: string,
@@ -187,20 +200,42 @@ export async function electronExport(
         }
       });
     };
+    const pad3 = (n: number) => ('00' + n).slice(-3);
     const AddMediaFiles = (recs: Record[]) => {
       const mediapath = PathType.MEDIA + '/';
       recs.forEach((m) => {
         var mf = m as MediaFile;
         if (!mf.attributes) return;
         const mp = dataPath(mf.attributes.audioUrl, PathType.MEDIA);
-        AddStreamEntry(mp, mediapath + path.basename(mp));
-        const eafCode = getMediaEaf(mf, memory);
-        const name = path.basename(mp, path.extname(mp)) + '.eaf';
-        zip.addFile(
-          mediapath + name,
-          Buffer.alloc(eafCode.length, eafCode),
-          'EAF'
-        );
+        let fullPath: string | null = null;
+        if (scripturePackage) {
+          const passRec = findRecord(
+            memory,
+            'passage',
+            related(mf, 'passage')
+          ) as Passage;
+          parseRef(passRec);
+          const book = passRec.attributes?.book;
+          const lang = projRec?.attributes?.language;
+          const chap = pad3(passRec?.startChapter || 1);
+          const start = pad3(passRec?.startVerse || 1);
+          const end = pad3(passRec?.endVerse || passRec?.startVerse || 1);
+          const ver = mf.attributes?.versionNumber;
+          const { ext } = removeExtension(mp);
+          if (passRec) {
+            fullPath = `release/audio/${book}/${lang}-${book}-${chap}-${start}-${end}v${ver}.${ext}`;
+          }
+        }
+        AddStreamEntry(mp, fullPath || mediapath + path.basename(mp));
+        if (!scripturePackage) {
+          const eafCode = getMediaEaf(mf, memory);
+          const name = path.basename(mp, path.extname(mp)) + '.eaf';
+          zip.addFile(
+            mediapath + name,
+            Buffer.alloc(eafCode.length, eafCode),
+            'EAF'
+          );
+        }
       });
     };
 
@@ -387,6 +422,22 @@ export async function electronExport(
 
         case 'mediafile':
         case 'passagestatechange':
+          if (artifactType !== undefined) {
+            const plans = (related(projRec, 'plans') as Plan[])?.map(
+              (p) => p.id
+            );
+            const media = memory.cache.query((q: QueryBuilder) =>
+              q.findRecords('mediafile')
+            ) as MediaFile[];
+            if (plans && plans.length > 0) {
+              return getMediaInPlans(
+                plans,
+                media,
+                artifactType,
+                !artifactType //use only latest for vernacular (null)
+              );
+            }
+          }
           return FromPassages(info.table, project, needsRemoteIds);
 
         case 'discussion':
@@ -454,7 +505,9 @@ export async function electronExport(
     ) => {
       var recs = GetTableRecs(info, project, needsRemoteIds);
       if (recs && Array.isArray(recs) && recs.length > 0) {
-        AddJsonEntry(info.table + 's', recs, info.sort);
+        if (!scripturePackage) {
+          AddJsonEntry(info.table + 's', recs, info.sort);
+        }
         switch (info.table) {
           case 'organization':
             AddOrgLogos(recs);
@@ -512,8 +565,10 @@ export async function electronExport(
     ];
     const op = getOfflineProject(projRec.id);
     const imported = moment.utc(op.attributes.snapshotDate || '01/01/1900');
-    AddSourceEntry(imported.toISOString());
-    AddVersionEntry((backup?.schema.version || 1).toString());
+    if (!scripturePackage) {
+      AddSourceEntry(imported.toISOString());
+      AddVersionEntry((backup?.schema.version || 1).toString());
+    }
     var needsRemoteIds = Boolean(projRec?.keys?.remoteId);
     if (!needsRemoteIds) AddOfflineEntry();
     const limit = onlyOneProject() ? undefined : projRec;
@@ -530,6 +585,15 @@ export async function electronExport(
           op.attributes.exportedDate = exported;
           await backup.push((t: TransformBuilder) => t.updateRecord(op));
         }
+        break;
+      case ExportType.DBL:
+      case ExportType.BURRITO:
+      case ExportType.AUDIO:
+        numRecs += AddAll(
+          { table: 'mediafile', sort: 'H' },
+          limit,
+          needsRemoteIds
+        );
         break;
       default:
         updateableFiles.forEach(
