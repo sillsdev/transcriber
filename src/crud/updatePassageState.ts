@@ -7,7 +7,7 @@ import {
   Passage,
   MediaFile,
 } from '../model';
-import { AddRecord, UpdateLastModifedBy } from '../model/baseModel';
+import { AddRecord, UpdateLastModifiedBy } from '../model/baseModel';
 
 export const AddPassageStateChangeToOps = (
   t: TransformBuilder,
@@ -63,8 +63,10 @@ export const UpdateRelatedPassageOps = (
   t: TransformBuilder,
   ops: Operation[]
 ) => {
-  ops.push(...UpdateLastModifedBy(t, { type: 'section', id: section }, userId));
-  ops.push(...UpdateLastModifedBy(t, { type: 'plan', id: plan }, userId));
+  ops.push(
+    ...UpdateLastModifiedBy(t, { type: 'section', id: section }, userId)
+  );
+  ops.push(...UpdateLastModifiedBy(t, { type: 'plan', id: plan }, userId));
 };
 export const UpdateMediaStateOps = (
   mediaFile: string,
@@ -81,7 +83,7 @@ export const UpdateMediaStateOps = (
     ops.push(t.replaceAttribute(mediaRecId, 'transcriptionstate', state));
   const mediaRec = findRecord(memory, 'mediafile', mediaFile) as MediaFile;
   const isVernacular = !related(mediaRec, 'artifacttype');
-  ops.push(...UpdateLastModifedBy(t, mediaRecId, userId));
+  ops.push(...UpdateLastModifiedBy(t, mediaRecId, userId));
   AddPassageStateChangeToOps(
     t,
     ops,
