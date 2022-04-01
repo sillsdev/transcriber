@@ -267,7 +267,6 @@ export function DiscussionList(props: IProps) {
   }, [discussions, currentstep, adding, filterState, sortState, catFilter]);
 
   useEffect(() => {
-    console.log('highlightedref', highlightedRef?.current?.offsetTop);
     if (formRef.current && highlightedRef?.current) {
       formRef.current.scrollTo(0, highlightedRef.current.offsetTop);
     }
@@ -406,7 +405,12 @@ export function DiscussionList(props: IProps) {
   );
 
   return (
-    <Paper id="DiscussionList" className={classes.root} style={rootWidthStyle}>
+    <Paper
+      ref={formRef}
+      id="DiscussionList"
+      className={classes.root}
+      style={rootWidthStyle}
+    >
       <>
         <div className={classes.discussionHead}>
           <div>
@@ -447,7 +451,7 @@ export function DiscussionList(props: IProps) {
           </div>
         </div>
 
-        <Grid ref={formRef} container className={classes.cardFlow}>
+        <Grid container className={classes.cardFlow}>
           {displayDiscussions.map((i, j) => (
             <DiscussionCard
               id={`card-${j}`}
