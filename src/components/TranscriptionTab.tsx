@@ -35,6 +35,10 @@ import {
   DialogContentText,
   DialogActions,
   AppBar,
+  Menu,
+  MenuItem,
+  PopoverOrigin,
+  useTheme,
 } from '@material-ui/core';
 // import CopyIcon from '@material-ui/icons/FileCopy';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -223,6 +227,20 @@ export function TranscriptionTab(props: IProps) {
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
+  const [actionMenuItem, setActionMenuItem] =
+    React.useState<null | HTMLElement>(null);
+  const handleMenu = (e: React.MouseEvent<HTMLButtonElement>) =>
+    setActionMenuItem(e.currentTarget);
+  const handleClose = () => setActionMenuItem(null);
+  const [anchorSpec] = useState<PopoverOrigin>({
+    vertical: 'bottom',
+    horizontal: 'left',
+  });
+  const theme = useTheme();
+  const [transformSpec] = useState<PopoverOrigin>({
+    vertical: -theme.spacing(5),
+    horizontal: 'left',
+  });
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const { getOrganizedBy } = useOrganizedBy();
   const [fingerprint] = useGlobal('fingerprint');
@@ -387,6 +405,18 @@ export function TranscriptionTab(props: IProps) {
       .catch((err) => {
         showMessage(t.cantCopy);
       });
+  };
+
+  const handleDbl = () => {
+    showMessage(`DBL Export not implemented`);
+  };
+
+  const handleBurrito = () => {
+    showMessage(`Scripture Burrito Export not implemented`);
+  };
+
+  const handleZipExport = () => {
+    showMessage(`Zip Export not implemented`);
   };
 
   const handleBackup = () => {
@@ -719,6 +749,38 @@ export function TranscriptionTab(props: IProps) {
             >
               {t.copyTranscriptions}
             </Button>
+            <Button
+              id="audioExport"
+              key="export"
+              aria-label={`audio export`}
+              aria-owns={actionMenuItem ? 'action-menu' : undefined}
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={handleMenu}
+            >
+              {`Audio Export`}
+            </Button>
+            <Menu
+              id="import-export-menu"
+              anchorEl={actionMenuItem}
+              open={Boolean(actionMenuItem)}
+              onClose={handleClose}
+              anchorOrigin={anchorSpec}
+              transformOrigin={transformSpec}
+            >
+              <MenuItem id="dblExport" onClick={handleDbl}>
+                {`Digital Bible Library`}
+              </MenuItem>
+
+              <MenuItem id="burritoExport" onClick={handleBurrito}>
+                {`Scripture Burrito`}
+              </MenuItem>
+
+              <MenuItem id="zipExport" onClick={handleZipExport}>
+                {'Zip'}
+              </MenuItem>
+            </Menu>
             {planColumn && offline && projects.length > 1 && (
               <Button
                 id="transBackup"
