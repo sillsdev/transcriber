@@ -414,11 +414,11 @@ export function TranscriptionTab(props: IProps) {
       });
   };
 
-  const handleDbl = () => {
-    setActionMenuItem(null);
-    setBusy(true);
-    doProjectExport(ExportType.DBL);
-  };
+  // const handleDbl = () => {
+  //   setActionMenuItem(null);
+  //   setBusy(true);
+  //   doProjectExport(ExportType.DBL);
+  // };
 
   const handleBurrito = () => {
     setActionMenuItem(null);
@@ -782,16 +782,14 @@ export function TranscriptionTab(props: IProps) {
               anchorOrigin={anchorSpec}
               transformOrigin={transformSpec}
             >
-              <MenuItem id="dblExport" key={1} onClick={handleDbl}>
-                {`Digital Bible Library`}
-              </MenuItem>
-
-              <MenuItem id="burritoExport" key={2} onClick={handleBurrito}>
-                {`Scripture Burrito`}
-              </MenuItem>
-
               <MenuItem id="zipExport" key={3} onClick={handleAudioExport}>
                 {'Latest Audio'}
+              </MenuItem>
+              {/* <MenuItem id="dblExport" key={1} onClick={handleDbl}>
+                {`Digital Bible Library`}
+              </MenuItem> */}
+              <MenuItem id="burritoExport" key={2} onClick={handleBurrito}>
+                {`Scripture Burrito`}
               </MenuItem>
             </Menu>
             {planColumn && offline && projects.length > 1 && (

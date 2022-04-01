@@ -1,4 +1,5 @@
 import {
+  User,
   MediaFile,
   Plan,
   Project,
@@ -8,8 +9,23 @@ import {
 } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { related, VernacularTag } from '.';
-import { cleanFileName, updateXml } from '../utils';
+import {
+  related,
+  VernacularTag,
+  findRecord,
+  parseRef,
+  getMediaInPlans,
+} from '.';
+import {
+  cleanFileName,
+  updateXml,
+  burritoMetadata,
+  FormatsType,
+  removeExtension,
+  mimeMap,
+  dataPath,
+  PathType,
+} from '../utils';
 import moment from 'moment';
 import eaf from '../utils/transcriptionEaf';
 import path from 'path';
@@ -186,4 +202,107 @@ export const getMediaEaf = (
       '<' + annotationValue + '>' + encTranscript + '</' + annotationValue + '>'
     );
   return str;
+};
+
+const pad3 = (n: number) => ('00' + n).slice(-3);
+
+export interface IBurritoMeta {
+  memory: Memory;
+  userId: string;
+  projRec: Project;
+  scripturePackage: boolean;
+  artifactType: string | null | undefined;
+}
+
+export const scriptureFullPath = (
+  mf: MediaFile,
+  { memory, scripturePackage, projRec }: IBurritoMeta
+) => {
+  let fullPath: string | null = null;
+  let book = '';
+  let ref = '';
+  if (scripturePackage) {
+    const mp = dataPath(mf.attributes.audioUrl, PathType.MEDIA);
+    const passRec = findRecord(
+      memory,
+      'passage',
+      related(mf, 'passage')
+    ) as Passage;
+    parseRef(passRec);
+    ref = passRec?.attributes?.reference;
+    book = passRec.attributes?.book;
+    const lang = projRec?.attributes?.language;
+    const chap = pad3(passRec?.startChapter || 1);
+    const start = pad3(passRec?.startVerse || 1);
+    const end = pad3(passRec?.endVerse || passRec?.startVerse || 1);
+    const ver = mf.attributes?.versionNumber;
+    const { ext } = removeExtension(mp);
+    if (passRec) {
+      fullPath = `release/audio/${book}/${lang}-${book}-${chap}-${start}-${end}v${ver}.${ext}`;
+    }
+  }
+  return { fullPath, book, ref };
+};
+
+export const mediaArtifacts = ({
+  memory,
+  projRec,
+  artifactType,
+}: IBurritoMeta) => {
+  const plans = (related(projRec, 'plans') as Plan[])?.map((p) => p.id);
+  const media = memory.cache.query((q: QueryBuilder) =>
+    q.findRecords('mediafile')
+  ) as MediaFile[];
+  if (plans && plans.length > 0) {
+    return getMediaInPlans(
+      plans,
+      media,
+      artifactType,
+      !artifactType //use only latest for vernacular (null)
+    );
+  }
+};
+
+export const getBurritoMeta = (props: IBurritoMeta) => {
+  const { memory, userId, projRec } = props;
+  const userRec = findRecord(memory, 'user', userId) as User;
+  const burritoMeta = burritoMetadata({ projRec, userRec });
+  const ingredients = mediaArtifacts(props);
+  const scopes = burritoMeta.type.flavorType.currentScope;
+  const formats = {} as FormatsType;
+  ingredients?.forEach((mf) => {
+    const { fullPath, book, ref } = scriptureFullPath(mf, props);
+    if (book && book.length > 0) {
+      if (scopes.hasOwnProperty(book)) {
+        scopes[book].push(ref);
+      } else {
+        scopes[book] = [ref];
+      }
+    }
+    if (fullPath) {
+      const { ext } = removeExtension(fullPath);
+      if (!formats.hasOwnProperty(ext)) {
+        formats[ext] = {
+          compression: ext,
+          trackConfiguration: '1/0 (Mono)',
+          bitRate: 0,
+          bitDepth: 32,
+          samplingRate: 48000,
+        };
+      }
+      burritoMeta.ingredients[fullPath] = {
+        mimeType: mimeMap[ext],
+        size: mf.attributes.filesize,
+        scope: {
+          [book]: [ref],
+        },
+      };
+    }
+  });
+  let formatn = 1;
+  for (let val of Object.values(formats)) {
+    burritoMeta.type.flavorType.flavor.formats[`format${formatn}`] = val;
+    formatn += 1;
+  }
+  return JSON.stringify(burritoMeta, null, 2);
 };

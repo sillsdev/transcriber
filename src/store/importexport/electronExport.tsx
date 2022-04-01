@@ -30,9 +30,10 @@ import {
   remoteId,
   getMediaEaf,
   remoteIdGuid,
-  getMediaInPlans,
-  findRecord,
-  parseRef,
+  getBurritoMeta,
+  scriptureFullPath,
+  IBurritoMeta,
+  mediaArtifacts,
 } from '../../crud';
 import {
   dataPath,
@@ -40,7 +41,6 @@ import {
   currentDateTime,
   PathType,
   createFolder,
-  removeExtension,
 } from '../../utils';
 import IndexedDBSource from '@orbit/indexeddb';
 
@@ -200,32 +200,18 @@ export async function electronExport(
         }
       });
     };
-    const pad3 = (n: number) => ('00' + n).slice(-3);
+
     const AddMediaFiles = (recs: Record[]) => {
       const mediapath = PathType.MEDIA + '/';
       recs.forEach((m) => {
         var mf = m as MediaFile;
         if (!mf.attributes) return;
         const mp = dataPath(mf.attributes.audioUrl, PathType.MEDIA);
-        let fullPath: string | null = null;
-        if (scripturePackage) {
-          const passRec = findRecord(
-            memory,
-            'passage',
-            related(mf, 'passage')
-          ) as Passage;
-          parseRef(passRec);
-          const book = passRec.attributes?.book;
-          const lang = projRec?.attributes?.language;
-          const chap = pad3(passRec?.startChapter || 1);
-          const start = pad3(passRec?.startVerse || 1);
-          const end = pad3(passRec?.endVerse || passRec?.startVerse || 1);
-          const ver = mf.attributes?.versionNumber;
-          const { ext } = removeExtension(mp);
-          if (passRec) {
-            fullPath = `release/audio/${book}/${lang}-${book}-${chap}-${start}-${end}v${ver}.${ext}`;
-          }
-        }
+        const { fullPath } = scriptureFullPath(mf, {
+          memory,
+          scripturePackage,
+          projRec,
+        } as IBurritoMeta);
         AddStreamEntry(mp, fullPath || mediapath + path.basename(mp));
         if (!scripturePackage) {
           const eafCode = getMediaEaf(mf, memory);
@@ -423,20 +409,12 @@ export async function electronExport(
         case 'mediafile':
         case 'passagestatechange':
           if (artifactType !== undefined) {
-            const plans = (related(projRec, 'plans') as Plan[])?.map(
-              (p) => p.id
-            );
-            const media = memory.cache.query((q: QueryBuilder) =>
-              q.findRecords('mediafile')
-            ) as MediaFile[];
-            if (plans && plans.length > 0) {
-              return getMediaInPlans(
-                plans,
-                media,
-                artifactType,
-                !artifactType //use only latest for vernacular (null)
-              );
-            }
+            const media = mediaArtifacts({
+              memory,
+              projRec,
+              artifactType,
+            } as IBurritoMeta);
+            if (media) return media;
           }
           return FromPassages(info.table, project, needsRemoteIds);
 
@@ -568,6 +546,22 @@ export async function electronExport(
     if (!scripturePackage) {
       AddSourceEntry(imported.toISOString());
       AddVersionEntry((backup?.schema.version || 1).toString());
+    } else if (exportType === ExportType.BURRITO) {
+      const userId =
+        remoteIdGuid('user', userid.toString(), memory.keyMap) ||
+        userid.toString();
+      const burritoMetaStr = getBurritoMeta({
+        memory,
+        userId,
+        projRec,
+        scripturePackage,
+        artifactType,
+      });
+      zip.addFile(
+        'metadata.json',
+        Buffer.alloc(burritoMetaStr.length, burritoMetaStr),
+        'metadata'
+      );
     }
     var needsRemoteIds = Boolean(projRec?.keys?.remoteId);
     if (!needsRemoteIds) AddOfflineEntry();

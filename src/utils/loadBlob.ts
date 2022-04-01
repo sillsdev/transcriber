@@ -5,7 +5,7 @@ interface MimeMap {
   [key: string]: string;
 }
 
-const mimeMap: MimeMap = {
+export const mimeMap: MimeMap = {
   mp3: 'audio/mpeg',
   webm: 'audio/webm;codecs=opus',
   mka: 'audio/webm;codecs=pcm',
