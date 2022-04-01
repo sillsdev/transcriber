@@ -829,6 +829,12 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "yes": string;
 };
 
+export interface ISortMenuStrings extends Localize.LocalizedStringsMethods {
+    "assignment": string;
+    "lastUpdated": string;
+    "topic": string;
+};
+
 export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
     "addToDict": string;
     "close": string;
@@ -1231,6 +1237,7 @@ export interface ILocalizedStrings {
 	selectArtifactType: ISelectArtifactTypeStrings;
 	selectRecording: ISelectRecordingStrings;
 	shared: ISharedStrings;
+	sortMenu: ISortMenuStrings;
 	spelling: ISpellingStrings;
 	stepEditor: IStepEditorStrings;
 	taskItem: ITaskItemStrings;

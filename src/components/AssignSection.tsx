@@ -46,7 +46,7 @@ import {
   useOrganizedBy,
 } from '../crud';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
-import { UpdateLastModifedBy, UpdateRelatedRecord } from '../model/baseModel';
+import { UpdateLastModifiedBy, UpdateRelatedRecord } from '../model/baseModel';
 
 const useStyles = makeStyles({
   gridRoot: {
@@ -119,7 +119,7 @@ function AssignSection(props: IProps) {
         userId,
         user
       ),
-      ...UpdateLastModifedBy(
+      ...UpdateLastModifiedBy(
         t,
         { type: 'plan', id: related(section, 'plan') },
         user

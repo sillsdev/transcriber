@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { connect } from 'react-redux';
 import { IState, IFilterMenuStrings } from '../../model';
 import localStrings from '../../selector/localize';
@@ -10,6 +10,7 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
+  Badge,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -95,9 +96,24 @@ export function FilterMenu(props: IProps) {
       action(what);
     }
   };
+  const anyFilter = useMemo(
+    () =>
+      forYou ||
+      resolved ||
+      latestVersion ||
+      allPassages ||
+      allSteps ||
+      cats > 0,
+    [forYou, resolved, latestVersion, allPassages, allSteps, cats]
+  );
 
   return (
-    <>
+    <Badge
+      badgeContent={anyFilter ? ' ' : 0}
+      overlap="circular"
+      variant="dot"
+      color="secondary"
+    >
       <IconButton
         id="filterMenu"
         aria-controls="filter-menu"
@@ -150,7 +166,7 @@ export function FilterMenu(props: IProps) {
           <ListItemText primary={t.category} />
         </StyledMenuItem>
       </StyledMenu>
-    </>
+    </Badge>
   );
 }
 

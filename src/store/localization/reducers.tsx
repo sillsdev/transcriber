@@ -861,7 +861,7 @@ const initialState = {
 			"launchAudacity": "Launch Audacity",
 			"mediaAttached": "Audio Attached",
 			"mediaDetached": "Audio Detached",
-			"mediaError": "Meida is missing or has an unaccepted format.",
+			"mediaError": "Media is missing or has an unaccepted format.",
 			"member": "Member",
 			"no": "No",
 			"NoSaveOffline": "Unable to save while offline.",
@@ -884,6 +884,13 @@ const initialState = {
 			"user": "User",
 			"versionHistory": "Versions",
 			"yes": "Yes",
+		}
+	}),
+	"sortMenu": new LocalizedStrings({
+		"en": {
+			"assignment": "Assigned To",
+			"lastUpdated": "Last Updated",
+			"topic": "Topic",
 		}
 	}),
 	"spelling": new LocalizedStrings({
@@ -1317,6 +1324,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"selectArtifactType" : new LocalizedStrings(action.payload.data.selectArtifactType),
 				"selectRecording" : new LocalizedStrings(action.payload.data.selectRecording),
 				"shared" : new LocalizedStrings(action.payload.data.shared),
+				"sortMenu" : new LocalizedStrings(action.payload.data.sortMenu),
 				"spelling" : new LocalizedStrings(action.payload.data.spelling),
 				"stepEditor" : new LocalizedStrings(action.payload.data.stepEditor),
 				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),
