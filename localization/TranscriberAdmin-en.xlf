@@ -4708,6 +4708,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.audioExport">
+         <segment>
+            <source>Audio Export</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.availableOnClipboard">
          <segment>
             <source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
@@ -4834,6 +4840,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.latestAudio">
+         <segment>
+            <source>Latest Audio</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.passages">
          <segment>
             <source>Passages</source>
@@ -4843,6 +4855,12 @@
       <unit id="transcriptionTab.plan">
          <segment>
             <source>Plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.scriptureBurrito">
+         <segment>
+            <source>Scripture Burrito</source>
             <target/>
          </segment>
       </unit>

@@ -772,7 +772,7 @@ export function TranscriptionTab(props: IProps) {
               className={classes.button}
               onClick={handleMenu}
             >
-              {`Audio Export`}
+              {t.audioExport}
             </Button>
             <Menu
               id="import-export-menu"
@@ -783,13 +783,13 @@ export function TranscriptionTab(props: IProps) {
               transformOrigin={transformSpec}
             >
               <MenuItem id="zipExport" key={3} onClick={handleAudioExport}>
-                {'Latest Audio'}
+                {t.latestAudio}
               </MenuItem>
               {/* <MenuItem id="dblExport" key={1} onClick={handleDbl}>
                 {`Digital Bible Library`}
               </MenuItem> */}
               <MenuItem id="burritoExport" key={2} onClick={handleBurrito}>
-                {`Scripture Burrito`}
+                {t.scriptureBurrito}
               </MenuItem>
             </Menu>
             {planColumn && offline && projects.length > 1 && (

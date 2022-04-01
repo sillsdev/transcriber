@@ -5490,6 +5490,13 @@
                <context context-type="sourcefile">TranscriptionShow.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="transcriptionTab.audioExport">
+      		<source>Audio Export</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="transcriptionTab.availableOnClipboard">
             <source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
             <target/>
@@ -5637,6 +5644,13 @@
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="transcriptionTab.latestAudio">
+      		<source>Latest Audio</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="transcriptionTab.passages">
             <source>Passages</source>
             <target/>
@@ -5651,6 +5665,13 @@
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="transcriptionTab.scriptureBurrito">
+      		<source>Scripture Burrito</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="transcriptionTab.sectionstate">
             <source>State</source>
             <target/>
