@@ -10,6 +10,7 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
+  Badge,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import SortIcon from '@material-ui/icons/Sort';
@@ -93,7 +94,12 @@ export function SortMenu(props: IProps) {
   };
 
   return (
-    <>
+    <Badge
+      badgeContent={topic ? 0 : ' '}
+      overlap="circular"
+      variant="dot"
+      color="secondary"
+    >
       <IconButton
         id="SortMenu"
         aria-controls="sort-menu"
@@ -138,7 +144,7 @@ export function SortMenu(props: IProps) {
           <ListItemText primary={t.assignment} />
         </StyledMenuItem>
       </StyledMenu>
-    </>
+    </Badge>
   );
 }
 
