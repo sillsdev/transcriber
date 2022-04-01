@@ -37,11 +37,10 @@ export function getSegments(name: string, segments: string) {
   var json = tryParseJSON(segments);
   if (Array.isArray(json)) {
     var thisone = json.find((j) => j['name'] === name) as INamedRegion;
-    if (thisone) return thisone.regionInfo.toString();
+    if (thisone?.regionInfo) return thisone.regionInfo.toString();
     return '{}';
   }
   //old style
-  console.log(segments);
   if (name === NamedRegions.Transcription) return segments;
   return '{}';
 }
