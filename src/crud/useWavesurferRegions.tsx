@@ -26,6 +26,7 @@ export interface INamedRegion {
   regionInfo: IRegions;
 }
 export const parseRegions = (regionstr: string) => {
+  if (!regionstr) return { params: {}, regions: [] as IRegion[] } as IRegions;
   var segs = JSON.parse(regionstr);
   if (segs.regions) segs.regions = JSON.parse(segs.regions);
   else segs.regions = [];
