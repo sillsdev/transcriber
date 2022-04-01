@@ -198,6 +198,7 @@ interface IProps extends IRecordProps, IStateProps {
   showStep: boolean;
   showReference: boolean;
   onAddComplete?: () => {};
+  setRef: (ref: any) => {};
 }
 export const DiscussionRegion = (discussion: Discussion) => {
   const startEnd = (val: string) =>
@@ -221,6 +222,7 @@ export const DiscussionCard = (props: IProps) => {
     showStep,
     showReference,
     onAddComplete,
+    setRef,
     comments,
     mediafiles,
     sections,
@@ -240,6 +242,7 @@ export const DiscussionCard = (props: IProps) => {
     currentSegment,
     handleHighlightDiscussion,
     highlightDiscussion,
+    refresh,
   } = ctx.state;
   const {
     toolChanged,
@@ -276,7 +279,7 @@ export const DiscussionCard = (props: IProps) => {
   const [editCard, setEditCard] = useState(false);
   const { localizedArtifactCategory } = useArtifactCategory();
   const { localizedWorkStepFromId } = useOrgWorkflowSteps();
-
+  const cardRef = useRef<any>();
   const myToolId = useMemo(() => {
     if (discussion.id) return discussion.id;
     else return NewDiscussionToolId;
@@ -397,6 +400,10 @@ export const DiscussionCard = (props: IProps) => {
     }
     return media;
   }
+
+  const handleLocateClick = () => {
+    handleHighlightDiscussion(myRegion?.start);
+  };
 
   const handleLocate = () => {
     if (myRegion) {
@@ -634,19 +641,20 @@ export const DiscussionCard = (props: IProps) => {
   }, [discussion]);
 
   useEffect(() => {
-    //can I scroll myself into view here???
-    //we need to make the discussion list scrollable, instead of having the
-    //whole window scroll
-
     //locate my region
-    if (myRegion?.start && myRegion?.start === highlightDiscussion)
+    if (highlightDiscussion === undefined) {
+      if (id === 'card-0') setRef(cardRef);
+    } else if (myRegion?.start === highlightDiscussion) {
       handleLocate();
+      setRef(cardRef);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlightDiscussion, myRegion?.start]);
+  }, [highlightDiscussion, myRegion?.start, refresh]);
 
   return (
     <div className={classes.root}>
       <Card
+        ref={cardRef}
         key={discussion.id}
         id={id}
         className={
@@ -733,7 +741,7 @@ export const DiscussionCard = (props: IProps) => {
                     size="small"
                     className={classes.actionButton}
                     title={t.locate}
-                    onClick={handleLocate}
+                    onClick={handleLocateClick}
                   >
                     <LocationIcon fontSize="small" />
                   </IconButton>

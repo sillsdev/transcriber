@@ -25,7 +25,13 @@ export interface INamedRegion {
   name: string;
   regionInfo: IRegions;
 }
-
+export const parseRegions = (regionstr: string) => {
+  if (!regionstr) return { params: {}, regions: [] as IRegion[] } as IRegions;
+  var segs = JSON.parse(regionstr);
+  if (segs.regions) segs.regions = JSON.parse(segs.regions);
+  else segs.regions = [];
+  return segs as IRegions;
+};
 export function useWaveSurferRegions(
   singleRegionOnly: boolean,
   onRegion: (

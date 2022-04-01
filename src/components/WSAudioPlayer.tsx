@@ -53,6 +53,7 @@ import {
   IRegion,
   IRegionChange,
   IRegionParams,
+  parseRegions,
 } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
@@ -528,10 +529,13 @@ function WSAudioPlayer(props: IProps) {
   }, [size, wsSetHeight]);
 
   useEffect(() => {
-    if (initialposition !== initialPosRef.current) {
-      if (wsIsReady()) wsGoto(initialposition || 0);
-      initialPosRef.current = initialposition;
+    if (
+      initialposition !== undefined &&
+      initialposition !== initialPosRef.current
+    ) {
+      if (wsIsReady()) wsGoto(initialposition);
     }
+    initialPosRef.current = initialposition;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialposition]);
 
@@ -548,13 +552,10 @@ function WSAudioPlayer(props: IProps) {
       segmentsRef.current = segments;
       if (ready && segmentsRef.current !== wsGetRegions()) {
         wsLoadRegions(segments, loopingRef.current);
-        var regions = JSON.parse(segments)?.regions;
-        if (regions) {
-          regions = JSON.parse(regions);
-          if (Array.isArray(regions) && regions.length) {
-            const start = regions[0].start;
-            wsGoto(start);
-          }
+        var region = parseRegions(segments);
+        if (region.regions.length) {
+          const start = region.regions[0].start;
+          wsGoto(start);
         }
       }
     }
