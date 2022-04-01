@@ -140,6 +140,7 @@ export function DiscussionList(props: IProps) {
     sort = 'sort',
   }
   const formRef = useRef<any>();
+  const [highlightedRef, setHighlightedRef] = useState<any>();
   // All passages is currently giving all passages in all projects.
   // we would need this if we only wanted the passages of this project.
   // const planMedia = useMemo(
@@ -264,6 +265,13 @@ export function DiscussionList(props: IProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussions, currentstep, adding, filterState, sortState, catFilter]);
+
+  useEffect(() => {
+    console.log('highlightedref', highlightedRef?.current?.offsetTop);
+    if (formRef.current && highlightedRef?.current) {
+      formRef.current.scrollTo(0, highlightedRef.current.offsetTop);
+    }
+  }, [highlightedRef]);
 
   useEffect(() => {
     function onlyUnique(value: any, index: number, self: any) {
@@ -452,6 +460,7 @@ export function DiscussionList(props: IProps) {
               showReference={allPassages}
               startSave={startSave}
               clearSave={clearSave}
+              setRef={setHighlightedRef}
             />
           ))}
         </Grid>

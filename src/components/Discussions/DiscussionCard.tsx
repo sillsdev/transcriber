@@ -198,6 +198,7 @@ interface IProps extends IRecordProps, IStateProps {
   showStep: boolean;
   showReference: boolean;
   onAddComplete?: () => {};
+  setRef: (ref: any) => {};
 }
 export const DiscussionRegion = (discussion: Discussion) => {
   const startEnd = (val: string) =>
@@ -221,6 +222,7 @@ export const DiscussionCard = (props: IProps) => {
     showStep,
     showReference,
     onAddComplete,
+    setRef,
     comments,
     mediafiles,
     sections,
@@ -277,7 +279,7 @@ export const DiscussionCard = (props: IProps) => {
   const [editCard, setEditCard] = useState(false);
   const { localizedArtifactCategory } = useArtifactCategory();
   const { localizedWorkStepFromId } = useOrgWorkflowSteps();
-
+  const cardRef = useRef<any>();
   const myToolId = useMemo(() => {
     if (discussion.id) return discussion.id;
     else return NewDiscussionToolId;
@@ -640,11 +642,11 @@ export const DiscussionCard = (props: IProps) => {
 
   useEffect(() => {
     //locate my region
-    if (
-      myRegion?.start !== undefined &&
-      myRegion?.start === highlightDiscussion
-    ) {
+    if (highlightDiscussion === undefined) {
+      if (id === 'card-0') setRef(cardRef);
+    } else if (myRegion?.start === highlightDiscussion) {
       handleLocate();
+      setRef(cardRef);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightDiscussion, myRegion?.start, refresh]);
@@ -652,6 +654,7 @@ export const DiscussionCard = (props: IProps) => {
   return (
     <div className={classes.root}>
       <Card
+        ref={cardRef}
         key={discussion.id}
         id={id}
         className={
