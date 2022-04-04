@@ -418,7 +418,6 @@ function WSAudioPlayer(props: IProps) {
       wsPause(); //stop if playing
       recordStartPosition.current = wsPosition();
       recordOverwritePosition.current = recordStartPosition.current;
-      initialPosRef.current = recordStartPosition.current;
       wsStartRecord();
       setRecording(startRecording(500));
     } else {
@@ -624,7 +623,6 @@ function WSAudioPlayer(props: IProps) {
     recordOverwritePosition.current = undefined;
     processRecordRef.current = false;
     setReady(true);
-    wsGoto(wsDuration());
     handleChanged();
   }
 
@@ -644,6 +642,7 @@ function WSAudioPlayer(props: IProps) {
     );
     recordOverwritePosition.current = newPos;
     setDuration(wsDuration());
+    wsGoto(newPos || wsDuration());
   }
   function onWSReady() {
     setReady(true);
