@@ -15,6 +15,7 @@ import {
   OfflineProject,
   VProject,
   Discussion,
+  OrgWorkflowStep,
 } from '../../model';
 import * as actions from '../../store';
 import { API_CONFIG } from '../../api-variable';
@@ -71,7 +72,9 @@ export const exportProject =
     auth: Auth,
     errorReporter: any, //global errorReporter
     pendingmsg: string,
-    getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
+    getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+    target?: string,
+    orgWorkflowSteps?: OrgWorkflowStep[]
   ) =>
   async (dispatch: any) => {
     dispatch({
@@ -88,7 +91,9 @@ export const exportProject =
         projectid,
         fingerprint,
         userid,
-        getOfflineProject
+        getOfflineProject,
+        target,
+        orgWorkflowSteps
       )
         .then((response) => {
           dispatch({

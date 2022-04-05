@@ -20,6 +20,7 @@ import {
   Project,
   ISharedStrings,
   ExportType,
+  OrgWorkflowStep,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -68,6 +69,7 @@ import {
   useTranscription,
   usePassageState,
   VernacularTag,
+  usePlanType,
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -183,6 +185,8 @@ interface IProps
   projectPlans: Plan[];
   planColumn?: boolean;
   floatTop?: boolean;
+  step?: string;
+  orgSteps?: OrgWorkflowStep[];
 }
 
 export function TranscriptionTab(props: IProps) {
@@ -204,11 +208,15 @@ export function TranscriptionTab(props: IProps) {
     exportFile,
     allBookData,
     floatTop,
+    step,
+    orgSteps,
   } = props;
   const classes = useStyles();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [busy, setBusy] = useGlobal('importexportBusy');
   const [plan, setPlan] = useGlobal('plan');
+  const getPlanType = usePlanType();
+  const [isScripture, setScripture] = useState(false);
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
   const backup = coordinator.getSource('backup') as IndexedDBSource;
@@ -346,7 +354,9 @@ export function TranscriptionTab(props: IProps) {
       auth,
       errorReporter,
       t.exportingProject,
-      getOfflineProject
+      getOfflineProject,
+      step,
+      orgSteps
     );
   };
   const handleProjectExport = () => {
@@ -525,6 +535,9 @@ export function TranscriptionTab(props: IProps) {
     if (projectPlans.length === 1) {
       if (plan === '') {
         setPlan(projectPlans[0].id); //set the global plan
+        setScripture(getPlanType(projectPlans[0].id).scripture);
+      } else {
+        setScripture(getPlanType(plan).scripture);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -762,20 +775,22 @@ export function TranscriptionTab(props: IProps) {
             >
               {t.copyTranscriptions}
             </Button>
-            <Button
-              id="audioExport"
-              key="export"
-              aria-label={`audio export`}
-              aria-owns={actionMenuItem ? 'action-menu' : undefined}
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={handleMenu}
-            >
-              {t.audioExport}
-            </Button>
+            {step && (
+              <Button
+                id="audioExport"
+                key="export"
+                aria-label={`audio export`}
+                aria-owns={actionMenuItem ? 'audio-export-menu' : undefined}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleMenu}
+              >
+                {t.audioExport}
+              </Button>
+            )}
             <Menu
-              id="import-export-menu"
+              id="audio-export-menu"
               anchorEl={actionMenuItem}
               open={Boolean(actionMenuItem)}
               onClose={handleClose}
@@ -788,9 +803,11 @@ export function TranscriptionTab(props: IProps) {
               {/* <MenuItem id="dblExport" key={1} onClick={handleDbl}>
                 {`Digital Bible Library`}
               </MenuItem> */}
-              <MenuItem id="burritoExport" key={2} onClick={handleBurrito}>
-                {t.scriptureBurrito}
-              </MenuItem>
+              {isScripture && (
+                <MenuItem id="burritoExport" key={2} onClick={handleBurrito}>
+                  {t.scriptureBurrito}
+                </MenuItem>
+              )}
             </Menu>
             {planColumn && offline && projects.length > 1 && (
               <Button

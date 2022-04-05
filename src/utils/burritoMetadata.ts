@@ -5,11 +5,11 @@ const progPackage = require('../../package.json');
 export interface FormatsType {
   [format: string]: {
     compression: string; // extension
-    trackConfiguration: '1/0 (Mono)';
+    trackConfiguration?: '1/0 (Mono)';
     //bitRate: 128000,
-    bitRate: number;
-    bitDepth: number;
-    samplingRate: number;
+    bitRate?: number;
+    bitDepth?: number;
+    samplingRate?: number;
   };
 }
 

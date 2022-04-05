@@ -16,6 +16,7 @@ import {
   OfflineProject,
   VProject,
   Discussion,
+  OrgWorkflowStep,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { getSerializer } from '../../serializers/JSONAPISerializerCustom';
@@ -33,6 +34,8 @@ import {
   getBurritoMeta,
   scriptureFullPath,
   IBurritoMeta,
+  IExportArtifacts,
+  IExportScripturePath,
   mediaArtifacts,
 } from '../../crud';
 import {
@@ -52,7 +55,9 @@ export async function electronExport(
   projectid: number | string,
   fingerprint: string,
   userid: number | string,
-  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
+  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+  target?: string,
+  orgWorkflowSteps?: OrgWorkflowStep[]
 ): Promise<FileResponse | null> {
   const onlineSerlzr = getSerializer(memory, false);
   const offlineSrlzr = getSerializer(memory, true);
@@ -152,7 +157,10 @@ export async function electronExport(
     const AddJsonEntry = (table: string, recs: Record[], sort: string) => {
       //put in the remoteIds for everything, then stringify
       const ser = projRec?.keys?.remoteId ? onlineSerlzr : offlineSrlzr;
-      var json = '{"data":' + JSON.stringify(ser.serializeRecords(recs)) + '}';
+      let json =
+        exportType !== ExportType.AUDIO
+          ? '{"data":' + JSON.stringify(ser.serializeRecords(recs)) + '}'
+          : JSON.stringify(ser.serializeRecords(recs), null, 2);
       zip.addFile(
         'data/' + sort + '_' + table + '.json',
         Buffer.from(json),
@@ -211,7 +219,7 @@ export async function electronExport(
           memory,
           scripturePackage,
           projRec,
-        } as IBurritoMeta);
+        } as IExportScripturePath);
         AddStreamEntry(mp, fullPath || mediapath + path.basename(mp));
         if (!scripturePackage) {
           const eafCode = getMediaEaf(mf, memory);
@@ -413,7 +421,9 @@ export async function electronExport(
               memory,
               projRec,
               artifactType,
-            } as IBurritoMeta);
+              target,
+              orgWorkflowSteps,
+            } as IExportArtifacts);
             if (media) return media;
           }
           return FromPassages(info.table, project, needsRemoteIds);
@@ -481,7 +491,7 @@ export async function electronExport(
       project: Project | undefined,
       needsRemoteIds: boolean
     ) => {
-      var recs = GetTableRecs(info, project, needsRemoteIds);
+      let recs = GetTableRecs(info, project, needsRemoteIds);
       if (recs && Array.isArray(recs) && recs.length > 0) {
         if (!scripturePackage) {
           AddJsonEntry(info.table + 's', recs, info.sort);
@@ -556,7 +566,9 @@ export async function electronExport(
         projRec,
         scripturePackage,
         artifactType,
-      });
+        target,
+        orgWorkflowSteps,
+      } as IBurritoMeta);
       zip.addFile(
         'metadata.json',
         Buffer.alloc(burritoMetaStr.length, burritoMetaStr),

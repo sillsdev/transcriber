@@ -6,6 +6,7 @@ import {
   Passage,
   Section,
   IMediaShare,
+  OrgWorkflowStep,
 } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
@@ -15,6 +16,8 @@ import {
   findRecord,
   parseRef,
   getMediaInPlans,
+  getStepComplete,
+  afterStep,
 } from '.';
 import {
   cleanFileName,
@@ -206,17 +209,34 @@ export const getMediaEaf = (
 
 const pad3 = (n: number) => ('00' + n).slice(-3);
 
-export interface IBurritoMeta {
+interface IExportCommon {
   memory: Memory;
-  userId: string;
   projRec: Project;
+}
+
+interface IExportScripture {
   scripturePackage: boolean;
+}
+
+interface IExportFilter {
   artifactType: string | null | undefined;
+  target: string;
+  orgWorkflowSteps: OrgWorkflowStep[];
+}
+
+export interface IExportScripturePath extends IExportCommon, IExportScripture {}
+export interface IExportArtifacts extends IExportCommon, IExportFilter {}
+
+export interface IBurritoMeta
+  extends IExportCommon,
+    IExportScripture,
+    IExportFilter {
+  userId: string;
 }
 
 export const scriptureFullPath = (
   mf: MediaFile,
-  { memory, scripturePackage, projRec }: IBurritoMeta
+  { memory, scripturePackage, projRec }: IExportScripturePath
 ) => {
   let fullPath: string | null = null;
   let book = '';
@@ -248,19 +268,53 @@ export const mediaArtifacts = ({
   memory,
   projRec,
   artifactType,
-}: IBurritoMeta) => {
+  target,
+  orgWorkflowSteps,
+}: IExportArtifacts) => {
   const plans = (related(projRec, 'plans') as Plan[])?.map((p) => p.id);
   const media = memory.cache.query((q: QueryBuilder) =>
     q.findRecords('mediafile')
   ) as MediaFile[];
+  let planMedia: MediaFile[] | undefined = undefined;
   if (plans && plans.length > 0) {
-    return getMediaInPlans(
+    planMedia = getMediaInPlans(
       plans,
       media,
       artifactType,
       !artifactType //use only latest for vernacular (null)
     );
   }
+  const key = new Map<string, string>();
+  planMedia?.forEach((m) => {
+    const passRec = findRecord(
+      memory,
+      'passage',
+      related(m, 'passage')
+    ) as Passage;
+    if (
+      !Boolean(
+        orgWorkflowSteps &&
+          afterStep({
+            psgCompleted: getStepComplete(passRec),
+            target,
+            orgWorkflowSteps,
+          })
+      )
+    )
+      return;
+    const secRec =
+      passRec &&
+      (findRecord(memory, 'section', related(passRec, 'section')) as Section);
+    key.set(
+      m.id,
+      `${pad3(secRec?.attributes?.sequencenum)}.${pad3(
+        passRec?.attributes?.sequencenum
+      )}`
+    );
+  });
+  return planMedia
+    ?.filter((m) => key.get(m.id))
+    .sort((i, j) => ((key.get(i.id) || '') <= (key.get(j.id) || '') ? -1 : 1));
 };
 
 export const getBurritoMeta = (props: IBurritoMeta) => {
@@ -284,10 +338,6 @@ export const getBurritoMeta = (props: IBurritoMeta) => {
       if (!formats.hasOwnProperty(ext)) {
         formats[ext] = {
           compression: ext,
-          trackConfiguration: '1/0 (Mono)',
-          bitRate: 0,
-          bitDepth: 32,
-          samplingRate: 48000,
         };
       }
       burritoMeta.ingredients[fullPath] = {

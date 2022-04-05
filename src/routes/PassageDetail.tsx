@@ -166,7 +166,8 @@ const PassageDetailGrids = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, discussionSize, setDiscussionSize } = ctx.state;
+  const { currentstep, discussionSize, setDiscussionSize, orgWorkflowSteps } =
+    ctx.state;
   const tool = useStepTool(currentstep);
   const [communitySlugs] = useState([
     ArtifactTypeSlug.Retell,
@@ -314,7 +315,13 @@ const PassageDetailGrids = (props: IProps) => {
         {tool === ToolSlug.Export && (
           <Grid container>
             <Grid item xs={12}>
-              <TranscriptionTab {...props} projectPlans={plans} floatTop />
+              <TranscriptionTab
+                {...props}
+                projectPlans={plans}
+                floatTop
+                step={currentstep}
+                orgSteps={orgWorkflowSteps}
+              />
             </Grid>
           </Grid>
         )}
