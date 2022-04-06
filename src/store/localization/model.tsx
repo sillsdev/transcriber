@@ -1004,6 +1004,7 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "filter": string;
     "incompletePlan": string;
     "latestAudio": string;
+    "noData": string;
     "passages": string;
     "plan": string;
     "scriptureBurrito": string;

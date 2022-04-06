@@ -61,6 +61,8 @@ export const useProjectExport = (props: IProps) => {
       auth,
       errorReporter,
       message || t.exportingProject,
+      t.noData.replace('{0}', ''),
+      '',
       getOfflineProject
     );
   };

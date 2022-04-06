@@ -34,12 +34,12 @@ import {
   IMPORT_SUCCESS,
   IMPORT_ERROR,
   IMPORT_COMPLETE,
-  FileResponse,
+  PostFileResponse,
   ExportType,
 } from './types';
 import { errStatus, errorStatus } from '../AxiosStatus';
 import Memory from '@orbit/memory';
-import { TransformBuilder, Operation } from '@orbit/data';
+import { TransformBuilder, Operation, QueryBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import { electronExport } from './electronExport';
 import {
@@ -48,9 +48,12 @@ import {
   insertData,
   remoteId,
   findRecord,
+  mediaArtifacts,
+  IExportArtifacts,
 } from '../../crud';
 import { logError, orbitInfo, Severity } from '../../utils';
 import Coordinator from '@orbit/coordinator';
+import { axiosPost } from '../../utils/axios';
 
 export const exportComplete = () => (dispatch: any) => {
   dispatch({
@@ -72,6 +75,8 @@ export const exportProject =
     auth: Auth,
     errorReporter: any, //global errorReporter
     pendingmsg: string,
+    nodatamsg: string,
+    localizedArtifact: string,
     getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
     target?: string,
     orgWorkflowSteps?: OrgWorkflowStep[]
@@ -81,6 +86,17 @@ export const exportProject =
       payload: pendingmsg.replace('{0}%', ''),
       type: EXPORT_PENDING,
     });
+    const getProjRec = (projectid: number | string): Project => {
+      return memory.cache.query((q: QueryBuilder) =>
+        q.findRecord({
+          type: 'project',
+          id:
+            typeof projectid === 'number'
+              ? remoteIdGuid('project', projectid.toString(), memory.keyMap)
+              : projectid,
+        })
+      ) as Project;
+    };
     if (!auth.accessToken || exportType === ExportType.ITFSYNC) {
       // equivalent to offline ie isElectron and not online
       electronExport(
@@ -91,6 +107,8 @@ export const exportProject =
         projectid,
         fingerprint,
         userid,
+        nodatamsg,
+        localizedArtifact,
         getOfflineProject,
         target,
         orgWorkflowSteps
@@ -109,30 +127,45 @@ export const exportProject =
           });
         });
     } else {
-      /* ignore export type for now -- online is always ptf */
       const remProjectId =
         typeof projectid === 'number'
           ? projectid.toString()
           : remoteId('project', projectid, memory.keyMap);
       let start = 0;
       do {
-        await Axios.get(
-          API_CONFIG.host +
-            '/api/offlineData/project/export/' +
-            remProjectId +
-            '/' +
-            start,
-          {
-            headers: {
-              Authorization: 'Bearer ' + auth.accessToken,
-            },
-            timeout: 0, //wait forever
+        var projRec = getProjRec(projectid);
+        var bodyFormData = new FormData();
+        if (artifactType !== undefined) {
+          var mediaList = mediaArtifacts({
+            memory,
+            projRec,
+            artifactType,
+            target,
+            orgWorkflowSteps,
+          } as IExportArtifacts)?.map((m) =>
+            remoteId('mediafile', m.id, memory.keyMap)
+          );
+          if (mediaList && mediaList.length > 0) {
+            if (artifactType)
+              bodyFormData.append('artifactType', localizedArtifact);
+            bodyFormData.append('ids', ',' + mediaList.join() + ',');
+          } else {
+            dispatch({
+              payload: errorStatus(-1, nodatamsg),
+              type: EXPORT_ERROR,
+            });
+            return;
           }
+        }
+        await axiosPost(
+          `offlineData/project/export/${exportType}/${remProjectId}/${start}`,
+          bodyFormData,
+          auth
         )
           // eslint-disable-next-line no-loop-func
           .then((response) => {
-            var fr = response.data as FileResponse;
-            start = Number(fr.data.id);
+            var fr = response.data as PostFileResponse;
+            start = Number(fr.id);
             switch (start) {
               case -1:
                 dispatch({
@@ -142,7 +175,7 @@ export const exportProject =
                 break;
               case -2:
                 dispatch({
-                  payload: errorStatus(undefined, fr.data.attributes.message),
+                  payload: errorStatus(undefined, fr.message),
                   type: EXPORT_ERROR,
                 });
                 break;

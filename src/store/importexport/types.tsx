@@ -10,7 +10,12 @@ export enum ExportType {
   BURRITO = 'burrito', //Scripture Burrito package
   AUDIO = 'audio', //Latest audio export
 }
-
+export interface PostFileResponse {
+  message: string;
+  fileURL: string;
+  contentType: string;
+  id: string;
+}
 export interface FileResponse {
   data: {
     attributes: {
@@ -27,7 +32,7 @@ export interface FileResponse {
 // Describing the shape of the paratext integration slice of state
 export interface IImportExportState {
   loaded: boolean;
-  exportFile: FileResponse;
+  exportFile: PostFileResponse;
   importexportStatus: IAxiosStatus | undefined;
 }
 
@@ -48,7 +53,7 @@ interface ExportPendingMsg {
 
 interface ExportSucceededMsg {
   type: typeof EXPORT_SUCCESS;
-  payload: FileResponse;
+  payload: PostFileResponse;
 }
 
 interface ExportFailedMsg {

@@ -55,6 +55,8 @@ export async function electronExport(
   projectid: number | string,
   fingerprint: string,
   userid: number | string,
+  nodatamsg: string,
+  localizedArtifact: string,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
   target?: string,
   orgWorkflowSteps?: OrgWorkflowStep[]
@@ -90,13 +92,17 @@ export async function electronExport(
       ? id.toString()
       : remoteId(kind, id, memory.keyMap) || id.split('-')[0];
 
-  const fileName = (projRec: Project, ext: string) =>
+  const fileName = (
+    projRec: Project,
+    localizedArtifactType: string,
+    ext: string
+  ) =>
     'Transcriber' +
     idStr('user', userid) +
     '_' +
     idStr('project', projRec.id) +
     '_' +
-    cleanFileName(projRec.attributes.name) +
+    cleanFileName(projRec.attributes.name + localizedArtifactType) +
     '.' +
     ext;
 
@@ -104,7 +110,7 @@ export async function electronExport(
     new Date().getDate().toString() +
     new Date().getHours().toString() +
     '_' +
-    fileName(projRec, 'itf');
+    fileName(projRec, '', 'itf');
 
   const backupName =
     'Transcriber' + idStr('user', userid) + '_backup.' + exportType;
@@ -655,7 +661,7 @@ export async function electronExport(
     const filename =
       exportType === ExportType.ITFBACKUP
         ? itfb_fileName(projects[ix])
-        : fileName(projects[ix], exportType);
+        : fileName(projects[ix], localizedArtifact, exportType);
     changedRecs += numRecs;
     if (backupZip) {
       if (numRecs)
@@ -665,9 +671,11 @@ export async function electronExport(
           projects[ix].attributes.name
         );
     } else {
-      var where = dataPath(filename);
-      zip.writeZip(where);
-      return BuildFileResponse(where, filename, undefined, changedRecs);
+      if (numRecs) {
+        var where = dataPath(filename);
+        zip.writeZip(where);
+        return BuildFileResponse(where, filename, undefined, changedRecs);
+      } else if (nodatamsg && projects.length === 1) throw new Error(nodatamsg);
     }
   }
   var backupWhere = dataPath(backupName);

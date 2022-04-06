@@ -24,12 +24,14 @@ export const getMediaInPlans = (
   }
   if (onlyLatest) {
     if (onlyTypeId === VernacularTag) {
-      media.forEach((f) => {
-        const name = versionName(f);
-        latest[name] = latest[name]
-          ? Math.max(latest[name], f.attributes.versionNumber)
-          : f.attributes.versionNumber;
-      });
+      media
+        .filter((m) => related(m, 'passage'))
+        .forEach((f) => {
+          const name = versionName(f);
+          latest[name] = latest[name]
+            ? Math.max(latest[name], f.attributes.versionNumber)
+            : f.attributes.versionNumber;
+        });
       return media.filter(
         (f) => latest[versionName(f)] === f.attributes.versionNumber
       );

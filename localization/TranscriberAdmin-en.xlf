@@ -4846,6 +4846,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.noData">
+         <segment>
+            <source>No {0} Data.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.passages">
          <segment>
             <source>Passages</source>

@@ -15,12 +15,12 @@ import {
   Plan,
   MediaFile,
   ActivityStates,
-  FileResponse,
   BookName,
   Project,
   ISharedStrings,
   ExportType,
   OrgWorkflowStep,
+  PostFileResponse,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -158,7 +158,7 @@ interface IStateProps {
   t: ITranscriptionTabStrings;
   ts: ISharedStrings;
   activityState: IActivityStateStrings;
-  exportFile: FileResponse;
+  exportFile: PostFileResponse;
   exportStatus: IAxiosStatus | undefined;
   allBookData: BookName[];
 }
@@ -254,7 +254,7 @@ export function TranscriptionTab(props: IProps) {
   const [fingerprint] = useGlobal('fingerprint');
   const getOfflineProject = useOfflnProjRead();
   const [globalStore] = useGlobal();
-  const { getTypeId } = useArtifactType();
+  const { getTypeId, localizedArtifactType } = useArtifactType();
   const [artifactTypes] = useState<ArtifactTypeSlug[]>([
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.Retell,
@@ -354,6 +354,8 @@ export function TranscriptionTab(props: IProps) {
       auth,
       errorReporter,
       t.exportingProject,
+      t.noData.replace('{0}', localizedArtifactType(artifactType)),
+      localizedArtifactType(artifactType),
       getOfflineProject,
       step,
       orgSteps
@@ -412,16 +414,20 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const handleCopyPlan = () => {
-    navigator.clipboard
-      .writeText(
-        getCopy(projectPlans, passages, sections, allBookData).join('\n')
-      )
-      .then(() => {
-        showMessage(t.availableOnClipboard);
-      })
-      .catch((err) => {
-        showMessage(t.cantCopy);
-      });
+    var trans = getCopy(projectPlans, passages, sections, allBookData).join(
+      '\n'
+    );
+    if (trans.length > 0)
+      navigator.clipboard
+        .writeText(trans)
+        .then(() => {
+          showMessage(t.availableOnClipboard);
+        })
+        .catch((err) => {
+          showMessage(t.cantCopy);
+        });
+    else
+      showMessage(t.noData.replace('{0}', localizedArtifactType(artifactType)));
   };
 
   // const handleDbl = () => {
@@ -522,8 +528,8 @@ export function TranscriptionTab(props: IProps) {
         if (exportStatus.complete) {
           setBusy(false);
           if (exportFile && exportName === '') {
-            setExportName(exportFile.data.attributes.message);
-            setExportUrl(exportFile.data.attributes.fileurl);
+            setExportName(exportFile.message);
+            setExportUrl(exportFile.fileURL);
           }
         }
       }
@@ -778,7 +784,7 @@ export function TranscriptionTab(props: IProps) {
             {step && (
               <Button
                 id="audioExport"
-                key="export"
+                key="audioexport"
                 aria-label={`audio export`}
                 aria-owns={actionMenuItem ? 'audio-export-menu' : undefined}
                 variant="contained"
@@ -794,6 +800,7 @@ export function TranscriptionTab(props: IProps) {
               anchorEl={actionMenuItem}
               open={Boolean(actionMenuItem)}
               onClose={handleClose}
+              getContentAnchorEl={null}
               anchorOrigin={anchorSpec}
               transformOrigin={transformSpec}
             >

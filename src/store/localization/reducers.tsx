@@ -1075,6 +1075,7 @@ const initialState = {
 			"filter": "Filter",
 			"incompletePlan": "Plan is incomplete: attach audio to passages.",
 			"latestAudio": "Latest Audio",
+			"noData": "No {0} Data.",
 			"passages": "Passages",
 			"plan": "Plan",
 			"scriptureBurrito": "Scripture Burrito",

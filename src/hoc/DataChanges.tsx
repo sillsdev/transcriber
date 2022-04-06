@@ -383,6 +383,8 @@ export function DataChanges(props: IProps) {
         project,
         fingerprint,
         user,
+        '',
+        '',
         getOfflineProject
       ).catch((err: Error) => {
         logError(
