@@ -15,6 +15,8 @@ export interface PostFileResponse {
   fileURL: string;
   contentType: string;
   id: string;
+  buffer: Buffer | undefined;
+  changes: number;
 }
 export interface FileResponse {
   data: {

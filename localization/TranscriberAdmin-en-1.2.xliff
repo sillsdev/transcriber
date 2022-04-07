@@ -5491,7 +5491,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="transcriptionTab.audioExport">
-      		<source>Audio Export</source>
+      		<source>Export Audio Files</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TranscriptionTab.tsx</context>

@@ -288,6 +288,13 @@ export function TranscriptionTab(props: IProps) {
   const [filter, setFilter] = useState(false);
   const getPassageState = usePassageState();
 
+  const localizedArtifact = useMemo(
+    () =>
+      artifactType === ArtifactTypeSlug.Vernacular
+        ? ''
+        : localizedArtifactType(artifactType),
+    [artifactType, localizedArtifactType]
+  );
   const defaultHiddenColumnNames = useMemo(
     () =>
       (planColumn ? ['planName'] : []).concat(
@@ -355,7 +362,7 @@ export function TranscriptionTab(props: IProps) {
       errorReporter,
       t.exportingProject,
       t.noData.replace('{0}', localizedArtifactType(artifactType)),
-      localizedArtifactType(artifactType),
+      localizedArtifact,
       getOfflineProject,
       step,
       orgSteps
@@ -779,7 +786,10 @@ export function TranscriptionTab(props: IProps) {
               onClick={handleCopyPlan}
               title={t.copyTip}
             >
-              {t.copyTranscriptions}
+              {t.copyTranscriptions +
+                (localizedArtifact
+                  ? ' (' + localizedArtifactType(artifactType) + ')'
+                  : '')}
             </Button>
             {step && (
               <Button
@@ -805,7 +815,10 @@ export function TranscriptionTab(props: IProps) {
               transformOrigin={transformSpec}
             >
               <MenuItem id="zipExport" key={3} onClick={handleAudioExport}>
-                {t.latestAudio}
+                {t.latestAudio +
+                  (localizedArtifact
+                    ? ' (' + localizedArtifactType(artifactType) + ')'
+                    : '')}
               </MenuItem>
               {/* <MenuItem id="dblExport" key={1} onClick={handleDbl}>
                 {`Digital Bible Library`}

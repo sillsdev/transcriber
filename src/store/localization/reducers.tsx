@@ -1052,7 +1052,7 @@ const initialState = {
 	}),
 	"transcriptionTab": new LocalizedStrings({
 		"en": {
-			"audioExport": "Audio Export",
+			"audioExport": "Export Audio Files",
 			"availableOnClipboard": "Exported data is available on the clipboard. Use paste to insert it into another program.",
 			"cancel": "Cancel",
 			"cantCopy": "Unable to copy to clipboard",

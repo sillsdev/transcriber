@@ -4710,7 +4710,7 @@
       </unit>
       <unit id="transcriptionTab.audioExport">
          <segment>
-            <source>Audio Export</source>
+            <source>Export Audio Files</source>
             <target/>
          </segment>
       </unit>

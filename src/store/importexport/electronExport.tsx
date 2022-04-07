@@ -1,4 +1,4 @@
-import { ExportType, FileResponse } from './types';
+import { ExportType, PostFileResponse } from './types';
 import AdmZip from 'adm-zip';
 import fs from 'fs';
 import path from 'path';
@@ -60,7 +60,7 @@ export async function electronExport(
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
   target?: string,
   orgWorkflowSteps?: OrgWorkflowStep[]
-): Promise<FileResponse | null> {
+): Promise<PostFileResponse | null> {
   const onlineSerlzr = getSerializer(memory, false);
   const offlineSrlzr = getSerializer(memory, true);
   const scripturePackage = [ExportType.DBL, ExportType.BURRITO].includes(
@@ -71,19 +71,14 @@ export async function electronExport(
     fileName: string,
     buffer: Buffer | undefined,
     changedRecs: number
-  ): FileResponse => {
+  ): PostFileResponse => {
     return {
-      data: {
-        attributes: {
-          message: fileName,
-          fileurl: 'file:////' + fullpath,
-          contenttype: 'application/' + exportType,
-          buffer: buffer,
-          changes: changedRecs,
-        },
-        type: 'file-responses',
-        id: '1',
-      },
+      message: fileName,
+      fileURL: 'file:////' + fullpath,
+      contentType: 'application/' + exportType,
+      buffer: buffer,
+      changes: changedRecs,
+      id: '1',
     };
   };
 
