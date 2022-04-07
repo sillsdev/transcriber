@@ -15,12 +15,12 @@ import {
   Plan,
   MediaFile,
   ActivityStates,
+  FileResponse,
   BookName,
   Project,
   ISharedStrings,
   ExportType,
   OrgWorkflowStep,
-  FileResponse,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -787,9 +787,7 @@ export function TranscriptionTab(props: IProps) {
               title={t.copyTip}
             >
               {t.copyTranscriptions +
-                (localizedArtifact
-                  ? ' (' + localizedArtifactType(artifactType) + ')'
-                  : '')}
+                (localizedArtifact ? ' (' + localizedArtifact + ')' : '')}
             </Button>
             {step && (
               <Button
@@ -816,9 +814,7 @@ export function TranscriptionTab(props: IProps) {
             >
               <MenuItem id="zipExport" key={3} onClick={handleAudioExport}>
                 {t.latestAudio +
-                  (localizedArtifact
-                    ? ' (' + localizedArtifactType(artifactType) + ')'
-                    : '')}
+                  (localizedArtifact ? ' (' + localizedArtifact + ')' : '')}
               </MenuItem>
               {/* <MenuItem id="dblExport" key={1} onClick={handleDbl}>
                 {`Digital Bible Library`}

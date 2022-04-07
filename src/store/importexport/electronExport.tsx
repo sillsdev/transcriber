@@ -81,7 +81,7 @@ export async function electronExport(
           buffer: buffer,
           changes: changedRecs,
         },
-        type: 'fileresponse',
+        type: 'file-responses',
         id: '1',
       },
     };
