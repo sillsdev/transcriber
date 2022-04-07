@@ -7,17 +7,17 @@ import * as actions from '../store';
 import {
   IState,
   ITranscriptionTabStrings,
-  FileResponse,
   ExportType,
   Project,
   ISharedStrings,
+  FileResponse,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../hoc/SnackBar';
 import Progress from '../control/UploadProgress';
-import { offlineProjectUpdateFilesDownloaded, useProjecExport } from '../crud';
+import { offlineProjectUpdateFilesDownloaded, useProjectExport } from '../crud';
 import {
   currentDateTime,
   dataPath,
@@ -65,7 +65,7 @@ export const ProjectDownload = (props: IProps) => {
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const [busy, setBusy] = useGlobal('importexportBusy');
   const { showMessage, showTitledMessage } = useSnackBar();
-  const doProjectExport = useProjecExport({
+  const doProjectExport = useProjectExport({
     auth,
     exportProject,
     t,

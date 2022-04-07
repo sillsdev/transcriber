@@ -18,7 +18,7 @@ interface IProps {
   message?: string;
 }
 
-export const useProjecExport = (props: IProps) => {
+export const useProjectExport = (props: IProps) => {
   const { auth, message } = props;
   const { exportProject, t } = props;
   const [memory] = useGlobal('memory');
@@ -51,6 +51,7 @@ export const useProjecExport = (props: IProps) => {
     );
     exportProject(
       exportType,
+      undefined, //always export all artifact types
       memory,
       backup,
       remoteIdNum('project', projectId, memory.keyMap),
@@ -60,6 +61,8 @@ export const useProjecExport = (props: IProps) => {
       auth,
       errorReporter,
       message || t.exportingProject,
+      t.noData.replace('{0}', ''),
+      '',
       getOfflineProject
     );
   };

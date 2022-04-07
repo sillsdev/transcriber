@@ -981,6 +981,7 @@ export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMeth
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
+    "audioExport": string;
     "availableOnClipboard": string;
     "cancel": string;
     "cantCopy": string;
@@ -1002,8 +1003,11 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "exportType": string;
     "filter": string;
     "incompletePlan": string;
+    "latestAudio": string;
+    "noData": string;
     "passages": string;
     "plan": string;
+    "scriptureBurrito": string;
     "sectionstate": string;
     "showHideFilter": string;
     "updated": string;

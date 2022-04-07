@@ -377,11 +377,14 @@ export function DataChanges(props: IProps) {
     if (!busy && !saving && project !== '') {
       electronExport(
         ExportType.ITFBACKUP,
+        undefined, //all artifact types
         memory,
         undefined,
         project,
         fingerprint,
         user,
+        '',
+        '',
         getOfflineProject
       ).catch((err: Error) => {
         logError(

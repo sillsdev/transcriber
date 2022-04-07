@@ -1052,6 +1052,7 @@ const initialState = {
 	}),
 	"transcriptionTab": new LocalizedStrings({
 		"en": {
+			"audioExport": "Export Audio Files",
 			"availableOnClipboard": "Exported data is available on the clipboard. Use paste to insert it into another program.",
 			"cancel": "Cancel",
 			"cantCopy": "Unable to copy to clipboard",
@@ -1073,8 +1074,11 @@ const initialState = {
 			"exportType": "Which export type?",
 			"filter": "Filter",
 			"incompletePlan": "Plan is incomplete: attach audio to passages.",
+			"latestAudio": "Latest Audio",
+			"noData": "No {0} Data.",
 			"passages": "Passages",
 			"plan": "Plan",
+			"scriptureBurrito": "Scripture Burrito",
 			"sectionstate": "State",
 			"showHideFilter": "Show/Hide filter rows",
 			"updated": "Updated",

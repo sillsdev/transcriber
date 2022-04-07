@@ -15,6 +15,7 @@ import {
   OfflineProject,
   VProject,
   Discussion,
+  OrgWorkflowStep,
 } from '../../model';
 import * as actions from '../../store';
 import { API_CONFIG } from '../../api-variable';
@@ -38,7 +39,7 @@ import {
 } from './types';
 import { errStatus, errorStatus } from '../AxiosStatus';
 import Memory from '@orbit/memory';
-import { TransformBuilder, Operation } from '@orbit/data';
+import { TransformBuilder, Operation, QueryBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import { electronExport } from './electronExport';
 import {
@@ -47,9 +48,12 @@ import {
   insertData,
   remoteId,
   findRecord,
+  mediaArtifacts,
+  IExportArtifacts,
 } from '../../crud';
 import { logError, orbitInfo, Severity } from '../../utils';
 import Coordinator from '@orbit/coordinator';
+import { axiosPost } from '../../utils/axios';
 
 export const exportComplete = () => (dispatch: any) => {
   dispatch({
@@ -61,6 +65,7 @@ export const exportComplete = () => (dispatch: any) => {
 export const exportProject =
   (
     exportType: ExportType,
+    artifactType: string | null | undefined,
     memory: Memory,
     backup: IndexedDBSource,
     projectid: number | string,
@@ -70,23 +75,43 @@ export const exportProject =
     auth: Auth,
     errorReporter: any, //global errorReporter
     pendingmsg: string,
-    getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
+    nodatamsg: string,
+    localizedArtifact: string,
+    getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+    target?: string,
+    orgWorkflowSteps?: OrgWorkflowStep[]
   ) =>
   async (dispatch: any) => {
     dispatch({
       payload: pendingmsg.replace('{0}%', ''),
       type: EXPORT_PENDING,
     });
+    const getProjRec = (projectid: number | string): Project => {
+      return memory.cache.query((q: QueryBuilder) =>
+        q.findRecord({
+          type: 'project',
+          id:
+            typeof projectid === 'number'
+              ? remoteIdGuid('project', projectid.toString(), memory.keyMap)
+              : projectid,
+        })
+      ) as Project;
+    };
     if (!auth.accessToken || exportType === ExportType.ITFSYNC) {
       // equivalent to offline ie isElectron and not online
       electronExport(
         exportType,
+        artifactType,
         memory,
         backup,
         projectid,
         fingerprint,
         userid,
-        getOfflineProject
+        nodatamsg,
+        localizedArtifact,
+        getOfflineProject,
+        target,
+        orgWorkflowSteps
       )
         .then((response) => {
           dispatch({
@@ -102,25 +127,40 @@ export const exportProject =
           });
         });
     } else {
-      /* ignore export type for now -- online is always ptf */
       const remProjectId =
         typeof projectid === 'number'
           ? projectid.toString()
           : remoteId('project', projectid, memory.keyMap);
       let start = 0;
       do {
-        await Axios.get(
-          API_CONFIG.host +
-            '/api/offlineData/project/export/' +
-            remProjectId +
-            '/' +
-            start,
-          {
-            headers: {
-              Authorization: 'Bearer ' + auth.accessToken,
-            },
-            timeout: 0, //wait forever
+        var projRec = getProjRec(projectid);
+        var bodyFormData = new FormData();
+        if (artifactType !== undefined) {
+          var mediaList = mediaArtifacts({
+            memory,
+            projRec,
+            artifactType,
+            target,
+            orgWorkflowSteps,
+          } as IExportArtifacts)?.map((m) =>
+            remoteId('mediafile', m.id, memory.keyMap)
+          );
+          if (mediaList && mediaList.length > 0) {
+            if (artifactType)
+              bodyFormData.append('artifactType', localizedArtifact);
+            bodyFormData.append('ids', ',' + mediaList.join() + ',');
+          } else {
+            dispatch({
+              payload: errorStatus(-1, nodatamsg),
+              type: EXPORT_ERROR,
+            });
+            return;
           }
+        }
+        await axiosPost(
+          `offlineData/project/export/${exportType}/${remProjectId}/${start}`,
+          bodyFormData,
+          auth
         )
           // eslint-disable-next-line no-loop-func
           .then((response) => {

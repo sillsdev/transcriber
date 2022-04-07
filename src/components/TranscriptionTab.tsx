@@ -20,6 +20,7 @@ import {
   Project,
   ISharedStrings,
   ExportType,
+  OrgWorkflowStep,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -35,6 +36,10 @@ import {
   DialogContentText,
   DialogActions,
   AppBar,
+  Menu,
+  MenuItem,
+  PopoverOrigin,
+  useTheme,
 } from '@material-ui/core';
 // import CopyIcon from '@material-ui/icons/FileCopy';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -64,6 +69,7 @@ import {
   useTranscription,
   usePassageState,
   VernacularTag,
+  usePlanType,
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -179,6 +185,8 @@ interface IProps
   projectPlans: Plan[];
   planColumn?: boolean;
   floatTop?: boolean;
+  step?: string;
+  orgSteps?: OrgWorkflowStep[];
 }
 
 export function TranscriptionTab(props: IProps) {
@@ -200,11 +208,15 @@ export function TranscriptionTab(props: IProps) {
     exportFile,
     allBookData,
     floatTop,
+    step,
+    orgSteps,
   } = props;
   const classes = useStyles();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [busy, setBusy] = useGlobal('importexportBusy');
   const [plan, setPlan] = useGlobal('plan');
+  const getPlanType = usePlanType();
+  const [isScripture, setScripture] = useState(false);
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
   const backup = coordinator.getSource('backup') as IndexedDBSource;
@@ -223,20 +235,34 @@ export function TranscriptionTab(props: IProps) {
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
+  const [actionMenuItem, setActionMenuItem] =
+    React.useState<null | HTMLElement>(null);
+  const handleMenu = (e: React.MouseEvent<HTMLButtonElement>) =>
+    setActionMenuItem(e.currentTarget);
+  const handleClose = () => setActionMenuItem(null);
+  const [anchorSpec] = useState<PopoverOrigin>({
+    vertical: 'bottom',
+    horizontal: 'left',
+  });
+  const theme = useTheme();
+  const [transformSpec] = useState<PopoverOrigin>({
+    vertical: -theme.spacing(5),
+    horizontal: 'left',
+  });
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const { getOrganizedBy } = useOrganizedBy();
   const [fingerprint] = useGlobal('fingerprint');
   const getOfflineProject = useOfflnProjRead();
   const [globalStore] = useGlobal();
-  const { getTypeId } = useArtifactType();
-  const [exportTypes] = useState<ArtifactTypeSlug[]>([
+  const { getTypeId, localizedArtifactType } = useArtifactType();
+  const [artifactTypes] = useState<ArtifactTypeSlug[]>([
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.Retell,
     ArtifactTypeSlug.QandA,
     ArtifactTypeSlug.BackTranslation,
   ]);
-  const [exportType, setExportType] = useState<ArtifactTypeSlug>(
-    exportTypes[0]
+  const [artifactType, setArtifactType] = useState<ArtifactTypeSlug>(
+    artifactTypes[0]
   );
   const getTranscription = useTranscription(true);
   const columnDefs = [
@@ -262,6 +288,13 @@ export function TranscriptionTab(props: IProps) {
   const [filter, setFilter] = useState(false);
   const getPassageState = usePassageState();
 
+  const localizedArtifact = useMemo(
+    () =>
+      artifactType === ArtifactTypeSlug.Vernacular
+        ? ''
+        : localizedArtifactType(artifactType),
+    [artifactType, localizedArtifactType]
+  );
   const defaultHiddenColumnNames = useMemo(
     () =>
       (planColumn ? ['planName'] : []).concat(
@@ -304,14 +337,21 @@ export function TranscriptionTab(props: IProps) {
       return;
     }
     /* get correct count */
+    const onlyTypeId = [ExportType.DBL, ExportType.BURRITO].includes(exportType)
+      ? VernacularTag
+      : exportType === ExportType.AUDIO
+      ? getTypeId(artifactType)
+      : undefined;
+    const onlyLatest = onlyTypeId === VernacularTag;
     media = getMediaInPlans(
       projectplans.map((p) => p.id),
       mediaFiles,
-      undefined,
-      false
+      onlyTypeId,
+      onlyLatest
     );
     exportProject(
       exportType,
+      onlyTypeId,
       memory,
       backup,
       project,
@@ -321,7 +361,11 @@ export function TranscriptionTab(props: IProps) {
       auth,
       errorReporter,
       t.exportingProject,
-      getOfflineProject
+      t.noData.replace('{0}', localizedArtifactType(artifactType)),
+      localizedArtifact,
+      getOfflineProject,
+      step,
+      orgSteps
     );
   };
   const handleProjectExport = () => {
@@ -331,9 +375,9 @@ export function TranscriptionTab(props: IProps) {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const exportId = useMemo(
-    () => (exportType ? getTypeId(exportType) : VernacularTag),
+    () => (artifactType ? getTypeId(artifactType) : VernacularTag),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [exportType]
+    [artifactType]
   );
 
   const getCopy = (
@@ -377,16 +421,38 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const handleCopyPlan = () => {
-    navigator.clipboard
-      .writeText(
-        getCopy(projectPlans, passages, sections, allBookData).join('\n')
-      )
-      .then(() => {
-        showMessage(t.availableOnClipboard);
-      })
-      .catch((err) => {
-        showMessage(t.cantCopy);
-      });
+    var trans = getCopy(projectPlans, passages, sections, allBookData).join(
+      '\n'
+    );
+    if (trans.length > 0)
+      navigator.clipboard
+        .writeText(trans)
+        .then(() => {
+          showMessage(t.availableOnClipboard);
+        })
+        .catch((err) => {
+          showMessage(t.cantCopy);
+        });
+    else
+      showMessage(t.noData.replace('{0}', localizedArtifactType(artifactType)));
+  };
+
+  // const handleDbl = () => {
+  //   setActionMenuItem(null);
+  //   setBusy(true);
+  //   doProjectExport(ExportType.DBL);
+  // };
+
+  const handleBurrito = () => {
+    setActionMenuItem(null);
+    setBusy(true);
+    doProjectExport(ExportType.BURRITO);
+  };
+
+  const handleAudioExport = () => {
+    setActionMenuItem(null);
+    setBusy(true);
+    doProjectExport(ExportType.AUDIO);
   };
 
   const handleBackup = () => {
@@ -482,6 +548,9 @@ export function TranscriptionTab(props: IProps) {
     if (projectPlans.length === 1) {
       if (plan === '') {
         setPlan(projectPlans[0].id); //set the global plan
+        setScripture(getPlanType(projectPlans[0].id).scripture);
+      } else {
+        setScripture(getPlanType(plan).scripture);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -717,8 +786,45 @@ export function TranscriptionTab(props: IProps) {
               onClick={handleCopyPlan}
               title={t.copyTip}
             >
-              {t.copyTranscriptions}
+              {t.copyTranscriptions +
+                (localizedArtifact ? ' (' + localizedArtifact + ')' : '')}
             </Button>
+            {step && (
+              <Button
+                id="audioExport"
+                key="audioexport"
+                aria-label={`audio export`}
+                aria-owns={actionMenuItem ? 'audio-export-menu' : undefined}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleMenu}
+              >
+                {t.audioExport}
+              </Button>
+            )}
+            <Menu
+              id="audio-export-menu"
+              anchorEl={actionMenuItem}
+              open={Boolean(actionMenuItem)}
+              onClose={handleClose}
+              getContentAnchorEl={null}
+              anchorOrigin={anchorSpec}
+              transformOrigin={transformSpec}
+            >
+              <MenuItem id="zipExport" key={3} onClick={handleAudioExport}>
+                {t.latestAudio +
+                  (localizedArtifact ? ' (' + localizedArtifact + ')' : '')}
+              </MenuItem>
+              {/* <MenuItem id="dblExport" key={1} onClick={handleDbl}>
+                {`Digital Bible Library`}
+              </MenuItem> */}
+              {isScripture && (
+                <MenuItem id="burritoExport" key={2} onClick={handleBurrito}>
+                  {t.scriptureBurrito}
+                </MenuItem>
+              )}
+            </Menu>
             {planColumn && offline && projects.length > 1 && (
               <Button
                 id="transBackup"
@@ -735,9 +841,9 @@ export function TranscriptionTab(props: IProps) {
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
             <SelectExportType
-              exportType={exportType}
-              exportTypes={exportTypes}
-              setExportType={setExportType}
+              exportType={artifactType}
+              exportTypes={artifactTypes}
+              setExportType={setArtifactType}
             />
             <Button
               id="transFilt"
