@@ -34,7 +34,9 @@ const ImportExportReducers = function (
         ...state,
         loaded: true,
         exportFile: action.payload,
-        importexportStatus: successStatus(action.payload.message),
+        importexportStatus: successStatus(
+          action.payload.data.attributes.message
+        ),
       };
     case EXPORT_ERROR:
       return {

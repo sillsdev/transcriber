@@ -20,7 +20,7 @@ import {
   ISharedStrings,
   ExportType,
   OrgWorkflowStep,
-  PostFileResponse,
+  FileResponse,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -158,7 +158,7 @@ interface IStateProps {
   t: ITranscriptionTabStrings;
   ts: ISharedStrings;
   activityState: IActivityStateStrings;
-  exportFile: PostFileResponse;
+  exportFile: FileResponse;
   exportStatus: IAxiosStatus | undefined;
   allBookData: BookName[];
 }
@@ -535,8 +535,8 @@ export function TranscriptionTab(props: IProps) {
         if (exportStatus.complete) {
           setBusy(false);
           if (exportFile && exportName === '') {
-            setExportName(exportFile.message);
-            setExportUrl(exportFile.fileURL);
+            setExportName(exportFile.data.attributes.message);
+            setExportUrl(exportFile.data.attributes.fileurl);
           }
         }
       }

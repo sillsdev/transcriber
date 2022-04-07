@@ -34,7 +34,7 @@ import {
   IMPORT_SUCCESS,
   IMPORT_ERROR,
   IMPORT_COMPLETE,
-  PostFileResponse,
+  FileResponse,
   ExportType,
 } from './types';
 import { errStatus, errorStatus } from '../AxiosStatus';
@@ -164,8 +164,8 @@ export const exportProject =
         )
           // eslint-disable-next-line no-loop-func
           .then((response) => {
-            var fr = response.data as PostFileResponse;
-            start = Number(fr.id);
+            var fr = response.data as FileResponse;
+            start = Number(fr.data.id);
             switch (start) {
               case -1:
                 dispatch({
@@ -175,7 +175,7 @@ export const exportProject =
                 break;
               case -2:
                 dispatch({
-                  payload: errorStatus(undefined, fr.message),
+                  payload: errorStatus(undefined, fr.data.attributes.message),
                   type: EXPORT_ERROR,
                 });
                 break;

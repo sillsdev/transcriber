@@ -10,7 +10,7 @@ import {
   ExportType,
   Project,
   ISharedStrings,
-  PostFileResponse,
+  FileResponse,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -40,7 +40,7 @@ enum Steps {
 interface IStateProps {
   t: ITranscriptionTabStrings;
   ts: ISharedStrings;
-  exportFile: PostFileResponse;
+  exportFile: FileResponse;
   exportStatus: IAxiosStatus | undefined;
 }
 
@@ -130,8 +130,8 @@ export const ProjectDownload = (props: IProps) => {
         }
         if (exportStatus.complete) {
           if (exportFile) {
-            setExportName(exportFile.message);
-            setExportUrl(exportFile.fileURL);
+            setExportName(exportFile.data.attributes.message);
+            setExportUrl(exportFile.data.attributes.fileurl);
             exportComplete();
             setProgress(Steps.Download);
           }
