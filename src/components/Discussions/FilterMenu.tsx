@@ -115,6 +115,7 @@ export function FilterMenu(props: IProps) {
       color="secondary"
     >
       <IconButton
+        title={t.filter}
         id="filterMenu"
         aria-controls="filter-menu"
         aria-haspopup="true"

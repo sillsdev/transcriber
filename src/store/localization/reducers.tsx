@@ -270,6 +270,7 @@ const initialState = {
 			"allPassages": "All Passages on all team projects",
 			"allSteps": "All Steps",
 			"category": "Category",
+			"filter": "Filter Discussions",
 			"forYou": "For You",
 			"latestVersion": "Latest Version",
 			"resolved": "Resolved",
@@ -890,6 +891,7 @@ const initialState = {
 		"en": {
 			"assignment": "Assigned To",
 			"lastUpdated": "Last Updated",
+			"sortMenu": "Sort Discussions",
 			"topic": "Topic",
 		}
 	}),

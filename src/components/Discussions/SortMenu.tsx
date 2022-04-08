@@ -104,6 +104,7 @@ export function SortMenu(props: IProps) {
         id="SortMenu"
         aria-controls="sort-menu"
         aria-haspopup="true"
+        title={t.sortMenu}
         className={classes.icon}
         onClick={handleClick}
         disabled={disabled}

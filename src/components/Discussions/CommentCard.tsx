@@ -276,7 +276,7 @@ export const CommentCard = (props: IProps) => {
               <UserAvatar {...props} userRec={author} />
             </Grid>
             {commentPlayId && mediaId === commentPlayId ? (
-              <Grid item className={classes.column}>
+              <Grid item id="commentplayer" className={classes.column}>
                 <MediaPlayer
                   auth={auth}
                   srcMediaId={mediaId === commentPlayId ? commentPlayId : ''}
@@ -289,13 +289,15 @@ export const CommentCard = (props: IProps) => {
             ) : (
               <>
                 {media && (
-                  <IconButton onClick={handlePlayComment}>
+                  <IconButton id="playcomment" onClick={handlePlayComment}>
                     <PlayIcon />
                   </IconButton>
                 )}
                 <Grid container className={classes.column}>
-                  <Grid item>{author?.attributes?.name}</Grid>
-                  <Grid item>
+                  <Grid item id="author">
+                    {author?.attributes?.name}
+                  </Grid>
+                  <Grid item id="datecreated">
                     {dateOrTime(comment.attributes.dateUpdated, lang)}
                   </Grid>
                 </Grid>

@@ -244,6 +244,7 @@ export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {
     "allPassages": string;
     "allSteps": string;
     "category": string;
+    "filter": string;
     "forYou": string;
     "latestVersion": string;
     "resolved": string;
@@ -832,6 +833,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
 export interface ISortMenuStrings extends Localize.LocalizedStringsMethods {
     "assignment": string;
     "lastUpdated": string;
+    "sortMenu": string;
     "topic": string;
 };
 
