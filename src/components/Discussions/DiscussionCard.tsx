@@ -602,6 +602,7 @@ export const DiscussionCard = (props: IProps) => {
       await memory.update(ops);
     }
     onAddComplete && onAddComplete();
+    if (myRegion) handleHighlightDiscussion(myRegion.start);
     setEditing(false);
     setChanged(false);
   };

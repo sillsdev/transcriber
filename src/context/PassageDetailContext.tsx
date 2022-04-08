@@ -436,7 +436,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         setState((state: ICtxState) => {
           return { ...state, refresh: refreshRef.current };
         });
-      }
+      } else settingSegmentRef.current = false;
     };
     const stepComplete = (stepid: string) => {
       stepid = remoteId('orgworkflowstep', stepid, memory.keyMap) || stepid;
@@ -668,13 +668,16 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         segment?.start !== highlightRef.current
       ) {
         handleHighlightDiscussion(undefined);
+        settingSegmentRef.current = false;
       }
-      currentSegmentRef.current = segment;
-      setState((state: ICtxState) => ({
-        ...state,
-        currentSegment: prettySegment(segment),
-        currentSegmentIndex,
-      }));
+      if (currentSegmentRef.current !== segment) {
+        currentSegmentRef.current = segment;
+        setState((state: ICtxState) => ({
+          ...state,
+          currentSegment: prettySegment(segment),
+          currentSegmentIndex,
+        }));
+      }
     };
     const setupLocate = (cb?: (segments: string) => void) => {
       segmentsCb.current = cb;

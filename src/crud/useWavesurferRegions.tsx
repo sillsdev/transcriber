@@ -577,13 +577,16 @@ export function useWaveSurferRegions(
       ')'
     );
   }
+  function roundToTenths(n: number) {
+    return Math.round(n * 10) / 10;
+  }
 
   function justPlayRegion(progress: number) {
     if (
       singleRegionRef.current &&
       currentRegion() &&
       !currentRegion().loop &&
-      currentRegion().start <= progress &&
+      roundToTenths(currentRegion().start) <= roundToTenths(progress) && //account for discussion topic rounding
       currentRegion().end > progress + 0.01
     ) {
       playRegionRef.current = true;
