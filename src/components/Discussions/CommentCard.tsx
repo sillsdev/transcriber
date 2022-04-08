@@ -266,7 +266,7 @@ export const CommentCard = (props: IProps) => {
     }
     setMediaId(related(comment, 'mediafile'));
   }, [comment, users]);
-
+  console.log('mediaId', mediaId, 'commentPlayId', commentPlayId);
   return (
     <div className={classes.root}>
       <Grid container className={classes.row}>
@@ -275,7 +275,7 @@ export const CommentCard = (props: IProps) => {
             <Grid item id="user" className={classes.avatar}>
               <UserAvatar {...props} userRec={author} />
             </Grid>
-            {mediaId === commentPlayId ? (
+            {commentPlayId && mediaId === commentPlayId ? (
               <Grid item className={classes.column}>
                 <MediaPlayer
                   auth={auth}
@@ -301,14 +301,6 @@ export const CommentCard = (props: IProps) => {
                 </Grid>
               </>
             )}
-            <Grid item className={classes.column}>
-              <Grid item id="author">
-                {author?.attributes?.name}
-              </Grid>
-              <Grid item id="dateupdated">
-                {dateOrTime(comment.attributes.dateUpdated, lang)}
-              </Grid>
-            </Grid>
           </Grid>
           {mediaId !== commentPlayId && author?.id === user && (
             <Grid item>
