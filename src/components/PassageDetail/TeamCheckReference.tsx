@@ -15,6 +15,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     playStatus: {
       margin: theme.spacing(1),
+      width: '100%',
+      '& audio': {
+        display: 'flex',
+        width: 'inherit',
+      },
     },
     slider: {},
     controls: {
@@ -43,11 +48,11 @@ export function TeamCheckReference({ auth }: IProps) {
   };
 
   return (
-    <Grid container direction="row" alignItems="center">
-      <Grid item md={4} sm={12} className={classes.resource}>
+    <Grid container direction="column">
+      <Grid item xs={10} className={classes.resource}>
         <SelectMyResource onChange={handleResource} />
       </Grid>
-      <Grid item md={6} sm={12} className={classes.playStatus}>
+      <Grid item xs={10} className={classes.playStatus}>
         <MediaPlayer
           auth={auth}
           srcMediaId={playItem}

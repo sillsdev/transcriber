@@ -80,10 +80,6 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       margin: 'auto',
       width: `calc(100% - 32px)`,
-      '& audio': {
-        display: 'flex',
-        width: 'inherit',
-      },
     },
     playSelect: {
       paddingRight: theme.spacing(4),
@@ -101,7 +97,14 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     grow: { flexGrow: 1 },
-    playerRow: { width: '100%', display: 'flex' },
+    playerRow: {
+      width: '100%',
+      '& audio': {
+        display: 'flex',
+        width: 'inherit',
+      },
+      display: 'flex',
+    },
   })
 );
 const Wrapper = styled.div`
