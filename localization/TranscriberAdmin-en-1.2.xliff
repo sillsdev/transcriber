@@ -1276,6 +1276,13 @@
                <context context-type="sourcefile">filterMenu.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="filterMenu.filter">
+            <source>Filter Discussions</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">filterMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="filterMenu.forYou">
             <source>For You</source>
             <target/>
@@ -4715,6 +4722,13 @@
          </trans-unit>
          <trans-unit id="sortMenu.lastUpdated">
             <source>Last Updated</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">filterMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="sortMenu.sortMenu">
+            <source>Sort Discussions</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">filterMenu.tsx</context>
