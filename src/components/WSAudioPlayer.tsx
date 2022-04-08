@@ -57,7 +57,6 @@ import {
 } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
-import { clearTimeout } from 'timers';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -504,7 +503,12 @@ function WSAudioPlayer(props: IProps) {
 
   const cleanupAutoStart = () => {
     if (autostartTimer.current) {
-      clearTimeout(autostartTimer.current);
+      try {
+        //make sure clearTimeout is not imported from timers
+        clearTimeout(autostartTimer.current);
+      } catch (error) {
+        console.log(error);
+      }
       autostartTimer.current = undefined;
     }
   };
