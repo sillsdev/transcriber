@@ -270,6 +270,7 @@ const initialState = {
 			"allPassages": "All Passages on all team projects",
 			"allSteps": "All Steps",
 			"category": "Category",
+			"filter": "Filter Discussions",
 			"forYou": "For You",
 			"latestVersion": "Latest Version",
 			"resolved": "Resolved",
@@ -861,7 +862,7 @@ const initialState = {
 			"launchAudacity": "Launch Audacity",
 			"mediaAttached": "Audio Attached",
 			"mediaDetached": "Audio Detached",
-			"mediaError": "Meida is missing or has an unaccepted format.",
+			"mediaError": "Media is missing or has an unaccepted format.",
 			"member": "Member",
 			"no": "No",
 			"NoSaveOffline": "Unable to save while offline.",
@@ -884,6 +885,14 @@ const initialState = {
 			"user": "User",
 			"versionHistory": "Versions",
 			"yes": "Yes",
+		}
+	}),
+	"sortMenu": new LocalizedStrings({
+		"en": {
+			"assignment": "Assigned To",
+			"lastUpdated": "Last Updated",
+			"sortMenu": "Sort Discussions",
+			"topic": "Topic",
 		}
 	}),
 	"spelling": new LocalizedStrings({
@@ -1045,6 +1054,7 @@ const initialState = {
 	}),
 	"transcriptionTab": new LocalizedStrings({
 		"en": {
+			"audioExport": "Export Audio Files",
 			"availableOnClipboard": "Exported data is available on the clipboard. Use paste to insert it into another program.",
 			"cancel": "Cancel",
 			"cantCopy": "Unable to copy to clipboard",
@@ -1066,8 +1076,11 @@ const initialState = {
 			"exportType": "Which export type?",
 			"filter": "Filter",
 			"incompletePlan": "Plan is incomplete: attach audio to passages.",
+			"latestAudio": "Latest Audio",
+			"noData": "No {0} Data.",
 			"passages": "Passages",
 			"plan": "Plan",
+			"scriptureBurrito": "Scripture Burrito",
 			"sectionstate": "State",
 			"showHideFilter": "Show/Hide filter rows",
 			"updated": "Updated",
@@ -1317,6 +1330,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"selectArtifactType" : new LocalizedStrings(action.payload.data.selectArtifactType),
 				"selectRecording" : new LocalizedStrings(action.payload.data.selectRecording),
 				"shared" : new LocalizedStrings(action.payload.data.shared),
+				"sortMenu" : new LocalizedStrings(action.payload.data.sortMenu),
 				"spelling" : new LocalizedStrings(action.payload.data.spelling),
 				"stepEditor" : new LocalizedStrings(action.payload.data.stepEditor),
 				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),

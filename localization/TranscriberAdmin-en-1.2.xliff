@@ -1276,6 +1276,13 @@
                <context context-type="sourcefile">filterMenu.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="filterMenu.filter">
+            <source>Filter Discussions</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">filterMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="filterMenu.forYou">
             <source>For You</source>
             <target/>
@@ -4546,7 +4553,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="shared.mediaError">
-            <source>Meida is missing or has an unaccepted format.</source>
+            <source>Media is missing or has an unaccepted format.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
@@ -4704,6 +4711,34 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="sortMenu.assignment">
+            <source>Assigned To</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">filterMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="sortMenu.lastUpdated">
+            <source>Last Updated</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">filterMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="sortMenu.sortMenu">
+            <source>Sort Discussions</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">filterMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="sortMenu.topic">
+            <source>Topic</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">filterMenu.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="spelling.addToDict">
@@ -5469,6 +5504,13 @@
                <context context-type="sourcefile">TranscriptionShow.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="transcriptionTab.audioExport">
+      		<source>Export Audio Files</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="transcriptionTab.availableOnClipboard">
             <source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
             <target/>
@@ -5616,6 +5658,20 @@
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="transcriptionTab.latestAudio">
+      		<source>Latest Audio</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="transcriptionTab.noData">
+      		<source>No {0} Data.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="transcriptionTab.passages">
             <source>Passages</source>
             <target/>
@@ -5630,6 +5686,13 @@
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="transcriptionTab.scriptureBurrito">
+      		<source>Scripture Burrito</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="transcriptionTab.sectionstate">
             <source>State</source>
             <target/>

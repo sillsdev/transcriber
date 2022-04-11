@@ -244,6 +244,7 @@ export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {
     "allPassages": string;
     "allSteps": string;
     "category": string;
+    "filter": string;
     "forYou": string;
     "latestVersion": string;
     "resolved": string;
@@ -829,6 +830,13 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "yes": string;
 };
 
+export interface ISortMenuStrings extends Localize.LocalizedStringsMethods {
+    "assignment": string;
+    "lastUpdated": string;
+    "sortMenu": string;
+    "topic": string;
+};
+
 export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
     "addToDict": string;
     "close": string;
@@ -975,6 +983,7 @@ export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMeth
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
+    "audioExport": string;
     "availableOnClipboard": string;
     "cancel": string;
     "cantCopy": string;
@@ -996,8 +1005,11 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "exportType": string;
     "filter": string;
     "incompletePlan": string;
+    "latestAudio": string;
+    "noData": string;
     "passages": string;
     "plan": string;
+    "scriptureBurrito": string;
     "sectionstate": string;
     "showHideFilter": string;
     "updated": string;
@@ -1231,6 +1243,7 @@ export interface ILocalizedStrings {
 	selectArtifactType: ISelectArtifactTypeStrings;
 	selectRecording: ISelectRecordingStrings;
 	shared: ISharedStrings;
+	sortMenu: ISortMenuStrings;
 	spelling: ISpellingStrings;
 	stepEditor: IStepEditorStrings;
 	taskItem: ITaskItemStrings;

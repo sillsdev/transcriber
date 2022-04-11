@@ -13,6 +13,7 @@ interface IProps {
   srcMediaId: string;
   requestPlay: boolean;
   onEnded: () => void;
+  onTogglePlay?: () => void;
   onPosition?: (timeStamp: number) => void;
   position?: number;
   onDuration?: (timeStamp: number) => void;
@@ -25,6 +26,7 @@ export function MediaPlayer(props: IProps) {
     srcMediaId,
     requestPlay,
     onEnded,
+    onTogglePlay,
     onPosition,
     position,
     onDuration,
@@ -89,6 +91,16 @@ export function MediaPlayer(props: IProps) {
     if (onEnded) onEnded();
   };
 
+  const pause = () => {
+    toggle(false);
+  };
+  const play = () => {
+    toggle(true);
+  };
+  const toggle = (play: boolean) => {
+    if (play !== playing && onTogglePlay) onTogglePlay();
+  };
+
   const timeUpdate = () => {
     if (!onPosition) return;
     const el = audioRef.current as HTMLMediaElement;
@@ -106,7 +118,6 @@ export function MediaPlayer(props: IProps) {
 
   const handleError = (e: any) => {
     logError(Severity.error, reporter, e);
-    console.log(e);
     // showMessage(e.target?.error?.message || ts.mediaError);
     showMessage(ts.mediaError);
   };
@@ -120,6 +131,8 @@ export function MediaPlayer(props: IProps) {
       onTimeUpdate={timeUpdate}
       onDurationChange={durationChange}
       onError={handleError}
+      onPause={pause}
+      onPlay={play}
     />
   ) : (
     <></>

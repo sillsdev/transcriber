@@ -1,5 +1,7 @@
+import { IconButton } from '@material-ui/core';
 import { CSSProperties } from 'styled-components';
-
+import PrevIcon from '@material-ui/icons/NavigateBefore';
+import NextIcon from '@material-ui/icons/NavigateNext';
 export const Stage = ({
   id,
   label,
@@ -7,6 +9,7 @@ export const Stage = ({
   textColor,
   done,
   select,
+  moveStep,
 }: {
   id: string;
   label: string;
@@ -14,6 +17,7 @@ export const Stage = ({
   textColor?: string;
   done?: boolean;
   select?: (id: string) => void;
+  moveStep?: (forward: boolean) => void;
 }) => {
   const lineProps = { strokeWidth: 1.1 };
   const textProps = (textColor?: string) =>
@@ -34,8 +38,27 @@ export const Stage = ({
   const handleClick = () => {
     select && select(id);
   };
-
-  return (
+  const handleMove = (forward: boolean) => () => {
+    moveStep && moveStep(forward);
+  };
+  const shortLabel = label.length > 22 ? `${label.slice(0, 22)}...` : label;
+  return id === 'prev' || id === 'next' ? (
+    <IconButton
+      id={id}
+      disabled={label === ''}
+      color="secondary"
+      onClick={handleMove(id === 'next')}
+      style={{ minWidth: '20px' }}
+    >
+      {label === '' ? (
+        <></>
+      ) : id === 'prev' ? (
+        <PrevIcon fontSize="large" />
+      ) : (
+        <NextIcon fontSize="large" />
+      )}
+    </IconButton>
+  ) : (
     <svg
       width="300px"
       height="50px"
@@ -72,7 +95,7 @@ export const Stage = ({
           transform="matrix(1.3,0,0,2.2,34.5,-21.3)"
         >
           <tspan x="85.3" y="25.6">
-            {`${done ? '\u2714 ' : ''}${label}`}
+            {`${done ? '\u2714 ' : ''}${shortLabel}`}
           </tspan>
         </text>
       </g>

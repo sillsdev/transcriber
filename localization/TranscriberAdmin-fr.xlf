@@ -746,12 +746,12 @@
 			</segment>
 		</unit>
 		<unit id="community.topic">
-         <segment>
-            <source>Topic</source>
-            <target>Sujet</target>
-         </segment>
-      </unit>
-      <unit id="community.transcribe">
+			<segment>
+				<source>Topic</source>
+				<target>Sujet</target>
+			</segment>
+		</unit>
+		<unit id="community.transcribe">
 			<segment>
 				<source>Transcribe</source>
 				<target>Transcrire</target>
@@ -1010,12 +1010,12 @@
 			</segment>
 		</unit>
 		<unit id="electronImport.newerVersion">
-         <segment>
-            <source>This file was exported with a newer version of the program.You should download the latest version before importing.  If you continue, some data may not be imported correctly.</source>
-            <target>Ce fichier a été exporté avec une version plus récente du programme, vous devez télécharger la dernière version avant de l'importer.  Si vous continuez, certaines données risquent de ne pas être importées correctement.</target>
-         </segment>
-      </unit>
-      <unit id="electronImport.project">
+			<segment>
+				<source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+				<target>Ce fichier a été exporté avec une version plus récente du programme.  Vous devriez télécharger la dernière version avant de l'importer !  Si vous continuez, certaines données risquent de ne pas être importées correctement.</target>
+			</segment>
+		</unit>
+		<unit id="electronImport.project">
 			<segment>
 				<source>Audio Project</source>
 				<target>Projet audio</target>
@@ -1023,7 +1023,8 @@
 		</unit>
 		<unit id="electronImport.projectImported">
 			<segment>
-				<source>Audio Project {name0} was previously imported with a newer file: {date1}</source>
+				<source>Audio Project {name0} was previously imported with a newer file:
+					{date1}</source>
 				<target>Le projet audio {nom0} a été précédemment importé avec un fichier plus récent : {date1}</target>
 			</segment>
 		</unit>
@@ -1093,7 +1094,13 @@
 				<target>Catégorie</target>
 			</segment>
 		</unit>
-		<unit id="filterMenu.forYou">
+		<unit id="filterMenu.filter">
+         <segment>
+            <source>Filter Discussions</source>
+            <target>Discussions sur les filtres</target>
+         </segment>
+      </unit>
+      <unit id="filterMenu.forYou">
 			<segment>
 				<source>For You</source>
 				<target>Pour vous</target>
@@ -2807,7 +2814,8 @@
 		</unit>
 		<unit id="mediaUpload.resourceTask">
 			<segment>
-				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in
+					.pdf format.</source>
 				<target>Téléchargez des fichiers audio au format .mp3, .m4a, .wav ou .ogg ou du contenu visuel au format .pdf.</target>
 			</segment>
 		</unit>
@@ -2820,7 +2828,8 @@
 		<unit id="mediaUpload.task">
 			<segment>
 				<source>You can upload audio files in .mp3, .m4a, .wav or .ogg format.</source>
-				<target>Vous pouvez télécharger des fichiers audio au format .mp3, .m4a, .wav ou .ogg.</target>
+				<target>Vous pouvez télécharger des fichiers audio au format .mp3, .m4a, .wav ou
+					.ogg.</target>
 			</segment>
 		</unit>
 		<unit id="mediaUpload.title">
@@ -2946,7 +2955,8 @@
 		<unit id="newProject.scriptureTip">
 			<segment>
 				<source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
-				<target>Le produit final peut être de l'audio ou du texte et le type de contenu peut être une traduction, des histoires, une rédaction ou une adaptation.</target>
+				<target>Le produit final peut être de l'audio ou du texte et le type de contenu peut
+					être une traduction, des histoires, une rédaction ou une adaptation.</target>
 			</segment>
 		</unit>
 		<unit id="newProject.startRecording">
@@ -3784,12 +3794,12 @@
 			</segment>
 		</unit>
 		<unit id="selectRecording.topic">
-         <segment>
-            <source>Topic</source>
-            <target>Sujet</target>
-         </segment>
-      </unit>
-      <unit id="shared.admin">
+			<segment>
+				<source>Topic</source>
+				<target>Sujet</target>
+			</segment>
+		</unit>
+		<unit id="shared.admin">
 			<segment>
 				<source>Admin</source>
 				<target>Admin</target>
@@ -3899,7 +3909,7 @@
 		</unit>
 		<unit id="shared.mediaError">
 			<segment>
-				<source>Meida is missing or has an unaccepted format.</source>
+				<source>Media is missing or has an unaccepted format.</source>
 				<target>L'audio est manquant ou a un format non accepté.</target>
 			</segment>
 		</unit>
@@ -4033,6 +4043,30 @@
 			<segment>
 				<source>Yes</source>
 				<target>Oui</target>
+			</segment>
+		</unit>
+		<unit id="sortMenu.assignment">
+			<segment>
+				<source>Assigned To</source>
+				<target>Affecté à</target>
+			</segment>
+		</unit>
+		<unit id="sortMenu.lastUpdated">
+			<segment>
+				<source>Last Updated</source>
+				<target>Dernière mise à jour</target>
+			</segment>
+		</unit>
+		<unit id="sortMenu.sortMenu">
+         <segment>
+            <source>Sort Discussions</source>
+            <target>Trier les discussions</target>
+         </segment>
+      </unit>
+      <unit id="sortMenu.topic">
+			<segment>
+				<source>Topic</source>
+				<target>Sujet</target>
 			</segment>
 		</unit>
 		<unit id="spelling.addToDict">
@@ -4384,12 +4418,12 @@
 			</segment>
 		</unit>
 		<unit id="tool.phraseBackTranslate">
-         <segment>
-            <source>Phrase Back Translate</source>
-            <target>Phrase Retour Traduire</target>
-         </segment>
-      </unit>
-      <unit id="tool.record">
+			<segment>
+				<source>Phrase Back Translate</source>
+				<target>Phrase Retour Traduire</target>
+			</segment>
+		</unit>
+		<unit id="tool.record">
 			<segment>
 				<source>Record</source>
 				<target>Enregistrement</target>
@@ -4420,12 +4454,12 @@
 			</segment>
 		</unit>
 		<unit id="tool.wholeBackTranslate">
-         <segment>
-            <source>Whole Back Translate</source>
-            <target>Traduire en arrière</target>
-         </segment>
-      </unit>
-      <unit id="transcribe.openTranscriber">
+			<segment>
+				<source>Whole Back Translate</source>
+				<target>Traduire en arrière</target>
+			</segment>
+		</unit>
+		<unit id="transcribe.openTranscriber">
 			<segment>
 				<source>Open Transcriber</source>
 				<target>Transcripteur ouvert</target>
@@ -4689,6 +4723,12 @@
 				<target>Cet affichage vous permet de consulter la transcription qui est stockée.</target>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.audioExport">
+			<segment>
+				<source>Audio Export</source>
+				<target>Exportation audio</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.availableOnClipboard">
 			<segment>
 				<source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
@@ -4815,7 +4855,19 @@
 				<target>Le plan est incomplet : joindre l'audio aux passages.</target>
 			</segment>
 		</unit>
-		<unit id="transcriptionTab.passages">
+		<unit id="transcriptionTab.latestAudio">
+			<segment>
+				<source>Latest Audio</source>
+				<target>Dernier audio</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.noData">
+         <segment>
+            <source>No {0} Data.</source>
+            <target>Non {0} Données.</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.passages">
 			<segment>
 				<source>Passages</source>
 				<target>Passages</target>
@@ -4825,6 +4877,12 @@
 			<segment>
 				<source>Plan</source>
 				<target>Plan</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.scriptureBurrito">
+			<segment>
+				<source>Scripture Burrito</source>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.sectionstate">
@@ -5310,7 +5368,8 @@
 		<unit id="welcome.setupTeamTip">
 			<segment>
 				<source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-				<target>Configurez le projet audio, en divisant le travail en passages qui peuvent être attribués à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
+				<target>Configurez le projet audio, en divisant le travail en passages qui peuvent
+					être attribués à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
 			</segment>
 		</unit>
 		<unit id="welcome.team">
@@ -5328,7 +5387,8 @@
 		<unit id="welcome.teamTip">
 			<segment>
 				<source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
-				<target>Un projet audio a été mis en place en ligne. Les transcripteurs et les éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la fiche projet audio, ou hors ligne en l'important.</target>
+				<target>Un projet audio a été mis en place en ligne. Les transcripteurs et les
+					éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la fiche projet audio, ou hors ligne en l'important.</target>
 			</segment>
 		</unit>
 		<unit id="welcome.title">
@@ -5338,12 +5398,12 @@
 			</segment>
 		</unit>
 		<unit id="workflowSteps.backTranslation">
-         <segment>
-            <source>Back Translate</source>
-            <target>Traduire en arrière</target>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.communityTest1">
+			<segment>
+				<source>Back Translate</source>
+				<target>Traduire en arrière</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.communityTest1">
 			<segment>
 				<source>Community Test 1</source>
 				<target>Test communautaire 1</target>
@@ -5372,14 +5432,14 @@
 				<source>Done</source>
 				<target>Terminé</target>
 			</segment>
-		</unit>S
+		</unit>
 		<unit id="workflowSteps.export">
 			<segment>
 				<source>Export</source>
 				<target>Export</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.finalRecord">
+		<unit id="workflowSteps.finalRecording">
 			<segment>
 				<source>Final Record</source>
 				<target>Enregistrement final</target>

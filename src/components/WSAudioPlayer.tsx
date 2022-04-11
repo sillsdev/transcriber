@@ -43,7 +43,7 @@ import {
 } from 'react-icons/fa';
 
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
-import { useWaveSurfer } from '../crud/useWaveSurfer';
+import { IMarker, useWaveSurfer } from '../crud/useWaveSurfer';
 import { Duration, LightTooltip } from '../control';
 import { connect } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -53,6 +53,7 @@ import {
   IRegion,
   IRegionChange,
   IRegionParams,
+  parseRegions,
 } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
@@ -181,12 +182,14 @@ interface IProps extends IStateProps {
   allowSilence?: boolean;
   size: number;
   segments: string;
+  markers?: IMarker[];
   metaData?: JSX.Element;
   isPlaying?: boolean;
   loading: boolean;
   busy?: boolean;
   defaultRegionParams?: IRegionParams;
   doReset?: boolean;
+  autoStart?: boolean;
   setBusy?: (busy: boolean) => void;
   setMimeType?: (type: string) => void;
   setAcceptedMimes?: (types: MimeInfo[]) => void;
@@ -201,6 +204,7 @@ interface IProps extends IStateProps {
   onInteraction?: () => void;
   onRecording?: (r: boolean) => void;
   onCurrentSegment?: (currentSegment: IRegion | undefined) => void;
+  onMarkerClick?: (time: number) => void;
 }
 function valuetext(value: number) {
   return `${Math.floor(value)}%`;
@@ -233,12 +237,14 @@ function WSAudioPlayer(props: IProps) {
     allowSilence,
     size,
     segments,
+    markers,
     metaData,
     isPlaying,
     loading,
     busy,
     defaultRegionParams,
     doReset,
+    autoStart,
     setBusy,
     setMimeType,
     setAcceptedMimes,
@@ -253,6 +259,7 @@ function WSAudioPlayer(props: IProps) {
     onInteraction,
     onRecording,
     onCurrentSegment,
+    onMarkerClick,
   } = props;
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
@@ -282,6 +289,7 @@ function WSAudioPlayer(props: IProps) {
   const durationRef = useRef(0);
   const initialPosRef = useRef(initialposition);
   const segmentsRef = useRef(segments);
+  const markersRef = useRef<IMarker[]>([]);
   const [duration, setDurationx] = useState(0);
   const justPlayButton = allowRecord;
   const processRecordRef = useRef(false);
@@ -289,6 +297,7 @@ function WSAudioPlayer(props: IProps) {
   const [style, setStyle] = useState({
     cursor: busy || loading ? 'progress' : 'default',
   });
+  const autostartTimer = React.useRef<NodeJS.Timeout>();
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
@@ -322,6 +331,7 @@ function WSAudioPlayer(props: IProps) {
     wsSetHeight,
     wsStartRecord,
     wsStopRecord,
+    wsAddMarkers,
   } = useWaveSurfer(
     waveformRef.current,
     onWSReady,
@@ -330,6 +340,7 @@ function WSAudioPlayer(props: IProps) {
     onWSCanUndo,
     onWSPlayStatus,
     onInteraction,
+    onMarkerClick,
     () => {}, //on error...probably should report?
     size - 150,
     allowRecord,
@@ -406,15 +417,14 @@ function WSAudioPlayer(props: IProps) {
       wsPause(); //stop if playing
       recordStartPosition.current = wsPosition();
       recordOverwritePosition.current = recordStartPosition.current;
-      initialPosRef.current = recordStartPosition.current;
       wsStartRecord();
-      startRecording(500);
+      setRecording(startRecording(500));
     } else {
       processRecordRef.current = true;
       stopRecording();
       wsStopRecord();
+      setRecording(false);
     }
-    setRecording(!recordingRef.current);
     return true;
   };
 
@@ -491,30 +501,64 @@ function WSAudioPlayer(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSpeed]);
 
+  const cleanupAutoStart = () => {
+    if (autostartTimer.current) {
+      try {
+        //make sure clearTimeout is not imported from timers
+        clearTimeout(autostartTimer.current);
+      } catch (error) {
+        console.log(error);
+      }
+      autostartTimer.current = undefined;
+    }
+  };
+  const launchTimer = () => {
+    autostartTimer.current = setTimeout(() => {
+      handleRecorder();
+    }, 1000 * 0.5);
+  };
+  useEffect(() => {
+    if (autoStart) {
+      launchTimer();
+    }
+    return () => {
+      cleanupAutoStart();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoStart]);
+
   useEffect(() => {
     wsSetHeight(size - 150); //does this need to be smarter?
   }, [size, wsSetHeight]);
 
   useEffect(() => {
-    if (initialposition !== initialPosRef.current) {
-      if (wsIsReady()) wsGoto(initialposition || 0);
-      initialPosRef.current = initialposition;
+    if (
+      initialposition !== undefined &&
+      initialposition !== initialPosRef.current
+    ) {
+      if (wsIsReady()) wsGoto(initialposition);
     }
+    initialPosRef.current = initialposition;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialposition]);
+
+  useEffect(() => {
+    if (ready && markers && markers !== markersRef.current) {
+      markersRef.current = markers;
+      wsAddMarkers(markers);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [markers, ready]);
 
   useEffect(() => {
     if (segments !== segmentsRef.current) {
       segmentsRef.current = segments;
       if (ready && segmentsRef.current !== wsGetRegions()) {
         wsLoadRegions(segments, loopingRef.current);
-        var regions = JSON.parse(segments)?.regions;
-        if (regions) {
-          regions = JSON.parse(regions);
-          if (Array.isArray(regions) && regions.length) {
-            const start = regions[0].start;
-            wsGoto(start);
-          }
+        var region = parseRegions(segments);
+        if (region.regions.length) {
+          const start = region.regions[0].start;
+          wsGoto(start);
         }
       }
     }
@@ -561,12 +605,14 @@ function WSAudioPlayer(props: IProps) {
     if (playing && wsPosition().toFixed(2) === durationRef.current.toFixed(2))
       wsGoto(0);
     setPlaying(playing);
-    if (onPlayStatus && isPlaying !== undefined && playing !== isPlaying)
+    if (onPlayStatus && isPlaying !== undefined && playing !== isPlaying) {
       onPlayStatus(playing);
+    }
   };
 
   useEffect(() => {
-    if (isPlaying !== undefined && playing !== isPlaying) handlePlayStatus();
+    if (isPlaying !== undefined && playingRef.current !== isPlaying)
+      handlePlayStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying]);
 
@@ -581,13 +627,16 @@ function WSAudioPlayer(props: IProps) {
     recordOverwritePosition.current = undefined;
     processRecordRef.current = false;
     setReady(true);
-    wsGoto(wsDuration());
     handleChanged();
   }
 
   function onRecordError(e: any) {
-    showMessage(e.error);
+    if (autostartTimer.current && e.error === 'No mediaRecorder') {
+      cleanupAutoStart();
+      launchTimer();
+    } else showMessage(e.error);
   }
+
   async function onRecordDataAvailable(e: any, blob: Blob) {
     var newPos = await wsInsertAudio(
       blob,
@@ -597,6 +646,7 @@ function WSAudioPlayer(props: IProps) {
     );
     recordOverwritePosition.current = newPos;
     setDuration(wsDuration());
+    wsGoto(newPos || wsDuration());
   }
   function onWSReady() {
     setReady(true);

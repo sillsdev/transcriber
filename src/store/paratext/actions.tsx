@@ -322,9 +322,10 @@ export const getLocalCount =
       payload: pendingStatus(t.countPending),
       type: COUNT_PENDING,
     });
-    //todo throw out old versions that are ready?
-    const ready = getMediaInPlans([plan], mediafiles, artifactId).filter(
-      (m) => m.attributes?.transcriptionstate === ActivityStates.Approved
+    const ready = getMediaInPlans([plan], mediafiles, artifactId, true).filter(
+      (m) =>
+        m.attributes?.transcriptionstate === ActivityStates.Approved &&
+        Boolean(related(m, 'passage'))
     );
     const refMissing = ready.filter((m) => {
       var passage = findRecord(

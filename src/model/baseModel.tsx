@@ -25,7 +25,7 @@ export const UpdateRecord = (
   user: string
 ): any => {
   rec.attributes.dateUpdated = currentDateTime();
-  return [t.updateRecord(rec), ...UpdateLastModifedBy(t, rec, user)];
+  return [t.updateRecord(rec), ...UpdateLastModifiedBy(t, rec, user)];
 };
 
 export const AddRecord = (
@@ -37,9 +37,9 @@ export const AddRecord = (
   memory.schema.initializeRecord(rec);
   if (!rec.attributes) rec.attributes = {} as any;
   rec.attributes.dateCreated = currentDateTime();
-  return [t.addRecord(rec), ...UpdateLastModifedBy(t, rec, user)];
+  return [t.addRecord(rec), ...UpdateLastModifiedBy(t, rec, user)];
 };
-export const UpdateLastModifedBy = (
+export const UpdateLastModifiedBy = (
   t: TransformBuilder,
   rec: RecordIdentity,
   user: string
@@ -73,7 +73,7 @@ export const UpdateRelatedRecord = (
   rec.attributes.dateUpdated = currentDateTime();
   if (related(rec, relationship) !== undefined)
     return [
-      ...UpdateLastModifedBy(t, rec, user),
+      ...UpdateLastModifiedBy(t, rec, user),
       t.replaceRelatedRecord(
         rec,
         relationship,
@@ -87,7 +87,7 @@ export const UpdateRelatedRecord = (
     ];
   else if (newId)
     return [
-      ...UpdateLastModifedBy(t, rec, user),
+      ...UpdateLastModifiedBy(t, rec, user),
       t.addToRelatedRecords(rec, relationship, {
         type: relatedType,
         id: newId,

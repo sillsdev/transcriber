@@ -8,12 +8,20 @@ import {
   IRegion,
   IRegionParams,
   IRegions,
+  parseRegions,
   useWaveSurferRegions,
 } from './useWavesurferRegions';
 import { convertToWav } from '../utils/wav';
 
 const noop = () => {};
 const noop1 = (x: any) => {};
+
+export interface IMarker {
+  time: number;
+  label?: string;
+  color?: string;
+  position?: 'top' | 'bottom';
+}
 
 export function useWaveSurfer(
   container: any,
@@ -27,6 +35,7 @@ export function useWaveSurfer(
   onCanUndo: (canUndo: boolean) => void = noop1,
   onPlayStatus: (playing: boolean) => void = noop,
   onInteraction: () => void = noop,
+  onMarkerClick: (time: number) => void = noop1,
   onError: (e: any) => void = noop,
   height: number = 128,
   singleRegionOnly: boolean = false,
@@ -47,6 +56,7 @@ export function useWaveSurfer(
   const inputRegionsRef = useRef<IRegions>();
   const regionsLoadedRef = useRef(false);
   const widthRef = useRef(0);
+  const markersRef = useRef([] as IMarker[]);
   const containerRef = useRef(container);
 
   const isNear = (position: number) => {
@@ -67,20 +77,26 @@ export function useWaveSurfer(
         'wavesurfer stop',
         () => !wavesurfer()?.isPlaying(),
         () => {
-          console.log('waiting for pause');
+          //console.log('waiting for pause');
           return false;
         },
         100
-      ).then(() => {
-        userInteractionRef.current = false;
-        wavesurfer()?.seekAndCenter(position);
-        userInteractionRef.current = true;
-      });
+      )
+        .catch()
+        .finally(() => {
+          userInteractionRef.current = false;
+          wavesurfer()?.seekAndCenter(position);
+          userInteractionRef.current = true;
+        });
     } else {
       userInteractionRef.current = false;
       wavesurfer()?.seekAndCenter(position);
       userInteractionRef.current = true;
     }
+  };
+  const onRegionPlayStatus = (value: boolean) => {
+    playingRef.current = value;
+    if (onPlayStatus) onPlayStatus(playingRef.current);
   };
   const progress = () => progressRef.current;
   const setPlaying = (value: boolean) => {
@@ -129,7 +145,7 @@ export function useWaveSurfer(
   } = useWaveSurferRegions(
     singleRegionOnly,
     onRegion,
-    onPlayStatus,
+    onRegionPlayStatus,
     wsDuration,
     isNear,
     wsGoto,
@@ -191,10 +207,32 @@ export function useWaveSurfer(
         if (onInteraction) onInteraction();
       });
       ws.on('redraw', function (peaks: any, width: number) {
-        widthRef.current = width;
+        if (widthRef.current !== width) {
+          widthRef.current = width;
+          wsAddMarkers(markersRef.current);
+        }
+      });
+      ws.on('marker-click', function (marker: any, e: any) {
+        //the seek right before this will cause any regions to be removed
+        //wait for that...
+        if (singleRegionOnly)
+          waitForIt(
+            'wavesurfer region clear',
+            () => {
+              return wsGetRegions().length <= '{"regions":"[]"}'.length;
+            },
+            () => {
+              return false;
+            },
+            100
+          )
+            .catch()
+            .finally(() => {
+              onMarkerClick(marker.time);
+            });
+        else onMarkerClick(marker.time);
       });
       // ws.drawer.on('click', (event: any, progress: number) => {
-      //   console.log('Clicking now', progress);
       // });
       return ws;
     }
@@ -277,7 +315,7 @@ export function useWaveSurfer(
 
   const wsLoad = (blob?: Blob, regions: string = '') => {
     durationRef.current = 0;
-    if (regions) inputRegionsRef.current = JSON.parse(regions);
+    if (regions) inputRegionsRef.current = parseRegions(regions);
     regionsLoadedRef.current = false;
     if (!wavesurfer() || !wavesurfer()?.backend) {
       blobToLoad.current = blob;
@@ -299,10 +337,10 @@ export function useWaveSurfer(
 
   const wsLoadRegions = (regions: string, loop: boolean) => {
     if (wavesurfer()?.isReady) {
-      loadRegions(JSON.parse(regions), loop);
+      loadRegions(parseRegions(regions), loop);
       regionsLoadedRef.current = true;
     } else {
-      inputRegionsRef.current = JSON.parse(regions);
+      inputRegionsRef.current = parseRegions(regions);
       regionsLoadedRef.current = false;
     }
   };
@@ -464,6 +502,13 @@ export function useWaveSurfer(
     setUndoBuffer(undefined);
     onCanUndo(false);
   };
+  const wsAddMarkers = (markers: IMarker[]) => {
+    markersRef.current = markers;
+    wavesurfer()?.clearMarkers();
+    markers.forEach((m) => {
+      wavesurfer()?.addMarker(m);
+    });
+  };
 
   //delete the audio in the current region
   const wsRegionDelete = () => {
@@ -546,5 +591,6 @@ export function useWaveSurfer(
     wsRemoveSplitRegion,
     wsStartRecord,
     wsStopRecord,
+    wsAddMarkers,
   };
 }

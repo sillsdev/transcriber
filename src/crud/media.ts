@@ -1,15 +1,34 @@
 import {
+  User,
   MediaFile,
   Plan,
   Project,
   Passage,
   Section,
   IMediaShare,
+  OrgWorkflowStep,
 } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { related, VernacularTag } from '.';
-import { cleanFileName, updateXml } from '../utils';
+import {
+  related,
+  VernacularTag,
+  findRecord,
+  parseRef,
+  getMediaInPlans,
+  getStepComplete,
+  afterStep,
+} from '.';
+import {
+  cleanFileName,
+  updateXml,
+  burritoMetadata,
+  FormatsType,
+  removeExtension,
+  mimeMap,
+  dataPath,
+  PathType,
+} from '../utils';
 import moment from 'moment';
 import eaf from '../utils/transcriptionEaf';
 import path from 'path';
@@ -186,4 +205,154 @@ export const getMediaEaf = (
       '<' + annotationValue + '>' + encTranscript + '</' + annotationValue + '>'
     );
   return str;
+};
+
+const pad3 = (n: number) => ('00' + n).slice(-3);
+
+interface IExportCommon {
+  memory: Memory;
+  projRec: Project;
+}
+
+interface IExportScripture {
+  scripturePackage: boolean;
+}
+
+interface IExportFilter {
+  artifactType: string | null | undefined;
+  target: string;
+  orgWorkflowSteps: OrgWorkflowStep[];
+}
+
+export interface IExportScripturePath extends IExportCommon, IExportScripture {}
+export interface IExportArtifacts extends IExportCommon, IExportFilter {}
+
+export interface IBurritoMeta
+  extends IExportCommon,
+    IExportScripture,
+    IExportFilter {
+  userId: string;
+}
+
+export const scriptureFullPath = (
+  mf: MediaFile,
+  { memory, scripturePackage, projRec }: IExportScripturePath
+) => {
+  let fullPath: string | null = null;
+  let book = '';
+  let ref = '';
+  if (scripturePackage) {
+    const mp = dataPath(mf.attributes.audioUrl, PathType.MEDIA);
+    const passRec = findRecord(
+      memory,
+      'passage',
+      related(mf, 'passage')
+    ) as Passage;
+    parseRef(passRec);
+    ref = passRec?.attributes?.reference;
+    book = passRec.attributes?.book;
+    const lang = projRec?.attributes?.language;
+    const chap = pad3(passRec?.startChapter || 1);
+    const start = pad3(passRec?.startVerse || 1);
+    const end = pad3(passRec?.endVerse || passRec?.startVerse || 1);
+    const ver = mf.attributes?.versionNumber;
+    const { ext } = removeExtension(mp);
+    if (passRec) {
+      fullPath = `release/audio/${book}/${lang}-${book}-${chap}-${start}-${end}v${ver}.${ext}`;
+    }
+  }
+  return { fullPath, book, ref };
+};
+
+export const mediaArtifacts = ({
+  memory,
+  projRec,
+  artifactType,
+  target,
+  orgWorkflowSteps,
+}: IExportArtifacts) => {
+  const plans = (related(projRec, 'plans') as Plan[])?.map((p) => p.id);
+  const media = memory.cache.query((q: QueryBuilder) =>
+    q.findRecords('mediafile')
+  ) as MediaFile[];
+  let planMedia: MediaFile[] | undefined = undefined;
+  if (plans && plans.length > 0) {
+    planMedia = getMediaInPlans(
+      plans,
+      media,
+      artifactType,
+      !artifactType //use only latest for vernacular (null)
+    );
+  }
+  const key = new Map<string, string>();
+  planMedia?.forEach((m) => {
+    const passRec = findRecord(
+      memory,
+      'passage',
+      related(m, 'passage')
+    ) as Passage;
+    if (
+      !Boolean(
+        orgWorkflowSteps &&
+          afterStep({
+            psgCompleted: getStepComplete(passRec),
+            target,
+            orgWorkflowSteps,
+          })
+      )
+    )
+      return;
+    const secRec =
+      passRec &&
+      (findRecord(memory, 'section', related(passRec, 'section')) as Section);
+    key.set(
+      m.id,
+      `${pad3(secRec?.attributes?.sequencenum)}.${pad3(
+        passRec?.attributes?.sequencenum
+      )}`
+    );
+  });
+  return planMedia
+    ?.filter((m) => key.get(m.id))
+    .sort((i, j) => ((key.get(i.id) || '') <= (key.get(j.id) || '') ? -1 : 1));
+};
+
+export const getBurritoMeta = (props: IBurritoMeta) => {
+  const { memory, userId, projRec } = props;
+  const userRec = findRecord(memory, 'user', userId) as User;
+  const burritoMeta = burritoMetadata({ projRec, userRec });
+  const ingredients = mediaArtifacts(props);
+  const scopes = burritoMeta.type.flavorType.currentScope;
+  const formats = {} as FormatsType;
+  ingredients?.forEach((mf) => {
+    const { fullPath, book, ref } = scriptureFullPath(mf, props);
+    if (book && book.length > 0) {
+      if (scopes.hasOwnProperty(book)) {
+        scopes[book].push(ref);
+      } else {
+        scopes[book] = [ref];
+      }
+    }
+    if (fullPath) {
+      const { ext } = removeExtension(fullPath);
+      if (!formats.hasOwnProperty(ext)) {
+        formats[ext] = {
+          compression: ext,
+        };
+      }
+      burritoMeta.ingredients[fullPath] = {
+        mimeType: mimeMap[ext],
+        size: mf.attributes.filesize,
+        scope: {
+          [book]: [ref],
+        },
+      };
+    }
+  });
+  let formatn = 1;
+  for (let val of Object.values(formats)) {
+    burritoMeta.type.flavorType.flavor.formats[`format${formatn}`] = val;
+    formatn += 1;
+  }
+  return JSON.stringify(burritoMeta, null, 2);
 };

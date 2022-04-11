@@ -80,10 +80,6 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       margin: 'auto',
       width: `calc(100% - 32px)`,
-      '& audio': {
-        display: 'flex',
-        width: 'inherit',
-      },
     },
     playSelect: {
       paddingRight: theme.spacing(4),
@@ -101,7 +97,14 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     grow: { flexGrow: 1 },
-    playerRow: { width: '100%', display: 'flex' },
+    playerRow: {
+      width: '100%',
+      '& audio': {
+        display: 'flex',
+        width: 'inherit',
+      },
+      display: 'flex',
+    },
   })
 );
 const Wrapper = styled.div`
@@ -199,8 +202,7 @@ export function PassageDetailItem(props: IProps) {
   const [topic, setTopic] = useState('');
   const [importList, setImportList] = useState<File[]>();
   const [uploadVisible, setUploadVisible] = useState(false);
-  const [playItem, setPlayItem] = useState('');
-  const [itemPlaying, setItemPlaying] = useState(false);
+  const [playItemSourceIsLatest, setPlayItemSourceIsLatest] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [confirm, setConfirm] = useState('');
   const {
@@ -215,6 +217,13 @@ export function PassageDetailItem(props: IProps) {
     currentSegmentIndex,
     getCurrentSegment,
     setPlaying,
+    setCommentPlaying,
+    playItem,
+    setPlayItem,
+    itemPlaying,
+    setItemPlaying,
+    handleItemTogglePlay,
+    handleItemPlayEnd,
   } = usePassageDetailContext();
   const { toolChanged, toolsChanged, startSave, saveCompleted, saveRequested } =
     useContext(UnsavedContext).state;
@@ -228,7 +237,7 @@ export function PassageDetailItem(props: IProps) {
   const toolId = 'RecordArtifactTool';
 
   const handleSplitSize = debounce((e: number) => {
-    setDiscussionSize(width - e);
+    setDiscussionSize({ width: width - e, height: discussionSize.height });
   }, 50);
 
   const handleHorizonalSplitSize = debounce((e: number) => {
@@ -279,6 +288,7 @@ export function PassageDetailItem(props: IProps) {
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     setStatusText('');
+    setTopic('');
     saveCompleted(toolId);
     if (importList) {
       setImportList(undefined);
@@ -320,12 +330,11 @@ export function PassageDetailItem(props: IProps) {
     e.persist();
     setTopic(e.target.value);
   };
-  const handleSelect = (id: string) => {
+  const handleSelect = (id: string, latest: boolean) => {
     setPlayItem(id);
+    setPlayItemSourceIsLatest(latest);
     setItemPlaying(false);
-  };
-  const handleEnded = () => {
-    setItemPlaying(false);
+    setCommentPlaying(false);
   };
 
   const handleDelete = (id: string) => () => {
@@ -366,6 +375,8 @@ export function PassageDetailItem(props: IProps) {
   const onRecordingOrPlaying = (doingsomething: boolean) => {
     if (doingsomething) {
       setPlaying(false); //stop the vernacular
+      setItemPlaying(false);
+      setCommentPlaying(false);
     }
   };
 
@@ -377,7 +388,7 @@ export function PassageDetailItem(props: IProps) {
         <div>
           <Wrapper>
             <SplitPane
-              defaultSize={width - discussionSize}
+              defaultSize={width - discussionSize.width}
               style={{ position: 'static' }}
               split="vertical"
               onChange={handleSplitSize}
@@ -512,6 +523,7 @@ export function PassageDetailItem(props: IProps) {
                               onChange={handleSelect}
                               ts={ts}
                               tags={slugs}
+                              latestVernacular={currentVersion}
                             />
                           </div>
                           <div id="rowplayer" className={classes.playerRow}>
@@ -519,30 +531,29 @@ export function PassageDetailItem(props: IProps) {
                               auth={auth}
                               srcMediaId={playItem}
                               requestPlay={itemPlaying}
-                              onEnded={handleEnded}
+                              onEnded={handleItemPlayEnd}
+                              onTogglePlay={handleItemTogglePlay}
                               controls={true}
                             />
-                            {playItem && (
-                              <>
-                                <LightTooltip title={t.transcribe}>
-                                  <IconButton
-                                    id="load-transcriber"
-                                    onClick={handleTranscribe}
-                                  >
-                                    <TranscribeIcon />
-                                  </IconButton>
-                                </LightTooltip>
-                                {projRole === RoleNames.Admin && (
-                                  <LightTooltip title={t.deleteItem}>
-                                    <IconButton
-                                      id="delete-recording"
-                                      onClick={handleDelete(playItem)}
-                                    >
-                                      <DeleteIcon />
-                                    </IconButton>
-                                  </LightTooltip>
-                                )}
-                              </>
+                            {playItem && playItemSourceIsLatest && (
+                              <LightTooltip title={t.transcribe}>
+                                <IconButton
+                                  id="load-transcriber"
+                                  onClick={handleTranscribe}
+                                >
+                                  <TranscribeIcon />
+                                </IconButton>
+                              </LightTooltip>
+                            )}
+                            {playItem && projRole === RoleNames.Admin && (
+                              <LightTooltip title={t.deleteItem}>
+                                <IconButton
+                                  id="delete-recording"
+                                  onClick={handleDelete(playItem)}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              </LightTooltip>
                             )}
                           </div>
                         </Paper>

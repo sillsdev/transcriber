@@ -1096,6 +1096,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="filterMenu.filter">
+         <segment>
+            <source>Filter Discussions</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="filterMenu.forYou">
          <segment>
             <source>For You</source>
@@ -3900,7 +3906,7 @@
       </unit>
       <unit id="shared.mediaError">
          <segment>
-            <source>Meida is missing or has an unaccepted format.</source>
+            <source>Media is missing or has an unaccepted format.</source>
             <target/>
          </segment>
       </unit>
@@ -4033,6 +4039,30 @@
       <unit id="shared.yes">
          <segment>
             <source>Yes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sortMenu.assignment">
+         <segment>
+            <source>Assigned To</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sortMenu.lastUpdated">
+         <segment>
+            <source>Last Updated</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sortMenu.sortMenu">
+         <segment>
+            <source>Sort Discussions</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sortMenu.topic">
+         <segment>
+            <source>Topic</source>
             <target/>
          </segment>
       </unit>
@@ -4690,6 +4720,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.audioExport">
+         <segment>
+            <source>Export Audio Files</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.availableOnClipboard">
          <segment>
             <source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
@@ -4816,6 +4852,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.latestAudio">
+         <segment>
+            <source>Latest Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.noData">
+         <segment>
+            <source>No {0} Data.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.passages">
          <segment>
             <source>Passages</source>
@@ -4825,6 +4873,12 @@
       <unit id="transcriptionTab.plan">
          <segment>
             <source>Plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.scriptureBurrito">
+         <segment>
+            <source>Scripture Burrito</source>
             <target/>
          </segment>
       </unit>

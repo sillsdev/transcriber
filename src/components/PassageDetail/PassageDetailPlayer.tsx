@@ -2,7 +2,7 @@ import { Button } from '@material-ui/core';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { IRegion } from '../../crud/useWavesurferRegions';
+import { IRegion, parseRegions } from '../../crud/useWavesurferRegions';
 import WSAudioPlayer from '../WSAudioPlayer';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IWsAudioPlayerStrings } from '../../model';
@@ -21,6 +21,11 @@ export function PassageDetailPlayer(props: IProps) {
     useContext(UnsavedContext).state;
   const t: IWsAudioPlayerStrings = useSelector(playerSelector, shallowEqual);
   const toolId = 'ArtifactSegments';
+  const ctx = useContext(PassageDetailContext);
+  const [requestPlay, setRequestPlay] = useState<boolean | undefined>(
+    undefined
+  );
+  const [initialposition, setInitialPosition] = useState<number | undefined>(0);
   const {
     loading,
     pdBusy,
@@ -32,25 +37,41 @@ export function PassageDetailPlayer(props: IProps) {
     currentstep,
     playerSize,
     setCurrentSegment,
-  } = useContext(PassageDetailContext).state;
+    discussionMarkers,
+    highlightDiscussion,
+    handleHighlightDiscussion,
+  } = ctx.state;
+  const highlightRef = useRef(highlightDiscussion);
   const defaultSegParams = {
     silenceThreshold: 0.004,
     timeThreshold: 0.12,
     segLenThreshold: 4.5,
   };
   const [defaultSegments, setDefaultSegments] = useState('{}');
+
   const segmentsRef = useRef('');
+  const playingRef = useRef(playing);
 
   const setPlayerSegments = (segments: string) => {
-    setDefaultSegments(segments);
+    if (
+      !allowSegment ||
+      !segmentsRef.current ||
+      segmentsRef.current.indexOf('},{') === -1
+    )
+      setDefaultSegments(segments);
+    if (!playingRef.current) {
+      var segs = parseRegions(segments);
+      if (segs.regions.length > 0) {
+        setInitialPosition(segs.regions[0].start);
+        setRequestPlay(true);
+      }
+    }
   };
 
   const onCurrentSegment = (segment: IRegion | undefined) => {
     var index = 0;
     if (segment && segmentsRef.current) {
-      var segs = JSON.parse(segmentsRef.current);
-      if (segs.regions) segs.regions = JSON.parse(segs.regions);
-      else segs.regions = [];
+      var segs = parseRegions(segmentsRef.current);
       index =
         segs.regions
           .sort((a: IRegion, b: IRegion) => a.start - b.start)
@@ -67,13 +88,27 @@ export function PassageDetailPlayer(props: IProps) {
       //not saving segments...so don't update changed
     }
   };
+
   const onPlayStatus = (newPlaying: boolean) => {
-    setPlaying(newPlaying);
+    if (playingRef.current !== newPlaying) {
+      setPlaying(newPlaying);
+      playingRef.current = newPlaying;
+      setRequestPlay(undefined);
+      setInitialPosition(undefined);
+    }
   };
 
   const onInteraction = () => {
     //focus on add comment?? focusOnTranscription();
   };
+
+  useEffect(() => {
+    highlightRef.current = highlightDiscussion;
+  }, [highlightDiscussion]);
+
+  useEffect(() => {
+    if (playing !== playingRef.current) setRequestPlay(playing);
+  }, [playing]);
 
   useEffect(() => {
     setupLocate(setPlayerSegments);
@@ -94,6 +129,7 @@ export function PassageDetailPlayer(props: IProps) {
     }
     //save the segments here
   };
+
   return (
     <div id="detailplayer">
       <WSAudioPlayer
@@ -101,13 +137,15 @@ export function PassageDetailPlayer(props: IProps) {
         allowRecord={false}
         size={playerSize}
         blob={audioBlob}
-        initialposition={0}
-        isPlaying={playing}
+        initialposition={initialposition}
+        isPlaying={requestPlay}
         loading={loading}
         busy={pdBusy}
         allowSegment={allowSegment}
         defaultRegionParams={defaultSegParams}
         segments={defaultSegments}
+        markers={discussionMarkers}
+        onMarkerClick={handleHighlightDiscussion}
         setBusy={setPDBusy}
         onSegmentChange={onSegmentChange}
         onPlayStatus={onPlayStatus}

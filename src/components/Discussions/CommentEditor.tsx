@@ -73,9 +73,11 @@ export const CommentEditor = (props: IProps) => {
   } = props;
   const {
     playing,
-    mediaPlaying,
+    itemPlaying,
     setPlaying,
-    setMediaPlaying,
+    setItemPlaying,
+    commentPlaying,
+    setCommentPlaying,
     commentRecording,
     setCommentRecording,
   } = useContext(PassageDetailContext).state;
@@ -122,7 +124,7 @@ export const CommentEditor = (props: IProps) => {
       try {
         waitForIt(
           'stop playing',
-          () => !playing && !mediaPlaying,
+          () => !playing && !itemPlaying && !commentPlaying,
           () => false,
           100
         ).then(() => {
@@ -135,7 +137,7 @@ export const CommentEditor = (props: IProps) => {
         setStartRecord(false);
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startRecord, playing, mediaPlaying]);
+  }, [startRecord, playing, itemPlaying, commentPlaying]);
 
   const handleSetCanSave = (valid: boolean) => {
     if (valid !== canSave) {
@@ -169,7 +171,8 @@ export const CommentEditor = (props: IProps) => {
 
   const handleRecord = () => {
     setPlaying(false);
-    setMediaPlaying(false);
+    setItemPlaying(false);
+    setCommentPlaying(false, true);
     setStartRecord(true);
     setCommentRecording(true);
   };
@@ -211,6 +214,7 @@ export const CommentEditor = (props: IProps) => {
           setCanSave={handleSetCanSave}
           setStatusText={setStatusText}
           size={200}
+          autoStart={true}
         />
       )}
       <div className={classes.row}>

@@ -6,6 +6,7 @@ import {
   AddRecord,
   UpdateRecord,
   UpdateRelatedRecord,
+  UpdateLastModifiedBy,
 } from '../model/baseModel';
 import { orbitErr } from '../utils';
 import * as actions from '../store';
@@ -51,6 +52,9 @@ export const useSaveComment = (props: IProps) => {
         })
       );
     }
+    ops.push(
+      ...UpdateLastModifiedBy(t, { type: 'discussion', id: discussion }, user)
+    );
     if (mediafile) {
       ops.push(
         ...UpdateRelatedRecord(

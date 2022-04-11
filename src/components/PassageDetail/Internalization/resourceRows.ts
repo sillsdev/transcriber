@@ -7,6 +7,7 @@ import {
 } from '../../../model';
 import { related, VernacularTag } from '../../../crud';
 import { IRow } from '../../../context/PassageDetailContext';
+import { removeExtension } from '../../../utils';
 
 const isResource = (typeSlug: string) =>
   ['resource', 'sharedresource'].indexOf(typeSlug) !== -1;
@@ -24,12 +25,14 @@ interface RowProps extends DataProps {
   newRow: IRow[];
   r: SectionResource | null;
   media: MediaFile | undefined;
+  sourceversion: number;
 }
 
 export const oneMediaRow = ({
   newRow,
   r,
   media,
+  sourceversion,
   artifactTypes,
   categories,
   userResources,
@@ -51,13 +54,14 @@ export const oneMediaRow = ({
           related(u, 'sectionresource') === r.id && related(u, 'user') === user
       )
   );
-
   newRow.push({
     id: media?.id || '',
     playItem: '',
     sequenceNum: r?.attributes.sequenceNum || 0,
     version: mediaAttr?.versionNumber || 0,
-    artifactName: r?.attributes.description || mediaAttr?.originalFile || '',
+    artifactName:
+      r?.attributes.description ||
+      removeExtension(mediaAttr?.originalFile || '').name,
     artifactType: localizedType(typeNameSlug),
     artifactCategory: localizedCategory(catNameSlug),
     done,
@@ -68,6 +72,7 @@ export const oneMediaRow = ({
     isComment: typeNameSlug === 'comment',
     isVernacular: typeNameSlug === '' || typeNameSlug === 'vernacular',
     isText: mediaAttr?.originalFile?.endsWith('.pdf') || false,
+    sourceVersion: sourceversion,
   });
   return newRow;
 };
@@ -80,7 +85,7 @@ export const mediaRows = (props: MediaProps) => {
   const { mediafiles, artifactTypes } = props;
 
   const newRow = Array<IRow>();
-  // sort takes the greatest version but if their equal, keeps the
+  // sort takes the greatest version but if they're equal, keeps the
   // one loaded first which is the vernacular media
   mediafiles
     .sort((i, j) => {
@@ -98,8 +103,14 @@ export const mediaRows = (props: MediaProps) => {
       const typId = related(media, 'artifactType');
       const artifactType = artifactTypes.find((t) => t.id === typId);
       const typeNameSlug = artifactType?.attributes?.typename || '';
+      let sourceversion = 0;
+      const relatedMedia = related(media, 'sourceMedia');
+      if (relatedMedia) {
+        var m = mediafiles.find((m) => m.id === relatedMedia);
+        sourceversion = m?.attributes?.versionNumber || 0;
+      }
       if (!isResource(typeNameSlug))
-        oneMediaRow({ ...props, newRow, r: null, media });
+        oneMediaRow({ ...props, newRow, r: null, media, sourceversion });
     });
   return newRow;
 };
@@ -115,7 +126,7 @@ export const resourceRows = (props: IProps) => {
   res.forEach((r) => {
     const id = related(r, 'mediafile');
     const media = mediafiles.find((m) => m.id === id);
-    oneMediaRow({ ...props, newRow, r, media });
+    oneMediaRow({ ...props, newRow, r, media, sourceversion: 0 });
   });
   return newRow;
 };

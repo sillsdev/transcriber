@@ -12,7 +12,8 @@ const versionName = (mf: MediaFile) => {
 export const getMediaInPlans = (
   planids: Array<string>,
   mediaFiles: Array<MediaFile>,
-  onlyTypeId: string | null | undefined // null for vernacular
+  onlyTypeId: string | null | undefined, // null for vernacular
+  onlyLatest: boolean
 ) => {
   const latest: ILatest = {};
   var media = mediaFiles.filter(
@@ -21,15 +22,29 @@ export const getMediaInPlans = (
   if (onlyTypeId !== undefined) {
     media = media.filter((m) => related(m, 'artifactType') === onlyTypeId);
   }
-  if (onlyTypeId === VernacularTag) {
-    media.forEach((f) => {
-      const name = versionName(f);
-      latest[name] = latest[name]
-        ? Math.max(latest[name], f.attributes.versionNumber)
-        : f.attributes.versionNumber;
-    });
-    return media.filter(
-      (f) => latest[versionName(f)] === f.attributes.versionNumber
-    );
-  } else return media;
+  if (onlyLatest) {
+    if (onlyTypeId === VernacularTag) {
+      media.forEach((f) => {
+        const name = versionName(f);
+        latest[name] = latest[name]
+          ? Math.max(latest[name], f.attributes.versionNumber)
+          : f.attributes.versionNumber;
+      });
+      return media.filter(
+        (f) => latest[versionName(f)] === f.attributes.versionNumber
+      );
+    } else {
+      var myMedia = media;
+      var vernacularIds = getMediaInPlans(
+        planids,
+        mediaFiles,
+        VernacularTag,
+        true
+      ).map((m) => m.id);
+      media = myMedia.filter(
+        (m) => vernacularIds.indexOf(related(m, 'sourceMedia')) >= 0
+      );
+    }
+  }
+  return media;
 };

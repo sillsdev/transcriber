@@ -20,6 +20,10 @@ export const usePassageState = () => {
         (a, b) => b.attributes?.versionNumber - a.attributes?.versionNumber
       );
     if (vernmedia.length === 0) return ActivityStates.NoMedia;
-    else return vernmedia[0].attributes?.transcriptionstate || '';
+    else
+      return (
+        vernmedia[0].attributes?.transcriptionstate ||
+        ActivityStates.TranscribeReady
+      );
   };
 };

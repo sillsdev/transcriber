@@ -12,6 +12,7 @@ import {
   IActivityStateStrings,
   localizeActivityState,
   MediaFile,
+  ActivityStates,
 } from '../model';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -96,7 +97,9 @@ export function Visualize(props: IProps) {
     selPlans.forEach((pl) => {
       const planName = pl.attributes.name;
       const selSections = sections.filter((s) => related(s, 'plan') === pl.id);
-      const selMedia = mediafiles.filter((m) => related(m, 'plan') === pl.id);
+      const selMedia = mediafiles.filter(
+        (m) => related(m, 'plan') === pl.id && Boolean(related(m, 'passage'))
+      );
       selSections.forEach((s) => {
         const selPassages = passages.filter(
           (ps) => related(ps, 'section') === s.id
@@ -135,7 +138,8 @@ export function Visualize(props: IProps) {
         }
       });
       selMedia.forEach((m) => {
-        const stateName = m.attributes ? m.attributes.transcriptionstate : '';
+        const stateName =
+          m.attributes?.transcriptionstate || ActivityStates.TranscribeReady;
         const statusKey =
           localizeActivityState(stateName, ta) + ':' + planName + ':status';
         statusTot[statusKey] = statusTot.hasOwnProperty(statusKey)

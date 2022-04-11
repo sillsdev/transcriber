@@ -67,7 +67,7 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: `calc(100% - 32px)`,
+      width: '100%',
       display: 'flex',
       '&:hover button': {
         color: 'black',
@@ -82,6 +82,11 @@ const useStyles = makeStyles((theme: Theme) =>
     card: {
       margin: theme.spacing(1),
       backgroundColor: theme.palette.primary.light,
+      flexGrow: 1,
+    },
+    highlightedcard: {
+      margin: theme.spacing(1),
+      backgroundColor: theme.palette.secondary.light,
       flexGrow: 1,
     },
     resolvedcard: {
@@ -193,8 +198,18 @@ interface IProps extends IRecordProps, IStateProps {
   showStep: boolean;
   showReference: boolean;
   onAddComplete?: () => {};
+  setRef: (ref: any) => {};
 }
+export const DiscussionRegion = (discussion: Discussion) => {
+  const startEnd = (val: string) =>
+    /^([0-9]+\.[0-9])-([0-9]+\.[0-9]) /.exec(val);
 
+  const m = startEnd(discussion.attributes?.subject);
+  if (m) {
+    return { start: parseFloat(m[1]), end: parseFloat(m[2]) };
+  }
+  return undefined;
+};
 export const DiscussionCard = (props: IProps) => {
   const classes = useStyles();
   const {
@@ -207,6 +222,7 @@ export const DiscussionCard = (props: IProps) => {
     showStep,
     showReference,
     onAddComplete,
+    setRef,
     comments,
     mediafiles,
     sections,
@@ -224,6 +240,9 @@ export const DiscussionCard = (props: IProps) => {
     setPlayerSegments,
     setMediaSelected,
     currentSegment,
+    handleHighlightDiscussion,
+    highlightDiscussion,
+    refresh,
   } = ctx.state;
   const {
     toolChanged,
@@ -260,7 +279,7 @@ export const DiscussionCard = (props: IProps) => {
   const [editCard, setEditCard] = useState(false);
   const { localizedArtifactCategory } = useArtifactCategory();
   const { localizedWorkStepFromId } = useOrgWorkflowSteps();
-
+  const cardRef = useRef<any>();
   const myToolId = useMemo(() => {
     if (discussion.id) return discussion.id;
     else return NewDiscussionToolId;
@@ -381,28 +400,24 @@ export const DiscussionCard = (props: IProps) => {
     }
     return media;
   }
-  const startEnd = (val: string) =>
-    /^([0-9]+\.[0-9])-([0-9]+\.[0-9]) /.exec(val);
+
+  const handleLocateClick = () => {
+    handleHighlightDiscussion(myRegion?.start);
+  };
 
   const handleLocate = () => {
-    const m = startEnd(discussion.attributes?.subject);
-    if (m) {
-      const regions = JSON.stringify([
-        { start: parseFloat(m[1]), end: parseFloat(m[2]) },
-      ]);
+    if (myRegion) {
+      const regions = JSON.stringify([myRegion]);
       setPlayerSegments(JSON.stringify({ regions }));
     }
   };
 
   const handlePlayOldClip = () => {
-    const values = startEnd(discussion.attributes?.subject);
-    let start = 0;
-    let end = 0;
-    if (values) {
-      start = parseFloat(values[1]);
-      end = parseFloat(values[2]);
-    }
-    setMediaSelected(related(discussion, 'mediafile'), start, end);
+    setMediaSelected(
+      related(discussion, 'mediafile'),
+      myRegion?.start || 0,
+      myRegion?.end || 0
+    );
   };
 
   const handleResolveButton = () => {
@@ -413,7 +428,7 @@ export const DiscussionCard = (props: IProps) => {
     memory.update((t: TransformBuilder) => UpdateRecord(t, discussion, user));
   };
   const handleSetSegment = async () => {
-    if (startEnd(discussion.attributes?.subject)) {
+    if (myRegion) {
       const subWords = editSubject.split(' ');
       subWords[0] = currentSegment.split(' ')[0];
       discussion.attributes.subject = subWords.join(' ');
@@ -435,6 +450,8 @@ export const DiscussionCard = (props: IProps) => {
       )
     );
     await memory.update(ops);
+    let start = parseFloat(currentSegment.split('-')[0]);
+    if (!isNaN(start)) handleHighlightDiscussion(start);
   };
   const handleDiscussionAction = (what: string) => {
     if (what === 'edit') {
@@ -585,6 +602,7 @@ export const DiscussionCard = (props: IProps) => {
       await memory.update(ops);
     }
     onAddComplete && onAddComplete();
+    if (myRegion) handleHighlightDiscussion(myRegion.start);
     setEditing(false);
     setChanged(false);
   };
@@ -619,13 +637,33 @@ export const DiscussionCard = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
+  const myRegion = useMemo(() => {
+    return DiscussionRegion(discussion);
+  }, [discussion]);
+
+  useEffect(() => {
+    //locate my region
+    if (highlightDiscussion === undefined) {
+      if (id === 'card-0') setRef(cardRef);
+    } else if (myRegion?.start === highlightDiscussion) {
+      handleLocate();
+      setRef(cardRef);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [highlightDiscussion, myRegion?.start, refresh]);
+
   return (
     <div className={classes.root}>
       <Card
+        ref={cardRef}
         key={discussion.id}
         id={id}
         className={
-          discussion.attributes.resolved ? classes.resolvedcard : classes.card
+          discussion.attributes.resolved
+            ? classes.resolvedcard
+            : myRegion?.start && myRegion?.start === highlightDiscussion
+            ? classes.highlightedcard
+            : classes.card
         }
         onClick={handleSelect(discussion)}
       >
@@ -698,42 +736,40 @@ export const DiscussionCard = (props: IProps) => {
           ) : (
             <Grid container className={classes.title}>
               <Grid item className={classes.topicItem}>
-                {startEnd(discussion.attributes?.subject) &&
-                  related(discussion, 'mediafile') === mediafileId && (
-                    <IconButton
-                      id={`locate-${discussion.id}`}
-                      size="small"
-                      className={classes.actionButton}
-                      title={t.locate}
-                      onClick={handleLocate}
-                    >
-                      <LocationIcon fontSize="small" />
-                    </IconButton>
-                  )}
-                {startEnd(discussion.attributes?.subject) &&
-                  related(discussion, 'mediafile') !== mediafileId && (
-                    <div className={classes.oldVersion}>
-                      {version && (
-                        <LightTooltip title={t.version}>
-                          <Chip label={version.toString()} size="small" />
-                        </LightTooltip>
-                      )}
-                      <LightTooltip title={t.playOrStop}>
-                        <IconButton
-                          id={`play-${discussion.id}`}
-                          size="small"
-                          className={classes.actionButton}
-                          onClick={handlePlayOldClip}
-                        >
-                          {playItem === related(discussion, 'mediafile') ? (
-                            <StopIcon fontSize="small" />
-                          ) : (
-                            <PlayIcon fontSize="small" />
-                          )}
-                        </IconButton>
+                {myRegion && related(discussion, 'mediafile') === mediafileId && (
+                  <IconButton
+                    id={`locate-${discussion.id}`}
+                    size="small"
+                    className={classes.actionButton}
+                    title={t.locate}
+                    onClick={handleLocateClick}
+                  >
+                    <LocationIcon fontSize="small" />
+                  </IconButton>
+                )}
+                {myRegion && related(discussion, 'mediafile') !== mediafileId && (
+                  <div className={classes.oldVersion}>
+                    {version && (
+                      <LightTooltip title={t.version}>
+                        <Chip label={version.toString()} size="small" />
                       </LightTooltip>
-                    </div>
-                  )}
+                    )}
+                    <LightTooltip title={t.playOrStop}>
+                      <IconButton
+                        id={`play-${discussion.id}`}
+                        size="small"
+                        className={classes.actionButton}
+                        onClick={handlePlayOldClip}
+                      >
+                        {playItem === related(discussion, 'mediafile') ? (
+                          <StopIcon fontSize="small" />
+                        ) : (
+                          <PlayIcon fontSize="small" />
+                        )}
+                      </IconButton>
+                    </LightTooltip>
+                  </div>
+                )}
                 <Typography
                   variant="h6"
                   component="h2"

@@ -23,7 +23,6 @@ import { withData } from '../../mods/react-orbitjs';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { findRecord, related } from '../../crud';
 import PlayIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
 import UserAvatar from '../UserAvatar';
 import { dateOrTime } from '../../utils';
 import { useGlobal } from 'reactn';
@@ -35,6 +34,7 @@ import { PassageDetailContext } from '../../context/PassageDetailContext';
 import Auth from '../../auth/Auth';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { UnsavedContext } from '../../context/UnsavedContext';
+import MediaPlayer from '../MediaPlayer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -130,8 +130,14 @@ export const CommentCard = (props: IProps) => {
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
   const savingRef = useRef(false);
-  const { setPlaying, setSelected, mediaPlaying, setMediaPlaying, playItem } =
-    useContext(PassageDetailContext).state;
+  const {
+    setSelected,
+    commentPlaying,
+    setCommentPlaying,
+    commentPlayId,
+    handleCommentPlayEnd,
+    handleCommentTogglePlay,
+  } = useContext(PassageDetailContext).state;
   const {
     toolChanged,
     toolsChanged,
@@ -247,8 +253,7 @@ export const CommentCard = (props: IProps) => {
   }, [comment, mediaId]);
 
   const handlePlayComment = () => {
-    setPlaying(false);
-    if (mediaId === playItem) setMediaPlaying(!mediaPlaying);
+    if (mediaId === commentPlayId) setCommentPlaying(!commentPlaying);
     else setSelected(mediaId);
   };
 
@@ -261,7 +266,7 @@ export const CommentCard = (props: IProps) => {
     }
     setMediaId(related(comment, 'mediafile'));
   }, [comment, users]);
-
+  console.log('mediaId', mediaId, 'commentPlayId', commentPlayId);
   return (
     <div className={classes.root}>
       <Grid container className={classes.row}>
@@ -270,25 +275,36 @@ export const CommentCard = (props: IProps) => {
             <Grid item id="user" className={classes.avatar}>
               <UserAvatar {...props} userRec={author} />
             </Grid>
-            {media && (
-              <IconButton id="playpause" onClick={handlePlayComment}>
-                {mediaId === playItem && mediaPlaying ? (
-                  <PauseIcon id="pause" />
-                ) : (
-                  <PlayIcon id="play" />
+            {commentPlayId && mediaId === commentPlayId ? (
+              <Grid item id="commentplayer" className={classes.column}>
+                <MediaPlayer
+                  auth={auth}
+                  srcMediaId={mediaId === commentPlayId ? commentPlayId : ''}
+                  requestPlay={commentPlaying}
+                  onEnded={handleCommentPlayEnd}
+                  onTogglePlay={handleCommentTogglePlay}
+                  controls={mediaId === commentPlayId}
+                />
+              </Grid>
+            ) : (
+              <>
+                {media && (
+                  <IconButton id="playcomment" onClick={handlePlayComment}>
+                    <PlayIcon />
+                  </IconButton>
                 )}
-              </IconButton>
+                <Grid container className={classes.column}>
+                  <Grid item id="author">
+                    {author?.attributes?.name}
+                  </Grid>
+                  <Grid item id="datecreated">
+                    {dateOrTime(comment.attributes.dateUpdated, lang)}
+                  </Grid>
+                </Grid>
+              </>
             )}
-            <Grid item className={classes.column}>
-              <Grid item id="author">
-                {author?.attributes?.name}
-              </Grid>
-              <Grid item id="dateupdated">
-                {dateOrTime(comment.attributes.dateUpdated, lang)}
-              </Grid>
-            </Grid>
           </Grid>
-          {author?.id === user && (
+          {mediaId !== commentPlayId && author?.id === user && (
             <Grid item>
               <DiscussionMenu action={handleCommentAction} />
             </Grid>

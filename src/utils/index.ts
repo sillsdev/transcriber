@@ -57,3 +57,6 @@ export * from './isProcessRunning';
 export * from './useDebounce';
 export * from './prettySegment';
 export * from './integrationSlug';
+export * from './tryParseJson';
+export * from './namedSegments';
+export * from './burritoMetadata';

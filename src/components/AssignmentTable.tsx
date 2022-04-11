@@ -38,7 +38,7 @@ import {
   usePassageState,
 } from '../crud';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
-import { UpdateLastModifedBy } from '../model/baseModel';
+import { UpdateLastModifiedBy } from '../model/baseModel';
 import { PlanContext } from '../context/PlanContext';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -233,8 +233,12 @@ export function AssignmentTable(props: IProps) {
         type: 'user',
         id: '',
       }),
-      ...UpdateLastModifedBy(t, s, user),
-      ...UpdateLastModifedBy(t, { type: 'plan', id: related(s, 'plan') }, user),
+      ...UpdateLastModifiedBy(t, s, user),
+      ...UpdateLastModifiedBy(
+        t,
+        { type: 'plan', id: related(s, 'plan') },
+        user
+      ),
     ]);
   };
 

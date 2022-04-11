@@ -12,7 +12,6 @@ import { withData } from '../../../mods/react-orbitjs';
 import localStrings from '../../../selector/localize';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { useArtifactCategory } from '../../../crud';
-import { removeExtension } from '../../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,8 +60,8 @@ export const SelectMyResource = (props: IProps) => {
 
   const sortName = (i: string, j: string) => {
     const pat = /^(.*)([0-9]+)[\\.\\:]([0-9]+)?-?([0-9]+)?(.*)$/i;
-    const iPat = pat.exec(removeExtension(i).name);
-    const jPat = pat.exec(removeExtension(j).name);
+    const iPat = pat.exec(i);
+    const jPat = pat.exec(j);
     if (iPat && jPat) {
       if (iPat[1] === jPat[1]) {
         const i2 = parseInt(iPat[2]);
@@ -111,12 +110,13 @@ export const SelectMyResource = (props: IProps) => {
     >
       {rowData
         .filter(
-          (r) => r.isResource && !r.isText && checkCategory(r.artifactCategory)
+          (r) =>
+            r?.isResource && !r?.isText && checkCategory(r?.artifactCategory)
         )
         .sort((i, j) => sortName(i.artifactName, j.artifactName))
         .map((r, k) => (
           <MenuItem id={`my-res-${k}`} value={r.id} key={r.id}>
-            {removeExtension(r.artifactName).name}
+            {r.artifactName}
           </MenuItem>
         ))}
     </TextField>

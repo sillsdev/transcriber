@@ -1,3 +1,39 @@
+sil-transcriber (2.15.0.0)  experimental; urgency=high
+
+  * Add Filtering and sorting
+  * TT-3273 show assigned discussions (#771)
+  * TT-3587 don't stop play on reload of row data
+  * TT-3806 implement named regions so transcription and bt can each save their own set of segments. (#765)
+  * TT-3811 reset topic after Retell/QA (#756)
+  * TT-3812 handle empty rows and then remove them (#767)
+  * TT-3821 Cut off stage after 22 chars. (#760)
+  * TT-3827 remove type and topic columns from back translation play item list (#757)
+  * TT-3829 Login on Email Verify (#761)
+  * TT-3832 update passage date when updating stepComplete (#759)
+  * TT-3835 Indonesian book names (#768)
+  * TT-3840 discussion markers (#770)
+  * TT-3842 start comment recording as soon as the editor opens (#769)
+  * TT-3843 add discussion sort - default order by topic - non default dot (#777)
+  * TT-3853 Handle dot in resource description (#758)
+  * TT-3853 Sort doesn't need to remove extension (#772)
+  * TT-3853 Team check - Display info after dot (#763)
+  * TT-3854 default to transcribeReady if no transcriptionstate (#766)
+  * TT-3855 No General Sync (#764)
+  * TT-3856 avoid sync of unattached media (#762)
+  * TT-3857 move audio width to playerrow so as not to interfere with other mediaplayers on screen (#783)
+  * TT-3860 add indicator if not using the default on sort and filter
+  * TT-3861 scroll discussions within the discussion list container (#773)
+  * TT-3862 handle clicking same marker or same locate segment (#775)
+  * TT-3863 Audio Export Menu
+  * TT-3866 handle discussions with multiple segments in phrase back translate
+  * TT-3867 handle null allsegs (#774)
+  * TT-3873 latest audio exports
+  * TT-3875 check regionInfo (#776)
+  * TT-3883 Add Scripture Burrito metadata
+  * Update localization and help
+
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 11 Apr 2022 14:53:00 -0600
+
 sil-transcriber (2.14.5.0)  experimental; urgency=high
 
   * update Indonesian localization

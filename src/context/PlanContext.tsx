@@ -9,6 +9,8 @@ import {
   IProjButtonsStrings,
   Project,
   RoleNames,
+  MediaFile,
+  Discussion,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -32,8 +34,14 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators({ resetOrbitError: actions.resetOrbitError }, dispatch),
 });
 
-interface IRecordProps {}
-const mapRecordsToProps = {};
+interface IRecordProps {
+  mediafiles: MediaFile[];
+  discussions: Discussion[];
+}
+const mapRecordsToProps = {
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  discussions: (q: QueryBuilder) => q.findRecords('discussion'),
+};
 
 export interface IRowData {}
 
@@ -42,6 +50,8 @@ const initState = {
   readonly: false,
   connected: false,
   projButtonStr: {} as IProjButtonsStrings,
+  mediafiles: [] as MediaFile[],
+  discussions: [] as Discussion[],
   scripture: false,
   flat: false,
   shared: false,
@@ -66,7 +76,7 @@ const PlanProvider = withData(mapRecordsToProps)(
     mapStateToProps,
     mapDispatchToProps
   )((props: IProps) => {
-    const { projButtonStr, resetOrbitError } = props;
+    const { projButtonStr, mediafiles, discussions, resetOrbitError } = props;
     const [memory] = useGlobal('memory');
     const [plan] = useGlobal('plan');
     const [project] = useGlobal('project');
@@ -81,6 +91,8 @@ const PlanProvider = withData(mapRecordsToProps)(
     const [state, setState] = useState({
       ...initState,
       projButtonStr,
+      mediafiles,
+      discussions,
     });
     const checkOnline = useCheckOnline(resetOrbitError);
 

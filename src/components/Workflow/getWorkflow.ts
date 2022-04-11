@@ -167,10 +167,12 @@ export const getWorkflow = (
           orgWorkflowSteps,
         });
         const stepRec = orgWorkflowSteps.find((s) => s.id === stepId);
-        if (stepRec)
+        if (stepRec) {
           item.step =
             wfStr.getString(toCamel(stepRec.attributes.name)) ||
             stepRec.attributes.name;
+          item.stepId = stepRec.id;
+        }
       }
       //console.log(`item ${JSON.stringify(item, null, 2)}`);
       wfPassageAdd(myWork, item, sectionIndex);

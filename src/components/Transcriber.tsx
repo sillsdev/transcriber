@@ -57,6 +57,9 @@ import {
   localUserKey,
   LocalKey,
   integrationSlug,
+  getSegments,
+  NamedRegions,
+  updateSegments,
 } from '../utils';
 import { isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
@@ -814,7 +817,11 @@ export function Transcriber(props: IProps) {
             attributes: {
               transcription: transcription,
               position: newPosition,
-              segments: segments,
+              segments: updateSegments(
+                NamedRegions.Transcription,
+                mediafile.attributes?.segments,
+                segments
+              ),
               transcriptionstate: nextState,
             },
           } as any as MediaFile,
@@ -890,7 +897,10 @@ export function Transcriber(props: IProps) {
 
   const getTranscription = () => {
     const attr = mediafile.attributes || {};
-    segmentsRef.current = attr.segments || '{}';
+    segmentsRef.current = getSegments(
+      NamedRegions.Transcription,
+      attr.segments
+    );
     setInitialSegments(segmentsRef.current);
     return {
       transcription: attr.transcription || '',
@@ -916,6 +926,14 @@ export function Transcriber(props: IProps) {
   };
 
   const handleAutosave = async () => {
+    console.log(
+      'do autosave? not playing',
+      !playingRef.current,
+      'not saving',
+      !saving.current,
+      'changed',
+      transcriptionIn.current !== transcriptionRef.current?.firstChild?.value
+    );
     if (
       !playingRef.current &&
       !saving.current &&

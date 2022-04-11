@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useContext } from 'react';
 import { Grid, makeStyles, createStyles, Theme } from '@material-ui/core';
 import SelectMyResource from './Internalization/SelectMyResource';
 import { MediaPlayer } from '../MediaPlayer';
 import Auth from '../../auth/Auth';
+import { PassageDetailContext } from '../../context/PassageDetailContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,6 +15,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     playStatus: {
       margin: theme.spacing(1),
+      width: '100%',
+      '& audio': {
+        display: 'flex',
+        width: 'inherit',
+      },
     },
     slider: {},
     controls: {
@@ -28,42 +34,31 @@ interface IProps {
 
 export function TeamCheckReference({ auth }: IProps) {
   const classes = useStyles();
-  const [playItem, setPlayItem] = useState('');
-  const [playing, setPlaying] = useState(false);
-  const [duration, setDuration] = useState(0);
-
-  const handleDuration = (duration: number) => {
-    setDuration(duration);
-  };
-
-  const handleEnded = () => {
-    setPlaying(false);
-  };
+  const ctx = useContext(PassageDetailContext);
+  const {
+    playItem,
+    setPlayItem,
+    itemPlaying,
+    handleItemPlayEnd,
+    handleItemTogglePlay,
+  } = ctx.state;
 
   const handleResource = (id: string) => {
     setPlayItem(id);
-    setPlaying(false);
   };
 
-  useEffect(() => {
-    if (duration) {
-      setPlaying(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [duration]);
-
   return (
-    <Grid container direction="row" alignItems="center">
-      <Grid item md={4} sm={12} className={classes.resource}>
+    <Grid container direction="column">
+      <Grid item xs={10} className={classes.resource}>
         <SelectMyResource onChange={handleResource} />
       </Grid>
-      <Grid item md={6} sm={12} className={classes.playStatus}>
+      <Grid item xs={10} className={classes.playStatus}>
         <MediaPlayer
           auth={auth}
           srcMediaId={playItem}
-          requestPlay={playing}
-          onEnded={handleEnded}
-          onDuration={handleDuration}
+          requestPlay={itemPlaying}
+          onTogglePlay={handleItemTogglePlay}
+          onEnded={handleItemPlayEnd}
           controls={true}
         />
       </Grid>

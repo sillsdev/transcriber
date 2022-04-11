@@ -299,11 +299,14 @@ export const Sources = async (
   if (!offline && isElectron) {
     var fr = await electronExport(
       ExportType.ITFSYNC,
+      undefined, //all artifact types
       memory,
       backup,
       0,
       fingerprint,
       0,
+      '',
+      '',
       getOfflineProject
     ).catch((err: Error) => {
       logError(

@@ -10,14 +10,13 @@ import {
 } from '@material-ui/core';
 import BigDialog from '../../hoc/BigDialog';
 import { useContext, useEffect, useState, useMemo } from 'react';
-import { ISelectRecordingStrings, IState, MediaFile } from '../../model';
+import { ISelectRecordingStrings, IState } from '../../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { IRow, PassageDetailContext } from '../../context/PassageDetailContext';
-import { findRecord, related, useArtifactType } from '../../crud';
+import { ArtifactTypeSlug, useArtifactType } from '../../crud';
 import { dateOrTime, prettySegment, removeExtension } from '../../utils';
 import { connect } from 'react-redux';
 import { localStrings } from '../../selector';
-import { useGlobal } from 'reactn';
 import { ItemDescription } from '../../control/MediaDescription';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -37,16 +36,28 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexGrow: 1,
     },
+    version: {},
+    oldVersion: {
+      color: theme.palette.secondary.light,
+    },
   })
 );
 
-const RecordingHeader = ({ t }: { t: ISelectRecordingStrings }) => {
+const RecordingHeader = ({
+  t,
+  showTopic,
+  showType,
+}: {
+  t: ISelectRecordingStrings;
+  showTopic: boolean;
+  showType: boolean;
+}) => {
   return (
     <TableRow key={0}>
-      <TableCell>{t.artifactType}</TableCell>
+      {showType && <TableCell>{t.artifactType}</TableCell>}
       <TableCell align="right">{t.sourceVersion}</TableCell>
       <TableCell align="left">{t.sourceSegment}</TableCell>
-      <TableCell align="left">{t.topic}</TableCell>
+      {showTopic && <TableCell align="left">{t.topic}</TableCell>}
       <TableCell align="left">{t.created}</TableCell>
       <TableCell align="left">{t.speaker}</TableCell>
       <TableCell align="left">{t.filename}</TableCell>
@@ -57,29 +68,42 @@ const RecordingHeader = ({ t }: { t: ISelectRecordingStrings }) => {
 interface IInfoProps {
   row: IRow;
   lang: string;
-  onClick: (id: string) => () => void;
+  onClick: (id: string, latest: boolean) => () => void;
+  latestVernacular: number;
+  showTopic: boolean;
+  showType: boolean;
 }
 
 const RecordingInfo = (iprops: IInfoProps) => {
-  const { row, lang, onClick } = iprops;
-  const [memory] = useGlobal('memory');
+  const { row, lang, onClick, latestVernacular, showTopic, showType } = iprops;
+  const classes = useStyles();
 
-  let version = '';
-  const relatedMedia = related(row.mediafile, 'sourceMedia');
-  if (relatedMedia) {
-    var m = findRecord(memory, 'mediafile', relatedMedia) as MediaFile;
-    version = m.attributes.versionNumber.toString();
-  }
   return (
-    <TableRow key={row.id} onClick={onClick(row.id)}>
-      <TableCell component="th" scope="row">
-        {row.artifactType}
+    <TableRow
+      key={row.id}
+      onClick={onClick(row.id, row.sourceVersion === latestVernacular)}
+    >
+      {showType && (
+        <TableCell component="th" scope="row">
+          {row.artifactType}
+        </TableCell>
+      )}
+      <TableCell
+        align="right"
+        className={
+          row.sourceVersion !== latestVernacular
+            ? classes.oldVersion
+            : classes.version
+        }
+      >
+        {row.sourceVersion}
       </TableCell>
-      <TableCell align="right">{version}</TableCell>
       <TableCell align="left">
         {prettySegment(row.mediafile.attributes?.sourceSegments || '')}
       </TableCell>
-      <TableCell align="left">{row.mediafile.attributes?.topic}</TableCell>
+      {showTopic && (
+        <TableCell align="left">{row.mediafile.attributes?.topic}</TableCell>
+      )}
       <TableCell align="left">
         {dateOrTime(row.mediafile.attributes?.dateCreated, lang)}
       </TableCell>
@@ -101,12 +125,13 @@ interface IStateProps {
 interface IProps extends IStateProps {
   inItem?: string;
   label?: string;
-  onChange?: (resource: string) => void;
+  onChange?: (resource: string, latest: boolean) => void;
   required?: boolean;
   tags: string[];
+  latestVernacular: number;
 }
 export const SelectRecording = (props: IProps) => {
-  const { t, lang, onChange, inItem, tags } = props;
+  const { t, lang, onChange, inItem, tags, latestVernacular } = props;
   const classes = useStyles();
   const ctx = useContext(PassageDetailContext);
   const { rowData } = ctx.state;
@@ -114,9 +139,17 @@ export const SelectRecording = (props: IProps) => {
   const [chooser, setChooser] = useState(false);
   const { localizedArtifactType } = useArtifactType();
 
-  const handleClick = (id: string) => () => {
+  const showTopic = useMemo(() => {
+    return tags[0] !== ArtifactTypeSlug.BackTranslation;
+  }, [tags]);
+
+  const showType = useMemo(() => {
+    return tags.length > 1;
+  }, [tags]);
+
+  const handleClick = (id: string, latest: boolean) => () => {
     setItem(id);
-    onChange && onChange(id);
+    onChange && onChange(id, latest);
     setChooser(false);
   };
 
@@ -132,7 +165,6 @@ export const SelectRecording = (props: IProps) => {
   const localTags = useMemo(() => {
     return tags.map((t) => localizedArtifactType(t));
   }, [tags, localizedArtifactType]);
-
   return (
     <>
       <div className={classes.choice}>
@@ -148,7 +180,11 @@ export const SelectRecording = (props: IProps) => {
           <TableContainer component={Paper}>
             <Table size="small" aria-label="a dense table">
               <TableHead>
-                <RecordingHeader t={t} />
+                <RecordingHeader
+                  t={t}
+                  showTopic={showTopic}
+                  showType={showType}
+                />
               </TableHead>
               <TableBody>
                 {rowData
@@ -158,9 +194,11 @@ export const SelectRecording = (props: IProps) => {
                       ? -1
                       : i.artifactType > j.artifactType
                       ? 1
-                      : i.artifactName <= j.artifactName
-                      ? -1
-                      : 1
+                      : i.sourceVersion === j.sourceVersion
+                      ? i.artifactName <= j.artifactName
+                        ? -1
+                        : 1
+                      : j.sourceVersion - i.sourceVersion
                   )
                   .map((r) => (
                     <RecordingInfo
@@ -168,6 +206,9 @@ export const SelectRecording = (props: IProps) => {
                       row={r}
                       lang={lang}
                       onClick={handleClick}
+                      latestVernacular={latestVernacular}
+                      showTopic={showTopic}
+                      showType={showType}
                     />
                   ))}
               </TableBody>

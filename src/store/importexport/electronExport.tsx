@@ -16,6 +16,7 @@ import {
   OfflineProject,
   VProject,
   Discussion,
+  OrgWorkflowStep,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { getSerializer } from '../../serializers/JSONAPISerializerCustom';
@@ -25,7 +26,18 @@ import {
   Record,
   TransformBuilder,
 } from '@orbit/data';
-import { related, remoteId, getMediaEaf, remoteIdGuid } from '../../crud';
+import {
+  related,
+  remoteId,
+  getMediaEaf,
+  remoteIdGuid,
+  getBurritoMeta,
+  scriptureFullPath,
+  IBurritoMeta,
+  IExportArtifacts,
+  IExportScripturePath,
+  mediaArtifacts,
+} from '../../crud';
 import {
   dataPath,
   cleanFileName,
@@ -37,15 +49,23 @@ import IndexedDBSource from '@orbit/indexeddb';
 
 export async function electronExport(
   exportType: ExportType,
+  artifactType: string | null | undefined,
   memory: Memory,
   backup: IndexedDBSource | undefined,
   projectid: number | string,
   fingerprint: string,
   userid: number | string,
-  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
+  nodatamsg: string,
+  localizedArtifact: string,
+  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+  target?: string,
+  orgWorkflowSteps?: OrgWorkflowStep[]
 ): Promise<FileResponse | null> {
   const onlineSerlzr = getSerializer(memory, false);
   const offlineSrlzr = getSerializer(memory, true);
+  const scripturePackage = [ExportType.DBL, ExportType.BURRITO].includes(
+    exportType
+  );
   const BuildFileResponse = (
     fullpath: string,
     fileName: string,
@@ -72,13 +92,17 @@ export async function electronExport(
       ? id.toString()
       : remoteId(kind, id, memory.keyMap) || id.split('-')[0];
 
-  const fileName = (projRec: Project, ext: string) =>
+  const fileName = (
+    projRec: Project,
+    localizedArtifactType: string,
+    ext: string
+  ) =>
     'Transcriber' +
     idStr('user', userid) +
     '_' +
     idStr('project', projRec.id) +
     '_' +
-    cleanFileName(projRec.attributes.name) +
+    cleanFileName(projRec.attributes.name + localizedArtifactType) +
     '.' +
     ext;
 
@@ -86,7 +110,7 @@ export async function electronExport(
     new Date().getDate().toString() +
     new Date().getHours().toString() +
     '_' +
-    fileName(projRec, 'itf');
+    fileName(projRec, '', 'itf');
 
   const backupName =
     'Transcriber' + idStr('user', userid) + '_backup.' + exportType;
@@ -139,7 +163,10 @@ export async function electronExport(
     const AddJsonEntry = (table: string, recs: Record[], sort: string) => {
       //put in the remoteIds for everything, then stringify
       const ser = projRec?.keys?.remoteId ? onlineSerlzr : offlineSrlzr;
-      var json = '{"data":' + JSON.stringify(ser.serializeRecords(recs)) + '}';
+      let json =
+        exportType !== ExportType.AUDIO
+          ? '{"data":' + JSON.stringify(ser.serializeRecords(recs)) + '}'
+          : JSON.stringify(ser.serializeRecords(recs), null, 2);
       zip.addFile(
         'data/' + sort + '_' + table + '.json',
         Buffer.from(json),
@@ -187,20 +214,28 @@ export async function electronExport(
         }
       });
     };
+
     const AddMediaFiles = (recs: Record[]) => {
       const mediapath = PathType.MEDIA + '/';
       recs.forEach((m) => {
         var mf = m as MediaFile;
         if (!mf.attributes) return;
         const mp = dataPath(mf.attributes.audioUrl, PathType.MEDIA);
-        AddStreamEntry(mp, mediapath + path.basename(mp));
-        const eafCode = getMediaEaf(mf, memory);
-        const name = path.basename(mp, path.extname(mp)) + '.eaf';
-        zip.addFile(
-          mediapath + name,
-          Buffer.alloc(eafCode.length, eafCode),
-          'EAF'
-        );
+        const { fullPath } = scriptureFullPath(mf, {
+          memory,
+          scripturePackage,
+          projRec,
+        } as IExportScripturePath);
+        AddStreamEntry(mp, fullPath || mediapath + path.basename(mp));
+        if (!scripturePackage) {
+          const eafCode = getMediaEaf(mf, memory);
+          const name = path.basename(mp, path.extname(mp)) + '.eaf';
+          zip.addFile(
+            mediapath + name,
+            Buffer.alloc(eafCode.length, eafCode),
+            'EAF'
+          );
+        }
       });
     };
 
@@ -387,6 +422,16 @@ export async function electronExport(
 
         case 'mediafile':
         case 'passagestatechange':
+          if (artifactType !== undefined) {
+            const media = mediaArtifacts({
+              memory,
+              projRec,
+              artifactType,
+              target,
+              orgWorkflowSteps,
+            } as IExportArtifacts);
+            if (media) return media;
+          }
           return FromPassages(info.table, project, needsRemoteIds);
 
         case 'discussion':
@@ -452,9 +497,11 @@ export async function electronExport(
       project: Project | undefined,
       needsRemoteIds: boolean
     ) => {
-      var recs = GetTableRecs(info, project, needsRemoteIds);
+      let recs = GetTableRecs(info, project, needsRemoteIds);
       if (recs && Array.isArray(recs) && recs.length > 0) {
-        AddJsonEntry(info.table + 's', recs, info.sort);
+        if (!scripturePackage) {
+          AddJsonEntry(info.table + 's', recs, info.sort);
+        }
         switch (info.table) {
           case 'organization':
             AddOrgLogos(recs);
@@ -512,8 +559,28 @@ export async function electronExport(
     ];
     const op = getOfflineProject(projRec.id);
     const imported = moment.utc(op.attributes.snapshotDate || '01/01/1900');
-    AddSourceEntry(imported.toISOString());
-    AddVersionEntry((backup?.schema.version || 1).toString());
+    if (!scripturePackage) {
+      AddSourceEntry(imported.toISOString());
+      AddVersionEntry((backup?.schema.version || 1).toString());
+    } else if (exportType === ExportType.BURRITO) {
+      const userId =
+        remoteIdGuid('user', userid.toString(), memory.keyMap) ||
+        userid.toString();
+      const burritoMetaStr = getBurritoMeta({
+        memory,
+        userId,
+        projRec,
+        scripturePackage,
+        artifactType,
+        target,
+        orgWorkflowSteps,
+      } as IBurritoMeta);
+      zip.addFile(
+        'metadata.json',
+        Buffer.alloc(burritoMetaStr.length, burritoMetaStr),
+        'metadata'
+      );
+    }
     var needsRemoteIds = Boolean(projRec?.keys?.remoteId);
     if (!needsRemoteIds) AddOfflineEntry();
     const limit = onlyOneProject() ? undefined : projRec;
@@ -530,6 +597,15 @@ export async function electronExport(
           op.attributes.exportedDate = exported;
           await backup.push((t: TransformBuilder) => t.updateRecord(op));
         }
+        break;
+      case ExportType.DBL:
+      case ExportType.BURRITO:
+      case ExportType.AUDIO:
+        numRecs += AddAll(
+          { table: 'mediafile', sort: 'H' },
+          limit,
+          needsRemoteIds
+        );
         break;
       default:
         updateableFiles.forEach(
@@ -585,7 +661,7 @@ export async function electronExport(
     const filename =
       exportType === ExportType.ITFBACKUP
         ? itfb_fileName(projects[ix])
-        : fileName(projects[ix], exportType);
+        : fileName(projects[ix], localizedArtifact, exportType);
     changedRecs += numRecs;
     if (backupZip) {
       if (numRecs)
@@ -595,9 +671,11 @@ export async function electronExport(
           projects[ix].attributes.name
         );
     } else {
-      var where = dataPath(filename);
-      zip.writeZip(where);
-      return BuildFileResponse(where, filename, undefined, changedRecs);
+      if (numRecs) {
+        var where = dataPath(filename);
+        zip.writeZip(where);
+        return BuildFileResponse(where, filename, undefined, changedRecs);
+      } else if (nodatamsg && projects.length === 1) throw new Error(nodatamsg);
     }
   }
   var backupWhere = dataPath(backupName);

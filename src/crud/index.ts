@@ -78,3 +78,5 @@ export * from './usePassageState';
 export * from './useOrgWorkflowSteps';
 export * from './usePlanType';
 export * from './useLoadStatic';
+export * from './useDiscussionCount';
+export * from './getNextStep';
