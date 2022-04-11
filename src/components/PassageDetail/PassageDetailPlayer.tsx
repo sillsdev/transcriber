@@ -53,7 +53,12 @@ export function PassageDetailPlayer(props: IProps) {
   const playingRef = useRef(playing);
 
   const setPlayerSegments = (segments: string) => {
-    setDefaultSegments(segments);
+    if (
+      !allowSegment ||
+      !segmentsRef.current ||
+      segmentsRef.current.indexOf('},{') === -1
+    )
+      setDefaultSegments(segments);
     if (!playingRef.current) {
       var segs = parseRegions(segments);
       if (segs.regions.length > 0) {
