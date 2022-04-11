@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "2.14.5",
+  "version": "2.15.0",
   "description": "Flexibly manage audio-text files for Paratext or Audacity",
   "private": true,
   "dependencies": {
