@@ -746,12 +746,12 @@
 			</segment>
 		</unit>
 		<unit id="community.topic">
-         <segment>
-            <source>Topic</source>
-            <target>Tema</target>
-         </segment>
-      </unit>
-      <unit id="community.transcribe">
+			<segment>
+				<source>Topic</source>
+				<target>Tema</target>
+			</segment>
+		</unit>
+		<unit id="community.transcribe">
 			<segment>
 				<source>Transcribe</source>
 				<target>Transcrição</target>
@@ -1010,12 +1010,12 @@
 			</segment>
 		</unit>
 		<unit id="electronImport.newerVersion">
-         <segment>
-            <source>This file was exported with a newer version of the program.You should download the latest version before importing.  If you continue, some data may not be imported correctly.</source>
-            <target>Este arquivo foi exportado com uma versão mais recente do programa. Você deve baixar a versão mais recente antes de importar.  Se você continuar, alguns dados podem não ser importados corretamente.</target>
-         </segment>
-      </unit>
-      <unit id="electronImport.project">
+			<segment>
+				<source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
+				<target>Este arquivo foi exportado com uma versão mais recente do programa. Você deve baixar a versão mais recente antes de importar. Se você continuar, alguns dados podem não ser importados corretamente.</target>
+			</segment>
+		</unit>
+		<unit id="electronImport.project">
 			<segment>
 				<source>Audio Project</source>
 				<target/>
@@ -1093,7 +1093,13 @@
 				<target>Categoria</target>
 			</segment>
 		</unit>
-		<unit id="filterMenu.forYou">
+		<unit id="filterMenu.filter">
+         <segment>
+            <source>Filter Discussions</source>
+            <target>Discussões de filtro</target>
+         </segment>
+      </unit>
+      <unit id="filterMenu.forYou">
 			<segment>
 				<source>For You</source>
 				<target>Para você</target>
@@ -2806,7 +2812,8 @@
 		</unit>
 		<unit id="mediaUpload.resourceTask">
 			<segment>
-				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in
+					.pdf format.</source>
 				<target>Carregar arquivos de áudio em formato .mp3, .m4a, .wav ou .ogg ou conteúdo visual em formato .pdf.</target>
 			</segment>
 		</unit>
@@ -3783,12 +3790,12 @@
 			</segment>
 		</unit>
 		<unit id="selectRecording.topic">
-         <segment>
-            <source>Topic</source>
-            <target>Tema</target>
-         </segment>
-      </unit>
-      <unit id="shared.admin">
+			<segment>
+				<source>Topic</source>
+				<target>Tema</target>
+			</segment>
+		</unit>
+		<unit id="shared.admin">
 			<segment>
 				<source>Admin</source>
 				<target>Admin</target>
@@ -3898,7 +3905,7 @@
 		</unit>
 		<unit id="shared.mediaError">
 			<segment>
-				<source>Meida is missing or has an unaccepted format.</source>
+				<source>Media is missing or has an unaccepted format.</source>
 				<target>O áudio está faltando ou tem um formato não aceito.</target>
 			</segment>
 		</unit>
@@ -4017,12 +4024,12 @@
 			</segment>
 		</unit>
 		<unit id="shared.user">
-         <segment>
-            <source>User</source>
-            <target>Usuário</target>
-         </segment>
-      </unit>
-      <unit id="shared.versionHistory">
+			<segment>
+				<source>User</source>
+				<target>Usuário</target>
+			</segment>
+		</unit>
+		<unit id="shared.versionHistory">
 			<segment>
 				<source>Versions</source>
 				<target>Versões</target>
@@ -4032,6 +4039,30 @@
 			<segment>
 				<source>Yes</source>
 				<target>Sim</target>
+			</segment>
+		</unit>
+		<unit id="sortMenu.assignment">
+			<segment>
+				<source>Assigned To</source>
+				<target>Atribuído a</target>
+			</segment>
+		</unit>
+		<unit id="sortMenu.lastUpdated">
+			<segment>
+				<source>Last Updated</source>
+				<target>Última Actualização</target>
+			</segment>
+		</unit>
+		<unit id="sortMenu.sortMenu">
+         <segment>
+            <source>Sort Discussions</source>
+            <target>Ordenar Discussões</target>
+         </segment>
+      </unit>
+      <unit id="sortMenu.topic">
+			<segment>
+				<source>Topic</source>
+				<target>Tópico</target>
 			</segment>
 		</unit>
 		<unit id="spelling.addToDict">
@@ -4383,12 +4414,12 @@
 			</segment>
 		</unit>
 		<unit id="tool.phraseBackTranslate">
-         <segment>
-            <source>Phrase Back Translate</source>
-            <target>Tradução de Frase Traseiro</target>
-         </segment>
-      </unit>
-      <unit id="tool.record">
+			<segment>
+				<source>Phrase Back Translate</source>
+				<target>Tradução de Frase Traseiro</target>
+			</segment>
+		</unit>
+		<unit id="tool.record">
 			<segment>
 				<source>Record</source>
 				<target>Registro</target>
@@ -4419,12 +4450,12 @@
 			</segment>
 		</unit>
 		<unit id="tool.wholeBackTranslate">
-         <segment>
-            <source>Whole Back Translate</source>
-            <target>Voltar Traduzir</target>
-         </segment>
-      </unit>
-      <unit id="transcribe.openTranscriber">
+			<segment>
+				<source>Whole Back Translate</source>
+				<target>Voltar Traduzir</target>
+			</segment>
+		</unit>
+		<unit id="transcribe.openTranscriber">
 			<segment>
 				<source>Open Transcriber</source>
 				<target>Transcriber aberto</target>
@@ -4688,6 +4719,12 @@
 				<target>Esta tela permite que você revise a transcrição que foi armazenada.</target>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.audioExport">
+			<segment>
+				<source>Export Audio Files</source>
+				<target>Exportação de arquivos de áudio</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.availableOnClipboard">
 			<segment>
 				<source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
@@ -4814,7 +4851,19 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="transcriptionTab.passages">
+		<unit id="transcriptionTab.latestAudio">
+			<segment>
+				<source>Latest Audio</source>
+				<target>Áudio mais recente</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.noData">
+         <segment>
+            <source>No {0} Data.</source>
+            <target>Não há {0} Dados.</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.passages">
 			<segment>
 				<source>Passages</source>
 				<target>Passagens</target>
@@ -4824,6 +4873,12 @@
 			<segment>
 				<source>Plan</source>
 				<target>Plano</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.scriptureBurrito">
+			<segment>
+				<source>Scripture Burrito</source>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.sectionstate">
@@ -5378,7 +5433,7 @@
 				<target>Exportação</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.finalRecord">
+		<unit id="workflowSteps.finalRecording">
 			<segment>
 				<source>Final Record</source>
 				<target>Registro Final</target>
