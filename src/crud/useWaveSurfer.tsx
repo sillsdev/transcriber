@@ -215,20 +215,22 @@ export function useWaveSurfer(
       ws.on('marker-click', function (marker: any, e: any) {
         //the seek right before this will cause any regions to be removed
         //wait for that...
-        waitForIt(
-          'wavesurfer region clear',
-          () => {
-            return wsGetRegions().length <= '{"regions":"[]"}'.length;
-          },
-          () => {
-            return false;
-          },
-          100
-        )
-          .catch()
-          .finally(() => {
-            onMarkerClick(marker.time);
-          });
+        if (singleRegionOnly)
+          waitForIt(
+            'wavesurfer region clear',
+            () => {
+              return wsGetRegions().length <= '{"regions":"[]"}'.length;
+            },
+            () => {
+              return false;
+            },
+            100
+          )
+            .catch()
+            .finally(() => {
+              onMarkerClick(marker.time);
+            });
+        else onMarkerClick(marker.time);
       });
       // ws.drawer.on('click', (event: any, progress: number) => {
       // });
