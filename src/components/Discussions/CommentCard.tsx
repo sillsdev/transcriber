@@ -266,7 +266,7 @@ export const CommentCard = (props: IProps) => {
     }
     setMediaId(related(comment, 'mediafile'));
   }, [comment, users]);
-  console.log('mediaId', mediaId, 'commentPlayId', commentPlayId);
+
   return (
     <div className={classes.root}>
       <Grid container className={classes.row}>

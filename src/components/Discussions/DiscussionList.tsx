@@ -268,7 +268,10 @@ export function DiscussionList(props: IProps) {
 
   useEffect(() => {
     if (formRef.current && highlightedRef?.current) {
-      formRef.current.scrollTo(0, highlightedRef.current.offsetTop);
+      formRef.current.scrollTo(
+        0,
+        Math.max(0, highlightedRef.current.offsetTop - 80)
+      );
     }
   }, [highlightedRef]);
 
@@ -405,12 +408,7 @@ export function DiscussionList(props: IProps) {
   );
 
   return (
-    <Paper
-      ref={formRef}
-      id="DiscussionList"
-      className={classes.root}
-      style={rootWidthStyle}
-    >
+    <Paper id="DiscussionListHeader" className={classes.root}>
       <>
         <div className={classes.discussionHead}>
           <div>
@@ -450,24 +448,30 @@ export function DiscussionList(props: IProps) {
             </IconButton>
           </div>
         </div>
-
-        <Grid container className={classes.cardFlow}>
-          {displayDiscussions.map((i, j) => (
-            <DiscussionCard
-              id={`card-${j}`}
-              auth={auth}
-              key={j}
-              discussion={i}
-              collapsed={collapsed}
-              onAddComplete={adding ? handleAddComplete : undefined}
-              showStep={allSteps}
-              showReference={allPassages}
-              startSave={startSave}
-              clearSave={clearSave}
-              setRef={setHighlightedRef}
-            />
-          ))}
-        </Grid>
+        <Paper
+          ref={formRef}
+          id="DiscussionList"
+          className={classes.root}
+          style={rootWidthStyle}
+        >
+          <Grid container className={classes.cardFlow}>
+            {displayDiscussions.map((i, j) => (
+              <DiscussionCard
+                id={`card-${j}`}
+                auth={auth}
+                key={j}
+                discussion={i}
+                collapsed={collapsed}
+                onAddComplete={adding ? handleAddComplete : undefined}
+                showStep={allSteps}
+                showReference={allPassages}
+                startSave={startSave}
+                clearSave={clearSave}
+                setRef={setHighlightedRef}
+              />
+            ))}
+          </Grid>
+        </Paper>
         <BigDialog
           title={t.categoryList}
           isOpen={categoryOpen}
