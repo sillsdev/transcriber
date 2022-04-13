@@ -180,7 +180,7 @@ const initState = {
   stepComplete: (stepId: string) => {
     return false;
   },
-  discussionSize: { width: 500, height: 800 },
+  discussionSize: { width: 450, height: 700 },
   playerSize: 280,
   setDiscussionSize: (size: { width: number; height: number }) => {},
   setPlayerSize: (size: number) => {},

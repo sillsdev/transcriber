@@ -184,7 +184,7 @@ const PassageDetailGrids = (props: IProps) => {
     setWidth(window.innerWidth);
     setDiscussionSize({
       width: discussionSize.width, //should we be smarter here?
-      height: window.innerHeight - 240,
+      height: window.innerHeight - 330,
     });
     // setPaperStyle({ width: window.innerWidth - 10 });
   };
