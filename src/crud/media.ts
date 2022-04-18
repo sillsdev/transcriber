@@ -281,7 +281,7 @@ export const mediaArtifacts = ({
       plans,
       media,
       artifactType,
-      !artifactType //use only latest for vernacular (null)
+      artifactType !== undefined // use only latest when artifact set
     );
   }
   const key = new Map<string, string>();
