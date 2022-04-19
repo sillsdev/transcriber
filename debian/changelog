@@ -1,4 +1,4 @@
-sil-transcriber (2.15.0.0)  experimental; urgency=high
+sil-transcriber (2.15.1.0)  experimental; urgency=high
 
   * Add Filtering and sorting
   * TT-3273 show assigned discussions (#771)
@@ -25,14 +25,18 @@ sil-transcriber (2.15.0.0)  experimental; urgency=high
   * TT-3861 scroll discussions within the discussion list container (#773)
   * TT-3862 handle clicking same marker or same locate segment (#775)
   * TT-3863 Audio Export Menu
-  * TT-3866 handle discussions with multiple segments in phrase back translate
+  * TT-3866 handle discussions with multiple segments in phrase back translate (#785)
   * TT-3867 handle null allsegs (#774)
+  * TT-3872 Filter Paratext Sync on General (#791)
   * TT-3873 latest audio exports
+  * TT-3874 Add ID's for the username and timestamp in Discussion comments
   * TT-3875 check regionInfo (#776)
   * TT-3883 Add Scripture Burrito metadata
+  * TT-3899 Only latest back translation (#789)
+  * TT-3908 Show transcription on tab (#790)
   * Update localization and help
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 11 Apr 2022 14:53:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 19 Apr 2022 12:00:00 -0600
 
 sil-transcriber (2.14.5.0)  experimental; urgency=high
 
