@@ -38,7 +38,7 @@ import {
   getTool,
   ToolSlug,
   getStepComplete,
-  usePlanType,
+  useFilteredSteps,
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
@@ -255,7 +255,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const fetching = useRef('');
     const segmentsCb = useRef<(segments: string) => void>();
-    const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
+    const getFilteredSteps = useFilteredSteps();
     const { localizedArtifactType } = useArtifactType();
     const { localizedArtifactCategory } = useArtifactCategory();
     const { localizedWorkStep } = useOrgWorkflowSteps();
@@ -268,7 +268,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { startSave, clearChanged, waitForSave } =
       useContext(UnsavedContext).state;
     const [plan] = useGlobal('plan');
-    const getPlanType = usePlanType();
     const [oldVernacularPlayItem, setOldVernacularPlayItem] = useState('');
     const [oldVernacularPlaying, setOldVernacularPlaying] = useState(false);
     const highlightRef = useRef<number>();
@@ -854,21 +853,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       if (!getStepsBusy.current) {
         getStepsBusy.current = true;
 
-        const { scripture } = getPlanType(plan);
-        GetOrgWorkflowSteps({ process: 'ANY' }).then(
-          (orgsteps: OrgWorkflowStep[]) => {
-            const wf = orgsteps.filter(
-              (s) =>
-                scripture ||
-                s.attributes.name.toLowerCase().indexOf('paratext') === -1
-            );
-            setState((state: ICtxState) => ({
-              ...state,
-              orgWorkflowSteps: wf,
-            }));
-            getStepsBusy.current = false;
-          }
-        );
+        getFilteredSteps((wf) => {
+          setState((state: ICtxState) => ({
+            ...state,
+            orgWorkflowSteps: wf,
+          }));
+          getStepsBusy.current = false;
+        });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [plan, orgWorkflowSteps, workflowSteps]);

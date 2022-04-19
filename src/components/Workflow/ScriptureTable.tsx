@@ -37,9 +37,9 @@ import {
   related,
   useOrganizedBy,
   usePlan,
+  useFilteredSteps,
   VernacularTag,
 } from '../../crud';
-import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import {
   lookupBook,
   waitForIt,
@@ -227,7 +227,7 @@ export function ScriptureTable(props: IProps) {
   const checkOnline = useCheckOnline(resetOrbitError);
   const getStepsBusy = useRef(false);
   const [orgSteps, setOrgSteps] = useState<OrgWorkflowStep[]>([]);
-  const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
+  const getFilteredSteps = useFilteredSteps();
   const secNumCol = React.useMemo(() => {
     return colNames.indexOf('sectionSeq');
   }, [colNames]);
@@ -717,12 +717,10 @@ export function ScriptureTable(props: IProps) {
     if (!getStepsBusy.current) {
       getStepsBusy.current = true;
 
-      GetOrgWorkflowSteps({ process: 'ANY' }).then(
-        (orgsteps: OrgWorkflowStep[]) => {
-          setOrgSteps(orgsteps);
-          getStepsBusy.current = false;
-        }
-      );
+      getFilteredSteps((orgSteps) => {
+        setOrgSteps(orgSteps);
+        getStepsBusy.current = false;
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workflowSteps, orgWorkflowSteps]);
