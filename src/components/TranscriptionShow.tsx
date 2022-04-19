@@ -94,7 +94,7 @@ function TranscriptionShow(props: IProps) {
           ) as MediaFile)
         : null;
       setTranscription(
-        getTranscription(related(mediaRec, 'passage'), exportId)
+        getTranscription(related(mediaRec, 'passage') || id, exportId)
       );
       const projRec = getMediaProjRec(mediaRec, memory, reporter);
       if (projRec) setFontData(getFontData(projRec, offline));
