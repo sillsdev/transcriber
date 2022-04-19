@@ -25,6 +25,7 @@ import {
   FontData,
   getFontData,
   useTranscription,
+  related,
 } from '../crud';
 
 const useStyles = makeStyles({
@@ -92,7 +93,9 @@ function TranscriptionShow(props: IProps) {
             q.findRecord({ type: 'mediafile', id })
           ) as MediaFile)
         : null;
-      setTranscription(getTranscription(id, exportId));
+      setTranscription(
+        getTranscription(related(mediaRec, 'passage') || id, exportId)
+      );
       const projRec = getMediaProjRec(mediaRec, memory, reporter);
       if (projRec) setFontData(getFontData(projRec, offline));
     }

@@ -342,7 +342,7 @@ export function TranscriptionTab(props: IProps) {
       : exportType === ExportType.AUDIO
       ? getTypeId(artifactType)
       : undefined;
-    const onlyLatest = onlyTypeId === VernacularTag;
+    const onlyLatest = onlyTypeId !== undefined;
     media = getMediaInPlans(
       projectplans.map((p) => p.id),
       mediaFiles,
