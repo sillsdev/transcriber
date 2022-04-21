@@ -1,3 +1,9 @@
+sil-transcriber (2.15.2.0)  experimental; urgency=high
+
+  * upgrade api to use dotnet 3.1 and latest lambda
+
+-- Greg Trihus <greg_trihus@sil.org>  Mon, 21 Apr 2022 12:19:00 -0600
+
 sil-transcriber (2.15.1.0)  experimental; urgency=high
 
   * Add Filtering and sorting
