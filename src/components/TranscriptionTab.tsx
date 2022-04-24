@@ -789,7 +789,7 @@ export function TranscriptionTab(props: IProps) {
               {t.copyTranscriptions +
                 (localizedArtifact ? ' (' + localizedArtifact + ')' : '')}
             </Button>
-            {step && (
+            {step && offline && (
               <Button
                 id="audioExport"
                 key="audioexport"
