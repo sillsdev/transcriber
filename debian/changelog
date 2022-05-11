@@ -1,3 +1,10 @@
+sil-transcriber (2.15.4.0)  experimental; urgency=high
+
+* export audio available online too
+* revert upgrade api to use EC2 for production
+
+-- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Apr 2022 21:40:00 -0600
+
 sil-transcriber (2.15.3.0)  experimental; urgency=high
 
 * export audio only available offline
