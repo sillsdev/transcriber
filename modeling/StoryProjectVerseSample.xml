@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Verse guid="0817f1f2-0e05-4f06-8802-67cc34322d59">
+	<StoryLine lang="Vernacular">ता सबसे पहीली परमात्‍मा हा धरती अउ ये सवरग ला बनाईस ।</StoryLine>
+	<StoryLine lang="NationalBt">तो सबसे पहले परमात्‍मा ने धरती और सवरग को बनाया।</StoryLine>
+	<StoryLine lang="InternationalBt">so first of all parmatma made  earth and this heaven </StoryLine>
+	<StoryLine lang="FreeTranslation">So first of all God made earth and heaven.</StoryLine>
+	<Anchors keyTermChecked="false">
+		<Anchor jumpTarget="Col 1:16">Col 1:16</Anchor>
+		<Anchor jumpTarget="Gen 1:1">Gen 1:1</Anchor>
+	</Anchors>
+	<TestQuestions>
+		<TestQuestion visible="true" guid="54842f0b-661b-498a-8622-f454b93cd684">
+			<TestQuestionLine lang="Vernacular">आप काय सोचथो कि काबर परमातम्‍मा हा  सबसे पहीली  धरती अउ ये सवरग ला बनाईस?</TestQuestionLine>
+			<TestQuestionLine lang="InternationalBt">why do you think  first of all parmatma made  earth and this heaven </TestQuestionLine>
+			<Answers>
+				<Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+				<Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">सबसे पहले इसलिय बनाया कि धरती को जब ताक पहले नही बनाता तो जीव -जन्‍तु मनुषयो को परमात्‍म कहा रखता । और सवरग इसलिय बनाया कि जो जो  अच्‍छा काम करेगा उसको तो परमात्‍मा  सवरग मे लायेगा ही।अचछा काम क अफल तो देगा ही इसलिय धरती के साथ साथ सवरग भी बनाया। तो इस धरती और सवरग का पहले बनाना बहुत महात्‍वपुर्ण था इसलिय इसको पहले बनाया। </Answer>
+				<Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">first mad ereat and swag because if earth may not made  then where this all living things and non lving things live and swarg made because who ever will do good work parmatma will bring them in swarg that;s way first gos made earth and swarg.</Answer>
+				<Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+				<Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">क्‍योकि धरती मे मनुष्‍य रहेगे और सवरग मे दुत  रह सके इसलिय परमात्‍मा धरती और सवरग को बनाते है </Answer>
+				<Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">becasue in the earth human  and in heaven dut can live that's way parmatma made this heaven and earth.</Answer>
+			</Answers>
+		</TestQuestion>
+	</TestQuestions>
+	<Retellings>
+		<Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">सबसे पहीली परमात्‍मा हा धरती अउ सवरग ला बनाईसे </Retelling>
+		<Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+		<Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">first of all parmtma made earth and heaven </Retelling>
+	</Retellings>
+	<ConsultantNotes>
+		<ConsultantConversation guid="bcd17089-f213-4cd9-9a42-c1469bd21f11" visible="false" finished="true">
+			<ConsultantNote Direction="ConsultantToProjFac" guid="5622ccdc-5d2d-463a-9622-9c8a45085314" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T14:12:07Z">IvR: Re: anc: Col 1:16. You probalby need also Gen 1:1 to anchor the 'first of all'.</ConsultantNote>
+			<ConsultantNote Direction="ProjFacToConsultant" guid="6e0975c3-d996-4f8e-bbe7-1526dbba8b41" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-02T17:00:05Z">ok i did it .</ConsultantNote>
+		</ConsultantConversation>
+	</ConsultantNotes>
+</Verse>
