@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation, useHistory } from 'react-router-dom';
-import { Passage } from '../../model';
+import { Passage, IPassageChooserStrings } from '../../model';
 import {
   Typography,
   Slider,
@@ -12,6 +12,8 @@ import {
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { related, findRecord } from '../../crud';
 import { LocalKey, localUserKey } from '../../utils';
+import { useSelector, shallowEqual } from 'react-redux';
+import { passageChooserSelector } from '../../selector';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,6 +42,10 @@ export const PassageChooser = () => {
   const [passageCount, setPassageCount] = useState(0);
   const [sliderValue, setSliderValue] = useState(0);
   const [view, setView] = useState('');
+  const t = useSelector(
+    passageChooserSelector,
+    shallowEqual
+  ) as IPassageChooserStrings;
 
   const sliderChange = (
     event: React.ChangeEvent<{}>,
@@ -101,7 +107,7 @@ export const PassageChooser = () => {
 
   return passageCount > 1 ? (
     <div className={classes.slider}>
-      <Typography className={classes.sliderHead}>Passage: </Typography>
+      <Typography className={classes.sliderHead}>{t.passages}</Typography>
       <Slider
         value={sliderValue}
         onChange={sliderChange}

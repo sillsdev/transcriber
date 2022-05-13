@@ -601,6 +601,10 @@ export interface INewProjectStrings extends Localize.LocalizedStringsMethods {
     "uploadAudio": string;
 };
 
+export interface IPassageChooserStrings extends Localize.LocalizedStringsMethods {
+    "passages": string;
+};
+
 export interface IPassageDetailArtifactsStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "activity": string;
@@ -1226,6 +1230,7 @@ export interface ILocalizedStrings {
 	mediaTab: IMediaTabStrings;
 	mediaUpload: IMediaUploadStrings;
 	newProject: INewProjectStrings;
+	passageChooser: IPassageChooserStrings;
 	passageDetailArtifacts: IPassageDetailArtifactsStrings;
 	passageDetailStepComplete: IPassageDetailStepCompleteStrings;
 	passageDetailToolbar: IPassageDetailToolbarStrings;

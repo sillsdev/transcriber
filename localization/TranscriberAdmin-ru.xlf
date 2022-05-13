@@ -2993,6 +2993,12 @@
 				<target>Загрузить аудио</target>
 			</segment>
 		</unit>
+		<unit id="passageChooser.passages">
+			<segment>
+				<source>Passages:</source>
+				<target>Прохождения: </target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.action">
 			<segment>
 				<source>Action</source>

@@ -641,6 +641,11 @@ const initialState = {
 			"uploadAudio": "Upload Audio",
 		}
 	}),
+	"passageChooser": new LocalizedStrings({
+		"en": {
+			"passages": "Passages:",
+		}
+	}),
 	"passageDetailArtifacts": new LocalizedStrings({
 		"en": {
 			"action": "Action",
@@ -1313,6 +1318,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
 				"mediaUpload" : new LocalizedStrings(action.payload.data.mediaUpload),
 				"newProject" : new LocalizedStrings(action.payload.data.newProject),
+				"passageChooser" : new LocalizedStrings(action.payload.data.passageChooser),
 				"passageDetailArtifacts" : new LocalizedStrings(action.payload.data.passageDetailArtifacts),
 				"passageDetailStepComplete" : new LocalizedStrings(action.payload.data.passageDetailStepComplete),
 				"passageDetailToolbar" : new LocalizedStrings(action.payload.data.passageDetailToolbar),
