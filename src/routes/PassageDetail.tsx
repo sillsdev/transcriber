@@ -32,6 +32,7 @@ import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer
 import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord';
 import PassageDetailArtifact from '../components/PassageDetail/PassageDetailItem';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
+import PassageChooser from '../components/PassageDetail/PassageChooser';
 import IntegrationTab from '../components/Integration';
 import TranscriptionTab from '../components/TranscriptionTab';
 import {
@@ -226,6 +227,9 @@ const PassageDetailGrids = (props: IProps) => {
         </Grid>
         <Grid item className={classes.description} xs={12}>
           <WorkflowSteps />
+        </Grid>
+        <Grid item xs={12}>
+          <PassageChooser />
         </Grid>
         {tool === ToolSlug.Resource && (
           <Grid container direction="row" className={classes.row}>
