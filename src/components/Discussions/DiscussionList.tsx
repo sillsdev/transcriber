@@ -138,6 +138,7 @@ export function DiscussionList(props: IProps) {
     category = 'category',
     filter = 'filter:',
     sort = 'sort',
+    changePassage = 'leave passage',
   }
   const formRef = useRef<any>();
   const [highlightedRef, setHighlightedRef] = useState<any>();
@@ -264,7 +265,15 @@ export function DiscussionList(props: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [discussions, currentstep, adding, filterState, sortState, catFilter]);
+  }, [
+    discussions,
+    currentstep,
+    adding,
+    filterState,
+    sortState,
+    catFilter,
+    passage,
+  ]);
 
   useEffect(() => {
     if (formRef.current && highlightedRef?.current) {

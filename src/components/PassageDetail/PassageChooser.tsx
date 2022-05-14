@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation, useHistory } from 'react-router-dom';
 import { Passage, IPassageChooserStrings } from '../../model';
@@ -14,6 +14,7 @@ import { related, findRecord } from '../../crud';
 import { LocalKey, localUserKey } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { passageChooserSelector } from '../../selector';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,6 +47,7 @@ export const PassageChooser = () => {
     passageChooserSelector,
     shallowEqual
   ) as IPassageChooserStrings;
+  const { startSave, waitForSave } = useContext(UnsavedContext).state;
 
   const sliderChange = (
     event: React.ChangeEvent<{}>,
@@ -93,12 +95,15 @@ export const PassageChooser = () => {
     setTimeout(() => {
       if (view) {
         if (view !== pathname) {
-          localStorage.setItem(localUserKey(LocalKey.url), view);
-          push(view);
-          setView('');
-          // Add these two lines to rechoose the step on navigation
-          // setFirstStepIndex(-1);
-          // setCurrentStep('');
+          startSave();
+          waitForSave(() => {
+            localStorage.setItem(localUserKey(LocalKey.url), view);
+            push(view);
+            setView('');
+            // Add these two lines to rechoose the step on navigation
+            // setFirstStepIndex(-1);
+            // setCurrentStep('');
+          }, 400);
         }
       }
     }, 1000);
