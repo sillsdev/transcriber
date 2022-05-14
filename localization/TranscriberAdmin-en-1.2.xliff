@@ -3467,7 +3467,14 @@
                <context context-type="sourcefile">NewProject.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="passageDetailArtifacts.action">
+      	<trans-unit id="passageChooser.passages">
+      		<source>Passages:</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageChooser.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.action">
             <source>Action</source>
             <target/>
             <context-group>

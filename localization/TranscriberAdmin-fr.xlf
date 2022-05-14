@@ -2977,6 +2977,12 @@
 				<target>Télécharger l'audio</target>
 			</segment>
 		</unit>
+		<unit id="passageChooser.passages">
+			<segment>
+				<source>Passages:</source>
+				<target>Passages : </target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.action">
 			<segment>
 				<source>Action</source>

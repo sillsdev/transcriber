@@ -2965,7 +2965,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="passageDetailArtifacts.action">
+   	<unit id="passageChooser.passages">
+   		<segment>
+   			<source>Passages:</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailArtifacts.action">
          <segment>
             <source>Action</source>
             <target/>

@@ -2973,6 +2973,12 @@
 				<target>Carregar Áudio</target>
 			</segment>
 		</unit>
+		<unit id="passageChooser.passages">
+			<segment>
+				<source>Passages:</source>
+				<target>Passagens: </target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.action">
 			<segment>
 				<source>Action</source>
