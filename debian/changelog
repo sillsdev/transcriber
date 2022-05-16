@@ -1,3 +1,11 @@
+sil-transcriber (2.15.5.1)  experimental; urgency=high
+
+* TT-3957 - Allow working through all passages of a section
+* TT-3958 - All discussions to be visible on the record step
+* update help
+
+-- Greg Trihus <greg_trihus@sil.org>  Mon, 16 May 2022 13:22:00 -0600
+
 sil-transcriber (2.15.4.0)  experimental; urgency=high
 
 * export audio available online too

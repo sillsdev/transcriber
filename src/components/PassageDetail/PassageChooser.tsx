@@ -85,7 +85,7 @@ export const PassageChooser = () => {
   useEffect(() => {
     const passages = related(section, 'passages');
     if (Array.isArray(passages)) {
-      const newCount = passages.length - 1;
+      const newCount = passages.length;
       if (passageCount !== newCount) setPassageCount(newCount);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
