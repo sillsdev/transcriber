@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" version="0.1">
+	<xs:element name="StoryProject">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Members" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:choice maxOccurs="unbounded">
+							<xs:element name="Member" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="name" type="xs:string" use="required" />
+									<xs:attribute name="memberType" type="MemberType" use="required" />
+									<xs:attribute name="memberKey" type="xs:ID" use="required" />
+									<xs:attribute name="email" type="xs:string" use="optional" />
+									<xs:attribute name="altPhone" type="xs:string" use="optional" />
+									<xs:attribute name="phone" type="xs:string" use="optional" />
+									<xs:attribute name="bioData" type="xs:string" use="optional" />
+									<xs:attribute name="skypeID" type="xs:string" use="optional" />
+									<xs:attribute name="teamViewerID" type="xs:string" use="optional" />
+									<xs:attribute name="OverrideVernacularKeyboard" type="xs:string" use="optional" />
+									<xs:attribute name="OverrideNationalBTKeyboard" type="xs:string" use="optional" />
+									<xs:attribute name="OverrideInternationalBTKeyboard" type="xs:string" use="optional" />
+                  <xs:attribute name="OverrideFreeTranslationKeyboard" type="xs:string" use="optional" />
+                  <xs:attribute name="OverrideFontNameVernacular" type="xs:string" use="optional" />
+                  <xs:attribute name="OverrideFontSizeVernacular" type="xs:float" use="optional" />
+                  <xs:attribute name="OverrideRtlVernacular" type="xs:boolean" use="optional" />
+                  <xs:attribute name="OverrideFontNameNationalBT" type="xs:string" use="optional" />
+                  <xs:attribute name="OverrideFontSizeNationalBT" type="xs:float" use="optional" />
+                  <xs:attribute name="OverrideRtlNationalBT" type="xs:boolean" use="optional" />
+                  <xs:attribute name="OverrideFontNameInternationalBT" type="xs:string" use="optional" />
+                  <xs:attribute name="OverrideFontSizeInternationalBT" type="xs:float" use="optional" />
+                  <xs:attribute name="OverrideRtlInternationalBT" type="xs:boolean" use="optional" />
+                  <xs:attribute name="OverrideFontNameFreeTranslation" type="xs:string" use="optional" />
+                  <xs:attribute name="OverrideFontSizeFreeTranslation" type="xs:float" use="optional" />
+                  <xs:attribute name="OverrideRtlFreeTranslation" type="xs:boolean" use="optional" />
+                  <xs:attribute name="HgUsername" type="xs:string" use="optional" />
+									<xs:attribute name="HgPassword" type="xs:string" use="optional" />
+                  <xs:attribute name="TransliteratorVernacular" type="xs:string" use="optional" />
+                  <xs:attribute name="TransliteratorDirectionForwardVernacular" type="xs:boolean" use="optional" />
+                  <xs:attribute name="TransliteratorNationalBT" type="xs:string" use="optional" />
+                  <xs:attribute name="TransliteratorDirectionForwardNationalBT" type="xs:boolean" use="optional" />
+                  <xs:attribute name="TransliteratorInternationalBT" type="xs:string" use="optional" />
+                  <xs:attribute name="TransliteratorDirectionForwardInternationalBT" type="xs:boolean" use="optional" />
+                  <xs:attribute name="TransliteratorFreeTranslation" type="xs:string" use="optional" />
+                  <xs:attribute name="TransliteratorDirectionForwardFreeTranslation" type="xs:boolean" use="optional" />
+                  <xs:attribute name="DefaultTasksAllowed" type="xs:string" use="optional" />
+                  <xs:attribute name="DefaultTasksRequired" type="xs:string" use="optional" />
+                </xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:attribute name="HasOutsideEnglishBTer" type="xs:boolean" use="optional" />
+            <xs:attribute name="HasFirstPassMentor" type="xs:boolean" use="optional" />
+            <xs:attribute name="HasIndependentConsultant" type="xs:boolean" use="optional" />
+          </xs:complexType>
+				</xs:element>
+				<xs:element name="Languages" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+            <xs:sequence>
+              <xs:element name="LanguageInfo" type="LanguageInfo" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+            <xs:attribute name="UseRetellingVernacular" type="xs:boolean" use="optional" />
+            <xs:attribute name="UseRetellingNationalBT" type="xs:boolean" use="optional" />
+            <xs:attribute name="UseRetellingInternationalBT" type="xs:boolean" use="optional" />
+            <xs:attribute name="UseTestQuestionVernacular" type="xs:boolean" use="optional" />
+            <xs:attribute name="UseTestQuestionNationalBT" type="xs:boolean" use="optional" />
+            <xs:attribute name="UseTestQuestionInternationalBT" type="xs:boolean" use="optional" />
+            <xs:attribute name="UseAnswerVernacular" type="xs:boolean" use="optional" />
+            <xs:attribute name="UseAnswerNationalBT" type="xs:boolean" use="optional" />
+            <xs:attribute name="UseAnswerInternationalBT" type="xs:boolean" use="optional" />
+          </xs:complexType>
+				</xs:element>
+        <xs:element name="AdaptItConfigurations" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AdaptItConfiguration" type="AdaptItConfigurationType" minOccurs="1" maxOccurs="unbounded" nillable="true" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="LnCNotes" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="LnCNote" minOccurs="0" maxOccurs="unbounded" nillable="true" msdata:AllowDBNull="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string" msdata:AllowDBNull="1">
+                      <xs:attribute name="guid" type="xs:string" use="required" />
+                      <xs:attribute name="VernacularRendering" type="xs:string" />
+                      <xs:attribute name="NationalBTRendering" type="xs:string" />
+                      <xs:attribute name="InternationalBTRendering" type="xs:string" />
+                      <xs:attribute name="KeyTermIds" type="xs:string" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="stories" minOccurs="1" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="story" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="CraftingInfo" minOccurs="1" maxOccurs="1">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="StoryCrafter" minOccurs="0" maxOccurs="1" nillable="true">
+														<xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="memberID" type="xs:IDREF" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+													</xs:element>
+													<xs:element name="ProjectFacilitator" maxOccurs="1" minOccurs="0" nillable="true">
+														<xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="memberID" type="xs:IDREF" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+														</xs:complexType>
+													</xs:element>
+                          <xs:element name="Consultant" maxOccurs="1" minOccurs="0" nillable="true">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="memberID" type="xs:IDREF" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Coach" maxOccurs="1" minOccurs="0" nillable="true">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="memberID" type="xs:IDREF" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="StoryPurpose" minOccurs="0" maxOccurs="1" type="xs:string" />
+													<xs:element name="ResourcesUsed" minOccurs="0" maxOccurs="1" type="xs:string" />
+                          <xs:element name="MiscellaneousStoryInfo" minOccurs="0" maxOccurs="1" type="xs:string" />
+													<xs:element name="BackTranslator" minOccurs="0" maxOccurs="1" nillable="true">
+														<xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="memberID" type="xs:IDREF" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+													</xs:element>
+                          <xs:element name="OutsideEnglishBackTranslator" minOccurs="0" maxOccurs="1" nillable="true">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="memberID" type="xs:IDREF" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="TestsRetellings" minOccurs="0" maxOccurs="1">
+														<xs:complexType>
+															<xs:sequence>
+                                <xs:element name="TestRetelling" minOccurs="1" maxOccurs="unbounded" nillable="true">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="memberID" type="xs:IDREF" use="required" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+															</xs:sequence>
+                            </xs:complexType>
+													</xs:element>
+                          <xs:element name="TestsTqAnswers" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="TestTqAnswer" minOccurs="1" maxOccurs="unbounded" nillable="true">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="memberID" type="xs:IDREF" use="required" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+												<xs:attribute name="NonBiblicalStory" type="xs:boolean" use="optional" />
+											</xs:complexType>
+										</xs:element>
+                    <xs:element name="TransitionHistory" minOccurs="0" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="StateTransition" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="LoggedInMemberId" type="xs:IDREF" use="required" />
+                              <xs:attribute name="WindowsUserName" type="xs:string" />
+                              <xs:attribute name="FromState" type="ProjectStages" use="required" />
+                              <xs:attribute name="ToState" type="ProjectStages" use="required" />
+                              <xs:attribute name="TransitionDateTime" type="xs:dateTime" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Verses" minOccurs="1" maxOccurs="1">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Verse" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="StoryLine" minOccurs="0" maxOccurs="unbounded" nillable="true">
+																	<xs:complexType>
+																		<xs:simpleContent>
+																			<xs:extension base="xs:string">
+                                        <xs:attribute name="lang" type="xs:string" use="required" />
+                                      </xs:extension>
+																		</xs:simpleContent>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="Anchors" minOccurs="0" maxOccurs="1">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element maxOccurs="unbounded" name="Anchor" nillable="true">
+																				<xs:complexType>
+                                          <xs:simpleContent>
+                                            <xs:extension base="xs:string">
+                                              <xs:attribute name="jumpTarget" type="xs:string" use="required" />
+                                            </xs:extension>
+                                          </xs:simpleContent>
+                                        </xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																		<xs:attribute name="keyTermChecked" type="xs:boolean" />
+																	</xs:complexType>
+																</xs:element>
+                                <xs:element name="ExegeticalHelps" minOccurs="0" maxOccurs="1">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="ExegeticalHelp" minOccurs="0" maxOccurs="unbounded" type="xs:string" nillable="true" />
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="TestQuestions" minOccurs="0" maxOccurs="1">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="TestQuestion" minOccurs="0" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="TestQuestionLine" minOccurs="0" maxOccurs="unbounded" nillable="true">
+                                              <xs:complexType>
+                                                <xs:simpleContent>
+                                                  <xs:extension base="xs:string">
+                                                    <xs:attribute name="lang" type="xs:string"/>
+                                                  </xs:extension>
+                                                </xs:simpleContent>
+                                              </xs:complexType>
+                                            </xs:element>
+																						<xs:element name="Answers" minOccurs="0" maxOccurs="1">
+																							<xs:complexType>
+																								<xs:sequence>
+																									<xs:element name="Answer" minOccurs="0" maxOccurs="unbounded" nillable="true">
+																										<xs:complexType>
+																											<xs:simpleContent>
+																												<xs:extension base="xs:string">
+                                                          <xs:attribute name="lang" type="xs:string" />
+                                                          <xs:attribute name="memberID" type="xs:IDREF" use="required" />
+                                                        </xs:extension>
+																											</xs:simpleContent>
+																										</xs:complexType>
+																									</xs:element>
+																								</xs:sequence>
+																							</xs:complexType>
+																						</xs:element>
+																					</xs:sequence>
+																					<xs:attribute name="visible" type="xs:boolean" />
+																					<xs:attribute name="guid" type="xs:string" use="required" />
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="Retellings" minOccurs="0" maxOccurs="1">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="Retelling" minOccurs="0" maxOccurs="unbounded" nillable="true">
+																				<xs:complexType>
+																					<xs:simpleContent>
+																						<xs:extension base="xs:string">
+                                              <xs:attribute name="lang" type="xs:string" use="optional" />
+                                              <xs:attribute name="memberID" type="xs:IDREF" use="required" />
+                                            </xs:extension>
+																					</xs:simpleContent>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="ConsultantNotes" minOccurs="0" maxOccurs="1">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="ConsultantConversation" minOccurs="1" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="ConsultantNote" minOccurs="1" maxOccurs="unbounded" type="Comment" />
+																					</xs:sequence>
+																					<xs:attribute name="guid" type="xs:string" use="required" />
+																					<xs:attribute name="visible" type="xs:boolean" />
+                                          <xs:attribute name="finished" type="xs:boolean" use="optional" default="false" />
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="CoachNotes" minOccurs="0" maxOccurs="1">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="CoachConversation" minOccurs="1" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="CoachNote" minOccurs="1" maxOccurs="unbounded" type="Comment" />
+																					</xs:sequence>
+																					<xs:attribute name="guid" type="xs:string" use="required" />
+																					<xs:attribute name="visible" type="xs:boolean" />
+                                          <xs:attribute name="finished" type="xs:boolean" use="optional" default="false" />
+                                        </xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+															<xs:attribute name="guid" type="xs:string" use="required" />
+															<xs:attribute name="first" type="xs:boolean" use="optional" default="false" />
+                              <xs:attribute name="visible" type="xs:boolean" use="optional" default="true" />
+                            </xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="name" type="xs:string" use="required" />
+									<xs:attribute name="stage" type="ProjectStages" use="required" />
+                  <xs:attribute name="TasksAllowedPf" type="xs:string" use="optional" />
+                  <xs:attribute name="TasksRequiredPf" type="xs:string" use="optional" />
+                  <xs:attribute name="TasksAllowedCit" type="xs:string" use="optional" />
+                  <xs:attribute name="TasksRequiredCit" type="xs:string" use="optional" />
+                  <xs:attribute name="CountRetellingsTests" type="xs:int" use="optional" default="0" />
+                  <xs:attribute name="CountTestingQuestionTests" type="xs:int" use="optional" default="0" />
+                  <xs:attribute name="guid" type="xs:string" use="required" />
+									<xs:attribute name="stageDateTimeStamp" type="xs:dateTime" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="SetName" type="xs:string" use="required" />
+          </xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="version" type="xs:string" use="required" />
+			<xs:attribute name="ProjectName" type="xs:string" use="required" />
+			<xs:attribute name="PanoramaFrontMatter" type="xs:string" />
+      <xs:attribute name="UseDropbox" type="xs:boolean" use="optional" />
+      <xs:attribute name="DropboxStory" type="xs:boolean" use="optional" />
+      <xs:attribute name="DropboxRetellings" type="xs:boolean" use="optional" />
+      <xs:attribute name="DropboxAnswers" type="xs:boolean" use="optional" />
+		</xs:complexType>
+		<xs:key name="MemberGuidKey">
+			<xs:selector xpath=".//Member" />
+			<xs:field xpath="@memberKey" />
+		</xs:key>
+		<xs:key name="StoryGuidKey">
+			<xs:selector xpath=".//story" />
+			<xs:field xpath="@guid" />
+		</xs:key>
+		<xs:key name="VerseKey">
+			<xs:selector xpath=".//verse" />
+			<xs:field xpath="@guid" />
+		</xs:key>
+		<xs:key name="StoriesSetName">
+			<xs:selector xpath=".//stories" />
+			<xs:field xpath="@SetName" />
+		</xs:key>
+		<xs:key name="AnchorKey">
+			<xs:selector xpath=".//anchor" />
+			<xs:field xpath="@jumpTarget" />
+		</xs:key>
+		<xs:key name="TestQuestionKey">
+			<xs:selector xpath=".//TestQuestion" />
+			<xs:field xpath="@guid" />
+		</xs:key>
+		<xs:key name="ConsultantConversationKey">
+			<xs:selector xpath=".//ConsultantConversation" />
+			<xs:field xpath="@guid" />
+		</xs:key>
+		<xs:key name="CoachConversationKey">
+			<xs:selector xpath=".//CoachConversation" />
+			<xs:field xpath="@guid" />
+		</xs:key>
+		<xs:key name="ConsultantNoteKey">
+			<xs:selector xpath=".//ConsultantNote" />
+			<xs:field xpath="@guid" />
+		</xs:key>
+		<xs:key name="CoachNoteKey">
+			<xs:selector xpath=".//CoachNote" />
+			<xs:field xpath="@guid" />
+		</xs:key>
+	</xs:element>
+	<xs:simpleType name="MemberType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Crafter" />
+			<xs:enumeration value="EnglishBackTranslator" />
+			<xs:enumeration value="UNS" />
+			<xs:enumeration value="ProjectFacilitator" />
+			<xs:enumeration value="FirstPassMentor" />
+			<xs:enumeration value="ConsultantInTraining" />
+			<xs:enumeration value="IndependentConsultant" />
+			<xs:enumeration value="Coach" />
+			<xs:enumeration value="JustLooking" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ProjectStages">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ProjFacTypeVernacular" />
+			<xs:enumeration value="ProjFacTypeNationalBT" />
+			<xs:enumeration value="ProjFacTypeInternationalBT" />
+      <xs:enumeration value="ProjFacTypeFreeTranslation" />
+			<xs:enumeration value="ProjFacAddAnchors" />
+			<xs:enumeration value="ProjFacAddStoryQuestions" />
+      <xs:enumeration value="ProjFacRevisesBeforeUnsTest" />
+			<xs:enumeration value="BackTranslatorTypeInternationalBT" />
+      <xs:enumeration value="BackTranslatorTranslateConNotesBeforeUnsTest" />
+			<xs:enumeration value="ConsultantCheckNonBiblicalStory" />
+			<xs:enumeration value="FirstPassMentorCheck1" />
+			<xs:enumeration value="ConsultantCheckStoryInfo" />
+			<xs:enumeration value="ConsultantCheckAnchors" />
+			<xs:enumeration value="ConsultantCheckStoryQuestions" />
+      <xs:enumeration value="ConsultantCauseRevisionBeforeUnsTest" />
+			<xs:enumeration value="CoachReviewRound1Notes" />
+			<xs:enumeration value="ConsultantReviseRound1Notes" />
+			<xs:enumeration value="BackTranslatorTranslateConNotes" />
+			<xs:enumeration value="ProjFacReviseBasedOnRound1Notes" />
+			<xs:enumeration value="ProjFacOnlineReview1WithConsultant" />
+			<xs:enumeration value="ProjFacReadyForTest1" />
+      <xs:enumeration value="ProjFacEnterRetellingOfTest1" />
+      <xs:enumeration value="ProjFacEnterAnswersToStoryQuestionsOfTest1" />
+      <xs:enumeration value="ProjFacRevisesAfterUnsTest" />
+      <xs:enumeration value="BackTranslatorTypeInternationalBTTest1" />
+      <xs:enumeration value="BackTranslatorTranslateConNotesAfterUnsTest" />
+      <xs:enumeration value="FirstPassMentorCheck2" />
+			<xs:enumeration value="ConsultantCheck2" />
+      <xs:enumeration value="ConsultantCauseRevisionAfterUnsTest" />
+			<xs:enumeration value="CoachReviewRound2Notes" />
+      <xs:enumeration value="ConsultantFinalCheck" />
+			<xs:enumeration value="TeamComplete" />
+      <xs:enumeration value="TeamFinalApproval" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="LanguageInfo">
+		<xs:sequence />
+    <xs:attribute name="lang" type="xs:string" use="required" />
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="code" type="xs:string" use="required" />
+		<xs:attribute name="FontName" type="xs:string" use="required" />
+		<xs:attribute name="FontSize" type="xs:float" use="required" />
+		<xs:attribute name="FontColor" type="xs:string" use="required" />
+		<xs:attribute name="SentenceFinalPunct" type="xs:string" use="required" />
+		<xs:attribute name="Keyboard" type="xs:string" />
+		<xs:attribute name="RTL" type="xs:boolean" />
+	</xs:complexType>
+  <xs:simpleType name="FromTo">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ConsultantToProjFac" />
+			<xs:enumeration value="ProjFacToConsultant" />
+			<xs:enumeration value="ConsultantToCoach" />
+			<xs:enumeration value="CoachToConsultant" />
+      <xs:enumeration value="ProjFacToProjFac" />
+      <xs:enumeration value="ConsultantToConsultant" />
+      <xs:enumeration value="CoachToCoach" />
+      <xs:enumeration value="ConsultantToProjFacNeedsApproval" />
+      <xs:enumeration value="ReferringToText" />
+    </xs:restriction>
+	</xs:simpleType>
+  <xs:simpleType name="AdaptItProjectType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="LocalAiProjectOnly" />
+      <xs:enumeration value="SharedAiProject" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="AdaptItBtDirection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Undefined" />
+      <xs:enumeration value="VernacularToNationalBt" />
+      <xs:enumeration value="VernacularToInternationalBt" />
+      <xs:enumeration value="NationalBtToInternationalBt" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Comment">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="Direction" type="FromTo" use="required" />
+				<xs:attribute name="guid" type="xs:string" use="required" />
+        <xs:attribute name="memberID" type="xs:string" use="optional" />
+        <xs:attribute name="timeStamp" type="xs:dateTime" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+  <xs:complexType name="AdaptItConfigurationType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="ProjectType" type="AdaptItProjectType" use="required" />
+        <xs:attribute name="BtDirection" type="AdaptItBtDirection" use="required" />
+        <xs:attribute name="ConverterName" type="xs:string" use="required" />
+        <xs:attribute name="ProjectFolderName" type="xs:string" use="optional" />
+        <xs:attribute name="RepoProjectName" type="xs:string" use="optional" />
+        <xs:attribute name="RepositoryServer" type="xs:string" use="optional" />
+        <xs:attribute name="NetworkRepositoryPath" type="xs:string" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

@@ -32,6 +32,7 @@ import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer
 import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord';
 import PassageDetailArtifact from '../components/PassageDetail/PassageDetailItem';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
+import PassageChooser from '../components/PassageDetail/PassageChooser';
 import IntegrationTab from '../components/Integration';
 import TranscriptionTab from '../components/TranscriptionTab';
 import {
@@ -166,8 +167,13 @@ const PassageDetailGrids = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, discussionSize, setDiscussionSize, orgWorkflowSteps } =
-    ctx.state;
+  const {
+    currentstep,
+    discussionSize,
+    setDiscussionSize,
+    orgWorkflowSteps,
+    mediafileId,
+  } = ctx.state;
   const tool = useStepTool(currentstep);
   const [communitySlugs] = useState([
     ArtifactTypeSlug.Retell,
@@ -227,19 +233,15 @@ const PassageDetailGrids = (props: IProps) => {
         <Grid item className={classes.description} xs={12}>
           <WorkflowSteps />
         </Grid>
+        <Grid item xs={12}>
+          <PassageChooser />
+        </Grid>
         {tool === ToolSlug.Resource && (
           <Grid container direction="row" className={classes.row}>
             <Grid item xs={12}>
               <Grid container>
                 <PassageDetailArtifacts auth={auth} />
               </Grid>
-            </Grid>
-          </Grid>
-        )}
-        {tool === ToolSlug.Record && (
-          <Grid container direction="row" className={classes.row}>
-            <Grid item xs={12}>
-              <PassageDetailRecord auth={auth} />
             </Grid>
           </Grid>
         )}
@@ -251,7 +253,9 @@ const PassageDetailGrids = (props: IProps) => {
         {tool === ToolSlug.Paratext && (
           <IntegrationTab {...props} auth={auth} />
         )}
-        {(tool === ToolSlug.Discuss || tool === ToolSlug.TeamCheck) && (
+        {(tool === ToolSlug.Discuss ||
+          tool === ToolSlug.TeamCheck ||
+          tool === ToolSlug.Record) && (
           <Paper className={classes.paper}>
             <Wrapper>
               <SplitPane
@@ -261,9 +265,16 @@ const PassageDetailGrids = (props: IProps) => {
                 onChange={handleSplitSize}
               >
                 <Pane className={classes.pane}>
-                  <Grid item className={classes.description} xs={12}>
-                    <PassageDetailPlayer />
-                  </Grid>
+                  {tool === ToolSlug.Record && (
+                    <Grid item className={classes.description} xs={12}>
+                      <PassageDetailRecord auth={auth} />
+                    </Grid>
+                  )}
+                  {(tool !== ToolSlug.Record || mediafileId) && (
+                    <Grid item className={classes.description} xs={12}>
+                      <PassageDetailPlayer />
+                    </Grid>
+                  )}
                   {tool === ToolSlug.TeamCheck && (
                     <Grid item className={classes.description} xs={12}>
                       <TeamCheckReference auth={auth} />

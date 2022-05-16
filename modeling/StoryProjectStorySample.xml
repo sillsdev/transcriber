@@ -1,0 +1,766 @@
+    <story name="01 Creation of spirit world" stage="ConsultantCheck2" TasksAllowedPf="VernacularLangFields, NationalBtLangFields, InternationalBtFields, Anchors, Retellings, TestQuestions, Answers, Retellings2, Answers2" TasksRequiredPf="VernacularLangFields, NationalBtLangFields, InternationalBtFields, Anchors, Answers" TasksAllowedCit="SendToProjectFacilitatorForRevision, SendToCoachForReview" TasksRequiredCit="None" CountRetellingsTests="0" CountTestingQuestionTests="0" guid="533a45a0-63d7-47ab-a9e4-4ae6a61b605f" stageDateTimeStamp="2016-04-11T16:54:01Z">
+      <CraftingInfo NonBiblicalStory="false">
+        <StoryCrafter memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af"></StoryCrafter>
+        <ProjectFacilitator memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af"></ProjectFacilitator>
+        <Consultant memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282"></Consultant>
+        <BackTranslator memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1"></BackTranslator>
+        <StoryPurpose>God is the maker of seen and unseen things. </StoryPurpose>
+        <ResourcesUsed>hindi bible (bible society of indian),tw,english vbible ,audio, recorded story in hindi.</ResourcesUsed>
+        <TestsRetellings>
+          <TestRetelling memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">Test done on: 2011-Aug-02. UNS heard the story 3 times.</TestRetelling>
+        </TestsRetellings>
+        <TestsTqAnswers>
+          <TestTqAnswer memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">Test done on: 2011-Aug-12</TestTqAnswer>
+          <TestTqAnswer memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">Test done on: 2011-Aug-18</TestTqAnswer>
+        </TestsTqAnswers>
+      </CraftingInfo>
+      <TransitionHistory>
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacTypeVernacular" ToState="ProjFacTypeVernacular" TransitionDateTime="2011-08-02T10:57:07Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacTypeVernacular" ToState="ProjFacTypeNationalBT" TransitionDateTime="2011-08-02T10:57:34Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacTypeNationalBT" ToState="ProjFacTypeInternationalBT" TransitionDateTime="2011-08-02T11:14:04Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacTypeInternationalBT" ToState="ProjFacAddAnchors" TransitionDateTime="2011-08-02T11:14:49Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacAddAnchors" ToState="ProjFacEnterRetellingOfTest1" TransitionDateTime="2011-08-02T11:51:25Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacEnterRetellingOfTest1" ToState="ConsultantCheck2" TransitionDateTime="2011-08-02T12:47:04Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" FromState="ConsultantCheck2" ToState="ProjFacRevisesAfterUnsTest" TransitionDateTime="2011-08-02T16:17:43Z" WindowsUserName="IRENE\Irene van Riezen" />
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacRevisesAfterUnsTest" ToState="ProjFacAddStoryQuestions" TransitionDateTime="2011-08-03T16:08:20Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacAddStoryQuestions" ToState="ConsultantCheck2" TransitionDateTime="2011-08-03T16:31:58Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" FromState="ConsultantCheck2" ToState="ProjFacRevisesAfterUnsTest" TransitionDateTime="2011-08-03T17:34:54Z" WindowsUserName="IRENE\Irene van Riezen" />
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacRevisesAfterUnsTest" ToState="ProjFacEnterRetellingOfTest1" TransitionDateTime="2011-08-08T12:59:03Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacEnterRetellingOfTest1" ToState="ConsultantCheck2" TransitionDateTime="2011-08-11T14:33:25Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" FromState="ConsultantCheck2" ToState="ProjFacRevisesAfterUnsTest" TransitionDateTime="2011-08-11T14:52:17Z" WindowsUserName="IRENE\Irene van Riezen" />
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacRevisesAfterUnsTest" ToState="ProjFacEnterAnswersToStoryQuestionsOfTest1" TransitionDateTime="2011-08-12T22:57:20Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacEnterAnswersToStoryQuestionsOfTest1" ToState="ConsultantCheck2" TransitionDateTime="2011-08-13T13:20:05Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" FromState="ConsultantCheck2" ToState="ProjFacRevisesAfterUnsTest" TransitionDateTime="2011-08-13T15:22:48Z" WindowsUserName="IRENE\Irene van Riezen" />
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacRevisesAfterUnsTest" ToState="ProjFacEnterAnswersToStoryQuestionsOfTest1" TransitionDateTime="2011-08-18T12:25:50Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" FromState="ProjFacEnterAnswersToStoryQuestionsOfTest1" ToState="ConsultantCheck2" TransitionDateTime="2011-08-18T13:52:24Z" WindowsUserName="MALTI\NIEA" />
+        <StateTransition LoggedInMemberId="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" FromState="ConsultantCheck2" ToState="TeamComplete" TransitionDateTime="2011-08-18T15:36:44Z" WindowsUserName="IRENE\Irene van Riezen" />
+        <StateTransition LoggedInMemberId="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" FromState="TeamComplete" ToState="TeamFinalApproval" TransitionDateTime="2012-12-19T04:12:57Z" WindowsUserName="IRENE\Irene" />
+        <StateTransition LoggedInMemberId="mem-962218e4-e53b-4662-a6b7-0595076ace95" FromState="TeamFinalApproval" ToState="ConsultantCheck2" TransitionDateTime="2016-04-11T16:54:01Z" WindowsUserName="AJR-ANISHA\Anisha Biju" />
+      </TransitionHistory>
+      <Verses>
+        <Verse guid="d5a6a3e3-6cd0-44f5-8612-1e007009a401" first="true">
+          <ConsultantNotes>
+            <ConsultantConversation guid="db50f326-f5fb-4d71-a9a7-469c43ab909f">
+              <ConsultantNote Direction="StickyNote" guid="c486634c-d78a-49c5-aab0-bd59d102a967" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2012-10-19T04:41:58Z"> ready for recording.</ConsultantNote>
+            </ConsultantConversation>
+            <ConsultantConversation guid="5e897ea9-06de-40a9-97ec-78b9d2f8b27c" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="f10558b1-4c32-4062-9c2a-7f89b8fb4959" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T16:14:16Z">IvR: the anchors for this story were hard, right! I have made some suggestions, mostly taken from the Hindi story set, which 'creation' story I can see you used as a model for this. (which is fine!). </ConsultantNote>
+            </ConsultantConversation>
+            <ConsultantConversation guid="fe7f8ca9-5c24-402e-939c-ea7eef613314" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="fe15fbfe-6589-4267-ab83-ea8b0219235e" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T16:17:10Z">IvR: the retelling looks good; near the end he made it a little shorter, but nothing significant seems lost. 
+You can proceed to make testing questions! </ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="22c9e38d-6972-4844-8642-3bf42def3707" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-02T17:00:05Z">ok </ConsultantNote>
+              <ConsultantNote Direction="ConsultantToProjFac" guid="f598c366-c45a-45b3-a3ac-91b18ffb8bdb" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-03T16:57:58Z">You can proceed to testing now. We need one more retelling, and two sets of answers. 
+I've made them required to see how that goes. I don't need to see the story again before you have completed the testing. </ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="97f00761-8741-4fa6-88b2-f4bce92485df" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-04T14:27:30Z">ok</ConsultantNote>
+              <ConsultantNote Direction="ConsultantToProjFac" guid="873977c9-6e8b-4012-9ca0-62f2fe9400ca" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-11T14:45:50Z">one retelling done (2nd not required as per new instruction), testing questions answers are still pending. </ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="cd68395e-e0e7-49e9-a14d-65fb62ab75c7" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-18T12:25:55Z">yes i know but i was thinking i have done one already i finish doc. but second will take time . so it is with me so let me send this whatever i have . like that i thought .</ConsultantNote>
+              <ConsultantNote Direction="ConsultantToProjFac" guid="33ddc9e3-cf10-487d-9e14-05e202e68618" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-18T15:23:42Z">fine. </ConsultantNote>
+            </ConsultantConversation>
+            <ConsultantConversation guid="75ec5bdb-cf74-4ceb-a9de-daa03e18d701" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="06f4471c-d0be-40e7-8591-464cba3e1d21" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-13T15:22:22Z">IvR: Re: you can get a 2nd set of answers. </ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="f3b9abdb-fb27-4875-9e55-042fde4058ad" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-18T12:25:55Z">done</ConsultantNote>
+            </ConsultantConversation>
+            <ConsultantConversation guid="ac2d0198-e524-48d9-9b22-dcc4357156fe" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="415406f7-080e-4289-8a67-ee2fe28dc35c" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-18T15:34:46Z">IvR: Re: PA on Aug 18 2011</ConsultantNote>
+            </ConsultantConversation>
+            <ConsultantConversation guid="b7efb640-e5ac-438a-ab9d-c279ad1babf8">
+              <ConsultantNote Direction="ConsultantToConsultant" guid="d7d8af96-9f67-495e-ab2a-381f601ede0d" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2012-12-19T04:11:41Z">IvR: Re: ok for recording - discuss however if the team wants this one as the first story.  I could imagine that it may be friendlier to start iwh the creation story, but maybe to put this story at the end - as an appendix. I don't know if that would work though...</ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="42d3e307-4584-4f60-baef-24f48b833c05">
+          <StoryLine lang="Vernacular">आज हमन जम्‍मो डहार जतका भी चीज देखथन।</StoryLine>
+          <StoryLine lang="NationalBt">आज जो सभी जगह जितना भी हम देखते है।</StoryLine>
+          <StoryLine lang="InternationalBt">toady also we¦us look-HAB PRES¦is</StoryLine>
+          <StoryLine lang="FreeTranslation">What ever places we are seeing today</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Ps 115:15">Ps 115:15</Anchor>
+          </Anchors>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">आज जम्‍मो डहान जे चीज ला हम देखथन </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">today whatever we see arround </Retelling>
+          </Retellings>
+        </Verse>
+        <Verse guid="abb3553d-f226-41c5-85ee-7e8645e0a624">
+          <StoryLine lang="Vernacular">ते सब ला परमात्‍मा हा बनाहे।</StoryLine>
+          <StoryLine lang="NationalBt">उन सब को परमात्‍मा व्‍यक्‍ति बनाहे।</StoryLine>
+          <StoryLine lang="InternationalBt">this  all created by parmatma .</StoryLine>
+          <StoryLine lang="FreeTranslation">That all God has made.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Ps 115:15">Ps 115:15</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="852547c3-949f-4683-b32d-f9e83258ae0b">
+              <TestQuestionLine lang="Vernacular">आपके विचार मे काला-काल हमन जम्‍मो डहार ज चीज देखथन ते सब ला परमात्‍मा हा बनाहे </TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">iyo what are things that we see arround us this  all created by parmatma</TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">अब पक्रतिक मे सब को पेड पौधा ,धेरती अकास सबको  परमात्‍मा ने  बनाय है   अब आदमी मे तो इतना शक्‍ति नही है कि अपने से कुछ बना सके । अब हमलोग जितना भी देखत है आस-पास सब परमात्‍मा का ही देन है हवा कि जो नही भी दिखता है उसको भी परमात्‍मा न बनाया है जैसे कि इस बताया गया हे सवरग दुत उसको भी परमात्‍मा ने बनाया है </Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">in nature god made tree-plants, earht sky . human has not have this power that can make this by himself. whatever we see this all things is created by god air which can not see but parmatma made it like wise swargdut also made by parmatma .</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">दुनिया ,पेड पौघा ,मनुष्‍य पशु -पक्षी इस सबको परमात्‍मा के दवारा बनाय गये है परमात्‍मा के दुत भी परमात्‍मा के दवारा बनाय गये है </Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">world ,tree-plants,human everything created by God. and dut of parmatma also created by God.</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">ओ सब ला परमात्‍मा हा बनाये हवय </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">that all created by parmtama</Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="314f0192-c3bb-4ebd-b608-ba3e35da9818" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="83dae23f-5a03-4314-991a-a510f8a03393" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-03T17:26:42Z">IvR: Re:tst 1: 'iyo what are things that we see arround us this  all created by parmatma'. 
+I can't quite figure out the meaning of this question, are you asking which things are made by paramatma, or whether things ARE made by paramatma? (I am assuming the first)</ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="cbaf0d8d-88c1-40d9-b1ea-f10d37433927" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-04T14:27:30Z">i want to know whethet they say about unseen things or not.</ConsultantNote>
+              <ConsultantNote Direction="ConsultantToProjFac" guid="1ec19809-a06a-4412-b336-36533c53aad2" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-11T14:45:50Z">Since the story has 'seen', I don't think anyone will answre with anything that is 'unseen'. but you can try... </ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="ea83968d-a99e-44ae-b2a7-e8c01a14e6a8" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-18T12:25:55Z">actually i wanted to notice that they will tell about dut or not . </ConsultantNote>
+              <ConsultantNote Direction="ConsultantToProjFac" guid="d04e3a5f-7f90-4f2e-aa97-32c26a9789bf" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-18T15:23:42Z">well, they do come up with that also, so I guess you're fine! </ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="0817f1f2-0e05-4f06-8802-67cc34322d59">
+          <StoryLine lang="Vernacular">ता सबसे पहीली परमात्‍मा हा धरती अउ ये सवरग ला बनाईस ।</StoryLine>
+          <StoryLine lang="NationalBt">तो सबसे पहले परमात्‍मा ने धरती और सवरग को बनाया।</StoryLine>
+          <StoryLine lang="InternationalBt">so first of all parmatma made  earth and this heaven </StoryLine>
+          <StoryLine lang="FreeTranslation">So first of all God made earth and heaven.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Col 1:16">Col 1:16</Anchor>
+            <Anchor jumpTarget="Gen 1:1">Gen 1:1</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="54842f0b-661b-498a-8622-f454b93cd684">
+              <TestQuestionLine lang="Vernacular">आप काय सोचथो कि काबर परमातम्‍मा हा  सबसे पहीली  धरती अउ ये सवरग ला बनाईस?</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">why do you think  first of all parmatma made  earth and this heaven </TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">सबसे पहले इसलिय बनाया कि धरती को जब ताक पहले नही बनाता तो जीव -जन्‍तु मनुषयो को परमात्‍म कहा रखता । और सवरग इसलिय बनाया कि जो जो  अच्‍छा काम करेगा उसको तो परमात्‍मा  सवरग मे लायेगा ही।अचछा काम क अफल तो देगा ही इसलिय धरती के साथ साथ सवरग भी बनाया। तो इस धरती और सवरग का पहले बनाना बहुत महात्‍वपुर्ण था इसलिय इसको पहले बनाया। </Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">first mad ereat and swag because if earth may not made  then where this all living things and non lving things live and swarg made because who ever will do good work parmatma will bring them in swarg that;s way first gos made earth and swarg.</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">क्‍योकि धरती मे मनुष्‍य रहेगे और सवरग मे दुत  रह सके इसलिय परमात्‍मा धरती और सवरग को बनाते है </Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">becasue in the earth human  and in heaven dut can live that's way parmatma made this heaven and earth.</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">सबसे पहीली परमात्‍मा हा धरती अउ सवरग ला बनाईसे </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">first of all parmtma made earth and heaven </Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="bcd17089-f213-4cd9-9a42-c1469bd21f11" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="5622ccdc-5d2d-463a-9622-9c8a45085314" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T14:12:07Z">IvR: Re: anc: Col 1:16. You probalby need also Gen 1:1 to anchor the 'first of all'.</ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="6e0975c3-d996-4f8e-bbe7-1526dbba8b41" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-02T17:00:05Z">ok i did it .</ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="e2c31ff1-e53c-4de6-bf5b-7558d2a84529">
+          <StoryLine lang="Vernacular">अउ सवरग दुत मन ला घलो बनाईस।</StoryLine>
+          <StoryLine lang="NationalBt">और  सवरग दुत भी बनाय।</StoryLine>
+          <StoryLine lang="InternationalBt">and also made swargdut  </StoryLine>
+          <StoryLine lang="FreeTranslation">And he also made angels.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Col 1:16">Col 1:16</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="b8e9da6a-996a-4e12-ae79-c5c0ac46c18b">
+              <TestQuestionLine lang="Vernacular">आपके विचार मे काबर सवरग दुत मन ला घलो बनाईस</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">iyo why did also made swargdut </TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">हो सकता है सवरग दतो को परमात्‍मा ने मनुष्‍यो कि मदद के लिय बनाया होगा ।जैसे कि अगर मनुषय बुर काम कर रहा तो ये सवरग दुत उसको सही रास्‍ता दिखा सके । इस कहानी बताया गया है कि ये सवरग दुद परमात्‍मा का नमन भजन करते थे तो वे अच्‍छे थे तो ये सवरग दुत मनुष्‍यो कि भी परमात्‍मा का नमन भजन करना सिखायेगे।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">may swarg dut made tohelp people like if any people do bad do swatg dut can guide them . in this story tells that swargdut worship parmtma so they were good so as they are doing good same can teach to man also.</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">सवरग के काम को करने के लिय परमात्‍मा दुतो को बनाता है  अपने (परमात्मा)आदेस को मानने के लिय भी और परमात्मा का नमन भजन करे इसलिय बनाया  परमात्‍मा ने उन्‍हे बनाया</Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">to done work in heaven parmatma created dut. to obey god's commandments and worship him that's way.</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">अउ सवरग मे कुछ सवरग दुत भी बनाईसे </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">and made also some swargdut in the heaven</Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="862d8c79-be1f-4c45-8cb0-9670caf2fc75" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="3aaae19a-15f3-4bbd-9331-3940ecd0f584" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T14:13:21Z">IvR: Re: /अउ सवरग मे/ 'in the heaven'. 
+I don't think we can anchor that angels were made 'in heaven'. Could you just leave it out, and say that they 'were made'? </ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="67356456-0505-43c4-8b32-cb7a4cc62bb9" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-03T14:46:52Z">ok iwill tell "और सवरग दुतो को भी बानया"</ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="56e24269-6f52-4410-9ea9-932b8a997c1f">
+          <StoryLine lang="Vernacular">अउ ये सवरग दुत परमात्‍मा के नमन भजन करय।</StoryLine>
+          <StoryLine lang="NationalBt">और ये सवरग दुत लोग परमात्‍मा के नमन भजन करते है।</StoryLine>
+          <StoryLine lang="InternationalBt">and this swargdut does worship to parmatma </StoryLine>
+          <StoryLine lang="FreeTranslation">And these angels are worshiping God</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Ps 148:2">Ps 148:2</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="d46a93ce-317e-4b4e-afc9-c1f8b67b41f8">
+              <TestQuestionLine lang="Vernacular">आप काय सोचथो कि काबर  ये सवरग दुत परमात्‍मा के नमन भजन करय?</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">why do you think  this swargdut does worship to parmatma ?</TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">अब सवरग दुतो को तो परमात्‍मा ने बनाय था ना तो जैसे कोई माँ अगर अपने बच्‍चे को पैदा करती है तो उसका बच्‍चा केवल अपनी मा का ही बात मानता है तो जेसे जैसे उसकी मा बोलेगी वह बच्‍चा वैसे वैसे ही करेगा। तो ठीक वैसे ही उस सवरग दुद की रचना परमात्‍मा न किया था । तो परमात्‍मा उनका मार्गदशन करते थे। इसलिय वह परमात्‍मा का नमन भजन करते थे।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">swargdut were made by parmatma . like mother give birth to a child . so whatever mother tell her son child does . likewise swargdut made by parmatma . so parmatma was guiding them that;s way they were worshipping parmatma .</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">क्‍योकि परमात्‍मा तो ही सबको बनाया है धरती सवरग सबको उसी ने बनाय है तो परमात्‍मा के इस काम सबको देख कर उसका नमन भजन करते थे। तो परमत्‍मा ही उनके लिय सब कुछ थे।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">because everything parmatma have created earth and heaven . so by seen work of parmatma they worship him that parmatma made this all.</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">अउ ओ सवरग दुत मन हा परमात्‍मा के नमन भजन करथे</Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">and that swargdut does worship to parmatma</Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="56ed76a7-d58c-425f-8d47-f9a291e78376" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="5f65010e-cbb2-455d-be60-2fbda36c1acb" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T15:07:31Z">IvR: Re: anc: Ps 148:3. 
+These anchors don't talk about 'angels', but you can take 148:2</ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="5710dbf0-de38-4f38-9260-3772a6df59dc" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-03T14:46:52Z">ok i did it </ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="152e8261-234e-42eb-a5b8-f89455f55448">
+          <StoryLine lang="Vernacular">अउ ओकर आज्ञा के पालन करय।</StoryLine>
+          <StoryLine lang="NationalBt">और उनकी आज्ञा का पालन करते है ।</StoryLine>
+          <StoryLine lang="InternationalBt">obey his commandment</StoryLine>
+          <StoryLine lang="FreeTranslation">And are obeying his commandments.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Ps 103:20">Ps 103:20</Anchor>
+          </Anchors>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">-</Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">-</Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="ed8cfcdd-19ca-4ebb-89de-8492bb7cf0c0" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="f3504560-2f51-4458-b948-e2d5e4b937d5" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-03T17:29:17Z">IvR: Re:tst 1: 'why do you think  obey his commandment?'. 
+You could also ask, 'what kind of things do you think that God might be commanding them to do?'</ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="3f00fbfb-5047-4125-9c06-12990e7ee7f3" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-04T14:27:30Z">ok i  did it</ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="57ece7c5-2556-4efb-9a60-127ebaa2f2e4">
+          <StoryLine lang="Vernacular">अउ परमात्‍मा हा ओ सवरग दुत मन ला अलग अलग जिम्‍मेदारी देथे।</StoryLine>
+          <StoryLine lang="NationalBt">और परमात्‍मा ने उन सवरग दुतो को अलग अलग उनकी जिम्‍मेदारी देते है।</StoryLine>
+          <StoryLine lang="InternationalBt">and parmatma gave them different responsibility</StoryLine>
+          <StoryLine lang="FreeTranslation">And to God gave these angels different-different responsibilities.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Ps 103:21">Ps 103:21</Anchor>
+            <Anchor jumpTarget="Jude 1:6">Jude 1:6</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="1cf46c9e-ba22-4724-855d-b7c1ee5f4ac1">
+              <TestQuestionLine lang="Vernacular">आप काय सोचथो कि   परमात्‍मा हा ओ सवरग दुत मन ला काय  अलग अलग जिम्‍मेदारी देथे?</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">what kind of responsibilities do you think that God might have given them? 
+</TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">कोई सवरग दुत को पाप और पुन्य का हिसाब करने का जिम्‍मेदारी दिया होगा । और किसी को यस दिया होगा कि कौन से प्राणी कौन से काम करेगा ।या किसी को लेखा जोखा करने को दिया होगा ।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">maysome were given to account of sinfull work and good wotk, or may some kind of accoutibility of some work.</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">दुत लोगो को धरती मे जाने का जिमेदारी दिया होगा ।नियम का पालन करने और करवाने का जिम्‍मेदारी दिये रहते है । सवरग का देखभाल करने का जिम्‍मेदारी दिया होगा।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">may dut had given responsibility to take car of earth.obey instruction og god and to make obey others. taking car of heaven.</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">तो परमात्‍मा हा सोचीसे कि मै ये मन ला कुछ काम देदेथव इकर मन बर </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">so parmtam thought that i give them some work for them</Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="4c973627-f786-45a6-b497-207f43befd8b" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="de43510d-0c71-46ad-953b-a0448a7111f5" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T15:10:30Z">IvR: Re: anc: Ps 103:21. 
+I've added Jude 1:6 as an anchor. I see you have taken the Hindi story as an example. that's fine. I will send you by email the file with the documentation for the Hindi story set - sometimes this might come handy. I have taken this Jude anchor from that. </ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="539ff381-fa30-4b48-bbb5-fa5f91e612e0" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-03T14:46:52Z">ok but. does jude talk about responsibility that angels were having</ConsultantNote>
+              <ConsultantNote Direction="ConsultantToProjFac" guid="c0c8efa8-737b-4f0b-801e-501d356aaee4" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-03T16:57:58Z">'proper domain' is interpreted as 'domains of work' - so indeed, different responsibilities. </ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="a6a38287-c4f6-48c3-afe1-8e48bc60161d" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-04T14:27:30Z">ok</ConsultantNote>
+            </ConsultantConversation>
+            <ConsultantConversation guid="1ffcf6f8-6753-42fb-8636-04dbdf782843" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="45fc53c7-cf4c-4c20-894e-248b5fef155e" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-03T17:29:45Z">IvR: Re:tst 1: 'why do you think parmatma gave them different responsibility?'. 
+Or maybe rephrase this as 'what kind of responsibilities do you think that God might have given them?' 
+(if you think this question is too similar to the one I suggested in line 6, maybe leave that one out and ask only this.)</ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="73be4b27-8bb4-4932-b8c8-3373ba4e1e96" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-04T14:34:22Z">ok i will skip Quetion from line no 6.</ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="b11b8c0d-2b70-475e-9920-158ee159c2a3">
+          <StoryLine lang="Vernacular">कुछ मन ला धरती मे देथे अउ कुछ मनला सवरग मे देथे ।</StoryLine>
+          <StoryLine lang="NationalBt">कुछ लोगो को धरती मे देते है और कुछ लोगो को सवरग मे देते है।</StoryLine>
+          <StoryLine lang="InternationalBt">some of them in the  earth and some of them in the heaven</StoryLine>
+          <StoryLine lang="FreeTranslation">Some on earth and some in heaven.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Isa 6:2">Isa 6:2</Anchor>
+            <Anchor jumpTarget="Gen 19:1">Gen 19:1</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="d343125a-01b3-43af-80e3-182b3404ccd7">
+              <TestQuestionLine lang="Vernacular">आप काय सोचथो कि काबर कुछ मन ला धरती मे देथे अउ कुछ मनला सवरग मे देथे?</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">why do you think  some of them in the  earth and some of them in the heaven?</TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">जैसे कि सब लोग धरती मे ही काम करते तो सवरग मे कौन करता ।इसिलय परमात्‍मा ने सब को अलग अलग काम दिया  और अगल अलग जगा मे दिया ।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">like all swagdut work on earth then who will work in swarg. that;s way parmatma gave different type of activity and given in different place.</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">कई तरह के दुत रहे होगे तो सबको परमात्‍मा के आज्ञा पालन का जिम्‍मेदारी दिया होगा जो भी उसके मुखिया रहा होगा उसको।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">many type of dut were there. who ever the  main cheif he  will given the work to make obey other god commandment.</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">तो आधा जन ला सवरग मे देदिस काम अउ आधा झन ला  धरती  मे </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">so half were given work in the earth and half in the heaven. </Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="4416cb35-b596-4f7f-b3fe-ba57f0ddbdaa" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="5d7e3fde-2956-4ed3-bd76-aca2a391d91f" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T15:14:42Z">IvR: Re: anc: Isa 42:5. 
+The hindi story set uses as anchor for 'in heaven": Isaiah 6:2. And for 'on earth': 'gen 19:1
+</ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="727b0cf0-6421-43f1-8edb-2301513013ac" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-03T14:46:52Z">ok i did also</ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="89f792f2-a39b-4355-9c56-91d6895b1e39">
+          <StoryLine lang="Vernacular">लेकिन शुरु से ही कुछ सवरग दुत मन हा परमात्‍मा के नमन भजन करे बर छोड दिस।</StoryLine>
+          <StoryLine lang="NationalBt">लकेइन सुरु से ही कुछ सवरग दुत लोग परमात्‍मा के नमन भजन करना छोड दिये।</StoryLine>
+          <StoryLine lang="InternationalBt">but from the begnning some of swargdut left to worship parmatma .</StoryLine>
+          <StoryLine lang="FreeTranslation">But from the beginning some angels stopped worshiping God.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Jude 1:6">Jude 1:6</Anchor>
+            <Anchor jumpTarget="1John 3:8">1John 3:8</Anchor>
+          </Anchors>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">तो कुछ सवरग दुत मन हा परमात्‍मा के नमन भजन करे बर छोड देथे </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">so some of swarg dut left to worship parmatma </Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="6bd1c603-0c48-4d8e-9a44-14148782a016" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="43226a96-152c-4060-803b-ce27cfbefc58" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T15:23:46Z">IvR: Re: anc: Jude 1:6. 
+we need an achor for 'from the beginning.' the Hindi story uses 1 John 3:8</ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="b0fc75fd-57f1-4f6f-8d34-019902385794" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-03T14:46:52Z">ok i ddi it</ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="35035d2b-f6a4-407a-bace-91ff61be5ce3">
+          <StoryLine lang="Vernacular">अउ ओकर से विसवास घात करीस ।</StoryLine>
+          <StoryLine lang="NationalBt">और परमात्‍मा से विसवास घार करते है। </StoryLine>
+          <StoryLine lang="InternationalBt">and rebelled /unfaithful to  him</StoryLine>
+          <StoryLine lang="FreeTranslation">And broke God's trust.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="2Pet 2:4">2Pet 2:4</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="aca52d10-987a-4476-9b73-a1b56d67482e">
+              <TestQuestionLine lang="Vernacular">आप काय सोचथो कि काबर शुरु से ही कुछ सवरग दुत मन हा परमात्‍मा के नमन भजन करे बर छोड दिस अउ ओकर से विसवास घात करीस?</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">why do you think from the begnning some of swargdut left to worship parmatma and rebelled /unfaithful to  him? </TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">उसमे कुछ सवरग दुत लोग एसे थे जिसको परमत्‍मा का नमन भजन करना या अच्‍छा काम करना पंसद नही आया होगा । तो इसलिय परमात्‍मा से विसवासघात किये मतलब पाप किये। </Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">may there were some swardut who are not liking to worship of god . that's way beccame unfaithfull to god means did sin.</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">कुछ सवरग दुत इसलिय करते है कि वे लोग परमात्मा के आदेस का पालन नही करते होगे कि यह अब हामरा काम नही है वे लोग अपने आप को बडे समझते रहे होगे।  इसलिय वे  लोग दुसरे दुत के सात मिलकर विसवास घात करते है । जलन रहा होगा उन लोगो को परमात्‍मा के प्रति।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">because some of did like this becasue theymight htought that do not need to fallow the commandments of god. thye thought that this is not our work. they thought themselves higher.that's way became unfaithful with others. jealosy with god</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">अउ ओकर साथ विसवास घात करथे </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1"> and rebelled /unfaithful with  him</Retelling>
+          </Retellings>
+        </Verse>
+        <Verse guid="686be2a1-14e2-4c4a-a272-1d5f4f773426">
+          <StoryLine lang="Vernacular">अउ ये मन हा परमात्‍मा के आज्ञा ला नई मानीस ।</StoryLine>
+          <StoryLine lang="NationalBt">और ये लोग परमात्‍मा जो आज्ञा दिये थे नही माने।</StoryLine>
+          <StoryLine lang="InternationalBt">and they have not obeyed parmatma's commandment.</StoryLine>
+          <StoryLine lang="FreeTranslation">And they did not obey God's command's.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="2Pet 2:4">2Pet 2:4</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="f432600e-9219-4967-b3d9-de4321a543ef">
+              <TestQuestionLine lang="Vernacular">आप काय सोचथो कि काबर  ये मन हा परमात्‍मा के आज्ञा ला नई मानीस?</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">why do you think they have not obeyed parmatma's commandment?</TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">जो लोग पापी स्‍वाभ का रहते है ओ लोग बहुत घंमड से भरे हुये होते है कि मै किसी कि आज्ञा को नही मानुगा । अपने से बडो कि भी इज्‍जत नही करते है ।तो वे सवरग दुत सोचते रहे होगे कि सबसे बडा हमही लोग है हमारे से बडा कोई नही है। हमलोग किसी की आज्ञा को नही मानेगे ।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">who is sin full nature they are filled with proud. like i will not obey any once commandment. do not give respect elders. so swarg dut thought that we are superier there is no one higher then us . that's way will not obey any once commandment.</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">कुछ दुत लोगो को परमात्ममा का  आज्ञा देना  अच्‍छा नही लगा होगा । उनकी इच्‍छा के खिलाप रहा होगा।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">may some of dut did not like the commandment of god. may be this was out of their willingness.</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">अउ परमात्‍मा के आज्ञा ला नई मानय </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">and did not obey parmatma's commandment</Retelling>
+          </Retellings>
+        </Verse>
+        <Verse guid="3204d937-9a81-436c-9f7e-70d35056e27a">
+          <StoryLine lang="Vernacular">अउ इही बात हा परमात्‍मा के नजर मे पाप हरे ।</StoryLine>
+          <StoryLine lang="NationalBt">और इही बात हा परमात्‍मा के नजर मे पाप है।</StoryLine>
+          <StoryLine lang="InternationalBt">and this thing is sin in eyes of parmatma .</StoryLine>
+          <StoryLine lang="FreeTranslation">And this is sin in God's eyes.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="2Pet 2:4">2Pet 2:4</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="54bc245c-f1fe-4626-981a-fd6ee1189493">
+              <TestQuestionLine lang="Vernacular">आप काय सोचथो कि काबर इही बात हा परमात्‍मा के नजर मे पाप हरे?</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">why do you think  this thing is sin in eyes of parmatma ?</TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">अब विसवास घात करना ,दुसरे को चोट पहहुचान तो पाप करना ही माना जाता है तो इसलिय परमात्‍मा पाप का सजा देना चाहता था।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">now decieved some once , is considerd sin  only na . that's way parmatma wants to punish them</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">इसलिय कि परमात्‍मा के खिलाप कुछ भी  करने से परमात्‍मा को नराज होते है  इसलिय परमात्‍मा के नजर मे पाप है उसकि बात को नहि मानना।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">becasue whatever do against of  parmatma .that is mke angreeness to god. that's way this is sin in eyes of god. may be they did not obey his word</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">अउ इही परमात्‍मा के नजर मे पाप हरे</Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">and this is sin in eyes of parmtma </Retelling>
+          </Retellings>
+        </Verse>
+        <Verse guid="cc5678f4-0f5f-4933-a216-3d4d8bc9a049">
+          <StoryLine lang="Vernacular">तब परमात्‍मा हा ये सोचके रखे हे।</StoryLine>
+          <StoryLine lang="NationalBt">तब परमात्‍मा  ये सोचके रखा था।</StoryLine>
+          <StoryLine lang="InternationalBt">then parmtama kept thought.</StoryLine>
+          <StoryLine lang="FreeTranslation">Then God kept this thought, </StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="2Pet 2:4">2Pet 2:4</Anchor>
+          </Anchors>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">तो परमात्‍मा हा सोचथे कि मै इमन ला </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">then parmtma thought that i will</Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="6f29c361-4b74-497a-858b-c7c5d38a4777" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="23171681-6710-44ad-8a0c-1578e7323a36" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T15:26:55Z">IvR: Re: /तब परमात्‍मा हा ये सोचके रखे हे।/ /तब परमात्‍मा  ये सोचके रखा था ।/ 'then parmtama kept thinking'. 
+I am not 100% sure about the full meaning of सोचके रखा था
+Does रखा था mean 'made a decision'? 
+We dont' want to convey the meaning that God is only 'thinking about this' - we want to make sure that it is clear that God made a solid plan. </ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="f5213b05-8822-44f0-b160-56d23ca98b0d" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-03T14:46:52Z">in hindi transelation is looking like it is undecided decision. but in chhattisgari is it very stroung . really believe. but did  write transletion in eng.</ConsultantNote>
+              <ConsultantNote Direction="ConsultantToProjFac" guid="ecc8e4c3-fef1-4d6f-b5e9-a685b1595569" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-03T16:57:58Z">that shoudl be okay then. </ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="6e76af91-dd28-409b-bda1-de99da6b547b">
+          <StoryLine lang="Vernacular">कि एक दिन उमन ला सिरतोन मे सजा दिही ।</StoryLine>
+          <StoryLine lang="NationalBt">कि एक दिन उनको सच मे सजा देगे।</StoryLine>
+          <StoryLine lang="InternationalBt">that on day truely punish them.</StoryLine>
+          <StoryLine lang="FreeTranslation">That one day I will certainly punish them.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Rev 21:10">Rev 21:10</Anchor>
+            <Anchor jumpTarget="Matt 25:41">Matt 25:41</Anchor>
+          </Anchors>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">-</Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">-</Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="247a10a4-fc56-472c-8d11-e6ea6e2886f4" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="c3ad4695-d020-4fc0-8c5b-370035ea82d5" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T16:00:03Z">IvR: Re: anc: 2Pet 2:4. This anchor seems to talk about something that allready happened, not a final day of judgement. You can instead use Matt 25:41 and REv 21:10 (which is a prophetic vision)</ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="8799f08c-33ea-4568-9011-b7f4f16ff6b7" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-03T14:46:52Z">ok i did it .</ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="1fcaaf36-d56d-436c-8e48-3ed22214950e">
+          <StoryLine lang="Vernacular">अउनरक के आग मे उमन ला डाल दिही ।</StoryLine>
+          <StoryLine lang="NationalBt">और नरक के आग मे डाल देगे।</StoryLine>
+          <StoryLine lang="InternationalBt">and put them in fire of hell.</StoryLine>
+          <StoryLine lang="FreeTranslation">And put them in the fire of hell.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Matt 25:41">Matt 25:41</Anchor>
+            <Anchor jumpTarget="Rev 21:10">Rev 21:10</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="411b36c1-ca8b-4c09-b0b4-69d7aaf7ab6f">
+              <TestQuestionLine lang="Vernacular">आप काय सोचथो कि काबर  परमात्‍मा हा ये सोचके रखे हे कि एक दिन उमन ला सिरतोन मे सजा दिही अउनरक के आग मे उमन ला डाल दिही?</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">why do you think then parmtama kept thought that on day truely punish them and put them in fire of hell?</TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">अब जो पाप करता है और पुन्य करता है सबको लेखा जोख देना पडता है और परिणाम भोगना ही पडता है तो सवरग दुत लोग भी जो किये है उसका परिणाम तो उसे भोगना ही पडेगा।और ये सवरग दुद बुरा काम करे है इसलिय इसको नरक मे डानने का परमात्‍मा ने सोचके रखा है </Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">there is account for evething good and for bad. and have face it to everyone. this swargdut had done wrong that's way parmatma thought toput them in hell.</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">परमात्ममा सब्र करता रहा होगा कि शायद ये लोग सुधर जाये आगे चल कर जब नही सुधरते है पर अब तो परमात्‍मा पुरा सोचके रखे है कि मै आगे चल कर इन्‍हे नरख के आग मे ढकेल दुगा ।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">parmatma is patience . may god thought that they my improve in the day to come. but now parmatma strictly thought that i will put them in to fire of hell.</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">नरक के आग मे ढकेल दुहु या डाल दुहु</Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">push  them in the fire of hell or put </Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="b5606600-e96a-402a-a9c8-38620100b630" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="90486bdb-3220-48c7-8579-f37387b9f78c" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T16:02:35Z">IvR: can use same anchor here as in previous line. </ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="d5091a36-19b3-4417-8c04-16928c12759a" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-03T14:46:52Z">ok i did</ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="c9f3bd3a-0e0d-4887-9087-0318826415fe">
+          <StoryLine lang="Vernacular">अउ ये सवरग दुत मन हा उही बुरा आत्‍मा हरे ।</StoryLine>
+          <StoryLine lang="NationalBt">और ये सवरग दुत वही बुरा आत्‍मा है।</StoryLine>
+          <StoryLine lang="InternationalBt">and this swargdut now is that bad evil spirit </StoryLine>
+          <StoryLine lang="FreeTranslation">And these angels are evil spirits</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="2Pet 2:4">2Pet 2:4 "those spirits are the spirits that now as the evil spirits" --  for ex 12:12</Anchor>
+          </Anchors>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">ता सवरग दुत मन हा उही बुरी आत्‍मा मनहा</Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">then swargdut is that evil spirit</Retelling>
+          </Retellings>
+        </Verse>
+        <Verse guid="8d11c87f-ede5-45a1-a5f9-9395badcc9c8">
+          <StoryLine lang="Vernacular">जे भुत परेत के रुप लेके मनुष्‍य मन ला परेशान करथे ।</StoryLine>
+          <StoryLine lang="NationalBt">जो भूत परैत का रुप लेके मनुष्‍य मन ला परेसान करथे।</StoryLine>
+          <StoryLine lang="InternationalBt"> who in the form of ghosts-spirits are giving people trouble</StoryLine>
+          <StoryLine lang="FreeTranslation">who in the form of ghosts-spirits are giving people trouble</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Eph 6:12">Eph 6:12</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="50a151d8-b301-49d9-9b48-92e3ebcf8723">
+              <TestQuestionLine lang="Vernacular">आप काय सोचथो कि काबर  ये सवरग दुत मन हा उही बुरा आत्‍मा हरे जे भुत परेत के रुप ले के मनुष्‍य मन ला परेशान करथे?</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">why do you think this swargdut now is that bad evil spirit   who in the form of ghosts-spirits are giving people trouble?</TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">अब  सवरग दुद का स्‍वाभाव पापी है वे  तो बुरा काम कर रहे है और कोई दुसरा काम नही है तो भुत बनके आदमीयो को ही परेशान करते है</Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">thenature of swargdut is sinfull they are doing bad and . thye do not have any other work so they are becaming buth paret and distrubing people.</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">सायद परमात्‍मा हा उन  सवरग दुतो  को दन्‍ड देते होगे तो वे लोग भुत परैत बन जाते होगे। वे लोग सुरु से ही परमात्‍मा के आज्ञा का पालन नही किये नमन भजन नही किये तो जब मनुष्‍य लोग परमात्‍मा का नमन भजन करते है तो इनको चिड लगता है इनको परेशानी होता है और इसलिय मनुष्‍यो को ये लोग परेसान करते है ताकि मनुष्‍य लोग भी परमात्‍मा का नमन भजन न कर सके।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">may parmatma punished them and they became but paret.they do not worship parmtma and if human worhisp they donot like it that;s way they creat problem.so that people should (Irene: not) worship god.</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1"> भुत परैत बनके  मईनखे मन ला सताथे </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1"> distrubed to people by becaming bhut paret </Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="ddadcc3d-8a0e-4e18-8064-9c91466d0268" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="70b21c09-b0c0-4ffb-be0c-72243c59ba92" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T16:04:14Z">IvR: Re: anc: 2Pet 2:4. 
+The Hindi set uses Eph 6:12 as anchor.</ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="00d54b29-c126-44f3-b4f7-28556bd08883" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-03T14:46:52Z">ok i did .</ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="59eec6b6-c7f5-4a21-9568-779a39f61bab">
+          <StoryLine lang="Vernacular">अउ इही बुरी आत्‍मा के मुखिया हा शैतान के नाम से जाने जाथे ।</StoryLine>
+          <StoryLine lang="NationalBt">और वही बुरी आत्‍मा का मुखिया जो शैतान के नाम से जाना जाता है।</StoryLine>
+          <StoryLine lang="InternationalBt">and cheif of this evil spirit known named satan</StoryLine>
+          <StoryLine lang="FreeTranslation">And the leader of these evil spirits is known as Satan.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Matt 9:34">Matt 9:34</Anchor>
+            <Anchor jumpTarget="Matt 25:41">Matt 25:41</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="61584149-162b-4480-906c-80b30d0bfa20">
+              <TestQuestionLine lang="Vernacular">आप काय सोचथो कि काबर इही बुरी आत्‍मा के मुखिया हा शैतान के नाम से जाने जाथे</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">why do you think  cheif of this evil spirit known named satan</TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">अब जैसे एक गाव है तो गाव मे जतना भी आदमी लोग  रहते है उसका कोई न कोई तो मुखिया रहता  ।तो नाम दिया गया । जो आदेस देता होगा भुतो परैतो को कि इस काम को करो। आदमी को परेसान करो। और ये मखिया था ये ओ बडा पापी  रहा होगा इसलिय महा पापी शैतान नाम दिया गया ।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">now in any village where there peopel lived so some one must be opointed there as a chief. so used to  given any name .so satan use to command to bhut pret that do this work. distrubed people . and their cheif  may  be very much sinner that way extrem sinner satan given name</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">हो सकता है एक दुत रहा होगा वही सबको भडकाया होगा दुतो को और सबको परमात्‍मा के बारे मे कि उसको मत मानो तो वही  होगा जो शैतान के नाम से जाना जाता है </Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">may there was a some one who creat wrong understand to all dut towards god.that donot worhsip him and do not obey his commandment.he onlychief named satan </Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">अउ उही बुरी आत्‍मा के मुखिया हा शैतान कहलाथे </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">and  cheif of that evil spirit called satan</Retelling>
+          </Retellings>
+        </Verse>
+        <Verse guid="ee64fac4-2c5a-4c86-8939-5491033ac97d">
+          <StoryLine lang="Vernacular">शैतान हा हमेशा घोखाबाजी करथे ।</StoryLine>
+          <StoryLine lang="NationalBt">हमेसा घोखाबाजी करता।</StoryLine>
+          <StoryLine lang="InternationalBt">satan always decived </StoryLine>
+          <StoryLine lang="FreeTranslation">Satan is always deceiving.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Rev 12:9">Rev 12:9</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="67bb91b4-b14a-47a7-b88d-811c96a13f98">
+              <TestQuestionLine lang="Vernacular">आप काय सोचथो कि काबर शैतान हा हमेशा घोखाबाजी करथे?</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">why do you think satan always decived ?</TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">अब शैतानो का काम क्‍या रहता है अच्‍छा तो कर नही सकता है अब किसी से धोखा बाजी करना या हत्‍या करना या लुट पात करना । शैतान हमेशा धोखा बाजी करता हे किसी का भलाई नही करता है और मनुष्‍य से बी यही करवाता क्‍योकि मनुष्‍यो कि सोच बहुत जल्‍दी बहक जाती है </Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">what is satan work . satan do not do good his work is murder . he alway deceived man .satan never do good. and wants that people also so  the same. because man easily gets decieved by any one.</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">शैतान आम इसान के तरह तो है नही और न ही परमात्‍मा है तो शैतान तो शैतानी काम करेगा ना । तो वह सिर्फ आम इंसानो को नुकसान पहुचाता है </Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">satan is not like command people and not he is not parmama . so satan always do satanic work . so he does only harm to people.</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">-</Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">-</Retelling>
+          </Retellings>
+        </Verse>
+        <Verse guid="e683d86f-f71c-486f-a1df-38a45db4bfc7">
+          <StoryLine lang="Vernacular">अउ मनुष्‍य से भी इही काम ला ओ करवाथे।</StoryLine>
+          <StoryLine lang="NationalBt">और मनुष्‍य से भी यही करवाता है ।</StoryLine>
+          <StoryLine lang="InternationalBt">and (wants) people also do this work (irene: and also causes people to do this)</StoryLine>
+          <StoryLine lang="FreeTranslation">And he is also causing people to do this.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Rev 12:9">Rev 12:9</Anchor>
+          </Anchors>
+          <ExegeticalHelps>
+            <ExegeticalHelp>TN on 1Jn 3:8 (The Son of God came in order to destroy the devil's work / undo everything that Satan has done.)" TN comment: "destroy the devil's work": (Meaning) The devil's work is tempting people to sin and getting control over their lives so that they continue to sin.</ExegeticalHelp>
+          </ExegeticalHelps>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">-</Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">-</Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="8c65eeba-f616-415c-9cec-71d82d27c927" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="c5098520-e05b-4d38-b082-cf31f7293838" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T16:07:49Z">IvR: I've added a exegetical note from Translator's notes as anchor for Satay wanting to 'let people also do this work'</ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="738bd2e6-f46f-437c-954d-53764a7ec34b" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-03T14:46:52Z">ok . but i did. can you guide me which exegitical trasletion </ConsultantNote>
+              <ConsultantNote Direction="ConsultantToProjFac" guid="cfef44c7-5ab7-4177-ae91-b1beb8b72b5c" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-03T16:57:58Z">To add an exegetical note, right click on the square button and click 'add exegetical/cultural note below."
+In this case, I have copied this note from the Hindi story set. 
+Normally, you would first know the verse, and then look up Translator's Notes or another commentary in TW. In this case if is a little different. </ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="944867b5-ca6e-4ed4-b1ec-96d7f2b1fa93" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-04T14:34:22Z">ok thanks</ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="10988b59-1848-42da-9e88-2f058410ab97">
+          <StoryLine lang="Vernacular">ताकि मानव जाती परमात्‍मा के सही रास्‍ता से हट जाये ।</StoryLine>
+          <StoryLine lang="NationalBt">ताकि मानुष्‍य जाति परमात्‍मा के सही रास्‍ते से हट जाये।</StoryLine>
+          <StoryLine lang="InternationalBt">so that human beings turn away from true way of  parmatma </StoryLine>
+          <StoryLine lang="FreeTranslation">So that people will go away from God's right way.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Rev 12:10">Rev 12:10</Anchor>
+            <Anchor jumpTarget="2Cor 4:4">2Cor 4:4</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="5f3d25a4-7d2d-4f22-bd75-a6e1dbb0ec64">
+              <TestQuestionLine lang="Vernacular">आपके विचार मे काबर शैतान हा चाहथे  कि मानव जाती परमात्‍मा के सही रास्‍ता से हट जाये?</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">why does Satan wants that people turn away from true way of paramaatma?</TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">शैतान दुसरो को अपने जैसा बनाना चाहता है तो शैतान हा परमात्‍मा  घ्रणा करता है तो जो परमात्‍मा का नमन भजन करता है उस मनुष्‍य से भी वह नफरत करता है तो इसलिय मनु्ष्‍यो कि बहकाता है कि सब मनुष्‍य परमात्‍मा के सही  रास्‍ता को छोड के बुराई के रास्‍ता मे आ जाये</Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">satan want other also belike him. satan hates parmatma so those who worhsip parmatma he hates them also. that's way he decieved people. so everyone turn away from god's way and walked on  evil way.</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">इसलिय क्‍योकि अगर मनुष्‍य लोग परमात्‍मा के तरफ जायेगे तो शैतान का शैतानी काम कभी सफल नही हो पायेगा इसलिय वह आदमी लोगो को अपने तरफ खिचता है ताकि  मनुष्‍यो   परमात्‍मा के सही रस्‍ता से हट जाये।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">becasue if people will go towards of god then satanic work never be success. that;s way he want people to turn toward him(satan) so that people missed out true way of god.</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">अउ सैतान चाहते कि मनुष्‍य मन हा परमात्‍मा के सही रस्‍ता ला छोड दे अउ ओकर उपर विसवास नई करे </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">and satan wants that people leave true way of parmatma and do not believe in him</Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="b326f2dd-b49d-4c49-b059-58bce4826d65" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="c4478808-8881-4001-b043-31dd619d498a" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T16:09:31Z">IvR: you can also add 2Cor 4:4 as anchor</ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="3b17ed3a-a1fc-46c9-9ba9-97bdf641a266" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-03T14:46:52Z">ok i did it</ConsultantNote>
+            </ConsultantConversation>
+            <ConsultantConversation guid="56f55044-eccc-4a47-8355-e8097066c79d" visible="false">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="f96bcc2d-6744-4fee-a3c6-c6ff259c8eb2" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-03T17:31:59Z">IvR: Re: 'so that human beings turn away from true way of  parmatma'. 
+Maybe here ask 'why does Satan wants that people turn away from true way of paramaatma?'</ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="54c555ad-f8dc-4249-80ec-dea9e84a9a87" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-04T14:34:22Z">ok i did  it </ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+        <Verse guid="b9876d63-aa79-4139-8204-f69a402c1350">
+          <StoryLine lang="Vernacular">शैतान हा मानव जाती के दुशमन हरे ।</StoryLine>
+          <StoryLine lang="NationalBt">शैतान हा मानव जाती का दुशमन है </StoryLine>
+          <StoryLine lang="InternationalBt">satan is enemy  of human being </StoryLine>
+          <StoryLine lang="FreeTranslation">Satan is the enemy of people,</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="Rev 12:10">Rev 12:10</Anchor>
+          </Anchors>
+          <ExegeticalHelps>
+            <ExegeticalHelp>TEV, footnote on 'sAtan': A supernatural being whose name indicates he was regarded as the opponent of human beings."</ExegeticalHelp>
+          </ExegeticalHelps>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="6c7f43b7-f824-4e7b-8f3a-620977d61a20">
+              <TestQuestionLine lang="Vernacular">आप काय सोचथो कि काबर शैतान हा मानव जाती के दुशमन हरे ?</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">why do you think satan is enemy  of human being?</TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">सैतान हमेसा मनुष्‍यो को बुरा काम करने बोलता है और बुरा काम करोगे तो तुमहारा नाश तो होगा ही । आज नही तो  काल नाश होगा । तो शैतान मानव जाती के दुशमन कहलायेगा ही क्‍योकि वह मानव जाती को बहकाता है </Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">satanalway tell man to do bad and if will do bad then surely  you will distroy.so satan is enemy of human being becasue he used to decied human being </Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">क्‍योकि मानव जाती परमात्‍मा के तरफ है और उसका नमन भजन करते है इसलिय </Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">because human being is side of god. and they worship god that's way satan is enemy of human being</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">-</Retelling>
+          </Retellings>
+        </Verse>
+        <Verse guid="2f7e0e8b-5c60-47ba-9dec-0c65a3fbd009">
+          <StoryLine lang="Vernacular">लेकिन परमात्‍मा मानव जाती से बहुत प्‍यार करथे।</StoryLine>
+          <StoryLine lang="NationalBt">लेकिन परमात्‍मा मानव जाती से बहुत प्‍यार करते है </StoryLine>
+          <StoryLine lang="InternationalBt">but parmtam loves human beings very much. </StoryLine>
+          <StoryLine lang="FreeTranslation">But God loves people very much.</StoryLine>
+          <Anchors keyTermChecked="false">
+            <Anchor jumpTarget="John 3:16">John 3:16</Anchor>
+          </Anchors>
+          <TestQuestions>
+            <TestQuestion visible="true" guid="539b69ce-3465-4001-aff1-1bf3c1e0152f">
+              <TestQuestionLine lang="Vernacular">आप काय सोचथो कि काबर  परमात्‍मा मानव जाती से बहुत प्‍यार करथे?</TestQuestionLine>
+              <TestQuestionLine lang="InternationalBt">why do you think  parmtam loves human beings very much?</TestQuestionLine>
+              <Answers>
+                <Answer lang="Vernacular" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d" />
+                <Answer lang="NationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">अब मानव जाती सब प्राणी से अलग है  और परमात्‍माने मनु्षयो को अलग तरिके से बनाय है  ताकि मनुष्‍य सबका देखभाल कर सके। तो मनुष्‍य को परमात्‍मा बहुत प्‍यार करते है </Answer>
+                <Answer lang="InternationalBt" memberID="mem-d2e2c685-5235-4c20-8fb1-22739c79f43d">human being are different from all creation. parmatma made human being very differently . so that man can protect everything. that's way parmtma love human being so much</Answer>
+                <Answer lang="Vernacular" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb" />
+                <Answer lang="NationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">इसलिय क्‍योकि परमात्‍माके दवारा ही मनु्ष्‍य इस दुनिय मे आया है और परमात्‍मा कनी नही चाहेगा कि मेरी बनाये दुनिय नष्‍ट हो जाये। इसलिय मानव जाती को बहुत प्‍यार करते है और मानव जाति ही उसकी आज्ञा का पालन कर सकता है क्‍योकि मानव जाती मनु्‍य है जीव है ।</Answer>
+                <Answer lang="InternationalBt" memberID="mem-4adfc289-2be0-401e-be9f-c596628becbb">because throught god only human have come in htis world. and god never wants that his creation distroyed . that's way he love human being . human being only can obey him because human being are living being.</Answer>
+              </Answers>
+            </TestQuestion>
+          </TestQuestions>
+          <Retellings>
+            <Retelling lang="Vernacular" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">लेकिन परमात्‍मा मनुष्‍य मन से बहुत प्रेम करथे प्‍यार करथे </Retelling>
+            <Retelling lang="NationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1" />
+            <Retelling lang="InternationalBt" memberID="mem-f0ba9827-591b-42fb-ac74-ceb6c319ccd1">but parmatma loves so much to people . do love </Retelling>
+          </Retellings>
+          <ConsultantNotes>
+            <ConsultantConversation guid="539526de-79a8-4c53-acc5-44dc98b25152" visible="false" finished="true">
+              <ConsultantNote Direction="ConsultantToProjFac" guid="6701bdbd-b674-4f2e-94a1-91842c9b1ada" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-02T16:10:38Z">IvR: the HIndi story has Gen 1:28 as anchor but that one must be wrong. However TEV has a footnote everytime the word 'Satan' appears, saying " A supernatural being whose name indicates he was regarded as the opponent of human beings."
+I've added that as an exegetical note. </ConsultantNote>
+              <ConsultantNote Direction="ProjFacToConsultant" guid="eebb41fe-32ac-4c7f-b1fe-9023a5df2ae5" memberID="mem-23d1fe56-06d0-4d9a-9d87-38aef63717af" timeStamp="2011-08-03T14:46:52Z">ok. but can you tell me in Tw where i can see this.</ConsultantNote>
+              <ConsultantNote Direction="ConsultantToProjFac" guid="9488e56d-69f7-4d65-ba86-5061d8256974" memberID="mem-f96cb4cb-1246-41ce-a00d-5835532b4282" timeStamp="2011-08-03T16:57:58Z">Yes. Good question! Actually I now noticed they give this footnote not every time 'Satan' appears, but occasionally. Here is how to find this: 
+
+With TEV open and selected, click on 'search' on the top bar. Then click 'advanced query'. In the white box that comes after "Query for:" type 'satan'. Click 'okay'. 
+The TEV wil now jump to one occurence of 'satan.' We want to see more, so we click the F4 button (does your computer have this?? at the top?), otherwise 'search', 'next hit'.
+An other way to get to the next occurence of the word is to click on the larger double right pointing arrows on the left bottom of your screen. Clicking instead on the left pointing arrows will give the previous hit again. 
+Keep going to get to the next hit till you wil see a symbol after the word 'satan', that looks like a cross with an extra piece near the bottom. That means that there is a footnote. I find one of these for instance on Job 1:6. When you click on the cross, you will see the footnote. 
+A footnote can give support to a certain interpretation in a story, and can be helpful to paste in an exegetical note. 
+Everytime you are reading a story in one of the Bibles and you find a footnote symbol, it is helpful to read these notes. They can be quite enlighting. </ConsultantNote>
+            </ConsultantConversation>
+          </ConsultantNotes>
+        </Verse>
+      </Verses>
+    </story>

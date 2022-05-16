@@ -205,6 +205,7 @@ const initState = {
   handleHighlightDiscussion: (time: number | undefined) => {},
   highlightDiscussion: undefined as number | undefined,
   refresh: 0,
+  prjId: '',
 };
 
 export type ICtxState = typeof initState;
@@ -236,7 +237,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { workflowSteps, orgWorkflowSteps } = props;
     const { wfStr, sharedStr, stepCompleteStr } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
-    const { pasId } = useParams<ParamTypes>();
+    const { pasId, prjId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
     const [coordinator] = useGlobal('coordinator');
     const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -251,6 +252,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       ...initState,
       allBookData,
       wfStr,
+      prjId,
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const fetching = useRef('');

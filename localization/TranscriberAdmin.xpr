@@ -2391,6 +2391,9 @@
         <file name="MissingTarget.xsl"/>
         <file name="MissingTargetUpdate.xsl"/>
         <file name="MissingTargetWithId.xsl"/>
+        <file name="../modeling/StoryProject.xsd"/>
+        <file name="../modeling/StoryProjectStorySample.xml"/>
+        <file name="../modeling/StoryProjectVerseSample.xml"/>
         <file name="ToModel.xsl"/>
         <file name="ToReducer.xsl"/>
         <file name="TranscriberAdmin-ar.xlf"/>
