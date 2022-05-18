@@ -81,3 +81,4 @@ export * from './useLoadStatic';
 export * from './useDiscussionCount';
 export * from './getNextStep';
 export * from './useFilteredSteps';
+export * from './getPasIdByNum';

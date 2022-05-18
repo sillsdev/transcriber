@@ -1,7 +1,10 @@
-sil-transcriber (2.15.5.1)  experimental; urgency=high
+sil-transcriber (2.15.5.2)  experimental; urgency=high
 
-* TT-3957 - Allow working through all passages of a section
-* TT-3958 - All discussions to be visible on the record step
+* TT-3957 Allow working through all passages of a section
+* TT-3958 All discussions to be visible on the record step
+* TT-3960 don't play two audio (no player on record)
+* TT-3966 hot keys control recorder (no player on record)
+* TT-3968 fix player count, show reference, step complete advances
 * update help
 
 -- Greg Trihus <greg_trihus@sil.org>  Mon, 16 May 2022 13:22:00 -0600

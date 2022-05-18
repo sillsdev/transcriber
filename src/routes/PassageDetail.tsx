@@ -167,13 +167,8 @@ const PassageDetailGrids = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
   const ctx = useContext(PassageDetailContext);
-  const {
-    currentstep,
-    discussionSize,
-    setDiscussionSize,
-    orgWorkflowSteps,
-    mediafileId,
-  } = ctx.state;
+  const { currentstep, discussionSize, setDiscussionSize, orgWorkflowSteps } =
+    ctx.state;
   const tool = useStepTool(currentstep);
   const [communitySlugs] = useState([
     ArtifactTypeSlug.Retell,
@@ -270,7 +265,7 @@ const PassageDetailGrids = (props: IProps) => {
                       <PassageDetailRecord auth={auth} />
                     </Grid>
                   )}
-                  {(tool !== ToolSlug.Record || mediafileId) && (
+                  {tool !== ToolSlug.Record && (
                     <Grid item className={classes.description} xs={12}>
                       <PassageDetailPlayer />
                     </Grid>

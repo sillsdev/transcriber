@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation, useHistory } from 'react-router-dom';
 import { Passage, IPassageChooserStrings } from '../../model';
@@ -10,7 +10,12 @@ import {
   Theme,
 } from '@material-ui/core';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import { related, findRecord } from '../../crud';
+import {
+  related,
+  findRecord,
+  passageReference,
+  getPasIdByNum,
+} from '../../crud';
 import { LocalKey, localUserKey } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { passageChooserSelector } from '../../selector';
@@ -29,19 +34,21 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface Mark {
+  value: number;
+  label: string;
+}
+
 export const PassageChooser = () => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const { push } = useHistory();
   const [memory] = useGlobal('memory');
-  const {
-    passage,
-    section,
-    prjId,
-    // setFirstStepIndex, setCurrentStep
-  } = usePassageDetailContext();
+  const { passage, section, prjId, allBookData, setCurrentStep } =
+    usePassageDetailContext();
   const [passageCount, setPassageCount] = useState(0);
   const [sliderValue, setSliderValue] = useState(0);
+  const marks = useRef<Array<Mark>>([]);
   const [view, setView] = useState('');
   const t = useSelector(
     passageChooserSelector,
@@ -55,18 +62,8 @@ export const PassageChooser = () => {
   ) => {
     if (typeof value === 'number') {
       if (value !== sliderValue) {
-        const passages = related(section, 'passages');
-        if (Array.isArray(passages)) {
-          passages.forEach((p) => {
-            const passRec = findRecord(memory, 'passage', p.id) as Passage;
-            const seq = passRec?.attributes?.sequencenum;
-            const seqSliderValue = seq ? seq - 1 : -1;
-            if (seqSliderValue === value) {
-              const pasId = passRec?.keys?.remoteId || passRec?.id;
-              setView(`/detail/${prjId}/${pasId}`);
-            }
-          });
-        }
+        const pasId = getPasIdByNum(section, value, memory);
+        if (pasId) setView(`/detail/${prjId}/${pasId}`);
       }
       setSliderValue(value);
     }
@@ -74,19 +71,31 @@ export const PassageChooser = () => {
 
   const valueLabelFormat = (v: number) => {
     const secSeq = section?.attributes?.sequencenum || 1;
-    return `${secSeq}.${v + 1}`;
+    return `${secSeq}.${v}`;
   };
 
   useEffect(() => {
     const seq = passage?.attributes?.sequencenum;
-    setSliderValue(seq ? seq - 1 : 0);
+    setSliderValue(seq ? seq : 1);
   }, [passage]);
 
   useEffect(() => {
-    const passages = related(section, 'passages');
+    const passages = related(section, 'passages') as Passage[];
     if (Array.isArray(passages)) {
       const newCount = passages.length;
       if (passageCount !== newCount) setPassageCount(newCount);
+      passages.forEach((p) => {
+        const passRec = findRecord(memory, 'passage', p.id) as Passage;
+        let reference = passageReference(passRec, allBookData);
+        if (!reference)
+          reference = `${section?.attributes?.sequencenum}.${
+            passRec?.attributes?.sequencenum || 1
+          }`;
+        marks.current.push({
+          value: passRec?.attributes?.sequencenum || -1,
+          label: reference,
+        });
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [section]);
@@ -100,9 +109,8 @@ export const PassageChooser = () => {
             localStorage.setItem(localUserKey(LocalKey.url), view);
             push(view);
             setView('');
-            // Add these two lines to rechoose the step on navigation
-            // setFirstStepIndex(-1);
-            // setCurrentStep('');
+            // Jump to first uncompleted step
+            setCurrentStep('');
           }, 400);
         }
       }
@@ -118,7 +126,9 @@ export const PassageChooser = () => {
         onChange={sliderChange}
         valueLabelDisplay="auto"
         valueLabelFormat={valueLabelFormat}
+        min={1}
         max={passageCount}
+        marks={marks.current}
       />
     </div>
   ) : (
