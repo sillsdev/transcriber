@@ -10,11 +10,12 @@ export const getPasIdByNum = (
   let pasId = '';
   const passages = related(section, 'passages');
   if (Array.isArray(passages)) {
+    const newValue = value > passages.length && passages.length > 1 ? 1 : value;
     passages.forEach((p) => {
       const passRec = findRecord(memory, 'passage', p.id) as Passage;
       const seq = passRec?.attributes?.sequencenum;
       const seqSliderValue = seq ? seq : -1;
-      if (seqSliderValue === value) {
+      if (seqSliderValue === newValue) {
         pasId = passRec?.keys?.remoteId || passRec?.id;
       }
     });
