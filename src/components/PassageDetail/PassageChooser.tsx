@@ -1,6 +1,5 @@
-import { useEffect, useState, useContext, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useGlobal } from 'reactn';
-import { useLocation, useHistory } from 'react-router-dom';
 import { Passage, IPassageChooserStrings } from '../../model';
 import {
   Typography,
@@ -16,10 +15,9 @@ import {
   passageReference,
   getPasIdByNum,
 } from '../../crud';
-import { LocalKey, localUserKey } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { passageChooserSelector } from '../../selector';
-import { UnsavedContext } from '../../context/UnsavedContext';
+import { usePassageNavigate } from './usePassageNavigate';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,20 +39,19 @@ interface Mark {
 
 export const PassageChooser = () => {
   const classes = useStyles();
-  const { pathname } = useLocation();
-  const { push } = useHistory();
   const [memory] = useGlobal('memory');
-  const { passage, section, prjId, allBookData, setCurrentStep } =
-    usePassageDetailContext();
+  const { passage, section, prjId, allBookData } = usePassageDetailContext();
   const [passageCount, setPassageCount] = useState(0);
   const [sliderValue, setSliderValue] = useState(0);
   const marks = useRef<Array<Mark>>([]);
   const [view, setView] = useState('');
+  const passageNavigate = usePassageNavigate(() => {
+    setView('');
+  });
   const t = useSelector(
     passageChooserSelector,
     shallowEqual
   ) as IPassageChooserStrings;
-  const { startSave, waitForSave } = useContext(UnsavedContext).state;
 
   const sliderChange = (
     event: React.ChangeEvent<{}>,
@@ -101,22 +98,9 @@ export const PassageChooser = () => {
   }, [section]);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (view) {
-        if (view !== pathname) {
-          startSave();
-          waitForSave(() => {
-            localStorage.setItem(localUserKey(LocalKey.url), view);
-            push(view);
-            setView('');
-            // Jump to first uncompleted step
-            setCurrentStep('');
-          }, 400);
-        }
-      }
-    }, 1000);
+    passageNavigate(view);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view, pathname]);
+  }, [view]);
 
   return passageCount > 1 ? (
     <div className={classes.slider}>
