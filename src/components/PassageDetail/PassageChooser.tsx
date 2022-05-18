@@ -22,7 +22,7 @@ import { usePassageNavigate } from './usePassageNavigate';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     slider: {
-      padding: `0 ${theme.spacing(4)}px`,
+      padding: `0 ${theme.spacing(6)}px`,
       display: 'flex',
       flexDirection: 'row',
     },
