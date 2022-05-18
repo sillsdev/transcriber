@@ -172,6 +172,10 @@ export const useFetchMediaUrl = (reporter?: any) => {
 
   const fetchMediaUrl = (props: IProps) => {
     let { id, auth } = props;
+    if (!id) {
+      dispatch({ payload: undefined, type: MediaSt.IDLE });
+      return;
+    }
     const remoteId = remId(id);
     id = guidId(id);
     dispatch({
