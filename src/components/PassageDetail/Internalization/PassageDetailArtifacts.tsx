@@ -49,6 +49,15 @@ const useStyles = makeStyles((theme: Theme) =>
     row: {
       display: 'flex',
       flexDirection: 'row',
+      flexGrow: 1,
+    },
+    playStatus: {
+      margin: theme.spacing(1),
+      width: '100%',
+      '& audio': {
+        display: 'flex',
+        width: 'inherit',
+      },
     },
   })
 );
@@ -282,14 +291,16 @@ export function PassageDetailArtifacts(props: IProps) {
         {projRole === RoleNames.Admin && (!offline || offlineOnly) && (
           <AddResource action={handleAction} />
         )}
-        <MediaPlayer
-          auth={auth}
-          srcMediaId={playItem}
-          requestPlay={itemPlaying}
-          onEnded={handleEnded}
-          onTogglePlay={handleItemTogglePlay}
-          controls={playItem !== ''}
-        />
+        <div className={classes.playStatus}>
+          <MediaPlayer
+            auth={auth}
+            srcMediaId={playItem}
+            requestPlay={itemPlaying}
+            onEnded={handleEnded}
+            onTogglePlay={handleItemTogglePlay}
+            controls={playItem !== ''}
+          />
+        </div>
       </div>
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
