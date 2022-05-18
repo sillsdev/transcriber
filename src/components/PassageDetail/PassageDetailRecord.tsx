@@ -113,7 +113,7 @@ export function PassageDetailRecord(props: IProps) {
   useEffect(() => {
     if (mediafileId !== mediaState.id) fetchMediaUrl({ id: mediafileId, auth });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediafileId]);
+  }, [mediafileId, passage]);
 
   useEffect(() => {
     setDefaultFileName(

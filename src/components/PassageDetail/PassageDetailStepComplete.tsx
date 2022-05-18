@@ -1,16 +1,14 @@
-import { useEffect, useState, useContext } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { createStyles, IconButton, makeStyles, Theme } from '@material-ui/core';
 import CompleteIcon from '@material-ui/icons/CheckBoxOutlined';
 import NotCompleteIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { IPassageDetailStepCompleteStrings, IState } from '../../model';
-import { LocalKey, localUserKey } from '../../utils';
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 import { getPasIdByNum } from '../../crud';
-import { UnsavedContext } from '../../context/UnsavedContext';
+import { usePassageNavigate } from './usePassageNavigate';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,12 +41,12 @@ export const PassageDetailStepComplete = (props: IProps) => {
   } = usePassageDetailContext();
   const classes = useStyles();
   const [memory] = useGlobal('memory');
-  const { pathname } = useLocation();
-  const { push } = useHistory();
   const [, setCurrentIndex] = useState(-1);
   const [complete, setComplete] = useState(false);
   const [view, setView] = useState('');
-  const { startSave, waitForSave } = useContext(UnsavedContext).state;
+  const passageNavigate = usePassageNavigate(() => {
+    setView('');
+  });
 
   useEffect(() => {
     var curIndex = orgWorkflowSteps.findIndex((s) => s.id === currentstep);
@@ -58,30 +56,18 @@ export const PassageDetailStepComplete = (props: IProps) => {
   }, [currentstep, orgWorkflowSteps, psgCompleted]);
 
   const handleToggleComplete = () => {
+    const curStatus = complete;
     setStepComplete(currentstep, !complete);
     setCurrentStep(''); // setting to empty jumps to first uncompleted step
     const seq = passage?.attributes?.sequencenum;
     const pasId = getPasIdByNum(section, seq + 1, memory);
-    if (pasId) setView(`/detail/${prjId}/${pasId}`);
+    if (pasId && !curStatus) setView(`/detail/${prjId}/${pasId}`);
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      if (view) {
-        if (view !== pathname) {
-          startSave();
-          waitForSave(() => {
-            localStorage.setItem(localUserKey(LocalKey.url), view);
-            push(view);
-            setView('');
-            // Jump to first uncompleted step
-            setCurrentStep('');
-          }, 400);
-        }
-      }
-    }, 1000);
+    passageNavigate(view);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view, pathname]);
+  }, [view]);
 
   return (
     <div>
