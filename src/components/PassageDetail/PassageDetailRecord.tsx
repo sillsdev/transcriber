@@ -112,7 +112,11 @@ export function PassageDetailRecord(props: IProps) {
   }, [toolsChanged]);
 
   useEffect(() => {
-    if (mediafileId !== mediaState.id) fetchMediaUrl({ id: mediafileId, auth });
+    if (!mediafileId) {
+      fetchMediaUrl({ id: mediafileId, auth });
+      setResetMedia(true);
+    } else if (mediafileId !== mediaState.id)
+      fetchMediaUrl({ id: mediafileId, auth });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafileId, passage]);
 
