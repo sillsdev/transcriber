@@ -310,7 +310,7 @@ export function DiscussionList(props: IProps) {
   useEffect(() => {
     setAdding(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentstep]);
+  }, [currentstep, passage]);
 
   const doTheThing = () => {
     switch (confirmAction) {
