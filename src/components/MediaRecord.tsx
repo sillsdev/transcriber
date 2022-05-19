@@ -346,6 +346,12 @@ function MediaRecord(props: IProps) {
         fetchMediaUrl({ id: mediaId, auth });
       }
     });
+    if (!mediaId) {
+      if (defaultFilename) setName(defaultFilename);
+      else setName(t.defaultFilename);
+      setDoReset && setDoReset(true);
+      return;
+    }
     const mediaRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'mediafile', id: mediaId })
     ) as MediaFile;
