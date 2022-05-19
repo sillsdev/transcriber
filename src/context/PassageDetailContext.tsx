@@ -522,7 +522,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           i = newRows.length - 1;
         } else {
           oldVernReset();
-          setOldVernacularPlaying(false);
           setState((state: ICtxState) => {
             return {
               ...state,
@@ -632,6 +631,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       mediaEnd.current = undefined;
       mediaPosition.current = undefined;
       setOldVernacularPlayItem('');
+      setOldVernacularPlaying(false);
     };
     const setMediaSelected = (id: string, start: number, end: number) => {
       mediaStart.current = start;
