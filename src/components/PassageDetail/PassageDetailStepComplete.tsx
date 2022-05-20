@@ -77,6 +77,7 @@ export const PassageDetailStepComplete = (props: IProps) => {
         className={classes.actionButton}
         title={t.title}
         onClick={handleToggleComplete}
+        disabled={view !== ''}
       >
         {complete ? (
           <CompleteIcon id="step-yes" />

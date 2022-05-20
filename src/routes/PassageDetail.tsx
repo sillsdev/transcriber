@@ -254,7 +254,7 @@ const PassageDetailGrids = (props: IProps) => {
           <Paper className={classes.paper}>
             <Wrapper>
               <SplitPane
-                defaultSize={width - discussionSize.width}
+                defaultSize={width - discussionSize.width - 16}
                 style={{ position: 'static' }}
                 split="vertical"
                 onChange={handleSplitSize}

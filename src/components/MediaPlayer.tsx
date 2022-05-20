@@ -52,7 +52,7 @@ export function MediaPlayer(props: IProps) {
     }
     if (srcMediaId !== playItem) {
       setReady(false);
-      if (srcMediaId) fetchMediaUrl({ id: srcMediaId, auth });
+      fetchMediaUrl({ id: srcMediaId, auth });
       setPlayItem(srcMediaId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
