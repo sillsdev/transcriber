@@ -647,6 +647,14 @@ export interface IPassageRecordStrings extends Localize.LocalizedStringsMethods 
     "uncompressed": string;
 };
 
+export interface IPeerStrings extends Localize.LocalizedStringsMethods {
+    "peerDescription": string;
+    "editPeerGroup": string;
+    "member": string;
+    "newPeerGroup": string;
+    "remove": string;
+};
+
 export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
     "assign": string;
     "delete": string;
@@ -1236,6 +1244,7 @@ export interface ILocalizedStrings {
 	passageDetailToolbar: IPassageDetailToolbarStrings;
 	passageMedia: IPassageMediaStrings;
 	passageRecord: IPassageRecordStrings;
+	peer: IPeerStrings;
 	planActions: IPlanActionsStrings;
 	planSheet: IPlanSheetStrings;
 	planTabs: IPlanTabsStrings;

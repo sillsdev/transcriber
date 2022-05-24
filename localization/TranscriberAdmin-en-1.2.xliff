@@ -3663,6 +3663,41 @@
                <context context-type="sourcefile">passageRecord.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="peer.peerDescription">
+      		<source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.editPeerGroup">
+      		<source>Edit Peer Groups</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.member">
+      		<source>Member</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Peer.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.newPeerGroup">
+      		<source>New Peer Groups</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.remove">
+      		<source>Remove</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="planActions.assign">
             <source>Assign</source>
             <target/>

@@ -3141,6 +3141,36 @@
 				<target>Sem compressão</target>
 			</segment>
 		</unit>
+		<unit id="peer.peerDescription">
+			<segment>
+				<source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
+				<target>Grupos de pares permitem atribuir tarefas a um grupo e não a um indivíduo.</target>
+			</segment>
+		</unit>
+		<unit id="peer.editPeerGroup">
+			<segment>
+				<source>Edit Peer Group</source>
+				<target>Editar Grupo de Pares</target>
+			</segment>
+		</unit>
+		<unit id="peer.member">
+			<segment>
+				<source>Member</source>
+				<target>Membro</target>
+			</segment>
+		</unit>
+		<unit id="peer.newPeerGroup">
+			<segment>
+				<source>New Peer Groups</source>
+				<target>Novo Grupo de Pares</target>
+			</segment>
+		</unit>
+		<unit id="peer.remove">
+			<segment>
+				<source>Remove</source>
+				<target>Remover</target>
+			</segment>
+		</unit>
 		<unit id="planActions.assign">
 			<segment>
 				<source>Assign</source>

@@ -3133,7 +3133,37 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planActions.assign">
+   	<unit id="peer.peerDescription">
+   		<segment>
+   			<source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="peer.editPeerGroup">
+   		<segment>
+   			<source>Edit Peer Groups</source>
+   			<target>Pengeditan Grup Baru</target>
+   		</segment>
+   	</unit>
+   	<unit id="peer.member">
+   		<segment>
+   			<source>Member</source>
+   			<target>Anggota</target>
+   		</segment>
+   	</unit>
+   	<unit id="peer.newPeerGroup">
+   		<segment>
+   			<source>New Peer Groups</source>
+   			<target>Grup Baru</target>
+   		</segment>
+   	</unit>
+   	<unit id="peer.remove">
+   		<segment>
+   			<source>Remove</source>
+   			<target>Hapus</target>
+   		</segment>
+   	</unit>
+   	<unit id="planActions.assign">
          <segment>
             <source>Assign</source>
             <target/>
