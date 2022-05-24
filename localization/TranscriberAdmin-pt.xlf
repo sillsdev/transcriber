@@ -1393,6 +1393,12 @@
 				<target>Convites</target>
 			</segment>
 		</unit>
+		<unit id="groupTabs.peerGroups">
+			<segment>
+				<source>Peer Groups</source>
+				<target>Grupos de Pares</target>
+			</segment>
+		</unit>
 		<unit id="groupTabs.roles">
 			<segment>
 				<source>Roles</source>

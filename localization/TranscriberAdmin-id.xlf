@@ -1387,6 +1387,12 @@
             <target/>
          </segment>
       </unit>
+   	<unit id="groupTabs.peerGroups">
+   		<segment>
+   			<source>Peer Groups</source>
+   			<target>Grup Baru</target>
+   		</segment>
+   	</unit>
       <unit id="groupTabs.roles">
          <segment>
             <source>Roles</source>

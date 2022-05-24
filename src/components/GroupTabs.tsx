@@ -55,7 +55,7 @@ const GroupTabs = (props: IProps) => {
         >
           <Tab label={t.users} />
           <Tab label={t.roles} />
-          <Tab label="Peer Groups" />
+          <Tab label={t.peerGroups} />
           {!offlineOnly && <Tab label={t.invitations} />}
         </Tabs>
       </AppBar>

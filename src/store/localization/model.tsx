@@ -303,6 +303,7 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
 export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {
     "groups": string;
     "invitations": string;
+    "peerGroups": string;
     "roles": string;
     "users": string;
 };

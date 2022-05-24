@@ -1626,6 +1626,13 @@
                <context context-type="sourcefile">GroupTabs.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="groupTabs.peerGroups">
+      		<source>Peer Groups</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="groupTabs.roles">
             <source>Roles</source>
             <target/>

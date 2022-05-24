@@ -332,6 +332,7 @@ const initialState = {
 		"en": {
 			"groups": "Groups",
 			"invitations": "Invitations",
+			"peerGroups": "Peer Groups",
 			"roles": "Roles",
 			"users": "Members",
 		}

@@ -1407,6 +1407,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="groupTabs.peerGroups">
+			<segment>
+				<source>Peer Groups</source>
+				<target>Группы сверстников</target>
+			</segment>
+		</unit>
 		<unit id="groupTabs.roles">
 			<segment>
 				<source>Roles</source>
