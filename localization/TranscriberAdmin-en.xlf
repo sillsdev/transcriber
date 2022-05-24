@@ -3142,6 +3142,36 @@
             <target/>
          </segment>
       </unit>
+      <unit id="peer.peerDescription">
+         <segment>
+            <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.editPeerGroup">
+         <segment>
+            <source>Edit Peer Groups</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.member">
+         <segment>
+            <source>Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.newPeerGroup">
+         <segment>
+            <source>New Peer Groups</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.remove">
+         <segment>
+            <source>Remove</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planActions.assign">
          <segment>
             <source>Assign</source>

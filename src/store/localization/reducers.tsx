@@ -693,6 +693,15 @@ const initialState = {
 			"uncompressed": "Uncompressed",
 		}
 	}),
+	"peer": new LocalizedStrings({
+		"en": {
+			"peerDescription": "Peer Groups allow you to assign tasks to a group rather than an individual.",
+			"editPeerGroup": "Edit Peer Groups",
+			"member": "Member",
+			"newPeerGroup": "New Peer Groups",
+			"remove": "Remove",
+		}
+	}),
 	"planActions": new LocalizedStrings({
 		"en": {
 			"assign": "Assign",
@@ -1324,6 +1333,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"passageDetailToolbar" : new LocalizedStrings(action.payload.data.passageDetailToolbar),
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),
+				"peer" : new LocalizedStrings(action.payload.data.peer),
 				"planActions" : new LocalizedStrings(action.payload.data.planActions),
 				"planSheet" : new LocalizedStrings(action.payload.data.planSheet),
 				"planTabs" : new LocalizedStrings(action.payload.data.planTabs),

@@ -3161,6 +3161,36 @@
 				<target>Без сжатия</target>
 			</segment>
 		</unit>
+		<unit id="peer.peerDescription">
+			<segment>
+				<source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
+				<target>Группы коллег позволяют назначать задания группе, а не отдельному человеку.</target>
+			</segment>
+		</unit>
+		<unit id="peer.editPeerGroup">
+			<segment>
+				<source>Edit Peer Group</source>
+				<target>Редактировать группу сверстников</target>
+			</segment>
+		</unit>
+		<unit id="peer.member">
+			<segment>
+				<source>Member</source>
+				<target>Член</target>
+			</segment>
+		</unit>
+		<unit id="peer.newPeerGroup">
+			<segment>
+				<source>New Peer Groups</source>
+				<target>Новая группа сверстников</target>
+			</segment>
+		</unit>
+		<unit id="peer.remove">
+			<segment>
+				<source>Remove</source>
+				<target>Удалить</target>
+			</segment>
+		</unit>
 		<unit id="planActions.assign">
 			<segment>
 				<source>Assign</source>
