@@ -114,6 +114,11 @@ export function Peer({ users, memberships, groups }: IProps) {
     setCheck(new Set(check));
   };
 
+  const inUse = useMemo(
+    () => cols.map((c) => c.attributes.name.toLocaleLowerCase()),
+    [cols]
+  );
+
   const isAdmin = useMemo(
     () => getMyOrgRole(organization) === RoleNames.Admin && !offline,
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -174,11 +179,12 @@ export function Peer({ users, memberships, groups }: IProps) {
                     save={handleSave}
                     remove={handleRemove}
                     isAdmin={isAdmin}
+                    inUse={inUse}
                   />
                 </TableCell>
               ))}
             <TableCell align="center">
-              <GroupDialog save={handleSave} isAdmin={isAdmin} />
+              <GroupDialog save={handleSave} isAdmin={isAdmin} inUse={inUse} />
             </TableCell>
           </TableRow>
         </TableHead>

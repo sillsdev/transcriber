@@ -3678,7 +3678,14 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="peer.editPeerGroup">
-      		<source>Edit Peer Groups</source>
+      		<source>Edit Peer Group</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.inUse">
+      		<source>Name already in use</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">GroupDialog.tsx</context>
@@ -3692,7 +3699,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="peer.newPeerGroup">
-      		<source>New Peer Groups</source>
+      		<source>New Peer Group</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">GroupDialog.tsx</context>
@@ -3700,6 +3707,13 @@
       	</trans-unit>
       	<trans-unit id="peer.remove">
       		<source>Remove</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.removeConfirm">
+      		<source>Do you want to remove the peer group and information about who are the members?</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">GroupDialog.tsx</context>

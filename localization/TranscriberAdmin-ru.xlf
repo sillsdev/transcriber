@@ -3179,6 +3179,12 @@
 				<target>Редактировать группу сверстников</target>
 			</segment>
 		</unit>
+		<unit id="peer.inUse">
+			<segment>
+				<source>Name already in use</source>
+				<target>Имя уже используется</target>
+			</segment>
+		</unit>
 		<unit id="peer.member">
 			<segment>
 				<source>Member</source>
@@ -3187,7 +3193,7 @@
 		</unit>
 		<unit id="peer.newPeerGroup">
 			<segment>
-				<source>New Peer Groups</source>
+				<source>New Peer Group</source>
 				<target>Новая группа сверстников</target>
 			</segment>
 		</unit>
@@ -3195,6 +3201,12 @@
 			<segment>
 				<source>Remove</source>
 				<target>Удалить</target>
+			</segment>
+		</unit>
+		<unit id="peer.removeConfirm">
+			<segment>
+				<source>Do you want to remove the peer group and information about who are the members?</source>
+				<target>Вы хотите удалить одноранговую группу и информацию о том, кто является ее членами?</target>
 			</segment>
 		</unit>
 		<unit id="planActions.assign">
