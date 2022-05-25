@@ -189,38 +189,40 @@ export function Peer({ users, memberships, groups }: IProps) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              {cols
-                .sort((i, j) =>
-                  i.attributes.name <= j.attributes.name ? -1 : 1
-                )
-                .map((col) => (
-                  <TableCell align="center" key={col.id}>
-                    {check?.has(`${row.userId}_${col.id}`) ? (
-                      <IconButton
-                        id={`${col.attributes.abbreviation}Check`}
-                        onClick={handleUncheck(row, col)}
-                        disabled={!isAdmin}
-                      >
-                        <CheckedIcon />
-                      </IconButton>
-                    ) : (
-                      <IconButton
-                        id={`${col.attributes.abbreviation}Uncheck`}
-                        onClick={handleCheck(row, col)}
-                        disabled={!isAdmin}
-                      >
-                        <UncheckedIcon />
-                      </IconButton>
-                    )}
-                  </TableCell>
-                ))}
-            </TableRow>
-          ))}
+          {rows
+            .sort((i, j) => (i.name <= j.name ? -1 : 1))
+            .map((row) => (
+              <TableRow key={row.name}>
+                <TableCell component="th" scope="row">
+                  {row.name}
+                </TableCell>
+                {cols
+                  .sort((i, j) =>
+                    i.attributes.name <= j.attributes.name ? -1 : 1
+                  )
+                  .map((col) => (
+                    <TableCell align="center" key={col.id}>
+                      {check?.has(`${row.userId}_${col.id}`) ? (
+                        <IconButton
+                          id={`${col.attributes.abbreviation}Check`}
+                          onClick={handleUncheck(row, col)}
+                          disabled={!isAdmin}
+                        >
+                          <CheckedIcon />
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          id={`${col.attributes.abbreviation}Uncheck`}
+                          onClick={handleCheck(row, col)}
+                          disabled={!isAdmin}
+                        >
+                          <UncheckedIcon />
+                        </IconButton>
+                      )}
+                    </TableCell>
+                  ))}
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </TableContainer>
