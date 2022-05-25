@@ -651,9 +651,11 @@ export interface IPassageRecordStrings extends Localize.LocalizedStringsMethods 
 export interface IPeerStrings extends Localize.LocalizedStringsMethods {
     "peerDescription": string;
     "editPeerGroup": string;
+    "inUse": string;
     "member": string;
     "newPeerGroup": string;
     "remove": string;
+    "removeConfirm": string;
 };
 
 export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {

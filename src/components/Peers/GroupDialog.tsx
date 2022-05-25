@@ -11,17 +11,28 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import AddIcon from '@material-ui/icons/Add';
 import { useSelector, shallowEqual } from 'react-redux';
 import { peerSelector, sharedSelector } from '../../selector';
+import Confirm from '../AlertDialog';
+import { useSnackBar } from '../../hoc/SnackBar';
 
 interface IProps {
   cur?: Group;
   save: (name: string, id?: string) => void;
   remove?: (id: string) => void;
   isAdmin: boolean;
+  inUse: string[];
 }
 
-export default function GroupDialog({ cur, save, remove, isAdmin }: IProps) {
+export default function GroupDialog({
+  cur,
+  save,
+  remove,
+  isAdmin,
+  inUse,
+}: IProps) {
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState('');
+  const [confirm, setConfirm] = React.useState<string>();
+  const { showMessage } = useSnackBar();
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
   const ts = useSelector(sharedSelector, shallowEqual) as ISharedStrings;
 
@@ -34,15 +45,29 @@ export default function GroupDialog({ cur, save, remove, isAdmin }: IProps) {
   };
 
   const handleCancel = () => {
+    setName('');
     setOpen(false);
   };
 
   const handleSave = () => {
+    if (inUse.includes(name.toLocaleLowerCase())) {
+      showMessage(t.inUse);
+      return;
+    }
     save(name, cur?.id);
     setOpen(false);
   };
 
   const handleRemove = () => {
+    setConfirm(t.removeConfirm);
+  };
+
+  const handleRemoveRefused = () => {
+    setConfirm(undefined);
+  };
+
+  const handleRemoveConfirmed = () => {
+    setConfirm(undefined);
     remove && remove(cur?.id || '');
     setOpen(false);
   };
@@ -90,6 +115,7 @@ export default function GroupDialog({ cur, save, remove, isAdmin }: IProps) {
             label="Peer Group Name"
             value={name}
             onChange={handleNameChange}
+            helperText={inUse.includes(name.toLocaleLowerCase()) && t.inUse}
           />
         </DialogContent>
         <DialogActions>
@@ -106,6 +132,13 @@ export default function GroupDialog({ cur, save, remove, isAdmin }: IProps) {
           </Button>
         </DialogActions>
       </Dialog>
+      {confirm && (
+        <Confirm
+          text={confirm}
+          yesResponse={handleRemoveConfirmed}
+          noResponse={handleRemoveRefused}
+        />
+      )}
     </div>
   );
 }

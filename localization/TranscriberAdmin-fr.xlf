@@ -3163,6 +3163,12 @@
 				<target>Modifier le group de pairs</target>
 			</segment>
 		</unit>
+		<unit id="peer.inUse">
+			<segment>
+				<source>Name already in use</source>
+				<target>Nom déjà utilisé</target>
+			</segment>
+		</unit>
 		<unit id="peer.member">
 			<segment>
 				<source>Member</source>
@@ -3179,6 +3185,12 @@
 			<segment>
 				<source>Remove</source>
 				<target>Supprimer</target>
+			</segment>
+		</unit>
+		<unit id="peer.removeConfirm">
+			<segment>
+				<source>Do you want to remove the peer group and information about who are the members?</source>
+				<target>Voulez-vous supprimer le groupe de pairs et les informations sur les membres qui le composent ?</target>
 			</segment>
 		</unit>
 		<unit id="planActions.assign">

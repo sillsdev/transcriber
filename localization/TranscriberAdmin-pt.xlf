@@ -3159,6 +3159,12 @@
 				<target>Editar Grupo de Pares</target>
 			</segment>
 		</unit>
+		<unit id="peer.inUse">
+			<segment>
+				<source>Name already in use</source>
+				<target>Nome já em uso</target>
+			</segment>
+		</unit>
 		<unit id="peer.member">
 			<segment>
 				<source>Member</source>
@@ -3167,7 +3173,7 @@
 		</unit>
 		<unit id="peer.newPeerGroup">
 			<segment>
-				<source>New Peer Groups</source>
+				<source>New Peer Group</source>
 				<target>Novo Grupo de Pares</target>
 			</segment>
 		</unit>
@@ -3175,6 +3181,12 @@
 			<segment>
 				<source>Remove</source>
 				<target>Remover</target>
+			</segment>
+		</unit>
+		<unit id="peer.removeConfirm">
+			<segment>
+				<source>Do you want to remove the peer group and information about who are the members?</source>
+				<target>Você quer remover o grupo de colegas e informações sobre quem são os membros?</target>
 			</segment>
 		</unit>
 		<unit id="planActions.assign">

@@ -3147,7 +3147,7 @@
    	</unit>
    	<unit id="peer.editPeerGroup">
    		<segment>
-   			<source>Edit Peer Groups</source>
+   			<source>Edit Peer Group</source>
    			<target>Pengeditan Grup Baru</target>
    		</segment>
    	</unit>
@@ -3159,7 +3159,7 @@
    	</unit>
    	<unit id="peer.newPeerGroup">
    		<segment>
-   			<source>New Peer Groups</source>
+   			<source>New Peer Group</source>
    			<target>Grup Baru</target>
    		</segment>
    	</unit>
@@ -3167,6 +3167,12 @@
    		<segment>
    			<source>Remove</source>
    			<target>Hapus</target>
+   		</segment>
+   	</unit>
+   	<unit id="peer.removeConfirm">
+   		<segment>
+   			<source>Do you want to remove the peer group and information about who are the members?</source>
+   			<target/>
    		</segment>
    	</unit>
    	<unit id="planActions.assign">

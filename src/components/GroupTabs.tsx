@@ -59,7 +59,7 @@ const GroupTabs = (props: IProps) => {
           {!offlineOnly && <Tab label={t.invitations} />}
         </Tabs>
       </AppBar>
-      {((tab || 0) === 0 || tab > 2) && <UserTable {...props} />}
+      {((tab || 0) === 0 || tab > 3) && <UserTable {...props} />}
       {tab === 1 && <GroupSettings {...props} />}
       {tab === 2 && <Peer />}
       {tab === 3 && <InvitationTable {...props} />}

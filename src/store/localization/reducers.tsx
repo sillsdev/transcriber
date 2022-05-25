@@ -697,10 +697,12 @@ const initialState = {
 	"peer": new LocalizedStrings({
 		"en": {
 			"peerDescription": "Peer Groups allow you to assign tasks to a group rather than an individual.",
-			"editPeerGroup": "Edit Peer Groups",
+			"editPeerGroup": "Edit Peer Group",
+			"inUse": "Name already in use",
 			"member": "Member",
-			"newPeerGroup": "New Peer Groups",
+			"newPeerGroup": "New Peer Group",
 			"remove": "Remove",
+			"removeConfirm": "Do you want to remove the peer group and information about who are the members?",
 		}
 	}),
 	"planActions": new LocalizedStrings({
