@@ -55,6 +55,7 @@ export default function GroupDialog({
       return;
     }
     save(name, cur?.id);
+    setName('');
     setOpen(false);
   };
 
@@ -127,7 +128,12 @@ export default function GroupDialog({
           <Button id="peerCancel" onClick={handleCancel} color="primary">
             {ts.cancel}
           </Button>
-          <Button id="peerSave" onClick={handleSave} color="primary">
+          <Button
+            id="peerSave"
+            onClick={handleSave}
+            color="primary"
+            disabled={!name}
+          >
             {ts.save}
           </Button>
         </DialogActions>
