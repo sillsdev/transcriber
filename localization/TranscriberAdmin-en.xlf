@@ -802,9 +802,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="discussionCard.assignPeerGroup">
+      <unit id="discussionCard.assignRole">
          <segment>
-            <source>Assign a Peer Group</source>
+            <source>Assign to a Role</source>
             <target/>
          </segment>
       </unit>

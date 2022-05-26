@@ -180,7 +180,7 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
 };
 
 export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods {
-    "assignPeerGroup": string;
+    "assignRole": string;
     "assignUser": string;
     "category": string;
     "collapse": string;

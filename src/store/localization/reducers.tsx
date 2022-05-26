@@ -201,7 +201,7 @@ const initialState = {
 	}),
 	"discussionCard": new LocalizedStrings({
 		"en": {
-			"assignPeerGroup": "Assign a Peer Group",
+			"assignRole": "Assign to a Role",
 			"assignUser": "Assign to a User",
 			"category": "Category: {0}",
 			"collapse": "Show/Hide Comments",
