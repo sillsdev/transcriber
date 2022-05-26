@@ -45,7 +45,7 @@ export default function GroupDialog({
   };
 
   const handleCancel = () => {
-    setName('');
+    if (!cur) setName('');
     setOpen(false);
   };
 

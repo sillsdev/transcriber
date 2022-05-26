@@ -201,7 +201,7 @@ const initialState = {
 	}),
 	"discussionCard": new LocalizedStrings({
 		"en": {
-			"assignRole": "Assign to a Role",
+			"assignPeerGroup": "Assign a Peer Group",
 			"assignUser": "Assign to a User",
 			"category": "Category: {0}",
 			"collapse": "Show/Hide Comments",
@@ -701,6 +701,7 @@ const initialState = {
 			"inUse": "Name already in use",
 			"member": "Member",
 			"newPeerGroup": "New Peer Group",
+			"peerGroup": "Peer Group",
 			"remove": "Remove",
 			"removeConfirm": "Do you want to remove the peer group and information about who are the members?",
 		}

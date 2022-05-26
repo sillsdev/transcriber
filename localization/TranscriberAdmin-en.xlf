@@ -802,9 +802,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="discussionCard.assignRole">
+      <unit id="discussionCard.assignPeerGroup">
          <segment>
-            <source>Assign to a Role</source>
+            <source>Assign a Peer Group</source>
             <target/>
          </segment>
       </unit>
@@ -3175,6 +3175,12 @@
       <unit id="peer.newPeerGroup">
          <segment>
             <source>New Peer Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.peerGroup">
+         <segment>
+            <source>Peer Group</source>
             <target/>
          </segment>
       </unit>

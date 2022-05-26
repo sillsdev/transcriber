@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import {
   Table,
@@ -22,16 +22,12 @@ import {
 } from '../../model';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { related, useAllUserGroup, useUser, useRole } from '../../crud';
+import { related, useRole } from '../../crud';
 import { AddRecord } from '../../model/baseModel';
 import { toCamel } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { peerSelector } from '../../selector';
-
-interface IRow {
-  userId: string;
-  name: string;
-}
+import { usePeerGroups, IUserName } from './usePeerGroups';
 
 interface IRecordProps {
   users: User[];
@@ -41,25 +37,22 @@ interface IRecordProps {
 
 interface IProps extends IRecordProps {}
 
-export function Peer({ users, memberships, groups }: IProps) {
+export function Peer(props: IProps) {
+  const { memberships } = props;
   const [memory] = useGlobal('memory');
+  const [offline] = useGlobal('offline');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
-  const [offline] = useGlobal('offline');
-  const allUsersGroup = useAllUserGroup();
-  const { getUserRec } = useUser();
+  const { userNames, peerGroups, check, setCheck, cKey } = usePeerGroups(props);
   const { getRoleId, getMyOrgRole } = useRole();
-  const [rows, setRows] = useState<IRow[]>([]);
-  const [cols, setCols] = useState<Group[]>([]);
-  const [check, setCheck] = useState<Set<string>>();
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
 
   const handleSave = async (name: string, id?: string) => {
     if (id) {
       // update peer group
-      for (let c of cols) {
-        if (c.id === id) {
-          await memory.update((t) => t.replaceAttribute(c, 'name', name));
+      for (let g of peerGroups) {
+        if (g.id === id) {
+          await memory.update((t) => t.replaceAttribute(g, 'name', name));
           return;
         }
       }
@@ -85,8 +78,8 @@ export function Peer({ users, memberships, groups }: IProps) {
     await memory.update((t) => t.removeRecord({ type: 'group', id }));
   };
 
-  const handleCheck = (row: IRow, col: Group) => async () => {
-    check?.add(`${row.userId}_${col.id}`);
+  const handleCheck = (row: IUserName, col: Group) => async () => {
+    check?.add(cKey(row.userId, col.id));
     const membership: GroupMembership = {
       type: 'groupmembership',
     } as GroupMembership;
@@ -102,8 +95,8 @@ export function Peer({ users, memberships, groups }: IProps) {
     setCheck(new Set(check));
   };
 
-  const handleUncheck = (row: IRow, col: Group) => async () => {
-    check?.delete(`${row.userId}_${col.id}`);
+  const handleUncheck = (row: IUserName, col: Group) => async () => {
+    check?.delete(cKey(row.userId, col.id));
     const recs = memberships.filter(
       (m) => related(m, 'user') === row.userId && related(m, 'group') === col.id
     );
@@ -114,55 +107,16 @@ export function Peer({ users, memberships, groups }: IProps) {
     setCheck(new Set(check));
   };
 
-  const inUse = useMemo(
-    () => cols.map((c) => c.attributes.name.toLocaleLowerCase()),
-    [cols]
-  );
-
-  const isAdmin = useMemo(
+  const canEditPeer = useMemo(
     () => getMyOrgRole(organization) === RoleNames.Admin && !offline,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [organization, offline]
   );
 
-  const allUserId = useMemo(
-    () => allUsersGroup(organization)?.id,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [organization]
+  const inUse = useMemo(
+    () => peerGroups.map((c) => c.attributes.name.toLocaleLowerCase()),
+    [peerGroups]
   );
-
-  useEffect(() => {
-    const memberIds = memberships
-      .filter((m) => related(m, 'group') === allUserId)
-      .map((m) => related(m, 'user'));
-    setRows(
-      memberIds.map((id) => {
-        const userRec = getUserRec(id) as User;
-        return { userId: id, name: userRec?.attributes?.name };
-      })
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [memberships, organization, users, allUserId]);
-
-  useEffect(() => {
-    const newCols = groups.filter(
-      (g) => g?.id !== allUserId && related(g, 'owner') === organization
-    );
-    setCols(newCols);
-  }, [groups, organization, allUserId]);
-
-  useEffect(() => {
-    const users = rows.map((r) => r.userId);
-    const grps = cols.map((c) => c.id);
-    const checks = new Set<string>();
-    memberships.forEach((m) => {
-      const u = related(m, 'user');
-      const g = related(m, 'group');
-      if (users.includes(u) && grps.includes(g)) checks.add(`${u}_${g}`);
-    });
-    setCheck(checks);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rows, cols]);
 
   return (
     <TableContainer component={Paper}>
@@ -170,7 +124,7 @@ export function Peer({ users, memberships, groups }: IProps) {
         <TableHead>
           <TableRow>
             <TableCell>{t.member}</TableCell>
-            {cols
+            {peerGroups
               .sort((i, j) => (i.attributes.name <= j.attributes.name ? -1 : 1))
               .map((col) => (
                 <TableCell align="center" key={col.id}>
@@ -178,35 +132,39 @@ export function Peer({ users, memberships, groups }: IProps) {
                     cur={col}
                     save={handleSave}
                     remove={handleRemove}
-                    isAdmin={isAdmin}
+                    isAdmin={canEditPeer}
                     inUse={inUse}
                   />
                 </TableCell>
               ))}
             <TableCell align="center">
-              <GroupDialog save={handleSave} isAdmin={isAdmin} inUse={inUse} />
+              <GroupDialog
+                save={handleSave}
+                isAdmin={canEditPeer}
+                inUse={inUse}
+              />
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows
+          {userNames
             .sort((i, j) => (i.name <= j.name ? -1 : 1))
             .map((row) => (
               <TableRow key={row.name}>
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
-                {cols
+                {peerGroups
                   .sort((i, j) =>
                     i.attributes.name <= j.attributes.name ? -1 : 1
                   )
                   .map((col) => (
                     <TableCell align="center" key={col.id}>
-                      {check?.has(`${row.userId}_${col.id}`) ? (
+                      {check?.has(cKey(row.userId, col.id)) ? (
                         <IconButton
                           id={`${col.attributes.abbreviation}Check`}
                           onClick={handleUncheck(row, col)}
-                          disabled={!isAdmin}
+                          disabled={!canEditPeer}
                         >
                           <CheckedIcon />
                         </IconButton>
@@ -214,7 +172,7 @@ export function Peer({ users, memberships, groups }: IProps) {
                         <IconButton
                           id={`${col.attributes.abbreviation}Uncheck`}
                           onClick={handleCheck(row, col)}
-                          disabled={!isAdmin}
+                          disabled={!canEditPeer}
                         >
                           <UncheckedIcon />
                         </IconButton>
