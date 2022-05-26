@@ -933,8 +933,8 @@
                <context context-type="sourcefile">DeleteExpansion.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="discussionCard.assignRole">
-            <source>Assign to a Role</source>
+         <trans-unit id="discussionCard.assignPeerGroup">
+            <source>Assign a Peer Group</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>
@@ -3700,6 +3700,13 @@
       	</trans-unit>
       	<trans-unit id="peer.newPeerGroup">
       		<source>New Peer Group</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.peerGroup">
+      		<source>Peer Group</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">GroupDialog.tsx</context>

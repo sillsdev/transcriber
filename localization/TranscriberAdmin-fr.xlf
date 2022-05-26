@@ -3181,6 +3181,12 @@
 				<target>Nouveau groupe de pairs</target>
 			</segment>
 		</unit>
+		<unit id="peer.peerGroup">
+			<segment>
+				<source>Peer Group</source>
+				<target>Groupe de pairs</target>
+			</segment>
+		</unit>
 		<unit id="peer.remove">
 			<segment>
 				<source>Remove</source>
