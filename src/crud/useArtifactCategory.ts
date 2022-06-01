@@ -128,9 +128,8 @@ export const useArtifactCategory = () => {
     }
   };
   const scriptureTypeCategory = (cat: string) => {
-    return (
-      ['scripture', 'biblestory'].includes(cat) ||
-      ['scripture', 'biblestory'].includes(fromLocalizedArtifactCategory(cat))
+    return ['scripture', 'biblestory'].includes(
+      fromLocalizedArtifactCategory(cat)
     );
   };
 
