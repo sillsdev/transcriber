@@ -224,6 +224,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
 interface IProps extends IStateProps, IRecordProps, IDispatchProps {
   auth: Auth;
+  defaultWidth?: number;
 }
 
 export function Transcriber(props: IProps) {
@@ -294,7 +295,7 @@ export function Transcriber(props: IProps) {
   const [boxHeight, setBoxHeight] = useState(
     height - (INIT_PLAYER_HEIGHT + 200)
   );
-  const [width, setWidth] = useState(window.innerWidth);
+  const [width, setWidth] = useState(props.defaultWidth || window.innerWidth);
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
   const [defaultPosition, setDefaultPosition] = useState(0.0);
@@ -475,7 +476,8 @@ export function Transcriber(props: IProps) {
   }, [toolsChanged]);
 
   useEffect(() => {
-    const newBoxHeight = height - (playerSize + 220);
+    const headHeight = props.defaultWidth ? 120 : 0;
+    const newBoxHeight = height - (playerSize + 220) - headHeight;
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, playerSize]);
@@ -892,7 +894,7 @@ export function Transcriber(props: IProps) {
 
   const setDimensions = () => {
     setHeight(window.innerHeight);
-    setWidth(window.innerWidth - TaskItemWidth - 16);
+    setWidth(props.defaultWidth || window.innerWidth - TaskItemWidth - 16);
   };
 
   const getTranscription = () => {
@@ -1029,26 +1031,32 @@ export function Transcriber(props: IProps) {
           </div>
         ) : (
           <Grid container direction="column" style={style}>
-            <Grid container alignItems="center" justifyContent="space-between">
-              <Grid item md={9}>
-                <SectionPassageTitle
-                  section={section}
-                  passage={passage}
-                  allBookData={allBookData}
-                />
-              </Grid>
-              {allowBack && (
-                <Grid item md={3} container alignContent="flex-end">
-                  <Button
-                    id="back-to-workflow"
-                    onClick={handleWorkflow}
-                    variant="contained"
-                  >
-                    {t.backToWorkflow}
-                  </Button>
+            {props.defaultWidth === undefined && (
+              <Grid
+                container
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Grid item md={9}>
+                  <SectionPassageTitle
+                    section={section}
+                    passage={passage}
+                    allBookData={allBookData}
+                  />
                 </Grid>
-              )}
-            </Grid>
+                {allowBack && (
+                  <Grid item md={3} container alignContent="flex-end">
+                    <Button
+                      id="back-to-workflow"
+                      onClick={handleWorkflow}
+                      variant="contained"
+                    >
+                      {t.backToWorkflow}
+                    </Button>
+                  </Grid>
+                )}
+              </Grid>
+            )}
             <Wrapper>
               <SplitPane
                 defaultSize={INIT_PLAYER_HEIGHT}

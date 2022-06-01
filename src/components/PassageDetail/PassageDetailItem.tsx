@@ -261,6 +261,12 @@ export function PassageDetailItem(props: IProps) {
     [recordType, getTypeId]
   );
 
+  const itemCount = useMemo(() => {
+    const localType = localizedArtifactType(recordType);
+    return rowData.filter((r) => r.artifactType === localType).length;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowData, recordType]);
+
   useEffect(() => {
     var tmp = (passage.attributes.book || '') + passage.attributes.reference;
     if (!tmp.length) tmp = passage.id.slice(0, 4);
@@ -356,6 +362,15 @@ export function PassageDetailItem(props: IProps) {
   };
 
   const handleTranscribe = () => {
+    if (!playItem) {
+      const localType = localizedArtifactType(recordType);
+      for (let r of rowData) {
+        if (r.artifactType === localType) {
+          setPlayItem(r.id);
+          break;
+        }
+      }
+    }
     localStorage.setItem(localUserKey(LocalKey.jumpBack), pathname);
     setView(pathname.replace('detail', 'work'));
   };
@@ -512,6 +527,17 @@ export function PassageDetailItem(props: IProps) {
                           disabled={!canSave}
                         >
                           {ts.save}
+                        </Button>
+                        <Button
+                          id="artifact-transcriber"
+                          className={classes.button}
+                          onClick={handleTranscribe}
+                          variant="contained"
+                          color="primary"
+                          disabled={canSave || itemCount < 1}
+                        >
+                          <TranscribeIcon color="white" />{' '}
+                          {`\u00A0${t.transcribe}`}
                         </Button>
                       </div>
                     </Paper>
