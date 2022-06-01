@@ -182,34 +182,26 @@ export function Loading(props: IProps) {
     });
 
     if (inviteId) {
-      let invite = allinvites.find(
-        (i) => i.attributes.silId === parseInt(inviteId)
-      );
+      let invite = allinvites.find((i) => i.id === inviteId);
       if (!invite) {
         try {
           const thisinvite: Invitation[] = (await newremote.query(
             (q: QueryBuilder) =>
-              q
-                .findRecords('invitation')
-                .filter({ attribute: 'silId', value: parseInt(inviteId) })
+              q.findRecord({ type: 'invitation', id: inviteId })
           )) as any;
-          if (!thisinvite.length) {
-            //it's either deleted, or I don't have access to it
-            //check if my paratext email is linked
-            if (!(await checkAlternateParatextEmail(inviteId))) {
-              inviteErr = t.inviteError;
-            }
-          } else {
-            if (
-              thisinvite[0].attributes.email.toLowerCase() !==
-              userEmail.toLowerCase()
-            ) {
-              /* they must have logged in with another email */
-              inviteErr = t.inviteError;
-            }
+          if (
+            thisinvite[0].attributes.email.toLowerCase() !==
+            userEmail.toLowerCase()
+          ) {
+            /* they must have logged in with another email */
+            inviteErr = t.inviteError;
           }
         } catch {
-          inviteErr = t.deletedInvitation;
+          //it's either deleted, or I don't have access to it
+          //check if my paratext email is linked
+          if (!(await checkAlternateParatextEmail(inviteId))) {
+            inviteErr = t.deletedInvitation;
+          }
         }
       }
       if (inviteErr !== '') {

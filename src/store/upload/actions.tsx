@@ -18,6 +18,7 @@ import {
   createPathFolder,
   removeExtension,
 } from '../../utils';
+import moment from 'moment';
 var fs = require('fs');
 var path = require('path');
 
@@ -158,9 +159,55 @@ export const nextUpload =
         if (cb) cb(n, false, data);
       }
     };
-
-    Axios.post(API_CONFIG.host + '/api/mediafiles', record, {
+    const toVnd = (record: any) => {
+      return {
+        data: {
+          type: 'mediafiles',
+          attributes: {
+            'version-number': record.versionNumber,
+            'original-file': record.originalFile,
+            'content-type': record.contentType,
+            'eaf-url': record.EafUrl,
+            'date-created': moment.utc(),
+          },
+          relationships: {
+            passage: {
+              data: {
+                type: 'passages',
+                id: record.passageId?.toString() ?? 'null',
+              },
+            },
+            plan: {
+              data: { type: 'plans', id: record.planId?.toString() ?? 'null' },
+            },
+            artifactype: {
+              data: {
+                type: 'artifacttypes',
+                id: record.artifactTypeId?.toString() ?? 'null',
+              },
+            },
+            sourcemedia: {
+              data: {
+                type: 'sourcemediaid',
+                id: record.sourceMediaId?.toString() ?? 'null',
+              },
+            },
+            lastmodifiedbyuser: {
+              data: {
+                type: 'lastmodifiedbyuser',
+                id: record.userId?.toString() ?? 'null',
+              },
+            },
+          },
+        },
+      } as any;
+    };
+    var vndRecord = toVnd(record);
+    //we have to use an axios call here because orbit is asynchronous
+    //(even if you await)
+    Axios.post(API_CONFIG.host + '/api/mediafiles', vndRecord, {
       headers: {
+        'Content-Type': 'application/vnd.api+json',
         Authorization: 'Bearer ' + auth.accessToken,
       },
     })

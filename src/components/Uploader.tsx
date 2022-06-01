@@ -200,6 +200,7 @@ export const Uploader = (props: IProps) => {
       contentType: uploadList[currentlyLoading].type,
       artifactTypeId: getArtifactTypeId(),
       passageId: getPassageId(),
+      userId: getUserId(),
       sourceMediaId: getSourceMediaId(),
       sourceSegments: sourceSegments,
       performedBy: performedBy,

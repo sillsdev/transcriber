@@ -110,6 +110,7 @@ export const useRecordComment = ({
       artifactTypeId: getArtifactId(),
       passageId: getPassageId(),
       recordedByUserId: getUserId(),
+      userId: getUserId(),
     } as any;
     nextUpload(mediaFile, files, 0, auth, offline, reporter, itemComplete);
   };
