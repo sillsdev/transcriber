@@ -33,7 +33,7 @@ import {
 import { related, useRole, getUserById } from '../crud';
 import { validateEmail } from '../utils';
 import { API_CONFIG } from '../api-variable';
-import { AddRecord } from '../model/baseModel';
+import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import SelectRole from '../control/SelectRole';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -136,46 +136,23 @@ function Invite(props: IProps) {
     } as any;
     await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, invitation, user, memory),
-      t.replaceRelatedRecord(
-        { type: 'invitation', id: invitation.id },
+      ...ReplaceRelatedRecord(
+        t,
+        invitation,
         'organization',
-        {
-          type: 'organization',
-          id: organization,
-        }
+        'organization',
+        organization
       ),
-      t.replaceRelatedRecord(
-        { type: 'invitation', id: invitation.id },
-        'role',
-        {
-          type: 'role',
-          id: role,
-        }
-      ),
-      t.replaceRelatedRecord(
-        { type: 'invitation', id: invitation.id },
+      ...ReplaceRelatedRecord(t, invitation, 'role', 'role', role),
+      ...ReplaceRelatedRecord(
+        t,
+        invitation,
         'allUsersRole',
-        {
-          type: 'role',
-          id: allUsersRole,
-        }
+        'role',
+        allUsersRole
       ),
-      t.replaceRelatedRecord(
-        { type: 'invitation', id: invitation.id },
-        'group',
-        {
-          type: 'group',
-          id: group,
-        }
-      ),
-      t.replaceRelatedRecord(
-        { type: 'invitation', id: invitation.id },
-        'groupRole',
-        {
-          type: 'role',
-          id: groupRole,
-        }
-      ),
+      ...ReplaceRelatedRecord(t, invitation, 'group', 'group', group),
+      ...ReplaceRelatedRecord(t, invitation, 'groupRole', 'role', groupRole),
     ]);
   };
   const handleEdit = async () => {

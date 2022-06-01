@@ -1,7 +1,7 @@
 import { Section } from '../model';
 import { TransformBuilder, RecordIdentity } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { AddRecord } from '../model/baseModel';
+import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 
 interface IProps {
   sequencenum: number;
@@ -22,7 +22,7 @@ export const saveNewSection = async (props: IProps) => {
   } as any;
   await memory.update((t: TransformBuilder) => [
     ...AddRecord(t, sec, user, memory),
-    t.replaceRelatedRecord(sec, 'plan', plan),
+    ...ReplaceRelatedRecord(t, sec, 'plan', 'plan', plan.id),
   ]);
   return sec;
 };

@@ -2,7 +2,7 @@ import { TransformBuilder } from '@orbit/data';
 import { useGlobal } from 'reactn';
 import { findRecord, related } from '.';
 import { MediaFile } from '../model';
-import { AddRecord } from '../model/baseModel';
+import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils';
 import { useMediaAttach } from './useMediaAttach';
 import * as actions from '../store';
@@ -45,10 +45,13 @@ export const useOfflnMediafileCreate = (
     const t = new TransformBuilder();
     await memory.update([
       ...AddRecord(t, newMediaRec, user, memory),
-      t.replaceRelatedRecord(newMediaRec, 'plan', {
-        type: 'plan',
-        id: plan || data.planId,
-      }),
+      ...ReplaceRelatedRecord(
+        t,
+        newMediaRec,
+        'plan',
+        'plan',
+        plan || data.planId
+      ),
     ]);
     if (passageId) {
       var passage = findRecord(memory, 'passage', passageId);
@@ -61,24 +64,33 @@ export const useOfflnMediafileCreate = (
     }
     if (artifactTypeId)
       await memory.update([
-        t.replaceRelatedRecord(newMediaRec, 'artifactType', {
-          type: 'artifacttype',
-          id: artifactTypeId,
-        }),
+        ...ReplaceRelatedRecord(
+          t,
+          newMediaRec,
+          'artifactType',
+          'artifacttype',
+          artifactTypeId
+        ),
       ]);
     if (sourceMediaId)
       await memory.update([
-        t.replaceRelatedRecord(newMediaRec, 'sourceMedia', {
-          type: 'mediafile',
-          id: sourceMediaId,
-        }),
+        ...ReplaceRelatedRecord(
+          t,
+          newMediaRec,
+          'sourceMedia',
+          'mediafile',
+          sourceMediaId
+        ),
       ]);
     if (recordedbyUserId)
       await memory.update([
-        t.replaceRelatedRecord(newMediaRec, 'recordedbyUser', {
-          type: 'user',
-          id: recordedbyUserId,
-        }),
+        ...ReplaceRelatedRecord(
+          t,
+          newMediaRec,
+          'recordedbyUser',
+          'user',
+          recordedbyUserId
+        ),
       ]);
     return newMediaRec;
   };

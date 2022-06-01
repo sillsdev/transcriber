@@ -1,6 +1,10 @@
 import { useGlobal } from 'reactn';
 import { Section, Passage, ActivityStates, IWorkflow } from '../../model';
-import { AddRecord, UpdateRecord } from '../../model/baseModel';
+import {
+  AddRecord,
+  ReplaceRelatedRecord,
+  UpdateRecord,
+} from '../../model/baseModel';
 import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
 import { UpdateRelatedPassageOps } from '../../crud';
 import {
@@ -70,11 +74,10 @@ export const useWfLocalSave = (props: IProps) => {
                 state: ActivityStates.NoMedia,
               },
             } as any;
-            const planRecId = { type: 'plan', id: plan };
             const t = new TransformBuilder();
             await memory.update([
               ...AddRecord(t, newRec, user, memory),
-              t.replaceRelatedRecord(newRec, 'plan', planRecId),
+              ...ReplaceRelatedRecord(t, newRec, 'plan', 'plan', plan),
             ]);
             item.sectionId = { type: 'section', id: newRec.id };
             lastSec = newRec;
@@ -116,11 +119,16 @@ export const useWfLocalSave = (props: IProps) => {
               state: ActivityStates.NoMedia,
             },
           } as any;
-          const secRecId = { type: 'section', id: lastSec.id };
           const t = new TransformBuilder();
           const ops: Operation[] = [
             ...AddRecord(t, passRec, user, memory),
-            t.replaceRelatedRecord(passRec, 'section', secRecId),
+            ...ReplaceRelatedRecord(
+              t,
+              passRec,
+              'section',
+              'section',
+              lastSec.id
+            ),
           ];
           await memory.update(ops);
         }

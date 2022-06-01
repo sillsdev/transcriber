@@ -44,6 +44,7 @@ import ResourceData from './ResourceData';
 import { UploadType } from '../../MediaUpload';
 import MediaPlayer from '../../MediaPlayer';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { ReplaceRelatedRecord } from '../../../model/baseModel';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     row: {
@@ -194,9 +195,14 @@ export function PassageDetailArtifacts(props: IProps) {
         (m) => m.id === related(editResource, 'mediafile')
       );
       if (mf && catIdRef.current) {
-        const catRecId = { type: 'artifactcategory', id: catIdRef.current };
         await memory.update((t: TransformBuilder) => [
-          t.replaceRelatedRecord(mf, 'artifactCategory', catRecId),
+          ...ReplaceRelatedRecord(
+            t,
+            mf,
+            'artifactCategory',
+            'artifactcategory',
+            catIdRef.current
+          ),
         ]);
       }
     }
@@ -253,9 +259,14 @@ export function PassageDetailArtifacts(props: IProps) {
         const id = remoteIdGuid('mediafile', remId, memory.keyMap) || remId;
         const mediaRecId = { type: 'mediafile', id };
         if (catIdRef.current) {
-          const catRecId = { type: 'artifactcategory', id: catIdRef.current };
           await memory.update((t: TransformBuilder) => [
-            t.replaceRelatedRecord(mediaRecId, 'artifactCategory', catRecId),
+            ...ReplaceRelatedRecord(
+              t,
+              mediaRecId,
+              'artifactCategory',
+              'artifactcategory',
+              catIdRef.current
+            ),
           ]);
         }
         await AddSectionResource(cnt, descriptionRef.current, mediaRecId);
@@ -267,8 +278,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleSelectShared = async (res: Resource[], catMap: CatMap) => {
     let cnt = rowData.length;
     for (const r of res) {
-      const catRecId = { type: 'artifactcategory', id: catMap[r.id] };
-      const newMediaRec = await AddMediaFileResource(r, catRecId);
+      const newMediaRec = await AddMediaFileResource(r, catMap[r.id]);
       cnt += 1;
       await AddSectionResource(cnt, r.attributes.reference, newMediaRec);
     }

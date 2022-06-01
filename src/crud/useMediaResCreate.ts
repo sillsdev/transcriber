@@ -2,17 +2,12 @@ import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { Resource, MediaFile, ArtifactType } from '../model';
-import { AddRecord } from '../model/baseModel';
+import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 
 export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [plan] = useGlobal('plan');
-
-  const stepRecId = useMemo(
-    () => ({ type: 'orgworkflowstep', id: stepId }),
-    [stepId]
-  );
 
   const sharedResource = useMemo(() => {
     const artifactTypes = memory.cache.query((q: QueryBuilder) =>
@@ -23,9 +18,7 @@ export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
     );
   }, [memory.cache]);
 
-  const planRecId = { type: 'plan', id: plan };
-
-  return async (res: Resource, artifactCategory?: RecordIdentity) => {
+  return async (res: Resource, artifactCategoryId?: string) => {
     const attr = res.attributes;
     const mediaRec = {
       type: 'mediafile',
@@ -51,19 +44,39 @@ export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
     const ops = [
       ...AddRecord(t, mediaRec, user, memory),
 
-      t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
-      t.replaceRelatedRecord(mediaRec, 'passage', passage),
+      ...ReplaceRelatedRecord(t, mediaRec, 'plan', 'plan', plan),
+      ...ReplaceRelatedRecord(t, mediaRec, 'passage', 'passage', passage.id),
     ];
     if (sharedResource)
       ops.push(
-        t.replaceRelatedRecord(mediaRec, 'artifactType', sharedResource)
+        ...ReplaceRelatedRecord(
+          t,
+          mediaRec,
+          'artifactType',
+          'artifacttype',
+          sharedResource.id
+        )
       );
-    if (artifactCategory)
+    if (artifactCategoryId)
       ops.push(
-        t.replaceRelatedRecord(mediaRec, 'artifactCategory', artifactCategory)
+        ...ReplaceRelatedRecord(
+          t,
+          mediaRec,
+          'artifactCategory',
+          'artifactCategory',
+          artifactCategoryId
+        )
       );
     if (stepId)
-      ops.push(t.replaceRelatedRecord(mediaRec, 'orgWorkflowStep', stepRecId));
+      ops.push(
+        ...ReplaceRelatedRecord(
+          t,
+          mediaRec,
+          'orgWorkflowStep',
+          'orgworkflowstep',
+          stepId
+        )
+      );
     await memory.update(ops);
     return mediaRec;
   };

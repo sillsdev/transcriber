@@ -23,7 +23,7 @@ import {
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { related, useRole } from '../../crud';
-import { AddRecord } from '../../model/baseModel';
+import { AddRecord, ReplaceRelatedRecord } from '../../model/baseModel';
 import { toCamel } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { peerSelector } from '../../selector';
@@ -67,10 +67,15 @@ export function Peer(props: IProps) {
         allUsers: false,
       },
     } as Group;
-    const orgRecId = { type: 'organization', id: organization };
     await memory.update((t) => [
       ...AddRecord(t, groupRec, user, memory),
-      t.replaceRelatedRecord(groupRec, 'owner', orgRecId),
+      ...ReplaceRelatedRecord(
+        t,
+        groupRec,
+        'owner',
+        'organization',
+        organization
+      ),
     ]);
   };
 
@@ -83,14 +88,17 @@ export function Peer(props: IProps) {
     const membership: GroupMembership = {
       type: 'groupmembership',
     } as GroupMembership;
-    const userRecId = { type: 'user', id: row.userId };
-    const groupRecId = { type: 'group', id: col.id };
-    const memberRecId = { type: 'role', id: getRoleId(RoleNames.Member) };
     await memory.update((t) => [
       ...AddRecord(t, membership, user, memory),
-      t.replaceRelatedRecord(membership, 'user', userRecId),
-      t.replaceRelatedRecord(membership, 'group', groupRecId),
-      t.replaceRelatedRecord(membership, 'role', memberRecId),
+      ...ReplaceRelatedRecord(t, membership, 'user', 'user', row.userId),
+      ...ReplaceRelatedRecord(t, membership, 'group', 'group', col.id),
+      ...ReplaceRelatedRecord(
+        t,
+        membership,
+        'role',
+        'role',
+        getRoleId(RoleNames.Member)
+      ),
     ]);
     setCheck(new Set(check));
   };

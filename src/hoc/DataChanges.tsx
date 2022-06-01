@@ -43,6 +43,7 @@ import * as actions from '../store';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { UnsavedContext } from '../context/UnsavedContext';
+import { ReplaceRelatedRecord } from '../model/baseModel';
 interface IStateProps {}
 
 interface IDispatchProps {
@@ -109,13 +110,7 @@ export const doDataChanges = async (
       case 'editor':
         table = 'user';
     }
-
-    newOps.push(
-      tb.replaceRelatedRecord(record, relationship, {
-        type: table,
-        id: '',
-      })
-    );
+    newOps.push(...ReplaceRelatedRecord(tb, record, relationship, table, ''));
   };
 
   const DeleteLocalCopy = (

@@ -2,6 +2,7 @@ import { TransformBuilder } from '@orbit/data';
 import { useGlobal } from 'reactn';
 import { related } from '.';
 import { Project, ProjectType, VProject } from '../model';
+import { ReplaceRelatedRecord } from '../model/baseModel';
 import { logError, Severity } from '../utils';
 
 export const useProjectType = () => {
@@ -55,12 +56,9 @@ export const useProjectType = () => {
       );
       if (pts.length > 0) {
         pt = pts[0];
-        memory.update((t: TransformBuilder) =>
-          t.replaceRelatedRecord(proj, 'projecttype', {
-            type: 'projecttype',
-            id: pt.id,
-          })
-        );
+        memory.update((t: TransformBuilder) => [
+          ...ReplaceRelatedRecord(t, proj, 'projecttype', 'projecttype', pt.id),
+        ]);
         return pt.attributes.name;
       }
     }

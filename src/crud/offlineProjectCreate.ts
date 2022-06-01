@@ -2,6 +2,7 @@ import { Project, OfflineProject } from '../model';
 import Memory from '@orbit/memory';
 import { Operation, TransformBuilder } from '@orbit/data';
 import { currentDateTime } from '../utils';
+import { ReplaceRelatedRecord } from '../model/baseModel';
 
 export const offlineProjectCreate = (
   project: Project,
@@ -26,5 +27,5 @@ export const offlineProjectCreate = (
   } as OfflineProject;
   memory.schema.initializeRecord(proj);
   ops.push(tb.addRecord(proj));
-  ops.push(tb.replaceRelatedRecord(proj, 'project', project));
+  ops.push(...ReplaceRelatedRecord(tb, proj, 'project', 'project', project.id));
 };
