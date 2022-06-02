@@ -8,3 +8,4 @@ export * from './DoneButton';
 export * from './SortableList';
 export * from './ResourceEditAction';
 export * from './ViewButton';
+export * from './PassageResourceButton';

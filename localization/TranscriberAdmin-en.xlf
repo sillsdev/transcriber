@@ -3004,6 +3004,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.allResources">
+         <segment>
+            <source>All Resources</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.category">
          <segment>
             <source>Category</source>
@@ -3019,6 +3025,12 @@
       <unit id="passageDetailArtifacts.editResource">
          <segment>
             <source>Edit Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.passageResource">
+         <segment>
+            <source>Passage Resource</source>
             <target/>
          </segment>
       </unit>

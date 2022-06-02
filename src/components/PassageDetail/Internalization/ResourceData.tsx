@@ -6,6 +6,7 @@ import { localStrings } from '../../../selector';
 import SelectArtifactCategory, {
   ScriptureEnum,
 } from '../../Workflow/SelectArtifactCategory';
+import { PassageResourceButton } from './PassageResourceButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,8 +21,10 @@ interface IStateProps {
 interface IProps extends IStateProps {
   initCategory: string; //id
   initDescription: string;
+  initPassRes: boolean;
   onCategoryChange: (artifactCategoryId: string) => void;
   onDescriptionChange: (desc: string) => void;
+  onPassResChange: () => void;
   catRequired: boolean;
   catAllowNew?: boolean;
 }
@@ -30,8 +33,10 @@ export function ResourceData(props: IProps) {
     ts,
     initCategory,
     initDescription,
+    initPassRes,
     onCategoryChange,
     onDescriptionChange,
+    onPassResChange,
     catRequired,
     catAllowNew,
   } = props;
@@ -63,6 +68,7 @@ export function ResourceData(props: IProps) {
         scripture={ScriptureEnum.highlight}
         resource={true}
       />
+      <PassageResourceButton value={initPassRes} cb={onPassResChange} />
     </div>
   );
 }

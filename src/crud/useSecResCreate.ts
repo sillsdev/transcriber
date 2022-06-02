@@ -27,7 +27,8 @@ export const useSecResCreate = (section: RecordIdentity) => {
   return async (
     seq: number,
     desc: string | null,
-    mediafile: RecordIdentity
+    mediafile: RecordIdentity,
+    passId?: string | null
   ) => {
     const secRes = {
       type: 'sectionresource',
@@ -56,6 +57,11 @@ export const useSecResCreate = (section: RecordIdentity) => {
         internalization?.id
       ),
     ];
+    if (passId) {
+      ops.push(
+        ...ReplaceRelatedRecord(t, secRes, 'passage', 'passage', passId)
+      );
+    }
     await memory.update(ops);
   };
 };

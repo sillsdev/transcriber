@@ -131,6 +131,7 @@ export interface IRow {
   done: boolean;
   editAction: JSX.Element | null;
   resource: SectionResource | null;
+  passageResource: string;
   isVernacular: boolean;
   isResource: boolean;
   isComment: boolean;

@@ -3041,6 +3041,12 @@
 				<target>Редактирование ресурса</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.passageResource">
+			<segment>
+				<source>Passage Resource</source>
+				<target>Ресурс пассажа</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.resource">
 			<segment>
 				<source>Resource</source>

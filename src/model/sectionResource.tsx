@@ -10,8 +10,9 @@ export interface SectionResource extends BaseModel {
     lastModifiedBy: number;
   };
   relationships?: {
-    // project: RecordRelationship;
+    project: RecordRelationship;
     section: RecordRelationship;
+    passage: RecordRelationship;
     mediafile: RecordRelationship;
     orgWorkflowStep: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
