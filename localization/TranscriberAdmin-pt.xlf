@@ -3021,6 +3021,12 @@
 				<target>Editar Recurso</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.passageResource">
+			<segment>
+				<source>Passage Resource</source>
+				<target>Recurso de Passagem</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.resource">
 			<segment>
 				<source>Resource</source>

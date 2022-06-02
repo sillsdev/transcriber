@@ -2,6 +2,9 @@ import { useState, CSSProperties } from 'react';
 import { IconButton } from '@material-ui/core';
 import UncheckedIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckedIcon from '@material-ui/icons/CheckBoxOutlined';
+import { passageDetailArtifactsSelector } from '../../../selector';
+import { shallowEqual, useSelector } from 'react-redux';
+import { IPassageDetailArtifactsStrings } from '../../../model';
 
 interface IProps {
   value: boolean;
@@ -16,6 +19,10 @@ const style: CSSProperties = {
 
 export const PassageResourceButton = (props: IProps) => {
   const [value, setValue] = useState(props.value);
+  const t: IPassageDetailArtifactsStrings = useSelector(
+    passageDetailArtifactsSelector,
+    shallowEqual
+  );
 
   const handleCheck =
     ({ cb }: IProps) =>
@@ -33,7 +40,7 @@ export const PassageResourceButton = (props: IProps) => {
           <UncheckedIcon id="pass-res-no" />
         )}
       </IconButton>
-      {`\u00A0 Passage Resource`}
+      {`\u00A0 ${t.passageResource}`}
     </div>
   );
 };

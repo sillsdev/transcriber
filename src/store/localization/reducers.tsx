@@ -655,6 +655,7 @@ const initialState = {
 			"category": "Category",
 			"completed": "Completed",
 			"editResource": "Edit Resource",
+			"passageResource": "Passage Resource",
 			"resource": "Resource",
 			"sharedResource": "Select Shared Resource",
 			"type": "Type",
