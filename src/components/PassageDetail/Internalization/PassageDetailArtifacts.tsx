@@ -45,12 +45,15 @@ import { UploadType } from '../../MediaUpload';
 import MediaPlayer from '../../MediaPlayer';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { ReplaceRelatedRecord } from '../../../model/baseModel';
+import { PassageResourceButton } from './PassageResourceButton';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     row: {
       display: 'flex',
       flexDirection: 'row',
       flexGrow: 1,
+      paddingRight: theme.spacing(2),
     },
     playStatus: {
       margin: theme.spacing(1),
@@ -114,6 +117,8 @@ export function PassageDetailArtifacts(props: IProps) {
   const [editResource, setEditResource] = useState<SectionResource>();
   const catIdRef = useRef<string>();
   const descriptionRef = useRef<string>('');
+  const passRes = useRef(false);
+  const [showPassageResources, setShowPassageResources] = useState(false);
   const { showMessage } = useSnackBar();
 
   const resourceType = useMemo(() => {
@@ -167,9 +172,14 @@ export function PassageDetailArtifacts(props: IProps) {
     setSharedResourceVisible(v);
   };
 
+  const handleShowPassageResources = () => {
+    setShowPassageResources(!showPassageResources);
+  };
+
   const handleEdit = (id: string) => {
     const secRes = sectionResources.find((r) => related(r, 'mediafile') === id);
     setEditResource(secRes);
+    passRes.current = Boolean(related(secRes, 'passage'));
     descriptionRef.current = secRes?.attributes.description || '';
     const mf = mediafiles.find((m) => m.id === related(secRes, 'mediafile'));
     catIdRef.current = mf ? related(mf, 'artifactCategory') : undefined;
@@ -191,6 +201,17 @@ export function PassageDetailArtifacts(props: IProps) {
           description: descriptionRef.current,
         },
       });
+      if (passRes.current !== Boolean(related(editResource, 'passage'))) {
+        await memory.update((t) => [
+          ...ReplaceRelatedRecord(
+            t,
+            editResource,
+            'passage',
+            'passage',
+            passRes.current ? passage.id : ''
+          ),
+        ]);
+      }
       const mf = mediafiles.find(
         (m) => m.id === related(editResource, 'mediafile')
       );
@@ -202,6 +223,17 @@ export function PassageDetailArtifacts(props: IProps) {
             'artifactCategory',
             'artifactcategory',
             catIdRef.current
+          ),
+        ]);
+      }
+      if (mf && passRes.current !== Boolean(related(mf, 'resourcePassage'))) {
+        await memory.update((t: TransformBuilder) => [
+          ...ReplaceRelatedRecord(
+            t,
+            mf,
+            'resourcePassage',
+            'passage',
+            passRes.current ? passage.id : ''
           ),
         ]);
       }
@@ -269,7 +301,23 @@ export function PassageDetailArtifacts(props: IProps) {
             ),
           ]);
         }
-        await AddSectionResource(cnt, descriptionRef.current, mediaRecId);
+        if (passRes.current) {
+          await memory.update((t: TransformBuilder) => [
+            ...ReplaceRelatedRecord(
+              t,
+              mediaRecId,
+              'resourcePassage',
+              'passage',
+              passage.id
+            ),
+          ]);
+        }
+        await AddSectionResource(
+          cnt,
+          descriptionRef.current,
+          mediaRecId,
+          passRes.current ? passage.id : null
+        );
       }
       resetEdit();
     }
@@ -280,7 +328,12 @@ export function PassageDetailArtifacts(props: IProps) {
     for (const r of res) {
       const newMediaRec = await AddMediaFileResource(r, catMap[r.id]);
       cnt += 1;
-      await AddSectionResource(cnt, r.attributes.reference, newMediaRec);
+      await AddSectionResource(
+        cnt,
+        r.attributes.reference,
+        newMediaRec,
+        passRes.current ? passage.id : null
+      );
     }
   };
 
@@ -291,6 +344,11 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleDescription = (desc: string) => {
     descriptionRef.current = desc;
   };
+
+  const handlePassRes = () => {
+    passRes.current = !passRes.current;
+  };
+
   const handleEnded = () => {
     setPlayItem('');
     handleItemPlayEnd();
@@ -311,11 +369,18 @@ export function PassageDetailArtifacts(props: IProps) {
             controls={playItem !== ''}
           />
         </div>
+        <PassageResourceButton
+          value={showPassageResources}
+          cb={handleShowPassageResources}
+        />
       </div>
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
         {rowData
-          .filter((r) => r?.isResource)
+          .filter(
+            (r) =>
+              r?.isResource && (!showPassageResources || r.isPassageResource)
+          )
           .map((value, index) => (
             <SortableItem
               key={`item-${index}`}
@@ -349,6 +414,8 @@ export function PassageDetailArtifacts(props: IProps) {
             initDescription=""
             onDescriptionChange={handleDescription}
             catRequired={false}
+            initPassRes={passRes.current}
+            onPassResChange={handlePassRes}
           />
         }
       />
@@ -378,6 +445,8 @@ export function PassageDetailArtifacts(props: IProps) {
           initDescription={descriptionRef.current}
           onDescriptionChange={handleDescription}
           catRequired={false}
+          initPassRes={passRes.current}
+          onPassResChange={handlePassRes}
         />
       </BigDialog>
       {displayId && (

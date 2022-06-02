@@ -133,6 +133,7 @@ export interface IRow {
   resource: SectionResource | null;
   isVernacular: boolean;
   isResource: boolean;
+  isPassageResource: boolean;
   isComment: boolean;
   isText: boolean;
   sourceVersion: number;
