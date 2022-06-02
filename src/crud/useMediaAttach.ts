@@ -14,7 +14,7 @@ import {
 } from '.';
 import { sharedSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-import { UpdateLastModifiedBy } from '../model/baseModel';
+import { ReplaceRelatedRecord, UpdateLastModifiedBy } from '../model/baseModel';
 
 interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
@@ -61,10 +61,7 @@ export const useMediaAttach = (props: IProps) => {
         UpdateRelatedPassageOps(section, plan, user, tb, ops);
       }
       ops.push(
-        tb.replaceRelatedRecord(mediaRI, 'passage', {
-          type: 'passage',
-          id: passage,
-        })
+        ...ReplaceRelatedRecord(tb, mediaRI, 'passage', 'passage', passage)
       );
     }
     AddPassageStateChangeToOps(
@@ -110,7 +107,7 @@ export const useMediaAttach = (props: IProps) => {
 
     ops.push(
       tb.replaceAttribute(mediaRecId, 'versionNumber', 1),
-      tb.replaceRelatedRecord(mediaRecId, 'passage', null)
+      ...ReplaceRelatedRecord(tb, mediaRecId, 'passage', 'passage', null)
     );
     const passRecId = { type: 'passage', id: passage };
     ops.push(...UpdateLastModifiedBy(tb, passRecId, user));

@@ -13,9 +13,9 @@ import { useSnackBar } from '../hoc/SnackBar';
 import Auth from '../auth/Auth';
 import Memory from '@orbit/memory';
 import Coordinator from '@orbit/coordinator';
-import { TransformBuilder, RecordIdentity } from '@orbit/data';
+import { TransformBuilder } from '@orbit/data';
 import { setDefaultProj, allUsersRec } from '.';
-import { AddRecord } from '../model/baseModel';
+import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { useTeamApiPull } from './useTeamApiPull';
 import * as actions from '../store';
 
@@ -47,7 +47,7 @@ export const useTeamCreate = (props: IProps) => {
   const OrgRelated = async (
     coordinator: Coordinator,
     orgRec: Organization,
-    userRecId: RecordIdentity
+    user: string
   ) => {
     const memory = coordinator.getSource('memory') as Memory;
 
@@ -73,22 +73,34 @@ export const useTeamCreate = (props: IProps) => {
         },
       } as Group;
       await memory.update((t: TransformBuilder) => [
-        ...AddRecord(t, group, userRecId.id, memory),
-        t.replaceRelatedRecord(group, 'owner', orgRec),
+        ...AddRecord(t, group, user, memory),
+        ...ReplaceRelatedRecord(t, group, 'owner', 'organization', orgRec.id),
       ]);
       allUsersGroup.push(group);
     }
     await memory.update((t: TransformBuilder) => [
-      ...AddRecord(t, orgMember, userRecId.id, memory),
-      t.replaceRelatedRecord(orgMember, 'user', userRecId),
-      t.replaceRelatedRecord(orgMember, 'organization', orgRec),
-      t.replaceRelatedRecord(orgMember, 'role', orgRoleRec[0]),
+      ...AddRecord(t, orgMember, user, memory),
+      ...ReplaceRelatedRecord(t, orgMember, 'user', 'user', user),
+      ...ReplaceRelatedRecord(
+        t,
+        orgMember,
+        'organization',
+        'organization',
+        orgRec.id
+      ),
+      ...ReplaceRelatedRecord(t, orgMember, 'role', 'role', orgRoleRec[0].id),
     ]);
     await memory.update((t: TransformBuilder) => [
-      ...AddRecord(t, groupMbr, userRecId.id, memory),
-      t.replaceRelatedRecord(groupMbr, 'user', userRecId),
-      t.replaceRelatedRecord(groupMbr, 'group', allUsersGroup[0]),
-      t.replaceRelatedRecord(groupMbr, 'role', grpRoleRec[0]),
+      ...AddRecord(t, groupMbr, user, memory),
+      ...ReplaceRelatedRecord(t, groupMbr, 'user', 'user', user),
+      ...ReplaceRelatedRecord(
+        t,
+        groupMbr,
+        'group',
+        'group',
+        allUsersGroup[0].id
+      ),
+      ...ReplaceRelatedRecord(t, groupMbr, 'role', 'role', grpRoleRec[0].id),
     ]);
   };
 
@@ -100,13 +112,12 @@ export const useTeamCreate = (props: IProps) => {
     const { orgRec } = props;
 
     const memory = coordinator.getSource('memory') as Memory;
-    const userRecId = { type: 'user', id: user };
     await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, orgRec, user, memory),
-      t.replaceRelatedRecord(orgRec, 'owner', userRecId),
+      ...ReplaceRelatedRecord(t, orgRec, 'owner', 'user', user),
     ]);
     if (!offlineOnly) await teamApiPull(orgRec.id); // Update slug value
-    await OrgRelated(coordinator, orgRec, userRecId);
+    await OrgRelated(coordinator, orgRec, user);
 
     setOrganization(orgRec.id);
     setDefaultProj(orgRec.id, memory, setProject, setProjectType);

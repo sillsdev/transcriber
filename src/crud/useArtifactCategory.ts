@@ -4,7 +4,7 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { related } from '.';
-import { AddRecord } from '../model/baseModel';
+import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { waitForIt } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
 
@@ -114,13 +114,12 @@ export const useArtifactCategory = () => {
       const t = new TransformBuilder();
       var ops = [
         ...AddRecord(t, artifactCategory, user, memory),
-        t.replaceRelatedRecord(
-          { type: 'artifactcategory', id: artifactCategory.id },
+        ...ReplaceRelatedRecord(
+          t,
+          artifactCategory,
           'organization',
-          {
-            type: 'organization',
-            id: organization,
-          }
+          'organization',
+          organization
         ),
       ];
       await memory.update(ops);

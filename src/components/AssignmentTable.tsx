@@ -38,7 +38,7 @@ import {
   usePassageState,
 } from '../crud';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
-import { UpdateLastModifiedBy } from '../model/baseModel';
+import { ReplaceRelatedRecord, UpdateLastModifiedBy } from '../model/baseModel';
 import { PlanContext } from '../context/PlanContext';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -225,15 +225,9 @@ export function AssignmentTable(props: IProps) {
 
   const RemoveOneAssignment = async (s: Section) => {
     await memory.update((t: TransformBuilder) => [
-      t.replaceRelatedRecord({ type: 'section', id: s.id }, 'transcriber', {
-        type: 'user',
-        id: '',
-      }),
-      t.replaceRelatedRecord({ type: 'section', id: s.id }, 'editor', {
-        type: 'user',
-        id: '',
-      }),
       ...UpdateLastModifiedBy(t, s, user),
+      ...ReplaceRelatedRecord(t, s, 'transcriber', 'user', ''),
+      ...ReplaceRelatedRecord(t, s, 'editor', 'user', ''),
       ...UpdateLastModifiedBy(
         t,
         { type: 'plan', id: related(s, 'plan') },

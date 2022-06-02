@@ -2,6 +2,7 @@ import { AudacityProject } from '../model';
 import Memory from '@orbit/memory';
 import { Operation, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { currentDateTime } from '../utils';
+import { ReplaceRelatedRecord } from '../model/baseModel';
 
 export const audacityProjectCreate = (
   passageRecId: RecordIdentity,
@@ -20,5 +21,7 @@ export const audacityProjectCreate = (
   } as AudacityProject;
   memory.schema.initializeRecord(proj);
   ops.push(tb.addRecord(proj));
-  ops.push(tb.replaceRelatedRecord(proj, 'passage', passageRecId));
+  ops.push(
+    ...ReplaceRelatedRecord(tb, proj, 'passage', 'passage', passageRecId.id)
+  );
 };

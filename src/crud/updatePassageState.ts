@@ -7,7 +7,11 @@ import {
   Passage,
   MediaFile,
 } from '../model';
-import { AddRecord, UpdateLastModifiedBy } from '../model/baseModel';
+import {
+  AddRecord,
+  ReplaceRelatedRecord,
+  UpdateLastModifiedBy,
+} from '../model/baseModel';
 
 export const AddPassageStateChangeToOps = (
   t: TransformBuilder,
@@ -26,8 +30,7 @@ export const AddPassageStateChangeToOps = (
     },
   } as PassageStateChange;
   ops.push(...AddRecord(t, psc, userId, memory));
-  const passRecId = { type: 'passage', id: passage };
-  ops.push(t.replaceRelatedRecord(psc, 'passage', passRecId));
+  ops.push(...ReplaceRelatedRecord(t, psc, 'passage', 'passage', passage));
 };
 
 export const AddFlatPassage = (
@@ -41,8 +44,7 @@ export const AddFlatPassage = (
   var t = new TransformBuilder();
   var ops: Operation[] = [];
   ops.push(...AddRecord(t, rec, userId, memory));
-  const passRecId = { type: 'passage', id: rec.id };
-  ops.push(t.replaceRelatedRecord(passRecId, 'section', section));
+  ops.push(...ReplaceRelatedRecord(t, rec, 'section', 'section', section.id));
   AddPassageStateChangeToOps(
     t,
     ops,
@@ -52,7 +54,7 @@ export const AddFlatPassage = (
     userId,
     memory
   );
-  ops.push(t.replaceRelatedRecord(media, 'passage', passRecId));
+  ops.push(...ReplaceRelatedRecord(t, media, 'passage', 'passage', rec.id));
   return ops;
 };
 

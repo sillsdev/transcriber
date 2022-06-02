@@ -16,7 +16,11 @@ import {
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import { AddRecord, UpdateRecord } from '../model/baseModel';
+import {
+  AddRecord,
+  ReplaceRelatedRecord,
+  UpdateRecord,
+} from '../model/baseModel';
 import {
   Accordion,
   AccordionSummary,
@@ -274,16 +278,8 @@ export function IntegrationPanel(props: IProps) {
     } as any;
     await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, pi, user, memory),
-      t.replaceRelatedRecord(
-        { type: 'projectintegration', id: pi.id },
-        'project',
-        { type: 'project', id: project }
-      ),
-      t.replaceRelatedRecord(
-        { type: 'projectintegration', id: pi.id },
-        'integration',
-        { type: 'integration', id: integration }
-      ),
+      ...ReplaceRelatedRecord(t, pi, 'project', 'project', project),
+      ...ReplaceRelatedRecord(t, pi, 'integration', 'integration', integration),
     ]);
     return pi.id;
   };

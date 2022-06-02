@@ -12,6 +12,7 @@ import {
 import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import { related } from '../crud';
 import { localizeRole, logError, Severity } from '../utils';
+import { ReplaceRelatedRecord } from '../model/baseModel';
 
 export const useRole = () => {
   const [memory] = useGlobal('memory');
@@ -103,12 +104,9 @@ export const useRole = () => {
           `missing role:${memberRecs[0].keys?.remoteId}`
         );
         roleId = getRoleId(RoleNames.Admin);
-        memory.update((t: TransformBuilder) =>
-          t.replaceRelatedRecord(memberRecs[0], 'role', {
-            type: 'role',
-            id: roleId,
-          })
-        );
+        memory.update((t: TransformBuilder) => [
+          ...ReplaceRelatedRecord(t, memberRecs[0], 'role', 'role', roleId),
+        ]);
       }
       const roleRec = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'role', id: roleId })

@@ -7,6 +7,7 @@ import {
   UpdateRecord,
   UpdateRelatedRecord,
   UpdateLastModifiedBy,
+  ReplaceRelatedRecord,
 } from '../model/baseModel';
 import { orbitErr } from '../utils';
 import * as actions from '../store';
@@ -46,10 +47,13 @@ export const useSaveComment = (props: IProps) => {
       } as Comment;
       ops.push(
         ...AddRecord(t, commentRec, user, memory),
-        t.replaceRelatedRecord(commentRec, 'discussion', {
-          type: 'discussion',
-          id: discussion,
-        })
+        ...ReplaceRelatedRecord(
+          t,
+          commentRec,
+          'discussion',
+          'discussion',
+          discussion
+        )
       );
     }
     ops.push(
