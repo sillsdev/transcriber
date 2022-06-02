@@ -424,164 +424,166 @@ export function PassageDetailItem(props: IProps) {
                       saveSegments={false} //todo
                     />
                   </Pane>
-                  <Pane className={classes.pane}>
-                    <Paper className={classes.paper}>
-                      <div className={classes.row}>
-                        <Button
-                          className={classes.button}
-                          id="pdRecordUpload"
-                          onClick={handleUpload}
-                          title={
-                            !offlineOnly
-                              ? ts.uploadMediaSingular
-                              : ts.importMediaSingular
-                          }
-                        >
-                          <AddIcon />
-                          {!offlineOnly
-                            ? ts.uploadMediaSingular
-                            : ts.importMediaSingular}
-                        </Button>
-                        <div className={classes.grow}>{'\u00A0'}</div>
-                        {currentSegment && (
-                          <TextField
-                            className={classes.formControl}
-                            id="segment"
-                            value={currentSegment}
-                            size={'small'}
-                            label={t.segment}
-                          />
-                        )}
-                      </div>
-                      <div className={classes.row}>
-                        <Typography className={classes.status}>
-                          {t.record}
-                        </Typography>
-                        {slugs.length > 1 && (
-                          <RadioGroup
-                            row={true}
-                            id="filetype"
-                            aria-label="filetype"
-                            name="filetype"
-                            value={recordType}
-                            onChange={handleChangeType}
+                  {currentVersion !== 0 && (
+                    <Pane className={classes.pane}>
+                      <Paper className={classes.paper}>
+                        <div className={classes.row}>
+                          <Button
+                            className={classes.button}
+                            id="pdRecordUpload"
+                            onClick={handleUpload}
+                            title={
+                              !offlineOnly
+                                ? ts.uploadMediaSingular
+                                : ts.importMediaSingular
+                            }
                           >
-                            {slugs.map((s) => (
-                              <FormControlLabel
-                                key={s}
-                                id={s}
-                                value={s}
-                                control={<Radio />}
-                                label={localizedArtifactType(s)}
-                              />
-                            ))}
-                          </RadioGroup>
-                        )}
-                        <div className={classes.grow}>{'\u00A0'}</div>
-                        {showTopic && (
+                            <AddIcon />
+                            {!offlineOnly
+                              ? ts.uploadMediaSingular
+                              : ts.importMediaSingular}
+                          </Button>
+                          <div className={classes.grow}>{'\u00A0'}</div>
+                          {currentSegment && (
+                            <TextField
+                              className={classes.formControl}
+                              id="segment"
+                              value={currentSegment}
+                              size={'small'}
+                              label={t.segment}
+                            />
+                          )}
+                        </div>
+                        <div className={classes.row}>
+                          <Typography className={classes.status}>
+                            {t.record}
+                          </Typography>
+                          {slugs.length > 1 && (
+                            <RadioGroup
+                              row={true}
+                              id="filetype"
+                              aria-label="filetype"
+                              name="filetype"
+                              value={recordType}
+                              onChange={handleChangeType}
+                            >
+                              {slugs.map((s) => (
+                                <FormControlLabel
+                                  key={s}
+                                  id={s}
+                                  value={s}
+                                  control={<Radio />}
+                                  label={localizedArtifactType(s)}
+                                />
+                              ))}
+                            </RadioGroup>
+                          )}
+                          <div className={classes.grow}>{'\u00A0'}</div>
+                          {showTopic && (
+                            <TextField
+                              className={classes.formControl}
+                              id="itemtopic"
+                              label={t.topic}
+                              value={topic}
+                              fullWidth={true}
+                              onChange={handleChangeTopic}
+                            />
+                          )}
                           <TextField
                             className={classes.formControl}
-                            id="itemtopic"
-                            label={t.topic}
-                            value={topic}
+                            id="speaker"
+                            label={t.speaker}
+                            value={speaker}
+                            onChange={handleChangeSpeaker}
                             fullWidth={true}
-                            onChange={handleChangeTopic}
                           />
-                        )}
-                        <TextField
-                          className={classes.formControl}
-                          id="speaker"
-                          label={t.speaker}
-                          value={speaker}
-                          onChange={handleChangeSpeaker}
-                          fullWidth={true}
+                        </div>
+                        <MediaRecord
+                          id="mediarecord"
+                          toolId={toolId}
+                          uploadMethod={uploadMedia}
+                          defaultFilename={defaultFilename}
+                          allowWave={false}
+                          showFilename={false}
+                          setCanSave={handleSetCanSave}
+                          setStatusText={setStatusText}
+                          doReset={resetMedia}
+                          setDoReset={setResetMedia}
+                          size={200}
+                          onRecording={onRecordingOrPlaying}
+                          onPlayStatus={onRecordingOrPlaying}
                         />
-                      </div>
-                      <MediaRecord
-                        id="mediarecord"
-                        toolId={toolId}
-                        uploadMethod={uploadMedia}
-                        defaultFilename={defaultFilename}
-                        allowWave={false}
-                        showFilename={false}
-                        setCanSave={handleSetCanSave}
-                        setStatusText={setStatusText}
-                        doReset={resetMedia}
-                        setDoReset={setResetMedia}
-                        size={200}
-                        onRecording={onRecordingOrPlaying}
-                        onPlayStatus={onRecordingOrPlaying}
-                      />
-                      <div className={classes.row}>
-                        <Typography
-                          variant="caption"
-                          className={classes.status}
-                        >
-                          {statusText}
-                        </Typography>
-                        <div className={classes.grow}>{'\u00A0'}</div>
-                        <Button
-                          id="rec-save"
-                          className={classes.button}
-                          onClick={handleSave}
-                          variant="contained"
-                          color="primary"
-                          disabled={!canSave}
-                        >
-                          {ts.save}
-                        </Button>
-                      </div>
-                    </Paper>
-                    <Paper className={classes.paper}>
-                      <div className={classes.row}>
-                        <Paper className={classes.paper}>
-                          <div id="playselect" className={classes.playSelect}>
-                            <SelectRecording
-                              onChange={handleSelect}
-                              ts={ts}
-                              tags={slugs}
-                              latestVernacular={currentVersion}
-                            />
-                            <Button
-                              id="load-transcriber"
-                              className={classes.button}
-                              onClick={handleTranscribe}
-                              variant="contained"
-                              color="primary"
-                              disabled={
-                                canSave ||
-                                itemCount < 1 ||
-                                (playItem !== '' && !playItemSourceIsLatest)
-                              }
-                            >
-                              <TranscribeIcon color="white" />{' '}
-                              {`\u00A0${t.transcribe}`}
-                            </Button>
-                          </div>
-                          <div id="rowplayer" className={classes.playerRow}>
-                            <MediaPlayer
-                              auth={auth}
-                              srcMediaId={playItem}
-                              requestPlay={itemPlaying}
-                              onEnded={handleItemPlayEnd}
-                              onTogglePlay={handleItemTogglePlay}
-                              controls={true}
-                            />
-                            {playItem && projRole === RoleNames.Admin && (
-                              <LightTooltip title={t.deleteItem}>
-                                <IconButton
-                                  id="delete-recording"
-                                  onClick={handleDelete(playItem)}
-                                >
-                                  <DeleteIcon />
-                                </IconButton>
-                              </LightTooltip>
-                            )}
-                          </div>
-                        </Paper>
-                      </div>
-                    </Paper>
-                  </Pane>
+                        <div className={classes.row}>
+                          <Typography
+                            variant="caption"
+                            className={classes.status}
+                          >
+                            {statusText}
+                          </Typography>
+                          <div className={classes.grow}>{'\u00A0'}</div>
+                          <Button
+                            id="rec-save"
+                            className={classes.button}
+                            onClick={handleSave}
+                            variant="contained"
+                            color="primary"
+                            disabled={!canSave}
+                          >
+                            {ts.save}
+                          </Button>
+                        </div>
+                      </Paper>
+                      <Paper className={classes.paper}>
+                        <div className={classes.row}>
+                          <Paper className={classes.paper}>
+                            <div id="playselect" className={classes.playSelect}>
+                              <SelectRecording
+                                onChange={handleSelect}
+                                ts={ts}
+                                tags={slugs}
+                                latestVernacular={currentVersion}
+                              />
+                              <Button
+                                id="load-transcriber"
+                                className={classes.button}
+                                onClick={handleTranscribe}
+                                variant="contained"
+                                color="primary"
+                                disabled={
+                                  canSave ||
+                                  itemCount < 1 ||
+                                  (playItem !== '' && !playItemSourceIsLatest)
+                                }
+                              >
+                                <TranscribeIcon color="white" />{' '}
+                                {`\u00A0${t.transcribe}`}
+                              </Button>
+                            </div>
+                            <div id="rowplayer" className={classes.playerRow}>
+                              <MediaPlayer
+                                auth={auth}
+                                srcMediaId={playItem}
+                                requestPlay={itemPlaying}
+                                onEnded={handleItemPlayEnd}
+                                onTogglePlay={handleItemTogglePlay}
+                                controls={true}
+                              />
+                              {playItem && projRole === RoleNames.Admin && (
+                                <LightTooltip title={t.deleteItem}>
+                                  <IconButton
+                                    id="delete-recording"
+                                    onClick={handleDelete(playItem)}
+                                  >
+                                    <DeleteIcon />
+                                  </IconButton>
+                                </LightTooltip>
+                              )}
+                            </div>
+                          </Paper>
+                        </div>
+                      </Paper>
+                    </Pane>
+                  )}
                 </SplitPane>
               </Pane>
               <Pane className={classes.pane}>
