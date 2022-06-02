@@ -82,6 +82,8 @@ const useStyles = makeStyles((theme: Theme) =>
       width: `calc(100% - 32px)`,
     },
     playSelect: {
+      display: 'flex',
+      flexDirection: 'row',
       paddingRight: theme.spacing(4),
       paddingBottom: theme.spacing(1),
     },
@@ -528,17 +530,6 @@ export function PassageDetailItem(props: IProps) {
                         >
                           {ts.save}
                         </Button>
-                        <Button
-                          id="artifact-transcriber"
-                          className={classes.button}
-                          onClick={handleTranscribe}
-                          variant="contained"
-                          color="primary"
-                          disabled={canSave || itemCount < 1}
-                        >
-                          <TranscribeIcon color="white" />{' '}
-                          {`\u00A0${t.transcribe}`}
-                        </Button>
                       </div>
                     </Paper>
                     <Paper className={classes.paper}>
@@ -551,6 +542,17 @@ export function PassageDetailItem(props: IProps) {
                               tags={slugs}
                               latestVernacular={currentVersion}
                             />
+                            <Button
+                              id="artifact-transcriber"
+                              className={classes.button}
+                              onClick={handleTranscribe}
+                              variant="contained"
+                              color="primary"
+                              disabled={canSave || itemCount < 1}
+                            >
+                              <TranscribeIcon color="white" />{' '}
+                              {`\u00A0${t.transcribe}`}
+                            </Button>
                           </div>
                           <div id="rowplayer" className={classes.playerRow}>
                             <MediaPlayer
