@@ -543,12 +543,16 @@ export function PassageDetailItem(props: IProps) {
                               latestVernacular={currentVersion}
                             />
                             <Button
-                              id="artifact-transcriber"
+                              id="load-transcriber"
                               className={classes.button}
                               onClick={handleTranscribe}
                               variant="contained"
                               color="primary"
-                              disabled={canSave || itemCount < 1}
+                              disabled={
+                                canSave ||
+                                itemCount < 1 ||
+                                (playItem !== '' && !playItemSourceIsLatest)
+                              }
                             >
                               <TranscribeIcon color="white" />{' '}
                               {`\u00A0${t.transcribe}`}
@@ -563,16 +567,6 @@ export function PassageDetailItem(props: IProps) {
                               onTogglePlay={handleItemTogglePlay}
                               controls={true}
                             />
-                            {playItem && playItemSourceIsLatest && (
-                              <LightTooltip title={t.transcribe}>
-                                <IconButton
-                                  id="load-transcriber"
-                                  onClick={handleTranscribe}
-                                >
-                                  <TranscribeIcon />
-                                </IconButton>
-                              </LightTooltip>
-                            )}
                             {playItem && projRole === RoleNames.Admin && (
                               <LightTooltip title={t.deleteItem}>
                                 <IconButton
