@@ -613,6 +613,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "allResources": string;
     "category": string;
     "completed": string;
+    "deleteConfirm": string;
     "editResource": string;
     "passageResource": string;
     "resource": string;
@@ -826,6 +827,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "mediaError": string;
     "member": string;
     "no": string;
+    "noAudio": string;
     "NoSaveOffline": string;
     "observer": string;
     "owner": string;

@@ -424,7 +424,7 @@ export function PassageDetailItem(props: IProps) {
                       saveSegments={false} //todo
                     />
                   </Pane>
-                  {currentVersion !== 0 && (
+                  {currentVersion !== 0 ? (
                     <Pane className={classes.pane}>
                       <Paper className={classes.paper}>
                         <div className={classes.row}>
@@ -581,6 +581,14 @@ export function PassageDetailItem(props: IProps) {
                             </div>
                           </Paper>
                         </div>
+                      </Paper>
+                    </Pane>
+                  ) : (
+                    <Pane className={classes.pane}>
+                      <Paper className={classes.paper}>
+                        <Typography variant="h2" align="center">
+                          {ts.noAudio}
+                        </Typography>
                       </Paper>
                     </Pane>
                   )}
