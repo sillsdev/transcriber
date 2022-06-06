@@ -46,6 +46,7 @@ import MediaPlayer from '../../MediaPlayer';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { ReplaceRelatedRecord } from '../../../model/baseModel';
 import { PassageResourceButton } from './PassageResourceButton';
+import Confirm from '../../AlertDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -120,6 +121,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const passRes = useRef(false);
   const [allResources, setAllResources] = useState(false);
   const { showMessage } = useSnackBar();
+  const [confirm, setConfirm] = useState('');
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -160,9 +162,14 @@ export function PassageDetailArtifacts(props: IProps) {
     }));
   };
 
-  const handleDelete = (id: string) => {
-    const secRes = sectionResources.find((r) => related(r, 'mediafile') === id);
+  const handleDelete = (id: string) => setConfirm(id);
+  const handleDeleteRefused = () => setConfirm('');
+  const handleDeleteConfirmed = () => {
+    const secRes = sectionResources.find(
+      (r) => related(r, 'mediafile') === confirm
+    );
     secRes && DeleteSectionResource(secRes);
+    setConfirm('');
   };
   const handleUploadVisible = (v: boolean) => {
     setUploadVisible(v);
@@ -453,6 +460,13 @@ export function PassageDetailArtifacts(props: IProps) {
           onPassResChange={handlePassRes}
         />
       </BigDialog>
+      {confirm && (
+        <Confirm
+          text={t.deleteConfirm}
+          yesResponse={handleDeleteConfirmed}
+          noResponse={handleDeleteRefused}
+        />
+      )}
       {displayId && (
         <MediaDisplay
           srcMediaId={displayId}

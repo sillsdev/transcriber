@@ -3035,6 +3035,12 @@
 				<target>Завершено</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.deleteConfirm">
+			<segment>
+				<source>Delete Resource?</source>
+				<target>Удалить ресурс?</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.editResource">
 			<segment>
 				<source>Edit Resource</source>
@@ -4010,6 +4016,12 @@
 			<segment>
 				<source>No</source>
 				<target>Нет</target>
+			</segment>
+		</unit>
+		<unit id="shared.noAudio">
+			<segment>
+				<source>No Audio Available!</source>
+				<target>Аудио отсутствует!</target>
 			</segment>
 		</unit>
 		<unit id="shared.NoSaveOffline">

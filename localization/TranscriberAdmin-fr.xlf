@@ -3019,6 +3019,12 @@
 				<target>Complété</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.deleteConfirm">
+			<segment>
+				<source>Delete Resource?</source>
+				<target>Supprimer la ressource ?</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.editResource">
 			<segment>
 				<source>Edit Resource</source>
@@ -3989,6 +3995,12 @@
 			<segment>
 				<source>No</source>
 				<target>No</target>
+			</segment>
+		</unit>
+		<unit id="shared.noAudio">
+			<segment>
+				<source>No Audio Available!</source>
+				<target>Pas d'audio disponible !</target>
 			</segment>
 		</unit>
 		<unit id="shared.NoSaveOffline">
