@@ -513,8 +513,11 @@ export interface IMediaActionsStrings extends Localize.LocalizedStringsMethods {
     "delete": string;
     "detach": string;
     "download": string;
+    "drag": string;
+    "edit": string;
     "pause": string;
     "play": string;
+    "view": string;
 };
 
 export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {

@@ -2928,6 +2928,20 @@
                <context context-type="sourcefile">MediaActions.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaActions.drag">
+      		<source>Drag to reorder</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.edit">
+      		<source>Edit</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="mediaActions.pause">
             <source>Pause</source>
             <target/>
@@ -2942,6 +2956,13 @@
                <context context-type="sourcefile">MediaActions.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaActions.view">
+      		<source>View</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="mediaTab.action">
             <source>Action</source>
             <target/>

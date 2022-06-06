@@ -2526,6 +2526,18 @@
 				<target>Скачать</target>
 			</segment>
 		</unit>
+		<unit id="mediaActions.drag">
+			<segment>
+				<source>Drag to reorder</source>
+				<target>Перетащите, чтобы изменить порядок</target>
+			</segment>
+		</unit>
+		<unit id="mediaActions.edit">
+			<segment>
+				<source>Edit</source>
+				<target>Редактировать</target>
+			</segment>
+		</unit>
 		<unit id="mediaActions.pause">
 			<segment>
 				<source>Pause</source>
@@ -2536,6 +2548,12 @@
 			<segment>
 				<source>Play</source>
 				<target>Играть</target>
+			</segment>
+		</unit>
+		<unit id="mediaActions.view">
+			<segment>
+				<source>View</source>
+				<target>Посмотреть</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.action">

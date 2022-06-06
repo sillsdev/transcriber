@@ -2512,6 +2512,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaActions.drag">
+         <segment>
+            <source>Drag to reorder</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.edit">
+         <segment>
+            <source>Edit</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaActions.pause">
          <segment>
             <source>Pause</source>
@@ -2521,6 +2533,12 @@
       <unit id="mediaActions.play">
          <segment>
             <source>Play</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.view">
+         <segment>
+            <source>View</source>
             <target/>
          </segment>
       </unit>

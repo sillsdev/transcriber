@@ -550,8 +550,11 @@ const initialState = {
 			"delete": "Delete",
 			"detach": "Disassociate",
 			"download": "Download",
+			"drag": "Drag to reorder",
+			"edit": "Edit",
 			"pause": "Pause",
 			"play": "Play",
+			"view": "View",
 		}
 	}),
 	"mediaTab": new LocalizedStrings({

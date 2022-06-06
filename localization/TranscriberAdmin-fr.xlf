@@ -2512,6 +2512,18 @@
 				<target>Télécharger</target>
 			</segment>
 		</unit>
+		<unit id="mediaActions.drag">
+			<segment>
+				<source>Drag to reorder</source>
+				<target>Faites glisser pour réorganiser</target>
+			</segment>
+		</unit>
+		<unit id="mediaActions.edit">
+			<segment>
+				<source>Edit</source>
+				<target>Modifier</target>
+			</segment>
+		</unit>
 		<unit id="mediaActions.pause">
 			<segment>
 				<source>Pause</source>
@@ -2522,6 +2534,12 @@
 			<segment>
 				<source>Play</source>
 				<target>Jouer</target>
+			</segment>
+		</unit>
+		<unit id="mediaActions.view">
+			<segment>
+				<source>View</source>
+				<target>Voir</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.action">
