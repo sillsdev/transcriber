@@ -259,6 +259,12 @@ export function PassageDetailArtifacts(props: IProps) {
     }
   };
 
+  const listFilter = (r: IRow) =>
+    r?.isResource &&
+    (allResources ||
+      r.passageResource === '' ||
+      r.passageResource === passage.id);
+
   const onSortEnd = ({
     oldIndex,
     newIndex,
@@ -268,7 +274,7 @@ export function PassageDetailArtifacts(props: IProps) {
   }) => {
     const indexes = Array<number>();
     rowData.forEach((r, i) => {
-      if (r?.isResource) indexes.push(i);
+      if (listFilter(r)) indexes.push(i);
     });
     const newIndexes = arrayMove(indexes, oldIndex, newIndex) as number[];
     for (let i = 0; i < newIndexes.length; i += 1) {
@@ -283,7 +289,7 @@ export function PassageDetailArtifacts(props: IProps) {
       }
     }
     const newRows = rowData
-      .map((r, i) => (r?.isResource ? rowData[newIndexes[i]] : r))
+      .map((r, i) => (listFilter(r) ? rowData[newIndexes[i]] : r))
       .filter((r) => r !== undefined);
     ctx.setState((state) => {
       return { ...state, rowData: newRows };
@@ -385,13 +391,7 @@ export function PassageDetailArtifacts(props: IProps) {
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
         {rowData
-          .filter(
-            (r) =>
-              r?.isResource &&
-              (allResources ||
-                r.passageResource === '' ||
-                r.passageResource === passage.id)
-          )
+          .filter((r) => listFilter(r))
           .map((value, index) => (
             <SortableItem
               key={`item-${index}`}
