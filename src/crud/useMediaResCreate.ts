@@ -63,7 +63,7 @@ export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
           t,
           mediaRec,
           'artifactCategory',
-          'artifactCategory',
+          'artifactcategory',
           artifactCategoryId
         )
       );
