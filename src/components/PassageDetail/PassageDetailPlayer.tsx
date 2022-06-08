@@ -1,3 +1,4 @@
+import { useGlobal } from 'reactn';
 import { Button } from '@material-ui/core';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
@@ -5,8 +6,11 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import { IRegion, parseRegions } from '../../crud/useWavesurferRegions';
 import WSAudioPlayer from '../WSAudioPlayer';
 import { useSelector, shallowEqual } from 'react-redux';
-import { IWsAudioPlayerStrings } from '../../model';
+import { IWsAudioPlayerStrings, MediaFile } from '../../model';
+import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector } from '../../selector';
+import { NamedRegions, getSegments, updateSegments } from '../../utils';
+import { findRecord } from '../../crud';
 
 interface IStateProps {}
 
@@ -17,8 +21,16 @@ interface IProps extends IStateProps {
 
 export function PassageDetailPlayer(props: IProps) {
   const { allowSegment, saveSegments } = props;
-  const { toolChanged, toolsChanged, isChanged, saveRequested, startSave } =
-    useContext(UnsavedContext).state;
+  const [memory] = useGlobal('memory');
+  const [user] = useGlobal('user');
+  const {
+    toolChanged,
+    toolsChanged,
+    isChanged,
+    saveRequested,
+    startSave,
+    saveCompleted,
+  } = useContext(UnsavedContext).state;
   const t: IWsAudioPlayerStrings = useSelector(playerSelector, shallowEqual);
   const toolId = 'ArtifactSegments';
   const ctx = useContext(PassageDetailContext);
@@ -40,6 +52,7 @@ export function PassageDetailPlayer(props: IProps) {
     discussionMarkers,
     highlightDiscussion,
     handleHighlightDiscussion,
+    selected,
   } = ctx.state;
   const highlightRef = useRef(highlightDiscussion);
   const defaultSegParams = {
@@ -51,6 +64,64 @@ export function PassageDetailPlayer(props: IProps) {
 
   const segmentsRef = useRef('');
   const playingRef = useRef(playing);
+  const savingRef = useRef(false);
+
+  const loadSegments = () => {
+    const mediafile = findRecord(memory, 'mediafile', selected) as
+      | MediaFile
+      | undefined;
+    const segs = mediafile?.attributes?.segments || '{}';
+    segmentsRef.current = getSegments(NamedRegions.BackTranslation, segs);
+    setDefaultSegments(segmentsRef.current);
+  };
+
+  useEffect(() => {
+    loadSegments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const writeSegments = async () => {
+    if (!savingRef.current) {
+      savingRef.current = true;
+      const mediafile = findRecord(memory, 'mediafile', selected) as
+        | MediaFile
+        | undefined;
+      if (mediafile) {
+        await memory
+          .update((t) => [
+            ...UpdateRecord(
+              t,
+              {
+                type: 'mediafile',
+                id: mediafile.id,
+                attributes: {
+                  segments: updateSegments(
+                    NamedRegions.BackTranslation,
+                    mediafile.attributes?.segments,
+                    segmentsRef.current
+                  ),
+                },
+              } as any as MediaFile,
+              user
+            ),
+          ])
+          .then(() => {
+            saveCompleted(toolId);
+            savingRef.current = false;
+          })
+          .catch((err) => {
+            //so we don't come here...we go to continue/logout
+            saveCompleted(toolId, err.message);
+            savingRef.current = false;
+          });
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (saveRequested(toolId) && !savingRef.current) writeSegments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [saveRequested]);
 
   const setPlayerSegments = (segments: string) => {
     if (
@@ -158,7 +229,7 @@ export function PassageDetailPlayer(props: IProps) {
               onClick={handleSave}
               variant="contained"
               color="primary"
-              disabled={isChanged(toolId)}
+              disabled={!isChanged(toolId)}
             >
               {t.saveSegments}
             </Button>
