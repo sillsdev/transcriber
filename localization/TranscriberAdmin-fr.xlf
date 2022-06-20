@@ -247,6 +247,12 @@
 				<target>Commentaire</target>
 			</segment>
 		</unit>
+		<unit id="artifactType.projectresource">
+			<segment>
+				<source>Project Resource</source>
+				<target>Ressources du projet</target>
+			</segment>
+		</unit>
 		<unit id="artifactType.qanda">
 			<segment>
 				<source>Question and Answer</source>
@@ -2824,6 +2830,18 @@
 				<target>Téléchargez les données de modification à partir de l'application Desktop.</target>
 			</segment>
 		</unit>
+		<unit id="mediaUpload.projectResourceTask">
+			<segment>
+				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+				<target>Téléchargez des fichiers audio au format .mp3, .m4a, .wav ou .ogg ou du contenu visuel au format .pdf.</target>
+			</segment>
+		</unit>
+		<unit id="mediaUpload.projectResourceTitle">
+			<segment>
+				<source>Upload Project Resource</source>
+				<target>Télécharger la ressource du projet</target>
+			</segment>
+		</unit>
 		<unit id="mediaUpload.PTFtask">
 			<segment>
 				<source>Upload a Portable Transcriber File (ptf).</source>
@@ -2838,8 +2856,7 @@
 		</unit>
 		<unit id="mediaUpload.resourceTask">
 			<segment>
-				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in
-					.pdf format.</source>
+				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
 				<target>Téléchargez des fichiers audio au format .mp3, .m4a, .wav ou .ogg ou du contenu visuel au format .pdf.</target>
 			</segment>
 		</unit>
@@ -3037,10 +3054,22 @@
 				<target>Complété</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.createResources">
+			<segment>
+				<source>Create Resources</source>
+				<target>Créer des ressources</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.deleteConfirm">
 			<segment>
 				<source>Delete Resource?</source>
 				<target>Supprimer la ressource ?</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.description">
+			<segment>
+				<source>Description</source>
+				<target>Description</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.editResource">
@@ -3055,6 +3084,30 @@
 				<target>Ressource de passage</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.projectResourcePassage">
+			<segment>
+				<source>Select Project Resource Passages</source>
+				<target>Sélectionner les passages de ressources du projet</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.projectResourceSheet">
+			<segment>
+				<source>Project Resource Sheet</source>
+				<target>Fiche de ressources du projet</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.projectResourceWizard">
+			<segment>
+				<source>Project Resource Wizard</source>
+				<target>Assistant de ressources de projet</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.reference">
+			<segment>
+				<source>Reference</source>
+				<target>Référence</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.resource">
 			<segment>
 				<source>Resource</source>
@@ -3067,6 +3120,12 @@
 				<target>Sélectionner la ressource partagée</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.startStop">
+			<segment>
+				<source>Start - Stop</source>
+				<target>Début - Fin</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.type">
 			<segment>
 				<source>Type</source>
@@ -3077,6 +3136,12 @@
 			<segment>
 				<source>Upload Resource</source>
 				<target>Télécharger la ressource</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.uploadProject">
+			<segment>
+				<source>Upload Project Resource</source>
+				<target>Télécharger la ressource du projet</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.version">
@@ -3923,6 +3988,12 @@
 			<segment>
 				<source>Consultant</source>
 				<target>Consultant</target>
+			</segment>
+		</unit>
+		<unit id="shared.delete">
+			<segment>
+				<source>Delete {0}. Are you sure?</source>
+				<target>Effacer {0}. Vous êtes sûr ?</target>
 			</segment>
 		</unit>
 		<unit id="shared.description">
@@ -5547,7 +5618,7 @@
 				<target>Examen final</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.internalization">
+		<unit id="workflowSteps.internalize">
 			<segment>
 				<source>Internalize</source>
 				<target>Internalisation</target>

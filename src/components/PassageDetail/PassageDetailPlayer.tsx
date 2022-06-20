@@ -17,10 +17,11 @@ interface IStateProps {}
 interface IProps extends IStateProps {
   allowSegment?: boolean;
   saveSegments?: boolean;
+  onSegment?: (segment: string) => void;
 }
 
 export function PassageDetailPlayer(props: IProps) {
-  const { allowSegment, saveSegments } = props;
+  const { allowSegment, saveSegments, onSegment } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const {
@@ -128,8 +129,10 @@ export function PassageDetailPlayer(props: IProps) {
       !allowSegment ||
       !segmentsRef.current ||
       segmentsRef.current.indexOf('},{') === -1
-    )
+    ) {
       setDefaultSegments(segments);
+      onSegment && onSegment(segments);
+    }
     if (!playingRef.current) {
       var segs = parseRegions(segments);
       if (segs.regions.length > 0) {
@@ -153,6 +156,7 @@ export function PassageDetailPlayer(props: IProps) {
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
     setDefaultSegments(segments); //now we'll notice if we reset them in SetPlayerSegments
+    onSegment && onSegment(segments);
     if (saveSegments) {
       toolChanged(toolId);
     } else {

@@ -24,7 +24,7 @@ interface IProps extends IStateProps {
   initPassRes: boolean;
   onCategoryChange: (artifactCategoryId: string) => void;
   onDescriptionChange: (desc: string) => void;
-  onPassResChange: () => void;
+  onPassResChange?: () => void;
   catRequired: boolean;
   catAllowNew?: boolean;
 }
@@ -68,7 +68,9 @@ export function ResourceData(props: IProps) {
         scripture={ScriptureEnum.highlight}
         resource={true}
       />
-      <PassageResourceButton value={initPassRes} cb={onPassResChange} />
+      {onPassResChange && (
+        <PassageResourceButton value={initPassRes} cb={onPassResChange} />
+      )}
     </div>
   );
 }

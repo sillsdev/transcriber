@@ -289,6 +289,13 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="artifactType.projectresource">
+      		<source>Project Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AlertDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="artifactType.qanda">
             <source>Question and Answer</source>
             <target/>
@@ -3292,6 +3299,20 @@
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaUpload.projectResourceTask">
+      		<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaUpload.projectResourceTitle">
+      		<source>Upload Project Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="mediaUpload.PTFtask">
             <source>Upload a Portable Transcriber File (ptf).</source>
             <target/>
@@ -3544,8 +3565,22 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.createResources">
+      		<source>Create Resources</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.deleteConfirm">
       		<source>Delete Resource?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.description">
+      		<source>Description</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>
@@ -3565,6 +3600,34 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.projectResourcePassage">
+      		<source>Select Project Resource Passages</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.projectResourceSheet">
+      		<source>Project Resource Sheet</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.projectResourceWizard">
+      		<source>Project Resource Wizard</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.reference">
+      		<source>Reference</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.resource">
             <source>Resource</source>
             <target/>
@@ -3579,6 +3642,13 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.startStop">
+      		<source>Start - Stop</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.type">
             <source>Type</source>
             <target/>
@@ -3593,6 +3663,13 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.uploadProject">
+      		<source>Upload Project Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.version">
             <source>Version</source>
             <target/>
@@ -4580,6 +4657,13 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="shared.delete">
+      		<source>Delete {0}. Are you sure?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AlertDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="shared.description">
             <source>Description</source>
             <target/>
@@ -6470,7 +6554,7 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.internalization">
+         <trans-unit id="workflowSteps.internalize">
             <source>Internalize</source>
             <target/>
             <context-group>

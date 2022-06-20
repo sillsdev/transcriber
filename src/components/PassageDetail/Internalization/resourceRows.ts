@@ -69,7 +69,7 @@ export const oneMediaRow = ({
     mediafile: media || ({} as MediaFile),
     resource: r,
     isResource: isResource(typeNameSlug),
-    passageResource: related(media, 'resourcePassage') || '',
+    passageId: related(media, 'passage') || '',
     isComment: typeNameSlug === 'comment',
     isVernacular: typeNameSlug === '' || typeNameSlug === 'vernacular',
     isText: mediaAttr?.originalFile?.endsWith('.pdf') || false,

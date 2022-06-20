@@ -4,6 +4,7 @@ import { INamedRegion } from '../crud/useWavesurferRegions';
 export enum NamedRegions {
   Transcription = 'Transcription',
   BackTranslation = 'BT',
+  ProjectResource = 'ProjRes',
 }
 export function updateSegments(
   name: string,

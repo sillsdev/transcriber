@@ -247,6 +247,12 @@
 				<target>Comentário</target>
 			</segment>
 		</unit>
+		<unit id="artifactType.projectresource">
+			<segment>
+				<source>Project Resource</source>
+				<target>Recurso do projeto</target>
+			</segment>
+		</unit>
 		<unit id="artifactType.qanda">
 			<segment>
 				<source>Question and Answer</source>
@@ -2822,6 +2828,18 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="mediaUpload.projectResourceTask">
+			<segment>
+				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+				<target>Carregar arquivos de áudio em formato .mp3, .m4a, .wav ou .ogg ou conteúdo visual em formato .pdf.</target>
+			</segment>
+		</unit>
+		<unit id="mediaUpload.projectResourceTitle">
+			<segment>
+				<source>Upload Project Resource</source>
+				<target>Upload do recurso do projeto</target>
+			</segment>
+		</unit>
 		<unit id="mediaUpload.PTFtask">
 			<segment>
 				<source>Upload a Portable Transcriber File (ptf).</source>
@@ -2836,8 +2854,7 @@
 		</unit>
 		<unit id="mediaUpload.resourceTask">
 			<segment>
-				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in
-					.pdf format.</source>
+				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
 				<target>Carregar arquivos de áudio em formato .mp3, .m4a, .wav ou .ogg ou conteúdo visual em formato .pdf.</target>
 			</segment>
 		</unit>
@@ -3033,10 +3050,22 @@
 				<target>Concluído</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.createResources">
+			<segment>
+				<source>Create Resources</source>
+				<target>Criar Recursos</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.deleteConfirm">
 			<segment>
 				<source>Delete Resource?</source>
 				<target>Eliminar Recurso?</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.description">
+			<segment>
+				<source>Description</source>
+				<target>Descrição</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.editResource">
@@ -3051,6 +3080,30 @@
 				<target>Recurso de Passagem</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.projectResourcePassage">
+			<segment>
+				<source>Select Project Resource Passages</source>
+				<target>Selecionar passagens de recursos do projeto</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.projectResourceSheet">
+			<segment>
+				<source>Project Resource Sheet</source>
+				<target>Ficha de recursos do projeto</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.projectResourceWizard">
+			<segment>
+				<source>Project Resource Wizard</source>
+				<target>Assistente de recursos do projeto</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.reference">
+			<segment>
+				<source>Reference</source>
+				<target>Referência</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.resource">
 			<segment>
 				<source>Resource</source>
@@ -3063,6 +3116,12 @@
 				<target>Selecione o recurso compartilhado</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.startStop">
+			<segment>
+				<source>Start - Stop</source>
+				<target>Início - Parada</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.type">
 			<segment>
 				<source>Type</source>
@@ -3073,6 +3132,12 @@
 			<segment>
 				<source>Upload Resource</source>
 				<target>Carregar recurso</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.uploadProject">
+			<segment>
+				<source>Upload Project Resource</source>
+				<target>Upload do recurso do projeto</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.version">
@@ -3919,6 +3984,12 @@
 			<segment>
 				<source>Consultant</source>
 				<target>Consultor</target>
+			</segment>
+		</unit>
+		<unit id="shared.delete">
+			<segment>
+				<source>Delete {0}. Are you sure?</source>
+				<target>Excluir {0}. Você tem certeza?</target>
 			</segment>
 		</unit>
 		<unit id="shared.description">
@@ -5541,7 +5612,7 @@
 				<target>Revisão final</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.internalization">
+		<unit id="workflowSteps.internalize">
 			<segment>
 				<source>Internalize</source>
 				<target>Internalizar</target>

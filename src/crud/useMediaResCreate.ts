@@ -45,7 +45,8 @@ export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
       ...AddRecord(t, mediaRec, user, memory),
 
       ...ReplaceRelatedRecord(t, mediaRec, 'plan', 'plan', plan),
-      ...ReplaceRelatedRecord(t, mediaRec, 'passage', 'passage', passage.id),
+      // shared resources are not associated with a single passage
+      // ...ReplaceRelatedRecord(t, mediaRec, 'passage', 'passage', passage.id),
     ];
     if (sharedResource)
       ops.push(

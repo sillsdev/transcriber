@@ -32,6 +32,7 @@ import {
   getAllMediaRecs,
   useArtifactCategory,
   useArtifactType,
+  ArtifactTypeSlug,
   findRecord,
   remoteId,
   AddPassageStateChangeToOps,
@@ -131,7 +132,7 @@ export interface IRow {
   done: boolean;
   editAction: JSX.Element | null;
   resource: SectionResource | null;
-  passageResource: string;
+  passageId: string;
   isVernacular: boolean;
   isResource: boolean;
   isComment: boolean;
@@ -175,6 +176,7 @@ const initState = {
   setPDBusy: (pdBusy: boolean) => {},
   allBookData: Array<BookName>(),
   getSharedResources: async () => [] as Resource[],
+  getProjectResources: async () => [] as MediaFile[],
   workflow: Array<SimpleWf>(),
   psgCompleted: [] as StepComplete[],
   setStepComplete: (stepId: string, complete: boolean) => {},
@@ -259,7 +261,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const fetching = useRef('');
     const segmentsCb = useRef<(segments: string) => void>();
     const getFilteredSteps = useFilteredSteps();
-    const { localizedArtifactType } = useArtifactType();
+    const { localizedArtifactType, getTypeId } = useArtifactType();
     const { localizedArtifactCategory } = useArtifactCategory();
     const { localizedWorkStep } = useOrgWorkflowSteps();
     const getStepsBusy = useRef<boolean>(false);
@@ -276,6 +278,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const highlightRef = useRef<number>();
     const refreshRef = useRef<number>(0);
     const settingSegmentRef = useRef(false);
+
     const handleSetCurrentStep = (stepId: string) => {
       var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
       setCurrentSegment(undefined, 0);
@@ -298,6 +301,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       }
       segmentsCb.current = undefined;
     };
+
     const setCurrentStep = (stepId: string) => {
       if (changed) {
         setConfirm(stepId);
@@ -305,6 +309,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         handleSetCurrentStep(stepId);
       }
     };
+
     const setFirstStepIndex = (stepIndex: number) => {
       setState((state: ICtxState) => {
         return {
@@ -313,6 +318,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         };
       });
     };
+
     const handleConfirmStep = () => {
       startSave();
       waitForSave(() => {
@@ -320,11 +326,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         setConfirm('');
       }, 400);
     };
+
     const handleRefuseStep = () => {
       clearChanged();
       handleSetCurrentStep(confirm);
       setConfirm('');
     };
+
     const setDiscussionSize = (discussionSize: {
       width: number;
       height: number;
@@ -393,6 +401,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
 
     const handleItemPlayEnd = () => {
       setItemPlaying(false);
+      oldVernReset();
     };
     const handleItemTogglePlay = () => {
       setItemPlaying(!state.itemPlaying);
@@ -502,6 +511,17 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       else return [] as Resource[];
     };
 
+    const getProjectResources = async () => {
+      const typeId = getTypeId(ArtifactTypeSlug.ProjectResource);
+      const media = (await memory.query((q: QueryBuilder) =>
+        q.findRecords('mediafile')
+      )) as MediaFile[];
+      return media.filter(
+        (m) =>
+          related(m, 'plan') === plan && related(m, 'artifactType') === typeId
+      );
+    };
+
     const setSelected = (selected: string, rowData: IRow[] = state.rowData) => {
       let i = rowData.findIndex((r) => r.mediafile.id === selected);
       let newRows: IRow[] = [];
@@ -543,7 +563,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       const r = rowData[i];
       var resetBlob = false;
       //if this is a file that will be played in the wavesurfer..fetch it
-      if (r.isVernacular && i === 0) {
+      if (
+        (r.isVernacular && i === 0) ||
+        r.artifactType ===
+          localizedArtifactType(ArtifactTypeSlug.ProjectResource)
+      ) {
         if (
           mediaState.id !== r.mediafile.id &&
           fetching.current !== r.mediafile.id
@@ -611,6 +635,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         });
       }
     };
+
     const setPlayItem = (playItem: string) => {
       setState((state: ICtxState) => {
         return {
@@ -619,6 +644,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         };
       });
     };
+
     const setCommentPlayId = (mediaId: string) => {
       setState((state: ICtxState) => {
         return {
@@ -627,6 +653,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         };
       });
     };
+
     const oldVernReset = () => {
       mediaStart.current = undefined;
       mediaEnd.current = undefined;
@@ -634,11 +661,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setOldVernacularPlayItem('');
       setOldVernacularPlaying(false);
     };
+
     const setMediaSelected = (id: string, start: number, end: number) => {
       mediaStart.current = start;
       mediaEnd.current = end;
       setSelected(id, state.rowData);
     };
+
     const handleDuration = (duration: number) => {
       if (mediaStart.current) {
         mediaPosition.current = mediaStart.current;
@@ -646,6 +675,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         setOldVernacularPlaying(true);
       }
     };
+
     const handlePosition = (position: number) => {
       if (mediaEnd.current) {
         if (position >= mediaEnd.current) {
@@ -837,18 +867,15 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setState((state: ICtxState) => {
         return { ...state, rowData: newData, mediafileId };
       });
-      if (mediafileId) setSelected(mediafileId, newData);
+      if (mediafileId && state.index === 0) setSelected(mediafileId, newData);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sectionResources, mediafiles, pasId, userResources]);
 
-    if (view.current !== '') {
-      const target = view.current;
-      view.current = '';
-      return <StickyRedirect to={target} />;
-    }
     useEffect(() => {
       //if I set playing when I set the mediaId, it plays a bit of the old
-      if (state.playItem) setItemPlaying(true);
+      //if not starting at the beginning set to playing after loaded
+      if (state.playItem && mediaStart.current === undefined)
+        setItemPlaying(true);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.playItem]);
 
@@ -887,6 +914,12 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.currentstep, state.psgCompleted, state.orgWorkflowSteps]);
 
+    if (view.current !== '') {
+      const target = view.current;
+      view.current = '';
+      return <StickyRedirect to={target} />;
+    }
+
     return (
       <PassageDetailContext.Provider
         value={{
@@ -904,6 +937,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setCommentPlayId,
             setPDBusy,
             getSharedResources,
+            getProjectResources,
             setCurrentSegment,
             getCurrentSegment,
             setPlayerSegments,

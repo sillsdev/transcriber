@@ -289,6 +289,7 @@ export const useOfflineSetup = () => {
         'resource',
         'retell',
         'sharedresource',
+        'projectresource',
       ].map((n) => {
         let rec = {
           type: 'artifacttype',

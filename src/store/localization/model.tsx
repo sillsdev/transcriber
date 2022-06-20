@@ -55,6 +55,7 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
 export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
     "backtranslation": string;
     "comment": string;
+    "projectresource": string;
     "qanda": string;
     "resource": string;
     "retell": string;
@@ -571,6 +572,8 @@ export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "invalidFile": string;
     "ITFtask": string;
     "ITFtitle": string;
+    "projectResourceTask": string;
+    "projectResourceTitle": string;
     "PTFtask": string;
     "PTFtitle": string;
     "resourceTask": string;
@@ -616,13 +619,21 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "allResources": string;
     "category": string;
     "completed": string;
+    "createResources": string;
     "deleteConfirm": string;
+    "description": string;
     "editResource": string;
     "passageResource": string;
+    "projectResourcePassage": string;
+    "projectResourceSheet": string;
+    "projectResourceWizard": string;
+    "reference": string;
     "resource": string;
     "sharedResource": string;
+    "startStop": string;
     "type": string;
     "upload": string;
+    "uploadProject": string;
     "version": string;
 };
 
@@ -815,6 +826,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "BookNotSet": string;
     "cancel": string;
     "consultant": string;
+    "delete": string;
     "description": string;
     "editor": string;
     "expiredParatextToken": string;
@@ -1151,7 +1163,7 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "export": string;
     "finalRecording": string;
     "finalReview": string;
-    "internalization": string;
+    "internalize": string;
     "paratextSync": string;
     "peerReview": string;
     "phraseBackTranslation": string;

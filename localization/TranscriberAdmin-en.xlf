@@ -250,6 +250,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactType.projectresource">
+         <segment>
+            <source>Project Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactType.qanda">
          <segment>
             <source>Question and Answer</source>
@@ -2824,6 +2830,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.projectResourceTask">
+         <segment>
+            <source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.projectResourceTitle">
+         <segment>
+            <source>Upload Project Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.PTFtask">
          <segment>
             <source>Upload a Portable Transcriber File (ptf).</source>
@@ -3040,9 +3058,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.createResources">
+         <segment>
+            <source>Create Resources</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.deleteConfirm">
          <segment>
             <source>Delete Resource?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.description">
+         <segment>
+            <source>Description</source>
             <target/>
          </segment>
       </unit>
@@ -3058,6 +3088,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.projectResourcePassage">
+         <segment>
+            <source>Select Project Resource Passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.projectResourceSheet">
+         <segment>
+            <source>Project Resource Sheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.projectResourceWizard">
+         <segment>
+            <source>Project Resource Wizard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.reference">
+         <segment>
+            <source>Reference</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.resource">
          <segment>
             <source>Resource</source>
@@ -3070,6 +3124,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.startStop">
+         <segment>
+            <source>Start - Stop</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.type">
          <segment>
             <source>Type</source>
@@ -3079,6 +3139,12 @@
       <unit id="passageDetailArtifacts.upload">
          <segment>
             <source>Upload Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.uploadProject">
+         <segment>
+            <source>Upload Project Resource</source>
             <target/>
          </segment>
       </unit>
@@ -3925,6 +3991,12 @@
       <unit id="shared.consultant">
          <segment>
             <source>Consultant</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.delete">
+         <segment>
+            <source>Delete {0}. Are you sure?</source>
             <target/>
          </segment>
       </unit>
@@ -5548,7 +5620,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.internalization">
+      <unit id="workflowSteps.internalize">
          <segment>
             <source>Internalize</source>
             <target/>

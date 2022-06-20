@@ -28,7 +28,8 @@ export const useSecResCreate = (section: RecordIdentity) => {
     seq: number,
     desc: string | null,
     mediafile: RecordIdentity,
-    passId?: string | null
+    passId?: string | null,
+    secId?: string
   ) => {
     const secRes = {
       type: 'sectionresource',
@@ -41,7 +42,13 @@ export const useSecResCreate = (section: RecordIdentity) => {
     const t = new TransformBuilder();
     const ops = [
       ...AddRecord(t, secRes, user, memory),
-      ...ReplaceRelatedRecord(t, secRes, 'section', 'section', section.id),
+      ...ReplaceRelatedRecord(
+        t,
+        secRes,
+        'section',
+        'section',
+        secId || section.id
+      ),
       ...ReplaceRelatedRecord(
         t,
         secRes,

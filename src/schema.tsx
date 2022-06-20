@@ -355,6 +355,7 @@ const schemaDefinition: SchemaSettings = {
         versionNumber: { type: 'number' },
         eafUrl: { type: 'string' },
         audioUrl: { type: 'string' },
+        s3file: { type: 'string' },
         duration: { type: 'number' },
         contentType: { type: 'string' },
         audioQuality: { type: 'string' },

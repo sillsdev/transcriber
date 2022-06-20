@@ -5,6 +5,7 @@ import {
   IPassageDetailArtifactsStrings,
   IState,
   RoleNames,
+  Passage,
 } from '../../../model';
 import localStrings from '../../../selector/localize';
 import {
@@ -23,6 +24,7 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import Uploader from '../../Uploader';
 import AddResource from './AddResource';
+import ProjectResource from './ProjectResource';
 import SortableHeader from './SortableHeader';
 import { IRow } from '../../../context/PassageDetailContext';
 import { SortableList, SortableItem } from '.';
@@ -36,17 +38,24 @@ import {
   useSecResUserCreate,
   useSecResUserRead,
   useSecResUserDelete,
+  useArtifactType,
+  ArtifactTypeSlug,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
 import SelectResource, { CatMap } from './SelectResource';
+import SelectProjectResource from './SelectProjectResource';
+import SelectProjResPassages from './SelectProjResPassages';
 import ResourceData from './ResourceData';
 import { UploadType } from '../../MediaUpload';
 import MediaPlayer from '../../MediaPlayer';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { ReplaceRelatedRecord } from '../../../model/baseModel';
 import { PassageResourceButton } from './PassageResourceButton';
+import ProjectResourceWizard from './ProjectResourceWizard';
+import { UnsavedContext } from '../../../context/UnsavedContext';
 import Confirm from '../../AlertDialog';
+import { getSegments, NamedRegions } from '../../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -90,6 +99,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const [project] = useGlobal('project');
   const ctx = useContext(PassageDetailContext);
   const {
     rowData,
@@ -98,6 +108,7 @@ export function PassageDetailArtifacts(props: IProps) {
     setSelected,
     playItem,
     setPlayItem,
+    setMediaSelected,
     itemPlaying,
     setItemPlaying,
     currentstep,
@@ -111,17 +122,28 @@ export function PassageDetailArtifacts(props: IProps) {
   const AddMediaFileResource = useMediaResCreate(passage, currentstep);
   const UpdateSectionResource = useSecResUpdate();
   const DeleteSectionResource = useSecResDelete();
+  const { localizedArtifactType } = useArtifactType();
   const [uploadVisible, setUploadVisible] = useState(false);
   const cancelled = useRef(false);
   const [displayId, setDisplayId] = useState('');
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
+  const [projectResourceVisible, setProjectResourceVisible] = useState(false);
+  const [projResPassageVisible, setProjResPassageVisible] = useState(false);
+  const [projResWizVisible, setProjResWizVisible] = useState(false);
   const [editResource, setEditResource] = useState<SectionResource>();
   const catIdRef = useRef<string>();
   const descriptionRef = useRef<string>('');
   const passRes = useRef(false);
+  const projRef = useRef('');
+  const projPassagesRef = useRef<Passage[]>([]);
+  const projMediaRef = useRef<MediaFile>();
   const [allResources, setAllResources] = useState(false);
   const { showMessage } = useSnackBar();
   const [confirm, setConfirm] = useState('');
+  const { checkSavedFn } = useContext(UnsavedContext).state;
+  const mediaStart = useRef<number | undefined>();
+  const mediaEnd = useRef<number | undefined>();
+  const mediaPosition = useRef<number | undefined>();
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -132,10 +154,36 @@ export function PassageDetailArtifacts(props: IProps) {
     return resourceType?.id;
   }, [artifactTypes, offlineOnly]);
 
+  const projResourceType = useMemo(() => {
+    const resourceType = artifactTypes.find(
+      (t) =>
+        t.attributes?.typename === 'projectresource' &&
+        Boolean(t?.keys?.remoteId) === !offlineOnly
+    );
+    return resourceType?.id;
+  }, [artifactTypes, offlineOnly]);
+
   const handlePlay = (id: string) => {
     if (id === playItem) {
       setItemPlaying(!itemPlaying);
-    } else setSelected(id);
+    } else {
+      const row = rowData.find((r) => r.id === id);
+      if (row) {
+        const segs = getSegments(
+          NamedRegions.ProjectResource,
+          row.mediafile.attributes.segments
+        );
+        const regions = JSON.parse(segs);
+        if (regions.length > 0) {
+          const { start, end } = regions[0];
+          mediaStart.current = start;
+          mediaEnd.current = end;
+          setMediaSelected(id, start, end);
+          return;
+        }
+      }
+      setSelected(id);
+    }
   };
 
   const handleDisplayId = (id: string) => {
@@ -179,6 +227,24 @@ export function PassageDetailArtifacts(props: IProps) {
     setSharedResourceVisible(v);
   };
 
+  const handleProjectResourceVisible = (v: boolean) => {
+    setProjectResourceVisible(v);
+  };
+
+  const handleProjResPassageVisible = (v: boolean) => {
+    setProjResPassageVisible(v);
+  };
+
+  const handleProjResWizVisible = (v: boolean) => {
+    if (v) {
+      setProjResWizVisible(v);
+    } else {
+      checkSavedFn(() => {
+        setProjResWizVisible(v);
+      });
+    }
+  };
+
   const handleAllResources = () => {
     setAllResources(!allResources);
   };
@@ -195,6 +261,7 @@ export function PassageDetailArtifacts(props: IProps) {
     setEditResource(undefined);
     catIdRef.current = undefined;
     descriptionRef.current = '';
+    projRef.current = '';
   };
   const handleEditResourceVisible = (v: boolean) => {
     if (!v) resetEdit();
@@ -253,17 +320,21 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleAction = (what: string) => {
     if (what === 'upload') {
       setUploadVisible(true);
+    } else if (what === 'project-upload') {
+      projRef.current = project;
+      setUploadVisible(true);
     } else if (what === 'reference') {
       setSharedResourceVisible(true);
     } else if (what === 'activity') {
+    } else if (what === 'wizard') {
+      setProjectResourceVisible(true);
+    } else if (what === 'sheet') {
     }
   };
 
   const listFilter = (r: IRow) =>
     r?.isResource &&
-    (allResources ||
-      r.passageResource === '' ||
-      r.passageResource === passage.id);
+    (allResources || r.passageId === '' || r.passageId === passage.id);
 
   const onSortEnd = ({
     oldIndex,
@@ -303,6 +374,11 @@ export function PassageDetailArtifacts(props: IProps) {
         cnt += 1;
         const id = remoteIdGuid('mediafile', remId, memory.keyMap) || remId;
         const mediaRecId = { type: 'mediafile', id };
+        if (descriptionRef.current) {
+          await memory.update((t: TransformBuilder) => [
+            t.replaceAttribute(mediaRecId, 'topic', descriptionRef.current),
+          ]);
+        }
         if (catIdRef.current) {
           await memory.update((t: TransformBuilder) => [
             ...ReplaceRelatedRecord(
@@ -319,18 +395,20 @@ export function PassageDetailArtifacts(props: IProps) {
             ...ReplaceRelatedRecord(
               t,
               mediaRecId,
-              'resourcePassage',
+              'passage',
               'passage',
               passage.id
             ),
           ]);
         }
-        await AddSectionResource(
-          cnt,
-          descriptionRef.current,
-          mediaRecId,
-          passRes.current ? passage.id : null
-        );
+        if (!projRef.current) {
+          await AddSectionResource(
+            cnt,
+            descriptionRef.current,
+            mediaRecId,
+            passRes.current ? passage.id : null
+          );
+        }
       }
       resetEdit();
     }
@@ -350,6 +428,19 @@ export function PassageDetailArtifacts(props: IProps) {
     }
   };
 
+  const handleSelectProjectResource = (m: MediaFile) => {
+    setSelected(m.id);
+    projMediaRef.current = m;
+    setProjectResourceVisible(false);
+    setProjResPassageVisible(true);
+  };
+
+  const handleSelectProjectResourcePassage = (passages: Passage[]) => {
+    projPassagesRef.current = passages;
+    setProjResPassageVisible(false);
+    setProjResWizVisible(true);
+  };
+
   const handleCategory = (categoryId: string) => {
     catIdRef.current = categoryId;
   };
@@ -363,14 +454,37 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const handleEnded = () => {
+    mediaStart.current = undefined;
+    mediaEnd.current = undefined;
+    mediaPosition.current = undefined;
     setPlayItem('');
     handleItemPlayEnd();
   };
+
+  const handleDuration = (duration: number) => {
+    if (mediaStart.current) {
+      mediaPosition.current = mediaStart.current;
+      mediaStart.current = undefined;
+      setItemPlaying(true);
+    }
+  };
+
+  const handlePosition = (position: number) => {
+    if (mediaEnd.current) {
+      if (position >= mediaEnd.current) {
+        handleEnded();
+      }
+    }
+  };
+
   return (
     <>
       <div className={classes.row}>
         {projRole === RoleNames.Admin && (!offline || offlineOnly) && (
-          <AddResource action={handleAction} />
+          <>
+            <AddResource action={handleAction} />
+            <ProjectResource action={handleAction} />
+          </>
         )}
         <div className={classes.playStatus}>
           <MediaPlayer
@@ -378,6 +492,9 @@ export function PassageDetailArtifacts(props: IProps) {
             srcMediaId={playItem}
             requestPlay={itemPlaying}
             onEnded={handleEnded}
+            onDuration={handleDuration}
+            onPosition={handlePosition}
+            position={mediaPosition.current}
             onTogglePlay={handleItemTogglePlay}
             controls={playItem !== ''}
           />
@@ -415,8 +532,10 @@ export function PassageDetailArtifacts(props: IProps) {
         multiple={true}
         finish={afterUpload}
         cancelled={cancelled}
-        artifactTypeId={resourceType}
-        uploadType={UploadType.Resource}
+        artifactTypeId={projRef.current ? projResourceType : resourceType}
+        uploadType={
+          projRef.current ? UploadType.ProjectResource : UploadType.Resource
+        }
         metaData={
           <ResourceData
             catAllowNew={true} //if they can upload they can add cat
@@ -426,7 +545,7 @@ export function PassageDetailArtifacts(props: IProps) {
             onDescriptionChange={handleDescription}
             catRequired={false}
             initPassRes={passRes.current}
-            onPassResChange={handlePassRes}
+            onPassResChange={!projRef.current ? handlePassRes : undefined}
           />
         }
       />
@@ -440,6 +559,42 @@ export function PassageDetailArtifacts(props: IProps) {
           onSelect={handleSelectShared}
           onOpen={handleSharedResourceVisible}
         />
+      </BigDialog>
+      <BigDialog
+        title={localizedArtifactType(ArtifactTypeSlug.ProjectResource)}
+        isOpen={projectResourceVisible}
+        onOpen={handleProjectResourceVisible}
+      >
+        <SelectProjectResource
+          onSelect={handleSelectProjectResource}
+          onOpen={handleProjectResourceVisible}
+        />
+      </BigDialog>
+      <BigDialog
+        title={t.projectResourcePassage}
+        isOpen={projResPassageVisible}
+        onOpen={handleProjResPassageVisible}
+      >
+        <SelectProjResPassages
+          onSelect={handleSelectProjectResourcePassage}
+          onOpen={handleProjResPassageVisible}
+        />
+      </BigDialog>
+      <BigDialog
+        title={t.projectResourceWizard}
+        isOpen={projResWizVisible}
+        onOpen={handleProjResWizVisible}
+        bp={BigDialogBp.md}
+      >
+        {projResWizVisible ? (
+          <ProjectResourceWizard
+            media={projMediaRef.current}
+            passages={projPassagesRef.current}
+            onOpen={handleProjResWizVisible}
+          />
+        ) : (
+          <></>
+        )}
       </BigDialog>
       <BigDialog
         title={t.editResource}
