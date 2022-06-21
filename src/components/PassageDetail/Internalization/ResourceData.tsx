@@ -55,14 +55,14 @@ export function ResourceData(props: IProps) {
         className={classes.formControl}
         id="filename"
         label={ts.description}
-        value={description}
+        value={description || ''}
         onChange={handleChangeDescription}
         required={false}
         fullWidth={true}
       />
       <SelectArtifactCategory
         allowNew={catAllowNew}
-        initCategory={initCategory}
+        initCategory={initCategory || ''}
         onCategoryChange={onCategoryChange}
         required={catRequired}
         scripture={ScriptureEnum.highlight}

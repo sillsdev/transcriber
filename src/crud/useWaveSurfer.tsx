@@ -163,6 +163,7 @@ export function useWaveSurfer(
       wavesurferRef.current = ws;
       setWaveSurfer(ws);
       ws.on('ready', function () {
+        console.log('ws ready');
         //recording also sends ready
         if (loadRequests.current > 0) loadRequests.current--;
         if (!loadRequests.current) {
@@ -180,6 +181,7 @@ export function useWaveSurfer(
         }
       });
       ws.on('destroy', function () {
+        console.log('ws destroy');
         wavesurferRef.current = undefined;
       });
       ws.on(
@@ -189,30 +191,37 @@ export function useWaveSurfer(
         }, 150)
       );
       ws.on('play', function () {
+        console.log('ws play');
         wavesurferPlayingRef.current = true;
       });
       ws.on('pause', function () {
+        console.log('ws pause');
         wavesurferPlayingRef.current = false;
       });
       ws.on('seek', function (e: number) {
+        console.log('ws seek');
         onRegionSeek(e, !userInteractionRef.current);
         setProgress(e * wsDuration());
       });
       ws.on('finish', function () {
+        console.log('ws finish');
         //we'll get a pause next, so don't set wavesurferPlayingRef here
         setPlaying(false);
         setProgress(wsDuration());
       });
       ws.on('interaction', function () {
+        console.log('ws interaction');
         if (onInteraction) onInteraction();
       });
       ws.on('redraw', function (peaks: any, width: number) {
+        // console.log('ws redraw');
         if (widthRef.current !== width) {
           widthRef.current = width;
           wsAddMarkers(markersRef.current);
         }
       });
       ws.on('marker-click', function (marker: any, e: any) {
+        console.log('ws marker click');
         //the seek right before this will cause any regions to be removed
         //wait for that...
         if (singleRegionOnly)
@@ -237,6 +246,7 @@ export function useWaveSurfer(
       return ws;
     }
     if (container && !wavesurferRef.current) {
+      console.log('ws container');
       create(container, height);
       containerRef.current = container;
       if (blobToLoad.current) {
@@ -250,6 +260,7 @@ export function useWaveSurfer(
   useEffect(() => {
     // Removes events, elements and disconnects Web Audio nodes on component unmount
     return () => {
+      console.log('ws destroy');
       blobToLoad.current = undefined;
       if (wavesurferRef.current) {
         var ws = wavesurferRef.current;

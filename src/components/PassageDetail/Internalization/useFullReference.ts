@@ -1,19 +1,32 @@
-import { useGlobal } from 'reactn';
-import { Section, Passage, IState } from '../../../model';
-import { findRecord, related, passageDescription } from '../../../crud';
+import { Section, Passage, IState, BookName } from '../../../model';
+import { passageDescription, sectionNumber } from '../../../crud';
 import { useSelector } from 'react-redux';
 
+export interface IInfo {
+  rec: Section | Passage;
+  secNum: number;
+}
+
+const getSection = (section: Section) => {
+  const name =
+    section && section.attributes && section.attributes.name
+      ? section.attributes.name
+      : '';
+  return sectionNumber(section) + ' ' + name;
+};
+
+const getPassage = (info: IInfo, bookData: BookName[]) => {
+  return `${info.secNum}.${passageDescription(
+    info.rec as Passage,
+    bookData
+  ).trim()}`;
+};
+
 export const useFullReference = () => {
-  const [memory] = useGlobal('memory');
   const bookData = useSelector((state: IState) => state.books.bookData);
 
-  return (p: Passage) => {
-    const secRec = findRecord(memory, 'section', related(p, 'section')) as
-      | Section
-      | undefined;
-    return `${secRec?.attributes?.sequencenum}.${passageDescription(
-      p,
-      bookData
-    ).trim()}`;
-  };
+  return (info: IInfo) =>
+    info.rec.type === 'passage'
+      ? getPassage(info, bookData)
+      : getSection(info.rec as Section);
 };

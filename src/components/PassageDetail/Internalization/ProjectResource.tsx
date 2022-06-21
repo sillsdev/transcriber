@@ -101,9 +101,9 @@ export const ProjectResource = (props: IProps) => {
         <StyledMenuItem id="referenceResource" onClick={handle('wizard')}>
           <ListItemText primary={t.projectResourceWizard} />
         </StyledMenuItem>
-        <StyledMenuItem id="referenceResource" onClick={handle('sheet')}>
+        {/* <StyledMenuItem id="referenceResource" onClick={handle('sheet')}>
           <ListItemText primary={t.projectResourceSheet} />
-        </StyledMenuItem>
+        </StyledMenuItem> */}
       </StyledMenu>
     </div>
   );

@@ -341,7 +341,9 @@ function WSAudioPlayer(props: IProps) {
     onWSPlayStatus,
     onInteraction,
     onMarkerClick,
-    () => {}, //on error...probably should report?
+    () => {
+      console.log('ws error');
+    }, //on error...probably should report?
     size - 150,
     allowRecord,
     timelineRef.current,
@@ -477,6 +479,7 @@ function WSAudioPlayer(props: IProps) {
   ];
 
   useEffect(() => {
+    console.log('wsPlayer init');
     playerKeys.forEach((k) => subscribe(k.key, k.cb));
 
     return () => {
@@ -489,14 +492,17 @@ function WSAudioPlayer(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
+    console.log('wsPlayer allow record');
     if (allowRecord) recordKeys.forEach((k) => subscribe(k.key, k.cb));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowRecord]);
   useEffect(() => {
+    console.log('wsPlayer allow segment');
     if (allowSegment) segmentKeys.forEach((k) => subscribe(k.key, k.cb));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSegment]);
   useEffect(() => {
+    console.log('wsPlayer allow speed');
     if (allowSpeed) speedKeys.forEach((k) => subscribe(k.key, k.cb));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSpeed]);
@@ -518,6 +524,7 @@ function WSAudioPlayer(props: IProps) {
     }, 1000 * 0.5);
   };
   useEffect(() => {
+    console.log('wsPlayer autostart');
     if (autoStart) {
       launchTimer();
     }
@@ -532,6 +539,7 @@ function WSAudioPlayer(props: IProps) {
   }, [size, wsSetHeight]);
 
   useEffect(() => {
+    console.log('wsPlayer init pos');
     if (
       initialposition !== undefined &&
       initialposition !== initialPosRef.current
@@ -543,6 +551,7 @@ function WSAudioPlayer(props: IProps) {
   }, [initialposition]);
 
   useEffect(() => {
+    console.log('wsPlayer marker ready');
     if (ready && markers && markers !== markersRef.current) {
       markersRef.current = markers;
       wsAddMarkers(markers);
@@ -551,6 +560,7 @@ function WSAudioPlayer(props: IProps) {
   }, [markers, ready]);
 
   useEffect(() => {
+    console.log('wsPlayer segment loop');
     if (segments !== segmentsRef.current) {
       segmentsRef.current = segments;
       if (ready && segmentsRef.current !== wsGetRegions()) {
@@ -566,10 +576,12 @@ function WSAudioPlayer(props: IProps) {
   }, [segments, looping]);
 
   useEffect(() => {
+    console.log('wsPlayer save prog');
     onSaveProgressRef.current = onSaveProgress;
   }, [onSaveProgress]);
 
   useEffect(() => {
+    console.log('wsPlayer blob reset');
     setDuration(0);
     setHasRegion(0);
     if (blob) {
@@ -585,15 +597,18 @@ function WSAudioPlayer(props: IProps) {
   }, [blob, doReset]); //passed in by user
 
   useEffect(() => {
+    console.log('wsPlayer mimes');
     if (setAcceptedMimes) setAcceptedMimes(acceptedMimes);
   }, [acceptedMimes, setAcceptedMimes]);
 
   useEffect(() => {
+    console.log('wsPlayer rate');
     wsSetPlaybackRate(playbackRate);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playbackRate]);
 
   useEffect(() => {
+    console.log('wsPlayer busy style');
     setStyle({
       cursor: busy || loading ? 'progress' : 'default',
     });
@@ -611,6 +626,7 @@ function WSAudioPlayer(props: IProps) {
   };
 
   useEffect(() => {
+    console.log('wsPlayer playing');
     if (isPlaying !== undefined && playingRef.current !== isPlaying)
       handlePlayStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps

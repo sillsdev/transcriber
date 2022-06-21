@@ -62,6 +62,7 @@ interface IProps extends IStateProps {
   showgroups?: boolean;
   showSelection?: boolean;
   select?: (checks: Array<number>) => void;
+  checks: Array<string | number>;
   getChildRows: (row: any, rootRows: any[]) => any[] | null;
 }
 
@@ -83,6 +84,7 @@ function TreeGrid(props: IProps) {
     showgroups,
     showSelection,
     select,
+    checks,
     dataCell,
     noDataCell,
   } = props;
@@ -116,7 +118,7 @@ function TreeGrid(props: IProps) {
             />
           </>
         )}
-        <SelectionState onSelectionChange={handleSelect} />
+        <SelectionState selection={checks} onSelectionChange={handleSelect} />
         <GroupingState columnExtensions={groupingStateColumnExtensions} />
 
         <IntegratedFiltering />
@@ -224,4 +226,4 @@ function TreeGrid(props: IProps) {
     </Paper>
   );
 }
-export default (connect(mapStateToProps)(TreeGrid) as any) as any;
+export default connect(mapStateToProps)(TreeGrid) as any as any;

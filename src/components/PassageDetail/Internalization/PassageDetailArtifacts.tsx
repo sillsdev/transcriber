@@ -6,6 +6,7 @@ import {
   IState,
   RoleNames,
   Passage,
+  Section,
 } from '../../../model';
 import localStrings from '../../../selector/localize';
 import {
@@ -20,7 +21,7 @@ import Auth from '../../../auth/Auth';
 import { withData } from '../../../mods/react-orbitjs';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import Uploader from '../../Uploader';
 import AddResource from './AddResource';
@@ -45,7 +46,8 @@ import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
 import SelectResource, { CatMap } from './SelectResource';
 import SelectProjectResource from './SelectProjectResource';
-import SelectProjResPassages from './SelectProjResPassages';
+// import SelectProjResPassages from './SelectProjResPassages';
+import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
 import { UploadType } from '../../MediaUpload';
 import MediaPlayer from '../../MediaPlayer';
@@ -53,9 +55,10 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { ReplaceRelatedRecord } from '../../../model/baseModel';
 import { PassageResourceButton } from './PassageResourceButton';
 import ProjectResourceWizard from './ProjectResourceWizard';
+import { useProjectResourceSave } from './useProjectResourceSave';
 import { UnsavedContext } from '../../../context/UnsavedContext';
 import Confirm from '../../AlertDialog';
-import { getSegments, NamedRegions } from '../../../utils';
+import { getSegments, NamedRegions, removeExtension } from '../../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -100,6 +103,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [project] = useGlobal('project');
+  const [, setComplete] = useGlobal('progress');
   const ctx = useContext(PassageDetailContext);
   const {
     rowData,
@@ -130,12 +134,14 @@ export function PassageDetailArtifacts(props: IProps) {
   const [projectResourceVisible, setProjectResourceVisible] = useState(false);
   const [projResPassageVisible, setProjResPassageVisible] = useState(false);
   const [projResWizVisible, setProjResWizVisible] = useState(false);
-  const [editResource, setEditResource] = useState<SectionResource>();
+  const [editResource, setEditResource] = useState<
+    SectionResource | undefined
+  >();
   const catIdRef = useRef<string>();
   const descriptionRef = useRef<string>('');
   const passRes = useRef(false);
   const projRef = useRef('');
-  const projPassagesRef = useRef<Passage[]>([]);
+  const projIdentRef = useRef<RecordIdentity[]>([]);
   const projMediaRef = useRef<MediaFile>();
   const [allResources, setAllResources] = useState(false);
   const { showMessage } = useSnackBar();
@@ -144,6 +150,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const mediaStart = useRef<number | undefined>();
   const mediaEnd = useRef<number | undefined>();
   const mediaPosition = useRef<number | undefined>();
+  const projectResourceSave = useProjectResourceSave();
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -435,10 +442,51 @@ export function PassageDetailArtifacts(props: IProps) {
     setProjResPassageVisible(true);
   };
 
-  const handleSelectProjectResourcePassage = (passages: Passage[]) => {
-    projPassagesRef.current = passages;
+  const writeVisualResource = async (items: RecordIdentity[]) => {
+    const t = new TransformBuilder();
+    let cnt = 0;
+    const total = items.length;
+    for (let i of items) {
+      const rec = memory.cache.query((q) => q.findRecord(i)) as
+        | Passage
+        | Section;
+      const secRec =
+        rec?.type === 'section'
+          ? (rec as Section)
+          : (memory.cache.query((q) =>
+              q.findRecord({ type: 'section', id: related(rec, 'section') })
+            ) as Section);
+      const secNum = secRec?.attributes.sequencenum || 0;
+      const topicIn = removeExtension(
+        projMediaRef.current?.attributes?.originalFile || ''
+      )?.name;
+      await projectResourceSave({
+        t,
+        media: projMediaRef.current as MediaFile,
+        i: { rec, secNum },
+        topicIn,
+        limitValue: '',
+        mediafiles,
+        sectionResources,
+      });
+      cnt += 1;
+      setComplete(Math.min((cnt * 100) / total, 100));
+    }
+    setComplete(0);
+  };
+
+  const handleSelectProjectResourcePassage = (items: RecordIdentity[]) => {
+    projIdentRef.current = items;
     setProjResPassageVisible(false);
-    setProjResWizVisible(true);
+    if (
+      projMediaRef.current?.attributes.originalFile
+        ?.toLowerCase()
+        .endsWith('.pdf')
+    ) {
+      writeVisualResource(items);
+    } else {
+      setProjResWizVisible(true);
+    }
   };
 
   const handleCategory = (categoryId: string) => {
@@ -575,10 +623,11 @@ export function PassageDetailArtifacts(props: IProps) {
         isOpen={projResPassageVisible}
         onOpen={handleProjResPassageVisible}
       >
-        <SelectProjResPassages
-          onSelect={handleSelectProjectResourcePassage}
-          onOpen={handleProjResPassageVisible}
-        />
+        {projResPassageVisible ? (
+          <SelectSections onSelect={handleSelectProjectResourcePassage} />
+        ) : (
+          <></>
+        )}
       </BigDialog>
       <BigDialog
         title={t.projectResourceWizard}
@@ -589,7 +638,7 @@ export function PassageDetailArtifacts(props: IProps) {
         {projResWizVisible ? (
           <ProjectResourceWizard
             media={projMediaRef.current}
-            passages={projPassagesRef.current}
+            items={projIdentRef.current}
             onOpen={handleProjResWizVisible}
           />
         ) : (

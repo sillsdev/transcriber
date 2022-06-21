@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { Section, Passage, MediaFile, SectionResource } from '../../../model';
+import { Section, MediaFile, SectionResource } from '../../../model';
 import { Operation, TransformBuilder } from '@orbit/data';
 import {
   ArtifactTypeSlug,
@@ -16,12 +16,12 @@ import {
   UpdateRecord,
   UpdateRelatedRecord,
 } from '../../../model/baseModel';
-import { useFullReference } from '.';
+import { useFullReference, IInfo } from '.';
 
 interface IProps {
   t: TransformBuilder;
   media: MediaFile;
-  p: Passage;
+  i: IInfo;
   topicIn: string;
   limitValue: string;
   mediafiles: MediaFile[];
@@ -42,14 +42,23 @@ export const useProjectResourceSave = () => {
   );
 
   return async (props: IProps) => {
-    const { t, media, p, topicIn, limitValue, mediafiles, sectionResources } =
+    const { t, media, i, topicIn, limitValue, mediafiles, sectionResources } =
       props;
     let topic = topicIn;
     const ops: Operation[] = [];
-    const medResRec = mediafiles.find(
-      (m) =>
-        related(m, 'passage') === p.id && related(m, 'sourceMedia') === media.id
-    );
+    const medResRec =
+      i.rec.type === 'passage'
+        ? mediafiles.find(
+            (m) =>
+              related(m, 'passage') === i.rec.id &&
+              related(m, 'sourceMedia') === media.id
+          )
+        : mediafiles.find(
+            (m) =>
+              related(m, 'section') === i.rec.id &&
+              !related(m, 'passage') &&
+              related(m, 'sourceMedia') === media.id
+          );
     if (medResRec) {
       const attr = medResRec.attributes;
       const regions = parseRegions(
@@ -92,11 +101,19 @@ export const useProjectResourceSave = () => {
             user
           )
         );
-        const secResRec = sectionResources.find(
-          (r) =>
-            related(r, 'passage') === p.id &&
-            related(r, 'mediafile') === medResRec.id
-        );
+        const secResRec =
+          i.rec.type === 'passage'
+            ? sectionResources.find(
+                (r) =>
+                  related(r, 'passage') === i.rec.id &&
+                  related(r, 'mediafile') === medResRec.id
+              )
+            : sectionResources.find(
+                (r) =>
+                  related(r, 'section') === i.rec.id &&
+                  !related(r, 'passage') &&
+                  related(r, 'mediafile') === medResRec.id
+              );
         if (secResRec) {
           ops.push(
             ...UpdateRecord(
@@ -116,6 +133,7 @@ export const useProjectResourceSave = () => {
       }
       if (change) await memory.update(ops);
     } else {
+      let segments = '{}';
       const limits = limitValue.split('-');
       if (limits.length === 2) {
         const regions = [
@@ -124,56 +142,72 @@ export const useProjectResourceSave = () => {
             end: parseFloat(limits[1]),
           },
         ];
-        const segments = updateSegments(
+        segments = updateSegments(
           NamedRegions.ProjectResource,
           '{}',
           JSON.stringify(regions)
         );
-        if (!topic) topic = fullReference(p);
-        const newMedia = {
-          type: 'mediafile',
-          attributes: {
-            ...media.attributes,
-            segments,
-            topic: topic,
-          },
-          relationships: { ...media.relationships },
-        } as MediaFile;
-        ops.push(...AddRecord(t, newMedia, user, memory));
-        ops.push(
-          ...UpdateRelatedRecord(
-            t,
-            newMedia,
-            'artifactType',
-            'artifacttype',
-            resourceType,
-            user
-          )
-        );
-        ops.push(
-          ...UpdateRelatedRecord(t, newMedia, 'passage', 'passage', p.id, user)
-        );
-        ops.push(
-          ...UpdateRelatedRecord(
-            t,
-            newMedia,
-            'sourceMedia',
-            'mediafile',
-            media.id,
-            user
-          )
-        );
-        await memory.update(ops);
-        const secId = related(p, 'section');
-        const cnt =
-          sectionResources.filter((r) => related(r, 'section') === secId)
-            .length + 1;
-        await AddSectionResource(cnt, topic, newMedia, p.id, secId);
-        await memory.update((t) => [
-          t.replaceAttribute(newMedia, 'audioUrl', media.attributes.audioUrl),
-          t.replaceAttribute(newMedia, 's3file', media.attributes.s3file),
-        ]);
       }
+      if (!topic) topic = fullReference(i);
+      const newMedia = {
+        type: 'mediafile',
+        attributes: {
+          ...media.attributes,
+          segments,
+          topic: topic,
+        },
+        relationships: { ...media.relationships },
+      } as MediaFile;
+      ops.push(...AddRecord(t, newMedia, user, memory));
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          newMedia,
+          'artifactType',
+          'artifacttype',
+          resourceType,
+          user
+        )
+      );
+      if (i.rec.type === 'passage') {
+        ops.push(
+          ...UpdateRelatedRecord(
+            t,
+            newMedia,
+            'passage',
+            'passage',
+            i.rec.id,
+            user
+          )
+        );
+      }
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          newMedia,
+          'sourceMedia',
+          'mediafile',
+          media.id,
+          user
+        )
+      );
+      await memory.update(ops);
+      const secId =
+        i.rec.type === 'passage' ? related(i.rec, 'section') : i.rec.id;
+      const cnt =
+        sectionResources.filter((r) => related(r, 'section') === secId).length +
+        1;
+      await AddSectionResource(
+        cnt,
+        topic,
+        newMedia,
+        i.rec.type === 'passage' ? i.rec.id : undefined,
+        secId
+      );
+      await memory.update((t) => [
+        t.replaceAttribute(newMedia, 'audioUrl', media.attributes.audioUrl),
+        t.replaceAttribute(newMedia, 's3file', media.attributes.s3file),
+      ]);
     }
   };
 };

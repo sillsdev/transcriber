@@ -8,7 +8,7 @@ import { RoleNames } from '../../../model';
 
 const useStyles = makeStyles({
   action: { minWidth: 100, textAlign: 'center' },
-  resource: { minWidth: 300 },
+  resource: { width: 300, whiteSpace: 'normal' },
   version: { minWidth: 100, textAlign: 'center' },
   resType: { minWidth: 200 },
   resCat: { minWidth: 200 },

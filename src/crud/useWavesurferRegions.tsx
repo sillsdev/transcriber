@@ -90,7 +90,7 @@ export function useWaveSurferRegions(
     wavesurferRef.current = ws;
     if (ws) {
       ws.on('region-created', function (r: any) {
-        //console.log('region-created', loadingRef.current);
+        console.log('region-created', loadingRef.current);
         if (singleRegionRef.current) {
           r.drag = true;
           if (currentRegion()) currentRegion().remove();
@@ -119,7 +119,8 @@ export function useWaveSurferRegions(
           r.attributes.nextRegion.attributes.prevRegion =
             r.attributes.prevRegion;
         if (!loadingRef.current) {
-          //wait for it to be removed from this list
+          // wait for it to be removed from this list
+          console.log('region-removed', loadingRef.current);
           waitForIt(
             'region removed',
             () => region(r.id) === undefined,
@@ -132,11 +133,13 @@ export function useWaveSurferRegions(
         }
       });
       ws.on('region-updated', function (r: any) {
+        console.log('region-updated');
         resizingRef.current = r.isResizing;
       });
       ws.on('region-update-end', function (r: any) {
         if (singleRegionRef.current) {
           if (!loadingRef.current) {
+            console.log('region-update-end');
             waitForIt(
               'region update end',
               () => region(r.id) !== undefined,
@@ -176,11 +179,11 @@ export function useWaveSurferRegions(
       //   console.log('region-play', r.start, r.loop);
       // });
       ws.on('region-in', function (r: any) {
-        //console.log('region-in', r.start, r.loop);
+        console.log('region-in', r.start, r.loop);
         setCurrentRegion(r);
       });
       ws.on('region-out', function (r: any) {
-        //console.log('region-out', r.start, r.loop, playRegionRef.current);
+        console.log('region-out', r.start, r.loop, playRegionRef.current);
         //help it in case it forgot -- unless the user clicked out
         //here is where we could add a pause possibly
         if (r.loop && r === loopingRegionRef.current) goto(r.start);
@@ -189,15 +192,18 @@ export function useWaveSurferRegions(
         }
       });
       ws.on('region-click', function (r: any) {
+        console.log('region-click', r);
         setCurrentRegion(r);
         loopingRegionRef.current = r;
       });
       ws.on('region-dblclick', function (r: any) {
+        console.log('region-dblclick');
         if (!singleRegionOnly) {
           wsAddOrRemoveRegion();
         }
       });
       ws.drawer.on('dblclick', (event: any, progress: number) => {
+        console.log('region drawer dblclick');
         if (!singleRegionOnly) {
           wsAddOrRemoveRegion();
         }
