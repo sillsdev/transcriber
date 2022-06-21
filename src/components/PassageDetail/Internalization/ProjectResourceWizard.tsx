@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useContext } from 'react';
+import { useGlobal } from 'reactn';
 import {
-  Passage,
+  Section,
   IPassageDetailArtifactsStrings,
   ISharedStrings,
   MediaFile,
@@ -16,7 +17,7 @@ import {
 import SkipIcon from '@material-ui/icons/NotInterested';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { withData } from '../../../mods/react-orbitjs';
 import PassageDetailPlayer from '../PassageDetailPlayer';
 import { parseRegions, IRegion } from '../../../crud/useWavesurferRegions';
@@ -27,7 +28,8 @@ import { UnsavedContext } from '../../../context/UnsavedContext';
 import { NamedRegions, updateSegments } from '../../../utils';
 import { useProjectResourceSave } from './useProjectResourceSave';
 import { useProjectSegmentSave } from './useProjectSegmentSave';
-import { useFullReference } from './useFullReference';
+import { useFullReference, IInfo } from './useFullReference';
+import { findRecord, related } from '../../../crud';
 
 const wizToolId = 'ProjResWizard';
 
@@ -38,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'flex-end',
     },
     button: { margin: theme.spacing(2) },
+    para: { margin: '6pt 0pt' },
     table: {
       padding: theme.spacing(4),
       '& .cTitle': {
@@ -86,15 +89,18 @@ interface IRecordProps {
 
 interface IProps extends IRecordProps {
   media: MediaFile | undefined;
-  passages: Passage[];
+  items: RecordIdentity[];
   onOpen?: (open: boolean) => void;
 }
 
 export const ProjectResourceWizard = (props: IProps) => {
-  const { media, passages, onOpen, mediafiles, sectionResources } = props;
+  const { media, items, onOpen, mediafiles, sectionResources } = props;
   const classes = useStyles();
+  const [memory] = useGlobal('memory');
+  const [, setComplete] = useGlobal('progress');
   const [data, setData] = useState<ICell[][]>([]);
   const dataRef = useRef<ICell[][]>([]);
+  const infoRef = useRef<IInfo[]>([]);
   const segmentsRef = useRef('{}');
   const fullReference = useFullReference();
   const t: IPassageDetailArtifactsStrings = useSelector(
@@ -116,16 +122,14 @@ export const ProjectResourceWizard = (props: IProps) => {
   const projectResourceSave = useProjectResourceSave();
   const projectSegmentSave = useProjectSegmentSave();
 
-  const readOnlys = [true, false, true, false, true];
-  const widths = [50, 150, 200, 300, 100];
-  const cClass = ['nav', 'lim', 'ref', 'des', 'act'];
+  const readOnlys = [false, true, false];
+  const widths = [150, 200, 300];
+  const cClass = ['lim', 'ref', 'des'];
 
   enum ColName {
-    Nav,
     Limits,
     Ref,
     Desc,
-    Action,
   }
 
   const rowCells = (row: string[], first = false) =>
@@ -141,15 +145,25 @@ export const ProjectResourceWizard = (props: IProps) => {
 
   useEffect(() => {
     let newData: ICell[][] = [
-      rowCells(['', t.startStop, t.reference, t.description, t.action], true),
+      rowCells([t.startStop, t.reference, t.description], true),
     ];
-    passages.forEach((p, i) => {
-      newData.push(rowCells(['', '', fullReference(p), '', `${i}`]));
+    const newInfo = items.map((v) => {
+      const rec = memory.cache.query((q) => q.findRecord(v));
+      const secRec = (
+        v.type === 'passage'
+          ? findRecord(memory, 'section', related(rec, 'section'))
+          : rec
+      ) as Section | undefined;
+      return { rec, secNum: secRec?.attributes?.sequencenum || 0 } as IInfo;
     });
+    newInfo.forEach((v) => {
+      newData.push(rowCells(['', fullReference(v), '']));
+    });
+    infoRef.current = newInfo;
     setData(newData);
     dataRef.current = newData;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passages]);
+  }, [items]);
 
   const writeResources = async () => {
     if (!savingRef.current) {
@@ -158,7 +172,8 @@ export const ProjectResourceWizard = (props: IProps) => {
         const t = new TransformBuilder();
         let ix = 0;
         const d = dataRef.current;
-        for (let p of passages) {
+        const total = infoRef.current.length;
+        for (let i of infoRef.current) {
           ix += 1;
           let row = d[ix];
           while (row[ColName.Ref].value === '' && ix < d.length) {
@@ -171,23 +186,26 @@ export const ProjectResourceWizard = (props: IProps) => {
             await projectResourceSave({
               t,
               media,
-              p,
+              i,
               topicIn: topic,
               limitValue,
               mediafiles,
               sectionResources,
             });
           }
+          setComplete(Math.min((ix * 100) / total, 100));
         }
         projectSegmentSave({ media, segments: segmentsRef.current })
           .then(() => {
             saveCompleted(wizToolId);
             savingRef.current = false;
+            setComplete(0);
           })
           .catch((err) => {
             //so we don't come here...we go to continue/logout
             saveCompleted(wizToolId, err.message);
             savingRef.current = false;
+            setComplete(0);
           });
       }
     }
@@ -238,11 +256,11 @@ export const ProjectResourceWizard = (props: IProps) => {
     regions[last].end = max;
   };
 
-  const d1 = (n: number) => Math.round(n * 10) / 10;
+  const d1 = (n: number) => `${Math.round(n * 10) / 10}`;
 
   const handleSegment = (segments: string) => {
     const regions = parseRegions(segments)
-      .regions.filter((r) => d1(r.start) !== d1(r.end) && d1(r.end) !== 0)
+      .regions.filter((r) => d1(r.start) !== d1(r.end) && d1(r.end) !== `0.0`)
       .sort((i, j) => i.start - j.start);
     fix(regions);
     // console.log('______');
@@ -257,19 +275,48 @@ export const ProjectResourceWizard = (props: IProps) => {
     let newData = new Array<ICell[]>();
     newData.push(dataRef.current[0]);
     const dlen = dataRef.current.length;
+    const ilen = infoRef.current.length;
+    let ix = 0;
+    const regs = new Map<number, IRegion>();
+    const secI = new Map<number, number>();
     regions.forEach((r, i) => {
       const v = prettySegment(r);
-      const ix = i + 1;
-      if (ix < dlen) {
-        let row = dataRef.current[ix].map((v) => v);
+      while (ix < ilen && infoRef.current[ix].rec.type === 'section') {
+        secI.set(infoRef.current[ix].secNum, ix + 1);
+        ix += 1;
+        newData.push(dataRef.current[ix]);
+      }
+      if (ix < ilen) {
+        const [vStart, vEnd] = v.split('-').map((n) => parseFloat(n));
+        const secNum = infoRef.current[ix].secNum;
+        if (regs.has(secNum)) {
+          regs.set(secNum, {
+            start: Math.min(vStart, regs.get(secNum)?.start as number),
+            end: Math.max(vEnd, regs.get(secNum)?.end as number),
+          });
+        } else {
+          regs.set(secNum, { start: vStart, end: vEnd });
+        }
+      }
+      const dx = ix + 1; // account for header
+      if (dx < dlen) {
+        let row = dataRef.current[dx].map((v) => v);
         if (row[ColName.Limits].value !== v) {
           row[ColName.Limits].value = v;
           change = true;
         }
         newData.push(row);
       } else {
-        newData.push(rowCells(['', v, '', '', `${i}`]));
+        newData.push(rowCells([v, '', '']));
         change = true;
+      }
+      ix += 1;
+    });
+    secI.forEach((v, k) => {
+      if (regs.has(k)) {
+        newData[v][ColName.Limits].value = prettySegment(
+          regs.get(k) as IRegion
+        );
       }
     });
     for (let i = newData.length; i < dataRef.current.length; i += 1) {
@@ -296,6 +343,8 @@ export const ProjectResourceWizard = (props: IProps) => {
       <IconButton onClick={handleSkip(cell.value)}>
         <SkipIcon fontSize="small" />
       </IconButton>
+    ) : cell.className === 'ref' ? (
+      <p className={classes.para}>{cell.value}</p>
     ) : (
       cell.value
     );

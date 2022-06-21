@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { IPassageDetailArtifactsStrings } from '../../../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
@@ -6,6 +6,7 @@ import { MenuProps } from '@material-ui/core/Menu';
 import { Button, Menu, MenuItem, ListItemText } from '@material-ui/core';
 import { resourceSelector } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import {
   useArtifactType,
   ArtifactTypeSlug,
@@ -58,10 +59,18 @@ export const ProjectResource = (props: IProps) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { localizedArtifactType } = useArtifactType();
+  const ctx = useContext(PassageDetailContext);
+  const { getProjectResources } = ctx.state;
+  const [hasProjRes, setHasProjRes] = useState(false);
   const t: IPassageDetailArtifactsStrings = useSelector(
     resourceSelector,
     shallowEqual
   );
+
+  useEffect(() => {
+    getProjectResources().then((res) => setHasProjRes(res.length > 0));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -98,12 +107,16 @@ export const ProjectResource = (props: IProps) => {
         <StyledMenuItem id="uploadResource" onClick={handle('project-upload')}>
           <ListItemText primary={t.uploadProject} />
         </StyledMenuItem>
-        <StyledMenuItem id="referenceResource" onClick={handle('wizard')}>
+        <StyledMenuItem
+          id="referenceResource"
+          onClick={handle('wizard')}
+          disabled={!hasProjRes}
+        >
           <ListItemText primary={t.projectResourceWizard} />
         </StyledMenuItem>
-        <StyledMenuItem id="referenceResource" onClick={handle('sheet')}>
+        {/* <StyledMenuItem id="referenceResource" onClick={handle('sheet')}>
           <ListItemText primary={t.projectResourceSheet} />
-        </StyledMenuItem>
+        </StyledMenuItem> */}
       </StyledMenu>
     </div>
   );

@@ -8,3 +8,4 @@ export * from './peerSelector';
 export * from './passageDetailArtifactsSelector';
 export * from './activitySelector';
 export * from './resourceSelector';
+export * from './transcriptionTabSelector';
