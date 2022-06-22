@@ -3671,7 +3671,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.tip1b">
-      		<source>Selected shared resourses will be associated with this passage or {0}.</source>
+      		<source>Selected shared resourses will be associated with this {0}.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>

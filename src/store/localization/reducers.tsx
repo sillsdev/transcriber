@@ -676,7 +676,7 @@ const initialState = {
 			"startStop": "Start - Stop",
 			"type": "Type",
 			"tip1a": "Resourses uploaded will be associated with this passage or {0}.",
-			"tip1b": "Selected shared resourses will be associated with this passage or {0}.",
+			"tip1b": "Selected shared resourses will be associated with this {0}.",
 			"tip2a": "Segments of project resources can be used by many passages or {0}.",
 			"tip2b": "Steps through connecting segments of an project resources with {0} and passages.",
 			"unusedSegment": "Unused segment: only segments with References will create resources",

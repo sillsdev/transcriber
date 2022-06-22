@@ -3136,8 +3136,8 @@
 		</unit>
 		<unit id="passageDetailArtifacts.tip1b">
 			<segment>
-				<source>Selected shared resourses will be associated with this passage or {0}.</source>
-				<target>Os recursos compartilhados selecionados serão associados a esta passagem ou {0}.</target>
+				<source>Selected shared resourses will be associated with this {0}.</source>
+				<target>Os recursos compartilhados selecionados serão associados a esta {0}.</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.tip2a">

@@ -3099,7 +3099,7 @@
    	</unit>
    	<unit id="passageDetailArtifacts.tip1b">
    		<segment>
-   			<source>Selected shared resourses will be associated with this passage or {0}.</source>
+   			<source>Selected shared resourses will be associated with this {0}.</source>
    			<target/>
    		</segment>
    	</unit>
