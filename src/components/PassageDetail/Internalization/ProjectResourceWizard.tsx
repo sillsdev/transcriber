@@ -30,6 +30,7 @@ import { useProjectResourceSave } from './useProjectResourceSave';
 import { useProjectSegmentSave } from './useProjectSegmentSave';
 import { useFullReference, IInfo } from './useFullReference';
 import { findRecord, related } from '../../../crud';
+import { useSnackBar } from '../../../hoc/SnackBar';
 
 const wizToolId = 'ProjResWizard';
 
@@ -121,6 +122,7 @@ export const ProjectResourceWizard = (props: IProps) => {
   const savingRef = useRef(false);
   const projectResourceSave = useProjectResourceSave();
   const projectSegmentSave = useProjectSegmentSave();
+  const { showMessage } = useSnackBar();
 
   const readOnlys = [false, true, false];
   const widths = [150, 200, 300];
@@ -307,6 +309,7 @@ export const ProjectResourceWizard = (props: IProps) => {
         }
         newData.push(row);
       } else {
+        showMessage(t.unusedSegment);
         newData.push(rowCells([v, '', '']));
         change = true;
       }

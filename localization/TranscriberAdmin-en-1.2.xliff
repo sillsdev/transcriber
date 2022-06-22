@@ -3656,6 +3656,13 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.unusedSegment">
+      		<source>Unused segment: only segments with References will create resources</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.upload">
             <source>Upload Resource</source>
             <target/>

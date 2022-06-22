@@ -632,6 +632,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "sharedResource": string;
     "startStop": string;
     "type": string;
+    "unusedSegment": string;
     "upload": string;
     "uploadProject": string;
     "version": string;

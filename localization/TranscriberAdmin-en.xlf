@@ -3136,6 +3136,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.unusedSegment">
+         <segment>
+            <source>Unused segment: only segments with References will create resources</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.upload">
          <segment>
             <source>Upload Resource</source>

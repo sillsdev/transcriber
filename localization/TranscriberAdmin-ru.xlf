@@ -3148,6 +3148,12 @@
 				<target>Тип</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.unusedSegment">
+			<segment>
+				<source>Unused segment: only segments with References will create resources</source>
+				<target>Неиспользуемый сегмент: только сегменты с References будут создавать ресурсы</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.upload">
 			<segment>
 				<source>Upload Resource</source>

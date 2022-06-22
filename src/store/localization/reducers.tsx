@@ -674,6 +674,7 @@ const initialState = {
 			"sharedResource": "Select Shared Resource",
 			"startStop": "Start - Stop",
 			"type": "Type",
+			"unusedSegment": "Unused segment: only segments with References will create resources",
 			"upload": "Upload Resource",
 			"uploadProject": "Upload Project Resource",
 			"version": "Version",
