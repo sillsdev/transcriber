@@ -11,7 +11,7 @@ import { getWorkflow } from '../components/Workflow';
 import { memory } from '../schema';
 
 const wfStr = {
-  internalization: 'Internalization',
+  internalize: 'Internalize',
   peerReview: 'Peer Review',
   record: 'Record',
   teamCheck: 'Team Check',
@@ -202,7 +202,7 @@ const owf: OrgWorkflowStep[] = [
     keys: { remoteId: '1' },
     attributes: {
       process: 'OBT',
-      name: 'Internalization',
+      name: 'Internalize',
       sequencenum: 1,
       tool: '{"tool": "resource"}',
       permissions: '{}',
@@ -804,7 +804,7 @@ test('one section and one passage with step gives output', async () => {
     {
       level: 1,
       kind: 1,
-      step: 'Internalization',
+      step: 'Internalize',
       sectionSeq: 1,
       passageSeq: 1,
       book: 'LUK',
@@ -825,7 +825,7 @@ test('two flat sections with steps gives output', async () => {
     attributes: {
       ...pa1.attributes,
       stepComplete:
-        '{"completed": [{"name": "Internalization", "stepid": "1", "complete": true}, {"name": "Record", "stepid": "2", "complete": true}, {"name": "TeamCheck", "stepid": "3", "complete": true}]}',
+        '{"completed": [{"name": "Internalize", "stepid": "1", "complete": true}, {"name": "Record", "stepid": "2", "complete": true}, {"name": "TeamCheck", "stepid": "3", "complete": true}]}',
     },
   } as Passage;
   expect(
@@ -864,7 +864,7 @@ test('two flat sections with steps gives output', async () => {
     {
       level: 0,
       kind: 2,
-      step: 'Internalization',
+      step: 'Internalize',
       sectionSeq: 2,
       title: 'Birth of John',
       passageSeq: 1,
