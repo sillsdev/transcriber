@@ -3565,6 +3565,13 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.configure">
+      		<source>Configure</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.createResources">
       		<source>Create Resources</source>
       		<target/>
@@ -3614,8 +3621,8 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="passageDetailArtifacts.projectResourceWizard">
-      		<source>Project Resource Wizard</source>
+         <trans-unit id="passageDetailArtifacts.projectResourceConfigure">
+      		<source>Project Resource Configure</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">AddResource.tsx</context>
@@ -3649,8 +3656,36 @@
       			<context context-type="sourcefile">PassageMedia.tsx</context>
       		</context-group>
       	</trans-unit>
-         <trans-unit id="passageDetailArtifacts.type">
-            <source>Type</source>
+      	<trans-unit id="passageDetailArtifacts.type">
+      		<source>Type</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.tip1a">
+      		<source>Resourses uploaded will be associated with this passage or {0}.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.tip1b">
+      		<source>Selected shared resourses will be associated with this passage or {0}.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.tip2a">
+      		<source>Segments of project resources can be used by many passages or {0}.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.tip2b">
+         	<source>Steps through connecting segments of an project resources with {0} and passages.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageMedia.tsx</context>
@@ -3671,7 +3706,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="passageDetailArtifacts.uploadProject">
-      		<source>Upload Project Resource</source>
+      		<source>Upload</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>

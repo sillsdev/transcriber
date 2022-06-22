@@ -94,7 +94,7 @@ interface IProps extends IRecordProps {
   onOpen?: (open: boolean) => void;
 }
 
-export const ProjectResourceWizard = (props: IProps) => {
+export const ProjectResourceConfigure = (props: IProps) => {
   const { media, items, onOpen, mediafiles, sectionResources } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
@@ -394,4 +394,4 @@ const mapRecordsToProps = {
   // userResources: (q: QueryBuilder) => q.findRecords('sectionresourceuser'),
 };
 
-export default withData(mapRecordsToProps)(ProjectResourceWizard) as any;
+export default withData(mapRecordsToProps)(ProjectResourceConfigure) as any;

@@ -3055,7 +3055,7 @@
    			<target/>
    		</segment>
    	</unit>
-   	<unit id="passageDetailArtifacts.projectResourceWizard">
+   	<unit id="passageDetailArtifacts.projectResourceConfigure">
    		<segment>
    			<source>Project Resource Wizard</source>
    			<target/>
@@ -3091,6 +3091,30 @@
             <target/>
          </segment>
       </unit>
+   	<unit id="passageDetailArtifacts.tip1a">
+   		<segment>
+   			<source>Resourses uploaded will be associated with this passage or {0}.</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailArtifacts.tip1b">
+   		<segment>
+   			<source>Selected shared resourses will be associated with this passage or {0}.</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailArtifacts.tip2a">
+   		<segment>
+   			<source>Segments of project resources can be used by many passages or {0}.</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="passageDetailArtifacts.tip2b">
+   		<segment>
+   			<source>Steps through connecting segments of an project resources with {0} and passages.</source>
+   			<target/>
+   		</segment>
+   	</unit>
    	<unit id="passageDetailArtifacts.unusedSegment">
    		<segment>
    			<source>Unused segment: only segments with References will create resources</source>

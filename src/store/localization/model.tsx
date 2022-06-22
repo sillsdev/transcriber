@@ -619,6 +619,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "allResources": string;
     "category": string;
     "completed": string;
+    "configure": string;
     "createResources": string;
     "deleteConfirm": string;
     "description": string;
@@ -626,12 +627,16 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "passageResource": string;
     "projectResourcePassage": string;
     "projectResourceSheet": string;
-    "projectResourceWizard": string;
+    "projectResourceConfigure": string;
     "reference": string;
     "resource": string;
     "sharedResource": string;
     "startStop": string;
     "type": string;
+    "tip1a": string;
+    "tip1b": string;
+    "tip2a": string;
+    "tip2b": string;
     "unusedSegment": string;
     "upload": string;
     "uploadProject": string;

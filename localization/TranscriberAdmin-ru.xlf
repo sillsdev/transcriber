@@ -3070,6 +3070,12 @@
 				<target>Завершено</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.configure">
+			<segment>
+				<source>Configure</source>
+				<target>Завершено</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.createResources">
 			<segment>
 				<source>Create Resources</source>
@@ -3112,10 +3118,10 @@
 				<target>Лист ресурсов проекта</target>
 			</segment>
 		</unit>
-		<unit id="passageDetailArtifacts.projectResourceWizard">
+		<unit id="passageDetailArtifacts.projectResourceConfigure">
 			<segment>
-				<source>Project Resource Wizard</source>
-				<target>Мастер создания ресурса проекта</target>
+				<source>Project Resource Configure</source>
+				<target>Настройка ресурса проекта</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.reference">
@@ -3146,6 +3152,30 @@
 			<segment>
 				<source>Type</source>
 				<target>Тип</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.tip1a">
+			<segment>
+				<source>Resourses uploaded will be associated with this passage or {0}.</source>
+				<target>Загруженные ресурсы будут связаны с этим отрывком или {0}.</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.tip1b">
+			<segment>
+				<source>Selected shared resourses will be associated with this passage or {0}.</source>
+				<target>Выбранные общие ресурсы будут связаны с этим проходом или {0}.</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.tip2a">
+			<segment>
+				<source>Segments of project resources can be used by many passages or {0}.</source>
+				<target>Сегменты ресурсов проекта могут быть использованы многими переходами или {0}.</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.tip2b">
+			<segment>
+				<source>Steps through connecting segments of an project resources with {0} and passages.</source>
+				<target>Шаги по соединению сегментов ресурсов проекта с {0} и переходами.</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.unusedSegment">

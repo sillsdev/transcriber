@@ -6,9 +6,12 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { MenuProps } from '@material-ui/core/Menu';
 import { Button, Menu, MenuItem, ListItemText } from '@material-ui/core';
+import InfoIcon from '@material-ui/icons/Info';
+import { LightTooltip } from '../../StepEditor';
 import { resourceSelector } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
+import { useOrganizedBy } from '../../../crud';
 import {
   useArtifactType,
   ArtifactTypeSlug,
@@ -69,6 +72,7 @@ export const ProjectResource = (props: IProps) => {
   const { getProjectResources } = ctx.state;
   const [hasProjRes, setHasProjRes] = useState(false);
   const mediaCount = useRef(0);
+  const { getOrganizedBy } = useOrganizedBy();
   const t: IPassageDetailArtifactsStrings = useSelector(
     resourceSelector,
     shallowEqual
@@ -108,21 +112,43 @@ export const ProjectResource = (props: IProps) => {
         {localizedArtifactType(ArtifactTypeSlug.ProjectResource)}
       </Button>
       <StyledMenu
-        id="customized-menu"
+        id="project-resource-menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        <StyledMenuItem id="uploadResource" onClick={handle('project-upload')}>
-          <ListItemText primary={t.uploadProject} />
+        <StyledMenuItem id="projt-res-upl" onClick={handle('project-upload')}>
+          <ListItemText>
+            {t.uploadProject}
+            {'\u00A0'}
+            <LightTooltip
+              title={t.tip2a.replace(
+                '{0}',
+                getOrganizedBy(false).toLocaleLowerCase()
+              )}
+            >
+              <InfoIcon fontSize="small" />
+            </LightTooltip>
+          </ListItemText>
         </StyledMenuItem>
         <StyledMenuItem
-          id="referenceResource"
+          id="proj-res-config"
           onClick={handle('wizard')}
           disabled={!hasProjRes}
         >
-          <ListItemText primary={t.projectResourceWizard} />
+          <ListItemText>
+            {t.configure}
+            {'\u00A0'}
+            <LightTooltip
+              title={t.tip2b.replace(
+                '{0}',
+                getOrganizedBy(false).toLocaleLowerCase()
+              )}
+            >
+              <InfoIcon fontSize="small" />
+            </LightTooltip>
+          </ListItemText>
         </StyledMenuItem>
         {/* <StyledMenuItem id="referenceResource" onClick={handle('sheet')}>
           <ListItemText primary={t.projectResourceSheet} />

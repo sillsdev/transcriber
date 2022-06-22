@@ -54,7 +54,7 @@ import MediaPlayer from '../../MediaPlayer';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { ReplaceRelatedRecord } from '../../../model/baseModel';
 import { PassageResourceButton } from './PassageResourceButton';
-import ProjectResourceWizard from './ProjectResourceWizard';
+import ProjectResourceConfigure from './ProjectResourceConfigure';
 import { useProjectResourceSave } from './useProjectResourceSave';
 import { UnsavedContext } from '../../../context/UnsavedContext';
 import Confirm from '../../AlertDialog';
@@ -630,13 +630,13 @@ export function PassageDetailArtifacts(props: IProps) {
         )}
       </BigDialog>
       <BigDialog
-        title={t.projectResourceWizard}
+        title={t.projectResourceConfigure}
         isOpen={projResWizVisible}
         onOpen={handleProjResWizVisible}
         bp={BigDialogBp.md}
       >
         {projResWizVisible ? (
-          <ProjectResourceWizard
+          <ProjectResourceConfigure
             media={projMediaRef.current}
             items={projIdentRef.current}
             onOpen={handleProjResWizVisible}

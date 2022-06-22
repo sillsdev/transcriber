@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { IPassageDetailArtifactsStrings, IState } from '../../../model';
-import localStrings from '../../../selector/localize';
+import { IPassageDetailArtifactsStrings } from '../../../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { MenuProps } from '@material-ui/core/Menu';
 import { Button, Menu, MenuItem, ListItemText } from '@material-ui/core';
+import InfoIcon from '@material-ui/icons/Info';
+import { LightTooltip } from '../../../control';
+import { useOrganizedBy } from '../../../crud';
+import { resourceSelector } from '../../../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,19 +47,20 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-interface IStateProps {
-  t: IPassageDetailArtifactsStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   action?: (what: string) => void;
   stopPlayer?: () => void;
 }
 
 export const AddResource = (props: IProps) => {
-  const { action, stopPlayer, t } = props;
+  const { action, stopPlayer } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { getOrganizedBy } = useOrganizedBy();
+  const t: IPassageDetailArtifactsStrings = useSelector(
+    resourceSelector,
+    shallowEqual
+  );
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -91,10 +95,32 @@ export const AddResource = (props: IProps) => {
         onClose={handle('Close')}
       >
         <StyledMenuItem id="uploadResource" onClick={handle('upload')}>
-          <ListItemText primary={t.upload} />
+          <ListItemText>
+            {t.upload}
+            {'\u00A0'}
+            <LightTooltip
+              title={t.tip1a.replace(
+                '{0}',
+                getOrganizedBy(true).toLocaleLowerCase()
+              )}
+            >
+              <InfoIcon fontSize="small" />
+            </LightTooltip>
+          </ListItemText>
         </StyledMenuItem>
         <StyledMenuItem id="referenceResource" onClick={handle('reference')}>
-          <ListItemText primary={t.sharedResource} />
+          <ListItemText>
+            {t.sharedResource}
+            {'\u00A0'}
+            <LightTooltip
+              title={t.tip1b.replace(
+                '{0}',
+                getOrganizedBy(true).toLocaleLowerCase()
+              )}
+            >
+              <InfoIcon fontSize="small" />
+            </LightTooltip>
+          </ListItemText>
         </StyledMenuItem>
         {/* <StyledMenuItem id="activity" onClick={handle('activity')}>
           <ListItemText primary={t.activity} />
@@ -104,8 +130,4 @@ export const AddResource = (props: IProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'passageDetailArtifacts' }),
-});
-
-export default connect(mapStateToProps)(AddResource) as any as any;
+export default AddResource;
