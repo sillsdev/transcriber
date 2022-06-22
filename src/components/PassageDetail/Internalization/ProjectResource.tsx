@@ -1,5 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { IPassageDetailArtifactsStrings } from '../../../model';
+import React, { useState, useContext, useEffect, useRef } from 'react';
+import { MediaFile, IPassageDetailArtifactsStrings } from '../../../model';
+import { QueryBuilder } from '@orbit/data';
+import { withData } from '../../../mods/react-orbitjs';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { MenuProps } from '@material-ui/core/Menu';
@@ -49,28 +51,36 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-interface IProps {
+interface IRecordProps {
+  mediafiles: MediaFile[];
+}
+
+interface IProps extends IRecordProps {
   action?: (what: string) => void;
   stopPlayer?: () => void;
 }
 
 export const ProjectResource = (props: IProps) => {
-  const { action, stopPlayer } = props;
+  const { action, stopPlayer, mediafiles } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { localizedArtifactType } = useArtifactType();
   const ctx = useContext(PassageDetailContext);
   const { getProjectResources } = ctx.state;
   const [hasProjRes, setHasProjRes] = useState(false);
+  const mediaCount = useRef(0);
   const t: IPassageDetailArtifactsStrings = useSelector(
     resourceSelector,
     shallowEqual
   );
 
   useEffect(() => {
-    getProjectResources().then((res) => setHasProjRes(res.length > 0));
+    if (mediaCount.current !== mediafiles.length) {
+      mediaCount.current = mediafiles.length;
+      getProjectResources().then((res) => setHasProjRes(res.length > 0));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [mediafiles]);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -122,4 +132,8 @@ export const ProjectResource = (props: IProps) => {
   );
 };
 
-export default ProjectResource;
+const mapRecordsToProps = {
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+};
+
+export default withData(mapRecordsToProps)(ProjectResource) as any;
