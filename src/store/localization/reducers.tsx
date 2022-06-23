@@ -674,6 +674,7 @@ const initialState = {
 			"projectResourceConfigure": "Project Resource Configure",
 			"reference": "Reference",
 			"resource": "Resource",
+			"resourcesDeleted": " ({0} resources will be deleted.)",
 			"sharedResource": "Select Shared Resource",
 			"startStop": "Start - Stop",
 			"type": "Type",

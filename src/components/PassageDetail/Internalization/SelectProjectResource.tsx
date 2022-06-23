@@ -1,6 +1,10 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import { useGlobal } from 'reactn';
-import { MediaFile, ISharedStrings } from '../../../model';
+import {
+  MediaFile,
+  ISharedStrings,
+  IPassageDetailArtifactsStrings,
+} from '../../../model';
 import {
   makeStyles,
   createStyles,
@@ -17,7 +21,10 @@ import {
 } from '@material-ui/core';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { useArtifactCategory, related } from '../../../crud';
-import { sharedSelector } from '../../../selector';
+import {
+  sharedSelector,
+  passageDetailArtifactsSelector,
+} from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import ShowIcon from '@material-ui/icons/Visibility';
 import AudioIcon from '@material-ui/icons/Audiotrack';
@@ -51,7 +58,12 @@ export const SelectProjectResource = (props: IProps) => {
   const { getProjectResources } = ctx.state;
   const [confirm, setConfirm] = useState<MediaFile | undefined>();
   const { localizedArtifactCategory, slugFromId } = useArtifactCategory();
+  const t: IPassageDetailArtifactsStrings = useSelector(
+    passageDetailArtifactsSelector,
+    shallowEqual
+  );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const media = useRef<MediaFile[]>();
 
   const handleSelect = (m: MediaFile) => {
     onSelect && onSelect(m);
@@ -61,13 +73,25 @@ export const SelectProjectResource = (props: IProps) => {
   const handleClick = (m: MediaFile) => () => handleSelect(m);
 
   const handleDelete = (m: MediaFile) => () => {
+    const mediafiles = memory.cache.query((q) =>
+      q.findRecords('mediafile')
+    ) as MediaFile[];
+    const affected = mediafiles.filter(
+      (r) => related(r, 'sourceMedia') === m.id
+    );
+    media.current = affected;
     setConfirm(m);
   };
   const handleDeleteRefused = () => {
     setConfirm(undefined);
   };
-  const handleDeleteAccepted = () => {
-    if (confirm) memory.update((t) => t.removeRecord(confirm));
+  const handleDeleteAccepted = async () => {
+    if (confirm && media.current) {
+      for (let m of media.current) {
+        await memory.update((t) => t.removeRecord(m));
+      }
+      await memory.update((t) => t.removeRecord(confirm));
+    }
     setConfirm(undefined);
   };
 
@@ -129,7 +153,11 @@ export const SelectProjectResource = (props: IProps) => {
         <Confirm
           text={ts.delete.replace(
             '{0}',
-            confirm.attributes.topic || confirm.attributes.originalFile
+            (confirm.attributes.topic || confirm.attributes.originalFile) +
+              t.resourcesDeleted.replace(
+                '{0}',
+                media.current?.length.toString() || '0'
+              )
           )}
           yesResponse={handleDeleteAccepted}
           noResponse={handleDeleteRefused}
