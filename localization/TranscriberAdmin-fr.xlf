@@ -3048,10 +3048,22 @@
 				<target>Catégorie</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.clipboard">
+			<segment>
+				<source>clipboard</source>
+				<target>presse-papiers</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.completed">
 			<segment>
 				<source>Completed</source>
 				<target>Complété</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.copyToClipboard">
+			<segment>
+				<source>Copy to Clipboard</source>
+				<target>Copier dans le presse-papiers</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.createResources">
