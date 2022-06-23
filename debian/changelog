@@ -1,3 +1,9 @@
+sil-transcriber (2.15.6.0)  experimental; urgency=high
+
+* fix local Paratext sync with complicated language code
+
+-- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Jun 2022 11:13:00 -0600
+
 sil-transcriber (2.15.5.4)  experimental; urgency=high
 
 * TT-3895 Allow playing resources multiple times
