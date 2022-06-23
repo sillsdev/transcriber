@@ -3,6 +3,7 @@ import { useGlobal } from 'reactn';
 import {
   Section,
   IPassageDetailArtifactsStrings,
+  ITranscriptionTabStrings,
   ISharedStrings,
   MediaFile,
   SectionResource,
@@ -21,8 +22,12 @@ import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { withData } from '../../../mods/react-orbitjs';
 import PassageDetailPlayer from '../PassageDetailPlayer';
 import { parseRegions, IRegion } from '../../../crud/useWavesurferRegions';
-import { prettySegment } from '../../../utils';
-import { resourceSelector, sharedSelector } from '../../../selector';
+import { prettySegment, cleanClipboard } from '../../../utils';
+import {
+  resourceSelector,
+  sharedSelector,
+  transcriptiontabSelector,
+} from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { UnsavedContext } from '../../../context/UnsavedContext';
 import { NamedRegions, updateSegments } from '../../../utils';
@@ -111,6 +116,10 @@ export const ProjectResourceConfigure = (props: IProps) => {
     resourceSelector,
     shallowEqual
   );
+  const tt: ITranscriptionTabStrings = useSelector(
+    transcriptiontabSelector,
+    shallowEqual
+  );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const {
     toolChanged,
@@ -148,10 +157,12 @@ export const ProjectResourceConfigure = (props: IProps) => {
         } as ICell)
     );
 
+  const emptyTable = () => [
+    rowCells([t.startStop, t.reference, t.description], true),
+  ];
+
   useEffect(() => {
-    let newData: ICell[][] = [
-      rowCells([t.startStop, t.reference, t.description], true),
-    ];
+    let newData: ICell[][] = emptyTable();
     const newInfo = items.map((v) => {
       const rec = memory.cache.query((q) => q.findRecord(v));
       const secRec = (
@@ -239,6 +250,45 @@ export const ProjectResourceConfigure = (props: IProps) => {
       clearChanged(wizToolId);
       onOpen && onOpen(false);
     });
+  };
+
+  const handleCopy = () => {
+    const config: string[] = [];
+    dataRef.current
+      .filter((v, i) => i > 0)
+      .forEach((row) => {
+        config.push(
+          `${row[ColName.Limits].value}\t${row[ColName.Ref].value}\t${
+            row[ColName.Desc].value
+          }`
+        );
+      });
+
+    const content = config.join('\n');
+    if (content.length > 0)
+      navigator.clipboard
+        .writeText(content)
+        .then(() => {
+          showMessage(tt.availableOnClipboard);
+        })
+        .catch((err) => {
+          showMessage(tt.cantCopy);
+        });
+    else showMessage(tt.noData.replace('{0}', t.projectResourceConfigure));
+  };
+
+  const handleParsePaste = (clipBoard: string) => {
+    const rawData = cleanClipboard(clipBoard);
+    if (rawData.length === 0) {
+      showMessage(tt.noData.replace('{0}', t.clipboard));
+      return [];
+    }
+    let newData: ICell[][] = emptyTable();
+    rawData.forEach((row) => newData.push(rowCells(row)));
+    setData(newData);
+    dataRef.current = newData;
+    if (!isChanged(wizToolId)) toolChanged(wizToolId);
+    return rawData;
   };
 
   const handleCellsChanged = (changes: Array<ICellChange>) => {
@@ -363,9 +413,19 @@ export const ProjectResourceConfigure = (props: IProps) => {
           data={data}
           valueRenderer={handleValueRenderer}
           onCellsChanged={handleCellsChanged}
+          parsePaste={handleParsePaste}
         />
       </div>
       <div className={classes.actions}>
+        <Button
+          id="copy-configure"
+          onClick={handleCopy}
+          variant="contained"
+          className={classes.button}
+          disabled={!isChanged(wizToolId)}
+        >
+          {t.copyToClipboard}
+        </Button>
         <Button
           id="res-create"
           onClick={handleCreate}

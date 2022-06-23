@@ -618,8 +618,10 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "add": string;
     "allResources": string;
     "category": string;
+    "clipboard": string;
     "completed": string;
     "configure": string;
+    "copyToClipboard": string;
     "createResources": string;
     "deleteConfirm": string;
     "description": string;

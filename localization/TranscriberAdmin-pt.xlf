@@ -3044,10 +3044,22 @@
 				<target>Categoria</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.clipboard">
+			<segment>
+				<source>clipboard</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.completed">
 			<segment>
 				<source>Completed</source>
 				<target>Concluído</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.copyToClipboard">
+			<segment>
+				<source>Copy to Clipboard</source>
+				<target>Cópia para o Clipboard</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.createResources">

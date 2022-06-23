@@ -3558,6 +3558,13 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.clipboard">
+      		<source>clipboard</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.completed">
             <source>Completed</source>
             <target/>
@@ -3567,6 +3574,13 @@
          </trans-unit>
       	<trans-unit id="passageDetailArtifacts.configure">
       		<source>Configure</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.copyToClipboard">
+      		<source>Copy to Clipboard</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>

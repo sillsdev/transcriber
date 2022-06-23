@@ -3052,6 +3052,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.clipboard">
+         <segment>
+            <source>clipboard</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.completed">
          <segment>
             <source>Completed</source>
@@ -3061,6 +3067,12 @@
       <unit id="passageDetailArtifacts.configure">
          <segment>
             <source>Configure</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.copyToClipboard">
+         <segment>
+            <source>Copy to Clipboard</source>
             <target/>
          </segment>
       </unit>
