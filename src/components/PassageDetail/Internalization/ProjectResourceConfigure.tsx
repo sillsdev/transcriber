@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme: Theme) =>
     para: { margin: '6pt 0pt' },
     table: {
       padding: theme.spacing(4),
+      '& .data-grid .cell': {
+        height: '48px',
+      },
       '& .cTitle': {
         fontWeight: 'bold',
       },
@@ -348,8 +351,6 @@ export const ProjectResourceConfigure = (props: IProps) => {
       <IconButton onClick={handleSkip(cell.value)}>
         <SkipIcon fontSize="small" />
       </IconButton>
-    ) : cell.className === 'ref' ? (
-      <p className={classes.para}>{cell.value}</p>
     ) : (
       cell.value
     );
