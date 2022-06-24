@@ -3148,6 +3148,12 @@
 				<target>Ресурс</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.resourcesDeleted">
+			<segment>
+				<source> ({0} resources will be deleted.)</source>
+				<target> ({0} ресурсов будет удалено).</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.sharedResource">
 			<segment>
 				<source>Select Shared Resource</source>
