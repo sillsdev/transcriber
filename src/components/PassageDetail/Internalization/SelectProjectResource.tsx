@@ -2,6 +2,7 @@ import { useEffect, useState, useContext, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import {
   MediaFile,
+  SectionResource,
   ISharedStrings,
   IPassageDetailArtifactsStrings,
 } from '../../../model';
@@ -53,6 +54,7 @@ export const SelectProjectResource = (props: IProps) => {
   const { onSelect, onOpen } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
+  const [complete, setComplete] = useGlobal('progress');
   const [resource, setResouce] = useState<MediaFile[]>([]);
   const ctx = useContext(PassageDetailContext);
   const { getProjectResources } = ctx.state;
@@ -87,16 +89,28 @@ export const SelectProjectResource = (props: IProps) => {
   };
   const handleDeleteAccepted = async () => {
     if (confirm && media.current) {
+      const total = media.current.length;
+      let n = 0;
+      const secResources = memory.cache.query((q) =>
+        q.findRecords('sectionresource')
+      ) as SectionResource[];
       for (let m of media.current) {
+        const secRes = secResources.find(
+          (r) => related(r, 'mediafile') === m.id
+        );
+        if (secRes) await memory.update((t) => t.removeRecord(secRes));
         await memory.update((t) => t.removeRecord(m));
+        setComplete(Math.min((n * 100) / total, 100));
+        n += 1;
       }
       await memory.update((t) => t.removeRecord(confirm));
+      setComplete(0);
     }
     setConfirm(undefined);
   };
 
   const handleCancel = () => {
-    onOpen && onOpen(false);
+    if (complete === 0 || complete === 100) onOpen && onOpen(false);
   };
 
   useEffect(() => {
