@@ -224,7 +224,7 @@ const localProjects = (
         const setting = settingsJson.ScriptureText;
         const langIso = setting.LanguageIsoCode._text
           .replace(/::?:?/g, '-')
-          .trim('-');
+          .replace(/-$/, '');
         pt.push({
           ParatextId: setting.Guid._text,
           Name: setting.FullName._text,
