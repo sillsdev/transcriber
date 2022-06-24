@@ -1,19 +1,19 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { useSelector, shallowEqual } from 'react-redux';
-import { sharedSelector } from '../../../selector';
+import { passageDetailArtifactsSelector } from '../../../selector';
 import {
   IState,
   Passage,
   Section,
   Plan,
   BookName,
-  ISharedStrings,
+  IPassageDetailArtifactsStrings,
 } from '../../../model';
 import { ITranscriptionTabStrings } from '../../../model';
 import { withData, WithDataProps } from '../../../mods/react-orbitjs';
 import { QueryBuilder, RecordIdentity } from '@orbit/data';
-import { Button } from '@material-ui/core';
+import { Button, debounce, Paper } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import TreeGrid from '../../TreeGrid';
 import {
@@ -35,6 +35,16 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
     },
     content: {
+      paddingTop: theme.spacing(2),
+      maxHeight: '70%',
+    },
+    root: {
+      backgroundColor: theme.palette.background.default,
+      marginBottom: theme.spacing(1),
+      '& .MuiPaper-rounded': {
+        borderRadius: '8px',
+      },
+      overflow: 'auto',
       paddingTop: theme.spacing(2),
     },
   })
@@ -81,9 +91,17 @@ export function SelectSections(props: IProps) {
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const [data, setData] = useState(Array<IRow>());
+  const [heightStyle, setHeightStyle] = useState({
+    maxHeight: `${window.innerHeight - 250}px`,
+  });
+
   const { getOrganizedBy } = useOrganizedBy();
   const t: ITranscriptionTabStrings = useSelector(
     transcriptiontabSelector,
+    shallowEqual
+  );
+  const ta: IPassageDetailArtifactsStrings = useSelector(
+    passageDetailArtifactsSelector,
     shallowEqual
   );
   const allBookData = useSelector((state: IState) => state.books.bookData);
@@ -96,8 +114,23 @@ export function SelectSections(props: IProps) {
     { columnName: 'passages', width: 120 },
   ];
   const [checks, setChecks] = useState<Array<string | number>>([]);
-  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const setDimensions = () => {
+    setHeightStyle({
+      maxHeight: `${window.innerHeight - 250}px`,
+    });
+  };
 
+  useEffect(() => {
+    setDimensions();
+    const handleResize = debounce(() => {
+      setDimensions();
+    }, 100);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
   const planRec = useMemo(
     () => findRecord(memory, 'plan', plan) as Plan | undefined,
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,18 +201,8 @@ export function SelectSections(props: IProps) {
   };
 
   return (
-    <div id="SelectSections" className={classes.container}>
-      <div>
-        <Button
-          onClick={handleSelected}
-          variant="contained"
-          color="primary"
-          disabled={checks.length === 0}
-        >
-          {ts.select}
-        </Button>
-      </div>
-      <div className={classes.content}>
+    <div id="SelectSections" className={classes.content}>
+      <Paper id="PassageList" className={classes.root} style={heightStyle}>
         <TreeGrid
           columns={columnDefs}
           columnWidths={columnWidths}
@@ -200,6 +223,17 @@ export function SelectSections(props: IProps) {
           select={handleSelect}
           checks={checks}
         />
+      </Paper>
+
+      <div>
+        <Button
+          onClick={handleSelected}
+          variant="contained"
+          color="primary"
+          disabled={checks.length === 0}
+        >
+          {ta.projectResourceConfigure}
+        </Button>
       </div>
     </div>
   );

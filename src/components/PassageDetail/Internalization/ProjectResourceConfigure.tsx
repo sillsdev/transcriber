@@ -14,6 +14,8 @@ import {
   Theme,
   IconButton,
   Button,
+  Paper,
+  debounce,
 } from '@material-ui/core';
 import SkipIcon from '@material-ui/icons/NotInterested';
 import DataSheet from 'react-datasheet';
@@ -41,12 +43,24 @@ const wizToolId = 'ProjResWizard';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    grow: {
+      flexGrow: 1,
+    },
     actions: {
       display: 'flex',
       justifyContent: 'flex-end',
     },
     button: { margin: theme.spacing(2) },
     para: { margin: '6pt 0pt' },
+    root: {
+      backgroundColor: theme.palette.background.default,
+      marginBottom: theme.spacing(1),
+      '& .MuiPaper-rounded': {
+        borderRadius: '8px',
+      },
+      overflow: 'auto',
+      paddingTop: theme.spacing(2),
+    },
     table: {
       padding: theme.spacing(4),
       '& .data-grid .cell': {
@@ -105,6 +119,9 @@ export const ProjectResourceConfigure = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [, setComplete] = useGlobal('progress');
   const [data, setData] = useState<ICell[][]>([]);
+  const [heightStyle, setHeightStyle] = useState({
+    maxHeight: `${window.innerHeight - 450}px`,
+  });
   const dataRef = useRef<ICell[][]>([]);
   const infoRef = useRef<IInfo[]>([]);
   const segmentsRef = useRef('{}');
@@ -143,7 +160,23 @@ export const ProjectResourceConfigure = (props: IProps) => {
     Ref,
     Desc,
   }
+  const setDimensions = () => {
+    setHeightStyle({
+      maxHeight: `${window.innerHeight - 550}px`,
+    });
+  };
 
+  useEffect(() => {
+    setDimensions();
+    const handleResize = debounce(() => {
+      setDimensions();
+    }, 100);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
   const rowCells = (row: string[], first = false) =>
     row.map(
       (v, i) =>
@@ -446,14 +479,16 @@ export const ProjectResourceConfigure = (props: IProps) => {
   return (
     <>
       <PassageDetailPlayer allowSegment={true} onSegment={handleSegment} />
-      <div id="proj-res-sheet" className={classes.table}>
-        <DataSheet
-          data={data}
-          valueRenderer={handleValueRenderer}
-          onCellsChanged={handleCellsChanged}
-          parsePaste={handleParsePaste}
-        />
-      </div>
+      <Paper id="proj-res-sheet" className={classes.root} style={heightStyle}>
+        <div id="proj-res-sheet" className={classes.table}>
+          <DataSheet
+            data={data}
+            valueRenderer={handleValueRenderer}
+            onCellsChanged={handleCellsChanged}
+            parsePaste={handleParsePaste}
+          />
+        </div>
+      </Paper>
       <div className={classes.actions}>
         <Button
           id="copy-configure"
@@ -464,6 +499,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
         >
           {t.copyToClipboard}
         </Button>
+        <div className={classes.grow}>{'\u00A0'}</div>
         <Button
           id="res-create"
           onClick={handleCreate}

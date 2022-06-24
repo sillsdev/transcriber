@@ -175,7 +175,7 @@ function MediaUpload(props: IProps) {
     t.ITFtitle,
     t.PTFtitle,
     'FUTURE TODO',
-    t.projectResourceTitle,
+    t.resourceTitle,
   ];
   const text = [
     t.task,
