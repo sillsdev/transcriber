@@ -3038,6 +3038,12 @@
 				<target>Adicione</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.canceling">
+			<segment>
+				<source>Canceling resource creation</source>
+				<target>Cancelando a criação de recursos</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.category">
 			<segment>
 				<source>Category</source>
