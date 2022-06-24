@@ -659,6 +659,7 @@ const initialState = {
 			"activity": "Add Activity",
 			"add": "Add",
 			"allResources": "All Resources",
+			"canceling": "Canceling resource creation",
 			"category": "Category",
 			"clipboard": "clipboard",
 			"completed": "Completed",

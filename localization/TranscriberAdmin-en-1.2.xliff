@@ -3551,6 +3551,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.canceling">
+      		<source>Canceling resource creation</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.category">
             <source>Category</source>
             <target/>

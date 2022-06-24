@@ -129,6 +129,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     checkSavedFn,
   } = useContext(UnsavedContext).state;
   const savingRef = useRef(false);
+  const canceling = useRef(false);
   const projectResourceSave = useProjectResourceSave();
   const projectSegmentSave = useProjectSegmentSave();
   const { showMessage } = useSnackBar();
@@ -187,6 +188,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
         const d = dataRef.current;
         const total = infoRef.current.length;
         for (let i of infoRef.current) {
+          if (canceling.current) break;
           ix += 1;
           let row = d[ix];
           while (row[ColName.Ref].value === '' && ix < d.length) {
@@ -212,6 +214,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
           .then(() => {
             saveCompleted(wizToolId);
             savingRef.current = false;
+            canceling.current = false;
             setComplete(0);
             onOpen && onOpen(false);
           })
@@ -219,6 +222,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
             //so we don't come here...we go to continue/logout
             saveCompleted(wizToolId, err.message);
             savingRef.current = false;
+            canceling.current = false;
             setComplete(0);
             onOpen && onOpen(false);
           });
@@ -243,6 +247,11 @@ export const ProjectResourceConfigure = (props: IProps) => {
   }, [toolsChanged]);
 
   const handleCancel = () => {
+    if (savingRef.current) {
+      showMessage(t.canceling);
+      canceling.current = true;
+      return;
+    }
     checkSavedFn(() => {
       clearChanged(wizToolId);
       onOpen && onOpen(false);
