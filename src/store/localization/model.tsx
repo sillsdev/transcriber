@@ -628,6 +628,8 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "description": string;
     "editResource": string;
     "passageResource": string;
+    "pasteFormat": string;
+    "pasteNoChange": string;
     "projectResourcePassage": string;
     "projectResourceSheet": string;
     "projectResourceConfigure": string;
