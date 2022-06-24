@@ -249,8 +249,8 @@
 		</unit>
 		<unit id="artifactType.projectresource">
 			<segment>
-				<source>Project Resource</source>
-				<target>Recurso do projeto</target>
+				<source>General Resource</source>
+				<target>Recurso geral</target>
 			</segment>
 		</unit>
 		<unit id="artifactType.qanda">
@@ -2860,8 +2860,8 @@
 		</unit>
 		<unit id="mediaUpload.resourceTitle">
 			<segment>
-				<source>Upload Resource</source>
-				<target>Carregar recurso</target>
+				<source>Upload Resources</source>
+				<target>Carregar Recursos</target>
 			</segment>
 		</unit>
 		<unit id="mediaUpload.task">
@@ -3038,6 +3038,12 @@
 				<target>Adicione</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.allResources">
+			<segment>
+				<source>Show resources for all passages</source>
+				<target>Mostrar recursos para todas as passagens</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.canceling">
 			<segment>
 				<source>Canceling resource creation</source>
@@ -3060,6 +3066,12 @@
 			<segment>
 				<source>Completed</source>
 				<target>Concluído</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.configure">
+			<segment>
+				<source>Configure General</source>
+				<target>Configurar Geral</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.copyToClipboard">
@@ -3094,8 +3106,8 @@
 		</unit>
 		<unit id="passageDetailArtifacts.passageResource">
 			<segment>
-				<source>Passage Resource</source>
-				<target>Recurso de Passagem</target>
+				<source>Passage</source>
+				<target>Passagem</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.pasteFormat">
@@ -3112,8 +3124,8 @@
 		</unit>
 		<unit id="passageDetailArtifacts.projectResourcePassage">
 			<segment>
-				<source>Select Project Resource Passages</source>
-				<target>Selecionar passagens de recursos do projeto</target>
+				<source>Select {0} and Passages</source>
+				<target>Selecione {0} e Passagens</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.projectResourceSheet">
@@ -3124,8 +3136,8 @@
 		</unit>
 		<unit id="passageDetailArtifacts.projectResourceConfigure">
 			<segment>
-				<source>Project Resource Configure</source>
-				<target>Configuração de recursos do projeto</target>
+				<source>Chunk into Resources</source>
+				<target>Partição em Recursos</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.reference">
@@ -3148,8 +3160,8 @@
 		</unit>
 		<unit id="passageDetailArtifacts.sharedResource">
 			<segment>
-				<source>Select Shared Resource</source>
-				<target>Selecione o recurso compartilhado</target>
+				<source>Link Shared Resource</source>
+				<target>Link Recurso Compartilhado</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.startStop">
@@ -3166,26 +3178,26 @@
 		</unit>
 		<unit id="passageDetailArtifacts.tip1a">
 			<segment>
-				<source>Resourses uploaded will be associated with this passage or {0}.</source>
-				<target>Os recursos carregados serão associados a esta passagem ou {0}.</target>
+				<source>Resourses for:</source>
+				<target>Recursos para:</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.tip1b">
 			<segment>
-				<source>Selected shared resourses will be associated with this {0}.</source>
-				<target>Os recursos compartilhados selecionados serão associados a esta {0}.</target>
+				<source>Link a shared resource to this {0}.</source>
+				<target>Vincule um recurso compartilhado a este {0}.</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.tip2a">
 			<segment>
-				<source>Segments of project resources can be used by many passages or {0}.</source>
-				<target>Segmentos de recursos do projeto podem ser utilizados por muitas passagens ou {0}.</target>
+				<source>Chunk</source>
+				<target>Partição</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.tip2b">
 			<segment>
-				<source>Steps through connecting segments of an project resources with {0} and passages.</source>
-				<target>Passos através da conexão de segmentos de recursos de um projeto com {0} e passagens.</target>
+				<source>Steps through connecting chunks of a general resource with {0} and passages.</source>
+				<target>Passos através da conexão de pedaços de um recurso geral com {0} e passagens.</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.unusedSegment">
@@ -3196,14 +3208,14 @@
 		</unit>
 		<unit id="passageDetailArtifacts.upload">
 			<segment>
-				<source>Upload Resource</source>
-				<target>Carregar recurso</target>
+				<source>Upload Resources</source>
+				<target>Carregar Recursos</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.uploadProject">
 			<segment>
-				<source>Upload Project Resource</source>
-				<target>Upload do recurso do projeto</target>
+				<source>General - to be used by multiple {0} or passages. (Uploaded files will only appear under Configure General.)</source>
+				<target>Geral - para ser usado por múltiplos {0} ou passagens. (Os arquivos carregados só aparecerão em Configurar Geral).</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.version">

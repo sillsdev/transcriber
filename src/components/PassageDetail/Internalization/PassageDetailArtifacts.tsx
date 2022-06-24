@@ -40,6 +40,7 @@ import {
   useSecResUserDelete,
   useArtifactType,
   ArtifactTypeSlug,
+  useOrganizedBy,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
@@ -121,6 +122,7 @@ export function PassageDetailArtifacts(props: IProps) {
     handleItemPlayEnd,
     handleItemTogglePlay,
   } = ctx.state;
+  const { getOrganizedBy } = useOrganizedBy();
   const AddSectionResource = useSecResCreate(section);
   const AddSectionResourceUser = useSecResUserCreate();
   const ReadSectionResourceUser = useSecResUserRead();
@@ -633,7 +635,7 @@ export function PassageDetailArtifacts(props: IProps) {
         />
       </BigDialog>
       <BigDialog
-        title={t.projectResourcePassage}
+        title={t.projectResourcePassage.replace('{0}', getOrganizedBy(false))}
         isOpen={projResPassageVisible}
         onOpen={handleProjResPassageVisible}
       >

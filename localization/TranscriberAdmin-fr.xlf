@@ -249,8 +249,8 @@
 		</unit>
 		<unit id="artifactType.projectresource">
 			<segment>
-				<source>Project Resource</source>
-				<target>Ressources du projet</target>
+				<source>General Resource</source>
+				<target>Ressources générales</target>
 			</segment>
 		</unit>
 		<unit id="artifactType.qanda">
@@ -1638,8 +1638,7 @@
 			<segment>
 				<source>ITF does not contain current audio project. It contains audio project
 					{0}.</source>
-				<target>L'ITF ne contient pas le projet audio actuel. Il contient le projet audio
-					{0}.</target>
+				<target>L'ITF ne contient pas le projet audio actuel. Il contient le projet audio {0}.</target>
 			</segment>
 		</unit>
 		<unit id="import.showHideFilter">
@@ -2862,15 +2861,14 @@
 		</unit>
 		<unit id="mediaUpload.resourceTitle">
 			<segment>
-				<source>Upload Resource</source>
-				<target>Télécharger la ressource</target>
+				<source>Upload Resources</source>
+				<target>Télécharger les ressources</target>
 			</segment>
 		</unit>
 		<unit id="mediaUpload.task">
 			<segment>
 				<source>You can upload audio files in .mp3, .m4a, .wav or .ogg format.</source>
-				<target>Vous pouvez télécharger des fichiers audio au format .mp3, .m4a, .wav ou
-					.ogg.</target>
+				<target>Vous pouvez télécharger des fichiers audio au format .mp3, .m4a, .wav ou .ogg.</target>
 			</segment>
 		</unit>
 		<unit id="mediaUpload.title">
@@ -2996,8 +2994,7 @@
 		<unit id="newProject.scriptureTip">
 			<segment>
 				<source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
-				<target>Le produit final peut être de l'audio ou du texte et le type de contenu peut
-					être une traduction, des histoires, une rédaction ou une adaptation.</target>
+				<target>Le produit final peut être de l'audio ou du texte et le type de contenu peut être une traduction, des histoires, une rédaction ou une adaptation.</target>
 			</segment>
 		</unit>
 		<unit id="newProject.startRecording">
@@ -3042,6 +3039,12 @@
 				<target>Ajouter</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.allResources">
+			<segment>
+				<source>Show resources for all passages</source>
+				<target>Afficher les ressources pour tous les passages</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.canceling">
 			<segment>
 				<source>Canceling resource creation</source>
@@ -3064,6 +3067,12 @@
 			<segment>
 				<source>Completed</source>
 				<target>Complété</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.configure">
+			<segment>
+				<source>Configure General</source>
+				<target>Configuration générale</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.copyToClipboard">
@@ -3098,14 +3107,14 @@
 		</unit>
 		<unit id="passageDetailArtifacts.passageResource">
 			<segment>
-				<source>Passage Resource</source>
-				<target>Ressource de passage</target>
+				<source>Passage</source>
+				<target>Passage</target>
 			</segment>
-		</unit>
+		</unit>``
 		<unit id="passageDetailArtifacts.projectResourcePassage">
 			<segment>
-				<source>Select Project Resource Passages</source>
-				<target>Sélectionner les passages de ressources du projet</target>
+				<source>Select {0} and Passages</source>
+				<target>Sélectionner {0} et Passages</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.pasteFormat">
@@ -3128,8 +3137,8 @@
 		</unit>
 		<unit id="passageDetailArtifacts.projectResourceConfigure">
 			<segment>
-				<source>Project Resource Configure</source>
-				<target>Configuration des ressources du projet</target>
+				<source>Chunk into Resources</source>
+				<target>Découpage en ressources</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.reference">
@@ -3152,8 +3161,8 @@
 		</unit>
 		<unit id="passageDetailArtifacts.sharedResource">
 			<segment>
-				<source>Select Shared Resource</source>
-				<target>Sélectionner la ressource partagée</target>
+				<source>Link Shared Resource</source>
+				<target>Lien Ressource partagée</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.startStop">
@@ -3170,25 +3179,25 @@
 		</unit>
 		<unit id="passageDetailArtifacts.tip1a">
 			<segment>
-				<source>Resourses uploaded will be associated with this passage or {0}.</source>
-				<target>Les ressources téléchargées seront associées à ce passage ou à {0}.</target>
+				<source>Resourses for:</source>
+				<target>Les ressources pour :</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.tip1b">
 			<segment>
-				<source>Selected shared resourses will be associated with this {0}.</source>
-				<target>Les ressources partagées sélectionnées seront associées à ce {0}.</target>
+				<source>Link a shared resource to this {0}.</source>
+				<target>Lier une ressource partagée à ce {0}.</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.tip2a">
 			<segment>
-				<source>Segments of project resources can be used by many passages or {0}.</source>
-				<target>Les segments des ressources du projet peuvent être utilisés par plusieurs passages ou {0}.</target>
+				<source>Chunk</source>
+				<target>Partition</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.tip2b">
 			<segment>
-				<source>Steps through connecting segments of an project resources with {0} and passages.</source>
+				<source>Steps through connecting chunks of a general resource with {0} and passages.</source>
 				<target>Etapes pour connecter des segments de ressources d'un projet avec {0} et des passages.</target>
 			</segment>
 		</unit>
@@ -3200,14 +3209,14 @@
 		</unit>
 		<unit id="passageDetailArtifacts.upload">
 			<segment>
-				<source>Upload Resource</source>
-				<target>Télécharger la ressource</target>
+				<source>Upload Resources</source>
+				<target>Télécharger les ressources</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.uploadProject">
 			<segment>
-				<source>Upload Project Resource</source>
-				<target>Télécharger la ressource du projet</target>
+				<source>General - to be used by multiple {0} or passages. (Uploaded files will only appear under Configure General.)</source>
+				<target>Général - à utiliser par plusieurs {0} ou passages. (Les fichiers téléchargés n'apparaîtront que sous Configurer Général).</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.version">
@@ -5601,8 +5610,7 @@
 		<unit id="welcome.setupTeamTip">
 			<segment>
 				<source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-				<target>Configurez le projet audio, en divisant le travail en passages qui peuvent
-					être attribués à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
+				<target>Configurez le projet audio, en divisant le travail en passages qui peuvent être attribués à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
 			</segment>
 		</unit>
 		<unit id="welcome.team">
@@ -5620,8 +5628,7 @@
 		<unit id="welcome.teamTip">
 			<segment>
 				<source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
-				<target>Un projet audio a été mis en place en ligne. Les transcripteurs et les
-					éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la fiche projet audio, ou hors ligne en l'important.</target>
+				<target>Un projet audio a été mis en place en ligne. Les transcripteurs et les éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la fiche projet audio, ou hors ligne en l'important.</target>
 			</segment>
 		</unit>
 		<unit id="welcome.title">

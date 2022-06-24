@@ -65,7 +65,7 @@ const initialState = {
 		"en": {
 			"backtranslation": "Back Translation",
 			"comment": "Comment",
-			"projectresource": "Select General Resource",
+			"projectresource": "General Resource",
 			"qanda": "Question and Answer",
 			"resource": "Resource",
 			"retell": "Retelling",
@@ -671,7 +671,7 @@ const initialState = {
 			"passageResource": "Passage",
 			"pasteFormat": "Pasted data must contain two or three columns. One of them must be the reference.",
 			"pasteNoChange": "Nothing changed! Perhaps no references matched?",
-			"projectResourcePassage": "Select Sections and Passages",
+			"projectResourcePassage": "Select {0} and Passages",
 			"projectResourceSheet": "Project Resource Sheet",
 			"projectResourceConfigure": "Chunk into Resources",
 			"reference": "Reference",

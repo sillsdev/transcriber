@@ -290,7 +290,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="artifactType.projectresource">
-      		<source>Select General Resource</source>
+      		<source>General Resource</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">AlertDialog.tsx</context>
@@ -3636,7 +3636,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.projectResourcePassage">
-      		<source>Select Sections and Passages</source>
+      		<source>Select {0} and Passages</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">AddResource.tsx</context>

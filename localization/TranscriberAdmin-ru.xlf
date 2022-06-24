@@ -251,8 +251,8 @@
 		</unit>
 		<unit id="artifactType.projectresource">
 			<segment>
-				<source>Project Resource</source>
-				<target>Ресурс проекта</target>
+				<source>General Resource</source>
+				<target>Общий ресурс</target>
 			</segment>
 		</unit>
 		<unit id="artifactType.qanda">
@@ -1040,8 +1040,7 @@
 		<unit id="electronImport.projectImported">
 			<segment>
 				<source>Audio Project {name0} was previously imported with a newer file: {date1} </source>
-				<target>Аудиопроект {name0} был ранее импортирован с более новым файлом:
-					{дата1}.</target>
+				<target>Аудиопроект {name0} был ранее импортирован с более новым файлом: {дата1}.</target>
 			</segment>
 		</unit>
 		<unit id="electronImport.ptfError">
@@ -2877,8 +2876,8 @@
 		</unit>
 		<unit id="mediaUpload.resourceTitle">
 			<segment>
-				<source>Upload Resource</source>
-				<target>Загрузить ресурс</target>
+				<source>Upload Resources</source>
+				<target>Загрузка ресурсов</target>
 			</segment>
 		</unit>
 		<unit id="mediaUpload.task">
@@ -3058,6 +3057,12 @@
 				<target>Добавить</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.allResources">
+			<segment>
+				<source>Show resources for all passages</source>
+				<target>Показать ресурсы для всех отрывков</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.canceling">
 			<segment>
 				<source>Canceling resource creation</source>
@@ -3082,16 +3087,16 @@
 				<target>Завершено</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.configure">
+			<segment>
+				<source>Configure General</source>
+				<target>Настройка Общие</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.copyToClipboard">
 			<segment>
 				<source>Copy to Clipboard</source>
 				<target>Копирование в буфер обмена</target>
-			</segment>
-		</unit>
-		<unit id="passageDetailArtifacts.configure">
-			<segment>
-				<source>Configure</source>
-				<target>Завершено</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.createResources">
@@ -3120,8 +3125,8 @@
 		</unit>
 		<unit id="passageDetailArtifacts.passageResource">
 			<segment>
-				<source>Passage Resource</source>
-				<target>Ресурс пассажа</target>
+				<source>Passage</source>
+				<target>Переход</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.pasteFormat">
@@ -3138,8 +3143,8 @@
 		</unit>
 		<unit id="passageDetailArtifacts.projectResourcePassage">
 			<segment>
-				<source>Select Project Resource Passages</source>
-				<target>Выберите прохождение ресурса проекта</target>
+				<source>Select {0} and Passages</source>
+				<target>Выберите {0} и переходы</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.projectResourceSheet">
@@ -3150,8 +3155,8 @@
 		</unit>
 		<unit id="passageDetailArtifacts.projectResourceConfigure">
 			<segment>
-				<source>Project Resource Configure</source>
-				<target>Настройка ресурса проекта</target>
+				<source>Chunk into Resources</source>
+				<target>Разделение на ресурсы</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.reference">
@@ -3174,8 +3179,8 @@
 		</unit>
 		<unit id="passageDetailArtifacts.sharedResource">
 			<segment>
-				<source>Select Shared Resource</source>
-				<target>Выберите общий ресурс</target>
+				<source>Link Shared Resource</source>
+				<target>Ссылка Общий ресурс</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.startStop">
@@ -3192,26 +3197,26 @@
 		</unit>
 		<unit id="passageDetailArtifacts.tip1a">
 			<segment>
-				<source>Resourses uploaded will be associated with this passage or {0}.</source>
-				<target>Загруженные ресурсы будут связаны с этим отрывком или {0}.</target>
+				<source>Resourses for:</source>
+				<target>Ресурсы для:</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.tip1b">
 			<segment>
-				<source>Selected shared resourses will be associated with this {0}.</source>
-				<target>Выбранные общие ресурсы будут связаны с этим {0}.</target>
+				<source>Link a shared resource to this {0}.</source>
+				<target>Свяжите общий ресурс с этим {0}.</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.tip2a">
 			<segment>
-				<source>Segments of project resources can be used by many passages or {0}.</source>
-				<target>Сегменты ресурсов проекта могут быть использованы многими переходами или {0}.</target>
+				<source>Chunk</source>
+				<target>Перегородка</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.tip2b">
 			<segment>
-				<source>Steps through connecting segments of an project resources with {0} and passages.</source>
-				<target>Шаги по соединению сегментов ресурсов проекта с {0} и переходами.</target>
+				<source>Steps through connecting chunks of a general resource with {0} and passages.</source>
+				<target>Шаги по соединению фрагментов общего ресурса с {0} и переходами.</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.unusedSegment">
@@ -3222,14 +3227,14 @@
 		</unit>
 		<unit id="passageDetailArtifacts.upload">
 			<segment>
-				<source>Upload Resource</source>
-				<target>Загрузить ресурс</target>
+				<source>Upload Resources</source>
+				<target>Загрузка ресурсов</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.uploadProject">
 			<segment>
-				<source>Upload Project Resource</source>
-				<target>Загрузка ресурса проекта</target>
+				<source>General - to be used by multiple {0} or passages. (Uploaded files will only appear under Configure General.)</source>
+				<target>Общие - для использования несколькими {0} или переходами. (Загруженные файлы будут отображаться только в разделе Configure General).</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.version">

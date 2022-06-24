@@ -252,7 +252,7 @@
       </unit>
       <unit id="artifactType.projectresource">
          <segment>
-            <source>Select General Resource</source>
+            <source>General Resource</source>
             <target/>
          </segment>
       </unit>
@@ -3120,7 +3120,7 @@
       </unit>
       <unit id="passageDetailArtifacts.projectResourcePassage">
          <segment>
-            <source>Select Sections and Passages</source>
+            <source>Select {0} and Passages</source>
             <target/>
          </segment>
       </unit>
