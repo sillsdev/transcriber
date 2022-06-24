@@ -669,6 +669,8 @@ const initialState = {
 			"description": "Description",
 			"editResource": "Edit Resource",
 			"passageResource": "Passage Resource",
+			"pasteFormat": "Pasted data must contain two or three columns. One of them must be the reference.",
+			"pasteNoChange": "Nothing changed! Perhaps no references matched?",
 			"projectResourcePassage": "Select Project Resource Passages",
 			"projectResourceSheet": "Project Resource Sheet",
 			"projectResourceConfigure": "Project Resource Configure",

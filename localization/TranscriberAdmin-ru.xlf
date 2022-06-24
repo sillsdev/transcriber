@@ -3118,6 +3118,18 @@
 				<target>Ресурс пассажа</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.pasteFormat">
+			<segment>
+				<source>Pasted data must contain two or three columns. One of them must be the reference.</source>
+				<target>Вставленные данные должны содержать два или три столбца. Один из них должен быть ссылкой.</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.pasteNoChange">
+			<segment>
+				<source>Nothing changed! Perhaps no references matched?</source>
+				<target>Ничего не изменилось! Возможно, ни одна ссылка не совпала?</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.projectResourcePassage">
 			<segment>
 				<source>Select Project Resource Passages</source>

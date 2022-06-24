@@ -3102,6 +3102,18 @@
 				<target>Sélectionner les passages de ressources du projet</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.pasteFormat">
+			<segment>
+				<source>Pasted data must contain two or three columns. One of them must be the reference.</source>
+				<target>Les données collées doivent contenir deux ou trois colonnes. L'une d'entre elles doit être la référence.</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.pasteNoChange">
+			<segment>
+				<source>Nothing changed! Perhaps no references matched?</source>
+				<target>Rien n'a changé ! Peut-être aucune référence ne correspondait-elle ?</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.projectResourceSheet">
 			<segment>
 				<source>Project Resource Sheet</source>

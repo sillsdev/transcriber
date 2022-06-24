@@ -91,9 +91,6 @@ interface ICellChange {
 interface IRecordProps {
   sectionResources: SectionResource[];
   mediafiles: MediaFile[];
-  // artifactTypes: ArtifactType[];
-  // categories: ArtifactCategory[]; // used by resourceRows
-  // userResources: SectionResourceUser[]; // used by resourceRows
 }
 
 interface IProps extends IRecordProps {
@@ -283,12 +280,44 @@ export const ProjectResourceConfigure = (props: IProps) => {
       showMessage(tt.noData.replace('{0}', t.clipboard));
       return [];
     }
-    let newData: ICell[][] = emptyTable();
-    rawData.forEach((row) => newData.push(rowCells(row)));
+    const rawWidth = rawData[0].length;
+    if (![2, 3].includes(rawWidth)) {
+      showMessage(t.pasteFormat);
+      return [];
+    }
+    let isCol0Ref = false;
+    if (rawWidth === 2) {
+      const col0 = rawData[0][0];
+      for (let row of data) {
+        if (row[ColName.Ref].value.trim() === col0) {
+          isCol0Ref = true;
+          break;
+        }
+      }
+    }
+    const refMap = new Map<string, string[]>();
+    rawData.forEach((row) => {
+      refMap.set(isCol0Ref ? row[0] : row[1], row);
+    });
+    let changed = false;
+    const newData = data.map((row, i) => {
+      if (i === 0) return row;
+      const ref = row[ColName.Ref].value.trim();
+      const raw = refMap.get(ref);
+      if (!raw) return row;
+      changed = true;
+      if (rawWidth === 3) return rowCells(raw);
+      if (isCol0Ref) return rowCells([row[ColName.Limits].value].concat(raw));
+      return rowCells(raw.concat([row[ColName.Desc].value]));
+    });
+    if (!changed) {
+      showMessage(t.pasteNoChange);
+      return [];
+    }
     setData(newData);
     dataRef.current = newData;
     if (!isChanged(wizToolId)) toolChanged(wizToolId);
-    return rawData;
+    return [];
   };
 
   const handleCellsChanged = (changes: Array<ICellChange>) => {
@@ -452,9 +481,6 @@ export const ProjectResourceConfigure = (props: IProps) => {
 const mapRecordsToProps = {
   sectionResources: (q: QueryBuilder) => q.findRecords('sectionresource'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  // artifactTypes: (q: QueryBuilder) => q.findRecords('artifacttype'),
-  // categories: (q: QueryBuilder) => q.findRecords('artifactcategory'),
-  // userResources: (q: QueryBuilder) => q.findRecords('sectionresourceuser'),
 };
 
 export default withData(mapRecordsToProps)(ProjectResourceConfigure) as any;

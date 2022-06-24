@@ -3621,6 +3621,20 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.pasteFormat">
+      		<source>Pasted data must contain two or three columns. One of them must be the reference.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.pasteNoChange">
+      		<source>Nothing changed! Perhaps no references matched?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.projectResourcePassage">
       		<source>Select Project Resource Passages</source>
       		<target/>
