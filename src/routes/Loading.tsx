@@ -174,12 +174,13 @@ export function Loading(props: IProps) {
         // { attribute: 'accepted', value: false }  //went from AND to OR between attributes :/
       )
     )) as any;
-    allinvites.forEach(async (invitation) => {
-      if (!invitation.attributes.accepted)
+    allinvites
+      .filter((i) => !i.attributes.accepted)
+      .forEach(async (invitation) => {
         await newremote.update((t: TransformBuilder) =>
           t.replaceAttribute(invitation, 'accepted', true)
         );
-    });
+      });
 
     if (inviteId) {
       let invite = allinvites.find((i) => i.id === inviteId);

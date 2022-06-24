@@ -130,8 +130,8 @@ export const ProjectDownload = (props: IProps) => {
         }
         if (exportStatus.complete) {
           if (exportFile) {
-            setExportName(exportFile.data.attributes.message);
-            setExportUrl(exportFile.data.attributes.fileurl);
+            setExportName(exportFile.message);
+            setExportUrl(exportFile.fileURL);
             exportComplete();
             setProgress(Steps.Download);
           }

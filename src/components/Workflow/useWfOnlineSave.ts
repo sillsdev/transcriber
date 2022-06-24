@@ -118,6 +118,9 @@ export const useWfOnlineSave = (props: IProps) => {
       }
     );
     //null only if sent twice by orbit
+    //TODO The dumbrec is no longer dumb and does contain the new data!!
+    //we can parse it and not have to requery the sections and passages
+    //but it might still be easier to just do the requery
     if (dumbrec) {
       setComplete(50);
       //dumbrec does not contain the new data...just the new id so go get it

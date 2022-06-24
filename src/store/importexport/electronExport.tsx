@@ -73,17 +73,12 @@ export async function electronExport(
     changedRecs: number
   ): FileResponse => {
     return {
-      data: {
-        attributes: {
-          message: fileName,
-          fileurl: 'file:////' + fullpath,
-          contenttype: 'application/' + exportType,
-          buffer: buffer,
-          changes: changedRecs,
-        },
-        type: 'file-responses',
-        id: '1',
-      },
+      message: fileName,
+      fileURL: 'file:////' + fullpath,
+      contentType: 'application/' + exportType,
+      buffer: buffer,
+      changes: changedRecs,
+      id: '1',
     };
   };
 

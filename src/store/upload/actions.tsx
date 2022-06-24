@@ -19,6 +19,7 @@ import {
   removeExtension,
 } from '../../utils';
 import moment from 'moment';
+import _ from 'lodash';
 var fs = require('fs');
 var path = require('path');
 
@@ -160,7 +161,7 @@ export const nextUpload =
       }
     };
     const toVnd = (record: any) => {
-      return {
+      var vnd = {
         data: {
           type: 'mediafiles',
           attributes: {
@@ -171,36 +172,38 @@ export const nextUpload =
             'date-created': moment.utc(),
           },
           relationships: {
-            passage: {
-              data: {
-                type: 'passages',
-                id: record.passageId?.toString() ?? 'null',
-              },
-            },
-            plan: {
-              data: { type: 'plans', id: record.planId?.toString() ?? 'null' },
-            },
-            artifactype: {
-              data: {
-                type: 'artifacttypes',
-                id: record.artifactTypeId?.toString() ?? 'null',
-              },
-            },
-            sourcemedia: {
-              data: {
-                type: 'sourcemediaid',
-                id: record.sourceMediaId?.toString() ?? 'null',
-              },
-            },
             lastmodifiedbyuser: {
               data: {
                 type: 'lastmodifiedbyuser',
-                id: record.userId?.toString() ?? 'null',
+                id: record.userId?.toString(),
               },
             },
           },
         },
       } as any;
+      if (record.passageId)
+        vnd.data.relationships.passage = {
+          data: { type: 'passages', id: record.passageId.toString() },
+        };
+      if (record.planId)
+        vnd.data.relationships.plan = {
+          data: { type: 'plans', id: record.planId.toString() },
+        };
+      if (record.artifactTypeId)
+        vnd.data.relationships['artifact-type'] = {
+          data: { type: 'artifacttypes', id: record.artifactTypeId.toString() },
+        };
+      if (record.sourceMediaId)
+        vnd.data.relationships['source-media'] = {
+          data: { type: 'mediafiles', id: record.sourceMediaId.toString() },
+        };
+      return vnd;
+    };
+    const fromVnd = (data: any) => {
+      var json = _.mapKeys(data.data.attributes, (v, k) => _.camelCase(k));
+      json.id = data.data.id;
+      json.stringId = json.id.toString();
+      return json;
     };
     var vndRecord = toVnd(record);
     //we have to use an axios call here because orbit is asynchronous
@@ -213,7 +216,8 @@ export const nextUpload =
     })
       .then((response) => {
         dispatch({ payload: n, type: UPLOAD_ITEM_CREATED });
-        uploadFile(response.data, files[n], errorReporter, auth, completeCB);
+        var json = fromVnd(response.data);
+        uploadFile(json, files[n], errorReporter, auth, completeCB);
         if (isElectron) {
           try {
             writeFileLocal(files[n], response.data.audioUrl);

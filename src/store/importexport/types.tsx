@@ -11,17 +11,12 @@ export enum ExportType {
   AUDIO = 'audio', //Latest audio export
 }
 export interface FileResponse {
-  data: {
-    attributes: {
-      message: string;
-      fileurl: string;
-      contenttype: string;
-      buffer: Buffer | undefined;
-      changes: number;
-    };
-    type: string; //"file-responses",
-    id: string;
-  };
+  fileURL: string;
+  message: string;
+  contentType: string;
+  buffer: Buffer | undefined;
+  changes: number;
+  id: string;
 }
 // Describing the shape of the paratext integration slice of state
 export interface IImportExportState {

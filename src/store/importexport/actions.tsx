@@ -165,7 +165,7 @@ export const exportProject =
           // eslint-disable-next-line no-loop-func
           .then((response) => {
             var fr = response.data as FileResponse;
-            start = Number(fr.data.id);
+            start = Number(fr.id);
             switch (start) {
               case -1:
                 dispatch({
@@ -175,7 +175,7 @@ export const exportProject =
                 break;
               case -2:
                 dispatch({
-                  payload: errorStatus(undefined, fr.data.attributes.message),
+                  payload: errorStatus(undefined, fr.message),
                   type: EXPORT_ERROR,
                 });
                 break;
@@ -233,14 +233,11 @@ const importFromElectron =
       },
     })
       .then((response) => {
-        const filename = response.data.data.attributes.message;
+        const filename = response.data.message;
         const xhr = new XMLHttpRequest();
         /* FUTURE TODO Limit is 5G, but it's recommended to use a multipart upload > 100M */
-        xhr.open('PUT', response.data.data.attributes.fileurl, true);
-        xhr.setRequestHeader(
-          'Content-Type',
-          response.data.data.attributes.contenttype
-        );
+        xhr.open('PUT', response.data.fileURL, true);
+        xhr.setRequestHeader('Content-Type', response.data.contentType);
         xhr.send(file.slice());
         xhr.onload = () => {
           if (xhr.status < 300) {
@@ -264,12 +261,12 @@ const importFromElectron =
                 Authorization: 'Bearer ' + auth.accessToken,
               },
             })
-              .then((response) => {
-                if (response.data.status === 200)
+              .then((putresponse) => {
+                if (putresponse.data.status === 200)
                   dispatch({
                     payload: {
                       status: completemsg,
-                      msg: response.data.message,
+                      msg: putresponse.data.message,
                     },
                     type: IMPORT_SUCCESS,
                   });
@@ -277,12 +274,12 @@ const importFromElectron =
                   logError(
                     Severity.error,
                     errorReporter,
-                    'import error' + response.data.message
+                    'import error' + putresponse.data.message
                   );
                   dispatch({
                     payload: errorStatus(
-                      response.data.status,
-                      response.data.message
+                      putresponse.data.status,
+                      putresponse.data.message
                     ),
                     type: IMPORT_ERROR,
                   });

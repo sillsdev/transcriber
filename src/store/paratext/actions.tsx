@@ -179,18 +179,19 @@ export const getProjects =
     })
       .then((response) => {
         let pt: ParatextProject[] = [];
-        for (let ix = 0; ix < response.data.length; ix++) {
+        var data = response.data;
+        for (let ix = 0; ix < data?.length; ix++) {
           let o: ParatextProject = {
-            Name: response.data[ix].Name,
-            ShortName: response.data[ix].ShortName,
-            ParatextId: response.data[ix].ParatextId,
-            LanguageName: response.data[ix].LanguageName,
-            LanguageTag: response.data[ix].LanguageTag,
-            CurrentUserRole: response.data[ix].CurrentUserRole,
-            ProjectIds: response.data[ix].ProjectIds,
-            ProjectType: response.data[ix].ProjectType,
-            BaseProject: response.data[ix].BaseProject,
-            IsConnectable: response.data[ix].IsConnectable,
+            Name: data[ix].name,
+            ShortName: data[ix].shortName,
+            ParatextId: data[ix].paratextId,
+            LanguageName: data[ix].languageName,
+            LanguageTag: data[ix].languageTag,
+            CurrentUserRole: data[ix].currentUserRole,
+            ProjectIds: data[ix].projectIds['$values'],
+            ProjectType: data[ix].projectType,
+            BaseProject: data[ix].baseProject,
+            IsConnectable: data[ix].isConnectable,
           };
           pt.push(o);
         }

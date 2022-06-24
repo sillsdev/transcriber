@@ -293,9 +293,9 @@ export const Sources = async (
         infoMsg(err, 'ITFSYNC export failed: ')
       );
     });
-    if (fr && fr.data.attributes.changes > 0) {
-      syncBuffer = fr.data.attributes.buffer;
-      syncFile = fr.data.attributes.message;
+    if (fr && fr.changes > 0) {
+      syncBuffer = fr.buffer;
+      syncFile = fr.message;
     }
   }
   /* set the user from the token - must be done after the backup is loaded and after changes to offline are recorded */
