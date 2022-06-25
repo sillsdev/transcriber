@@ -249,7 +249,7 @@
       </unit>
    	<unit id="artifactType.projectresource">
    		<segment>
-   			<source>Project Resource</source>
+   			<source>General Resource</source>
    			<target/>
    		</segment>
    	</unit>
@@ -2835,7 +2835,7 @@
    	</unit>
    	<unit id="mediaUpload.resourceTitle">
    		<segment>
-   			<source>Upload Resource</source>
+   			<source>Upload Resources</source>
    			<target>Sumber Daya Unggah</target>
    		</segment>
    	</unit>
@@ -3013,6 +3013,12 @@
             <target/>
          </segment>
       </unit>
+   	<unit id="passageDetailArtifacts.allResources">
+   		<segment>
+   			<source>Show resources for all passages</source>
+   			<target/>
+   		</segment>
+   	</unit>
    	<unit id="passageDetailArtifacts.canceling">
    		<segment>
    			<source>Canceling resource creation</source>
@@ -3037,6 +3043,12 @@
             <target/>
          </segment>
       </unit>
+   	<unit id="passageDetailArtifacts.configure">
+   		<segment>
+   			<source>Configure General</source>
+   			<target/>
+   		</segment>
+   	</unit>
    	<unit id="passageDetailArtifacts.copyToClipboard">
    		<segment>
    			<source>Copy to Clipboard</source>
@@ -3061,6 +3073,12 @@
             <target/>
          </segment>
       </unit>
+   	<unit id="passageDetailArtifacts.passageResource">
+   		<segment>
+   			<source>Passage</source>
+   			<target/>
+   		</segment>
+   	</unit>
    	<unit id="passageDetailArtifacts.pasteFormat">
    		<segment>
    			<source>Pasted data must contain two or three columns. One of them must be the reference.</source>
@@ -3075,7 +3093,7 @@
    	</unit>
    	<unit id="passageDetailArtifacts.projectResourcePassage">
    		<segment>
-   			<source>Select Project Resource Passages</source>
+   			<source>Select {0} and Passages</source>
    			<target/>
    		</segment>
    	</unit>
@@ -3087,7 +3105,7 @@
    	</unit>
    	<unit id="passageDetailArtifacts.projectResourceConfigure">
    		<segment>
-   			<source>Project Resource Wizard</source>
+   			<source>Chunk into Resources</source>
    			<target/>
    		</segment>
    	</unit>
@@ -3111,7 +3129,7 @@
    	</unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
-            <source>Select Shared Resource</source>
+            <source>Link Shared Resource</source>
             <target/>
          </segment>
       </unit>
@@ -3135,19 +3153,19 @@
    	</unit>
    	<unit id="passageDetailArtifacts.tip1b">
    		<segment>
-   			<source>Selected shared resourses will be associated with this {0}.</source>
+   			<source>Link a shared resource to this {0}.</source>
    			<target/>
    		</segment>
    	</unit>
    	<unit id="passageDetailArtifacts.tip2a">
    		<segment>
-   			<source>Segments of project resources can be used by many passages or {0}.</source>
+   			<source>Chunk</source>
    			<target/>
    		</segment>
    	</unit>
    	<unit id="passageDetailArtifacts.tip2b">
    		<segment>
-   			<source>Steps through connecting segments of an project resources with {0} and passages.</source>
+   			<source>Steps through connecting chunks of a general resource with {0} and passages.</source>
    			<target/>
    		</segment>
    	</unit>
@@ -3159,13 +3177,13 @@
    	</unit>
       <unit id="passageDetailArtifacts.upload">
          <segment>
-            <source>Upload Resource</source>
+            <source>Upload Resources</source>
             <target/>
          </segment>
       </unit>
    	<unit id="passageDetailArtifacts.uploadProject">
    		<segment>
-   			<source>Upload Project Resource</source>
+   			<source>General - to be used by multiple {0} or passages. (Uploaded files will only appear under Configure General.)</source>
    			<target/>
    		</segment>
    	</unit>

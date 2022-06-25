@@ -17,11 +17,12 @@ interface IStateProps {}
 interface IProps extends IStateProps {
   allowSegment?: boolean;
   saveSegments?: boolean;
+  allowAutoSegment?: boolean;
   onSegment?: (segment: string) => void;
 }
 
 export function PassageDetailPlayer(props: IProps) {
-  const { allowSegment, saveSegments, onSegment } = props;
+  const { allowSegment, allowAutoSegment, saveSegments, onSegment } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const {
@@ -224,6 +225,7 @@ export function PassageDetailPlayer(props: IProps) {
         loading={loading}
         busy={pdBusy}
         allowSegment={allowSegment}
+        allowAutoSegment={allowAutoSegment}
         defaultRegionParams={defaultSegParams}
         segments={defaultSegments}
         markers={discussionMarkers}

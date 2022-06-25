@@ -573,7 +573,6 @@ export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "ITFtask": string;
     "ITFtitle": string;
     "projectResourceTask": string;
-    "projectResourceTitle": string;
     "PTFtask": string;
     "PTFtitle": string;
     "resourceTask": string;

@@ -25,7 +25,6 @@ import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import Uploader from '../../Uploader';
 import AddResource from './AddResource';
-import ProjectResource from './ProjectResource';
 import SortableHeader from './SortableHeader';
 import { IRow } from '../../../context/PassageDetailContext';
 import { SortableList, SortableItem } from '.';
@@ -41,6 +40,7 @@ import {
   useSecResUserDelete,
   useArtifactType,
   ArtifactTypeSlug,
+  useOrganizedBy,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
@@ -94,7 +94,11 @@ interface IStateProps {
 interface IProps extends IStateProps, IRecordProps {
   auth: Auth;
 }
-
+export enum ResourceTypeEnum {
+  sectionResource,
+  passageResource,
+  projectResource,
+}
 export function PassageDetailArtifacts(props: IProps) {
   const classes = useStyles();
   const { sectionResources, mediafiles, artifactTypes, auth, t } = props;
@@ -102,7 +106,6 @@ export function PassageDetailArtifacts(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [project] = useGlobal('project');
   const [, setComplete] = useGlobal('progress');
   const ctx = useContext(PassageDetailContext);
   const {
@@ -119,6 +122,7 @@ export function PassageDetailArtifacts(props: IProps) {
     handleItemPlayEnd,
     handleItemTogglePlay,
   } = ctx.state;
+  const { getOrganizedBy } = useOrganizedBy();
   const AddSectionResource = useSecResCreate(section);
   const AddSectionResourceUser = useSecResUserCreate();
   const ReadSectionResourceUser = useSecResUserRead();
@@ -137,10 +141,15 @@ export function PassageDetailArtifacts(props: IProps) {
   const [editResource, setEditResource] = useState<
     SectionResource | undefined
   >();
+  const [artifactTypeId, setArtifactTypeId] = useState<string>();
+  const [uploadType, setUploadType] = useState<UploadType>(UploadType.Resource);
+
   const catIdRef = useRef<string>();
   const descriptionRef = useRef<string>('');
-  const passRes = useRef(false);
-  const projRef = useRef('');
+
+  const resourceTypeRef = useRef<ResourceTypeEnum>(
+    ResourceTypeEnum.sectionResource
+  );
   const projIdentRef = useRef<RecordIdentity[]>([]);
   const projMediaRef = useRef<MediaFile>();
   const [allResources, setAllResources] = useState(false);
@@ -158,8 +167,14 @@ export function PassageDetailArtifacts(props: IProps) {
         t.attributes?.typename === 'resource' &&
         Boolean(t?.keys?.remoteId) === !offlineOnly
     );
+    setArtifactTypeId(resourceType?.id);
     return resourceType?.id;
   }, [artifactTypes, offlineOnly]);
+
+  const isPassageResource = () =>
+    resourceTypeRef.current === ResourceTypeEnum.passageResource;
+  const isProjectResource = () =>
+    resourceTypeRef.current === ResourceTypeEnum.projectResource;
 
   const projResourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -259,7 +274,9 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleEdit = (id: string) => {
     const secRes = sectionResources.find((r) => related(r, 'mediafile') === id);
     setEditResource(secRes);
-    passRes.current = Boolean(related(secRes, 'passage'));
+    resourceTypeRef.current = Boolean(related(secRes, 'passage'))
+      ? ResourceTypeEnum.passageResource
+      : ResourceTypeEnum.sectionResource;
     descriptionRef.current = secRes?.attributes.description || '';
     const mf = mediafiles.find((m) => m.id === related(secRes, 'mediafile'));
     catIdRef.current = mf ? related(mf, 'artifactCategory') : undefined;
@@ -268,7 +285,6 @@ export function PassageDetailArtifacts(props: IProps) {
     setEditResource(undefined);
     catIdRef.current = undefined;
     descriptionRef.current = '';
-    projRef.current = '';
   };
   const handleEditResourceVisible = (v: boolean) => {
     if (!v) resetEdit();
@@ -282,14 +298,14 @@ export function PassageDetailArtifacts(props: IProps) {
           description: descriptionRef.current,
         },
       });
-      if (passRes.current !== Boolean(related(editResource, 'passage'))) {
+      if (Boolean(related(editResource, 'passage')) !== isPassageResource()) {
         await memory.update((t) => [
           ...ReplaceRelatedRecord(
             t,
             editResource,
             'passage',
             'passage',
-            passRes.current ? passage.id : ''
+            isPassageResource() ? passage.id : ''
           ),
         ]);
       }
@@ -307,14 +323,17 @@ export function PassageDetailArtifacts(props: IProps) {
           ),
         ]);
       }
-      if (mf && passRes.current !== Boolean(related(mf, 'resourcePassage'))) {
+      if (
+        mf &&
+        isPassageResource() !== Boolean(related(mf, 'resourcePassage'))
+      ) {
         await memory.update((t: TransformBuilder) => [
           ...ReplaceRelatedRecord(
             t,
             mf,
             'resourcePassage',
             'passage',
-            passRes.current ? passage.id : ''
+            isPassageResource() ? passage.id : ''
           ),
         ]);
       }
@@ -326,9 +345,6 @@ export function PassageDetailArtifacts(props: IProps) {
   };
   const handleAction = (what: string) => {
     if (what === 'upload') {
-      setUploadVisible(true);
-    } else if (what === 'project-upload') {
-      projRef.current = project;
       setUploadVisible(true);
     } else if (what === 'reference') {
       setSharedResourceVisible(true);
@@ -397,7 +413,7 @@ export function PassageDetailArtifacts(props: IProps) {
             ),
           ]);
         }
-        if (passRes.current) {
+        if (isPassageResource()) {
           await memory.update((t: TransformBuilder) => [
             ...ReplaceRelatedRecord(
               t,
@@ -408,12 +424,12 @@ export function PassageDetailArtifacts(props: IProps) {
             ),
           ]);
         }
-        if (!projRef.current) {
+        if (!isProjectResource()) {
           await AddSectionResource(
             cnt,
             descriptionRef.current,
             mediaRecId,
-            passRes.current ? passage.id : null
+            isPassageResource() ? passage.id : null
           );
         }
       }
@@ -430,7 +446,7 @@ export function PassageDetailArtifacts(props: IProps) {
         cnt,
         r.attributes.reference,
         newMediaRec,
-        passRes.current ? passage.id : null
+        isPassageResource() ? passage.id : null
       );
     }
   };
@@ -497,8 +513,12 @@ export function PassageDetailArtifacts(props: IProps) {
     descriptionRef.current = desc;
   };
 
-  const handlePassRes = () => {
-    passRes.current = !passRes.current;
+  const handlePassRes = (newValue: ResourceTypeEnum) => {
+    resourceTypeRef.current = newValue;
+    setArtifactTypeId(isProjectResource() ? projResourceType : resourceType);
+    setUploadType(
+      isProjectResource() ? UploadType.ProjectResource : UploadType.Resource
+    );
   };
 
   const handleEnded = () => {
@@ -529,10 +549,7 @@ export function PassageDetailArtifacts(props: IProps) {
     <>
       <div className={classes.row}>
         {projRole === RoleNames.Admin && (!offline || offlineOnly) && (
-          <>
-            <AddResource action={handleAction} />
-            <ProjectResource action={handleAction} />
-          </>
+          <AddResource action={handleAction} />
         )}
         <div className={classes.playStatus}>
           <MediaPlayer
@@ -580,10 +597,8 @@ export function PassageDetailArtifacts(props: IProps) {
         multiple={true}
         finish={afterUpload}
         cancelled={cancelled}
-        artifactTypeId={projRef.current ? projResourceType : resourceType}
-        uploadType={
-          projRef.current ? UploadType.ProjectResource : UploadType.Resource
-        }
+        artifactTypeId={artifactTypeId}
+        uploadType={uploadType}
         metaData={
           <ResourceData
             catAllowNew={true} //if they can upload they can add cat
@@ -592,8 +607,9 @@ export function PassageDetailArtifacts(props: IProps) {
             initDescription=""
             onDescriptionChange={handleDescription}
             catRequired={false}
-            initPassRes={passRes.current}
-            onPassResChange={!projRef.current ? handlePassRes : undefined}
+            initPassRes={isPassageResource()}
+            onPassResChange={handlePassRes}
+            allowProject={true}
           />
         }
       />
@@ -619,7 +635,7 @@ export function PassageDetailArtifacts(props: IProps) {
         />
       </BigDialog>
       <BigDialog
-        title={t.projectResourcePassage}
+        title={t.projectResourcePassage.replace('{0}', getOrganizedBy(false))}
         isOpen={projResPassageVisible}
         onOpen={handleProjResPassageVisible}
       >
@@ -660,8 +676,9 @@ export function PassageDetailArtifacts(props: IProps) {
           initDescription={descriptionRef.current}
           onDescriptionChange={handleDescription}
           catRequired={false}
-          initPassRes={passRes.current}
+          initPassRes={resourceTypeRef.current}
           onPassResChange={handlePassRes}
+          allowProject={false}
         />
       </BigDialog>
       {confirm && (
