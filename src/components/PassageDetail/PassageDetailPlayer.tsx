@@ -78,7 +78,6 @@ export function PassageDetailPlayer(props: IProps) {
   };
 
   useEffect(() => {
-    console.log('ctx loadSegments');
     loadSegments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -122,7 +121,6 @@ export function PassageDetailPlayer(props: IProps) {
   };
 
   useEffect(() => {
-    console.log('ctx save req');
     if (saveRequested(toolId) && !savingRef.current) writeSegments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saveRequested]);
@@ -146,7 +144,6 @@ export function PassageDetailPlayer(props: IProps) {
   };
 
   const onCurrentSegment = (segment: IRegion | undefined) => {
-    console.log('onCurrent', segment);
     var index = 0;
     if (segment && segmentsRef.current) {
       var segs = parseRegions(segmentsRef.current);
@@ -155,7 +152,6 @@ export function PassageDetailPlayer(props: IProps) {
           .sort((a: IRegion, b: IRegion) => a.start - b.start)
           .findIndex((r: IRegion) => r.start === segment.start) + 1;
     }
-    console.log('onCurSeg', index);
     setCurrentSegment && setCurrentSegment(segment, index);
   };
   const onSegmentChange = (segments: string) => {
@@ -187,12 +183,10 @@ export function PassageDetailPlayer(props: IProps) {
   }, [highlightDiscussion]);
 
   useEffect(() => {
-    console.log('ctx playing');
     if (playing !== playingRef.current) setRequestPlay(playing);
   }, [playing]);
 
   useEffect(() => {
-    console.log('ctx cur step');
     setupLocate(setPlayerSegments);
     return () => {
       setupLocate();
@@ -201,7 +195,6 @@ export function PassageDetailPlayer(props: IProps) {
   }, [currentstep]);
 
   useEffect(() => {
-    console.log('ctx tool chg');
     if (saveRequested(toolId)) handleSave();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);

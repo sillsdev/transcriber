@@ -25,7 +25,6 @@ export const convertBlob =
     var fileReader = new FileReader();
     fileReader.onload = function () {
       blobData = this.result;
-      console.log('fileReader ready');
       postMessage();
     };
 

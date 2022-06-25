@@ -154,7 +154,6 @@ export function PassageDetailRecord(props: IProps) {
   };
   const handleAudacityImport = (i: number, list: File[]) => {
     saveIfChanged(() => {
-      console.log('audacity import', list);
       setImportList(list);
       setUploadVisible(true);
     });
