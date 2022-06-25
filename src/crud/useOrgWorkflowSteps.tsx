@@ -7,7 +7,7 @@ import {
   OrgWorkflowStep,
   WorkflowStep,
 } from '../model';
-import { AddRecord } from '../model/baseModel';
+import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { logError, Severity, toCamel, waitForIt } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -60,8 +60,15 @@ export const useOrgWorkflowSteps = () => {
       },
     } as OrgWorkflowStep;
     ops.push(...AddRecord(t, wfs, user, memory));
-    const orgRecId = { type: 'organization', id: org || global.organization };
-    ops.push(t.replaceRelatedRecord(wfs, 'organization', orgRecId));
+    ops.push(
+      ...ReplaceRelatedRecord(
+        t,
+        wfs,
+        'organization',
+        'organization',
+        org || global.organization
+      )
+    );
     try {
       await memory.update(ops);
     } catch (ex) {

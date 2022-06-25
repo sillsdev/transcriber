@@ -139,7 +139,7 @@ export const useOfflineSetup = () => {
       const t = new TransformBuilder();
       var process = 'OBT';
       let ops = [
-        { name: 'Internalization', tool: 'resource' },
+        { name: 'Internalize', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TeamCheck', tool: 'teamCheck' },
         { name: 'PeerReview', tool: 'teamCheck' },
@@ -171,7 +171,7 @@ export const useOfflineSetup = () => {
 
       process = 'OBS';
       ops = [
-        { name: 'Internalization', tool: 'resource' },
+        { name: 'Internalize', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TeamCheck', tool: 'teamCheck' },
         { name: 'PeerReview', tool: 'teamCheck' },
@@ -201,7 +201,7 @@ export const useOfflineSetup = () => {
       await memory.sync(await backup.push(ops));
       process = 'draft';
       ops = [
-        { name: 'Internalization', tool: 'resource' },
+        { name: 'Internalize', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TeamCheck', tool: 'teamCheck' },
         { name: 'Transcribe', tool: 'transcribe"}' },
@@ -289,6 +289,7 @@ export const useOfflineSetup = () => {
         'resource',
         'retell',
         'sharedresource',
+        'projectresource',
       ].map((n) => {
         let rec = {
           type: 'artifacttype',

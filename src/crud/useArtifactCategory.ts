@@ -3,8 +3,8 @@ import { IState, IArtifactCategoryStrings, ArtifactCategory } from '../model';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
-import { related } from '.';
-import { AddRecord } from '../model/baseModel';
+import { related, findRecord } from '.';
+import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { waitForIt } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
 
@@ -42,6 +42,13 @@ export const useArtifactCategory = () => {
       }
     }
     return fromLocal[val] || val;
+  };
+
+  const slugFromId = (id: string) => {
+    var aRec = {} as ArtifactCategory;
+    if (id)
+      aRec = findRecord(memory, 'artifactcategory', id) as ArtifactCategory;
+    return aRec && aRec.attributes ? aRec.attributes.categoryname : '';
   };
 
   const getArtifactCategorys = async (
@@ -114,13 +121,12 @@ export const useArtifactCategory = () => {
       const t = new TransformBuilder();
       var ops = [
         ...AddRecord(t, artifactCategory, user, memory),
-        t.replaceRelatedRecord(
-          { type: 'artifactcategory', id: artifactCategory.id },
+        ...ReplaceRelatedRecord(
+          t,
+          artifactCategory,
           'organization',
-          {
-            type: 'organization',
-            id: organization,
-          }
+          'organization',
+          organization
         ),
       ];
       await memory.update(ops);
@@ -128,9 +134,8 @@ export const useArtifactCategory = () => {
     }
   };
   const scriptureTypeCategory = (cat: string) => {
-    return (
-      ['scripture', 'biblestory'].includes(cat) ||
-      ['scripture', 'biblestory'].includes(fromLocalizedArtifactCategory(cat))
+    return ['scripture', 'biblestory'].includes(
+      fromLocalizedArtifactCategory(cat)
     );
   };
 
@@ -140,5 +145,6 @@ export const useArtifactCategory = () => {
     localizedArtifactCategory,
     fromLocalizedArtifactCategory,
     scriptureTypeCategory,
+    slugFromId,
   };
 };

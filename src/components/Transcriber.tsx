@@ -15,6 +15,7 @@ import {
   Integration,
   ProjectIntegration,
   RoleNames,
+  IActivityStateStrings,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -77,10 +78,13 @@ import TranscribeAddNote from './TranscribeAddNote';
 import WSAudioPlayer from './WSAudioPlayer';
 import PassageHistory from './PassageHistory';
 import { HotKeyContext } from '../context/HotKeyContext';
+import TaskFlag from './TaskFlag';
 import Spelling from './Spelling';
 import { SectionPassageTitle } from '../control/SectionPassageTitle';
 import { UnsavedContext } from '../context/UnsavedContext';
 import StickyRedirect from './StickyRedirect';
+import { activitySelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -106,6 +110,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     padRow: {
       paddingTop: '16px',
+    },
+    taskFlag: {
+      display: 'flex',
+      alignItems: 'center',
     },
     button: {
       marginLeft: theme.spacing(1),
@@ -224,6 +232,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
 interface IProps extends IStateProps, IRecordProps, IDispatchProps {
   auth: Auth;
+  defaultWidth?: number;
 }
 
 export function Transcriber(props: IProps) {
@@ -294,7 +303,7 @@ export function Transcriber(props: IProps) {
   const [boxHeight, setBoxHeight] = useState(
     height - (INIT_PLAYER_HEIGHT + 200)
   );
-  const [width, setWidth] = useState(window.innerWidth);
+  const [width, setWidth] = useState(props.defaultWidth || window.innerWidth);
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
   const [defaultPosition, setDefaultPosition] = useState(0.0);
@@ -339,6 +348,7 @@ export function Transcriber(props: IProps) {
     direction: projData?.fontDir as any,
     cursor: 'default',
   });
+  const ta: IActivityStateStrings = useSelector(activitySelector, shallowEqual);
   const toolId = 'transcriber';
   /* debug what props are changing to force renders
   useRenderingTrace(
@@ -416,6 +426,11 @@ export function Transcriber(props: IProps) {
 
   const keys = [{ key: HISTORY_KEY, cb: handleShowHistory }];
 
+  const setDimensions = () => {
+    setHeight(window.innerHeight);
+    setWidth(props.defaultWidth || window.innerWidth - TaskItemWidth - 16);
+  };
+
   useEffect(() => {
     const getParatextIntegration = () => {
       const intfind = integrations.findIndex(
@@ -442,6 +457,11 @@ export function Transcriber(props: IProps) {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    setDimensions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.defaultWidth]);
 
   useEffect(() => {
     if (!allDone) {
@@ -475,7 +495,8 @@ export function Transcriber(props: IProps) {
   }, [toolsChanged]);
 
   useEffect(() => {
-    const newBoxHeight = height - (playerSize + 220);
+    const headHeight = props.defaultWidth ? 120 : 0;
+    const newBoxHeight = height - (playerSize + 220) - headHeight;
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, playerSize]);
@@ -890,11 +911,6 @@ export function Transcriber(props: IProps) {
     ).then(() => doReopen());
   };
 
-  const setDimensions = () => {
-    setHeight(window.innerHeight);
-    setWidth(window.innerWidth - TaskItemWidth - 16);
-  };
-
   const getTranscription = () => {
     const attr = mediafile.attributes || {};
     segmentsRef.current = getSegments(
@@ -1011,7 +1027,7 @@ export function Transcriber(props: IProps) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
-        {allDone ? (
+        {allDone && !props.defaultWidth ? (
           <div>
             {allowBack && (
               <div className={classes.grow}>
@@ -1029,26 +1045,32 @@ export function Transcriber(props: IProps) {
           </div>
         ) : (
           <Grid container direction="column" style={style}>
-            <Grid container alignItems="center" justifyContent="space-between">
-              <Grid item md={9}>
-                <SectionPassageTitle
-                  section={section}
-                  passage={passage}
-                  allBookData={allBookData}
-                />
-              </Grid>
-              {allowBack && (
-                <Grid item md={3} container alignContent="flex-end">
-                  <Button
-                    id="back-to-workflow"
-                    onClick={handleWorkflow}
-                    variant="contained"
-                  >
-                    {t.backToWorkflow}
-                  </Button>
+            {props.defaultWidth === undefined && (
+              <Grid
+                container
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Grid item md={9}>
+                  <SectionPassageTitle
+                    section={section}
+                    passage={passage}
+                    allBookData={allBookData}
+                  />
                 </Grid>
-              )}
-            </Grid>
+                {allowBack && (
+                  <Grid item md={3} container alignContent="flex-end">
+                    <Button
+                      id="back-to-workflow"
+                      onClick={handleWorkflow}
+                      variant="contained"
+                    >
+                      {t.backToWorkflow}
+                    </Button>
+                  </Grid>
+                )}
+              </Grid>
+            )}
             <Wrapper>
               <SplitPane
                 defaultSize={INIT_PLAYER_HEIGHT}
@@ -1168,35 +1190,44 @@ export function Transcriber(props: IProps) {
             </Wrapper>
 
             <Grid container direction="row" className={classes.padRow}>
-              <Grid item>
-                <Button
-                  id="transcriber.showNote"
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleShowAddNote}
-                  disabled={selected === ''}
-                >
-                  {t.addNote}
-                </Button>
-
-                <LightTooltip
-                  title={t.historyTip.replace(
-                    '{0}',
-                    localizeHotKey(HISTORY_KEY)
-                  )}
-                >
-                  <span>
-                    <IconButton
-                      id="transcriber.showHistory"
-                      onClick={handleShowHistory}
+              <Grid item className={classes.taskFlag}>
+                {!props.defaultWidth ? (
+                  <>
+                    <Button
+                      id="transcriber.showNote"
+                      variant="outlined"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleShowAddNote}
+                      disabled={selected === ''}
                     >
-                      <>
-                        <HistoryIcon />
-                      </>
-                    </IconButton>
-                  </span>
-                </LightTooltip>
+                      {t.addNote}
+                    </Button>
+
+                    <LightTooltip
+                      title={t.historyTip.replace(
+                        '{0}',
+                        localizeHotKey(HISTORY_KEY)
+                      )}
+                    >
+                      <span>
+                        <IconButton
+                          id="transcriber.showHistory"
+                          onClick={handleShowHistory}
+                        >
+                          <>
+                            <HistoryIcon />
+                          </>
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+                  </>
+                ) : (
+                  <TaskFlag
+                    ta={ta}
+                    state={mediafile?.attributes?.transcriptionstate || ''}
+                  />
+                )}
                 {isElectron && <Spelling />}
               </Grid>
               <Grid item xs>

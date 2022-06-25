@@ -250,6 +250,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactType.projectresource">
+         <segment>
+            <source>General Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactType.qanda">
          <segment>
             <source>Question and Answer</source>
@@ -1396,6 +1402,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupTabs.peerGroups">
+         <segment>
+            <source>Peer Groups</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="groupTabs.roles">
          <segment>
             <source>Roles</source>
@@ -2506,6 +2518,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaActions.drag">
+         <segment>
+            <source>Drag to reorder</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.edit">
+         <segment>
+            <source>Edit</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaActions.pause">
          <segment>
             <source>Pause</source>
@@ -2515,6 +2539,12 @@
       <unit id="mediaActions.play">
          <segment>
             <source>Play</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.view">
+         <segment>
+            <source>View</source>
             <target/>
          </segment>
       </unit>
@@ -2800,6 +2830,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.projectResourceTask">
+         <segment>
+            <source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.PTFtask">
          <segment>
             <source>Upload a Portable Transcriber File (ptf).</source>
@@ -2820,7 +2856,7 @@
       </unit>
       <unit id="mediaUpload.resourceTitle">
          <segment>
-            <source>Upload Resource</source>
+            <source>Upload Resources</source>
             <target/>
          </segment>
       </unit>
@@ -2998,9 +3034,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.allResources">
+         <segment>
+            <source>Show resources for all passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.canceling">
+         <segment>
+            <source>Canceling resource creation</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.category">
          <segment>
             <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.clipboard">
+         <segment>
+            <source>clipboard</source>
             <target/>
          </segment>
       </unit>
@@ -3010,9 +3064,81 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.configure">
+         <segment>
+            <source>Configure General</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.copyToClipboard">
+         <segment>
+            <source>Copy to Clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.createResources">
+         <segment>
+            <source>Create Resources</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.deleteConfirm">
+         <segment>
+            <source>Delete Resource?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.description">
+         <segment>
+            <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.editResource">
          <segment>
             <source>Edit Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.passageResource">
+         <segment>
+            <source>Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.pasteFormat">
+         <segment>
+            <source>Pasted data must contain two or three columns. One of them must be the reference.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.pasteNoChange">
+         <segment>
+            <source>Nothing changed! Perhaps no references matched?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.projectResourcePassage">
+         <segment>
+            <source>Select {0} and Passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.projectResourceSheet">
+         <segment>
+            <source>Project Resource Sheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.projectResourceConfigure">
+         <segment>
+            <source>Chunk into Resources</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.reference">
+         <segment>
+            <source>Reference</source>
             <target/>
          </segment>
       </unit>
@@ -3022,9 +3148,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.resourcesDeleted">
+         <segment>
+            <source> ({0} resources will be deleted.)</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
-            <source>Select Shared Resource</source>
+            <source>Link Shared Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.startStop">
+         <segment>
+            <source>Start - Stop</source>
             <target/>
          </segment>
       </unit>
@@ -3034,9 +3172,45 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.tip1a">
+         <segment>
+            <source>Resources for:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.tip1b">
+         <segment>
+            <source>Link a shared resource to this {0}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.tip2a">
+         <segment>
+            <source>Chunk</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.tip2b">
+         <segment>
+            <source>Steps through connecting chunks of a general resource with {0} and passages.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.unusedSegment">
+         <segment>
+            <source>Unused segment: only segments with References will create resources</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.upload">
          <segment>
-            <source>Upload Resource</source>
+            <source>Upload Resources</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.uploadProject">
+         <segment>
+            <source>General - to be used by multiple {0} or passages. (Uploaded files will only appear under Configure General.)</source>
             <target/>
          </segment>
       </unit>
@@ -3139,6 +3313,54 @@
       <unit id="passageRecord.uncompressed">
          <segment>
             <source>Uncompressed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.peerDescription">
+         <segment>
+            <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.editPeerGroup">
+         <segment>
+            <source>Edit Peer Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.inUse">
+         <segment>
+            <source>Name already in use</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.member">
+         <segment>
+            <source>Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.newPeerGroup">
+         <segment>
+            <source>New Peer Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.peerGroup">
+         <segment>
+            <source>Peer Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.remove">
+         <segment>
+            <source>Remove</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.removeConfirm">
+         <segment>
+            <source>Do you want to remove the peer group and information about who are the members?</source>
             <target/>
          </segment>
       </unit>
@@ -3838,6 +4060,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.delete">
+         <segment>
+            <source>Delete {0}. Are you sure?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.description">
          <segment>
             <source>Description</source>
@@ -3925,6 +4153,12 @@
       <unit id="shared.no">
          <segment>
             <source>No</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.noAudio">
+         <segment>
+            <source>No Audio Available!</source>
             <target/>
          </segment>
       </unit>
@@ -5452,7 +5686,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.internalization">
+      <unit id="workflowSteps.internalize">
          <segment>
             <source>Internalize</source>
             <target/>

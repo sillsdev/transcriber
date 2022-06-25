@@ -178,6 +178,7 @@ interface IProps extends IStateProps {
   allowRecord?: boolean;
   allowZoom?: boolean;
   allowSegment?: boolean;
+  allowAutoSegment?: boolean;
   allowSpeed?: boolean;
   allowSilence?: boolean;
   size: number;
@@ -233,6 +234,7 @@ function WSAudioPlayer(props: IProps) {
     allowRecord,
     allowZoom,
     allowSegment,
+    allowAutoSegment,
     allowSpeed,
     allowSilence,
     size,
@@ -948,7 +950,7 @@ function WSAudioPlayer(props: IProps) {
                 playing={playing}
                 currentNumRegions={hasRegion}
                 params={regionParams}
-                wsAutoSegment={wsAutoSegment}
+                wsAutoSegment={allowAutoSegment ? wsAutoSegment : undefined}
                 wsRemoveSplitRegion={wsRemoveSplitRegion}
                 wsAddOrRemoveRegion={wsAddOrRemoveRegion}
                 wsClearRegions={wsClearRegions}
@@ -962,23 +964,25 @@ function WSAudioPlayer(props: IProps) {
           {justPlayButton || (
             <Grid container className={classes.toolbar}>
               <Grid item>
-                <LightTooltip
-                  id="wsAudioLoopTip"
-                  title={looping ? t.loopon : t.loopoff}
-                >
-                  <span>
-                    <ToggleButton
-                      id="wsAudioLoop"
-                      className={classes.togglebutton}
-                      value="loop"
-                      selected={looping}
-                      onChange={handleToggleLoop}
-                      disabled={!hasRegion}
-                    >
-                      <LoopIcon />
-                    </ToggleButton>
-                  </span>
-                </LightTooltip>
+                {allowAutoSegment && (
+                  <LightTooltip
+                    id="wsAudioLoopTip"
+                    title={looping ? t.loopon : t.loopoff}
+                  >
+                    <span>
+                      <ToggleButton
+                        id="wsAudioLoop"
+                        className={classes.togglebutton}
+                        value="loop"
+                        selected={looping}
+                        onChange={handleToggleLoop}
+                        disabled={!hasRegion}
+                      >
+                        <LoopIcon />
+                      </ToggleButton>
+                    </span>
+                  </LightTooltip>
+                )}
                 {allowSegment && (
                   <>
                     <LightTooltip

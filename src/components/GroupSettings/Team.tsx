@@ -33,6 +33,7 @@ import Confirm from '../AlertDialog';
 import { OptionType } from '../../model';
 import { related, useRole } from '../../crud';
 import { localizeRole } from '../../utils';
+import { ReplaceRelatedRecord } from '../../model/baseModel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -130,13 +131,15 @@ function Team(props: IProps) {
     const ids = getGroups(id);
     const roleId = getRoleId(role);
     if (ids.length > 0 && roleId.length > 0) {
-      memory.update((t: TransformBuilder) =>
-        t.replaceRelatedRecord(
+      memory.update((t: TransformBuilder) => [
+        ...ReplaceRelatedRecord(
+          t,
           { type: 'groupmembership', id: ids[0] },
           'role',
-          { type: 'role', id: roleId }
-        )
-      );
+          'role',
+          roleId
+        ),
+      ]);
     }
   };
 

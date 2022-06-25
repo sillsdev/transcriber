@@ -240,17 +240,13 @@ const PassageDetailGrids = (props: IProps) => {
             </Grid>
           </Grid>
         )}
-        {tool === ToolSlug.Transcribe && (
-          <Grid item xs={12} className={classes.transcriber}>
-            <PassageDetailTranscribe />
-          </Grid>
-        )}
         {tool === ToolSlug.Paratext && (
           <IntegrationTab {...props} auth={auth} />
         )}
         {(tool === ToolSlug.Discuss ||
           tool === ToolSlug.TeamCheck ||
-          tool === ToolSlug.Record) && (
+          tool === ToolSlug.Record ||
+          tool === ToolSlug.Transcribe) && (
           <Paper className={classes.paper}>
             <Wrapper>
               <SplitPane
@@ -265,7 +261,7 @@ const PassageDetailGrids = (props: IProps) => {
                       <PassageDetailRecord auth={auth} />
                     </Grid>
                   )}
-                  {tool !== ToolSlug.Record && (
+                  {tool !== ToolSlug.Record && tool !== ToolSlug.Transcribe && (
                     <Grid item className={classes.description} xs={12}>
                       <PassageDetailPlayer />
                     </Grid>
@@ -273,6 +269,14 @@ const PassageDetailGrids = (props: IProps) => {
                   {tool === ToolSlug.TeamCheck && (
                     <Grid item className={classes.description} xs={12}>
                       <TeamCheckReference auth={auth} />
+                    </Grid>
+                  )}
+                  {tool === ToolSlug.Transcribe && (
+                    <Grid item className={classes.description} xs={12}>
+                      <PassageDetailTranscribe
+                        auth={auth}
+                        width={width - discussionSize.width - 16}
+                      />
                     </Grid>
                   )}
                 </Pane>

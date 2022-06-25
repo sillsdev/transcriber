@@ -289,6 +289,13 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="artifactType.projectresource">
+      		<source>General Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AlertDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="artifactType.qanda">
             <source>Question and Answer</source>
             <target/>
@@ -1626,6 +1633,13 @@
                <context context-type="sourcefile">GroupTabs.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="groupTabs.peerGroups">
+      		<source>Peer Groups</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="groupTabs.roles">
             <source>Roles</source>
             <target/>
@@ -2921,6 +2935,20 @@
                <context context-type="sourcefile">MediaActions.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaActions.drag">
+      		<source>Drag to reorder</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.edit">
+      		<source>Edit</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="mediaActions.pause">
             <source>Pause</source>
             <target/>
@@ -2935,6 +2963,13 @@
                <context context-type="sourcefile">MediaActions.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaActions.view">
+      		<source>View</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="mediaTab.action">
             <source>Action</source>
             <target/>
@@ -3264,6 +3299,13 @@
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaUpload.projectResourceTask">
+      		<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="mediaUpload.PTFtask">
             <source>Upload a Portable Transcriber File (ptf).</source>
             <target/>
@@ -3286,7 +3328,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="mediaUpload.resourceTitle">
-      		<source>Upload Resource</source>
+      		<source>Upload Resources</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">MediaUpload.tsx</context>
@@ -3495,6 +3537,20 @@
                <context context-type="sourcefile">AddResource.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.allResources">
+      		<source>Show resources for all passages</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.canceling">
+      		<source>Canceling resource creation</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.category">
             <source>Category</source>
             <target/>
@@ -3502,6 +3558,13 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.clipboard">
+      		<source>clipboard</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.completed">
             <source>Completed</source>
             <target/>
@@ -3509,6 +3572,41 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.configure">
+      		<source>Configure General</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.copyToClipboard">
+      		<source>Copy to Clipboard</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.createResources">
+      		<source>Create Resources</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.deleteConfirm">
+      		<source>Delete Resource?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.description">
+      		<source>Description</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.editResource">
             <source>Edit Resource</source>
             <target/>
@@ -3516,6 +3614,55 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.passageResource">
+      		<source>Passage</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.pasteFormat">
+      		<source>Pasted data must contain two or three columns. One of them must be the reference.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.pasteNoChange">
+      		<source>Nothing changed! Perhaps no references matched?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.projectResourcePassage">
+      		<source>Select {0} and Passages</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.projectResourceSheet">
+      		<source>Project Resource Sheet</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.projectResourceConfigure">
+      		<source>Chunk into Resources</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.reference">
+      		<source>Reference</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.resource">
             <source>Resource</source>
             <target/>
@@ -3523,27 +3670,83 @@
                <context context-type="sourcefile">AddResource.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.resourcesDeleted">
+      		<source> ({0} resources will be deleted.)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.sharedResource">
-            <source>Select Shared Resource</source>
+            <source>Link Shared Resource</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="passageDetailArtifacts.type">
-            <source>Type</source>
+      	<trans-unit id="passageDetailArtifacts.startStop">
+      		<source>Start - Stop</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.type">
+      		<source>Type</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.tip1a">
+      		<source>Resources for:</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.tip1b">
+      		<source>Link a shared resource to this {0}.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.tip2a">
+      		<source>Chunk</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.tip2b">
+         	<source>Steps through connecting chunks of a general resource with {0} and passages.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.unusedSegment">
+      		<source>Unused segment: only segments with References will create resources</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.upload">
-            <source>Upload Resource</source>
+            <source>Upload Resources</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.uploadProject">
+      		<source>General - to be used by multiple {0} or passages. (Uploaded files will only appear under Configure General.)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.version">
             <source>Version</source>
             <target/>
@@ -3663,6 +3866,62 @@
                <context context-type="sourcefile">passageRecord.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="peer.peerDescription">
+      		<source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.editPeerGroup">
+      		<source>Edit Peer Group</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.inUse">
+      		<source>Name already in use</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.member">
+      		<source>Member</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Peer.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.newPeerGroup">
+      		<source>New Peer Group</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.peerGroup">
+      		<source>Peer Group</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.remove">
+      		<source>Remove</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.removeConfirm">
+      		<source>Do you want to remove the peer group and information about who are the members?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="planActions.assign">
             <source>Assign</source>
             <target/>
@@ -4475,6 +4734,13 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="shared.delete">
+      		<source>Delete {0}. Are you sure?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AlertDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="shared.description">
             <source>Description</source>
             <target/>
@@ -4580,6 +4846,13 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="shared.noAudio">
+      		<source>No Audio Available!</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="shared.NoSaveOffline">
             <source>Unable to save while offline.</source>
             <target/>
@@ -6358,7 +6631,7 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.internalization">
+         <trans-unit id="workflowSteps.internalize">
             <source>Internalize</source>
             <target/>
             <context-group>

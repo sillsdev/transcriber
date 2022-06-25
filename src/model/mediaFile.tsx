@@ -8,6 +8,7 @@ export interface MediaFile extends BaseModel {
     artifactType: string | null;
     eafUrl: string | null;
     audioUrl: string;
+    s3file: string;
     duration: number;
     contentType: string;
     audioQuality: string | null;
@@ -33,6 +34,7 @@ export interface MediaFile extends BaseModel {
   };
   relationships?: {
     passage: RecordRelationship;
+    resourcePassage: RecordRelationship;
     plan: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
     artifactType: RecordRelationship;

@@ -16,7 +16,7 @@ import { CheckedChoice as ShowAll } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
 import { toCamel } from '../../utils';
 import { getTool, ToolSlug, defaultWorkflow } from '../../crud';
-import { AddRecord } from '../../model/baseModel';
+import { AddRecord, ReplaceRelatedRecord } from '../../model/baseModel';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { UnsavedContext } from '../../context/UnsavedContext';
 
@@ -219,10 +219,15 @@ export const StepEditor = ({ process, org }: IProps) => {
           },
         } as OrgWorkflowStep;
         if (org) {
-          const orgRec = { type: 'organization', id: org };
           await memory.update((t: TransformBuilder) => [
             ...AddRecord(t, rec, user, memory),
-            t.replaceRelatedRecord(rec, 'organization', orgRec),
+            ...ReplaceRelatedRecord(
+              t,
+              rec,
+              'organization',
+              'organization',
+              org
+            ),
           ]);
         }
         count += 1;

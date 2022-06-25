@@ -90,7 +90,6 @@ export function useWaveSurferRegions(
     wavesurferRef.current = ws;
     if (ws) {
       ws.on('region-created', function (r: any) {
-        //console.log('region-created', loadingRef.current);
         if (singleRegionRef.current) {
           r.drag = true;
           if (currentRegion()) currentRegion().remove();
@@ -119,7 +118,7 @@ export function useWaveSurferRegions(
           r.attributes.nextRegion.attributes.prevRegion =
             r.attributes.prevRegion;
         if (!loadingRef.current) {
-          //wait for it to be removed from this list
+          // wait for it to be removed from this list
           waitForIt(
             'region removed',
             () => region(r.id) === undefined,
@@ -176,11 +175,9 @@ export function useWaveSurferRegions(
       //   console.log('region-play', r.start, r.loop);
       // });
       ws.on('region-in', function (r: any) {
-        //console.log('region-in', r.start, r.loop);
         setCurrentRegion(r);
       });
       ws.on('region-out', function (r: any) {
-        //console.log('region-out', r.start, r.loop, playRegionRef.current);
         //help it in case it forgot -- unless the user clicked out
         //here is where we could add a pause possibly
         if (r.loop && r === loopingRegionRef.current) goto(r.start);

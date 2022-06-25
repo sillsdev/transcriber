@@ -26,7 +26,13 @@ import {
 } from '@material-ui/core';
 import WSAudioPlayer from './WSAudioPlayer';
 import { QueryBuilder } from '@orbit/data';
-import { generateUUID, loadBlob, removeExtension, waitForIt } from '../utils';
+import {
+  generateUUID,
+  loadBlob,
+  removeExtension,
+  waitForIt,
+  cleanFileName,
+} from '../utils';
 import { MediaSt, useFetchMediaUrl } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { bindActionCreators } from 'redux';
@@ -328,7 +334,7 @@ function MediaRecord(props: IProps) {
 
   const handleChangeFileName = (e: any) => {
     e.persist();
-    setName(e.target.value);
+    setName(cleanFileName(e.target.value));
     setUserHasSetName(true);
   };
 

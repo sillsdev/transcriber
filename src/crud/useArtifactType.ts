@@ -9,7 +9,7 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { findRecord, related } from '.';
-import { AddRecord } from '../model/baseModel';
+import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 
 export const VernacularTag = null; // used to test the relationship
 
@@ -22,6 +22,7 @@ export enum ArtifactTypeSlug {
   Activity = 'activity',
   Resource = 'resource',
   SharedResource = 'sharedResource',
+  ProjectResource = 'projectresource',
 }
 interface ISwitches {
   [key: string]: any;
@@ -130,13 +131,12 @@ export const useArtifactType = () => {
     const t = new TransformBuilder();
     await memory.update([
       ...AddRecord(t, artifactType, user, memory),
-      t.replaceRelatedRecord(
-        { type: 'artifacttype', id: artifactType.id },
+      ...ReplaceRelatedRecord(
+        t,
+        artifactType,
         'organization',
-        {
-          type: 'organization',
-          id: organization,
-        }
+        'organization',
+        organization
       ),
     ]);
   };

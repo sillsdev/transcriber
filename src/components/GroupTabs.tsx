@@ -1,4 +1,4 @@
-import React from 'react';
+import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, IGroupTabsStrings } from '../model';
@@ -8,6 +8,7 @@ import { AppBar, Tabs, Tab } from '@material-ui/core';
 import UserTable from '../components/UserTable';
 import GroupSettings from '../components/GroupSettings/GroupSettings';
 import InvitationTable from '../components/InvitationTable';
+import Peer from './Peers/Peer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,6 +34,7 @@ const GroupTabs = (props: IProps) => {
   const classes = useStyles();
   const [tab, setTab] = useGlobal('tab');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const [isDeveloper] = useGlobal('developer');
 
   const handleChange = (event: any, value: number) => {
     setTab(value);
@@ -40,6 +42,8 @@ const GroupTabs = (props: IProps) => {
       changeTab(value);
     }
   };
+
+  const last = useMemo(() => (isDeveloper ? 3 : 2), [isDeveloper]);
 
   return (
     <div className={classes.root}>
@@ -54,12 +58,14 @@ const GroupTabs = (props: IProps) => {
         >
           <Tab label={t.users} />
           <Tab label={t.roles} />
+          {isDeveloper && <Tab label={t.peerGroups} />}
           {!offlineOnly && <Tab label={t.invitations} />}
         </Tabs>
       </AppBar>
-      {((tab || 0) === 0 || tab > 2) && <UserTable {...props} />}
+      {((tab || 0) === 0 || tab > last) && <UserTable {...props} />}
       {tab === 1 && <GroupSettings {...props} />}
-      {tab === 2 && <InvitationTable {...props} />}
+      {isDeveloper && tab === 2 && <Peer />}
+      {tab === last && <InvitationTable {...props} />}
     </div>
   );
 };

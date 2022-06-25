@@ -171,7 +171,7 @@ export const SelectArtifactCategory = (props: IProps) => {
         select
         label={t.artifactCategory}
         className={classes.textField}
-        value={categoryId}
+        value={categoryId || ''}
         onChange={handleArtifactCategoryChange}
         SelectProps={{
           MenuProps: {
@@ -228,7 +228,7 @@ export const SelectArtifactCategory = (props: IProps) => {
               id="new-artifact-cat"
               label={t.newArtifactCategory}
               className={classes.newTextField}
-              value={newArtifactCategory}
+              value={newArtifactCategory || ''}
               onChange={handleNewArtifactCategoryChange}
             ></TextField>
             <IconButton

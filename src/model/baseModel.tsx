@@ -44,36 +44,20 @@ export const UpdateLastModifiedBy = (
   rec: RecordIdentity,
   user: string
 ): any => {
-  var updDate = t.replaceAttribute(rec, 'dateUpdated', currentDateTime());
-  if (related(rec, 'lastModifiedByUser') !== undefined)
-    return [
-      updDate,
-      t.replaceRelatedRecord(rec, 'lastModifiedByUser', {
-        type: 'user',
-        id: user,
-      }),
-    ];
-  else
-    return [
-      updDate,
-      t.addToRelatedRecords(rec, 'lastModifiedByUser', {
-        type: 'user',
-        id: user,
-      }),
-    ];
+  return [
+    t.replaceAttribute(rec, 'dateUpdated', currentDateTime()),
+    ...ReplaceRelatedRecord(t, rec, 'lastModifiedByUser', 'user', user),
+  ];
 };
-export const UpdateRelatedRecord = (
+export const ReplaceRelatedRecord = (
   t: TransformBuilder,
-  rec: BaseModel,
+  rec: BaseModel | RecordIdentity,
   relationship: string,
   relatedType: string,
-  newId: string | undefined,
-  user: string
+  newId: string | undefined | null
 ): any => {
-  rec.attributes.dateUpdated = currentDateTime();
   if (related(rec, relationship) !== undefined)
     return [
-      ...UpdateLastModifiedBy(t, rec, user),
       t.replaceRelatedRecord(
         rec,
         relationship,
@@ -87,10 +71,23 @@ export const UpdateRelatedRecord = (
     ];
   else if (newId)
     return [
-      ...UpdateLastModifiedBy(t, rec, user),
       t.addToRelatedRecords(rec, relationship, {
         type: relatedType,
         id: newId,
       }),
     ];
+};
+
+export const UpdateRelatedRecord = (
+  t: TransformBuilder,
+  rec: BaseModel,
+  relationship: string,
+  relatedType: string,
+  newId: string | undefined,
+  user: string
+): any => {
+  return [
+    ...UpdateLastModifiedBy(t, rec, user),
+    ...ReplaceRelatedRecord(t, rec, relationship, relatedType, newId),
+  ];
 };

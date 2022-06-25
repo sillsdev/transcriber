@@ -1,3 +1,12 @@
+sil-transcriber (2.15.8.1)  experimental; urgency=high
+
+* TT-4035b fix removing extra hyphens on language tags
+* TT-4028 Cancelling resource creation
+* TT-4030c Chunk paste edge cases
+* TT-3844 scrolling windows and wording changes
+
+-- Greg Trihus <greg_trihus@sil.org>  Mon, 25 Jun 2022 17:34:00 -0600
+
 sil-transcriber (2.15.7.0)  experimental; urgency=high
 
 * fix local Paratext sync - code does not end in dash

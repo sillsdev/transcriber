@@ -2,7 +2,7 @@ import { useGlobal } from 'reactn';
 import { Plan, Project, VProject } from '../model';
 import { TransformBuilder } from '@orbit/data';
 import { related, useTypeId } from '.';
-import { UpdateRecord } from '../model/baseModel';
+import { ReplaceRelatedRecord, UpdateRecord } from '../model/baseModel';
 
 export const useVProjectUpdate = () => {
   const [memory] = useGlobal('memory');
@@ -49,13 +49,16 @@ export const useVProjectUpdate = () => {
         user
       ),
       // We use the plan type and not the project type
-      t.replaceRelatedRecord({ type: 'project', id: id }, 'projecttype', {
-        type: 'projecttype',
-        id: getTypeId(
+      ...ReplaceRelatedRecord(
+        t,
+        { type: 'project', id: id },
+        'projecttype',
+        'projecttype',
+        getTypeId(
           type.toLowerCase() === 'scripture' ? type : 'generic',
           'project'
-        ),
-      }),
+        )
+      ),
       //we aren't allowing them to change group, owner or oraganization currently
     ]);
 
@@ -74,10 +77,13 @@ export const useVProjectUpdate = () => {
         } as any as Plan,
         user
       ),
-      t.replaceRelatedRecord({ type: 'plan', id: vProject.id }, 'plantype', {
-        type: 'plantype',
-        id: getTypeId(type, 'plan'),
-      }),
+      ...ReplaceRelatedRecord(
+        t,
+        { type: 'plan', id: vProject.id },
+        'plantype',
+        'plantype',
+        getTypeId(type, 'plan')
+      ),
     ]);
   };
 };

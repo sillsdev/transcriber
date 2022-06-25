@@ -51,6 +51,20 @@ export const dataPath = (
     }
     if (local_out) local_out.localname = localName;
     if (fs.existsSync(localName)) return localName;
+    if (type === PathType.MEDIA && relPath?.startsWith('http')) {
+      // This logic handles names with slashes. Sholdn't nappen again
+      const fileParts =
+        url.parse(relPath).pathname?.split('?')[0].split('/') || [];
+      const fileName = fileParts.slice(3).join('/');
+      localName = path.join(
+        os.homedir(),
+        process.env.REACT_APP_OFFLINEDATA,
+        type,
+        decodeURIComponent(fileName)
+      );
+      if (local_out) local_out.localname = localName;
+      if (fs.existsSync(localName)) return localName;
+    }
   }
   return relPath?.startsWith('http')
     ? relPath

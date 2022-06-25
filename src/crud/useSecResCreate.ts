@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { SectionResource, OrgWorkflowStep } from '../model';
-import { AddRecord } from '../model/baseModel';
+import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { getTool, related, ToolSlug } from '.';
 
 export const useSecResCreate = (section: RecordIdentity) => {
@@ -27,7 +27,9 @@ export const useSecResCreate = (section: RecordIdentity) => {
   return async (
     seq: number,
     desc: string | null,
-    mediafile: RecordIdentity
+    mediafile: RecordIdentity,
+    passId?: string | null,
+    secId?: string
   ) => {
     const secRes = {
       type: 'sectionresource',
@@ -40,13 +42,33 @@ export const useSecResCreate = (section: RecordIdentity) => {
     const t = new TransformBuilder();
     const ops = [
       ...AddRecord(t, secRes, user, memory),
-      t.replaceRelatedRecord(secRes, 'section', section),
-      t.replaceRelatedRecord(secRes, 'mediafile', mediafile),
+      ...ReplaceRelatedRecord(
+        t,
+        secRes,
+        'section',
+        'section',
+        secId || section.id
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        secRes,
+        'mediafile',
+        'mediafile',
+        mediafile.id
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        secRes,
+        'orgWorkflowStep',
+        'orgworkflowstep',
+        internalization?.id
+      ),
     ];
-    if (internalization)
+    if (passId) {
       ops.push(
-        t.replaceRelatedRecord(secRes, 'orgWorkflowStep', internalization)
+        ...ReplaceRelatedRecord(t, secRes, 'passage', 'passage', passId)
       );
+    }
     await memory.update(ops);
   };
 };

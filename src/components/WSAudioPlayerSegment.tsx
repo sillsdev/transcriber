@@ -57,7 +57,7 @@ interface IProps extends IStateProps {
   params: IRegionParams;
   playing: boolean;
   onSplit: (split: IRegionChange) => void;
-  wsAutoSegment: (loop: boolean, params: IRegionParams) => number;
+  wsAutoSegment?: (loop: boolean, params: IRegionParams) => number;
   wsRemoveSplitRegion: (next?: boolean) => IRegionChange | undefined;
   wsAddOrRemoveRegion: () => IRegionChange | undefined;
   wsClearRegions: () => void;
@@ -128,7 +128,7 @@ function WSAudioPlayerSegment(props: IProps) {
   };
   const handleAutoSegment = () => {
     setSegmenting(true);
-    var numRegions = wsAutoSegment(loop, segParams);
+    var numRegions = (wsAutoSegment && wsAutoSegment(loop, segParams)) ?? 0;
     showMessage(t.segmentsCreated.replace('{0}', numRegions.toString()));
     setSegmenting(false);
     return true;
@@ -174,41 +174,45 @@ function WSAudioPlayerSegment(props: IProps) {
     <div className={classes.root}>
       <Grid container className={classes.toolbar}>
         <Grid item>
-          <LightTooltip
-            id="wsSegmentTip"
-            title={t.autoSegment.replace('[{0}]', '')}
-          >
-            <span>
-              <IconButton
-                id="wsSegment"
-                onClick={handleAutoSegment}
-                disabled={!ready || playing || busyRef.current}
+          {wsAutoSegment && (
+            <div>
+              <LightTooltip
+                id="wsSegmentTip"
+                title={t.autoSegment.replace('[{0}]', '')}
               >
-                <IoMdBarcode />
-              </IconButton>
-            </span>
-          </LightTooltip>
-          <LightTooltip id="wsSettingsTip" title={t.segmentSettings}>
-            <span>
-              <IconButton
-                id="wsSegmentSettings"
-                onClick={handleShowSettings}
-                disabled={playing}
-              >
-                <SettingsIcon fontSize="small" />
-              </IconButton>
-            </span>
-          </LightTooltip>
-          <WSSegmentParameters
-            loop={loop}
-            params={segParams}
-            currentNumRegions={currentNumRegions}
-            wsAutoSegment={wsAutoSegment}
-            isOpen={showSettings && !playing}
-            onOpen={setShowSettings}
-            onSave={handleSegParamChange}
-            setBusy={setBusy}
-          />
+                <span>
+                  <IconButton
+                    id="wsSegment"
+                    onClick={handleAutoSegment}
+                    disabled={!ready || playing || busyRef.current}
+                  >
+                    <IoMdBarcode />
+                  </IconButton>
+                </span>
+              </LightTooltip>
+              <LightTooltip id="wsSettingsTip" title={t.segmentSettings}>
+                <span>
+                  <IconButton
+                    id="wsSegmentSettings"
+                    onClick={handleShowSettings}
+                    disabled={playing}
+                  >
+                    <SettingsIcon fontSize="small" />
+                  </IconButton>
+                </span>
+              </LightTooltip>
+              <WSSegmentParameters
+                loop={loop}
+                params={segParams}
+                currentNumRegions={currentNumRegions}
+                wsAutoSegment={wsAutoSegment}
+                isOpen={showSettings && !playing}
+                onOpen={setShowSettings}
+                onSave={handleSegParamChange}
+                setBusy={setBusy}
+              />
+            </div>
+          )}
 
           <LightTooltip
             id="wsSplitTip"

@@ -355,6 +355,7 @@ const schemaDefinition: SchemaSettings = {
         versionNumber: { type: 'number' },
         eafUrl: { type: 'string' },
         audioUrl: { type: 'string' },
+        s3file: { type: 'string' },
         duration: { type: 'number' },
         contentType: { type: 'string' },
         audioQuality: { type: 'string' },
@@ -384,6 +385,7 @@ const schemaDefinition: SchemaSettings = {
         orgWorkflowStep: { type: 'hasOne', model: 'orgworkflowstep' },
         plan: { type: 'hasOne', model: 'plan', inverse: 'mediafiles' },
         passage: { type: 'hasOne', model: 'passage', inverse: 'mediafiles' },
+        resourcePassage: { type: 'hasOne', model: 'passage' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
         recordedbyUser: { type: 'hasOne', model: 'user' },
         sourceMedia: { type: 'hasOne', model: 'mediafile' },
@@ -666,6 +668,14 @@ if (
       section: {
         type: 'hasOne',
         model: 'section',
+      },
+      passage: {
+        type: 'hasOne',
+        model: 'passage',
+      },
+      project: {
+        type: 'hasOne',
+        model: 'project',
       },
       mediafile: {
         type: 'hasOne',

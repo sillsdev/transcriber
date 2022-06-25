@@ -4,6 +4,7 @@ import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import { related, useTypeId, useOfflnProjCreate } from '.';
 import { useProjectsLoaded, localeDefault, currentDateTime } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
+import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 
 export const useVProjectCreate = () => {
   const [memory] = useGlobal('memory');
@@ -64,25 +65,25 @@ export const useVProjectCreate = () => {
     await memory.update((t: TransformBuilder) => [
       t.addRecord(project),
       // We use the plan type and not the project type
-      t.replaceRelatedRecord(project, 'projecttype', {
-        type: 'projecttype',
-        id: getTypeId(
+      ...ReplaceRelatedRecord(
+        t,
+        project,
+        'projecttype',
+        'projecttype',
+        getTypeId(
           type.toLowerCase() === 'scripture' ? type : 'generic',
           'project'
-        ),
-      }),
-      t.replaceRelatedRecord(project, 'group', {
-        type: 'group',
-        id: getGroupId(teamId),
-      }),
-      t.replaceRelatedRecord(project, 'organization', {
-        type: 'organization',
-        id: teamId,
-      }),
-      t.replaceRelatedRecord(project, 'owner', {
-        type: 'user',
-        id: user,
-      }),
+        )
+      ),
+      ...ReplaceRelatedRecord(t, project, 'group', 'group', getGroupId(teamId)),
+      ...ReplaceRelatedRecord(
+        t,
+        project,
+        'organization',
+        'organization',
+        teamId
+      ),
+      ...ReplaceRelatedRecord(t, project, 'owner', 'user', user),
     ]);
     await offlineProjectCreate(project);
     AddProjectLoaded(project.id);
@@ -94,21 +95,19 @@ export const useVProjectCreate = () => {
         flat,
         tags: JSON.stringify(tags),
         organizedBy,
-        dateCreated: currentDateTime(),
-        dateUpdated: currentDateTime(),
       },
     } as any;
     memory.schema.initializeRecord(plan);
     await memory.update((t: TransformBuilder) => [
-      t.addRecord(plan),
-      t.replaceRelatedRecord(plan, 'plantype', {
-        type: 'plantype',
-        id: getTypeId(type, 'plan'),
-      }),
-      t.replaceRelatedRecord(plan, 'project', {
-        type: 'project',
-        id: project.id,
-      }),
+      ...AddRecord(t, plan, user, memory),
+      ...ReplaceRelatedRecord(
+        t,
+        plan,
+        'plantype',
+        'plantype',
+        getTypeId(type, 'plan')
+      ),
+      ...ReplaceRelatedRecord(t, plan, 'project', 'project', project.id),
     ]);
     //fetch the slug from the server
     if (!offlineOnly) {

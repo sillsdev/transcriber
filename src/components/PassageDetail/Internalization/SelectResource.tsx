@@ -1,7 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { connect } from 'react-redux';
-import { Resource, ISharedStrings, IState } from '../../../model';
-import localStrings from '../../../selector/localize';
+import { Resource, ISharedStrings } from '../../../model';
 import {
   makeStyles,
   createStyles,
@@ -21,6 +19,8 @@ import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import SelectCategory, {
   ScriptureEnum,
 } from '../../Workflow/SelectArtifactCategory';
+import { sharedSelector } from '../../../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,23 +65,20 @@ export interface CatMap {
   [resId: string]: string; //map resource id to category id
 }
 
-interface IStateProps {
-  ts: ISharedStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   onSelect?: (resources: Resource[], catMap: CatMap) => void;
   onOpen?: (open: boolean) => void;
 }
 
 export const SelectResource = (props: IProps) => {
-  const { onSelect, onOpen, ts } = props;
+  const { onSelect, onOpen } = props;
   const classes = useStyles();
   const [resource, setResouce] = useState<Resource[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
   const [catMap] = useState<CatMap>({});
   const ctx = useContext(PassageDetailContext);
   const { getSharedResources } = ctx.state;
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const select = (i: number, noToggle?: boolean) => {
     let newSelected = [...selected];
@@ -174,8 +171,4 @@ export const SelectResource = (props: IProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  ts: localStrings(state, { layout: 'shared' }),
-});
-
-export default connect(mapStateToProps)(SelectResource) as any as any;
+export default SelectResource;

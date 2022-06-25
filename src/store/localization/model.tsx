@@ -55,6 +55,7 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
 export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
     "backtranslation": string;
     "comment": string;
+    "projectresource": string;
     "qanda": string;
     "resource": string;
     "retell": string;
@@ -303,6 +304,7 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
 export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {
     "groups": string;
     "invitations": string;
+    "peerGroups": string;
     "roles": string;
     "users": string;
 };
@@ -512,8 +514,11 @@ export interface IMediaActionsStrings extends Localize.LocalizedStringsMethods {
     "delete": string;
     "detach": string;
     "download": string;
+    "drag": string;
+    "edit": string;
     "pause": string;
     "play": string;
+    "view": string;
 };
 
 export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
@@ -567,6 +572,7 @@ export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "invalidFile": string;
     "ITFtask": string;
     "ITFtitle": string;
+    "projectResourceTask": string;
     "PTFtask": string;
     "PTFtitle": string;
     "resourceTask": string;
@@ -609,13 +615,36 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "action": string;
     "activity": string;
     "add": string;
+    "allResources": string;
+    "canceling": string;
     "category": string;
+    "clipboard": string;
     "completed": string;
+    "configure": string;
+    "copyToClipboard": string;
+    "createResources": string;
+    "deleteConfirm": string;
+    "description": string;
     "editResource": string;
+    "passageResource": string;
+    "pasteFormat": string;
+    "pasteNoChange": string;
+    "projectResourcePassage": string;
+    "projectResourceSheet": string;
+    "projectResourceConfigure": string;
+    "reference": string;
     "resource": string;
+    "resourcesDeleted": string;
     "sharedResource": string;
+    "startStop": string;
     "type": string;
+    "tip1a": string;
+    "tip1b": string;
+    "tip2a": string;
+    "tip2b": string;
+    "unusedSegment": string;
     "upload": string;
+    "uploadProject": string;
     "version": string;
 };
 
@@ -645,6 +674,17 @@ export interface IPassageRecordStrings extends Localize.LocalizedStringsMethods 
     "saving": string;
     "title": string;
     "uncompressed": string;
+};
+
+export interface IPeerStrings extends Localize.LocalizedStringsMethods {
+    "peerDescription": string;
+    "editPeerGroup": string;
+    "inUse": string;
+    "member": string;
+    "newPeerGroup": string;
+    "peerGroup": string;
+    "remove": string;
+    "removeConfirm": string;
 };
 
 export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
@@ -797,6 +837,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "BookNotSet": string;
     "cancel": string;
     "consultant": string;
+    "delete": string;
     "description": string;
     "editor": string;
     "expiredParatextToken": string;
@@ -812,6 +853,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "mediaError": string;
     "member": string;
     "no": string;
+    "noAudio": string;
     "NoSaveOffline": string;
     "observer": string;
     "owner": string;
@@ -1132,7 +1174,7 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "export": string;
     "finalRecording": string;
     "finalReview": string;
-    "internalization": string;
+    "internalize": string;
     "paratextSync": string;
     "peerReview": string;
     "phraseBackTranslation": string;
@@ -1236,6 +1278,7 @@ export interface ILocalizedStrings {
 	passageDetailToolbar: IPassageDetailToolbarStrings;
 	passageMedia: IPassageMediaStrings;
 	passageRecord: IPassageRecordStrings;
+	peer: IPeerStrings;
 	planActions: IPlanActionsStrings;
 	planSheet: IPlanSheetStrings;
 	planTabs: IPlanTabsStrings;

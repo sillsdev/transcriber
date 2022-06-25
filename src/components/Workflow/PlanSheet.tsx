@@ -18,7 +18,7 @@ import Confirm from '../AlertDialog';
 import BookSelect from '../BookSelect';
 import { ProjButtons, StageReport } from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
-import { refMatch } from '../../utils';
+import { refMatch, cleanClipboard } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
 import { useOrganizedBy, useDiscussionCount } from '../../crud';
 import TaskAvatar from '../TaskAvatar';
@@ -358,20 +358,6 @@ export function PlanSheet(props: IProps) {
   const handlePassageBelow = () => {
     addPassage(position.i - 1, false);
     setPosition(initialPosition);
-  };
-  const removeBlanks = (clipBoard: string) => {
-    const blankLines = /\r?\n\t*\r?\n/;
-    const chunks = clipBoard.split(blankLines);
-    return chunks
-      .join('\n')
-      .replace(/\r?\n$/, '')
-      .split('\n');
-  };
-  const splitAndTrim = (clipBoard: string): string[] =>
-    clipBoard.split('\t').map((v) => (typeof v === 'string' ? v.trim() : v));
-
-  const cleanClipboard = (clipText: string) => {
-    return removeBlanks(clipText).map((line: string) => splitAndTrim(line));
   };
 
   const parsePaste = (clipBoard: string) => {

@@ -61,6 +61,7 @@ export enum UploadType {
   ITF = 2,
   PTF = 3,
   LOGO = 4 /* do we need separate ones for org and avatar? */,
+  ProjectResource = 5,
 }
 
 interface ITargetProps extends IStateProps {
@@ -174,14 +175,15 @@ function MediaUpload(props: IProps) {
     t.ITFtitle,
     t.PTFtitle,
     'FUTURE TODO',
+    t.resourceTitle,
   ];
   const text = [
     t.task,
     t.resourceTask,
-    t.task,
     t.ITFtask,
     t.PTFtask,
     'FUTURE TODO',
+    t.projectResourceTask,
   ];
 
   const handleAddOrSave = () => {
@@ -241,6 +243,7 @@ function MediaUpload(props: IProps) {
         '.itf',
         '.ptf',
         '.jpg, .svg, .png',
+        '.mp3, .m4a, .wav, .ogg, .pdf',
       ].map((s) => s)[uploadType]
     );
   }, [uploadType]);
@@ -253,6 +256,7 @@ function MediaUpload(props: IProps) {
         'application/itf',
         'application/ptf',
         'image/jpeg, image/svg+xml, image/png',
+        'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf',
       ].map((s) => s)[uploadType]
     );
   }, [uploadType]);

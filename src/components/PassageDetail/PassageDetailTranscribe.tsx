@@ -1,56 +1,32 @@
-import { useState } from 'react';
-import { connect } from 'react-redux';
-import { IState, ITranscribeStrings } from '../../model';
-import { useLocation } from 'react-router-dom';
-import localStrings from '../../selector/localize';
-import { Button, makeStyles, Theme, createStyles } from '@material-ui/core';
-import TranscribeIcon from '../../control/TranscribeIcon';
-import { LocalKey, localUserKey } from '../../utils';
-import StickyRedirect from '../StickyRedirect';
+import { Grid, Typography } from '@material-ui/core';
+import { TranscriberProvider } from '../../context/TranscriberContext';
+import Transcriber from '../../components/Transcriber';
+import Auth from '../../auth/Auth';
+import usePassageDetailContext from '../../context/usePassageDetailContext';
+import { ISharedStrings } from '../../model';
+import { sharedSelector } from '../../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    icon: {
-      display: 'flex',
-      paddingLeft: theme.spacing(1),
-    },
-  })
-);
-
-interface IStateProps {
-  t: ITranscribeStrings;
+interface IProps {
+  auth: Auth;
+  width: number;
 }
 
-interface IProps extends IStateProps {}
+export function PassageDetailTranscribe({ auth, width }: IProps) {
+  const { mediafileId } = usePassageDetailContext();
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
-export function PassageDetailTranscribe(props: IProps) {
-  const { t } = props;
-  const { pathname } = useLocation();
-  const classes = useStyles();
-  const [view, setView] = useState('');
-
-  const handleTranscribe = () => {
-    localStorage.setItem(localUserKey(LocalKey.jumpBack), pathname);
-    setView(pathname.replace('detail', 'work'));
-  };
-
-  if (view) return <StickyRedirect to={view} />;
-
-  return (
-    <Button
-      id="transcriber-step"
-      onClick={handleTranscribe}
-      variant="contained"
-      color="primary"
-    >
-      {t.openTranscriber}
-      <TranscribeIcon className={classes.icon} color="white" />
-    </Button>
+  return Boolean(mediafileId) ? (
+    <TranscriberProvider auth={auth}>
+      <Grid container direction="column">
+        <Transcriber auth={auth} defaultWidth={width} />
+      </Grid>
+    </TranscriberProvider>
+  ) : (
+    <Typography variant="h2" align="center">
+      {ts.noAudio}
+    </Typography>
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'transcribe' }),
-});
-
-export default connect(mapStateToProps)(PassageDetailTranscribe) as any as any;
+export default PassageDetailTranscribe as any;

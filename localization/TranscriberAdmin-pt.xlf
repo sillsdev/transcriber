@@ -247,6 +247,12 @@
 				<target>Comentário</target>
 			</segment>
 		</unit>
+		<unit id="artifactType.projectresource">
+			<segment>
+				<source>General Resource</source>
+				<target>Recurso geral</target>
+			</segment>
+		</unit>
 		<unit id="artifactType.qanda">
 			<segment>
 				<source>Question and Answer</source>
@@ -1393,6 +1399,12 @@
 				<target>Convites</target>
 			</segment>
 		</unit>
+		<unit id="groupTabs.peerGroups">
+			<segment>
+				<source>Peer Groups</source>
+				<target>Grupos de Pares</target>
+			</segment>
+		</unit>
 		<unit id="groupTabs.roles">
 			<segment>
 				<source>Roles</source>
@@ -2504,6 +2516,18 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="mediaActions.drag">
+			<segment>
+				<source>Drag to reorder</source>
+				<target>Arrastar para reordenar</target>
+			</segment>
+		</unit>
+		<unit id="mediaActions.edit">
+			<segment>
+				<source>Edit</source>
+				<target>Editar</target>
+			</segment>
+		</unit>
 		<unit id="mediaActions.pause">
 			<segment>
 				<source>Pause</source>
@@ -2514,6 +2538,12 @@
 			<segment>
 				<source>Play</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="mediaActions.view">
+			<segment>
+				<source>View</source>
+				<target>Ver</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.action">
@@ -2798,6 +2828,18 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="mediaUpload.projectResourceTask">
+			<segment>
+				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+				<target>Carregar arquivos de áudio em formato .mp3, .m4a, .wav ou .ogg ou conteúdo visual em formato .pdf.</target>
+			</segment>
+		</unit>
+		<unit id="mediaUpload.projectResourceTitle">
+			<segment>
+				<source>Upload Project Resource</source>
+				<target>Upload do recurso do projeto</target>
+			</segment>
+		</unit>
 		<unit id="mediaUpload.PTFtask">
 			<segment>
 				<source>Upload a Portable Transcriber File (ptf).</source>
@@ -2812,15 +2854,14 @@
 		</unit>
 		<unit id="mediaUpload.resourceTask">
 			<segment>
-				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in
-					.pdf format.</source>
+				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
 				<target>Carregar arquivos de áudio em formato .mp3, .m4a, .wav ou .ogg ou conteúdo visual em formato .pdf.</target>
 			</segment>
 		</unit>
 		<unit id="mediaUpload.resourceTitle">
 			<segment>
-				<source>Upload Resource</source>
-				<target>Carregar recurso</target>
+				<source>Upload Resources</source>
+				<target>Carregar Recursos</target>
 			</segment>
 		</unit>
 		<unit id="mediaUpload.task">
@@ -2997,10 +3038,28 @@
 				<target>Adicione</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.allResources">
+			<segment>
+				<source>Show resources for all passages</source>
+				<target>Mostrar recursos para todas as passagens</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.canceling">
+			<segment>
+				<source>Canceling resource creation</source>
+				<target>Cancelando a criação de recursos</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.category">
 			<segment>
 				<source>Category</source>
 				<target>Categoria</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.clipboard">
+			<segment>
+				<source>clipboard</source>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.completed">
@@ -3009,10 +3068,82 @@
 				<target>Concluído</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.configure">
+			<segment>
+				<source>Configure General</source>
+				<target>Configurar Geral</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.copyToClipboard">
+			<segment>
+				<source>Copy to Clipboard</source>
+				<target>Cópia para o Clipboard</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.createResources">
+			<segment>
+				<source>Create Resources</source>
+				<target>Criar Recursos</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.deleteConfirm">
+			<segment>
+				<source>Delete Resource?</source>
+				<target>Eliminar Recurso?</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.description">
+			<segment>
+				<source>Description</source>
+				<target>Descrição</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.editResource">
 			<segment>
 				<source>Edit Resource</source>
 				<target>Editar Recurso</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.passageResource">
+			<segment>
+				<source>Passage</source>
+				<target>Passagem</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.pasteFormat">
+			<segment>
+				<source>Pasted data must contain two or three columns. One of them must be the reference.</source>
+				<target>Os dados colados devem conter duas ou três colunas. Uma delas deve ser a referência.</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.pasteNoChange">
+			<segment>
+				<source>Nothing changed! Perhaps no references matched?</source>
+				<target>Nada mudou! Talvez nenhuma referência coincidente?</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.projectResourcePassage">
+			<segment>
+				<source>Select {0} and Passages</source>
+				<target>Selecione {0} e Passagens</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.projectResourceSheet">
+			<segment>
+				<source>Project Resource Sheet</source>
+				<target>Ficha de recursos do projeto</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.projectResourceConfigure">
+			<segment>
+				<source>Chunk into Resources</source>
+				<target>Partição em Recursos</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.reference">
+			<segment>
+				<source>Reference</source>
+				<target>Referência</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.resource">
@@ -3021,10 +3152,22 @@
 				<target>Recurso</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.resourcesDeleted">
+			<segment>
+				<source> ({0} resources will be deleted.)</source>
+				<target> ({0} os recursos serão apagados).</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.sharedResource">
 			<segment>
-				<source>Select Shared Resource</source>
-				<target>Selecione o recurso compartilhado</target>
+				<source>Link Shared Resource</source>
+				<target>Link Recurso Compartilhado</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.startStop">
+			<segment>
+				<source>Start - Stop</source>
+				<target>Início - Parada</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.type">
@@ -3033,10 +3176,46 @@
 				<target>Tipo</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.tip1a">
+			<segment>
+				<source>Resourses for:</source>
+				<target>Recursos para:</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.tip1b">
+			<segment>
+				<source>Link a shared resource to this {0}.</source>
+				<target>Vincule um recurso compartilhado a este {0}.</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.tip2a">
+			<segment>
+				<source>Chunk</source>
+				<target>Partição</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.tip2b">
+			<segment>
+				<source>Steps through connecting chunks of a general resource with {0} and passages.</source>
+				<target>Passos através da conexão de pedaços de um recurso geral com {0} e passagens.</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.unusedSegment">
+			<segment>
+				<source>Unused segment: only segments with References will create resources</source>
+				<target>Segmento não utilizado: somente segmentos com Referências criarão recursos</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.upload">
 			<segment>
-				<source>Upload Resource</source>
-				<target>Carregar recurso</target>
+				<source>Upload Resources</source>
+				<target>Carregar Recursos</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.uploadProject">
+			<segment>
+				<source>General - to be used by multiple {0} or passages. (Uploaded files will only appear under Configure General.)</source>
+				<target>Geral - para ser usado por múltiplos {0} ou passagens. (Os arquivos carregados só aparecerão em Configurar Geral).</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.version">
@@ -3139,6 +3318,54 @@
 			<segment>
 				<source>Uncompressed</source>
 				<target>Sem compressão</target>
+			</segment>
+		</unit>
+		<unit id="peer.peerDescription">
+			<segment>
+				<source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
+				<target>Grupos de pares permitem atribuir tarefas a um grupo e não a um indivíduo.</target>
+			</segment>
+		</unit>
+		<unit id="peer.editPeerGroup">
+			<segment>
+				<source>Edit Peer Group</source>
+				<target>Editar Grupo de Pares</target>
+			</segment>
+		</unit>
+		<unit id="peer.inUse">
+			<segment>
+				<source>Name already in use</source>
+				<target>Nome já em uso</target>
+			</segment>
+		</unit>
+		<unit id="peer.member">
+			<segment>
+				<source>Member</source>
+				<target>Membro</target>
+			</segment>
+		</unit>
+		<unit id="peer.newPeerGroup">
+			<segment>
+				<source>New Peer Group</source>
+				<target>Novo Grupo de Pares</target>
+			</segment>
+		</unit>
+		<unit id="peer.peerGroup">
+			<segment>
+				<source>Peer Group</source>
+				<target>Grupo de pares</target>
+			</segment>
+		</unit>
+		<unit id="peer.remove">
+			<segment>
+				<source>Remove</source>
+				<target>Remover</target>
+			</segment>
+		</unit>
+		<unit id="peer.removeConfirm">
+			<segment>
+				<source>Do you want to remove the peer group and information about who are the members?</source>
+				<target>Você quer remover o grupo de colegas e informações sobre quem são os membros?</target>
 			</segment>
 		</unit>
 		<unit id="planActions.assign">
@@ -3837,6 +4064,12 @@
 				<target>Consultor</target>
 			</segment>
 		</unit>
+		<unit id="shared.delete">
+			<segment>
+				<source>Delete {0}. Are you sure?</source>
+				<target>Excluir {0}. Você tem certeza?</target>
+			</segment>
+		</unit>
 		<unit id="shared.description">
 			<segment>
 				<source>Description</source>
@@ -3925,6 +4158,12 @@
 			<segment>
 				<source>No</source>
 				<target>Não</target>
+			</segment>
+		</unit>
+		<unit id="shared.noAudio">
+			<segment>
+				<source>No Audio Available!</source>
+				<target>Não há áudio disponível!</target>
 			</segment>
 		</unit>
 		<unit id="shared.NoSaveOffline">
@@ -5451,7 +5690,7 @@
 				<target>Revisão final</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.internalization">
+		<unit id="workflowSteps.internalize">
 			<segment>
 				<source>Internalize</source>
 				<target>Internalizar</target>

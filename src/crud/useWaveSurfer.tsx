@@ -77,7 +77,6 @@ export function useWaveSurfer(
         'wavesurfer stop',
         () => !wavesurfer()?.isPlaying(),
         () => {
-          //console.log('waiting for pause');
           return false;
         },
         100

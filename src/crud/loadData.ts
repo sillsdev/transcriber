@@ -30,6 +30,7 @@ import { orbitInfo } from '../utils/infoMsg';
 import ProjData from '../model/projData';
 import Coordinator from '@orbit/coordinator';
 import { getFingerprint, currentDateTime, orbitErr } from '../utils';
+import { ReplaceRelatedRecord } from '../model/baseModel';
 
 const completePerTable = 3;
 
@@ -121,10 +122,12 @@ export async function insertData(
               (rec.relationships[rel].data as RecordIdentity).id)
         )
           oparray.push(
-            tb.replaceRelatedRecord(
+            ...ReplaceRelatedRecord(
+              tb,
               rec,
               rel,
-              item.relationships[rel].data as RecordIdentity
+              (item.relationships[rel].data as RecordIdentity).type,
+              (item.relationships[rel].data as RecordIdentity).id
             )
           );
       }

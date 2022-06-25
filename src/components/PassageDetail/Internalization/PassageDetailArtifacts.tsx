@@ -5,6 +5,8 @@ import {
   IPassageDetailArtifactsStrings,
   IState,
   RoleNames,
+  Passage,
+  Section,
 } from '../../../model';
 import localStrings from '../../../selector/localize';
 import {
@@ -19,7 +21,7 @@ import Auth from '../../../auth/Auth';
 import { withData } from '../../../mods/react-orbitjs';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import Uploader from '../../Uploader';
 import AddResource from './AddResource';
@@ -36,20 +38,35 @@ import {
   useSecResUserCreate,
   useSecResUserRead,
   useSecResUserDelete,
+  useArtifactType,
+  ArtifactTypeSlug,
+  useOrganizedBy,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
 import SelectResource, { CatMap } from './SelectResource';
+import SelectProjectResource from './SelectProjectResource';
+// import SelectProjResPassages from './SelectProjResPassages';
+import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
 import { UploadType } from '../../MediaUpload';
 import MediaPlayer from '../../MediaPlayer';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { ReplaceRelatedRecord } from '../../../model/baseModel';
+import { PassageResourceButton } from './PassageResourceButton';
+import ProjectResourceConfigure from './ProjectResourceConfigure';
+import { useProjectResourceSave } from './useProjectResourceSave';
+import { UnsavedContext } from '../../../context/UnsavedContext';
+import Confirm from '../../AlertDialog';
+import { getSegments, NamedRegions, removeExtension } from '../../../utils';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     row: {
       display: 'flex',
       flexDirection: 'row',
       flexGrow: 1,
+      paddingRight: theme.spacing(2),
     },
     playStatus: {
       margin: theme.spacing(1),
@@ -77,7 +94,11 @@ interface IStateProps {
 interface IProps extends IStateProps, IRecordProps {
   auth: Auth;
 }
-
+export enum ResourceTypeEnum {
+  sectionResource,
+  passageResource,
+  projectResource,
+}
 export function PassageDetailArtifacts(props: IProps) {
   const classes = useStyles();
   const { sectionResources, mediafiles, artifactTypes, auth, t } = props;
@@ -85,6 +106,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const [, setComplete] = useGlobal('progress');
   const ctx = useContext(PassageDetailContext);
   const {
     rowData,
@@ -93,12 +115,14 @@ export function PassageDetailArtifacts(props: IProps) {
     setSelected,
     playItem,
     setPlayItem,
+    setMediaSelected,
     itemPlaying,
     setItemPlaying,
     currentstep,
     handleItemPlayEnd,
     handleItemTogglePlay,
   } = ctx.state;
+  const { getOrganizedBy } = useOrganizedBy();
   const AddSectionResource = useSecResCreate(section);
   const AddSectionResourceUser = useSecResUserCreate();
   const ReadSectionResourceUser = useSecResUserRead();
@@ -106,19 +130,56 @@ export function PassageDetailArtifacts(props: IProps) {
   const AddMediaFileResource = useMediaResCreate(passage, currentstep);
   const UpdateSectionResource = useSecResUpdate();
   const DeleteSectionResource = useSecResDelete();
+  const { localizedArtifactType } = useArtifactType();
   const [uploadVisible, setUploadVisible] = useState(false);
   const cancelled = useRef(false);
   const [displayId, setDisplayId] = useState('');
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
-  const [editResource, setEditResource] = useState<SectionResource>();
+  const [projectResourceVisible, setProjectResourceVisible] = useState(false);
+  const [projResPassageVisible, setProjResPassageVisible] = useState(false);
+  const [projResWizVisible, setProjResWizVisible] = useState(false);
+  const [editResource, setEditResource] = useState<
+    SectionResource | undefined
+  >();
+  const [artifactTypeId, setArtifactTypeId] = useState<string>();
+  const [uploadType, setUploadType] = useState<UploadType>(UploadType.Resource);
+
   const catIdRef = useRef<string>();
   const descriptionRef = useRef<string>('');
+
+  const resourceTypeRef = useRef<ResourceTypeEnum>(
+    ResourceTypeEnum.sectionResource
+  );
+  const projIdentRef = useRef<RecordIdentity[]>([]);
+  const projMediaRef = useRef<MediaFile>();
+  const [allResources, setAllResources] = useState(false);
   const { showMessage } = useSnackBar();
+  const [confirm, setConfirm] = useState('');
+  const { checkSavedFn } = useContext(UnsavedContext).state;
+  const mediaStart = useRef<number | undefined>();
+  const mediaEnd = useRef<number | undefined>();
+  const mediaPosition = useRef<number | undefined>();
+  const projectResourceSave = useProjectResourceSave();
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
       (t) =>
         t.attributes?.typename === 'resource' &&
+        Boolean(t?.keys?.remoteId) === !offlineOnly
+    );
+    setArtifactTypeId(resourceType?.id);
+    return resourceType?.id;
+  }, [artifactTypes, offlineOnly]);
+
+  const isPassageResource = () =>
+    resourceTypeRef.current === ResourceTypeEnum.passageResource;
+  const isProjectResource = () =>
+    resourceTypeRef.current === ResourceTypeEnum.projectResource;
+
+  const projResourceType = useMemo(() => {
+    const resourceType = artifactTypes.find(
+      (t) =>
+        t.attributes?.typename === 'projectresource' &&
         Boolean(t?.keys?.remoteId) === !offlineOnly
     );
     return resourceType?.id;
@@ -127,7 +188,24 @@ export function PassageDetailArtifacts(props: IProps) {
   const handlePlay = (id: string) => {
     if (id === playItem) {
       setItemPlaying(!itemPlaying);
-    } else setSelected(id);
+    } else {
+      const row = rowData.find((r) => r.id === id);
+      if (row) {
+        const segs = getSegments(
+          NamedRegions.ProjectResource,
+          row.mediafile.attributes.segments
+        );
+        const regions = JSON.parse(segs);
+        if (regions.length > 0) {
+          const { start, end } = regions[0];
+          mediaStart.current = start;
+          mediaEnd.current = end;
+          setMediaSelected(id, start, end);
+          return;
+        }
+      }
+      setSelected(id);
+    }
   };
 
   const handleDisplayId = (id: string) => {
@@ -154,9 +232,14 @@ export function PassageDetailArtifacts(props: IProps) {
     }));
   };
 
-  const handleDelete = (id: string) => {
-    const secRes = sectionResources.find((r) => related(r, 'mediafile') === id);
+  const handleDelete = (id: string) => setConfirm(id);
+  const handleDeleteRefused = () => setConfirm('');
+  const handleDeleteConfirmed = () => {
+    const secRes = sectionResources.find(
+      (r) => related(r, 'mediafile') === confirm
+    );
     secRes && DeleteSectionResource(secRes);
+    setConfirm('');
   };
   const handleUploadVisible = (v: boolean) => {
     setUploadVisible(v);
@@ -166,9 +249,34 @@ export function PassageDetailArtifacts(props: IProps) {
     setSharedResourceVisible(v);
   };
 
+  const handleProjectResourceVisible = (v: boolean) => {
+    setProjectResourceVisible(v);
+  };
+
+  const handleProjResPassageVisible = (v: boolean) => {
+    setProjResPassageVisible(v);
+  };
+
+  const handleProjResWizVisible = (v: boolean) => {
+    if (v) {
+      setProjResWizVisible(v);
+    } else {
+      checkSavedFn(() => {
+        setProjResWizVisible(v);
+      });
+    }
+  };
+
+  const handleAllResources = () => {
+    setAllResources(!allResources);
+  };
+
   const handleEdit = (id: string) => {
     const secRes = sectionResources.find((r) => related(r, 'mediafile') === id);
     setEditResource(secRes);
+    resourceTypeRef.current = Boolean(related(secRes, 'passage'))
+      ? ResourceTypeEnum.passageResource
+      : ResourceTypeEnum.sectionResource;
     descriptionRef.current = secRes?.attributes.description || '';
     const mf = mediafiles.find((m) => m.id === related(secRes, 'mediafile'));
     catIdRef.current = mf ? related(mf, 'artifactCategory') : undefined;
@@ -190,13 +298,43 @@ export function PassageDetailArtifacts(props: IProps) {
           description: descriptionRef.current,
         },
       });
+      if (Boolean(related(editResource, 'passage')) !== isPassageResource()) {
+        await memory.update((t) => [
+          ...ReplaceRelatedRecord(
+            t,
+            editResource,
+            'passage',
+            'passage',
+            isPassageResource() ? passage.id : ''
+          ),
+        ]);
+      }
       const mf = mediafiles.find(
         (m) => m.id === related(editResource, 'mediafile')
       );
       if (mf && catIdRef.current) {
-        const catRecId = { type: 'artifactcategory', id: catIdRef.current };
         await memory.update((t: TransformBuilder) => [
-          t.replaceRelatedRecord(mf, 'artifactCategory', catRecId),
+          ...ReplaceRelatedRecord(
+            t,
+            mf,
+            'artifactCategory',
+            'artifactcategory',
+            catIdRef.current
+          ),
+        ]);
+      }
+      if (
+        mf &&
+        isPassageResource() !== Boolean(related(mf, 'resourcePassage'))
+      ) {
+        await memory.update((t: TransformBuilder) => [
+          ...ReplaceRelatedRecord(
+            t,
+            mf,
+            'resourcePassage',
+            'passage',
+            isPassageResource() ? passage.id : ''
+          ),
         ]);
       }
     }
@@ -211,8 +349,15 @@ export function PassageDetailArtifacts(props: IProps) {
     } else if (what === 'reference') {
       setSharedResourceVisible(true);
     } else if (what === 'activity') {
+    } else if (what === 'wizard') {
+      setProjectResourceVisible(true);
+    } else if (what === 'sheet') {
     }
   };
+
+  const listFilter = (r: IRow) =>
+    r?.isResource &&
+    (allResources || r.passageId === '' || r.passageId === passage.id);
 
   const onSortEnd = ({
     oldIndex,
@@ -223,7 +368,7 @@ export function PassageDetailArtifacts(props: IProps) {
   }) => {
     const indexes = Array<number>();
     rowData.forEach((r, i) => {
-      if (r?.isResource) indexes.push(i);
+      if (listFilter(r)) indexes.push(i);
     });
     const newIndexes = arrayMove(indexes, oldIndex, newIndex) as number[];
     for (let i = 0; i < newIndexes.length; i += 1) {
@@ -238,7 +383,7 @@ export function PassageDetailArtifacts(props: IProps) {
       }
     }
     const newRows = rowData
-      .map((r, i) => (r?.isResource ? rowData[newIndexes[i]] : r))
+      .map((r, i) => (listFilter(r) ? rowData[newIndexes[i]] : r))
       .filter((r) => r !== undefined);
     ctx.setState((state) => {
       return { ...state, rowData: newRows };
@@ -252,13 +397,41 @@ export function PassageDetailArtifacts(props: IProps) {
         cnt += 1;
         const id = remoteIdGuid('mediafile', remId, memory.keyMap) || remId;
         const mediaRecId = { type: 'mediafile', id };
-        if (catIdRef.current) {
-          const catRecId = { type: 'artifactcategory', id: catIdRef.current };
+        if (descriptionRef.current) {
           await memory.update((t: TransformBuilder) => [
-            t.replaceRelatedRecord(mediaRecId, 'artifactCategory', catRecId),
+            t.replaceAttribute(mediaRecId, 'topic', descriptionRef.current),
           ]);
         }
-        await AddSectionResource(cnt, descriptionRef.current, mediaRecId);
+        if (catIdRef.current) {
+          await memory.update((t: TransformBuilder) => [
+            ...ReplaceRelatedRecord(
+              t,
+              mediaRecId,
+              'artifactCategory',
+              'artifactcategory',
+              catIdRef.current
+            ),
+          ]);
+        }
+        if (isPassageResource()) {
+          await memory.update((t: TransformBuilder) => [
+            ...ReplaceRelatedRecord(
+              t,
+              mediaRecId,
+              'passage',
+              'passage',
+              passage.id
+            ),
+          ]);
+        }
+        if (!isProjectResource()) {
+          await AddSectionResource(
+            cnt,
+            descriptionRef.current,
+            mediaRecId,
+            isPassageResource() ? passage.id : null
+          );
+        }
       }
       resetEdit();
     }
@@ -267,10 +440,68 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleSelectShared = async (res: Resource[], catMap: CatMap) => {
     let cnt = rowData.length;
     for (const r of res) {
-      const catRecId = { type: 'artifactcategory', id: catMap[r.id] };
-      const newMediaRec = await AddMediaFileResource(r, catRecId);
+      const newMediaRec = await AddMediaFileResource(r, catMap[r.id]);
       cnt += 1;
-      await AddSectionResource(cnt, r.attributes.reference, newMediaRec);
+      await AddSectionResource(
+        cnt,
+        r.attributes.reference,
+        newMediaRec,
+        isPassageResource() ? passage.id : null
+      );
+    }
+  };
+
+  const handleSelectProjectResource = (m: MediaFile) => {
+    setSelected(m.id);
+    projMediaRef.current = m;
+    setProjectResourceVisible(false);
+    setProjResPassageVisible(true);
+  };
+
+  const writeVisualResource = async (items: RecordIdentity[]) => {
+    const t = new TransformBuilder();
+    let cnt = 0;
+    const total = items.length;
+    for (let i of items) {
+      const rec = memory.cache.query((q) => q.findRecord(i)) as
+        | Passage
+        | Section;
+      const secRec =
+        rec?.type === 'section'
+          ? (rec as Section)
+          : (memory.cache.query((q) =>
+              q.findRecord({ type: 'section', id: related(rec, 'section') })
+            ) as Section);
+      const secNum = secRec?.attributes.sequencenum || 0;
+      const topicIn = removeExtension(
+        projMediaRef.current?.attributes?.originalFile || ''
+      )?.name;
+      await projectResourceSave({
+        t,
+        media: projMediaRef.current as MediaFile,
+        i: { rec, secNum },
+        topicIn,
+        limitValue: '',
+        mediafiles,
+        sectionResources,
+      });
+      cnt += 1;
+      setComplete(Math.min((cnt * 100) / total, 100));
+    }
+    setComplete(0);
+  };
+
+  const handleSelectProjectResourcePassage = (items: RecordIdentity[]) => {
+    projIdentRef.current = items;
+    setProjResPassageVisible(false);
+    if (
+      projMediaRef.current?.attributes.originalFile
+        ?.toLowerCase()
+        .endsWith('.pdf')
+    ) {
+      writeVisualResource(items);
+    } else {
+      setProjResWizVisible(true);
     }
   };
 
@@ -281,10 +512,39 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleDescription = (desc: string) => {
     descriptionRef.current = desc;
   };
+
+  const handlePassRes = (newValue: ResourceTypeEnum) => {
+    resourceTypeRef.current = newValue;
+    setArtifactTypeId(isProjectResource() ? projResourceType : resourceType);
+    setUploadType(
+      isProjectResource() ? UploadType.ProjectResource : UploadType.Resource
+    );
+  };
+
   const handleEnded = () => {
+    mediaStart.current = undefined;
+    mediaEnd.current = undefined;
+    mediaPosition.current = undefined;
     setPlayItem('');
     handleItemPlayEnd();
   };
+
+  const handleDuration = (duration: number) => {
+    if (mediaStart.current) {
+      mediaPosition.current = mediaStart.current;
+      mediaStart.current = undefined;
+      setItemPlaying(true);
+    }
+  };
+
+  const handlePosition = (position: number) => {
+    if (mediaEnd.current) {
+      if (position >= mediaEnd.current) {
+        handleEnded();
+      }
+    }
+  };
+
   return (
     <>
       <div className={classes.row}>
@@ -297,15 +557,23 @@ export function PassageDetailArtifacts(props: IProps) {
             srcMediaId={playItem}
             requestPlay={itemPlaying}
             onEnded={handleEnded}
+            onDuration={handleDuration}
+            onPosition={handlePosition}
+            position={mediaPosition.current}
             onTogglePlay={handleItemTogglePlay}
             controls={playItem !== ''}
           />
         </div>
+        <PassageResourceButton
+          value={allResources}
+          label={t.allResources}
+          cb={handleAllResources}
+        />
       </div>
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
         {rowData
-          .filter((r) => r?.isResource)
+          .filter((r) => listFilter(r))
           .map((value, index) => (
             <SortableItem
               key={`item-${index}`}
@@ -329,8 +597,8 @@ export function PassageDetailArtifacts(props: IProps) {
         multiple={true}
         finish={afterUpload}
         cancelled={cancelled}
-        artifactTypeId={resourceType}
-        uploadType={UploadType.Resource}
+        artifactTypeId={artifactTypeId}
+        uploadType={uploadType}
         metaData={
           <ResourceData
             catAllowNew={true} //if they can upload they can add cat
@@ -339,6 +607,9 @@ export function PassageDetailArtifacts(props: IProps) {
             initDescription=""
             onDescriptionChange={handleDescription}
             catRequired={false}
+            initPassRes={isPassageResource()}
+            onPassResChange={handlePassRes}
+            allowProject={true}
           />
         }
       />
@@ -352,6 +623,43 @@ export function PassageDetailArtifacts(props: IProps) {
           onSelect={handleSelectShared}
           onOpen={handleSharedResourceVisible}
         />
+      </BigDialog>
+      <BigDialog
+        title={localizedArtifactType(ArtifactTypeSlug.ProjectResource)}
+        isOpen={projectResourceVisible}
+        onOpen={handleProjectResourceVisible}
+      >
+        <SelectProjectResource
+          onSelect={handleSelectProjectResource}
+          onOpen={handleProjectResourceVisible}
+        />
+      </BigDialog>
+      <BigDialog
+        title={t.projectResourcePassage.replace('{0}', getOrganizedBy(false))}
+        isOpen={projResPassageVisible}
+        onOpen={handleProjResPassageVisible}
+      >
+        {projResPassageVisible ? (
+          <SelectSections onSelect={handleSelectProjectResourcePassage} />
+        ) : (
+          <></>
+        )}
+      </BigDialog>
+      <BigDialog
+        title={t.projectResourceConfigure}
+        isOpen={projResWizVisible}
+        onOpen={handleProjResWizVisible}
+        bp={BigDialogBp.md}
+      >
+        {projResWizVisible ? (
+          <ProjectResourceConfigure
+            media={projMediaRef.current}
+            items={projIdentRef.current}
+            onOpen={handleProjResWizVisible}
+          />
+        ) : (
+          <></>
+        )}
       </BigDialog>
       <BigDialog
         title={t.editResource}
@@ -368,8 +676,18 @@ export function PassageDetailArtifacts(props: IProps) {
           initDescription={descriptionRef.current}
           onDescriptionChange={handleDescription}
           catRequired={false}
+          initPassRes={resourceTypeRef.current}
+          onPassResChange={handlePassRes}
+          allowProject={false}
         />
       </BigDialog>
+      {confirm && (
+        <Confirm
+          text={t.deleteConfirm}
+          yesResponse={handleDeleteConfirmed}
+          noResponse={handleDeleteRefused}
+        />
+      )}
       {displayId && (
         <MediaDisplay
           srcMediaId={displayId}
