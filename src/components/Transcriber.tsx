@@ -1110,6 +1110,7 @@ export function Transcriber(props: IProps) {
                         <WSAudioPlayer
                           id="audioPlayer"
                           allowRecord={false}
+                          allowAutoSegment={true}
                           allowSegment={selected !== '' && role !== 'view'}
                           allowZoom={true}
                           allowSpeed={true}

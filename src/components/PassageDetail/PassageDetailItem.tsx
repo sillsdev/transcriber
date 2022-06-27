@@ -421,6 +421,7 @@ export function PassageDetailItem(props: IProps) {
                   <Pane className={classes.pane}>
                     <PassageDetailPlayer
                       allowSegment={segments}
+                      allowAutoSegment={segments}
                       saveSegments={segments}
                     />
                   </Pane>
