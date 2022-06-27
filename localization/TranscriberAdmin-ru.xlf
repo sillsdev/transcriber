@@ -3123,6 +3123,18 @@
 				<target>Редактирование ресурса</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.generalResources">
+			<segment>
+				<source>General Resources</source>
+				<target>Общие ресурсы</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.link">
+			<segment>
+				<source>Link</source>
+				<target>Ссылка</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.passageResource">
 			<segment>
 				<source>Passage</source>

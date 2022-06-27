@@ -28,7 +28,7 @@ import {
 } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import ShowIcon from '@material-ui/icons/Visibility';
-import AudioIcon from '@material-ui/icons/Audiotrack';
+import AudioIcon from '@material-ui/icons/Hearing';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Confirm from '../../AlertDialog';
 

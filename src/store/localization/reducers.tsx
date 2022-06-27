@@ -668,6 +668,8 @@ const initialState = {
 			"deleteConfirm": "Delete Resource?",
 			"description": "Description",
 			"editResource": "Edit Resource",
+			"generalResources": "General Resources",
+			"link": "Link",
 			"passageResource": "Passage",
 			"pasteFormat": "Pasted data must contain two or three columns. One of them must be the reference.",
 			"pasteNoChange": "Nothing changed! Perhaps no references matched?",

@@ -82,11 +82,12 @@ interface IRecordProps {
 }
 
 interface IProps extends IRecordProps, WithDataProps {
+  visual?: boolean;
   onSelect?: (items: RecordIdentity[]) => void;
 }
 
 export function SelectSections(props: IProps) {
-  const { passages, sections, onSelect } = props;
+  const { passages, sections, visual, onSelect } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
@@ -94,7 +95,6 @@ export function SelectSections(props: IProps) {
   const [heightStyle, setHeightStyle] = useState({
     maxHeight: `${window.innerHeight - 250}px`,
   });
-
   const { getOrganizedBy } = useOrganizedBy();
   const t: ITranscriptionTabStrings = useSelector(
     transcriptiontabSelector,
@@ -104,6 +104,8 @@ export function SelectSections(props: IProps) {
     passageDetailArtifactsSelector,
     shallowEqual
   );
+  const [buttonText, setButtonText] = useState(ta.projectResourceConfigure);
+
   const allBookData = useSelector((state: IState) => state.books.bookData);
   const columnDefs = [
     { name: 'name', title: getOrganizedBy(true) },
@@ -119,6 +121,11 @@ export function SelectSections(props: IProps) {
       maxHeight: `${window.innerHeight - 250}px`,
     });
   };
+
+  useEffect(() => {
+    setButtonText(visual ? ta.createResources : ta.projectResourceConfigure);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visual]);
 
   useEffect(() => {
     setDimensions();
@@ -232,7 +239,7 @@ export function SelectSections(props: IProps) {
           color="primary"
           disabled={checks.length === 0}
         >
-          {ta.projectResourceConfigure}
+          {buttonText}
         </Button>
       </div>
     </div>

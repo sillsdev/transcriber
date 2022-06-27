@@ -3100,6 +3100,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.generalResources">
+         <segment>
+            <source>General Resources</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.link">
+         <segment>
+            <source>Link</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.passageResource">
          <segment>
             <source>Passage</source>

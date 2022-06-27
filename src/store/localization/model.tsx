@@ -626,6 +626,8 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "deleteConfirm": string;
     "description": string;
     "editResource": string;
+    "generalResources": string;
+    "link": string;
     "passageResource": string;
     "pasteFormat": string;
     "pasteNoChange": string;

@@ -3105,6 +3105,18 @@
 				<target>Changer de ressource</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.generalResources">
+			<segment>
+				<source>General Resources</source>
+				<target>Ressources générales</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.link">
+			<segment>
+				<source>Link</source>
+				<target>Lien</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.passageResource">
 			<segment>
 				<source>Passage</source>

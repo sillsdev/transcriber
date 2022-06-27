@@ -38,15 +38,12 @@ import {
   useSecResUserCreate,
   useSecResUserRead,
   useSecResUserDelete,
-  useArtifactType,
-  ArtifactTypeSlug,
   useOrganizedBy,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
 import SelectResource, { CatMap } from './SelectResource';
 import SelectProjectResource from './SelectProjectResource';
-// import SelectProjResPassages from './SelectProjResPassages';
 import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
 import { UploadType } from '../../MediaUpload';
@@ -130,8 +127,8 @@ export function PassageDetailArtifacts(props: IProps) {
   const AddMediaFileResource = useMediaResCreate(passage, currentstep);
   const UpdateSectionResource = useSecResUpdate();
   const DeleteSectionResource = useSecResDelete();
-  const { localizedArtifactType } = useArtifactType();
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [visual, setVisual] = useState(false);
   const cancelled = useRef(false);
   const [displayId, setDisplayId] = useState('');
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
@@ -263,6 +260,8 @@ export function PassageDetailArtifacts(props: IProps) {
     } else {
       checkSavedFn(() => {
         setProjResWizVisible(v);
+        projMediaRef.current = undefined;
+        setVisual(false);
       });
     }
   };
@@ -454,6 +453,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleSelectProjectResource = (m: MediaFile) => {
     setSelected(m.id);
     projMediaRef.current = m;
+    setVisual(m?.attributes?.originalFile?.toLowerCase()?.endsWith('.pdf'));
     setProjectResourceVisible(false);
     setProjResPassageVisible(true);
   };
@@ -625,7 +625,7 @@ export function PassageDetailArtifacts(props: IProps) {
         />
       </BigDialog>
       <BigDialog
-        title={localizedArtifactType(ArtifactTypeSlug.ProjectResource)}
+        title={t.generalResources}
         isOpen={projectResourceVisible}
         onOpen={handleProjectResourceVisible}
       >
@@ -640,7 +640,10 @@ export function PassageDetailArtifacts(props: IProps) {
         onOpen={handleProjResPassageVisible}
       >
         {projResPassageVisible ? (
-          <SelectSections onSelect={handleSelectProjectResourcePassage} />
+          <SelectSections
+            visual={visual}
+            onSelect={handleSelectProjectResourcePassage}
+          />
         ) : (
           <></>
         )}
