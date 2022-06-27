@@ -1,5 +1,9 @@
 import { useEffect, useState, useContext } from 'react';
-import { Resource, ISharedStrings } from '../../../model';
+import {
+  Resource,
+  ISharedStrings,
+  IPassageDetailArtifactsStrings,
+} from '../../../model';
 import {
   makeStyles,
   createStyles,
@@ -19,7 +23,10 @@ import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import SelectCategory, {
   ScriptureEnum,
 } from '../../Workflow/SelectArtifactCategory';
-import { sharedSelector } from '../../../selector';
+import {
+  passageDetailArtifactsSelector,
+  sharedSelector,
+} from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -78,6 +85,10 @@ export const SelectResource = (props: IProps) => {
   const [catMap] = useState<CatMap>({});
   const ctx = useContext(PassageDetailContext);
   const { getSharedResources } = ctx.state;
+  const t: IPassageDetailArtifactsStrings = useSelector(
+    passageDetailArtifactsSelector,
+    shallowEqual
+  );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const select = (i: number, noToggle?: boolean) => {
@@ -156,7 +167,7 @@ export const SelectResource = (props: IProps) => {
           color="primary"
           disabled={selected.length === 0}
         >
-          {ts.select}
+          {t.link}
         </Button>
         <Button
           id="res-select-cancel"
