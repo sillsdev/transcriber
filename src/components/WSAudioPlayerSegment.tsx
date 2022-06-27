@@ -175,7 +175,7 @@ function WSAudioPlayerSegment(props: IProps) {
       <Grid container className={classes.toolbar}>
         <Grid item>
           {wsAutoSegment && (
-            <div>
+            <>
               <LightTooltip
                 id="wsSegmentTip"
                 title={t.autoSegment.replace('[{0}]', '')}
@@ -211,7 +211,7 @@ function WSAudioPlayerSegment(props: IProps) {
                 onSave={handleSegParamChange}
                 setBusy={setBusy}
               />
-            </div>
+            </>
           )}
 
           <LightTooltip
