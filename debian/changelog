@@ -1,12 +1,13 @@
-sil-transcriber (2.15.8.2)  experimental; urgency=high
+sil-transcriber (2.15.8.3)  experimental; urgency=high
 
 * TT-4035b fix removing extra hyphens on language tags
 * TT-4028 Cancelling resource creation
 * TT-4030c Chunk paste edge cases
 * TT-3844 scrolling windows and wording changes
 * Enable auto segmenter for transcriber and phrase back translate
+* Wording changes
 
--- Greg Trihus <greg_trihus@sil.org>  Mon, 25 Jun 2022 17:34:00 -0600
+-- Greg Trihus <greg_trihus@sil.org>  Mon, 27 Jun 2022 11:21:00 -0600
 
 sil-transcriber (2.15.7.0)  experimental; urgency=high
 
