@@ -1,10 +1,12 @@
 sil-transcriber (2.15.8.3)  experimental; urgency=high
 
-* TT-4035b fix removing extra hyphens on language tags
+* TT-3805 update test for visual resource
+* TT-3844 scrolling windows and wording changes
 * TT-4028 Cancelling resource creation
 * TT-4030c Chunk paste edge cases
-* TT-3844 scrolling windows and wording changes
+* TT-4035b fix removing extra hyphens on language tags
 * Enable auto segmenter for transcriber and phrase back translate
+* update help
 * Wording changes
 
 -- Greg Trihus <greg_trihus@sil.org>  Mon, 27 Jun 2022 11:21:00 -0600
