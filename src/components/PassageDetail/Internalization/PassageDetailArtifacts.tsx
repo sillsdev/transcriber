@@ -55,7 +55,12 @@ import ProjectResourceConfigure from './ProjectResourceConfigure';
 import { useProjectResourceSave } from './useProjectResourceSave';
 import { UnsavedContext } from '../../../context/UnsavedContext';
 import Confirm from '../../AlertDialog';
-import { getSegments, NamedRegions, removeExtension } from '../../../utils';
+import {
+  getSegments,
+  NamedRegions,
+  removeExtension,
+  isVisual,
+} from '../../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -453,7 +458,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleSelectProjectResource = (m: MediaFile) => {
     setSelected(m.id);
     projMediaRef.current = m;
-    setVisual(m?.attributes?.originalFile?.toLowerCase()?.endsWith('.pdf'));
+    setVisual(isVisual(m));
     setProjectResourceVisible(false);
     setProjResPassageVisible(true);
   };
@@ -494,11 +499,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleSelectProjectResourcePassage = (items: RecordIdentity[]) => {
     projIdentRef.current = items;
     setProjResPassageVisible(false);
-    if (
-      projMediaRef.current?.attributes.originalFile
-        ?.toLowerCase()
-        .endsWith('.pdf')
-    ) {
+    if (isVisual(projMediaRef.current)) {
       writeVisualResource(items);
     } else {
       setProjResWizVisible(true);

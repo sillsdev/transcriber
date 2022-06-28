@@ -31,6 +31,7 @@ import ShowIcon from '@material-ui/icons/Visibility';
 import AudioIcon from '@material-ui/icons/Hearing';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Confirm from '../../AlertDialog';
+import { isVisual } from '../../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -130,11 +131,7 @@ export const SelectProjectResource = (props: IProps) => {
             className={classes.listItem}
           >
             <ListItemIcon>
-              {r.attributes.originalFile.endsWith('.pdf') ? (
-                <ShowIcon />
-              ) : (
-                <AudioIcon />
-              )}
+              {isVisual(r) ? <ShowIcon /> : <AudioIcon />}
             </ListItemIcon>
             <ListItemText
               primary={r.attributes?.topic}
