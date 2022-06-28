@@ -62,3 +62,4 @@ export * from './namedSegments';
 export * from './burritoMetadata';
 export * from './eqSet';
 export * from './cleanClipboard';
+export * from './isVisual';

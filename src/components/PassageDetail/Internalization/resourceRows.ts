@@ -7,7 +7,7 @@ import {
 } from '../../../model';
 import { related, VernacularTag } from '../../../crud';
 import { IRow } from '../../../context/PassageDetailContext';
-import { removeExtension } from '../../../utils';
+import { isVisual, removeExtension } from '../../../utils';
 
 const isResource = (typeSlug: string) =>
   ['resource', 'sharedresource'].indexOf(typeSlug) !== -1;
@@ -72,7 +72,7 @@ export const oneMediaRow = ({
     passageId: related(media, 'passage') || '',
     isComment: typeNameSlug === 'comment',
     isVernacular: typeNameSlug === '' || typeNameSlug === 'vernacular',
-    isText: mediaAttr?.originalFile?.endsWith('.pdf') || false,
+    isText: isVisual(media),
     sourceVersion: sourceversion,
   });
   return newRow;
