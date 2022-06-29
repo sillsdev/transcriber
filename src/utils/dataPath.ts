@@ -17,8 +17,7 @@ export const dataPath = (
   type?: PathType,
   local_out?: { localname: string }
 ): string => {
-  if (isElectron && process.env.REACT_APP_OFFLINEDATA !== undefined) {
-    console.log(process.env.REACT_APP_OFFLINEDATA, relPath);
+  if (isElectron && process.env.REACT_APP_OFFLINEDATA) {
     var localName = '';
     switch (type) {
       case PathType.AVATARS:
