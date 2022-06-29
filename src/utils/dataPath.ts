@@ -51,7 +51,8 @@ export const dataPath = (
     }
     if (local_out) local_out.localname = localName;
     if (fs.existsSync(localName)) return localName;
-    if (type === PathType.MEDIA && relPath?.startsWith('http')) {
+    //s3 paths look like https://sil-transcriber-userfiles-dev.s3.amazonaws.com/noorg/B14___01_2Thess______ENGESVN2DA.mp3?AWSAccessKeyId=xxx
+    if (type === PathType.MEDIA && relPath?.includes('s3.amazonaws')) {
       // This logic handles names with slashes. Sholdn't nappen again
       const fileParts =
         url.parse(relPath).pathname?.split('?')[0].split('/') || [];
