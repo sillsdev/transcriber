@@ -56,6 +56,8 @@ export const SelectProjectResource = (props: IProps) => {
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [complete, setComplete] = useGlobal('progress');
+  const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [resource, setResouce] = useState<MediaFile[]>([]);
   const ctx = useContext(PassageDetailContext);
   const { getProjectResources } = ctx.state;
@@ -90,7 +92,7 @@ export const SelectProjectResource = (props: IProps) => {
   };
   const handleDeleteAccepted = async () => {
     if (confirm && media.current) {
-      const total = media.current.length;
+      const total = media.current.length + 1;
       let n = 0;
       const secResources = memory.cache.query((q) =>
         q.findRecords('sectionresource')
@@ -117,6 +119,9 @@ export const SelectProjectResource = (props: IProps) => {
   useEffect(() => {
     getProjectResources().then((res) => {
       setResouce(res);
+      if (res.length === 0) {
+        onOpen && onOpen(false);
+      }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [confirm]);
@@ -142,7 +147,10 @@ export const SelectProjectResource = (props: IProps) => {
                 {localizedArtifactCategory(
                   slugFromId(related(r, 'artifactCategory'))
                 )}
-                <IconButton onClick={handleDelete(r)}>
+                <IconButton
+                  onClick={handleDelete(r)}
+                  disabled={isOffline && !offlineOnly}
+                >
                   <DeleteIcon />
                 </IconButton>
               </>

@@ -108,7 +108,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [, setComplete] = useGlobal('progress');
+  const [complete, setComplete] = useGlobal('progress');
   const ctx = useContext(PassageDetailContext);
   const {
     rowData,
@@ -252,7 +252,9 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const handleProjectResourceVisible = (v: boolean) => {
-    setProjectResourceVisible(v);
+    if (complete === 0 || complete === 100) {
+      setProjectResourceVisible(v);
+    }
   };
 
   const handleProjResPassageVisible = (v: boolean) => {

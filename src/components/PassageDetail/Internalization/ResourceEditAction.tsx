@@ -1,3 +1,4 @@
+import { useGlobal } from 'reactn';
 import { IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -13,6 +14,8 @@ interface IProps {
 }
 
 export const ResourceEditAction = ({ item, onEdit, onDelete }: IProps) => {
+  const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const t: IMediaActionsStrings = useSelector(
     mediaActionsSelector,
     shallowEqual
@@ -26,7 +29,7 @@ export const ResourceEditAction = ({ item, onEdit, onDelete }: IProps) => {
     onDelete && onDelete(item);
   };
 
-  return (
+  return !isOffline || offlineOnly ? (
     <span>
       {onEdit && (
         <LightTooltip title={t.edit}>
@@ -45,5 +48,7 @@ export const ResourceEditAction = ({ item, onEdit, onDelete }: IProps) => {
         </span>
       </LightTooltip>
     </span>
+  ) : (
+    <></>
   );
 };
