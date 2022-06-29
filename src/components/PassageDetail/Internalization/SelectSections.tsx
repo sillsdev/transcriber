@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from 'reactn';
+import { Column, TableColumnWidthInfo } from '@devexpress/dx-react-grid';
 import { useSelector, shallowEqual } from 'react-redux';
 import { passageDetailArtifactsSelector } from '../../../selector';
 import {
@@ -24,6 +25,7 @@ import {
   passageDescription,
   useOrganizedBy,
   findRecord,
+  usePlanType,
 } from '../../../crud';
 import { transcriptiontabSelector } from '../../../selector';
 import { eqSet } from '../../../utils';
@@ -105,22 +107,16 @@ export function SelectSections(props: IProps) {
     shallowEqual
   );
   const [buttonText, setButtonText] = useState(ta.projectResourceConfigure);
-
   const allBookData = useSelector((state: IState) => state.books.bookData);
-  const columnDefs = [
-    { name: 'name', title: getOrganizedBy(true) },
-    { name: 'passages', title: t.passages },
-  ];
-  const columnWidths = [
-    { columnName: 'name', width: 300 },
-    { columnName: 'passages', width: 120 },
-  ];
+  const [columnDefs, setColumnDefs] = useState<Column[]>([]);
+  const [columnWidths, setColumnWidths] = useState<TableColumnWidthInfo[]>([]);
   const [checks, setChecks] = useState<Array<string | number>>([]);
   const setDimensions = () => {
     setHeightStyle({
       maxHeight: `${window.innerHeight - 250}px`,
     });
   };
+  const planType = usePlanType();
 
   useEffect(() => {
     setButtonText(visual ? ta.createResources : ta.projectResourceConfigure);
@@ -138,11 +134,41 @@ export function SelectSections(props: IProps) {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
   const planRec = useMemo(
     () => findRecord(memory, 'plan', plan) as Plan | undefined,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [plan]
   );
+
+  const isFlat = useMemo(() => {
+    return planType(plan)?.flat;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plan]);
+
+  useEffect(() => {
+    if (!isFlat) {
+      setColumnDefs(
+        [
+          { name: 'name', title: getOrganizedBy(true) },
+          { name: 'passages', title: t.passages },
+        ].map((r) => r)
+      );
+      setColumnWidths(
+        [
+          { columnName: 'name', width: 300 },
+          { columnName: 'passages', width: 120 },
+        ].map((r) => r)
+      );
+    } else {
+      setColumnDefs(
+        [{ name: 'name', title: getOrganizedBy(true) }].map((r) => r)
+      );
+      setColumnWidths([{ columnName: 'name', width: 300 }].map((r) => r));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFlat]);
+
   const getSections = (
     passages: Array<Passage>,
     sections: Array<Section>,
@@ -156,18 +182,23 @@ export function SelectSections(props: IProps) {
         const sectionpassages = passages
           .filter((ps) => related(ps, 'section') === section.id)
           .sort(passageCompare);
-        rowData.push({
-          id: section.id,
-          name: getSection(section),
-          passages: sectionpassages.length.toString(),
-          parentId: '',
-        });
+        const passageCount = sectionpassages.length;
+        if (!isFlat && passageCount > 1)
+          rowData.push({
+            id: section.id,
+            name: getSection(section).trim(),
+            passages: passageCount.toString(),
+            parentId: '',
+          });
         sectionpassages.forEach((passage: Passage) => {
           rowData.push({
             id: passage.id,
-            name: getReference(passage, bookData),
+            name: `${section?.attributes?.sequencenum}.${getReference(
+              passage,
+              bookData
+            ).trim()}`,
             passages: '',
-            parentId: section.id,
+            parentId: isFlat || passageCount === 1 ? '' : section.id,
           } as IRow);
         });
       });
@@ -200,7 +231,10 @@ export function SelectSections(props: IProps) {
       .map((c) => {
         const n = parseInt(c as string);
         return {
-          type: data[n].parentId === '' ? 'section' : 'passage',
+          type:
+            data[n].parentId === '' && !isFlat && parseInt(data[n].passages) > 1
+              ? 'section'
+              : 'passage',
           id: data[n].id,
         };
       }) as RecordIdentity[];
