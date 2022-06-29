@@ -513,10 +513,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
 
     const getProjectResources = async () => {
       const typeId = getTypeId(ArtifactTypeSlug.ProjectResource);
-      const media = (await memory.query((q: QueryBuilder) =>
-        q.findRecords('mediafile')
-      )) as MediaFile[];
-      return media.filter(
+      return mediafiles.filter(
         (m) =>
           related(m, 'plan') === plan && related(m, 'artifactType') === typeId
       );
