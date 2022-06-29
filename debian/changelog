@@ -1,12 +1,14 @@
-sil-transcriber (2.15.8.5)  experimental; urgency=high
+sil-transcriber (2.15.8.6)  experimental; urgency=high
 
 * TT-3805 update test for visual resource
 * TT-3844 scrolling windows and wording changes
 * TT-4024 chunking resources for flat plans
+* TT-4026 deleting project resource
 * TT-4028 Cancelling resource creation
 * TT-4030c Chunk paste edge cases
 * TT-4035b fix removing extra hyphens on language tags
 * TT-4038, TT-4040 finding files for offline projects
+* TT-4039 no offline resouce edits
 * Enable auto segmenter for transcriber and phrase back translate
 * update help
 * Wording changes
