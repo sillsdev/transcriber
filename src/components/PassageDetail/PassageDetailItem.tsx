@@ -280,7 +280,15 @@ export function PassageDetailItem(props: IProps) {
     if (currentSegmentIndex > 0) tmp += 's' + currentSegmentIndex.toString();
     setDefaultFileName(cleanFileName(tmp));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [memory, passage, rowData, recordType, speaker, currentSegmentIndex]);
+  }, [
+    memory,
+    passage,
+    rowData,
+    recordType,
+    speaker,
+    currentSegmentIndex,
+    currentVersion,
+  ]);
 
   useEffect(() => {
     if (saveRequested(toolId) && canSave) handleSave();
