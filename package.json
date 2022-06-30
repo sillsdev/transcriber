@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "2.15.8-alpha.6",
+  "version": "2.15.8",
   "description": "Flexibly manage audio-text files for Paratext or Audacity",
   "private": true,
   "dependencies": {
@@ -90,7 +90,10 @@
     "deploySetup": "amplify init && git checkout amplify && git checkout .gitignore",
     "dev": "amplify env checkout appdev && node env-config/changeEnv.js dev && git checkout amplify\\#current-cloud-backend",
     "qa": "amplify env checkout appqa && node env-config/changeEnv.js qa && git checkout amplify\\#current-cloud-backend",
-    "prod": "amplify env checkout appprod && node env-config/changeEnv.js prod && git checkout amplify\\#current-cloud-backend"
+    "prod": "amplify env checkout appprod && node env-config/changeEnv.js prod && git checkout amplify\\#current-cloud-backend",
+    "devs": "node env-config/changeEnv.js dev",
+    "qas": "node env-config/changeEnv.js qa",
+    "dbg": "node env-config/changeEnv.js dbg"
   },
   "prettier": {
     "trailingComma": "es5"
