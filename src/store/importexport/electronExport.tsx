@@ -305,8 +305,17 @@ export async function electronExport(
       }
       if (remoteIds) {
         recs.forEach((r) => {
-          if (!remoteId('table', r.id, memory.keyMap) && r.attributes)
+          if (!remoteId(table, r.id, memory.keyMap) && r.attributes)
             r.attributes.offlineId = r.id;
+          if (
+            table === 'mediafile' &&
+            !remoteId('mediafile', related(r, 'sourceMedia'), memory.keyMap)
+          ) {
+            (r as MediaFile).attributes.sourceMediaOfflineId = related(
+              r,
+              'sourceMedia'
+            );
+          }
         });
       }
       return recs;
@@ -330,6 +339,24 @@ export async function electronExport(
         });
       }
       return ds;
+    };
+    const FromMedia = (media: MediaFile[], remoteIds: boolean) => {
+      if (remoteIds) {
+        media.forEach((m) => {
+          if (!remoteId('mediafile', m.id, memory.keyMap) && m.attributes) {
+            m.attributes.offlineId = m.id;
+          }
+          var src = related(m, 'sourceMedia');
+          if (
+            src &&
+            !remoteId('mediafile', src, memory.keyMap) &&
+            m.attributes
+          ) {
+            m.attributes.sourceMediaOfflineId = src;
+          }
+        });
+      }
+      return media;
     };
     const Comments = (project: Project | undefined, remoteIds: boolean) => {
       var comments = memory.cache.query((q: QueryBuilder) =>
@@ -430,7 +457,7 @@ export async function electronExport(
               target,
               orgWorkflowSteps,
             } as IExportArtifacts);
-            if (media) return media;
+            if (media) return FromMedia(media, needsRemoteIds);
           }
           return FromPassages(info.table, project, needsRemoteIds);
 
