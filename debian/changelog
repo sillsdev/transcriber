@@ -1,7 +1,22 @@
-sil-transcriber (2.15.8.6)  experimental; urgency=high
+sil-transcriber (2.15.8.7)  experimental; urgency=high
 
+* TT-3100 Resource Delete Confirm (#812)
+* TT-3393 Resource tool tips
+* TT-3798 Passage Resources (#811)
 * TT-3805 update test for visual resource
+* TT-3830 Require Vernacular (#810)
+* TT-3831 set sourceMediaOfflineId in prep for API export changes (#840)
 * TT-3844 scrolling windows and wording changes
+* TT-3918 use tool name not step name to filter Paratext step (#841)
+* TT-3919 Save Back Translation Segments (#815)
+* TT-3997 Maintain Resource order (#805)
+* TT-3998 Add Transcriber to Work flow (#807)
+* TT-3998b move transcribe button next to play item
+* TT-4001 Handle names with slashes
+* TT-4002 Display Transcription State (#817)
+* TT-4005 Shared Resource Create error (#816)
+* TT-4006 Moving Resources (#813)
+* TT-4023 add message when too many segments
 * TT-4024 chunking resources for flat plans
 * TT-4026 deleting project resource
 * TT-4028 Cancelling resource creation
@@ -9,11 +24,9 @@ sil-transcriber (2.15.8.6)  experimental; urgency=high
 * TT-4035b fix removing extra hyphens on language tags
 * TT-4038, TT-4040 finding files for offline projects
 * TT-4039 no offline resouce edits
-* Enable auto segmenter for transcriber and phrase back translate
 * update help
-* Wording changes
 
--- Greg Trihus <greg_trihus@sil.org>  Mon, 27 Jun 2022 11:21:00 -0600
+-- Greg Trihus <greg_trihus@sil.org>  Mon, 30 Jun 2022 13:01:00 -0600
 
 sil-transcriber (2.15.7.0)  experimental; urgency=high
 
