@@ -1,6 +1,6 @@
 import { useGlobal } from 'reactn';
 import { OrgWorkflowStep } from '../model';
-import { usePlanType, useOrgWorkflowSteps } from '.';
+import { usePlanType, useOrgWorkflowSteps, getTool, ToolSlug } from '.';
 
 export const useFilteredSteps = () => {
   const [plan] = useGlobal('plan');
@@ -12,9 +12,7 @@ export const useFilteredSteps = () => {
     GetOrgWorkflowSteps({ process: 'ANY' }).then(
       (orgsteps: OrgWorkflowStep[]) => {
         const wf = orgsteps.filter(
-          (s) =>
-            scripture ||
-            s.attributes.name.toLowerCase().indexOf('paratext') === -1
+          (s) => scripture || getTool(s.attributes?.tool) !== ToolSlug.Paratext
         );
         cb(wf);
       }
