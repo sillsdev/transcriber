@@ -361,7 +361,12 @@ export function TranscriptionTab(props: IProps) {
       auth,
       errorReporter,
       t.exportingProject,
-      t.noData.replace('{0}', localizedArtifactType(artifactType)),
+      t.noData.replace(
+        '{0}',
+        onlyTypeId !== undefined
+          ? localizedArtifactType(artifactType)
+          : t.changed
+      ),
       localizedArtifact,
       getOfflineProject,
       step,
@@ -535,8 +540,8 @@ export function TranscriptionTab(props: IProps) {
         if (exportStatus.complete) {
           setBusy(false);
           if (exportFile && exportName === '') {
-            setExportName(exportFile.data.attributes.message);
-            setExportUrl(exportFile.data.attributes.fileurl);
+            setExportName(exportFile.message);
+            setExportUrl(exportFile.fileURL);
           }
         }
       }

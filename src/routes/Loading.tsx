@@ -169,48 +169,40 @@ export function Loading(props: IProps) {
 
     //filter will be passed to api which will lowercase the email before comparison
     var allinvites: Invitation[] = (await newremote.query((q: QueryBuilder) =>
-      q
-        .findRecords('invitation')
-        .filter(
-          { attribute: 'email', value: userEmail },
-          { attribute: 'accepted', value: false }
-        )
+      q.findRecords('invitation').filter(
+        { attribute: 'email', value: userEmail }
+        // { attribute: 'accepted', value: false }  //went from AND to OR between attributes :/
+      )
     )) as any;
-    allinvites.forEach(async (invitation) => {
-      await newremote.update((t: TransformBuilder) =>
-        t.replaceAttribute(invitation, 'accepted', true)
-      );
-    });
+    allinvites
+      .filter((i) => !i.attributes.accepted)
+      .forEach(async (invitation) => {
+        await newremote.update((t: TransformBuilder) =>
+          t.replaceAttribute(invitation, 'accepted', true)
+        );
+      });
 
     if (inviteId) {
-      let invite = allinvites.find(
-        (i) => i.attributes.silId === parseInt(inviteId)
-      );
+      let invite = allinvites.find((i) => i.id === inviteId);
       if (!invite) {
         try {
           const thisinvite: Invitation[] = (await newremote.query(
             (q: QueryBuilder) =>
-              q
-                .findRecords('invitation')
-                .filter({ attribute: 'silId', value: parseInt(inviteId) })
+              q.findRecord({ type: 'invitation', id: inviteId })
           )) as any;
-          if (!thisinvite.length) {
-            //it's either deleted, or I don't have access to it
-            //check if my paratext email is linked
-            if (!(await checkAlternateParatextEmail(inviteId))) {
-              inviteErr = t.inviteError;
-            }
-          } else {
-            if (
-              thisinvite[0].attributes.email.toLowerCase() !==
-              userEmail.toLowerCase()
-            ) {
-              /* they must have logged in with another email */
-              inviteErr = t.inviteError;
-            }
+          if (
+            thisinvite[0].attributes.email.toLowerCase() !==
+            userEmail.toLowerCase()
+          ) {
+            /* they must have logged in with another email */
+            inviteErr = t.inviteError;
           }
         } catch {
-          inviteErr = t.deletedInvitation;
+          //it's either deleted, or I don't have access to it
+          //check if my paratext email is linked
+          if (!(await checkAlternateParatextEmail(inviteId))) {
+            inviteErr = t.deletedInvitation;
+          }
         }
       }
       if (inviteErr !== '') {
@@ -350,9 +342,14 @@ export function Loading(props: IProps) {
 
   useEffect(() => {
     const finishRemoteLoad = () => {
+      const tokData = auth.getProfile() || { sub: '' };
       localStorage.removeItem('goingOnline');
       remote
-        .pull((q) => q.findRecords('currentuser'))
+        .pull((q) =>
+          q
+            .findRecords('user')
+            .filter({ attribute: 'auth0Id', value: tokData.sub })
+        )
         .then((tr) => {
           const user = (tr[0].operations[0] as any).record as User;
           InviteUser(remote, user?.attributes?.email || 'neverhere').then(

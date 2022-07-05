@@ -5116,6 +5116,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.changed">
+         <segment>
+            <source>Changed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.passages">
          <segment>
             <source>Passages</source>

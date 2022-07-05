@@ -1,6 +1,6 @@
 import { useGlobal } from 'reactn';
 import { SectionPassage, IWorkflow } from '../../model';
-import { TransformBuilder, QueryBuilder, Operation } from '@orbit/data';
+import { TransformBuilder, Operation } from '@orbit/data';
 import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
 import { remoteId, remoteIdNum, remoteIdGuid } from '../../crud';
@@ -104,23 +104,19 @@ export const useWfOnlineSave = (props: IProps) => {
     } as SectionPassage;
     memory.schema.initializeRecord(sp);
     setComplete(20);
-    var dumbrec = await memory.update(
-      (t: TransformBuilder) => t.addRecord(sp),
-      {
-        label: 'Update Plan Section and Passages',
-        sources: {
-          remote: {
-            settings: {
-              timeout: 2000000,
-            },
+    var rec = await memory.update((t: TransformBuilder) => t.addRecord(sp), {
+      label: 'Update Plan Section and Passages',
+      sources: {
+        remote: {
+          settings: {
+            timeout: 2000000,
           },
         },
-      }
-    );
+      },
+    });
     //null only if sent twice by orbit
-    if (dumbrec) {
+    if (rec) {
       setComplete(50);
-      //dumbrec does not contain the new data...just the new id so go get it
       var filterrec = {
         attribute: 'plan-id',
         value: remoteId('plan', plan, memory.keyMap),
@@ -144,34 +140,30 @@ export const useWfOnlineSave = (props: IProps) => {
       );
       hasNew = anyNew;
       if (anyNew) {
-        var rec: SectionPassage = (await remote.query((q: QueryBuilder) =>
-          q.findRecord({ type: 'sectionpassage', id: dumbrec.id })
-        )) as any;
-        if (rec !== undefined) {
-          //outrecs is an array of arrays of IRecords
-          const outrecs = JSON.parse(rec.attributes.data);
-          workflow.forEach((row, index) => {
-            if (isSectionRow(row) && isSectionAdding(row))
-              row.sectionId = {
-                type: 'section',
-                id: remoteIdGuid(
-                  'section',
-                  (outrecs[index][0] as SaveRec).id,
-                  memory.keyMap
-                ),
-              };
-            if (isPassageRow(row) && isPassageAdding(row)) {
-              row.passageId = {
-                type: 'passage',
-                id: remoteIdGuid(
-                  'passage',
-                  (outrecs[index][isSectionRow(row) ? 1 : 0] as SaveRec).id,
-                  memory.keyMap
-                ),
-              };
-            }
-          });
-        }
+        //set the ids in the sheet
+        //outrecs is an array of arrays of IRecords
+        const outrecs = JSON.parse(rec.attributes.data);
+        workflow.forEach((row, index) => {
+          if (isSectionRow(row) && isSectionAdding(row))
+            row.sectionId = {
+              type: 'section',
+              id: remoteIdGuid(
+                'section',
+                (outrecs[index][0] as SaveRec).id,
+                memory.keyMap
+              ),
+            };
+          if (isPassageRow(row) && isPassageAdding(row)) {
+            row.passageId = {
+              type: 'passage',
+              id: remoteIdGuid(
+                'passage',
+                (outrecs[index][isSectionRow(row) ? 1 : 0] as SaveRec).id,
+                memory.keyMap
+              ),
+            };
+          }
+        });
       }
       if (deleteItems.length > 0) {
         const tb = new TransformBuilder();

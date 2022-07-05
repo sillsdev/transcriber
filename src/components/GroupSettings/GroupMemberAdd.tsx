@@ -64,6 +64,7 @@ function GroupMemberAdd(props: IProps) {
     const fileRole: RoleNames =
       role === 'owner' ? RoleNames.Admin : (role as RoleNames);
     const roleId = getRoleId(fileRole);
+    //NET6 This works only because it is going to the cache. Online query would use an OR
     const groupMemberRecs: GroupMembership[] = memory.cache.query(
       (q: QueryBuilder) =>
         q.findRecords('groupmembership').filter(

@@ -5,10 +5,10 @@ import {
   ArtifactCategory,
   ArtifactType,
   RoleNames,
+  WorkflowStep,
 } from '../model';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
-import WorkflowStep from '../model/workflowStep';
 
 export const useOfflineSetup = () => {
   const [memory] = useGlobal('memory');

@@ -14,6 +14,16 @@ import { offlineProjectCreate, related } from './crud';
 import { MediaFile } from './model';
 
 const schemaDefinition: SchemaSettings = {
+  pluralize: (word: string) => {
+    if (!word) return word;
+    if (word.endsWith('y')) return word.substring(0, word.length - 1) + 'ies';
+    return word + 's';
+  },
+  singularize: (word: string) => {
+    if (!word) return word;
+    if (word.endsWith('ies')) return word.substring(0, word.length - 3) + 'y';
+    return word.substring(0, word.length - 1);
+  },
   models: {
     activitystate: {
       keys: { remoteId: {} },
@@ -91,7 +101,6 @@ const schemaDefinition: SchemaSettings = {
         loginLink: { type: 'string' },
         invitedBy: { type: 'string' },
         strings: { type: 'string' },
-        silId: { type: 'numer' },
         accepted: { type: 'boolean' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
@@ -126,7 +135,6 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         slug: { type: 'string' },
-        SilId: { type: 'number' },
         description: { type: 'string' },
         websiteUrl: { type: 'string' },
         logoUrl: { type: 'string' },

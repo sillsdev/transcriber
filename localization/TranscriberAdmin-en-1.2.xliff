@@ -5966,6 +5966,13 @@
       			<context context-type="sourcefile">TranscriptionTab.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="transcriptionTab.changed">
+      		<source>Changed</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="transcriptionTab.passages">
             <source>Passages</source>
             <target/>

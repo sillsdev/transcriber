@@ -8,13 +8,14 @@ export const useLoadStatic = () => {
 
   const loadStatic = async () => {
     if (!remote) return false;
-    await memory.sync(await remote.pull((q) => q.findRecords('workflowstep')));
     await memory.sync(
       await remote.pull((q) => q.findRecords('artifactcategory'))
     );
     await memory.sync(await remote.pull((q) => q.findRecords('artifacttype')));
     await memory.sync(await remote.pull((q) => q.findRecords('role')));
     await memory.sync(await remote.pull((q) => q.findRecords('integration')));
+    await memory.sync(await remote.pull((q) => q.findRecords('workflowstep')));
+
     return true;
   };
 
