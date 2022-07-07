@@ -3726,13 +3726,6 @@
       			<context context-type="sourcefile">PassageMedia.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="passageDetailArtifacts.tip2a">
-      		<source>Chunk</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">PassageMedia.tsx</context>
-      		</context-group>
-      	</trans-unit>
          <trans-unit id="passageDetailArtifacts.tip2b">
          	<source>Steps through connecting chunks of a general resource with {0} and passages.</source>
             <target/>

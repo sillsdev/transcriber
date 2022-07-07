@@ -3219,12 +3219,6 @@
 				<target>Свяжите общий ресурс с этим {0}.</target>
 			</segment>
 		</unit>
-		<unit id="passageDetailArtifacts.tip2a">
-			<segment>
-				<source>Chunk</source>
-				<target>Перегородка</target>
-			</segment>
-		</unit>
 		<unit id="passageDetailArtifacts.tip2b">
 			<segment>
 				<source>Steps through connecting chunks of a general resource with {0} and passages.</source>
