@@ -1,3 +1,9 @@
+sil-transcriber (2.15.9.0)  experimental; urgency=high
+
+* include latest Indonesian localizations
+
+-- Greg Trihus <greg_trihus@sil.org>  Mon, 7 Jul 2022 10:33:00 -0600
+
 sil-transcriber (2.15.8.7)  experimental; urgency=high
 
 * TT-3100 Resource Delete Confirm (#812)

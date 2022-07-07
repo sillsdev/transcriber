@@ -684,7 +684,6 @@ const initialState = {
 			"type": "Type",
 			"tip1a": "Resources for:",
 			"tip1b": "Link a shared resource to this {0}.",
-			"tip2a": "Chunk",
 			"tip2b": "Steps through connecting chunks of a general resource with {0} and passages.",
 			"unusedSegment": "Unused segment: only segments with References will create resources",
 			"upload": "Upload Resources",
