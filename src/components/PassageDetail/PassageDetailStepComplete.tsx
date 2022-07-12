@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { createStyles, IconButton, makeStyles, Theme } from '@material-ui/core';
-import CompleteIcon from '@material-ui/icons/CheckBoxOutlined';
-import NotCompleteIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CompleteIcon from '@mui/icons-material/CheckBoxOutlined';
+import NotCompleteIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { IPassageDetailStepCompleteStrings, IState } from '../../model';
 import localStrings from '../../selector/localize';

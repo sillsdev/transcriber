@@ -41,10 +41,10 @@ import {
   PopoverOrigin,
   useTheme,
 } from '@material-ui/core';
-// import CopyIcon from '@material-ui/icons/FileCopy';
-import FilterIcon from '@material-ui/icons/FilterList';
-import SelectAllIcon from '@material-ui/icons/SelectAll';
-import ViewIcon from '@material-ui/icons/RemoveRedEye';
+// import CopyIcon from '@mui/icons-material/FileCopy';
+import FilterIcon from '@mui/icons-material/FilterList';
+import SelectAllIcon from '@mui/icons-material/SelectAll';
+import ViewIcon from '@mui/icons-material/RemoveRedEye';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import { useSnackBar } from '../hoc/SnackBar';
 import TreeGrid from './TreeGrid';

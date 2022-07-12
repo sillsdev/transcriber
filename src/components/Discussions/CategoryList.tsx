@@ -11,8 +11,8 @@ import QueryBuilder from '@orbit/data/dist/types/query-builder';
 import { connect } from 'react-redux';
 import { withData } from '../../mods/react-orbitjs';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import SelectedIcon from '@material-ui/icons/CheckBoxOutlined';
-import NotSelectedIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import SelectedIcon from '@mui/icons-material/CheckBoxOutlined';
+import NotSelectedIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { related, useDiscussionOrg } from '../../crud';
 
 export interface CatData {

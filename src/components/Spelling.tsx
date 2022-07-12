@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
 import { IState, ISpellingStrings } from '../model';
 import { IconButton } from '@material-ui/core';
-import SpellCheckIcon from '@material-ui/icons/Spellcheck';
+import SpellCheckIcon from '@mui/icons-material/Spellcheck';
 import SpellingTabs from './SpellingTabs';
 import BigDialog from '../hoc/BigDialog';
 import Confirm from './AlertDialog';

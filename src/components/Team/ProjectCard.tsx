@@ -8,7 +8,7 @@ import {
   Typography,
   Chip,
 } from '@material-ui/core';
-import ScriptureIcon from '@material-ui/icons/MenuBook';
+import ScriptureIcon from '@mui/icons-material/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
 import moment from 'moment';
 import { VProject, DialogMode } from '../../model';
@@ -29,7 +29,7 @@ import {
   related,
 } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
-import OfflineIcon from '@material-ui/icons/OfflinePin';
+import OfflineIcon from '@mui/icons-material/OfflinePin';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

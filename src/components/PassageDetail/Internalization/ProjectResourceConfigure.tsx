@@ -17,7 +17,7 @@ import {
   Paper,
   debounce,
 } from '@material-ui/core';
-import SkipIcon from '@material-ui/icons/NotInterested';
+import SkipIcon from '@mui/icons-material/NotInterested';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';

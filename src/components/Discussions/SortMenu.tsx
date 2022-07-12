@@ -13,9 +13,9 @@ import {
   Badge,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import SortIcon from '@material-ui/icons/Sort';
-import RadioOff from '@material-ui/icons/RadioButtonUnchecked';
-import RadioOn from '@material-ui/icons/RadioButtonChecked';
+import SortIcon from '@mui/icons-material/Sort';
+import RadioOff from '@mui/icons-material/RadioButtonUnchecked';
+import RadioOn from '@mui/icons-material/RadioButtonChecked';
 
 export interface ISortState {
   topic: boolean;

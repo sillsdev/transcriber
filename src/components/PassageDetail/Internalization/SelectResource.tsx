@@ -17,8 +17,8 @@ import {
   ListItemText,
   Button,
 } from '@material-ui/core';
-import Checked from '@material-ui/icons/CheckBoxOutlined';
-import UnChecked from '@material-ui/icons/CheckBoxOutlineBlank';
+import Checked from '@mui/icons-material/CheckBoxOutlined';
+import UnChecked from '@mui/icons-material/CheckBoxOutlineBlank';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import SelectCategory, {
   ScriptureEnum,

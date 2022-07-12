@@ -17,9 +17,9 @@ import {
   ISelectArtifactCategoryStrings,
   IState,
 } from '../../model';
-import AddIcon from '@material-ui/icons/Add';
-import InfoIcon from '@material-ui/icons/Info';
-import CancelIcon from '@material-ui/icons/CancelOutlined';
+import AddIcon from '@mui/icons-material/Add';
+import InfoIcon from '@mui/icons-material/Info';
+import CancelIcon from '@mui/icons-material/CancelOutlined';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 import { useSnackBar } from '../../hoc/SnackBar';

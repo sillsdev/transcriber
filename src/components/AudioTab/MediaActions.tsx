@@ -1,9 +1,9 @@
 import React from 'react';
 import { IMediaActionsStrings, IState } from '../../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
-import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
+import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import { FaPaperclip, FaUnlink } from 'react-icons/fa';
-import PauseIcon from '@material-ui/icons/Pause';
+import PauseIcon from '@mui/icons-material/Pause';
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 import { isElectron } from '../../api-variable';

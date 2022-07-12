@@ -24,7 +24,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import TranscribeIcon from '../../control/TranscribeIcon';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Auth from '../../auth/Auth';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -57,7 +57,7 @@ import { LocalKey, localUserKey } from '../../utils';
 import StickyRedirect from '../StickyRedirect';
 import Confirm from '../AlertDialog';
 import Uploader from '../Uploader';
-import AddIcon from '@material-ui/icons/LibraryAddOutlined';
+import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import { LightTooltip } from '../StepEditor';
 
 const useStyles = makeStyles((theme: Theme) =>

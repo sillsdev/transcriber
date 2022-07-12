@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { Grid, Paper, Typography, Button } from '@material-ui/core';
-import PersonIcon from '@material-ui/icons/Person';
+import PersonIcon from '@mui/icons-material/Person';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { TeamContext } from '../../context/TeamContext';
 import BigDialog from '../../hoc/BigDialog';

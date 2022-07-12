@@ -20,18 +20,18 @@ import React, {
   ChangeEvent,
   useContext,
 } from 'react';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import ForwardIcon from '@material-ui/icons/Refresh';
-import ReplayIcon from '@material-ui/icons/Replay';
-import PlayIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import LoopIcon from '@material-ui/icons/Loop';
-import DeleteIcon from '@material-ui/icons/Delete';
-import SilenceIcon from '@material-ui/icons/SpaceBar';
-import TimerIcon from '@material-ui/icons/AccessTime';
-import NextSegmentIcon from '@material-ui/icons/ArrowRightAlt';
-import UndoIcon from '@material-ui/icons/Undo';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import ForwardIcon from '@mui/icons-material/Refresh';
+import ReplayIcon from '@mui/icons-material/Replay';
+import PlayIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import LoopIcon from '@mui/icons-material/Loop';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SilenceIcon from '@mui/icons-material/SpaceBar';
+import TimerIcon from '@mui/icons-material/AccessTime';
+import NextSegmentIcon from '@mui/icons-material/ArrowRightAlt';
+import UndoIcon from '@mui/icons-material/Undo';
 import localStrings from '../selector/localize';
 import { IState, IWsAudioPlayerStrings } from '../model';
 import {

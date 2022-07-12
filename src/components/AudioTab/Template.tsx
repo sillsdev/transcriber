@@ -18,8 +18,8 @@ import {
   ListItemText,
   ListItemIcon,
 } from '@material-ui/core';
-import DoneIcon from '@material-ui/icons/Done';
-import InfoIcon from '@material-ui/icons/Info';
+import DoneIcon from '@mui/icons-material/Done';
+import InfoIcon from '@mui/icons-material/Info';
 import { related, useOrganizedBy } from '../../crud';
 import { IMatchData } from './makeRefMap';
 

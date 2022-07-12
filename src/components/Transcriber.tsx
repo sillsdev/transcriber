@@ -28,8 +28,8 @@ import {
   TextareaAutosize,
 } from '@material-ui/core';
 import useTodo from '../context/useTodo';
-import PullIcon from '@material-ui/icons/GetAppOutlined';
-import HistoryIcon from '@material-ui/icons/History';
+import PullIcon from '@mui/icons-material/GetAppOutlined';
+import HistoryIcon from '@mui/icons-material/History';
 import { formatTime, LightTooltip } from '../control';
 import TranscribeReject from './TranscribeReject';
 import { useSnackBar } from '../hoc/SnackBar';

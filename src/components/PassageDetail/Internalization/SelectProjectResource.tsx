@@ -27,9 +27,9 @@ import {
   passageDetailArtifactsSelector,
 } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-import ShowIcon from '@material-ui/icons/Visibility';
-import AudioIcon from '@material-ui/icons/Hearing';
-import DeleteIcon from '@material-ui/icons/Delete';
+import ShowIcon from '@mui/icons-material/Visibility';
+import AudioIcon from '@mui/icons-material/Hearing';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Confirm from '../../AlertDialog';
 import { isVisual } from '../../../utils';
 

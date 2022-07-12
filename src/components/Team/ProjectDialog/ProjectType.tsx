@@ -1,5 +1,5 @@
 import React from 'react';
-import ScriptureIcon from '@material-ui/icons/MenuBook';
+import ScriptureIcon from '@mui/icons-material/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
 import { TeamContext } from '../../../context/TeamContext';
 import { Options } from '.';

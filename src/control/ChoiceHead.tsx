@@ -7,7 +7,7 @@ import {
   makeStyles,
   Grid,
 } from '@material-ui/core';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { ReactElement } from 'react';
 const useStyles = makeStyles({
   notes: {

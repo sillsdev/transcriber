@@ -22,7 +22,7 @@ import {
   useOrganizedBy,
   useRole,
 } from '../crud';
-import PeopleIconOutline from '@material-ui/icons/PeopleAltOutlined';
+import PeopleIconOutline from '@mui/icons-material/PeopleAltOutlined';
 import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
 import { TaskItemWidth } from './TaskTable';

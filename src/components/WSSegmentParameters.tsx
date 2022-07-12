@@ -16,7 +16,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { IWsAudioPlayerSegmentStrings, IState } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import { IRegionParams } from '../crud/useWavesurferRegions';

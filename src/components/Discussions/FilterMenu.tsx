@@ -13,9 +13,9 @@ import {
   Badge,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import FilterIcon from '@material-ui/icons/FilterList';
-import BoxOpen from '@material-ui/icons/CheckBoxOutlineBlank';
-import BoxClose from '@material-ui/icons/CheckBox';
+import FilterIcon from '@mui/icons-material/FilterList';
+import BoxOpen from '@mui/icons-material/CheckBoxOutlineBlank';
+import BoxClose from '@mui/icons-material/CheckBox';
 
 export interface IFilterState {
   forYou: boolean;

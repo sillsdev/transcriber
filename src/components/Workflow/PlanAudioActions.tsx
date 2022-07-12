@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
 import { IPlanActionsStrings, IState, IMediaShare } from '../../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
-//import AddIcon from '@material-ui/icons/AddCircleOutline';
-import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
-import PauseIcon from '@material-ui/icons/Pause';
+//import AddIcon from '@mui/icons-material/AddCircleOutline';
+import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
+import PauseIcon from '@mui/icons-material/Pause';
 import TranscribeIcon from '../../control/TranscribeIcon';
-import SharedCheckbox from '@material-ui/icons/CheckBoxOutlined';
-import NotSharedCheckbox from '@material-ui/icons/CheckBoxOutlineBlankOutlined';
-import VersionsIcon from '@material-ui/icons/List';
+import SharedCheckbox from '@mui/icons-material/CheckBoxOutlined';
+import NotSharedCheckbox from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
+import VersionsIcon from '@mui/icons-material/List';
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 

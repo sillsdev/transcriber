@@ -7,7 +7,7 @@ import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Confirm from '../components/AlertDialog';
-import InfoIcon from '@material-ui/icons/Info';
+import InfoIcon from '@mui/icons-material/Info';
 import ParatextIcon from '../control/ParatextLogo';
 
 const useStyles = makeStyles((theme: Theme) =>

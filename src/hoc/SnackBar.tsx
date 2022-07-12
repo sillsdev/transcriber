@@ -6,7 +6,7 @@ import {
   Theme,
   createStyles,
 } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { useMounted } from '../utils';
 

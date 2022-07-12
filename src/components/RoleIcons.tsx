@@ -1,5 +1,5 @@
-import Transcriber from '@material-ui/icons/ReceiptOutlined';
-import Editor from '@material-ui/icons/RateReviewOutlined';
+import Transcriber from '@mui/icons-material/ReceiptOutlined';
+import Editor from '@mui/icons-material/RateReviewOutlined';
 import { Tooltip } from '@material-ui/core';
 import React, { FunctionComponent } from 'react';
 import { connect } from 'react-redux';

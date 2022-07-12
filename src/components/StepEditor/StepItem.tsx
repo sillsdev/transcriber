@@ -1,7 +1,7 @@
 import { SortableElement } from 'react-sortable-hoc';
 import { ListItem, IconButton, makeStyles } from '@material-ui/core';
-import HideIcon from '@material-ui/icons/VisibilityOff';
-import ShowIcon from '@material-ui/icons/Visibility';
+import HideIcon from '@mui/icons-material/VisibilityOff';
+import ShowIcon from '@mui/icons-material/Visibility';
 import { IStepRow, DragHandle, stepEditorSelector } from '.';
 import StepName from './StepName';
 import ToolChoice from './ToolChoice';

@@ -1,5 +1,5 @@
 import { IconButton } from '@material-ui/core';
-import ShowIcon from '@material-ui/icons/Visibility';
+import ShowIcon from '@mui/icons-material/Visibility';
 import { LightTooltip } from '../../StepEditor';
 import { IMediaActionsStrings } from '../../../model';
 import { mediaActionsSelector } from '../../../selector';
