@@ -1,10 +1,13 @@
 import { useGlobal } from 'reactn';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Tooltip } from '@material-ui/core';
 import { ListItem } from '@material-ui/core';
 import { IRow } from '../../../context/PassageDetailContext';
 import { DragHandle } from '.';
-import { RoleNames } from '../../../model';
+import { IPassageDetailArtifactsStrings, RoleNames } from '../../../model';
+import { useOrganizedBy } from '../../../crud';
+import { useSelector, shallowEqual } from 'react-redux';
+import { resourceSelector } from '../../../selector';
 
 const useStyles = makeStyles({
   action: { minWidth: 100, textAlign: 'center' },
@@ -26,7 +29,11 @@ interface IProps {
 export const TableRow = ({ value, header }: IProps) => {
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
-
+  const { getOrganizedBy } = useOrganizedBy();
+  const t: IPassageDetailArtifactsStrings = useSelector(
+    resourceSelector,
+    shallowEqual
+  );
   return (
     <ListItem>
       {projRole === RoleNames.Admin && (
@@ -44,9 +51,15 @@ export const TableRow = ({ value, header }: IProps) => {
       <div className={clsx(classes.version, { [classes.bold]: header })}>
         {value.version}
       </div>
-      <div className={clsx(classes.resType, { [classes.bold]: header })}>
-        {value.artifactType}
-      </div>
+      <Tooltip
+        title={
+          Boolean(value.passageId) ? t.passageResource : getOrganizedBy(true)
+        }
+      >
+        <div className={clsx(classes.resType, { [classes.bold]: header })}>
+          {value.artifactType}
+        </div>
+      </Tooltip>
       <div className={clsx(classes.resCat, { [classes.bold]: header })}>
         {value.artifactCategory}
       </div>

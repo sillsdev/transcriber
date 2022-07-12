@@ -329,15 +329,12 @@ export function PassageDetailArtifacts(props: IProps) {
           ),
         ]);
       }
-      if (
-        mf &&
-        isPassageResource() !== Boolean(related(mf, 'resourcePassage'))
-      ) {
+      if (mf && isPassageResource() !== Boolean(related(mf, 'passage'))) {
         await memory.update((t: TransformBuilder) => [
           ...ReplaceRelatedRecord(
             t,
             mf,
-            'resourcePassage',
+            'passage',
             'passage',
             isPassageResource() ? passage.id : ''
           ),
@@ -536,8 +533,8 @@ export function PassageDetailArtifacts(props: IProps) {
     if (mediaStart.current) {
       mediaPosition.current = mediaStart.current;
       mediaStart.current = undefined;
-      setItemPlaying(true);
     }
+    setItemPlaying(true);
   };
 
   const handlePosition = (position: number) => {
