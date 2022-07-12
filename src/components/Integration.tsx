@@ -312,18 +312,12 @@ export function IntegrationPanel(props: IProps) {
     if (projint.length === 0) return '';
     return projint[0].id;
   };
-  const removeProjectFromParatextList = (index: number) => {
-    paratext_projects[index].ProjectIds = paratext_projects[
-      index
-    ].ProjectIds.filter(
-      (p) => p !== (remoteId('project', project, memory.keyMap) || project)
-    );
-  };
+
   const handleParatextProjectChange = (e: any) => {
     let index: number = paratext_projects.findIndex(
       (p) => p.Name === e.target.value
     );
-    if (ptProj >= 0) removeProjectFromParatextList(ptProj);
+
     setPtProj(index);
     setPtProjName(e.target.value);
     if (index >= 0) {
@@ -341,9 +335,6 @@ export function IntegrationPanel(props: IProps) {
       } else {
         updateProjectIntegration(projint, JSON.stringify(setting));
       }
-      paratext_projects[index].ProjectIds.push(
-        remoteId('project', project, memory.keyMap) || project
-      );
     }
   };
   const handleSync = () => {
