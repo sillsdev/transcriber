@@ -188,7 +188,6 @@ export const getProjects =
             LanguageName: data[ix].languageName,
             LanguageTag: data[ix].languageTag,
             CurrentUserRole: data[ix].currentUserRole,
-            ProjectIds: data[ix].projectIds['$values'],
             ProjectType: data[ix].projectType,
             BaseProject: data[ix].baseProject,
             IsConnectable: data[ix].isConnectable,
@@ -234,7 +233,6 @@ const localProjects = (
           LanguageTag: langIso,
           CurrentUserRole:
             setting.Editable._text === 'T' ? 'pt_translator' : '',
-          ProjectIds: Array<string>(),
           IsConnectable: setting.Editable._text === 'T',
           ProjectType: setting.TranslationInfo._text.split(':')[0],
           BaseProject: setting.TranslationInfo._text.split(':')[2],
@@ -273,11 +271,6 @@ export const getLocalProjects =
     });
     if (ptPath === '') return;
     let pts = localProjects(ptPath, languageTag);
-    pts?.forEach((pt) => {
-      pt.ProjectIds = pt.ProjectIds.concat(
-        projIds.filter((pi) => pi.Name === pt.Name).map((pi) => pi.Id)
-      );
-    });
     dispatch({ payload: pts, type: PROJECTS_SUCCESS });
   };
 
