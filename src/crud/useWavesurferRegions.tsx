@@ -377,6 +377,7 @@ export function useWaveSurferRegions(
     ).finally(() => {
       setPrevNext(regionIds());
       onRegion(regarray.length, paramsRef.current, newRegions);
+      onRegionGoTo(0);
       loadingRef.current = false;
     });
   }

@@ -51,8 +51,8 @@ export const useSnackBar = () => {
   const showMessage = (msg: string | JSX.Element, alert?: AlertSeverity) => {
     setAlert(alert);
     if (typeof msg === 'string') {
-      if (message.props.children !== msg) setMessage(<span>{msg}</span>);
-    } else if (message.props.children !== msg.props.children) setMessage(msg);
+      if (message?.props?.children !== msg) setMessage(<span>{msg}</span>);
+    } else if (message?.props?.children !== msg.props.children) setMessage(msg);
   };
 
   const showTitledMessage = (title: string, msg: JSX.Element | string) => {

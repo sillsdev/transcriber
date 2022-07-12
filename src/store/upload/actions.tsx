@@ -170,6 +170,9 @@ export const nextUpload =
             'content-type': record.contentType,
             'eaf-url': record.EafUrl,
             'date-created': moment.utc(),
+            'source-segments': record.sourceSegments,
+            'performed-by': record.performedBy,
+            topic: record.topic,
           },
           relationships: {
             lastmodifiedbyuser: {
