@@ -22,7 +22,7 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { findRecord, related } from '../../crud';
-import PlayIcon from '@material-ui/icons/PlayArrow';
+import PlayIcon from '@mui/icons-material/PlayArrow';
 import UserAvatar from '../UserAvatar';
 import { dateOrTime } from '../../utils';
 import { useGlobal } from 'reactn';

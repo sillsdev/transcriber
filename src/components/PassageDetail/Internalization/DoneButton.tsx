@@ -1,6 +1,6 @@
 import { IconButton } from '@material-ui/core';
-import OpenIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import DoneIcon from '@material-ui/icons/CheckBoxOutlined';
+import OpenIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import DoneIcon from '@mui/icons-material/CheckBoxOutlined';
 import { SectionResource } from '../../../model';
 
 interface IProps {

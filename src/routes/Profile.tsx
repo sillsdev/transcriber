@@ -36,7 +36,7 @@ import {
   Avatar,
   MenuItem,
 } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
+import SaveIcon from '@mui/icons-material/Save';
 import Confirm from '../components/AlertDialog';
 import ParatextLinked from '../components/ParatextLinked';
 import DeleteExpansion from '../components/DeleteExpansion';

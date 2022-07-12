@@ -27,12 +27,12 @@ import {
   Plan,
   Passage,
 } from '../../model';
-import ResolveIcon from '@material-ui/icons/Check';
-import HideIcon from '@material-ui/icons/ArrowDropUp';
-import ShowIcon from '@material-ui/icons/ArrowDropDown';
-import LocationIcon from '@material-ui/icons/LocationSearching';
-import PlayIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
+import ResolveIcon from '@mui/icons-material/Check';
+import HideIcon from '@mui/icons-material/ArrowDropUp';
+import ShowIcon from '@mui/icons-material/ArrowDropDown';
+import LocationIcon from '@mui/icons-material/LocationSearching';
+import PlayIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
 import { LightTooltip } from '../../control';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';

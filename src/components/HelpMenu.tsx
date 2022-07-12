@@ -14,12 +14,12 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import ReportIcon from '@material-ui/icons/Report';
-import HelpIcon from '@material-ui/icons/Help';
-import InfoIcon from '@material-ui/icons/Info';
-import DownloadIcon from '@material-ui/icons/CloudDownload';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+import ReportIcon from '@mui/icons-material/Report';
+import HelpIcon from '@mui/icons-material/Help';
+import InfoIcon from '@mui/icons-material/Info';
+import DownloadIcon from '@mui/icons-material/CloudDownload';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import path from 'path';
 import { isElectron, API_CONFIG } from '../api-variable';
 import {

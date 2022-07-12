@@ -19,18 +19,18 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import SettingsIcon from '@material-ui/icons/Settings';
-// import SyncIcon from '@material-ui/icons/Sync';
-// import IntegrationIcon from '@material-ui/icons/SyncAlt';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SettingsIcon from '@mui/icons-material/Settings';
+// import SyncIcon from '@mui/icons-material/Sync';
+// import IntegrationIcon from '@mui/icons-material/SyncAlt';
 import ParatextLogo from '../../control/ParatextLogo';
-import ImportIcon from '@material-ui/icons/CloudUpload';
-import ExportIcon from '@material-ui/icons/CloudDownload';
-import ReportIcon from '@material-ui/icons/Assessment';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FilterIcon from '@material-ui/icons/FilterList';
-import UncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import CheckedIcon from '@material-ui/icons/RadioButtonChecked';
+import ImportIcon from '@mui/icons-material/CloudUpload';
+import ExportIcon from '@mui/icons-material/CloudDownload';
+import ReportIcon from '@mui/icons-material/Assessment';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FilterIcon from '@mui/icons-material/FilterList';
+import UncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import CheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { isElectron } from '../../api-variable';
 import { useOfflnProjRead, useProjectType, ArtifactTypeSlug } from '../../crud';
 

@@ -14,10 +14,10 @@ import {
   Typography,
   Divider,
 } from '@material-ui/core';
-import ExitIcon from '@material-ui/icons/ExitToApp';
-import AccountIcon from '@material-ui/icons/AccountCircle';
-import ReloadIcon from '@material-ui/icons/Refresh';
-import ClearIcon from '@material-ui/icons/Clear';
+import ExitIcon from '@mui/icons-material/ExitToApp';
+import AccountIcon from '@mui/icons-material/AccountCircle';
+import ReloadIcon from '@mui/icons-material/Refresh';
+import ClearIcon from '@mui/icons-material/Clear';
 import UserAvatar from './UserAvatar';
 import { isElectron } from '../api-variable';
 import { useLocation } from 'react-router-dom';

@@ -22,9 +22,9 @@ import {
   User,
 } from '../../model';
 import localStrings from '../../selector/localize';
-import AddIcon from '@material-ui/icons/Add';
-import HideIcon from '@material-ui/icons/ArrowDropUp';
-import ShowIcon from '@material-ui/icons/ArrowDropDown';
+import AddIcon from '@mui/icons-material/Add';
+import HideIcon from '@mui/icons-material/ArrowDropUp';
+import ShowIcon from '@mui/icons-material/ArrowDropDown';
 import DiscussionCard, { DiscussionRegion } from './DiscussionCard';
 import BigDialog from '../../hoc/BigDialog';
 import CategoryList, { CatData } from './CategoryList';

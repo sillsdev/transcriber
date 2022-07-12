@@ -16,7 +16,7 @@ import {
   ListItemText,
   Avatar,
 } from '@material-ui/core';
-import CheckIcon from '@material-ui/icons/Check';
+import CheckIcon from '@mui/icons-material/Check';
 
 const useStyles = makeStyles({
   progress: {

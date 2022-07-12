@@ -3,7 +3,7 @@ import { useGlobal, useEffect } from 'reactn';
 import { IProjButtonsStrings } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Divider, Button, Menu, MenuItem } from '@material-ui/core';
-import DropDownIcon from '@material-ui/icons/ArrowDropDown';
+import DropDownIcon from '@mui/icons-material/ArrowDropDown';
 import BigDialog from '../hoc/BigDialog';
 import IntegrationTab from '../components/Integration';
 import ExportTab from '../components/TranscriptionTab';

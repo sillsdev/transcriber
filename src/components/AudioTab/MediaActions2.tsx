@@ -1,7 +1,7 @@
 import React from 'react';
 import { IMediaActionsStrings, IState } from '../../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/DeleteOutline';
+import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 import { isElectron } from '../../api-variable';
@@ -41,16 +41,8 @@ interface IProps extends IStateProps {
 }
 
 export function MediaActions2(props: IProps) {
-  const {
-    t,
-    rowIndex,
-    mediaId,
-    online,
-    readonly,
-    onDelete,
-    canDelete,
-    auth,
-  } = props;
+  const { t, rowIndex, mediaId, online, readonly, onDelete, canDelete, auth } =
+    props;
   const classes = useStyles();
 
   const handleDelete = () => {
@@ -78,4 +70,4 @@ export function MediaActions2(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaActions' }),
 });
-export default (connect(mapStateToProps)(MediaActions2) as any) as any;
+export default connect(mapStateToProps)(MediaActions2) as any as any;

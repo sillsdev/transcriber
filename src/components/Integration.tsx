@@ -39,9 +39,9 @@ import {
   TextField,
   MenuItem,
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SyncIcon from '@material-ui/icons/Sync';
-import CheckIcon from '@material-ui/icons/Check';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SyncIcon from '@mui/icons-material/Sync';
+import CheckIcon from '@mui/icons-material/Check';
 import { useSnackBar } from '../hoc/SnackBar';
 import ParatextLogo from '../control/ParatextLogo';
 // import RenderLogo from '../control/RenderLogo';

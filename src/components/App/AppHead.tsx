@@ -14,8 +14,8 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
-import HomeIcon from '@material-ui/icons/Home';
-import SystemUpdateIcon from '@material-ui/icons/SystemUpdateAlt';
+import HomeIcon from '@mui/icons-material/Home';
+import SystemUpdateIcon from '@mui/icons-material/SystemUpdateAlt';
 import Auth from '../../auth/Auth';
 import { API_CONFIG, isElectron } from '../../api-variable';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -38,7 +38,7 @@ import { withBucket } from '../../hoc/withBucket';
 import { usePlan, useLoadStatic } from '../../crud';
 import Busy from '../Busy';
 import StickyRedirect from '../StickyRedirect';
-import CloudOffIcon from '@material-ui/icons/CloudOff';
+import CloudOffIcon from '@mui/icons-material/CloudOff';
 import ProjectDownloadAlert from '../ProjectDownloadAlert';
 import { axiosPost } from '../../utils/axios';
 import moment from 'moment';

@@ -10,7 +10,7 @@ import {
   IconButton,
   Grid,
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@mui/icons-material/Add';
 import useStyles from './GroupSettingsStyles';
 import PersonItems from './PersonItems';
 import { useRole } from '../../crud';

@@ -9,7 +9,7 @@ import {
 } from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
-import DownloadIcon from '@material-ui/icons/GetAppOutlined';
+import DownloadIcon from '@mui/icons-material/GetAppOutlined';
 import { remoteIdGuid, useFetchMediaUrl, MediaSt } from '../crud';
 import Auth from '../auth/Auth';
 import { loadBlob, removeExtension } from '../utils';

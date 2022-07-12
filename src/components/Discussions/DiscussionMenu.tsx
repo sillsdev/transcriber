@@ -12,12 +12,12 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ResolveIcon from '@material-ui/icons/Check';
-import ReopenIcon from '@material-ui/icons/Unarchive';
-import LinkIcon from '@material-ui/icons/Link';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ResolveIcon from '@mui/icons-material/Check';
+import ReopenIcon from '@mui/icons-material/Unarchive';
+import LinkIcon from '@mui/icons-material/Link';
 import { useGlobal } from 'reactn';
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -4,7 +4,7 @@ import { makeStyles, createStyles, Theme, Divider } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { MenuProps } from '@material-ui/core/Menu';
 import { Button, Menu, MenuItem, ListItemText } from '@material-ui/core';
-import InfoIcon from '@material-ui/icons/Info';
+import InfoIcon from '@mui/icons-material/Info';
 import { LightTooltip } from '../../../control';
 import { useOrganizedBy } from '../../../crud';
 import { resourceSelector } from '../../../selector';

@@ -10,8 +10,8 @@ import {
   Paper,
   IconButton,
 } from '@material-ui/core';
-import UncheckedIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckedIcon from '@material-ui/icons/CheckBoxOutlined';
+import UncheckedIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckedIcon from '@mui/icons-material/CheckBoxOutlined';
 import GroupDialog from './GroupDialog';
 import {
   User,

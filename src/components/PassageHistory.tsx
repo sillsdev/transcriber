@@ -17,8 +17,8 @@ import {
 } from '@material-ui/core';
 import UserAvatar from './UserAvatar';
 import { useGlobal } from 'reactn';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import useTodo from '../context/useTodo';
 import TranscribeAddNote from './TranscribeAddNote';
 import { UpdateRecord } from '../model/baseModel';

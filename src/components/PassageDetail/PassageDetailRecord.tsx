@@ -31,10 +31,10 @@ import Uploader from '../Uploader';
 import AudacityManager from '../Workflow/AudacityManager';
 import { isElectron } from '../../api-variable';
 import { AudacityLogo } from '../../control';
-import AddIcon from '@material-ui/icons/LibraryAddOutlined';
+import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
-import VersionsIcon from '@material-ui/icons/List';
+import VersionsIcon from '@mui/icons-material/List';
 import { PlanProvider } from '../../context/PlanContext';
 
 const useStyles = makeStyles((theme: Theme) =>

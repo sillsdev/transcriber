@@ -1,7 +1,7 @@
 import { IconButton } from '@material-ui/core';
 import { CSSProperties } from 'styled-components';
-import PrevIcon from '@material-ui/icons/NavigateBefore';
-import NextIcon from '@material-ui/icons/NavigateNext';
+import PrevIcon from '@mui/icons-material/NavigateBefore';
+import NextIcon from '@mui/icons-material/NavigateNext';
 export const Stage = ({
   id,
   label,

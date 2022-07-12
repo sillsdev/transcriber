@@ -1,7 +1,7 @@
 import { useGlobal } from 'reactn';
 import { IconButton } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { LightTooltip } from '../../StepEditor';
 import { IMediaActionsStrings } from '../../../model';
 import { mediaActionsSelector } from '../../../selector';

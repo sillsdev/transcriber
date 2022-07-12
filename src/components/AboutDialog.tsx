@@ -20,7 +20,7 @@ import {
   Link,
   Tooltip,
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import logo from '../routes/LogoNoShadow-4x.png';
 import { API_CONFIG } from '../api-variable';
 import about from '../assets/about.json';
