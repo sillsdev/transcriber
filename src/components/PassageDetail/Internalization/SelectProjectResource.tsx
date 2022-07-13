@@ -131,6 +131,7 @@ export const SelectProjectResource = (props: IProps) => {
       <List component="div">
         {resource.map((r, i) => (
           <ListItem
+            button
             key={i}
             onClick={handleClick(r)}
             className={classes.listItem}
