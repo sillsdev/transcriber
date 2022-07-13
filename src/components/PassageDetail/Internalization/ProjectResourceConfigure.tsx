@@ -178,6 +178,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
   const rowCells = (row: string[], first = false) =>
     row.map(
       (v, i) =>
@@ -244,7 +245,14 @@ export const ProjectResourceConfigure = (props: IProps) => {
           }
           setComplete(Math.min((ix * 100) / total, 100));
         }
-        projectSegmentSave({ media, segments: segmentsRef.current })
+        projectSegmentSave({
+          media,
+          segments: updateSegments(
+            NamedRegions.ProjectResource,
+            media.attributes?.segments,
+            segmentsRef.current
+          ),
+        })
           .then(() => {
             saveCompleted(wizToolId);
             savingRef.current = false;
@@ -399,11 +407,8 @@ export const ProjectResourceConfigure = (props: IProps) => {
 
     // console.log('______');
     // regions.forEach((r) => console.log(prettySegment(r)));
-    segmentsRef.current = updateSegments(
-      NamedRegions.ProjectResource,
-      '',
-      JSON.stringify(regions)
-    );
+    segmentsRef.current = segments;
+
     let change = false;
     let newData = new Array<ICell[]>();
     newData.push(dataRef.current[0]);
@@ -483,7 +488,10 @@ export const ProjectResourceConfigure = (props: IProps) => {
 
   return (
     <>
-      <PassageDetailPlayer allowSegment={true} onSegment={handleSegment} />
+      <PassageDetailPlayer
+        allowSegment={NamedRegions.ProjectResource}
+        onSegment={handleSegment}
+      />
       <Paper id="proj-res-sheet" className={classes.root} style={heightStyle}>
         <div id="proj-res-sheet" className={classes.table}>
           <DataSheet

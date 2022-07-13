@@ -1103,7 +1103,11 @@ export function Transcriber(props: IProps) {
                           id="audioPlayer"
                           allowRecord={false}
                           allowAutoSegment={true}
-                          allowSegment={selected !== '' && role !== 'view'}
+                          allowSegment={
+                            selected !== '' && role !== 'view'
+                              ? NamedRegions.Transcription
+                              : undefined
+                          }
                           allowZoom={true}
                           allowSpeed={true}
                           size={playerSize}

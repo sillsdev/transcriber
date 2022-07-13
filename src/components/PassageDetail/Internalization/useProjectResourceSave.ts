@@ -8,9 +8,12 @@ import {
   useArtifactType,
   useSecResCreate,
 } from '../../../crud';
-import { parseRegions } from '../../../crud/useWavesurferRegions';
-import { getSegments, prettySegment } from '../../../utils';
-import { NamedRegions, updateSegments } from '../../../utils';
+import {
+  getSegments,
+  prettySegment,
+  NamedRegions,
+  updateSegments,
+} from '../../../utils';
 import {
   AddRecord,
   UpdateRecord,
@@ -46,24 +49,37 @@ export const useProjectResourceSave = () => {
       props;
     let topic = topicIn;
     const ops: Operation[] = [];
-    const medResRec =
-      i.rec.type === 'passage'
-        ? mediafiles.find(
-            (m) =>
-              related(m, 'passage') === i.rec.id &&
-              related(m, 'sourceMedia') === media.id
-          )
-        : mediafiles.find(
-            (m) =>
-              related(m, 'section') === i.rec.id &&
-              !related(m, 'passage') &&
-              related(m, 'sourceMedia') === media.id
-          );
+    var medResRec: MediaFile | undefined = undefined;
+    if (i.rec.type === 'passage')
+      medResRec = mediafiles.find(
+        (m) =>
+          related(m, 'passage') === i.rec.id &&
+          related(m, 'sourceMedia') === media.id
+      );
+    else {
+      //there is no sectionid in mediafiles...so get all the ones without a passage that use this sourceMedia
+      var mfs = mediafiles
+        .filter(
+          (m) =>
+            !related(m, 'passage') && related(m, 'sourceMedia') === media.id
+        )
+        .map((m) => m.id);
+      //use those to find the section resource for this section
+      var sr = sectionResources.find(
+        (sr) =>
+          related(sr, 'section') === i.rec.id &&
+          mfs.includes(related(sr, 'mediafile'))
+      );
+      //and then go back and pick the mediafile attached to our segment
+      medResRec = mediafiles.find((m) => m.id === related(sr, 'mediafile'));
+    }
+
     if (medResRec) {
       const attr = medResRec.attributes;
-      const regions = parseRegions(
+      //this isn't formatted like all other mediafiles, so don't use parseRegions
+      const regions = JSON.parse(
         getSegments(NamedRegions.ProjectResource, attr.segments)
-      ).regions;
+      );
       const firstSeg = prettySegment(regions[0]);
       const limits = limitValue.split('-');
       let change = false;
@@ -106,13 +122,13 @@ export const useProjectResourceSave = () => {
             ? sectionResources.find(
                 (r) =>
                   related(r, 'passage') === i.rec.id &&
-                  related(r, 'mediafile') === medResRec.id
+                  related(r, 'mediafile') === medResRec?.id
               )
             : sectionResources.find(
                 (r) =>
                   related(r, 'section') === i.rec.id &&
                   !related(r, 'passage') &&
-                  related(r, 'mediafile') === medResRec.id
+                  related(r, 'mediafile') === medResRec?.id
               );
         if (secResRec) {
           ops.push(
@@ -145,7 +161,7 @@ export const useProjectResourceSave = () => {
         segments = updateSegments(
           NamedRegions.ProjectResource,
           '',
-          JSON.stringify(regions)
+          JSON.stringify(regions) //this doesn't match the rest of the mediafiles but is only used to play resources so leave it.
         );
       }
       if (!topic) topic = fullReference(i);

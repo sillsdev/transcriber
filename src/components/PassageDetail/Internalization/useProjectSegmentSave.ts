@@ -1,7 +1,6 @@
 import { useGlobal } from 'reactn';
 import { MediaFile } from '../../../model';
 import { UpdateRecord } from '../../../model/baseModel';
-import { NamedRegions, updateSegments } from '../../../utils';
 
 interface IProps {
   media: MediaFile;
@@ -19,11 +18,7 @@ export const useProjectSegmentSave = () => {
           type: 'mediafile',
           id: media.id,
           attributes: {
-            segments: updateSegments(
-              NamedRegions.ProjectResource,
-              media.attributes?.segments,
-              segments
-            ),
+            segments: segments,
           },
         } as any as MediaFile,
         user

@@ -44,7 +44,7 @@ import {
   useUrlContext,
 } from '../crud';
 import { RoleNames, Plan, IToolStrings } from '../model';
-import { forceLogin, LocalKey, localUserKey } from '../utils';
+import { forceLogin, LocalKey, localUserKey, NamedRegions } from '../utils';
 import { memory } from '../schema';
 import { useSelector, shallowEqual } from 'react-redux';
 import { toolSelector } from '../selector';
@@ -299,7 +299,6 @@ const PassageDetailGrids = (props: IProps) => {
                   auth={auth}
                   width={width}
                   slugs={communitySlugs}
-                  segments={false}
                   showTopic={true}
                 />
               </Grid>
@@ -315,7 +314,11 @@ const PassageDetailGrids = (props: IProps) => {
                   auth={auth}
                   width={width}
                   slugs={backTranslationSlugs}
-                  segments={tool === ToolSlug.PhraseBackTranslate}
+                  segments={
+                    tool === ToolSlug.PhraseBackTranslate
+                      ? NamedRegions.BackTranslation
+                      : undefined
+                  }
                 />
               </Grid>
             </Grid>
