@@ -79,8 +79,9 @@ export function PassageDetailPlayer(props: IProps) {
 
   useEffect(() => {
     if (allowSegment) loadSegments();
+    else setDefaultSegments('{}');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [allowSegment]);
 
   const writeSegments = async () => {
     if (!savingRef.current) {
