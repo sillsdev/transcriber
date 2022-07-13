@@ -374,7 +374,10 @@ export function useWaveSurfer(
     }
     return undefined;
   };
-  const wsSkip = (amt: number) => wavesurfer()?.skip(amt);
+  const wsSkip = (amt: number) => {
+    userInteractionRef.current = false;
+    wavesurfer()?.skip(amt);
+  };
 
   const wsSetHeight = (height: number) => wavesurfer()?.setHeight(height);
 
