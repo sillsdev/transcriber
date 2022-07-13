@@ -84,6 +84,7 @@ export const AudioDownload = (props: IProps) => {
         setAudName('');
         setBlobUrl('');
       }
+      fetchMediaUrl({ id: '', auth });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blobUrl, audName]);
@@ -94,7 +95,7 @@ export const AudioDownload = (props: IProps) => {
         id="audDownload"
         className={classes.actionButton}
         title={title || t.downloadMedia}
-        disabled={(mediaId || '') === ''}
+        disabled={(mediaId || '') === '' || mediaId === mediaState.remoteId}
         onClick={handleDownload}
       >
         <DownloadIcon />
