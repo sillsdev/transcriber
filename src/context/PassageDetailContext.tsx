@@ -576,7 +576,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           });
           resetBlob = true;
         }
-        currentSegmentRef.current = undefined;
+
+        if (resetBlob) currentSegmentRef.current = undefined;
         setState((state: ICtxState) => {
           return {
             ...state,
@@ -586,8 +587,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             playing: false,
             loading: fetching.current !== '',
             rowData: newRows.length > 0 ? newRows : rowData,
-            currentSegment: '',
-            currentSegmentIndex: 0,
+            currentSegment: resetBlob ? '' : state.currentSegment,
+            currentSegmentIndex: resetBlob ? 0 : state.currentSegmentIndex,
           };
         });
       } else if (r.isVernacular) {
