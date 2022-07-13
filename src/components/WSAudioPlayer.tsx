@@ -57,6 +57,7 @@ import {
 } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
+import { NamedRegions } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -177,7 +178,7 @@ interface IProps extends IStateProps {
   initialposition?: number;
   allowRecord?: boolean;
   allowZoom?: boolean;
-  allowSegment?: boolean;
+  allowSegment?: NamedRegions | undefined;
   allowAutoSegment?: boolean;
   allowSpeed?: boolean;
   allowSilence?: boolean;

@@ -43,7 +43,7 @@ import { TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { cleanFileName } from '../../utils';
+import { cleanFileName, NamedRegions } from '../../utils';
 import styled from 'styled-components';
 import SplitPane, { Pane } from 'react-split-pane';
 import PassageDetailPlayer from './PassageDetailPlayer';
@@ -182,7 +182,7 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   ready?: () => boolean;
   width: number;
   slugs: ArtifactTypeSlug[];
-  segments: boolean;
+  segments: NamedRegions | undefined;
   showTopic: boolean;
 }
 
@@ -429,8 +429,8 @@ export function PassageDetailItem(props: IProps) {
                   <Pane className={classes.pane}>
                     <PassageDetailPlayer
                       allowSegment={segments}
-                      allowAutoSegment={segments}
-                      saveSegments={segments}
+                      allowAutoSegment={segments !== undefined}
+                      saveSegments={segments !== undefined}
                     />
                   </Pane>
                   {currentVersion !== 0 ? (

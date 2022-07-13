@@ -15,7 +15,7 @@ import { findRecord } from '../../crud';
 interface IStateProps {}
 
 interface IProps extends IStateProps {
-  allowSegment?: boolean;
+  allowSegment?: NamedRegions | undefined;
   saveSegments?: boolean;
   allowAutoSegment?: boolean;
   onSegment?: (segment: string) => void;
@@ -73,7 +73,7 @@ export function PassageDetailPlayer(props: IProps) {
       | MediaFile
       | undefined;
     const segs = mediafile?.attributes?.segments || '{}';
-    segmentsRef.current = getSegments(NamedRegions.BackTranslation, segs);
+    if (allowSegment) segmentsRef.current = getSegments(allowSegment, segs);
     setDefaultSegments(segmentsRef.current);
   };
 
