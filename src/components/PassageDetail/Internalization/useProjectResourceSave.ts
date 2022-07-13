@@ -144,7 +144,7 @@ export const useProjectResourceSave = () => {
         ];
         segments = updateSegments(
           NamedRegions.ProjectResource,
-          '{}',
+          '',
           JSON.stringify(regions)
         );
       }

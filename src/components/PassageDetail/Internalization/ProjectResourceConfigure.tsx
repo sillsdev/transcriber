@@ -119,6 +119,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [, setComplete] = useGlobal('progress');
   const [data, setData] = useState<ICell[][]>([]);
+  const [numSegments, setNumSegments] = useState(0);
   const [heightStyle, setHeightStyle] = useState({
     maxHeight: `${window.innerHeight - 450}px`,
   });
@@ -370,7 +371,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     setData(newData);
     dataRef.current = newData;
   };
-
+  /*
   const fix = (regions: IRegion[]) => {
     const last = regions.length - 1;
     if (last < 0) return;
@@ -385,20 +386,24 @@ export const ProjectResourceConfigure = (props: IProps) => {
   };
 
   const d1 = (n: number) => `${Math.round(n * 10) / 10}`;
+*/
 
   const handleSegment = (segments: string) => {
-    const regions = parseRegions(segments)
-      .regions.filter((r) => d1(r.start) !== d1(r.end) && d1(r.end) !== `0.0`)
-      .sort((i, j) => i.start - j.start);
-    fix(regions);
+    const regions = parseRegions(segments).regions.sort(
+      (i, j) => i.start - j.start
+    );
+    //.regions.filter((r) => d1(r.start) !== d1(r.end) && d1(r.end) !== `0.0`)
+    //fix(regions);
+
+    setNumSegments(regions.length);
+
     // console.log('______');
     // regions.forEach((r) => console.log(prettySegment(r)));
     segmentsRef.current = updateSegments(
       NamedRegions.ProjectResource,
-      segments,
+      '',
       JSON.stringify(regions)
     );
-    // console.log(segmentsRef.current);
     let change = false;
     let newData = new Array<ICell[]>();
     newData.push(dataRef.current[0]);
@@ -495,7 +500,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
           onClick={handleCopy}
           variant="contained"
           className={classes.button}
-          disabled={!isChanged(wizToolId)}
+          disabled={numSegments === 0}
         >
           {t.copyToClipboard}
         </Button>
@@ -506,7 +511,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
           variant="contained"
           className={classes.button}
           color="primary"
-          disabled={!isChanged(wizToolId)}
+          disabled={numSegments === 0}
         >
           {t.createResources}
         </Button>
