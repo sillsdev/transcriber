@@ -4371,7 +4371,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="profile.sendDigest">
-            <source>Receive daily digests</source>
+            <source>Receive Email Notifications and Digests</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>
