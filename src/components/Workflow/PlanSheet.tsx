@@ -150,6 +150,7 @@ interface IProps extends IStateProps {
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => Promise<boolean>;
   addPassage: (i?: number, before?: boolean) => void;
+  movePassage: (i: number, before: boolean) => void;
   addSection: (i?: number) => void;
   lookupBook: (book: string) => string;
   resequence: () => void;
@@ -178,6 +179,7 @@ export function PlanSheet(props: IProps) {
     updateData,
     action,
     addPassage,
+    movePassage,
     addSection,
     paste,
     resequence,
@@ -224,9 +226,11 @@ export function PlanSheet(props: IProps) {
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = bookCol > 0 ? 6 : 5;
-  const isSection = (i: number) => isSectionRow(rowInfo[i]);
+  const isSection = (i: number) =>
+    i < rowInfo.length ? isSectionRow(rowInfo[i]) : false;
 
   const isPassage = (i: number) => isPassageRow(rowInfo[i]);
+
   const [changed, setChanged] = useState(false); //for button enabling
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
@@ -357,6 +361,16 @@ export function PlanSheet(props: IProps) {
 
   const handlePassageBelow = () => {
     addPassage(position.i - 1, false);
+    setPosition(initialPosition);
+  };
+
+  const handlePassageToPrev = () => {
+    movePassage(position.i - 1, true);
+    setPosition(initialPosition);
+  };
+
+  const handlePassageToNext = () => {
+    movePassage(position.i - 1, false);
     setPosition(initialPosition);
   };
 
@@ -756,7 +770,14 @@ export function PlanSheet(props: IProps) {
               {t.sectionAbove.replace('{0}', organizedBy)}
             </MenuItem>
           )}
-
+          {!inlinePassages &&
+            position.i > 2 &&
+            isPassage(position.i - 1) &&
+            isSection(position.i - 2) && (
+              <MenuItem id="passToPrev" onClick={handlePassageToPrev}>
+                {t.passageToPrevSection}
+              </MenuItem>
+            )}
           {!inlinePassages && (
             <MenuItem id="passBelow" onClick={handlePassageBelow}>
               {t.passageBelow.replace(
@@ -767,6 +788,14 @@ export function PlanSheet(props: IProps) {
               )}
             </MenuItem>
           )}
+          {!inlinePassages &&
+            position.i > 0 &&
+            isPassage(position.i - 1) &&
+            isSection(position.i) && (
+              <MenuItem id="passToNext" onClick={handlePassageToNext}>
+                {t.passageToNextSection}
+              </MenuItem>
+            )}
         </Menu>
       </div>
       {confirmAction !== '' ? (

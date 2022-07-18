@@ -304,6 +304,56 @@ export function ScriptureTable(props: IProps) {
     data[index + 1] = newrowid;
   };
 
+  const findSection = (
+    myWorkflow: IWorkflow[],
+    sectionIndex: number,
+    before: boolean
+  ) => {
+    while (
+      sectionIndex >= 0 &&
+      sectionIndex < myWorkflow.length &&
+      (myWorkflow[sectionIndex].deleted ||
+        !isSectionRow(myWorkflow[sectionIndex]))
+    )
+      sectionIndex = sectionIndex + (before ? -1 : 1);
+    if (sectionIndex < 0 || sectionIndex === myWorkflow.length) return -1;
+    return sectionIndex;
+  };
+  const movePassageTo = (
+    myWorkflow: IWorkflow[],
+    i: number,
+    before: boolean
+  ) => {
+    let passageRow = { ...myWorkflow[i] };
+    let originalSectionIndex = findSection(myWorkflow, i, true);
+    let newSectionIndex = findSection(
+      myWorkflow,
+      before ? originalSectionIndex - 1 : i,
+      before
+    );
+    if (newSectionIndex < 0) return;
+    let swapRowIndex = before ? originalSectionIndex : newSectionIndex;
+    let swapRow = { ...myWorkflow[swapRowIndex] };
+
+    passageRow.sectionSeq = myWorkflow[newSectionIndex].sectionSeq;
+    passageRow.passageUpdated = currentDateTime();
+    myWorkflow = wfResequencePassages(
+      wfResequencePassages(
+        updateRowAt(
+          updateRowAt(myWorkflow, passageRow, swapRowIndex),
+          swapRow,
+          i
+        ),
+        i,
+        flat
+      ),
+      before ? newSectionIndex : originalSectionIndex,
+      flat
+    );
+    setWorkflow(myWorkflow);
+    setChanged(true);
+  };
+
   const addPassageTo = (
     myWorkflow: IWorkflow[],
     i?: number,
@@ -388,7 +438,16 @@ export function ScriptureTable(props: IProps) {
     if (ix !== undefined) var { i } = getByIndex(workflow, ix);
     addPassageTo(workflow, i, before);
   };
-
+  const movePassage = (ix: number, before: boolean) => {
+    if (savingRef.current) {
+      showMessage(t.saving);
+      return;
+    }
+    if (flat) return;
+    //find the undeleted index...
+    var { i } = getByIndex(workflow, ix);
+    movePassageTo(workflow, i, before);
+  };
   const getByIndex = (wf: IWorkflow[], index: number) => {
     let n = 0;
     let i = 0;
@@ -506,10 +565,9 @@ export function ScriptureTable(props: IProps) {
       const { wf, i } = getByIndex(workflow, c.row);
       const myWf = wf as MyWorkflow | undefined;
       const name = colNames[c.col];
-      if (
-        (c.col === secNumCol && !isValidNumber(c.value || '')) ||
-        (c.col === passNumCol && !isValidNumber(c.value || ''))
-      ) {
+      const isNumberCol = c.col === secNumCol || c.col === passNumCol;
+
+      if (isNumberCol && !isValidNumber(c.value || '')) {
         showMessage(s.nonNumber);
       } else if (myWf && myWf[name] !== c.value) {
         const isSection = c.col < 2;
@@ -522,7 +580,7 @@ export function ScriptureTable(props: IProps) {
         const value = name === 'book' ? findBook(c.value as string) : c.value;
         workflow[i] = {
           ...wf,
-          [name]: value,
+          [name]: isNumberCol ? parseInt(value ?? '') : value,
           sectionUpdated,
           passageUpdated,
         } as IWorkflow;
@@ -899,6 +957,7 @@ export function ScriptureTable(props: IProps) {
         action={handleDelete}
         addSection={addSection}
         addPassage={addPassage}
+        movePassage={movePassage}
         updateData={updateData}
         paste={handleTablePaste}
         lookupBook={handleLookupBook}

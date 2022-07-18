@@ -709,6 +709,8 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "confirm": string;
     "nonNumber": string;
     "passageBelow": string;
+    "passageToPrevSection": string;
+    "passageToNextSection": string;
     "pasting": string;
     "refErr": string;
     "resequence": string;
