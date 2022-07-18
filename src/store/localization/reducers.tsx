@@ -812,7 +812,7 @@ const initialState = {
 			"phone": "Phone",
 			"role": "Team Role",
 			"save": "Save",
-			"sendDigest": "Receive daily digests",
+			"sendDigest": "Receive Email Notifications and Digests",
 			"timezone": "Time zone",
 			"userExists": "This offline user exists.",
 			"userProfile": "User profile",

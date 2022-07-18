@@ -3755,7 +3755,7 @@
 		</unit>
 		<unit id="profile.sendDigest">
 			<segment>
-				<source>Receive daily digests</source>
+				<source>Receive Email Notifications and Digests</source>
 				<target>Recevoir les résumés quotidiens</target>
 			</segment>
 		</unit>
