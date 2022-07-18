@@ -758,6 +758,8 @@ const initialState = {
 			"confirm": "{0} {1} Item(s). Are you sure?",
 			"nonNumber": "Do not change to non-number.",
 			"passageBelow": "Insert passage below {0}",
+			"passageToPrevSection": "Move Passage to Previous Section",
+			"passageToNextSection": "Move Passage to Next Section",
 			"pasting": "Pasting",
 			"refErr": "This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)",
 			"resequence": "Resequence",

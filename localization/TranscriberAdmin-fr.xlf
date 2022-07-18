@@ -3477,7 +3477,19 @@
 				<target>Insérer le passage ci-dessous {0}</target>
 			</segment>
 		</unit>
-		<unit id="planSheet.pasting">
+      <unit id="planSheet.passageToPrevSection">
+         <segment>
+            <source>Move Passage to Previous Section</source>
+            <target>Déplacer le passage vers la section précédente</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.passageToNextSection">
+         <segment>
+            <source>Move Passage to Next Section</source>
+            <target>Déplacer le passage vers la section suivante</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.pasting">
 			<segment>
 				<source>Pasting</source>
 				<target>Coller</target>

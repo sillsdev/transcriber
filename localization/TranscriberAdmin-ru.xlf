@@ -3495,6 +3495,18 @@
 				<target/>
 			</segment>
 		</unit>
+      <unit id="planSheet.passageToPrevSection">
+         <segment>
+            <source>Move Passage to Previous Section</source>
+            <target>Переместить отрывок в предыдущий раздел</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.passageToNextSection">
+         <segment>
+            <source>Move Passage to Next Section</source>
+            <target>Переместить проход в следующий раздел</target>
+         </segment>
+      </unit>
 		<unit id="planSheet.pasting">
 			<segment>
 				<source>Pasting</source>
