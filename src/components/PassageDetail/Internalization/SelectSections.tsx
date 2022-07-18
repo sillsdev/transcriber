@@ -186,17 +186,17 @@ export function SelectSections(props: IProps) {
         if (!isFlat && passageCount > 1)
           rowData.push({
             id: section.id,
-            name: getSection(section).trim(),
+            name: getSection(section),
             passages: passageCount.toString(),
             parentId: '',
           });
         sectionpassages.forEach((passage: Passage) => {
           rowData.push({
             id: passage.id,
-            name: `${section?.attributes?.sequencenum}.${getReference(
+            name: `${sectionNumber(section)}.${getReference(
               passage,
               bookData
-            ).trim()}`,
+            )}`,
             passages: '',
             parentId: isFlat || passageCount === 1 ? '' : section.id,
           } as IRow);
