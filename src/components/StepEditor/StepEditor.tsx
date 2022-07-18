@@ -15,7 +15,7 @@ import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { CheckedChoice as ShowAll } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
 import { toCamel } from '../../utils';
-import { getTool, ToolSlug, defaultWorkflow } from '../../crud';
+import { getTool, ToolSlug, defaultWorkflow, useTools } from '../../crud';
 import { AddRecord, ReplaceRelatedRecord } from '../../model/baseModel';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -64,7 +64,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   const { showMessage } = useSnackBar();
   const saving = useRef(false);
   const toolId = 'stepEditor';
-
+  const { localizedTool } = useTools();
   const mxSeq = useMemo(() => {
     let max = 0;
     rows.forEach((r) => {
@@ -119,7 +119,10 @@ export const StepEditor = ({ process, org }: IProps) => {
   };
 
   const handleToolChange = (tool: string, index: number) => {
-    setRows(rows.map((r, i) => (i === index ? { ...r, tool } : r)));
+    let name = rows[index].name;
+    if (name === se.nextStep)
+      name = mangleName(localizedTool(tool), getOrgNames());
+    setRows(rows.map((r, i) => (i === index ? { ...r, tool, name } : r)));
     toolChanged(toolId, true);
   };
 
