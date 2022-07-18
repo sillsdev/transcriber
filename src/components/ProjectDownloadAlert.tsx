@@ -63,7 +63,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
     const needyProject = new Set<string>();
     let totalSize = 0;
     mediaRecs.forEach((m) => {
-      if (related(m, 'passage')) {
+      if (related(m, 'artifactType') || related(m, 'passage')) {
         var local = { localname: '' };
         var curpath = dataPath(m.attributes.audioUrl, PathType.MEDIA, local);
         if (curpath !== local.localname) {
