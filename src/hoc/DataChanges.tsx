@@ -160,13 +160,15 @@ export const doDataChanges = async (
               for (const tr of t) {
                 var tb = new TransformBuilder();
                 var localOps: Operation[] = [];
-                var newOps: Operation[] = [];
                 var upRec: UpdateRecordOperation;
-                //await UpdateOfflineIds(tr.operations, tb, newOps);
                 await memory.sync(await backup.push(tr.operations));
                 for (const o of tr.operations) {
                   if (o.op === 'updateRecord') {
                     upRec = o as UpdateRecordOperation;
+                    if (!upRec.record.relationships)
+                      //this is just an included record and wasn't changed
+                      continue;
+
                     switch (upRec.record.type) {
                       case 'section':
                         if (
@@ -211,7 +213,6 @@ export const doDataChanges = async (
                 }
                 if (localOps.length > 0)
                   memory.sync(await backup.push(localOps));
-                if (newOps.length > 0) memory.update(newOps);
               }
             });
         }
