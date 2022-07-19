@@ -202,6 +202,7 @@ export const getProjects =
           errorReporter,
           infoMsg(err, 'Projects failed')
         );
+        if (err.response.data === '') err.response.data = '401';
         dispatch({ payload: errStatus(err), type: PROJECTS_ERROR });
       });
   };
