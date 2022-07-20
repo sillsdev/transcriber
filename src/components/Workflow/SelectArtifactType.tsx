@@ -1,16 +1,17 @@
 import {
   createStyles,
-  IconButton,
   makeStyles,
   MenuItem,
   TextField,
   Theme,
 } from '@material-ui/core';
-import { useState } from 'react';
-import { IArtifactType, useArtifactType } from '../../crud/useArtifactType';
+import { useEffect, useState } from 'react';
+import {
+  ArtifactTypeSlug,
+  IArtifactType,
+  useArtifactType,
+} from '../../crud/useArtifactType';
 import { ISelectArtifactTypeStrings, IState } from '../../model';
-import AddIcon from '@mui/icons-material/Add';
-import CancelIcon from '@mui/icons-material/CancelOutlined';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 
@@ -18,7 +19,9 @@ interface IStateProps {
   t: ISelectArtifactTypeStrings;
 }
 interface IProps extends IStateProps {
-  onTypeChange: (artifactTypeId: string) => void;
+  onTypeChange: (artifactTypeId: string | null) => void;
+  initialValue?: string | null;
+  limit?: ArtifactTypeSlug[];
   allowNew?: boolean;
 }
 
@@ -54,34 +57,37 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 export const SelectArtifactType = (props: IProps) => {
-  const { onTypeChange, allowNew, t } = props;
+  const { onTypeChange, initialValue, limit, t } = props;
   const classes = useStyles();
-  const [artifactType, setArtifactType] = useState('vernacular');
-  const [newArtifactType, setNewArtifactType] = useState('');
-  const [showNew, setShowNew] = useState(false);
-  const { getArtifactTypes, addNewArtifactType } = useArtifactType();
-  const [artifactTypes, setArtifactTypes] = useState(getArtifactTypes());
-  const addNewType = async () => {
-    await addNewArtifactType(newArtifactType);
-    setArtifactTypes(getArtifactTypes());
-    setArtifactType(newArtifactType);
-    onTypeChange(newArtifactType);
-    cancelNewType();
-  };
-  const cancelNewType = () => {
-    setNewArtifactType('');
-    setShowNew(false);
-  };
+  const [artifactType, setArtifactType] = useState(
+    ArtifactTypeSlug.Vernacular as string
+  );
+  const { getArtifactTypes } = useArtifactType();
+  const [artifactTypes, setArtifactTypes] = useState<IArtifactType[]>([]);
+
   const handleArtifactTypeChange = (e: any) => {
-    if (e.target.value === t.addNewType) setShowNew(true);
-    else {
-      setArtifactType(e.target.value);
-      onTypeChange(e.target.value);
-    }
+    setArtifactType(e.target.value);
+    onTypeChange(
+      e.target.value === (ArtifactTypeSlug.Vernacular as string)
+        ? null
+        : e.target.value
+    );
   };
-  const handleNewArtifactTypeChange = (e: any) => {
-    setNewArtifactType(e.target.value);
-  };
+
+  useEffect(() => {
+    setArtifactTypes(
+      getArtifactTypes(limit, true).map((a, i) =>
+        !a.id ? { ...a, id: ArtifactTypeSlug.Vernacular as string } : a
+      )
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [limit]);
+
+  useEffect(() => {
+    setArtifactType(
+      initialValue ? initialValue : (ArtifactTypeSlug.Vernacular as string)
+    );
+  }, [initialValue]);
 
   return (
     <div className={classes.container}>
@@ -111,13 +117,12 @@ export const SelectArtifactType = (props: IProps) => {
         variant="filled"
         required={true}
       >
-        {artifactTypes
-          .sort()
-          .map((option: IArtifactType) => (
+        {
+          artifactTypes.map((option: IArtifactType) => (
             <MenuItem key={option.id} value={option.id}>
               {option.type}
             </MenuItem>
-          ))
+          )) /*
           .concat(
             allowNew ? (
               <MenuItem key={t.addNewType} value={t.addNewType}>
@@ -126,40 +131,13 @@ export const SelectArtifactType = (props: IProps) => {
               </MenuItem>
             ) : (
               <></>
-            )
-          )}
+            )) */
+        }
       </TextField>
-      {showNew && (
-        <div className={classes.row}>
-          <TextField
-            id="new-artifact-type"
-            label={t.newArtifactType}
-            className={classes.newTextField}
-            value={newArtifactType}
-            onChange={handleNewArtifactTypeChange}
-          ></TextField>
-          <IconButton
-            id="addnew"
-            color="secondary"
-            aria-label="addnew"
-            onClick={addNewType}
-          >
-            <AddIcon />
-          </IconButton>
-          <IconButton
-            id="cancelnew"
-            color="secondary"
-            aria-label="cancelnew"
-            onClick={cancelNewType}
-          >
-            <CancelIcon />
-          </IconButton>
-        </div>
-      )}
     </div>
   );
 };
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'SelectArtifactType' }),
+  t: localStrings(state, { layout: 'selectArtifactType' }),
 });
 export default connect(mapStateToProps)(SelectArtifactType);

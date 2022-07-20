@@ -7,7 +7,7 @@ import StepName from './StepName';
 import ToolChoice from './ToolChoice';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IStepEditorStrings } from '../../model';
-
+import SettingsIcon from '@mui/icons-material/Settings';
 const useStyles = makeStyles({
   step: { minWidth: 250 },
   tool: { minWidth: 250 },
@@ -20,10 +20,20 @@ interface IProps {
   onToolChange: (tool: string, index: number) => void;
   onDelete: (index: number) => void;
   onRestore: (index: number) => void;
+  onSettings?: (index: number) => void;
+  settingsTitle?: string;
 }
 
 export const StepItem = SortableElement(
-  ({ value, onNameChange, onToolChange, onDelete, onRestore }: IProps) => {
+  ({
+    value,
+    onNameChange,
+    onToolChange,
+    onDelete,
+    onRestore,
+    onSettings,
+    settingsTitle,
+  }: IProps) => {
     const classes = useStyles();
     const se: IStepEditorStrings = useSelector(
       stepEditorSelector,
@@ -39,6 +49,9 @@ export const StepItem = SortableElement(
     const handleDeleteOrRestore = () => {
       if (value.seq >= 0) onDelete(value.rIdx);
       else onRestore(value.rIdx);
+    };
+    const handleSettings = () => {
+      if (onSettings) onSettings(value.rIdx);
     };
 
     return (
@@ -56,6 +69,11 @@ export const StepItem = SortableElement(
         >
           {value.seq < 0 ? <HideIcon /> : <ShowIcon />}
         </IconButton>
+        {onSettings && (
+          <IconButton onClick={handleSettings} title={settingsTitle ?? ''}>
+            {<SettingsIcon />}
+          </IconButton>
+        )}
       </ListItem>
     );
   }

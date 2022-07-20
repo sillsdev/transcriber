@@ -43,6 +43,7 @@ import {
   AddPassageStateChangeToOps,
   remoteId,
   ArtifactTypeSlug,
+  useArtifactType,
 } from '../crud';
 import {
   insertAtCursor,
@@ -338,6 +339,9 @@ export function Transcriber(props: IProps) {
     localStorage.getItem(localUserKey(LocalKey.jumpBack))
   );
   const [view, setView] = useState('');
+  const [artifactTypeSlug, setArtifactTypeSlug] = useState(slug);
+  const { slugFromId } = useArtifactType();
+
   const [textAreaStyle, setTextAreaStyle] = useState({
     overflow: 'auto',
     backgroundColor: '#cfe8fc',
@@ -436,7 +440,7 @@ export function Transcriber(props: IProps) {
       const intfind = integrations.findIndex(
         (i) =>
           i.attributes &&
-          i.attributes.name === integrationSlug(slug, offline) &&
+          i.attributes.name === integrationSlug(artifactTypeSlug, offline) &&
           Boolean(i.keys?.remoteId) !== offline
       );
       if (intfind > -1) setParatextIntegration(integrations[intfind].id);
@@ -475,7 +479,7 @@ export function Transcriber(props: IProps) {
       const intfind = integrations.findIndex(
         (i) =>
           i.attributes &&
-          i.attributes.name === integrationSlug(slug, offline) &&
+          i.attributes.name === integrationSlug(artifactTypeSlug, offline) &&
           Boolean(i.keys?.remoteId) !== offline
       );
       if (intfind > -1) setParatextIntegration(integrations[intfind].id);
@@ -1005,10 +1009,19 @@ export function Transcriber(props: IProps) {
   const noPull = React.useMemo(
     () =>
       [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
-        (slug || '') as ArtifactTypeSlug
+        (artifactTypeSlug || '') as ArtifactTypeSlug
       ),
-    [slug]
+    [artifactTypeSlug]
   );
+  useEffect(() => {
+    setArtifactTypeSlug(
+      slug
+        ? slug
+        : artifactId
+        ? slugFromId(artifactId)
+        : ArtifactTypeSlug.Vernacular
+    );
+  }, [slug, artifactId, slugFromId]);
 
   const allowBack = React.useMemo(() => {
     return jumpBack && jumpBack.split('/').pop() === pasId;
