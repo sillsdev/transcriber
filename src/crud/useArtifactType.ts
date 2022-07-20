@@ -8,7 +8,7 @@ import {
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
-import { findRecord, related } from '.';
+import { findRecord, related, remoteId } from '.';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 
 export const VernacularTag = null; // used to test the relationship
@@ -29,7 +29,7 @@ interface ISwitches {
 }
 export interface IArtifactType {
   type: string;
-  id: string;
+  id: string | undefined;
 }
 const stringSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'artifactType' });
@@ -45,14 +45,16 @@ export const useArtifactType = () => {
   const localizedArtifactType = (val: string) => {
     return (t as ISwitches)[val] || val;
   };
-  const localizedArtifactTypeFromId = (id: string) => {
-    return localizedArtifactType(slugFromId(id));
+  const localizedArtifactTypeFromId = (id: string | null) => {
+    return localizedArtifactType(
+      id ? slugFromId(id) : ArtifactTypeSlug.Vernacular
+    );
   };
 
   const slugFromId = (id: string) => {
     var at = {} as ArtifactType;
     if (id) at = findRecord(memory, 'artifacttype', id) as ArtifactType;
-    return at && at.attributes ? at.attributes.typename : 'vernacular';
+    return at?.attributes?.typename ?? ArtifactTypeSlug.Vernacular;
   };
 
   const fromLocalizedArtifactType = (val: string) => {
@@ -64,24 +66,41 @@ export const useArtifactType = () => {
     return fromLocal[val] || val;
   };
 
-  const getArtifactTypes = () => {
+  const getArtifactTypes = (
+    limit?: ArtifactTypeSlug[],
+    remoteIds: boolean = false
+  ) => {
     const types: IArtifactType[] = [];
-    const orgrecs: ArtifactType[] = memory.cache.query((q: QueryBuilder) =>
+    if (!limit || limit.includes(ArtifactTypeSlug.Vernacular))
+      types.push({
+        type: localizedArtifactType(ArtifactTypeSlug.Vernacular),
+        id: undefined,
+      });
+    const artifacts: ArtifactType[] = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('artifacttype')
     ) as any;
-    orgrecs
+    artifacts
       .filter(
         (r) =>
           (related(r, 'organization') === organization ||
             related(r, 'organization') === null) &&
           Boolean(r.keys?.remoteId) !== offlineOnly
       )
-      .forEach((r) =>
-        types.push({
-          type: localizedArtifactType(r.attributes.typename),
-          id: r.id,
-        })
-      );
+      .sort((i, j) =>
+        localizedArtifactType(i.attributes.typename) <
+        localizedArtifactType(j.attributes.typename)
+          ? -1
+          : 1
+      )
+      .forEach((r) => {
+        if (!limit || limit.includes(r.attributes.typename as ArtifactTypeSlug))
+          types.push({
+            type: localizedArtifactType(r.attributes.typename),
+            id: remoteIds
+              ? remoteId('artifacttype', r.id, memory.keyMap)
+              : r.id,
+          });
+      });
 
     return types;
   };

@@ -37,6 +37,7 @@ import IntegrationTab from '../components/Integration';
 import TranscriptionTab from '../components/TranscriptionTab';
 import {
   ArtifactTypeSlug,
+  remoteIdGuid,
   ToolSlug,
   useProjectType,
   useRole,
@@ -169,7 +170,8 @@ const PassageDetailGrids = (props: IProps) => {
   const ctx = useContext(PassageDetailContext);
   const { currentstep, discussionSize, setDiscussionSize, orgWorkflowSteps } =
     ctx.state;
-  const tool = useStepTool(currentstep);
+  const { tool, settings } = useStepTool(currentstep);
+
   const [communitySlugs] = useState([
     ArtifactTypeSlug.Retell,
     ArtifactTypeSlug.QandA,
@@ -276,6 +278,15 @@ const PassageDetailGrids = (props: IProps) => {
                       <PassageDetailTranscribe
                         auth={auth}
                         width={width - discussionSize.width - 16}
+                        artifactTypeId={
+                          settings
+                            ? remoteIdGuid(
+                                'artifacttype',
+                                JSON.parse(settings).artifactTypeId,
+                                memory.keyMap
+                              )
+                            : null
+                        }
                       />
                     </Grid>
                   )}

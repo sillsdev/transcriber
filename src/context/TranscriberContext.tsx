@@ -152,6 +152,7 @@ const TranscriberContext = React.createContext({} as IContext);
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   children: React.ReactElement;
   auth: Auth;
+  artifactTypeId?: string | null | undefined;
 }
 interface ParamTypes {
   prjId: string;
@@ -164,6 +165,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     mapStateToProps,
     mapDispatchToProps
   )((props: IProps) => {
+    const { artifactTypeId } = props;
     const [reporter] = useGlobal('errorReporter');
     const { passages, mediafiles, sections } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
@@ -207,8 +209,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const fetching = useRef('');
 
     const artifactId = useMemo(
-      () => (slug ? getTypeId(slug) : VernacularTag),
-      [slug, getTypeId]
+      () => (slug ? getTypeId(slug) : artifactTypeId ?? VernacularTag),
+      [slug, artifactTypeId, getTypeId]
     );
 
     useEffect(() => {
