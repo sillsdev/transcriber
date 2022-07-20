@@ -148,7 +148,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   };
   const handleToolChange = (tool: string, index: number) => {
     let name = rows[index].name;
-    if (name === se.nextStep)
+    if (name.includes(se.nextStep))
       name = mangleName(localizedTool(tool), getOrgNames());
     //bring up Settings editor
     setToolSettingsRow(index);
