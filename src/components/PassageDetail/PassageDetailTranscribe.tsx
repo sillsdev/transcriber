@@ -56,11 +56,7 @@ export function PassageDetailTranscribe({
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   return Boolean(mediafileId) ? (
-    <TranscriberProvider
-      auth={auth}
-      artifactTypeId={artifactTypeId}
-      passageId={passage.id}
-    >
+    <TranscriberProvider auth={auth} artifactTypeId={artifactTypeId}>
       <Grid container direction="column">
         {artifactTypeId && (
           <div className={classes.panel2}>
