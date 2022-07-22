@@ -223,11 +223,16 @@ export const StepEditor = ({ process, org }: IProps) => {
     for (let ix = 0; ix < rows.length; ix += 1) {
       const row = rows[ix];
       const id = row.id;
+      const tool = JSON.stringify({
+        tool: row.tool,
+        settings: row.settings,
+      });
       if (id) {
         const recId = { type: 'orgworkflowstep', id };
         const rec = memory.cache.query((q: QueryBuilder) =>
           q.findRecord(recId)
         ) as OrgWorkflowStep | undefined;
+
         if (rec) {
           let name = rec.attributes?.name;
           if (name !== row.name) {
@@ -237,10 +242,6 @@ export const StepEditor = ({ process, org }: IProps) => {
             );
             orgNames.add(name);
           }
-          const tool = JSON.stringify({
-            tool: row.tool,
-            settings: row.settings,
-          });
           if (
             name !== rec.attributes?.name ||
             row.seq !== rec.attributes?.sequencenum ||
@@ -266,14 +267,13 @@ export const StepEditor = ({ process, org }: IProps) => {
           getOrgNames().concat(Array.from(orgNames)),
           ix
         );
-        const tool = row.tool;
         const rec = {
           type: 'orgworkflowstep',
           attributes: {
             sequencenum: row.seq,
             name,
             process: process || defaultWorkflow,
-            tool: JSON.stringify({ tool }),
+            tool: tool,
             permissions: '{}',
           },
         } as OrgWorkflowStep;
