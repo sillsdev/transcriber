@@ -284,15 +284,19 @@ export const DiscussionCard = (props: IProps) => {
     if (discussion.id) return discussion.id;
     else return NewDiscussionToolId;
   }, [discussion]);
-  const [changeAssignment, setChangeAssignment] = useState(false);
+  const [changeAssignment, setChangeAssignment] = useState<
+    boolean | undefined
+  >();
   const handleSelect = (discussion: Discussion) => () => {
     selectDiscussion(discussion);
   };
   const userPrefix = 'u:';
   const groupPrefix = 'g:';
+
   const handleEditCard = (val: boolean) => {
     if (val !== editCard) setEditCard(val);
   };
+
   useEffect(() => {
     //if any of my comments are changed, add the discussion to the toolChanged list so DiscussionList will pick it up
     if (!myChanged) {
@@ -303,8 +307,9 @@ export const DiscussionCard = (props: IProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, myComments, myChanged]);
+
   useEffect(() => {
-    if (!changeAssignment) handleSave();
+    if (changeAssignment === false) handleSave();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [changeAssignment]);
 
@@ -680,7 +685,7 @@ export const DiscussionCard = (props: IProps) => {
       : '';
   const handleAssignedClick = () => {
     setEditAssigned(currentAssigned());
-    setChangeAssignment(!changeAssignment);
+    setChangeAssignment(!changeAssignment as boolean);
   };
 
   return (
