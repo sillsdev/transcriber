@@ -171,6 +171,7 @@ export function Access(props: IProps) {
   );
   const [selectedUser, setSelectedUser] = useState('');
   const [, setOrganization] = useGlobal('organization');
+  const [, setPermissions] = useGlobal('permissions');
   const [, setProject] = useGlobal('project');
   const [, setProjRole] = useGlobal('projRole');
   const [, setProjType] = useGlobal('projType');
@@ -321,6 +322,7 @@ export function Access(props: IProps) {
   useEffect(() => {
     if (isElectron) persistData();
     setOrganization('');
+    setPermissions([]);
     setProject('');
     setPlan('');
     setProjRole(undefined);

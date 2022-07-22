@@ -940,8 +940,22 @@
                <context context-type="sourcefile">DeleteExpansion.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="discussionCard.assignRole">
-            <source>Assign to a Role</source>
+         <trans-unit id="discussionCard.assign">
+            <source>Assign to a Group or User</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.groupuser">
+            <source>Group/User</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.assignGroup">
+            <source>Assign to a Group</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>
@@ -3894,11 +3908,32 @@
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="peer.permissions">
+      		<source>Special permission</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="peer.noSpecialPermission">
+      		<source>No special permission</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="peer.member">
       		<source>Member</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">Peer.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.name">
+      		<source>Peer Group Name</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="peer.newPeerGroup">
@@ -3924,6 +3959,62 @@
       	</trans-unit>
       	<trans-unit id="peer.removeConfirm">
       		<source>Do you want to remove the peer group and information about who are the members?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="permission.admin">
+      		<source>Admin</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="permission.adminTip">
+      		<source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.consultant">
+      		<source>Consultant</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.consultantTip">
+      		<source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.consultantInTraining">
+      		<source>Consultant In Training</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.consultantInTrainingTip">
+      		<source>CITs comments will only be visible to Mentors until a mentor approves the comment.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.mentor">
+      		<source>Mentor</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.mentorTip">
+      		<source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">GroupDialog.tsx</context>

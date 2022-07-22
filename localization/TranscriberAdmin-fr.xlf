@@ -805,10 +805,22 @@
 				<target>Supprimer</target>
 			</segment>
 		</unit>
-		<unit id="discussionCard.assignRole">
+        <unit id="discussionCard.assign">
+         <segment>
+            <source>Assign to a Group or User</source>
+            <target>Attribuer à un groupe ou à un utilisateur</target>
+         </segment>
+      </unit>
+      <unit id="discussionCard.groupuser">
+         <segment>
+            <source>Group/User</source>
+            <target>Groupe/Utilisateur</target>
+         </segment>
+      </unit>
+		<unit id="discussionCard.assignGroup">
 			<segment>
-				<source>Assign to a Role</source>
-				<target>Affectation à un rôle</target>
+				<source>Assign to a Group</source>
+				<target>Affectation à un groupe</target>
 			</segment>
 		</unit>
 		<unit id="discussionCard.assignUser">
@@ -3345,12 +3357,30 @@
 				<target>Nom déjà utilisé</target>
 			</segment>
 		</unit>
+      <unit id="peer.permissions">
+         <segment>
+            <source>Special permission</source>
+            <target>Autorisation spéciale</target>
+         </segment>
+      </unit>
+      <unit id="peer.noSpecialPermission">
+         <segment>
+            <source>No special permission</source>
+             <target>Pas d'autorisation spéciale</target>
+         </segment>
+      </unit>
 		<unit id="peer.member">
 			<segment>
 				<source>Member</source>
 				<target>Membre</target>
 			</segment>
 		</unit>
+      <unit id="peer.name">
+         <segment>
+            <source>Peer Group Name</source>
+            <target>Nom du groupe de pairs</target>
+         </segment>
+      </unit>
 		<unit id="peer.newPeerGroup">
 			<segment>
 				<source>New Peer Group</source>
@@ -3375,7 +3405,55 @@
 				<target>Voulez-vous supprimer le groupe de pairs et les informations sur les membres qui le composent ?</target>
 			</segment>
 		</unit>
-		<unit id="planActions.assign">
+      <unit id="permission.admin">
+         <segment>
+            <source>Admin</source>
+            <target></target>
+         </segment>
+      </unit>
+      <unit id="permission.adminTip">
+         <segment>
+            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <target></target>
+         </segment>
+      </unit>
+      <unit id="permission.consultant">
+         <segment>
+            <source>Consultant</source>
+            <target></target>
+         </segment>
+      </unit>
+      <unit id="permission.consultantTip">
+         <segment>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+            <target></target>
+         </segment>
+      </unit>
+      <unit id="permission.consultantInTraining">
+         <segment>
+            <source>Consultant In Training</source>
+            <target>Consultante en formation</target>
+         </segment>
+      </unit>
+      <unit id="permission.consultantInTrainingTip">
+         <segment>
+            <source>CITs comments will only be visible to Mentors until a mentor approves the comment.</source>
+            <target>Les commentaires des CIT ne seront visibles par les mentors que jusqu'à ce qu'un mentor approuve le commentaire.</target>
+         </segment>
+      </unit>
+      <unit id="permission.mentor">
+         <segment>
+            <source>Mentor</source>
+            <target>Mentor</target>
+         </segment>
+      </unit>
+      <unit id="permission.mentorTip">
+         <segment>
+            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <target>Les commentaires du mentor ne seront visibles que par les CIT. Les mentors peuvent approuver les commentaires de CIT pour les rendre visibles au reste de l'équipe.</target>
+         </segment>
+      </unit>
+      <unit id="planActions.assign">
 			<segment>
 				<source>Assign</source>
 				<target>Affecter</target>

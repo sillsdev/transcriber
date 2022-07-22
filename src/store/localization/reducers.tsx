@@ -202,7 +202,9 @@ const initialState = {
 	}),
 	"discussionCard": new LocalizedStrings({
 		"en": {
-			"assignRole": "Assign to a Role",
+			"assign": "Assign to a Group or User",
+			"groupuser": "Group/User",
+			"assignGroup": "Assign to a Group",
 			"assignUser": "Assign to a User",
 			"category": "Category: {0}",
 			"collapse": "Show/Hide Comments",
@@ -728,11 +730,26 @@ const initialState = {
 			"peerDescription": "Peer Groups allow you to assign tasks to a group rather than an individual.",
 			"editPeerGroup": "Edit Peer Group",
 			"inUse": "Name already in use",
+			"permissions": "Special permission",
+			"noSpecialPermission": "No special permission",
 			"member": "Member",
+			"name": "Peer Group Name",
 			"newPeerGroup": "New Peer Group",
 			"peerGroup": "Peer Group",
 			"remove": "Remove",
 			"removeConfirm": "Do you want to remove the peer group and information about who are the members?",
+		}
+	}),
+	"permission": new LocalizedStrings({
+		"en": {
+			"admin": "Admin",
+			"adminTip": "Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.",
+			"consultant": "Consultant",
+			"consultantTip": "Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.",
+			"consultantInTraining": "Consultant In Training",
+			"consultantInTrainingTip": "CITs comments will only be visible to Mentors until a mentor approves the comment.",
+			"mentor": "Mentor",
+			"mentorTip": "Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.",
 		}
 	}),
 	"planActions": new LocalizedStrings({
@@ -1372,6 +1389,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),
 				"peer" : new LocalizedStrings(action.payload.data.peer),
+				"permission" : new LocalizedStrings(action.payload.data.permission),
 				"planActions" : new LocalizedStrings(action.payload.data.planActions),
 				"planSheet" : new LocalizedStrings(action.payload.data.planSheet),
 				"planTabs" : new LocalizedStrings(action.payload.data.planTabs),

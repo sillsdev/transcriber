@@ -17,7 +17,7 @@ import {
   Comment,
   IDiscussionCardStrings,
   IState,
-  Role,
+  Group,
   User,
   MediaFile,
   ISharedStrings,
@@ -42,7 +42,6 @@ import { related } from '../../crud';
 import CommentCard from './CommentCard';
 import ReplyCard from './ReplyCard';
 import UserAvatar from '../UserAvatar';
-import RoleAvatar from '../RoleAvatar';
 import DiscussionMenu from './DiscussionMenu';
 import {
   AddRecord,
@@ -50,7 +49,7 @@ import {
   UpdateRelatedRecord,
 } from '../../model/baseModel';
 import { useArtifactCategory } from '../../crud/useArtifactCategory';
-import SelectRole from '../../control/SelectRole';
+import SelectGroup from '../../control/SelectPeerGroup';
 import SelectUser from '../../control/SelectUser';
 import { StageReport } from '../../control';
 import SelectArtifactCategory, {
@@ -63,6 +62,8 @@ import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import Auth from '../../auth/Auth';
 import { NewDiscussionToolId } from './DiscussionList';
 import { UnsavedContext } from '../../context/UnsavedContext';
+import GroupAvatar from '../GroupAvatar';
+import SelectDiscussionAssignment from '../../control/SelectDiscussionAssignment';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -183,7 +184,7 @@ interface IRecordProps {
   passages: Array<Passage>;
   plans: Array<Plan>;
   artifactcategorys: Array<ArtifactCategory>;
-  roles: Array<Role>;
+  groups: Array<Group>;
   users: Array<User>;
 }
 interface IStateProps {
@@ -229,7 +230,7 @@ export const DiscussionCard = (props: IProps) => {
     passages,
     plans,
     artifactcategorys,
-    roles,
+    groups,
     users,
   } = props;
   const ctx = useContext(PassageDetailContext);
@@ -261,7 +262,7 @@ export const DiscussionCard = (props: IProps) => {
   const [artifactCategory, setArtifactCategory] = useState('');
   const [step, setStep] = useState('');
   const [reference, setReference] = useState('');
-  const [assignedRole, setAssignedRole] = useState<Role>();
+  const [assignedGroup, setAssignedGroup] = useState<Group>();
   const [assignedUser, setAssignedUser] = useState<User>();
   const [sourceMediafile, setSourceMediafile] = useState<MediaFile>();
   const [editing, setEditing] = useState(false);
@@ -273,8 +274,7 @@ export const DiscussionCard = (props: IProps) => {
   const [editSubject, setEditSubject] = useState(
     discussion.attributes?.subject
   );
-  const [editRole, setEditRole] = useState<string>('');
-  const [editUser, setEditUser] = useState<string>('');
+  const [editAssigned, setEditAssigned] = useState<string>('');
   const [editCategory, setEditCategory] = useState('');
   const [editCard, setEditCard] = useState(false);
   const { localizedArtifactCategory } = useArtifactCategory();
@@ -284,11 +284,12 @@ export const DiscussionCard = (props: IProps) => {
     if (discussion.id) return discussion.id;
     else return NewDiscussionToolId;
   }, [discussion]);
-
+  const [changeAssignment, setChangeAssignment] = useState(false);
   const handleSelect = (discussion: Discussion) => () => {
     selectDiscussion(discussion);
   };
-
+  const userPrefix = 'u:';
+  const groupPrefix = 'g:';
   const handleEditCard = (val: boolean) => {
     if (val !== editCard) setEditCard(val);
   };
@@ -302,6 +303,10 @@ export const DiscussionCard = (props: IProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, myComments, myChanged]);
+  useEffect(() => {
+    if (!changeAssignment) handleSave();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [changeAssignment]);
 
   useEffect(() => {
     if (comments)
@@ -315,12 +320,12 @@ export const DiscussionCard = (props: IProps) => {
   }, [comments, discussion.id]);
 
   useEffect(() => {
-    if (roles) {
-      var r = roles.filter((r) => related(discussion, 'role') === r.id);
-      if (r.length > 0) setAssignedRole(r[0]);
-      else setAssignedRole(undefined);
+    if (groups) {
+      var r = groups.filter((r) => related(discussion, 'group') === r.id);
+      if (r.length > 0) setAssignedGroup(r[0]);
+      else setAssignedGroup(undefined);
     }
-  }, [roles, discussion]);
+  }, [groups, discussion]);
 
   useEffect(() => {
     if (users) {
@@ -456,8 +461,7 @@ export const DiscussionCard = (props: IProps) => {
   const handleDiscussionAction = (what: string) => {
     if (what === 'edit') {
       setEditSubject(discussion.attributes.subject);
-      setEditRole(related(discussion, 'role') || '');
-      setEditUser(related(discussion, 'user') || '');
+      setEditAssigned(currentAssigned());
       setEditCategory(related(discussion, 'artifactCategory') || '');
       setEditing(true);
     } else if (what === 'delete') {
@@ -473,8 +477,7 @@ export const DiscussionCard = (props: IProps) => {
 
   const handleReset = () => {
     setEditSubject('');
-    setEditRole('');
-    setEditUser('');
+    setEditAssigned('');
     setEditCategory('');
   };
 
@@ -539,17 +542,20 @@ export const DiscussionCard = (props: IProps) => {
       setChanged(true);
     }
   };
-  const handleRoleChange = (e: string) => {
-    if (e !== editRole) {
-      setEditRole(e);
-      setEditUser('');
+  const handleAssignedChange = (e: string) => {
+    setEditAssigned(e);
+    setChanged(true);
+    setChangeAssignment(false);
+  };
+  const handleGroupChange = (e: string) => {
+    if (groupPrefix + e !== editAssigned) {
+      setEditAssigned(groupPrefix + e);
       setChanged(true);
     }
   };
   const handleUserChange = (e: string) => {
-    if (e !== editUser) {
-      setEditUser(e);
-      setEditRole('');
+    if (userPrefix + e !== editAssigned) {
+      setEditAssigned(userPrefix + e);
       setChanged(true);
     }
   };
@@ -596,8 +602,15 @@ export const DiscussionCard = (props: IProps) => {
           editCategory,
           user
         ),
-        ...UpdateRelatedRecord(t, discussion, 'role', 'role', editRole, user),
-        ...UpdateRelatedRecord(t, discussion, 'user', 'user', editUser, user)
+        ...UpdateRelatedRecord(
+          t,
+          discussion,
+          'group',
+          'group',
+          editGroup(),
+          user
+        ),
+        ...UpdateRelatedRecord(t, discussion, 'user', 'user', editUser(), user)
       );
       await memory.update(ops);
     }
@@ -612,6 +625,14 @@ export const DiscussionCard = (props: IProps) => {
     setEditing(false);
     setChanged(false);
   };
+  const editGroup = () =>
+    editAssigned.startsWith(groupPrefix)
+      ? editAssigned.substring(groupPrefix.length)
+      : '';
+  const editUser = () =>
+    editAssigned.startsWith(userPrefix)
+      ? editAssigned.substring(userPrefix.length)
+      : '';
 
   const version = useMemo(() => {
     const mediafile = mediafiles.find(
@@ -651,6 +672,16 @@ export const DiscussionCard = (props: IProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightDiscussion, myRegion?.start, refresh]);
+  const currentAssigned = () =>
+    related(discussion, 'group')
+      ? groupPrefix + related(discussion, 'group')
+      : related(discussion, 'user')
+      ? userPrefix + related(discussion, 'user')
+      : '';
+  const handleAssignedClick = () => {
+    setEditAssigned(currentAssigned());
+    setChangeAssignment(!changeAssignment);
+  };
 
   return (
     <div className={classes.root}>
@@ -681,13 +712,13 @@ export const DiscussionCard = (props: IProps) => {
                 fullWidth
               />
               <div className={classes.row}>
-                <SelectRole
-                  id={`role-${discussion.id}`}
+                <SelectGroup
+                  id={`group-${discussion.id}`}
                   org={false}
-                  initRole={editRole}
-                  onChange={handleRoleChange}
+                  initGroup={editGroup()}
+                  onChange={handleGroupChange}
                   required={false}
-                  label={t.assignRole}
+                  label={t.assignGroup}
                 />
                 <Typography
                   variant="h6"
@@ -780,12 +811,28 @@ export const DiscussionCard = (props: IProps) => {
                 </Typography>
               </Grid>
               <Grid item className={classes.titleControls}>
-                {assignedRole && (
-                  <RoleAvatar roleRec={assignedRole} org={false} />
+                {assignedGroup && (
+                  <IconButton onClick={handleAssignedClick}>
+                    <GroupAvatar groupRec={assignedGroup} org={false} />
+                  </IconButton>
                 )}
-
-                {assignedUser && <UserAvatar userRec={assignedUser} />}
-
+                {assignedUser && (
+                  <IconButton onClick={handleAssignedClick}>
+                    <UserAvatar userRec={assignedUser} />
+                  </IconButton>
+                )}
+                {changeAssignment && (
+                  <SelectDiscussionAssignment
+                    id={`group-${discussion.id}`}
+                    org={false}
+                    initAssigned={editAssigned}
+                    onChange={handleAssignedChange}
+                    required={false}
+                    label={t.assign}
+                    userPrefix={userPrefix}
+                    groupPrefix={groupPrefix}
+                  />
+                )}
                 {!discussion.attributes.resolved && (
                   <IconButton
                     id={`resolveDiscussion-${discussion.id}`}
@@ -876,7 +923,7 @@ const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   artifactcategorys: (q: QueryBuilder) => q.findRecords('artifactcategory'),
-  roles: (q: QueryBuilder) => q.findRecords('role'),
+  groups: (q: QueryBuilder) => q.findRecords('group'),
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 const mapStateToProps = (state: IState): IStateProps => ({

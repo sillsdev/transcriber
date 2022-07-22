@@ -44,6 +44,7 @@ const schemaDefinition: SchemaSettings = {
         name: { type: 'string' },
         abbreviation: { type: 'string' },
         ownerId: { type: 'number' },
+        permissions: { type: 'string' },
         allUsers: { type: 'boolean' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
@@ -635,7 +636,7 @@ if (
     },
     relationships: {
       mediafile: { type: 'hasOne', model: 'mediafile' },
-      role: { type: 'hasOne', model: 'role' },
+      group: { type: 'hasOne', model: 'group' },
       user: { type: 'hasOne', model: 'user' },
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
       artifactCategory: { type: 'hasOne', model: 'artifactcategory' },

@@ -6,6 +6,7 @@ export interface Group extends BaseModel {
     name: string;
     abbreviation: string;
     ownerId: number;
+    permissions: string;
     allUsers: boolean;
     dateCreated: string;
     dateUpdated: string;

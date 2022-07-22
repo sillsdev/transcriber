@@ -82,3 +82,5 @@ export * from './useDiscussionCount';
 export * from './getNextStep';
 export * from './useFilteredSteps';
 export * from './getPasIdByNum';
+export * from './useGroups';
+export * from './usePermissions';
