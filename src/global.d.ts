@@ -10,6 +10,7 @@ declare module 'reactn/default' {
     orgRole: RoleNames | undefined;
     project: string;
     projRole: RoleNames | undefined;
+    permissions: PermissionNames | undefined;
     projType: string;
     plan: string;
     tab: number;

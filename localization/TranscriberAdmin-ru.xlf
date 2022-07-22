@@ -810,10 +810,22 @@
 				<target>Удалить</target>
 			</segment>
 		</unit>
-		<unit id="discussionCard.assignRole">
+      <unit id="discussionCard.assign">
+         <segment>
+            <source>Assign to a Group or User</source>
+            <target>Назначить группе или пользователю</target>
+         </segment>
+      </unit>
+      <unit id="discussionCard.groupuser">
+         <segment>
+            <source>Group/User</source>
+            <target>Группа/Пользователь</target>
+         </segment>
+      </unit>
+		<unit id="discussionCard.assignGroup">
 			<segment>
-				<source>Assign to a Role</source>
-				<target>Назначить роль</target>
+				<source>Assign to a Group</source>
+				<target>Назначить группе</target>
 			</segment>
 		</unit>
 		<unit id="discussionCard.assignUser">
@@ -3363,12 +3375,30 @@
 				<target>Имя уже используется</target>
 			</segment>
 		</unit>
+      <unit id="peer.permissions">
+         <segment>
+            <source>Special permission</source>
+            <target>Специальное разрешение</target>
+         </segment>
+     </unit>
+      <unit id="peer.noSpecialPermission">
+         <segment>
+            <source>No special permission</source>
+             <target>Без специального разрешения</target>
+         </segment>
+      </unit>
 		<unit id="peer.member">
 			<segment>
 				<source>Member</source>
 				<target>Член</target>
 			</segment>
 		</unit>
+      <unit id="peer.name">
+         <segment>
+            <source>Peer Group Name</source>
+            <target>Имя одноранговой группы</target>
+         </segment>
+      </unit>
 		<unit id="peer.newPeerGroup">
 			<segment>
 				<source>New Peer Group</source>
@@ -3393,7 +3423,55 @@
 				<target>Вы хотите удалить одноранговую группу и информацию о том, кто является ее членами?</target>
 			</segment>
 		</unit>
-		<unit id="planActions.assign">
+      <unit id="permission.admin">
+         <segment>
+            <source>Admin</source>
+            <target>Администратор</target>
+         </segment>
+      </unit>
+      <unit id="permission.adminTip">
+         <segment>
+            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <target></target>
+         </segment>
+      </unit>
+      <unit id="permission.consultant">
+         <segment>
+            <source>Consultant</source>
+            <target>Консультант</target>
+         </segment>
+      </unit>
+      <unit id="permission.consultantTip">
+         <segment>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+            <target></target>
+         </segment>
+      </unit>
+      <unit id="permission.consultantInTraining">
+         <segment>
+            <source>Consultant In Training</source>
+            <target>Консультант по обучению</target>
+         </segment>
+      </unit>
+      <unit id="permission.consultantInTrainingTip">
+         <segment>
+            <source>CITs comments will only be visible to Mentors until a mentor approves the comment.</source>
+            <target>Комментарии CIT будут видны только наставникам, пока наставник не одобрит комментарий.</target>
+         </segment>
+      </unit>
+      <unit id="permission.mentor">
+         <segment>
+            <source>Mentor</source>
+            <target>Наставник</target>
+         </segment>
+      </unit>
+      <unit id="permission.mentorTip">
+         <segment>
+            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <target>Комментарии наставника будут видны только CIT. Наставники могут одобрять комментарии CIT, чтобы сделать их видимыми для остальных членов команды.</target>
+         </segment>
+      </unit>
+      	<unit id="planActions.assign">
 			<segment>
 				<source>Assign</source>
 				<target/>

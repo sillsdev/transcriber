@@ -181,7 +181,9 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
 };
 
 export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods {
-    "assignRole": string;
+    "assign": string;
+    "groupuser": string;
+    "assignGroup": string;
     "assignUser": string;
     "category": string;
     "collapse": string;
@@ -681,11 +683,25 @@ export interface IPeerStrings extends Localize.LocalizedStringsMethods {
     "peerDescription": string;
     "editPeerGroup": string;
     "inUse": string;
+    "permissions": string;
+    "noSpecialPermission": string;
     "member": string;
+    "name": string;
     "newPeerGroup": string;
     "peerGroup": string;
     "remove": string;
     "removeConfirm": string;
+};
+
+export interface IPermissionStrings extends Localize.LocalizedStringsMethods {
+    "admin": string;
+    "adminTip": string;
+    "consultant": string;
+    "consultantTip": string;
+    "consultantInTraining": string;
+    "consultantInTrainingTip": string;
+    "mentor": string;
+    "mentorTip": string;
 };
 
 export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
@@ -1283,6 +1299,7 @@ export interface ILocalizedStrings {
 	passageMedia: IPassageMediaStrings;
 	passageRecord: IPassageRecordStrings;
 	peer: IPeerStrings;
+	permission: IPermissionStrings;
 	planActions: IPlanActionsStrings;
 	planSheet: IPlanSheetStrings;
 	planTabs: IPlanTabsStrings;

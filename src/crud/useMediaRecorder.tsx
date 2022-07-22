@@ -79,7 +79,7 @@ export function useMediaRecorder(
           if (stream && stream.id && stream.active) {
             mediaStreamRef.current = stream;
           } else {
-            const err = stream.toString();
+            const err = stream?.toString();
             logError(Severity.error, reporter, infoMsg(err, 'no media stream'));
             showMessage(err);
           }

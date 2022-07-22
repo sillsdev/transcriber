@@ -10,7 +10,12 @@ import { StepEditor } from '../StepEditor';
 import GroupTabs from '../GroupTabs';
 import { ProjectCard, AddCard } from '.';
 import TeamDialog from './TeamDialog';
-import { useRole, useAllUserGroup, defaultWorkflow } from '../../crud';
+import {
+  useRole,
+  useAllUserGroup,
+  defaultWorkflow,
+  usePermissions,
+} from '../../crud';
 import Confirm from '../AlertDialog';
 import { UnsavedContext } from '../../context/UnsavedContext';
 
@@ -67,10 +72,12 @@ export const TeamItem = (props: IProps) => {
   const allUserGroup = useAllUserGroup();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [changed] = useGlobal('changed');
+  const { setMyPermissions } = usePermissions();
 
   const handleMembers = (team: Organization) => () => {
     setOrganization(team.id);
     setMyOrgRole(team.id);
+    setMyPermissions(team.id);
     setGroup(allUserGroup(team.id)?.id);
     setOpenMember(true);
   };

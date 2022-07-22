@@ -808,9 +808,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="discussionCard.assignRole">
+      <unit id="discussionCard.assign">
          <segment>
-            <source>Assign to a Role</source>
+            <source>Assign to a Group or User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.groupuser">
+         <segment>
+            <source>Group/User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.assignGroup">
+         <segment>
+            <source>Assign to a Group</source>
             <target/>
          </segment>
       </unit>
@@ -3340,9 +3352,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="peer.permissions">
+         <segment>
+            <source>Special permission</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.noSpecialPermission">
+         <segment>
+            <source>No special permission</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="peer.member">
          <segment>
             <source>Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.name">
+         <segment>
+            <source>Peer Group Name</source>
             <target/>
          </segment>
       </unit>
@@ -3367,6 +3397,54 @@
       <unit id="peer.removeConfirm">
          <segment>
             <source>Do you want to remove the peer group and information about who are the members?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="permission.admin">
+         <segment>
+            <source>Admin</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="permission.adminTip">
+         <segment>
+            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="permission.consultant">
+         <segment>
+            <source>Consultant</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="permission.consultantTip">
+         <segment>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="permission.consultantInTraining">
+         <segment>
+            <source>Consultant In Training</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="permission.consultantInTrainingTip">
+         <segment>
+            <source>CITs comments will only be visible to Mentors until a mentor approves the comment.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="permission.mentor">
+         <segment>
+            <source>Mentor</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="permission.mentorTip">
+         <segment>
+            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
             <target/>
          </segment>
       </unit>

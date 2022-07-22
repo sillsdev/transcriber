@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, IGroupTabsStrings } from '../model';
@@ -34,7 +33,6 @@ const GroupTabs = (props: IProps) => {
   const classes = useStyles();
   const [tab, setTab] = useGlobal('tab');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [isDeveloper] = useGlobal('developer');
 
   const handleChange = (event: any, value: number) => {
     setTab(value);
@@ -43,7 +41,7 @@ const GroupTabs = (props: IProps) => {
     }
   };
 
-  const last = useMemo(() => (isDeveloper ? 3 : 2), [isDeveloper]);
+  const last = 3;
 
   return (
     <div className={classes.root}>
@@ -58,13 +56,13 @@ const GroupTabs = (props: IProps) => {
         >
           <Tab label={t.users} />
           <Tab label={t.roles} />
-          {isDeveloper && <Tab label={t.peerGroups} />}
+          <Tab label={t.peerGroups} />
           {!offlineOnly && <Tab label={t.invitations} />}
         </Tabs>
       </AppBar>
       {((tab || 0) === 0 || tab > last) && <UserTable {...props} />}
       {tab === 1 && <GroupSettings {...props} />}
-      {isDeveloper && tab === 2 && <Peer />}
+      {tab === 2 && <Peer />}
       {tab === last && <InvitationTable {...props} />}
     </div>
   );

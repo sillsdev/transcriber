@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Group, IPeerStrings, ISharedStrings } from '../../model';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -13,10 +13,27 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { peerSelector, sharedSelector } from '../../selector';
 import Confirm from '../AlertDialog';
 import { useSnackBar } from '../../hoc/SnackBar';
-
+import { usePermissions } from '../../crud/usePermissions';
+import {
+  createStyles,
+  FormControlLabel,
+  FormLabel,
+  makeStyles,
+  Radio,
+  RadioGroup,
+  Theme,
+  Tooltip,
+} from '@material-ui/core';
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    label: {
+      marginTop: theme.spacing(3),
+    },
+  })
+);
 interface IProps {
   cur?: Group;
-  save: (name: string, id?: string) => void;
+  save: (name: string, permissions: string, id?: string) => void;
   remove?: (id: string) => void;
   isAdmin: boolean;
   inUse: string[];
@@ -29,10 +46,15 @@ export default function GroupDialog({
   isAdmin,
   inUse,
 }: IProps) {
-  const [open, setOpen] = React.useState(false);
-  const [name, setName] = React.useState('');
-  const [confirm, setConfirm] = React.useState<string>();
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [confirm, setConfirm] = useState<string>();
   const { showMessage } = useSnackBar();
+  const { allPermissions, localizedPermissions, permissionTip } =
+    usePermissions();
+  const [permissionTitles] = useState(localizedPermissions());
+  const [value, setValue] = React.useState(cur?.attributes.permissions ?? '');
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
   const ts = useSelector(sharedSelector, shallowEqual) as ISharedStrings;
 
@@ -48,13 +70,16 @@ export default function GroupDialog({
     if (!cur) setName('');
     setOpen(false);
   };
+  const showInUse = () =>
+    (!cur || cur.attributes.name !== name) &&
+    inUse.includes(name.toLocaleLowerCase());
 
   const handleSave = () => {
-    if (inUse.includes(name.toLocaleLowerCase())) {
+    if (showInUse()) {
       showMessage(t.inUse);
       return;
     }
-    save(name, cur?.id);
+    save(name, value, cur?.id);
     setName('');
     setOpen(false);
   };
@@ -76,6 +101,10 @@ export default function GroupDialog({
   React.useEffect(() => {
     if (cur) setName(cur.attributes?.name);
   }, [cur]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue((event.target as HTMLInputElement).value);
+  };
 
   return (
     <div>
@@ -113,11 +142,33 @@ export default function GroupDialog({
             autoFocus
             margin="dense"
             id="peerName"
-            label="Peer Group Name"
+            label={t.name}
             value={name}
             onChange={handleNameChange}
-            helperText={inUse.includes(name.toLocaleLowerCase()) && t.inUse}
+            helperText={showInUse() && t.inUse}
           />
+
+          <FormLabel component="legend" className={classes.label}>
+            {t.permissions}
+          </FormLabel>
+          <RadioGroup value={value} onChange={handleChange}>
+            <FormControlLabel
+              key="none"
+              control={<Radio id="none" key="none" />}
+              label={t.noSpecialPermission}
+              value={''}
+            />
+            {allPermissions().map((p, i) => (
+              <Tooltip title={permissionTip(p)}>
+                <FormControlLabel
+                  key={p}
+                  control={<Radio id={p} key={p} />}
+                  label={permissionTitles[i]}
+                  value={p}
+                />
+              </Tooltip>
+            ))}
+          </RadioGroup>
         </DialogContent>
         <DialogActions>
           {cur && (
