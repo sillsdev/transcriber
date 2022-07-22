@@ -49,14 +49,18 @@ export function PassageDetailTranscribe({
   width,
   artifactTypeId,
 }: IProps) {
-  const { mediafileId } = usePassageDetailContext();
+  const { mediafileId, passage } = usePassageDetailContext();
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const classes = useStyles();
   const [topFilter, setTopFilter] = useState(false);
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   return Boolean(mediafileId) ? (
-    <TranscriberProvider auth={auth} artifactTypeId={artifactTypeId}>
+    <TranscriberProvider
+      auth={auth}
+      artifactTypeId={artifactTypeId}
+      passageId={passage.id}
+    >
       <Grid container direction="column">
         {artifactTypeId && (
           <div className={classes.panel2}>

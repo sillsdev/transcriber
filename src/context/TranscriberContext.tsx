@@ -153,6 +153,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   children: React.ReactElement;
   auth: Auth;
   artifactTypeId?: string | null | undefined;
+  passageId?: string;
 }
 interface ParamTypes {
   prjId: string;
@@ -165,7 +166,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     mapStateToProps,
     mapDispatchToProps
   )((props: IProps) => {
-    const { artifactTypeId } = props;
+    const { artifactTypeId, passageId } = props;
     const [reporter] = useGlobal('errorReporter');
     const { passages, mediafiles, sections } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
@@ -211,6 +212,10 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const artifactId = useMemo(
       () => (slug ? getTypeId(slug) : artifactTypeId ?? VernacularTag),
       [slug, artifactTypeId, getTypeId]
+    );
+    const limitToPassageId = useMemo(
+      () => pasId ?? passageId,
+      [pasId, passageId]
     );
 
     useEffect(() => {
@@ -506,8 +511,10 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     useEffect(() => {
       const playItem = state.playItem;
       const rowList: IRowData[] = [];
-      if (pasId && slug) {
-        var psg = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+      if (limitToPassageId && slug) {
+        var psg =
+          remoteIdGuid('passage', limitToPassageId, memory.keyMap) ||
+          limitToPassageId;
         passageMediaRef.current = planMediaRef.current.filter(
           (m) => related(m, 'passage') === psg
         );
@@ -535,7 +542,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           let mediaId = medId;
           if (!mediaId) {
             //vernacular so should just be one
-            const psg = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+            const psg =
+              remoteIdGuid('passage', limitToPassageId, memory.keyMap) ||
+              limitToPassageId;
             const p = rowList.filter((r) => r.passage.id === psg);
             if (p.length > 0) mediaId = p[0].mediafile.id;
           }
@@ -560,7 +569,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [role, planMedia, refreshed, pasId, medId]);
+    }, [role, planMedia, refreshed, pasId, passageId, medId]);
 
     const actor: { [key: string]: string } = {
       [ActivityStates.TranscribeReady]: 'transcriber',
