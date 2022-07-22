@@ -49,7 +49,7 @@ export function PassageDetailTranscribe({
   width,
   artifactTypeId,
 }: IProps) {
-  const { mediafileId, passage } = usePassageDetailContext();
+  const { mediafileId } = usePassageDetailContext();
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const classes = useStyles();
   const [topFilter, setTopFilter] = useState(false);
