@@ -43,6 +43,7 @@ import {
   useOfflineSetup,
   useRole,
   useProjectType,
+  remoteId,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -186,10 +187,12 @@ export function Loading(props: IProps) {
       let invite = allinvites.find((i) => i.id === inviteId);
       if (!invite) {
         try {
-          const thisinvite: Invitation[] = (await newremote.query(
-            (q: QueryBuilder) =>
+          //ARGH...this ignores the id and just gets them all...
+          const thisinvite: Invitation[] = (
+            (await newremote.query((q: QueryBuilder) =>
               q.findRecord({ type: 'invitation', id: inviteId })
-          )) as any;
+            )) as Invitation[]
+          ).filter((i) => i.keys?.remoteId === inviteId);
           if (
             thisinvite[0].attributes.email.toLowerCase() !==
             userEmail.toLowerCase()

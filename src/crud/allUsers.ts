@@ -7,9 +7,10 @@ export const allUsersRec = (memory: Memory, orgId: string) => {
   const groups = memory.cache.query((q: QueryBuilder) =>
     q.findRecords('group')
   ) as Group[];
-  return groups.filter(
+  var recs = groups.filter(
     (g) => related(g, 'owner') === orgId && g.attributes.allUsers
   );
+  return recs.length > 0 ? recs[0] : undefined;
 };
 
 export default allUsersRec;

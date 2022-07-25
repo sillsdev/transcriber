@@ -67,8 +67,7 @@ export function UserAdd(props: IProps) {
   const isIncluded = (userId: string): boolean => {
     const userRec = users.filter((u) => u?.id === userId);
     if (userRec.length === 0) return false;
-    const allUsers = allUsersRec(memory, organization);
-    const groupId = allUsers.length > 0 && allUsers[0]?.id;
+    const groupId = allUsersRec(memory, organization)?.id;
     const memberRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('groupmembership')
     ) as GroupMembership[];

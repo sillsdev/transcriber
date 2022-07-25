@@ -16,7 +16,7 @@ export const useAddToOrgAndGroup = () => {
         type: 'organizationmembership',
       } as any;
       const memberRec = getRoleRec('member', true)[0];
-      const allUsersGroup = allUsersRec(memory, organization)[0];
+      const allUsersGroup = allUsersRec(memory, organization);
       const editorRec = getRoleRec('editor', false)[0];
       let groupMbr: GroupMembership = {
         type: 'groupmembership',
@@ -36,7 +36,13 @@ export const useAddToOrgAndGroup = () => {
       memory.update((t: TransformBuilder) => [
         ...AddRecord(t, groupMbr, user, memory),
         ...ReplaceRelatedRecord(t, groupMbr, 'user', 'user', userRec.id),
-        ...ReplaceRelatedRecord(t, groupMbr, 'group', 'role', allUsersGroup.id),
+        ...ReplaceRelatedRecord(
+          t,
+          groupMbr,
+          'group',
+          'role',
+          allUsersGroup?.id
+        ),
         ...ReplaceRelatedRecord(t, groupMbr, 'role', 'role', editorRec.id),
       ]);
     };

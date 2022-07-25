@@ -62,8 +62,8 @@ export const useTeamCreate = (props: IProps) => {
 
     const orgRoleRec = getRoleRec(RoleNames.Admin, true);
     const grpRoleRec = getRoleRec(RoleNames.Admin, false);
-    const allUsersGroup = allUsersRec(memory, orgRec.id);
-    if (allUsersGroup.length === 0) {
+    let allUsersGroup = allUsersRec(memory, orgRec.id);
+    if (!allUsersGroup) {
       let group: Group = {
         type: 'group',
         attributes: {
@@ -76,7 +76,7 @@ export const useTeamCreate = (props: IProps) => {
         ...AddRecord(t, group, user, memory),
         ...ReplaceRelatedRecord(t, group, 'owner', 'organization', orgRec.id),
       ]);
-      allUsersGroup.push(group);
+      allUsersGroup = group;
     }
     await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, orgMember, user, memory),
@@ -93,13 +93,7 @@ export const useTeamCreate = (props: IProps) => {
     await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, groupMbr, user, memory),
       ...ReplaceRelatedRecord(t, groupMbr, 'user', 'user', user),
-      ...ReplaceRelatedRecord(
-        t,
-        groupMbr,
-        'group',
-        'group',
-        allUsersGroup[0].id
-      ),
+      ...ReplaceRelatedRecord(t, groupMbr, 'group', 'group', allUsersGroup?.id),
       ...ReplaceRelatedRecord(t, groupMbr, 'role', 'role', grpRoleRec[0].id),
     ]);
   };
