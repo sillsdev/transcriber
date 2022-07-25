@@ -22,7 +22,9 @@ export const useVProjectCreate = () => {
     const grpRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('group')
     ) as Group[];
-    const selected = grpRecs.filter((g) => related(g, 'owner') === teamId);
+    const selected = grpRecs.filter(
+      (g) => g.attributes.allUsers && related(g, 'owner') === teamId
+    );
     return selected.length > 0 ? selected[0].id : '';
   };
 
