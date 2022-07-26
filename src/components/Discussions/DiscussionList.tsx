@@ -12,7 +12,13 @@ import QueryBuilder from '@orbit/data/dist/types/query-builder';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { getMediaInPlans, related, VernacularTag } from '../../crud';
+import {
+  findRecord,
+  getMediaInPlans,
+  related,
+  useTeamUpdate,
+  VernacularTag,
+} from '../../crud';
 import {
   Discussion,
   IDiscussionListStrings,
@@ -21,6 +27,8 @@ import {
   Group,
   User,
   GroupMembership,
+  RoleNames,
+  Organization,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import AddIcon from '@mui/icons-material/Add';
@@ -91,6 +99,9 @@ export function DiscussionList(props: IProps) {
   const [planId] = useGlobal('plan');
   const [userId] = useGlobal('user');
   const [organization] = useGlobal('organization');
+  const [memory] = useGlobal('memory');
+  const [projRole] = useGlobal('projRole');
+  const [isOffline] = useGlobal('offline');
   const [displayDiscussions, setDisplayDiscussions] = useState<Discussion[]>(
     []
   );
@@ -113,7 +124,7 @@ export function DiscussionList(props: IProps) {
     width: `${discussionSize.width - 30}px`, //leave room for scroll bar
     maxHeight: discussionSize.height,
   });
-  const [filterState, setFilterState] = useState<IFilterState>({
+  const [filterState, setFilterStatex] = useState<IFilterState>({
     forYou: false,
     resolved: false,
     latestVersion: false,
@@ -129,10 +140,12 @@ export function DiscussionList(props: IProps) {
   });
   const [catFilter, setCatFilter] = useState<CatData[]>([]);
   const [catSelect, setCatSelect] = useState<string[]>([]);
+  const [confirmFilterSave, setConfirmFilterSave] = useState(false);
   const [confirmAction, setConfirmAction] = useState<string>('');
   const [startSave, setStartSave] = useState(false);
   const [clearSave, setClearSave] = useState(false);
   const discussionOrg = useDiscussionOrg();
+  const orgUpdate = useTeamUpdate();
   const anyChangedRef = useRef(false);
   const enum WaitSave {
     add = 'add',
@@ -152,6 +165,22 @@ export function DiscussionList(props: IProps) {
     return mygroups.map((g) => related(g, 'group'));
   }, [groupMemberships, userId]);
 
+  useEffect(() => {
+    var org = findRecord(memory, 'organization', organization) as Organization;
+    var json = JSON.parse(org.attributes.defaultParams ?? '{}');
+    if (json.discussionFilter) {
+      setFilterStatex(json.discussionFilter);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organization]);
+
+  const setFilterState = (filter: IFilterState) => {
+    setFilterStatex(filter);
+    if (projRole === RoleNames.Admin && !isOffline) {
+      //see if this is the new org default
+      setConfirmFilterSave(true);
+    }
+  };
   // All passages is currently giving all passages in all projects.
   // we would need this if we only wanted the passages of this project.
   // const planMedia = useMemo(
@@ -343,6 +372,17 @@ export function DiscussionList(props: IProps) {
       doTheThing();
     });
   };
+  const handleSaveFilterConfirmed = () => {
+    var org = findRecord(memory, 'organization', organization) as Organization;
+    var json = JSON.parse(org.attributes.defaultParams ?? '{}');
+    json.discussionFilter = filterState;
+    org.attributes.defaultParams = JSON.stringify(json);
+    orgUpdate(org);
+    setConfirmFilterSave(false);
+  };
+  const handleSaveFilterRefused = () => {
+    setConfirmFilterSave(false);
+  };
   const handleSaveFirstConfirmed = () => {
     setStartSave(true);
     waitSaveOrClear();
@@ -494,6 +534,14 @@ export function DiscussionList(props: IProps) {
             text={t.saveFirst}
             yesResponse={handleSaveFirstConfirmed}
             noResponse={handleSaveFirstRefused}
+          />
+        )}
+        {confirmFilterSave && (
+          <Confirm
+            jsx={<span></span>}
+            text={t.saveFilter}
+            yesResponse={handleSaveFilterConfirmed}
+            noResponse={handleSaveFilterRefused}
           />
         )}
       </>

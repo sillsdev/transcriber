@@ -919,6 +919,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionList.saveFilter">
+         <segment>
+            <source>Save as the Team default?</source>
+            <target>Simpan sebagai default Tim?</target>
+         </segment>
+      </unit>
       <unit id="discussionList.saveFirst">
          <segment>
             <source>Save changed discussions and comments first?</source>

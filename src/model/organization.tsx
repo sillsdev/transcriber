@@ -12,6 +12,7 @@ export interface Organization extends Record {
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
+    defaultParams: string;
   };
   relationships?: {
     owner: RecordRelationship;

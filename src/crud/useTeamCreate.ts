@@ -130,6 +130,7 @@ export const useTeamCreate = (props: IProps) => {
         websiteUrl,
         logoUrl,
         publicByDefault,
+        defaultParams: '{}',
       },
     } as Organization;
 

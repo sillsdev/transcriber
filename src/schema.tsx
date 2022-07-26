@@ -143,6 +143,7 @@ const schemaDefinition: SchemaSettings = {
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
+        defaultParams: { type: 'string' },
       },
       relationships: {
         owner: { type: 'hasOne', model: 'user' },

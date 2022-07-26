@@ -1073,6 +1073,13 @@
                <context context-type="sourcefile">discussionList.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="discussionList.saveFilter">
+            <source>Save as the Team default?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">discussionList.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="discussionList.saveFirst">
             <source>Save changed discussions and comments first?</source>
             <target/>

@@ -203,6 +203,7 @@ export interface IDiscussionListStrings extends Localize.LocalizedStringsMethods
     "collapse": string;
     "discussionFilter": string;
     "filterStatus": string;
+    "saveFilter": string;
     "saveFirst": string;
     "title": string;
 };

@@ -225,6 +225,7 @@ const initialState = {
 			"collapse": "Show/Hide All Comments",
 			"discussionFilter": "Discussion Filter",
 			"filterStatus": "{0} / {1} discussions",
+			"saveFilter": "Save as the Team default?",
 			"saveFirst": "Save changed discussions and comments first?",
 			"title": "Discussions",
 		}
