@@ -81,7 +81,7 @@ export const AudioTable = (props: IProps) => {
   const columnWidths = shared
     ? [
         { columnName: 'planName', width: 150 },
-        { columnName: 'actions', width: onAttach ? 120 : 50 },
+        { columnName: 'actions', width: onAttach ? 120 : 70 },
         { columnName: 'fileName', width: 220 },
         { columnName: 'sectionDesc', width: 150 },
         { columnName: 'reference', width: 150 },
@@ -94,7 +94,7 @@ export const AudioTable = (props: IProps) => {
       ]
     : [
         { columnName: 'planName', width: 150 },
-        { columnName: 'actions', width: onAttach ? 120 : 50 },
+        { columnName: 'actions', width: onAttach ? 120 : 70 },
         { columnName: 'fileName', width: 220 },
         { columnName: 'sectionDesc', width: 150 },
         { columnName: 'reference', width: 150 },
