@@ -335,7 +335,8 @@ export function useWaveSurferRegions(
     });
   };
   function clearRegions() {
-    if (!wavesurferRef.current || !regionIds().length) return;
+    if (!wavesurferRef.current || !regionIds().length || loadingRef.current)
+      return;
     loadingRef.current = true;
     wavesurferRef.current.regions.clear();
     currentRegionRef.current = undefined;
