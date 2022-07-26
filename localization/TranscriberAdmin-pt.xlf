@@ -919,6 +919,12 @@
 				<target>{0} / {1} discussões</target>
 			</segment>
 		</unit>
+      <unit id="discussionList.saveFilter">
+         <segment>
+            <source>Save as the Team default?</source>
+            <target>Salvar como o padrão da equipe?</target>
+         </segment>
+      </unit>
 		<unit id="discussionList.saveFirst">
 			<segment>
 				<source>Save changed discussions and comments first?</source>
