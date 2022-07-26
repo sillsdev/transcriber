@@ -96,12 +96,12 @@ export const useArtifactType = () => {
         if (!limit || limit.includes(r.attributes.typename as ArtifactTypeSlug))
           types.push({
             type: localizedArtifactType(r.attributes.typename),
-            id: remoteIds
-              ? remoteId('artifacttype', r.id, memory.keyMap)
-              : r.id,
+            id:
+              remoteIds && !offlineOnly
+                ? remoteId('artifacttype', r.id, memory.keyMap)
+                : r.id,
           });
       });
-
     return types;
   };
 

@@ -1032,7 +1032,7 @@ export function Transcriber(props: IProps) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
-        {allDone && !props.defaultWidth ? (
+        {allDone ? (
           <div>
             {allowBack && (
               <div className={classes.grow}>

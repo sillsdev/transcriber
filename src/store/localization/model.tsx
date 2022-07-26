@@ -702,6 +702,8 @@ export interface IPermissionStrings extends Localize.LocalizedStringsMethods {
     "consultantInTrainingTip": string;
     "mentor": string;
     "mentorTip": string;
+    "observer": string;
+    "observerTip": string;
 };
 
 export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {

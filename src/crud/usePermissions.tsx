@@ -12,6 +12,7 @@ export enum PermissionName {
   Consultant = 'consultant',
   Mentor = 'mentor',
   CIT = 'consultantInTraining',
+  Observer = 'observer',
 }
 
 export const usePermissions = () => {

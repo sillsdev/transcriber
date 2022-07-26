@@ -3448,6 +3448,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="permission.observer">
+         <segment>
+            <source>Observer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="permission.observerTip">
+         <segment>
+            <source>Observers will be able to view projects but not make changes.  Will they be able to participate in discussions?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planActions.assign">
          <segment>
             <source>Assign</source>
