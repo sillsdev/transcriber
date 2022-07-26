@@ -336,7 +336,8 @@ export const StepEditor = ({ process, org }: IProps) => {
       case ToolSlug.Transcribe:
         if (json)
           return localizedArtifactTypeFromId(
-            remoteIdGuid('artifacttype', json.artifactTypeId, memory.keyMap)
+            remoteIdGuid('artifacttype', json.artifactTypeId, memory.keyMap) ??
+              json.artifactTypeId
           );
         return localizedArtifactTypeFromId(VernacularTag);
       default:

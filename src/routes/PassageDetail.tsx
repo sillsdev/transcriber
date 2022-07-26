@@ -172,6 +172,14 @@ const PassageDetailGrids = (props: IProps) => {
     ctx.state;
   const { tool, settings } = useStepTool(currentstep);
 
+  const artifactId = useMemo(() => {
+    if (settings) {
+      var id = JSON.parse(settings).artifactTypeId;
+      if (id) return remoteIdGuid('artifacttype', id, memory.keyMap) ?? id;
+    }
+    return null;
+  }, [settings]);
+
   const [communitySlugs] = useState([
     ArtifactTypeSlug.Retell,
     ArtifactTypeSlug.QandA,
@@ -278,15 +286,7 @@ const PassageDetailGrids = (props: IProps) => {
                       <PassageDetailTranscribe
                         auth={auth}
                         width={width - discussionSize.width - 16}
-                        artifactTypeId={
-                          settings
-                            ? remoteIdGuid(
-                                'artifacttype',
-                                JSON.parse(settings).artifactTypeId,
-                                memory.keyMap
-                              )
-                            : null
-                        }
+                        artifactTypeId={artifactId}
                       />
                     </Grid>
                   )}

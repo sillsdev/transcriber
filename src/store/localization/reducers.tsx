@@ -750,6 +750,8 @@ const initialState = {
 			"consultantInTrainingTip": "CITs comments will only be visible to Mentors until a mentor approves the comment.",
 			"mentor": "Mentor",
 			"mentorTip": "Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.",
+			"observer": "Observer",
+			"observerTip": "Observers will be able to view projects but not make changes.  Will they be able to participate in discussions?",
 		}
 	}),
 	"planActions": new LocalizedStrings({
