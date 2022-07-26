@@ -166,6 +166,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     mapDispatchToProps
   )((props: IProps) => {
     const { artifactTypeId } = props;
+    const [isDetail] = useState(artifactTypeId !== undefined);
     const [reporter] = useGlobal('errorReporter');
     const { passages, mediafiles, sections } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
@@ -267,7 +268,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           remoteId('passage', r.passage.id, memory.keyMap) || r.passage.id;
         const remId =
           remoteId('mediafile', selected, memory.keyMap) || selected;
-        if (!artifactTypeId && (pasId !== psgId || (slug && remId !== medId))) {
+        if (!isDetail && (pasId !== psgId || (slug && remId !== medId))) {
           view.current = `/work/${prjId}/${psgId}`;
           if (slug) view.current += `/${slug}/${medId}`;
         }

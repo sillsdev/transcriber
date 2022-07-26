@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IProps {
   auth: Auth;
   width: number;
-  artifactTypeId?: string | null;
+  artifactTypeId: string | null;
 }
 
 export function PassageDetailTranscribe({
