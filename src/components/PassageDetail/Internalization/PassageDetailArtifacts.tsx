@@ -477,9 +477,10 @@ export function PassageDetailArtifacts(props: IProps) {
               q.findRecord({ type: 'section', id: related(rec, 'section') })
             ) as Section);
       const secNum = secRec?.attributes.sequencenum || 0;
-      const topicIn = removeExtension(
-        projMediaRef.current?.attributes?.originalFile || ''
-      )?.name;
+      const topicIn =
+        projMediaRef.current?.attributes?.topic ||
+        removeExtension(projMediaRef.current?.attributes?.originalFile || '')
+          ?.name;
       await projectResourceSave({
         t,
         media: projMediaRef.current as MediaFile,
