@@ -14,7 +14,6 @@ import * as actions from '../../store';
 import { useRecordComment } from './useRecordComment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Auth from '../../auth/Auth';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { useMounted } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -76,13 +75,12 @@ interface IDispatchProps {
 }
 
 interface IProps extends IRecordProps, IStateProps, IDispatchProps {
-  auth: Auth;
   discussion: Discussion;
   number: number;
 }
 
 export const ReplyCard = (props: IProps) => {
-  const { auth, discussion, number, users, groups, memberships } = props;
+  const { discussion, number, users, groups, memberships } = props;
   const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
   const classes = useStyles();
   const [refresh, setRefresh] = useState(0);
@@ -117,7 +115,6 @@ export const ReplyCard = (props: IProps) => {
     commentText.current = '';
   };
   const { uploadMedia, fileName } = useRecordComment({
-    auth,
     discussion,
     number,
     afterUploadcb,

@@ -60,7 +60,6 @@ import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { removeExtension, waitForIt } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
-import Auth from '../../auth/Auth';
 import { NewDiscussionToolId } from './DiscussionList';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import GroupAvatar from '../GroupAvatar';
@@ -195,7 +194,6 @@ interface IStateProps {
 }
 interface IProps extends IRecordProps, IStateProps {
   id: string;
-  auth: Auth;
   discussion: Discussion;
   collapsed: boolean;
   showStep: boolean;
@@ -219,7 +217,6 @@ export const DiscussionCard = (props: IProps) => {
     id,
     t,
     ts,
-    auth,
     discussion,
     collapsed,
     showStep,
@@ -904,7 +901,6 @@ export const DiscussionCard = (props: IProps) => {
             <Grid container className={classes.cardFlow}>
               {myComments.map((i, j) => (
                 <CommentCard
-                  auth={auth}
                   key={i.id}
                   comment={i}
                   needsApproval={needsApproval(i.attributes?.visible)}
@@ -916,7 +912,6 @@ export const DiscussionCard = (props: IProps) => {
               {!discussion.attributes.resolved && !editCard && (
                 <ReplyCard
                   id={`reply-${discussion.id}`}
-                  auth={auth}
                   discussion={discussion}
                   number={myComments.length}
                 />

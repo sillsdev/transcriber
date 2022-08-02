@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect, useLocation } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -13,6 +13,7 @@ import {
   Plan,
   Section,
 } from '../model';
+import { TokenContext } from '../context/TokenProvider';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -23,7 +24,6 @@ import {
   Box,
   // IconButton
 } from '@material-ui/core';
-import Auth from '../auth/Auth';
 import { useCheckOnline, forceLogin, waitForIt } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
@@ -121,9 +121,7 @@ interface IDispatchProps {
   resetOrbitError: typeof action.resetOrbitError;
 }
 
-interface IProps extends IRecordProps, IStateProps, IDispatchProps {
-  auth: Auth;
-}
+interface IProps extends IRecordProps, IStateProps, IDispatchProps {}
 export const goOnline = (email?: string) => {
   const lastTime = localStorage.getItem('electron-lastTime');
   localStorage.removeItem('auth-id');
@@ -145,7 +143,6 @@ export const switchUser = async () => {
 };
 export function Access(props: IProps) {
   const {
-    auth,
     t,
     importStatus,
     users,
@@ -163,6 +160,8 @@ export function Access(props: IProps) {
 
   const [, setEditId] = useGlobal('editUserId');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
+  const tokenCtx = useContext(TokenContext);
+  const { logout, accessToken, expiresAt } = tokenCtx.state;
   const [importOpen, setImportOpen] = useState(false);
   const [view, setView] = useState('');
   const [curUser, setCurUser] = useState<User>();
@@ -193,7 +192,7 @@ export function Access(props: IProps) {
     if (selected.length > 0) {
       if (selected[0]?.keys?.remoteId === undefined) setOfflineOnly(true);
       setOffline(true);
-      auth.logout();
+      logout();
       localStorage.setItem('user-id', selected[0].id);
       setSelectedUser(uId);
     }
@@ -242,7 +241,7 @@ export function Access(props: IProps) {
 
   const handleCreateUser = async () => {
     setOffline(true);
-    auth.logout();
+    logout();
     await offlineSetup();
     setOfflineOnly(true);
     setEditId('Add');
@@ -326,7 +325,7 @@ export function Access(props: IProps) {
     setProjRole(undefined);
     setProjType('');
     checkOnline((online) => {}, true);
-    if (!auth?.isAuthenticated() && !isAuthenticated) {
+    if (!tokenCtx.state.isAuthenticated() && !isAuthenticated) {
       if (!offline && !isElectron) {
         const hasUsed = localStorage.key(0) !== null;
         if (hasUsed) {
@@ -340,13 +339,13 @@ export function Access(props: IProps) {
         }
       }
     }
-    if (user && auth?.expiresAt !== -1) {
+    if (user && expiresAt !== -1) {
       if (localStorage.getItem('isLoggedIn') !== 'true') {
         handleSelect(user); //set by Quick Transcribe
       } else {
         waitForIt(
           'check if token is set',
-          () => auth !== undefined,
+          () => accessToken !== undefined,
           () => false,
           200
         ).then(() => {
@@ -369,7 +368,7 @@ export function Access(props: IProps) {
             const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
             if (loggedIn) {
               if (offline) setOffline(false);
-              if (auth) auth.setAuthSession(result, accessToken);
+              tokenCtx.state.setAuthSession(result, accessToken);
             }
             if (selectedUser === '' && loggedIn) setSelectedUser('unknownUser');
           });
@@ -390,12 +389,12 @@ export function Access(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users]);
 
-  if (auth?.accessToken && !auth?.emailVerified()) {
+  if (tokenCtx.state.accessToken && !tokenCtx.state.email_verified) {
     if (localStorage.getItem('isLoggedIn') === 'true')
       return <Redirect to="/emailunverified" />;
     else doLogout();
   } else if (
-    (!isElectron && auth?.isAuthenticated()) ||
+    (!isElectron && tokenCtx.state.isAuthenticated()) ||
     offlineOnly ||
     (isElectron && selectedUser !== '')
   ) {
@@ -579,7 +578,7 @@ export function Access(props: IProps) {
             </div>
           )}
           {importOpen && (
-            <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
+            <ImportTab isOpen={importOpen} onOpen={setImportOpen} />
           )}
         </div>
       )}

@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import Auth from '../auth/Auth';
 import { useGlobal } from 'reactn';
 import { useFetchMediaUrl, MediaSt } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -9,7 +8,6 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { ExternalLink, LaunchFn } from './ExternalLink';
 
 interface IProps {
-  auth: Auth | null;
   srcMediaId: string;
   finish: () => void;
 }

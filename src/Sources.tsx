@@ -19,7 +19,7 @@ import JSONAPISource from '@orbit/jsonapi';
 import { Transform, NetworkError, QueryBuilder } from '@orbit/data';
 import { Bucket } from '@orbit/core';
 import Memory from '@orbit/memory';
-import Auth from './auth/Auth';
+import { ITokenContext } from './context/TokenProvider';
 import { API_CONFIG, isElectron } from './api-variable';
 import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { orbitRetry, orbitErr, logError, infoMsg, Severity } from './utils';
@@ -28,7 +28,7 @@ import { restoreBackup } from '.';
 
 export const Sources = async (
   coordinator: Coordinator,
-  auth: Auth,
+  tokenCtx: ITokenContext,
   fingerprint: string,
   setUser: (id: string) => void,
   setProjectsLoaded: (valud: string[]) => void,
@@ -41,14 +41,15 @@ export const Sources = async (
 ) => {
   const memory = coordinator.getSource('memory') as Memory;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
-  const tokData = auth.getProfile() || { sub: '' };
+  const tokData = tokenCtx.state.profile || { sub: '' };
   const userToken = localStorage.getItem('auth-id');
   if (tokData.sub !== '') {
-    localStorage.setItem('auth-id', tokData.sub);
+    localStorage.setItem('auth-id', tokData.sub || '');
   }
 
   const bucket: Bucket = new IndexedDBBucket({
-    namespace: 'transcriber-' + tokData.sub.replace(/\|/g, '-') + '-bucket',
+    namespace:
+      'transcriber-' + (tokData.sub || '').replace(/\|/g, '-') + '-bucket',
   }) as any;
 
   //set up strategies
@@ -67,7 +68,7 @@ export const Sources = async (
 
   let remote: JSONAPISource = {} as JSONAPISource;
 
-  const offline = !auth.accessToken;
+  const offline = !tokenCtx.state.accessToken;
 
   if (!offline) {
     remote = coordinator.sourceNames.includes('remote')
@@ -82,7 +83,7 @@ export const Sources = async (
           SerializerClass: JSONAPISerializerCustom,
           defaultFetchSettings: {
             headers: {
-              Authorization: 'Bearer ' + auth.accessToken,
+              Authorization: 'Bearer ' + tokenCtx.state.accessToken,
               'X-FP': fingerprint,
             },
             timeout: 100000,
@@ -108,7 +109,7 @@ export const Sources = async (
           action(transform: Transform, ex: IApiError) {
             console.log('***** api pull fail', transform, ex);
             if (ex.response.status === 401) {
-              auth.logout();
+              tokenCtx.state.logout();
             } else {
               orbitError(ex);
               return remote.requestQueue.error;

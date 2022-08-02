@@ -42,7 +42,6 @@ import {
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob, logError, Severity } from '../utils';
-import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 
 export const getPlanName = (plan: Plan) => {
@@ -151,7 +150,6 @@ const TranscriberContext = React.createContext({} as IContext);
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   children: React.ReactElement;
-  auth: Auth;
   artifactTypeId?: string | null | undefined;
 }
 interface ParamTypes {
@@ -281,7 +279,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           fetching.current = r.mediafile.id;
           fetchMediaUrl({
             id: r.mediafile.id,
-            auth: props.auth,
           });
           resetBlob = true;
         }

@@ -2,7 +2,6 @@ import { useContext, useRef } from 'react';
 import { Grid, makeStyles, createStyles, Theme } from '@material-ui/core';
 import SelectMyResource from './Internalization/SelectMyResource';
 import { MediaPlayer } from '../MediaPlayer';
-import Auth from '../../auth/Auth';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { getSegments, NamedRegions } from '../../utils';
 
@@ -28,11 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IProps {
-  auth: Auth;
-}
-
-export function TeamCheckReference({ auth }: IProps) {
+export function TeamCheckReference() {
   const classes = useStyles();
   const ctx = useContext(PassageDetailContext);
   const {
@@ -99,7 +94,6 @@ export function TeamCheckReference({ auth }: IProps) {
       </Grid>
       <Grid item xs={10} className={classes.playStatus}>
         <MediaPlayer
-          auth={auth}
           srcMediaId={playItem}
           requestPlay={itemPlaying}
           onTogglePlay={handleItemTogglePlay}

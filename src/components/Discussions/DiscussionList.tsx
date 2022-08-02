@@ -41,7 +41,6 @@ import { withData } from '../../mods/react-orbitjs';
 import { useGlobal } from 'reactn';
 import { useDiscussionOrg } from '../../crud';
 import FilterMenu, { IFilterState } from './FilterMenu';
-import Auth from '../../auth/Auth';
 import Confirm from '../AlertDialog';
 import { waitForIt } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -86,14 +85,11 @@ interface IRecordProps {
   groups: Group[];
   groupMemberships: GroupMembership[];
 }
-interface IProps extends IStateProps, IRecordProps {
-  auth: Auth;
-}
+interface IProps extends IStateProps, IRecordProps {}
 export const NewDiscussionToolId = 'newDiscussion';
 
 export function DiscussionList(props: IProps) {
-  const { t, auth, discussions, mediafiles, users, groups, groupMemberships } =
-    props;
+  const { t, discussions, mediafiles, users, groups, groupMemberships } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [planId] = useGlobal('plan');
@@ -507,7 +503,6 @@ export function DiscussionList(props: IProps) {
             {displayDiscussions.map((i, j) => (
               <DiscussionCard
                 id={`card-${j}`}
-                auth={auth}
                 key={j}
                 discussion={i}
                 collapsed={collapsed}

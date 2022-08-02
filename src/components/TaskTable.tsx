@@ -19,7 +19,6 @@ import Visualize from './Visualize';
 import ProjectMenu from './Team/ProjectMenu';
 import { formatTime, LightTooltip } from '../control';
 import { ChipText } from './TaskFlag';
-import Auth from '../auth/Auth';
 import {
   sectionNumber,
   sectionDescription,
@@ -123,12 +122,11 @@ interface IRow {
 }
 
 interface IProps {
-  auth: Auth;
   onFilter?: (top: boolean) => void;
 }
 
 export function TaskTable(props: IProps) {
-  const { auth, onFilter } = props;
+  const { onFilter } = props;
   const {
     rowData,
     activityStateStr,
@@ -518,7 +516,6 @@ export function TaskTable(props: IProps) {
         </div>
       </div>
       <MediaPlayer
-        auth={auth}
         srcMediaId={playItem}
         requestPlay={playing}
         onEnded={playEnded}
@@ -528,7 +525,7 @@ export function TaskTable(props: IProps) {
         isOpen={openIntegration}
         onOpen={setOpenIntegration}
       >
-        <IntegrationTab {...props} auth={auth} stopPlayer={handleStopPlayer} />
+        <IntegrationTab {...props} stopPlayer={handleStopPlayer} />
       </BigDialog>
       <BigDialog
         title={tpb.exportTitle.replace('{0}', planName)}
@@ -537,7 +534,6 @@ export function TaskTable(props: IProps) {
       >
         <ExportTab
           {...props}
-          auth={auth}
           projectPlans={projectPlans(projectId)}
           planColumn={true}
         />

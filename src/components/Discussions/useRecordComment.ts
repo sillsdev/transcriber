@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import {
   findRecord,
@@ -12,7 +12,7 @@ import { Discussion, MediaFile } from '../../model';
 import * as actions from '../../store';
 import { cleanFileName } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
-import Auth from '../../auth/Auth';
+import { TokenContext } from '../../context/TokenProvider';
 interface IDispatchProps {
   uploadFiles: typeof actions.uploadFiles;
   nextUpload: typeof actions.nextUpload;
@@ -21,14 +21,12 @@ interface IDispatchProps {
 }
 
 interface IProps extends IDispatchProps {
-  auth: Auth;
   discussion: Discussion;
   number: number;
   afterUploadcb: (mediaId: string) => void;
 }
 
 export const useRecordComment = ({
-  auth,
   discussion,
   number,
   afterUploadcb,
@@ -44,6 +42,7 @@ export const useRecordComment = ({
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offline] = useGlobal('offline');
+  const { accessToken } = useContext(TokenContext).state;
   const { commentId } = useArtifactType();
   const fileList = useRef<File[]>();
   const mediaIdRef = useRef('');
@@ -112,7 +111,15 @@ export const useRecordComment = ({
       recordedByUserId: getUserId(),
       userId: getUserId(),
     } as any;
-    nextUpload(mediaFile, files, 0, auth, offline, reporter, itemComplete);
+    nextUpload(
+      mediaFile,
+      files,
+      0,
+      accessToken || '',
+      offline,
+      reporter,
+      itemComplete
+    );
   };
   return { uploadMedia, fileName };
 };

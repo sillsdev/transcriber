@@ -10,7 +10,6 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, IPassageRecordStrings } from '../model';
 import localStrings from '../selector/localize';
-import Auth from '../auth/Auth';
 import * as actions from '../store';
 import {
   Button,
@@ -85,7 +84,6 @@ interface IProps extends IStateProps, IDispatchProps {
   onRecording: (r: boolean) => void;
   onPlayStatus: (p: boolean) => void;
   mediaId: string;
-  auth: Auth;
   metaData?: JSX.Element;
   defaultFilename?: string;
   startSave: boolean;
@@ -111,7 +109,6 @@ function MediaRecord(props: IProps) {
     onRecording,
     onPlayStatus,
     mediaId,
-    auth,
     defaultFilename,
     uploadMethod,
     setCanSave,
@@ -178,7 +175,7 @@ function MediaRecord(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId, auth });
+    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
 
@@ -349,7 +346,7 @@ function MediaRecord(props: IProps) {
       } else {
         showMessage(urlorError);
         //force it to go get another (unexpired) s3 url
-        fetchMediaUrl({ id: mediaId, auth });
+        fetchMediaUrl({ id: mediaId });
       }
     });
     if (!mediaId) {

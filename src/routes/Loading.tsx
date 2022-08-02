@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Axios from 'axios';
 import { useGlobal } from 'reactn';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import { Redirect, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -108,12 +108,10 @@ interface IDispatchProps {
   resetOrbitError: typeof action.resetOrbitError;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
-  auth: Auth;
-}
+interface IProps extends IStateProps, IDispatchProps {}
 
 export function Loading(props: IProps) {
-  const { orbitFetchResults, auth, t } = props;
+  const { orbitFetchResults, t } = props;
   const classes = useStyles();
   const {
     fetchOrbitData,
@@ -140,6 +138,8 @@ export function Loading(props: IProps) {
   const [, setPlan] = useGlobal('plan');
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
+  const tokenCtx = useContext(TokenContext);
+  const { accessToken, profile, isAuthenticated } = tokenCtx.state;
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [, setCompleted] = useGlobal('progress');
   const { showMessage } = useSnackBar();
@@ -153,12 +153,7 @@ export function Loading(props: IProps) {
   const offlineSetup = useOfflineSetup();
   const { setMyProjRole } = useRole();
   const { setProjectType } = useProjectType();
-  const LoadProjData = useLoadProjectData(
-    auth,
-    t,
-    doOrbitError,
-    resetOrbitError
-  );
+  const LoadProjData = useLoadProjectData(t, doOrbitError, resetOrbitError);
   const [view, setView] = useState('');
   const [inviteError, setInviteError] = useState('');
 
@@ -223,7 +218,7 @@ export function Loading(props: IProps) {
         API_CONFIG.host + '/api/paratext/useremail/' + inviteId,
         {
           headers: {
-            Authorization: 'Bearer ' + auth.accessToken,
+            Authorization: 'Bearer ' + accessToken,
           },
         }
       );
@@ -233,9 +228,9 @@ export function Loading(props: IProps) {
     }
   };
   useEffect(() => {
-    if (!offline && !auth?.isAuthenticated()) return;
+    if (!offline && !isAuthenticated()) return;
     if (!offline) {
-      const decodedToken = jwtDecode(auth.getAccessToken()) as IToken;
+      const decodedToken = jwtDecode(accessToken || '') as IToken;
       setExpireAt(decodedToken.exp);
     }
     setLanguage(localeDefault(isDeveloper));
@@ -243,7 +238,7 @@ export function Loading(props: IProps) {
     fetchLocalization();
     fetchOrbitData(
       coordinator,
-      auth,
+      tokenCtx,
       fingerprint,
       setUser,
       setProjectsLoaded,
@@ -344,7 +339,7 @@ export function Loading(props: IProps) {
 
   useEffect(() => {
     const finishRemoteLoad = () => {
-      const tokData = auth.getProfile() || { sub: '' };
+      const tokData = profile || { sub: '' };
       localStorage.removeItem('goingOnline');
       remote
         .pull((q) =>
@@ -391,7 +386,7 @@ export function Loading(props: IProps) {
     setView('Logout');
   };
 
-  if (!offline && !auth?.isAuthenticated()) return <Redirect to="/" />;
+  if (!offline && !isAuthenticated()) return <Redirect to="/" />;
   if (view !== '') return <Redirect to={view} />;
 
   return (
@@ -433,7 +428,6 @@ export function Loading(props: IProps) {
             <ImportTab
               syncBuffer={orbitFetchResults?.syncBuffer}
               syncFile={orbitFetchResults?.syncFile}
-              auth={auth}
               isOpen={importOpen}
               onOpen={setImportOpen}
             />

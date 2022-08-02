@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { TokenContext } from '../context/TokenProvider';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -14,7 +15,6 @@ import Alert from './AlertDialog';
 import ProjectDownload from './ProjectDownload';
 import { dataPath, PathType } from '../utils';
 import { related, useProjectPlans, getMediaInPlans } from '../crud';
-import Auth from '../auth/Auth';
 import { isElectron } from '../api-variable';
 
 interface PlanProject {
@@ -33,12 +33,12 @@ interface IRecordProps {
 
 interface IProps extends IStateProps, IRecordProps {
   cb: () => void;
-  auth: Auth;
 }
 
 export const ProjectDownloadAlert = (props: IProps) => {
-  const { cb, t, auth } = props;
+  const { cb, t } = props;
   const { offlineProjects, mediafiles, projects } = props;
+  const tokenCtx = useContext(TokenContext);
   const [alert, setAlert] = React.useState(false);
   const [downloadSize, setDownloadSize] = React.useState(0);
   const [needyIds, setNeedyIds] = React.useState<string[]>([]);
@@ -81,7 +81,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
   };
 
   React.useEffect(() => {
-    if (isElectron && auth.accessToken) {
+    if (isElectron && tokenCtx.state.accessToken) {
       const projRemIds = getNeedyRemoteIds();
       if (projRemIds.length > 0) {
         setNeedyIds(projRemIds);
@@ -106,12 +106,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
           noOnLeft={true}
         />
       )}
-      <ProjectDownload
-        open={downloadOpen}
-        auth={auth}
-        projectIds={needyIds}
-        finish={cb}
-      />
+      <ProjectDownload open={downloadOpen} projectIds={needyIds} finish={cb} />
     </div>
   );
 };

@@ -6,13 +6,8 @@ import { PersonalItem, TeamItem } from '.';
 import ImportTab from '../ImportTab';
 import { getPlanName } from '../../context/TranscriberContext';
 import { related } from '../../crud';
-import Auth from '../../auth/Auth';
 
-interface IProps {
-  auth: Auth;
-}
-export const TeamProjects = (props: IProps) => {
-  const { auth } = props;
+export const TeamProjects = () => {
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const ctx = React.useContext(TeamContext);
@@ -23,7 +18,7 @@ export const TeamProjects = (props: IProps) => {
     <>
       <Grid container>
         {(personalProjects.length > 0 || !offline || offlineOnly) && (
-          <PersonalItem key={1} auth={auth} />
+          <PersonalItem key={1} />
         )}
         {teams.map((i) => {
           return <TeamItem key={i.id} team={i} />;
@@ -31,7 +26,6 @@ export const TeamProjects = (props: IProps) => {
       </Grid>
       {importOpen && (
         <ImportTab
-          auth={auth}
           isOpen={importOpen}
           onOpen={setImportOpen}
           planName={importProject ? getPlanName(importProject.id) : undefined}

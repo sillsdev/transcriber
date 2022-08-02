@@ -11,7 +11,6 @@ import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 import DownloadIcon from '@mui/icons-material/GetAppOutlined';
 import { remoteIdGuid, useFetchMediaUrl, MediaSt } from '../crud';
-import Auth from '../auth/Auth';
 import { loadBlob, removeExtension } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
 
@@ -32,14 +31,12 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps {
-  auth: Auth;
   title?: string;
   mediaId: string;
 }
 
 export const AudioDownload = (props: IProps) => {
   const { mediaId, title, t, ts } = props;
-  const { auth } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [reporter] = useGlobal('errorReporter');
@@ -59,7 +56,7 @@ export const AudioDownload = (props: IProps) => {
     const version = mediaRec?.attributes?.versionNumber || '1';
     setAudName(`${name}-ver${version}.${ext}`);
     if (id !== mediaState.id) {
-      fetchMediaUrl({ id, auth });
+      fetchMediaUrl({ id });
     }
   };
 
@@ -84,7 +81,7 @@ export const AudioDownload = (props: IProps) => {
         setAudName('');
         setBlobUrl('');
       }
-      fetchMediaUrl({ id: '', auth });
+      fetchMediaUrl({ id: '' });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blobUrl, audName]);

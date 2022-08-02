@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -15,7 +15,7 @@ import {
   useArtifactType,
   useOfflnMediafileCreate,
 } from '../crud';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import PassageRecordDlg from './PassageRecordDlg';
@@ -43,7 +43,6 @@ interface IDispatchProps {
 
 interface IProps extends IStateProps, IDispatchProps {
   noBusy?: boolean;
-  auth: Auth;
   recordAudio: boolean;
   allowWave?: boolean;
   defaultFilename?: string;
@@ -70,7 +69,6 @@ interface IProps extends IStateProps, IDispatchProps {
 export const Uploader = (props: IProps) => {
   const {
     noBusy,
-    auth,
     mediaId,
     recordAudio,
     allowWave,
@@ -109,7 +107,7 @@ export const Uploader = (props: IProps) => {
   const planIdRef = useRef<string>(plan);
   const successCount = useRef<number>(0);
   const fileList = useRef<File[]>();
-  const authRef = useRef<Auth>(auth);
+  const ctx = useContext(TokenContext).state;
   const mediaIdRef = useRef<string[]>([]);
   const artifactTypeRef = useRef<string>('');
   const { createMedia } = useOfflnMediafileCreate(doOrbitError);
@@ -214,7 +212,7 @@ export const Uploader = (props: IProps) => {
       mediaFile,
       uploadList,
       currentlyLoading,
-      authRef.current,
+      ctx.accessToken || '',
       offline,
       errorReporter,
       itemComplete
@@ -232,7 +230,6 @@ export const Uploader = (props: IProps) => {
     uploadFiles(files);
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
-    authRef.current = auth;
     artifactTypeRef.current = artifactTypeId || '';
     doUpload(0);
   };
@@ -279,7 +276,6 @@ export const Uploader = (props: IProps) => {
           visible={isOpen}
           onVisible={onOpen}
           mediaId={mediaId}
-          auth={auth}
           uploadMethod={uploadMedia}
           onCancel={uploadCancel}
           metaData={metaData}

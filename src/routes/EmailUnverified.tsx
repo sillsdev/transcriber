@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import JwtDecode from 'jwt-decode';
 import { connect } from 'react-redux';
@@ -9,7 +9,7 @@ import { Typography, Grid, Button } from '@material-ui/core';
 import { Redirect } from 'react-router';
 import { API_CONFIG, isElectron } from '../api-variable';
 import Axios from 'axios';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import { doLogout, goOnline } from './Access';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,14 +42,13 @@ interface IStateProps {
   t: IEmailUnverifiedStrings;
 }
 
-interface IProps extends IStateProps {
-  auth: Auth;
-}
+interface IProps extends IStateProps {}
 
 export const EmailUnverified = (props: IProps) => {
-  const { auth, t } = props;
+  const { t } = props;
   const classes = useStyles();
   const { getAccessTokenSilently, user } = useAuth0();
+  const { accessToken, setAuthSession } = useContext(TokenContext).state;
   const [view, setView] = useState('');
   const [message, setMessage] = useState('');
 
@@ -57,7 +56,7 @@ export const EmailUnverified = (props: IProps) => {
     var url = API_CONFIG.host + '/api/auth/resend';
     Axios.get(url, {
       headers: {
-        Authorization: 'Bearer ' + auth.accessToken,
+        Authorization: 'Bearer ' + accessToken,
       },
     })
       .then((response) => setMessage('resent'))
@@ -83,7 +82,7 @@ export const EmailUnverified = (props: IProps) => {
       (async () => {
         const token = await getAccessTokenSilently();
         const decodedToken = JwtDecode(token) as IToken;
-        auth.setAuthSession(user, token, decodedToken.exp);
+        setAuthSession(user, token, decodedToken.exp);
         setView('Loading');
       })();
     }

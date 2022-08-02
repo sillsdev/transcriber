@@ -8,7 +8,6 @@ import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Button, Grid } from '@material-ui/core';
-import Auth from '../auth/Auth';
 import { useCheckOnline, localeDefault } from '../utils';
 import { isElectron } from '../api-variable';
 import AppHead from '../components/App/AppHead';
@@ -83,12 +82,10 @@ interface IDispatchProps {
   resetOrbitError: typeof action.resetOrbitError;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
-  auth: Auth;
-}
+interface IProps extends IStateProps, IDispatchProps {}
 
 export function Welcome(props: IProps) {
-  const { auth, t, importStatus, importComplete, resetOrbitError } = props;
+  const { t, importStatus, importComplete, resetOrbitError } = props;
   const classes = useStyles();
   const offlineSetup = useOfflineSetup();
   const { fetchLocalization, setLanguage } = props;
@@ -393,9 +390,7 @@ export function Welcome(props: IProps) {
           </Grid>
         </div>
       )}
-      {importOpen && (
-        <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
-      )}
+      {importOpen && <ImportTab isOpen={importOpen} onOpen={setImportOpen} />}
     </div>
   );
 }

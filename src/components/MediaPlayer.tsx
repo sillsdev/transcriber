@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react';
-import Auth from '../auth/Auth';
 import { useGlobal } from 'reactn';
 import { useFetchMediaUrl, MediaSt } from '../crud';
 import { logError, Severity } from '../utils';
@@ -9,7 +8,6 @@ import { sharedSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 
 interface IProps {
-  auth: Auth | null;
   srcMediaId: string;
   requestPlay: boolean;
   onEnded: () => void;
@@ -22,7 +20,6 @@ interface IProps {
 
 export function MediaPlayer(props: IProps) {
   const {
-    auth,
     srcMediaId,
     requestPlay,
     onEnded,
@@ -52,7 +49,7 @@ export function MediaPlayer(props: IProps) {
     }
     if (srcMediaId !== playItem) {
       setReady(false);
-      fetchMediaUrl({ id: srcMediaId, auth });
+      fetchMediaUrl({ id: srcMediaId });
       setPlayItem(srcMediaId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

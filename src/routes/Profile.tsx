@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -164,13 +164,12 @@ interface IProps
     IDispatchProps,
     IRecordProps,
     WithDataProps {
-  auth: Auth;
   noMargin?: boolean;
   finishAdd?: () => void;
 }
 
 export function Profile(props: IProps) {
-  const { users, t, noMargin, finishAdd, setLanguage, auth } = props;
+  const { users, t, noMargin, finishAdd, setLanguage } = props;
   const { paratext_username, paratext_usernameStatus, getUserName } = props;
   const classes = useStyles();
   const [isOffline] = useGlobal('offline');
@@ -185,6 +184,7 @@ export function Profile(props: IProps) {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
+  const { accessToken } = useContext(TokenContext).state;
   const { getUserRec } = useUser();
   const { getMbrRoleRec } = useRole();
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
@@ -551,7 +551,7 @@ export function Profile(props: IProps) {
   useEffect(() => {
     if (!isOffline) {
       if (!paratext_usernameStatus) {
-        getUserName(auth, errorReporter, t.checkingParatext);
+        getUserName(accessToken || '', errorReporter, t.checkingParatext);
       }
       setHasParatext(paratext_username !== '');
     }

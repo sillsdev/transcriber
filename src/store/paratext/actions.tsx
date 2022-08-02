@@ -1,6 +1,5 @@
 import Axios from 'axios';
 import { API_CONFIG } from '../../api-variable';
-import Auth from '../../auth/Auth';
 import {
   Passage,
   ActivityStates,
@@ -52,7 +51,7 @@ export const resetParatextText = () => async (dispatch: any) => {
 };
 export const getParatextText =
   (
-    auth: Auth,
+    token: string,
     passageId: number,
     artifactId: string | null,
     errorReporter: any,
@@ -69,7 +68,7 @@ export const getParatextText =
       if (artifactId) url += `/${artifactId}`;
       let response = await Axios.get(url, {
         headers: {
-          Authorization: 'Bearer ' + auth.accessToken,
+          Authorization: 'Bearer ' + token,
         },
       });
       dispatch({ payload: response.data, type: TEXT_SUCCESS });
@@ -118,7 +117,7 @@ export const getParatextTextLocal =
   };
 
 export const getUserName =
-  (auth: Auth, errorReporter: any, pendingmsg: string) =>
+  (token: string, errorReporter: any, pendingmsg: string) =>
   async (dispatch: any) => {
     dispatch({
       payload: pendingStatus(pendingmsg),
@@ -133,7 +132,7 @@ export const getUserName =
           API_CONFIG.host + '/api/paratext/username',
           {
             headers: {
-              Authorization: 'Bearer ' + auth.accessToken,
+              Authorization: 'Bearer ' + token,
             },
           }
         );
@@ -164,7 +163,12 @@ export const resetProjects = () => (dispatch: any) => {
 };
 
 export const getProjects =
-  (auth: Auth, pendingmsg: string, errorReporter: any, languageTag?: string) =>
+  (
+    token: string,
+    pendingmsg: string,
+    errorReporter: any,
+    languageTag?: string
+  ) =>
   (dispatch: any) => {
     dispatch({
       payload: pendingStatus(pendingmsg),
@@ -174,7 +178,7 @@ export const getProjects =
     if (languageTag) url += '/' + languageTag;
     Axios.get(url, {
       headers: {
-        Authorization: 'Bearer ' + auth.accessToken,
+        Authorization: 'Bearer ' + token,
       },
     })
       .then((response) => {
@@ -282,7 +286,7 @@ export const resetCount = () => (dispatch: any) => {
 };
 
 export const getCount =
-  (auth: Auth, projectId: number, errorReporter: any, pendingmsg: string) =>
+  (token: string, projectId: number, errorReporter: any, pendingmsg: string) =>
   (dispatch: any) => {
     dispatch({
       payload: pendingStatus(pendingmsg),
@@ -292,7 +296,7 @@ export const getCount =
       API_CONFIG.host + '/api/paratext/project/' + projectId + '/count';
     Axios.get(path, {
       headers: {
-        Authorization: 'Bearer ' + auth.accessToken,
+        Authorization: 'Bearer ' + token,
       },
     })
       .then((response) => {
@@ -352,7 +356,7 @@ export const resetSync = () => (dispatch: any) => {
 };
 export const syncProject =
   (
-    auth: Auth,
+    token: string,
     projectId: number,
     typeId: number, //0 for vernacular?
     errorReporter: any,
@@ -367,13 +371,13 @@ export const syncProject =
       null,
       {
         headers: {
-          Authorization: 'Bearer ' + auth.accessToken,
+          Authorization: 'Bearer ' + token,
         },
       }
     )
       .then((response) => {
         dispatch({ payload: successmsg, type: SYNC_SUCCESS });
-        getCount(auth, projectId, errorReporter, '');
+        getCount(token, projectId, errorReporter, '');
       })
       .catch((err) => {
         logError(Severity.error, errorReporter, infoMsg(err, 'Sync Failed'));

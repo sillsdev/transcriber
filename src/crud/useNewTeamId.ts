@@ -10,7 +10,6 @@ import {
 import { QueryBuilder } from '@orbit/data';
 import { waitForIt } from '../utils';
 import { useTeamCreate, useIsPersonalTeam } from '.';
-import Auth from '../auth/Auth';
 import related from './related';
 
 interface IStateProps {
@@ -19,9 +18,7 @@ interface IStateProps {
 interface IDispatchProps {
   resetOrbitError: typeof actions.resetOrbitError;
 }
-interface IProps extends IStateProps, IDispatchProps {
-  auth: Auth;
-}
+interface IProps extends IStateProps, IDispatchProps {}
 
 export const useNewTeamId = (props: IProps) => {
   const [memory] = useGlobal('memory');

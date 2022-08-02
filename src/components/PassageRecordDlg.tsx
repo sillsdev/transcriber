@@ -3,7 +3,6 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, IPassageRecordStrings } from '../model';
 import localStrings from '../selector/localize';
-import Auth from '../auth/Auth';
 import {
   Button,
   createStyles,
@@ -50,17 +49,14 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-interface IDispatchProps {}
 interface IStateProps {
   t: IPassageRecordStrings;
 }
-interface IProps extends IStateProps {}
-interface IProps extends IStateProps, IDispatchProps {
+interface IProps extends IStateProps {
   visible: boolean;
   onVisible: (visible: boolean) => void;
   onCancel?: () => void;
   mediaId: string;
-  auth: Auth;
   metaData?: JSX.Element;
   defaultFilename?: string;
   ready: () => boolean;
@@ -74,7 +70,6 @@ function PassageRecordDlg(props: IProps) {
     visible,
     onVisible,
     mediaId,
-    auth,
     defaultFilename,
     uploadMethod,
     onCancel,
@@ -103,7 +98,7 @@ function PassageRecordDlg(props: IProps) {
   };
 
   useEffect(() => {
-    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId, auth });
+    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
 
@@ -129,7 +124,6 @@ function PassageRecordDlg(props: IProps) {
         <MediaRecord
           toolId={myToolId}
           mediaId={mediaId}
-          auth={auth}
           uploadMethod={uploadMethod}
           onReady={onReady}
           defaultFilename={defaultFilename}

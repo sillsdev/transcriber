@@ -26,7 +26,6 @@ import {
   isElectron,
   OrbitNetworkErrorRetries,
 } from '../api-variable';
-import Auth from '../auth/Auth';
 import {
   findRecord,
   offlineProjectUpdateSnapshot,
@@ -42,6 +41,7 @@ import IndexedDBSource from '@orbit/indexeddb';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { TokenContext } from '../context/TokenProvider';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { ReplaceRelatedRecord } from '../model/baseModel';
 interface IStateProps {}
@@ -52,7 +52,6 @@ interface IDispatchProps {
 }
 
 interface IProps extends IStateProps, IDispatchProps {
-  auth: Auth;
   children: JSX.Element;
 }
 const mapStateToProps = (state: IState): IStateProps => ({});
@@ -68,7 +67,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 
 export const doDataChanges = async (
-  auth: Auth,
+  token: string,
   coordinator: Coordinator,
   fingerprint: string,
   projectsLoaded: string[],
@@ -141,7 +140,7 @@ export const doDataChanges = async (
       var response = await Axios.get(api, {
         params: params,
         headers: {
-          Authorization: 'Bearer ' + auth.accessToken,
+          Authorization: 'Bearer ' + token,
         },
       });
       var data = response.data.data as DataChange;
@@ -295,7 +294,7 @@ export const doDataChanges = async (
 };
 
 export function DataChanges(props: IProps) {
-  const { auth, children, setLanguage, resetOrbitError } = props;
+  const { children, setLanguage, resetOrbitError } = props;
   const [isOffline] = useGlobal('offline');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
@@ -307,6 +306,8 @@ export function DataChanges(props: IProps) {
   const [user] = useGlobal('user');
   const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
+  const ctx = useContext(TokenContext).state;
+  const { isAuthenticated } = ctx;
   const [busyDelay, setBusyDelay] = useState<number | null>(null);
   const [dataDelay, setDataDelay] = useState<number | null>(null);
   const [firstRun, setFirstRun] = useState(true);
@@ -327,7 +328,7 @@ export function DataChanges(props: IProps) {
 
     setFirstRun(dataDelay === null);
     var newDelay =
-      connected && loadComplete && remote && auth?.isAuthenticated()
+      connected && loadComplete && remote && isAuthenticated()
         ? dataDelay === null
           ? 10
           : defaultDataDelay
@@ -335,12 +336,12 @@ export function DataChanges(props: IProps) {
     setDataDelay(newDelay);
     if (!remote) setBusy(false);
     setBusyDelay(
-      remote && auth?.isAuthenticated()
+      remote && isAuthenticated()
         ? defaultBusyDelay * (connected ? 1 : 10)
         : null
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [remote, auth, loadComplete, connected, firstRun]);
+  }, [remote, ctx, loadComplete, connected, firstRun]);
   const updateBusy = () => {
     const checkBusy =
       user === '' || (remote && remote.requestQueue.length !== 0);
@@ -352,11 +353,11 @@ export function DataChanges(props: IProps) {
     } else if (checkBusy !== busy) setBusy(checkBusy);
   };
   const updateData = async () => {
-    if (!doingChanges.current && !busy && !saving && auth?.isAuthenticated()) {
+    if (!doingChanges.current && !busy && !saving && isAuthenticated()) {
       doingChanges.current = true; //attempt to prevent double calls
       setFirstRun(false);
       await doDataChanges(
-        auth,
+        ctx.accessToken || '',
         coordinator,
         fingerprint,
         projectsLoaded,

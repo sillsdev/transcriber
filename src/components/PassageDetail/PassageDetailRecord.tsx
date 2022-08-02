@@ -13,7 +13,6 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import Auth from '../../auth/Auth';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useFetchMediaUrl, VernacularTag } from '../../crud';
 import { useGlobal } from 'reactn';
@@ -71,12 +70,11 @@ interface IRecordProps {
   mediafiles: Array<MediaFile>;
 }
 interface IProps extends IRecordProps, IStateProps, IDispatchProps {
-  auth: Auth;
   ready?: () => boolean;
 }
 const SaveWait = 500;
 export function PassageDetailRecord(props: IProps) {
-  const { auth, ready, ts } = props;
+  const { ready, ts } = props;
   const { mediafiles } = props;
   const { startSave, toolChanged, toolsChanged, saveRequested, waitForSave } =
     useContext(UnsavedContext).state;
@@ -113,10 +111,10 @@ export function PassageDetailRecord(props: IProps) {
 
   useEffect(() => {
     if (!mediafileId) {
-      fetchMediaUrl({ id: mediafileId, auth });
+      fetchMediaUrl({ id: mediafileId });
       setResetMedia(true);
     } else if (mediafileId !== mediaState.id)
-      fetchMediaUrl({ id: mediafileId, auth });
+      fetchMediaUrl({ id: mediafileId });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafileId, passage]);
 
@@ -218,7 +216,6 @@ export function PassageDetailRecord(props: IProps) {
         <MediaRecord
           toolId={toolId}
           mediaId={mediafileId}
-          auth={auth}
           uploadMethod={uploadMedia}
           onReady={onReady}
           defaultFilename={defaultFilename}
@@ -250,7 +247,6 @@ export function PassageDetailRecord(props: IProps) {
 
         <Uploader
           recordAudio={false}
-          auth={auth}
           importList={importList}
           isOpen={uploadVisible}
           onOpen={handleUploadVisible}
@@ -273,7 +269,7 @@ export function PassageDetailRecord(props: IProps) {
           isOpen={versionVisible}
           onOpen={handleVerHistClose}
         >
-          <VersionDlg auth={auth} passId={passage.id} />
+          <VersionDlg passId={passage.id} />
         </BigDialog>
       </div>
     </PlanProvider>

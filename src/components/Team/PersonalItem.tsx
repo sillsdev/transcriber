@@ -8,7 +8,6 @@ import BigDialog from '../../hoc/BigDialog';
 import { ProjectCard, AddCard } from '.';
 import { StepEditor } from '../StepEditor';
 import { useNewTeamId, defaultWorkflow } from '../../crud';
-import Auth from '../../auth/Auth';
 import { UnsavedContext } from '../../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -41,11 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IProps {
-  auth: Auth;
-}
-
-export const PersonalItem = (props: IProps) => {
+export const PersonalItem = () => {
   const classes = useStyles();
   const ctx = React.useContext(TeamContext);
   const { personalProjects, cardStrings, ts, resetOrbitError } = ctx.state;
@@ -56,7 +51,7 @@ export const PersonalItem = (props: IProps) => {
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [showWorkflow, setShowWorkflow] = useState(false);
   const [org, setOrg] = useState('');
-  const getTeamId = useNewTeamId({ ...props, ts, resetOrbitError });
+  const getTeamId = useNewTeamId({ ts, resetOrbitError });
 
   const handleWorkflow = (isOpen: boolean) => {
     if (changed) {

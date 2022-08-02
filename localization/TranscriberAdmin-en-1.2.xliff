@@ -2603,7 +2603,7 @@
             <source>Continue</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.continueCurrentUser">
@@ -2652,7 +2652,7 @@
             <source>Exit</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.export">
@@ -2855,14 +2855,14 @@
             <source>Your session will expire in {0} seconds. Would you like to continue?</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.sessionExpiring">
             <source>Session Expiring</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.settings">
@@ -2883,7 +2883,7 @@
             <source>Switch Mode or User</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.tasks">

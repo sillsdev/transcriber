@@ -7,7 +7,6 @@ import AppHead from '../components/App/AppHead';
 import { TeamProvider } from '../context/TeamContext';
 import { TeamProjects } from '../components/Team';
 import StickyRedirect from '../components/StickyRedirect';
-import Auth from '../auth/Auth';
 import { remoteId } from '../crud';
 import TeamActions from '../components/Team/TeamActions';
 import { RoleNames } from '../model';
@@ -23,12 +22,7 @@ const useStyles = makeStyles({
   },
 });
 
-interface IProps {
-  auth: Auth;
-}
-
-export const TeamScreen = (props: IProps) => {
-  const { auth } = props;
+export const TeamScreen = () => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const [isOffline] = useGlobal('offline');
@@ -71,11 +65,11 @@ export const TeamScreen = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <AppHead {...props} />
-      <TeamProvider {...props}>
+      <AppHead />
+      <TeamProvider>
         <div id="TeamScreen" className={classes.teamScreen}>
-          <TeamActions auth={auth} />
-          <TeamProjects auth={auth} />
+          <TeamActions />
+          <TeamProjects />
         </div>
       </TeamProvider>
     </div>

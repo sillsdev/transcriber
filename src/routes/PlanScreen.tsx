@@ -8,7 +8,6 @@ import ViewMode, { ViewOption } from '../control/ViewMode';
 import PlanTabs from '../components/PlanTabs';
 import { useUrlContext, useRole, useProjectType } from '../crud';
 import { forceLogin, localUserKey, LocalKey } from '../utils';
-import Auth from '../auth/Auth';
 import { UnsavedContext } from '../context/UnsavedContext';
 import StickyRedirect from '../components/StickyRedirect';
 
@@ -22,14 +21,10 @@ const useStyles = makeStyles({
   },
 });
 
-interface IProps {
-  auth: Auth;
-}
-
 interface ParamTypes {
   prjId: string;
 }
-export const PlanScreen = (props: IProps) => {
+export const PlanScreen = () => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const { prjId } = useParams<ParamTypes>();
@@ -86,10 +81,10 @@ export const PlanScreen = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <AppHead {...props} SwitchTo={SwitchTo} />
-      <PlanProvider {...props}>
+      <AppHead SwitchTo={SwitchTo} />
+      <PlanProvider>
         <div id="PlanScreen" className={classes.teamScreen}>
-          <PlanTabs {...props} checkSaved={checkSavedFn} />
+          <PlanTabs checkSaved={checkSavedFn} />
         </div>
       </PlanProvider>
     </div>

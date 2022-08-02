@@ -25,7 +25,6 @@ import {
 } from '@material-ui/core';
 import TranscribeIcon from '../../control/TranscribeIcon';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Auth from '../../auth/Auth';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArtifactTypeSlug,
@@ -178,7 +177,6 @@ interface IRecordProps {
   mediafiles: Array<MediaFile>;
 }
 interface IProps extends IRecordProps, IStateProps, IDispatchProps {
-  auth: Auth;
   ready?: () => boolean;
   width: number;
   slugs: ArtifactTypeSlug[];
@@ -187,7 +185,7 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 }
 
 export function PassageDetailItem(props: IProps) {
-  const { auth, t, ts, width, slugs, segments, showTopic, mediafiles } = props;
+  const { t, ts, width, slugs, segments, showTopic, mediafiles } = props;
   const { pathname } = useLocation();
   const [view, setView] = useState('');
   const [reporter] = useGlobal('errorReporter');
@@ -252,7 +250,7 @@ export function PassageDetailItem(props: IProps) {
   }, [canSave]);
 
   useEffect(() => {
-    if (mediafileId !== mediaState.id) fetchMediaUrl({ id: mediafileId, auth });
+    if (mediafileId !== mediaState.id) fetchMediaUrl({ id: mediafileId });
     var mediaRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
     setCurrentVersion(mediaRec?.attributes?.versionNumber || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -570,7 +568,6 @@ export function PassageDetailItem(props: IProps) {
                             </div>
                             <div id="rowplayer" className={classes.playerRow}>
                               <MediaPlayer
-                                auth={auth}
                                 srcMediaId={playItem}
                                 requestPlay={itemPlaying}
                                 onEnded={handleItemPlayEnd}
@@ -606,7 +603,7 @@ export function PassageDetailItem(props: IProps) {
               <Pane className={classes.pane}>
                 <Grid item xs={12} sm container>
                   <Grid item container direction="column">
-                    <DiscussionList auth={auth} />
+                    <DiscussionList />
                   </Grid>
                 </Grid>
               </Pane>
@@ -624,7 +621,6 @@ export function PassageDetailItem(props: IProps) {
       <Uploader
         noBusy={true}
         recordAudio={false}
-        auth={auth}
         importList={importList}
         isOpen={uploadVisible}
         onOpen={handleUploadVisible}

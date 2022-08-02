@@ -49,7 +49,6 @@ import {
   useLoadProjectData,
   useProjectType,
 } from '../crud';
-import Auth from '../auth/Auth';
 
 export type TeamIdType = Organization | null;
 
@@ -118,7 +117,6 @@ const mapRecordsToProps = {
 };
 
 const initState = {
-  auth: undefined as any,
   controlStrings: {} as IControlStrings,
   lang: 'en',
   ts: {} as ISharedStrings,
@@ -178,7 +176,6 @@ interface IContext {
 const TeamContext = React.createContext({} as IContext);
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
-  auth: Auth;
   children: React.ReactElement;
 }
 
@@ -188,7 +185,6 @@ const TeamProvider = withData(mapRecordsToProps)(
     mapDispatchToProps
   )((props: IProps) => {
     const {
-      auth,
       organizations,
       orgMembers,
       projects,
@@ -224,7 +220,6 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [importProject, setImportProject] = useState<VProject>();
     const [state, setState] = useState({
       ...initState,
-      auth,
       controlStrings,
       lang,
       cardStrings,
@@ -239,19 +234,19 @@ const TeamProvider = withData(mapRecordsToProps)(
     const vProjectCreate = useVProjectCreate();
     const vProjectUpdate = useVProjectUpdate();
     const vProjectDelete = useVProjectDelete();
-    const orbitTeamCreate = useTeamCreate({ ...props });
+    const orbitTeamCreate = useTeamCreate(props);
     const orbitTeamUpdate = useTeamUpdate();
     const orbitTeamDelete = useTeamDelete();
     const orbitFlatAdd = useFlatAdd(sharedStrings);
     const isPersonal = useIsPersonalTeam();
-    const getTeamId = useNewTeamId({ ...props });
+    const getTeamId = useNewTeamId(props);
     const getPlanType = useTableType('plan');
     const vProject = useVProjectRead();
     const oProjRead = useOfflnProjRead();
     const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
     const { setProjectType } = useProjectType();
     const { getPlan } = usePlan();
-    const LoadData = useLoadProjectData(auth, t, doOrbitError, resetOrbitError);
+    const LoadData = useLoadProjectData(t, doOrbitError, resetOrbitError);
 
     const setProjectParams = (plan: Plan) => {
       const projectId = related(plan, 'project');

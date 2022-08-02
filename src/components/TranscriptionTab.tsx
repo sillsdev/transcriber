@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
@@ -49,7 +49,7 @@ import { Table } from '@devexpress/dx-react-grid-material-ui';
 import { useSnackBar } from '../hoc/SnackBar';
 import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import {
   related,
   sectionNumber,
@@ -181,7 +181,6 @@ interface IProps
     IDispatchProps,
     IRecordProps,
     WithDataProps {
-  auth: Auth;
   projectPlans: Plan[];
   planColumn?: boolean;
   floatTop?: boolean;
@@ -191,7 +190,6 @@ interface IProps
 
 export function TranscriptionTab(props: IProps) {
   const {
-    auth,
     activityState,
     t,
     ts,
@@ -223,6 +221,7 @@ export function TranscriptionTab(props: IProps) {
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const [lang] = useGlobal('lang');
+  const token = useContext(TokenContext).state.accessToken;
   const { showMessage, showTitledMessage } = useSnackBar();
   const [openExport, setOpenExport] = useState(false);
   const [data, setData] = useState(Array<IRow>());
@@ -358,7 +357,7 @@ export function TranscriptionTab(props: IProps) {
       fingerprint,
       user,
       media.length,
-      auth,
+      token,
       errorReporter,
       t.exportingProject,
       t.noData.replace(
@@ -676,7 +675,7 @@ export function TranscriptionTab(props: IProps) {
           <br />
           {t.export}
         </IconButton>
-        <AudioDownload auth={auth} mediaId={mediaId} />
+        <AudioDownload mediaId={mediaId} />
       </div>
     </Table.Cell>
   );
