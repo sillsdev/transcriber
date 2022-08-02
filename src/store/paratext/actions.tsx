@@ -202,7 +202,6 @@ export const getProjects =
           errorReporter,
           infoMsg(err, 'Projects failed')
         );
-        if (err.response.data === '') err.response.data = '401';
         dispatch({ payload: errStatus(err), type: PROJECTS_ERROR });
       });
   };
@@ -377,7 +376,6 @@ export const syncProject =
         getCount(auth, projectId, errorReporter, '');
       })
       .catch((err) => {
-        if (err.response.data === '') err.response.data = '401';
         logError(Severity.error, errorReporter, infoMsg(err, 'Sync Failed'));
         dispatch({ payload: errStatus(err), type: SYNC_ERROR });
       });
