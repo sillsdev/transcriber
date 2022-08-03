@@ -657,6 +657,7 @@ if (
       offlineId: { type: 'string' },
       offlineDiscussionId: { type: 'string' },
       offlineMediafileId: { type: 'string' },
+      visible: { type: 'string' },
     },
     relationships: {
       discussion: { type: 'hasOne', model: 'discussion' },

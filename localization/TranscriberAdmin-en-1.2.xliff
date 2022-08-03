@@ -800,8 +800,22 @@
                <context context-type="sourcefile">AddCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="commentCard.approve">
+            <source>Approve</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">CommentCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="commentCard.confirmDelete">
             <source>Delete this comment?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">CommentCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="commentCard.unapproved">
+            <source>Unapproved</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">CommentCard.tsx</context>
@@ -4027,20 +4041,7 @@
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
-         <trans-unit id="permission.observer">
-      		<source>Observer</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">GroupDialog.tsx</context>
-      		</context-group>
-      	</trans-unit>
-         <trans-unit id="permission.observerTip">
-      		<source>Observers will be able to view projects but not make changes.  Will they be able to participate in discussions?</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">GroupDialog.tsx</context>
-      		</context-group>
-      	</trans-unit>
+
          <trans-unit id="planActions.assign">
             <source>Assign</source>
             <target/>

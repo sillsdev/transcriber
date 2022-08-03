@@ -146,7 +146,9 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface ICommentCardStrings extends Localize.LocalizedStringsMethods {
+    "approve": string;
     "confirmDelete": string;
+    "unapproved": string;
 };
 
 export interface ICommentEditorStrings extends Localize.LocalizedStringsMethods {
@@ -703,8 +705,6 @@ export interface IPermissionStrings extends Localize.LocalizedStringsMethods {
     "consultantInTrainingTip": string;
     "mentor": string;
     "mentorTip": string;
-    "observer": string;
-    "observerTip": string;
 };
 
 export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {

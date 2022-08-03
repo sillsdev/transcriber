@@ -1,5 +1,8 @@
 import {
+  Checkbox,
   createStyles,
+  FormControlLabel,
+  FormLabel,
   Grid,
   IconButton,
   makeStyles,
@@ -10,6 +13,8 @@ import { connect } from 'react-redux';
 import {
   Comment,
   Discussion,
+  Group,
+  GroupMembership,
   ICommentCardStrings,
   IState,
   MediaFile,
@@ -21,7 +26,12 @@ import localStrings from '../../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { findRecord, related } from '../../crud';
+import {
+  findRecord,
+  PermissionName,
+  related,
+  usePermissions,
+} from '../../crud';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import UserAvatar from '../UserAvatar';
 import { dateOrTime } from '../../utils';
@@ -97,11 +107,18 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       color: theme.palette.background.paper,
     },
+    textField: {
+      color: theme.palette.primary.dark,
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+    },
   })
 );
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
   users: Array<User>;
+  groups: Array<Group>;
+  memberships: Array<GroupMembership>;
 }
 interface IStateProps {
   t: ICommentCardStrings;
@@ -119,10 +136,22 @@ interface IProps extends IStateProps, IRecordProps, IDispatchProps {
   discussion: Discussion;
   number: number;
   onEditing: (val: boolean) => void;
+  needsApproval: boolean;
 }
 
 export const CommentCard = (props: IProps) => {
-  const { t, auth, comment, discussion, number, users, onEditing } = props;
+  const {
+    t,
+    auth,
+    comment,
+    discussion,
+    number,
+    users,
+    groups,
+    memberships,
+    onEditing,
+    needsApproval,
+  } = props;
   const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
   const classes = useStyles();
   const [author, setAuthor] = useState<User>();
@@ -149,6 +178,17 @@ export const CommentCard = (props: IProps) => {
   const [canSaveRecording, setCanSaveRecording] = useState(false);
   const [editComment, setEditComment] = useState('');
   const [confirmAction, setConfirmAction] = useState('');
+  const [approved, setApprovedx] = useState(false);
+  const approvedRef = useRef(false);
+  const setApproved = (value: boolean) => {
+    setApprovedx(value);
+    approvedRef.current = value;
+  };
+  const { getAuthor, hasPermission } = usePermissions({
+    users,
+    groups,
+    memberships,
+  });
 
   const reset = () => {
     setEditing(false);
@@ -165,9 +205,18 @@ export const CommentCard = (props: IProps) => {
     discussion: discussion.id,
     cb: reset,
     doOrbitError,
+    users,
+    groups,
+    memberships,
   });
   const afterUploadcb = (mediaId: string) => {
-    saveComment(comment.id, editComment, mediaId);
+    saveComment(
+      comment.id,
+      editComment,
+      mediaId,
+      approvedRef.current,
+      comment.attributes?.visible
+    );
   };
   const { uploadMedia, fileName } = useRecordComment({
     auth,
@@ -245,7 +294,10 @@ export const CommentCard = (props: IProps) => {
     setEditComment(newText);
     setChanged(true);
   };
-
+  const handleApprovedChange = () => {
+    setApproved(!approvedRef.current);
+    handleSaveEdit();
+  };
   const media = useMemo(() => {
     if (!mediaId || mediaId === '') return null;
     return findRecord(memory, 'mediafile', mediaId);
@@ -260,11 +312,15 @@ export const CommentCard = (props: IProps) => {
   useEffect(() => {
     if (users) {
       var u = users.filter(
-        (u) => u.id === related(comment, 'lastModifiedByUser')
+        (u) =>
+          u.id ===
+          (getAuthor(comment.attributes.visible) ??
+            related(comment, 'lastModifiedByUser'))
       );
       if (u.length > 0) setAuthor(u[0]);
     }
     setMediaId(related(comment, 'mediafile'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment, users]);
 
   return (
@@ -304,6 +360,25 @@ export const CommentCard = (props: IProps) => {
               </>
             )}
           </Grid>
+          {needsApproval &&
+            (hasPermission(PermissionName.Mentor) ? (
+              <FormControlLabel
+                className={classes.textField}
+                control={
+                  <Checkbox
+                    id="checkbox-approved"
+                    checked={approved}
+                    onChange={handleApprovedChange}
+                  />
+                }
+                label={t.approve}
+                labelPlacement="top"
+              />
+            ) : (
+              <FormLabel id="unapproved" color="secondary">
+                {t.unapproved}
+              </FormLabel>
+            ))}
           {mediaId !== commentPlayId && author?.id === user && (
             <Grid item>
               <DiscussionMenu action={handleCommentAction} />
@@ -323,16 +398,18 @@ export const CommentCard = (props: IProps) => {
               fileName={fileName}
               uploadMethod={uploadMedia}
             />
-          ) : text ? (
-            <TextField
-              className={classes.text}
-              id="outlined-textarea"
-              value={text}
-              multiline
-              fullWidth
-            />
           ) : (
-            <></>
+            <>
+              {text && (
+                <TextField
+                  className={classes.text}
+                  id="outlined-textarea"
+                  value={text}
+                  multiline
+                  fullWidth
+                />
+              )}
+            </>
           )}
         </Grid>
       </Grid>
@@ -350,6 +427,8 @@ export const CommentCard = (props: IProps) => {
 const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
   users: (q: QueryBuilder) => q.findRecords('user'),
+  groups: (q: QueryBuilder) => q.findRecords('group'),
+  memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(

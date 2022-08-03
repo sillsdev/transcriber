@@ -685,12 +685,24 @@
 				<target>Progression du téléchargement</target>
 			</segment>
 		</unit>
+      <unit id="commentCard.approve">
+         <segment>
+            <source>Approve</source>
+            <target>Approuver</target>
+         </segment>
+      </unit>
 		<unit id="commentCard.confirmDelete">
 			<segment>
 				<source>Delete this comment?</source>
 				<target>Supprimer ce commentaire ?</target>
 			</segment>
 		</unit>
+        <unit id="commentCard.unapproved">
+         <segment>
+            <source>Unapproved</source>
+            <target>Désapprouvé</target>
+         </segment>
+      </unit>
 		<unit id="commentEditor.record">
 			<segment>
 				<source>Record Comment</source>

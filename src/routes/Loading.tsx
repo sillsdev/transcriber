@@ -43,7 +43,6 @@ import {
   useOfflineSetup,
   useRole,
   useProjectType,
-  remoteId,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';

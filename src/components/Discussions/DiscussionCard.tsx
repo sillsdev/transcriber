@@ -26,6 +26,7 @@ import {
   Section,
   Plan,
   Passage,
+  GroupMembership,
 } from '../../model';
 import ResolveIcon from '@mui/icons-material/Check';
 import HideIcon from '@mui/icons-material/ArrowDropUp';
@@ -38,7 +39,7 @@ import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
-import { related } from '../../crud';
+import { related, usePermissions } from '../../crud';
 import CommentCard from './CommentCard';
 import ReplyCard from './ReplyCard';
 import UserAvatar from '../UserAvatar';
@@ -186,6 +187,7 @@ interface IRecordProps {
   artifactcategorys: Array<ArtifactCategory>;
   groups: Array<Group>;
   users: Array<User>;
+  memberships: Array<GroupMembership>;
 }
 interface IStateProps {
   t: IDiscussionCardStrings;
@@ -232,6 +234,7 @@ export const DiscussionCard = (props: IProps) => {
     artifactcategorys,
     groups,
     users,
+    memberships,
   } = props;
   const ctx = useContext(PassageDetailContext);
   const {
@@ -274,6 +277,11 @@ export const DiscussionCard = (props: IProps) => {
   const [editSubject, setEditSubject] = useState(
     discussion.attributes?.subject
   );
+  const { permissions, canAccess, needsApproval } = usePermissions({
+    users,
+    groups,
+    memberships,
+  });
   const [editAssigned, setEditAssigned] = useState<string>('');
   const [editCategory, setEditCategory] = useState('');
   const [editCard, setEditCard] = useState(false);
@@ -317,12 +325,17 @@ export const DiscussionCard = (props: IProps) => {
     if (comments)
       setMyComments(
         comments
-          .filter((c) => related(c, 'discussion') === discussion.id)
+          .filter(
+            (c) =>
+              related(c, 'discussion') === discussion.id &&
+              canAccess(c.attributes.visible)
+          )
           .sort((a, b) =>
             a.attributes.dateCreated <= b.attributes.dateCreated ? -1 : 1
           )
       );
-  }, [comments, discussion.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [comments, discussion.id, permissions]);
 
   useEffect(() => {
     if (groups) {
@@ -894,6 +907,7 @@ export const DiscussionCard = (props: IProps) => {
                   auth={auth}
                   key={i.id}
                   comment={i}
+                  needsApproval={needsApproval(i.attributes?.visible)}
                   discussion={discussion}
                   number={j}
                   onEditing={handleEditCard}
@@ -930,6 +944,7 @@ const mapRecordsToProps = {
   artifactcategorys: (q: QueryBuilder) => q.findRecords('artifactcategory'),
   groups: (q: QueryBuilder) => q.findRecords('group'),
   users: (q: QueryBuilder) => q.findRecords('user'),
+  memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'discussionCard' }),

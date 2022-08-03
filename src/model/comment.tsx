@@ -10,6 +10,7 @@ export interface Comment extends BaseModel {
     offlineId: string;
     offlineDiscussionId: string;
     offlineMediafileId: string;
+    visible: string; //jsonb
   };
   relationships?: {
     mediafile: RecordRelationship;
