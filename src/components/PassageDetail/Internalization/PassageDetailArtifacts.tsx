@@ -17,7 +17,6 @@ import {
   SectionResourceUser,
   Resource,
 } from '../../../model';
-import Auth from '../../../auth/Auth';
 import { withData } from '../../../mods/react-orbitjs';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
@@ -93,9 +92,7 @@ interface IStateProps {
   t: IPassageDetailArtifactsStrings;
 }
 
-interface IProps extends IStateProps, IRecordProps {
-  auth: Auth;
-}
+interface IProps extends IStateProps, IRecordProps {}
 export enum ResourceTypeEnum {
   sectionResource,
   passageResource,
@@ -103,7 +100,7 @@ export enum ResourceTypeEnum {
 }
 export function PassageDetailArtifacts(props: IProps) {
   const classes = useStyles();
-  const { sectionResources, mediafiles, artifactTypes, auth, t } = props;
+  const { sectionResources, mediafiles, artifactTypes, t } = props;
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
   const [offline] = useGlobal('offline');
@@ -554,7 +551,6 @@ export function PassageDetailArtifacts(props: IProps) {
         )}
         <div className={classes.playStatus}>
           <MediaPlayer
-            auth={auth}
             srcMediaId={playItem}
             requestPlay={itemPlaying}
             onEnded={handleEnded}
@@ -591,7 +587,6 @@ export function PassageDetailArtifacts(props: IProps) {
       </SortableList>
       <Uploader
         recordAudio={false}
-        auth={auth}
         isOpen={uploadVisible}
         onOpen={handleUploadVisible}
         showMessage={showMessage}
@@ -693,11 +688,7 @@ export function PassageDetailArtifacts(props: IProps) {
         />
       )}
       {displayId && (
-        <MediaDisplay
-          srcMediaId={displayId}
-          finish={handleFinish}
-          auth={auth}
-        />
+        <MediaDisplay srcMediaId={displayId} finish={handleFinish} />
       )}
     </>
   );

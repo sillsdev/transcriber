@@ -44,7 +44,6 @@ import {
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob, logError, prettySegment, Severity } from '../utils';
-import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
@@ -222,7 +221,6 @@ const PassageDetailContext = React.createContext({} as IContext);
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   children: React.ReactElement;
-  auth: Auth;
 }
 interface ParamTypes {
   prjId: string;
@@ -235,7 +233,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     mapDispatchToProps
   )((props: IProps) => {
     const [reporter] = useGlobal('errorReporter');
-    const { auth, passages, sections, sectionResources, mediafiles } = props;
+    const { passages, sections, sectionResources, mediafiles } = props;
     const { artifactTypes, categories, userResources } = props;
     const { workflowSteps, orgWorkflowSteps } = props;
     const { wfStr, sharedStr, stepCompleteStr } = props;
@@ -572,7 +570,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           fetching.current = r.mediafile.id;
           fetchMediaUrl({
             id: r.mediafile.id,
-            auth: props.auth,
           });
           resetBlob = true;
         }
@@ -957,7 +954,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         {props.children}
         {/*this is only used to play old vernacular file segments*/}
         <MediaPlayer
-          auth={auth}
           srcMediaId={oldVernacularPlayItem}
           requestPlay={oldVernacularPlaying}
           onEnded={handleOldVernacularPlayEnd}

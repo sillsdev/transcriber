@@ -64,7 +64,7 @@ import {
   updateSegments,
 } from '../utils';
 import { isElectron } from '../api-variable';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import { debounce } from 'lodash';
 import { TaskItemWidth } from '../components/TaskTable';
 import { AllDone } from './AllDone';
@@ -232,13 +232,11 @@ const mapStateToProps = (state: IState): IStateProps => ({
   paratext_usernameStatus: state.paratext.usernameStatus,
 });
 interface IProps extends IStateProps, IRecordProps, IDispatchProps {
-  auth: Auth;
   defaultWidth?: number;
 }
 
 export function Transcriber(props: IProps) {
   const {
-    auth,
     mediafiles,
     projintegrations,
     integrations,
@@ -289,6 +287,7 @@ export function Transcriber(props: IProps) {
   const [user] = useGlobal('user');
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
+  const { accessToken } = useContext(TokenContext).state;
   const [assigned, setAssigned] = useState('');
   const [projData, setProjData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
@@ -626,7 +625,7 @@ export function Transcriber(props: IProps) {
   useEffect(() => {
     if (!offline) {
       if (!paratext_usernameStatus && projType.toLowerCase() === 'scripture') {
-        getUserName(auth, errorReporter, '');
+        getUserName(accessToken || '', errorReporter, '');
       }
       setHasParatextName(paratext_username !== '');
     } else setHasParatextName(true);
@@ -669,7 +668,7 @@ export function Transcriber(props: IProps) {
       );
     } else {
       getParatextText(
-        auth,
+        accessToken || '',
         remoteIdNum('passage', passage.id, memory.keyMap),
         artifactId && remoteId('artifacttype', artifactId, memory.keyMap),
         errorReporter,

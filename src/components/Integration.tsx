@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import * as actions from '../store';
 import { useGlobal, useState } from 'reactn';
 import { connect } from 'react-redux';
@@ -60,7 +60,7 @@ import {
   useCheckOnline,
   integrationSlug,
 } from '../utils';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import { bindActionCreators } from 'redux';
 import ParatextProject from '../model/paratextProject';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -161,7 +161,6 @@ interface IProps
     IDispatchProps,
     IRecordProps,
     WithDataProps {
-  auth: Auth;
   stopPlayer?: () => void;
 }
 
@@ -169,7 +168,6 @@ export function IntegrationPanel(props: IProps) {
   const {
     t,
     ts,
-    auth,
     paratext_username,
     paratext_usernameStatus,
     paratext_count,
@@ -210,6 +208,7 @@ export function IntegrationPanel(props: IProps) {
   const [projectsLoaded] = useGlobal('projectsLoaded');
   const getOfflineProject = useOfflnProjRead();
   const [offline] = useGlobal('offline');
+  const { accessToken } = useContext(TokenContext).state;
   const [count, setCount] = useState(-1);
 
   const [paratextIntegration, setParatextIntegration] = useState('');
@@ -341,7 +340,7 @@ export function IntegrationPanel(props: IProps) {
     if (stopPlayer) stopPlayer();
     setSyncing(true);
     syncProject(
-      auth,
+      accessToken || '',
       remoteIdNum('project', project, memory.keyMap),
       getTypeId(exportType)
         ? remoteIdNum(
@@ -512,7 +511,7 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     if (!offline) {
       if (!paratext_usernameStatus) {
-        getUserName(auth, errorReporter, t.usernamePending);
+        getUserName(accessToken || '', errorReporter, t.usernamePending);
       } else if (paratext_usernameStatus.errStatus)
         showTitledMessage(
           t.usernameError,
@@ -549,7 +548,12 @@ export function IntegrationPanel(props: IProps) {
             getLocalProjects(ptPath, t.projectsPending, projIds, langTag);
           });
         } else {
-          getProjects(auth, t.projectsPending, errorReporter, langTag);
+          getProjects(
+            accessToken || '',
+            t.projectsPending,
+            errorReporter,
+            langTag
+          );
         }
       } else {
         if (paratext_projectsStatus.errStatus) {
@@ -586,7 +590,7 @@ export function IntegrationPanel(props: IProps) {
         resetSync();
         setSyncing(false);
         doDataChanges(
-          auth,
+          accessToken || '',
           coordinator,
           fingerprint,
           projectsLoaded,

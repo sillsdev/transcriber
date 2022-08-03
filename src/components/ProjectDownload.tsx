@@ -1,6 +1,5 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import Auth from '../auth/Auth';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
@@ -51,13 +50,12 @@ interface IDispatchProps {
 
 interface IProps extends IStateProps, IDispatchProps {
   open: Boolean;
-  auth: Auth;
   projectIds: string[];
   finish: () => void;
 }
 
 export const ProjectDownload = (props: IProps) => {
-  const { open, projectIds, auth, t, ts, finish } = props;
+  const { open, projectIds, t, ts, finish } = props;
   const { exportProject, exportComplete, exportStatus, exportFile } = props;
   const [errorReporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
@@ -66,7 +64,6 @@ export const ProjectDownload = (props: IProps) => {
   const [busy, setBusy] = useGlobal('importexportBusy');
   const { showMessage, showTitledMessage } = useSnackBar();
   const doProjectExport = useProjectExport({
-    auth,
     exportProject,
     t,
     message: t.downloadingProject,

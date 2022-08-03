@@ -64,7 +64,6 @@ import { debounce } from 'lodash';
 import AudacityManager from './AudacityManager';
 import AssignSection from '../AssignSection';
 import StickyRedirect from '../StickyRedirect';
-import Auth from '../../auth/Auth';
 import Uploader from '../Uploader';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import { UpdateRecord } from '../../model/baseModel';
@@ -133,7 +132,6 @@ interface IProps
     IRecordProps,
     WithDataProps {
   colNames: string[];
-  auth: Auth;
 }
 
 interface ParamTypes {
@@ -164,7 +162,6 @@ export function ScriptureTable(props: IProps) {
     mediafiles,
     workflowSteps,
     orgWorkflowSteps,
-    auth,
   } = props;
   const classes = useStyles();
   const { prjId } = useParams<ParamTypes>();
@@ -970,7 +967,6 @@ export function ScriptureTable(props: IProps) {
         onUpload={handleUpload}
         onRecord={handleRecord}
         onHistory={handleVersions}
-        auth={auth}
         toolId={toolId}
         t={s}
         ts={ts}
@@ -984,7 +980,6 @@ export function ScriptureTable(props: IProps) {
         recordAudio={recordAudio}
         allowWave={true}
         defaultFilename={defaultFilename}
-        auth={auth}
         mediaId={uploadItem.current?.mediaId?.id || ''}
         importList={importList}
         isOpen={uploadVisible}
@@ -1010,7 +1005,7 @@ export function ScriptureTable(props: IProps) {
         isOpen={versionItem !== ''}
         onOpen={handleVerHistClose}
       >
-        <VersionDlg auth={auth} passId={versionItem} />
+        <VersionDlg passId={versionItem} />
       </BigDialog>
     </div>
   );

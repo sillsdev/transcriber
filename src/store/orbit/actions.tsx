@@ -8,10 +8,10 @@ import {
   FETCH_ORBIT_DATA_COMPLETE,
 } from './types';
 import Coordinator from '@orbit/coordinator';
-import Auth from '../../auth/Auth';
 import { Sources } from '../../Sources';
 import { Severity } from '../../utils';
 import { OfflineProject, Plan, VProject } from '../../model';
+import { ITokenContext } from '../../context/TokenProvider';
 
 export const orbitError = (ex: IApiError) => {
   return ex.response.status !== Severity.retry
@@ -51,7 +51,7 @@ export const orbitSaving = (val: boolean) => {
 export const fetchOrbitData =
   (
     coordinator: Coordinator,
-    auth: Auth,
+    tokenCtx: ITokenContext,
     fingerprint: string,
     setUser: (id: string) => void,
     setProjectsLoaded: (value: string[]) => void,
@@ -64,7 +64,7 @@ export const fetchOrbitData =
   (dispatch: any) => {
     Sources(
       coordinator,
-      auth,
+      tokenCtx,
       fingerprint,
       setUser,
       setProjectsLoaded,

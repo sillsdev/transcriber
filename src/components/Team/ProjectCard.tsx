@@ -88,7 +88,6 @@ export const ProjectCard = (props: IProps) => {
   const { project } = props;
   const ctx = React.useContext(TeamContext);
   const {
-    auth,
     loadProject,
     selectProject,
     setProjectParams,
@@ -337,7 +336,7 @@ export const ProjectCard = (props: IProps) => {
         isOpen={openIntegration}
         onOpen={setOpenIntegration}
       >
-        <IntegrationTab {...props} auth={auth} />
+        <IntegrationTab {...props} />
       </BigDialog>
       <BigDialog
         title={tpb.exportTitle.replace('{0}', getPlanName(project.id))}
@@ -346,7 +345,6 @@ export const ProjectCard = (props: IProps) => {
       >
         <ExportTab
           {...props}
-          auth={auth}
           projectPlans={projectPlans(projectId)}
           planColumn={true}
         />

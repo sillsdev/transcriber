@@ -2603,7 +2603,7 @@
             <source>Continue</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.continueCurrentUser">
@@ -2652,7 +2652,7 @@
             <source>Exit</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.export">
@@ -2855,14 +2855,14 @@
             <source>Your session will expire in {0} seconds. Would you like to continue?</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.sessionExpiring">
             <source>Session Expiring</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.settings">
@@ -2883,7 +2883,7 @@
             <source>Switch Mode or User</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.tasks">
@@ -4343,6 +4343,20 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="profile.defaultLocale">
+      		<source>Default locale set.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Profile.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="profile.defaultTimezone">
+      		<source>Default timezone set.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Profile.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="profile.deleteExplained">
             <source>Deleting your user will block you from using the program and remove references to your work.</source>
             <target/>
@@ -4357,6 +4371,20 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="profile.discardChanges">
+      		<source>Discard unsaved Changes?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Profile.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="profile.discardChangesExplained">
+      		<source>Discard unsaved Changes? ({0})</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Profile.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="profile.email">
             <source>Email</source>
             <target/>

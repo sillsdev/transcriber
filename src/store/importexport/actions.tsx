@@ -19,7 +19,6 @@ import {
 } from '../../model';
 import * as actions from '../../store';
 import { API_CONFIG } from '../../api-variable';
-import Auth from '../../auth/Auth';
 import { ResourceDocument } from '@orbit/jsonapi';
 import {
   getSerializer,
@@ -72,7 +71,7 @@ export const exportProject =
     fingerprint: string,
     userid: number | string,
     numberOfMedia: number,
-    auth: Auth,
+    token: string | null,
     errorReporter: any, //global errorReporter
     pendingmsg: string,
     nodatamsg: string,
@@ -97,7 +96,7 @@ export const exportProject =
         })
       ) as Project;
     };
-    if (!auth.accessToken || exportType === ExportType.ITFSYNC) {
+    if (!token || exportType === ExportType.ITFSYNC) {
       // equivalent to offline ie isElectron and not online
       electronExport(
         exportType,
@@ -160,7 +159,7 @@ export const exportProject =
         await axiosPost(
           `offlineData/project/export/${exportType}/${remProjectId}/${start}`,
           bodyFormData,
-          auth
+          token
         )
           // eslint-disable-next-line no-loop-func
           .then((response) => {
@@ -216,7 +215,7 @@ const importFromElectron =
     filename: string,
     file: Blob,
     projectid: number,
-    auth: Auth,
+    token: string | null,
     errorReporter: any, //global errorReporter
     pendingmsg: string,
     completemsg: string
@@ -229,7 +228,7 @@ const importFromElectron =
     var url = API_CONFIG.host + '/api/offlineData/project/import/' + filename;
     Axios.get(url, {
       headers: {
-        Authorization: 'Bearer ' + auth.accessToken,
+        Authorization: 'Bearer ' + token,
       },
     })
       .then((response) => {
@@ -258,7 +257,7 @@ const importFromElectron =
 
             Axios.put(url, null, {
               headers: {
-                Authorization: 'Bearer ' + auth.accessToken,
+                Authorization: 'Bearer ' + token,
               },
             })
               .then((putresponse) => {
@@ -323,7 +322,7 @@ export const importSyncFromElectron =
   (
     filename: string,
     file: Buffer,
-    auth: Auth,
+    token: string | null,
     errorReporter: any,
     pendingmsg: string,
     completemsg: string
@@ -334,7 +333,7 @@ export const importSyncFromElectron =
         filename,
         new Blob([file]),
         0,
-        auth,
+        token,
         errorReporter,
         pendingmsg,
         completemsg
@@ -346,7 +345,7 @@ export const importProjectFromElectron =
   (
     files: File[],
     projectid: number,
-    auth: Auth,
+    token: string | null,
     errorReporter: any,
     pendingmsg: string,
     completemsg: string
@@ -357,7 +356,7 @@ export const importProjectFromElectron =
         files[0].name,
         files[0],
         projectid,
-        auth,
+        token,
         errorReporter,
         pendingmsg,
         completemsg

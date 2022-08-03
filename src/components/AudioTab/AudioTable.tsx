@@ -15,7 +15,6 @@ import MediaPlayer from '../MediaPlayer';
 import MediaActions from './MediaActions';
 import MediaActions2 from './MediaActions2';
 import Confirm from '../AlertDialog';
-import Auth from '../../auth/Auth';
 import { remoteId, useOrganizedBy } from '../../crud';
 import { numCompare, dateCompare, dateOrTime } from '../../utils';
 import { IRow } from '.';
@@ -28,7 +27,6 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps {
-  auth: Auth;
   data: IRow[];
   setRefresh: (refresh: boolean) => void;
   playItem: string;
@@ -38,7 +36,7 @@ interface IProps extends IStateProps {
   onAttach?: (checks: number[], attach: boolean) => void;
 }
 export const AudioTable = (props: IProps) => {
-  const { data, setRefresh, lang, auth, t } = props;
+  const { data, setRefresh, lang, t } = props;
   const { playItem, setPlayItem, onAttach } = props;
   const ctx = React.useContext(PlanContext);
   const { connected, readonly, shared } = ctx.state;
@@ -239,7 +237,6 @@ export const AudioTable = (props: IProps) => {
           t={t}
           rowIndex={row.index}
           mediaId={mediaId}
-          auth={auth}
           online={connected || offlineOnly}
           readonly={readonly}
           canDelete={!readonly}
@@ -336,7 +333,7 @@ export const AudioTable = (props: IProps) => {
           isOpen={Boolean(verHist)}
           onOpen={handleVerHistClose}
         >
-          <VersionDlg auth={auth} passId={verHist} />
+          <VersionDlg passId={verHist} />
         </BigDialog>
       )}
 
@@ -356,7 +353,6 @@ export const AudioTable = (props: IProps) => {
         />
       )}
       <MediaPlayer
-        auth={auth}
         srcMediaId={playItem}
         requestPlay={mediaPlaying}
         onEnded={playEnded}

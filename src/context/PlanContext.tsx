@@ -17,7 +17,6 @@ import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { usePlanType } from '../crud';
 import { useCheckOnline, useInterval } from '../utils';
-import Auth from '../auth/Auth';
 import * as actions from '../store';
 
 interface IStateProps {
@@ -67,7 +66,6 @@ interface IContext {
 const PlanContext = React.createContext({} as IContext);
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
-  auth: Auth;
   children: React.ReactElement;
 }
 

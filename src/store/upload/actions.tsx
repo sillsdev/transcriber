@@ -1,6 +1,5 @@
 import Axios from 'axios';
 import { API_CONFIG, isElectron } from '../../api-variable';
-import Auth from '../../auth/Auth';
 import {
   UPLOAD_LIST,
   UPLOAD_ITEM_PENDING,
@@ -62,11 +61,11 @@ export const writeFileLocal = (file: File, remoteName?: string) => {
   reader.readAsBinaryString(file);
   return path.join(PathType.MEDIA, fullName.split(path.sep).pop());
 };
-export const uploadFile = (
+const uploadFile = (
   data: any,
   file: File,
   errorReporter: any,
-  auth: Auth,
+  token: string,
   cb?: (
     success: boolean,
     data: any,
@@ -89,7 +88,7 @@ export const uploadFile = (
       );
       Axios.delete(API_CONFIG.host + '/api/mediafiles/' + data.id, {
         headers: {
-          Authorization: 'Bearer ' + auth.accessToken,
+          Authorization: 'Bearer ' + token,
         },
       }).catch((err) => {
         logError(
@@ -107,7 +106,7 @@ export const nextUpload =
     record: any,
     files: File[],
     n: number,
-    auth: Auth,
+    token: string,
     offlineOnly: boolean,
     errorReporter: any,
     cb?: (n: number, success: boolean, data?: any) => void
@@ -214,13 +213,13 @@ export const nextUpload =
     Axios.post(API_CONFIG.host + '/api/mediafiles', vndRecord, {
       headers: {
         'Content-Type': 'application/vnd.api+json',
-        Authorization: 'Bearer ' + auth.accessToken,
+        Authorization: 'Bearer ' + token,
       },
     })
       .then((response) => {
         dispatch({ payload: n, type: UPLOAD_ITEM_CREATED });
         var json = fromVnd(response.data);
-        uploadFile(json, files[n], errorReporter, auth, completeCB);
+        uploadFile(json, files[n], errorReporter, token, completeCB);
         if (isElectron) {
           try {
             writeFileLocal(files[n], response.data.audioUrl);

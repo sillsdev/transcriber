@@ -65,7 +65,6 @@ export const AddCard = (props: IProps) => {
   const {
     projectCreate,
     cardStrings,
-    auth,
     flatAdd,
     vProjectStrings,
     bookSuggestions,
@@ -324,7 +323,6 @@ export const AddCard = (props: IProps) => {
       </Card>
       <Uploader
         recordAudio={recordAudio}
-        auth={auth}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}

@@ -41,7 +41,6 @@ import DiscussionMenu from './DiscussionMenu';
 import { useRecordComment } from './useRecordComment';
 import { bindActionCreators } from 'redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import Auth from '../../auth/Auth';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import MediaPlayer from '../MediaPlayer';
@@ -131,7 +130,6 @@ interface IDispatchProps {
 }
 
 interface IProps extends IStateProps, IRecordProps, IDispatchProps {
-  auth: Auth;
   comment: Comment;
   discussion: Discussion;
   number: number;
@@ -142,7 +140,6 @@ interface IProps extends IStateProps, IRecordProps, IDispatchProps {
 export const CommentCard = (props: IProps) => {
   const {
     t,
-    auth,
     comment,
     discussion,
     number,
@@ -219,7 +216,6 @@ export const CommentCard = (props: IProps) => {
     );
   };
   const { uploadMedia, fileName } = useRecordComment({
-    auth,
     discussion,
     number,
     afterUploadcb,
@@ -334,7 +330,6 @@ export const CommentCard = (props: IProps) => {
             {commentPlayId && mediaId === commentPlayId ? (
               <Grid item id="commentplayer" className={classes.column}>
                 <MediaPlayer
-                  auth={auth}
                   srcMediaId={mediaId === commentPlayId ? commentPlayId : ''}
                   requestPlay={commentPlaying}
                   onEnded={handleCommentPlayEnd}

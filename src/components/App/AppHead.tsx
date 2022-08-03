@@ -16,8 +16,8 @@ import {
 import { makeStyles } from '@material-ui/core';
 import HomeIcon from '@mui/icons-material/Home';
 import SystemUpdateIcon from '@mui/icons-material/SystemUpdateAlt';
-import Auth from '../../auth/Auth';
 import { API_CONFIG, isElectron } from '../../api-variable';
+import { TokenContext } from '../../context/TokenProvider';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import HelpMenu from '../HelpMenu';
 import UserMenu from '../UserMenu';
@@ -117,14 +117,12 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
 
 interface IProps extends IStateProps {
-  auth: Auth;
   resetRequests: () => Promise<void>;
   SwitchTo?: React.FC;
 }
 
 export const AppHead = (props: IProps) => {
-  const { auth, resetRequests, SwitchTo, t, orbitStatus, orbitErrorMsg } =
-    props;
+  const { resetRequests, SwitchTo, t, orbitStatus, orbitErrorMsg } = props;
   const classes = useStyles();
   const { pathname } = useLocation();
   const [errorReporter] = useGlobal('errorReporter');
@@ -133,6 +131,7 @@ export const AppHead = (props: IProps) => {
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [connected] = useGlobal('connected');
+  const tokenCtx = useContext(TokenContext);
   const ctx = useContext(UnsavedContext);
   const { checkSavedFn, startSave, toolsChanged, anySaving } = ctx.state;
   const [view, setView] = useState('');
@@ -216,11 +215,11 @@ export const AppHead = (props: IProps) => {
   };
 
   useEffect(() => {
-    if (auth.expiresAt === -1) {
+    if (tokenCtx.state.expiresAt === -1) {
       handleUserMenu('Logout');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth.expiresAt]);
+  }, [tokenCtx.state]);
 
   const downDone = () => {
     setDownloadAlert(false);
@@ -390,11 +389,11 @@ export const AppHead = (props: IProps) => {
           )}
           <HelpMenu online={!isOffline} />
           {pathname !== '/' && !pathname.startsWith('/access') && (
-            <UserMenu action={handleUserMenu} auth={auth} />
+            <UserMenu action={handleUserMenu} />
           )}
         </Toolbar>
         {!importexportBusy || <Busy />}
-        {downloadAlert && <ProjectDownloadAlert auth={auth} cb={downDone} />}
+        {downloadAlert && <ProjectDownloadAlert cb={downDone} />}
         <PolicyDialog
           isOpen={Boolean(showTerms)}
           content={showTerms}

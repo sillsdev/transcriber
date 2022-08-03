@@ -14,7 +14,6 @@ import styled from 'styled-components';
 import AppHead from '../components/App/AppHead';
 import ViewMode, { ViewOption } from '../control/ViewMode';
 import { UnsavedContext } from '../context/UnsavedContext';
-import Auth from '../auth/Auth';
 import SplitPane, { Pane } from 'react-split-pane';
 import { HeadHeight } from '../App';
 import {
@@ -154,15 +153,11 @@ const Wrapper = styled.div`
     min-height: 0;
   }
 `;
-interface IProps {
-  auth: Auth;
-}
 interface ParamTypes {
   prjId: string;
 }
 
-const PassageDetailGrids = (props: IProps) => {
-  const { auth } = props;
+const PassageDetailGrids = () => {
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
@@ -245,14 +240,12 @@ const PassageDetailGrids = (props: IProps) => {
           <Grid container direction="row" className={classes.row}>
             <Grid item xs={12}>
               <Grid container>
-                <PassageDetailArtifacts auth={auth} />
+                <PassageDetailArtifacts />
               </Grid>
             </Grid>
           </Grid>
         )}
-        {tool === ToolSlug.Paratext && (
-          <IntegrationTab {...props} auth={auth} />
-        )}
+        {tool === ToolSlug.Paratext && <IntegrationTab />}
         {(tool === ToolSlug.Discuss ||
           tool === ToolSlug.TeamCheck ||
           tool === ToolSlug.Record ||
@@ -268,7 +261,7 @@ const PassageDetailGrids = (props: IProps) => {
                 <Pane className={classes.pane}>
                   {tool === ToolSlug.Record && (
                     <Grid item className={classes.description} xs={12}>
-                      <PassageDetailRecord auth={auth} />
+                      <PassageDetailRecord />
                     </Grid>
                   )}
                   {tool !== ToolSlug.Record && tool !== ToolSlug.Transcribe && (
@@ -278,13 +271,12 @@ const PassageDetailGrids = (props: IProps) => {
                   )}
                   {tool === ToolSlug.TeamCheck && (
                     <Grid item className={classes.description} xs={12}>
-                      <TeamCheckReference auth={auth} />
+                      <TeamCheckReference />
                     </Grid>
                   )}
                   {tool === ToolSlug.Transcribe && (
                     <Grid item className={classes.description} xs={12}>
                       <PassageDetailTranscribe
-                        auth={auth}
                         width={width - discussionSize.width - 16}
                         artifactTypeId={artifactId}
                       />
@@ -294,7 +286,7 @@ const PassageDetailGrids = (props: IProps) => {
                 <Pane className={classes.pane}>
                   <Grid item xs={12} sm container>
                     <Grid item container direction="column">
-                      <DiscussionList auth={auth} />
+                      <DiscussionList />
                     </Grid>
                   </Grid>
                 </Pane>
@@ -307,7 +299,6 @@ const PassageDetailGrids = (props: IProps) => {
             <Grid item xs={12}>
               <Grid container>
                 <PassageDetailArtifact
-                  auth={auth}
                   width={width}
                   slugs={communitySlugs}
                   showTopic={true}
@@ -322,7 +313,6 @@ const PassageDetailGrids = (props: IProps) => {
             <Grid item xs={12}>
               <Grid container>
                 <PassageDetailArtifact
-                  auth={auth}
                   width={width}
                   slugs={backTranslationSlugs}
                   segments={
@@ -340,7 +330,6 @@ const PassageDetailGrids = (props: IProps) => {
           <Grid container>
             <Grid item xs={12}>
               <TranscriptionTab
-                {...props}
                 projectPlans={plans}
                 floatTop
                 step={currentstep}
@@ -354,7 +343,7 @@ const PassageDetailGrids = (props: IProps) => {
   );
 };
 
-export const PassageDetail = (props: IProps) => {
+export const PassageDetail = () => {
   const classes = useStyles();
   const { prjId } = useParams<ParamTypes>();
   const { pathname } = useLocation();
@@ -399,9 +388,9 @@ export const PassageDetail = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <AppHead {...props} SwitchTo={SwitchTo} />
-      <PassageDetailProvider {...props}>
-        <PassageDetailGrids {...props} />
+      <AppHead SwitchTo={SwitchTo} />
+      <PassageDetailProvider>
+        <PassageDetailGrids />
       </PassageDetailProvider>
     </div>
   );

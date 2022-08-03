@@ -13,7 +13,6 @@ import StickyRedirect from '../components/StickyRedirect';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { useProjectType, useRole, useUrlContext } from '../crud';
 import { forceLogin, localUserKey, LocalKey } from '../utils';
-import Auth from '../auth/Auth';
 import { HeadHeight } from '../App';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -44,14 +43,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IProps {
-  auth: Auth;
-}
 interface ParamTypes {
   prjId: string;
 }
-export const WorkScreen = (props: IProps) => {
-  const { auth } = props;
+export const WorkScreen = () => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const { prjId } = useParams<ParamTypes>();
@@ -110,15 +105,15 @@ export const WorkScreen = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <AppHead {...props} SwitchTo={SwitchTo} />
-      <TranscriberProvider {...props}>
+      <AppHead SwitchTo={SwitchTo} />
+      <TranscriberProvider>
         <div className={classes.panel2}>
           <div className={clsx({ [classes.topFilter]: topFilter })}>
-            <TaskTable auth={auth} onFilter={handleTopFilter} />
+            <TaskTable onFilter={handleTopFilter} />
           </div>
           {!topFilter && (
             <div className={classes.topTranscriber}>
-              <Transcriber auth={auth} />
+              <Transcriber />
             </div>
           )}
         </div>

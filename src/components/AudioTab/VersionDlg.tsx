@@ -13,7 +13,6 @@ import {
 } from '../../model';
 import localStrings from '../../selector/localize';
 import { QueryBuilder } from '@orbit/data';
-import Auth from '../../auth/Auth';
 import { related, useArtifactType, usePlan } from '../../crud';
 import { IRow, getMedia, IGetMedia } from '.';
 import AudioTable from './AudioTable';
@@ -30,11 +29,10 @@ interface IRecordProps {
 }
 
 interface IProps extends IStateProps, IRecordProps {
-  auth: Auth;
   passId: string;
 }
 export const VersionDlg = (props: IProps) => {
-  const { passId, auth, allBookData } = props;
+  const { passId, allBookData } = props;
   const { mediaFiles, passages, sections } = props;
   const [plan] = useGlobal('plan');
   const { getPlan } = usePlan();
@@ -67,7 +65,6 @@ export const VersionDlg = (props: IProps) => {
   return (
     <AudioTable
       data={data}
-      auth={auth}
       setRefresh={setRefresh}
       playItem={playItem}
       setPlayItem={setPlayItem}

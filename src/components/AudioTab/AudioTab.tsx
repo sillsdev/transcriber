@@ -21,14 +21,11 @@ import JSONAPISource from '@orbit/jsonapi';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, AppBar } from '@material-ui/core';
 import AddIcon from '@mui/icons-material/Add';
-// import FilterIcon from '@mui/icons-material/FilterList';
-// import SelectAllIcon from '@mui/icons-material/SelectAll';
 import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
 import { useSnackBar } from '../../hoc/SnackBar';
 import BigDialog from '../../hoc/BigDialog';
 import AudioTable from './AudioTable';
 import Uploader from '../Uploader';
-import Auth from '../../auth/Auth';
 import {
   getMediaInPlans,
   usePlan,
@@ -109,21 +106,11 @@ interface IProps
   extends IStateProps,
     IDispatchProps,
     IRecordProps,
-    WithDataProps {
-  auth: Auth;
-}
+    WithDataProps {}
 
 export function AudioTab(props: IProps) {
-  const {
-    t,
-    ts,
-    doOrbitError,
-    mediaFiles,
-    passages,
-    sections,
-    auth,
-    allBookData,
-  } = props;
+  const { t, ts, doOrbitError, mediaFiles, passages, sections, allBookData } =
+    props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
@@ -460,7 +447,6 @@ export function AudioTab(props: IProps) {
           <div className={classes.row}>
             <AudioTable
               data={data}
-              auth={auth}
               setRefresh={setRefresh}
               playItem={playItem}
               setPlayItem={setPlayItem}
@@ -490,7 +476,6 @@ export function AudioTab(props: IProps) {
       </div>
       <Uploader
         recordAudio={false}
-        auth={auth}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}

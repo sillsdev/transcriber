@@ -24,7 +24,6 @@ import SelectAllIcon from '@mui/icons-material/SelectAll';
 import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import TreeGrid from './TreeGrid';
-import Auth from '../auth/Auth';
 import AssignSection from './AssignSection';
 import {
   related,
@@ -100,7 +99,6 @@ interface IRecordProps {
 
 interface IProps extends IStateProps, IRecordProps, WithDataProps {
   action?: (what: string, where: number[]) => boolean;
-  auth: Auth;
 }
 
 export function AssignmentTable(props: IProps) {

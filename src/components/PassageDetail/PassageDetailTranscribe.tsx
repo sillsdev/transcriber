@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core';
 import { TranscriberProvider } from '../../context/TranscriberContext';
 import Transcriber from '../../components/Transcriber';
-import Auth from '../../auth/Auth';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { ISharedStrings } from '../../model';
 import { sharedSelector } from '../../selector';
@@ -39,16 +38,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 interface IProps {
-  auth: Auth;
   width: number;
   artifactTypeId: string | null;
 }
 
-export function PassageDetailTranscribe({
-  auth,
-  width,
-  artifactTypeId,
-}: IProps) {
+export function PassageDetailTranscribe({ width, artifactTypeId }: IProps) {
   const { mediafileId } = usePassageDetailContext();
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const classes = useStyles();
@@ -56,23 +50,21 @@ export function PassageDetailTranscribe({
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   return Boolean(mediafileId) ? (
-    <TranscriberProvider auth={auth} artifactTypeId={artifactTypeId}>
+    <TranscriberProvider artifactTypeId={artifactTypeId}>
       <Grid container direction="column">
         {artifactTypeId && (
           <div className={classes.panel2}>
             <div className={clsx({ [classes.topFilter]: topFilter })}>
-              <TaskTable auth={auth} onFilter={handleTopFilter} />
+              <TaskTable onFilter={handleTopFilter} />
             </div>
             {!topFilter && (
               <div className={classes.topTranscriber}>
-                <Transcriber auth={auth} defaultWidth={width - TaskItemWidth} />
+                <Transcriber defaultWidth={width - TaskItemWidth} />
               </div>
             )}
           </div>
         )}
-        {artifactTypeId == null && (
-          <Transcriber auth={auth} defaultWidth={width} />
-        )}
+        {artifactTypeId == null && <Transcriber defaultWidth={width} />}
       </Grid>
     </TranscriberProvider>
   ) : (

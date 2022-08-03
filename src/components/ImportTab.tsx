@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { TokenContext } from '../context/TokenProvider';
 import { errorStatus, IAxiosStatus } from '../store/AxiosStatus';
 import {
   Project,
@@ -33,7 +34,6 @@ import {
   DialogContent,
   DialogActions,
 } from '@material-ui/core';
-import Auth from '../auth/Auth';
 import localStrings from '../selector/localize';
 import { bindActionCreators } from 'redux';
 import Memory from '@orbit/memory';
@@ -94,7 +94,6 @@ interface IProps
     IDispatchProps,
     IRecordProps,
     WithDataProps {
-  auth: Auth;
   project?: string;
   planName?: string;
   syncBuffer: Buffer | undefined;
@@ -111,7 +110,6 @@ export function ImportTab(props: IProps) {
     t,
     ta,
     ts,
-    auth,
     importComplete,
     importStatus,
     importProjectToElectron,
@@ -138,6 +136,7 @@ export function ImportTab(props: IProps) {
   const [errorReporter] = useGlobal('errorReporter');
   const [user] = useGlobal('user');
   const [isOffline] = useGlobal('offline');
+  const token = useContext(TokenContext).state.accessToken;
   const { showMessage } = useSnackBar();
   const [changeData, setChangeData] = useState(Array<IRow>());
   const [importTitle, setImportTitle] = useState('');
@@ -310,7 +309,7 @@ export function ImportTab(props: IProps) {
         importProjectFromElectron(
           files,
           remoteIdNum('project', project, memory.keyMap),
-          auth,
+          token,
           errorReporter,
           t.importPending,
           t.importComplete
@@ -324,7 +323,7 @@ export function ImportTab(props: IProps) {
     importSyncFromElectron(
       fileName,
       buffer,
-      auth,
+      token,
       errorReporter,
       t.importPending,
       t.importComplete
@@ -715,7 +714,7 @@ export function ImportTab(props: IProps) {
           importComplete();
           if (remote)
             doDataChanges(
-              auth,
+              token || '',
               coordinator,
               fingerprint,
               projectsLoaded,

@@ -24,7 +24,6 @@ import { useOrganizedBy, useDiscussionCount } from '../../crud';
 import TaskAvatar from '../TaskAvatar';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
-import Auth from '../../auth/Auth';
 import PlanActionMenu from './PlanActionMenu';
 import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
 import PlanAudioActions from './PlanAudioActions';
@@ -162,7 +161,6 @@ interface IProps extends IStateProps {
   onUpload: (i: number) => () => void;
   onRecord: (i: number) => void;
   onHistory: (i: number) => () => void;
-  auth: Auth;
 }
 
 export function PlanSheet(props: IProps) {
@@ -184,7 +182,6 @@ export function PlanSheet(props: IProps) {
     paste,
     resequence,
     inlinePassages,
-    auth,
     onTranscribe,
     onAudacity,
     onPassageDetail,
@@ -810,7 +807,6 @@ export function PlanSheet(props: IProps) {
         <></>
       )}
       <MediaPlayer
-        auth={auth}
         srcMediaId={srcMediaId}
         onEnded={playEnded}
         requestPlay={mediaPlaying}

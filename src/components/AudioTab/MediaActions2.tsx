@@ -6,7 +6,6 @@ import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 import { isElectron } from '../../api-variable';
 import AudioDownload from '../AudioDownload';
-import Auth from '../../auth/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,12 +36,10 @@ interface IProps extends IStateProps {
   canDelete: boolean;
   onDownload: (mediaId: string) => void;
   onDelete: (i: number) => () => void;
-  auth: Auth;
 }
 
 export function MediaActions2(props: IProps) {
-  const { t, rowIndex, mediaId, online, readonly, onDelete, canDelete, auth } =
-    props;
+  const { t, rowIndex, mediaId, online, readonly, onDelete, canDelete } = props;
   const classes = useStyles();
 
   const handleDelete = () => {
@@ -51,9 +48,7 @@ export function MediaActions2(props: IProps) {
 
   return (
     <div className={classes.arrangeActions}>
-      {(isElectron || online) && (
-        <AudioDownload auth={auth} mediaId={mediaId} />
-      )}
+      {(isElectron || online) && <AudioDownload mediaId={mediaId} />}
       {canDelete && !readonly && (
         <IconButton
           id="audActDel"

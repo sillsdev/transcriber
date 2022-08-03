@@ -10,7 +10,6 @@ import {
 import { useCheckOnline, cleanFileName } from '../utils';
 import { offlineError, useProjectType, useRole } from '.';
 import { useSnackBar } from '../hoc/SnackBar';
-import Auth from '../auth/Auth';
 import Memory from '@orbit/memory';
 import Coordinator from '@orbit/coordinator';
 import { TransformBuilder } from '@orbit/data';
@@ -27,9 +26,7 @@ interface IStateProps {
   ts: ISharedStrings;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
-  auth: Auth;
-}
+interface IProps extends IStateProps, IDispatchProps {}
 
 export const useTeamCreate = (props: IProps) => {
   const { resetOrbitError } = props;
