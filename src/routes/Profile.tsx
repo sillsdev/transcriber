@@ -224,11 +224,14 @@ export function Profile(props: IProps) {
   const { showMessage } = useSnackBar();
   const addToOrgAndGroup = useAddToOrgAndGroup();
   const teamDelete = useTeamDelete();
+  const toolId = 'profile';
+  const saving = useRef(false);
+  const [confirmCancel, setConfirmCancel] = useState<string>();
+
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
   };
-  const toolId = 'profile';
-  const saving = useRef(false);
+
   const handleNameChange = (e: any) => {
     if (e.target.value === email) {
       showMessage(t.nameNotEmail);
@@ -408,6 +411,25 @@ export function Profile(props: IProps) {
   };
 
   const handleCancel = () => {
+    if (myChanged) {
+      const defLocale =
+        currentUser?.attributes?.locale === '' ? t.defaultLocale : '';
+      const defTimezone =
+        currentUser?.attributes?.timezone === '' ? t.defaultTimezone : '';
+      let message = t.discardChanges;
+      let message2 = t.discardChangesExplained;
+      if (defLocale && defTimezone) {
+        message = message2.replace('{0}', `${defLocale} ${defTimezone}`);
+      } else if (defLocale) {
+        message = message2.replace('{0}', defLocale);
+      } else if (defTimezone) {
+        message = message2.replace('{0}', defTimezone);
+      }
+      setConfirmCancel(message);
+    } else handleCancelConrimed();
+  };
+  const handleCancelConrimed = () => {
+    setConfirmCancel(undefined);
     toolChanged(toolId, false);
     if (editId) {
       setEditId(null);
@@ -418,6 +440,9 @@ export function Profile(props: IProps) {
       }
     }
     setView('Team');
+  };
+  const handleCancelAborted = () => {
+    setConfirmCancel(undefined);
   };
 
   const handleDelete = () => {
@@ -837,6 +862,13 @@ export function Profile(props: IProps) {
           <Confirm
             yesResponse={handleDeleteConfirmed}
             noResponse={handleDeleteRefused}
+          />
+        )}
+        {confirmCancel && (
+          <Confirm
+            text="Discard unsaved data?"
+            yesResponse={handleCancelConrimed}
+            noResponse={handleCancelAborted}
           />
         )}
       </Paper>

@@ -760,8 +760,12 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "checkingParatext": string;
     "close": string;
     "completeProfile": string;
+    "defaultLocale": string;
+    "defaultTimezone": string;
     "deleteExplained": string;
     "deleteUser": string;
+    "discardChanges": string;
+    "discardChangesExplained": string;
     "email": string;
     "family": string;
     "given": string;

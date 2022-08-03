@@ -3685,7 +3685,19 @@
             <target/>
          </segment>
       </unit>
-      <unit id="profile.deleteExplained">
+   	<unit id="profile.defaultLocale">
+   		<segment>
+   			<source>Default locale set.</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="profile.defaultTimezone">
+   		<segment>
+   			<source>Default timezone set.</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="profile.deleteExplained">
          <segment>
             <source>Deleting your user will block you from using the program and remove references to your work.</source>
             <target/>
@@ -3697,6 +3709,18 @@
             <target/>
          </segment>
       </unit>
+   	<unit id="profile.discardChanges">
+   		<segment>
+   			<source>Discard unsaved Changes?</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="profile.discardChangesExplained">
+   		<segment>
+   			<source>Discard unsaved Changes? ({0})</source>
+   			<target/>
+   		</segment>
+   	</unit>
       <unit id="profile.email">
          <segment>
             <source>Email</source>
