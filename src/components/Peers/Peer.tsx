@@ -46,7 +46,7 @@ export function Peer(props: IProps) {
   const { userNames, peerGroups, check, setCheck, cKey } = usePeerGroups(props);
   const { getRoleId, getMyOrgRole } = useRole();
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
-  const { localizePermission } = usePermissions();
+  const { localizePermission } = usePermissions(props);
 
   const handleSave = async (name: string, permissions: string, id?: string) => {
     if (id) {
@@ -55,7 +55,11 @@ export function Peer(props: IProps) {
         if (g.id === id) {
           await memory.update((t) => t.replaceAttribute(g, 'name', name));
           await memory.update((t) =>
-            t.replaceAttribute(g, 'permissions', permissions)
+            t.replaceAttribute(
+              g,
+              'permissions',
+              JSON.stringify({ permissions: permissions })
+            )
           );
           return;
         }
@@ -69,7 +73,7 @@ export function Peer(props: IProps) {
         name,
         abbreviation: toCamel(name),
         allUsers: false,
-        permissions: permissions,
+        permissions: JSON.stringify({ permissions: permissions }),
       },
     } as Group;
     await memory.update((t) => [

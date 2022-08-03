@@ -1,7 +1,7 @@
 import { Operation, TransformBuilder } from '@orbit/data';
 import { useGlobal } from 'reactn';
-import { findRecord, remoteIdGuid } from '.';
-import { MediaFile, Comment } from '../model';
+import { findRecord, PermissionName, remoteIdGuid, usePermissions } from '.';
+import { MediaFile, Comment, GroupMembership, Group, User } from '../model';
 import {
   AddRecord,
   UpdateRecord,
@@ -18,31 +18,68 @@ interface IDispatchProps {
 interface IProps extends IDispatchProps {
   discussion: string;
   cb: () => void;
+  users: User[];
+  groups: Group[];
+  memberships: GroupMembership[];
 }
 
 export const useSaveComment = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const { users, groups, memberships } = props;
+  const { hasPermission, addAccess, addNeedsApproval, approve } =
+    usePermissions({
+      users,
+      groups,
+      memberships,
+    });
   const { discussion, cb, doOrbitError } = props;
-  return (commentId: string, commentText: string, mediaRemId: string) => {
+  return (
+    commentId: string,
+    commentText: string,
+    mediaRemId: string,
+    approved: boolean,
+    permissions?: string
+  ) => {
     var mediafile = undefined;
     if (mediaRemId) {
       const id =
         remoteIdGuid('mediafile', mediaRemId, memory.keyMap) || mediaRemId;
       mediafile = findRecord(memory, 'mediafile', id) as MediaFile;
     }
+    interface IIndexable {
+      [key: string]: any;
+    }
+    var visible: IIndexable = {};
+    if (approved) {
+      //save the author...get rid of the rest of the permissions
+      visible = approve(permissions);
+    } else if (
+      hasPermission(PermissionName.CIT) ||
+      hasPermission(PermissionName.Mentor)
+    ) {
+      visible = addAccess(
+        addAccess(visible, PermissionName.CIT),
+        PermissionName.Mentor
+      );
+      if (hasPermission(PermissionName.CIT))
+        visible = addNeedsApproval(visible);
+    }
+
     const t = new TransformBuilder();
     const ops: Operation[] = [];
     var commentRec: Comment;
     if (commentId) {
       commentRec = findRecord(memory, 'comment', commentId) as Comment;
       commentRec.attributes.commentText = commentText;
+      commentRec.attributes.visible = JSON.stringify(visible);
       ops.push(...UpdateRecord(t, commentRec, user));
     } else {
       commentRec = {
         type: 'comment',
         attributes: {
           commentText: commentText,
+          visible: JSON.stringify(visible),
         },
       } as Comment;
       ops.push(

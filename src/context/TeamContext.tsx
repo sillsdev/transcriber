@@ -48,7 +48,6 @@ import {
   useOfflnProjRead,
   useLoadProjectData,
   useProjectType,
-  usePermissions,
 } from '../crud';
 import Auth from '../auth/Auth';
 
@@ -214,7 +213,6 @@ const TeamProvider = withData(mapRecordsToProps)(
       resetOrbitError,
     } = props;
     const [, setOrganization] = useGlobal('organization');
-    const [, setPermissions] = useGlobal('permissions');
     const [, setProject] = useGlobal('project');
     const [, setPlan] = useGlobal('plan');
     const [user] = useGlobal('user');
@@ -253,7 +251,6 @@ const TeamProvider = withData(mapRecordsToProps)(
     const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
     const { setProjectType } = useProjectType();
     const { getPlan } = usePlan();
-    const { setMyPermissions } = usePermissions();
     const LoadData = useLoadProjectData(auth, t, doOrbitError, resetOrbitError);
 
     const setProjectParams = (plan: Plan) => {
@@ -261,7 +258,6 @@ const TeamProvider = withData(mapRecordsToProps)(
       const team = vProject(plan);
       const orgId = related(team, 'organization');
       setOrganization(orgId);
-      setMyPermissions(orgId);
       setProject(projectId);
       setProjectType(projectId);
       setPlan(plan.id);
@@ -405,7 +401,6 @@ const TeamProvider = withData(mapRecordsToProps)(
     const projectDelete = async (project: VProject) => {
       await vProjectDelete(project);
       setOrganization('');
-      setPermissions([]);
       setProject('');
       setPlan('');
     };

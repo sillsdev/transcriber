@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Group, IPeerStrings, ISharedStrings } from '../../model';
+import {
+  Group,
+  GroupMembership,
+  IPeerStrings,
+  ISharedStrings,
+  User,
+} from '../../model';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
@@ -24,6 +30,8 @@ import {
   Theme,
   Tooltip,
 } from '@material-ui/core';
+import { QueryBuilder } from '@orbit/data';
+import { withData } from '../../mods/react-orbitjs';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     label: {
@@ -31,7 +39,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-interface IProps {
+interface IRecordProps {
+  users: Array<User>;
+  groups: Array<Group>;
+  memberships: Array<GroupMembership>;
+}
+interface IProps extends IRecordProps {
   cur?: Group;
   save: (name: string, permissions: string, id?: string) => void;
   remove?: (id: string) => void;
@@ -39,22 +52,27 @@ interface IProps {
   inUse: string[];
 }
 
-export default function GroupDialog({
+export const GroupDialog = ({
   cur,
   save,
   remove,
   isAdmin,
   inUse,
-}: IProps) {
+  users,
+  groups,
+  memberships,
+}: IProps) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [confirm, setConfirm] = useState<string>();
   const { showMessage } = useSnackBar();
   const { allPermissions, localizedPermissions, permissionTip } =
-    usePermissions();
+    usePermissions({ users, groups, memberships });
   const [permissionTitles] = useState(localizedPermissions());
-  const [value, setValue] = React.useState(cur?.attributes.permissions ?? '');
+  const [permissions, setPermissions] = React.useState(
+    cur?.attributes.permissions ?? ''
+  );
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
   const ts = useSelector(sharedSelector, shallowEqual) as ISharedStrings;
 
@@ -79,7 +97,7 @@ export default function GroupDialog({
       showMessage(t.inUse);
       return;
     }
-    save(name, value, cur?.id);
+    save(name, permissions, cur?.id);
     setName('');
     setOpen(false);
   };
@@ -103,7 +121,7 @@ export default function GroupDialog({
   }, [cur]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value);
+    setPermissions((event.target as HTMLInputElement).value);
   };
 
   return (
@@ -151,7 +169,7 @@ export default function GroupDialog({
           <FormLabel component="legend" className={classes.label}>
             {t.permissions}
           </FormLabel>
-          <RadioGroup value={value} onChange={handleChange}>
+          <RadioGroup value={permissions} onChange={handleChange}>
             <FormControlLabel
               key="none"
               control={<Radio id="none" key="none" />}
@@ -198,4 +216,12 @@ export default function GroupDialog({
       )}
     </div>
   );
-}
+};
+
+const mapRecordsToProps = {
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  users: (q: QueryBuilder) => q.findRecords('user'),
+  groups: (q: QueryBuilder) => q.findRecords('group'),
+  memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
+};
+export default withData(mapRecordsToProps)(GroupDialog as any) as any;

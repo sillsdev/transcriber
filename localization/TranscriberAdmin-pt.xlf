@@ -685,13 +685,25 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="commentCard.confirmDelete">
+        <unit id="commentCard.approve">
+         <segment>
+            <source>Approve</source>
+            <target>Aprovar</target>
+         </segment>
+        </unit>
+      	<unit id="commentCard.confirmDelete">
 			<segment>
 				<source>Delete this comment?</source>
 				<target>Eliminar este comentário?</target>
 			</segment>
 		</unit>
-		<unit id="commentEditor.record">
+      <unit id="commentCard.unapproved">
+         <segment>
+            <source>Unapproved</source>
+            <target>Desaprovado</target>
+         </segment>
+      </unit>
+      	<unit id="commentEditor.record">
 			<segment>
 				<source>Record Comment</source>
 				<target>Comentário de registro</target>

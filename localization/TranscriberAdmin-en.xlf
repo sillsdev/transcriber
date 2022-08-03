@@ -688,9 +688,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="commentCard.approve">
+         <segment>
+            <source>Approve</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="commentCard.confirmDelete">
          <segment>
             <source>Delete this comment?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentCard.unapproved">
+         <segment>
+            <source>Unapproved</source>
             <target/>
          </segment>
       </unit>
@@ -3451,18 +3463,6 @@
       <unit id="permission.mentorTip">
          <segment>
             <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="permission.observer">
-         <segment>
-            <source>Observer</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="permission.observerTip">
-         <segment>
-            <source>Observers will be able to view projects but not make changes.  Will they be able to participate in discussions?</source>
             <target/>
          </segment>
       </unit>

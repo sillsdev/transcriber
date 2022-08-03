@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { User, GroupMembership, Group } from '../../model';
+import { User, Group, GroupMembership } from '../../model';
 import { related, useAllUserGroup, useUser } from '../../crud';
 
 export interface IUserName {
@@ -20,7 +20,10 @@ export const usePeerGroups = ({ users, groups, memberships }: IProps) => {
   const { getUserRec } = useUser();
   const [userNames, setUserNames] = useState<IUserName[]>([]);
   const [peerGroups, setPeerGroups] = useState<Group[]>([]);
+  const [myGroups, setMyGroups] = useState<Group[]>([]);
   const [check, setCheck] = useState<Set<string>>();
+  const [user] = useGlobal('user');
+  const [offlineOnly] = useGlobal('offlineOnly');
 
   const cKey = (userId: string, groupId: string) => `${userId}_${groupId}`;
 
@@ -34,11 +37,23 @@ export const usePeerGroups = ({ users, groups, memberships }: IProps) => {
     const memberIds = memberships
       .filter((m) => related(m, 'group') === allUserId)
       .map((m) => related(m, 'user'));
+
     setUserNames(
       memberIds.map((id) => {
         const userRec = getUserRec(id) as User;
         return { userId: id, name: userRec?.attributes?.name };
       })
+    );
+    var groupIds = memberships
+      .filter((m) => related(m, 'user') === user)
+      .map((om) => related(om, 'group'));
+    setMyGroups(
+      groups.filter(
+        (g) =>
+          g?.id !== allUserId &&
+          groupIds.includes(g.id) &&
+          related(g, 'owner') === organization
+      )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memberships, organization, users, allUserId]);
@@ -63,5 +78,24 @@ export const usePeerGroups = ({ users, groups, memberships }: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userNames, peerGroups]);
 
-  return { userNames, peerGroups, check, setCheck, cKey };
+  const getGroupId = function (name: string): string {
+    let findit = groups.filter(
+      (r) =>
+        r.attributes &&
+        r.attributes.name === name &&
+        offlineOnly === Boolean(r?.keys?.remoteId)
+    );
+    if (findit.length > 0) return findit[0].id;
+    return '';
+  };
+
+  return {
+    userNames,
+    peerGroups,
+    check,
+    setCheck,
+    cKey,
+    myGroups,
+    getGroupId,
+  };
 };
