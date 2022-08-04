@@ -514,7 +514,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       if (role !== '') {
         selectTasks(true, rowList, playItem); // assigned
         selectTasks(false, rowList, playItem); // unassigned
-        const newAllDone = rowList.length === 0;
+        const newAllDone = rowList.length === 0 && !isDetail;
         if (newAllDone !== state.allDone) setAllDone(newAllDone);
         // ALL OTHERS
         addTasks('', 'view', rowList, false, playItem);
