@@ -1,23 +1,20 @@
-import { makeStyles } from '@material-ui/core/styles';
+import styled from 'styled-components';
 import busyImage from '../assets/progress.gif';
 
-const useStyles = makeStyles({
-  busy: {
-    display: 'flex',
-    height: '100vh',
-  },
-  img: {
-    width: '120px',
-    margin: 'auto',
-  },
-});
+const BusyDiv = styled.div`
+  display: flex;
+  height: 100vh;
+  .busyImg {
+    width: 120px;
+    margin: auto;
+  }
+`;
 
-const Busy = () => {
-  const classes = useStyles();
+export const Busy = () => {
   return (
-    <div className={classes.busy}>
-      <img className={classes.img} src={busyImage} alt="busy" />
-    </div>
+    <BusyDiv>
+      <img className="busyImg" src={busyImage} alt="busy" />
+    </BusyDiv>
   );
 };
 
