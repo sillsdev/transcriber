@@ -64,6 +64,7 @@ import { NewDiscussionToolId } from './DiscussionList';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import GroupAvatar from '../GroupAvatar';
 import SelectDiscussionAssignment from '../../control/SelectDiscussionAssignment';
+import { usePeerGroups } from '../Peers/usePeerGroups';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -262,8 +263,6 @@ export const DiscussionCard = (props: IProps) => {
   const [artifactCategory, setArtifactCategory] = useState('');
   const [step, setStep] = useState('');
   const [reference, setReference] = useState('');
-  const [assignedGroup, setAssignedGroup] = useState<Group>();
-  const [assignedUser, setAssignedUser] = useState<User>();
   const [sourceMediafile, setSourceMediafile] = useState<MediaFile>();
   const [editing, setEditing] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
@@ -274,7 +273,13 @@ export const DiscussionCard = (props: IProps) => {
   const [editSubject, setEditSubject] = useState(
     discussion.attributes?.subject
   );
-  const { permissions, canAccess, needsApproval } = usePermissions({
+  const assignedToMeRef = useRef(false);
+  const { permissions, canAccess, needsApproval, getAuthor } = usePermissions({
+    users,
+    groups,
+    memberships,
+  });
+  const { myGroups } = usePeerGroups({
     users,
     groups,
     memberships,
@@ -292,6 +297,7 @@ export const DiscussionCard = (props: IProps) => {
   const [changeAssignment, setChangeAssignment] = useState<
     boolean | undefined
   >();
+
   const handleSelect = (discussion: Discussion) => () => {
     selectDiscussion(discussion);
   };
@@ -314,7 +320,10 @@ export const DiscussionCard = (props: IProps) => {
   }, [toolsChanged, myComments, myChanged]);
 
   useEffect(() => {
-    if (changeAssignment === false) handleSave();
+    if (changeAssignment === false) {
+      handleSave();
+      setChangeAssignment(undefined);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [changeAssignment]);
 
@@ -335,20 +344,11 @@ export const DiscussionCard = (props: IProps) => {
   }, [comments, discussion.id, permissions]);
 
   useEffect(() => {
-    if (groups) {
-      var r = groups.filter((r) => related(discussion, 'group') === r.id);
-      if (r.length > 0) setAssignedGroup(r[0]);
-      else setAssignedGroup(undefined);
-    }
-  }, [groups, discussion]);
-
-  useEffect(() => {
-    if (users) {
-      var u = users.filter((u) => related(discussion, 'user') === u.id);
-      if (u.length > 0) setAssignedUser(u[0]);
-      else setAssignedUser(undefined);
-    }
-  }, [users, discussion]);
+    var a = related(discussion, 'group');
+    if (a) setEditAssigned(groupPrefix + a);
+    a = related(discussion, 'user');
+    if (a) setEditAssigned(userPrefix + a);
+  }, [discussion]);
 
   useEffect(() => {
     if (mediafiles) {
@@ -622,10 +622,17 @@ export const DiscussionCard = (props: IProps) => {
           discussion,
           'group',
           'group',
-          editGroup(),
+          assignedGroup?.id ?? '',
           user
         ),
-        ...UpdateRelatedRecord(t, discussion, 'user', 'user', editUser(), user)
+        ...UpdateRelatedRecord(
+          t,
+          discussion,
+          'user',
+          'user',
+          assignedUser?.id ?? '',
+          user
+        )
       );
       await memory.update(ops);
     }
@@ -640,14 +647,17 @@ export const DiscussionCard = (props: IProps) => {
     setEditing(false);
     setChanged(false);
   };
-  const editGroup = () =>
-    editAssigned.startsWith(groupPrefix)
-      ? editAssigned.substring(groupPrefix.length)
-      : '';
-  const editUser = () =>
-    editAssigned.startsWith(userPrefix)
-      ? editAssigned.substring(userPrefix.length)
-      : '';
+  const assignedGroup = useMemo(() => {
+    return editAssigned.startsWith(groupPrefix)
+      ? groups?.find((g) => g.id === editAssigned.substring(groupPrefix.length))
+      : undefined;
+  }, [editAssigned, groups]);
+
+  const assignedUser = useMemo(() => {
+    return editAssigned.startsWith(userPrefix)
+      ? users?.find((u) => u.id === editAssigned.substring(userPrefix.length))
+      : undefined;
+  }, [editAssigned, users]);
 
   const version = useMemo(() => {
     const mediafile = mediafiles.find(
@@ -687,12 +697,52 @@ export const DiscussionCard = (props: IProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightDiscussion, myRegion?.start, refresh]);
+
   const currentAssigned = () =>
     related(discussion, 'group')
       ? groupPrefix + related(discussion, 'group')
       : related(discussion, 'user')
       ? userPrefix + related(discussion, 'user')
       : '';
+
+  useEffect(() => {
+    var assigned = editAssigned || currentAssigned();
+    assignedToMeRef.current =
+      assigned === userPrefix + user ||
+      myGroups.map((grp) => groupPrefix + grp.id).includes(assigned);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editAssigned, myGroups]);
+
+  useEffect(() => {
+    if (assignedToMeRef.current) {
+      var sortedByUpdatedDesc = [...myComments];
+      sortedByUpdatedDesc.sort((a, b) =>
+        a.attributes.dateUpdated > b.attributes.dateUpdated ? -1 : 1
+      );
+      if (
+        sortedByUpdatedDesc.length > 0 &&
+        related(sortedByUpdatedDesc[0], 'lastModifiedByUser') === user
+      ) {
+        //find who commented before me...
+        for (
+          var ix = 0;
+          ix < sortedByUpdatedDesc.length &&
+          (getAuthor(sortedByUpdatedDesc[ix].attributes.visible) ??
+            related(sortedByUpdatedDesc[ix], 'lastModifiedByUser')) === user;
+          ix++
+        );
+        if (ix < sortedByUpdatedDesc.length) {
+          handleUserChange(
+            getAuthor(sortedByUpdatedDesc[ix].attributes.visible) ??
+              related(sortedByUpdatedDesc[ix], 'lastModifiedByUser')
+          );
+          setChangeAssignment(false);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [myComments]);
+
   const handleAssignedClick = () => {
     setEditAssigned(currentAssigned());
     setChangeAssignment(!changeAssignment as boolean);
@@ -730,7 +780,7 @@ export const DiscussionCard = (props: IProps) => {
                 <SelectGroup
                   id={`group-${discussion.id}`}
                   org={false}
-                  initGroup={editGroup()}
+                  initGroup={assignedGroup?.id}
                   onChange={handleGroupChange}
                   required={false}
                   label={t.assignGroup}
@@ -744,7 +794,7 @@ export const DiscussionCard = (props: IProps) => {
                 </Typography>
                 <SelectUser
                   id={`user-${discussion.id}`}
-                  initUser={editUser}
+                  initUser={assignedUser?.id}
                   onChange={handleUserChange}
                   required={false}
                   label={t.assignUser}
