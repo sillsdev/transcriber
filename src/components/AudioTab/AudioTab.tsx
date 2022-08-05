@@ -164,6 +164,7 @@ export function AudioTab(props: IProps) {
   const handleAutoMatch = () => setAutoMatch(!autoMatch);
 
   const handleAttachCancel = () => {
+    setUploadMedia(undefined);
     setAttachVisible(false);
     setPCheck(-1);
     setMCheck(-1);
