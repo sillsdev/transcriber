@@ -70,8 +70,11 @@ export function Logout(props: IProps) {
         coordinator.removeSource('remote');
         await coordinator.activate({ logLevel: LogLevel.Warnings });
       }
-      ctx.logout();
-      !isElectron && logout({ returnTo: window.origin });
+      if (isElectron) {
+        ctx.logout();
+      } else {
+        logout({ returnTo: window.origin });
+      }
     }
     setView(wasOfflineOnly ? 'offline' : 'online');
   };
@@ -80,7 +83,7 @@ export function Logout(props: IProps) {
     setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
     if (!isElectron) {
-      ctx.logout();
+      // ctx.logout();
       !isElectron && logout({ returnTo: window.origin });
     } else handleLogout();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
