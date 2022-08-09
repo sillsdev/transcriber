@@ -25,7 +25,6 @@ import {
   BookName,
   RoleNames,
 } from '../model';
-import { isElectron } from '../api-variable';
 import { OptionType } from '../model';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -300,13 +299,11 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const getTeams = () => {
       let orgs = organizations;
-      if (isElectron) {
-        //online or offline we may have other user's orgs in the db
-        const orgIds = orgMembers
-          .filter((om) => related(om, 'user') === user)
-          .map((om) => related(om, 'organization'));
-        orgs = organizations.filter((o) => orgIds.includes(o.id));
-      }
+      //online or offline we may have other user's orgs in the db
+      const orgIds = orgMembers
+        .filter((om) => related(om, 'user') === user)
+        .map((om) => related(om, 'organization'));
+      orgs = organizations.filter((o) => orgIds.includes(o.id));
       return orgs
         .filter(
           (o) =>
@@ -451,17 +448,16 @@ const TeamProvider = withData(mapRecordsToProps)(
       /* after deleting a project, sometimes we get here before the projects
        ** list is updated.  So, get an updated list all the time
        */
+
       var projs = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('project')
       ) as Project[];
-      if (isElectron) {
-        const grpIds = groupMemberships
-          .filter((gm) => related(gm, 'user') === user)
-          .map((gm) => related(gm, 'group'));
-        setUserProjects(
-          projs.filter((p) => grpIds.includes(related(p, 'group')))
-        );
-      } else setUserProjects(projs);
+      const grpIds = groupMemberships
+        .filter((gm) => related(gm, 'user') === user)
+        .map((gm) => related(gm, 'group'));
+      setUserProjects(
+        projs.filter((p) => grpIds.includes(related(p, 'group')))
+      );
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [projects, groupMemberships, user, isOffline]);
 

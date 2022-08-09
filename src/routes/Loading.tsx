@@ -14,7 +14,7 @@ import {
   ISharedStrings,
   IFetchResults,
 } from '../model';
-import { TransformBuilder, QueryBuilder } from '@orbit/data';
+import { QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Typography, Paper, Button } from '@material-ui/core';
@@ -43,6 +43,7 @@ import {
   useOfflineSetup,
   useRole,
   useProjectType,
+  AcceptInvitation,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -172,9 +173,7 @@ export function Loading(props: IProps) {
     allinvites
       .filter((i) => !i.attributes.accepted)
       .forEach(async (invitation) => {
-        await newremote.update((t: TransformBuilder) =>
-          t.replaceAttribute(invitation, 'accepted', true)
-        );
+        await AcceptInvitation(newremote, invitation);
       });
 
     if (inviteId) {
