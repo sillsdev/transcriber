@@ -27,8 +27,11 @@ import {
   OrbitNetworkErrorRetries,
 } from '../api-variable';
 import {
+  AcceptInvitation,
   findRecord,
+  GetUser,
   offlineProjectUpdateSnapshot,
+  related,
   remoteId,
   remoteIdGuid,
   SetUserLanguage,
@@ -36,7 +39,16 @@ import {
 import { currentDateTime, localUserKey, LocalKey } from '../utils';
 import { electronExport } from '../store/importexport/electronExport';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
-import { ExportType, IState, OfflineProject, Plan, VProject } from '../model';
+import {
+  ExportType,
+  GroupMembership,
+  Invitation,
+  IState,
+  OfflineProject,
+  OrganizationMembership,
+  Plan,
+  VProject,
+} from '../model';
 import IndexedDBSource from '@orbit/indexeddb';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
@@ -131,6 +143,25 @@ export const doDataChanges = async (
     }
   };
 
+  const reloadOrgs = async (localId: string) => {
+    const orgmem = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'organizationmembership', id: localId })
+    ) as OrganizationMembership;
+    if (related(orgmem, 'user') === user)
+      memory.sync(await remote.pull((q) => q.findRecords('organization')));
+  };
+
+  const reloadProjects = async (localId: string) => {
+    const grpmem = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'groupmembership', id: localId })
+    ) as GroupMembership;
+    if (related(grpmem, 'user') === user) {
+      memory.sync(await remote.pull((q) => q.findRecords('group')));
+      memory.sync(await remote.pull((q) => q.findRecords('project')));
+      memory.sync(await remote.pull((q) => q.findRecords('plan')));
+    }
+  };
+
   const processDataChanges = async (
     api: string,
     params: any,
@@ -159,7 +190,7 @@ export const doDataChanges = async (
               for (const tr of t) {
                 var tb = new TransformBuilder();
                 var localOps: Operation[] = [];
-                var upRec: UpdateRecordOperation;
+                let upRec: UpdateRecordOperation;
                 await memory.sync(await backup.push(tr.operations));
                 for (const o of tr.operations) {
                   if (o.op === 'updateRecord') {
@@ -207,6 +238,21 @@ export const doDataChanges = async (
                           tb,
                           localOps
                         );
+                        break;
+                      case 'invitation':
+                        var userrec = GetUser(memory, user);
+                        if (
+                          (upRec.record as Invitation).attributes?.email ===
+                          userrec.attributes.email
+                        )
+                          AcceptInvitation(remote, upRec.record as Invitation);
+                        break;
+                      case 'organizationmembership':
+                        reloadOrgs(upRec.record.id);
+                        break;
+                      case 'groupmembership':
+                        reloadProjects(upRec.record.id);
+                        break;
                     }
                   }
                 }
@@ -226,6 +272,14 @@ export const doDataChanges = async (
         table.ids.forEach((r) => {
           const localId = remoteIdGuid(table.type, r.toString(), memory.keyMap);
           if (localId) {
+            switch (table.type) {
+              case 'organizationmembership':
+                reloadOrgs(localId);
+                break;
+              case 'groupmembership':
+                reloadProjects(localId);
+                break;
+            }
             operations.push(tb.removeRecord({ type: table.type, id: localId }));
           }
         });
@@ -370,6 +424,7 @@ export function DataChanges(props: IProps) {
       doingChanges.current = false; //attempt to prevent double calls
     }
   };
+
   const backupElectron = () => {
     if (!busy && !saving && project !== '') {
       electronExport(
