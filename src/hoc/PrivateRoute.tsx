@@ -22,7 +22,8 @@ export function PrivateRoute({ children, ...rest }: IProps) {
             localUserKey(LocalKey.deeplink),
             location?.pathname
           );
-        localStorage.setItem(localUserKey(LocalKey.url), location?.pathname);
+        if (!location?.pathname?.endsWith('null'))
+          localStorage.setItem(localUserKey(LocalKey.url), location?.pathname);
         return (
           <Redirect
             to={{

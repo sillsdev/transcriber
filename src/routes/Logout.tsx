@@ -45,7 +45,7 @@ export function Logout(props: IProps) {
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
   const [coordinator] = useGlobal('coordinator');
-  const [, setUser] = useGlobal('user');
+  const [user, setUser] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
   const [, setIsOffline] = useGlobal('offline');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
@@ -84,7 +84,9 @@ export function Logout(props: IProps) {
     fetchLocalization();
     if (!isElectron) {
       // ctx.logout();
-      !isElectron && logout({ returnTo: window.origin });
+      if (user) {
+        !isElectron && logout({ returnTo: window.origin });
+      }
     } else handleLogout();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);

@@ -190,7 +190,8 @@ export const AppHead = (props: IProps) => {
       });
       return;
     }
-    localStorage.setItem(localUserKey(LocalKey.url), lastpath);
+    if (!lastpath.endsWith('null'))
+      localStorage.setItem(localUserKey(LocalKey.url), lastpath);
     if (!/Close/i.test(what)) {
       if (/ClearLogout/i.test(what)) {
         forceLogin();
