@@ -556,6 +556,22 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         if (selected === '') {
           setSelected(rowList[1].mediafile.id, rowList);
         }
+      } else {
+        //reset mediastate
+        fetchMediaUrl({
+          id: '',
+        });
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            audioBlob: undefined,
+            index: 0,
+            selected: '',
+            playing: false,
+            playItem: '',
+            loading: false,
+          };
+        });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [role, planMedia, refreshed, pasId, medId]);
