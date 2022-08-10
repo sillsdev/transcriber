@@ -54,6 +54,7 @@ export const TeamItem = (props: IProps) => {
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setOrganization] = useGlobal('organization');
+  const [busy] = useGlobal('importexportBusy');
   const [editOpen, setEditOpen] = React.useState(false);
   const [showWorkflow, setShowWorkflow] = React.useState(false);
   const [deleteItem, setDeleteItem] = React.useState<Organization>();
@@ -146,6 +147,7 @@ export const TeamItem = (props: IProps) => {
                 id="teamSettings"
                 variant="contained"
                 onClick={handleSettings(team)}
+                disabled={busy}
               >
                 {t.settings}
               </Button>
