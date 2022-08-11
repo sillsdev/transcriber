@@ -142,9 +142,6 @@ function TokenProvider(props: IProps) {
 
   const checkTokenExpired = () => {
     if (!offline) {
-      if (localStorage.getItem('isLoggedIn') !== 'true' && state.accessToken) {
-        handleLogOut();
-      }
       if (state.expiresAt) {
         const currentUnix = moment().locale('en').format('X');
         const expires = moment

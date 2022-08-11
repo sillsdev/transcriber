@@ -357,7 +357,7 @@ export function Access(props: IProps) {
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, []);
+  }, [accessToken]);
 
   useEffect(() => {
     if (isElectron && selectedUser === '') {
