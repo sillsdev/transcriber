@@ -220,10 +220,6 @@ export const useProjectResourceSave = () => {
         i.rec.type === 'passage' ? i.rec.id : undefined,
         secId
       );
-      await memory.update((t) => [
-        t.replaceAttribute(newMedia, 'audioUrl', media.attributes.audioUrl),
-        t.replaceAttribute(newMedia, 's3file', media.attributes.s3file),
-      ]);
     }
   };
 };
