@@ -269,6 +269,12 @@ export function useWaveSurfer(
   };
 
   const wsClear = (preventUndo: boolean = false) => {
+    if (loadRequests.current) {
+      //queue this
+      blobToLoad.current = undefined;
+      loadRequests.current = 2; //if there was another, we'll bypass it
+      return;
+    }
     if (wavesurferPlayingRef.current) wavesurferRef.current?.stop();
     if (!preventUndo) {
       setUndoBuffer(copyOriginal());
@@ -331,6 +337,9 @@ export function useWaveSurfer(
     } else if (blobToLoad.current) {
       wavesurfer()?.loadBlob(blobToLoad.current);
       blobToLoad.current = undefined;
+    } else {
+      loadRequests.current--;
+      wsClear();
     }
   };
 

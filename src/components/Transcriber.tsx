@@ -44,6 +44,7 @@ import {
   remoteId,
   ArtifactTypeSlug,
   useArtifactType,
+  findRecord,
 } from '../crud';
 import {
   insertAtCursor,
@@ -505,7 +506,8 @@ export function Transcriber(props: IProps) {
   }, [height, playerSize]);
 
   useEffect(() => {
-    if (!saving.current && selected) showTranscription(getTranscription());
+    if (!selected) showTranscription({ transcription: '', position: 0 });
+    else if (!saving.current) showTranscription(getTranscription());
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [selected]);
 
@@ -579,10 +581,8 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     if (project && project !== '') {
-      var r = memory.cache.query((q) =>
-        q.findRecord({ type: 'project', id: project })
-      ) as Project;
-      setProjData(getFontData(r, offline));
+      var r = findRecord(memory, 'project', project) as Project;
+      if (r) setProjData(getFontData(r, offline));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
@@ -602,21 +602,26 @@ export function Transcriber(props: IProps) {
       ) as MediaFile[];
       //check if the url we have loaded is for the current mediaId
       const oldRec = mediaRecs.filter((m) => m.id === mediafile.id);
-      var mediaRecUrl =
-        oldRec.length > 0
-          ? safeURL(dataPath(oldRec[0].attributes.audioUrl, PathType.MEDIA))
-          : '';
-      var cut = mediaUrl.lastIndexOf('&Signature');
-      var check = cut > 0 ? mediaUrl.substr(0, cut) : mediaUrl;
-      if (check === (cut > 0 ? mediaRecUrl.substr(0, cut) : mediaRecUrl)) {
-        memory
-          .update((t: TransformBuilder) =>
-            t.replaceAttribute(oldRec[0], 'duration', Math.floor(totalSeconds))
-          )
-          .then(() => {
-            refresh();
-          });
-        // console.log(`update duration to ${Math.floor(totalSeconds)}`);
+      if (oldRec.length) {
+        var mediaRecUrl = safeURL(
+          dataPath(oldRec[0].attributes.audioUrl, PathType.MEDIA)
+        );
+        var cut = mediaUrl.lastIndexOf('&Signature');
+        var check = cut > 0 ? mediaUrl.substring(0, cut) : mediaUrl;
+        if (check === (cut > 0 ? mediaRecUrl.substring(0, cut) : mediaRecUrl)) {
+          memory
+            .update((t: TransformBuilder) =>
+              t.replaceAttribute(
+                oldRec[0],
+                'duration',
+                Math.floor(totalSeconds)
+              )
+            )
+            .then(() => {
+              refresh();
+            });
+          // console.log(`update duration to ${Math.floor(totalSeconds)}`);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -763,11 +768,10 @@ export function Transcriber(props: IProps) {
   ];
 
   const handleAssign = async (curState: string) => {
-    const secRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord(section)
-    );
+    const secRec = findRecord(memory, 'section', section.id);
     const role = stateRole[curState];
     if (
+      secRec &&
       role &&
       projRole &&
       roleHierarchy.indexOf(camel2Title(role) as RoleNames) <=
