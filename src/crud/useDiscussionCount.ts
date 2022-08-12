@@ -1,27 +1,27 @@
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { Discussion, MediaFile } from '../model';
-import { related, useRole } from '../crud';
+import { Discussion, GroupMembership, MediaFile } from '../model';
+import { related } from '../crud';
 
 interface IProps {
   discussions: Discussion[];
   mediafiles: MediaFile[];
+  groupmemberships: GroupMembership[];
 }
 
-export const useDiscussionCount = ({ discussions, mediafiles }: IProps) => {
+export const useDiscussionCount = ({
+  discussions,
+  mediafiles,
+  groupmemberships,
+}: IProps) => {
   const [userId] = useGlobal('user');
-  const [projRole] = useGlobal('projRole');
-  const { getRoleRec } = useRole();
 
-  const projRoleId = useMemo(
-    () => {
-      if (!projRole) return '';
-      const roleRec = getRoleRec(projRole, false);
-      return roleRec.length > 0 ? roleRec[0].id : '';
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [projRole]
-  );
+  const projGroups = useMemo(() => {
+    const mygroups = groupmemberships?.filter(
+      (gm) => related(gm, 'user') === userId
+    );
+    return mygroups?.map((g) => related(g, 'group'));
+  }, [groupmemberships, userId]);
 
   return (passageId: string, stepId: string) => {
     const currentPassage = (d: Discussion) => {
@@ -29,13 +29,12 @@ export const useDiscussionCount = ({ discussions, mediafiles }: IProps) => {
       const mediaRec = mediafiles.find((m) => m.id === mediaId);
       return mediaRec && related(mediaRec, 'passage') === passageId;
     };
-
     return discussions.filter(
       (d) =>
-        (related(d, 'user') === userId || related(d, 'role') === projRoleId) &&
+        (related(d, 'user') === userId ||
+          projGroups?.includes(related(d, 'group'))) &&
         !Boolean(d.attributes?.resolved) &&
-        currentPassage(d) &&
-        related(d, 'orgWorkflowStep') === stepId
+        currentPassage(d)
     ).length;
   };
 };

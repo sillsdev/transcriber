@@ -188,9 +188,19 @@ export function PlanSheet(props: IProps) {
   } = props;
   const classes = useStyles();
   const ctx = React.useContext(PlanContext);
-  const { projButtonStr, mediafiles, discussions, connected, readonly } =
-    ctx.state;
-  const getDiscussionCount = useDiscussionCount({ mediafiles, discussions });
+  const {
+    projButtonStr,
+    mediafiles,
+    discussions,
+    groupmemberships,
+    connected,
+    readonly,
+  } = ctx.state;
+  const getDiscussionCount = useDiscussionCount({
+    mediafiles,
+    discussions,
+    groupmemberships,
+  });
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [global] = useGlobal();
