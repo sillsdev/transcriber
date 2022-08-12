@@ -64,7 +64,15 @@ export async function restoreBackup() {
       () => false,
       300
     );
+    // TODO: update this code when ugrading to orbit 0.17
+    await memory.sync(await backup.pull((q) => q.findRecords('user')));
     await memory.sync(await backup.pull((q) => q.findRecords()));
+    await memory.sync(
+      await backup.pull((q) => q.findRecords('organizationmembership'))
+    );
+    await memory.sync(
+      await backup.pull((q) => q.findRecords('groupmembership'))
+    );
 
     const loadedplans = new Set(
       (
