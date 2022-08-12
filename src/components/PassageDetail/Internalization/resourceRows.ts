@@ -85,7 +85,7 @@ interface MediaProps extends DataProps {
 export const mediaRows = (props: MediaProps) => {
   const { mediafiles, artifactTypes } = props;
 
-  const newRow = Array<IRow>();
+  const newRow = new Array<IRow>();
   // sort takes the greatest version but if they're equal, keeps the
   // one loaded first which is the vernacular media
   mediafiles
