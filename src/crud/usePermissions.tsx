@@ -7,11 +7,11 @@ import { permissionsSelector } from '../selector';
 import remoteId, { remoteIdGuid } from './remoteId';
 
 export enum PermissionName {
-  Admin = 'admin',
+  //Admin = 'admin',
   //MTTranscriber = 'mtTranscriber',
   //LWCTranscriber = 'lwcTranscriber',
   //Editor = 'transcriptionEditor',
-  Consultant = 'consultant',
+  //Consultant = 'consultant',
   Mentor = 'mentor',
   CIT = 'consultantInTraining',
 }
@@ -43,7 +43,17 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
     setPermissions(perms.filter(onlyUnique).join());
   }, [myGroups]);
 
+  const getPermissionFromJson = (jsonstr: string) => {
+    if (jsonstr.trimLeft().charAt(0) === '{') {
+      var json = JSON.parse(jsonstr);
+      if (json?.permissions) return json.permissions;
+    }
+    return jsonstr;
+  };
   const localizePermission = (p: PermissionName | string) => {
+    if (typeof p === 'string') {
+      p = getPermissionFromJson(p);
+    }
     return t.hasOwnProperty(p)
       ? t.getString(p)
       : Object.keys(PermissionName)
@@ -130,5 +140,6 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
     localizedPermissions,
     permissionTip,
     getAuthor,
+    getPermissionFromJson,
   };
 };

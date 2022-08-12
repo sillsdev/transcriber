@@ -67,15 +67,18 @@ export const GroupDialog = ({
   const [name, setName] = useState('');
   const [confirm, setConfirm] = useState<string>();
   const { showMessage } = useSnackBar();
-  const { allPermissions, localizedPermissions, permissionTip } =
-    usePermissions({ users, groups, memberships });
+  const {
+    allPermissions,
+    localizedPermissions,
+    permissionTip,
+    getPermissionFromJson,
+  } = usePermissions({ users, groups, memberships });
   const [permissionTitles] = useState(localizedPermissions());
   const [permissions, setPermissions] = React.useState(
-    cur?.attributes.permissions ?? ''
+    getPermissionFromJson(cur?.attributes.permissions ?? '')
   );
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
   const ts = useSelector(sharedSelector, shallowEqual) as ISharedStrings;
-
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
