@@ -106,7 +106,7 @@ export const PassageChooser = () => {
     <div className={classes.slider}>
       <Typography className={classes.sliderHead}>{t.passages}</Typography>
       <Slider
-        value={sliderValue}
+        value={sliderValue || 1}
         onChange={sliderChange}
         valueLabelDisplay="auto"
         valueLabelFormat={valueLabelFormat}

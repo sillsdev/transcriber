@@ -58,10 +58,10 @@ export const PassageDetailStepComplete = (props: IProps) => {
   const handleToggleComplete = () => {
     const curStatus = complete;
     setStepComplete(currentstep, !complete);
-    setCurrentStep(''); // setting to empty jumps to first uncompleted step
     const seq = passage?.attributes?.sequencenum;
     const pasId = getPasIdByNum(section, seq + 1, memory);
     if (pasId && !curStatus) setView(`/detail/${prjId}/${pasId}`);
+    else setCurrentStep(''); // setting to empty jumps to first uncompleted step
   };
 
   useEffect(() => {

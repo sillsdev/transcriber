@@ -504,7 +504,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     useEffect(() => {
       const playItem = state.playItem;
       const rowList: IRowData[] = [];
-      if (pasId && artifactId) {
+      if (pasId && isDetail) {
         var psg = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
         passageMediaRef.current = planMediaRef.current.filter(
           (m) => related(m, 'passage') === psg
@@ -654,7 +654,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         if (forcerefresh) refresh(); //force the transcriber pane to refresh also
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [mediafiles]);
+    }, [mediafiles, pasId]);
 
     useEffect(() => {
       if (mediaState.url && mediaState.id === fetching.current) {

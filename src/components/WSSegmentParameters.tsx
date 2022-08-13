@@ -175,7 +175,7 @@ function WSSegmentParameters(props: IProps) {
             max={50}
             step={1}
             marks
-            value={silenceValue}
+            value={silenceValue || 1}
             valueLabelDisplay="auto"
             onChange={handleSilenceChange}
             aria-labelledby="silence-slider"
@@ -189,7 +189,7 @@ function WSSegmentParameters(props: IProps) {
             marks
             min={1}
             max={20}
-            value={timeValue}
+            value={timeValue || 1}
             valueLabelDisplay="auto"
             onChange={handleTimeChange}
             aria-labelledby="time-slider"
@@ -203,7 +203,7 @@ function WSSegmentParameters(props: IProps) {
             marks
             min={0.5}
             max={8}
-            value={segLength}
+            value={segLength || 0.5}
             valueLabelDisplay="auto"
             onChange={handleSegTimeChange}
             aria-labelledby="time-slider"
