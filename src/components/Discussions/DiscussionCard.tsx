@@ -780,7 +780,7 @@ export const DiscussionCard = (props: IProps) => {
                 <SelectGroup
                   id={`group-${discussion.id}`}
                   org={false}
-                  initGroup={assignedGroup?.id}
+                  initGroup={assignedGroup?.id || ''}
                   onChange={handleGroupChange}
                   required={false}
                   label={t.assignGroup}
@@ -794,7 +794,7 @@ export const DiscussionCard = (props: IProps) => {
                 </Typography>
                 <SelectUser
                   id={`user-${discussion.id}`}
-                  initUser={assignedUser?.id}
+                  initUser={assignedUser?.id || ''}
                   onChange={handleUserChange}
                   required={false}
                   label={t.assignUser}
