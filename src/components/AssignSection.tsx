@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
+import styledHtml from 'styled-components';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -14,14 +15,12 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
   List,
   ListItem,
   ListItemIcon,
@@ -29,13 +28,17 @@ import {
   Paper,
   Radio,
   ListItemAvatar,
+  IconButton,
+} from '@mui/material';
+import {
+  Grid,
   Table,
   TableHead,
   TableRow,
   TableCell,
   TableBody,
-  IconButton,
-} from '@material-ui/core';
+  SxProps,
+} from '@mui/material';
 import UserAvatar from './UserAvatar';
 import {
   related,
@@ -48,20 +51,12 @@ import {
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import { UpdateLastModifiedBy, UpdateRelatedRecord } from '../model/baseModel';
 
-const useStyles = makeStyles({
-  gridRoot: {
-    margin: 'auto',
-  },
-  paper: {},
-  headerCell: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  grids: { minWidth: 650 },
-  avatar: {
-    margin: 10,
-  },
-});
+const HeadCell = styledHtml.div`
+  display: flex;
+  align-items: center;
+`;
+
+const GridProps = { m: 'auto', p: 1 } as SxProps;
 
 interface IStateProps {
   t: IAssignSectionStrings;
@@ -91,7 +86,6 @@ function AssignSection(props: IProps) {
     visible,
     closeMethod,
   } = props;
-  const classes = useStyles();
   const [project] = useGlobal('project');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
@@ -252,24 +246,24 @@ function AssignSection(props: IProps) {
             spacing={2}
             justifyContent="center"
             alignItems="flex-start"
-            className={classes.gridRoot}
+            sx={GridProps}
           >
-            <Paper className={classes.paper}>
-              <Table className={classes.grids} size="small">
+            <Paper>
+              <Table sx={{ minWidth: 650 }} size="small">
                 <TableHead>
                   <TableRow>
                     <TableCell>{organizedBy}</TableCell>
                     <TableCell align="right">
-                      <div className={classes.headerCell}>
+                      <HeadCell>
                         <EditorIcon />
                         {ts.editor}
-                      </div>
+                      </HeadCell>
                     </TableCell>
                     <TableCell align="right">
-                      <div className={classes.headerCell}>
+                      <HeadCell>
                         <TranscriberIcon />
                         {ts.transcriber}
-                      </div>
+                      </HeadCell>
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -282,10 +276,10 @@ function AssignSection(props: IProps) {
             spacing={2}
             justifyContent="center"
             alignItems="flex-start"
-            className={classes.gridRoot}
+            sx={GridProps}
           >
             <Grid item>
-              <Paper className={classes.paper}>
+              <Paper>
                 <List dense component="div">
                   <ListItem key="head">
                     <IconButton>
@@ -298,7 +292,7 @@ function AssignSection(props: IProps) {
               </Paper>
             </Grid>
             <Grid item>
-              <Paper className={classes.paper}>
+              <Paper>
                 <List dense component="div">
                   <ListItem key="head">
                     <TranscriberIcon />
