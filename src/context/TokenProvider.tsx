@@ -71,14 +71,15 @@ function TokenProvider(props: IProps) {
 
   React.useEffect(() => {
     (async () => {
-      if (isAuthenticated) {
+      if (isAuthenticated && user) {
+        console.log(`checking for token`);
         const token = await getAccessTokenSilently();
         const decodedToken = jwtDecode(token) as IToken;
         setAuthSession(user, token, decodedToken.exp);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
 
   const logout = () => {
     setState((state) => ({
