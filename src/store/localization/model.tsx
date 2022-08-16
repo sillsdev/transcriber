@@ -727,7 +727,10 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "bookSelect": string;
     "confirm": string;
     "nonNumber": string;
+    "insertFirstPassage": string;
+    "insertLastPassage": string;
     "passageBelow": string;
+    "passageEnd": string;
     "passageToPrevSection": string;
     "passageToNextSection": string;
     "pasting": string;
@@ -736,6 +739,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "saving": string;
     "sectionAbove": string;
+    "sectionEnd": string;
     "selectRows": string;
     "step": string;
     "tablePaste": string;

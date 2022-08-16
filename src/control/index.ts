@@ -1,3 +1,4 @@
+export * from './AddSectionPassageButtons';
 export * from './Duration';
 export * from './Options';
 export * from './Language';

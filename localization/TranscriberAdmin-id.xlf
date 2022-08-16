@@ -3523,10 +3523,28 @@
             <target/>
          </segment>
       </unit>
+       <unit id="planSheet.insertFirstPassage">
+         <segment>
+            <source>Add passage as first in {0} {1}</source>
+            <target>Tambahkan bagian sebagai yang pertama di {0} {1}</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.insertLastPassage">
+         <segment>
+            <source>Add passage as last in {0} {1}</source>
+            <target>Tambahkan bagian sebagai yang terakhir di {0} {1}</target>
+         </segment>
+      </unit>
       <unit id="planSheet.passageBelow">
          <segment>
             <source>Insert passage below {0}</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.passageEnd">
+         <segment>
+            <source>Add Passage to End</source>
+            <target>Tambahkan Bagian ke Akhir</target>
          </segment>
       </unit>
       <unit id="planSheet.passageToPrevSection">
@@ -3573,8 +3591,14 @@
       </unit>
       <unit id="planSheet.sectionAbove">
          <segment>
-            <source>Insert {0} above</source>
+            <source>Insert {0} above {1} {2}</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.sectionEnd">
+         <segment>
+            <source>Add {0} to End</source>
+            <target>Tambahkan {0} ke Akhir</target>
          </segment>
       </unit>
       <unit id="planSheet.selectRows">

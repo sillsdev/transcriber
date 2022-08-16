@@ -9,18 +9,21 @@ import {
   RoleNames,
 } from '../../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem, AppBar, Badge } from '@material-ui/core';
+import { Button, AppBar, Badge } from '@material-ui/core';
 import SaveIcon from '@mui/icons-material/Save';
-import AddIcon from '@mui/icons-material/Add';
 import { useSnackBar } from '../../hoc/SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from '../AlertDialog';
 import BookSelect from '../BookSelect';
-import { ProjButtons, StageReport } from '../../control';
+import {
+  AddSectionPassageButtons,
+  ProjButtons,
+  StageReport,
+} from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
 import { refMatch, cleanClipboard } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
-import { useOrganizedBy, useDiscussionCount } from '../../crud';
+import { useDiscussionCount } from '../../crud';
 import TaskAvatar from '../TaskAvatar';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
@@ -57,6 +60,10 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       '& .data-grid-container .data-grid .cell.setpErr': {
         backgroundColor: theme.palette.warning.main,
+      },
+      '& .data-grid-container .data-grid .cell.currentrow': {
+        borderStyle: 'double',
+        borderColor: theme.palette.primary.light,
       },
       '& .data-grid-container .data-grid .cell.num': {
         textAlign: 'center',
@@ -219,47 +226,41 @@ export function PlanSheet(props: IProps) {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
-  const currentRow = useRef<number>(-1);
+  const currentRowRef = useRef<number>(-1);
+  const [currentRow, setCurrentRowx] = useState(-1);
+  const [active, setActive] = useState(-1); // used for action menu to display
   const sheetRef = useRef<any>();
-  const { getOrganizedBy } = useOrganizedBy();
-  const [organizedBy] = useState(getOrganizedBy(true));
   const { startSave, toolsChanged, saveRequested, isChanged } =
     useContext(UnsavedContext).state;
   const [srcMediaId, setSrcMediaId] = useState('');
   const [mediaPlaying, setMediaPlaying] = useState(false);
   const [warning, setWarning] = useState<string>();
-  const [active, setActive] = useState(-1);
+
   const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = bookCol > 0 ? 6 : 5;
   const isSection = (i: number) =>
-    i < rowInfo.length ? isSectionRow(rowInfo[i]) : false;
+    i >= 0 && i < rowInfo.length ? isSectionRow(rowInfo[i]) : false;
 
-  const isPassage = (i: number) => isPassageRow(rowInfo[i]);
+  const isPassage = (i: number) =>
+    i >= 0 && i < rowInfo.length ? isPassageRow(rowInfo[i]) : false;
 
   const [changed, setChanged] = useState(false); //for button enabling
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
-
-  const handleAddSection = () => {
-    addSection();
-  };
-  const handleAddPassage = () => {
-    addPassage();
-  };
 
   const handleSave = () => {
     startSave();
   };
 
   const sheetScroll = () => {
-    if (sheetRef.current && currentRow.current) {
+    if (sheetRef.current && currentRowRef.current) {
       const gridRef = (
         sheetRef.current as HTMLDivElement
       ).getElementsByClassName('data-grid-container');
       const tbodyRef = gridRef[0]?.firstChild?.firstChild?.childNodes[
-        currentRow.current
+        currentRowRef.current
       ] as HTMLDivElement;
       //only scroll if it's not already visible
       if (tbodyRef && tbodyRef.offsetTop < document.documentElement.scrollTop) {
@@ -277,9 +278,12 @@ export function PlanSheet(props: IProps) {
     }
     return false;
   };
-
+  const setCurrentRow = (row: number) => {
+    currentRowRef.current = row;
+    setCurrentRowx(row);
+  };
   const handleSelect = (loc: DataSheet.Selection) => {
-    currentRow.current = loc.end.i;
+    setCurrentRow(loc.end.i);
     sheetScroll();
   };
 
@@ -359,31 +363,9 @@ export function PlanSheet(props: IProps) {
 
   const handleNoContextMenu = () => setPosition(initialPosition);
 
-  const handleSectionAbove = () => {
-    //we'll find a section before we get past 0
-    while (!isSection(position.i - 1)) position.i -= 1;
-    addSection(position.i - 1);
-    setPosition(initialPosition);
-  };
-
-  const handlePassageBelow = () => {
-    addPassage(position.i - 1, false);
-    setPosition(initialPosition);
-  };
-
-  const handlePassageToPrev = () => {
-    movePassage(position.i - 1, true);
-    setPosition(initialPosition);
-  };
-
-  const handlePassageToNext = () => {
-    movePassage(position.i - 1, false);
-    setPosition(initialPosition);
-  };
-
   const parsePaste = (clipBoard: string) => {
     if (readonly) return Array<Array<string>>();
-    if (currentRow.current === 0) {
+    if (currentRowRef.current === 0) {
       setPasting(true);
       showMessage(t.pasting);
       const retVal = paste(cleanClipboard(clipBoard));
@@ -414,7 +396,7 @@ export function PlanSheet(props: IProps) {
 
   const ActivateCell = (props: any) => {
     React.useEffect(() => {
-      setActive(currentRow.current);
+      setActive(currentRowRef.current);
       props.onRevert();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props]);
@@ -512,6 +494,8 @@ export function PlanSheet(props: IProps) {
         rowData.map((row, rowIndex) => {
           const section = isSection(rowIndex);
           const passage = isPassage(rowIndex);
+          const iscurrent = currentRow === rowIndex + 1 ? ' currentrow ' : '';
+
           return [
             {
               value: passage && (
@@ -529,7 +513,8 @@ export function PlanSheet(props: IProps) {
                 </Badge>
               ),
               readOnly: true,
-              className: section ? 'set' + (passage ? 'p' : '') : 'pass',
+              className:
+                iscurrent + (section ? 'set' + (passage ? 'p' : '') : 'pass'),
             } as ICell,
             {
               value: (
@@ -538,7 +523,8 @@ export function PlanSheet(props: IProps) {
                 />
               ),
               readOnly: true,
-              className: section ? 'set' + (passage ? 'p' : '') : 'pass',
+              className:
+                iscurrent + (section ? 'set' + (passage ? 'p' : '') : 'pass'),
             } as ICell,
           ]
             .concat(
@@ -564,16 +550,16 @@ export function PlanSheet(props: IProps) {
                         />
                       ),
                       readOnly: true,
-                      className: section
-                        ? 'set' + (passage ? 'p' : ' ')
-                        : 'pass',
+                      className:
+                        iscurrent +
+                        (section ? 'set' + (passage ? 'p' : ' ') : 'pass'),
                     } as ICell,
                   ]
                 : [
                     {
                       value: <></>,
                       readOnly: true,
-                      className: 'set',
+                      className: iscurrent + 'set',
                     } as ICell,
                   ]
             )
@@ -583,7 +569,8 @@ export function PlanSheet(props: IProps) {
                   ? {
                       value: e,
                       readOnly: isOffline && !offlineOnly,
-                      className: 'book ' + (section ? ' setp' : 'pass'),
+                      className:
+                        iscurrent + 'book ' + (section ? ' setp' : 'pass'),
                       dataEditor: bookEditor,
                     }
                   : {
@@ -596,11 +583,12 @@ export function PlanSheet(props: IProps) {
                             : cellIndex > 1
                           : cellIndex <= 1),
                       className:
+                        iscurrent +
                         (cellIndex === SectionSeqCol ||
                         cellIndex === PassageSeqCol
                           ? 'num '
                           : '') +
-                        (section ? 'set' + (passage ? 'p' : '') : 'pass') +
+                        (section ? 'set' + (passage ? 'p' : '') : 'xxpass') +
                         (refCol && refCol === cellIndex && refErrTest(e)
                           ? 'Err'
                           : ''),
@@ -628,7 +616,9 @@ export function PlanSheet(props: IProps) {
                   />
                 ),
                 // readOnly: true,
-                className: section ? 'set' + (passage ? 'p' : ' ') : 'pass',
+                className:
+                  iscurrent +
+                  (section ? 'set' + (passage ? 'p' : ' ') : 'pass'),
                 dataEditor: ActivateCell,
               } as ICell,
             ]);
@@ -650,7 +640,16 @@ export function PlanSheet(props: IProps) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, rowInfo, bookCol, columns, srcMediaId, mediaPlaying, projRole]);
+  }, [
+    rowData,
+    rowInfo,
+    bookCol,
+    columns,
+    srcMediaId,
+    mediaPlaying,
+    projRole,
+    currentRow,
+  ]);
 
   useEffect(() => {
     //if I set playing when I set the mediaId, it plays a bit of the old
@@ -664,6 +663,16 @@ export function PlanSheet(props: IProps) {
   const playEnded = () => {
     setMediaPlaying(false);
   };
+  const currentRowSectionNum = () => {
+    if (currentRowRef.current < 1) return '';
+    var row = currentRowRef.current - 1;
+    while (!isSection(row)) row--;
+    return rowData[row][SectionSeqCol].toString();
+  };
+  const currentRowPassageNum = () =>
+    currentRowRef.current > 0 && isPassage(currentRowRef.current - 1)
+      ? rowData[currentRowRef.current - 1][PassageSeqCol].toString()
+      : '';
 
   return (
     <div className={classes.container}>
@@ -672,34 +681,22 @@ export function PlanSheet(props: IProps) {
           <AppBar position="fixed" className={classes.bar} color="default">
             <div className={classes.actions}>
               <>
-                <Button
-                  id="planSheetAddSec"
-                  key="addSection"
-                  aria-label={t.addSection}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleAddSection}
-                  disabled={readonly}
-                >
-                  {t.addSection.replace('{0}', organizedBy)}
-                  <AddIcon className={classes.icon} />
-                </Button>
-                {!inlinePassages && (
-                  <Button
-                    id="planSheetAddPass"
-                    key="addPassage"
-                    aria-label={t.addPassage}
-                    variant="outlined"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleAddPassage}
-                    disabled={data.length < 2 || readonly}
-                  >
-                    {t.addPassage}
-                    <AddIcon className={classes.icon} />
-                  </Button>
-                )}
+                <AddSectionPassageButtons
+                  inlinePassages={inlinePassages}
+                  numRows={data.length}
+                  readonly={readonly}
+                  t={t}
+                  isSection={isSection}
+                  isPassage={isPassage}
+                  currentrow={currentRow - 1}
+                  mouseposition={position}
+                  handleNoContextMenu={handleNoContextMenu}
+                  sectionSequenceNumber={currentRowSectionNum()}
+                  passageSequenceNumber={currentRowPassageNum()}
+                  addSection={addSection}
+                  addPassage={addPassage}
+                  movePassage={movePassage}
+                />
                 <Button
                   id="planSheetImp"
                   key="importExcel"
@@ -761,49 +758,6 @@ export function PlanSheet(props: IProps) {
             onSelect={handleSelect}
           />
         </div>
-        <Menu
-          keepMounted
-          open={position.mouseY !== null && projRole === RoleNames.Admin}
-          onClose={handleNoContextMenu}
-          anchorReference="anchorPosition"
-          anchorPosition={
-            position.mouseY !== null && position.mouseX !== null
-              ? { top: position.mouseY, left: position.mouseX }
-              : undefined
-          }
-        >
-          {position.i > 0 && isSection(position.i - 1) && (
-            <MenuItem id="secAbove" onClick={handleSectionAbove}>
-              {t.sectionAbove.replace('{0}', organizedBy)}
-            </MenuItem>
-          )}
-          {!inlinePassages &&
-            position.i > 2 &&
-            isPassage(position.i - 1) &&
-            isSection(position.i - 2) && (
-              <MenuItem id="passToPrev" onClick={handlePassageToPrev}>
-                {t.passageToPrevSection}
-              </MenuItem>
-            )}
-          {!inlinePassages && (
-            <MenuItem id="passBelow" onClick={handlePassageBelow}>
-              {t.passageBelow.replace(
-                '{0}',
-                position.i > 0
-                  ? rowData[position.i - 1][PassageSeqCol].toString()
-                  : ''
-              )}
-            </MenuItem>
-          )}
-          {!inlinePassages &&
-            position.i > 0 &&
-            isPassage(position.i - 1) &&
-            isSection(position.i) && (
-              <MenuItem id="passToNext" onClick={handlePassageToNext}>
-                {t.passageToNextSection}
-              </MenuItem>
-            )}
-        </Menu>
       </div>
       {confirmAction !== '' ? (
         <Confirm
