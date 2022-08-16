@@ -46,7 +46,7 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
   const getPermissionFromJson = (jsonstr: string) => {
     if (jsonstr.trimLeft().charAt(0) === '{') {
       var json = JSON.parse(jsonstr);
-      if (json?.permissions) return json.permissions;
+      return json.permissions || '';
     }
     return jsonstr;
   };
