@@ -179,14 +179,14 @@ export const AddSectionPassageButtons = (props: IProps) => {
               .replace('{2}', sectionSequenceNumber)}
           </MenuItem>
         )}
-        {isContextMenu && (
+        {isContextMenu && !inlinePassages && (
           <MenuItem id="passageAsFirst" onClick={handlePassageBelow}>
             {t.insertFirstPassage
               .replace('{0}', organizedBy)
               .replace('{1}', sectionSequenceNumber)}
           </MenuItem>
         )}
-        {isContextMenu && (
+        {isContextMenu && !inlinePassages && (
           <MenuItem id="passageAsLast" onClick={handlePassageLast}>
             {t.insertLastPassage
               .replace('{0}', organizedBy)
