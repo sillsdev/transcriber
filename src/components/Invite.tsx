@@ -91,6 +91,7 @@ function Invite(props: IProps) {
     inviteIn,
   } = props;
   const classes = useStyles();
+  const [isDeveloper] = useGlobal('developer');
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
@@ -302,7 +303,7 @@ function Invite(props: IProps) {
                 required
               />
             </Grid>
-            {hasInvite(email) && (
+            {isDeveloper && hasInvite(email) && (
               <Grid item xs={12}>
                 <FormControlLabel
                   control={
