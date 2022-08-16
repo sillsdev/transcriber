@@ -3567,12 +3567,30 @@
 				<target>Ne passez pas au non-numéro.</target>
 			</segment>
 		</unit>
-		<unit id="planSheet.passageBelow">
+      <unit id="planSheet.insertFirstPassage">
+         <segment>
+            <source>Add passage as first in {0} {1}</source>
+            <target>Ajouter le passage en premier dans {0} {1}</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.insertLastPassage">
+         <segment>
+            <source>Add passage as last in {0} {1}</source>
+            <target>Ajouter le passage en dernier dans {0} {1}</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.passageBelow">
 			<segment>
-				<source>Insert passage below {0}</source>
-				<target>Insérer le passage ci-dessous {0}</target>
+				<source>Insert passage below passage {0}</source>
+				<target>Insérer le passage ci-dessous passage {0}</target>
 			</segment>
 		</unit>
+      <unit id="planSheet.passageEnd">
+         <segment>
+            <source>Add Passage to End</source>
+            <target>Ajouter un passage à la fin</target>
+         </segment>
+      </unit>
       <unit id="planSheet.passageToPrevSection">
          <segment>
             <source>Move Passage to Previous Section</source>
@@ -3617,11 +3635,17 @@
 		</unit>
 		<unit id="planSheet.sectionAbove">
 			<segment>
-				<source>Insert {0} above</source>
-				<target>Insérer {0} ci-dessus</target>
+				<source>Insert {0} above  {1} {2}</source>
+				<target>Insérer {0} ci-dessus {1} {2}</target>
 			</segment>
 		</unit>
-		<unit id="planSheet.selectRows">
+      <unit id="planSheet.sectionEnd">
+         <segment>
+            <source>Add {0} to End</source>
+            <target>Ajouter {0} à la fin</target>
+         </segment>
+      </unit>
+      	<unit id="planSheet.selectRows">
 			<segment>
 				<source>Please select row(s) to {0}.</source>
 				<target>Veuillez sélectionner la ou les lignes de {0}.</target>
