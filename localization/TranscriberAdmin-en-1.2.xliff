@@ -4027,6 +4027,13 @@
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="permission.nsp">
+      		<source>General</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="permission.mentor">
       		<source>Mentor</source>
       		<target/>
@@ -4041,7 +4048,13 @@
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
-
+         <trans-unit id="permission.nspTip">
+      		<source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="planActions.assign">
             <source>Assign</source>
             <target/>

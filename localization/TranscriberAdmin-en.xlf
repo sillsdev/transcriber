@@ -3454,6 +3454,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="permission.nsp">
+         <segment>
+            <source>General</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="permission.mentor">
          <segment>
             <source>Mentor</source>
@@ -3463,6 +3469,12 @@
       <unit id="permission.mentorTip">
          <segment>
             <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="permission.nspTip">
+         <segment>
+            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
             <target/>
          </segment>
       </unit>
