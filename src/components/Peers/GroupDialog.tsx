@@ -173,12 +173,14 @@ export const GroupDialog = ({
             {t.permissions}
           </FormLabel>
           <RadioGroup value={permissions} onChange={handleChange}>
-            <FormControlLabel
-              key="none"
-              control={<Radio id="none" key="none" />}
-              label={t.noSpecialPermission}
-              value={''}
-            />
+            <Tooltip title={permissionTip('')}>
+              <FormControlLabel
+                key="none"
+                control={<Radio id="none" key="none" />}
+                label={t.noSpecialPermission}
+                value={''}
+              />
+            </Tooltip>
             {allPermissions().map((p, i) => (
               <Tooltip title={permissionTip(p)}>
                 <FormControlLabel

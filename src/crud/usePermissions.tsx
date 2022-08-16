@@ -54,6 +54,7 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
     if (typeof p === 'string') {
       p = getPermissionFromJson(p);
     }
+    if (!p) return t.nsp;
     return t.hasOwnProperty(p)
       ? t.getString(p)
       : Object.keys(PermissionName)
@@ -61,6 +62,8 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
           .pop() ?? p;
   };
   const permissionTip = (p: PermissionName | string) => {
+    if (!p) return t.nspTip
+    ;
     return t.hasOwnProperty(p + 'Tip') ? t.getString(p + 'Tip') : '';
   };
   const allPermissions = () => Object.values(PermissionName);
