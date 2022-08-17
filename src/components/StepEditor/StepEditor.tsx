@@ -5,7 +5,7 @@ import {
   IWorkflowStepsStrings,
   OrgWorkflowStep,
 } from '../../model';
-import { Button, makeStyles } from '@material-ui/core';
+import { Button, Box } from '@mui/material';
 import localStrings from '../../selector/localize';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { useGlobal } from 'reactn';
@@ -30,13 +30,6 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
 import { TranscribeStepSettings } from './TranscribeStepSettings';
-
-const useStyles = makeStyles({
-  row: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-});
 
 export interface IStepRow {
   id: string;
@@ -64,7 +57,6 @@ export const stepEditorSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'stepEditor' });
 
 export const StepEditor = ({ process, org }: IProps) => {
-  const classes = useStyles();
   const [rows, setRows] = useState<IStepRow[]>([]);
   const [showAll, setShowAll] = useState(false);
   const t: IWorkflowStepsStrings = useSelector(wfStepsSelector, shallowEqual);
@@ -346,7 +338,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   };
   return (
     <div>
-      <div className={classes.row}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Button id="wk-step-add" onClick={handleAdd} variant="contained">
           {se.add}
         </Button>
@@ -358,7 +350,7 @@ export const StepEditor = ({ process, org }: IProps) => {
             disabled={hidden === 0}
           />
         </div>
-      </div>
+      </Box>
       <StepList onSortEnd={handleSortEnd} useDragHandle>
         {rows
           .map((r, i) => ({ ...r, rIdx: i }))
