@@ -36,3 +36,8 @@ export const staticFiles = [
   { table: 'sectionresource', sort: 'G' },
   { table: 'workflowstep', sort: 'B' },
 ];
+
+export const localFiles = [
+  { table: 'offlineproject', sort: 'K' },
+  { table: 'audacityproject', sort: 'K' },
+];
