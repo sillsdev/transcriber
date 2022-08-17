@@ -666,9 +666,10 @@ export function PlanSheet(props: IProps) {
   const currentRowSectionNum = () => {
     if (currentRowRef.current < 1) return '';
     var row = currentRowRef.current - 1;
-    while (!isSection(row)) row--;
-    return rowData[row][SectionSeqCol].toString();
+    while (row >= 0 && !isSection(row)) row--;
+    return row >= 0 ? rowData[row][SectionSeqCol].toString() : '';
   };
+
   const currentRowPassageNum = () =>
     currentRowRef.current > 0 && isPassage(currentRowRef.current - 1)
       ? rowData[currentRowRef.current - 1][PassageSeqCol].toString()
