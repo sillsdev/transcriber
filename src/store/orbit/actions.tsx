@@ -12,6 +12,7 @@ import { Sources } from '../../Sources';
 import { Severity } from '../../utils';
 import { OfflineProject, Plan, VProject } from '../../model';
 import { ITokenContext } from '../../context/TokenProvider';
+import { AlertSeverity } from '../../hoc/SnackBar';
 
 export const orbitError = (ex: IApiError) => {
   return ex.response.status !== Severity.retry
@@ -59,7 +60,8 @@ export const fetchOrbitData =
     setLang: (locale: string) => void,
     global: any,
     getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
-    offlineSetup: () => Promise<void>
+    offlineSetup: () => Promise<void>,
+    showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void
   ) =>
   (dispatch: any) => {
     Sources(
@@ -73,7 +75,8 @@ export const fetchOrbitData =
       setLang,
       global,
       getOfflineProject,
-      offlineSetup
+      offlineSetup,
+      showMessage
     ).then((fr) => {
       dispatch({ type: FETCH_ORBIT_DATA, payload: fr });
     });

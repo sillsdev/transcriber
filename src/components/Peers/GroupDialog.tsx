@@ -131,6 +131,7 @@ export const GroupDialog = ({
     <div>
       {cur ? (
         <Button
+          key="open"
           id={`${cur.attributes.abbreviation}Open`}
           color="primary"
           onClick={handleClickOpen}
@@ -140,6 +141,7 @@ export const GroupDialog = ({
         </Button>
       ) : (
         <IconButton
+          key="peeropen"
           id="peerOpen"
           color="primary"
           onClick={handleClickOpen}
@@ -173,7 +175,7 @@ export const GroupDialog = ({
             {t.permissions}
           </FormLabel>
           <RadioGroup value={permissions} onChange={handleChange}>
-            <Tooltip title={permissionTip('')}>
+            <Tooltip key="nsptip" title={permissionTip('')}>
               <FormControlLabel
                 key="none"
                 control={<Radio id="none" key="none" />}
@@ -182,7 +184,7 @@ export const GroupDialog = ({
               />
             </Tooltip>
             {allPermissions().map((p, i) => (
-              <Tooltip title={permissionTip(p)}>
+              <Tooltip key={p + 'tip'} title={permissionTip(p)}>
                 <FormControlLabel
                   key={p}
                   control={<Radio id={p} key={p} />}

@@ -25,6 +25,7 @@ import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { orbitRetry, orbitErr, logError, infoMsg, Severity } from './utils';
 import { electronExport } from './store/importexport/electronExport';
 import { restoreBackup } from '.';
+import { AlertSeverity } from './hoc/SnackBar';
 
 export const Sources = async (
   coordinator: Coordinator,
@@ -37,7 +38,8 @@ export const Sources = async (
   setLang: (locale: string) => void,
   globalStore: any,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
-  offlineSetup: () => Promise<void>
+  offlineSetup: () => Promise<void>,
+  showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void
 ) => {
   const memory = coordinator.getSource('memory') as Memory;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
@@ -168,34 +170,26 @@ export const Sources = async (
             } else {
               // When non-network errors occur, notify the user and
               // reset state.
-              let label = transform.options && transform.options.label;
-              if (label) {
-                orbitError(orbitErr(ex, `Unable to complete "${label}"`));
+              const data = (ex as any).data;
+              const detail =
+                data?.errors &&
+                Array.isArray(data.errors) &&
+                data.errors.length > 0 &&
+                data.errors[0].meta &&
+                data.errors[0].meta.stackTrace[0];
+
+              if (detail?.includes('Entity has been deleted')) {
+                console.log('***attempt to update deleted record');
+                showMessage(detail);
               } else {
                 const response = ex.response as any;
-                const url: string | null = response?.url;
-                const data = (ex as any).data;
-                const detail =
-                  data?.errors &&
-                  Array.isArray(data.errors) &&
-                  data.errors.length > 0 &&
-                  data.errors[0].meta &&
-                  data.errors[0].meta.stackTrace[0];
-                if (url && detail) {
-                  orbitError(
-                    orbitErr(
-                      ex,
-                      `Unable to complete ` +
-                        transform.operations[0].op +
-                        ` in ` +
-                        url.split('/').pop() +
-                        `: ` +
-                        detail
-                    )
-                  );
-                } else {
-                  orbitError(orbitErr(ex, `Unable to complete operation`));
-                }
+                const url: string = response?.url ?? '';
+                let label =
+                  ((transform.options && transform.options.label) ||
+                    transform.operations[0].op +
+                      (url ? ` in ` + url.split('/').pop() + `: ` : '')) +
+                    detail ?? '';
+                orbitError(orbitErr(ex, `Unable to complete "${label}"`));
               }
 
               // Roll back memory to position before transform
