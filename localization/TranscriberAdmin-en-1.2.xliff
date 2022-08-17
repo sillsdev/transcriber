@@ -5721,13 +5721,6 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriber.backToWorkflow">
-            <source>Back to Workflow</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Transcriber.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="transcriber.comment">
             <source>Comment</source>
             <target/>

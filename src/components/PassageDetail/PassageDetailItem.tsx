@@ -6,7 +6,6 @@ import {
   MediaFile,
   RoleNames,
 } from '../../model';
-import { useLocation } from 'react-router-dom';
 import localStrings from '../../selector/localize';
 import {
   Button,
@@ -23,14 +22,12 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import TranscribeIcon from '../../control/TranscribeIcon';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArtifactTypeSlug,
   findRecord,
   related,
-  remoteIdNum,
   useArtifactType,
   useFetchMediaUrl,
 } from '../../crud';
@@ -52,8 +49,6 @@ import MediaRecord from '../MediaRecord';
 import SelectRecording from './SelectRecording';
 import { useGlobal } from 'reactn';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { LocalKey, localUserKey } from '../../utils';
-import StickyRedirect from '../StickyRedirect';
 import Confirm from '../AlertDialog';
 import Uploader from '../Uploader';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
@@ -185,9 +180,7 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 }
 
 export function PassageDetailItem(props: IProps) {
-  const { t, ts, width, slugs, segments, showTopic, mediafiles } = props;
-  const { pathname } = useLocation();
-  const [view, setView] = useState('');
+  const { t, ts, width, slugs, segments, showTopic } = props;
   const [reporter] = useGlobal('errorReporter');
   const [projRole] = useGlobal('projRole');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -202,7 +195,6 @@ export function PassageDetailItem(props: IProps) {
   const [topic, setTopic] = useState('');
   const [importList, setImportList] = useState<File[]>();
   const [uploadVisible, setUploadVisible] = useState(false);
-  const [playItemSourceIsLatest, setPlayItemSourceIsLatest] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [confirm, setConfirm] = useState('');
   const {
@@ -228,7 +220,7 @@ export function PassageDetailItem(props: IProps) {
   const { toolChanged, toolsChanged, startSave, saveCompleted, saveRequested } =
     useContext(UnsavedContext).state;
 
-  const { getTypeId, slugFromId, localizedArtifactType } = useArtifactType();
+  const { getTypeId, localizedArtifactType } = useArtifactType();
   const { showMessage } = useSnackBar();
   const [recordType, setRecordType] = useState<ArtifactTypeSlug>(slugs[0]);
   const [currentVersion, setCurrentVersion] = useState(1);
@@ -260,12 +252,6 @@ export function PassageDetailItem(props: IProps) {
     () => getTypeId(recordType),
     [recordType, getTypeId]
   );
-
-  const itemCount = useMemo(() => {
-    const localType = localizedArtifactType(recordType);
-    return rowData.filter((r) => r.artifactType === localType).length;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, recordType]);
 
   useEffect(() => {
     var tmp = (passage.attributes.book || '') + passage.attributes.reference;
@@ -345,8 +331,8 @@ export function PassageDetailItem(props: IProps) {
     setTopic(e.target.value);
   };
   const handleSelect = (id: string, latest: boolean) => {
+    //latest isn't used anymore but might be useful...so leave it
     setPlayItem(id);
-    setPlayItemSourceIsLatest(latest);
     setItemPlaying(false);
     setCommentPlaying(false);
   };
@@ -369,32 +355,6 @@ export function PassageDetailItem(props: IProps) {
     setConfirm('');
   };
 
-  const handleTranscribe = () => {
-    if (!playItem) {
-      const localType = localizedArtifactType(recordType);
-      for (let r of rowData) {
-        if (r.artifactType === localType) {
-          setPlayItem(r.id);
-          break;
-        }
-      }
-    }
-    localStorage.setItem(localUserKey(LocalKey.jumpBack), pathname);
-    setView(pathname.replace('detail', 'work'));
-  };
-
-  const playItemId = useMemo(
-    () => remoteIdNum('mediafile', playItem, memory.keyMap) || playItem,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [playItem]
-  );
-  const playType = useMemo(() => {
-    var pi = mediafiles.find((m) => m.id === playItem);
-    if (pi) return slugFromId(related(pi, 'artifactType'));
-    return '';
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playItem, mediafiles]);
-
   const onRecordingOrPlaying = (doingsomething: boolean) => {
     if (doingsomething) {
       setPlaying(false); //stop the vernacular
@@ -402,8 +362,6 @@ export function PassageDetailItem(props: IProps) {
       setCommentPlaying(false);
     }
   };
-
-  if (view) return <StickyRedirect to={`${view}/${playType}/${playItemId}`} />;
 
   return (
     <div>
@@ -550,21 +508,6 @@ export function PassageDetailItem(props: IProps) {
                                 tags={slugs}
                                 latestVernacular={currentVersion}
                               />
-                              <Button
-                                id="load-transcriber"
-                                className={classes.button}
-                                onClick={handleTranscribe}
-                                variant="contained"
-                                color="primary"
-                                disabled={
-                                  canSave ||
-                                  itemCount < 1 ||
-                                  (playItem !== '' && !playItemSourceIsLatest)
-                                }
-                              >
-                                <TranscribeIcon color="white" />{' '}
-                                {`\u00A0${t.transcribe}`}
-                              </Button>
                             </div>
                             <div id="rowplayer" className={classes.playerRow}>
                               <MediaPlayer
