@@ -1,5 +1,5 @@
 import { SortableElement } from 'react-sortable-hoc';
-import { ListItem, IconButton, makeStyles } from '@material-ui/core';
+import { ListItem, IconButton, styled } from '@mui/material';
 import HideIcon from '@mui/icons-material/VisibilityOff';
 import ShowIcon from '@mui/icons-material/Visibility';
 import { IStepRow, DragHandle, stepEditorSelector } from '.';
@@ -8,10 +8,9 @@ import ToolChoice from './ToolChoice';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IStepEditorStrings } from '../../model';
 import SettingsIcon from '@mui/icons-material/Settings';
-const useStyles = makeStyles({
-  step: { minWidth: 250 },
-  tool: { minWidth: 250 },
-});
+
+const StepSpan = styled('span')(() => ({ minWidth: 250 }));
+const ToolSpan = styled('span')(() => ({ minWidth: 250 }));
 
 interface IProps {
   value: IStepRow;
@@ -34,7 +33,6 @@ export const StepItem = SortableElement(
     onSettings,
     settingsTitle,
   }: IProps) => {
-    const classes = useStyles();
     const se: IStepEditorStrings = useSelector(
       stepEditorSelector,
       shallowEqual
@@ -57,12 +55,12 @@ export const StepItem = SortableElement(
     return (
       <ListItem>
         <DragHandle />
-        <span className={classes.step}>
+        <StepSpan>
           <StepName name={value.name} onChange={handleNameChange} />
-        </span>
-        <span className={classes.tool}>
+        </StepSpan>
+        <ToolSpan>
           <ToolChoice tool={value.tool} onChange={handleToolChange} />
-        </span>
+        </ToolSpan>
         <IconButton
           onClick={handleDeleteOrRestore}
           title={value.seq >= 0 ? se.hide : se.show}
