@@ -3,7 +3,6 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, ITranscriptionShowStrings } from '../model';
 import localStrings from '../selector/localize';
-import { makeStyles } from '@material-ui/core/styles';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -17,7 +16,7 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FaCopy } from 'react-icons/fa';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
@@ -27,13 +26,6 @@ import {
   useTranscription,
   related,
 } from '../crud';
-
-const useStyles = makeStyles({
-  actions: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-});
 
 interface IStateProps {
   t: ITranscriptionShowStrings;
@@ -54,7 +46,6 @@ interface IProps extends IRecordProps, IStateProps {
 function TranscriptionShow(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
   const { id, isMediaId, t, visible, closeMethod, exportId } = props;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [open, setOpen] = useState(visible);
@@ -148,7 +139,9 @@ function TranscriptionShow(props: IProps) {
             />
           )}
         </DialogContent>
-        <DialogActions className={classes.actions}>
+        <DialogActions
+          sx={{ display: 'flex', justifyContent: 'space-between' }}
+        >
           <IconButton id="transCopy" onClick={handleCopy(transcription)}>
             <FaCopy />
           </IconButton>
