@@ -111,7 +111,7 @@ export const ReplyCard = (props: IProps) => {
   });
   const commentText = useRef('');
   const afterUploadcb = (mediaId: string) => {
-    saveComment('', commentText.current, mediaId, false);
+    saveComment('', commentText.current, mediaId, undefined);
     commentText.current = '';
   };
   const { uploadMedia, fileName } = useRecordComment({

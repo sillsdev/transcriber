@@ -694,6 +694,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="commentCard.approved">
+         <segment>
+            <source>Approved</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="commentCard.confirmDelete">
          <segment>
             <source>Delete this comment?</source>

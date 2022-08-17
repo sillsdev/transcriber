@@ -807,6 +807,13 @@
                <context context-type="sourcefile">CommentCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="commentCard.approved">
+            <source>Approved</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">CommentCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="commentCard.confirmDelete">
             <source>Delete this comment?</source>
             <target/>

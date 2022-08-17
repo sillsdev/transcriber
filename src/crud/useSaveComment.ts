@@ -38,7 +38,7 @@ export const useSaveComment = (props: IProps) => {
     commentId: string,
     commentText: string,
     mediaRemId: string,
-    approved: boolean,
+    approved: boolean | undefined,
     permissions?: string
   ) => {
     var mediafile = undefined;
@@ -51,9 +51,8 @@ export const useSaveComment = (props: IProps) => {
       [key: string]: any;
     }
     var visible: IIndexable = {};
-    if (approved) {
-      //save the author...get rid of the rest of the permissions
-      visible = approve(permissions);
+    if (approved !== undefined) {
+      visible = approve(approved, permissions);
     } else if (
       hasPermission(PermissionName.CIT) ||
       hasPermission(PermissionName.Mentor)

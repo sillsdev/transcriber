@@ -147,6 +147,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
 
 export interface ICommentCardStrings extends Localize.LocalizedStringsMethods {
     "approve": string;
+    "approved": string;
     "confirmDelete": string;
     "unapproved": string;
 };
