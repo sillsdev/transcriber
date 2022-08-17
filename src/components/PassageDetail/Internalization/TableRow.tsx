@@ -1,7 +1,6 @@
+import { CSSProperties, useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
-import clsx from 'clsx';
-import { makeStyles, Tooltip } from '@material-ui/core';
-import { ListItem } from '@material-ui/core';
+import { ListItem, Tooltip, Box } from '@mui/material';
 import { IRow } from '../../../context/PassageDetailContext';
 import { DragHandle } from '.';
 import { IPassageDetailArtifactsStrings, RoleNames } from '../../../model';
@@ -9,67 +8,62 @@ import { useOrganizedBy } from '../../../crud';
 import { useSelector, shallowEqual } from 'react-redux';
 import { resourceSelector } from '../../../selector';
 
-const useStyles = makeStyles({
-  action: { minWidth: 100, textAlign: 'center' },
-  resource: { width: 300, whiteSpace: 'normal' },
-  version: { minWidth: 100, textAlign: 'center' },
-  resType: { minWidth: 200 },
-  resCat: { minWidth: 200 },
-  done: { minWidth: 100, textAlign: 'center' },
-  edit: { minWidth: 100, textAlign: 'center' },
-  hidden: { visibility: 'hidden' },
-  bold: { fontWeight: 'bold' },
-});
-
 interface IProps {
   value: IRow;
   header?: boolean;
 }
 
 export const TableRow = ({ value, header }: IProps) => {
-  const classes = useStyles();
   const [projRole] = useGlobal('projRole');
+  const [headBold, setHeadBold] = useState<CSSProperties>({});
+  const [headHide, setHeadHide] = useState<CSSProperties>({});
   const { getOrganizedBy } = useOrganizedBy();
   const t: IPassageDetailArtifactsStrings = useSelector(
     resourceSelector,
     shallowEqual
   );
+
+  useEffect(() => {
+    setHeadBold(header ? { fontWeight: 'bold' } : {});
+    setHeadHide(header ? { visibility: 'hidden' } : {});
+  }, [header]);
+
   return (
     <ListItem>
       {projRole === RoleNames.Admin && (
-        <span className={clsx({ [classes.hidden]: header })}>
+        <span style={headHide}>
           <DragHandle />
           {'\u00A0'}
         </span>
       )}
-      <div className={clsx(classes.action, { [classes.bold]: header })}>
+      <Box style={headBold} sx={{ minWidth: 100, textAlign: 'center' }}>
         {value.playItem}
-      </div>
-      <div className={clsx(classes.resource, { [classes.bold]: header })}>
+      </Box>
+      <Box style={headBold} sx={{ width: 300, whiteSpace: 'normal' }}>
         {value.artifactName}
-      </div>
-      <div className={clsx(classes.version, { [classes.bold]: header })}>
+      </Box>
+      <Box style={headBold} sx={{ minWidth: 100, textAlign: 'center' }}>
         {value.version}
-      </div>
+      </Box>
       <Tooltip
         title={
           Boolean(value.passageId) ? t.passageResource : getOrganizedBy(true)
         }
       >
-        <div className={clsx(classes.resType, { [classes.bold]: header })}>
+        <Box style={headBold} sx={{ minWidth: 200 }}>
           {value.artifactType}
-        </div>
+        </Box>
       </Tooltip>
-      <div className={clsx(classes.resCat, { [classes.bold]: header })}>
+      <Box style={headBold} sx={{ minWidth: 200 }}>
         {value.artifactCategory}
-      </div>
-      <div className={clsx(classes.done, { [classes.bold]: header })}>
+      </Box>
+      <Box style={headBold} sx={{ minWidth: 100, textAlign: 'center' }}>
         {value.done}
-      </div>
+      </Box>
       {projRole === RoleNames.Admin && (
-        <div className={clsx(classes.edit, { [classes.bold]: header })}>
+        <Box style={headBold} sx={{ minWidth: 100, textAlign: 'center' }}>
           {value.editAction}
-        </div>
+        </Box>
       )}
     </ListItem>
   );
