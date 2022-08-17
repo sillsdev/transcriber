@@ -955,14 +955,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="discussionCard.assign">
-            <source>Assign to a Group or User</source>
+            <source>Assign to a Group or Team Member</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="discussionCard.groupuser">
-            <source>Group/User</source>
+            <source>Group/Team Member</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>
@@ -976,7 +976,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="discussionCard.assignUser">
-            <source>Assign to a User</source>
+            <source>Assign to a Team Member</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>
@@ -2278,7 +2278,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="invite.addInvite">
-            <source>Invite Member</source>
+            <source>Invite Person</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -2383,7 +2383,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="invite.newInviteTask">
-            <source>Enter the email address of the member to invite.</source>
+            <source>Enter the email address of the person to invite.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -5176,7 +5176,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="shared.user">
-            <source>User</source>
+            <source>Team Member</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">integration.tsx</context>
@@ -6282,7 +6282,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="usertable.addNewUser">
-            <source>Add New User</source>
+            <source>Add New Member</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">UserAdd.tsx</context>

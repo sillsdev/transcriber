@@ -822,13 +822,13 @@
       </unit>
       <unit id="discussionCard.assign">
          <segment>
-            <source>Assign to a Group or User</source>
+            <source>Assign to a Group or Team Member</source>
             <target/>
          </segment>
       </unit>
       <unit id="discussionCard.groupuser">
          <segment>
-            <source>Group/User</source>
+            <source>Group/Team Member</source>
             <target/>
          </segment>
       </unit>
@@ -840,7 +840,7 @@
       </unit>
       <unit id="discussionCard.assignUser">
          <segment>
-            <source>Assign to a User</source>
+            <source>Assign to a Team Member</source>
             <target/>
          </segment>
       </unit>
@@ -1956,7 +1956,7 @@
       </unit>
       <unit id="invite.addInvite">
          <segment>
-            <source>Invite Member</source>
+            <source>Invite Person</source>
             <target/>
          </segment>
       </unit>
@@ -2046,7 +2046,7 @@
       </unit>
       <unit id="invite.newInviteTask">
          <segment>
-            <source>Enter the email address of the member to invite.</source>
+            <source>Enter the email address of the person to invite.</source>
             <target/>
          </segment>
       </unit>
@@ -4440,7 +4440,7 @@
       </unit>
       <unit id="shared.user">
          <segment>
-            <source>User</source>
+            <source>Team Member</source>
             <target/>
          </segment>
       </unit>
@@ -5388,7 +5388,7 @@
       </unit>
       <unit id="usertable.addNewUser">
          <segment>
-            <source>Add New User</source>
+            <source>Add New Member</source>
             <target/>
          </segment>
       </unit>
