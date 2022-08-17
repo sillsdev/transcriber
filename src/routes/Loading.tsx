@@ -245,7 +245,8 @@ export function Loading(props: IProps) {
       setLang,
       globalStore,
       getOfflineProject,
-      offlineSetup
+      offlineSetup,
+      showMessage
     );
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
