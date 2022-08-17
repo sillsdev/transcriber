@@ -6,8 +6,9 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core';
+  DialogProps,
+  styled,
+} from '@mui/material';
 import { TeamContext } from '../../../context/TeamContext';
 import {
   ProjectName,
@@ -21,14 +22,12 @@ import {
 import Mode from '../../../model/dialogMode';
 import { IDialog } from '../../../model';
 
-const useStyles = makeStyles({
-  root: {
-    '& .MuiDialog-paper': {
-      maxWidth: '850px',
-      minWidth: '535px',
-    },
+const StyledDialog = styled(Dialog)<DialogProps>(() => ({
+  '& .MuiDialog-paper': {
+    maxWidth: '850px',
+    minWidth: '535px',
   },
-});
+}));
 
 const initState = {
   name: '',
@@ -60,7 +59,6 @@ interface IProps extends IDialog<IProjectDialog> {
 
 export function ProjectDialog(props: IProps) {
   const { mode, values, isOpen, onOpen, onCommit, onCancel, nameInUse } = props;
-  const classes = useStyles();
   const ctx = React.useContext(TeamContext);
   const t = ctx.state.vProjectStrings;
   initState.organizedBy = 'section';
@@ -91,9 +89,8 @@ export function ProjectDialog(props: IProps) {
   };
 
   return (
-    <Dialog
+    <StyledDialog
       open={isOpen}
-      className={classes.root}
       onClose={handleClose}
       aria-labelledby="projectDlg"
     >
@@ -126,7 +123,7 @@ export function ProjectDialog(props: IProps) {
           {mode === Mode.add ? t.add : t.save}
         </Button>
       </DialogActions>
-    </Dialog>
+    </StyledDialog>
   );
 }
 
