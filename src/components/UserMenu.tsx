@@ -3,8 +3,6 @@ import { useEffect, useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, IMainStrings, ISharedStrings, User } from '../model';
 import localStrings from '../selector/localize';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { MenuProps } from '@material-ui/core/Menu';
 import {
   Button,
   Menu,
@@ -13,7 +11,10 @@ import {
   ListItemText,
   Typography,
   Divider,
-} from '@material-ui/core';
+  styled,
+  MenuProps,
+  MenuItemProps,
+} from '@mui/material';
 import ExitIcon from '@mui/icons-material/ExitToApp';
 import AccountIcon from '@mui/icons-material/AccountCircle';
 import ReloadIcon from '@mui/icons-material/Refresh';
@@ -25,25 +26,16 @@ import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { localizeRole } from '../utils';
 
-const useStyles = makeStyles({
-  terms: {
-    textAlign: 'center',
-    lineHeight: 1,
-    paddingBottom: 0,
-    '& .MuiListItemText-primary': {
-      fontSize: 'small',
-    },
-  },
-});
-
-const StyledMenu = withStyles({
-  paper: {
+const MenuWithStyles = styled(Menu)<MenuProps>(() => ({
+  '.MuiPaper-root': {
     border: '1px solid #d3d4d5',
   },
-})((props: MenuProps) => (
-  <Menu
+}));
+
+const StyledMenu = (props: MenuProps) => (
+  <MenuWithStyles
     elevation={0}
-    getContentAnchorEl={null}
+    anchorEl={null}
     anchorOrigin={{
       vertical: 'bottom',
       horizontal: 'right',
@@ -54,18 +46,25 @@ const StyledMenu = withStyles({
     }}
     {...props}
   />
-));
+);
 
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
-      },
+const StyledMenuItem = styled(MenuItem)<MenuItemProps>(({ theme }) => ({
+  '&:focus': {
+    backgroundColor: theme.palette.primary.main,
+    '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+      color: theme.palette.common.white,
     },
   },
-}))(MenuItem);
+}));
+
+const TermsItem = styled(StyledMenuItem)<MenuItemProps>(() => ({
+  textAlign: 'center',
+  lineHeight: 1,
+  paddingBottom: 0,
+  '& .MuiListItemText-primary': {
+    fontSize: 'small',
+  },
+}));
 
 const roleStyle = {
   display: 'flex',
@@ -85,7 +84,6 @@ interface IProps extends IStateProps, IRecordProps {
 
 export function UserMenu(props: IProps) {
   const { action, t, ts, users } = props;
-  const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [developer] = useGlobal('developer');
   const [user] = useGlobal('user');
@@ -192,20 +190,12 @@ export function UserMenu(props: IProps) {
           <ListItemText primary={isElectron ? t.switchUser : t.logout} />
         </StyledMenuItem>
         <Divider />
-        <StyledMenuItem
-          id="privacy"
-          onClick={handleAction('Privacy')}
-          className={classes.terms}
-        >
+        <TermsItem id="privacy" onClick={handleAction('Privacy')}>
           <ListItemText primary={t.privacy} />
-        </StyledMenuItem>
-        <StyledMenuItem
-          id="terms"
-          onClick={handleAction('Terms')}
-          className={classes.terms}
-        >
+        </TermsItem>
+        <TermsItem id="terms" onClick={handleAction('Terms')}>
           <ListItemText primary={t.terms} />
-        </StyledMenuItem>
+        </TermsItem>
       </StyledMenu>
     </div>
   );
