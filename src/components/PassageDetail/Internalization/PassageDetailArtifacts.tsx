@@ -170,6 +170,13 @@ export function PassageDetailArtifacts(props: IProps) {
     return resourceType?.id;
   }, [artifactTypes, offlineOnly]);
 
+  const otherResourcesAvailable = useMemo(
+    () =>
+      rowData.filter((r) => r.passageId && r.passageId !== passage.id).length >
+      0,
+    [passage, rowData]
+  );
+
   const isPassageResource = () =>
     resourceTypeRef.current === ResourceTypeEnum.passageResource;
   const isProjectResource = () =>
@@ -542,7 +549,6 @@ export function PassageDetailArtifacts(props: IProps) {
       }
     }
   };
-
   return (
     <>
       <div className={classes.row}>
@@ -561,11 +567,13 @@ export function PassageDetailArtifacts(props: IProps) {
             controls={playItem !== ''}
           />
         </div>
-        <PassageResourceButton
-          value={allResources}
-          label={t.allResources}
-          cb={handleAllResources}
-        />
+        {otherResourcesAvailable && (
+          <PassageResourceButton
+            value={allResources}
+            label={t.allResources}
+            cb={handleAllResources}
+          />
+        )}
       </div>
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
