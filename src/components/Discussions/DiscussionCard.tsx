@@ -39,7 +39,7 @@ import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
-import { related, usePermissions } from '../../crud';
+import { PermissionName, related, usePermissions } from '../../crud';
 import CommentCard from './CommentCard';
 import ReplyCard from './ReplyCard';
 import UserAvatar from '../UserAvatar';
@@ -274,12 +274,13 @@ export const DiscussionCard = (props: IProps) => {
     discussion.attributes?.subject
   );
   const assignedToMeRef = useRef(false);
-  const { permissions, canAccess, needsApproval, getAuthor } = usePermissions({
-    users,
-    groups,
-    memberships,
-  });
-  const { myGroups } = usePeerGroups({
+  const { permissions, canAccess, approvalStatus, getAuthor, hasPermission } =
+    usePermissions({
+      users,
+      groups,
+      memberships,
+    });
+  const { myGroups, citGroup, mentorGroup } = usePeerGroups({
     users,
     groups,
     memberships,
@@ -723,20 +724,30 @@ export const DiscussionCard = (props: IProps) => {
         sortedByUpdatedDesc.length > 0 &&
         related(sortedByUpdatedDesc[0], 'lastModifiedByUser') === user
       ) {
-        //find who commented before me...
-        for (
-          var ix = 0;
-          ix < sortedByUpdatedDesc.length &&
-          (getAuthor(sortedByUpdatedDesc[ix].attributes.visible) ??
-            related(sortedByUpdatedDesc[ix], 'lastModifiedByUser')) === user;
-          ix++
-        );
-        if (ix < sortedByUpdatedDesc.length) {
-          handleUserChange(
-            getAuthor(sortedByUpdatedDesc[ix].attributes.visible) ??
-              related(sortedByUpdatedDesc[ix], 'lastModifiedByUser')
-          );
+        //If I'm a CIT, always assign to mentors group
+        if (hasPermission(PermissionName.CIT) && mentorGroup) {
+          handleGroupChange(mentorGroup.id);
           setChangeAssignment(false);
+          //If I'm a mentor, always assign to CIT group
+        } else if (hasPermission(PermissionName.Mentor) && citGroup) {
+          handleGroupChange(citGroup.id);
+          setChangeAssignment(false);
+        } else {
+          //otherwise find who commented before me...
+          for (
+            var ix = 0;
+            ix < sortedByUpdatedDesc.length &&
+            (getAuthor(sortedByUpdatedDesc[ix].attributes.visible) ??
+              related(sortedByUpdatedDesc[ix], 'lastModifiedByUser')) === user;
+            ix++
+          );
+          if (ix < sortedByUpdatedDesc.length) {
+            handleUserChange(
+              getAuthor(sortedByUpdatedDesc[ix].attributes.visible) ??
+                related(sortedByUpdatedDesc[ix], 'lastModifiedByUser')
+            );
+            setChangeAssignment(false);
+          }
         }
       }
     }
@@ -953,7 +964,7 @@ export const DiscussionCard = (props: IProps) => {
                 <CommentCard
                   key={i.id}
                   comment={i}
-                  needsApproval={needsApproval(i.attributes?.visible)}
+                  approvalStatus={approvalStatus(i.attributes?.visible)}
                   discussion={discussion}
                   number={j}
                   onEditing={handleEditCard}

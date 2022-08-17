@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { User, Group, GroupMembership } from '../../model';
-import { related, useAllUserGroup, useUser } from '../../crud';
+import { PermissionName, related, useAllUserGroup, useUser } from '../../crud';
 
 export interface IUserName {
   userId: string;
@@ -89,6 +89,28 @@ export const usePeerGroups = ({ users, groups, memberships }: IProps) => {
     return '';
   };
 
+  const citGroup = useMemo(
+    () =>
+      peerGroups.filter((g) =>
+        g.attributes.permissions?.includes(PermissionName.CIT)
+      ).length > 0
+        ? peerGroups.filter((g) =>
+            g.attributes.permissions?.includes(PermissionName.CIT)
+          )[0]
+        : undefined,
+    [peerGroups]
+  );
+  const mentorGroup = useMemo(
+    () =>
+      peerGroups.filter((g) =>
+        g.attributes.permissions?.includes(PermissionName.Mentor)
+      ).length > 0
+        ? peerGroups.filter((g) =>
+            g.attributes.permissions?.includes(PermissionName.Mentor)
+          )[0]
+        : undefined,
+    [peerGroups]
+  );
   return {
     userNames,
     peerGroups,
@@ -97,5 +119,7 @@ export const usePeerGroups = ({ users, groups, memberships }: IProps) => {
     cKey,
     myGroups,
     getGroupId,
+    citGroup,
+    mentorGroup,
   };
 };

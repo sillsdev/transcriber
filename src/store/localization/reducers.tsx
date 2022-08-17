@@ -163,6 +163,7 @@ const initialState = {
 	"commentCard": new LocalizedStrings({
 		"en": {
 			"approve": "Approve",
+			"approved": "Approved",
 			"confirmDelete": "Delete this comment?",
 			"unapproved": "Unapproved",
 		}

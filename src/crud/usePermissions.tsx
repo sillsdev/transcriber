@@ -62,8 +62,7 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
           .pop() ?? p;
   };
   const permissionTip = (p: PermissionName | string) => {
-    if (!p) return t.nspTip
-    ;
+    if (!p) return t.nspTip;
     return t.hasOwnProperty(p + 'Tip') ? t.getString(p + 'Tip') : '';
   };
   const allPermissions = () => Object.values(PermissionName);
@@ -72,15 +71,14 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
     return allPermissions().map((p) => localizePermission(p));
   };
 
-  //given a string of json {mentor:true, consultantInTraining:true}
+  //given a string of json {mentor:true, consultantInTraining:true, author: userid, approved: false}
   const canAccess = (perms: string) => {
     if (!perms) return true;
     var json = JSON.parse(perms);
     //nothing here so everyone can see it
     if (Object.keys(json).length === 0) return true;
-    //just author left so everyone can see it
-    if (Object.keys(json).length === 1 && json.hasOwnProperty('author'))
-      return true;
+    //has been approved
+    if (json.hasOwnProperty('approved') && json.approved) return true;
 
     var canI = false;
     permissions.split(',').forEach((p) => {
@@ -96,25 +94,24 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
   const addNeedsApproval = (json: any) => {
     return {
       ...json,
-      needsApproval: true,
+      approved: false,
       author: remoteId('user', user, memory.keyMap) ?? user,
     };
   };
 
-  const needsApproval = (perms: string) => {
-    if (!perms) return false;
+  const approvalStatus = (perms: string) => {
+    if (!perms) return undefined;
     var json = JSON.parse(perms);
-    if (Object.keys(json).length === 0) return false;
-    return json.hasOwnProperty('needsApproval');
+    if (Object.keys(json).length === 0) return undefined;
+    return json.approved;
   };
-  const approve = (perms?: string) => {
-    //save the author...get rid of the rest
+
+  const approve = (approved: boolean, perms?: string) => {
     if (!perms) return {};
     var json = JSON.parse(perms);
-    if (json.hasOwnProperty('author')) return { author: json['author'] };
-    //eh...this is bad but shouldn't ever be here!
-    return {};
+    return { ...json, approved };
   };
+
   const getAuthor = (perms: string) => {
     if (!perms) return undefined;
     var json = JSON.parse(perms);
@@ -135,7 +132,7 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
     addAccess,
     canAccess,
     addNeedsApproval,
-    needsApproval,
+    approvalStatus,
     approve,
     hasPermission,
     allPermissions,
