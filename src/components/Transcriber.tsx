@@ -57,8 +57,6 @@ import {
   waitForIt,
   dataPath,
   PathType,
-  localUserKey,
-  LocalKey,
   integrationSlug,
   getSegments,
   NamedRegions,
@@ -84,7 +82,6 @@ import TaskFlag from './TaskFlag';
 import Spelling from './Spelling';
 import { SectionPassageTitle } from '../control/SectionPassageTitle';
 import { UnsavedContext } from '../context/UnsavedContext';
-import StickyRedirect from './StickyRedirect';
 import { activitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 
@@ -267,7 +264,7 @@ export function Transcriber(props: IProps) {
     loading,
     artifactId,
   } = useTodo();
-  const { pasId, slug } = useParams<ParamTypes>();
+  const { slug } = useParams<ParamTypes>();
   const { safeURL } = useFetchMediaUrl();
   const { section, passage, duration, mediafile, state, role } = rowData[
     index
@@ -335,10 +332,7 @@ export function Transcriber(props: IProps) {
   const [style, setStyle] = useState({
     cursor: 'default',
   });
-  const [jumpBack] = useState(
-    localStorage.getItem(localUserKey(LocalKey.jumpBack))
-  );
-  const [view, setView] = useState('');
+
   const [artifactTypeSlug, setArtifactTypeSlug] = useState(slug);
   const { slugFromId } = useArtifactType();
 
@@ -1003,12 +997,6 @@ export function Transcriber(props: IProps) {
     playingRef.current = newPlaying;
   };
 
-  const handleWorkflow = async () => {
-    if (changed) await handleSave();
-    localStorage.removeItem(localUserKey(LocalKey.jumpBack));
-    setView(jumpBack || '#');
-  };
-
   const noPull = React.useMemo(
     () =>
       [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
@@ -1026,31 +1014,11 @@ export function Transcriber(props: IProps) {
     );
   }, [slug, artifactId, slugFromId]);
 
-  const allowBack = React.useMemo(() => {
-    return jumpBack && jumpBack.split('/').pop() === pasId;
-  }, [jumpBack, pasId]);
-
-  if (view) return <StickyRedirect to={view} />;
-
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
         {allDone ? (
-          <div>
-            {allowBack && (
-              <div className={classes.grow}>
-                <div className={classes.grow}>{'\u00A0'}</div>
-                <Button
-                  id="back-to-workflow"
-                  onClick={handleWorkflow}
-                  variant="contained"
-                >
-                  {t.backToWorkflow}
-                </Button>
-              </div>
-            )}
-            <AllDone />
-          </div>
+          <AllDone />
         ) : (
           <Grid container direction="column" style={style}>
             {props.defaultWidth === undefined && (
@@ -1066,17 +1034,6 @@ export function Transcriber(props: IProps) {
                     allBookData={allBookData}
                   />
                 </Grid>
-                {allowBack && (
-                  <Grid item md={3} container alignContent="flex-end">
-                    <Button
-                      id="back-to-workflow"
-                      onClick={handleWorkflow}
-                      variant="contained"
-                    >
-                      {t.backToWorkflow}
-                    </Button>
-                  </Grid>
-                )}
               </Grid>
             )}
             <Wrapper>
