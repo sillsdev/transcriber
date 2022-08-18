@@ -20,6 +20,7 @@ import { TokenContext } from '../../context/TokenProvider';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import HelpMenu from '../HelpMenu';
 import UserMenu from '../UserMenu';
+import { GrowingSpacer } from '../../control';
 import {
   resetData,
   exitElectronApp,
@@ -337,13 +338,13 @@ export const AppHead = (props: IProps) => {
         <Toolbar>
           {projRole && <ProjectName setView={setView} />}
           {!projRole && <span style={cssVars}>{'\u00A0'}</span>}
-          <Box sx={{ flexGrow: 1 }}>{'\u00A0'}</Box>
+          <GrowingSpacer />
           {(pathname === '/' || pathname.startsWith('/access')) && (
             <>
               <Typography variant="h6" noWrap>
                 {API_CONFIG.productName}
               </Typography>
-              <Box sx={{ flexGrow: 1 }}>{'\u00A0'}</Box>
+              <GrowingSpacer />
             </>
           )}
           {SwitchTo && <SwitchTo />}
