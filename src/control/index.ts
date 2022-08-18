@@ -17,3 +17,4 @@ export * from './Stage';
 export * from './StageReport';
 export * from './MediaDescription';
 export * from './SelectExportType';
+export * from './LogoImg';
