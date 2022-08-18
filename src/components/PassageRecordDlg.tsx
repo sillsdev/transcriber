@@ -118,6 +118,7 @@ function PassageRecordDlg(props: IProps) {
       open={visible}
       onClose={handleCancel}
       aria-labelledby="recDlg"
+      disableEnforceFocus
     >
       <DialogTitle id="recDlg">{t.title}</DialogTitle>
       <DialogContent>

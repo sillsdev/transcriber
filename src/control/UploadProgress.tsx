@@ -53,6 +53,7 @@ export function UploadProgress(props: IProps) {
       open={open}
       onClose={handleChoice('Close')}
       aria-labelledby="uploadProgDlg"
+      disableEnforceFocus
     >
       <DialogTitle id="uploadProgDlg">{title || t.progressTitle}</DialogTitle>
       <DialogContent>

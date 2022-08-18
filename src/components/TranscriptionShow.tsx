@@ -101,7 +101,12 @@ function TranscriptionShow(props: IProps) {
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="transShowDlg">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="transShowDlg"
+        disableEnforceFocus
+      >
         <DialogTitle id="transShowDlg">{t.transcription}</DialogTitle>
         <DialogContent>
           <DialogContentText>{t.transcriptionDisplay}</DialogContentText>

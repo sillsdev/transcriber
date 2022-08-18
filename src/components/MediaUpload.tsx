@@ -267,6 +267,7 @@ function MediaUpload(props: IProps) {
         open={visible}
         onClose={handleCancel}
         aria-labelledby="audUploadDlg"
+        disableEnforceFocus
       >
         <DialogTitle id="audUploadDlg">{title[uploadType]}</DialogTitle>
         <DialogContent>

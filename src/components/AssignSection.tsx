@@ -236,6 +236,7 @@ function AssignSection(props: IProps) {
         maxWidth="md"
         onClose={handleClose}
         aria-labelledby="assignDlg"
+        disableEnforceFocus
       >
         <DialogTitle id="assignDlg">
           {t.title.replace('{0}', organizedBy)}

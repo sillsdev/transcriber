@@ -119,6 +119,7 @@ export function BigDialog({
         [classes.rootXl]: bp === BigDialogBp.xl,
       })}
       aria-labelledby="bigDlg"
+      disableEnforceFocus
     >
       <DialogTitle id="bigDlg">
         <div className={classes.row}>

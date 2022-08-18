@@ -732,6 +732,7 @@ export function TranscriptionTab(props: IProps) {
         onClose={closeNoChoice}
         aria-labelledby="transExpDlg"
         aria-describedby="transExpDesc"
+        disableEnforceFocus
       >
         <DialogTitle id="transExpDlg">{t.exportType}</DialogTitle>
         <DialogContent>

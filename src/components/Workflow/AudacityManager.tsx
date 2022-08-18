@@ -297,7 +297,12 @@ function AudacityManager(props: IProps) {
   }, [passageId, name]);
 
   return (
-    <Dialog onClose={handleClose} aria-labelledby="manager-title" open={open}>
+    <Dialog
+      onClose={handleClose}
+      aria-labelledby="manager-title"
+      open={open}
+      disableEnforceFocus
+    >
       <DialogTitle id="manager-title">{t.title}</DialogTitle>
       <Grid container className={classes.grid}>
         {exists && name !== '' ? (

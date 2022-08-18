@@ -148,6 +148,7 @@ function WSSegmentParameters(props: IProps) {
       onClose={handleClose}
       PaperComponent={PaperComponent}
       aria-labelledby="draggable-dialog-title"
+      disableEnforceFocus
     >
       <DialogTitle className={classes.movecursor} id="draggable-dialog-title">
         <div className={classes.row}>

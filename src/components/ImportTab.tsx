@@ -750,6 +750,7 @@ export function ImportTab(props: IProps) {
       disableBackdropClick={true}
       disableEscapeKeyDown={true}
       aria-labelledby="importDlg"
+      disableEnforceFocus
     >
       <DialogTitle id="importDlg">
         {syncBuffer ? t.importSync : t.importProject + ' ' + (planName || '')}

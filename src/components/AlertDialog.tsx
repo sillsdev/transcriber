@@ -80,6 +80,7 @@ function AlertDialog(props: IProps) {
       onClose={handleClose}
       aria-labelledby="alertDlg"
       aria-describedby="alertDesc"
+      disableEnforceFocus
     >
       <DialogTitle id="alertDlg">
         {title || (isDelete ? t.delete : t.confirmation)}

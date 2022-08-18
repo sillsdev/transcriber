@@ -109,6 +109,7 @@ function TranscribeReject(props: IProps) {
         open={open}
         onClose={handleCancel}
         aria-labelledby="transRejectDlg"
+        disableEnforceFocus
       >
         <DialogTitle id="transRejectDlg">{t.rejectTitle}</DialogTitle>
         <DialogContent>
