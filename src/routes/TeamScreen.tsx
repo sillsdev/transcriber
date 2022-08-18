@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useGlobal } from 'reactn';
 import { LocalKey, localUserKey } from '../utils';
-import { makeStyles } from '@material-ui/core';
+import { Box } from '@mui/material';
 import AppHead from '../components/App/AppHead';
 import { TeamProvider } from '../context/TeamContext';
 import { TeamProjects } from '../components/Team';
@@ -12,18 +12,7 @@ import TeamActions from '../components/Team/TeamActions';
 import { RoleNames } from '../model';
 import { UnsavedContext } from '../context/UnsavedContext';
 
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-  },
-  teamScreen: {
-    display: 'flex',
-    paddingTop: '80px',
-  },
-});
-
 export const TeamScreen = () => {
-  const classes = useStyles();
   const { pathname } = useLocation();
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -64,15 +53,15 @@ export const TeamScreen = () => {
   }
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ width: '100%' }}>
       <AppHead />
       <TeamProvider>
-        <div id="TeamScreen" className={classes.teamScreen}>
+        <Box id="TeamScreen" sx={{ display: 'flex', paddingTop: '80px' }}>
           <TeamActions />
           <TeamProjects />
-        </div>
+        </Box>
       </TeamProvider>
-    </div>
+    </Box>
   );
 };
 
