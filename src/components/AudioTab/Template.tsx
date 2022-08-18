@@ -79,7 +79,12 @@ const InfoDialog = connect(mapStateToProps)((props: InfoDialogProps) => {
   };
 
   return (
-    <Dialog onClose={handleClose} open={open} aria-labelledby="templDlg">
+    <Dialog
+      onClose={handleClose}
+      open={open}
+      aria-labelledby="templDlg"
+      disableEnforceFocus
+    >
       <DialogTitle id="templDlg">{t.templateCodes}</DialogTitle>
       <List>
         {Object.keys(pattern).map((pat) => (

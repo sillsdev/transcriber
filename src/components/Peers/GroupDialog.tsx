@@ -155,6 +155,7 @@ export const GroupDialog = ({
         open={open}
         onClose={handleCancel}
         aria-labelledby="form-dialog-title"
+        disableEnforceFocus
       >
         <DialogTitle id="form-dialog-title">
           {cur ? t.editPeerGroup : t.newPeerGroup}

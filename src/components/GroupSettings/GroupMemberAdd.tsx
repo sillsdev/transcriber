@@ -98,7 +98,12 @@ function GroupMemberAdd(props: IProps) {
   };
 
   return (
-    <Dialog open={open} onClose={handleCancel} aria-labelledby="memberDlg">
+    <Dialog
+      open={open}
+      onClose={handleCancel}
+      aria-labelledby="memberDlg"
+      disableEnforceFocus
+    >
       <DialogTitle id="memberDlg">
         {t.addGroupMember.replace('{0}', localizeRole(role, ts, true))}
       </DialogTitle>

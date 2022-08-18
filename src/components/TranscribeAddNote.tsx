@@ -48,15 +48,8 @@ interface IProps extends IStateProps {
 }
 
 function TranscribeAddNote(props: IProps) {
-  const {
-    t,
-    visible,
-    addMethod,
-    editMethod,
-    cancelMethod,
-    passageIn,
-    pscIn,
-  } = props;
+  const { t, visible, addMethod, editMethod, cancelMethod, passageIn, pscIn } =
+    props;
   const classes = useStyles();
   const [open, setOpen] = useState(visible);
   const [comment, setComment] = useState('');
@@ -103,7 +96,12 @@ function TranscribeAddNote(props: IProps) {
 
   return (
     <div>
-      <Dialog open={open} onClose={handleCancel} aria-labelledby="transAddDlg">
+      <Dialog
+        open={open}
+        onClose={handleCancel}
+        aria-labelledby="transAddDlg"
+        disableEnforceFocus
+      >
         <DialogTitle id="transAddDlg">{t.addNoteTitle}</DialogTitle>
         <DialogContent>
           <TextField

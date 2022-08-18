@@ -280,6 +280,7 @@ function Invite(props: IProps) {
         onClose={handleCancel}
         aria-labelledby="inviteDlg"
         maxWidth="lg"
+        disableEnforceFocus
       >
         <DialogTitle id="inviteDlg">
           {inviteIn ? t.editInvite : t.addInvite}

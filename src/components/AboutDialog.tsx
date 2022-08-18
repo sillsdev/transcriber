@@ -174,6 +174,7 @@ function AboutDialog(props: AboutDialogProps) {
       aria-labelledby="aboutDlg"
       open={open}
       scroll={'paper'}
+      disableEnforceFocus
     >
       <DialogTitle id="aboutDlg">{t.about}</DialogTitle>
       <DialogContent id="about-version" sx={{ px: 4 }}>
