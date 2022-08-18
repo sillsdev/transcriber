@@ -4,16 +4,10 @@ import {
   ListSubheader,
   ListItemIcon,
   Typography,
-  makeStyles,
   Grid,
-} from '@material-ui/core';
+} from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { ReactElement } from 'react';
-const useStyles = makeStyles({
-  notes: {
-    fontSize: 'small',
-  },
-});
 
 export interface FactorDecorate {
   [key: string]: ReactElement;
@@ -36,8 +30,7 @@ const KindHead = (props: { text: string; decorate?: ReactElement }) => (
 );
 
 const Prose = ({ text }: { text: string }) => {
-  const classes = useStyles();
-  return <Typography className={classes.notes}>{text}</Typography>;
+  return <Typography sx={{ fontSize: 'small' }}>{text}</Typography>;
 };
 
 const KeyFactorsHead = ({ title }: { title: string }) => {
