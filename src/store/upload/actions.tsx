@@ -167,7 +167,7 @@ export const nextUpload =
             'version-number': record.versionNumber,
             'original-file': record.originalFile,
             'content-type': record.contentType,
-            'eaf-url': record.EafUrl,
+            'eaf-url': record.eafUrl,
             'date-created': moment.utc(),
             'source-segments': record.sourceSegments,
             'performed-by': record.performedBy,
