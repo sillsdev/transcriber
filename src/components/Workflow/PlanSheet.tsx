@@ -316,6 +316,7 @@ export function PlanSheet(props: IProps) {
 
   const handleActionRefused = () => {
     setConfirmAction('');
+    setCheck(Array<number>());
   };
 
   const handlePlayStatus = (mediaId: string) => {
@@ -603,7 +604,7 @@ export function PlanSheet(props: IProps) {
                     rowIndex={rowIndex}
                     isSection={section}
                     isPassage={passage}
-                    readonly={readonly}
+                    readonly={readonly || check.length > 0}
                     online={connected || offlineOnly}
                     mediaId={rowInfo[rowIndex].mediaId?.id}
                     mediaShared={rowInfo[rowIndex].mediaShared}
@@ -649,6 +650,7 @@ export function PlanSheet(props: IProps) {
     mediaPlaying,
     projRole,
     currentRow,
+    check,
   ]);
 
   useEffect(() => {
@@ -684,7 +686,7 @@ export function PlanSheet(props: IProps) {
               <>
                 <AddSectionPassageButtons
                   inlinePassages={inlinePassages}
-                  numRows={data.length}
+                  numRows={rowInfo.length}
                   readonly={readonly}
                   t={t}
                   isSection={isSection}
