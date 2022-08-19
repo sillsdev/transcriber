@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -515,10 +515,15 @@ export function ScriptureTable(props: IProps) {
 
   const handleDelete = async (what: string, where: number[]) => {
     if (what === 'Delete') {
-      if (savingRef.current) {
-        showMessage(t.saving);
-        return false;
-      }
+      await waitForIt(
+        'saving before delete',
+        () => {
+          console.log('waiting for save before deleting.');
+          return !savingRef.current;
+        },
+        () => false,
+        1500
+      );
       await markDelete(where[0]);
       return true;
     }
@@ -542,8 +547,7 @@ export function ScriptureTable(props: IProps) {
     }
     const { valid, addedWorkflow } = paste(rows);
     if (valid) {
-      const newWorkflow = [...workflow].concat(addedWorkflow);
-      setWorkflow(newWorkflow);
+      setWorkflow(workflow.concat(addedWorkflow));
       setChanged(true);
       return Array<Array<string>>();
     }
@@ -808,13 +812,22 @@ export function ScriptureTable(props: IProps) {
           setComplete(Math.floor((90 * start) / numChanges) + 10);
           end = 200;
           while (!isSectionRow(workflow[start + end]) && end > 0) end -= 1;
-          if (end === 0) throw new Error('The section has > 200 passages');
+          if (end === 0) {
+            //find the end
+            end = 200;
+            while (
+              end < workflow.length &&
+              !isSectionRow(workflow[start + end])
+            )
+              end++;
+          }
           change = (await saveFn(workflow.slice(start, start + end))) || change;
         }
       }
       change = (await saveFn(workflow.slice(start))) || change;
       //update plan section count and lastmodified
       await updateLastModified();
+      //not sure we need to do this because its going to be requeried next
       if (change) setWorkflow([...workflow]);
       setBusy(false);
     };
@@ -928,6 +941,12 @@ export function ScriptureTable(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [workflow, width, colNames, flat]);
 
+  const rowdata = useMemo(
+    () => workflowSheet(workflow, colNames),
+    [workflow, colNames]
+  );
+
+  const rowinfo = useMemo(() => workflow.filter((w) => !w.deleted), [workflow]);
   if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
@@ -946,8 +965,8 @@ export function ScriptureTable(props: IProps) {
       <PlanSheet
         {...props}
         columns={columns}
-        rowData={workflowSheet(workflow, colNames)}
-        rowInfo={workflow.filter((w) => !w.deleted)}
+        rowData={rowdata}
+        rowInfo={rowinfo}
         bookCol={colNames.findIndex((v) => v === 'book')}
         bookMap={bookMap}
         bookSuggestions={bookSuggestions}
@@ -971,11 +990,13 @@ export function ScriptureTable(props: IProps) {
         t={s}
         ts={ts}
       />
-      <AssignSection
-        sections={getSectionsWhere(assignSections)}
-        visible={assignSectionVisible}
-        closeMethod={handleAssignClose()}
-      />
+      {assignSectionVisible && (
+        <AssignSection
+          sections={getSectionsWhere(assignSections)}
+          visible={assignSectionVisible}
+          closeMethod={handleAssignClose()}
+        />
+      )}
       <Uploader
         recordAudio={recordAudio}
         allowWave={true}
