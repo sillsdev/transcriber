@@ -8,22 +8,15 @@ import {
   ISharedStrings,
 } from '../model';
 import localStrings from '../selector/localize';
-import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
+import { IconButton, IconButtonProps, styled } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/GetAppOutlined';
 import { remoteIdGuid, useFetchMediaUrl, MediaSt } from '../crud';
 import { loadBlob, removeExtension } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    actionButton: {
-      color: theme.palette.primary.light,
-    },
-    icon: {
-      fontSize: '16px',
-    },
-  })
-);
+const StyledIcon = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+  color: theme.palette.primary.light,
+}));
 
 interface IStateProps {
   t: IAudioDownloadStrings;
@@ -37,7 +30,6 @@ interface IProps extends IStateProps {
 
 export const AudioDownload = (props: IProps) => {
   const { mediaId, title, t, ts } = props;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -88,15 +80,14 @@ export const AudioDownload = (props: IProps) => {
 
   return (
     <div>
-      <IconButton
+      <StyledIcon
         id="audDownload"
-        className={classes.actionButton}
         title={title || t.downloadMedia}
         disabled={(mediaId || '') === '' || mediaId === mediaState.remoteId}
         onClick={handleDownload}
       >
         <DownloadIcon />
-      </IconButton>
+      </StyledIcon>
       {blobUrl && (
         /* eslint-disable-next-line jsx-a11y/anchor-has-content */
         <a
