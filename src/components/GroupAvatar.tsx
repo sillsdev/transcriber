@@ -1,11 +1,9 @@
-import React from 'react';
 import { useGlobal } from 'reactn';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { ISharedStrings, IState, Group } from '../model';
 import { connect } from 'react-redux';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
-import { Avatar } from '@material-ui/core';
+import { Avatar, AvatarProps, styled } from '@mui/material';
 import { makeAbbr } from '../utils';
 import { dataPath, PathType } from '../utils/dataPath';
 import { remoteId } from '../crud';
@@ -14,18 +12,23 @@ import localStrings from '../selector/localize';
 const os = require('os');
 const fs = require('fs');
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    small: {
-      width: theme.spacing(3),
-      height: theme.spacing(3),
-    },
-    medium: {
-      width: theme.spacing(5),
-      height: theme.spacing(5),
-    },
-  })
-);
+// see: https://mui.com/material-ui/customization/how-to-customize/
+interface StyledAvatarProps extends AvatarProps {
+  small?: boolean;
+}
+const StyledAvatar = styled(Avatar, {
+  shouldForwardProp: (prop) => prop !== 'small',
+})<StyledAvatarProps>(({ small, theme }) => ({
+  ...(small
+    ? {
+        width: theme.spacing(3),
+        height: theme.spacing(3),
+      }
+    : {
+        width: theme.spacing(5),
+        height: theme.spacing(5),
+      }),
+}));
 
 interface IStateProps {
   ts: ISharedStrings;
@@ -42,7 +45,6 @@ interface IProps extends IStateProps, IRecordProps {
 
 export function GroupAvatar(props: IProps) {
   const { groupRec, small } = props;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
 
   var src = dataPath(groupRec.attributes.name, PathType.AVATARS, {
@@ -59,15 +61,11 @@ export function GroupAvatar(props: IProps) {
     } else src = '';
   }
   return src ? (
-    <Avatar
-      alt={groupRec.attributes.name}
-      src={src}
-      className={small ? classes.small : classes.medium}
-    />
+    <StyledAvatar alt={groupRec.attributes.name} src={src} small={small} />
   ) : groupRec.attributes && groupRec.attributes.name !== '' ? (
-    <Avatar className={small ? classes.small : classes.medium}>
+    <StyledAvatar small={small}>
       {makeAbbr(groupRec.attributes.name)}
-    </Avatar>
+    </StyledAvatar>
   ) : (
     <></>
   );
