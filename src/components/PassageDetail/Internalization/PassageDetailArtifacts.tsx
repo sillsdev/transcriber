@@ -295,6 +295,7 @@ export function PassageDetailArtifacts(props: IProps) {
     setEditResource(undefined);
     catIdRef.current = undefined;
     descriptionRef.current = '';
+    resourceTypeRef.current = ResourceTypeEnum.sectionResource;
   };
   const handleEditResourceVisible = (v: boolean) => {
     if (!v) resetEdit();
