@@ -85,7 +85,7 @@ export const AddSectionPassageButtons = (props: IProps) => {
   };
   const handlePassageLast = () => {
     //we're on a section so find our last row and add it below it
-    var row = currentrow + 1;
+    var row = currentrow;
     while (isPassage(row + 1)) row++;
     addPassage(row, false);
     handleClose();
@@ -171,7 +171,7 @@ export const AddSectionPassageButtons = (props: IProps) => {
         }
         onClose={handleClose}
       >
-        {currentrow >= 0 && (
+        {currentrow >= 0 && numRows > 0 && (
           <MenuItem id="secAbove" onClick={handleSectionAbove}>
             {t.sectionAbove
               .replace('{0}', organizedBy)
@@ -186,7 +186,7 @@ export const AddSectionPassageButtons = (props: IProps) => {
               .replace('{1}', sectionSequenceNumber)}
           </MenuItem>
         )}
-        {isContextMenu && !inlinePassages && (
+        {isContextMenu && !inlinePassages && isPassage(currentrow + 1) && (
           <MenuItem id="passageAsLast" onClick={handlePassageLast}>
             {t.insertLastPassage
               .replace('{0}', organizedBy)
@@ -226,14 +226,14 @@ export const AddSectionPassageButtons = (props: IProps) => {
               .replace('{1}', sectionSequenceNumber)}
           </MenuItem>
         )}
-        {currentisSection && (
+        {currentisSection && isPassage(currentrow + 1) && (
           <MenuItem id="psgAsLast" onClick={handlePassageLast}>
             {t.insertLastPassage
               .replace('{0}', organizedBy)
               .replace('{1}', sectionSequenceNumber)}
           </MenuItem>
         )}
-        {currentrow > 2 && currentisPassage && isSection(currentrow - 1) && (
+        {currentrow >= 2 && currentisPassage && isSection(currentrow - 1) && (
           <MenuItem id="passToPrev" onClick={handlePassageToPrev}>
             {t.passageToPrevSection.replace('{0}', passageSequenceNumber)}
           </MenuItem>
@@ -249,7 +249,7 @@ export const AddSectionPassageButtons = (props: IProps) => {
             {t.passageToNextSection.replace('{0}', passageSequenceNumber)}
           </MenuItem>
         )}
-        {!isContextMenu && (
+        {!isContextMenu && currentrow !== numRows - 1 && (
           <MenuItem id="passageEnd" onClick={handlePassageEnd}>
             {t.passageEnd}
           </MenuItem>
