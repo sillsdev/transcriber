@@ -9,19 +9,19 @@ import {
 import localStrings from '../../selector/localize';
 import {
   Button,
-  createStyles,
   debounce,
   FormControlLabel,
   Grid,
   IconButton,
-  makeStyles,
   Paper,
   Radio,
   RadioGroup,
   TextField,
-  Theme,
   Typography,
-} from '@material-ui/core';
+  Box,
+  SxProps,
+  styled,
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -40,7 +40,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { cleanFileName, NamedRegions } from '../../utils';
-import styled from 'styled-components';
+import styledHtml from 'styled-components';
 import SplitPane, { Pane } from 'react-split-pane';
 import PassageDetailPlayer from './PassageDetailPlayer';
 import DiscussionList from '../Discussions/DiscussionList';
@@ -52,58 +52,29 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import Confirm from '../AlertDialog';
 import Uploader from '../Uploader';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
-import { LightTooltip } from '../StepEditor';
+import { GrowingSpacer, LightTooltip, PriButton } from '../../control';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {},
-    button: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    status: {
-      marginRight: theme.spacing(2),
-      alignSelf: 'center',
-      display: 'block',
-      gutterBottom: 'true',
-    },
-    unsupported: {
-      color: theme.palette.secondary.light,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      margin: 'auto',
-      width: `calc(100% - 32px)`,
-    },
-    playSelect: {
-      display: 'flex',
-      flexDirection: 'row',
-      paddingRight: theme.spacing(4),
-      paddingBottom: theme.spacing(1),
-    },
-    pane: {},
-    formControl: {
-      margin: theme.spacing(1),
-      paddingBottom: theme.spacing(2),
-    },
-    playStatus: {
-      margin: theme.spacing(1),
-    },
-    row: {
-      display: 'flex',
-    },
-    grow: { flexGrow: 1 },
-    playerRow: {
-      width: '100%',
-      '& audio': {
-        display: 'flex',
-        width: 'inherit',
-      },
-      display: 'flex',
-    },
-  })
-);
-const Wrapper = styled.div`
+const PlayerRow = styled('div')(() => ({
+  width: '100%',
+  '& audio': {
+    display: 'flex',
+    width: 'inherit',
+  },
+  display: 'flex',
+}));
+
+const paperProps = { p: 2, m: 'auto', width: `calc(100% - 32px)` } as SxProps;
+const rowProp = { display: 'flex' };
+const buttonProp = { mx: 1 } as SxProps;
+const ctlProps = { m: 1, pb: 2 } as SxProps;
+const statusProps = {
+  mr: 2,
+  alignSelf: 'center',
+  display: 'block',
+  gutterBottom: 'true',
+} as SxProps;
+
+const Wrapper = styledHtml.div`
   .Resizer {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -158,6 +129,7 @@ const Wrapper = styled.div`
     min-height: 0;
   }
 `;
+
 interface IStateProps {
   t: ICommunityStrings;
   ts: ISharedStrings;
@@ -188,7 +160,6 @@ export function PassageDetailItem(props: IProps) {
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
-  const classes = useStyles();
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const [speaker, setSpeaker] = useState('');
@@ -365,7 +336,7 @@ export function PassageDetailItem(props: IProps) {
 
   return (
     <div>
-      <Paper className={classes.paper}>
+      <Paper sx={paperProps}>
         <div>
           <Wrapper>
             <SplitPane
@@ -374,7 +345,7 @@ export function PassageDetailItem(props: IProps) {
               split="vertical"
               onChange={handleSplitSize}
             >
-              <Pane className={classes.pane}>
+              <Pane>
                 <SplitPane
                   split="horizontal"
                   defaultSize={playerSize - 20}
@@ -382,7 +353,7 @@ export function PassageDetailItem(props: IProps) {
                   style={{ position: 'static' }}
                   onChange={handleHorizonalSplitSize}
                 >
-                  <Pane className={classes.pane}>
+                  <Pane>
                     <PassageDetailPlayer
                       allowSegment={segments}
                       allowAutoSegment={segments !== undefined}
@@ -390,11 +361,11 @@ export function PassageDetailItem(props: IProps) {
                     />
                   </Pane>
                   {currentVersion !== 0 ? (
-                    <Pane className={classes.pane}>
-                      <Paper className={classes.paper}>
-                        <div className={classes.row}>
+                    <Pane>
+                      <Paper sx={paperProps}>
+                        <Box sx={rowProp}>
                           <Button
-                            className={classes.button}
+                            sx={buttonProp}
                             id="pdRecordUpload"
                             onClick={handleUpload}
                             title={
@@ -408,21 +379,19 @@ export function PassageDetailItem(props: IProps) {
                               ? ts.uploadMediaSingular
                               : ts.importMediaSingular}
                           </Button>
-                          <div className={classes.grow}>{'\u00A0'}</div>
+                          <GrowingSpacer />
                           {currentSegment && (
                             <TextField
-                              className={classes.formControl}
+                              sx={ctlProps}
                               id="segment"
                               value={currentSegment}
                               size={'small'}
                               label={t.segment}
                             />
                           )}
-                        </div>
-                        <div className={classes.row}>
-                          <Typography className={classes.status}>
-                            {t.record}
-                          </Typography>
+                        </Box>
+                        <Box sx={rowProp}>
+                          <Typography sx={statusProps}>{t.record}</Typography>
                           {slugs.length > 1 && (
                             <RadioGroup
                               row={true}
@@ -443,10 +412,10 @@ export function PassageDetailItem(props: IProps) {
                               ))}
                             </RadioGroup>
                           )}
-                          <div className={classes.grow}>{'\u00A0'}</div>
+                          <GrowingSpacer />
                           {showTopic && (
                             <TextField
-                              className={classes.formControl}
+                              sx={ctlProps}
                               id="itemtopic"
                               label={t.topic}
                               value={topic}
@@ -455,14 +424,14 @@ export function PassageDetailItem(props: IProps) {
                             />
                           )}
                           <TextField
-                            className={classes.formControl}
+                            sx={ctlProps}
                             id="speaker"
                             label={t.speaker}
                             value={speaker}
                             onChange={handleChangeSpeaker}
                             fullWidth={true}
                           />
-                        </div>
+                        </Box>
                         <MediaRecord
                           id="mediarecord"
                           toolId={toolId}
@@ -478,38 +447,41 @@ export function PassageDetailItem(props: IProps) {
                           onRecording={onRecordingOrPlaying}
                           onPlayStatus={onRecordingOrPlaying}
                         />
-                        <div className={classes.row}>
-                          <Typography
-                            variant="caption"
-                            className={classes.status}
-                          >
+                        <Box sx={rowProp}>
+                          <Typography variant="caption" sx={statusProps}>
                             {statusText}
                           </Typography>
-                          <div className={classes.grow}>{'\u00A0'}</div>
-                          <Button
+                          <GrowingSpacer />
+                          <PriButton
                             id="rec-save"
-                            className={classes.button}
+                            sx={buttonProp}
                             onClick={handleSave}
-                            variant="contained"
-                            color="primary"
                             disabled={!canSave}
                           >
                             {ts.save}
-                          </Button>
-                        </div>
+                          </PriButton>
+                        </Box>
                       </Paper>
-                      <Paper className={classes.paper}>
-                        <div className={classes.row}>
-                          <Paper className={classes.paper}>
-                            <div id="playselect" className={classes.playSelect}>
+                      <Paper sx={paperProps}>
+                        <Box sx={rowProp}>
+                          <Paper sx={paperProps}>
+                            <Box
+                              id="playselect"
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                pr: 4,
+                                pb: 1,
+                              }}
+                            >
                               <SelectRecording
                                 onChange={handleSelect}
                                 ts={ts}
                                 tags={slugs}
                                 latestVernacular={currentVersion}
                               />
-                            </div>
-                            <div id="rowplayer" className={classes.playerRow}>
+                            </Box>
+                            <PlayerRow id="rowplayer">
                               <MediaPlayer
                                 srcMediaId={playItem}
                                 requestPlay={itemPlaying}
@@ -527,14 +499,14 @@ export function PassageDetailItem(props: IProps) {
                                   </IconButton>
                                 </LightTooltip>
                               )}
-                            </div>
+                            </PlayerRow>
                           </Paper>
-                        </div>
+                        </Box>
                       </Paper>
                     </Pane>
                   ) : (
-                    <Pane className={classes.pane}>
-                      <Paper className={classes.paper}>
+                    <Pane>
+                      <Paper sx={paperProps}>
                         <Typography variant="h2" align="center">
                           {ts.noAudio}
                         </Typography>
@@ -543,7 +515,7 @@ export function PassageDetailItem(props: IProps) {
                   )}
                 </SplitPane>
               </Pane>
-              <Pane className={classes.pane}>
+              <Pane>
                 <Grid item xs={12} sm container>
                   <Grid item container direction="column">
                     <DiscussionList />

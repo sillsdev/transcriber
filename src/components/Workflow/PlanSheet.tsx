@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext, memo } from 'react';
 import { useGlobal } from 'reactn';
 import {
   IPlanSheetStrings,
@@ -8,8 +8,7 @@ import {
   IWorkflow,
   RoleNames,
 } from '../../model';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, AppBar, Badge } from '@material-ui/core';
+import { Badge, Box, styled } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { useSnackBar } from '../../hoc/SnackBar';
 import DataSheet from 'react-datasheet';
@@ -19,6 +18,12 @@ import {
   AddSectionPassageButtons,
   ProjButtons,
   StageReport,
+  TabActions,
+  ActionHeight,
+  GrowingSpacer,
+  AltButton,
+  PriButton,
+  iconMargin,
 } from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
 import { refMatch, cleanClipboard } from '../../utils';
@@ -28,95 +33,73 @@ import TaskAvatar from '../TaskAvatar';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
 import PlanActionMenu from './PlanActionMenu';
-import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
+import { TabAppBar } from '../../control';
 import PlanAudioActions from './PlanAudioActions';
 import { HotKeyContext } from '../../context/HotKeyContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
 
-const MemoizedTaskAvatar = React.memo(TaskAvatar);
+const MemoizedTaskAvatar = memo(TaskAvatar);
 
 const DOWN_ARROW = 'ARROWDOWN';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-    },
-    paper: {},
-    bar: actionBar,
-    content: {
-      paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
-      '& .data-grid-container .data-grid .cell': {
-        verticalAlign: 'middle',
-        textAlign: 'left',
-        paddingLeft: theme.spacing(0.5),
-        paddingRight: theme.spacing(0.5),
-      },
-      '& .data-grid-container .data-grid .cell.set': {
-        backgroundColor: theme.palette.background.default,
-      },
-      '& .data-grid-container .data-grid .cell.setp': {
-        backgroundColor: theme.palette.background.default,
-      },
-      '& .data-grid-container .data-grid .cell.setpErr': {
-        backgroundColor: theme.palette.warning.main,
-      },
-      '& .data-grid-container .data-grid .cell.currentrow': {
-        borderStyle: 'double',
-        borderColor: theme.palette.primary.light,
-      },
-      '& .data-grid-container .data-grid .cell.num': {
-        textAlign: 'center',
-      },
-      '& .data-grid-container .data-grid .cell.num > input': {
-        textAlign: 'center',
-        padding: theme.spacing(1),
-      },
-      '& .data-grid-container .data-grid .cell.pass': {
-        backgroundColor: theme.palette.background.paper,
-        textAlign: 'left',
-      },
-      '& .data-grid-container .data-grid .cell.passErr': {
-        backgroundColor: theme.palette.warning.main,
-        textAlign: 'left',
-      },
-      '& .data-grid-container .data-grid .cell.pass > input': {
-        backgroundColor: theme.palette.background.paper,
-        textAlign: 'left',
-        padding: theme.spacing(1),
-      },
-      '& tr td:first-child > span': {
-        display: 'flex!important',
-        justifyContent: 'center',
-      },
-      '& tr td:nth-child(2) > span': {
-        display: 'flex!important',
-        justifyContent: 'center',
-      },
-    },
-    actions: tabActions,
-    text: {},
-    grow: {
-      flexGrow: 1,
-    },
-    button: {
-      margin: theme.spacing(1),
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      justifyContent: 'flex-start',
-    },
-    icon: {
-      marginLeft: theme.spacing(1),
-    },
-    warning: {
-      backgroundColor: theme.palette.warning.main,
-      display: 'flex',
-      justifyContent: 'space-around',
-      padding: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
-  })
-);
+const ContentDiv = styled('div')(({ theme }) => ({
+  paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
+  '& .data-grid-container .data-grid .cell': {
+    verticalAlign: 'middle',
+    textAlign: 'left',
+    paddingLeft: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5),
+  },
+  '& .data-grid-container .data-grid .cell.set': {
+    backgroundColor: theme.palette.background.default,
+  },
+  '& .data-grid-container .data-grid .cell.setp': {
+    backgroundColor: theme.palette.background.default,
+  },
+  '& .data-grid-container .data-grid .cell.setpErr': {
+    backgroundColor: theme.palette.warning.main,
+  },
+  '& .data-grid-container .data-grid .cell.currentrow': {
+    borderStyle: 'double',
+    borderColor: theme.palette.primary.light,
+  },
+  '& .data-grid-container .data-grid .cell.num': {
+    textAlign: 'center',
+  },
+  '& .data-grid-container .data-grid .cell.num > input': {
+    textAlign: 'center',
+    padding: theme.spacing(1),
+  },
+  '& .data-grid-container .data-grid .cell.pass': {
+    backgroundColor: theme.palette.background.paper,
+    textAlign: 'left',
+  },
+  '& .data-grid-container .data-grid .cell.passErr': {
+    backgroundColor: theme.palette.warning.main,
+    textAlign: 'left',
+  },
+  '& .data-grid-container .data-grid .cell.pass > input': {
+    backgroundColor: theme.palette.background.paper,
+    textAlign: 'left',
+    padding: theme.spacing(1),
+  },
+  '& tr td:first-child > span': {
+    display: 'flex!important',
+    justifyContent: 'center',
+  },
+  '& tr td:nth-child(2) > span': {
+    display: 'flex!important',
+    justifyContent: 'center',
+  },
+}));
+
+const WarningDiv = styled('div')(({ theme }) => ({
+  backgroundColor: theme.palette.warning.main,
+  display: 'flex',
+  justifyContent: 'space-around',
+  padding: theme.spacing(1),
+  marginBottom: theme.spacing(1),
+}));
 
 const initialPosition = {
   mouseX: null,
@@ -193,8 +176,7 @@ export function PlanSheet(props: IProps) {
     onAudacity,
     onPassageDetail,
   } = props;
-  const classes = useStyles();
-  const ctx = React.useContext(PlanContext);
+  const ctx = useContext(PlanContext);
   const {
     projButtonStr,
     mediafiles,
@@ -222,7 +204,7 @@ export function PlanSheet(props: IProps) {
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
   const suggestionRef = useRef<Array<OptionType>>();
-  const saveTimer = React.useRef<NodeJS.Timeout>();
+  const saveTimer = useRef<NodeJS.Timeout>();
   const [offlineOnly] = useGlobal('offlineOnly');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
@@ -396,7 +378,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const ActivateCell = (props: any) => {
-    React.useEffect(() => {
+    useEffect(() => {
       setActive(currentRowRef.current);
       props.onRevert();
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -678,11 +660,11 @@ export function PlanSheet(props: IProps) {
       : '';
 
   return (
-    <div className={classes.container}>
-      <div className={classes.paper}>
+    <Box sx={{ display: 'flex' }}>
+      <div>
         {projRole === RoleNames.Admin && (
-          <AppBar position="fixed" className={classes.bar} color="default">
-            <div className={classes.actions}>
+          <TabAppBar position="fixed" color="default">
+            <TabActions>
               <>
                 <AddSectionPassageButtons
                   inlinePassages={inlinePassages}
@@ -700,30 +682,24 @@ export function PlanSheet(props: IProps) {
                   addPassage={addPassage}
                   movePassage={movePassage}
                 />
-                <Button
+                <AltButton
                   id="planSheetImp"
                   key="importExcel"
                   aria-label={t.tablePaste}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
                   disabled={pasting || readonly}
                   onClick={handleTablePaste}
                 >
                   {t.tablePaste}
-                </Button>
-                <Button
+                </AltButton>
+                <AltButton
                   id="planSheetReseq"
                   key="resequence"
                   aria-label={t.resequence}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
                   disabled={pasting || data.length < 2 || readonly}
                   onClick={handleResequence}
                 >
                   {t.resequence}
-                </Button>
+                </AltButton>
 
                 <ProjButtons
                   {...props}
@@ -731,26 +707,24 @@ export function PlanSheet(props: IProps) {
                   noIntegrate={pasting || data.length < 2}
                   t={projButtonStr}
                 />
-                <div className={classes.grow}>{'\u00A0'}</div>
-                <Button
+                <GrowingSpacer />
+                <PriButton
                   id="planSheetSave"
                   key="save"
                   aria-label={t.save}
-                  variant="contained"
                   color={connected ? 'primary' : 'secondary'}
-                  className={classes.button}
                   onClick={handleSave}
                   disabled={saving || !changed}
                 >
                   {t.save}
-                  <SaveIcon className={classes.icon} />
-                </Button>
+                  <SaveIcon sx={iconMargin} />
+                </PriButton>
               </>
-            </div>
-          </AppBar>
+            </TabActions>
+          </TabAppBar>
         )}
-        <div id="PlanSheet" ref={sheetRef} className={classes.content}>
-          {warning && <div className={classes.warning}>{warning}</div>}
+        <ContentDiv id="PlanSheet" ref={sheetRef}>
+          {warning && <WarningDiv>{warning}</WarningDiv>}
           <DataSheet
             data={data as any[][]}
             valueRenderer={handleValueRender}
@@ -760,7 +734,7 @@ export function PlanSheet(props: IProps) {
             parsePaste={parsePaste}
             onSelect={handleSelect}
           />
-        </div>
+        </ContentDiv>
       </div>
       {confirmAction !== '' ? (
         <Confirm
@@ -778,7 +752,7 @@ export function PlanSheet(props: IProps) {
         onEnded={playEnded}
         requestPlay={mediaPlaying}
       />
-    </div>
+    </Box>
   );
 }
 

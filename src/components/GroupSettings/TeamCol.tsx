@@ -1,19 +1,13 @@
-import React from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, IGroupSettingsStrings, RoleNames } from '../../model';
 import localStrings from '../../selector/localize';
-import {
-  FormLabel,
-  FormGroup,
-  List,
-  IconButton,
-  Grid,
-} from '@material-ui/core';
+import { FormLabel, FormGroup, List, IconButton, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import useStyles from './GroupSettingsStyles';
 import PersonItems from './PersonItems';
 import { useRole } from '../../crud';
+import { GrowingSpacer } from '../StepEditor';
 
 interface IStateProps {
   t: IGroupSettingsStrings;
@@ -57,7 +51,7 @@ function TeamCol(props: IProps) {
       <FormGroup className={classes.group}>
         <FormLabel className={classes.label}>
           {title} {titledetail}
-          <div className={classes.grow}>{'\u00A0'}</div>
+          <GrowingSpacer />
           {canEdit() && (
             <IconButton
               id={`teamColAdd${title}`}

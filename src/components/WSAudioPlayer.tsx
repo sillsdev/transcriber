@@ -1,25 +1,19 @@
 import {
-  makeStyles,
-  withStyles,
-  Theme,
-  createStyles,
   Paper,
   IconButton,
   Typography,
   Slider,
+  SliderProps,
   InputLabel,
   Divider,
   Input,
   Grid,
-} from '@material-ui/core';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  ChangeEvent,
-  useContext,
-} from 'react';
+  ToggleButton,
+  Box,
+  styled,
+  SxProps,
+} from '@mui/material';
+import { useState, useEffect, useRef, useContext } from 'react';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import ForwardIcon from '@mui/icons-material/Refresh';
@@ -44,7 +38,7 @@ import {
 
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
 import { IMarker, useWaveSurfer } from '../crud/useWaveSurfer';
-import { Duration, LightTooltip } from '../control';
+import { Duration, GrowingSpacer, LightTooltip } from '../control';
 import { connect } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
@@ -58,77 +52,36 @@ import {
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
 import { NamedRegions } from '../utils';
+import { DividerProps } from '@material-ui/core';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      margin: 'auto',
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'column',
-      whiteSpace: 'nowrap',
-    },
-    toolbar: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyItems: 'flex-start',
-      display: 'flex',
-    },
-    labeledControl: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    slider: {
-      width: '50px',
-      display: 'flex',
-    },
-    record: {
-      color: 'red',
-    },
-    togglebutton: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    formControl: {
-      margin: theme.spacing(1),
-      maxWidth: 50,
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    smallFont: {
-      fontSize: 'small',
-    },
-    divider: {
-      marginLeft: '5px',
-      orientation: 'vertical', //this doesn't work - has to be below
-    },
-    duration: {
-      margin: '5px',
-    },
-    flipIcon: {
-      transform: 'rotate(180deg)',
-    },
-  })
+const VertDivider = (prop: DividerProps) => (
+  <Divider orientation="vertical" flexItem sx={{ ml: '5px' }} {...prop} />
 );
+
+const toolbarProp = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyItems: 'flex-start',
+  display: 'flex',
+} as SxProps;
+
+const labeledControlProp = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};
+
+const smallLabel = { fontSize: 'small' } as SxProps;
 
 const iOSBoxShadow =
   '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)';
 
-const IOSSlider = withStyles({
-  root: {
-    width: '50px',
-    color: '#3880ff',
-    height: 2,
-    padding: '15px 0',
-  },
-  thumb: {
+const IOSSlider = styled(Slider)<SliderProps>(() => ({
+  width: '50px',
+  color: '#3880ff',
+  height: 2,
+  padding: '15px 0',
+  '& .MuiSlider-thumb': {
     height: 10,
     width: 10,
     boxShadow: iOSBoxShadow,
@@ -140,33 +93,30 @@ const IOSSlider = withStyles({
       },
     },
   },
-  active: {},
-  valueLabel: {
-    top: -15,
-    '& *': {
-      background: 'transparent',
-      color: '#000',
-    },
+  '& .MuiSlider-valueLabel': {
+    top: 5,
+    background: 'transparent',
+    color: '#000',
   },
-  track: {
+  '& .MuiSlider-track': {
     height: 2,
   },
-  rail: {
+  '& .MuiSlider-rail': {
     height: 2,
     opacity: 0.5,
     backgroundColor: '#bfbfbf',
   },
-  mark: {
+  '& .MuiSlider-mark': {
     backgroundColor: '#bfbfbf',
     height: 3,
     width: 1,
     marginTop: -1,
   },
-  markActive: {
+  '& .MuiSlider-markActive': {
     opacity: 1,
     backgroundColor: 'currentColor',
   },
-})(Slider);
+}));
 
 interface IStateProps {
   t: IWsAudioPlayerStrings;
@@ -267,7 +217,6 @@ function WSAudioPlayer(props: IProps) {
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
 
-  const classes = useStyles();
   const [confirmAction, setConfirmAction] = useState<string | JSX.Element>('');
   const [jump] = useState(2);
   const playbackRef = useRef(1);
@@ -300,7 +249,7 @@ function WSAudioPlayer(props: IProps) {
   const [style, setStyle] = useState({
     cursor: busy || loading ? 'progress' : 'default',
   });
-  const autostartTimer = React.useRef<NodeJS.Timeout>();
+  const autostartTimer = useRef<NodeJS.Timeout>();
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
@@ -359,7 +308,6 @@ function WSAudioPlayer(props: IProps) {
     onRecordDataAvailable
   );
 
-  const paperStyle = {};
   //#region hotkey handlers
   const handleFaster = () => {
     if (playbackRef.current === MAX_SPEED || recordingRef.current) return false;
@@ -680,10 +628,7 @@ function WSAudioPlayer(props: IProps) {
     if (onPlayStatus) onPlayStatus(status);
   }
 
-  const handleSliderChange = (
-    event: ChangeEvent<{}>,
-    value: number | number[]
-  ) => {
+  const handleSliderChange = (event: Event, value: number | number[]) => {
     if (Array.isArray(value)) value = value[0]; //won't be
     setPlaybackRate(value / 100);
   };
@@ -763,10 +708,17 @@ function WSAudioPlayer(props: IProps) {
   const onSplit = (split: IRegionChange) => {};
 
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper} style={paperStyle}>
-        <div className={classes.main} style={style}>
-          <Grid container className={classes.toolbar}>
+    <Box sx={{ flexGrow: 1 }}>
+      <Paper sx={{ p: 2, margin: 'auto' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            whiteSpace: 'nowrap',
+          }}
+          style={style}
+        >
+          <Grid container sx={toolbarProp}>
             {allowRecord && (
               <>
                 <Grid item>
@@ -780,7 +732,7 @@ function WSAudioPlayer(props: IProps) {
                     <span>
                       <IconButton
                         id="wsAudioRecord"
-                        className={classes.record}
+                        sx={{ color: 'red' }}
                         onClick={handleRecorder}
                         disabled={
                           playingRef.current || processRecordRef.current
@@ -810,26 +762,16 @@ function WSAudioPlayer(props: IProps) {
                     </span>
                   </LightTooltip>
                 </Grid>
-                <Divider
-                  id="wsAudioDiv1"
-                  className={classes.divider}
-                  orientation="vertical"
-                  flexItem
-                />
+                <VertDivider id="wsAudioDiv1" />
               </>
             )}
             <Grid item>
-              <Typography className={classes.duration}>
+              <Typography sx={{ m: '5px' }}>
                 <Duration id="wsAudioPosition" seconds={progress} /> {' / '}
                 <Duration id="wsAudioDuration" seconds={duration} />
               </Typography>
             </Grid>
-            <Divider
-              id="wsAudioDiv2"
-              className={classes.divider}
-              orientation="vertical"
-              flexItem
-            />
+            <VertDivider id="wsAudioDiv2" />
             {allowZoom && (
               <>
                 <Grid item>
@@ -841,30 +783,22 @@ function WSAudioPlayer(props: IProps) {
                     t={t}
                   ></WSAudioPlayerZoom>
                 </Grid>
-                <Divider
-                  id="wsAudioDiv3"
-                  className={classes.divider}
-                  orientation="vertical"
-                  flexItem
-                />
+                <VertDivider id="wsAudioDiv3" />
               </>
             )}
             {allowRecord && (
               <>
                 {allowSilence && (
                   <>
-                    <div className={classes.labeledControl}>
-                      <InputLabel
-                        id="wsAudioAddSilenceLabel"
-                        className={classes.smallFont}
-                      >
+                    <Box sx={labeledControlProp}>
+                      <InputLabel id="wsAudioAddSilenceLabel" sx={smallLabel}>
                         {t.silence}
                       </InputLabel>
                       <LightTooltip id="wsAudioAddSilenceTip" title={t.silence}>
                         <span>
                           <IconButton
                             id="wsAudioAddSilence"
-                            className={classes.togglebutton}
+                            sx={{ mx: 1 }}
                             onClick={handleAddSilence()}
                             disabled={
                               !ready ||
@@ -877,29 +811,21 @@ function WSAudioPlayer(props: IProps) {
                           </IconButton>
                         </span>
                       </LightTooltip>
-                    </div>
-                    <div className={classes.labeledControl}>
-                      <InputLabel
-                        id="wsAudioSilenceLabel"
-                        className={classes.smallFont}
-                      >
+                    </Box>
+                    <Box sx={labeledControlProp}>
+                      <InputLabel id="wsAudioSilenceLabel" sx={smallLabel}>
                         {t.seconds}
                       </InputLabel>
                       <Input
                         id="wsAudioSilence"
-                        className={classes.formControl}
+                        sx={{ m: 1, maxWidth: 50 }}
                         type="number"
                         inputProps={{ min: '0.1', step: '0.1' }}
                         value={silence}
                         onChange={handleChangeSilence}
                       />
-                    </div>
-                    <Divider
-                      id="wsAudioDiv4"
-                      className={classes.divider}
-                      orientation="vertical"
-                      flexItem
-                    />{' '}
+                    </Box>
+                    <VertDivider id="wsAudioDiv4" />{' '}
                   </>
                 )}
                 {hasRegion !== 0 && (
@@ -940,7 +866,7 @@ function WSAudioPlayer(props: IProps) {
                     </span>
                   </LightTooltip>
                 )}
-                <div className={classes.grow}>{'\u00A0'}</div>
+                <GrowingSpacer />
               </>
             )}
             {allowSegment && (
@@ -963,7 +889,7 @@ function WSAudioPlayer(props: IProps) {
           <div id="wsAudioTimeline" ref={timelineRef} />
           <div id="wsAudioWaveform" ref={waveformRef} />
           {justPlayButton || (
-            <Grid container className={classes.toolbar}>
+            <Grid container sx={toolbarProp}>
               <Grid item>
                 {allowAutoSegment && (
                   <LightTooltip
@@ -973,7 +899,7 @@ function WSAudioPlayer(props: IProps) {
                     <span>
                       <ToggleButton
                         id="wsAudioLoop"
-                        className={classes.togglebutton}
+                        sx={{ mx: 1 }}
                         value="loop"
                         selected={looping}
                         onChange={handleToggleLoop}
@@ -999,7 +925,9 @@ function WSAudioPlayer(props: IProps) {
                           id="wsNext"
                           onClick={handlePrevRegion}
                         >
-                          <NextSegmentIcon className={classes.flipIcon} />
+                          <NextSegmentIcon
+                            sx={{ transform: 'rotate(180deg)' }}
+                          />
                         </IconButton>
                       </span>
                     </LightTooltip>
@@ -1023,12 +951,7 @@ function WSAudioPlayer(props: IProps) {
                   </>
                 )}
               </Grid>
-              <Divider
-                id="wsAudioDiv5"
-                className={classes.divider}
-                orientation="vertical"
-                flexItem
-              />
+              <VertDivider id="wsAudioDiv5" />
               <Grid item>
                 <>
                   <LightTooltip
@@ -1119,14 +1042,9 @@ function WSAudioPlayer(props: IProps) {
               </Grid>
               {allowSpeed && (
                 <>
-                  <Divider
-                    id="wsAudioDiv6"
-                    className={classes.divider}
-                    orientation="vertical"
-                    flexItem
-                  />
+                  <VertDivider id="wsAudioDiv6" />
                   <Grid item>
-                    <div className={classes.toolbar}>
+                    <Box sx={toolbarProp}>
                       <LightTooltip
                         id="wsAudioSlowerTip"
                         title={t.slowerTip.replace(
@@ -1179,18 +1097,13 @@ function WSAudioPlayer(props: IProps) {
                           </IconButton>
                         </span>
                       </LightTooltip>
-                    </div>
+                    </Box>
                   </Grid>
                 </>
               )}
               {onSaveProgress && (
                 <>
-                  <Divider
-                    id="wsAudioDiv7"
-                    className={classes.divider}
-                    orientation="vertical"
-                    flexItem
-                  />
+                  <VertDivider id="wsAudioDiv7" />
                   <Grid item>
                     <LightTooltip
                       id="wsAudioTimestampTip"
@@ -1214,7 +1127,7 @@ function WSAudioPlayer(props: IProps) {
                   {metaData}
                 </>
               )}
-              <Grid item className={classes.grow}>
+              <Grid item sx={{ flexGrow: 1 }}>
                 {'\u00A0'}
               </Grid>
               {!onSaveProgress && <>{metaData}</>}
@@ -1228,9 +1141,9 @@ function WSAudioPlayer(props: IProps) {
               noResponse={handleActionRefused}
             />
           )}
-        </div>
+        </Box>
       </Paper>
-    </div>
+    </Box>
   );
 }
 

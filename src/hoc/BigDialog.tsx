@@ -1,73 +1,21 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { useGlobal } from 'reactn';
-import clsx from 'clsx';
-import { ISharedStrings, IState } from '../model';
-import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import { ISharedStrings } from '../model';
+import { useSelector, shallowEqual } from 'react-redux';
+import { sharedSelector } from '../selector';
 import {
   Dialog,
+  DialogProps,
   DialogContent,
   DialogActions,
   DialogTitle,
   IconButton,
   Button,
-} from '@material-ui/core';
+  Box,
+  styled,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      '& .MuiDialog-paper': {
-        maxWidth: '90%',
-        minWidth: '600px',
-        minHeight: '80%',
-      },
-      '& .MuiTable-root': {
-        tableLayout: 'auto',
-        paddingRight: theme.spacing(1),
-      },
-      '& .MuiDialogTitle-root': {
-        paddingBottom: 0,
-      },
-    },
-    rootSm: {
-      '& .MuiDialog-paper': {
-        minWidth: '600px',
-        minHeight: '50%',
-      },
-    },
-    rootMd: {
-      '& .MuiDialog-paper': {
-        minWidth: '960px',
-      },
-    },
-    rootLg: {
-      '& .MuiDialog-paper': {
-        minWidth: '1280px',
-      },
-    },
-    rootXl: {
-      '& .MuiDialog-paper': {
-        minWidth: '1920px',
-      },
-    },
-    row: {
-      display: 'flex',
-    },
-    column: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-  })
-);
-
-interface IStateProps {
-  ts: ISharedStrings;
-}
+import { GrowingSpacer } from '../control';
 
 export enum BigDialogBp {
   'sm',
@@ -76,7 +24,64 @@ export enum BigDialogBp {
   'xl',
 }
 
-interface IProps extends IStateProps {
+// see: https://mui.com/material-ui/customization/how-to-customize/
+export interface StyledDialogProps extends DialogProps {
+  bp?: BigDialogBp;
+}
+// eslint-disable-block TS2783
+export const StyledDialog = styled(Dialog, {
+  shouldForwardProp: (prop) => prop !== 'bp',
+})<StyledDialogProps>(({ bp, theme }) => ({
+  '& .MuiTable-root': {
+    tableLayout: 'auto',
+    paddingRight: theme.spacing(1),
+  },
+  '& .MuiDialogTitle-root': {
+    paddingBottom: 0,
+  },
+  ...(bp === BigDialogBp.sm
+    ? {
+        '& .MuiDialog-paper': {
+          maxWidth: '90%',
+          minWidth: '600px',
+          minHeight: '50%',
+        },
+      }
+    : bp === BigDialogBp.md
+    ? {
+        '& .MuiDialog-paper': {
+          maxWidth: '90%',
+          minHeight: '80%',
+          minWidth: '960px',
+        },
+      }
+    : bp === BigDialogBp.lg
+    ? {
+        '& .MuiDialog-paper': {
+          maxWidth: '90%',
+          minHeight: '80%',
+          minWidth: '1280px',
+        },
+      }
+    : bp === BigDialogBp.xl
+    ? {
+        '& .MuiDialog-paper': {
+          maxWidth: '90%',
+          minHeight: '80%',
+          minWidth: '1920px',
+        },
+      }
+    : {
+        '& .MuiDialog-paper': {
+          maxWidth: '90%',
+          minWidth: '600px',
+          minHeight: '80%',
+        },
+      }),
+}));
+// eslint-enable-block
+
+interface IProps {
   title: string;
   description?: ReactElement;
   children: JSX.Element;
@@ -96,11 +101,10 @@ export function BigDialog({
   onCancel,
   onSave,
   bp,
-  ts,
 }: IProps) {
-  const classes = useStyles();
   const [isExportBusy] = useGlobal('importexportBusy');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const handleClose = () => {
     if (enableOffsite) setEnableOffsite(false);
@@ -109,25 +113,19 @@ export function BigDialog({
   };
 
   return (
-    <Dialog
+    <StyledDialog
       open={isOpen}
       onClose={handleClose}
-      className={clsx(classes.root, {
-        [classes.rootSm]: bp === BigDialogBp.sm,
-        [classes.rootMd]: bp === BigDialogBp.md,
-        [classes.rootLg]: bp === BigDialogBp.lg,
-        [classes.rootXl]: bp === BigDialogBp.xl,
-      })}
       aria-labelledby="bigDlg"
       disableEnforceFocus
     >
       <DialogTitle id="bigDlg">
-        <div className={classes.row}>
-          <div className={classes.column}>
+        <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             {title}
             {description}
-          </div>
-          <div className={classes.grow}>{'\u00A0'}</div>
+          </Box>
+          <GrowingSpacer />
           {!isExportBusy ? (
             <IconButton id="bigClose" onClick={handleClose}>
               <CloseIcon />
@@ -135,7 +133,7 @@ export function BigDialog({
           ) : (
             <div />
           )}
-        </div>
+        </Box>
       </DialogTitle>
       <DialogContent>{children}</DialogContent>
       {(onCancel || onSave) && (
@@ -144,7 +142,7 @@ export function BigDialog({
             <Button
               id="bigCancel"
               onClick={onCancel}
-              color="default"
+              sx={{ color: 'grey' }}
               variant="outlined"
             >
               {ts.cancel}
@@ -157,12 +155,8 @@ export function BigDialog({
           )}
         </DialogActions>
       )}
-    </Dialog>
+    </StyledDialog>
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  ts: localStrings(state, { layout: 'shared' }),
-});
-
-export default connect(mapStateToProps)(BigDialog);
+export default BigDialog;

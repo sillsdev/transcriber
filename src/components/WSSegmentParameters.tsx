@@ -1,7 +1,4 @@
 import {
-  makeStyles,
-  Theme,
-  createStyles,
   Slider,
   Box,
   Typography,
@@ -11,42 +8,22 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-} from '@material-ui/core';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+  SxProps,
+} from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 import { IWsAudioPlayerSegmentStrings, IState } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
 import CloseIcon from '@mui/icons-material/Close';
-import Paper from '@material-ui/core/Paper';
+import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import { IRegionParams } from '../crud/useWavesurferRegions';
+import { GrowingSpacer } from '../control';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'column',
-      whiteSpace: 'nowrap',
-    },
-    button: { margin: theme.spacing(1) },
-    row: {
-      display: 'flex',
-    },
-    column: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    movecursor: {
-      cursor: 'move',
-    },
-  })
-);
+const btnProp = { m: 1 } as SxProps;
+const rowProp = { display: 'flex' } as SxProps;
+const colProp = { display: 'flex', flexDirection: 'column' } as SxProps;
+
 interface IStateProps {
   t: IWsAudioPlayerSegmentStrings;
 }
@@ -62,7 +39,6 @@ interface IProps extends IStateProps {
 }
 
 function WSSegmentParameters(props: IProps) {
-  const classes = useStyles();
   const {
     t,
     loop,
@@ -90,24 +66,15 @@ function WSSegmentParameters(props: IProps) {
     setSegmentLen(params.segLenThreshold);
   }, [params]);
 
-  const handleSilenceChange = (
-    event: ChangeEvent<{}>,
-    value: number | number[]
-  ) => {
+  const handleSilenceChange = (event: Event, value: number | number[]) => {
     if (Array.isArray(value)) value = value[0];
     setSilenceValue(value);
   };
-  const handleTimeChange = (
-    event: ChangeEvent<{}>,
-    value: number | number[]
-  ) => {
+  const handleTimeChange = (event: Event, value: number | number[]) => {
     if (Array.isArray(value)) value = value[0];
     setTimeValue(value);
   };
-  const handleSegTimeChange = (
-    event: ChangeEvent<{}>,
-    value: number | number[]
-  ) => {
+  const handleSegTimeChange = (event: Event, value: number | number[]) => {
     if (Array.isArray(value)) value = value[0];
     setSegmentLen(value);
   };
@@ -150,9 +117,9 @@ function WSSegmentParameters(props: IProps) {
       aria-labelledby="draggable-dialog-title"
       disableEnforceFocus
     >
-      <DialogTitle className={classes.movecursor} id="draggable-dialog-title">
-        <div className={classes.row}>
-          <div className={classes.grow}>{'\u00A0'}</div>{' '}
+      <DialogTitle sx={{ cursor: 'move' }} id="draggable-dialog-title">
+        <Box sx={rowProp}>
+          <GrowingSpacer />
           <IconButton
             id="bigClose"
             onClick={handleClose}
@@ -160,13 +127,13 @@ function WSSegmentParameters(props: IProps) {
           >
             <CloseIcon />
           </IconButton>
-        </div>
-        <div className={classes.row}>
-          <div className={classes.column}>{t.segmentSettings}</div>
-        </div>
+        </Box>
+        <Box sx={rowProp}>
+          <Box sx={colProp}>{t.segmentSettings}</Box>
+        </Box>
       </DialogTitle>
       <DialogContent>
-        <Box display="flex" flexDirection="column">
+        <Box sx={colProp}>
           <Typography id="silence-slider-label" gutterBottom>
             {t.silenceThreshold}
           </Typography>
@@ -219,7 +186,7 @@ function WSSegmentParameters(props: IProps) {
       <DialogActions>
         <Button
           autoFocus
-          className={classes.button}
+          sx={btnProp}
           onClick={handleApply}
           variant="outlined"
           disabled={applyingRef.current}
@@ -227,7 +194,7 @@ function WSSegmentParameters(props: IProps) {
           {t.apply}
         </Button>
         <Button
-          className={classes.button}
+          sx={btnProp}
           onClick={handleClose}
           variant="outlined"
           disabled={applyingRef.current}

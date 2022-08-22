@@ -1,21 +1,25 @@
 import React, { useMemo, useState } from 'react';
 import { IPlanSheetStrings } from '../model';
-import { Button, Menu, MenuItem } from '@material-ui/core';
+import { Button, ButtonProps, Menu, MenuItem } from '@mui/material';
 import DropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { iconMargin } from '../control';
 import { useOrganizedBy } from '../crud';
-import styled from 'styled-components';
 
-const Styles = styled.div`
-  .button {
-    margin: theme.spacing(1);
-    overflow: 'hidden';
-    white-space: 'nowrap';
-    justify-content: 'flex-start';
-  }
-  .icon {
-    margin-left: theme.spacing(1);
-  }
-`;
+const SecondButton = ({ children, ...rest }: ButtonProps) => (
+  <Button
+    variant="outlined"
+    color="primary"
+    sx={{
+      m: 1,
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      justifyContent: 'flex-start',
+    }}
+    {...rest}
+  >
+    {children}
+  </Button>
+);
 
 interface IStateProps {
   t: IPlanSheetStrings;
@@ -123,34 +127,28 @@ export const AddSectionPassageButtons = (props: IProps) => {
     [isSection, currentrow]
   );
   return (
-    <Styles>
-      <Button
+    <div>
+      <SecondButton
         id="planSheetAddSec"
         key="addSection"
         aria-label={t.addSection}
-        variant="outlined"
-        color="primary"
-        className="button"
         onClick={handleMenu}
         disabled={readonly}
       >
         {t.addSection.replace('{0}', organizedBy)}
-        <DropDownIcon className="icon" />
-      </Button>
+        <DropDownIcon sx={iconMargin} />
+      </SecondButton>
       {!inlinePassages && (
-        <Button
+        <SecondButton
           id="planSheetAddPass"
           key="addPassage"
           aria-label={t.addPassage}
-          variant="outlined"
-          color="primary"
-          className="button"
           onClick={handleMenu}
           disabled={numRows < 2 || readonly}
         >
           {t.addPassage}
-          <DropDownIcon className="icon" />
-        </Button>
+          <DropDownIcon sx={iconMargin} />
+        </SecondButton>
       )}
       {/*Section Button Menu and Context Menu */}
       <Menu
@@ -255,6 +253,6 @@ export const AddSectionPassageButtons = (props: IProps) => {
           </MenuItem>
         )}
       </Menu>
-    </Styles>
+    </div>
   );
 };

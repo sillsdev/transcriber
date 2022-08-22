@@ -15,9 +15,8 @@ import {
   levGenColNames,
 } from '../model';
 import localStrings from '../selector/localize';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { AppBar, Tabs, Tab } from '@material-ui/core';
-import grey from '@material-ui/core/colors/grey';
+import { AppBar, Tabs, Tab, Box } from '@mui/material';
+import grey from '@mui/material/colors/grey';
 import ScriptureTable from './Workflow/ScriptureTable';
 import AudioTab from '../components/AudioTab/AudioTab';
 import AssignmentTable from './AssignmentTable';
@@ -26,8 +25,9 @@ import StickyRedirect from './StickyRedirect';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { PlanContext } from '../context/PlanContext';
-//import { HeadHeight } from '../App';
 import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
+import { HeadHeight } from '../App';
+import { TabHeight } from '../control';
 
 export enum tabs {
   sectionPassage = 0,
@@ -35,47 +35,6 @@ export enum tabs {
   assignment = 2,
   transcription = 3,
 }
-export const TabHeight = 52;
-export const ActionHeight = 38;
-const HeadHeight = 64; //can't get the one from app on initialization?!
-export const actionBar = {
-  top: `calc(${TabHeight}px + ${HeadHeight}px)`,
-  height: `${ActionHeight}px`,
-  left: 0,
-  width: '100%',
-};
-export const tabActions = {
-  paddingBottom: 14,
-  display: 'flex',
-  justifyContent: 'flex-end',
-  '& .MuiButton-label': { fontSize: '.8rem' },
-  '& .MuiButtonBase-root': { margin: '5px', padding: '2px 10px' },
-  '& .MuiSvgIcon-root': { fontSize: '.9rem' },
-};
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      width: '100%',
-      backgroundColor: theme.palette.background.paper,
-      flexDirection: 'column',
-    },
-    bar: {
-      top: `${HeadHeight}px`,
-      height: `${TabHeight}px`,
-      left: 0,
-      width: '100%',
-    },
-    content: {
-      paddingTop: `${TabHeight}px`,
-    },
-    status: {
-      fontSize: 'x-small',
-      color: grey[400],
-    },
-  })
-);
 
 interface IStateProps {
   t: IPlanTabsStrings;
@@ -95,7 +54,6 @@ interface ParamTypes {
 }
 const ScrollableTabsButtonAuto = (props: IProps) => {
   const { t, checkSaved, plans, sections, passages, mediafiles } = props;
-  const classes = useStyles();
   const ctx = React.useContext(PlanContext);
   const { flat, scripture } = ctx.state;
   const [isOffline] = useGlobal('offline');
@@ -136,7 +94,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     return (
       <>
         {text}
-        <div className={classes.status}>{status}</div>
+        <Box sx={{ fontSize: 'x-small', color: grey[400] }}>{status}</Box>
       </>
     );
   };
@@ -155,8 +113,24 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     return <StickyRedirect to={`/plan/${prjId}/${tab}`} />;
 
   return (
-    <div className={classes.root}>
-      <AppBar position="fixed" className={classes.bar} color="default">
+    <Box
+      sx={{
+        flexGrow: 1,
+        width: '100%',
+        backgroundColor: 'background.paper',
+        flexDirection: 'column',
+      }}
+    >
+      <AppBar
+        position="fixed"
+        color="default"
+        sx={{
+          top: `${HeadHeight}px`,
+          height: `${TabHeight}px`,
+          left: 0,
+          width: '100%',
+        }}
+      >
         <Tabs
           value={tab ?? 0}
           onChange={(e: any, v: number) => checkSaved(() => handleChange(e, v))}
@@ -211,7 +185,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           />
         </Tabs>
       </AppBar>
-      <div className={classes.content}>
+      <Box sx={{ pt: `${TabHeight}px` }}>
         {tab === tabs.sectionPassage && (
           <ScriptureTable {...props} colNames={colNames} />
         )}
@@ -228,8 +202,8 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
             projectPlans={plans.filter((p) => p.id === plan)}
           />
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 const mapRecordsToProps = {

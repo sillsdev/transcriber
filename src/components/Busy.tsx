@@ -1,20 +1,13 @@
-import styled from 'styled-components';
 import busyImage from '../assets/progress.gif';
+import { Box, styled } from '@mui/material';
 
-const BusyDiv = styled.div`
-  display: flex;
-  height: 100vh;
-  .busyImg {
-    width: 120px;
-    margin: auto;
-  }
-`;
+const BusyImg = styled('img')(() => ({ width: '120px', margin: 'auto' }));
 
 export const Busy = () => {
   return (
-    <BusyDiv>
-      <img className="busyImg" src={busyImage} alt="busy" />
-    </BusyDiv>
+    <Box sx={{ display: 'flex', height: '100vh' }}>
+      <BusyImg className="busyImg" src={busyImage} alt="busy" />
+    </Box>
   );
 };
 
