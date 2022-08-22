@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { IPassageDetailArtifactsStrings, MediaFile } from '../../../model';
 import { makeStyles, createStyles, Theme, Divider } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
@@ -70,12 +70,9 @@ export const AddResource = (props: IProps) => {
     shallowEqual
   );
   const [hasProjRes, setHasProjRes] = useState(false);
-  const mediaCount = useRef(0);
+
   useEffect(() => {
-    if (mediaCount.current !== mediafiles.length) {
-      mediaCount.current = mediafiles.length;
-      getProjectResources().then((res) => setHasProjRes(res.length > 0));
-    }
+    getProjectResources().then((res) => setHasProjRes(res.length > 0));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafiles]);
 
