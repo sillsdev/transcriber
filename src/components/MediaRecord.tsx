@@ -368,6 +368,8 @@ function MediaRecord(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preload]);
 
+  const segments = '{}';
+
   return (
     <Paper id="mediaRecord">
       {mediaState.status === MediaSt.FETCHED && mediaState.id === mediaId && (
@@ -387,6 +389,7 @@ function MediaRecord(props: IProps) {
         onPlayStatus={onPlayStatus}
         doReset={doReset}
         autoStart={autoStart}
+        segments={segments}
       />
       <div className={classes.row}>
         {showFilename && (
