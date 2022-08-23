@@ -2,15 +2,13 @@ import {
   Paper,
   IconButton,
   Typography,
-  Slider,
-  SliderProps,
   InputLabel,
   Divider,
+  DividerProps,
   Input,
   Grid,
   ToggleButton,
   Box,
-  styled,
   SxProps,
 } from '@mui/material';
 import { useState, useEffect, useRef, useContext } from 'react';
@@ -26,8 +24,7 @@ import SilenceIcon from '@mui/icons-material/SpaceBar';
 import TimerIcon from '@mui/icons-material/AccessTime';
 import NextSegmentIcon from '@mui/icons-material/ArrowRightAlt';
 import UndoIcon from '@mui/icons-material/Undo';
-import localStrings from '../selector/localize';
-import { IState, IWsAudioPlayerStrings } from '../model';
+import { IWsAudioPlayerStrings } from '../model';
 import {
   FaHandScissors,
   FaAngleDoubleUp,
@@ -38,8 +35,7 @@ import {
 
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
 import { IMarker, useWaveSurfer } from '../crud/useWaveSurfer';
-import { Duration, GrowingSpacer, LightTooltip } from '../control';
-import { connect } from 'react-redux';
+import { Duration, GrowingSpacer, LightTooltip, IosSlider } from '../control';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
 import WSAudioPlayerZoom from './WSAudioPlayerZoom';
@@ -52,7 +48,8 @@ import {
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
 import { NamedRegions } from '../utils';
-import { DividerProps } from '@material-ui/core';
+import { wsAudioPlayerSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
 const VertDivider = (prop: DividerProps) => (
   <Divider orientation="vertical" flexItem sx={{ ml: '5px' }} {...prop} />
@@ -73,57 +70,9 @@ const labeledControlProp = {
 
 const smallLabel = { fontSize: 'small' } as SxProps;
 
-const iOSBoxShadow =
-  '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)';
-
-const IOSSlider = styled(Slider)<SliderProps>(() => ({
-  width: '50px',
-  color: '#3880ff',
-  height: 2,
-  padding: '15px 0',
-  '& .MuiSlider-thumb': {
-    height: 10,
-    width: 10,
-    boxShadow: iOSBoxShadow,
-    '&:focus, &:hover, &$active': {
-      boxShadow: iOSBoxShadow,
-      // Reset on touch devices, it doesn't add specificity
-      '@media (hover: none)': {
-        boxShadow: iOSBoxShadow,
-      },
-    },
-  },
-  '& .MuiSlider-valueLabel': {
-    top: 5,
-    background: 'transparent',
-    color: '#000',
-  },
-  '& .MuiSlider-track': {
-    height: 2,
-  },
-  '& .MuiSlider-rail': {
-    height: 2,
-    opacity: 0.5,
-    backgroundColor: '#bfbfbf',
-  },
-  '& .MuiSlider-mark': {
-    backgroundColor: '#bfbfbf',
-    height: 3,
-    width: 1,
-    marginTop: -1,
-  },
-  '& .MuiSlider-markActive': {
-    opacity: 1,
-    backgroundColor: 'currentColor',
-  },
-}));
-
-interface IStateProps {
-  t: IWsAudioPlayerStrings;
-}
-
-interface IProps extends IStateProps {
-  visible: boolean;
+interface IProps {
+  id?: string;
+  visible?: boolean;
   blob?: Blob;
   initialposition?: number;
   allowRecord?: boolean;
@@ -179,7 +128,6 @@ const RIGHT_KEY = 'CTRL+ARROWRIGHT';
 
 function WSAudioPlayer(props: IProps) {
   const {
-    t,
     blob,
     initialposition,
     allowRecord,
@@ -246,11 +194,16 @@ function WSAudioPlayer(props: IProps) {
   const justPlayButton = allowRecord;
   const processRecordRef = useRef(false);
   const { showMessage } = useSnackBar();
+  const t: IWsAudioPlayerStrings = useSelector(
+    wsAudioPlayerSelector,
+    shallowEqual
+  );
   const [style, setStyle] = useState({
     cursor: busy || loading ? 'progress' : 'default',
   });
   const autostartTimer = useRef<NodeJS.Timeout>();
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
+
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
   const {
@@ -1062,7 +1015,7 @@ function WSAudioPlayer(props: IProps) {
                           </IconButton>
                         </span>
                       </LightTooltip>
-                      <IOSSlider
+                      <IosSlider
                         id="wsAudioPlaybackSpeed"
                         aria-label="ios slider"
                         value={
@@ -1147,8 +1100,4 @@ function WSAudioPlayer(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'wsAudioPlayer' }),
-});
-
-export default connect(mapStateToProps)(WSAudioPlayer) as any;
+export default WSAudioPlayer;

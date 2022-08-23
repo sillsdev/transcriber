@@ -15,7 +15,6 @@ import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -50,6 +49,7 @@ import {
 } from '../crud';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import { UpdateLastModifiedBy, UpdateRelatedRecord } from '../model/baseModel';
+import { PriButton } from '../control';
 
 const headProps = { display: 'flex', alignItems: 'center' } as SxProps;
 const gridProps = { m: 'auto', p: 1 } as SxProps;
@@ -302,14 +302,9 @@ function AssignSection(props: IProps) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button
-            id="assignClose"
-            onClick={handleClose}
-            variant="contained"
-            color="primary"
-          >
+          <PriButton id="assignClose" onClick={handleClose}>
             {t.close}
-          </Button>
+          </PriButton>
         </DialogActions>
       </Dialog>
     </div>

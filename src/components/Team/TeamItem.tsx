@@ -169,7 +169,7 @@ export const TeamItem = (props: IProps) => {
         onOpen={setOpenMember}
         bp={BigDialogBp.md}
       >
-        <GroupTabs {...props} />
+        <GroupTabs />
       </BigDialog>
       <BigDialog
         title={t.editWorkflow.replace(

@@ -345,7 +345,7 @@ export function PassageDetailItem(props: IProps) {
               split="vertical"
               onChange={handleSplitSize}
             >
-              <Pane>
+              <Pane className="pane">
                 <SplitPane
                   split="horizontal"
                   defaultSize={playerSize - 20}
@@ -353,7 +353,7 @@ export function PassageDetailItem(props: IProps) {
                   style={{ position: 'static' }}
                   onChange={handleHorizonalSplitSize}
                 >
-                  <Pane>
+                  <Pane className="pane">
                     <PassageDetailPlayer
                       allowSegment={segments}
                       allowAutoSegment={segments !== undefined}
@@ -361,7 +361,7 @@ export function PassageDetailItem(props: IProps) {
                     />
                   </Pane>
                   {currentVersion !== 0 ? (
-                    <Pane>
+                    <Pane className="pane">
                       <Paper sx={paperProps}>
                         <Box sx={rowProp}>
                           <Button
@@ -505,7 +505,7 @@ export function PassageDetailItem(props: IProps) {
                       </Paper>
                     </Pane>
                   ) : (
-                    <Pane>
+                    <Pane className="pane">
                       <Paper sx={paperProps}>
                         <Typography variant="h2" align="center">
                           {ts.noAudio}
@@ -515,7 +515,7 @@ export function PassageDetailItem(props: IProps) {
                   )}
                 </SplitPane>
               </Pane>
-              <Pane>
+              <Pane className="pane">
                 <Grid item xs={12} sm container>
                   <Grid item container direction="column">
                     <DiscussionList />

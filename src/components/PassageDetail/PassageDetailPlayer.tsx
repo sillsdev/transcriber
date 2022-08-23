@@ -12,9 +12,7 @@ import { playerSelector } from '../../selector';
 import { NamedRegions, getSegments, updateSegments } from '../../utils';
 import { findRecord } from '../../crud';
 
-interface IStateProps {}
-
-interface IProps extends IStateProps {
+interface IProps {
   allowSegment?: NamedRegions | undefined;
   saveSegments?: boolean;
   allowAutoSegment?: boolean;
@@ -249,4 +247,4 @@ export function PassageDetailPlayer(props: IProps) {
   );
 }
 
-export default PassageDetailPlayer as any;
+export default PassageDetailPlayer;

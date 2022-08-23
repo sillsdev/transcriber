@@ -670,7 +670,6 @@ export function PlanSheet(props: IProps) {
                   inlinePassages={inlinePassages}
                   numRows={rowInfo.length}
                   readonly={readonly}
-                  t={t}
                   isSection={isSection}
                   isPassage={isPassage}
                   currentrow={currentRow - 1}

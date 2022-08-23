@@ -17,9 +17,15 @@ import localStrings from '../../selector/localize';
 import { withData, WithDataProps } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import JSONAPISource from '@orbit/jsonapi';
-import { Button, Box, SxProps } from '@mui/material';
+import { Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { GrowingSpacer, PaddedBox, TabActions, TabAppBar } from '../../control';
+import {
+  AltButton,
+  GrowingSpacer,
+  PaddedBox,
+  TabActions,
+  TabAppBar,
+} from '../../control';
 import { useSnackBar } from '../../hoc/SnackBar';
 import BigDialog from '../../hoc/BigDialog';
 import AudioTable from './AudioTable';
@@ -46,8 +52,6 @@ import {
 } from '.';
 import { IMatchData, makeMatchMap } from './makeRefMap';
 import { UnsavedContext } from '../../context/UnsavedContext';
-
-const btnProp = { m: 1 } as SxProps;
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -335,43 +339,34 @@ export function AudioTab(props: IProps) {
           <TabActions>
             {projRole === RoleNames.Admin && (!isOffline || offlineOnly) && (
               <>
-                <Button
+                <AltButton
                   id="audUpload"
                   key="upload"
                   aria-label={ts.uploadMediaPlural}
-                  variant="outlined"
-                  color="primary"
-                  sx={btnProp}
                   onClick={handleUpload}
                 >
                   {ts.uploadMediaPlural}
                   <AddIcon sx={{ ml: 1 }} />
-                </Button>
-                <Button
+                </AltButton>
+                <AltButton
                   id="audMatch"
                   key={t.autoMatch}
                   aria-label={t.autoMatch}
-                  variant="outlined"
-                  color="primary"
-                  sx={btnProp}
                   onClick={handleAutoMatch}
                 >
                   {t.autoMatch}
-                </Button>
+                </AltButton>
               </>
             )}
             <GrowingSpacer />
             {complete !== 0 && complete !== 100 && !cloudSync.current && (
-              <Button
+              <AltButton
                 id="uploadCancel"
                 aria-label={ts.cancel}
-                variant="outlined"
-                color="primary"
-                sx={btnProp}
                 onClick={handleUploadCancel}
               >
                 {ts.cancel}
-              </Button>
+              </AltButton>
             )}
           </TabActions>
         </TabAppBar>

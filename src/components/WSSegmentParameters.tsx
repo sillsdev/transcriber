@@ -1,8 +1,6 @@
 import {
-  Slider,
   Box,
   Typography,
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -11,23 +9,20 @@ import {
   SxProps,
 } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
-import { IWsAudioPlayerSegmentStrings, IState } from '../model';
-import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
+import { IWsAudioPlayerSegmentStrings } from '../model';
 import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import { IRegionParams } from '../crud/useWavesurferRegions';
-import { GrowingSpacer } from '../control';
+import { AltButton, GrowingSpacer, IosSlider, PriButton } from '../control';
+import { wsAudioPlayerSegmentSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
 const btnProp = { m: 1 } as SxProps;
 const rowProp = { display: 'flex' } as SxProps;
 const colProp = { display: 'flex', flexDirection: 'column' } as SxProps;
 
-interface IStateProps {
-  t: IWsAudioPlayerSegmentStrings;
-}
-interface IProps extends IStateProps {
+interface IProps {
   loop: boolean;
   params: IRegionParams;
   currentNumRegions: number;
@@ -40,7 +35,6 @@ interface IProps extends IStateProps {
 
 function WSSegmentParameters(props: IProps) {
   const {
-    t,
     loop,
     params,
     currentNumRegions,
@@ -55,6 +49,10 @@ function WSSegmentParameters(props: IProps) {
   const [segLength, setSegmentLen] = useState(0);
   const [numRegions, setNumRegions] = useState(currentNumRegions);
   const applyingRef = useRef(false);
+  const t: IWsAudioPlayerSegmentStrings = useSelector(
+    wsAudioPlayerSegmentSelector,
+    shallowEqual
+  );
 
   useEffect(() => {
     setNumRegions(currentNumRegions);
@@ -137,8 +135,9 @@ function WSSegmentParameters(props: IProps) {
           <Typography id="silence-slider-label" gutterBottom>
             {t.silenceThreshold}
           </Typography>
-          <Slider
+          <IosSlider
             id="loudnessslider"
+            sx={{ width: 'unset' }}
             min={1}
             max={50}
             step={1}
@@ -151,8 +150,9 @@ function WSSegmentParameters(props: IProps) {
           <Typography id="silence-slider-label" gutterBottom>
             {t.silenceLength}
           </Typography>
-          <Slider
+          <IosSlider
             id="silenceLenSlider"
+            sx={{ width: 'unset' }}
             step={1}
             marks
             min={1}
@@ -165,8 +165,9 @@ function WSSegmentParameters(props: IProps) {
           <Typography id="segment-slider-label" gutterBottom>
             {t.segmentLength}
           </Typography>
-          <Slider
+          <IosSlider
             id="segmentLengthSlider"
+            sx={{ width: 'unset' }}
             step={0.5}
             marks
             min={0.5}
@@ -184,30 +185,24 @@ function WSSegmentParameters(props: IProps) {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button
+        <PriButton
           autoFocus
           sx={btnProp}
           onClick={handleApply}
-          variant="outlined"
           disabled={applyingRef.current}
         >
           {t.apply}
-        </Button>
-        <Button
+        </PriButton>
+        <AltButton
           sx={btnProp}
           onClick={handleClose}
-          variant="outlined"
           disabled={applyingRef.current}
         >
           {t.close}
-        </Button>
+        </AltButton>
       </DialogActions>
     </Dialog>
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'wsAudioPlayerSegment' }),
-});
-
-export default connect(mapStateToProps)(WSSegmentParameters) as any;
+export default WSSegmentParameters;

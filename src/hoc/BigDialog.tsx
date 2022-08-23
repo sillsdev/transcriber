@@ -10,12 +10,11 @@ import {
   DialogActions,
   DialogTitle,
   IconButton,
-  Button,
   Box,
   styled,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { GrowingSpacer } from '../control';
+import { PriButton, AltButton, GrowingSpacer } from '../control';
 
 export enum BigDialogBp {
   'sm',
@@ -139,20 +138,11 @@ export function BigDialog({
       {(onCancel || onSave) && (
         <DialogActions>
           {onCancel && (
-            <Button
-              id="bigCancel"
-              onClick={onCancel}
-              sx={{ color: 'grey' }}
-              variant="outlined"
-            >
+            <AltButton id="bigCancel" onClick={onCancel} sx={{ color: 'grey' }}>
               {ts.cancel}
-            </Button>
+            </AltButton>
           )}
-          {onSave && (
-            <Button color="primary" onClick={onSave} variant="outlined">
-              {ts.save}
-            </Button>
-          )}
+          {onSave && <PriButton onClick={onSave}>{ts.save}</PriButton>}
         </DialogActions>
       )}
     </StyledDialog>

@@ -28,3 +28,4 @@ export * from './AltButton';
 export * from './ActionRow';
 export * from './iconMargin';
 export * from './iconSize';
+export * from './IosSlider';

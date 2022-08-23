@@ -1,31 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { IPlanSheetStrings } from '../model';
-import { Button, ButtonProps, Menu, MenuItem } from '@mui/material';
+import { Menu, MenuItem } from '@mui/material';
 import DropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { iconMargin } from '../control';
+import { iconMargin, AltButton } from '../control';
 import { useOrganizedBy } from '../crud';
+import { planSheetSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-const SecondButton = ({ children, ...rest }: ButtonProps) => (
-  <Button
-    variant="outlined"
-    color="primary"
-    sx={{
-      m: 1,
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      justifyContent: 'flex-start',
-    }}
-    {...rest}
-  >
-    {children}
-  </Button>
-);
-
-interface IStateProps {
-  t: IPlanSheetStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   readonly: boolean;
   inlinePassages: boolean;
   numRows: number;
@@ -50,7 +32,6 @@ export const AddSectionPassageButtons = (props: IProps) => {
   const {
     readonly,
     inlinePassages,
-    t,
     numRows,
     currentrow,
     mouseposition,
@@ -66,6 +47,8 @@ export const AddSectionPassageButtons = (props: IProps) => {
   const [actionMenuItem, setActionMenuItem] = React.useState<any>(undefined);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
+  const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
+
   const handleMenu = (e: any) => {
     setActionMenuItem(e.currentTarget);
   };
@@ -128,7 +111,7 @@ export const AddSectionPassageButtons = (props: IProps) => {
   );
   return (
     <div>
-      <SecondButton
+      <AltButton
         id="planSheetAddSec"
         key="addSection"
         aria-label={t.addSection}
@@ -137,9 +120,9 @@ export const AddSectionPassageButtons = (props: IProps) => {
       >
         {t.addSection.replace('{0}', organizedBy)}
         <DropDownIcon sx={iconMargin} />
-      </SecondButton>
+      </AltButton>
       {!inlinePassages && (
-        <SecondButton
+        <AltButton
           id="planSheetAddPass"
           key="addPassage"
           aria-label={t.addPassage}
@@ -148,7 +131,7 @@ export const AddSectionPassageButtons = (props: IProps) => {
         >
           {t.addPassage}
           <DropDownIcon sx={iconMargin} />
-        </SecondButton>
+        </AltButton>
       )}
       {/*Section Button Menu and Context Menu */}
       <Menu
