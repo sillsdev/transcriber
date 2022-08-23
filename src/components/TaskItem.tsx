@@ -1,15 +1,16 @@
 import React from 'react';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import {
   List,
   ListItem,
   ListItemText,
   ListItemAvatar,
   Typography,
-} from '@material-ui/core';
+  Box,
+  SxProps,
+} from '@mui/material';
 import useTodo from '../context/useTodo';
 import TaskFlag from './TaskFlag';
-import { Duration, ItemDescription } from '../control';
+import { Duration, GrowingSpacer, ItemDescription } from '../control';
 import {
   related,
   sectionNumber,
@@ -22,32 +23,7 @@ import { UnsavedContext } from '../context/UnsavedContext';
 import { TaskItemWidth } from './TaskTable';
 import { ActivityStates } from '../model';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      minWidth: `${TaskItemWidth}px`,
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    detail: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    detailAlign: {
-      display: 'flex',
-      flexDirection: 'row-reverse',
-    },
-    listAvatar: {
-      minWidth: theme.spacing(4),
-    },
-    grow: {
-      flexGrow: 1,
-    },
-  })
-);
+const rowProp = { display: 'flex', flexDirection: 'row' } as SxProps;
 
 interface IProps {
   item: number;
@@ -57,7 +33,6 @@ interface IProps {
 
 export function TaskItem(props: IProps) {
   const { flat } = props;
-  const classes = useStyles();
   const {
     rowData,
     activityStateStr,
@@ -99,50 +74,48 @@ export function TaskItem(props: IProps) {
   }
 
   return (
-    <List className={classes.root}>
+    <List sx={{ width: '100%', minWidth: `${TaskItemWidth}px` }}>
       <ListItem
         id="taskSelect"
         alignItems="flex-start"
         onClick={handleSelect(mediafile.id)}
       >
-        <ListItemAvatar className={classes.listAvatar}>
+        <ListItemAvatar sx={{ minWidth: 4 }}>
           <TaskAvatar assigned={assigned} />
         </ListItemAvatar>
         <ListItemText
           disableTypography
           primary={
             <div>
-              <div className={classes.row}>
+              <Box sx={rowProp}>
                 <Typography>
                   {passageReference(passage, allBookData)}
                 </Typography>
                 {!flat && (
                   <>
-                    <div className={classes.grow}> </div>
-                    {'\u00A0'}
+                    <GrowingSpacer />
                     {'{1}.{2}'
                       .replace('{1}', sectionNumber(section))
                       .replace('{2}', passageNumber(passage).trim())}
                   </>
                 )}
-              </div>
+              </Box>
               {related(mediafile, 'artifactType') && (
                 <ItemDescription mediafile={mediafile} col={true} />
               )}
             </div>
           }
           secondary={
-            <div className={classes.row}>
+            <Box sx={rowProp}>
               <TaskFlag
                 ta={activityStateStr}
                 state={
                   attr?.transcriptionstate || ActivityStates.TranscribeReady
                 }
               />
-              <div className={classes.grow}> </div>
-              {'\u00A0'}
+              <GrowingSpacer />
               <Duration seconds={duration} />
-            </div>
+            </Box>
           }
         />
       </ListItem>

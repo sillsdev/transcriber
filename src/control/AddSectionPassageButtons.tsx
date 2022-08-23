@@ -1,27 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { IPlanSheetStrings } from '../model';
-import { Button, Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem } from '@mui/material';
 import DropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { iconMargin, AltButton } from '../control';
 import { useOrganizedBy } from '../crud';
-import styled from 'styled-components';
+import { planSheetSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-const Styles = styled.div`
-  .button {
-    margin: theme.spacing(1);
-    overflow: 'hidden';
-    white-space: 'nowrap';
-    justify-content: 'flex-start';
-  }
-  .icon {
-    margin-left: theme.spacing(1);
-  }
-`;
-
-interface IStateProps {
-  t: IPlanSheetStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   readonly: boolean;
   inlinePassages: boolean;
   numRows: number;
@@ -46,7 +32,6 @@ export const AddSectionPassageButtons = (props: IProps) => {
   const {
     readonly,
     inlinePassages,
-    t,
     numRows,
     currentrow,
     mouseposition,
@@ -62,6 +47,8 @@ export const AddSectionPassageButtons = (props: IProps) => {
   const [actionMenuItem, setActionMenuItem] = React.useState<any>(undefined);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
+  const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
+
   const handleMenu = (e: any) => {
     setActionMenuItem(e.currentTarget);
   };
@@ -123,34 +110,28 @@ export const AddSectionPassageButtons = (props: IProps) => {
     [isSection, currentrow]
   );
   return (
-    <Styles>
-      <Button
+    <div>
+      <AltButton
         id="planSheetAddSec"
         key="addSection"
         aria-label={t.addSection}
-        variant="outlined"
-        color="primary"
-        className="button"
         onClick={handleMenu}
         disabled={readonly}
       >
         {t.addSection.replace('{0}', organizedBy)}
-        <DropDownIcon className="icon" />
-      </Button>
+        <DropDownIcon sx={iconMargin} />
+      </AltButton>
       {!inlinePassages && (
-        <Button
+        <AltButton
           id="planSheetAddPass"
           key="addPassage"
           aria-label={t.addPassage}
-          variant="outlined"
-          color="primary"
-          className="button"
           onClick={handleMenu}
           disabled={numRows < 2 || readonly}
         >
           {t.addPassage}
-          <DropDownIcon className="icon" />
-        </Button>
+          <DropDownIcon sx={iconMargin} />
+        </AltButton>
       )}
       {/*Section Button Menu and Context Menu */}
       <Menu
@@ -255,6 +236,6 @@ export const AddSectionPassageButtons = (props: IProps) => {
           </MenuItem>
         )}
       </Menu>
-    </Styles>
+    </div>
   );
 };

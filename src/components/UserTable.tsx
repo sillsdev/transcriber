@@ -17,8 +17,7 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, IconButton } from '@material-ui/core';
+import { IconButton, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import FilterIcon from '@mui/icons-material/FilterList';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
@@ -40,36 +39,13 @@ import {
 } from '../crud';
 import SelectRole from '../control/SelectRole';
 import { UpdateRelatedRecord } from '../model/baseModel';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-    },
-    paper: {},
-    actions: {
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-    buttonIcon: {
-      marginLeft: theme.spacing(1),
-    },
-    editIcon: {
-      fontSize: 16,
-    },
-    addIcon: {},
-    actionIcon: {},
-    link: {},
-  })
-);
+import {
+  GrowingSpacer,
+  PriButton,
+  AltButton,
+  ActionRow,
+  iconMargin,
+} from '../control';
 
 interface IRow {
   type: string;
@@ -125,7 +101,6 @@ export function UserTable(props: IProps) {
     groupMemberships,
     projectRole,
   } = props;
-  const classes = useStyles();
   const { pathname } = useLocation();
   const [organization] = useGlobal('organization');
   const [group] = useGlobal('group');
@@ -320,7 +295,6 @@ export function UserTable(props: IProps) {
           key={'edit-' + value}
           aria-label={'edit-' + value}
           color="default"
-          className={classes.actionIcon}
           onClick={handleEdit(value)}
           disabled={isCurrentUser(value)}
         >
@@ -331,7 +305,6 @@ export function UserTable(props: IProps) {
           key={'del-' + value}
           aria-label={'del-' + value}
           color="default"
-          className={classes.actionIcon}
           onClick={handleDelete(value)}
           disabled={isCurrentUser(value)}
         >
@@ -356,57 +329,48 @@ export function UserTable(props: IProps) {
 
   if (/profile/i.test(view)) return <StickyRedirect to="/profile" />;
   return (
-    <div className={classes.container}>
-      <div className={classes.paper}>
-        <div className={classes.actions}>
+    <Box sx={{ display: 'flex' }}>
+      <div>
+        <ActionRow>
           {canEdit() && (
             <>
               {!offlineOnly && (
-                <Button
+                <PriButton
                   key="add"
                   aria-label={t.invite}
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
                   onClick={handleInvite}
                 >
                   {t.invite}
-                  <AddIcon className={classes.buttonIcon} />
-                </Button>
+                  <AddIcon sx={iconMargin} />
+                </PriButton>
               )}
               {offlineOnly && (
-                <Button
+                <PriButton
                   key="add-member"
                   aria-label={t.addMember}
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
                   onClick={handleAddOpen}
                 >
                   {t.addMember}
-                  <AddIcon className={classes.buttonIcon} />
-                </Button>
+                  <AddIcon sx={iconMargin} />
+                </PriButton>
               )}
             </>
           )}
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <Button
+          <GrowingSpacer />
+          <AltButton
             key="filter"
             aria-label={t.filter}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
             onClick={handleFilter}
             title={t.showHideFilter}
           >
             {t.filter}
             {filter ? (
-              <SelectAllIcon className={classes.buttonIcon} />
+              <SelectAllIcon sx={iconMargin} />
             ) : (
-              <FilterIcon className={classes.buttonIcon} />
+              <FilterIcon sx={iconMargin} />
             )}
-          </Button>
-        </div>
+          </AltButton>
+        </ActionRow>
         <ShapingTable
           columns={columnDefs}
           columnWidths={columnWidths}
@@ -437,7 +401,7 @@ export function UserTable(props: IProps) {
       ) : (
         <></>
       )}
-    </div>
+    </Box>
   );
 }
 

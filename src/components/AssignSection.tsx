@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import styledHtml from 'styled-components';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -16,7 +15,6 @@ import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -37,6 +35,7 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  Box,
   SxProps,
 } from '@mui/material';
 import UserAvatar from './UserAvatar';
@@ -50,13 +49,10 @@ import {
 } from '../crud';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import { UpdateLastModifiedBy, UpdateRelatedRecord } from '../model/baseModel';
+import { PriButton } from '../control';
 
-const HeadCell = styledHtml.div`
-  display: flex;
-  align-items: center;
-`;
-
-const GridProps = { m: 'auto', p: 1 } as SxProps;
+const headProps = { display: 'flex', alignItems: 'center' } as SxProps;
+const gridProps = { m: 'auto', p: 1 } as SxProps;
 
 interface IStateProps {
   t: IAssignSectionStrings;
@@ -247,7 +243,7 @@ function AssignSection(props: IProps) {
             spacing={2}
             justifyContent="center"
             alignItems="flex-start"
-            sx={GridProps}
+            sx={gridProps}
           >
             <Paper>
               <Table sx={{ minWidth: 650 }} size="small">
@@ -255,16 +251,16 @@ function AssignSection(props: IProps) {
                   <TableRow>
                     <TableCell>{organizedBy}</TableCell>
                     <TableCell align="right">
-                      <HeadCell>
+                      <Box sx={headProps}>
                         <EditorIcon />
                         {ts.editor}
-                      </HeadCell>
+                      </Box>
                     </TableCell>
                     <TableCell align="right">
-                      <HeadCell>
+                      <Box sx={headProps}>
                         <TranscriberIcon />
                         {ts.transcriber}
-                      </HeadCell>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -277,7 +273,7 @@ function AssignSection(props: IProps) {
             spacing={2}
             justifyContent="center"
             alignItems="flex-start"
-            sx={GridProps}
+            sx={gridProps}
           >
             <Grid item>
               <Paper>
@@ -306,14 +302,9 @@ function AssignSection(props: IProps) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button
-            id="assignClose"
-            onClick={handleClose}
-            variant="contained"
-            color="primary"
-          >
+          <PriButton id="assignClose" onClick={handleClose}>
             {t.close}
-          </Button>
+          </PriButton>
         </DialogActions>
       </Dialog>
     </div>
