@@ -43,7 +43,7 @@ const MemoizedTaskAvatar = memo(TaskAvatar);
 const DOWN_ARROW = 'ARROWDOWN';
 
 const ContentDiv = styled('div')(({ theme }) => ({
-  paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
+  paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)})`,
   '& .data-grid-container .data-grid .cell': {
     verticalAlign: 'middle',
     textAlign: 'left',
