@@ -89,7 +89,7 @@ const StyledDialog = styled(Dialog)<DialogProps>(({ theme }) => ({
 }));
 
 const ProgressBar = styled(AppBar)<AppBarProps>(({ theme }) => ({
-  top: `calc(${HeadHeight}px - ${theme.spacing(1)}px)`,
+  top: `calc(${HeadHeight}px - ${theme.spacing(1)})`,
   zIndex: 100,
   width: '100%',
 }));
