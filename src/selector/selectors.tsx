@@ -4,8 +4,17 @@ import localStrings from './localize';
 export const activitySelector = (state: IState) =>
   localStrings(state as IState, { layout: 'activityState' });
 
+export const cardsSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'cards' });
+
 export const discussionCardSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'discussionCard' });
+
+export const discussionMenuSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'discussionMenu' });
+
+export const filterMenuSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'filterMenu' });
 
 export const groupSettingsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'groupSettings' });
@@ -15,6 +24,9 @@ export const groupTabsSelector = (state: IState) =>
 
 export const mediaActionsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'mediaActions' });
+
+export const mainSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'main' });
 
 export const passageChooserSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'passageChooser' });
@@ -37,8 +49,17 @@ export const playerSelector = (state: IState) =>
 export const resourceSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'passageDetailArtifacts' });
 
+export const projButtonsSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'projButtons' });
+
 export const sharedSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'shared' });
+
+export const sortMenuSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'sortMenu' });
+
+export const toDoTableSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'toDoTable' });
 
 export const toolSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'tool' });

@@ -5,57 +5,24 @@ import { IState, IMainStrings, ISharedStrings, User } from '../model';
 import localStrings from '../selector/localize';
 import {
   Button,
-  Menu,
-  MenuItem,
   ListItemIcon,
   ListItemText,
   Typography,
   Divider,
   styled,
-  MenuProps,
   MenuItemProps,
 } from '@mui/material';
 import ExitIcon from '@mui/icons-material/ExitToApp';
 import AccountIcon from '@mui/icons-material/AccountCircle';
 import ReloadIcon from '@mui/icons-material/Refresh';
 import ClearIcon from '@mui/icons-material/Clear';
+import { StyledMenu, StyledMenuItem } from '../control';
 import UserAvatar from './UserAvatar';
 import { isElectron } from '../api-variable';
 import { useLocation } from 'react-router-dom';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { localizeRole } from '../utils';
-
-const MenuWithStyles = styled(Menu)<MenuProps>(() => ({
-  '.MuiPaper-root': {
-    border: '1px solid #d3d4d5',
-  },
-}));
-
-const StyledMenu = (props: MenuProps) => (
-  <MenuWithStyles
-    elevation={0}
-    anchorEl={null}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'right',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    {...props}
-  />
-);
-
-const StyledMenuItem = styled(MenuItem)<MenuItemProps>(({ theme }) => ({
-  '&:focus': {
-    backgroundColor: theme.palette.primary.main,
-    '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-      color: theme.palette.common.white,
-    },
-  },
-}));
 
 const TermsItem = styled(StyledMenuItem)<MenuItemProps>(() => ({
   textAlign: 'center',
@@ -209,6 +176,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
 const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
+
 export default withData(mapRecordsToProps)(
   connect(mapStateToProps)(UserMenu) as any
 ) as any;
