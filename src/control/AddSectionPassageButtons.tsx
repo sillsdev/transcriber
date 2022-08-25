@@ -110,7 +110,7 @@ export const AddSectionPassageButtons = (props: IProps) => {
     [isSection, currentrow]
   );
   return (
-    <div>
+    <>
       <AltButton
         id="planSheetAddSec"
         key="addSection"
@@ -236,6 +236,6 @@ export const AddSectionPassageButtons = (props: IProps) => {
           </MenuItem>
         )}
       </Menu>
-    </div>
+    </>
   );
 };
