@@ -1,69 +1,18 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { IState, IDiscussionMenuStrings } from '../../model';
-import localStrings from '../../selector/localize';
-import { withStyles } from '@material-ui/core/styles';
-import { MenuProps } from '@material-ui/core/Menu';
-import {
-  IconButton,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-} from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import { IDiscussionMenuStrings } from '../../model';
+import { IconButton, ListItemIcon, ListItemText } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ResolveIcon from '@mui/icons-material/Check';
 import ReopenIcon from '@mui/icons-material/Unarchive';
 import LinkIcon from '@mui/icons-material/Link';
+import { StyledMenu, StyledMenuItem } from '../../control';
 import { useGlobal } from 'reactn';
+import { discussionMenuSelector } from '../../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    icon: {
-      color: theme.palette.background.paper,
-    },
-  })
-);
-
-const StyledMenu = withStyles({
-  paper: {
-    border: '1px solid #d3d4d5',
-  },
-})((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'right',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
-
-interface IStateProps {
-  t: IDiscussionMenuStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   action?: (what: string) => void;
   resolved?: boolean;
   canSet: boolean;
@@ -71,11 +20,15 @@ interface IProps extends IStateProps {
 }
 
 export function DiscussionMenu(props: IProps) {
-  const { action, t, resolved, canSet, stopPlayer } = props;
+  const { action, resolved, canSet, stopPlayer } = props;
   const [offlineOnly] = useGlobal('offlineOnly');
   const [offline] = useGlobal('offline');
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const t: IDiscussionMenuStrings = useSelector(
+    discussionMenuSelector,
+    shallowEqual
+  );
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
@@ -96,7 +49,7 @@ export function DiscussionMenu(props: IProps) {
         id="commentMenu"
         aria-controls="customized-menu"
         aria-haspopup="true"
-        className={classes.icon}
+        sx={{ color: 'background.paper' }}
         onClick={handleClick}
       >
         <MoreVertIcon />
@@ -173,8 +126,4 @@ export function DiscussionMenu(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'discussionMenu' }),
-});
-
-export default connect(mapStateToProps)(DiscussionMenu) as any;
+export default DiscussionMenu;

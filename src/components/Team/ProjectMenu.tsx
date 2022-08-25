@@ -1,28 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import {
-  IState,
   ICardsStrings,
   IProjButtonsStrings,
   IToDoTableStrings,
 } from '../../model';
-import localStrings from '../../selector/localize';
-import { withStyles } from '@material-ui/core/styles';
-import { MenuProps } from '@material-ui/core/Menu';
-import {
-  IconButton,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-} from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import { IconButton, ListItemIcon, ListItemText } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SettingsIcon from '@mui/icons-material/Settings';
-// import SyncIcon from '@mui/icons-material/Sync';
-// import IntegrationIcon from '@mui/icons-material/SyncAlt';
 import ParatextLogo from '../../control/ParatextLogo';
 import ImportIcon from '@mui/icons-material/CloudUpload';
 import ExportIcon from '@mui/icons-material/CloudDownload';
@@ -33,53 +19,15 @@ import UncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { isElectron } from '../../api-variable';
 import { useOfflnProjRead, useProjectType, ArtifactTypeSlug } from '../../crud';
+import { StyledMenu, StyledMenuItem } from '../../control';
+import {
+  cardsSelector,
+  projButtonsSelector,
+  toDoTableSelector,
+} from '../../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    icon: {
-      color: theme.palette.primary.light,
-    },
-  })
-);
-
-const StyledMenu = withStyles({
-  paper: {
-    border: '1px solid #d3d4d5',
-  },
-})((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'right',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
-
-interface IStateProps {
-  t: ICardsStrings;
-  tpb: IProjButtonsStrings;
-  td: IToDoTableStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   inProject?: boolean;
   isOwner?: boolean;
   project: string;
@@ -88,8 +36,7 @@ interface IProps extends IStateProps {
 }
 
 export function ProjectMenu(props: IProps) {
-  const { inProject, action, t, tpb, td, isOwner, project, stopPlayer } = props;
-  const classes = useStyles();
+  const { inProject, action, isOwner, project, stopPlayer } = props;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { pathname } = useLocation();
@@ -97,6 +44,12 @@ export function ProjectMenu(props: IProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const offlineProjectRead = useOfflnProjRead();
   const [projectType, setProjectType] = useState('');
+  const t: ICardsStrings = useSelector(cardsSelector, shallowEqual);
+  const tpb: IProjButtonsStrings = useSelector(
+    projButtonsSelector,
+    shallowEqual
+  );
+  const td: IToDoTableStrings = useSelector(toDoTableSelector, shallowEqual);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
@@ -123,7 +76,7 @@ export function ProjectMenu(props: IProps) {
         id="projectMenu"
         aria-controls="customized-menu"
         aria-haspopup="true"
-        className={classes.icon}
+        sx={{ color: 'primary.light' }}
         onClick={handleClick}
       >
         <MoreVertIcon />
@@ -155,14 +108,6 @@ export function ProjectMenu(props: IProps) {
             <ListItemText primary={t.offlineAvail} />
           </StyledMenuItem>
         )}
-        {/* <StyledMenuItem onClick={handle('sync')} disabled={syncDisable}>
-          <ListItemIcon>
-            <SyncIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary={tpb.sync.replace('{0}', toBeSynced.toString())}
-          />
-        </StyledMenuItem> */}
         <StyledMenuItem id="projMenuRep" onClick={handle('reports')}>
           <ListItemIcon>
             <ReportIcon />
@@ -216,10 +161,4 @@ export function ProjectMenu(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'cards' }),
-  tpb: localStrings(state, { layout: 'projButtons' }),
-  td: localStrings(state, { layout: 'toDoTable' }),
-});
-
-export default connect(mapStateToProps)(ProjectMenu) as any;
+export default ProjectMenu;

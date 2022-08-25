@@ -1,21 +1,12 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { IState, ISortMenuStrings } from '../../model';
-import localStrings from '../../selector/localize';
-import { withStyles } from '@material-ui/core/styles';
-import { MenuProps } from '@material-ui/core/Menu';
-import {
-  IconButton,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-  Badge,
-} from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import { ISortMenuStrings } from '../../model';
+import { IconButton, ListItemIcon, ListItemText, Badge } from '@mui/material';
 import SortIcon from '@mui/icons-material/Sort';
 import RadioOff from '@mui/icons-material/RadioButtonUnchecked';
 import RadioOn from '@mui/icons-material/RadioButtonChecked';
+import { StyledMenu, StyledMenuItem } from '../../control';
+import { sortMenuSelector } from '../../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
 export interface ISortState {
   topic: boolean;
@@ -24,50 +15,7 @@ export interface ISortState {
   [key: string]: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    icon: {
-      color: theme.palette.primary.light,
-    },
-  })
-);
-
-const StyledMenu = withStyles({
-  paper: {
-    border: '1px solid #d3d4d5',
-  },
-})((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'right',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
-
-interface IStateProps {
-  t: ISortMenuStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   state: ISortState;
   action?: (what: string) => void;
   stopPlayer?: () => void;
@@ -75,10 +23,11 @@ interface IProps extends IStateProps {
 }
 
 export function SortMenu(props: IProps) {
-  const { action, t, stopPlayer, disabled } = props;
+  const { action, stopPlayer, disabled } = props;
   const { topic, assignedTo, lastUpdated } = props.state;
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const t: ISortMenuStrings = useSelector(sortMenuSelector, shallowEqual);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
@@ -105,7 +54,7 @@ export function SortMenu(props: IProps) {
         aria-controls="sort-menu"
         aria-haspopup="true"
         title={t.sortMenu}
-        className={classes.icon}
+        sx={{ color: 'primary.light' }}
         onClick={handleClick}
         disabled={disabled}
       >
@@ -149,8 +98,4 @@ export function SortMenu(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'sortMenu' }),
-});
-
-export default connect(mapStateToProps)(SortMenu) as any;
+export default SortMenu;
