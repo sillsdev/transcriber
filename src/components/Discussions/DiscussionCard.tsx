@@ -923,7 +923,7 @@ export const DiscussionCard = (props: IProps) => {
                   id={`menu-${discussion.id}`}
                   action={handleDiscussionAction}
                   resolved={discussion.attributes.resolved || false}
-                  canSet={currentSegment}
+                  canSet={Boolean(currentSegment)}
                 />
               </Grid>
             </Grid>

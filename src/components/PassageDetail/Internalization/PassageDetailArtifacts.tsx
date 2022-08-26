@@ -668,12 +668,12 @@ export function PassageDetailArtifacts(props: IProps) {
       >
         <ResourceData
           catAllowNew={true}
-          initCategory={catIdRef.current}
+          initCategory={catIdRef.current || ''}
           onCategoryChange={handleCategory}
           initDescription={descriptionRef.current}
           onDescriptionChange={handleDescription}
           catRequired={false}
-          initPassRes={resourceTypeRef.current}
+          initPassRes={Boolean(resourceTypeRef.current)}
           onPassResChange={handlePassRes}
           allowProject={false}
         />

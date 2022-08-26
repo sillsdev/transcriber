@@ -13,14 +13,15 @@ import { discussionMenuSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 
 interface IProps {
+  id?: string;
   action?: (what: string) => void;
   resolved?: boolean;
-  canSet: boolean;
+  canSet?: boolean;
   stopPlayer?: () => void;
 }
 
 export function DiscussionMenu(props: IProps) {
-  const { action, resolved, canSet, stopPlayer } = props;
+  const { id, action, resolved, canSet, stopPlayer } = props;
   const [offlineOnly] = useGlobal('offlineOnly');
   const [offline] = useGlobal('offline');
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -46,7 +47,7 @@ export function DiscussionMenu(props: IProps) {
   return (
     <div>
       <IconButton
-        id="commentMenu"
+        id={id || 'commentMenu'}
         aria-controls="customized-menu"
         aria-haspopup="true"
         sx={{ color: 'background.paper' }}

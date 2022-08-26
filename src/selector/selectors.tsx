@@ -82,7 +82,7 @@ export const transcribeAddNoteSelector = (state: IState) =>
 export const transcribeRejectSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'transcribeReject' });
 
-export const transcriptiontabSelector = (state: IState) =>
+export const transcriptionTabSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'transcriptionTab' });
 
 export const wsAudioPlayerSegmentSelector = (state: IState) =>
