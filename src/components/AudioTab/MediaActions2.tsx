@@ -6,18 +6,13 @@ import AudioDownload from '../AudioDownload';
 import { mediaActionsSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 
-interface IStateProps {
-  t: IMediaActionsStrings;
-}
-interface IProps extends IStateProps {
+interface IProps {
   rowIndex: number;
   mediaId: string;
   online: boolean;
   readonly: boolean;
-  isPlaying: boolean;
   canDelete: boolean;
-  onDownload: (mediaId: string) => void;
-  onDelete: (i: number) => () => void;
+  onDelete: (i: number) => void;
 }
 
 export function MediaActions2(props: IProps) {

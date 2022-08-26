@@ -20,7 +20,7 @@ import { prettySegment, cleanClipboard } from '../../../utils';
 import {
   resourceSelector,
   sharedSelector,
-  transcriptiontabSelector,
+  transcriptionTabSelector,
 } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { UnsavedContext } from '../../../context/UnsavedContext';
@@ -117,7 +117,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     shallowEqual
   );
   const tt: ITranscriptionTabStrings = useSelector(
-    transcriptiontabSelector,
+    transcriptionTabSelector,
     shallowEqual
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);

@@ -5,6 +5,7 @@ import {
   ICardsStrings,
   IProjButtonsStrings,
   IToDoTableStrings,
+  VProject,
 } from '../../model';
 import { IconButton, ListItemIcon, ListItemText } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -30,7 +31,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 interface IProps {
   inProject?: boolean;
   isOwner?: boolean;
-  project: string;
+  project: string | VProject;
   action?: (what: string) => void;
   stopPlayer?: () => void;
 }

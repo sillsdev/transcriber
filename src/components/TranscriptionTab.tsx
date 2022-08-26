@@ -33,10 +33,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Menu,
-  MenuItem,
-  PopoverOrigin,
-  useTheme,
   Box,
 } from '@mui/material';
 // import CopyIcon from '@mui/icons-material/FileCopy';
@@ -81,6 +77,7 @@ import IndexedDBSource from '@orbit/indexeddb';
 import { dateOrTime } from '../utils';
 import AudioDownload from './AudioDownload';
 import { SelectExportType, iconMargin } from '../control';
+import AudioExportMenu from './AudioExportMenu';
 
 interface IRow {
   id: string;
@@ -192,20 +189,6 @@ export function TranscriptionTab(props: IProps) {
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
-  const [actionMenuItem, setActionMenuItem] =
-    React.useState<null | HTMLElement>(null);
-  const handleMenu = (e: React.MouseEvent<HTMLButtonElement>) =>
-    setActionMenuItem(e.currentTarget);
-  const handleClose = () => setActionMenuItem(null);
-  const [anchorSpec] = useState<PopoverOrigin>({
-    vertical: 'bottom',
-    horizontal: 'left',
-  });
-  const theme = useTheme();
-  const [transformSpec] = useState<PopoverOrigin>({
-    vertical: -theme.spacing(5),
-    horizontal: 'left',
-  });
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const { getOrganizedBy } = useOrganizedBy();
   const [fingerprint] = useGlobal('fingerprint');
@@ -399,22 +382,17 @@ export function TranscriptionTab(props: IProps) {
       showMessage(t.noData.replace('{0}', localizedArtifactType(artifactType)));
   };
 
-  // const handleDbl = () => {
-  //   setActionMenuItem(null);
-  //   setBusy(true);
-  //   doProjectExport(ExportType.DBL);
-  // };
-
-  const handleBurrito = () => {
-    setActionMenuItem(null);
-    setBusy(true);
-    doProjectExport(ExportType.BURRITO);
-  };
-
-  const handleAudioExport = () => {
-    setActionMenuItem(null);
-    setBusy(true);
-    doProjectExport(ExportType.AUDIO);
+  const handleAudioExportMenu = (what: string) => {
+    if (what === 'zip') {
+      setBusy(true);
+      doProjectExport(ExportType.AUDIO);
+    } else if (what === 'burrito') {
+      setBusy(true);
+      doProjectExport(ExportType.BURRITO);
+      // } else if (what === 'dbl') {
+      //   setBusy(true);
+      //   doProjectExport(ExportType.DBL);
+    }
   };
 
   const handleBackup = () => {
@@ -744,37 +722,13 @@ export function TranscriptionTab(props: IProps) {
                 (localizedArtifact ? ' (' + localizedArtifact + ')' : '')}
             </PriButton>
             {step && (
-              <PriButton
-                id="audioExport"
+              <AudioExportMenu
                 key="audioexport"
-                aria-label={`audio export`}
-                aria-owns={actionMenuItem ? 'audio-export-menu' : undefined}
-                onClick={handleMenu}
-              >
-                {t.audioExport}
-              </PriButton>
+                action={handleAudioExportMenu}
+                localizedArtifact={localizedArtifact}
+                isScripture={isScripture}
+              />
             )}
-            <Menu
-              id="audio-export-menu"
-              anchorEl={actionMenuItem}
-              open={Boolean(actionMenuItem)}
-              onClose={handleClose}
-              anchorOrigin={anchorSpec}
-              transformOrigin={transformSpec}
-            >
-              <MenuItem id="zipExport" key={3} onClick={handleAudioExport}>
-                {t.latestAudio +
-                  (localizedArtifact ? ' (' + localizedArtifact + ')' : '')}
-              </MenuItem>
-              {/* <MenuItem id="dblExport" key={1} onClick={handleDbl}>
-                {`Digital Bible Library`}
-              </MenuItem> */}
-              {isScripture && (
-                <MenuItem id="burritoExport" key={2} onClick={handleBurrito}>
-                  {t.scriptureBurrito}
-                </MenuItem>
-              )}
-            </Menu>
             {planColumn && offline && projects.length > 1 && (
               <PriButton
                 id="transBackup"

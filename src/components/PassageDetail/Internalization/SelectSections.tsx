@@ -27,7 +27,7 @@ import {
   findRecord,
   usePlanType,
 } from '../../../crud';
-import { transcriptiontabSelector } from '../../../selector';
+import { transcriptionTabSelector } from '../../../selector';
 import { eqSet } from '../../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -99,7 +99,7 @@ export function SelectSections(props: IProps) {
   });
   const { getOrganizedBy } = useOrganizedBy();
   const t: ITranscriptionTabStrings = useSelector(
-    transcriptiontabSelector,
+    transcriptionTabSelector,
     shallowEqual
   );
   const ta: IPassageDetailArtifactsStrings = useSelector(

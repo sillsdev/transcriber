@@ -234,9 +234,8 @@ export const AudioTable = (props: IProps) => {
     return (
       <Table.Cell {...props}>
         <MediaActions2
-          t={t}
           rowIndex={row.index}
-          mediaId={mediaId}
+          mediaId={mediaId || ''}
           online={connected || offlineOnly}
           readonly={readonly}
           canDelete={!readonly}
