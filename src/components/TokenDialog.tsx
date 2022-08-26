@@ -1,38 +1,23 @@
-import React from 'react';
-import { IMainStrings, IState } from '../model';
-import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { IMainStrings } from '../model';
 import {
   Dialog,
   DialogTitle,
   Button,
   DialogContentText,
   DialogActions,
-} from '@material-ui/core';
+} from '@mui/material';
+import { mainSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    text: {
-      paddingLeft: theme.spacing(4),
-      paddingRight: theme.spacing(4),
-    },
-  })
-);
-
-interface IStateProps {
-  t: IMainStrings;
-}
-
-interface TokenDialogProps extends IStateProps {
+interface TokenDialogProps {
   seconds: number;
   open: boolean;
   onClose: (value: number) => void;
 }
 
 function TokenDialog(props: TokenDialogProps) {
-  const { seconds, onClose, open, t } = props;
-  const classes = useStyles();
+  const { seconds, onClose, open } = props;
+  const t: IMainStrings = useSelector(mainSelector, shallowEqual);
 
   const handleClose = () => onClose(-1);
   const handleExit = () => onClose(-1);
@@ -46,7 +31,7 @@ function TokenDialog(props: TokenDialogProps) {
       disableEnforceFocus
     >
       <DialogTitle id="tokenDlg">{t.sessionExpiring}</DialogTitle>
-      <DialogContentText className={classes.text}>
+      <DialogContentText sx={{ px: 4 }}>
         {t.sessionExpireTask.replace('{0}', seconds.toString())}
       </DialogContentText>
       <DialogActions>
@@ -60,8 +45,5 @@ function TokenDialog(props: TokenDialogProps) {
     </Dialog>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'main' }),
-});
 
-export default connect(mapStateToProps)(TokenDialog);
+export default TokenDialog;

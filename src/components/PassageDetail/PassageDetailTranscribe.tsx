@@ -1,42 +1,33 @@
-import {
-  createStyles,
-  Grid,
-  makeStyles,
-  Theme,
-  Typography,
-} from '@material-ui/core';
+import { useState } from 'react';
+import { ISharedStrings } from '../../model';
+import { Grid, Typography, Box, BoxProps, styled } from '@mui/material';
 import { TranscriberProvider } from '../../context/TranscriberContext';
 import Transcriber from '../../components/Transcriber';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import { ISharedStrings } from '../../model';
 import { sharedSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import TaskTable, { TaskItemWidth } from '../TaskTable';
-import clsx from 'clsx';
-import { useState } from 'react';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    panel2: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    topFilter: {
-      zIndex: 2,
-      position: 'absolute',
-      left: 0,
-      backgroundColor: 'white',
-    },
-    topTranscriber: {
-      zIndex: 1,
-      position: 'absolute',
-      left: TaskItemWidth + theme.spacing(0.5),
-    },
-  })
-);
+interface TableContainerProps extends BoxProps {
+  topFilter?: boolean;
+}
+const TableContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'topFilter',
+})<TableContainerProps>(({ topFilter }) => ({
+  ...(topFilter && {
+    zIndex: 2,
+    position: 'absolute',
+    left: 0,
+    backgroundColor: 'white',
+  }),
+}));
+
+const TranscriberContainer = styled(Box)<BoxProps>(({ theme }) => ({
+  zIndex: 1,
+  position: 'absolute',
+  left: TaskItemWidth + theme.spacing(0.5),
+}));
+
 interface IProps {
   width: number;
   artifactTypeId: string | null;
@@ -45,7 +36,6 @@ interface IProps {
 export function PassageDetailTranscribe({ width, artifactTypeId }: IProps) {
   const { mediafileId } = usePassageDetailContext();
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const classes = useStyles();
   const [topFilter, setTopFilter] = useState(false);
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
@@ -53,16 +43,16 @@ export function PassageDetailTranscribe({ width, artifactTypeId }: IProps) {
     <TranscriberProvider artifactTypeId={artifactTypeId}>
       <Grid container direction="column">
         {artifactTypeId && (
-          <div className={classes.panel2}>
-            <div className={clsx({ [classes.topFilter]: topFilter })}>
+          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+            <TableContainer topFilter={topFilter}>
               <TaskTable onFilter={handleTopFilter} />
-            </div>
+            </TableContainer>
             {!topFilter && (
-              <div className={classes.topTranscriber}>
+              <TranscriberContainer>
                 <Transcriber defaultWidth={width - TaskItemWidth} />
-              </div>
+              </TranscriberContainer>
             )}
-          </div>
+          </Box>
         )}
         {artifactTypeId == null && <Transcriber defaultWidth={width} />}
       </Grid>
@@ -74,4 +64,4 @@ export function PassageDetailTranscribe({ width, artifactTypeId }: IProps) {
   );
 }
 
-export default PassageDetailTranscribe as any;
+export default PassageDetailTranscribe;

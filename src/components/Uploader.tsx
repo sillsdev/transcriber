@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
 import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { styled } from '@mui/material';
 import localStrings from '../selector/localize';
 import MediaUpload, { UploadType } from './MediaUpload';
 import {
@@ -20,13 +20,9 @@ import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import PassageRecordDlg from './PassageRecordDlg';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    unsupported: {
-      color: theme.palette.secondary.light,
-    },
-  })
-);
+const UnsupportedMessage = styled('span')(({ theme }) => ({
+  color: theme.palette.secondary.light,
+}));
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -95,7 +91,6 @@ export const Uploader = (props: IProps) => {
   const { uploadFiles } = props;
   const { metaData, ready } = props;
   const { createProject } = props;
-  const classes = useStyles();
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -245,12 +240,12 @@ export const Uploader = (props: IProps) => {
     if (uploadError !== '') {
       if (uploadError.indexOf('unsupported') > 0)
         showMessage(
-          <span className={classes.unsupported}>
+          <UnsupportedMessage>
             {t.unsupported.replace(
               '{0}',
               uploadError.substr(0, uploadError.indexOf(':unsupported'))
             )}
-          </span>
+          </UnsupportedMessage>
         );
       else showMessage(uploadError);
       setBusy(false);

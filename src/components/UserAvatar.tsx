@@ -1,44 +1,27 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { IState, User } from '../model';
-import { connect } from 'react-redux';
+import { User } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
-import { Avatar } from '@material-ui/core';
+import { Avatar } from '@mui/material';
 import { makeAbbr } from '../utils';
 import { dataPath, PathType } from '../utils/dataPath';
 import { remoteId } from '../crud';
 import { isElectron } from '../api-variable';
+import { avatarSize } from '../control';
 const os = require('os');
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    small: {
-      width: theme.spacing(3),
-      height: theme.spacing(3),
-    },
-    medium: {
-      width: theme.spacing(5),
-      height: theme.spacing(5),
-    },
-  })
-);
-
-interface IStateProps {}
 
 interface IRecordProps {
   users: Array<User>;
 }
 
-interface IProps extends IStateProps, IRecordProps {
+interface IProps extends IRecordProps {
   userRec?: User;
   small?: boolean;
 }
 
 export function UserAvatar(props: IProps) {
   const { userRec, users, small } = props;
-  const classes = useStyles();
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
 
@@ -70,10 +53,10 @@ export function UserAvatar(props: IProps) {
       id="srcuser"
       alt={curUser.attributes.name}
       src={src}
-      className={small ? classes.small : classes.medium}
+      sx={avatarSize(small)}
     />
   ) : curUser.attributes && curUser.attributes.name !== '' ? (
-    <Avatar id="abbruser" className={small ? classes.small : classes.medium}>
+    <Avatar id="abbruser" sx={avatarSize(small)}>
       {makeAbbr(curUser.attributes.name)}
     </Avatar>
   ) : (
@@ -81,12 +64,8 @@ export function UserAvatar(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({});
-
 const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(UserAvatar) as any
-) as any;
+export default withData(mapRecordsToProps)(UserAvatar) as any;

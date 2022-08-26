@@ -1,29 +1,11 @@
-import React from 'react';
-import { IMediaActionsStrings, IState } from '../../model';
-import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
+import { IMediaActionsStrings } from '../../model';
+import { IconButton, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
-import localStrings from '../../selector/localize';
-import { connect } from 'react-redux';
 import { isElectron } from '../../api-variable';
 import AudioDownload from '../AudioDownload';
+import { mediaActionsSelector } from '../../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    arrangeActions: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    actionButton: {
-      color: theme.palette.primary.light,
-    },
-    download: {
-      fill: theme.palette.primary.light,
-    },
-    icon: {
-      fontSize: '16px',
-    },
-  })
-);
 interface IStateProps {
   t: IMediaActionsStrings;
 }
@@ -39,30 +21,30 @@ interface IProps extends IStateProps {
 }
 
 export function MediaActions2(props: IProps) {
-  const { t, rowIndex, mediaId, online, readonly, onDelete, canDelete } = props;
-  const classes = useStyles();
+  const { rowIndex, mediaId, online, readonly, onDelete, canDelete } = props;
+  const t: IMediaActionsStrings = useSelector(
+    mediaActionsSelector,
+    shallowEqual
+  );
 
   const handleDelete = () => {
     onDelete(rowIndex);
   };
 
   return (
-    <div className={classes.arrangeActions}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       {(isElectron || online) && <AudioDownload mediaId={mediaId} />}
       {canDelete && !readonly && (
         <IconButton
           id="audActDel"
-          className={classes.actionButton}
+          sx={{ color: 'primary.light' }}
           title={t.delete}
           onClick={handleDelete}
         >
           <DeleteIcon />
         </IconButton>
       )}
-    </div>
+    </Box>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediaActions' }),
-});
-export default connect(mapStateToProps)(MediaActions2) as any as any;
+export default MediaActions2;

@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import {
-  IState,
-  ITranscribeRejectStrings,
-  ActivityStates,
-  MediaFile,
-} from '../model';
-import localStrings from '../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { ITranscribeRejectStrings, ActivityStates, MediaFile } from '../model';
 import {
   Button,
   Dialog,
@@ -20,30 +12,12 @@ import {
   RadioGroup,
   Radio,
   TextField,
-} from '@material-ui/core';
+} from '@mui/material';
+import { commentProps } from '../control';
+import { transcribeRejectSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    menu: {
-      width: 300,
-    },
-    formControl: {
-      margin: theme.spacing(3),
-    },
-    comment: {
-      paddingTop: '16px',
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-    },
-  })
-);
-
-interface IStateProps {
-  t: ITranscribeRejectStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   mediaIn: MediaFile;
   visible: boolean;
   editMethod?: (mediaRec: MediaFile, comment: string) => void;
@@ -51,12 +25,15 @@ interface IProps extends IStateProps {
 }
 
 function TranscribeReject(props: IProps) {
-  const { t, visible, editMethod, cancelMethod, mediaIn } = props;
-  const classes = useStyles();
+  const { visible, editMethod, cancelMethod, mediaIn } = props;
   const [open, setOpen] = useState(visible);
   const [next, setNext] = useState<ActivityStates>();
   const [comment, setComment] = useState('');
   const [inProcess, setInProcess] = useState(false);
+  const t: ITranscribeRejectStrings = useSelector(
+    transcribeRejectSelector,
+    shallowEqual
+  );
 
   const handleSave = () => {
     doAddOrSave();
@@ -113,7 +90,7 @@ function TranscribeReject(props: IProps) {
       >
         <DialogTitle id="transRejectDlg">{t.rejectTitle}</DialogTitle>
         <DialogContent>
-          <FormControl component="fieldset" className={classes.formControl}>
+          <FormControl component="fieldset" sx={{ m: 3 }}>
             <FormLabel component="legend">{t.rejectReason}</FormLabel>
             <RadioGroup
               aria-label={t.rejectReason}
@@ -146,11 +123,10 @@ function TranscribeReject(props: IProps) {
             label={t.comment}
             variant="filled"
             multiline
-            rowsMax={5}
-            className={classes.comment}
+            maxRows={5}
+            sx={commentProps}
             value={comment}
             onChange={handleCommentChange}
-            style={{ overflow: 'auto', width: '400px' }}
           />
         </DialogContent>
         <DialogActions>
@@ -182,8 +158,4 @@ function TranscribeReject(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'transcribeReject' }),
-});
-
-export default connect(mapStateToProps)(TranscribeReject) as any;
+export default TranscribeReject;

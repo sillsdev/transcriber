@@ -1,24 +1,9 @@
-import {
-  createStyles,
-  debounce,
-  makeStyles,
-  Theme,
-  useTheme,
-} from '@material-ui/core';
+import { Box, debounce, useTheme } from '@mui/material';
 import { Stage } from '../../control/Stage';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { toCamel } from '../../utils';
 import { useEffect, useState } from 'react';
 import { SimpleWf } from '../../context/PassageDetailContext';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      margin: theme.spacing(1),
-    },
-  })
-);
 
 export function WorkflowSteps() {
   const {
@@ -30,7 +15,6 @@ export function WorkflowSteps() {
     firstStepIndex,
     setFirstStepIndex,
   } = usePassageDetailContext();
-  const classes = useStyles();
   const theme = useTheme();
   const [shownWorkflow, setShownWorkflow] = useState<SimpleWf[]>([]);
   const [width, setWidth] = useState(0);
@@ -104,7 +88,7 @@ export function WorkflowSteps() {
     else setFirstStepIndex(Math.max(0, firstStepIndex - 1));
   };
   return (
-    <div className={classes.root}>
+    <Box sx={{ display: 'flex', m: 1 }}>
       {shownWorkflow.map((w) => {
         const cameLabel = toCamel(w.label);
         const label = wfStr.hasOwnProperty(cameLabel)
@@ -127,6 +111,6 @@ export function WorkflowSteps() {
           />
         );
       })}
-    </div>
+    </Box>
   );
 }
