@@ -6,13 +6,7 @@ import {
   MediaFile,
 } from '../../model';
 import localStrings from '../../selector/localize';
-import {
-  Button,
-  createStyles,
-  makeStyles,
-  Theme,
-  Typography,
-} from '@material-ui/core';
+import { Button, Typography, SxProps } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useFetchMediaUrl, VernacularTag } from '../../crud';
 import { useGlobal } from 'reactn';
@@ -29,32 +23,19 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import Uploader from '../Uploader';
 import AudacityManager from '../Workflow/AudacityManager';
 import { isElectron } from '../../api-variable';
-import { AudacityLogo } from '../../control';
+import { AudacityLogo, PriButton } from '../../control';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
 import VersionsIcon from '@mui/icons-material/List';
 import { PlanProvider } from '../../context/PlanContext';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    button: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      maxHeight: '40px',
-      alignSelf: 'center',
-    },
-    status: {
-      marginRight: theme.spacing(2),
-      alignSelf: 'center',
-      display: 'block',
-      gutterBottom: 'true',
-    },
-    unsupported: {
-      color: theme.palette.secondary.light,
-    },
-  })
-);
+const buttonProps = {
+  mx: 1,
+  maxHeight: '40px',
+  alignSelf: 'center',
+} as SxProps;
+
 interface IStateProps {
   t: IMediaTabStrings;
   ts: ISharedStrings;
@@ -84,7 +65,6 @@ export function PassageDetailRecord(props: IProps) {
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
-  const classes = useStyles();
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const { passage, mediafileId } = usePassageDetailContext();
@@ -184,7 +164,7 @@ export function PassageDetailRecord(props: IProps) {
     <PlanProvider {...props}>
       <div>
         <Button
-          className={classes.button}
+          sx={buttonProps}
           id="pdRecordVersions"
           onClick={handleVersions}
           title={ts.versionHistory}
@@ -193,7 +173,7 @@ export function PassageDetailRecord(props: IProps) {
           {ts.versionHistory}
         </Button>
         <Button
-          className={classes.button}
+          sx={buttonProps}
           id="pdRecordUpload"
           onClick={handleUpload}
           title={!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
@@ -204,7 +184,7 @@ export function PassageDetailRecord(props: IProps) {
 
         {isElectron && (
           <Button
-            className={classes.button}
+            sx={buttonProps}
             id="pdAudacity"
             onClick={handleAudacity}
             title={ts.launchAudacity}
@@ -228,19 +208,24 @@ export function PassageDetailRecord(props: IProps) {
           setDoReset={setResetMedia}
           metaData={
             <>
-              <Typography variant="caption" className={classes.status}>
+              <Typography
+                variant="caption"
+                sx={{
+                  mr: 2,
+                  alignSelf: 'center',
+                  display: 'block',
+                  gutterBottom: 'true',
+                }}
+              >
                 {statusText}
               </Typography>
-              <Button
+              <PriButton
                 id="rec-save"
-                className={classes.button}
                 onClick={handleSave}
-                variant="contained"
-                color="primary"
                 disabled={(ready && !ready()) || !canSave}
               >
                 {ts.save}
-              </Button>
+              </PriButton>
             </>
           }
         />

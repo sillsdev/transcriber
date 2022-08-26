@@ -1,13 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { Passage, IPassageChooserStrings } from '../../model';
-import {
-  Typography,
-  Slider,
-  makeStyles,
-  createStyles,
-  Theme,
-} from '@material-ui/core';
+import { Typography, Slider, Box, BoxProps, styled } from '@mui/material';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import {
   related,
@@ -19,18 +13,11 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { passageChooserSelector } from '../../selector';
 import { usePassageNavigate } from './usePassageNavigate';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    slider: {
-      padding: `0 ${theme.spacing(6)}px`,
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    sliderHead: {
-      paddingRight: theme.spacing(2),
-    },
-  })
-);
+const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
+  padding: `0 ${theme.spacing(6)}px`,
+  display: 'flex',
+  flexDirection: 'row',
+}));
 
 interface Mark {
   value: number;
@@ -38,7 +25,6 @@ interface Mark {
 }
 
 export const PassageChooser = () => {
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const { passage, section, prjId, allBookData } = usePassageDetailContext();
   const [passageCount, setPassageCount] = useState(0);
@@ -53,10 +39,7 @@ export const PassageChooser = () => {
     shallowEqual
   ) as IPassageChooserStrings;
 
-  const sliderChange = (
-    event: React.ChangeEvent<{}>,
-    value: number | number[]
-  ) => {
+  const sliderChange = (event: Event, value: number | number[]) => {
     if (typeof value === 'number') {
       if (value !== sliderValue) {
         const pasId = getPasIdByNum(section, value, memory);
@@ -103,8 +86,8 @@ export const PassageChooser = () => {
   }, [view]);
 
   return passageCount > 1 ? (
-    <div className={classes.slider}>
-      <Typography className={classes.sliderHead}>{t.passages}</Typography>
+    <StyledBox>
+      <Typography sx={{ pr: 2 }}>{t.passages}</Typography>
       <Slider
         value={sliderValue || 1}
         onChange={sliderChange}
@@ -114,7 +97,7 @@ export const PassageChooser = () => {
         max={passageCount}
         marks={marks.current}
       />
-    </div>
+    </StyledBox>
   ) : (
     <></>
   );

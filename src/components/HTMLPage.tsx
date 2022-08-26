@@ -1,18 +1,9 @@
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    page: {
-      margin: theme.spacing(4),
-    },
-  })
-);
+import { Box } from '@mui/material';
 
 export const HTMLPage = ({ text }: { text: string }) => {
-  const classes = useStyles();
   return (
-    <div
-      className={classes.page}
+    <Box
+      sx={{ m: 4 }}
       dangerouslySetInnerHTML={{
         __html: text,
       }}

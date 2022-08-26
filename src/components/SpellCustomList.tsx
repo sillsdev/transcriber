@@ -1,26 +1,14 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import IconButton from '@material-ui/core/IconButton';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import { isElectron } from '../api-variable';
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-  })
-);
-
 export function SpellCustomList() {
-  const classes = useStyles();
   const [list, setList] = React.useState<string[]>([]);
   const [refresh, setRefresh] = React.useState(0);
 
@@ -36,7 +24,9 @@ export function SpellCustomList() {
   }, [refresh]);
 
   return (
-    <List className={classes.root}>
+    <List
+      sx={{ width: '100%', maxWidth: 360, backgroundColor: 'background.paper' }}
+    >
       {list.sort().map((value, i) => {
         const labelId = `custom-${i}`;
 

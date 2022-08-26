@@ -47,7 +47,7 @@ import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
 import { UploadType } from '../../MediaUpload';
 import MediaPlayer from '../../MediaPlayer';
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { Box, BoxProps, styled } from '@mui/material';
 import { ReplaceRelatedRecord } from '../../../model/baseModel';
 import { PassageResourceButton } from './PassageResourceButton';
 import ProjectResourceConfigure from './ProjectResourceConfigure';
@@ -61,24 +61,14 @@ import {
   isVisual,
 } from '../../../utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexGrow: 1,
-      paddingRight: theme.spacing(2),
-    },
-    playStatus: {
-      margin: theme.spacing(1),
-      width: '100%',
-      '& audio': {
-        display: 'flex',
-        width: 'inherit',
-      },
-    },
-  })
-);
+const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
+  margin: theme.spacing(1),
+  width: '100%',
+  '& audio': {
+    display: 'flex',
+    width: 'inherit',
+  },
+}));
 
 interface IRecordProps {
   sectionResources: SectionResource[];
@@ -99,7 +89,6 @@ export enum ResourceTypeEnum {
   projectResource,
 }
 export function PassageDetailArtifacts(props: IProps) {
-  const classes = useStyles();
   const { sectionResources, mediafiles, artifactTypes, t } = props;
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
@@ -552,11 +541,11 @@ export function PassageDetailArtifacts(props: IProps) {
   };
   return (
     <>
-      <div className={classes.row}>
+      <Box sx={{ display: 'flex', flexDirection: 'row', flexGrow: 1, pr: 2 }}>
         {projRole === RoleNames.Admin && (!offline || offlineOnly) && (
           <AddResource action={handleAction} />
         )}
-        <div className={classes.playStatus}>
+        <MediaContainer>
           <MediaPlayer
             srcMediaId={playItem}
             requestPlay={itemPlaying}
@@ -567,7 +556,7 @@ export function PassageDetailArtifacts(props: IProps) {
             onTogglePlay={handleItemTogglePlay}
             controls={playItem !== ''}
           />
-        </div>
+        </MediaContainer>
         {otherResourcesAvailable && (
           <PassageResourceButton
             value={allResources}
@@ -575,7 +564,7 @@ export function PassageDetailArtifacts(props: IProps) {
             cb={handleAllResources}
           />
         )}
-      </div>
+      </Box>
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
         {rowData

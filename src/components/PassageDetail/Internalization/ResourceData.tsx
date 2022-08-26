@@ -1,42 +1,25 @@
 import {
-  createStyles,
   FormControl,
   FormControlLabel,
   FormLabel,
-  makeStyles,
   Radio,
   RadioGroup,
   TextField,
-  Theme,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useState } from 'react';
-import { connect, shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import { useOrganizedBy } from '../../../crud';
+import { IPassageDetailArtifactsStrings, ISharedStrings } from '../../../model';
 import {
-  IPassageDetailArtifactsStrings,
-  ISharedStrings,
-  IState,
-} from '../../../model';
-import {
-  localStrings,
   passageDetailArtifactsSelector,
+  sharedSelector,
 } from '../../../selector';
 import SelectArtifactCategory, {
   ScriptureEnum,
 } from '../../Workflow/SelectArtifactCategory';
 import { ResourceTypeEnum } from './PassageDetailArtifacts';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-    },
-  })
-);
-interface IStateProps {
-  ts: ISharedStrings;
-}
-interface IProps extends IStateProps {
+interface IProps {
   initCategory: string; //id
   initDescription: string;
   initPassRes: boolean;
@@ -49,7 +32,6 @@ interface IProps extends IStateProps {
 }
 export function ResourceData(props: IProps) {
   const {
-    ts,
     initCategory,
     initDescription,
     initPassRes,
@@ -60,7 +42,6 @@ export function ResourceData(props: IProps) {
     catAllowNew,
     allowProject,
   } = props;
-  const classes = useStyles();
   const [description, setDescription] = useState(initDescription);
   const { getOrganizedBy } = useOrganizedBy();
   const [value, setValue] = useState(initPassRes ? 'passage' : 'section');
@@ -68,6 +49,8 @@ export function ResourceData(props: IProps) {
     passageDetailArtifactsSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     var newValue = (event.target as HTMLInputElement).value;
     setValue(newValue);
@@ -89,7 +72,7 @@ export function ResourceData(props: IProps) {
   return (
     <div>
       <TextField
-        className={classes.formControl}
+        sx={{ m: 1 }}
         id="filename"
         label={ts.description}
         value={description || ''}
@@ -142,8 +125,4 @@ export function ResourceData(props: IProps) {
     </div>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  ts: localStrings(state, { layout: 'shared' }),
-});
-
-export default connect(mapStateToProps)(ResourceData) as any;
+export default ResourceData;

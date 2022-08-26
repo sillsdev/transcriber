@@ -1,30 +1,17 @@
 import { connect } from 'react-redux';
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import {
   ITeamCheckReferenceStrings,
   IState,
   SectionResource,
 } from '../../../model';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../../../mods/react-orbitjs';
 import localStrings from '../../../selector/localize';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { useArtifactCategory } from '../../../crud';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    menu: {},
-    label: { marginTop: theme.spacing(1) },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      display: 'flex',
-      flexGrow: 1,
-    },
-  })
-);
 interface IStateProps {
   t: ITeamCheckReferenceStrings;
 }
@@ -39,7 +26,6 @@ interface IProps extends IStateProps, IRecordProps {
 }
 export const SelectMyResource = (props: IProps) => {
   const { t, onChange, inResource, required } = props;
-  const classes = useStyles();
   const ctx = useContext(PassageDetailContext);
   const { rowData } = ctx.state;
   const [resource, setResource] = useState('');
@@ -61,17 +47,12 @@ export const SelectMyResource = (props: IProps) => {
   return (
     <TextField
       id="select-my-resource"
-      className={classes.textField}
+      sx={{ mx: 1, display: 'flex', flexGrow: 1 }}
       select
       label={t.resource}
       helperText={t.resourcehelper}
       value={resource}
       onChange={handleUserChange}
-      SelectProps={{
-        MenuProps: {
-          className: classes.menu,
-        },
-      }}
       variant="filled"
       required={required}
       fullWidth={true}

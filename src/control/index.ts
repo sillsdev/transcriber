@@ -30,3 +30,5 @@ export * from './iconMargin';
 export * from './iconSize';
 export * from './IosSlider';
 export * from './StyledMenu';
+export * from './commentProps';
+export * from './avatarSize';

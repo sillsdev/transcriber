@@ -34,6 +34,9 @@ export const passageChooserSelector = (state: IState) =>
 export const passageDetailArtifactsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'passageDetailArtifacts' });
 
+export const passageDetailStepCompleteSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'passageDetailStepComplete' });
+
 export const peerSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'peer' });
 
@@ -49,6 +52,9 @@ export const playerSelector = (state: IState) =>
 export const resourceSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'passageDetailArtifacts' });
 
+export const selectRecordingSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'selectRecording' });
+
 export const projButtonsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'projButtons' });
 
@@ -58,11 +64,23 @@ export const sharedSelector = (state: IState) =>
 export const sortMenuSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'sortMenu' });
 
+export const spellingSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'spelling' });
+
+export const templateSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'template' });
+
 export const toDoTableSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'toDoTable' });
 
 export const toolSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'tool' });
+
+export const transcribeAddNoteSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'transcribeAddNote' });
+
+export const transcribeRejectSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'transcribeReject' });
 
 export const transcriptiontabSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'transcriptionTab' });

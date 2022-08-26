@@ -1,33 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
-import { createStyles, IconButton, makeStyles, Theme } from '@material-ui/core';
+import { IconButton } from '@mui/material';
 import CompleteIcon from '@mui/icons-material/CheckBoxOutlined';
 import NotCompleteIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import { IPassageDetailStepCompleteStrings, IState } from '../../model';
-import localStrings from '../../selector/localize';
-import { connect } from 'react-redux';
+import { IPassageDetailStepCompleteStrings } from '../../model';
 import { getPasIdByNum } from '../../crud';
 import { usePassageNavigate } from './usePassageNavigate';
+import { passageDetailStepCompleteSelector } from '../../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    actionButton: {
-      color: theme.palette.primary.light,
-    },
-    icon: {
-      fontSize: '16px',
-    },
-  })
-);
-interface IStateProps {
-  t: IPassageDetailStepCompleteStrings;
-}
-
-interface IProps extends IStateProps {}
-
-export const PassageDetailStepComplete = (props: IProps) => {
-  const { t } = props;
+export const PassageDetailStepComplete = () => {
   const {
     currentstep,
     setCurrentStep,
@@ -39,11 +22,15 @@ export const PassageDetailStepComplete = (props: IProps) => {
     section,
     passage,
   } = usePassageDetailContext();
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [, setCurrentIndex] = useState(-1);
   const [complete, setComplete] = useState(false);
   const [view, setView] = useState('');
+  const t: IPassageDetailStepCompleteStrings = useSelector(
+    passageDetailStepCompleteSelector,
+    shallowEqual
+  );
+
   const passageNavigate = usePassageNavigate(() => {
     setView('');
   });
@@ -74,7 +61,7 @@ export const PassageDetailStepComplete = (props: IProps) => {
       {t.title}
       <IconButton
         id="complete"
-        className={classes.actionButton}
+        sx={{ color: 'primary.light' }}
         title={t.title}
         onClick={handleToggleComplete}
         disabled={view !== ''}
@@ -88,9 +75,4 @@ export const PassageDetailStepComplete = (props: IProps) => {
     </div>
   );
 };
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'passageDetailStepComplete' }),
-});
-export default connect(mapStateToProps)(
-  PassageDetailStepComplete
-) as any as any;
+export default PassageDetailStepComplete;

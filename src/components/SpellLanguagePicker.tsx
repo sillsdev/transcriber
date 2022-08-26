@@ -1,27 +1,18 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { User } from '../model';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Checkbox,
+} from '@mui/material';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { langName } from '../utils';
 import { isElectron } from '../api-variable';
 const ipc = isElectron ? require('electron').ipcRenderer : null;
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-  })
-);
 
 interface IRecordProps {
   users: Array<User>;
@@ -33,7 +24,6 @@ interface IProps extends IRecordProps {
 
 export const SpellLanguagePicker = (props: IProps) => {
   const { users, onSetCodes } = props;
-  const classes = useStyles();
   const [user] = useGlobal('user');
   const [checked, setChecked] = React.useState<string[]>([]);
   const [codes, setCodes] = React.useState<string[]>([]);
@@ -82,7 +72,9 @@ export const SpellLanguagePicker = (props: IProps) => {
   }, []);
 
   return (
-    <List className={classes.root}>
+    <List
+      sx={{ width: '100%', maxWidth: 360, backgroundColor: 'background.paper' }}
+    >
       {codes.sort(compare).map((value) => {
         const labelId = `checkbox-list-label-${value}`;
 

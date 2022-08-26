@@ -3,55 +3,43 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableCellProps,
   TableContainer,
   TableHead,
   TableRow,
   Button,
-} from '@material-ui/core';
+  Box,
+  styled,
+} from '@mui/material';
 import BigDialog from '../../hoc/BigDialog';
 import { useContext, useEffect, useState, useMemo } from 'react';
 import { ISelectRecordingStrings, IState } from '../../model';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { IRow, PassageDetailContext } from '../../context/PassageDetailContext';
 import { ArtifactTypeSlug, useArtifactType } from '../../crud';
 import { dateOrTime, prettySegment, removeExtension } from '../../utils';
 import { connect } from 'react-redux';
-import { localStrings } from '../../selector';
 import { ItemDescription } from '../../control/MediaDescription';
+import { selectRecordingSelector } from '../../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    menu: {},
-    choice: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    description: {
-      paddingLeft: theme.spacing(2),
-    },
-    label: { marginTop: theme.spacing(1) },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      display: 'flex',
-      flexGrow: 1,
-    },
-    version: {},
-    oldVersion: {
-      color: theme.palette.secondary.light,
-    },
-  })
-);
+interface StyledCellProps extends TableCellProps {
+  old?: boolean;
+}
+const StyledCell = styled(TableCell, {
+  shouldForwardProp: (prop) => prop !== 'old',
+})<StyledCellProps>(({ old, theme }) => ({
+  ...(old && {
+    color: theme.palette.secondary.light,
+  }),
+}));
 
-const RecordingHeader = ({
-  t,
-  showTopic,
-  showType,
-}: {
+interface IHeaderProps {
   t: ISelectRecordingStrings;
   showTopic: boolean;
   showType: boolean;
-}) => {
+}
+
+const RecordingHeader = ({ t, showTopic, showType }: IHeaderProps) => {
   return (
     <TableRow key={0}>
       {showType && <TableCell>{t.artifactType}</TableCell>}
@@ -76,7 +64,6 @@ interface IInfoProps {
 
 const RecordingInfo = (iprops: IInfoProps) => {
   const { row, lang, onClick, latestVernacular, showTopic, showType } = iprops;
-  const classes = useStyles();
 
   return (
     <TableRow
@@ -88,16 +75,9 @@ const RecordingInfo = (iprops: IInfoProps) => {
           {row.artifactType}
         </TableCell>
       )}
-      <TableCell
-        align="right"
-        className={
-          row.sourceVersion !== latestVernacular
-            ? classes.oldVersion
-            : classes.version
-        }
-      >
+      <StyledCell align="right" old={row.sourceVersion !== latestVernacular}>
         {row.sourceVersion}
-      </TableCell>
+      </StyledCell>
       <TableCell align="left">
         {prettySegment(row.mediafile.attributes?.sourceSegments || '')}
       </TableCell>
@@ -118,7 +98,6 @@ const RecordingInfo = (iprops: IInfoProps) => {
 };
 
 interface IStateProps {
-  t: ISelectRecordingStrings;
   lang: string;
 }
 
@@ -131,13 +110,16 @@ interface IProps extends IStateProps {
   latestVernacular: number;
 }
 export const SelectRecording = (props: IProps) => {
-  const { t, lang, onChange, inItem, tags, latestVernacular } = props;
-  const classes = useStyles();
+  const { lang, onChange, inItem, tags, latestVernacular } = props;
   const ctx = useContext(PassageDetailContext);
   const { rowData } = ctx.state;
   const [item, setItem] = useState('');
   const [chooser, setChooser] = useState(false);
   const { localizedArtifactType } = useArtifactType();
+  const t: ISelectRecordingStrings = useSelector(
+    selectRecordingSelector,
+    shallowEqual
+  );
 
   const showTopic = useMemo(() => {
     return tags[0] !== ArtifactTypeSlug.BackTranslation;
@@ -167,14 +149,14 @@ export const SelectRecording = (props: IProps) => {
   }, [tags, localizedArtifactType]);
   return (
     <>
-      <div className={classes.choice}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Button id="select-recording" onClick={handleItem} variant="contained">
           {t.playItem}
         </Button>
         <ItemDescription
           mediafile={rowData.find((r) => r.id === item)?.mediafile}
         />
-      </div>
+      </Box>
       {chooser && (
         <BigDialog title={'Select Item'} isOpen={chooser} onOpen={setChooser}>
           <TableContainer component={Paper}>
@@ -220,7 +202,6 @@ export const SelectRecording = (props: IProps) => {
   );
 };
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'selectRecording' }),
   lang: state.strings.lang,
 });
 export default connect(mapStateToProps)(SelectRecording) as any;

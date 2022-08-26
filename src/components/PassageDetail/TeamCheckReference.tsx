@@ -1,34 +1,20 @@
 import { useContext, useRef } from 'react';
-import { Grid, makeStyles, createStyles, Theme } from '@material-ui/core';
+import { Grid, GridProps, styled } from '@mui/material';
 import SelectMyResource from './Internalization/SelectMyResource';
 import { MediaPlayer } from '../MediaPlayer';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { getSegments, NamedRegions } from '../../utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    duration: {
-      margin: theme.spacing(1),
-    },
-    resource: {
-      margin: theme.spacing(1),
-    },
-    playStatus: {
-      margin: theme.spacing(1),
-      width: '100%',
-      '& audio': {
-        display: 'flex',
-        width: 'inherit',
-      },
-    },
-    controls: {
-      alignSelf: 'center',
-    },
-  })
-);
+const StyledGrid = styled(Grid)<GridProps>(({ theme }) => ({
+  margin: theme.spacing(1),
+  width: '100%',
+  '& audio': {
+    display: 'flex',
+    width: 'inherit',
+  },
+}));
 
 export function TeamCheckReference() {
-  const classes = useStyles();
   const ctx = useContext(PassageDetailContext);
   const {
     rowData,
@@ -89,10 +75,10 @@ export function TeamCheckReference() {
 
   return (
     <Grid container direction="column">
-      <Grid item xs={10} className={classes.resource}>
+      <Grid item xs={10} sx={{ m: 1 }}>
         <SelectMyResource onChange={handleResource} />
       </Grid>
-      <Grid item xs={10} className={classes.playStatus}>
+      <StyledGrid item xs={10}>
         <MediaPlayer
           srcMediaId={playItem}
           requestPlay={itemPlaying}
@@ -103,7 +89,7 @@ export function TeamCheckReference() {
           position={mediaPosition.current}
           controls={true}
         />
-      </Grid>
+      </StyledGrid>
     </Grid>
   );
 }

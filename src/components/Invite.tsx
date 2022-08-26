@@ -16,7 +16,6 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
   TextField,
@@ -29,25 +28,17 @@ import {
   FormLabel,
   Checkbox,
   FormControlLabel,
-} from '@material-ui/core';
+  styled,
+} from '@mui/material';
 import { related, useRole, getUserById } from '../crud';
 import { validateEmail } from '../utils';
 import { API_CONFIG } from '../api-variable';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import SelectRole from '../control/SelectRole';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    menu: {},
-    label: { marginTop: theme.spacing(1) },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      display: 'flex',
-      flexGrow: 1,
-    },
-  })
-);
+const StyledLabel = styled('label')(({ theme }) => ({
+  marginTop: theme.spacing(1),
+}));
 
 interface IStateProps {
   t: IInviteStrings;
@@ -90,7 +81,6 @@ function Invite(props: IProps) {
     cancelMethod,
     inviteIn,
   } = props;
-  const classes = useStyles();
   const [isDeveloper] = useGlobal('developer');
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
@@ -292,7 +282,7 @@ function Invite(props: IProps) {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                className={classes.textField}
+                sx={{ mx: 1, display: 'flex', flexGrow: 1 }}
                 autoFocus
                 margin="dense"
                 variant="filled"
@@ -343,9 +333,7 @@ function Invite(props: IProps) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <label id="projectsAll" className={classes.label}>
-                {t.allUsersProjects}
-              </label>
+              <StyledLabel id="projectsAll">{t.allUsersProjects}</StyledLabel>
               <div>{allUsersProjects}</div>
               <br />
             </Grid>
