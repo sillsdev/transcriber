@@ -755,8 +755,34 @@ if (
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
+}
+if (
+  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4 &&
+  schemaDefinition.models
+) {
+  schemaDefinition.models.intellectualproperty = {
+    keys: { remoteId: {} },
+    attributes: {
+      rightsHolder: { type: 'string' },
+      notes: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      organization: {
+        type: 'hasOne',
+        model: 'organization',
+      },
+      releaseMediafile: {
+        type: 'hasOne',
+        model: 'mediafile',
+      },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
 
-  schemaDefinition.version = 4;
+  schemaDefinition.version = 5;
 }
 export const schema = new Schema(schemaDefinition);
 
