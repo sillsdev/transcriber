@@ -180,7 +180,9 @@ const initialState = {
 		"en": {
 			"deleteItem": "Delete Item",
 			"playTest": "Play Test",
+			"provideRights": "Provide Rights",
 			"record": "Record",
+			"rights": "Rights",
 			"saveFirst": "Save or Clear your recording before uploading.",
 			"segment": "Segment",
 			"speaker": "Speaker",
@@ -614,6 +616,8 @@ const initialState = {
 			"cancel": "Cancel",
 			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",
 			"dragDropSingle": "Drag and drop a file here, or click here to browse for the file.",
+			"intellectualPropertyTask": "UUpload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.",
+			"intellectualPropertyTitle": "Upload Intellectual Property Release",
 			"invalidFile": "Not valid for this operation: {0} ",
 			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the Desktop app.",
 			"ITFtitle": "Upload Change Data from Desktop app.",
@@ -1085,7 +1089,6 @@ const initialState = {
 	"transcriber": new LocalizedStrings({
 		"en": {
 			"addNote": "Add Note",
-			"backToWorkflow": "Back to Workflow",
 			"comment": "Comment",
 			"congratulation": "Congratulations",
 			"done": "Completed",

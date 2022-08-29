@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import path from 'path';
 import { useSnackBar } from '../hoc/SnackBar';
+import Speaker from './Speaker';
 
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
@@ -62,6 +63,7 @@ export enum UploadType {
   PTF = 3,
   LOGO = 4 /* do we need separate ones for org and avatar? */,
   ProjectResource = 5,
+  IntellectualProperty = 6,
 }
 
 interface ITargetProps extends IStateProps {
@@ -176,6 +178,7 @@ function MediaUpload(props: IProps) {
     t.PTFtitle,
     'FUTURE TODO',
     t.resourceTitle,
+    t.intellectualPropertyTitle,
   ];
   const text = [
     t.task,
@@ -184,6 +187,7 @@ function MediaUpload(props: IProps) {
     t.PTFtask,
     'FUTURE TODO',
     t.projectResourceTask,
+    t.intellectualPropertyTask,
   ];
 
   const handleAddOrSave = () => {
@@ -244,6 +248,7 @@ function MediaUpload(props: IProps) {
         '.ptf',
         '.jpg, .svg, .png',
         '.mp3, .m4a, .wav, .ogg, .pdf',
+        '.mp3, .m4a, .wav, .ogg, .pdf',
       ].map((s) => s)[uploadType]
     );
   }, [uploadType]);
@@ -256,6 +261,7 @@ function MediaUpload(props: IProps) {
         'application/itf',
         'application/ptf',
         'image/jpeg, image/svg+xml, image/png',
+        'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf',
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf',
       ].map((s) => s)[uploadType]
     );

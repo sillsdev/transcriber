@@ -748,9 +748,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.provideRights">
+         <segment>
+            <source>Provide Rights</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.record">
          <segment>
             <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.rights">
+         <segment>
+            <source>Rights</source>
             <target/>
          </segment>
       </unit>
@@ -2848,6 +2860,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.intellectualPropertyTask">
+         <segment>
+            <source>UUpload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.intellectualPropertyTitle">
+         <segment>
+            <source>Upload Intellectual Property Release</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.invalidFile">
          <segment>
             <source>Not valid for this operation: {0} </source>
@@ -4903,12 +4927,6 @@
       <unit id="transcriber.addNote">
          <segment>
             <source>Add Note</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.backToWorkflow">
-         <segment>
-            <source>Back to Workflow</source>
             <target/>
          </segment>
       </unit>

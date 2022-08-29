@@ -870,14 +870,28 @@
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="community.record">
+      	<trans-unit id="community.provideRights">
+      		<source>Provide Rights</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Community.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.record">
             <source>Record</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="community.saveFirst">
+      	<trans-unit id="community.rights">
+      		<source>Rights</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Community.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.saveFirst">
             <source>Save or Clear your recording before uploading.</source>
             <target/>
             <context-group>
@@ -3320,7 +3334,21 @@
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaUpload.invalidFile">
+      	<trans-unit id="mediaUpload.intellectualPropertyTask">
+      		<source>UUpload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaUpload.intellectualPropertyTitle">
+      		<source>Upload Intellectual Property Release</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaUpload.invalidFile">
             <source>Not valid for this operation: {0} </source>
             <target/>
             <context-group>
