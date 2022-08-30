@@ -51,10 +51,11 @@ interface IRecordProps {
 interface IProps {
   speaker: string;
   recordType: ArtifactTypeSlug;
+  onRights?: (hasRights: boolean) => void;
 }
 
 export function ProvideRights(props: IProps & IRecordProps & IDispatchProps) {
-  const { speaker, recordType } = props;
+  const { speaker, recordType, onRights } = props;
   const [reporter] = useGlobal('errorReporter');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [user] = useGlobal('user');
@@ -141,6 +142,7 @@ export function ProvideRights(props: IProps & IRecordProps & IDispatchProps) {
           ...ReplaceRelatedRecord(t, ip, 'releaseMedia', 'mediafile', mediaId),
           ...ReplaceRelatedRecord(t, ip, 'organization', 'organization', orgId),
         ]);
+        onRights && onRights(true);
       }
     }
     saveCompleted(toolId);

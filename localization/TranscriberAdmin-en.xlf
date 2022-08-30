@@ -736,6 +736,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.addSpeaker">
+         <segment>
+            <source>Add '{0}'</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.deleteItem">
          <segment>
             <source>Delete Item</source>
@@ -757,6 +763,12 @@
       <unit id="community.record">
          <segment>
             <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.releaseRights">
+         <segment>
+            <source>Record or upload a statement releasing the rights to use material recorded by this speaker</source>
             <target/>
          </segment>
       </unit>
@@ -2862,7 +2874,7 @@
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
          <segment>
-            <source>UUpload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+            <source>Upload audio file with rights release files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf, .png or .jpg format.</source>
             <target/>
          </segment>
       </unit>

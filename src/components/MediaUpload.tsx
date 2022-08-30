@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import path from 'path';
 import { useSnackBar } from '../hoc/SnackBar';
-import Speaker from './Speaker';
+import SpeakerName from './SpeakerName';
 
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
@@ -171,6 +171,9 @@ function MediaUpload(props: IProps) {
   const { showMessage } = useSnackBar();
   const [acceptextension, setAcceptExtension] = useState('');
   const [acceptmime, setAcceptMime] = useState('');
+  const [hasRights, setHasRight] = useState(
+    uploadType === UploadType.IntellectualProperty
+  );
   const title = [
     t.title,
     t.resourceTitle,
@@ -239,6 +242,8 @@ function MediaUpload(props: IProps) {
     }
   };
 
+  const handleRights = (hasRights: boolean) => setHasRight(hasRights);
+
   useEffect(() => {
     setAcceptExtension(
       [
@@ -248,7 +253,7 @@ function MediaUpload(props: IProps) {
         '.ptf',
         '.jpg, .svg, .png',
         '.mp3, .m4a, .wav, .ogg, .pdf',
-        '.mp3, .m4a, .wav, .ogg, .pdf',
+        '.mp3, .m4a, .wav, .ogg, .pdf, .png, .jpg',
       ].map((s) => s)[uploadType]
     );
   }, [uploadType]);
@@ -262,7 +267,7 @@ function MediaUpload(props: IProps) {
         'application/ptf',
         'image/jpeg, image/svg+xml, image/png',
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf',
-        'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf',
+        'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf, image/png, image/jpeg',
       ].map((s) => s)[uploadType]
     );
   }, [uploadType]);
@@ -278,6 +283,9 @@ function MediaUpload(props: IProps) {
         <DialogTitle id="audUploadDlg">{title[uploadType]}</DialogTitle>
         <DialogContent>
           <DialogContentText>{text[uploadType]}</DialogContentText>
+          {uploadType !== UploadType.IntellectualProperty && (
+            <SpeakerName name={''} onRights={handleRights} />
+          )}
           <div className={classes.drop}>
             <DropTarget
               name={name}
@@ -304,7 +312,9 @@ function MediaUpload(props: IProps) {
             onClick={handleAddOrSave}
             variant="contained"
             color="primary"
-            disabled={(ready && !ready()) || !files || files.length === 0}
+            disabled={
+              (ready && !ready()) || !files || files.length === 0 || !hasRights
+            }
           >
             {t.upload}
           </Button>

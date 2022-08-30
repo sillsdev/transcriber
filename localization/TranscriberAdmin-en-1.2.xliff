@@ -856,7 +856,14 @@
                <context context-type="sourcefile">CommentCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="community.deleteItem">
+      	<trans-unit id="community.addSpeaker">
+      		<source>Add '{0}'</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">SpeakerName.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.deleteItem">
             <source>Delete Item</source>
             <target/>
             <context-group>
@@ -884,6 +891,13 @@
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="community.releaseRights">
+      		<source>Record or upload a statement releasing the rights to use material recorded by this speaker</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Community.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="community.rights">
       		<source>Rights</source>
       		<target/>
@@ -909,7 +923,7 @@
             <source>Speaker</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Community.tsx</context>
+               <context context-type="sourcefile">SpeakerName.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="community.topic">
@@ -3335,7 +3349,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="mediaUpload.intellectualPropertyTask">
-      		<source>UUpload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+      		<source>Upload audio file with rights release files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf, .png or .jpg format.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">MediaUpload.tsx</context>

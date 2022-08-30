@@ -160,10 +160,12 @@ export interface ICommentEditorStrings extends Localize.LocalizedStringsMethods 
 };
 
 export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
+    "addSpeaker": string;
     "deleteItem": string;
     "playTest": string;
     "provideRights": string;
     "record": string;
+    "releaseRights": string;
     "rights": string;
     "saveFirst": string;
     "segment": string;
