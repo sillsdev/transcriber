@@ -58,6 +58,7 @@ interface IProps extends IStateProps, IDispatchProps {
   sourceMediaId?: string;
   sourceSegments?: string;
   performedBy?: string;
+  onSpeakerChange?: (performedBy: string) => void;
   topic?: string;
   uploadType?: UploadType;
 }
@@ -82,6 +83,7 @@ export const Uploader = (props: IProps) => {
     sourceMediaId,
     sourceSegments,
     performedBy,
+    onSpeakerChange,
     topic,
     uploadType,
   } = props;
@@ -108,6 +110,11 @@ export const Uploader = (props: IProps) => {
   const { createMedia } = useOfflnMediafileCreate(doOrbitError);
   const [, setComplete] = useGlobal('progress');
   const { localizedArtifactTypeFromId } = useArtifactType();
+
+  const handleSpeakerChange = (speaker: string) => {
+    onSpeakerChange && onSpeakerChange(speaker);
+  };
+
   const finishMessage = () => {
     setTimeout(() => {
       if (fileList.current)
@@ -290,6 +297,8 @@ export const Uploader = (props: IProps) => {
           cancelMethod={uploadCancel}
           metaData={metaData}
           ready={ready}
+          speaker={performedBy}
+          onSpeaker={handleSpeakerChange}
         />
       )}
     </div>

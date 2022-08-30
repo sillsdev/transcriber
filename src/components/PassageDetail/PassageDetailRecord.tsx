@@ -8,7 +8,7 @@ import {
 import localStrings from '../../selector/localize';
 import { Button, Typography, SxProps, Box } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { useFetchMediaUrl, VernacularTag } from '../../crud';
+import { findRecord, useFetchMediaUrl, VernacularTag } from '../../crud';
 import { useGlobal } from 'reactn';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
@@ -107,6 +107,18 @@ export function PassageDetailRecord(props: IProps) {
       passageDefaultFilename(passage?.id, memory, VernacularTag)
     );
   }, [memory, passage, mediafiles]);
+
+  useEffect(() => {
+    const mediaRec = findRecord(memory, 'mediafile', mediafileId) as
+      | MediaFile
+      | undefined;
+    const performer = mediaRec?.attributes?.performedBy;
+    if (mediaRec && performer) {
+      setSpeaker(performer);
+      setHasRight(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mediafileId, mediafiles]);
 
   const handleSave = () => {
     startSave(toolId);
@@ -212,6 +224,7 @@ export function PassageDetailRecord(props: IProps) {
           uploadMethod={uploadMedia}
           onReady={onReady}
           defaultFilename={defaultFilename}
+          allowRecord={hasRights}
           allowWave={true}
           showFilename={true}
           preload={preload}
@@ -219,7 +232,6 @@ export function PassageDetailRecord(props: IProps) {
           setStatusText={setStatusText}
           doReset={resetMedia}
           setDoReset={setResetMedia}
-          speaker={speaker}
           metaData={
             <>
               <Typography
@@ -254,6 +266,8 @@ export function PassageDetailRecord(props: IProps) {
           finish={afterUpload}
           cancelled={cancelled}
           passageId={passage.id}
+          performedBy={speaker}
+          onSpeakerChange={handleNameChange}
         />
         <AudacityManager
           item={1}

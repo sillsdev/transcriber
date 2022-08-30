@@ -48,6 +48,11 @@ export function SpeakerName({
     setShowDialog(false);
   };
 
+  const handleRightsChange = (hasRights: boolean) => {
+    onRights && onRights(hasRights);
+    setShowDialog(false);
+  };
+
   React.useEffect(() => {
     const newSpeakers = new Array<NameOptionType>();
     ipRecs.forEach((r) => {
@@ -55,6 +60,10 @@ export function SpeakerName({
     });
     setSpeakers(newSpeakers);
   }, [ipRecs]);
+
+  React.useEffect(() => {
+    setValue({ name });
+  }, [name]);
 
   return (
     <>
@@ -131,6 +140,7 @@ export function SpeakerName({
           <ProvideRights
             speaker={value?.name || ''}
             recordType={ArtifactTypeSlug.IntellectualProperty}
+            onRights={handleRightsChange}
           />
         </>
       </BigDialog>

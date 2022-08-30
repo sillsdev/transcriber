@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Typography,
 } from '@material-ui/core';
 import path from 'path';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -151,6 +152,8 @@ interface IProps extends IStateProps {
   cancelMethod?: () => void;
   metaData?: JSX.Element;
   ready?: () => boolean;
+  speaker?: string;
+  onSpeaker?: (speaker: string) => void;
 }
 
 function MediaUpload(props: IProps) {
@@ -164,6 +167,8 @@ function MediaUpload(props: IProps) {
     cancelMethod,
     metaData,
     ready,
+    speaker,
+    onSpeaker,
   } = props;
   const classes = useStyles();
   const [name, setName] = useState('');
@@ -243,6 +248,9 @@ function MediaUpload(props: IProps) {
   };
 
   const handleRights = (hasRights: boolean) => setHasRight(hasRights);
+  const handleSpeaker = (speaker: string) => {
+    onSpeaker && onSpeaker(speaker);
+  };
 
   useEffect(() => {
     setAcceptExtension(
@@ -256,9 +264,6 @@ function MediaUpload(props: IProps) {
         '.mp3, .m4a, .wav, .ogg, .pdf, .png, .jpg',
       ].map((s) => s)[uploadType]
     );
-  }, [uploadType]);
-
-  useEffect(() => {
     setAcceptMime(
       [
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg',
@@ -284,17 +289,25 @@ function MediaUpload(props: IProps) {
         <DialogContent>
           <DialogContentText>{text[uploadType]}</DialogContentText>
           {uploadType !== UploadType.IntellectualProperty && (
-            <SpeakerName name={''} onRights={handleRights} />
+            <SpeakerName
+              name={speaker || ''}
+              onRights={handleRights}
+              onChange={handleSpeaker}
+            />
           )}
           <div className={classes.drop}>
-            <DropTarget
-              name={name}
-              handleFiles={handleFiles}
-              acceptextension={acceptextension}
-              acceptmime={acceptmime}
-              multiple={multiple}
-              t={t}
-            />
+            {hasRights ? (
+              <DropTarget
+                name={name}
+                handleFiles={handleFiles}
+                acceptextension={acceptextension}
+                acceptmime={acceptmime}
+                multiple={multiple}
+                t={t}
+              />
+            ) : (
+              <Typography className={classes.label}>{'\u00A0'}</Typography>
+            )}
           </div>
           {metaData}
         </DialogContent>

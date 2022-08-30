@@ -139,7 +139,13 @@ export function ProvideRights(props: IProps & IRecordProps & IDispatchProps) {
         } as IntellectualProperty;
         await memory.update((t) => [
           ...AddRecord(t, ip, user, memory),
-          ...ReplaceRelatedRecord(t, ip, 'releaseMedia', 'mediafile', mediaId),
+          ...ReplaceRelatedRecord(
+            t,
+            ip,
+            'releaseMediafile',
+            'mediafile',
+            mediaId
+          ),
           ...ReplaceRelatedRecord(t, ip, 'organization', 'organization', orgId),
         ]);
         onRights && onRights(true);
