@@ -85,8 +85,10 @@ export function SpeakerName({
             handleRights();
           } else {
             setValue(newValue);
-            onChange && onChange(newValue?.name || '');
-            onRights && onRights(true);
+            if (newValue) {
+              onChange && onChange(newValue?.name || '');
+              onRights && onRights(true);
+            }
           }
         }}
         filterOptions={(options, params) => {

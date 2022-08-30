@@ -113,7 +113,7 @@ export function PassageDetailRecord(props: IProps) {
       | MediaFile
       | undefined;
     const performer = mediaRec?.attributes?.performedBy;
-    if (mediaRec && performer) {
+    if (performer) {
       setSpeaker(performer);
       setHasRight(true);
     }

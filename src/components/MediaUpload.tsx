@@ -287,8 +287,10 @@ function MediaUpload(props: IProps) {
       >
         <DialogTitle id="audUploadDlg">{title[uploadType]}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{text[uploadType]}</DialogContentText>
-          {uploadType !== UploadType.IntellectualProperty && (
+          <DialogContentText>
+            {text[uploadType].replace('{0}', speaker || '')}
+          </DialogContentText>
+          {uploadType === UploadType.Media && (
             <SpeakerName
               name={speaker || ''}
               onRights={handleRights}

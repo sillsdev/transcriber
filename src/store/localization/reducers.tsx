@@ -618,7 +618,7 @@ const initialState = {
 			"cancel": "Cancel",
 			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",
 			"dragDropSingle": "Drag and drop a file here, or click here to browse for the file.",
-			"intellectualPropertyTask": "Upload audio file with rights release files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf, .png or .jpg format.",
+			"intellectualPropertyTask": "Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.",
 			"intellectualPropertyTitle": "Upload Intellectual Property Release",
 			"invalidFile": "Not valid for this operation: {0} ",
 			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the Desktop app.",

@@ -2874,7 +2874,7 @@
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
          <segment>
-            <source>Upload audio file with rights release files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf, .png or .jpg format.</source>
+            <source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
             <target/>
          </segment>
       </unit>
