@@ -23,6 +23,7 @@ export enum ArtifactTypeSlug {
   Resource = 'resource',
   SharedResource = 'sharedResource',
   ProjectResource = 'projectresource',
+  IntellectualProperty = 'intellectualproperty'
 }
 interface ISwitches {
   [key: string]: any;

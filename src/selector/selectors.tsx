@@ -7,6 +7,9 @@ export const activitySelector = (state: IState) =>
 export const cardsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'cards' });
 
+export const communitySelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'community' });
+
 export const discussionCardSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'discussionCard' });
 

@@ -736,6 +736,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.addSpeaker">
+         <segment>
+            <source>Add '{0}'</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.deleteItem">
          <segment>
             <source>Delete Item</source>
@@ -748,9 +754,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.provideRights">
+         <segment>
+            <source>Provide Rights</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.record">
          <segment>
             <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.releaseRights">
+         <segment>
+            <source>Record or upload a statement releasing the rights to use material recorded by this speaker</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.rights">
+         <segment>
+            <source>Rights</source>
             <target/>
          </segment>
       </unit>
@@ -2848,6 +2872,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.intellectualPropertyTask">
+         <segment>
+            <source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.intellectualPropertyTitle">
+         <segment>
+            <source>Upload Intellectual Property Release</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.invalidFile">
          <segment>
             <source>Not valid for this operation: {0} </source>
@@ -4903,12 +4939,6 @@
       <unit id="transcriber.addNote">
          <segment>
             <source>Add Note</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.backToWorkflow">
-         <segment>
-            <source>Back to Workflow</source>
             <target/>
          </segment>
       </unit>

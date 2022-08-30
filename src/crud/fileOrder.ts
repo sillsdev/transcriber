@@ -7,6 +7,7 @@ export const updateableFiles = [
   { table: 'comment', sort: 'J' },
   { table: 'discussion', sort: 'I' },
   { table: 'groupmembership', sort: 'D' },
+  { table: 'intellectualproperty', sort: 'C' },
   { table: 'mediafile', sort: 'H' },
   { table: 'passage', sort: 'G' },
   { table: 'passagestatechange', sort: 'H' },

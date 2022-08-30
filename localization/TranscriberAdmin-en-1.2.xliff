@@ -856,7 +856,14 @@
                <context context-type="sourcefile">CommentCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="community.deleteItem">
+      	<trans-unit id="community.addSpeaker">
+      		<source>Add '{0}'</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">SpeakerName.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.deleteItem">
             <source>Delete Item</source>
             <target/>
             <context-group>
@@ -870,14 +877,35 @@
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="community.record">
+      	<trans-unit id="community.provideRights">
+      		<source>Provide Rights</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Community.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.record">
             <source>Record</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="community.saveFirst">
+      	<trans-unit id="community.releaseRights">
+      		<source>Record or upload a statement releasing the rights to use material recorded by this speaker</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Community.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.rights">
+      		<source>Rights</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Community.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.saveFirst">
             <source>Save or Clear your recording before uploading.</source>
             <target/>
             <context-group>
@@ -895,7 +923,7 @@
             <source>Speaker</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Community.tsx</context>
+               <context context-type="sourcefile">SpeakerName.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="community.topic">
@@ -3320,7 +3348,21 @@
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaUpload.invalidFile">
+      	<trans-unit id="mediaUpload.intellectualPropertyTask">
+      		<source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaUpload.intellectualPropertyTitle">
+      		<source>Upload Intellectual Property Release</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaUpload.invalidFile">
             <source>Not valid for this operation: {0} </source>
             <target/>
             <context-group>

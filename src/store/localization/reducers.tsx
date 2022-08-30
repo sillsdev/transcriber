@@ -178,9 +178,13 @@ const initialState = {
 	}),
 	"community": new LocalizedStrings({
 		"en": {
+			"addSpeaker": "Add '{0}'",
 			"deleteItem": "Delete Item",
 			"playTest": "Play Test",
+			"provideRights": "Provide Rights",
 			"record": "Record",
+			"releaseRights": "Record or upload a statement releasing the rights to use material recorded by this speaker",
+			"rights": "Rights",
 			"saveFirst": "Save or Clear your recording before uploading.",
 			"segment": "Segment",
 			"speaker": "Speaker",
@@ -614,6 +618,8 @@ const initialState = {
 			"cancel": "Cancel",
 			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",
 			"dragDropSingle": "Drag and drop a file here, or click here to browse for the file.",
+			"intellectualPropertyTask": "Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.",
+			"intellectualPropertyTitle": "Upload Intellectual Property Release",
 			"invalidFile": "Not valid for this operation: {0} ",
 			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the Desktop app.",
 			"ITFtitle": "Upload Change Data from Desktop app.",
@@ -1085,7 +1091,6 @@ const initialState = {
 	"transcriber": new LocalizedStrings({
 		"en": {
 			"addNote": "Add Note",
-			"backToWorkflow": "Back to Workflow",
 			"comment": "Comment",
 			"congratulation": "Congratulations",
 			"done": "Completed",

@@ -160,9 +160,13 @@ export interface ICommentEditorStrings extends Localize.LocalizedStringsMethods 
 };
 
 export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
+    "addSpeaker": string;
     "deleteItem": string;
     "playTest": string;
+    "provideRights": string;
     "record": string;
+    "releaseRights": string;
+    "rights": string;
     "saveFirst": string;
     "segment": string;
     "speaker": string;
@@ -575,6 +579,8 @@ export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
     "dragDropMultiple": string;
     "dragDropSingle": string;
+    "intellectualPropertyTask": string;
+    "intellectualPropertyTitle": string;
     "invalidFile": string;
     "ITFtask": string;
     "ITFtitle": string;
@@ -1014,7 +1020,6 @@ export interface ITranscribeAddNoteStrings extends Localize.LocalizedStringsMeth
 
 export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "addNote": string;
-    "backToWorkflow": string;
     "comment": string;
     "congratulation": string;
     "done": string;

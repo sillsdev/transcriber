@@ -6,9 +6,9 @@ import {
   MediaFile,
 } from '../../model';
 import localStrings from '../../selector/localize';
-import { Button, Typography, SxProps } from '@mui/material';
+import { Button, Typography, SxProps, Box } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { useFetchMediaUrl, VernacularTag } from '../../crud';
+import { findRecord, useFetchMediaUrl, VernacularTag } from '../../crud';
 import { useGlobal } from 'reactn';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
@@ -29,6 +29,7 @@ import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
 import VersionsIcon from '@mui/icons-material/List';
 import { PlanProvider } from '../../context/PlanContext';
+import SpeakerName from '../SpeakerName';
 
 const buttonProps = {
   mx: 1,
@@ -78,6 +79,8 @@ export function PassageDetailRecord(props: IProps) {
   const [versionVisible, setVersionVisible] = useState(false);
   const [preload, setPreload] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
+  const [speaker, setSpeaker] = useState('');
+  const [hasRights, setHasRight] = useState(false);
 
   useEffect(() => {
     toolChanged(toolId, canSave);
@@ -93,8 +96,9 @@ export function PassageDetailRecord(props: IProps) {
     if (!mediafileId) {
       fetchMediaUrl({ id: mediafileId });
       setResetMedia(true);
-    } else if (mediafileId !== mediaState.id)
+    } else if (mediafileId !== mediaState.id) {
       fetchMediaUrl({ id: mediafileId });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafileId, passage]);
 
@@ -103,6 +107,18 @@ export function PassageDetailRecord(props: IProps) {
       passageDefaultFilename(passage?.id, memory, VernacularTag)
     );
   }, [memory, passage, mediafiles]);
+
+  useEffect(() => {
+    const mediaRec = findRecord(memory, 'mediafile', mediafileId) as
+      | MediaFile
+      | undefined;
+    const performer = mediaRec?.attributes?.performedBy;
+    if (performer) {
+      setSpeaker(performer);
+      setHasRight(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mediafileId, mediafiles]);
 
   const handleSave = () => {
     startSave(toolId);
@@ -159,6 +175,8 @@ export function PassageDetailRecord(props: IProps) {
   const handleVerHistClose = () => {
     setVersionVisible(false);
   };
+  const handleNameChange = (name: string) => setSpeaker(name);
+  const handleRights = (hasRights: boolean) => setHasRight(hasRights);
 
   return (
     <PlanProvider {...props}>
@@ -193,12 +211,20 @@ export function PassageDetailRecord(props: IProps) {
             {ts.launchAudacity}
           </Button>
         )}
+        <Box sx={{ py: 1 }}>
+          <SpeakerName
+            name={speaker}
+            onChange={handleNameChange}
+            onRights={handleRights}
+          />
+        </Box>
         <MediaRecord
           toolId={toolId}
           mediaId={mediafileId}
           uploadMethod={uploadMedia}
           onReady={onReady}
           defaultFilename={defaultFilename}
+          allowRecord={hasRights}
           allowWave={true}
           showFilename={true}
           preload={preload}
@@ -222,7 +248,7 @@ export function PassageDetailRecord(props: IProps) {
               <PriButton
                 id="rec-save"
                 onClick={handleSave}
-                disabled={(ready && !ready()) || !canSave}
+                disabled={(ready && !ready()) || !canSave || !hasRights}
               >
                 {ts.save}
               </PriButton>
@@ -240,6 +266,8 @@ export function PassageDetailRecord(props: IProps) {
           finish={afterUpload}
           cancelled={cancelled}
           passageId={passage.id}
+          performedBy={speaker}
+          onSpeakerChange={handleNameChange}
         />
         <AudacityManager
           item={1}

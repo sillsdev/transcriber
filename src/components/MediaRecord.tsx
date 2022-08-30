@@ -92,6 +92,7 @@ interface IProps extends IStateProps, IDispatchProps {
   setStatusText: (status: string) => void;
   uploadMethod?: (files: File[]) => Promise<void>;
   cancelMethod?: () => void;
+  allowRecord?: boolean;
   allowWave?: boolean;
   showFilename?: boolean;
   size?: number;
@@ -114,6 +115,7 @@ function MediaRecord(props: IProps) {
     setCanSave,
     setCanCancel,
     setStatusText,
+    allowRecord,
     allowWave,
     showFilename,
     autoStart,
@@ -378,7 +380,7 @@ function MediaRecord(props: IProps) {
         </Button>
       )}
       <WSAudioPlayer
-        allowRecord={true}
+        allowRecord={allowRecord !== false}
         allowSilence={allowWave}
         size={size || 350}
         blob={originalBlob}
