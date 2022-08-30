@@ -116,6 +116,7 @@ export function BigDialog({
       open={isOpen}
       onClose={handleClose}
       aria-labelledby="bigDlg"
+      bp={bp}
       disableEnforceFocus
     >
       <DialogTitle id="bigDlg">
