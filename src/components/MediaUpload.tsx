@@ -176,9 +176,7 @@ function MediaUpload(props: IProps) {
   const { showMessage } = useSnackBar();
   const [acceptextension, setAcceptExtension] = useState('');
   const [acceptmime, setAcceptMime] = useState('');
-  const [hasRights, setHasRight] = useState(
-    uploadType === UploadType.IntellectualProperty
-  );
+  const [hasRights, setHasRight] = useState(uploadType !== UploadType.Media);
   const title = [
     t.title,
     t.resourceTitle,
