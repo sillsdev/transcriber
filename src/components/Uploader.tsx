@@ -37,7 +37,7 @@ interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
+interface IProps {
   noBusy?: boolean;
   recordAudio: boolean;
   allowWave?: boolean;
@@ -48,7 +48,7 @@ interface IProps extends IStateProps, IDispatchProps {
   finish?: (planId: string, mediaRemoteIds?: string[]) => void; // logic when upload complete
   metaData?: JSX.Element; // component embeded in dialog
   ready?: () => boolean; // if false control is disabled
-  createProject?: (file: File[]) => Promise<any>;
+  createProject?: (name: string) => Promise<string>;
   cancelled: React.MutableRefObject<boolean>;
   multiple?: boolean;
   mediaId?: string;
@@ -61,9 +61,10 @@ interface IProps extends IStateProps, IDispatchProps {
   onSpeakerChange?: (performedBy: string) => void;
   topic?: string;
   uploadType?: UploadType;
+  team?: string; // used when adding a card to check speakers
 }
 
-export const Uploader = (props: IProps) => {
+export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
   const {
     noBusy,
     mediaId,
@@ -86,6 +87,7 @@ export const Uploader = (props: IProps) => {
     onSpeakerChange,
     topic,
     uploadType,
+    team,
   } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
@@ -228,7 +230,11 @@ export const Uploader = (props: IProps) => {
       return;
     }
     if (!noBusy) setBusy(true);
-    if (createProject) planIdRef.current = await createProject(files);
+    let name =
+      uploadType === UploadType.IntellectualProperty
+        ? 'Project'
+        : files[0]?.name.split('.')[0];
+    if (createProject) planIdRef.current = await createProject(name);
     uploadFiles(files);
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
@@ -285,6 +291,10 @@ export const Uploader = (props: IProps) => {
           defaultFilename={defaultFilename}
           allowWave={allowWave}
           showFilename={allowWave}
+          speaker={performedBy}
+          onSpeaker={handleSpeakerChange}
+          createProject={createProject}
+          team={team}
         />
       )}
       {!recordAudio && !importList && (
@@ -299,6 +309,8 @@ export const Uploader = (props: IProps) => {
           ready={ready}
           speaker={performedBy}
           onSpeaker={handleSpeakerChange}
+          createProject={createProject}
+          team={team}
         />
       )}
     </div>
@@ -323,4 +335,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Uploader);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Uploader) as any as (props: IProps) => JSX.Element;

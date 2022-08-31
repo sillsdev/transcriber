@@ -9,7 +9,7 @@ import BigDialog from '../hoc/BigDialog';
 import ProvideRights from './ProvideRights';
 import { communitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-import { ArtifactTypeSlug } from '../crud';
+import { ArtifactTypeSlug, related } from '../crud';
 import { Typography } from '@material-ui/core';
 
 interface NameOptionType {
@@ -27,12 +27,16 @@ interface IProps {
   name: string;
   onChange?: (name: string) => void;
   onRights?: (hasRights: boolean) => void;
+  createProject?: (name: string) => Promise<string>;
+  team?: string;
 }
 
 export function SpeakerName({
   name,
   onChange,
   onRights,
+  createProject,
+  team,
   ipRecs,
 }: IProps & IRecordProps) {
   const [value, setValue] = React.useState<NameOptionType | null>({ name });
@@ -56,10 +60,12 @@ export function SpeakerName({
   React.useEffect(() => {
     const newSpeakers = new Array<NameOptionType>();
     ipRecs.forEach((r) => {
-      newSpeakers.push({ name: r.attributes.rightsHolder });
+      if (related(r, 'organization') === team) {
+        newSpeakers.push({ name: r.attributes.rightsHolder });
+      }
     });
     setSpeakers(newSpeakers);
-  }, [ipRecs]);
+  }, [ipRecs, team]);
 
   React.useEffect(() => {
     setValue({ name });
@@ -143,6 +149,8 @@ export function SpeakerName({
             speaker={value?.name || ''}
             recordType={ArtifactTypeSlug.IntellectualProperty}
             onRights={handleRightsChange}
+            createProject={createProject}
+            team={team}
           />
         </>
       </BigDialog>
