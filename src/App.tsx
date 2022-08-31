@@ -39,7 +39,7 @@ const handleParameters = (props: any) => {
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#005CB9',
+      main: '#135CB9',
     },
     secondary: {
       main: '#00A7E1',

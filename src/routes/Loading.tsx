@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Axios from 'axios';
 import { useGlobal } from 'reactn';
 import { TokenContext } from '../context/TokenProvider';
@@ -16,10 +16,8 @@ import {
 } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { Typography, Paper, Button } from '@material-ui/core';
+import { Box, SxProps } from '@mui/material';
 import * as action from '../store';
-import logo from './LogoNoShadow-4x.png';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -51,47 +49,10 @@ import AppHead from '../components/App/AppHead';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import ImportTab from '../components/ImportTab';
 import jwtDecode from 'jwt-decode';
+import { ApmSplash } from '../components/ApmSplash';
+import { AltButton, PriButton } from '../control';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    container: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    appBar: {
-      width: '100%',
-      boxShadow: 'none',
-    },
-    paper: {
-      paddingTop: 16,
-      paddingBottom: 16,
-      marginTop: theme.spacing(10),
-      width: '30%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignContent: 'center',
-      [theme.breakpoints.down('md')]: {
-        width: '100%',
-      },
-    },
-    button: { margin: theme.spacing(1) },
-    icon: {
-      alignSelf: 'center',
-      width: '256px',
-      height: '256px',
-    },
-    message: {
-      alignSelf: 'center',
-      textAlign: 'center',
-    },
-  })
-);
+const centerProps = { display: 'flex', justifyContent: 'center' } as SxProps;
 
 interface IStateProps {
   t: IMainStrings;
@@ -113,7 +74,6 @@ interface IProps extends IStateProps, IDispatchProps {}
 
 export function Loading(props: IProps) {
   const { orbitFetchResults, t } = props;
-  const classes = useStyles();
   const {
     fetchOrbitData,
     orbitComplete,
@@ -390,51 +350,36 @@ export function Loading(props: IProps) {
   if (view !== '') return <Redirect to={view} />;
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ width: '100%' }}>
       <AppHead {...props} />
-      <div className={classes.container}>
-        <Paper className={classes.paper}>
-          <img src={logo} className={classes.icon} alt="logo" />
-          <div>
-            <Typography variant="h6" className={classes.message}>
-              {inviteError}
-            </Typography>
-            <Typography variant="h6" className={classes.message}>
-              {t.loadingTranscriber.replace('{0}', API_CONFIG.productName)}
-            </Typography>
-          </div>
-          {loadComplete && inviteError && (
-            <div className={classes.container}>
-              <Button
-                id="errCont"
-                variant="contained"
-                className={classes.button}
-                onClick={continueWithCurrentUser}
-              >
-                {t.continueCurrentUser}
-              </Button>
-
-              <Button
-                id="errLogout"
-                variant="contained"
-                className={classes.button}
-                onClick={logoutAndTryAgain}
-              >
-                {t.logout}
-              </Button>
-            </div>
-          )}
-          {isElectron && importOpen && (
-            <ImportTab
-              syncBuffer={orbitFetchResults?.syncBuffer}
-              syncFile={orbitFetchResults?.syncFile}
-              isOpen={importOpen}
-              onOpen={setImportOpen}
-            />
-          )}
-        </Paper>
-      </div>
-    </div>
+      <Box sx={centerProps}>
+        <ApmSplash
+          message={inviteError}
+          component={
+            <>
+              {loadComplete && inviteError && (
+                <Box sx={centerProps}>
+                  <PriButton id="errCont" onClick={continueWithCurrentUser}>
+                    {t.continueCurrentUser}
+                  </PriButton>
+                  <AltButton id="errLogout" onClick={logoutAndTryAgain}>
+                    {t.logout}
+                  </AltButton>
+                </Box>
+              )}
+              {isElectron && importOpen && (
+                <ImportTab
+                  syncBuffer={orbitFetchResults?.syncBuffer}
+                  syncFile={orbitFetchResults?.syncFile}
+                  isOpen={importOpen}
+                  onOpen={setImportOpen}
+                />
+              )}
+            </>
+          }
+        />
+      </Box>
+    </Box>
   );
 }
 
