@@ -71,19 +71,19 @@ export const privacyContent = `<div>
     rel="noopener noreferrer"
     target="_blank"
     >community.software.sil.org</a>
-    or SIL Transcriber at
+    or Audio Project Manager at
     <a
-    href="https://app.siltranscriber.org"
+    href="https://app.audioprojectmanager.org"
     rel="noopener noreferrer"
     target="_blank"
-    >app.siltranscriber.org</a>
+    >app.audioprojectmanager.org</a>
 </p>
 <p>
     <strong>Content</strong><br />
     This is data that you submit to a service that we provide. Very
     often you provide content to our service expressly for the purpose
     that we share that data with others. For example, you enter data
-    into SIL Transcriber so that we can share it with other members of
+    into Audio Project Manager so that we can share it with other members of
     your team. Please refer to the SIL Language Software
     <a
     href="https://software.sil.org/language-software-terms-of-use/"
@@ -315,7 +315,7 @@ export const privacyContent = `<div>
 <p>
     <strong>Manage and export content</strong><br />
     Some of our services allow you to manage and export your content
-    through our software. E.g Manage data in SIL Transcriber and export from
+    through our software. E.g Manage data in Audio Project Manager and export from
     AWS servers.
 </p>
 <p>
@@ -333,7 +333,7 @@ export const privacyContent = `<div>
     data is never lost. If it is necessary to delete the data held in
     our AWS account a team manager can
     <a
-        href="https://software.sil.org/siltranscriber/about/"
+        href="https://software.sil.org/audioprojectmanager/about/"
         rel="noopener noreferrer"
         target="_blank"
         ><span>contact us</span></a>

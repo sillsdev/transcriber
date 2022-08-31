@@ -1,7 +1,7 @@
 {
-  "name": "sil-transcriber",
+  "name": "audio-project-manager",
   "version": "2.15.9",
-  "description": "Flexibly manage audio-text files for Paratext or Audacity",
+  "description": "Flexible audio-text orality solution",
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^1.9.0",
@@ -170,15 +170,15 @@
     "url": "http://sil.org"
   },
   "build": {
-    "appId": "sil.lsdev.sil-transcriber-electron",
-    "productName": "SIL Transcriber Desktop",
+    "appId": "sil.lsdev.audio-project-manager-electron",
+    "productName": "Audio Project Manager Desktop",
     "copyright": "Copyright © 2020-2022 ${author}",
     "win": {
       "icon": "public/favicon.png"
     },
     "linux": {
-      "icon": "debian/sil-transcriber.png",
-      "desktop": "debian/sil-transcriber.desktop",
+      "icon": "debian/audio-project-manager.png",
+      "desktop": "debian/audio-project-manager.desktop",
       "target": [
         "deb"
       ]

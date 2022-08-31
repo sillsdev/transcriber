@@ -1,2 +1,2 @@
 #!/bin/sh
-/usr/lib/sil-transcriber/sil-transcriber
+/usr/lib/audio-project-manager/audio-project-manager

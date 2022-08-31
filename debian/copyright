@@ -3,13 +3,13 @@ Upstream-Name: sil-transcribe
 Source: <https://github.com/sillsdev/transcribe>
 
 Files: *
-Copyright: <2020> <SIL International>
+Copyright: <2020-2022> <SIL International>
 License: MIT
 
 License: MIT
  MIT License
  .
- Copyright (c) 2020 SIL Language Software
+ Copyright (c) 2020-2022 SIL Language Software
  .
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal

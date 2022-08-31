@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Audio Project Manager Desktop
+Name[fr]=Audio Project Manager de bureau
+Comment=Flexible audio-text orality solution
+Comment[fr]=Solution flexible d'oralité audio-textuelle
+Exec=/usr/bin/audio-project-manager
+Icon=audio-project-manager
+Categories=GTK;GNOME;Education;
+Terminal=false
