@@ -17,6 +17,7 @@ import {
 import { useFetchMediaUrl } from '../crud';
 import MediaRecord from './MediaRecord';
 import { UnsavedContext } from '../context/UnsavedContext';
+import SpeakerName from './SpeakerName';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,6 +63,8 @@ interface IProps extends IStateProps {
   ready: () => boolean;
   uploadMethod?: (files: File[]) => Promise<void>;
   allowWave?: boolean;
+  speaker?: string;
+  onSpeaker?: (speaker: string) => void;
 }
 
 function PassageRecordDlg(props: IProps) {
@@ -76,12 +79,15 @@ function PassageRecordDlg(props: IProps) {
     ready,
     metaData,
     allowWave,
+    speaker,
+    onSpeaker,
   } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [canCancel, setCanCancel] = useState(false);
+  const [hasRights, setHasRights] = useState(false);
   const classes = useStyles();
   const { startSave, saveCompleted } = useContext(UnsavedContext).state;
 
@@ -95,6 +101,11 @@ function PassageRecordDlg(props: IProps) {
   const close = () => {
     //reset();
     onVisible(false);
+  };
+
+  const handleRights = (hasRights: boolean) => setHasRights(hasRights);
+  const handleSpeaker = (speaker: string) => {
+    onSpeaker && onSpeaker(speaker);
   };
 
   useEffect(() => {
@@ -122,12 +133,18 @@ function PassageRecordDlg(props: IProps) {
     >
       <DialogTitle id="recDlg">{t.title}</DialogTitle>
       <DialogContent>
+        <SpeakerName
+          name={speaker || ''}
+          onRights={handleRights}
+          onChange={handleSpeaker}
+        />
         <MediaRecord
           toolId={myToolId}
           mediaId={mediaId}
           uploadMethod={uploadMethod}
           onReady={onReady}
           defaultFilename={defaultFilename}
+          allowRecord={hasRights}
           allowWave={allowWave}
           showFilename={allowWave}
           setCanSave={setCanSave}
