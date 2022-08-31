@@ -928,7 +928,16 @@ export const DiscussionCard = (props: IProps) => {
               </Grid>
             </Grid>
           )}
+
           <div className={classes.commentCount}>
+            <IconButton
+              id={`collapseDiscussion-${discussion.id}`}
+              className={classes.smallButton}
+              title={t.collapse}
+              onClick={handleToggleCollapse}
+            >
+              {showComments ? <HideIcon /> : <ShowIcon />}
+            </IconButton>
             <Typography variant="body2" component="p">
               {t.comments.replace('{0}', myComments.length.toString())}
             </Typography>
@@ -949,14 +958,6 @@ export const DiscussionCard = (props: IProps) => {
                 {reference}
               </Typography>
             )}
-            <IconButton
-              id={`collapseDiscussion-${discussion.id}`}
-              className={classes.smallButton}
-              title={t.collapse}
-              onClick={handleToggleCollapse}
-            >
-              {showComments ? <HideIcon /> : <ShowIcon />}
-            </IconButton>
           </div>
           {showComments && !onAddComplete && (
             <Grid container className={classes.cardFlow}>
