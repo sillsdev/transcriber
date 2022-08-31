@@ -154,6 +154,8 @@ interface IProps extends IStateProps {
   ready?: () => boolean;
   speaker?: string;
   onSpeaker?: (speaker: string) => void;
+  createProject?: (name: string) => Promise<string>;
+  team?: string; // used to check for speakers when adding a card
 }
 
 function MediaUpload(props: IProps) {
@@ -169,6 +171,8 @@ function MediaUpload(props: IProps) {
     ready,
     speaker,
     onSpeaker,
+    createProject,
+    team,
   } = props;
   const classes = useStyles();
   const [name, setName] = useState('');
@@ -293,6 +297,8 @@ function MediaUpload(props: IProps) {
               name={speaker || ''}
               onRights={handleRights}
               onChange={handleSpeaker}
+              createProject={createProject}
+              team={team}
             />
           )}
           <div className={classes.drop}>

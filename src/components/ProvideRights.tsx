@@ -1,7 +1,13 @@
 import { ICommunityStrings, ISharedStrings, MediaFile } from '../model';
 import { Button, Paper, Typography, Box, SxProps } from '@mui/material';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { ArtifactTypeSlug, useArtifactType, remoteIdGuid } from '../crud';
+import {
+  ArtifactTypeSlug,
+  useArtifactType,
+  remoteIdGuid,
+  findRecord,
+  related,
+} from '../crud';
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../hoc/SnackBar';
 import { withData } from '../mods/react-orbitjs';
@@ -36,13 +42,15 @@ interface IProps {
   speaker: string;
   recordType: ArtifactTypeSlug;
   onRights?: (hasRights: boolean) => void;
+  createProject?: (name: string) => Promise<string>;
+  team?: string;
 }
 
 export function ProvideRights(props: IProps & IRecordProps) {
-  const { speaker, recordType, onRights } = props;
+  const { speaker, recordType, onRights, createProject, team } = props;
   const [offlineOnly] = useGlobal('offlineOnly');
   const [user] = useGlobal('user');
-  const [orgId] = useGlobal('organization');
+  const [organizationId] = useGlobal('organization');
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
@@ -93,6 +101,16 @@ export function ProvideRights(props: IProps & IRecordProps) {
     setStatusText('');
     if (mediaRemoteIds && mediaRemoteIds.length > 0) {
       if (!cancelled.current) {
+        let orgId = team || organizationId;
+        if (!orgId) {
+          const planRec = findRecord(memory, 'plan', planId);
+          const projRec = findRecord(
+            memory,
+            'project',
+            related(planRec, 'project')
+          );
+          orgId = related(projRec, 'organization');
+        }
         const mediaId = remoteIdGuid(
           'mediafile',
           mediaRemoteIds[0],
@@ -213,6 +231,7 @@ export function ProvideRights(props: IProps & IRecordProps) {
         cancelled={cancelled}
         artifactTypeId={recordTypeId}
         performedBy={speaker}
+        createProject={createProject}
         uploadType={UploadType.IntellectualProperty}
       />
     </div>

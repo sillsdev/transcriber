@@ -90,7 +90,7 @@ export const AddCard = (props: IProps) => {
   const { fromLocalizedOrganizedBy } = useOrganizedBy();
   const [step, setStep] = React.useState(0);
   const cancelled = useRef(false);
-  const [, setPlan] = useGlobal('plan');
+  const [plan, setPlan] = useGlobal('plan');
   const [pickOpen, setPickOpen] = React.useState(false);
   const preventBoth = React.useRef(false);
   const [view, setView] = React.useState('');
@@ -209,13 +209,21 @@ export const AddCard = (props: IProps) => {
     );
   };
 
-  const createProject = async (fileList: File[]) => {
+  const nextName = (newName: string) => {
+    const projects = team ? teamProjects(team.id) : personalProjects;
+    const sameNameRec = projects.filter((p) => p?.attributes?.name === newName);
+    return sameNameRec.length > 0
+      ? `${newName} ${sameNameRec.length + 1}`
+      : newName;
+  };
+
+  const createProject = async (name: string) => {
+    if (step === 1 && plan) return plan; // project and plan already created
     setStep(0);
-    const name = fileList[0]?.name.split('.')[0];
     const planId = await projectCreate(
       {
         attributes: {
-          name: bookRef.current?.label || name,
+          name: bookRef.current?.label || nextName(name),
           description: '',
           type,
           language: languageRef.current.bcp47,
@@ -334,6 +342,7 @@ export const AddCard = (props: IProps) => {
         cancelled={cancelled}
         defaultFilename={book?.value}
         allowWave={true}
+        team={team?.id || undefined}
       />
       <Progress
         title={t.uploadProgress}

@@ -65,6 +65,8 @@ interface IProps extends IStateProps {
   allowWave?: boolean;
   speaker?: string;
   onSpeaker?: (speaker: string) => void;
+  createProject?: (name: string) => Promise<string>;
+  team?: string;
 }
 
 function PassageRecordDlg(props: IProps) {
@@ -81,6 +83,8 @@ function PassageRecordDlg(props: IProps) {
     allowWave,
     speaker,
     onSpeaker,
+    createProject,
+    team,
   } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -137,6 +141,8 @@ function PassageRecordDlg(props: IProps) {
           name={speaker || ''}
           onRights={handleRights}
           onChange={handleSpeaker}
+          createProject={createProject}
+          team={team}
         />
         <MediaRecord
           toolId={myToolId}
