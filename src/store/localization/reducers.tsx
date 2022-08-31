@@ -180,6 +180,7 @@ const initialState = {
 		"en": {
 			"addSpeaker": "Add '{0}'",
 			"deleteItem": "Delete Item",
+			"later": "Do later",
 			"playTest": "Play Test",
 			"provideRights": "Provide Rights",
 			"record": "Record",

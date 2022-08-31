@@ -162,6 +162,7 @@ export interface ICommentEditorStrings extends Localize.LocalizedStringsMethods 
 export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "addSpeaker": string;
     "deleteItem": string;
+    "later": string;
     "playTest": string;
     "provideRights": string;
     "record": string;
