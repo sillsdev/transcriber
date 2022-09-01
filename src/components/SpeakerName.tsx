@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useGlobal } from 'reactn';
 import { ICommunityStrings } from '../model';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
@@ -42,6 +43,7 @@ export function SpeakerName({
   const [value, setValue] = React.useState<NameOptionType | null>({ name });
   const [speakers, setSpeakers] = React.useState<NameOptionType[]>([]);
   const [showDialog, setShowDialog] = React.useState(false);
+  const [organization] = useGlobal('organization');
   const t: ICommunityStrings = useSelector(communitySelector, shallowEqual);
 
   const handleRights = () => {
@@ -59,13 +61,14 @@ export function SpeakerName({
 
   React.useEffect(() => {
     const newSpeakers = new Array<NameOptionType>();
+    const orgId = team || organization;
     ipRecs.forEach((r) => {
-      if (related(r, 'organization') === team) {
+      if (related(r, 'organization') === orgId) {
         newSpeakers.push({ name: r.attributes.rightsHolder });
       }
     });
     setSpeakers(newSpeakers);
-  }, [ipRecs, team]);
+  }, [ipRecs, team, organization]);
 
   React.useEffect(() => {
     setValue({ name });
