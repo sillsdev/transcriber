@@ -1,4 +1,4 @@
-import apmLogo from '../assets/apm-logo.svg';
+import apmLogo from '../assets/apm-logo.min.svg';
 import { LogoImg } from '.';
 
 export const ApmLogo = () => {
