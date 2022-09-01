@@ -174,7 +174,7 @@
     "productName": "Audio Project Manager Desktop",
     "copyright": "Copyright © 2020-2022 ${author}",
     "win": {
-      "icon": "public/favicon.png"
+      "icon": "public/icon.png"
     },
     "linux": {
       "icon": "debian/audio-project-manager.png",
@@ -184,7 +184,8 @@
       ]
     },
     "mac": {
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "icon": "public/icon.png"
     },
     "directories": {
       "buildResources": "assets"
