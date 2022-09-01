@@ -1054,9 +1054,11 @@ const initialState = {
 			"passage": "Passage",
 			"plan": "Plan",
 			"project": "Audio Project",
+			"speaker": "Speaker",
 			"state": "State",
 			"tasks": "Tasks",
 			"title": "Title",
+			"topic": "Topic",
 			"transcriber": "Transcribe",
 			"yes": "Yes",
 		}

@@ -16,8 +16,8 @@ const TableContainer = styled(Box, {
 })<TableContainerProps>(({ topFilter }) => ({
   ...(topFilter && {
     zIndex: 2,
-    position: 'absolute',
-    left: 0,
+    // position: 'absolute',
+    // left: 0,
     backgroundColor: 'white',
   }),
 }));
@@ -31,13 +31,22 @@ const TranscriberContainer = styled(Box)<BoxProps>(({ theme }) => ({
 interface IProps {
   width: number;
   artifactTypeId: string | null;
+  onFilter?: (filtered: boolean) => void;
 }
 
-export function PassageDetailTranscribe({ width, artifactTypeId }: IProps) {
+export function PassageDetailTranscribe({
+  width,
+  artifactTypeId,
+  onFilter,
+}: IProps) {
   const { mediafileId } = usePassageDetailContext();
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [topFilter, setTopFilter] = useState(false);
-  const handleTopFilter = (top: boolean) => setTopFilter(top);
+
+  const handleTopFilter = (top: boolean) => {
+    setTopFilter(top);
+    onFilter && onFilter(top);
+  };
 
   return Boolean(mediafileId) ? (
     <TranscriberProvider artifactTypeId={artifactTypeId}>

@@ -4816,6 +4816,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="toDoTable.speaker">
+         <segment>
+            <source>Speaker</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="toDoTable.state">
          <segment>
             <source>State</source>
@@ -4831,6 +4837,12 @@
       <unit id="toDoTable.title">
          <segment>
             <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.topic">
+         <segment>
+            <source>Topic</source>
             <target/>
          </segment>
       </unit>
