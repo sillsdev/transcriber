@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { Passage, IPassageChooserStrings } from '../../model';
-import { Typography, Slider, Box, BoxProps, styled } from '@mui/material';
+import { Typography, Box, BoxProps, styled, Tabs, Tab } from '@mui/material';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import {
   related,
@@ -28,7 +28,7 @@ export const PassageChooser = () => {
   const [memory] = useGlobal('memory');
   const { passage, section, prjId, allBookData } = usePassageDetailContext();
   const [passageCount, setPassageCount] = useState(0);
-  const [sliderValue, setSliderValue] = useState(0);
+  const [value, setValue] = useState(0);
   const marks = useRef<Array<Mark>>([]);
   const [view, setView] = useState('');
   const passageNavigate = usePassageNavigate(() => {
@@ -39,24 +39,19 @@ export const PassageChooser = () => {
     shallowEqual
   ) as IPassageChooserStrings;
 
-  const sliderChange = (event: Event, value: number | number[]) => {
-    if (typeof value === 'number') {
-      if (value !== sliderValue) {
-        const pasId = getPasIdByNum(section, value, memory);
+  const handleChange = (event: React.SyntheticEvent, newValue: any) => {
+    if (typeof newValue === 'number') {
+      if (newValue !== value) {
+        const pasId = getPasIdByNum(section, newValue, memory);
         if (pasId) setView(`/detail/${prjId}/${pasId}`);
       }
-      setSliderValue(value);
+      setValue(newValue);
     }
-  };
-
-  const valueLabelFormat = (v: number) => {
-    const secSeq = section?.attributes?.sequencenum || 1;
-    return `${secSeq}.${v}`;
   };
 
   useEffect(() => {
     const seq = passage?.attributes?.sequencenum;
-    setSliderValue(seq ? seq : 1);
+    setValue(seq ? seq - 1 : 0);
   }, [passage]);
 
   useEffect(() => {
@@ -88,15 +83,20 @@ export const PassageChooser = () => {
   return passageCount > 1 ? (
     <StyledBox>
       <Typography sx={{ pr: 2 }}>{t.passages}</Typography>
-      <Slider
-        value={sliderValue || 1}
-        onChange={sliderChange}
-        valueLabelDisplay="auto"
-        valueLabelFormat={valueLabelFormat}
-        min={1}
-        max={passageCount}
-        marks={marks.current}
-      />
+      <Tabs
+        value={value || 0}
+        onChange={handleChange}
+        variant="scrollable"
+        scrollButtons
+        allowScrollButtonsMobile
+        aria-label="scrollable passage tabs"
+      >
+        {marks.current
+          .sort((i, j) => i.value - j.value)
+          .map((m) => (
+            <Tab key={m.value} label={m.label} />
+          ))}
+      </Tabs>
     </StyledBox>
   ) : (
     <></>
