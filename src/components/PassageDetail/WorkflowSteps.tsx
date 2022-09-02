@@ -18,6 +18,7 @@ export function WorkflowSteps() {
   const theme = useTheme();
   const [shownWorkflow, setShownWorkflow] = useState<SimpleWf[]>([]);
   const [width, setWidth] = useState(0);
+  const [stageWdith, setStageWidth] = useState(300);
   const prevWF = {
     id: 'prev',
     label: '<<',
@@ -46,17 +47,20 @@ export function WorkflowSteps() {
   }, []); //do this once to get the default;
 
   useEffect(() => {
-    var show = Math.ceil(width / 200);
+    const show = Math.ceil(width / 200);
+    // 24 for next/prev icon + 16 padding with 10 padding on bar = 100
+    const newStageWdith = (width - 100) / show;
+    if (newStageWdith !== stageWdith) setStageWidth(newStageWdith);
     if (!workflow || !workflow.length) return;
-    var tempFirstStep = firstStepIndex;
+    let tempFirstStep = firstStepIndex;
     if (firstStepIndex < 0) {
       if (currentstep) {
-        var stepIndex = workflow.findIndex((w) => w.id === currentstep);
+        const stepIndex = workflow.findIndex((w) => w.id === currentstep);
         tempFirstStep = Math.floor(Math.max(stepIndex - show / 2, 0));
       } else tempFirstStep = 0;
       setFirstStepIndex(tempFirstStep);
     }
-    var wf: SimpleWf[] = [];
+    let wf: SimpleWf[] = [];
     wf.push({ ...prevWF, label: tempFirstStep > 0 ? prevWF.label : '' });
     wf = wf.concat(workflow.slice(tempFirstStep, tempFirstStep + show));
     wf.push({
@@ -88,7 +92,7 @@ export function WorkflowSteps() {
     else setFirstStepIndex(Math.max(0, firstStepIndex - 1));
   };
   return (
-    <Box sx={{ display: 'flex', m: 1 }}>
+    <Box sx={{ display: 'flex', m: 1, alignItems: 'center' }}>
       {shownWorkflow.map((w) => {
         const cameLabel = toCamel(w.label);
         const label = wfStr.hasOwnProperty(cameLabel)
@@ -105,6 +109,7 @@ export function WorkflowSteps() {
                 ? theme.palette.secondary.contrastText
                 : '#000000'
             }
+            wid={stageWdith}
             done={stepComplete(w.id)}
             select={handleSelect}
             moveStep={moveStep}

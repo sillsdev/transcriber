@@ -2,23 +2,28 @@ import { CSSProperties } from 'react';
 import { IconButton } from '@mui/material';
 import PrevIcon from '@mui/icons-material/NavigateBefore';
 import NextIcon from '@mui/icons-material/NavigateNext';
+
+interface IProps {
+  id: string;
+  label: string;
+  color?: string;
+  textColor?: string;
+  wid?: number;
+  done?: boolean;
+  select?: (id: string) => void;
+  moveStep?: (forward: boolean) => void;
+}
+
 export const Stage = ({
   id,
   label,
   color,
   textColor,
+  wid,
   done,
   select,
   moveStep,
-}: {
-  id: string;
-  label: string;
-  color?: string;
-  textColor?: string;
-  done?: boolean;
-  select?: (id: string) => void;
-  moveStep?: (forward: boolean) => void;
-}) => {
+}: IProps) => {
   const lineProps = { strokeWidth: 1.1 };
   const textProps = (textColor?: string) =>
     ({
@@ -50,18 +55,12 @@ export const Stage = ({
       onClick={handleMove(id === 'next')}
       style={{ minWidth: '20px' }}
     >
-      {label === '' ? (
-        <></>
-      ) : id === 'prev' ? (
-        <PrevIcon fontSize="large" />
-      ) : (
-        <NextIcon fontSize="large" />
-      )}
+      {label === '' ? <></> : id === 'prev' ? <PrevIcon /> : <NextIcon />}
     </IconButton>
   ) : (
     <svg
-      width="300px"
-      height="50px"
+      width={wid || 300}
+      height={wid ? (50 * wid) / 300 : 50}
       viewBox="0.0 0.0 300.0 50.0"
       fill="none"
       stroke="none"
