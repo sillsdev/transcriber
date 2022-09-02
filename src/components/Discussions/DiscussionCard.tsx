@@ -309,6 +309,25 @@ export const DiscussionCard = (props: IProps) => {
     if (val !== editCard) setEditCard(val);
   };
 
+  const handleReset = () => {
+    setEditSubject('');
+    setEditAssigned('');
+    setEditCategory('');
+  };
+
+  useEffect(() => {
+    if (Boolean(onAddComplete) !== editing) {
+      handleReset();
+      setEditing(onAddComplete !== undefined);
+    }
+    if (Boolean(discussion.attributes?.subject) && !Boolean(discussion.id)) {
+      //I'm adding but I have a subject already (target segment) so mark as changed
+      setChanged(true);
+    }
+    setEditSubject(discussion.attributes?.subject);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentstep, discussion.id]);
+
   useEffect(() => {
     //if any of my comments are changed, add the discussion to the toolChanged list so DiscussionList will pick it up
     if (!myChanged) {
@@ -490,25 +509,6 @@ export const DiscussionCard = (props: IProps) => {
       handleSetSegment();
     }
   };
-
-  const handleReset = () => {
-    setEditSubject('');
-    setEditAssigned('');
-    setEditCategory('');
-  };
-
-  useEffect(() => {
-    if (Boolean(onAddComplete) !== editing) {
-      handleReset();
-      setEditing(onAddComplete !== undefined);
-    }
-    if (Boolean(discussion.attributes?.subject) && !Boolean(discussion.id)) {
-      //I'm adding but I have a subject already (target segment) so mark as changed
-      setChanged(true);
-    }
-    setEditSubject(discussion.attributes?.subject);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentstep, discussion.id]);
 
   const handleDelete = () => {
     var ops: Operation[] = [];
