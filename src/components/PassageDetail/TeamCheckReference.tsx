@@ -53,7 +53,6 @@ export function TeamCheckReference() {
     mediaStart.current = undefined;
     mediaEnd.current = undefined;
     mediaPosition.current = undefined;
-    setPlayItem('');
     handleItemPlayEnd();
   };
 
@@ -75,7 +74,7 @@ export function TeamCheckReference() {
 
   return (
     <Grid container direction="column">
-      <Grid item xs={10} sx={{ m: 1 }}>
+      <Grid item xs={10} sx={{ m: 2, p: 2 }}>
         <SelectMyResource onChange={handleResource} />
       </Grid>
       <StyledGrid item xs={10}>
