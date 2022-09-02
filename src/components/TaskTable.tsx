@@ -99,6 +99,8 @@ interface IRow {
   sectPass: string;
   title: string;
   description: string;
+  topic: string;
+  speaker: string;
   length: string;
   state: string;
   assigned: string;
@@ -156,6 +158,8 @@ export function TaskTable(props: IProps) {
     { name: 'title', title: t.title },
     { name: 'sectPass', title: t.passage },
     { name: 'description', title: t.description },
+    { name: 'topic', title: t.topic },
+    { name: 'speaker', title: t.speaker },
     { name: 'length', title: t.length },
     { name: 'state', title: t.state },
     { name: 'assigned', title: t.assigned },
@@ -173,6 +177,8 @@ export function TaskTable(props: IProps) {
       align: 'left',
       wordWrapEnabled: true,
     },
+    { columnName: 'topic', width: 100, align: 'left' },
+    { columnName: 'speaker', width: 100, align: 'left' },
     { columnName: 'length', width: 100, align: 'left' },
     { columnName: 'state', width: 150, align: 'left' },
     { columnName: 'assigned', width: 150, align: 'left' },
@@ -303,9 +309,9 @@ export function TaskTable(props: IProps) {
       ]);
     } else {
       let addHead = 50;
-      let addWid = (width - 1037) / 3;
+      let addWid = (width - 1237) / 3;
       if (width < 1283) {
-        addHead = addWid = width > 1037 ? (width - 1037) / 5 : 0;
+        addHead = addWid = width > 1237 ? (width - 1237) / 7 : 0;
       }
       setColumnFormatting([
         { columnName: 'composite', width: 1, align: 'left' },
@@ -330,6 +336,8 @@ export function TaskTable(props: IProps) {
           align: 'left',
           wordWrapEnabled: true,
         },
+        { columnName: 'topic', width: 65 + addHead, align: 'left' },
+        { columnName: 'speaker', width: 65 + addHead, align: 'left' },
         { columnName: 'length', width: 100, align: 'left' },
         { columnName: 'duration', width: 100, align: 'right' },
         { columnName: 'state', width: 150, align: 'left' },
@@ -356,6 +364,8 @@ export function TaskTable(props: IProps) {
       sectPass: r.sectPass,
       title: sectionDescription(r.section),
       description: r.passage?.attributes?.title,
+      topic: r.mediafile?.attributes?.topic || '',
+      speaker: r.mediafile?.attributes?.performedBy || '',
       length: r.duration ? formatTime(r.duration) : '',
       state:
         r.state !== ''

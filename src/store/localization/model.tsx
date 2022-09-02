@@ -987,9 +987,11 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "passage": string;
     "plan": string;
     "project": string;
+    "speaker": string;
     "state": string;
     "tasks": string;
     "title": string;
+    "topic": string;
     "transcriber": string;
     "yes": string;
 };

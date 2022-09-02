@@ -162,6 +162,7 @@ const PassageDetailGrids = () => {
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
+  const [topFilter, setTopFilter] = useState(false);
   const ctx = useContext(PassageDetailContext);
   const { currentstep, discussionSize, setDiscussionSize, orgWorkflowSteps } =
     ctx.state;
@@ -193,6 +194,10 @@ const PassageDetailGrids = () => {
       height: window.innerHeight - 330,
     });
     // setPaperStyle({ width: window.innerWidth - 10 });
+  };
+
+  const handleFilter = (filtered: boolean) => {
+    setTopFilter(filtered);
   };
 
   useEffect(() => {
@@ -279,17 +284,20 @@ const PassageDetailGrids = () => {
                       <PassageDetailTranscribe
                         width={width - discussionSize.width - 16}
                         artifactTypeId={artifactId}
+                        onFilter={handleFilter}
                       />
                     </Grid>
                   )}
                 </Pane>
-                <Pane className={classes.pane}>
-                  <Grid item xs={12} sm container>
-                    <Grid item container direction="column">
-                      <DiscussionList />
+                {!topFilter && (
+                  <Pane className={classes.pane}>
+                    <Grid item xs={12} sm container>
+                      <Grid item container direction="column">
+                        <DiscussionList />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Pane>
+                  </Pane>
+                )}
               </SplitPane>
             </Wrapper>
           </Paper>

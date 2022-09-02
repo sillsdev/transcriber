@@ -5616,14 +5616,21 @@
                <context context-type="sourcefile">ToDoTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="toDoTable.state">
-            <source>State</source>
+         <trans-unit id="toDoTable.speaker">
+            <source>Speaker</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ToDoTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="toDoTable.tasks">
+      	<trans-unit id="toDoTable.state">
+      		<source>State</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ToDoTable.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="toDoTable.tasks">
             <source>Tasks</source>
             <target/>
             <context-group>
@@ -5637,7 +5644,14 @@
                <context context-type="sourcefile">TaskItem.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="toDoTable.transcriber">
+      	<trans-unit id="toDoTable.topic">
+      		<source>Topic</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ToDoTable.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="toDoTable.transcriber">
             <source>Transcribe</source>
             <target/>
             <context-group>
