@@ -104,6 +104,7 @@ export const AddCard = (props: IProps) => {
   const [view, setView] = React.useState('');
   const [forceType, setForceType] = React.useState(false);
   const [recordAudio, setRecordAudio] = React.useState(false);
+  const speakerRef = useRef<string>();
 
   useEffect(() => {
     if (localStorage.getItem('autoaddProject') !== null && team === null) {
@@ -177,6 +178,10 @@ export const AddCard = (props: IProps) => {
     e.stopPropagation();
   };
 
+  const handleNameChange = (name: string) => {
+    speakerRef.current = name;
+  };
+
   const nameInUse = (newName: string) => {
     const projects = team ? teamProjects(team.id) : personalProjects;
     const sameNameRec = projects.filter((p) => p?.attributes?.name === newName);
@@ -234,7 +239,6 @@ export const AddCard = (props: IProps) => {
         related(planRec, 'project')
       ) as Project | undefined;
       if (projRec) {
-        console.log(`proj upd book: ${bookRef.current?.label}`);
         const newName = bookRef.current?.label || nextName(name);
         const updProj = {
           ...projRec,
@@ -378,6 +382,8 @@ export const AddCard = (props: IProps) => {
         defaultFilename={book?.value}
         allowWave={true}
         team={team?.id || undefined}
+        performedBy={speakerRef.current}
+        onSpeakerChange={handleNameChange}
       />
       <Progress
         title={t.uploadProgress}
