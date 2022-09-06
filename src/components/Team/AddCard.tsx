@@ -3,13 +3,20 @@ import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Card, CardContent } from '@material-ui/core';
 import AddIcon from '@mui/icons-material/Add';
-import { VProject, DialogMode, OptionType } from '../../model';
+import { VProject, DialogMode, OptionType, Project, Plan } from '../../model';
 import { ProjectDialog, IProjectDialog, ProjectType } from './ProjectDialog';
 import { Language, ILanguage } from '../../control';
 import Uploader from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
-import { waitForRemoteId, remoteId, useOrganizedBy } from '../../crud';
+import { UpdateRecord } from '../../model/baseModel';
+import {
+  waitForRemoteId,
+  remoteId,
+  useOrganizedBy,
+  findRecord,
+  related,
+} from '../../crud';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
@@ -60,6 +67,7 @@ export const AddCard = (props: IProps) => {
   const { team } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
+  const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
   const ctx = React.useContext(TeamContext);
   const {
@@ -218,7 +226,34 @@ export const AddCard = (props: IProps) => {
   };
 
   const createProject = async (name: string) => {
-    if (step === 1 && plan) return plan; // project and plan already created
+    if (step === 1 && plan) {
+      const planRec = findRecord(memory, 'plan', plan);
+      const projRec = findRecord(
+        memory,
+        'project',
+        related(planRec, 'project')
+      ) as Project | undefined;
+      if (projRec) {
+        console.log(`proj upd book: ${bookRef.current?.label}`);
+        const newName = bookRef.current?.label || nextName(name);
+        const updProj = {
+          ...projRec,
+          attributes: {
+            ...projRec.attributes,
+            name: newName,
+            language: languageRef.current.bcp47,
+            languageName: languageRef.current.languageName,
+            spellCheck: languageRef.current.spellCheck,
+            defaultFont: languageRef.current.font,
+          },
+        } as Project;
+        await memory.update((t) => [
+          ...UpdateRecord(t, updProj, user),
+          t.replaceAttribute(planRec as Plan, 'name', newName),
+        ]);
+        return plan;
+      }
+    }
     setStep(0);
     const planId = await projectCreate(
       {
