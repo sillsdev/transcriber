@@ -338,6 +338,8 @@ function MediaRecord(props: IProps) {
   };
 
   const handleLoadAudio = () => {
+    showMessage(t.loading);
+    if (loading) return;
     setLoading(true);
     reset();
     loadBlob(mediaState.url, (urlorError, b) => {
@@ -349,6 +351,7 @@ function MediaRecord(props: IProps) {
         showMessage(urlorError);
         //force it to go get another (unexpired) s3 url
         fetchMediaUrl({ id: mediaId });
+        setLoading(false);
       }
     });
     if (!mediaId) {
@@ -376,7 +379,7 @@ function MediaRecord(props: IProps) {
     <Paper id="mediaRecord">
       {mediaState.status === MediaSt.FETCHED && mediaState.id === mediaId && (
         <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
-          {loading ? t.loading : t.loadfile}
+          {t.loadfile}
         </Button>
       )}
       <WSAudioPlayer
