@@ -106,6 +106,7 @@ export function AudioTab(props: IProps) {
   const [planMedia, setPlanMedia] = useState<MediaFile[]>([]);
   const [uploadMedia, setUploadMedia] = useState<string>();
   const inProcess = React.useRef<boolean>(false);
+  const [speaker, setSpeaker] = useState('');
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
     doOrbitError,
@@ -125,6 +126,10 @@ export function AudioTab(props: IProps) {
   const handleUpload = () => {
     cancelled.current = false;
     setUploadVisible(true);
+  };
+
+  const handleNameChange = (name: string) => {
+    setSpeaker(name);
   };
 
   const handleAutoMatch = () => setAutoMatch(!autoMatch);
@@ -417,6 +422,8 @@ export function AudioTab(props: IProps) {
         multiple={true}
         finish={afterUpload}
         cancelled={cancelled}
+        performedBy={speaker}
+        onSpeakerChange={handleNameChange}
       />
     </Box>
   );

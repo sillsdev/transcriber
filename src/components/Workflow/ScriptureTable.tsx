@@ -222,6 +222,7 @@ export function ScriptureTable(props: IProps) {
     doOrbitError,
   });
   const checkOnline = useCheckOnline(resetOrbitError);
+  const [speaker, setSpeaker] = useState('');
   const getStepsBusy = useRef(false);
   const [orgSteps, setOrgSteps] = useState<OrgWorkflowStep[]>([]);
   const getFilteredSteps = useFilteredSteps();
@@ -719,6 +720,10 @@ export function ScriptureTable(props: IProps) {
     setVersionItem('');
   };
 
+  const handleNameChange = (name: string) => {
+    setSpeaker(name);
+  };
+
   const updateLastModified = async () => {
     var planRec = getPlan(plan) as Plan;
     if (planRec !== null) {
@@ -1010,6 +1015,8 @@ export function ScriptureTable(props: IProps) {
         finish={afterUpload}
         cancelled={cancelled}
         passageId={uploadItem.current?.passageId?.id}
+        performedBy={speaker}
+        onSpeakerChange={handleNameChange}
       />
       {audacityItem?.wf?.passageId && (
         <AudacityManager
