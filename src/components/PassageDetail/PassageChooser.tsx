@@ -9,6 +9,7 @@ import {
   passageReference,
   getPasIdByNum,
 } from '../../crud';
+import { localUserKey, LocalKey } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { passageChooserSelector } from '../../selector';
 import { usePassageNavigate } from './usePassageNavigate';
@@ -43,7 +44,10 @@ export const PassageChooser = () => {
     if (typeof newValue === 'number') {
       if (newValue !== value) {
         const pasId = getPasIdByNum(section, newValue, memory);
-        if (pasId) setView(`/detail/${prjId}/${pasId}`);
+        if (pasId) {
+          localStorage.setItem(localUserKey(LocalKey.passage), pasId);
+          setView(`/detail/${prjId}/${pasId}`);
+        }
       }
       setValue(newValue);
     }

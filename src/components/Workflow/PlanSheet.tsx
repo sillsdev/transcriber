@@ -26,9 +26,9 @@ import {
   iconMargin,
 } from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
-import { refMatch, cleanClipboard } from '../../utils';
+import { refMatch, cleanClipboard, localUserKey, LocalKey } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
-import { useDiscussionCount } from '../../crud';
+import { remoteIdGuid, useDiscussionCount } from '../../crud';
 import TaskAvatar from '../TaskAvatar';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
@@ -192,6 +192,7 @@ export function PlanSheet(props: IProps) {
   });
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
+  const [memory] = useGlobal('memory');
   const [global] = useGlobal();
   const { showMessage } = useSnackBar();
   const [position, setPosition] = useState<{
@@ -379,8 +380,19 @@ export function PlanSheet(props: IProps) {
 
   const ActivateCell = (props: any) => {
     useEffect(() => {
-      setActive(currentRowRef.current);
-      props.onRevert();
+      const lastPasId = localStorage.getItem(localUserKey(LocalKey.passage));
+      let row = 0;
+      if (lastPasId) {
+        const pasGuid = remoteIdGuid('passage', lastPasId, memory.keyMap);
+        row = rowInfo.findIndex((r) => r.passageId?.id === pasGuid);
+      }
+      if (row) {
+        setActive(row);
+        localStorage.removeItem(localUserKey(LocalKey.passage));
+      } else {
+        setActive(currentRowRef.current);
+        props.onRevert();
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props]);
     return <></>;
