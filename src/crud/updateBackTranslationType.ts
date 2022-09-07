@@ -1,4 +1,4 @@
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import MemorySource from '@orbit/memory';
 import { AxiosError } from 'axios';
 import { ArtifactType, MediaFile } from '../model';
@@ -13,49 +13,34 @@ export const updateBackTranslationType = async (
   errorReporter: any
 ) => {
   if (token) {
-    await axiosGet('mediafiles/wbt', undefined, token)
-      // eslint-disable-next-line no-loop-func
-      .then((response) => {
-        var fr = response.data as any;
-        console.log(fr);
-      })
-      // eslint-disable-next-line no-loop-func
-      .catch((err: AxiosError) => {
+    await axiosGet('mediafiles/wbt', undefined, token).catch(
+      (err: AxiosError) => {
         logError(
           Severity.error,
           errorReporter,
           'Whole Back Translate Update Failed:' +
             (err.message || err.toString())
         );
-      });
+      }
+    );
   } else {
     //offline
     var artifacttypes = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('artifacttype')
     ) as ArtifactType[];
-    var bt =
-      artifacttypes.filter((a) => a.attributes.typename === 'backtranslation')
-        .length > 0
-        ? artifacttypes.filter(
-            (a) => a.attributes.typename === 'backtranslation'
-          )[0]
-        : null;
+    var bt = artifacttypes.find(
+      (a) => a.attributes.typename === 'backtranslation'
+    );
+    var wbt = artifacttypes.find(
+      (a) => a.attributes.typename === 'wholebacktranslation'
+    );
 
-    var wbt =
-      artifacttypes.filter(
-        (a) => a.attributes.typename === 'wholebacktranslation'
-      ).length > 0
-        ? artifacttypes.filter(
-            (a) => a.attributes.typename === 'wholebacktranslation'
-          )[0]
-        : null;
-
-    if (bt === null || wbt === null) return;
+    if (!bt || !wbt) return;
 
     var mediafiles = memory.cache.query((q: QueryBuilder) =>
       q
         .findRecords('mediafile')
-        .filter({ relation: 'artifactType', record: bt })
+        .filter({ relation: 'artifactType', record: bt as RecordIdentity })
         .filter({ attribute: 'sourceSegments', value: null })
     ) as MediaFile[];
 
