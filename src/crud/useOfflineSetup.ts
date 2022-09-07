@@ -303,6 +303,26 @@ export const useOfflineSetup = () => {
       await memory.sync(await backup.push(ops));
     }
   };
+  const makeMoreArtifactTypeRecs = async () => {
+    const allRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('artifacttype')
+    ) as WorkflowStep[];
+    const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
+    if (offlineRecs.length < 10) {
+      const t = new TransformBuilder();
+      const ops = ['intellectualproperty', 'wholebacktranslation'].map((n) => {
+        let rec = {
+          type: 'artifacttype',
+          attributes: {
+            typename: n,
+          },
+        } as ArtifactType;
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
+      });
+      await memory.sync(await backup.push(ops));
+    }
+  };
   return async () => {
     // local update only, migrate offlineproject to include offlineAvailable
     await makeRoleRecs();
@@ -312,6 +332,9 @@ export const useOfflineSetup = () => {
       await makeArtifactCategoryRecs();
       await makeArtifactTypeRecs();
       await makeWorkflowStepsRecs();
+    }
+    if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
+      await makeMoreArtifactTypeRecs();
     }
   };
 };

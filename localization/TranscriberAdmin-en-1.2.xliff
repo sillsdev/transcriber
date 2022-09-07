@@ -276,7 +276,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="artifactType.backtranslation">
-            <source>Back Translation</source>
+            <source>Phrase Back Translation</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AlertDialog.tsx</context>
@@ -297,7 +297,7 @@
       		</context-group>
       	</trans-unit>
          <trans-unit id="artifactType.qanda">
-            <source>Question and Answer</source>
+            <source>Community Test Question and Answer</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AlertDialog.tsx</context>
@@ -311,7 +311,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="artifactType.retell">
-            <source>Retelling</source>
+            <source>Community Test Retell</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AlertDialog.tsx</context>
@@ -333,6 +333,13 @@
          </trans-unit>
          <trans-unit id="artifactType.vernacular">
             <source>Vernacular</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.wholebacktranslation">
+            <source>Whole Back Translation</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AlertDialog.tsx</context>
@@ -4953,13 +4960,6 @@
          </trans-unit>
          <trans-unit id="shared.admin">
             <source>Admin</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="shared.backtranslator">
-            <source>Back Translator</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>

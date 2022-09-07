@@ -29,7 +29,7 @@ import PassageDetailArtifacts from '../components/PassageDetail/Internalization/
 import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord';
-import PassageDetailArtifact from '../components/PassageDetail/PassageDetailItem';
+import PassageDetailItem from '../components/PassageDetail/PassageDetailItem';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
 import PassageChooser from '../components/PassageDetail/PassageChooser';
 import IntegrationTab from '../components/Integration';
@@ -38,6 +38,7 @@ import {
   ArtifactTypeSlug,
   remoteIdGuid,
   ToolSlug,
+  useArtifactType,
   useProjectType,
   useRole,
   useStepTool,
@@ -167,6 +168,7 @@ const PassageDetailGrids = () => {
   const { currentstep, discussionSize, setDiscussionSize, orgWorkflowSteps } =
     ctx.state;
   const { tool, settings } = useStepTool(currentstep);
+  const { slugFromId } = useArtifactType();
 
   const artifactId = useMemo(() => {
     if (settings) {
@@ -176,11 +178,21 @@ const PassageDetailGrids = () => {
     return null;
   }, [settings]);
 
+  const artifactSlug = useMemo(() => {
+    return artifactId ? slugFromId(artifactId) : ArtifactTypeSlug.Vernacular;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [artifactId]);
+
   const [communitySlugs] = useState([
     ArtifactTypeSlug.Retell,
     ArtifactTypeSlug.QandA,
   ]);
-  const [backTranslationSlugs] = useState([ArtifactTypeSlug.BackTranslation]);
+  const [phraseBackTranslationSlugs] = useState([
+    ArtifactTypeSlug.PhraseBackTranslation,
+  ]);
+  const [wholeBackTranslationSlugs] = useState([
+    ArtifactTypeSlug.WholeBackTranslation,
+  ]);
   const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
   const handleSplitSize = debounce((e: number) => {
@@ -250,7 +262,9 @@ const PassageDetailGrids = () => {
             </Grid>
           </Grid>
         )}
-        {tool === ToolSlug.Paratext && <IntegrationTab />}
+        {tool === ToolSlug.Paratext && (
+          <IntegrationTab artifactType={artifactSlug} />
+        )}
         {(tool === ToolSlug.Discuss ||
           tool === ToolSlug.TeamCheck ||
           tool === ToolSlug.Record ||
@@ -302,27 +316,22 @@ const PassageDetailGrids = () => {
             </Wrapper>
           </Paper>
         )}
-        {tool === ToolSlug.Community && (
-          <Grid container direction="row" className={classes.row}>
-            <Grid item xs={12}>
-              <Grid container>
-                <PassageDetailArtifact
-                  width={width}
-                  slugs={communitySlugs}
-                  showTopic={true}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-        )}
-        {(tool === ToolSlug.PhraseBackTranslate ||
+        {(tool === ToolSlug.Community ||
+          tool === ToolSlug.PhraseBackTranslate ||
           tool === ToolSlug.WholeBackTranslate) && (
           <Grid container direction="row" className={classes.row}>
             <Grid item xs={12}>
               <Grid container>
-                <PassageDetailArtifact
+                <PassageDetailItem
                   width={width}
-                  slugs={backTranslationSlugs}
+                  slugs={
+                    tool === ToolSlug.Community
+                      ? communitySlugs
+                      : tool === ToolSlug.PhraseBackTranslate
+                      ? phraseBackTranslationSlugs
+                      : wholeBackTranslationSlugs
+                  }
+                  showTopic={tool === ToolSlug.Community}
                   segments={
                     tool === ToolSlug.PhraseBackTranslate
                       ? NamedRegions.BackTranslation

@@ -2,7 +2,6 @@ import React, { useEffect, useContext } from 'react';
 import * as actions from '../store';
 import { useGlobal, useState } from 'reactn';
 import { connect } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import {
   IState,
   IIntegrationStrings,
@@ -162,6 +161,7 @@ interface IProps
     IRecordProps,
     WithDataProps {
   stopPlayer?: () => void;
+  artifactType: ArtifactTypeSlug;
 }
 
 export function IntegrationPanel(props: IProps) {
@@ -176,6 +176,7 @@ export function IntegrationPanel(props: IProps) {
     paratext_projectsStatus,
     paratext_syncStatus,
     stopPlayer,
+    artifactType,
   } = props;
   const {
     getUserName,
@@ -194,7 +195,6 @@ export function IntegrationPanel(props: IProps) {
     props;
   const classes = useStyles();
   const [connected] = useGlobal('connected');
-  const { pathname } = useLocation();
   const [hasPtProj, setHasPtProj] = useState(false);
   const [ptProj, setPtProj] = useState(-1);
   const [ptProjName, setPtProjName] = useState('');
@@ -225,15 +225,12 @@ export function IntegrationPanel(props: IProps) {
   const setSyncing = (state: boolean) => (syncing.current = state);
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const checkOnline = useCheckOnline(resetOrbitError);
-  const [exportTypes] = useState([
+  const [exportTypes, setExportTypes] = useState([
     ArtifactTypeSlug.Vernacular,
-    ArtifactTypeSlug.BackTranslation,
+    ArtifactTypeSlug.WholeBackTranslation,
+    ArtifactTypeSlug.PhraseBackTranslation,
   ]);
-  const [exportType, setExportType] = useState(
-    pathname.indexOf(ArtifactTypeSlug.BackTranslation) !== -1
-      ? ArtifactTypeSlug.BackTranslation
-      : exportTypes[0]
-  );
+  const [exportType, setExportType] = useState(exportTypes[0]);
   const { getTypeId } = useArtifactType();
   const getTranscription = useTranscription(false, ActivityStates.Approved);
   const intSave = React.useRef('');
@@ -404,7 +401,7 @@ export function IntegrationPanel(props: IProps) {
       index = paratext_projects.findIndex(
         (p) =>
           Boolean(p.BaseProject) ===
-          (exportType === ArtifactTypeSlug.BackTranslation)
+          (exportType !== ArtifactTypeSlug.Vernacular)
       );
       if (index >= 0 && !intSave.current) {
         if (
@@ -436,6 +433,13 @@ export function IntegrationPanel(props: IProps) {
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
     return replLang.replace('{lang0}', language || '');
   };
+
+  useEffect(() => {
+    if (artifactType) {
+      setExportType(artifactType);
+      setExportTypes([artifactType]);
+    }
+  }, [artifactType]);
 
   useEffect(() => {
     if (offline) {

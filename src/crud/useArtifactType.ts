@@ -15,7 +15,8 @@ export const VernacularTag = null; // used to test the relationship
 
 export enum ArtifactTypeSlug {
   Vernacular = 'vernacular',
-  BackTranslation = 'backtranslation',
+  WholeBackTranslation = 'wholebacktranslation',
+  PhraseBackTranslation = 'backtranslation',
   Retell = 'retell',
   QandA = 'qanda',
   Comment = 'comment',
@@ -23,7 +24,7 @@ export enum ArtifactTypeSlug {
   Resource = 'resource',
   SharedResource = 'sharedResource',
   ProjectResource = 'projectresource',
-  IntellectualProperty = 'intellectualproperty'
+  IntellectualProperty = 'intellectualproperty',
 }
 interface ISwitches {
   [key: string]: any;
@@ -126,21 +127,6 @@ export const useArtifactType = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offlineOnly]);
 
-  const retellId = useMemo(() => {
-    return getTypeId(ArtifactTypeSlug.Retell) as string;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [offlineOnly]);
-
-  const qAndaId = useMemo(() => {
-    return getTypeId(ArtifactTypeSlug.QandA) as string;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [offlineOnly]);
-
-  const backTranslationId = useMemo(() => {
-    return getTypeId(ArtifactTypeSlug.BackTranslation) as string;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [offlineOnly]);
-
   const addNewArtifactType = async (newArtifactType: string) => {
     const artifactType: ArtifactType = {
       type: 'artifacttype',
@@ -168,9 +154,6 @@ export const useArtifactType = () => {
     localizedArtifactTypeFromId,
     fromLocalizedArtifactType,
     commentId,
-    retellId,
-    qAndaId,
-    backTranslationId,
     getTypeId,
     IsVernacularMedia,
   };

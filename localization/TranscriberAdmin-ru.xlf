@@ -239,8 +239,8 @@
 		</unit>
 		<unit id="artifactType.backtranslation">
 			<segment>
-				<source>Back Translation</source>
-				<target>Обратный перевод</target>
+				<source>Phrase Back Translation</source>
+				<target>Обратный перевод фразы</target>
 			</segment>
 		</unit>
 		<unit id="artifactType.comment">
@@ -288,9 +288,15 @@
 		<unit id="artifactType.vernacular">
 			<segment>
 				<source>Vernacular</source>
-				<target>Vernacular</target>
+				<target>Народный</target>
 			</segment>
 		</unit>
+      <unit id="artifactType.wholebacktranslation">
+         <segment>
+            <source>Whole Back Translation</source>
+            <target>Перевод всей спины</target>
+         </segment>
+      </unit>
 		<unit id="assignmentTable.assignSec">
 			<segment>
 				<source>Assign {0}</source>

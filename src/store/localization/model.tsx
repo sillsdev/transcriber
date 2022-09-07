@@ -62,6 +62,7 @@ export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
     "sharedresource": string;
     "testing": string;
     "vernacular": string;
+    "wholebacktranslation": string;
 };
 
 export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethods {
@@ -872,7 +873,6 @@ export interface ISelectRecordingStrings extends Localize.LocalizedStringsMethod
 
 export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "admin": string;
-    "backtranslator": string;
     "bookNotInParatext": string;
     "BookNotSet": string;
     "cancel": string;

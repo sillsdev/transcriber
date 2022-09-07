@@ -240,7 +240,7 @@
       </unit>
       <unit id="artifactType.backtranslation">
          <segment>
-            <source>Back Translation</source>
+            <source>Phrase Back Translation</source>
             <target/>
          </segment>
       </unit>
@@ -258,7 +258,7 @@
       </unit>
       <unit id="artifactType.qanda">
          <segment>
-            <source>Question and Answer</source>
+            <source>Community Test Question and Answer</source>
             <target/>
          </segment>
       </unit>
@@ -270,7 +270,7 @@
       </unit>
       <unit id="artifactType.retell">
          <segment>
-            <source>Retelling</source>
+            <source>Community Test Retell</source>
             <target/>
          </segment>
       </unit>
@@ -289,6 +289,12 @@
       <unit id="artifactType.vernacular">
          <segment>
             <source>Vernacular</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.wholebacktranslation">
+         <segment>
+            <source>Whole Back Translation</source>
             <target/>
          </segment>
       </unit>
@@ -4249,12 +4255,6 @@
       <unit id="shared.admin">
          <segment>
             <source>Admin</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="shared.backtranslator">
-         <segment>
-            <source>Back Translator</source>
             <target/>
          </segment>
       </unit>
