@@ -63,15 +63,16 @@ const initialState = {
 	}),
 	"artifactType": new LocalizedStrings({
 		"en": {
-			"backtranslation": "Back Translation",
+			"backtranslation": "Phrase Back Translation",
 			"comment": "Comment",
 			"projectresource": "General Resource",
-			"qanda": "Question and Answer",
+			"qanda": "Community Test Question and Answer",
 			"resource": "Resource",
-			"retell": "Retelling",
+			"retell": "Community Test Retell",
 			"sharedresource": "Shared Resource",
 			"testing": "Testing",
 			"vernacular": "Vernacular",
+			"wholebacktranslation": "Whole Back Translation",
 		}
 	}),
 	"assignmentTable": new LocalizedStrings({
@@ -932,7 +933,6 @@ const initialState = {
 	"shared": new LocalizedStrings({
 		"en": {
 			"admin": "Admin",
-			"backtranslator": "Back Translator",
 			"bookNotInParatext": "Passage {0}.{1}: Paratext project does not contain book {2}.",
 			"BookNotSet": "Book was not set for Section {0} Passage {1}",
 			"cancel": "Cancel",

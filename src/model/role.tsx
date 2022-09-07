@@ -6,23 +6,10 @@ export enum RoleNames {
   Admin = 'Admin',
   Member = 'Member',
   SuperAdmin = 'SuperAdmin',
-  PeerReviewer = 'PeerReviewer',
-  BackTranslator = 'BackTranslator',
-  Observer = 'Observer',
-  Consultant = 'Consultant',
-  Translator = 'Translator',
 }
 
-export const canBeEditor = [
-  RoleNames.Editor,
-  RoleNames.PeerReviewer,
-  RoleNames.Admin,
-];
-export const canTranscribe = [
-  ...canBeEditor,
-  RoleNames.Transcriber,
-  RoleNames.BackTranslator,
-];
+export const canBeEditor = [RoleNames.Editor, RoleNames.Admin];
+export const canTranscribe = [...canBeEditor, RoleNames.Transcriber];
 
 export interface Role extends Record {
   attributes: {

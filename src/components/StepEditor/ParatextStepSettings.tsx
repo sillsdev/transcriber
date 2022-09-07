@@ -7,14 +7,12 @@ interface IProps {
   onChange: (toolSettings: string) => void;
 }
 
-export const TranscribeStepSettings = ({ toolSettings, onChange }: IProps) => {
+export const ParatextStepSettings = ({ toolSettings, onChange }: IProps) => {
   // const classes = useStyles();
   const artifacts = [
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.WholeBackTranslation,
     ArtifactTypeSlug.PhraseBackTranslation,
-    ArtifactTypeSlug.QandA,
-    ArtifactTypeSlug.Retell,
   ];
   const [initialValue, setInitialValue] = useState<string | null>(null);
   useEffect(() => {

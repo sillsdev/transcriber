@@ -199,7 +199,8 @@ export function TranscriptionTab(props: IProps) {
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.Retell,
     ArtifactTypeSlug.QandA,
-    ArtifactTypeSlug.BackTranslation,
+    ArtifactTypeSlug.WholeBackTranslation,
+    ArtifactTypeSlug.PhraseBackTranslation,
   ]);
   const [artifactType, setArtifactType] = useState<ArtifactTypeSlug>(
     artifactTypes[0]

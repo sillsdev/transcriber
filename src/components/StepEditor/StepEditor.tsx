@@ -30,6 +30,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
 import { TranscribeStepSettings } from './TranscribeStepSettings';
+import { ParatextStepSettings } from './ParatextStepSettings';
 
 export interface IStepRow {
   id: string;
@@ -72,7 +73,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   const { localizedTool } = useTools();
   const { localizedArtifactTypeFromId } = useArtifactType();
   const [toolSettingsRow, setToolSettingsRow] = useState(-1);
-  const settingsTools = [ToolSlug.Transcribe];
+  const settingsTools = [ToolSlug.Transcribe, ToolSlug.Paratext];
   const mxSeq = useMemo(() => {
     let max = 0;
     rows.forEach((r) => {
@@ -326,6 +327,7 @@ export const StepEditor = ({ process, org }: IProps) => {
     var json = settings ? JSON.parse(settings) : undefined;
     switch (tool as ToolSlug) {
       case ToolSlug.Transcribe:
+      case ToolSlug.Paratext:
         if (json)
           return localizedArtifactTypeFromId(
             remoteIdGuid('artifacttype', json.artifactTypeId, memory.keyMap) ??
@@ -381,6 +383,19 @@ export const StepEditor = ({ process, org }: IProps) => {
           bp={BigDialogBp.sm}
         >
           <TranscribeStepSettings
+            toolSettings={rows[toolSettingsRow].settings}
+            onChange={handleSettingsChange}
+          />
+        </BigDialog>
+      )}
+      {toolSettingsRow > -1 && (
+        <BigDialog
+          title={localizedTool(rows[toolSettingsRow].tool)}
+          isOpen={rows[toolSettingsRow].tool === ToolSlug.Paratext}
+          onOpen={setToolSettingsOpen}
+          bp={BigDialogBp.sm}
+        >
+          <ParatextStepSettings
             toolSettings={rows[toolSettingsRow].settings}
             onChange={handleSettingsChange}
           />

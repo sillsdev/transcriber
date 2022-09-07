@@ -237,8 +237,8 @@
 		</unit>
 		<unit id="artifactType.backtranslation">
 			<segment>
-				<source>Back Translation</source>
-				<target>Traduction en arrière</target>
+				<source>Phrase Back Translation</source>
+				<target>Phrase Traduction arrière</target>
 			</segment>
 		</unit>
 		<unit id="artifactType.comment">
@@ -289,7 +289,13 @@
 				<target>Vernaculaire</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.assignSec">
+      <unit id="artifactType.wholebacktranslation">
+         <segment>
+            <source>Whole Back Translation</source>
+            <target>Traduction du dos entier</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.assignSec">
 			<segment>
 				<source>Assign {0}</source>
 				<target>Affecter {0}</target>

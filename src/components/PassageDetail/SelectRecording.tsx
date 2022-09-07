@@ -122,7 +122,10 @@ export const SelectRecording = (props: IProps) => {
   );
 
   const showTopic = useMemo(() => {
-    return tags[0] !== ArtifactTypeSlug.BackTranslation;
+    return (
+      tags[0] !== ArtifactTypeSlug.WholeBackTranslation &&
+      tags[0] !== ArtifactTypeSlug.PhraseBackTranslation
+    );
   }, [tags]);
 
   const showType = useMemo(() => {
