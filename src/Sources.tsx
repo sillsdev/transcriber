@@ -26,6 +26,7 @@ import { orbitRetry, orbitErr, logError, infoMsg, Severity } from './utils';
 import { electronExport } from './store/importexport/electronExport';
 import { restoreBackup } from '.';
 import { AlertSeverity } from './hoc/SnackBar';
+import { updateBackTranslationType } from './crud/updateBackTranslationType';
 
 export const Sources = async (
   coordinator: Coordinator,
@@ -304,6 +305,15 @@ export const Sources = async (
     localStorage.setItem('user-id', user.id);
     localStorage.setItem('online-user-id', user.id);
   }
-  setUser(localStorage.getItem('user-id') as string);
+  var user = localStorage.getItem('user-id') as string;
+  setUser(user);
+  if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
+    updateBackTranslationType(
+      memory,
+      tokData.sub || '',
+      user,
+      globalStore.errorReporter
+    );
+  }
   return { syncBuffer, syncFile, goRemote };
 };
