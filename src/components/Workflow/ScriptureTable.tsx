@@ -46,6 +46,8 @@ import {
   useCheckOnline,
   currentDateTime,
   hasAudacity,
+  LocalKey,
+  localUserKey,
 } from '../../utils';
 import {
   isSectionRow,
@@ -626,6 +628,10 @@ export function ScriptureTable(props: IProps) {
         const { wf } = getByIndex(workflowRef.current, i);
         const id = wf?.passageId?.id || '';
         const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
+        localStorage.setItem(
+          localUserKey(LocalKey.passage),
+          `${passageRemoteId}`
+        );
         setView(`/detail/${prjId}/${passageRemoteId}`);
       });
     });

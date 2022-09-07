@@ -26,9 +26,9 @@ import {
   iconMargin,
 } from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
-import { refMatch, cleanClipboard } from '../../utils';
+import { refMatch, cleanClipboard, localUserKey, LocalKey } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
-import { useDiscussionCount } from '../../crud';
+import { remoteIdGuid, useDiscussionCount } from '../../crud';
 import TaskAvatar from '../TaskAvatar';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
@@ -192,6 +192,7 @@ export function PlanSheet(props: IProps) {
   });
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
+  const [memory] = useGlobal('memory');
   const [global] = useGlobal();
   const { showMessage } = useSnackBar();
   const [position, setPosition] = useState<{
@@ -217,6 +218,7 @@ export function PlanSheet(props: IProps) {
   const [srcMediaId, setSrcMediaId] = useState('');
   const [mediaPlaying, setMediaPlaying] = useState(false);
   const [warning, setWarning] = useState<string>();
+  const [toRow, setToRow] = useState(0);
 
   const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
   const SectionSeqCol = 0;
@@ -425,6 +427,47 @@ export function PlanSheet(props: IProps) {
   }, []);
 
   useEffect(() => {
+    let timeoutRef: NodeJS.Timeout | undefined = undefined;
+    if (rowInfo) {
+      const lastPasId = localStorage.getItem(localUserKey(LocalKey.passage));
+      let row = -1;
+      if (lastPasId) {
+        const pasGuid = remoteIdGuid('passage', lastPasId, memory.keyMap);
+        row = rowInfo.findIndex((r) => r.passageId?.id === pasGuid);
+      }
+      if (row >= 0) {
+        let tbodyRef: HTMLDivElement | undefined = undefined;
+        if (sheetRef.current) {
+          const gridRef = (
+            sheetRef.current as HTMLDivElement
+          ).getElementsByClassName('data-grid-container');
+          tbodyRef = gridRef[0]?.firstChild?.firstChild?.childNodes[
+            row + 1
+          ] as HTMLDivElement;
+        }
+        if (tbodyRef) {
+          setCurrentRow(row + 1);
+          localStorage.removeItem(localUserKey(LocalKey.passage));
+          sheetScroll();
+          // The useEffect will trigger when sheet is present but
+          // if sheet is present and we aren't ready, set a half
+          // second timeout and check again
+        } else if (sheetRef.current) {
+          timeoutRef = setTimeout(() => {
+            setToRow(toRow + 1);
+          }, 500);
+        }
+      }
+    }
+
+    return () => {
+      if (timeoutRef) clearTimeout(timeoutRef);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowInfo, sheetRef, toRow]);
+
+  useEffect(() => {
     changedRef.current = isChanged(toolId);
     if (changedRef.current !== changed) setChanged(changedRef.current);
     var isSaving = saveRequested(toolId);
@@ -571,7 +614,7 @@ export function PlanSheet(props: IProps) {
                         cellIndex === PassageSeqCol
                           ? 'num '
                           : '') +
-                        (section ? 'set' + (passage ? 'p' : '') : 'xxpass') +
+                        (section ? 'set' + (passage ? 'p' : '') : 'pass') +
                         (refCol && refCol === cellIndex && refErrTest(e)
                           ? 'Err'
                           : ''),
