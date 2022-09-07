@@ -43,13 +43,13 @@ export const PassageDetailChooser = () => {
   const handleChange = (event: React.SyntheticEvent, newValue: any) => {
     if (typeof newValue === 'number') {
       if (newValue !== value) {
-        const pasId = getPasIdByNum(section, newValue, memory);
+        const pasId = getPasIdByNum(section, newValue + 1, memory);
         if (pasId) {
           localStorage.setItem(localUserKey(LocalKey.passage), pasId);
           setView(`/detail/${prjId}/${pasId}`);
+          return;
         }
       }
-      setValue(newValue);
     }
   };
 
