@@ -19,6 +19,7 @@ import {
   dataPath,
   PathType,
   execFolder,
+  restoreScroll,
 } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
 import AboutDialog from './AboutDialog';
@@ -132,6 +133,8 @@ export function HelpMenu(props: IProps) {
 
   const handleAbout = (visible: boolean) => () => {
     if (visible !== aboutOpen) setAboutOpen(visible);
+    restoreScroll();
+    setAnchorEl(null);
   };
 
   const handle = (what: string) => () => {

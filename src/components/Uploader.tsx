@@ -19,6 +19,7 @@ import { TokenContext } from '../context/TokenProvider';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import PassageRecordDlg from './PassageRecordDlg';
+import { restoreScroll } from '../utils';
 
 const UnsupportedMessage = styled('span')(({ theme }) => ({
   color: theme.palette.secondary.light,
@@ -245,8 +246,7 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
   const uploadCancel = () => {
     onOpen(false);
     if (cancelled) cancelled.current = true;
-    // This makes the scroll bar reappear on the parent
-    document.getElementsByTagName('body')[0].removeAttribute('style');
+    restoreScroll();
   };
 
   React.useEffect(() => {
