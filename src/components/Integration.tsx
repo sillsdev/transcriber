@@ -375,6 +375,7 @@ export function IntegrationPanel(props: IProps) {
       passages,
       memory,
       user,
+      passage,
       getTypeId(exportType),
       getTranscription
     );
