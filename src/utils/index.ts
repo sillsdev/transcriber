@@ -63,3 +63,4 @@ export * from './burritoMetadata';
 export * from './eqSet';
 export * from './cleanClipboard';
 export * from './isVisual';
+export * from './restoreScroll';

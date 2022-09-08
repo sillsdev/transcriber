@@ -21,6 +21,7 @@ import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
 import NewProjectGrid from './NewProjectGrid';
+import { restoreScroll } from '../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -127,6 +128,11 @@ export const AddCard = (props: IProps) => {
       setLanguage(initLang);
       setBook(null);
       cancelled.current = false;
+    } else {
+      // someplace it is being shut off if I reset it here so I wait
+      setTimeout(() => {
+        restoreScroll();
+      }, 500);
     }
   }, [uploadVisible]);
 
