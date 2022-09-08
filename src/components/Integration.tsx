@@ -141,6 +141,7 @@ interface IDispatchProps {
   getLocalProjects: typeof actions.getLocalProjects;
   getLocalCount: typeof actions.getLocalCount;
   syncProject: typeof actions.syncProject;
+  syncPassage: typeof actions.syncPassage;
   resetSync: typeof actions.resetSync;
   resetCount: typeof actions.resetCount;
   resetProjects: typeof actions.resetProjects;
@@ -161,7 +162,8 @@ interface IProps
     IRecordProps,
     WithDataProps {
   stopPlayer?: () => void;
-  artifactType: ArtifactTypeSlug;
+  artifactType?: ArtifactTypeSlug;
+  passage?: Passage;
 }
 
 export function IntegrationPanel(props: IProps) {
@@ -177,6 +179,7 @@ export function IntegrationPanel(props: IProps) {
     paratext_syncStatus,
     stopPlayer,
     artifactType,
+    passage,
   } = props;
   const {
     getUserName,
@@ -184,6 +187,7 @@ export function IntegrationPanel(props: IProps) {
     getProjects,
     getLocalProjects,
     syncProject,
+    syncPassage,
     resetSync,
     resetCount,
     resetProjects,
@@ -336,20 +340,29 @@ export function IntegrationPanel(props: IProps) {
   const handleSync = () => {
     if (stopPlayer) stopPlayer();
     setSyncing(true);
-    syncProject(
-      accessToken || '',
-      remoteIdNum('project', project, memory.keyMap),
-      getTypeId(exportType)
-        ? remoteIdNum(
-            'artifacttype',
-            getTypeId(exportType) || '',
-            memory.keyMap
-          )
-        : 0,
-      errorReporter,
-      t.syncPending,
-      t.syncComplete
-    );
+    var typeId = getTypeId(exportType)
+      ? remoteIdNum('artifacttype', getTypeId(exportType) || '', memory.keyMap)
+      : 0;
+    if (passage !== undefined) {
+      //from detail screen so just do passage
+      syncPassage(
+        accessToken || '',
+        remoteIdNum('passage', passage.id, memory.keyMap),
+        typeId,
+        errorReporter,
+        t.syncPending,
+        t.syncComplete
+      );
+    } else {
+      syncProject(
+        accessToken || '',
+        remoteIdNum('project', project, memory.keyMap),
+        typeId,
+        errorReporter,
+        t.syncPending,
+        t.syncComplete
+      );
+    }
   };
   const handleLocalSync = async () => {
     if (stopPlayer) stopPlayer();
@@ -476,15 +489,19 @@ export function IntegrationPanel(props: IProps) {
 
   useEffect(() => {
     resetCount();
-    if (plan)
-      getLocalCount(
-        mediafiles,
-        plan,
-        memory,
-        errorReporter,
-        t,
-        getTypeId(exportType)
-      );
+    setTimeout(() => {
+      if (plan)
+        getLocalCount(
+          mediafiles,
+          plan,
+          memory,
+          errorReporter,
+          t,
+          getTypeId(exportType),
+          passage?.id
+        );
+    }, 500);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafiles, plan, exportType]);
 
@@ -983,6 +1000,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       getLocalProjects: actions.getLocalProjects,
       getLocalCount: actions.getLocalCount,
       syncProject: actions.syncProject,
+      syncPassage: actions.syncPassage,
       resetSync: actions.resetSync,
       resetCount: actions.resetCount,
       resetProjects: actions.resetProjects,

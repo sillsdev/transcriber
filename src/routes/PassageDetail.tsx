@@ -263,7 +263,10 @@ const PassageDetailGrids = () => {
           </Grid>
         )}
         {tool === ToolSlug.Paratext && (
-          <IntegrationTab artifactType={artifactSlug} />
+          <IntegrationTab
+            artifactType={artifactSlug}
+            passage={ctx.state.passage}
+          />
         )}
         {(tool === ToolSlug.Discuss ||
           tool === ToolSlug.TeamCheck ||
