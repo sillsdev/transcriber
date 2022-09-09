@@ -180,7 +180,7 @@ function MediaUpload(props: IProps) {
   const { showMessage } = useSnackBar();
   const [acceptextension, setAcceptExtension] = useState('');
   const [acceptmime, setAcceptMime] = useState('');
-  const [hasRights, setHasRight] = useState(uploadType !== UploadType.Media);
+  const [hasRights, setHasRight] = useState(!onSpeaker);
   const title = [
     t.title,
     t.resourceTitle,
@@ -292,7 +292,7 @@ function MediaUpload(props: IProps) {
           <DialogContentText>
             {text[uploadType].replace('{0}', speaker || '')}
           </DialogContentText>
-          {uploadType === UploadType.Media && (
+          {onSpeaker && uploadType === UploadType.Media && (
             <SpeakerName
               name={speaker || ''}
               onRights={handleRights}

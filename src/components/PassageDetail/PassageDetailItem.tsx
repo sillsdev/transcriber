@@ -208,6 +208,10 @@ export function PassageDetailItem(props: IProps) {
   }, 50);
 
   useEffect(() => {
+    if (!slugs.find((s) => s === recordType)) setRecordType(slugs[0]);
+  }, [slugs, recordType]);
+
+  useEffect(() => {
     toolChanged(toolId, canSave);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSave]);
