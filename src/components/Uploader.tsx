@@ -308,7 +308,12 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
           metaData={metaData}
           ready={ready}
           speaker={performedBy}
-          onSpeaker={handleSpeakerChange}
+          onSpeaker={
+            !artifactTypeId &&
+            (uploadType || UploadType.Media) === UploadType.Media
+              ? handleSpeakerChange
+              : undefined
+          }
           createProject={createProject}
           team={team}
         />
