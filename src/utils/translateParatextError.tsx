@@ -51,6 +51,8 @@ export const translateParatextError = (
   if (err.errStatus === 500) {
     if (
       err.errMsg.length === 0 ||
+      err.errMsg.indexOf('Detail: ') + 'Detail: '.length ===
+        err.errMsg.length ||
       err.errMsg.includes('SecurityException') ||
       err.errMsg.includes('401') ||
       err.errMsg.includes('400')
