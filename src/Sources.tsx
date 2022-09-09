@@ -310,7 +310,7 @@ export const Sources = async (
   if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
     updateBackTranslationType(
       memory,
-      tokData.sub || '',
+      tokenCtx.state.accessToken || '',
       user,
       globalStore.errorReporter
     );

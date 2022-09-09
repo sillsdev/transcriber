@@ -621,6 +621,7 @@ export const localSync = async (
   passages: Passage[],
   memory: Memory,
   userId: string,
+  passage: Passage | undefined,
   artifactId: string | null,
   getTranscription: (passId: string, artifactId: string | null) => string
 ) => {
@@ -631,6 +632,11 @@ export const localSync = async (
       related(m, 'artifactType') === artifactId && //will this find vernacular?
       m.attributes?.transcriptionstate === ActivityStates.Approved
   );
+  if (passage) {
+    probablyready = probablyready.filter(
+      (m) => related(m, 'passage') === passage.id
+    );
+  }
   //ensure this is the latest mediafile for the passage
   let ready: PassageInfo[] = [];
   probablyready.forEach((pr) => {

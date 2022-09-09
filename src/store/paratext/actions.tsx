@@ -284,16 +284,21 @@ export const resetCount = () => (dispatch: any) => {
     type: COUNT_PENDING,
   });
 };
-
+//not used
 export const getCount =
-  (token: string, projectId: number, errorReporter: any, pendingmsg: string) =>
+  (
+    token: string,
+    kind: string,
+    id: number,
+    errorReporter: any,
+    pendingmsg: string
+  ) =>
   (dispatch: any) => {
     dispatch({
       payload: pendingStatus(pendingmsg),
       type: COUNT_PENDING,
     });
-    let path =
-      API_CONFIG.host + '/api/paratext/project/' + projectId + '/count';
+    let path = API_CONFIG.host + '/api/paratext/' + kind + '/' + id + '/count';
     Axios.get(path, {
       headers: {
         Authorization: 'Bearer ' + token,
@@ -315,18 +320,22 @@ export const getLocalCount =
     memory: MemorySource,
     errorReporter: any,
     t: IIntegrationStrings,
-    artifactId: string | null
+    artifactId: string | null,
+    passageId: string | undefined
   ) =>
   (dispatch: any) => {
     dispatch({
       payload: pendingStatus(t.countPending),
       type: COUNT_PENDING,
     });
-    const ready = getMediaInPlans([plan], mediafiles, artifactId, true).filter(
+    var ready = getMediaInPlans([plan], mediafiles, artifactId, true).filter(
       (m) =>
         m.attributes?.transcriptionstate === ActivityStates.Approved &&
         Boolean(related(m, 'passage'))
     );
+    if (passageId)
+      ready = ready.filter((m) => related(m, 'passage') === passageId);
+
     const refMissing = ready.filter((m) => {
       var passage = findRecord(
         memory,
@@ -354,6 +363,36 @@ export const getLocalCount =
 export const resetSync = () => (dispatch: any) => {
   dispatch({ payload: undefined, type: SYNC_PENDING });
 };
+export const syncPassage =
+  (
+    token: string,
+    passageId: number,
+    typeId: number, //0 for vernacular?
+    errorReporter: any,
+    pendingmsg: string,
+    successmsg: string
+  ) =>
+  (dispatch: any) => {
+    dispatch({ payload: pendingStatus(pendingmsg), type: SYNC_PENDING });
+
+    Axios.post(
+      `${API_CONFIG.host}/api/paratext/passage/${passageId}/${typeId}`,
+      null,
+      {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      }
+    )
+      .then((response) => {
+        dispatch({ payload: successmsg, type: SYNC_SUCCESS });
+      })
+      .catch((err) => {
+        logError(Severity.error, errorReporter, infoMsg(err, 'Sync Failed'));
+        dispatch({ payload: errStatus(err), type: SYNC_ERROR });
+      });
+  };
+
 export const syncProject =
   (
     token: string,
@@ -377,7 +416,6 @@ export const syncProject =
     )
       .then((response) => {
         dispatch({ payload: successmsg, type: SYNC_SUCCESS });
-        getCount(token, projectId, errorReporter, '');
       })
       .catch((err) => {
         logError(Severity.error, errorReporter, infoMsg(err, 'Sync Failed'));
