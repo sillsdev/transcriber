@@ -46,6 +46,7 @@ import UserAvatar from '../UserAvatar';
 import DiscussionMenu from './DiscussionMenu';
 import {
   AddRecord,
+  ReplaceRelatedRecord,
   UpdateRecord,
   UpdateRelatedRecord,
 } from '../../model/baseModel';
@@ -57,7 +58,7 @@ import SelectArtifactCategory, {
   ScriptureEnum,
 } from '../Workflow/SelectArtifactCategory';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { removeExtension, waitForIt } from '../../utils';
+import { removeExtension, startEnd, waitForIt } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { NewDiscussionToolId } from './DiscussionList';
@@ -203,15 +204,9 @@ interface IProps extends IRecordProps, IStateProps {
   setRef: (ref: any) => {};
 }
 export const DiscussionRegion = (discussion: Discussion) => {
-  const startEnd = (val: string) =>
-    /^([0-9]+\.[0-9])-([0-9]+\.[0-9]) /.exec(val);
-
-  const m = startEnd(discussion.attributes?.subject);
-  if (m) {
-    return { start: parseFloat(m[1]), end: parseFloat(m[2]) };
-  }
-  return undefined;
+  return startEnd(discussion.attributes?.subject);
 };
+
 export const DiscussionCard = (props: IProps) => {
   const classes = useStyles();
   const {
@@ -234,6 +229,7 @@ export const DiscussionCard = (props: IProps) => {
     users,
     memberships,
   } = props;
+  const tdcs = t;
   const ctx = useContext(PassageDetailContext);
   const {
     currentstep,
@@ -468,16 +464,49 @@ export const DiscussionCard = (props: IProps) => {
     memory.update((t: TransformBuilder) => UpdateRecord(t, discussion, user));
   };
   const handleSetSegment = async () => {
+    if (savingRef.current) return;
+    savingRef.current = true;
+    let ops: Operation[] = [];
+    let ops2: Operation[] = [];
+    let t = new TransformBuilder();
+
     if (myRegion) {
       const subWords = editSubject.split(' ');
+      const prevMedia = related(discussion, 'mediafile') as string;
+
+      if (prevMedia !== mediafileId) {
+        const newCmt = {
+          type: 'comment',
+          attributes: {
+            commentText: `${subWords[0]} ${tdcs.earlierVersion}`,
+          },
+        } as Comment;
+        ops2.push(...AddRecord(t, newCmt, user, memory));
+        ops2.push(
+          ...ReplaceRelatedRecord(
+            t,
+            newCmt,
+            'discussion',
+            'discussion',
+            discussion.id
+          )
+        );
+        ops2.push(
+          ...ReplaceRelatedRecord(
+            t,
+            newCmt,
+            'mediafile',
+            'mediafile',
+            prevMedia
+          )
+        );
+      }
       subWords[0] = currentSegment.split(' ')[0];
       discussion.attributes.subject = subWords.join(' ');
     } else {
       discussion.attributes.subject =
         currentSegment + (discussion.attributes?.subject || '');
     }
-    let ops: Operation[] = [];
-    let t = new TransformBuilder();
     ops.push(...UpdateRecord(t, discussion, user));
     ops.push(
       ...UpdateRelatedRecord(
@@ -490,9 +519,14 @@ export const DiscussionCard = (props: IProps) => {
       )
     );
     await memory.update(ops);
-    let start = parseFloat(currentSegment.split('-')[0]);
-    if (!isNaN(start)) handleHighlightDiscussion(start);
+    if (ops2.length > 0) await memory.update(ops2);
+    savingRef.current = false;
+    setTimeout(() => {
+      let start = parseFloat(currentSegment.split('-')[0]);
+      if (!isNaN(start)) handleHighlightDiscussion(start);
+    }, 2000);
   };
+
   const handleDiscussionAction = (what: string) => {
     if (what === 'edit') {
       setEditSubject(discussion.attributes.subject);
@@ -638,7 +672,9 @@ export const DiscussionCard = (props: IProps) => {
       await memory.update(ops);
     }
     onAddComplete && onAddComplete();
-    if (myRegion) handleHighlightDiscussion(myRegion.start);
+    setTimeout(() => {
+      if (myRegion) handleHighlightDiscussion(myRegion.start);
+    }, 2000);
     setEditing(false);
     setChanged(false);
   };
@@ -707,7 +743,7 @@ export const DiscussionCard = (props: IProps) => {
       : '';
 
   useEffect(() => {
-    var assigned = editAssigned || currentAssigned();
+    const assigned = editAssigned || currentAssigned();
     assignedToMeRef.current =
       assigned === userPrefix + user ||
       myGroups.map((grp) => groupPrefix + grp.id).includes(assigned);

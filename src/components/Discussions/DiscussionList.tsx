@@ -162,8 +162,12 @@ export function DiscussionList(props: IProps) {
   }, [groupMemberships, userId]);
 
   useEffect(() => {
-    var org = findRecord(memory, 'organization', organization) as Organization;
-    var json = JSON.parse(org.attributes.defaultParams ?? '{}');
+    const org = findRecord(
+      memory,
+      'organization',
+      organization
+    ) as Organization;
+    const json = JSON.parse(org.attributes.defaultParams ?? '{}');
     if (json.discussionFilter) {
       setFilterStatex(json.discussionFilter);
     }

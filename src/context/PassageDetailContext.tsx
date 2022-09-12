@@ -867,10 +867,17 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     }, [sectionResources, mediafiles, pasId, userResources]);
 
     useEffect(() => {
+      let delayedPlay: NodeJS.Timeout | undefined = undefined;
       //if I set playing when I set the mediaId, it plays a bit of the old
       //if not starting at the beginning set to playing after loaded
       if (state.playItem && mediaStart.current === undefined)
-        setItemPlaying(true);
+        delayedPlay = setTimeout(() => {
+          setItemPlaying(true);
+        }, 2000);
+
+      return () => {
+        if (delayedPlay) clearTimeout(delayedPlay);
+      };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.playItem]);
 

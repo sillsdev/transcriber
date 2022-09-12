@@ -166,6 +166,8 @@ const initialState = {
 			"approve": "Approve",
 			"approved": "Approved",
 			"confirmDelete": "Delete this comment?",
+			"playOrStop": "Play / Stop",
+			"previousVersion": "Previous Version",
 			"unapproved": "Unapproved",
 		}
 	}),
@@ -212,6 +214,7 @@ const initialState = {
 	"discussionCard": new LocalizedStrings({
 		"en": {
 			"assign": "Assign to a Group or Team Member",
+			"earlierVersion": "From an earlier version",
 			"groupuser": "Group/Team Member",
 			"assignGroup": "Assign to a Group",
 			"assignUser": "Assign to a Team Member",

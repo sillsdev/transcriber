@@ -48,6 +48,7 @@ export function PassageDetailPlayer(props: IProps) {
     setPlaying,
     currentstep,
     playerSize,
+    currentSegmentIndex,
     setCurrentSegment,
     discussionMarkers,
     highlightDiscussion,
@@ -220,6 +221,7 @@ export function PassageDetailPlayer(props: IProps) {
         allowAutoSegment={allowAutoSegment}
         defaultRegionParams={defaultSegParams}
         segments={defaultSegments}
+        currentSegmentIndex={currentSegmentIndex}
         markers={discussionMarkers}
         onMarkerClick={handleHighlightDiscussion}
         setBusy={setPDBusy}

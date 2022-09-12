@@ -1,5 +1,6 @@
 import {
   Checkbox,
+  Chip,
   FormControlLabel,
   FormLabel,
   Grid,
@@ -27,14 +28,16 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  ArtifactTypeSlug,
   findRecord,
   PermissionName,
   related,
   usePermissions,
 } from '../../crud';
 import PlayIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
 import UserAvatar from '../UserAvatar';
-import { dateOrTime } from '../../utils';
+import { dateOrTime, startEnd } from '../../utils';
 import { useGlobal } from 'reactn';
 import { CommentEditor } from './CommentEditor';
 import DiscussionMenu from './DiscussionMenu';
@@ -44,6 +47,7 @@ import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import MediaPlayer from '../MediaPlayer';
+import { LightTooltip } from '../../control';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -131,6 +135,8 @@ export const CommentCard = (props: IProps) => {
     commentPlayId,
     handleCommentPlayEnd,
     handleCommentTogglePlay,
+    playItem,
+    setMediaSelected,
   } = useContext(PassageDetailContext).state;
   const {
     toolChanged,
@@ -194,6 +200,7 @@ export const CommentCard = (props: IProps) => {
   });
   const text = comment.attributes?.commentText;
   const [mediaId, setMediaId] = useState('');
+  const [oldVernVer, setOldVernVer] = useState(0);
 
   useEffect(() => {
     setEditComment(comment.attributes.commentText);
@@ -264,9 +271,30 @@ export const CommentCard = (props: IProps) => {
   };
   const media = useMemo(() => {
     if (!mediaId || mediaId === '') return null;
-    return findRecord(memory, 'mediafile', mediaId);
+    const mediaRec = findRecord(memory, 'mediafile', mediaId) as
+      | MediaFile
+      | undefined;
+    if (mediaRec) {
+      if (
+        !mediaRec.attributes?.artifactType ||
+        mediaRec.attributes?.artifactType === ArtifactTypeSlug.Vernacular
+      ) {
+        setOldVernVer(mediaRec.attributes?.versionNumber);
+      }
+    }
+    return mediaRec;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment, mediaId]);
+  const myRegion = useMemo(() => {
+    return startEnd(text);
+  }, [text]);
+  const handlePlayOldClip = () => {
+    setMediaSelected(
+      related(comment, 'mediafile'),
+      myRegion?.start || 0,
+      myRegion?.end || 0
+    );
+  };
 
   const handlePlayComment = () => {
     if (mediaId === commentPlayId) setCommentPlaying(!commentPlaying);
@@ -307,7 +335,7 @@ export const CommentCard = (props: IProps) => {
               </GridContainerCol>
             ) : (
               <>
-                {media && (
+                {media && !oldVernVer && (
                   <IconButton id="playcomment" onClick={handlePlayComment}>
                     <PlayIcon />
                   </IconButton>
@@ -348,14 +376,42 @@ export const CommentCard = (props: IProps) => {
                 </FormLabel>
               )
             ))}
-          {mediaId !== commentPlayId && author?.id === user && (
+          {mediaId !== commentPlayId && author?.id === user && !oldVernVer && (
             <Grid item>
               <DiscussionMenu action={handleCommentAction} />
             </Grid>
           )}
         </GridContainerSpread>
         <Grid item xs={12}>
-          {editing ? (
+          {oldVernVer && text ? (
+            <>
+              {oldVernVer && (
+                <LightTooltip title={t.previousVersion}>
+                  <Chip label={oldVernVer.toString()} size="small" />
+                </LightTooltip>
+              )}
+              <LightTooltip title={t.playOrStop}>
+                <IconButton
+                  id={`play-${comment.id}`}
+                  size="small"
+                  onClick={handlePlayOldClip}
+                >
+                  {playItem === related(discussion, 'mediafile') ? (
+                    <StopIcon fontSize="small" />
+                  ) : (
+                    <PlayIcon fontSize="small" />
+                  )}
+                </IconButton>
+              </LightTooltip>
+              <StyledText
+                id="outlined-textarea"
+                value={text}
+                multiline
+                fullWidth
+                variant="standard"
+              />
+            </>
+          ) : editing ? (
             <CommentEditor
               toolId={comment.id}
               refresh={0}
