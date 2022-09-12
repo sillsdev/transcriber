@@ -164,6 +164,8 @@ interface IProps
   stopPlayer?: () => void;
   artifactType?: ArtifactTypeSlug;
   passage?: Passage;
+  currentstep?: string;
+  setStepComplete?: (stepId: string, complete: boolean) => {};
 }
 
 export function IntegrationPanel(props: IProps) {
@@ -180,6 +182,8 @@ export function IntegrationPanel(props: IProps) {
     stopPlayer,
     artifactType,
     passage,
+    currentstep,
+    setStepComplete,
   } = props;
   const {
     getUserName,
@@ -381,6 +385,8 @@ export function IntegrationPanel(props: IProps) {
     );
     showMessage(err || t.syncComplete);
     resetCount();
+    if (setStepComplete && currentstep && !err)
+      setStepComplete(currentstep, true);
     setSyncing(false);
   };
 
@@ -622,6 +628,8 @@ export function IntegrationPanel(props: IProps) {
           setLanguage,
           setDataChangeCount
         );
+        if (setStepComplete && currentstep && !paratext_syncStatus.errStatus)
+          setStepComplete(currentstep, true);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
