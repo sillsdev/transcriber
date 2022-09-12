@@ -52,6 +52,8 @@ export function SpeakerName({
 
   const handleCloseRights = () => {
     setShowDialog(false);
+    onChange && onChange('');
+    onRights && onRights(false);
   };
 
   const handleRightsChange = (hasRights: boolean) => {
