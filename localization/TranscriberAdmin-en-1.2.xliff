@@ -906,7 +906,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="community.releaseRights">
-      		<source>Record or upload a statement releasing the rights to use material recorded by this speaker</source>
+      		<source>Upload or record a statement releasing the rights to publish material recorded by this speaker.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">Community.tsx</context>
@@ -5231,7 +5231,14 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shared.user">
+      	<trans-unit id="shared.uploadRights">
+      		<source>Upload Rights File</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="shared.user">
             <source>Team Member</source>
             <target/>
             <context-group>

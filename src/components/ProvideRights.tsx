@@ -48,7 +48,6 @@ interface IProps {
 
 export function ProvideRights(props: IProps & IRecordProps) {
   const { speaker, recordType, onRights, createProject, team } = props;
-  const [offlineOnly] = useGlobal('offlineOnly');
   const [user] = useGlobal('user');
   const [organizationId] = useGlobal('organization');
   const [statusText, setStatusText] = useState('');
@@ -179,12 +178,10 @@ export function ProvideRights(props: IProps & IRecordProps) {
             sx={buttonProp}
             id="pdRecordUpload"
             onClick={handleUpload}
-            title={
-              !offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular
-            }
+            title={ts.uploadRights}
           >
             <AddIcon />
-            {!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
+            {ts.uploadRights}
           </Button>
         </Box>
         <Box sx={rowProp}>

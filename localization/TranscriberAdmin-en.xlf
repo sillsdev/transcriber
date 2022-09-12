@@ -780,7 +780,7 @@
       </unit>
       <unit id="community.releaseRights">
          <segment>
-            <source>Record or upload a statement releasing the rights to use material recorded by this speaker</source>
+            <source>Upload or record a statement releasing the rights to publish material recorded by this speaker.</source>
             <target/>
          </segment>
       </unit>
@@ -4483,6 +4483,12 @@
       <unit id="shared.uploadMediaSingular">
          <segment>
             <source>Upload Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.uploadRights">
+         <segment>
+            <source>Upload Rights File</source>
             <target/>
          </segment>
       </unit>
