@@ -54,7 +54,7 @@ export function PassageDetailTranscribe({
         {artifactTypeId && (
           <Box sx={{ display: 'flex', flexDirection: 'row' }}>
             <TableContainer topFilter={topFilter}>
-              <TaskTable onFilter={handleTopFilter} />
+              <TaskTable onFilter={handleTopFilter} isDetail={true} />
             </TableContainer>
             {!topFilter && (
               <TranscriberContainer>

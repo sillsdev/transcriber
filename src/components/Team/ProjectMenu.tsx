@@ -32,12 +32,13 @@ interface IProps {
   inProject?: boolean;
   isOwner?: boolean;
   project: string | VProject;
+  justFilter?: boolean;
   action?: (what: string) => void;
   stopPlayer?: () => void;
 }
 
 export function ProjectMenu(props: IProps) {
-  const { inProject, action, isOwner, project, stopPlayer } = props;
+  const { inProject, action, isOwner, project, justFilter, stopPlayer } = props;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { pathname } = useLocation();
@@ -109,13 +110,16 @@ export function ProjectMenu(props: IProps) {
             <ListItemText primary={t.offlineAvail} />
           </StyledMenuItem>
         )}
-        <StyledMenuItem id="projMenuRep" onClick={handle('reports')}>
-          <ListItemIcon>
-            <ReportIcon />
-          </ListItemIcon>
-          <ListItemText primary={tpb.reports} />
-        </StyledMenuItem>
-        {projectType.toLowerCase() === 'scripture' &&
+        {!justFilter && (
+          <StyledMenuItem id="projMenuRep" onClick={handle('reports')}>
+            <ListItemIcon>
+              <ReportIcon />
+            </ListItemIcon>
+            <ListItemText primary={tpb.reports} />
+          </StyledMenuItem>
+        )}
+        {!justFilter &&
+          projectType.toLowerCase() === 'scripture' &&
           pathname.indexOf(ArtifactTypeSlug.Retell) === -1 &&
           pathname.indexOf(ArtifactTypeSlug.QandA) === -1 && (
             <StyledMenuItem id="projMenuInt" onClick={handle('integration')}>
@@ -125,7 +129,7 @@ export function ProjectMenu(props: IProps) {
               <ListItemText primary={tpb.integrations} />
             </StyledMenuItem>
           )}
-        {isOwner && !inProject && (
+        {!justFilter && isOwner && !inProject && (
           <StyledMenuItem id="projMenuImp" onClick={handle('import')}>
             <ListItemIcon>
               <ImportIcon />
@@ -133,12 +137,14 @@ export function ProjectMenu(props: IProps) {
             <ListItemText primary={tpb.import} />
           </StyledMenuItem>
         )}
-        <StyledMenuItem id="projMenuExp" onClick={handle('export')}>
-          <ListItemIcon>
-            <ExportIcon />
-          </ListItemIcon>
-          <ListItemText primary={tpb.export} />
-        </StyledMenuItem>
+        {!justFilter && (
+          <StyledMenuItem id="projMenuExp" onClick={handle('export')}>
+            <ListItemIcon>
+              <ExportIcon />
+            </ListItemIcon>
+            <ListItemText primary={tpb.export} />
+          </StyledMenuItem>
+        )}
         {inProject ? (
           <StyledMenuItem id="projMenuFilt" onClick={handle('filter')}>
             <ListItemIcon>

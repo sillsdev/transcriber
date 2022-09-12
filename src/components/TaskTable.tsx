@@ -110,10 +110,11 @@ interface IRow {
 
 interface IProps {
   onFilter?: (top: boolean) => void;
+  isDetail?: boolean;
 }
 
 export function TaskTable(props: IProps) {
-  const { onFilter } = props;
+  const { onFilter, isDetail } = props;
   const {
     rowData,
     activityStateStr,
@@ -476,6 +477,7 @@ export function TaskTable(props: IProps) {
               inProject={true}
               isOwner={projRole === RoleNames.Admin}
               project={projectId}
+              justFilter={isDetail}
             />
             {filter && (
               <IconButton id="taskFiltClose" onClick={handleToggleFilter}>

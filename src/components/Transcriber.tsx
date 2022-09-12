@@ -623,7 +623,7 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     if (!offline) {
-      if (!paratext_usernameStatus && projType.toLowerCase() === 'scripture') {
+      if (!paratext_usernameStatus && !noParatext) {
         getUserName(accessToken || '', errorReporter, '');
       }
       setHasParatextName(paratext_username !== '');
@@ -729,6 +729,7 @@ export function Transcriber(props: IProps) {
     transcribed: ActivityStates.Approved,
     needsNewTranscription: ActivityStates.Transcribed,
   };
+
   const forcePosition = (position: number) => {
     setDefaultPosition(playedSecsRef.current || 0);
     setDefaultPosition(position);
@@ -736,10 +737,7 @@ export function Transcriber(props: IProps) {
   const handleSubmit = async () => {
     if (next.hasOwnProperty(state)) {
       let nextState = next[state];
-      if (
-        nextState === ActivityStates.Approved &&
-        projType.toLowerCase() !== 'scripture'
-      )
+      if (nextState === ActivityStates.Approved && noParatext)
         nextState = ActivityStates.Done;
       await save(nextState, 0, segmentsRef.current, '');
       forcePosition(0);
@@ -997,12 +995,12 @@ export function Transcriber(props: IProps) {
     playingRef.current = newPlaying;
   };
 
-  const noPull = React.useMemo(
+  const noParatext = React.useMemo(
     () =>
       [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
         (artifactTypeSlug || '') as ArtifactTypeSlug
-      ),
-    [artifactTypeSlug]
+      ) || projType.toLowerCase() !== 'scripture',
+    [artifactTypeSlug, projType]
   );
   useEffect(() => {
     setArtifactTypeSlug(
@@ -1050,7 +1048,7 @@ export function Transcriber(props: IProps) {
                     {role === 'transcriber' &&
                       hasParatextName &&
                       paratextProject &&
-                      !noPull && (
+                      !noParatext && (
                         <Grid item>
                           <LightTooltip title={t.pullParatextTip}>
                             <span>
