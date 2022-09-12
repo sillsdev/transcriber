@@ -81,6 +81,7 @@ interface IProps {
   allowAutoSegment?: boolean;
   allowSpeed?: boolean;
   allowSilence?: boolean;
+  alternatePlayer?: boolean;
   size: number;
   segments: string;
   markers?: IMarker[];
@@ -115,6 +116,7 @@ const SPEED_STEP = 0.1;
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 1.5;
 const PLAY_PAUSE_KEY = 'F1,CTRL+SPACE';
+const ALT_PLAY_PAUSE_KEY = 'ALT+F1,ALT+CTRL+SPACE';
 const HOME_KEY = 'CTRL+HOME';
 const BACK_KEY = 'F2,SHIFT+ARROWLEFT';
 const AHEAD_KEY = 'F3,SHIFT+ARROWRIGHT';
@@ -367,7 +369,15 @@ function WSAudioPlayer(props: IProps) {
     { key: AHEAD_KEY, cb: handleJumpForward },
     { key: TIMER_KEY, cb: handleSendProgress },
   ];
-
+  const simplePlayerKeys = [
+    {
+      key: ALT_PLAY_PAUSE_KEY,
+      cb: () => {
+        handlePlayStatus();
+        return true;
+      },
+    },
+  ];
   const speedKeys = [
     { key: FASTER_KEY, cb: handleFaster },
     { key: SLOWER_KEY, cb: handleSlower },
@@ -381,17 +391,22 @@ function WSAudioPlayer(props: IProps) {
   ];
 
   useEffect(() => {
-    playerKeys.forEach((k) => subscribe(k.key, k.cb));
-
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       playerKeys.forEach((k) => unsubscribe(k.key));
+      simplePlayerKeys.forEach((k) => unsubscribe(k.key));
       recordKeys.forEach((k) => unsubscribe(k.key));
       segmentKeys.forEach((k) => unsubscribe(k.key));
       speedKeys.forEach((k) => unsubscribe(k.key));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (justPlayButton) simplePlayerKeys.forEach((k) => subscribe(k.key, k.cb));
+    else playerKeys.forEach((k) => subscribe(k.key, k.cb));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [justPlayButton]);
+
   useEffect(() => {
     if (allowRecord) recordKeys.forEach((k) => subscribe(k.key, k.cb));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -702,7 +717,9 @@ function WSAudioPlayer(props: IProps) {
                       id="wsAudioPlayTip"
                       title={(playing ? t.pauseTip : t.playTip).replace(
                         '{0}',
-                        localizeHotKey(PLAY_PAUSE_KEY)
+                        localizeHotKey(
+                          justPlayButton ? ALT_PLAY_PAUSE_KEY : PLAY_PAUSE_KEY
+                        )
                       )}
                     >
                       <span>
