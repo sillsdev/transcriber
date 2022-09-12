@@ -266,6 +266,8 @@ const PassageDetailGrids = () => {
           <IntegrationTab
             artifactType={artifactSlug}
             passage={ctx.state.passage}
+            setStepComplete={ctx.state.setStepComplete}
+            currentstep={currentstep}
           />
         )}
         {(tool === ToolSlug.Discuss ||
