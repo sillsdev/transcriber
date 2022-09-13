@@ -166,6 +166,8 @@ const initState = {
   setCommentPlaying: (playing: boolean, ended?: boolean) => {},
   commentPlayId: '',
   setCommentPlayId: (mediaId: string) => {},
+  oldVernacularPlayItem: '',
+  oldVernacularPlaying: false,
   rowData: Array<IRow>(),
   sharedStr: {} as ISharedStrings,
   mediafileId: '',
@@ -271,8 +273,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { startSave, clearChanged, waitForSave } =
       useContext(UnsavedContext).state;
     const [plan] = useGlobal('plan');
-    const [oldVernacularPlayItem, setOldVernacularPlayItem] = useState('');
-    const [oldVernacularPlaying, setOldVernacularPlaying] = useState(false);
     const highlightRef = useRef<number>();
     const refreshRef = useRef<number>(0);
     const settingSegmentRef = useRef(false);
@@ -361,9 +361,10 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             playing,
             itemPlaying: playing ? false : state.itemPlaying,
             commentPlaying: playing ? false : state.commentPlaying,
+            oldVernacularPlaying: playing ? false : state.oldVernacularPlaying,
+            oldVernacularPlayItem: playing ? '' : state.oldVernacularPlayItem,
           };
         });
-        if (playing) setOldVernacularPlayItem('');
       }
     };
     const setItemPlaying = (itemPlaying: boolean) => {
@@ -374,9 +375,14 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             itemPlaying,
             playing: itemPlaying ? false : state.playing,
             commentPlaying: itemPlaying ? false : state.commentPlaying,
+            oldVernacularPlaying: itemPlaying
+              ? false
+              : state.oldVernacularPlaying,
+            oldVernacularPlayItem: itemPlaying
+              ? ''
+              : state.oldVernacularPlayItem,
           };
         });
-        if (itemPlaying) setOldVernacularPlayItem('');
       }
     };
     const setCommentPlaying = (
@@ -391,9 +397,14 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             commentPlayId: ended ? '' : state.commentPlayId,
             playing: commentPlaying ? false : state.playing,
             itemPlaying: commentPlaying ? false : state.itemPlaying,
+            oldVernacularPlaying: commentPlaying
+              ? false
+              : state.oldVernacularPlaying,
+            oldVernacularPlayItem: commentPlaying
+              ? ''
+              : state.oldVernacularPlayItem,
           };
         });
-        if (commentPlaying) setOldVernacularPlayItem('');
       }
     };
 
@@ -412,7 +423,15 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const handleCommentTogglePlay = () => {
       setCommentPlaying(!state.commentPlaying);
     };
-    const handleOldVernacularPlayEnd = () => setOldVernacularPlayItem('');
+    const handleOldVernacularPlayEnd = () => {
+      setState((state: ICtxState) => {
+        return {
+          ...state,
+          oldVernacularPlaying: false,
+          oldVernacularPlayItem: '',
+        };
+      });
+    };
     const setPDBusy = (busy: boolean) => {
       setState((state: ICtxState) => {
         return {
@@ -590,7 +609,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         });
       } else if (r.isVernacular) {
         //play just the segment of an old one
-        setOldVernacularPlayItem(r.mediafile.id);
         setState((state: ICtxState) => {
           return {
             ...state,
@@ -599,6 +617,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             playing: false,
             commentPlaying: false,
             itemPlaying: false,
+            oldVernacularPlayItem: r.mediafile.id,
             rowData: newRows.length > 0 ? newRows : rowData,
           };
         });
@@ -653,8 +672,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       mediaStart.current = undefined;
       mediaEnd.current = undefined;
       mediaPosition.current = undefined;
-      setOldVernacularPlayItem('');
-      setOldVernacularPlaying(false);
+      handleOldVernacularPlayEnd();
     };
 
     const setMediaSelected = (id: string, start: number, end: number) => {
@@ -667,7 +685,12 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       if (mediaStart.current) {
         mediaPosition.current = mediaStart.current;
         mediaStart.current = undefined;
-        setOldVernacularPlaying(true);
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            oldVernacularPlaying: true,
+          };
+        });
       }
     };
 
@@ -961,8 +984,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         {props.children}
         {/*this is only used to play old vernacular file segments*/}
         <MediaPlayer
-          srcMediaId={oldVernacularPlayItem}
-          requestPlay={oldVernacularPlaying}
+          srcMediaId={state.oldVernacularPlayItem}
+          requestPlay={state.oldVernacularPlaying}
           onEnded={handleOldVernacularPlayEnd}
           onDuration={handleDuration}
           onPosition={handlePosition}

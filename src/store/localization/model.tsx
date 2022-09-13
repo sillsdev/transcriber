@@ -192,6 +192,7 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
 };
 
 export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods {
+    "addComment": string;
     "assign": string;
     "earlierVersion": string;
     "groupuser": string;

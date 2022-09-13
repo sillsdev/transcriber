@@ -1,6 +1,5 @@
 import {
   Checkbox,
-  Chip,
   FormControlLabel,
   FormLabel,
   Grid,
@@ -35,9 +34,8 @@ import {
   usePermissions,
 } from '../../crud';
 import PlayIcon from '@mui/icons-material/PlayArrow';
-import StopIcon from '@mui/icons-material/Stop';
 import UserAvatar from '../UserAvatar';
-import { dateOrTime, startEnd } from '../../utils';
+import { dateOrTime } from '../../utils';
 import { useGlobal } from 'reactn';
 import { CommentEditor } from './CommentEditor';
 import DiscussionMenu from './DiscussionMenu';
@@ -47,7 +45,7 @@ import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import MediaPlayer from '../MediaPlayer';
-import { LightTooltip } from '../../control';
+import { OldVernVersion } from '../../control/OldVernVersion';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -135,8 +133,6 @@ export const CommentCard = (props: IProps) => {
     commentPlayId,
     handleCommentPlayEnd,
     handleCommentTogglePlay,
-    playItem,
-    setMediaSelected,
   } = useContext(PassageDetailContext).state;
   const {
     toolChanged,
@@ -285,16 +281,6 @@ export const CommentCard = (props: IProps) => {
     return mediaRec;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment, mediaId]);
-  const myRegion = useMemo(() => {
-    return startEnd(text);
-  }, [text]);
-  const handlePlayOldClip = () => {
-    setMediaSelected(
-      related(comment, 'mediafile'),
-      myRegion?.start || 0,
-      myRegion?.end || 0
-    );
-  };
 
   const handlePlayComment = () => {
     if (mediaId === commentPlayId) setCommentPlaying(!commentPlaying);
@@ -383,35 +369,7 @@ export const CommentCard = (props: IProps) => {
           )}
         </GridContainerSpread>
         <Grid item xs={12}>
-          {oldVernVer && text ? (
-            <>
-              {oldVernVer && (
-                <LightTooltip title={t.previousVersion}>
-                  <Chip label={oldVernVer.toString()} size="small" />
-                </LightTooltip>
-              )}
-              <LightTooltip title={t.playOrStop}>
-                <IconButton
-                  id={`play-${comment.id}`}
-                  size="small"
-                  onClick={handlePlayOldClip}
-                >
-                  {playItem === related(discussion, 'mediafile') ? (
-                    <StopIcon fontSize="small" />
-                  ) : (
-                    <PlayIcon fontSize="small" />
-                  )}
-                </IconButton>
-              </LightTooltip>
-              <StyledText
-                id="outlined-textarea"
-                value={text}
-                multiline
-                fullWidth
-                variant="standard"
-              />
-            </>
-          ) : editing ? (
+          {editing ? (
             <CommentEditor
               toolId={comment.id}
               refresh={0}
@@ -424,8 +382,14 @@ export const CommentCard = (props: IProps) => {
               uploadMethod={uploadMedia}
             />
           ) : (
-            <>
-              {text && (
+            text && (
+              <>
+                <OldVernVersion
+                  id={comment.id}
+                  oldVernVer={oldVernVer}
+                  mediaId={mediaId}
+                  text={text}
+                />
                 <StyledText
                   id="outlined-textarea"
                   value={text}
@@ -433,8 +397,8 @@ export const CommentCard = (props: IProps) => {
                   fullWidth
                   variant="standard"
                 />
-              )}
-            </>
+              </>
+            )
           )}
         </Grid>
       </GridContainerBorderedRow>

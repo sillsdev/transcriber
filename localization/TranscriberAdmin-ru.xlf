@@ -840,7 +840,13 @@
 				<target>Удалить</target>
 			</segment>
 		</unit>
-      <unit id="discussionCard.assign">
+		<unit id="discussionCard.addComment">
+			<segment>
+				<source>Add Comment</source>
+				<target>Добавить комментарий</target>
+			</segment>
+		</unit>
+		<unit id="discussionCard.assign">
          <segment>
             <source>Assign to a Group or User</source>
             <target>Назначить группе или пользователю</target>

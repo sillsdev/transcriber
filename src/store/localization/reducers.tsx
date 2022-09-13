@@ -213,6 +213,7 @@ const initialState = {
 	}),
 	"discussionCard": new LocalizedStrings({
 		"en": {
+			"addComment": "Add Comment",
 			"assign": "Assign to a Group or Team Member",
 			"earlierVersion": "From an earlier version",
 			"groupuser": "Group/Team Member",

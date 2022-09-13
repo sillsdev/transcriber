@@ -1017,6 +1017,13 @@
                <context context-type="sourcefile">DeleteExpansion.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="discussionCard.addComment">
+      		<source>Add Comment</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="discussionCard.assign">
             <source>Assign to a Group or Team Member</source>
             <target/>

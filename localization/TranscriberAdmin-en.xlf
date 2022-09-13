@@ -874,6 +874,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionCard.addComment">
+         <segment>
+            <source>Add Comment</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionCard.assign">
          <segment>
             <source>Assign to a Group or Team Member</source>
