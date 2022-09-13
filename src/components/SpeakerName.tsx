@@ -50,8 +50,10 @@ export function SpeakerName({
     setShowDialog(true);
   };
 
-  const handleCloseRights = () => {
+  const handleCancelRights = () => {
     setShowDialog(false);
+    onChange && onChange('');
+    onRights && onRights(false);
   };
 
   const handleRightsChange = (hasRights: boolean) => {
@@ -144,7 +146,7 @@ export function SpeakerName({
       <BigDialog
         title={t.provideRights}
         isOpen={showDialog}
-        onOpen={handleCloseRights}
+        onOpen={handleCancelRights}
       >
         <>
           <Typography>{t.releaseRights}</Typography>
