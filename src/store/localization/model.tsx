@@ -911,6 +911,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "translator": string;
     "uploadMediaPlural": string;
     "uploadMediaSingular": string;
+    "uploadRights": string;
     "user": string;
     "versionHistory": string;
     "yes": string;

@@ -751,6 +751,18 @@
 				<target>Enregistrement</target>
 			</segment>
 		</unit>
+		<unit id="community.releaseRights">
+			<segment>
+				<source>Upload or record a statement releasing the rights to publish material recorded by this speaker.</source>
+				<target>Téléchargez ou enregistrez une déclaration libérant les droits de publication du matériel enregistré par cet intervenant.</target>
+			</segment>
+		</unit>
+		<unit id="community.rights">
+			<segment>
+				<source>Rights</source>
+				<target>Droits</target>
+			</segment>
+		</unit>
 		<unit id="community.saveFirst">
 			<segment>
 				<source>Save or Clear your recording before uploading.</source>
@@ -4435,6 +4447,12 @@
 			<segment>
 				<source>Upload Audio</source>
 				<target>Télécharger de audio</target>
+			</segment>
+		</unit>
+		<unit id="shared.uploadRights">
+			<segment>
+				<source>Upload Rights File</source>
+				<target>Télécharger le fichier des droits</target>
 			</segment>
 		</unit>
 		<unit id="shared.user">

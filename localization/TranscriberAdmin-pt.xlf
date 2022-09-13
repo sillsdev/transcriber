@@ -751,6 +751,18 @@
 				<target>Registro</target>
 			</segment>
 		</unit>
+		<unit id="community.releaseRights">
+			<segment>
+				<source>Upload or record a statement releasing the rights to publish material recorded by this speaker.</source>
+				<target>Carregar ou gravar uma declaração libertando os direitos de publicação do material gravado por este orador.</target>
+			</segment>
+		</unit>
+		<unit id="community.rights">
+			<segment>
+				<source>Rights</source>
+				<target>Direitos</target>
+			</segment>
+		</unit>
 		<unit id="community.saveFirst">
 			<segment>
 				<source>Save or Clear your recording before uploading.</source>
@@ -4434,6 +4446,12 @@
 			<segment>
 				<source>Upload Audio</source>
 				<target>Upload de áudio</target>
+			</segment>
+		</unit>
+		<unit id="shared.uploadRights">
+			<segment>
+				<source>Upload Rights File</source>
+				<target>Upload de ficheiros de direitos</target>
 			</segment>
 		</unit>
 		<unit id="shared.user">
