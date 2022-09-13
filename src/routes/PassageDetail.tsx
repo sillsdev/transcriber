@@ -51,10 +51,14 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { toolSelector } from '../selector';
 import { QueryBuilder } from '@orbit/data';
 
+const minWidth = 800;
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      minWidth: `${minWidth}px`,
+      minHeight: '700px',
     },
     paper: {
       padding: theme.spacing(2),
@@ -200,7 +204,7 @@ const PassageDetailGrids = () => {
   }, 50);
 
   const setDimensions = () => {
-    setWidth(window.innerWidth);
+    setWidth(Math.max(window.innerWidth, minWidth));
     setDiscussionSize({
       width: discussionSize.width, //should we be smarter here?
       height: window.innerHeight - 330,
