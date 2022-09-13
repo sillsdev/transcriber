@@ -84,6 +84,7 @@ interface IProps {
   alternatePlayer?: boolean;
   size: number;
   segments: string;
+  currentSegmentIndex?: number;
   markers?: IMarker[];
   metaData?: JSX.Element;
   isPlaying?: boolean;
@@ -140,6 +141,7 @@ function WSAudioPlayer(props: IProps) {
     allowSilence,
     size,
     segments,
+    currentSegmentIndex,
     markers,
     metaData,
     isPlaying,
@@ -252,6 +254,7 @@ function WSAudioPlayer(props: IProps) {
     size - 150,
     allowRecord,
     timelineRef.current,
+    currentSegmentIndex,
     onCurrentSegment
   );
   //because we have to call hooks consistently, call this even if we aren't going to record

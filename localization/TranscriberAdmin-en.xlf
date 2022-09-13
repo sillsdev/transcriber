@@ -712,6 +712,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="commentCard.playOrStop">
+         <segment>
+            <source>Play / Stop</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentCard.previousVersion">
+         <segment>
+            <source>Previous Version</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="commentCard.unapproved">
          <segment>
             <source>Unapproved</source>
@@ -862,9 +874,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionCard.addComment">
+         <segment>
+            <source>Add Comment</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionCard.assign">
          <segment>
             <source>Assign to a Group or Team Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.earlierVersion">
+         <segment>
+            <source>From an earlier version</source>
             <target/>
          </segment>
       </unit>

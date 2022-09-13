@@ -40,6 +40,7 @@ export function useWaveSurfer(
   height: number = 128,
   singleRegionOnly: boolean = false,
   timelineContainer?: any,
+  currentSegmentIndex?: number,
   onCurrentRegion?: (currentRegion: IRegion | undefined) => void
 ) {
   //const isMounted = useMounted('wavesurfer');
@@ -143,6 +144,7 @@ export function useWaveSurfer(
     setWaveSurfer,
   } = useWaveSurferRegions(
     singleRegionOnly,
+    currentSegmentIndex ?? -1,
     onRegion,
     onRegionPlayStatus,
     wsDuration,

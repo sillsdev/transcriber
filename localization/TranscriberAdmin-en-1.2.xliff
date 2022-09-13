@@ -828,6 +828,20 @@
                <context context-type="sourcefile">CommentCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="commentCard.playOrStop">
+      		<source>Play / Stop</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CommentCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="commentCard.previousVersion">
+      		<source>Previous Version</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CommentCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="commentCard.unapproved">
             <source>Unapproved</source>
             <target/>
@@ -1003,6 +1017,13 @@
                <context context-type="sourcefile">DeleteExpansion.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="discussionCard.addComment">
+      		<source>Add Comment</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="discussionCard.assign">
             <source>Assign to a Group or Team Member</source>
             <target/>
@@ -1010,6 +1031,13 @@
                <context context-type="sourcefile">DiscussionCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="discussionCard.earlierVersion">
+      		<source>From an earlier version</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="discussionCard.groupuser">
             <source>Group/Team Member</source>
             <target/>

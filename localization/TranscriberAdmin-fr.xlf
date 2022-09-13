@@ -835,7 +835,13 @@
 				<target>Supprimer</target>
 			</segment>
 		</unit>
-        <unit id="discussionCard.assign">
+		<unit id="discussionCard.addComment">
+			<segment>
+				<source>Add Comment</source>
+				<target>Ajouter un commentaire</target>
+			</segment>
+		</unit>
+		<unit id="discussionCard.assign">
          <segment>
             <source>Assign to a Group or User</source>
             <target>Attribuer à un groupe ou à un utilisateur</target>

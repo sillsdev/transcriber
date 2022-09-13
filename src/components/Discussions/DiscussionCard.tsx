@@ -32,9 +32,6 @@ import ResolveIcon from '@mui/icons-material/Check';
 import HideIcon from '@mui/icons-material/ArrowDropUp';
 import ShowIcon from '@mui/icons-material/ArrowDropDown';
 import LocationIcon from '@mui/icons-material/LocationSearching';
-import PlayIcon from '@mui/icons-material/PlayArrow';
-import StopIcon from '@mui/icons-material/Stop';
-import { LightTooltip } from '../../control';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -46,6 +43,7 @@ import UserAvatar from '../UserAvatar';
 import DiscussionMenu from './DiscussionMenu';
 import {
   AddRecord,
+  ReplaceRelatedRecord,
   UpdateRecord,
   UpdateRelatedRecord,
 } from '../../model/baseModel';
@@ -57,7 +55,7 @@ import SelectArtifactCategory, {
   ScriptureEnum,
 } from '../Workflow/SelectArtifactCategory';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { removeExtension, waitForIt } from '../../utils';
+import { removeExtension, startEnd, waitForIt } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { NewDiscussionToolId } from './DiscussionList';
@@ -65,6 +63,7 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import GroupAvatar from '../GroupAvatar';
 import SelectDiscussionAssignment from '../../control/SelectDiscussionAssignment';
 import { usePeerGroups } from '../Peers/usePeerGroups';
+import { OldVernVersion } from '../../control/OldVernVersion';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -79,6 +78,12 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       '& .MuiTypography-root': {
         cursor: 'default ',
+      },
+      '& button': {
+        color: 'lightgrey',
+      },
+      '& .MuiChip-root': {
+        backgroundColor: 'lightgrey',
       },
     },
     card: {
@@ -203,15 +208,9 @@ interface IProps extends IRecordProps, IStateProps {
   setRef: (ref: any) => {};
 }
 export const DiscussionRegion = (discussion: Discussion) => {
-  const startEnd = (val: string) =>
-    /^([0-9]+\.[0-9])-([0-9]+\.[0-9]) /.exec(val);
-
-  const m = startEnd(discussion.attributes?.subject);
-  if (m) {
-    return { start: parseFloat(m[1]), end: parseFloat(m[2]) };
-  }
-  return undefined;
+  return startEnd(discussion.attributes?.subject);
 };
+
 export const DiscussionCard = (props: IProps) => {
   const classes = useStyles();
   const {
@@ -234,13 +233,12 @@ export const DiscussionCard = (props: IProps) => {
     users,
     memberships,
   } = props;
+  const tdcs = t;
   const ctx = useContext(PassageDetailContext);
   const {
     currentstep,
     mediafileId,
-    playItem,
     setPlayerSegments,
-    setMediaSelected,
     currentSegment,
     handleHighlightDiscussion,
     highlightDiscussion,
@@ -452,14 +450,6 @@ export const DiscussionCard = (props: IProps) => {
     }
   };
 
-  const handlePlayOldClip = () => {
-    setMediaSelected(
-      related(discussion, 'mediafile'),
-      myRegion?.start || 0,
-      myRegion?.end || 0
-    );
-  };
-
   const handleResolveButton = () => {
     handleResolveDiscussion(true);
   };
@@ -468,16 +458,49 @@ export const DiscussionCard = (props: IProps) => {
     memory.update((t: TransformBuilder) => UpdateRecord(t, discussion, user));
   };
   const handleSetSegment = async () => {
+    if (savingRef.current) return;
+    savingRef.current = true;
+    let ops: Operation[] = [];
+    let ops2: Operation[] = [];
+    let t = new TransformBuilder();
+
     if (myRegion) {
       const subWords = editSubject.split(' ');
+      const prevMedia = related(discussion, 'mediafile') as string;
+
+      if (prevMedia !== mediafileId) {
+        const newCmt = {
+          type: 'comment',
+          attributes: {
+            commentText: `${subWords[0]} ${tdcs.earlierVersion}`,
+          },
+        } as Comment;
+        ops2.push(...AddRecord(t, newCmt, user, memory));
+        ops2.push(
+          ...ReplaceRelatedRecord(
+            t,
+            newCmt,
+            'discussion',
+            'discussion',
+            discussion.id
+          )
+        );
+        ops2.push(
+          ...ReplaceRelatedRecord(
+            t,
+            newCmt,
+            'mediafile',
+            'mediafile',
+            prevMedia
+          )
+        );
+      }
       subWords[0] = currentSegment.split(' ')[0];
       discussion.attributes.subject = subWords.join(' ');
     } else {
       discussion.attributes.subject =
         currentSegment + (discussion.attributes?.subject || '');
     }
-    let ops: Operation[] = [];
-    let t = new TransformBuilder();
     ops.push(...UpdateRecord(t, discussion, user));
     ops.push(
       ...UpdateRelatedRecord(
@@ -490,9 +513,14 @@ export const DiscussionCard = (props: IProps) => {
       )
     );
     await memory.update(ops);
-    let start = parseFloat(currentSegment.split('-')[0]);
-    if (!isNaN(start)) handleHighlightDiscussion(start);
+    if (ops2.length > 0) await memory.update(ops2);
+    savingRef.current = false;
+    setTimeout(() => {
+      let start = parseFloat(currentSegment.split('-')[0]);
+      if (!isNaN(start)) handleHighlightDiscussion(start);
+    }, 2000);
   };
+
   const handleDiscussionAction = (what: string) => {
     if (what === 'edit') {
       setEditSubject(discussion.attributes.subject);
@@ -638,7 +666,9 @@ export const DiscussionCard = (props: IProps) => {
       await memory.update(ops);
     }
     onAddComplete && onAddComplete();
-    if (myRegion) handleHighlightDiscussion(myRegion.start);
+    setTimeout(() => {
+      if (myRegion) handleHighlightDiscussion(myRegion.start);
+    }, 2000);
     setEditing(false);
     setChanged(false);
   };
@@ -707,7 +737,7 @@ export const DiscussionCard = (props: IProps) => {
       : '';
 
   useEffect(() => {
-    var assigned = editAssigned || currentAssigned();
+    const assigned = editAssigned || currentAssigned();
     assignedToMeRef.current =
       assigned === userPrefix + user ||
       myGroups.map((grp) => groupPrefix + grp.id).includes(assigned);
@@ -829,7 +859,7 @@ export const DiscussionCard = (props: IProps) => {
                   className={classes.actionButton}
                   disabled={editSubject === ''}
                 >
-                  {ts.save}
+                  {t.addComment}
                 </Button>
                 <Button
                   id={`cancel-${discussion.id}`}
@@ -856,25 +886,12 @@ export const DiscussionCard = (props: IProps) => {
                 )}
                 {myRegion && related(discussion, 'mediafile') !== mediafileId && (
                   <div className={classes.oldVersion}>
-                    {version && (
-                      <LightTooltip title={t.version}>
-                        <Chip label={version.toString()} size="small" />
-                      </LightTooltip>
-                    )}
-                    <LightTooltip title={t.playOrStop}>
-                      <IconButton
-                        id={`play-${discussion.id}`}
-                        size="small"
-                        className={classes.actionButton}
-                        onClick={handlePlayOldClip}
-                      >
-                        {playItem === related(discussion, 'mediafile') ? (
-                          <StopIcon fontSize="small" />
-                        ) : (
-                          <PlayIcon fontSize="small" />
-                        )}
-                      </IconButton>
-                    </LightTooltip>
+                    <OldVernVersion
+                      id={discussion.id}
+                      oldVernVer={version}
+                      mediaId={related(discussion, 'mediafile')}
+                      text={discussion.attributes?.subject}
+                    />
                   </div>
                 )}
                 <Typography

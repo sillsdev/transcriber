@@ -27,6 +27,7 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  ArtifactTypeSlug,
   findRecord,
   PermissionName,
   related,
@@ -44,6 +45,7 @@ import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import MediaPlayer from '../MediaPlayer';
+import { OldVernVersion } from '../../control/OldVernVersion';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -194,6 +196,7 @@ export const CommentCard = (props: IProps) => {
   });
   const text = comment.attributes?.commentText;
   const [mediaId, setMediaId] = useState('');
+  const [oldVernVer, setOldVernVer] = useState(0);
 
   useEffect(() => {
     setEditComment(comment.attributes.commentText);
@@ -264,7 +267,18 @@ export const CommentCard = (props: IProps) => {
   };
   const media = useMemo(() => {
     if (!mediaId || mediaId === '') return null;
-    return findRecord(memory, 'mediafile', mediaId);
+    const mediaRec = findRecord(memory, 'mediafile', mediaId) as
+      | MediaFile
+      | undefined;
+    if (mediaRec) {
+      if (
+        !mediaRec.attributes?.artifactType ||
+        mediaRec.attributes?.artifactType === ArtifactTypeSlug.Vernacular
+      ) {
+        setOldVernVer(mediaRec.attributes?.versionNumber);
+      }
+    }
+    return mediaRec;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment, mediaId]);
 
@@ -307,7 +321,7 @@ export const CommentCard = (props: IProps) => {
               </GridContainerCol>
             ) : (
               <>
-                {media && (
+                {media && !oldVernVer && (
                   <IconButton id="playcomment" onClick={handlePlayComment}>
                     <PlayIcon />
                   </IconButton>
@@ -348,7 +362,7 @@ export const CommentCard = (props: IProps) => {
                 </FormLabel>
               )
             ))}
-          {mediaId !== commentPlayId && author?.id === user && (
+          {mediaId !== commentPlayId && author?.id === user && !oldVernVer && (
             <Grid item>
               <DiscussionMenu action={handleCommentAction} />
             </Grid>
@@ -368,8 +382,14 @@ export const CommentCard = (props: IProps) => {
               uploadMethod={uploadMedia}
             />
           ) : (
-            <>
-              {text && (
+            text && (
+              <>
+                <OldVernVersion
+                  id={comment.id}
+                  oldVernVer={oldVernVer}
+                  mediaId={mediaId}
+                  text={text}
+                />
                 <StyledText
                   id="outlined-textarea"
                   value={text}
@@ -377,8 +397,8 @@ export const CommentCard = (props: IProps) => {
                   fullWidth
                   variant="standard"
                 />
-              )}
-            </>
+              </>
+            )
           )}
         </Grid>
       </GridContainerBorderedRow>

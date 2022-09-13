@@ -150,6 +150,8 @@ export interface ICommentCardStrings extends Localize.LocalizedStringsMethods {
     "approve": string;
     "approved": string;
     "confirmDelete": string;
+    "playOrStop": string;
+    "previousVersion": string;
     "unapproved": string;
 };
 
@@ -190,7 +192,9 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
 };
 
 export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods {
+    "addComment": string;
     "assign": string;
+    "earlierVersion": string;
     "groupuser": string;
     "assignGroup": string;
     "assignUser": string;

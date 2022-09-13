@@ -34,6 +34,7 @@ export const parseRegions = (regionstr: string) => {
 };
 export function useWaveSurferRegions(
   singleRegionOnly: boolean,
+  defaultRegionIndex: number,
   onRegion: (
     count: number,
     params: IRegionParams | undefined,
@@ -378,7 +379,11 @@ export function useWaveSurferRegions(
     ).finally(() => {
       setPrevNext(regionIds());
       onRegion(regarray.length, paramsRef.current, newRegions);
-      onRegionGoTo(0);
+      if (defaultRegionIndex >= 0) {
+        currentRegionRef.current = regarray[defaultRegionIndex];
+      } else {
+        onRegionGoTo(0);
+      }
       loadingRef.current = false;
     });
   }
