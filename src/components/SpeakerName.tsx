@@ -41,6 +41,7 @@ export function SpeakerName({
   ipRecs,
 }: IProps & IRecordProps) {
   const [value, setValue] = React.useState<NameOptionType | null>({ name });
+  const valueRef = React.useRef<string>('');
   const [speakers, setSpeakers] = React.useState<NameOptionType[]>([]);
   const [showDialog, setShowDialog] = React.useState(false);
   const [organization] = useGlobal('organization');
@@ -50,15 +51,53 @@ export function SpeakerName({
     setShowDialog(true);
   };
 
-  const handleCancelRights = () => {
-    setShowDialog(false);
+  const nameReset = () => {
     onChange && onChange('');
     onRights && onRights(false);
+  };
+
+  const handleCancelRights = () => {
+    setShowDialog(false);
+    nameReset();
   };
 
   const handleRightsChange = (hasRights: boolean) => {
     onRights && onRights(hasRights);
     setShowDialog(false);
+  };
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    valueRef.current = event.target.value;
+    onRights && onRights(false);
+  };
+
+  const handleChoice = (newValue: string | NameOptionType | null) => {
+    if (newValue === null) {
+      nameReset();
+    } else if (typeof newValue === 'string') {
+      setValue({
+        name: newValue,
+      });
+      onChange && onChange(newValue);
+      handleRights();
+    } else if (newValue && newValue.inputValue) {
+      // Create a new value from the user input
+      setValue({
+        name: newValue.inputValue,
+      });
+      onChange && onChange(newValue.inputValue);
+      handleRights();
+    } else {
+      setValue(newValue);
+      if (newValue) {
+        onChange && onChange(newValue?.name || '');
+        onRights && onRights(true);
+      }
+    }
+  };
+
+  const handleLeave = (event: React.SyntheticEvent, reason: string) => {
+    if (reason === 'blur') handleChoice(valueRef.current);
   };
 
   React.useEffect(() => {
@@ -80,28 +119,8 @@ export function SpeakerName({
     <>
       <Autocomplete
         value={value}
-        onChange={(event, newValue) => {
-          if (typeof newValue === 'string') {
-            setValue({
-              name: newValue,
-            });
-            onChange && onChange(newValue);
-            onRights && onRights(true);
-          } else if (newValue && newValue.inputValue) {
-            // Create a new value from the user input
-            setValue({
-              name: newValue.inputValue,
-            });
-            onChange && onChange(newValue.inputValue);
-            handleRights();
-          } else {
-            setValue(newValue);
-            if (newValue) {
-              onChange && onChange(newValue?.name || '');
-              onRights && onRights(true);
-            }
-          }
-        }}
+        onChange={(event, newValue) => handleChoice(newValue)}
+        onClose={handleLeave}
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
 
@@ -140,7 +159,12 @@ export function SpeakerName({
         sx={{ width: 300 }}
         freeSolo
         renderInput={(params) => (
-          <TextField required {...params} label={t.speaker} />
+          <TextField
+            required
+            {...params}
+            label={t.speaker}
+            onChange={handleNameChange}
+          />
         )}
       />
       <BigDialog
