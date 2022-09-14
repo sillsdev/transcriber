@@ -1032,6 +1032,8 @@ export function ScriptureTable(props: IProps) {
           passageId={audacityItem?.wf?.passageId as RecordIdentity}
           mediaId={audacityItem?.wf?.mediaId?.id || ''}
           onImport={handleAudacityImport}
+          speaker={speaker}
+          onSpeaker={handleNameChange}
         />
       )}
       <BigDialog

@@ -34,6 +34,7 @@ import {
 } from '../../utils';
 import { dataPath, PathType } from '../../utils';
 import { extensions, mimes } from '.';
+import SpeakerName from '../SpeakerName';
 
 const fs = require('fs');
 const ipc = isElectron ? require('electron').ipcRenderer : null;
@@ -42,13 +43,17 @@ const path = require('path');
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      display: 'flex',
+      minWidth: '900px',
     },
     grid: {
-      minWidth: '500px',
+      minWidth: '800px',
+      '& .MuiAutocomplete-root': {
+        paddingBottom: '20px',
+        width: 'unset',
+      },
     },
     name: {
-      minWidth: '400px',
+      minWidth: '500px',
       margin: theme.spacing(2),
     },
     actions: {
@@ -78,12 +83,16 @@ export interface IProps extends IStateProps {
   open: boolean;
   onClose: () => void;
   onImport: (i: number, list: File[]) => void;
+  speaker?: string;
+  onSpeaker?: (speaker: string) => void;
 }
 
 function AudacityManager(props: IProps) {
   const classes = useStyles();
   const { passageId, mediaId, onClose, open, t } = props;
   const { item, onImport } = props;
+  const { speaker, onSpeaker } = props;
+  const [hasRights, setHasRight] = React.useState(!onSpeaker);
   const audUpdate = useAudacityProjUpdate();
   const audRead = useAudacityProjRead();
   const audDelete = useAudacityProjDelete();
@@ -203,6 +212,11 @@ function AudacityManager(props: IProps) {
     launchAudacity(name, reporter);
   };
 
+  const handleRights = (hasRights: boolean) => setHasRight(hasRights);
+  const handleSpeaker = (speaker: string) => {
+    onSpeaker && onSpeaker(speaker);
+  };
+
   const handleImport = async () => {
     if (name.indexOf('.aup3') === -1) {
       showMessage(t.badProjName);
@@ -301,13 +315,14 @@ function AudacityManager(props: IProps) {
       onClose={handleClose}
       aria-labelledby="manager-title"
       open={open}
+      maxWidth="md"
       disableEnforceFocus
     >
       <DialogTitle id="manager-title">{t.title}</DialogTitle>
       <Grid container className={classes.grid}>
         {exists && name !== '' ? (
           <Grid container justifyContent="center">
-            <Grid item xs={9}>
+            <Grid item xs={8}>
               <FormControl>
                 <TextField
                   id="audacity-project"
@@ -321,12 +336,21 @@ function AudacityManager(props: IProps) {
                 />
               </FormControl>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <div className={classes.actions}>
                 <Button onClick={handleOpen} variant="outlined">
                   {t.open}
                 </Button>
-                <Button onClick={handleImport} variant="outlined">
+                <SpeakerName
+                  name={speaker || ''}
+                  onRights={handleRights}
+                  onChange={handleSpeaker}
+                />
+                <Button
+                  onClick={handleImport}
+                  variant="outlined"
+                  disabled={!hasRights}
+                >
                   {t.import}
                 </Button>
                 <Button onClick={handleUnlink} variant="outlined">

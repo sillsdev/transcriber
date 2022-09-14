@@ -276,6 +276,8 @@ export function PassageDetailRecord(props: IProps) {
           passageId={{ type: 'passage', id: passage.id } as RecordIdentity}
           mediaId={mediafileId}
           onImport={handleAudacityImport}
+          speaker={speaker}
+          onSpeaker={handleNameChange}
         />
         <BigDialog
           title={ts.versionHistory}
