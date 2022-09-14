@@ -52,6 +52,7 @@ import {
   ArtifactTypeSlug,
   useArtifactType,
   useTranscription,
+  findRecord,
 } from '../crud';
 import {
   localSync,
@@ -291,21 +292,16 @@ export function IntegrationPanel(props: IProps) {
     projInt: string,
     setting: string
   ): string => {
-    memory.update((t: TransformBuilder) =>
-      UpdateRecord(
-        t,
-        {
-          type: 'projectintegration',
-          id: projInt,
-          attributes: {
-            settings: setting,
-          },
-        } as ProjectIntegration,
-        user
-      )
-    );
+    var pi = findRecord(
+      memory,
+      'projectintegration',
+      projInt
+    ) as ProjectIntegration;
+    pi.attributes.settings = setting;
+    memory.update((t: TransformBuilder) => UpdateRecord(t, pi, user));
     return projInt;
   };
+
   const getProjectIntegration = (integration: string): string => {
     const projint: ProjectIntegration[] = projectintegrations.filter(
       (pi) =>
