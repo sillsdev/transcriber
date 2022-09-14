@@ -27,7 +27,6 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  ArtifactTypeSlug,
   findRecord,
   PermissionName,
   related,
@@ -46,6 +45,7 @@ import { useSaveComment } from '../../crud/useSaveComment';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import MediaPlayer from '../MediaPlayer';
 import { OldVernVersion } from '../../control/OldVernVersion';
+import { useArtifactType } from '../../crud';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -147,6 +147,7 @@ export const CommentCard = (props: IProps) => {
   const [confirmAction, setConfirmAction] = useState('');
   const [approved, setApprovedx] = useState(approvalStatus);
   const approvedRef = useRef(approvalStatus);
+  const { IsVernacularMedia } = useArtifactType();
   const setApproved = (value: boolean) => {
     setApprovedx(value);
     approvedRef.current = value;
@@ -271,10 +272,7 @@ export const CommentCard = (props: IProps) => {
       | MediaFile
       | undefined;
     if (mediaRec) {
-      if (
-        !mediaRec.attributes?.artifactType ||
-        mediaRec.attributes?.artifactType === ArtifactTypeSlug.Vernacular
-      ) {
+      if (IsVernacularMedia(mediaRec)) {
         setOldVernVer(mediaRec.attributes?.versionNumber);
       }
     }
@@ -301,6 +299,7 @@ export const CommentCard = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment, users]);
 
+  console.log(`media=${media} oldVernVer=${oldVernVer}`);
   return (
     <StyledWrapper>
       <GridContainerBorderedRow container>
@@ -321,7 +320,7 @@ export const CommentCard = (props: IProps) => {
               </GridContainerCol>
             ) : (
               <>
-                {media && !oldVernVer && (
+                {media && (!oldVernVer || oldVernVer === 0) && (
                   <IconButton id="playcomment" onClick={handlePlayComment}>
                     <PlayIcon />
                   </IconButton>
