@@ -17,7 +17,7 @@ const Splash = styled(Box)<BoxProps>(({ theme }) => ({
 const textProps = {
   color: 'primary.main',
   fontWeight: 'bold',
-  width: 'max-content',
+  width: '90%',
   alignSelf: 'center',
 } as SxProps;
 
@@ -29,10 +29,10 @@ interface IProps {
 export const ApmSplash = ({ message, component }: IProps) => (
   <Splash sx={{ py: 16, mt: 10 }}>
     <ApmLogo />
-    <Typography sx={textProps} variant="h2">
+    <Typography sx={textProps} variant="h2" align="center">
       {API_CONFIG.productName}
     </Typography>
-    <Typography variant="h5" sx={textProps}>
+    <Typography variant="h5" sx={textProps} align="center">
       {description}
     </Typography>
     <Typography sx={{ alignSelf: 'center', textAlign: 'center' }}>
