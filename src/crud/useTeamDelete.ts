@@ -114,7 +114,6 @@ export const useTeamDelete = () => {
         ops.push(t.removeRecord({ type: 'artifactcategory', id }))
       );
     }
-    console.log(`useTeamDelete ${teamid}`);
     ops.push(t.removeRecord({ type: 'organization', id: teamid }));
 
     await memory.update(ops);
