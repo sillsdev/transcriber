@@ -1,5 +1,12 @@
 import { ICommunityStrings, ISharedStrings, MediaFile } from '../model';
-import { Button, Paper, Typography, Box, SxProps } from '@mui/material';
+import {
+  Button,
+  Paper,
+  Typography,
+  Box,
+  SxProps,
+  LinearProgress,
+} from '@mui/material';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArtifactTypeSlug,
@@ -50,6 +57,7 @@ export function ProvideRights(props: IProps & IRecordProps) {
   const { speaker, recordType, onRights, createProject, team } = props;
   const [user] = useGlobal('user');
   const [organizationId] = useGlobal('organization');
+  const [busy] = useGlobal('importexportBusy');
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
@@ -215,9 +223,18 @@ export function ProvideRights(props: IProps & IRecordProps) {
             {ts.save}
           </PriButton>
         </Box>
+        {busy && (
+          <Box sx={{ display: 'flex', flexGrow: 1, alignItems: 'center' }}>
+            <Typography>{`${t.loading}\u00A0`}</Typography>
+            <LinearProgress
+              variant="indeterminate"
+              sx={{ display: 'flex', flexGrow: 1 }}
+            />
+          </Box>
+        )}
       </Paper>
       <Uploader
-        noBusy={true}
+        noBusy={false}
         recordAudio={false}
         importList={importList}
         isOpen={uploadVisible}

@@ -739,6 +739,12 @@
 				<target>Excluir Item</target>
 			</segment>
 		</unit>
+		<unit id="community.loading">
+			<segment>
+				<source>Loading:</source>
+				<target>Carregamento:</target>
+			</segment>
+		</unit>
 		<unit id="community.playTest">
 			<segment>
 				<source>Play Test</source>

@@ -184,6 +184,7 @@ const initialState = {
 			"addSpeaker": "Add '{0}'",
 			"deleteItem": "Delete Item",
 			"later": "Do later",
+			"loading": "Loading:",
 			"playTest": "Play Test",
 			"provideRights": "Provide Rights",
 			"record": "Record",
