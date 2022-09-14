@@ -71,6 +71,8 @@ export function SpeakerName({
     onRights && onRights(false);
   };
 
+  const inList = (name: string) => speakers.find((s) => s.name === name);
+
   const handleChoice = (newValue: string | NameOptionType | null) => {
     if (newValue === null) {
       nameReset();
@@ -79,14 +81,18 @@ export function SpeakerName({
         name: newValue,
       });
       onChange && onChange(newValue);
-      handleRights();
+      if (inList(newValue)) {
+        onRights && onRights(true);
+      } else handleRights();
     } else if (newValue && newValue.inputValue) {
       // Create a new value from the user input
       setValue({
         name: newValue.inputValue,
       });
       onChange && onChange(newValue.inputValue);
-      handleRights();
+      if (inList(newValue.inputValue)) {
+        onRights && onRights(true);
+      } else handleRights();
     } else {
       setValue(newValue);
       if (newValue) {
@@ -110,6 +116,13 @@ export function SpeakerName({
     });
     setSpeakers(newSpeakers);
   }, [ipRecs, team, organization]);
+
+  React.useEffect(() => {
+    if (inList(name)) {
+      onRights && onRights(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [speakers, name]);
 
   React.useEffect(() => {
     setValue({ name });
