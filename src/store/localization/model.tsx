@@ -166,6 +166,7 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "addSpeaker": string;
     "deleteItem": string;
     "later": string;
+    "loading": string;
     "playTest": string;
     "provideRights": string;
     "record": string;

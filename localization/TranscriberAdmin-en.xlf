@@ -772,6 +772,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.loading">
+         <segment>
+            <source>Loading:</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.playTest">
          <segment>
             <source>Play Test</source>
