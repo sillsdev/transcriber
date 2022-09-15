@@ -44,7 +44,7 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
 };
 
 export const getMedia = (media: MediaFile[], data: IGetMedia) => {
-  let rowData: IRow[] = [];
+  let rowData = new Array<IRow>();
 
   let index = 0;
   media.forEach((f) => {
