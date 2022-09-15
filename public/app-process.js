@@ -115,7 +115,7 @@ function createAppWindow() {
           label: 'Learn More',
           click: () => {
             shell.openPath(
-              path.join(execFolder(), 'help/SIL_Transcriber_Help.chm')
+              path.join(execFolder(), 'help/Audio_Project_Manager_Help.chm')
             );
           },
         },
