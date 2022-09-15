@@ -28,7 +28,7 @@ interface IStateProps {
 
 interface IProps extends IStateProps {
   data: IRow[];
-  setRefresh: (refresh: boolean) => void;
+  setRefresh: () => void;
   playItem: string;
   setPlayItem: (item: string) => void;
   mediaPlaying: boolean;
@@ -140,7 +140,7 @@ export const AudioTable = (props: IProps) => {
     ) as MediaFile;
     mediaRec.attributes.readyToShare = !mediaRec.attributes.readyToShare;
     memory.update((t: TransformBuilder) => UpdateRecord(t, mediaRec, user));
-    setRefresh(true);
+    setRefresh();
   };
   const handleCloseTranscription = () => {
     setShowId('');
@@ -163,9 +163,10 @@ export const AudioTable = (props: IProps) => {
 
   const handleActionConfirmed = () => {
     if (confirmAction === 'Delete') {
-      handleDelete(deleteItem);
-      setDeleteItem(-1);
-      setRefresh(true);
+      handleDelete(deleteItem).then(() => {
+        setDeleteItem(-1);
+        setRefresh();
+      });
     }
     setConfirmAction('');
   };

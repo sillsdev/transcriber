@@ -111,10 +111,12 @@ export function AudioTab(props: IProps) {
     ...props,
     doOrbitError,
   });
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(0);
   const cloudSync = useRef(false);
 
   const myToolId = 'AudioTab';
+
+  const handleRefresh = () => setRefresh(refresh + 1);
 
   const hasPassage = (pRow: number) => {
     for (let mediaId of Object.keys(attachMap)) {
@@ -246,10 +248,10 @@ export function AudioTab(props: IProps) {
   };
 
   useEffect(() => {
-    if (plan && mediaFiles.length > 0) {
+    if (plan) {
       setPlanMedia(getMediaInPlans([plan], mediaFiles, VernacularTag, true));
     }
-  }, [mediaFiles, plan]);
+  }, [mediaFiles, plan, refresh]);
 
   // Check if playItem changes
   useEffect(() => {
@@ -279,7 +281,6 @@ export function AudioTab(props: IProps) {
     };
     const newData = getMedia(planMedia, mediaData);
     setData(newData);
-    setRefresh(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planMedia, passages, sections, refresh]);
 
@@ -387,7 +388,7 @@ export function AudioTab(props: IProps) {
           <Box sx={{ display: 'flex', flexDirection: 'row' }}>
             <AudioTable
               data={data}
-              setRefresh={setRefresh}
+              setRefresh={handleRefresh}
               playItem={playItem}
               setPlayItem={setPlayItem}
               onAttach={onAttach}
