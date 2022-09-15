@@ -51,6 +51,8 @@ export function MediaPlayer(props: IProps) {
       setReady(false);
       fetchMediaUrl({ id: srcMediaId });
       setPlayItem(srcMediaId);
+    } else {
+      durationChange();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcMediaId]);
@@ -79,8 +81,11 @@ export function MediaPlayer(props: IProps) {
     }
   }, [ready, requestPlay, playing, playItem]);
 
-  useEffect(() => {
+  const setPosition = (position: number | undefined) => {
     if (audioRef.current && position) audioRef.current.currentTime = position;
+  };
+  useEffect(() => {
+    setPosition(position);
   }, [position]);
 
   const ended = () => {
@@ -108,8 +113,9 @@ export function MediaPlayer(props: IProps) {
   };
 
   const durationChange = () => {
+    setPosition(position);
     const el = audioRef.current as HTMLMediaElement;
-    if (onDuration) onDuration(el.duration);
+    if (onDuration && el?.duration) onDuration(el.duration);
     timeTrack.current = undefined;
   };
 
