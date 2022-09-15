@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useGlobal, useEffect } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -100,6 +100,7 @@ export const ProjectCard = (props: IProps) => {
     cardStrings,
     vProjectStrings,
     projButtonStrings,
+    sections,
     doImport,
   } = ctx.state;
   const { getPlanName } = usePlan();
@@ -255,7 +256,11 @@ export const ProjectCard = (props: IProps) => {
 
   moment.locale(ctx.state.lang);
 
-  const sectionCount = projectSections(project);
+  const sectionCount = useMemo(
+    () => projectSections(project),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [project, sections.length]
+  );
 
   return (
     <div className={classes.root}>
