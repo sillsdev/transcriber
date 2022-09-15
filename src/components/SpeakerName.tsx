@@ -48,6 +48,7 @@ export function SpeakerName({
   const t: ICommunityStrings = useSelector(communitySelector, shallowEqual);
 
   const handleRights = () => {
+    onRights && onRights(false);
     setShowDialog(true);
   };
 
