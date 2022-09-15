@@ -103,7 +103,7 @@ export function SpeakerName({
   };
 
   const handleLeave = (event: React.SyntheticEvent, reason: string) => {
-    if (reason === 'blur') handleChoice(valueRef.current);
+    if (reason === 'blur' && valueRef.current) handleChoice(valueRef.current);
   };
 
   React.useEffect(() => {
