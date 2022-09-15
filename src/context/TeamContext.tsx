@@ -24,6 +24,7 @@ import {
   BookNameMap,
   BookName,
   RoleNames,
+  Section,
 } from '../model';
 import { OptionType } from '../model';
 import { withData } from '../mods/react-orbitjs';
@@ -105,6 +106,7 @@ interface IRecordProps {
   projects: Project[];
   plans: Plan[];
   planTypes: PlanType[];
+  sections: Section[];
 }
 const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
@@ -113,6 +115,7 @@ const mapRecordsToProps = {
   projects: (q: QueryBuilder) => q.findRecords('project'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
+  sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 
 const initState = {
@@ -163,6 +166,7 @@ const initState = {
   setImportOpen: (val: boolean) => {},
   importProject: undefined as any,
   doImport: (p: VProject | undefined = undefined) => {},
+  sections: Array<Section>(),
 };
 
 export type ICtxState = typeof initState & {};
@@ -203,6 +207,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       bookSuggestions,
       bookMap,
       allBookData,
+      sections,
       fetchBooks,
       doOrbitError,
       resetOrbitError,
@@ -227,6 +232,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       pickerStrings,
       projButtonStrings,
       newProjectStrings,
+      sections,
       ts,
       resetOrbitError,
     });
@@ -356,12 +362,8 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const projectSections = (plan: Plan) => {
-      if (plan.attributes.sectionCount === undefined) {
-        //only old data
-        var sectionIds: string[] | null = related(plan, 'sections');
-        return sectionIds ? sectionIds.length.toString() : '<na>';
-      }
-      return plan.attributes.sectionCount.toString();
+      const sectionIds: string[] | null = related(plan, 'sections');
+      return sectionIds ? sectionIds.length.toString() : '<na>';
     };
 
     const getProject = (plan: Plan) => {
