@@ -5,7 +5,7 @@ import { API_CONFIG } from '../api-variable';
 const description = require('../../package.json').description;
 
 const Splash = styled(Box)<BoxProps>(({ theme }) => ({
-  width: '30%',
+  width: '90%',
   display: 'flex',
   flexDirection: 'column',
   alignContent: 'center',
