@@ -17,8 +17,12 @@ interface IProps {
 }
 
 export function OldVernVersion({ id, oldVernVer, mediaId, text }: IProps) {
-  const { oldVernacularPlayItem, setMediaSelected } =
-    useContext(PassageDetailContext).state;
+  const {
+    oldVernacularPlayItem,
+    oldVernacularPlaying,
+    handleOldVernacularPlayEnd,
+    setMediaSelected,
+  } = useContext(PassageDetailContext).state;
   const t: ICommentCardStrings = useSelector(commentCardSelector, shallowEqual);
 
   const myRegion = useMemo(() => {
@@ -26,7 +30,11 @@ export function OldVernVersion({ id, oldVernVer, mediaId, text }: IProps) {
   }, [text]);
 
   const handlePlayOldClip = (mediaId: string) => () => {
-    setMediaSelected(mediaId, myRegion?.start || 0, myRegion?.end || 0);
+    if (oldVernacularPlaying) {
+      handleOldVernacularPlayEnd();
+    } else {
+      setMediaSelected(mediaId, myRegion?.start || 0, myRegion?.end || 0);
+    }
   };
 
   return oldVernVer ? (
