@@ -49,6 +49,7 @@ import {
   findRecord,
   mediaArtifacts,
   IExportArtifacts,
+  ArtifactTypeSlug,
 } from '../../crud';
 import { logError, orbitInfo, Severity } from '../../utils';
 import Coordinator from '@orbit/coordinator';
@@ -472,7 +473,11 @@ export const importProjectToElectron =
       var mediaids = (
         memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
       )
-        .filter((m) => planids.includes(related(m, 'plan')))
+        .filter(
+          (m) =>
+            planids.includes(related(m, 'plan')) &&
+            related(m, 'artifacttype') !== ArtifactTypeSlug.IntellectualProperty
+        )
         .map((m) => m.id);
       var discussionids = (
         memory.cache.query((q) => q.findRecords('discussion')) as Discussion[]

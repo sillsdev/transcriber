@@ -767,7 +767,9 @@ if (
       notes: { type: 'string' },
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
-      lastModifiedBy: { type: 'number' }, //bkwd compat only
+      lastModifiedBy: { type: 'number' },
+      offlineId: { type: 'string' },
+      offlineMediafileId: { type: 'string' },
     },
     relationships: {
       organization: {
