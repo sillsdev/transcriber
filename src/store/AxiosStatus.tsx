@@ -23,7 +23,8 @@ export const errStatus = (err: AxiosError): IAxiosStatus => {
       let detail = err.response.data.errors[0];
       err.message += ' Detail: ' + detail.detail;
     } else {
-      err.message += ' Detail: ' + err.response.data;
+      err.message +=
+        ' Detail: ' + err.response.data.detail ?? err.response.data;
     }
   } else if (err.request) {
     // The request was made but no response was received

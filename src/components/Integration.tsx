@@ -297,8 +297,10 @@ export function IntegrationPanel(props: IProps) {
       'projectintegration',
       projInt
     ) as ProjectIntegration;
-    pi.attributes.settings = setting;
-    memory.update((t: TransformBuilder) => UpdateRecord(t, pi, user));
+    if (pi) {
+      pi.attributes.settings = setting;
+      memory.update((t: TransformBuilder) => UpdateRecord(t, pi, user));
+    }
     return projInt;
   };
 
@@ -431,7 +433,10 @@ export function IntegrationPanel(props: IProps) {
             LanguageTag: paratext_projects[index].LanguageTag,
             LanguageName: paratext_projects[index].LanguageName,
           };
-          addProjectIntegration(paratextIntegration, JSON.stringify(setting));
+          if (curInt.length > 0) {
+            updateProjectIntegration(curInt[0].id, JSON.stringify(setting));
+          } else
+            addProjectIntegration(paratextIntegration, JSON.stringify(setting));
         }
       }
     }
