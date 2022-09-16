@@ -374,6 +374,7 @@ export const importProjectToElectron =
     offlineOnly: boolean,
     AddProjectLoaded: (project: string) => void,
     reportError: typeof actions.doOrbitError,
+    getTypeId: (slug: string) => string | null,
     pendingmsg: string,
     completemsg: string,
     oldfilemsg: string
@@ -476,7 +477,8 @@ export const importProjectToElectron =
         .filter(
           (m) =>
             planids.includes(related(m, 'plan')) &&
-            related(m, 'artifacttype') !== ArtifactTypeSlug.IntellectualProperty
+            related(m, 'artifacttype') !==
+              getTypeId(ArtifactTypeSlug.IntellectualProperty)
         )
         .map((m) => m.id);
       var discussionids = (
