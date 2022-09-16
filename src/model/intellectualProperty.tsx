@@ -13,7 +13,7 @@ export interface IntellectualProperty extends BaseModel {
   };
   relationships?: {
     organization: RecordRelationship;
-    releaseMedia: RecordRelationship;
+    releaseMediafile: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }

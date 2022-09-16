@@ -239,6 +239,14 @@ export const doDataChanges = async (
                           localOps
                         );
                         break;
+                      case 'intellectualproperty':
+                        DeleteLocalCopy(
+                          upRec.record.attributes?.offlineId,
+                          upRec.record.type,
+                          tb,
+                          localOps
+                        );
+                        break;
                       case 'invitation':
                         var userrec = GetUser(memory, user);
                         if (

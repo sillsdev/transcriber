@@ -20,12 +20,7 @@ import {
 } from '../../model';
 import Memory from '@orbit/memory';
 import { getSerializer } from '../../serializers/JSONAPISerializerCustom';
-import {
-  QueryBuilder,
-  RecordIdentity,
-  Record,
-  TransformBuilder,
-} from '@orbit/data';
+import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import {
   related,
   remoteId,
@@ -49,6 +44,7 @@ import {
   createFolder,
 } from '../../utils';
 import IndexedDBSource from '@orbit/indexeddb';
+import IntellectualProperty from '../../model/intellectualProperty';
 
 export async function electronExport(
   exportType: ExportType,
@@ -338,6 +334,36 @@ export async function electronExport(
       }
       return ds;
     };
+    const IntellectualProperties = (
+      project: Project | undefined,
+      remoteIds: boolean
+    ) => {
+      var ips = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('intellectualproperty')
+      ) as IntellectualProperty[];
+      if (project) {
+        ips = ips.filter(
+          (rec) =>
+            related(rec, 'organization') === related(project, 'organization')
+        );
+      }
+      if (remoteIds) {
+        ips.forEach((ip) => {
+          if (!remoteId('intellectualproperty', ip.id, memory.keyMap))
+            ip.attributes.offlineId = ip.id;
+          if (
+            !remoteId(
+              'mediafile',
+              related(ip, 'releaseMediafile'),
+              memory.keyMap
+            )
+          )
+            ip.attributes.offlineMediafileId = related(ip, 'releaseMediafile');
+        });
+      }
+      return ips;
+    };
+
     const FromMedia = (media: MediaFile[], remoteIds: boolean) => {
       if (remoteIds) {
         media.forEach((m) => {
@@ -397,6 +423,18 @@ export async function electronExport(
         ).filter((r) => Boolean(r?.keys?.remoteId) === needsRemoteIds);
       };
       switch (info.table) {
+        case 'organization':
+          if (project)
+            return [
+              memory.cache.query((q: QueryBuilder) =>
+                q.findRecord({
+                  type: 'organization',
+                  id: related(project, 'organization'),
+                })
+              ) as Organization,
+            ];
+          return defaultQuery(info.table);
+
         case 'project':
           if (project) return [project];
           return defaultQuery(info.table);
@@ -416,19 +454,15 @@ export async function electronExport(
 
         case 'user':
           if (project) {
-            var gms = GroupMemberships(project).map((gm) => gm.id);
+            var projusers = GroupMemberships(project).map((gm) =>
+              related(gm, 'user')
+            );
             var users = memory.cache.query((q: QueryBuilder) =>
               q.findRecords(info.table)
             ) as User[];
+
             return users.filter(
-              (u) =>
-                related(u, 'groupMemberships') &&
-                gms.some(
-                  (gm) =>
-                    related(u, 'groupMemberships')
-                      .map((ri: RecordIdentity) => ri.id)
-                      .indexOf(gm) >= 0
-                )
+              (u) => projusers.find((p) => p === u.id) !== undefined
             );
           }
           return defaultQuery(info.table);
@@ -474,6 +508,9 @@ export async function electronExport(
               })
             ) as Record[];
           return defaultQuery(info.table);
+
+        case 'intellectualproperty':
+          return IntellectualProperties(project, needsRemoteIds);
 
         default:
           //activitystate,integration,plantype,projecttype,role

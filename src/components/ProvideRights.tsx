@@ -118,11 +118,9 @@ export function ProvideRights(props: IProps & IRecordProps) {
           );
           orgId = related(projRec, 'organization');
         }
-        const mediaId = remoteIdGuid(
-          'mediafile',
-          mediaRemoteIds[0],
-          memory.keyMap
-        );
+        const mediaId =
+          remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ??
+          mediaRemoteIds[0];
         const ip = {
           type: 'intellectualproperty',
           attributes: {

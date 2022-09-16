@@ -6,7 +6,7 @@ import { OpenDialogSyncOptions } from 'electron';
 import { Project, IElectronImportStrings, IState } from '../model';
 import * as action from '../store';
 import { QueryBuilder } from '@orbit/data';
-import { remoteIdGuid, useOfflnProjRead } from '../crud';
+import { remoteIdGuid, useArtifactType, useOfflnProjRead } from '../crud';
 import {
   dataPath,
   LocalKey,
@@ -49,6 +49,7 @@ export const useElectronImport = (
   const zipRef = useRef<AdmZip>();
   const t = useSelector(stringSelector, shallowEqual) as IElectronImportStrings;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const { getTypeId } = useArtifactType();
 
   const invalidReturn = {
     fileName: '',
@@ -301,6 +302,7 @@ export const useElectronImport = (
           isOfflinePtf.current,
           AddProjectLoaded,
           reportError,
+          getTypeId,
           t.importPending,
           t.importComplete,
           t.importOldFile
