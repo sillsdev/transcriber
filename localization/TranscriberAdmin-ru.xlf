@@ -648,7 +648,13 @@
 				<target>Аудиопроект создан</target>
 			</segment>
 		</unit>
-		<unit id="cards.save">
+      <unit id="cards.Render">
+         <segment>
+            <source>Render to Paratext</source>
+           	<target>Render до Paratext</target>
+         </segment>
+      </unit>
+      	<unit id="cards.save">
 			<segment>
 				<source>Save</source>
 				<target>Сохранить</target>
@@ -5947,6 +5953,18 @@
 				<target>Обратный перевод фразы</target>
 			</segment>
 		</unit>
+      <unit id="workflowSteps.pBTTranscribe">
+         <segment>
+            <source>Phrase BT Transcribe</source>
+			   <target>Обратный перевод фразы Транскрибировать</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.pBTParatextSync">
+         <segment>
+            <source>Phrase BT Paratext</source>
+ 			<target>Обратный перевод фразы синхронизировать</target>
+         </segment>
+      </unit>
 		<unit id="workflowSteps.preliminaryApproval">
 			<segment>
 				<source>Preliminary Approval</source>
@@ -5989,7 +6007,19 @@
 				<target>Обратный перевод целиком</target>
 			</segment>
 		</unit>
-		<unit id="wsAudioPlayer.aheadTip">
+      <unit id="workflowSteps.wBTTranscribe">
+         <segment>
+            <source>Whole BT Transcribe</source>
+			   <target>Обратный перевод целиком Транскрибировать</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.wBTParatextSync">
+         <segment>
+            <source>Whole BT Paratext</source>
+ 			<target>Обратный перевод целиком синхронизировать</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aheadTip">
 			<segment>
 				<source>Ahead {jump} {1} [{0}]</source>
 				<target>Перейти вперед {jump} {1} [{0}]</target>

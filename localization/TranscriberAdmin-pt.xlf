@@ -643,7 +643,13 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="cards.save">
+      <unit id="cards.Render">
+         <segment>
+            <source>Render to Paratext</source>
+           	<target>Render a Paratext</target>
+         </segment>
+      </unit>
+      <unit id="cards.save">
 			<segment>
 				<source>Save</source>
 				<target>Salvar</target>
@@ -5912,7 +5918,19 @@
 				<target>Traduzir Frase Voltar</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.preliminaryApproval">
+      <unit id="workflowSteps.pBTTranscribe">
+         <segment>
+            <source>Phrase BT Transcribe</source>
+			<target>Traduzir Frase Voltar Transcrição</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.pBTParatextSync">
+         <segment>
+            <source>Phrase BT Paratext</source>
+ 			<target>Traduzir Frase Voltar Sincronização</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.preliminaryApproval">
 			<segment>
 				<source>Preliminary Approval</source>
 				<target>Aprovação Preliminar</target>
@@ -5954,7 +5972,19 @@
 				<target>Traduzir todo o verso</target>
 			</segment>
 		</unit>
-		<unit id="wsAudioPlayer.aheadTip">
+      <unit id="workflowSteps.wBTTranscribe">
+         <segment>
+            <source>Whole BT Transcribe</source>
+			   <target>Traduzir todo Transcrição</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.wBTParatextSync">
+         <segment>
+            <source>Whole BT Paratext</source>
+ 			<target>Traduzir todo Sincronização</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aheadTip">
 			<segment>
 				<source>Ahead {jump} {1} [{0}]</source>
 				<target>Avançar {jump} {1} [{0}]</target>

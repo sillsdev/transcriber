@@ -646,6 +646,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.Render">
+         <segment>
+            <source>Render to Paratext</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.save">
          <segment>
             <source>Save</source>
@@ -5980,6 +5986,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="workflowSteps.pBTTranscribe">
+         <segment>
+            <source>Phrase BT Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.pBTParatextSync">
+         <segment>
+            <source>Phrase BT Paratext</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="workflowSteps.preliminaryApproval">
          <segment>
             <source>Preliminary Approval</source>
@@ -6019,6 +6037,18 @@
       <unit id="workflowSteps.wholeBackTranslation">
          <segment>
             <source>Whole Back Translate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.wBTTranscribe">
+         <segment>
+            <source>Whole BT Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.wBTParatextSync">
+         <segment>
+            <source>Whole BT Paratext</source>
             <target/>
          </segment>
       </unit>

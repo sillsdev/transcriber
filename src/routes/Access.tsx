@@ -242,8 +242,8 @@ export function Access(props: IProps) {
   const handleCreateUser = async () => {
     setOffline(true);
     logout();
-    await offlineSetup();
     setOfflineOnly(true);
+    await offlineSetup();
     setEditId('Add');
   };
 

@@ -751,6 +751,13 @@
                <context context-type="sourcefile">AddCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.Render">
+            <source>Render to Paratext</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TeamDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.save">
             <source>Save</source>
             <target/>
@@ -6974,6 +6981,20 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="workflowSteps.pBTTranscribe">
+            <source>Phrase BT Transcribe</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.pBTParatextSync">
+            <source>Phrase BT Paratext</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="workflowSteps.preliminaryApproval">
             <source>Preliminary Approval</source>
             <target/>
@@ -7018,6 +7039,20 @@
          </trans-unit>
          <trans-unit id="workflowSteps.wholeBackTranslation">
             <source>Whole Back Translate</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.wBTTranscribe">
+            <source>Whole BT Transcribe</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.wBTParatextSync">
+            <source>Whole BT Paratext</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>

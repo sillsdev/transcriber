@@ -151,6 +151,7 @@ const initialState = {
 			"personalProjects": "Personal Audio Projects",
 			"process": "Default Workflow",
 			"projectCreated": "Audio Project Created",
+			"Render": "Render to Paratext",
 			"save": "Save",
 			"sectionStatus": "{0} {1}",
 			"settings": "Settings",
@@ -1308,6 +1309,8 @@ const initialState = {
 			"paratextSync": "Sync to Paratext",
 			"peerReview": "Peer Review",
 			"phraseBackTranslation": "Phrase Back Translate",
+			"pBTTranscribe": "Phrase BT Transcribe",
+			"pBTParatextSync": "Phrase BT Paratext",
 			"preliminaryApproval": "Preliminary Approval",
 			"record": "Record",
 			"saveFirst": "Save before changing step?",
@@ -1315,6 +1318,8 @@ const initialState = {
 			"transcribe": "Transcribe",
 			"unsaved": "Unsaved content",
 			"wholeBackTranslation": "Whole Back Translate",
+			"wBTTranscribe": "Whole BT Transcribe",
+			"wBTParatextSync": "Whole BT Paratext",
 		}
 	}),
 	"wsAudioPlayer": new LocalizedStrings({

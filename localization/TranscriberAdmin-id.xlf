@@ -643,6 +643,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.Render">
+         <segment>
+            <source>Render to Paratext</source>
+           	<target>Render sampai Paratext</target>
+         </segment>
+      </unit>
       <unit id="cards.save">
          <segment>
             <source>Save</source>
@@ -5848,10 +5854,22 @@
       <unit id="workflowSteps.phraseBackTranslation">
          <segment>
             <source>Phrase Back Translate</source>
-            <target/>
+            <target>terjemahan balik frase</target>
          </segment>
       </unit>
-      <unit id="workflowSteps.preliminaryApproval">
+      <unit id="workflowSteps.pBTTranscribe">
+         <segment>
+            <source>Phrase BT Transcribe</source>
+			   <target>terjemahan balik frase menuliskan</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.pBTParatextSync">
+         <segment>
+            <source>Phrase BT Paratext</source>
+ 			<target>terjemahan balik frase menyinkronkan</target>
+         </segment>
+      </unit>
+        <unit id="workflowSteps.preliminaryApproval">
          <segment>
             <source>Preliminary Approval</source>
             <target/>
@@ -5878,7 +5896,7 @@
       <unit id="workflowSteps.transcribe">
          <segment>
             <source>Transcribe</source>
-            <target/>
+            <target>menuliskan</target>
          </segment>
       </unit>
       <unit id="workflowSteps.unsaved">
@@ -5890,7 +5908,19 @@
       <unit id="workflowSteps.wholeBackTranslation">
          <segment>
             <source>Whole Back Translate</source>
-            <target/>
+            <target>Terjemahan Seluruh Kembali</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.wBTTranscribe">
+         <segment>
+            <source>Whole BT Transcribe</source>
+			   <target>Terjemahan Seluruh Kembali menuliskan</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.wBTParatextSync">
+         <segment>
+            <source>Whole BT Paratext</source>
+ 			<target>Terjemahan Seluruh Kembali menyinkronkan</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.aheadTip">

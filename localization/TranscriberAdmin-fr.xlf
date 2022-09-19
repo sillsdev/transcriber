@@ -643,6 +643,12 @@
 				<target>Création d'un projet audio</target>
 			</segment>
 		</unit>
+      <unit id="cards.Render">
+         <segment>
+            <source>Render to Paratext</source>
+           	<target>Render à Paratext</target>
+         </segment>
+      </unit>
 		<unit id="cards.save">
 			<segment>
 				<source>Save</source>
@@ -5913,6 +5919,18 @@
 				<target>Traduction du dos par phrase</target>
 			</segment>
 		</unit>
+      <unit id="workflowSteps.pBTTranscribe">
+         <segment>
+            <source>Phrase BT Transcribe</source>
+			<target>Phrase Retour Traduire Transcription</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.pBTParatextSync">
+         <segment>
+            <source>Phrase BT Paratext</source>
+ 			<target>Phrase Retour Traduire Sync</target>
+         </segment>
+      </unit>
 		<unit id="workflowSteps.preliminaryApproval">
 			<segment>
 				<source>Preliminary Approval</source>
@@ -5955,6 +5973,18 @@
 				<target>Traduire en entier</target>
 			</segment>
 		</unit>
+      <unit id="workflowSteps.wBTTranscribe">
+         <segment>
+            <source>Whole BT Transcribe</source>
+			<target>Traduire en entier Transcription</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.wBTParatextSync">
+         <segment>
+            <source>Whole BT Paratext</source>
+ 			<target>Traduire en entier Sync</target>
+         </segment>
+      </unit>
 		<unit id="wsAudioPlayer.aheadTip">
 			<segment>
 				<source>Ahead {jump} {1} [{0}]</source>

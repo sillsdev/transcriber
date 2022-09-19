@@ -111,14 +111,16 @@ export const useArtifactType = () => {
     return related(m, 'artifactType') === VernacularTag;
   };
 
-  const getTypeId = (typeSlug: string) => {
+  const getTypeId = (typeSlug: string, forceOffline: boolean = false) => {
     if (typeSlug === ArtifactTypeSlug.Vernacular) return null;
     const types = memory.cache.query((q: QueryBuilder) =>
       q
         .findRecords('artifacttype')
         .filter({ attribute: 'typename', value: typeSlug })
     ) as ArtifactType[];
-    const v = types.find((r) => Boolean(r?.keys?.remoteId) !== offlineOnly);
+    const v = types.find(
+      (r) => Boolean(r?.keys?.remoteId) !== (forceOffline || offlineOnly)
+    );
     return v?.id || '';
   };
 

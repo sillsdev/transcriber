@@ -136,6 +136,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "personalProjects": string;
     "process": string;
     "projectCreated": string;
+    "Render": string;
     "save": string;
     "sectionStatus": string;
     "settings": string;
@@ -1226,6 +1227,8 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "paratextSync": string;
     "peerReview": string;
     "phraseBackTranslation": string;
+    "pBTTranscribe": string;
+    "pBTParatextSync": string;
     "preliminaryApproval": string;
     "record": string;
     "saveFirst": string;
@@ -1233,6 +1236,8 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "transcribe": string;
     "unsaved": string;
     "wholeBackTranslation": string;
+    "wBTTranscribe": string;
+    "wBTParatextSync": string;
 };
 
 export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods {
