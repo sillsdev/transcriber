@@ -102,6 +102,7 @@ export function Welcome(props: IProps) {
   const [hasOnlineUsers, setHasOnlineUsers] = useState(false);
   const [hasOfflineProjects, setHasOfflineProjects] = useState(false);
   const [hasProjects, setHasProjects] = useState(false);
+  const [, setOfflineOnly] = useGlobal('offlineOnly');
   const checkOnline = useCheckOnline(resetOrbitError);
 
   const hasRecs = (recType: string, iRecs?: Record[], offline?: Boolean) => {
@@ -245,6 +246,7 @@ export function Welcome(props: IProps) {
   };
 
   const handleQuickOffline = () => {
+    setOfflineOnly(true);
     if (!hasOfflineProjects || !hasOfflineUsers)
       localStorage.setItem('autoaddProject', 'true');
 
