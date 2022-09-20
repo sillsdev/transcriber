@@ -150,6 +150,9 @@ export const doDataChanges = async (
     if (related(orgmem, 'user') === user) {
       memory.sync(await remote.pull((q) => q.findRecords('organization')));
       memory.sync(await remote.pull((q) => q.findRecords('orgworkflowstep')));
+      memory.sync(
+        await remote.pull((q) => q.findRecords('organizationmembership'))
+      );
     }
   };
 
@@ -161,6 +164,7 @@ export const doDataChanges = async (
       memory.sync(await remote.pull((q) => q.findRecords('group')));
       memory.sync(await remote.pull((q) => q.findRecords('project')));
       memory.sync(await remote.pull((q) => q.findRecords('plan')));
+      memory.sync(await remote.pull((q) => q.findRecords('groupmembership')));
     }
   };
 
@@ -252,8 +256,10 @@ export const doDataChanges = async (
                       case 'invitation':
                         var userrec = GetUser(memory, user);
                         if (
-                          (upRec.record as Invitation).attributes?.email ===
-                          userrec.attributes.email
+                          (
+                            upRec.record as Invitation
+                          ).attributes?.email.toLowerCase() ===
+                          userrec.attributes.email.toLowerCase()
                         )
                           AcceptInvitation(remote, upRec.record as Invitation);
                         break;
