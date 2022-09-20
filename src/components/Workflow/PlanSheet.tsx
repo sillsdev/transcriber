@@ -83,11 +83,11 @@ const ContentDiv = styled('div')(({ theme }) => ({
     textAlign: 'left',
     padding: theme.spacing(1),
   },
-  '& tr td:first-child > span': {
+  '& tr td:first-of-type > span': {
     display: 'flex!important',
     justifyContent: 'center',
   },
-  '& tr td:nth-child(2) > span': {
+  '& tr td:nth-of-type(2) > span': {
     display: 'flex!important',
     justifyContent: 'center',
   },

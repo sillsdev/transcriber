@@ -48,7 +48,7 @@ import { PlanContext } from '../context/PlanContext';
 
 const AssignmentDiv = styled('div')(() => ({
   display: 'flex',
-  '& tr > td > div > span.MuiButtonBase-root:nth-child(3)': {
+  '& tr > td > div > span.MuiButtonBase-root:nth-of-type(3)': {
     visibility: 'hidden',
   },
 }));

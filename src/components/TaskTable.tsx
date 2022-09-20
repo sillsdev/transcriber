@@ -48,13 +48,13 @@ const TaskTableDiv = styled('div')(() => ({
   '& .MuiList-root': {
     padding: 0,
   },
-  '& colgroup col:first-child': {
+  '& colgroup col:first-of-type': {
     width: '1px !important',
   },
-  '&[data-list="true"] colgroup col:nth-child(2)': {
+  '&[data-list="true"] colgroup col:nth-of-type(2)': {
     width: `${TaskItemWidth}px !important`,
   },
-  '& tbody > tr:first-child': {
+  '& tbody > tr:first-of-type': {
     display: 'none',
   },
 }));
