@@ -147,8 +147,10 @@ export const doDataChanges = async (
     const orgmem = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'organizationmembership', id: localId })
     ) as OrganizationMembership;
-    if (related(orgmem, 'user') === user)
+    if (related(orgmem, 'user') === user) {
       memory.sync(await remote.pull((q) => q.findRecords('organization')));
+      memory.sync(await remote.pull((q) => q.findRecords('orgworkflowstep')));
+    }
   };
 
   const reloadProjects = async (localId: string) => {
