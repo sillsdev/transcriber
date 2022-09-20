@@ -9,13 +9,11 @@ import { TeamProjects } from '../components/Team';
 import StickyRedirect from '../components/StickyRedirect';
 import { remoteId } from '../crud';
 import TeamActions from '../components/Team/TeamActions';
-import { RoleNames } from '../model';
 import { UnsavedContext } from '../context/UnsavedContext';
 
 export const TeamScreen = () => {
   const { pathname } = useLocation();
   const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
   const [project, setProject] = useGlobal('project');
   const [projRole, setProjRole] = useGlobal('projRole');
   const [projType, setProjType] = useGlobal('projType');
@@ -32,10 +30,12 @@ export const TeamScreen = () => {
   useEffect(() => {
     if (project !== '' && projRole) {
       const remProjId = remoteId('plan', plan, memory.keyMap);
-      const loc =
+      const loc = `/plan/${remProjId || plan}/0`;
+      /*
         projRole === RoleNames.Admin && (!isOffline || offlineOnly)
           ? `/plan/${remProjId || plan}/0`
           : `/work/${remProjId || plan}`;
+          */
       if (loc !== localStorage.getItem(localUserKey(LocalKey.url))) {
         setView(loc);
       } else {
