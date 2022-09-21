@@ -6,7 +6,12 @@ import { OpenDialogSyncOptions } from 'electron';
 import { Project, IElectronImportStrings, IState } from '../model';
 import * as action from '../store';
 import { QueryBuilder } from '@orbit/data';
-import { remoteIdGuid, useArtifactType, useOfflnProjRead } from '../crud';
+import {
+  remoteIdGuid,
+  useArtifactType,
+  useOfflineSetup,
+  useOfflnProjRead,
+} from '../crud';
 import {
   dataPath,
   LocalKey,
@@ -15,11 +20,12 @@ import {
   useProjectsLoaded,
 } from '../utils';
 import { isElectron } from '../api-variable';
-import { useGlobal, useRef } from 'reactn';
+import { useContext, useGlobal, useRef } from 'reactn';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
 import IndexedDBSource from '@orbit/indexeddb';
+import { TokenContext } from '../context/TokenProvider';
 
 export interface IImportData {
   fileName: string;
@@ -40,6 +46,9 @@ export const useElectronImport = (
   importComplete: typeof action.importComplete
 ) => {
   const [coordinator] = useGlobal('coordinator');
+  const token = useContext(TokenContext).state.accessToken;
+  const [errorReporter] = useGlobal('errorReporter');
+  const offlineSetup = useOfflineSetup();
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
   const isOfflinePtf = useRef<boolean>(false);
@@ -305,7 +314,11 @@ export const useElectronImport = (
           getTypeId,
           t.importPending,
           t.importComplete,
-          t.importOldFile
+          t.importOldFile,
+          token,
+          user,
+          errorReporter,
+          offlineSetup
         );
         const userLastTimeKey = localUserKey(LocalKey.time);
         let lastTime = localStorage.getItem(userLastTimeKey) || '';

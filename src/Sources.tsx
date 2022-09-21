@@ -312,7 +312,8 @@ export const Sources = async (
       memory,
       tokenCtx.state.accessToken || '',
       user,
-      globalStore.errorReporter
+      globalStore.errorReporter,
+      offlineSetup
     );
   }
   return { syncBuffer, syncFile, goRemote };

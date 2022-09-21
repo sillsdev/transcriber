@@ -10,7 +10,8 @@ export const updateBackTranslationType = async (
   memory: MemorySource,
   token: string | null,
   user: string,
-  errorReporter: any
+  errorReporter: any,
+  offlineSetup: () => Promise<void>
 ) => {
   if (token) {
     await axiosGet('mediafiles/wbt', undefined, token).catch(
@@ -35,16 +36,30 @@ export const updateBackTranslationType = async (
       (a) => a.attributes.typename === 'wholebacktranslation'
     );
 
-    if (!bt || !wbt) return;
+    if (!bt || !wbt) {
+      await offlineSetup();
+      wbt = artifacttypes.find(
+        (a) => a.attributes.typename === 'wholebacktranslation'
+      );
+      if (!wbt) {
+        logError(
+          Severity.error,
+          errorReporter,
+          'Unable to find wholebacktranslation artifact type'
+        );
+        return;
+      }
+    }
 
     var mediafiles = memory.cache.query((q: QueryBuilder) =>
       q
         .findRecords('mediafile')
         .filter({ relation: 'artifactType', record: bt as RecordIdentity })
-        .filter({ attribute: 'sourceSegments', value: null })
     ) as MediaFile[];
-
-    mediafiles.forEach((m) =>
+    var nosegs = mediafiles.filter(
+      (m) => (m.attributes.sourceSegments?.length ?? 0) === 0
+    );
+    nosegs.forEach((m) =>
       memory.update((t: TransformBuilder) =>
         UpdateRelatedRecord(t, m, 'artifactType', 'artifacttype', wbt?.id, user)
       )
