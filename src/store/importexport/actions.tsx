@@ -54,6 +54,7 @@ import {
 import { logError, orbitInfo, Severity } from '../../utils';
 import Coordinator from '@orbit/coordinator';
 import { axiosPost } from '../../utils/axios';
+import { updateBackTranslationType } from '../../crud/updateBackTranslationType';
 
 export const exportComplete = () => (dispatch: any) => {
   dispatch({
@@ -377,7 +378,11 @@ export const importProjectToElectron =
     getTypeId: (slug: string) => string | null,
     pendingmsg: string,
     completemsg: string,
-    oldfilemsg: string
+    oldfilemsg: string,
+    token: string | null,
+    user: string,
+    errorReporter: any,
+    offlineSetup: () => Promise<void>
   ) =>
   (dispatch: any) => {
     var tb: TransformBuilder = new TransformBuilder();
@@ -613,6 +618,7 @@ export const importProjectToElectron =
             dataDate
           )) || project;
       }
+
       return project;
     }
 
@@ -682,6 +688,15 @@ export const importProjectToElectron =
           if (oparray.length > 0) {
             await saveToMemory(oparray, 'remove extra records');
             await saveToBackup(oparray, 'remove extra records from backup');
+          }
+          if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
+            updateBackTranslationType(
+              memory,
+              token,
+              user,
+              errorReporter,
+              offlineSetup
+            );
           }
           AddProjectLoaded(project?.id || '');
           dispatch({
