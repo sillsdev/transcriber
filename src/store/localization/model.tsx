@@ -835,8 +835,7 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "installAudacity": string;
     "loadingTable": string;
     "passage": string;
-    "pasteInvalidColumnsGeneral": string;
-    "pasteInvalidColumnsScripture": string;
+    "pasteInvalidColumns": string;
     "pasteInvalidSections": string;
     "pasteNoRows": string;
     "reference": string;

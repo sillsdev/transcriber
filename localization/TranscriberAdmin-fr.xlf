@@ -4059,16 +4059,10 @@
 				<target>Passage</target>
 			</segment>
 		</unit>
-		<unit id="scriptureTable.pasteInvalidColumnsGeneral">
+		<unit id="scriptureTable.pasteInvalidColumns">
 			<segment>
-				<source>Invalid number of columns ({0}). Expecting 5 columns.</source>
-				<target>Nombre de colonnes non valide ({0}). Attend 5 colonnes.</target>
-			</segment>
-		</unit>
-		<unit id="scriptureTable.pasteInvalidColumnsScripture">
-			<segment>
-				<source>Invalid number of columns ({0}). Expecting 6 columns.</source>
-				<target>Nombre de colonnes non valide ({0}). Attend 6 colonnes.</target>
+				<source>Invalid number of columns ({0}). Expecting {1} columns.</source>
+				<target>Nombre de colonnes non valide ({0}). Attend {1} colonnes.</target>
 			</segment>
 		</unit>
 		<unit id="scriptureTable.pasteInvalidSections">

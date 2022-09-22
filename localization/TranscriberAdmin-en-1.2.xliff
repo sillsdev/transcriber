@@ -4804,15 +4804,8 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="scriptureTable.pasteInvalidColumnsGeneral">
-            <source>Invalid number of columns ({0}). Expecting 5 columns.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ScriptureTable.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="scriptureTable.pasteInvalidColumnsScripture">
-            <source>Invalid number of columns ({0}). Expecting 6 columns.</source>
+         <trans-unit id="scriptureTable.pasteInvalidColumns">
+            <source>Invalid number of columns ({0}). Expecting {1} columns.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
