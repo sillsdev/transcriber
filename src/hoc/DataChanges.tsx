@@ -186,6 +186,7 @@ export const doDataChanges = async (
       setDataChangeCount(changes.length + deletes.length);
       for (const table of changes) {
         if (table.ids.length > 0) {
+          if (!remote) return started;
           remote
             .pull((q: QueryBuilder) =>
               q
