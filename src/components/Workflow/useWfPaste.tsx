@@ -25,7 +25,7 @@ interface IProps {
 }
 
 export const useWfPaste = (props: IProps) => {
-  const { secNumCol, passNumCol, scripture, flat, t, shared } = props;
+  const { secNumCol, passNumCol, flat, t, shared } = props;
   const { colNames, findBook } = props;
   const { showMessage } = useSnackBar();
   const { getOrganizedBy } = useOrganizedBy();
@@ -44,24 +44,15 @@ export const useWfPaste = (props: IProps) => {
       return false;
     }
     const organizedBy = getOrganizedBy(true);
-    if (scripture) {
-      if (rows[0].length !== colNames.length) {
-        showMessage(
-          t.pasteInvalidColumnsScripture.replace(
-            '{0}',
-            rows[0].length.toString()
-          )
-        );
-        return false;
-      }
-    } else {
-      if (rows[0].length !== colNames.length) {
-        showMessage(
-          t.pasteInvalidColumnsGeneral.replace('{0}', rows[0].length.toString())
-        );
-        return false;
-      }
+    if (rows[0].length !== colNames.length) {
+      showMessage(
+        t.pasteInvalidColumns
+          .replace('{0}', rows[0].length.toString())
+          .replace('{1}', colNames.length.toString())
+      );
+      return false;
     }
+
     let invalidSec = rows
       .filter(
         (row, rowIndex) => rowIndex > 0 && !isBlankOrValidNumber(row[secNumCol])
