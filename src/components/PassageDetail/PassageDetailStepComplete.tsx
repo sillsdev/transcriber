@@ -9,7 +9,7 @@ import { getPasIdByNum } from '../../crud';
 import { usePassageNavigate } from './usePassageNavigate';
 import { passageDetailStepCompleteSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-import { LocalKey, localUserKey } from '../../utils';
+import { rememberCurrentPassage } from '../../utils';
 
 export const PassageDetailStepComplete = () => {
   const {
@@ -49,7 +49,7 @@ export const PassageDetailStepComplete = () => {
     const seq = passage?.attributes?.sequencenum;
     const pasId = getPasIdByNum(section, seq + 1, memory);
     if (pasId && !curStatus) {
-      localStorage.setItem(localUserKey(LocalKey.passage), pasId);
+      rememberCurrentPassage(memory, pasId);
       setView(`/detail/${prjId}/${pasId}`);
     } else setCurrentStep(''); // setting to empty jumps to first uncompleted step
   };

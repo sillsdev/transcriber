@@ -65,3 +65,4 @@ export * from './cleanClipboard';
 export * from './isVisual';
 export * from './restoreScroll';
 export * from './startEnd';
+export * from './rememberCurrentPassage';

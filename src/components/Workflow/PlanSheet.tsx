@@ -26,7 +26,13 @@ import {
   iconMargin,
 } from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
-import { refMatch, cleanClipboard, localUserKey, LocalKey } from '../../utils';
+import {
+  refMatch,
+  cleanClipboard,
+  localUserKey,
+  LocalKey,
+  rememberCurrentPassage,
+} from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
 import { remoteIdGuid, useDiscussionCount } from '../../crud';
 import TaskAvatar from '../TaskAvatar';
@@ -262,10 +268,15 @@ export function PlanSheet(props: IProps) {
     }
     return false;
   };
+
   const setCurrentRow = (row: number) => {
     currentRowRef.current = row;
     setCurrentRowx(row);
+    if (isPassage(row - 1)) {
+      rememberCurrentPassage(memory, rowInfo[row - 1].passageId?.id ?? '');
+    }
   };
+
   const handleSelect = (loc: DataSheet.Selection) => {
     setCurrentRow(loc.end.i);
     sheetScroll();
@@ -447,7 +458,6 @@ export function PlanSheet(props: IProps) {
         }
         if (tbodyRef) {
           setCurrentRow(row + 1);
-          localStorage.removeItem(localUserKey(LocalKey.passage));
           sheetScroll();
           // The useEffect will trigger when sheet is present but
           // if sheet is present and we aren't ready, set a half
