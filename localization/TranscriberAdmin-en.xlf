@@ -5368,6 +5368,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.offlineData">
+         <segment>
+            <source>You cannot export an online project after creating new content offline (recordings, discussions, comments etc.). Please export an ITF file.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.changed">
          <segment>
             <source>Changed</source>

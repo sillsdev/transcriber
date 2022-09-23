@@ -308,6 +308,7 @@ export function TranscriptionTab(props: IProps) {
           ? localizedArtifactType(artifactType)
           : t.changed
       ),
+      t.offlineData,
       localizedArtifact,
       getOfflineProject,
       step,

@@ -1174,6 +1174,7 @@ const initialState = {
 			"incompletePlan": "Plan is incomplete: attach audio to passages.",
 			"latestAudio": "Latest Audio",
 			"noData": "No {0} Data.",
+			"offlineData": "You cannot export an online project after creating new content offline (recordings, discussions, comments etc.). Please export an ITF file.",
 			"changed": "Changed",
 			"passages": "Passages",
 			"plan": "Plan",

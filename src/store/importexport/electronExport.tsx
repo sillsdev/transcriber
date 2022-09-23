@@ -55,6 +55,7 @@ export async function electronExport(
   fingerprint: string,
   userid: number | string,
   nodatamsg: string,
+  noNewallowed: string,
   localizedArtifact: string,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
   target?: string,
@@ -557,10 +558,18 @@ export async function electronExport(
     const AddAll = (
       info: fileInfo,
       project: Project | undefined,
-      needsRemoteIds: boolean
+      needsRemoteIds: boolean,
+      allowNew: boolean = true
     ) => {
       let recs = GetTableRecs(info, project, needsRemoteIds);
       if (recs && Array.isArray(recs) && recs.length > 0) {
+        if (
+          needsRemoteIds &&
+          !allowNew &&
+          recs.filter((r) => !Boolean(r.keys?.remoteId)).length > 0
+        ) {
+          throw new Error(noNewallowed);
+        }
         if (!scripturePackage) {
           AddJsonEntry(info.table + 's', recs, info.sort);
         }
@@ -636,7 +645,7 @@ export async function electronExport(
         break;
       default:
         updateableFiles.forEach(
-          (info) => (numRecs += AddAll(info, limit, needsRemoteIds))
+          (info) => (numRecs += AddAll(info, limit, needsRemoteIds, false))
         );
         staticFiles.forEach((info) => AddAll(info, limit, needsRemoteIds));
         AddFonts();
@@ -668,8 +677,9 @@ export async function electronExport(
       .map((o) => related(o, 'project')) as string[];
     projects = projects.filter((p) => ids.includes(p.id));
     backupZip = new AdmZip();
-    if (exportType === ExportType.FULLBACKUP) exportType = ExportType.PTF;
-    else {
+    if (exportType === ExportType.FULLBACKUP) {
+      exportType = ExportType.PTF;
+    } else {
       projects = projects.filter(
         (p) => remoteId('project', p.id, memory.keyMap) !== undefined
       );

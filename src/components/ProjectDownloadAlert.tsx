@@ -17,6 +17,8 @@ import { dataPath, PathType } from '../utils';
 import { related, useProjectPlans, getMediaInPlans } from '../crud';
 import { isElectron } from '../api-variable';
 
+import fs from 'fs';
+
 interface PlanProject {
   [planId: string]: string;
 }
@@ -65,8 +67,8 @@ export const ProjectDownloadAlert = (props: IProps) => {
     mediaRecs.forEach((m) => {
       if (related(m, 'artifactType') || related(m, 'passage')) {
         var local = { localname: '' };
-        var curpath = dataPath(m.attributes.audioUrl, PathType.MEDIA, local);
-        if (curpath !== local.localname) {
+        dataPath(m.attributes.audioUrl, PathType.MEDIA, local);
+        if (!fs.existsSync(local.localname)) {
           needyProject.add(planProject[related(m, 'plan')]);
           totalSize += m?.attributes?.filesize || 0;
         }
