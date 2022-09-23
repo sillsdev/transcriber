@@ -77,6 +77,7 @@ export const exportProject =
     errorReporter: any, //global errorReporter
     pendingmsg: string,
     nodatamsg: string,
+    noNewAllowedmsg: string,
     localizedArtifact: string,
     getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
     target?: string,
@@ -109,6 +110,7 @@ export const exportProject =
         fingerprint,
         userid,
         nodatamsg,
+        noNewAllowedmsg,
         localizedArtifact,
         getOfflineProject,
         target,
