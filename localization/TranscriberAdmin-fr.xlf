@@ -5307,6 +5307,12 @@
             <target>Non {0} Données.</target>
          </segment>
       </unit>
+      <unit id="transcriptionTab.offlineData">
+         <segment>
+            <source>You cannot export an online project after creating new content offline (recordings, discussions, comments etc.). Please export an ITF file.</source>
+            <target>Vous ne pouvez pas exporter un projet en ligne après avoir créé un nouveau contenu hors ligne (enregistrements, discussions, commentaires, etc.). Veuillez exporter un fichier ITF.</target>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.passages">
 			<segment>
 				<source>Passages</source>

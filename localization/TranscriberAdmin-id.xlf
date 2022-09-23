@@ -5245,6 +5245,18 @@
             <target/>
          </segment>
       </unit>
+		<unit id="transcriptionTab.noData">
+         <segment>
+            <source>No {0} Data.</source>
+            <target></target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.offlineData">
+         <segment>
+            <source>You cannot export an online project after creating new content offline (recordings, discussions, comments etc.). Please export an ITF file.</source>
+            <target>Anda tidak dapat mengekspor proyek online setelah membuat konten baru secara offline (rekaman, diskusi, komentar, dll.). Harap ekspor file ITF.</target>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.passages">
          <segment>
             <source>Passages</source>
