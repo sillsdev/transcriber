@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="en" version="1.0">
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="id" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.availableUsers">
          <segment>
@@ -267,8 +267,8 @@
       </unit>
       <unit id="artifactType.retell">
          <segment>
-            <source>Community Test Retelling</source>
-            <target>Menceritakan Ulang Tes Komunitas</target>
+            <source>Community Test Retell</source>
+            <target/>
          </segment>
       </unit>
       <unit id="artifactType.sharedresource">
@@ -703,9 +703,27 @@
             <target>Menyetujui</target>
          </segment>
       </unit>
+      <unit id="commentCard.approved">
+         <segment>
+            <source>Approved</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="commentCard.confirmDelete">
          <segment>
             <source>Delete this comment?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentCard.playOrStop">
+         <segment>
+            <source>Play / Stop</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="commentCard.previousVersion">
+         <segment>
+            <source>Previous Version</source>
             <target/>
          </segment>
       </unit>
@@ -739,13 +757,25 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.addSpeaker">
+         <segment>
+            <source>Add '{0}'</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.deleteItem">
          <segment>
             <source>Delete Item</source>
             <target/>
          </segment>
       </unit>
-   	<unit id="community.loading">
+   	<unit id="community.later">
+         <segment>
+            <source>Do later</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.loading">
    		<segment>
    			<source>Loading:</source>
    			<target/>
@@ -754,6 +784,12 @@
    	<unit id="community.playTest">
          <segment>
             <source>Play Test</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.provideRights">
+         <segment>
+            <source>Provide Rights</source>
             <target/>
          </segment>
       </unit>
@@ -855,14 +891,20 @@
    	</unit>
       <unit id="discussionCard.assign">
          <segment>
-            <source>Assign to a Group or User</source>
-            <target>Tetapkan ke Grup atau Pengguna</target>
+            <source>Assign to a Group or Team Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.earlierVersion">
+         <segment>
+            <source>From an earlier version</source>
+            <target/>
          </segment>
       </unit>
       <unit id="discussionCard.groupuser">
          <segment>
-            <source>Group/User</source>
-            <target>Grup/Pengguna</target>
+            <source>Group/Team Member</source>
+            <target/>
          </segment>
       </unit>
       <unit id="discussionCard.assignGroup">
@@ -1162,6 +1204,12 @@
       <unit id="filterMenu.category">
          <segment>
             <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.filter">
+         <segment>
+            <source>Filter Discussions</source>
             <target/>
          </segment>
       </unit>
@@ -1983,7 +2031,7 @@
       </unit>
       <unit id="invite.addInvite">
          <segment>
-            <source>Invite Member</source>
+            <source>Invite Person</source>
             <target/>
          </segment>
       </unit>
@@ -2073,7 +2121,7 @@
       </unit>
       <unit id="invite.newInviteTask">
          <segment>
-            <source>Enter the email address of the member to invite.</source>
+            <source>Enter the email address of the person to invite.</source>
             <target/>
          </segment>
       </unit>
@@ -2575,6 +2623,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaActions.drag">
+         <segment>
+            <source>Drag to reorder</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.edit">
+         <segment>
+            <source>Edit</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaActions.pause">
          <segment>
             <source>Pause</source>
@@ -2584,6 +2644,12 @@
       <unit id="mediaActions.play">
          <segment>
             <source>Play</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.view">
+         <segment>
+            <source>View</source>
             <target/>
          </segment>
       </unit>
@@ -2851,6 +2917,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.intellectualPropertyTask">
+         <segment>
+            <source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.intellectualPropertyTitle">
+         <segment>
+            <source>Upload Intellectual Property Release</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.invalidFile">
          <segment>
             <source>Not valid for this operation: {0} </source>
@@ -2875,13 +2953,7 @@
    			<target/>
    		</segment>
    	</unit>
-   	<unit id="mediaUpload.projectResourceTitle">
-   		<segment>
-   			<source>Upload Project Resource</source>
-   			<target/>
-   		</segment>
-   	</unit>
-      <unit id="mediaUpload.PTFtask">
+   	<unit id="mediaUpload.PTFtask">
          <segment>
             <source>Upload a Portable Transcriber File (ptf).</source>
             <target/>
@@ -3127,7 +3199,13 @@
    			<target/>
    		</segment>
    	</unit>
-   	<unit id="passageDetailArtifacts.description">
+   	<unit id="passageDetailArtifacts.deleteConfirm">
+         <segment>
+            <source>Delete Resource?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.description">
    		<segment>
    			<source>Description</source>
    			<target/>
@@ -3225,7 +3303,7 @@
       </unit>
    	<unit id="passageDetailArtifacts.tip1a">
    		<segment>
-   			<source>Resourses uploaded will be associated with this passage or {0}.</source>
+   			<source>Resources for:</source>
    			<target/>
    		</segment>
    	</unit>
@@ -3373,6 +3451,12 @@
    			<target>Pengeditan Grup Baru</target>
    		</segment>
    	</unit>
+      <unit id="peer.inUse">
+         <segment>
+            <source>Name already in use</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="peer.permissions">
          <segment>
             <source>Special permission</source>
@@ -3403,7 +3487,13 @@
    			<target>Grup Baru</target>
    		</segment>
    	</unit>
-   	<unit id="peer.remove">
+   	<unit id="peer.peerGroup">
+         <segment>
+            <source>Peer Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.remove">
    		<segment>
    			<source>Remove</source>
    			<target>Hapus</target>
@@ -3451,6 +3541,12 @@
             <target>Komentar CIT hanya akan terlihat oleh Mentor sampai mentor menyetujui komentar tersebut.</target>
          </segment>
       </unit>
+      <unit id="permission.nsp">
+         <segment>
+            <source>General</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="permission.mentor">
          <segment>
             <source>Mentor</source>
@@ -3461,6 +3557,12 @@
          <segment>
             <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
             <target>Komentar Mentor hanya akan terlihat oleh CIT. Mentor dapat menyetujui komentar CIT agar terlihat oleh anggota tim lainnya.</target>
+         </segment>
+      </unit>
+      <unit id="permission.nspTip">
+         <segment>
+            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planActions.assign">
@@ -3573,7 +3675,7 @@
       </unit>
       <unit id="planSheet.passageBelow">
          <segment>
-            <source>Insert passage below {0}</source>
+            <source>Insert passage below passage {0}</source>
             <target/>
          </segment>
       </unit>
@@ -4183,12 +4285,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="shared.backtranslator">
-         <segment>
-            <source>Back Translator</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="shared.bookNotInParatext">
          <segment>
             <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
@@ -4309,6 +4405,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.noAudio">
+         <segment>
+            <source>No Audio Available!</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.NoSaveOffline">
          <segment>
             <source>Unable to save while offline.</source>
@@ -4419,7 +4521,7 @@
    	</unit>
    	<unit id="shared.user">
          <segment>
-            <source>User</source>
+            <source>Team Member</source>
             <target/>
          </segment>
       </unit>
@@ -4444,6 +4546,12 @@
       <unit id="sortMenu.lastUpdated">
          <segment>
             <source>Last Updated</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="sortMenu.sortMenu">
+         <segment>
+            <source>Sort Discussions</source>
             <target/>
          </segment>
       </unit>
@@ -4741,6 +4849,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="toDoTable.speaker">
+         <segment>
+            <source>Speaker</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="toDoTable.state">
          <segment>
             <source>State</source>
@@ -4756,6 +4870,12 @@
       <unit id="toDoTable.title">
          <segment>
             <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.topic">
+         <segment>
+            <source>Topic</source>
             <target/>
          </segment>
       </unit>
@@ -4870,12 +4990,6 @@
       <unit id="transcriber.addNote">
          <segment>
             <source>Add Note</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.backToWorkflow">
-         <segment>
-            <source>Back to Workflow</source>
             <target/>
          </segment>
       </unit>
@@ -5109,7 +5223,7 @@
       </unit>
       <unit id="transcriptionTab.audioExport">
          <segment>
-            <source>Audio Export</source>
+            <source>Export Audio Files</source>
             <target/>
          </segment>
       </unit>
@@ -5257,6 +5371,12 @@
             <target>Anda tidak dapat mengekspor proyek online setelah membuat konten baru secara offline (rekaman, diskusi, komentar, dll.). Harap ekspor file ITF.</target>
          </segment>
       </unit>
+      <unit id="transcriptionTab.changed">
+         <segment>
+            <source>Changed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.passages">
          <segment>
             <source>Passages</source>
@@ -5361,7 +5481,7 @@
       </unit>
       <unit id="usertable.addNewUser">
          <segment>
-            <source>Add New User</source>
+            <source>Add New Member</source>
             <target/>
          </segment>
       </unit>

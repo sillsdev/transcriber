@@ -255,8 +255,8 @@
 		</unit>
 		<unit id="artifactType.qanda">
 			<segment>
-				<source>Question and Answer</source>
-				<target>Questions et réponses</target>
+				<source>Community Test Question and Answer</source>
+				<target>Test communautaire : questions et réponses</target>
 			</segment>
 		</unit>
 		<unit id="artifactType.resource">
@@ -267,8 +267,8 @@
 		</unit>
 		<unit id="artifactType.retell">
 			<segment>
-				<source>Retelling</source>
-				<target>Récit</target>
+				<source>Community Test Retell</source>
+				<target>Test communautaire Retell</target>
 			</segment>
 		</unit>
 		<unit id="artifactType.sharedresource">
@@ -289,13 +289,13 @@
 				<target>Vernaculaire</target>
 			</segment>
 		</unit>
-      <unit id="artifactType.wholebacktranslation">
-         <segment>
-            <source>Whole Back Translation</source>
-            <target>Traduction du dos entier</target>
-         </segment>
-      </unit>
-      <unit id="assignmentTable.assignSec">
+		<unit id="artifactType.wholebacktranslation">
+			<segment>
+				<source>Whole Back Translation</source>
+				<target>Traduction du dos entier</target>
+			</segment>
+		</unit>
+		<unit id="assignmentTable.assignSec">
 			<segment>
 				<source>Assign {0}</source>
 				<target>Affecter {0}</target>
@@ -643,12 +643,12 @@
 				<target>Création d'un projet audio</target>
 			</segment>
 		</unit>
-      <unit id="cards.Render">
-         <segment>
-            <source>Render to Paratext</source>
-           	<target>Render à Paratext</target>
-         </segment>
-      </unit>
+		<unit id="cards.Render">
+			<segment>
+				<source>Render to Paratext</source>
+				<target>Render à Paratext</target>
+			</segment>
+		</unit>
 		<unit id="cards.save">
 			<segment>
 				<source>Save</source>
@@ -697,24 +697,42 @@
 				<target>Progression du téléchargement</target>
 			</segment>
 		</unit>
-      <unit id="commentCard.approve">
-         <segment>
-            <source>Approve</source>
-            <target>Approuver</target>
-         </segment>
-      </unit>
+		<unit id="commentCard.approve">
+			<segment>
+				<source>Approve</source>
+				<target>Approuver</target>
+			</segment>
+		</unit>
+		<unit id="commentCard.approved">
+			<segment>
+				<source>Approved</source>
+				<target>Approuvé</target>
+			</segment>
+		</unit>
 		<unit id="commentCard.confirmDelete">
 			<segment>
 				<source>Delete this comment?</source>
 				<target>Supprimer ce commentaire ?</target>
 			</segment>
 		</unit>
-        <unit id="commentCard.unapproved">
-         <segment>
-            <source>Unapproved</source>
-            <target>Désapprouvé</target>
-         </segment>
-      </unit>
+		<unit id="commentCard.playOrStop">
+			<segment>
+				<source>Play / Stop</source>
+				<target>Lecture / Arrêt</target>
+			</segment>
+		</unit>
+		<unit id="commentCard.previousVersion">
+			<segment>
+				<source>Previous Version</source>
+				<target>Version précédente</target>
+			</segment>
+		</unit>
+		<unit id="commentCard.unapproved">
+			<segment>
+				<source>Unapproved</source>
+				<target>Désapprouvé</target>
+			</segment>
+		</unit>
 		<unit id="commentEditor.record">
 			<segment>
 				<source>Record Comment</source>
@@ -739,10 +757,22 @@
 				<target>Non sauvegardé</target>
 			</segment>
 		</unit>
+		<unit id="community.addSpeaker">
+			<segment>
+				<source>Add '{0}'</source>
+				<target>Ajouter '{0}'.</target>
+			</segment>
+		</unit>
 		<unit id="community.deleteItem">
 			<segment>
 				<source>Delete Item</source>
 				<target>Supprimer l'élément</target>
+			</segment>
+		</unit>
+		<unit id="community.later">
+			<segment>
+				<source>Do later</source>
+				<target>A faire plus tard</target>
 			</segment>
 		</unit>
 		<unit id="community.loading">
@@ -755,6 +785,12 @@
 			<segment>
 				<source>Play Test</source>
 				<target>Jouer le test</target>
+			</segment>
+		</unit>
+		<unit id="community.provideRights">
+			<segment>
+				<source>Provide Rights</source>
+				<target>Fournir des droits</target>
 			</segment>
 		</unit>
 		<unit id="community.record">
@@ -784,7 +820,7 @@
 		<unit id="community.segment">
 			<segment>
 				<source>Segment</source>
-				<target/>
+				<target>Segmenter</target>
 			</segment>
 		</unit>
 		<unit id="community.speaker">
@@ -854,17 +890,23 @@
 			</segment>
 		</unit>
 		<unit id="discussionCard.assign">
-         <segment>
-            <source>Assign to a Group or User</source>
-            <target>Attribuer à un groupe ou à un utilisateur</target>
-         </segment>
-      </unit>
-      <unit id="discussionCard.groupuser">
-         <segment>
-            <source>Group/User</source>
-            <target>Groupe/Utilisateur</target>
-         </segment>
-      </unit>
+			<segment>
+				<source>Assign to a Group or Team Member</source>
+				<target>Attribuer à un groupe ou à un membre de l'équipe</target>
+			</segment>
+		</unit>
+		<unit id="discussionCard.earlierVersion">
+			<segment>
+				<source>From an earlier version</source>
+				<target>A partir d'une version antérieure</target>
+			</segment>
+		</unit>
+		<unit id="discussionCard.groupuser">
+			<segment>
+				<source>Group/Team Member</source>
+				<target>Groupe/membre de l'équipe</target>
+			</segment>
+		</unit>
 		<unit id="discussionCard.assignGroup">
 			<segment>
 				<source>Assign to a Group</source>
@@ -873,8 +915,8 @@
 		</unit>
 		<unit id="discussionCard.assignUser">
 			<segment>
-				<source>Assign to a User</source>
-				<target>Affecter à un utilisateur</target>
+				<source>Assign to a Team Member</source>
+				<target>Affecter à un membre de l'équipe</target>
 			</segment>
 		</unit>
 		<unit id="discussionCard.category">
@@ -967,12 +1009,12 @@
 				<target>{0} / {1} discussions</target>
 			</segment>
 		</unit>
-      <unit id="discussionList.saveFilter">
-         <segment>
-            <source>Save as the Team default?</source>
-            <target>Enregistrer en tant qu'équipe par défaut?</target>
-         </segment>
-      </unit>
+		<unit id="discussionList.saveFilter">
+			<segment>
+				<source>Save as the Team default?</source>
+				<target>Enregistrer en tant qu'équipe par défaut?</target>
+			</segment>
+		</unit>
 		<unit id="discussionList.saveFirst">
 			<segment>
 				<source>Save changed discussions and comments first?</source>
@@ -1083,8 +1125,8 @@
 		</unit>
 		<unit id="electronImport.newerVersion">
 			<segment>
-				<source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
-				<target>Ce fichier a été exporté avec une version plus récente du programme.  Vous devriez télécharger la dernière version avant de l'importer !  Si vous continuez, certaines données risquent de ne pas être importées correctement.</target>
+				<source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
+				<target>Ce fichier a été exporté avec une version plus récente du programme. Vous devriez télécharger la dernière version avant de l'importer ! Si vous continuez, certaines données risquent de ne pas être importées correctement.</target>
 			</segment>
 		</unit>
 		<unit id="electronImport.project">
@@ -1095,8 +1137,7 @@
 		</unit>
 		<unit id="electronImport.projectImported">
 			<segment>
-				<source>Audio Project {name0} was previously imported with a newer file:
-					{date1}</source>
+				<source>Audio Project {name0} was previously imported with a newer file: {date1}</source>
 				<target>Le projet audio {nom0} a été précédemment importé avec un fichier plus récent : {date1}</target>
 			</segment>
 		</unit>
@@ -1167,12 +1208,12 @@
 			</segment>
 		</unit>
 		<unit id="filterMenu.filter">
-         <segment>
-            <source>Filter Discussions</source>
-            <target>Discussions sur les filtres</target>
-         </segment>
-      </unit>
-      <unit id="filterMenu.forYou">
+			<segment>
+				<source>Filter Discussions</source>
+				<target>Discussions sur les filtres</target>
+			</segment>
+		</unit>
+		<unit id="filterMenu.forYou">
 			<segment>
 				<source>For You</source>
 				<target>Pour vous</target>
@@ -1535,7 +1576,7 @@
 		<unit id="hotKey.shiftKey">
 			<segment>
 				<source>Shift</source>
-				<target/>
+				<target>Équipe</target>
 			</segment>
 		</unit>
 		<unit id="hotKey.spaceKey">
@@ -1702,8 +1743,7 @@
 		</unit>
 		<unit id="import.projectNotFound">
 			<segment>
-				<source>ITF does not contain current audio project. It contains audio project
-					{0}.</source>
+				<source>ITF does not contain current audio project. It contains audio project {0}.</source>
 				<target>L'ITF ne contient pas le projet audio actuel. Il contient le projet audio {0}.</target>
 			</segment>
 		</unit>
@@ -1991,8 +2031,8 @@
 		</unit>
 		<unit id="invite.addInvite">
 			<segment>
-				<source>Invite Member</source>
-				<target>Inviter un membre</target>
+				<source>Invite Person</source>
+				<target>Inviter une personne</target>
 			</segment>
 		</unit>
 		<unit id="invite.allUsersProjects">
@@ -2081,8 +2121,8 @@
 		</unit>
 		<unit id="invite.newInviteTask">
 			<segment>
-				<source>Enter the email address of the member to invite.</source>
-				<target>Entrez le adresse électronique du membre à inviter.</target>
+				<source>Enter the email address of the person to invite.</source>
+				<target>Saisissez l'adresse électronique de la personne à inviter.</target>
 			</segment>
 		</unit>
 		<unit id="invite.noProjects">
@@ -2670,7 +2710,7 @@
 		<unit id="mediaTab.cloudSync">
 			<segment>
 				<source>Cloud Sync</source>
-				<target/>
+				<target>Cloud Sync</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.date">
@@ -2877,6 +2917,18 @@
 				<target>Glissez et déposez un fichier ici, ou cliquez ici pour rechercher le fichier.</target>
 			</segment>
 		</unit>
+		<unit id="mediaUpload.intellectualPropertyTask">
+			<segment>
+				<source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
+				<target>Téléchargez un communiqué de propriété intellectuelle pour {0} au format audio ou visuel. Les formats audio acceptés sont .mp3, .m4a, .wav ou .ogg. Les formats visuels acceptés sont .pdf, .png, ou .jpg.</target>
+			</segment>
+		</unit>
+		<unit id="mediaUpload.intellectualPropertyTitle">
+			<segment>
+				<source>Upload Intellectual Property Release</source>
+				<target>Télécharger la décharge de propriété intellectuelle</target>
+			</segment>
+		</unit>
 		<unit id="mediaUpload.invalidFile">
 			<segment>
 				<source>Not valid for this operation: {0}</source>
@@ -2899,12 +2951,6 @@
 			<segment>
 				<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
 				<target>Téléchargez des fichiers audio au format .mp3, .m4a, .wav ou .ogg ou du contenu visuel au format .pdf.</target>
-			</segment>
-		</unit>
-		<unit id="mediaUpload.projectResourceTitle">
-			<segment>
-				<source>Upload Project Resource</source>
-				<target>Télécharger la ressource du projet</target>
 			</segment>
 		</unit>
 		<unit id="mediaUpload.PTFtask">
@@ -3188,12 +3234,6 @@
 				<source>Passage</source>
 				<target>Passage</target>
 			</segment>
-		</unit>``
-		<unit id="passageDetailArtifacts.projectResourcePassage">
-			<segment>
-				<source>Select {0} and Passages</source>
-				<target>Sélectionner {0} et Passages</target>
-			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.pasteFormat">
 			<segment>
@@ -3205,6 +3245,12 @@
 			<segment>
 				<source>Nothing changed! Perhaps no references matched?</source>
 				<target>Rien n'a changé ! Peut-être aucune référence ne correspondait-elle ?</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.projectResourcePassage">
+			<segment>
+				<source>Select {0} and Passages</source>
+				<target>Sélectionnez {0} et les passages</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.projectResourceSheet">
@@ -3257,7 +3303,7 @@
 		</unit>
 		<unit id="passageDetailArtifacts.tip1a">
 			<segment>
-				<source>Resourses for:</source>
+				<source>Resources for:</source>
 				<target>Les ressources pour :</target>
 			</segment>
 		</unit>
@@ -3411,30 +3457,30 @@
 				<target>Nom déjà utilisé</target>
 			</segment>
 		</unit>
-      <unit id="peer.permissions">
-         <segment>
-            <source>Special permission</source>
-            <target>Autorisation spéciale</target>
-         </segment>
-      </unit>
-      <unit id="peer.noSpecialPermission">
-         <segment>
-            <source>No special permission</source>
-             <target>Pas d'autorisation spéciale</target>
-         </segment>
-      </unit>
+		<unit id="peer.permissions">
+			<segment>
+				<source>Special permission</source>
+				<target>Autorisation spéciale</target>
+			</segment>
+		</unit>
+		<unit id="peer.noSpecialPermission">
+			<segment>
+				<source>No special permission</source>
+				<target>Pas d'autorisation spéciale</target>
+			</segment>
+		</unit>
 		<unit id="peer.member">
 			<segment>
 				<source>Member</source>
 				<target>Membre</target>
 			</segment>
 		</unit>
-      <unit id="peer.name">
-         <segment>
-            <source>Peer Group Name</source>
-            <target>Nom du groupe de pairs</target>
-         </segment>
-      </unit>
+		<unit id="peer.name">
+			<segment>
+				<source>Peer Group Name</source>
+				<target>Nom du groupe de pairs</target>
+			</segment>
+		</unit>
 		<unit id="peer.newPeerGroup">
 			<segment>
 				<source>New Peer Group</source>
@@ -3459,55 +3505,67 @@
 				<target>Voulez-vous supprimer le groupe de pairs et les informations sur les membres qui le composent ?</target>
 			</segment>
 		</unit>
-      <unit id="permission.admin">
-         <segment>
-            <source>Admin</source>
-            <target></target>
-         </segment>
-      </unit>
-      <unit id="permission.adminTip">
-         <segment>
-            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target></target>
-         </segment>
-      </unit>
-      <unit id="permission.consultant">
-         <segment>
-            <source>Consultant</source>
-            <target></target>
-         </segment>
-      </unit>
-      <unit id="permission.consultantTip">
-         <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
-            <target></target>
-         </segment>
-      </unit>
-      <unit id="permission.consultantInTraining">
-         <segment>
-            <source>Consultant In Training</source>
-            <target>Consultante en formation</target>
-         </segment>
-      </unit>
-      <unit id="permission.consultantInTrainingTip">
-         <segment>
-            <source>CITs comments will only be visible to Mentors until a mentor approves the comment.</source>
-            <target>Les commentaires des CIT ne seront visibles par les mentors que jusqu'à ce qu'un mentor approuve le commentaire.</target>
-         </segment>
-      </unit>
-      <unit id="permission.mentor">
-         <segment>
-            <source>Mentor</source>
-            <target>Mentor</target>
-         </segment>
-      </unit>
-      <unit id="permission.mentorTip">
-         <segment>
-            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-            <target>Les commentaires du mentor ne seront visibles que par les CIT. Les mentors peuvent approuver les commentaires de CIT pour les rendre visibles au reste de l'équipe.</target>
-         </segment>
-      </unit>
-      <unit id="planActions.assign">
+		<unit id="permission.admin">
+			<segment>
+				<source>Admin</source>
+				<target>Admin</target>
+			</segment>
+		</unit>
+		<unit id="permission.adminTip">
+			<segment>
+				<source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+				<target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur de l'équipe ? Les personnes de ce groupe pourront effectuer n'importe quelle étape, même si elle est assignée à un groupe dont elles ne font pas partie.</target>
+			</segment>
+		</unit>
+		<unit id="permission.consultant">
+			<segment>
+				<source>Consultant</source>
+				<target>Consultant</target>
+			</segment>
+		</unit>
+		<unit id="permission.consultantTip">
+			<segment>
+				<source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
+				<target>Pas sûr que nous ayons besoin de cette autorisation non plus, car on ne sait pas très bien ce que font les consultants dans ce logiciel. Indépendant Les commentaires du consultant seront visibles par tous les membres de l'équipe.</target>
+			</segment>
+		</unit>
+		<unit id="permission.consultantInTraining">
+			<segment>
+				<source>Consultant In Training</source>
+				<target>Consultante en formation</target>
+			</segment>
+		</unit>
+		<unit id="permission.consultantInTrainingTip">
+			<segment>
+				<source>CITs comments will only be visible to Mentors until a mentor approves the comment.</source>
+				<target>Les commentaires des CIT ne seront visibles par les mentors que jusqu'à ce qu'un mentor approuve le commentaire.</target>
+			</segment>
+		</unit>
+		<unit id="permission.nsp">
+			<segment>
+				<source>General</source>
+				<target>Général</target>
+			</segment>
+		</unit>
+		<unit id="permission.mentor">
+			<segment>
+				<source>Mentor</source>
+				<target>Mentor</target>
+			</segment>
+		</unit>
+		<unit id="permission.mentorTip">
+			<segment>
+				<source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+				<target>Les commentaires du mentor ne seront visibles que par les CIT. Les mentors peuvent approuver les commentaires de CIT pour les rendre visibles au reste de l'équipe.</target>
+			</segment>
+		</unit>
+		<unit id="permission.nspTip">
+			<segment>
+				<source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
+				<target>Groupe de pairs général sans permissions spéciales. Utilisé pour assigner des discussions à des groupes d'équipe.</target>
+			</segment>
+		</unit>
+		<unit id="planActions.assign">
 			<segment>
 				<source>Assign</source>
 				<target>Affecter</target>
@@ -3603,43 +3661,43 @@
 				<target>Ne passez pas au non-numéro.</target>
 			</segment>
 		</unit>
-      <unit id="planSheet.insertFirstPassage">
-         <segment>
-            <source>Add passage as first in {0} {1}</source>
-            <target>Ajouter le passage en premier dans {0} {1}</target>
-         </segment>
-      </unit>
-      <unit id="planSheet.insertLastPassage">
-         <segment>
-            <source>Add passage as last in {0} {1}</source>
-            <target>Ajouter le passage en dernier dans {0} {1}</target>
-         </segment>
-      </unit>
-      <unit id="planSheet.passageBelow">
+		<unit id="planSheet.insertFirstPassage">
+			<segment>
+				<source>Add passage as first in {0} {1}</source>
+				<target>Ajouter le passage en premier dans {0} {1}</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.insertLastPassage">
+			<segment>
+				<source>Add passage as last in {0} {1}</source>
+				<target>Ajouter le passage en dernier dans {0} {1}</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.passageBelow">
 			<segment>
 				<source>Insert passage below passage {0}</source>
 				<target>Insérer le passage ci-dessous passage {0}</target>
 			</segment>
 		</unit>
-      <unit id="planSheet.passageEnd">
-         <segment>
-            <source>Add Passage to End</source>
-            <target>Ajouter un passage à la fin</target>
-         </segment>
-      </unit>
-      <unit id="planSheet.passageToPrevSection">
-         <segment>
-            <source>Move Passage to Previous Section</source>
-            <target>Déplacer le passage vers la section précédente</target>
-         </segment>
-      </unit>
-      <unit id="planSheet.passageToNextSection">
-         <segment>
-            <source>Move Passage to Next Section</source>
-            <target>Déplacer le passage vers la section suivante</target>
-         </segment>
-      </unit>
-      <unit id="planSheet.pasting">
+		<unit id="planSheet.passageEnd">
+			<segment>
+				<source>Add Passage to End</source>
+				<target>Ajouter un passage à la fin</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.passageToPrevSection">
+			<segment>
+				<source>Move Passage to Previous Section</source>
+				<target>Déplacer le passage vers la section précédente</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.passageToNextSection">
+			<segment>
+				<source>Move Passage to Next Section</source>
+				<target>Déplacer le passage vers la section suivante</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.pasting">
 			<segment>
 				<source>Pasting</source>
 				<target>Coller</target>
@@ -3671,17 +3729,17 @@
 		</unit>
 		<unit id="planSheet.sectionAbove">
 			<segment>
-				<source>Insert {0} above  {1} {2}</source>
+				<source>Insert {0} above {1} {2}</source>
 				<target>Insérer {0} ci-dessus {1} {2}</target>
 			</segment>
 		</unit>
-      <unit id="planSheet.sectionEnd">
-         <segment>
-            <source>Add {0} to End</source>
-            <target>Ajouter {0} à la fin</target>
-         </segment>
-      </unit>
-      	<unit id="planSheet.selectRows">
+		<unit id="planSheet.sectionEnd">
+			<segment>
+				<source>Add {0} to End</source>
+				<target>Ajouter {0} à la fin</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.selectRows">
 			<segment>
 				<source>Please select row(s) to {0}.</source>
 				<target>Veuillez sélectionner la ou les lignes de {0}.</target>
@@ -3792,13 +3850,13 @@
 		<unit id="profile.defaultLocale">
 			<segment>
 				<source>Default locale set.</source>
-				<target/>
+				<target>Paramètres régionaux par défaut.</target>
 			</segment>
 		</unit>
 		<unit id="profile.defaultTimezone">
 			<segment>
 				<source>Default timezone set.</source>
-				<target/>
+				<target>Fuseau horaire par défaut.</target>
 			</segment>
 		</unit>
 		<unit id="profile.deleteExplained">
@@ -3816,13 +3874,13 @@
 		<unit id="profile.discardChanges">
 			<segment>
 				<source>Discard unsaved Changes?</source>
-				<target/>
+				<target>Annuler les modifications non sauvegardées ?</target>
 			</segment>
 		</unit>
 		<unit id="profile.discardChangesExplained">
 			<segment>
 				<source>Discard unsaved Changes? ({0})</source>
-				<target/>
+				<target>Ignorer les modifications non sauvegardées ? ({0})</target>
 			</segment>
 		</unit>
 		<unit id="profile.email">
@@ -4227,12 +4285,6 @@
 				<target>Admin</target>
 			</segment>
 		</unit>
-		<unit id="shared.backtranslator">
-			<segment>
-				<source>Back Translator</source>
-				<target>Retour Traducteur</target>
-			</segment>
-		</unit>
 		<unit id="shared.bookNotInParatext">
 			<segment>
 				<source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
@@ -4498,12 +4550,12 @@
 			</segment>
 		</unit>
 		<unit id="sortMenu.sortMenu">
-         <segment>
-            <source>Sort Discussions</source>
-            <target>Trier les discussions</target>
-         </segment>
-      </unit>
-      <unit id="sortMenu.topic">
+			<segment>
+				<source>Sort Discussions</source>
+				<target>Trier les discussions</target>
+			</segment>
+		</unit>
+		<unit id="sortMenu.topic">
 			<segment>
 				<source>Topic</source>
 				<target>Sujet</target>
@@ -4797,6 +4849,12 @@
 				<target>Project audio</target>
 			</segment>
 		</unit>
+		<unit id="toDoTable.speaker">
+			<segment>
+				<source>Speaker</source>
+				<target>Intervenant</target>
+			</segment>
+		</unit>
 		<unit id="toDoTable.state">
 			<segment>
 				<source>State</source>
@@ -4813,6 +4871,12 @@
 			<segment>
 				<source>Title</source>
 				<target>Titre</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.topic">
+			<segment>
+				<source>Topic</source>
+				<target>Sujet</target>
 			</segment>
 		</unit>
 		<unit id="toDoTable.transcriber">
@@ -4927,12 +4991,6 @@
 			<segment>
 				<source>Add Note</source>
 				<target>Ajouter une note</target>
-			</segment>
-		</unit>
-		<unit id="transcriber.backToWorkflow">
-			<segment>
-				<source>Back to Workflow</source>
-				<target>Retour au flux de travail</target>
 			</segment>
 		</unit>
 		<unit id="transcriber.comment">
@@ -5165,8 +5223,8 @@
 		</unit>
 		<unit id="transcriptionTab.audioExport">
 			<segment>
-				<source>Audio Export</source>
-				<target>Exportation audio</target>
+				<source>Export Audio Files</source>
+				<target>Exporter les fichiers audio</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.availableOnClipboard">
@@ -5302,18 +5360,24 @@
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.noData">
-         <segment>
-            <source>No {0} Data.</source>
-            <target>Non {0} Données.</target>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.offlineData">
-         <segment>
-            <source>You cannot export an online project after creating new content offline (recordings, discussions, comments etc.). Please export an ITF file.</source>
-            <target>Vous ne pouvez pas exporter un projet en ligne après avoir créé un nouveau contenu hors ligne (enregistrements, discussions, commentaires, etc.). Veuillez exporter un fichier ITF.</target>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.passages">
+			<segment>
+				<source>No {0} Data.</source>
+				<target>Non {0} Données.</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.offlineData">
+			<segment>
+				<source>You cannot export an online project after creating new content offline (recordings, discussions, comments etc.). Please export an ITF file.</source>
+				<target>Vous ne pouvez pas exporter un projet en ligne après avoir créé un nouveau contenu hors ligne (enregistrements, discussions, commentaires, etc.). Veuillez exporter un fichier ITF.</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.changed">
+			<segment>
+				<source>Changed</source>
+				<target>Modifié</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.passages">
 			<segment>
 				<source>Passages</source>
 				<target>Passages</target>
@@ -5919,18 +5983,18 @@
 				<target>Traduction du dos par phrase</target>
 			</segment>
 		</unit>
-      <unit id="workflowSteps.pBTTranscribe">
-         <segment>
-            <source>Phrase BT Transcribe</source>
-			<target>Phrase Retour Traduire Transcription</target>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.pBTParatextSync">
-         <segment>
-            <source>Phrase BT Paratext</source>
- 			<target>Phrase Retour Traduire Sync</target>
-         </segment>
-      </unit>
+		<unit id="workflowSteps.pBTTranscribe">
+			<segment>
+				<source>Phrase BT Transcribe</source>
+				<target>Phrase Retour Traduire Transcription</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.pBTParatextSync">
+			<segment>
+				<source>Phrase BT Paratext</source>
+				<target>Phrase Retour Traduire Sync</target>
+			</segment>
+		</unit>
 		<unit id="workflowSteps.preliminaryApproval">
 			<segment>
 				<source>Preliminary Approval</source>
@@ -5973,18 +6037,18 @@
 				<target>Traduire en entier</target>
 			</segment>
 		</unit>
-      <unit id="workflowSteps.wBTTranscribe">
-         <segment>
-            <source>Whole BT Transcribe</source>
-			<target>Traduire en entier Transcription</target>
-         </segment>
-      </unit>
-      <unit id="workflowSteps.wBTParatextSync">
-         <segment>
-            <source>Whole BT Paratext</source>
- 			<target>Traduire en entier Sync</target>
-         </segment>
-      </unit>
+		<unit id="workflowSteps.wBTTranscribe">
+			<segment>
+				<source>Whole BT Transcribe</source>
+				<target>Traduire en entier Transcription</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.wBTParatextSync">
+			<segment>
+				<source>Whole BT Paratext</source>
+				<target>Traduire en entier Sync</target>
+			</segment>
+		</unit>
 		<unit id="wsAudioPlayer.aheadTip">
 			<segment>
 				<source>Ahead {jump} {1} [{0}]</source>
