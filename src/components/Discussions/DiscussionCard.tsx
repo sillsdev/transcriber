@@ -436,7 +436,7 @@ export const DiscussionCard = (props: IProps) => {
       const parts = removeExtension(sourceMediafile.attributes.originalFile);
       media = parts.name;
     }
-    return media;
+    return `${discussion.attributes?.subject} (${media})`;
   }
 
   const handleLocateClick = () => {
