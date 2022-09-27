@@ -50,7 +50,7 @@ import {
 import { useArtifactCategory } from '../../crud/useArtifactCategory';
 import SelectGroup from '../../control/SelectPeerGroup';
 import SelectUser from '../../control/SelectUser';
-import { StageReport } from '../../control';
+import { LightTooltip, StageReport } from '../../control';
 import SelectArtifactCategory, {
   ScriptureEnum,
 } from '../Workflow/SelectArtifactCategory';
@@ -905,14 +905,18 @@ export const DiscussionCard = (props: IProps) => {
               </Grid>
               <Grid item className={classes.titleControls}>
                 {assignedGroup && (
-                  <IconButton onClick={handleAssignedClick}>
-                    <GroupAvatar groupRec={assignedGroup} org={false} />
-                  </IconButton>
+                  <LightTooltip title={t.changeAssignment}>
+                    <IconButton onClick={handleAssignedClick}>
+                      <GroupAvatar groupRec={assignedGroup} org={false} />
+                    </IconButton>
+                  </LightTooltip>
                 )}
                 {assignedUser && (
-                  <IconButton onClick={handleAssignedClick}>
-                    <UserAvatar userRec={assignedUser} />
-                  </IconButton>
+                  <LightTooltip title={t.changeAssignment}>
+                    <IconButton onClick={handleAssignedClick}>
+                      <UserAvatar userRec={assignedUser} />
+                    </IconButton>
+                  </LightTooltip>
                 )}
                 {changeAssignment && (
                   <SelectDiscussionAssignment

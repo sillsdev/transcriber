@@ -928,6 +928,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionCard.changeAssignment">
+         <segment>
+            <source>Change Assignmentz</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionCard.collapse">
          <segment>
             <source>Show/Hide Comments</source>

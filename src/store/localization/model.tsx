@@ -201,6 +201,7 @@ export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods
     "assignGroup": string;
     "assignUser": string;
     "category": string;
+    "changeAssignment": string;
     "collapse": string;
     "comments": string;
     "confirmDelete": string;

@@ -1080,7 +1080,14 @@
                <context context-type="sourcefile">DiscussionCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="discussionCard.collapse">
+      	<trans-unit id="discussionCard.changeAssignment">
+      		<source>Change Assignmentz</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="discussionCard.collapse">
             <source>Show/Hide Comments</source>
             <target/>
             <context-group>

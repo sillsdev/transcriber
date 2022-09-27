@@ -925,6 +925,12 @@
 				<target>Категория: {0}</target>
 			</segment>
 		</unit>
+		<unit id="discussionCard.changeAssignment">
+			<segment>
+				<source>Change Assignment</source>
+				<target>Изменить назначение</target>
+			</segment>
+		</unit>
 		<unit id="discussionCard.collapse">
 			<segment>
 				<source>Show/Hide Comments</source>
