@@ -1,9 +1,9 @@
-import { useContext, useRef } from 'react';
+import { useContext, useRef, useEffect } from 'react';
 import { Grid, GridProps, styled } from '@mui/material';
 import SelectMyResource from './Internalization/SelectMyResource';
 import { MediaPlayer } from '../MediaPlayer';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { getSegments, NamedRegions } from '../../utils';
+import { getSegments, LocalKey, localUserKey, NamedRegions } from '../../utils';
 
 const StyledGrid = styled(Grid)<GridProps>(({ theme }) => ({
   margin: theme.spacing(1),
@@ -25,12 +25,14 @@ export function TeamCheckReference() {
     setItemPlaying,
     handleItemPlayEnd,
     handleItemTogglePlay,
+    currentstep,
   } = ctx.state;
   const mediaStart = useRef<number | undefined>();
   const mediaEnd = useRef<number | undefined>();
   const mediaPosition = useRef<number | undefined>();
 
   const handleResource = (id: string) => {
+    localStorage.setItem(localUserKey(LocalKey.compare), id);
     const row = rowData.find((r) => r.id === id);
     if (row) {
       const segs = getSegments(
@@ -48,6 +50,13 @@ export function TeamCheckReference() {
     }
     setPlayItem(id);
   };
+
+  useEffect(() => {
+    const id = localStorage.getItem(localUserKey(LocalKey.compare));
+    if (id) setTimeout(() => handleResource(id), 2000);
+    setPlayItem('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentstep]);
 
   const handleEnded = () => {
     mediaStart.current = undefined;
@@ -75,7 +84,7 @@ export function TeamCheckReference() {
   return (
     <Grid container direction="column">
       <Grid item xs={10} sx={{ m: 2, p: 2 }}>
-        <SelectMyResource onChange={handleResource} />
+        <SelectMyResource onChange={handleResource} inResource={playItem} />
       </Grid>
       <StyledGrid item xs={10}>
         <MediaPlayer
