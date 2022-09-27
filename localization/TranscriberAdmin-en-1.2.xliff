@@ -1081,7 +1081,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="discussionCard.changeAssignment">
-      		<source>Change Assignmentz</source>
+      		<source>Change Assignment</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">DiscussionCard.tsx</context>

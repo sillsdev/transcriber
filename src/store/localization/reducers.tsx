@@ -222,7 +222,7 @@ const initialState = {
 			"assignGroup": "Assign to a Group",
 			"assignUser": "Assign to a Team Member",
 			"category": "Category: {0}",
-			"changeAssignment": "Change Assignmentz",
+			"changeAssignment": "Change Assignment",
 			"collapse": "Show/Hide Comments",
 			"comments": "Comments: {0}",
 			"confirmDelete": "Delete this discussion and all commments?",

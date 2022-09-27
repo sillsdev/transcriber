@@ -930,7 +930,7 @@
       </unit>
       <unit id="discussionCard.changeAssignment">
          <segment>
-            <source>Change Assignmentz</source>
+            <source>Change Assignment</source>
             <target/>
          </segment>
       </unit>
