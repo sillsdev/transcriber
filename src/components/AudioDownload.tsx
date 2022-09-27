@@ -83,7 +83,11 @@ export const AudioDownload = (props: IProps) => {
       <StyledIcon
         id="audDownload"
         title={title || t.downloadMedia}
-        disabled={(mediaId || '') === '' || mediaId === mediaState.remoteId}
+        disabled={
+          (mediaId || '') === '' ||
+          mediaId === mediaState.remoteId ||
+          audName !== ''
+        }
         onClick={handleDownload}
       >
         <DownloadIcon />
