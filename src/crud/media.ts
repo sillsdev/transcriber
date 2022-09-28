@@ -33,29 +33,33 @@ import moment from 'moment';
 import eaf from '../utils/transcriptionEaf';
 import path from 'path';
 
-const vernSort = (m: MediaFile) => (!related(m, 'artifactType') ? 0 : 1);
-
 export const getAllMediaRecs = (
   passageId: string,
   memory: Memory,
-  artifactTypeId?: string | null
+  artifactTypeId?: string | null,
+  version?: number
 ) => {
-  const mediaRecs = (
-    memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('mediafile').filter({
-        relation: 'passage',
-        record: { type: 'passage', id: passageId },
-      })
-    ) as MediaFile[]
-  )
-    .sort((a, b) => vernSort(a) - vernSort(b))
-    .sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
+  const mediaRecs = memory.cache.query((q: QueryBuilder) =>
+    q.findRecords('mediafile').filter({
+      relation: 'passage',
+      record: { type: 'passage', id: passageId },
+    })
+  ) as MediaFile[];
+  const latest =
+    version ??
+    mediaRecs.reduce(
+      (p, c) =>
+        c.attributes.versionNumber > p.attributes.versionNumber ? c : p,
+      { attributes: { versionNumber: 0 } }
+    )?.attributes.versionNumber;
   if (artifactTypeId !== undefined) {
     return mediaRecs.filter(
-      (m) => related(m, 'artifactType') === artifactTypeId
+      (m) =>
+        related(m, 'artifactType') === artifactTypeId &&
+        m.attributes.versionNumber === latest
     );
   }
-  return mediaRecs;
+  return mediaRecs.filter((m) => m.attributes.versionNumber === latest);
 };
 
 export const getVernacularMediaRec = (passageId: string, memory: Memory) => {
