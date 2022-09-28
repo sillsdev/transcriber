@@ -499,7 +499,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
         <PriButton
           id="res-create"
           onClick={handleCreate}
-          disabled={numSegments === 0}
+          disabled={numSegments === 0 || savingRef.current}
         >
           {t.createResources}
         </PriButton>
