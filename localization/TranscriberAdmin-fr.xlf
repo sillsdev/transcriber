@@ -2707,6 +2707,12 @@
 				<target>Livre</target>
 			</segment>
 		</unit>
+		<unit id="mediaTab.cancelling">
+			<segment>
+				<source>Cancelling with {0} of {1} completed.</source>
+				<target>Annulation avec {0} de {1} complété.</target>
+			</segment>
+		</unit>
 		<unit id="mediaTab.choosePassage">
 			<segment>
 				<source>Choose Passage</source>

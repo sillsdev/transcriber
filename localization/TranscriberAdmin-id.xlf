@@ -2707,6 +2707,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="mediaTab.cancelling">
+			<segment>
+				<source>Cancelling with {0} of {1} completed.</source>
+				<target>Pembatalan dengan {0} dari {1} selesai.</target>
+			</segment>
+		</unit>
 		<unit id="mediaTab.choosePassage">
 			<segment>
 				<source>Choose Passage</source>

@@ -2707,12 +2707,19 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="mediaTab.cancelling">
+			<segment>
+				<source>Cancelling with {0} of {1} completed.</source>
+				<target>Отмена с {0} из {1} завершена.</target>
+			</segment>
+		</unit>
 		<unit id="mediaTab.choosePassage">
 			<segment>
 				<source>Choose Passage</source>
 				<target>Выберите Проход</target>
 			</segment>
 		</unit>
+		
 		<unit id="mediaTab.cloudSync">
 			<segment>
 				<source>Cloud Sync</source>

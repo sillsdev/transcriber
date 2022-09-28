@@ -587,6 +587,7 @@ const initialState = {
 			"autoMatch": "Auto Match",
 			"availablePassages": "Available Passages",
 			"book": "Book",
+			"cancelling": "Cancelling with {0} of {1} completed.",
 			"choosePassage": "Choose Passage",
 			"cloudSync": "Cloud Sync",
 			"date": "Date",

@@ -3159,6 +3159,13 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaTab.cancelling">
+      		<source>Cancelling with {0} of {1} completed.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="mediaTab.choosePassage">
             <source>Choose Passage</source>
             <target/>
