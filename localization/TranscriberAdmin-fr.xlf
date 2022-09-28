@@ -5239,6 +5239,12 @@
 				<target>Les données exportées sont disponibles dans le presse-papiers. Utilisez la fonction coller pour les insérer dans un autre programme.</target>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.download">
+			<segment>
+				<source>Download Vernacular Audio</source>
+				<target>Télécharger Vernacular Audio</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.cancel">
 			<segment>
 				<source>Cancel</source>

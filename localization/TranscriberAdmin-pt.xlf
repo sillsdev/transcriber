@@ -5239,6 +5239,12 @@
 				<target>Os dados exportados estão disponíveis na prancheta. Use pasta para inseri-la em outro programa.</target>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.download">
+			<segment>
+				<source>Download Vernacular Audio</source>
+				<target>Descarregar Áudio Vernacular</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.cancel">
 			<segment>
 				<source>Cancel</source>

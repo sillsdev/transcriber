@@ -1079,6 +1079,7 @@ export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMeth
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
     "audioExport": string;
     "availableOnClipboard": string;
+    "download": string;
     "cancel": string;
     "cantCopy": string;
     "copyTip": string;

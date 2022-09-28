@@ -5239,6 +5239,12 @@
 				<target>"Экспортированные данные доступны в буфере обмена. Используйте paste, чтобыставить их в другую программу."</target>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.download">
+			<segment>
+				<source>Download Vernacular Audio</source>
+				<target>Скачать аудиозапись</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.cancel">
 			<segment>
 				<source>Cancel</source>

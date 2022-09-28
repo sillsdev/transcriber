@@ -1153,6 +1153,7 @@ const initialState = {
 		"en": {
 			"audioExport": "Export Audio Files",
 			"availableOnClipboard": "Exported data is available on the clipboard. Use paste to insert it into another program.",
+			"download": "Download Vernacular Audio",
 			"cancel": "Cancel",
 			"cantCopy": "Unable to copy to clipboard",
 			"copyTip": "Copy transcriptions to Clipboard",

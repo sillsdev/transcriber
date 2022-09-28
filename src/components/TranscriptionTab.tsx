@@ -612,7 +612,7 @@ export function TranscriptionTab(props: IProps) {
           <br />
           {t.export}
         </IconButton>
-        <AudioDownload mediaId={mediaId} />
+        <AudioDownload mediaId={mediaId} title={t.download} />
       </Box>
     </Table.Cell>
   );

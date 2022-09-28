@@ -5239,6 +5239,12 @@
 				<target>Los datos exportados están disponibles en el portapapeles. Utilice la opción de pegar para insertarlos en otro programa.</target>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.download">
+			<segment>
+				<source>Download Vernacular Audio</source>
+				<target>Descargar audio vernáculo</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.cancel">
 			<segment>
 				<source>Cancel</source>

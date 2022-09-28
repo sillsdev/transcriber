@@ -6113,6 +6113,13 @@
                <context context-type="sourcefile">ExportTab.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="transcriptionTab.download">
+      		<source>Download Vernacular Audio</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="transcriptionTab.cancel">
             <source>Cancel</source>
             <target/>

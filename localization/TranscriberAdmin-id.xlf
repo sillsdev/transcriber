@@ -5239,6 +5239,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.download">
+			<segment>
+				<source>Download Vernacular Audio</source>
+				<target>Unduh Audio Vernakular</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.cancel">
 			<segment>
 				<source>Cancel</source>
