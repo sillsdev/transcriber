@@ -21,7 +21,7 @@ function TryParseInt(str: string, defaultValue: number): number {
 }
 
 function parseReferencePart(a: Passage, start: boolean, part: string) {
-  let colon = part.indexOf(':');
+  let colon = (part ?? '').indexOf(':');
   let chapter: number = 0;
   let verse: number = 0;
   if (colon > 0) {
@@ -45,7 +45,7 @@ export function parseRef(a: Passage) {
       a.startVerse = 0;
       a.endVerse = 0;
     } else {
-      let dash = a.attributes.reference.indexOf('-');
+      let dash = (a.attributes?.reference ?? '').indexOf('-');
       let firstPart =
         dash > 0
           ? a.attributes.reference.substring(0, dash)

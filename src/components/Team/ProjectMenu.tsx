@@ -119,6 +119,7 @@ export function ProjectMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {!justFilter &&
+          pathname &&
           projectType.toLowerCase() === 'scripture' &&
           pathname.indexOf(ArtifactTypeSlug.Retell) === -1 &&
           pathname.indexOf(ArtifactTypeSlug.QandA) === -1 && (

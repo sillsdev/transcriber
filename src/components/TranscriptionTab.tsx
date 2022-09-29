@@ -641,7 +641,7 @@ export function TranscriptionTab(props: IProps) {
             .findRecords('mediafile')
             .filter({ relation: 'passage', record: passRec })
         ) as MediaFile[];
-        const latest = getMediaInPlans([plan], media, null, true);
+        const latest = plan ? getMediaInPlans([plan], media, null, true) : [];
         if (state !== ActivityStates.NoMedia && latest.length > 0)
           return <ActionCell {...props} mediaId={latest[0].id} />;
         else return <td className="MuiTableCell-root" />;

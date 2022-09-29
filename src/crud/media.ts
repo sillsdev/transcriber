@@ -47,11 +47,9 @@ export const getAllMediaRecs = (
   ) as MediaFile[];
   const latest =
     version ??
-    mediaRecs.reduce(
-      (p, c) =>
-        c.attributes.versionNumber > p.attributes.versionNumber ? c : p,
-      { attributes: { versionNumber: 0 } }
-    )?.attributes.versionNumber;
+    mediaRecs
+      .map((m) => m.attributes?.versionNumber ?? 0)
+      .reduce((p, c) => Math.max(p, c), 0);
   if (artifactTypeId !== undefined) {
     return mediaRecs.filter(
       (m) =>
