@@ -39,7 +39,7 @@ export const getAllMediaRecs = (
   passageId: string,
   memory: Memory,
   artifactTypeId?: string | null,
-  version?: number | null // null for latest
+  version?: number
 ) => {
   const mediaRecs = (
     memory.cache.query((q: QueryBuilder) =>
@@ -56,10 +56,6 @@ export const getAllMediaRecs = (
       (m) => related(m, 'artifactType') === artifactTypeId
     );
     if (version === undefined) return allOfType;
-    if (version === null) {
-      const latestId = mediaRecs[0].id;
-      return allOfType.filter((m) => related(m, 'sourceMedia') === latestId);
-    }
     const mediaVersionId = mediaRecs.find(
       (m) =>
         !related(m, 'artifactType') && m.attributes?.versionNumber === version
@@ -70,13 +66,6 @@ export const getAllMediaRecs = (
     );
   }
   if (version === undefined) return mediaRecs;
-  if (version === null) {
-    const latestVernacular = mediaRecs[0];
-    const latestArtifacts = mediaRecs.filter(
-      (m) => related(m, 'sourceMedia') === latestVernacular.id
-    );
-    return [latestVernacular].concat(latestArtifacts);
-  }
   const mediaVersion = mediaRecs.filter(
     (m) => !related(m, 'artifactType') && m.attributes.versionNumber === version
   );
