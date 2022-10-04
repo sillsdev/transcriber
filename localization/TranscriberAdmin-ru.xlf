@@ -2719,7 +2719,6 @@
 				<target>Выберите Проход</target>
 			</segment>
 		</unit>
-
 		<unit id="mediaTab.cloudSync">
 			<segment>
 				<source>Cloud Sync</source>
