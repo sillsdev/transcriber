@@ -299,7 +299,6 @@ export const CommentCard = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment, users]);
 
-  console.log(`media=${media} oldVernVer=${oldVernVer}`);
   return (
     <StyledWrapper>
       <GridContainerBorderedRow container>

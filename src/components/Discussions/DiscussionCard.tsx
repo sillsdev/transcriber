@@ -204,8 +204,9 @@ interface IProps extends IRecordProps, IStateProps {
   collapsed: boolean;
   showStep: boolean;
   showReference: boolean;
-  onAddComplete?: () => {};
+  onAddComplete?: (id: string) => {};
   setRef: (ref: any) => {};
+  requestHighlight: string;
 }
 export const DiscussionRegion = (discussion: Discussion) => {
   return startEnd(discussion.attributes?.subject);
@@ -223,6 +224,7 @@ export const DiscussionCard = (props: IProps) => {
     showReference,
     onAddComplete,
     setRef,
+    requestHighlight,
     comments,
     mediafiles,
     sections,
@@ -665,16 +667,13 @@ export const DiscussionCard = (props: IProps) => {
       );
       await memory.update(ops);
     }
-    onAddComplete && onAddComplete();
-    setTimeout(() => {
-      if (myRegion) handleHighlightDiscussion(myRegion.start);
-    }, 2000);
+    onAddComplete && onAddComplete(discussion.id);
     setEditing(false);
     setChanged(false);
   };
 
   const handleCancel = (e: any) => {
-    onAddComplete && onAddComplete();
+    onAddComplete && onAddComplete('');
     setEditing(false);
     setChanged(false);
   };
@@ -721,13 +720,14 @@ export const DiscussionCard = (props: IProps) => {
   useEffect(() => {
     //locate my region
     if (highlightDiscussion === undefined) {
-      if (id === 'card-0') setRef(cardRef);
+      if (id === 'card-0' || discussion.id === requestHighlight)
+        setRef(cardRef);
     } else if (myRegion?.start === highlightDiscussion) {
       handleLocate();
       setRef(cardRef);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlightDiscussion, myRegion?.start, refresh]);
+  }, [highlightDiscussion, myRegion?.start, refresh, requestHighlight]);
 
   const currentAssigned = () =>
     related(discussion, 'group')
