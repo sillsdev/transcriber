@@ -97,9 +97,10 @@ export const AddCard = (props: IProps) => {
     t.passagesCreated,
   ]);
   const { fromLocalizedOrganizedBy } = useOrganizedBy();
-  const [step, setStep] = React.useState(0);
+  const stepRef = useRef(0);
+  const planRef = useRef('');
   const cancelled = useRef(false);
-  const [plan, setPlan] = useGlobal('plan');
+  const [, setPlan] = useGlobal('plan');
   const [pickOpen, setPickOpen] = React.useState(false);
   const preventBoth = React.useRef(false);
   const [view, setView] = React.useState('');
@@ -237,8 +238,11 @@ export const AddCard = (props: IProps) => {
   };
 
   const createProject = async (name: string) => {
-    if (step === 1 && plan) {
-      const planRec = findRecord(memory, 'plan', plan);
+    console.log(
+      `creating project step=${stepRef.current} plan=${planRef.current}`
+    );
+    if (stepRef.current === 1 && planRef.current) {
+      const planRec = findRecord(memory, 'plan', planRef.current);
       const projRec = findRecord(
         memory,
         'project',
@@ -261,11 +265,11 @@ export const AddCard = (props: IProps) => {
           ...UpdateRecord(t, updProj, user),
           t.replaceAttribute(planRec as Plan, 'name', newName),
         ]);
-        return plan;
+        return planRef.current;
       }
     }
-    setStep(0);
-    const planId = await projectCreate(
+    stepRef.current = 0;
+    planRef.current = await projectCreate(
       {
         attributes: {
           name: bookRef.current?.label || nextName(name),
@@ -285,18 +289,21 @@ export const AddCard = (props: IProps) => {
       } as VProject,
       team
     );
-    setPlan(planId);
+    setPlan(planRef.current);
     if (!offlineOnly)
-      await waitForRemoteId({ type: 'plan', id: planId }, memory.keyMap);
-    setStep(1);
-    return planId;
+      await waitForRemoteId(
+        { type: 'plan', id: planRef.current },
+        memory.keyMap
+      );
+    stepRef.current = 1;
+    return planRef.current;
   };
 
   const makeSectionsAndPassages = async (
     planId: string,
     mediaRemoteIds?: string[]
   ) => {
-    setStep(2);
+    stepRef.current = 2;
     mediaRemoteIds &&
       (await flatAdd(
         planId,
@@ -304,11 +311,11 @@ export const AddCard = (props: IProps) => {
         bookRef.current?.value,
         setComplete
       ));
-    setStep(3);
+    stepRef.current = 3;
     setTimeout(() => {
       // Allow time for last check mark
       setInProgress(false);
-      setStep(0);
+      stepRef.current = 0;
       if (bookRef.current?.value)
         setView(`/plan/${remoteId('plan', planId, memory.keyMap) || planId}/0`);
       else
@@ -396,7 +403,7 @@ export const AddCard = (props: IProps) => {
         open={!uploadVisible && inProgress && !cancelled.current}
         progress={complete}
         steps={steps}
-        currentStep={step}
+        currentStep={stepRef.current}
         action={cancelUpload}
         allowCancel={true}
       />
