@@ -1,5 +1,6 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as action from '../store';
@@ -26,6 +27,8 @@ interface IProps extends IDispatchProps {}
 
 export function Logout(props: IProps) {
   const { logout } = useAuth0();
+  const { pathname } = useLocation();
+  const curPath = useRef('');
   const { fetchLocalization, setLanguage } = props;
   const [coordinator] = useGlobal('coordinator');
   const [user, setUser] = useGlobal('user');
@@ -63,14 +66,31 @@ export function Logout(props: IProps) {
   };
 
   useEffect(() => {
+    curPath.current = pathname;
+  }, [pathname]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
     setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
     if (!isElectron) {
       // ctx.logout();
       if (user) {
-        !isElectron && logout({ returnTo: window.origin });
+        logout({ returnTo: window.origin });
+      } else {
+        timer = setTimeout(() => {
+          console.log(`timer fired path=${curPath.current}`);
+          if (curPath.current === '/logout') {
+            logout({ returnTo: window.origin });
+          }
+        }, 4000);
       }
     } else handleLogout();
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
