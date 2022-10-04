@@ -250,13 +250,13 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
   };
 
   React.useEffect(() => {
-    if (uploadError !== '') {
+    if (uploadError && uploadError !== '') {
       if (uploadError.indexOf('unsupported') > 0)
         showMessage(
           <UnsupportedMessage>
             {t.unsupported.replace(
               '{0}',
-              uploadError.substr(0, uploadError.indexOf(':unsupported'))
+              uploadError.substring(0, uploadError.indexOf(':unsupported'))
             )}
           </UnsupportedMessage>
         );

@@ -928,6 +928,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionCard.changeAssignment">
+         <segment>
+            <source>Change Assignment</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionCard.collapse">
          <segment>
             <source>Show/Hide Comments</source>
@@ -2701,6 +2707,12 @@
       <unit id="mediaTab.book">
          <segment>
             <source>Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.cancelling">
+         <segment>
+            <source>Cancelling with {0} of {1} completed.</source>
             <target/>
          </segment>
       </unit>
@@ -5233,6 +5245,12 @@
       <unit id="transcriptionTab.availableOnClipboard">
          <segment>
             <source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.download">
+         <segment>
+            <source>Download Vernacular Audio</source>
             <target/>
          </segment>
       </unit>

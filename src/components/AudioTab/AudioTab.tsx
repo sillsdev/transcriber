@@ -161,11 +161,17 @@ export function AudioTab(props: IProps) {
       setComplete(Math.min((n * 100) / total, 100));
     }
     setAttachMap({});
-    if (cancelled.current) cancelled.current = false;
-    else showMessage(t.savingComplete);
+    if (cancelled.current) {
+      cancelled.current = false;
+      showMessage(
+        t.cancelling
+          .replace('{0}', n.toString())
+          .replace('{1}', total.toString())
+      );
+    } else showMessage(t.savingComplete);
     inProcess.current = false;
     saveCompleted(myToolId);
-    showMessage('Cloud Sync');
+    setTimeout(() => showMessage(t.cloudSync), 1500);
     requests.current = remote?.requestQueue.length;
     cloudSync.current = Boolean(requests.current);
     const progressMessage = () => {

@@ -320,7 +320,6 @@ export function TranscriptionTab(props: IProps) {
     else doProjectExport(ExportType.PTF);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const exportId = useMemo(
     () => (artifactType ? getTypeId(artifactType) : VernacularTag),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -612,7 +611,7 @@ export function TranscriptionTab(props: IProps) {
           <br />
           {t.export}
         </IconButton>
-        <AudioDownload mediaId={mediaId} />
+        <AudioDownload mediaId={mediaId} title={t.download} />
       </Box>
     </Table.Cell>
   );
@@ -642,8 +641,9 @@ export function TranscriptionTab(props: IProps) {
             .findRecords('mediafile')
             .filter({ relation: 'passage', record: passRec })
         ) as MediaFile[];
-        if (state !== ActivityStates.NoMedia && media.length > 0)
-          return <ActionCell {...props} mediaId={media[0].id} />;
+        const latest = plan ? getMediaInPlans([plan], media, null, true) : [];
+        if (state !== ActivityStates.NoMedia && latest.length > 0)
+          return <ActionCell {...props} mediaId={latest[0].id} />;
         else return <td className="MuiTableCell-root" />;
       }
     }

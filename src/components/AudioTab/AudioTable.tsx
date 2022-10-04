@@ -130,8 +130,12 @@ export const AudioTable = (props: IProps) => {
   const [pageSizes] = useState<number[]>([]);
   const [hiddenColumnNames] = useState<string[]>(['planName']);
   const [verHist, setVerHist] = useState('');
+  const [verValue, setVerValue] = useState<number>();
 
   const handleShowTranscription = (id: string) => () => {
+    const row = data.find((r) => r.id === id);
+    const rowVer = row?.version;
+    if (rowVer) setVerValue(parseInt(rowVer));
     setShowId(id);
   };
   const handleChangeReadyToShare = (id: string) => () => {
@@ -343,6 +347,7 @@ export const AudioTable = (props: IProps) => {
           isMediaId={true}
           visible={showId !== ''}
           closeMethod={handleCloseTranscription}
+          version={verValue}
         />
       )}
       {confirmAction === '' || (

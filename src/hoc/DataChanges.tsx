@@ -115,7 +115,7 @@ export const doDataChanges = async (
     relationship: string,
     record: RecordIdentity
   ) => {
-    var table = relationship;
+    let table = relationship;
     switch (relationship) {
       case 'transcriber':
       case 'editor':
@@ -131,7 +131,7 @@ export const doDataChanges = async (
     localOps: Operation[]
   ) => {
     if (offlineId) {
-      var myRecord = findRecord(memory, type, offlineId);
+      const myRecord = findRecord(memory, type, offlineId);
       if (myRecord) {
         localOps.push(
           tb.removeRecord({
@@ -174,13 +174,14 @@ export const doDataChanges = async (
     started: number
   ) => {
     try {
-      var response = await Axios.get(api, {
+      const response = await Axios.get(api, {
         params: params,
         headers: {
           Authorization: 'Bearer ' + token,
         },
       });
-      var data = response.data.data as DataChange;
+      const data = response.data?.data as DataChange | null;
+      if (data === null) return started;
       const changes = data?.attributes?.changes;
       const deletes = data?.attributes?.deleted;
       setDataChangeCount(changes.length + deletes.length);
@@ -195,8 +196,8 @@ export const doDataChanges = async (
             )
             .then(async (t: Transform[]) => {
               for (const tr of t) {
-                var tb = new TransformBuilder();
-                var localOps: Operation[] = [];
+                const tb = new TransformBuilder();
+                const localOps: Operation[] = [];
                 let upRec: UpdateRecordOperation;
                 await memory.sync(await backup.push(tr.operations));
                 for (const o of tr.operations) {
@@ -255,7 +256,7 @@ export const doDataChanges = async (
                         );
                         break;
                       case 'invitation':
-                        var userrec = GetUser(memory, user);
+                        const userrec = GetUser(memory, user);
                         if (
                           (
                             upRec.record as Invitation
@@ -280,10 +281,10 @@ export const doDataChanges = async (
         }
       }
       setDataChangeCount(deletes.length);
-      var tb: TransformBuilder = new TransformBuilder();
+      const tb: TransformBuilder = new TransformBuilder();
 
-      for (var ix = 0; ix < deletes.length; ix++) {
-        var table = deletes[ix];
+      for (let ix = 0; ix < deletes.length; ix++) {
+        const table = deletes[ix];
         let operations: Operation[] = [];
         // eslint-disable-next-line no-loop-func
         table.ids.forEach((r) => {
@@ -311,15 +312,15 @@ export const doDataChanges = async (
       return started;
     }
   };
-  var version = backup.cache.dbVersion;
+  const version = backup.cache.dbVersion;
 
-  var api = API_CONFIG.host + '/api/datachanges/v' + version.toString() + '/';
-  var start = 1;
-  var tries = 5;
+  const api = API_CONFIG.host + '/api/datachanges/v' + version.toString() + '/';
+  let start = 1;
+  let tries = 5;
   if (isElectron) {
-    for (var ix = 0; ix < projectsLoaded.length; ix++) {
-      var p = projectsLoaded[ix];
-      var op = getOfflineProject(p);
+    for (let ix = 0; ix < projectsLoaded.length; ix++) {
+      const p = projectsLoaded[ix];
+      const op = getOfflineProject(p);
       if (
         op.attributes?.snapshotDate &&
         Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
@@ -398,7 +399,7 @@ export function DataChanges(props: IProps) {
     const defaultDataDelay = 1000 * 100;
 
     setFirstRun(dataDelay === null);
-    var newDelay =
+    const newDelay =
       connected && loadComplete && remote && isAuthenticated()
         ? dataDelay === null
           ? 10

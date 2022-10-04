@@ -3,9 +3,9 @@ export interface IParsedArgs {
 }
 
 export function parseQuery(search: string) {
-  const args = search.substring(search[0] === '?' ? 1 : 0).split('&');
+  const args = search?.substring(search[0] === '?' ? 1 : 0).split('&') ?? [];
   const argsParsed: IParsedArgs = {};
-  args.forEach(arg => {
+  args.forEach((arg) => {
     if (-1 === arg.indexOf('=')) {
       argsParsed[decodeURIComponent(arg).trim()] = true;
     } else {

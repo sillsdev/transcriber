@@ -50,7 +50,7 @@ export const translateParatextError = (
   if (err.errStatus === 400) return t.invalidParatextLogin;
   if (err.errStatus === 500) {
     if (
-      err.errMsg.length === 0 ||
+      (err?.errMsg?.length ?? 0) === 0 ||
       err.errMsg.indexOf('Detail: ') + 'Detail: '.length ===
         err.errMsg.length ||
       err.errMsg.includes('SecurityException') ||

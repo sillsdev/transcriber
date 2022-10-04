@@ -3,7 +3,8 @@ import { ActivityStates } from '../model';
 import { getVernacularMediaRec, getAllMediaRecs, VernacularTag } from '.';
 export const useTranscription = (
   addSpeaker: boolean,
-  state?: ActivityStates
+  state?: ActivityStates,
+  version?: number
 ) => {
   const [memory] = useGlobal('memory');
 
@@ -12,7 +13,12 @@ export const useTranscription = (
       const mediaRec = getVernacularMediaRec(passageId, memory);
       return mediaRec?.attributes?.transcription || '';
     } else {
-      const transcriptions = getAllMediaRecs(passageId, memory, exportId)
+      const transcriptions = getAllMediaRecs(
+        passageId,
+        memory,
+        exportId,
+        version
+      )
         .sort((i, j) =>
           i.attributes?.dateCreated <= j.attributes?.dateCreated ? -1 : 1
         )

@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
       '& .MuiTypography-root': {
         cursor: 'default ',
       },
+      cursor: 'pointer',
     },
     card: {
       minWidth: 275,

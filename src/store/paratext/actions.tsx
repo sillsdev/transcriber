@@ -328,7 +328,10 @@ export const getLocalCount =
       payload: pendingStatus(t.countPending),
       type: COUNT_PENDING,
     });
-    var ready = getMediaInPlans([plan], mediafiles, artifactId, true).filter(
+    const media = plan
+      ? getMediaInPlans([plan], mediafiles, artifactId, true)
+      : [];
+    let ready = media.filter(
       (m) =>
         m.attributes?.transcriptionstate === ActivityStates.Approved &&
         Boolean(related(m, 'passage'))
@@ -337,7 +340,7 @@ export const getLocalCount =
       ready = ready.filter((m) => related(m, 'passage') === passageId);
 
     const refMissing = ready.filter((m) => {
-      var passage = findRecord(
+      const passage = findRecord(
         memory,
         'passage',
         related(m, 'passage')

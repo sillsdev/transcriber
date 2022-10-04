@@ -4,9 +4,9 @@
 	<!-- Step 3. This document takes the strings from deepl.com and inserts them into missing units in the .xlf -->
 	<!-- This url is replaced with the URL of the XML file created in Step 2. -->
 	<!-- After it runs, reformat with CTRL-SHIFT-P but then you have to combine lines that shouldn't have been split -->
-	<!-- Find: \n\s+(\w) and Replace: a space and $1. (For Russian also Find: \n\s+([А-џ]) and replace with the same. -->
+	<!-- Find: \n\s+([^\<\s]) and Replace: a space and $1. -->
 	<xsl:variable name="cng"
-		select="document('file:/C:/Users/Trihus/git/transcriber/localization/ru-strings.xml')"/>
+		select="document('file:/C:/Users/Trihus/git/transcriber/localization/ru-trg.xml')"/>
 
 	<xsl:template match="node() |@*">
 		<xsl:choose>

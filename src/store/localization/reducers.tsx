@@ -222,6 +222,7 @@ const initialState = {
 			"assignGroup": "Assign to a Group",
 			"assignUser": "Assign to a Team Member",
 			"category": "Category: {0}",
+			"changeAssignment": "Change Assignment",
 			"collapse": "Show/Hide Comments",
 			"comments": "Comments: {0}",
 			"confirmDelete": "Delete this discussion and all commments?",
@@ -586,6 +587,7 @@ const initialState = {
 			"autoMatch": "Auto Match",
 			"availablePassages": "Available Passages",
 			"book": "Book",
+			"cancelling": "Cancelling with {0} of {1} completed.",
 			"choosePassage": "Choose Passage",
 			"cloudSync": "Cloud Sync",
 			"date": "Date",
@@ -1152,6 +1154,7 @@ const initialState = {
 		"en": {
 			"audioExport": "Export Audio Files",
 			"availableOnClipboard": "Exported data is available on the clipboard. Use paste to insert it into another program.",
+			"download": "Download Vernacular Audio",
 			"cancel": "Cancel",
 			"cantCopy": "Unable to copy to clipboard",
 			"copyTip": "Copy transcriptions to Clipboard",

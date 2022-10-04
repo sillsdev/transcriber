@@ -201,6 +201,7 @@ export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods
     "assignGroup": string;
     "assignUser": string;
     "category": string;
+    "changeAssignment": string;
     "collapse": string;
     "comments": string;
     "confirmDelete": string;
@@ -548,6 +549,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "autoMatch": string;
     "availablePassages": string;
     "book": string;
+    "cancelling": string;
     "choosePassage": string;
     "cloudSync": string;
     "date": string;
@@ -1078,6 +1080,7 @@ export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMeth
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
     "audioExport": string;
     "availableOnClipboard": string;
+    "download": string;
     "cancel": string;
     "cantCopy": string;
     "copyTip": string;

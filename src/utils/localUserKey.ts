@@ -6,6 +6,7 @@ export enum LocalKey {
   deeplink = 'deeplink',
   start = 'startNext',
   passage = 'passage',
+  compare = 'compare',
 }
 
 export const localUserKey = (id: LocalKey) => {

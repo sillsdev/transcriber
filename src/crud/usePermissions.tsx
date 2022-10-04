@@ -4,6 +4,7 @@ import { useGlobal } from 'reactn';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { Group, GroupMembership, IPermissionStrings, User } from '../model';
 import { permissionsSelector } from '../selector';
+import { onlyUnique } from '../utils';
 import remoteId, { remoteIdGuid } from './remoteId';
 
 export enum PermissionName {
@@ -122,10 +123,6 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
   };
   //given one permission "mentor"
   const hasPermission = (perm: PermissionName) => permissions.includes(perm);
-
-  function onlyUnique(value: any, index: number, self: any[]) {
-    return self.indexOf(value) === index;
-  }
 
   return {
     permissions,

@@ -34,8 +34,8 @@ export const useOrganizedBy = () => {
     if (singular === undefined) return val;
     const index = (val || '').indexOf('/');
     if (index > 0) {
-      if (singular) return val.substr(0, index);
-      else return val.substr(index + 1);
+      if (singular) return val.substring(0, index);
+      else return val.substring(index + 1);
     }
     return val || '';
   };

@@ -38,7 +38,8 @@ const vernSort = (m: MediaFile) => (!related(m, 'artifactType') ? 0 : 1);
 export const getAllMediaRecs = (
   passageId: string,
   memory: Memory,
-  artifactTypeId?: string | null
+  artifactTypeId?: string | null,
+  version?: number
 ) => {
   const mediaRecs = (
     memory.cache.query((q: QueryBuilder) =>
@@ -51,11 +52,29 @@ export const getAllMediaRecs = (
     .sort((a, b) => vernSort(a) - vernSort(b))
     .sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
   if (artifactTypeId !== undefined) {
-    return mediaRecs.filter(
+    const allOfType = mediaRecs.filter(
       (m) => related(m, 'artifactType') === artifactTypeId
     );
+    if (version === undefined) return allOfType;
+    const mediaVersionId = mediaRecs.find(
+      (m) =>
+        !related(m, 'artifactType') && m.attributes?.versionNumber === version
+    )?.id;
+    if (!mediaVersionId) return [];
+    return allOfType.filter(
+      (m) => related(m, 'sourceMedia') === mediaVersionId
+    );
   }
-  return mediaRecs;
+  if (version === undefined) return mediaRecs;
+  const mediaVersion = mediaRecs.filter(
+    (m) => !related(m, 'artifactType') && m.attributes.versionNumber === version
+  );
+  if (mediaVersion.length === 0) return mediaVersion;
+  const versionId = mediaVersion[0].id;
+  const versionArtifacts = mediaRecs.filter(
+    (m) => related(m, 'sourceMedia') === versionId
+  );
+  return mediaVersion.concat(versionArtifacts);
 };
 
 export const getVernacularMediaRec = (passageId: string, memory: Memory) => {

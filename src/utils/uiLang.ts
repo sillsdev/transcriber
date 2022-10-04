@@ -1,4 +1,4 @@
-export const uiLang = ['en', 'fr', 'id', 'pt', 'ru'];
+export const uiLang = ['en', 'es', 'fr', 'id', 'pt', 'ru'];
 
 export const uiLangDev = [
   'en',

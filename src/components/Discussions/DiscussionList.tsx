@@ -42,7 +42,7 @@ import { useGlobal } from 'reactn';
 import { useDiscussionOrg } from '../../crud';
 import FilterMenu, { IFilterState } from './FilterMenu';
 import Confirm from '../AlertDialog';
-import { waitForIt } from '../../utils';
+import { onlyUnique, waitForIt } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import SortMenu, { ISortState } from './SortMenu';
 
@@ -209,6 +209,7 @@ export function DiscussionList(props: IProps) {
   };
 
   const latestMedia: string[] = useMemo(() => {
+    if (!planId) return [];
     return getMediaInPlans([planId], mediafiles, VernacularTag, true).map(
       (r) => r.id
     );
@@ -314,9 +315,6 @@ export function DiscussionList(props: IProps) {
   }, [highlightedRef]);
 
   useEffect(() => {
-    function onlyUnique(value: any, index: number, self: any) {
-      return self.indexOf(value) === index;
-    }
     var markers = displayDiscussions
       .filter(
         (d) =>

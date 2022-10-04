@@ -98,7 +98,7 @@ export function ProjectMenu(props: IProps) {
             <ListItemText primary={t.settings} />
           </StyledMenuItem>
         )}
-        {isElectron && !isOffline && (
+        {isElectron && !isOffline && !justFilter && (
           <StyledMenuItem id="projMenuOl" onClick={handle('offlineAvail')}>
             <ListItemIcon>
               {offlineProject?.attributes?.offlineAvailable ? (
@@ -119,6 +119,7 @@ export function ProjectMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {!justFilter &&
+          pathname &&
           projectType.toLowerCase() === 'scripture' &&
           pathname.indexOf(ArtifactTypeSlug.Retell) === -1 &&
           pathname.indexOf(ArtifactTypeSlug.QandA) === -1 && (
