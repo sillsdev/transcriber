@@ -492,7 +492,19 @@ export async function electronExport(
             } as IExportArtifacts);
             if (media) return FromMedia(media, needsRemoteIds);
           }
-          return FromPassages(info.table, project, needsRemoteIds);
+          var tmp = FromPassages(info.table, project, needsRemoteIds);
+          if (info.table === 'mediafile') {
+            //get IP media
+            var ip = IntellectualProperties(project, needsRemoteIds).map((i) =>
+              related(i, 'releaseMediafile')
+            );
+            var media = memory.cache.query((q: QueryBuilder) =>
+              q.findRecords(info.table)
+            ) as MediaFile[];
+            var ipmedia = media.filter((m) => ip.includes(m.id));
+            return tmp.concat(ipmedia);
+          }
+          return tmp;
 
         case 'discussion':
           return Discussions(project, needsRemoteIds);
