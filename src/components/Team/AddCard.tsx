@@ -238,9 +238,6 @@ export const AddCard = (props: IProps) => {
   };
 
   const createProject = async (name: string) => {
-    console.log(
-      `creating project step=${stepRef.current} plan=${planRef.current}`
-    );
     if (stepRef.current === 1 && planRef.current) {
       const planRec = findRecord(memory, 'plan', planRef.current);
       const projRec = findRecord(
