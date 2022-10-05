@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="14.2">
+    <meta>
+        <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
+        <options>
+            <serialized version="14.2" xml:space="preserve">
+                <map>
+                    <entry>
+                        <String>scenario.associations</String>
+                        <scenarioAssociation-array>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>../../../../../My%20Paratext%209%20Projects/niv/local/USX/020PRO.usx</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>NIV Proverbs</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>sheet-select-pro2.xsl</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>sheet-select for ruth</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XML</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>sheet-select-pro.xsl</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>sheet-select for ruth</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XML</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>sheet-select.xsl</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>sheet-select for ruth</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XML</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>../../../../../My%20Paratext%209%20Projects/niv/local/USX/008RUT.usx</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>008RUT</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>../../../../../My%20Paratext%209%20Projects/niv/local/USX/001GEN.usx</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>NIV Book</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                        </scenarioAssociation-array>
+                    </entry>
+                    <entry>
+                        <String>scenarios</String>
+                        <scenario-array>
+                            <scenario>
+                                <field name="advancedOptionsMap">
+                                    <null/>
+                                </field>
+                                <field name="name">
+                                    <String>008RUT</String>
+                                </field>
+                                <field name="baseURL">
+                                    <String></String>
+                                </field>
+                                <field name="footerURL">
+                                    <String></String>
+                                </field>
+                                <field name="fOPMethod">
+                                    <String>pdf</String>
+                                </field>
+                                <field name="fOProcessorName">
+                                    <String>Apache FOP</String>
+                                </field>
+                                <field name="headerURL">
+                                    <String></String>
+                                </field>
+                                <field name="inputXSLURL">
+                                    <String>file:/C:/Users/Trihus/git/transcriber/sheets/sheet-select.xsl</String>
+                                </field>
+                                <field name="inputXMLURL">
+                                    <String>${currentFileURL}</String>
+                                </field>
+                                <field name="defaultScenario">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="isFOPPerforming">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="type">
+                                    <String>XSL</String>
+                                </field>
+                                <field name="saveAs">
+                                    <Boolean>true</Boolean>
+                                </field>
+                                <field name="openInBrowser">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="outputFile">
+                                    <null/>
+                                </field>
+                                <field name="openOtherLocationInBrowser">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="locationToOpenInBrowserURL">
+                                    <null/>
+                                </field>
+                                <field name="openInEditor">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInHTMLPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInXMLPane">
+                                    <Boolean>true</Boolean>
+                                </field>
+                                <field name="showInSVGPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInResultSetPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="useXSLTInput">
+                                    <Boolean>true</Boolean>
+                                </field>
+                                <field name="xsltParams">
+                                    <list/>
+                                </field>
+                                <field name="cascadingStylesheets">
+                                    <String-array/>
+                                </field>
+                                <field name="xslTransformer">
+                                    <String>Saxon6.5.5</String>
+                                </field>
+                                <field name="extensionURLs">
+                                    <String-array/>
+                                </field>
+                            </scenario>
+                            <scenario>
+                                <field name="advancedOptionsMap">
+                                    <null/>
+                                </field>
+                                <field name="name">
+                                    <String>NIV Book</String>
+                                </field>
+                                <field name="baseURL">
+                                    <String></String>
+                                </field>
+                                <field name="footerURL">
+                                    <String></String>
+                                </field>
+                                <field name="fOPMethod">
+                                    <String>pdf</String>
+                                </field>
+                                <field name="fOProcessorName">
+                                    <String>Apache FOP</String>
+                                </field>
+                                <field name="headerURL">
+                                    <String></String>
+                                </field>
+                                <field name="inputXSLURL">
+                                    <String>file:/C:/Users/Trihus/git/transcriber/sheets/sheet-select.xsl</String>
+                                </field>
+                                <field name="inputXMLURL">
+                                    <String>${currentFileURL}</String>
+                                </field>
+                                <field name="defaultScenario">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="isFOPPerforming">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="type">
+                                    <String>XSL</String>
+                                </field>
+                                <field name="saveAs">
+                                    <Boolean>true</Boolean>
+                                </field>
+                                <field name="openInBrowser">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="outputFile">
+                                    <File>${pd}/${cfn}.txt</File>
+                                </field>
+                                <field name="openOtherLocationInBrowser">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="locationToOpenInBrowserURL">
+                                    <null/>
+                                </field>
+                                <field name="openInEditor">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInHTMLPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInXMLPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInSVGPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInResultSetPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="useXSLTInput">
+                                    <Boolean>true</Boolean>
+                                </field>
+                                <field name="xsltParams">
+                                    <list/>
+                                </field>
+                                <field name="cascadingStylesheets">
+                                    <String-array/>
+                                </field>
+                                <field name="xslTransformer">
+                                    <String>Saxon6.5.5</String>
+                                </field>
+                                <field name="extensionURLs">
+                                    <String-array/>
+                                </field>
+                            </scenario>
+                            <scenario>
+                                <field name="advancedOptionsMap">
+                                    <null/>
+                                </field>
+                                <field name="name">
+                                    <String>NIV Proverbs</String>
+                                </field>
+                                <field name="baseURL">
+                                    <String></String>
+                                </field>
+                                <field name="footerURL">
+                                    <String></String>
+                                </field>
+                                <field name="fOPMethod">
+                                    <String>pdf</String>
+                                </field>
+                                <field name="fOProcessorName">
+                                    <String>Apache FOP</String>
+                                </field>
+                                <field name="headerURL">
+                                    <String></String>
+                                </field>
+                                <field name="inputXSLURL">
+                                    <String>file:/C:/Users/Trihus/git/transcriber/sheets/sheet-select-pro2.xsl</String>
+                                </field>
+                                <field name="inputXMLURL">
+                                    <String>${currentFileURL}</String>
+                                </field>
+                                <field name="defaultScenario">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="isFOPPerforming">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="type">
+                                    <String>XSL</String>
+                                </field>
+                                <field name="saveAs">
+                                    <Boolean>true</Boolean>
+                                </field>
+                                <field name="openInBrowser">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="outputFile">
+                                    <File>${pd}/${cfn}.txt</File>
+                                </field>
+                                <field name="openOtherLocationInBrowser">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="locationToOpenInBrowserURL">
+                                    <null/>
+                                </field>
+                                <field name="openInEditor">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInHTMLPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInXMLPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInSVGPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInResultSetPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="useXSLTInput">
+                                    <Boolean>true</Boolean>
+                                </field>
+                                <field name="xsltParams">
+                                    <list/>
+                                </field>
+                                <field name="cascadingStylesheets">
+                                    <String-array/>
+                                </field>
+                                <field name="xslTransformer">
+                                    <String>Saxon6.5.5</String>
+                                </field>
+                                <field name="extensionURLs">
+                                    <String-array/>
+                                </field>
+                            </scenario>
+                            <scenario>
+                                <field name="advancedOptionsMap">
+                                    <null/>
+                                </field>
+                                <field name="name">
+                                    <String>sheet-select for ruth</String>
+                                </field>
+                                <field name="baseURL">
+                                    <String></String>
+                                </field>
+                                <field name="footerURL">
+                                    <String></String>
+                                </field>
+                                <field name="fOPMethod">
+                                    <String>pdf</String>
+                                </field>
+                                <field name="fOProcessorName">
+                                    <String>Apache FOP</String>
+                                </field>
+                                <field name="headerURL">
+                                    <String></String>
+                                </field>
+                                <field name="inputXSLURL">
+                                    <String>${currentFileURL}</String>
+                                </field>
+                                <field name="inputXMLURL">
+                                    <String>file:/C:/My%20Paratext%209%20Projects/niv/local/USX/008RUT.usx</String>
+                                </field>
+                                <field name="defaultScenario">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="isFOPPerforming">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="type">
+                                    <String>XML</String>
+                                </field>
+                                <field name="saveAs">
+                                    <Boolean>true</Boolean>
+                                </field>
+                                <field name="openInBrowser">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="outputFile">
+                                    <null/>
+                                </field>
+                                <field name="openOtherLocationInBrowser">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="locationToOpenInBrowserURL">
+                                    <null/>
+                                </field>
+                                <field name="openInEditor">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInHTMLPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInXMLPane">
+                                    <Boolean>true</Boolean>
+                                </field>
+                                <field name="showInSVGPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="showInResultSetPane">
+                                    <Boolean>false</Boolean>
+                                </field>
+                                <field name="useXSLTInput">
+                                    <Boolean>true</Boolean>
+                                </field>
+                                <field name="xsltParams">
+                                    <list/>
+                                </field>
+                                <field name="cascadingStylesheets">
+                                    <String-array/>
+                                </field>
+                                <field name="xslTransformer">
+                                    <String>Saxon6.5.5</String>
+                                </field>
+                                <field name="extensionURLs">
+                                    <String-array/>
+                                </field>
+                            </scenario>
+                        </scenario-array>
+                    </entry>
+                </map>
+            </serialized>
+        </options>
+    </meta>
+    <projectTree name="sheets.xpr">
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/001GEN.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/002EXO.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/003LEV.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/004NUM.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/005DEU.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/006JOS.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/007JDG.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/008RUT.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0091SA.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0102SA.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0111KI.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0122KI.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0131CH.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0142CH.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/015EZR.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/016NEH.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/017EST.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/018JOB.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/019PSA.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/020PRO.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/021ECC.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/022SNG.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/023ISA.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/024JER.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/025LAM.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/026EZK.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/027DAN.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/028HOS.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/029JOL.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/030AMO.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/031OBA.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/032JON.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/033MIC.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/034NAM.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/035HAB.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/036ZEP.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/037HAG.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/038ZEC.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/039MAL.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/040MAT.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/041MRK.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/042LUK.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/043JHN.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/044ACT.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/045ROM.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0461CO.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0472CO.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/048GAL.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/049EPH.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/050PHP.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/051COL.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0521TH.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0532TH.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0541TI.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0552TI.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/056TIT.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/057PHM.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/058HEB.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/059JAS.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0601PE.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0612PE.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0621JN.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0632JN.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/0643JN.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/065JUD.usx"/>
+        <file name="../../../../../My%20Paratext%209%20Projects/niv/local/USX/066REV.usx"/>
+        <file name="sheet-select-pro.xsl"/>
+        <file name="sheet-select.xsl"/>
+    </projectTree>
+</project>

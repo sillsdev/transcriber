@@ -1,0 +1,144 @@
+		1	1CO	1:1-1	
+		2	1CO	1:2-2	
+		3	1CO	1:3-3	
+1	Thanksgiving				
+		1	1CO	1:4-9	
+2	Divisions in the Church				
+		1	1CO	1:10-12	
+		2	1CO	1:13-17	
+3	Christ the Wisdom and Power of God				
+		1	1CO	1:18-19	
+		2	1CO	1:20-25	
+		3	1CO	1:26-31	
+		4	1CO	2:1-5	
+4	Wisdom From the Spirit				
+		1	1CO	2:6-9	
+		2	1CO	2:11-15	
+5	On Divisions in the Church				
+		1	1CO	3:1-4	
+		2	1CO	3:5-9	
+		3	1CO	3:10-15	
+		4	1CO	3:16-17	
+		5	1CO	3:18-23	
+6	Apostles of Christ				
+		1	1CO	4:1-5	
+		2	1CO	4:6-7	
+		3	1CO	4:8-13	
+		4	1CO	4:14-17	
+		5	1CO	4:18-21	
+7	Expel the Immoral Brother!				
+		1	1CO	5:1-5	
+		2	1CO	5:6-8	
+		3	1CO	5:9-11	
+		4	1CO	5:12-13	
+8	Lawsuits Among Believers				
+		1	1CO	6:1-6	
+		2	1CO	6:7-8	
+		3	1CO	6:9-11	
+9	Sexual Immorality				
+		1	1CO	6:12-17	
+		2	1CO	6:18-20	
+10	Marriage				
+		1	1CO	7:1-7	
+		2	1CO	7:8-9	
+		3	1CO	7:10-11	
+		4	1CO	7:12-14	
+		5	1CO	7:15-16	
+		6	1CO	7:17-24	
+		7	1CO	7:25-28	
+		8	1CO	7:29-31	
+		9	1CO	7:32-35	
+		10	1CO	7:36-38	
+		11	1CO	7:39-40	
+11	Food Sacrificed to Idols				
+		1	1CO	8:1-3	
+		2	1CO	8:4-6	
+		3	1CO	8:7-8	
+		4	1CO	8:9-13	
+12	The Rights of an Apostle				
+		1	1CO	9:1-2	
+		2	1CO	9:3-6	
+		3	1CO	9:7-12	
+		4	1CO	9:13-14	
+		5	1CO	9:15-18	
+		6	1CO	9:19-23	
+		7	1CO	9:24-24	
+		8	1CO	9:25-27	
+13	Warnings From Israel's History				
+		1	1CO	10:1-5	
+		2	1CO	10:6-10	
+		3	1CO	10:11-13	
+14	Idol Feasts and the Lord's Supper				
+		1	1CO	10:14-17	
+		2	1CO	10:18-22	
+15	The Believer's Freedom				
+		1	1CO	10:23-24	
+		2	1CO	10:25-26	
+		3	1CO	10:27-30	
+		4	1CO	10:31-33	
+		5	1CO	11:1-1	
+16	Propriety in Worship				
+		1	1CO	11:2-2	
+		2	1CO	11:3-10	
+		3	1CO	11:11-16	
+17	The Lord's Supper				
+		1	1CO	11:17-22	
+		2	1CO	11:23-26	
+		3	1CO	11:27-32	
+		4	1CO	11:33-34	
+18	Spiritual Gifts				
+		1	1CO	12:1-3	
+		2	1CO	12:4-6	
+		3	1CO	12:7-11	
+19	One Body, Many Parts				
+		1	1CO	12:12-13	
+		2	1CO	12:14-20	
+		3	1CO	12:21-26	
+		4	1CO	12:27-31	
+20	Love				
+		1	1CO	13:1-3	
+		2	1CO	13:4-7	
+		3	1CO	13:8-12	
+		4	1CO	13:13-13	
+21	Gifts of Prophecy and Tongues				
+		1	1CO	14:1-5	
+		2	1CO	14:6-12	
+		3	1CO	14:13-17	
+		4	1CO	14:18-19	
+		5	1CO	14:20-21	
+		6	1CO	14:22-25	
+22	Orderly Worship				
+		1	1CO	14:26-28	
+		2	1CO	14:29-33	
+		3	1CO	14:34-35	
+		4	1CO	14:36-38	
+		5	1CO	14:39-40	
+23	The Resurrection of Christ				
+		1	1CO	15:1-2	
+		2	1CO	15:3-8	
+		3	1CO	15:9-11	
+24	The Resurrection of the Dead				
+		1	1CO	15:12-19	
+		2	1CO	15:20-28	
+		3	1CO	15:29-32	
+25	The Resurrection Body				
+		1	1CO	15:35-41	
+		2	1CO	15:42-44	
+		3	1CO	15:45-49	
+		4	1CO	15:50-54	
+		5	1CO	15:58-58	
+26	The Collection for God's People				
+		1	1CO	16:1-4	
+27	Personal Requests				
+		1	1CO	16:5-9	
+		2	1CO	16:10-11	
+		3	1CO	16:12-12	
+		4	1CO	16:13-14	
+		5	1CO	16:15-18	
+28	Final Greetings				
+		1	1CO	16:19-20	
+		2	1CO	16:21-21	
+		3	1CO	16:22-22	
+		4	1CO	16:23-23	
+		5	1CO	16:24-24	
+

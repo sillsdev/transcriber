@@ -1,0 +1,40 @@
+		1	COL	1:1-1	
+		2	COL	1:2-2	
+1	Thanksgiving and Prayer				
+		1	COL	1:3-8	
+		2	COL	1:9-14	
+2	The Supremacy of Christ				
+		1	COL	1:15-20	
+		2	COL	1:21-23	
+3	Paul's Labor for the Church				
+		1	COL	1:24-27	
+		2	COL	1:28-29	
+		3	COL	2:1-5	
+4	Freedom From Human Regulations Through Life With Christ				
+		1	COL	2:6-7	
+		2	COL	2:8-8	
+		3	COL	2:9-12	
+		4	COL	2:13-15	
+		5	COL	2:16-19	
+		6	COL	2:20-23	
+5	Rules for Holy Living				
+		1	COL	3:1-4	
+		2	COL	3:5-11	
+		3	COL	3:12-14	
+		4	COL	3:15-17	
+6	Rules for Christian Households				
+		1	COL	3:18-18	
+		2	COL	3:19-19	
+		3	COL	3:20-20	
+		4	COL	3:21-21	
+		5	COL	3:22-25	
+		6	COL	4:1-1	
+7	Further Instructions				
+		1	COL	4:2-6	
+8	Final Greetings				
+		1	COL	4:7-9	
+		2	COL	4:10-15	
+		3	COL	4:16-16	
+		4	COL	4:17-17	
+		5	COL	4:18-18	
+

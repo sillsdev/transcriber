@@ -1,0 +1,37 @@
+		1	1PE	1:1-1	
+		2	1PE	1:2-2	
+1	Praise to God for a Living Hope				
+		1	1PE	1:3-9	
+		2	1PE	1:10-12	
+2	Be Holy				
+		1	1PE	1:13-16	
+		2	1PE	1:17-21	
+		3	1PE	1:22-24	
+		4	1PE	2:1-3	
+3	The Living Stone and a Chosen People				
+		1	1PE	2:4-6	
+		2	1PE	2:9-10	
+		3	1PE	2:11-12	
+4	Submission to Rulers and Masters				
+		1	1PE	2:13-17	
+		2	1PE	2:18-21	
+5	Wives and Husbands				
+		1	1PE	3:1-6	
+		2	1PE	3:7-7	
+6	Suffering for Doing Good				
+		1	1PE	3:8-10	
+		2	1PE	3:13-22	
+7	Living for God				
+		1	1PE	4:1-6	
+		2	1PE	4:7-11	
+8	Suffering for Being a Christian				
+		1	1PE	4:12-18	
+		2	1PE	4:19-19	
+9	To Elders and Young Men				
+		1	1PE	5:1-4	
+		2	1PE	5:5-5	
+		3	1PE	5:8-9	
+		4	1PE	5:10-11	
+10	Final Greetings				
+		1	1PE	5:12-14	
+
