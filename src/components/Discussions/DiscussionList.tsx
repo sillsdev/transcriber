@@ -153,6 +153,7 @@ export function DiscussionList(props: IProps) {
   }
   const formRef = useRef<any>();
   const [highlightedRef, setHighlightedRef] = useState<any>();
+  const [highlightNew, setHighlightNew] = useState('');
 
   const projGroups = useMemo(() => {
     const mygroups = groupMemberships.filter(
@@ -407,8 +408,9 @@ export function DiscussionList(props: IProps) {
     return false;
   };
 
-  const handleAddComplete = () => {
+  const handleAddComplete = (id: string) => {
     setAdding(false);
+    setHighlightNew(id);
   };
 
   const handleAddDiscussion = async () => {
@@ -514,6 +516,7 @@ export function DiscussionList(props: IProps) {
                 startSave={startSave}
                 clearSave={clearSave}
                 setRef={setHighlightedRef}
+                requestHighlight={highlightNew}
               />
             ))}
           </Grid>
