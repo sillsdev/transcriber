@@ -43,7 +43,7 @@
 						select="count(preceding-sibling::para[starts-with(@style,'s') or @style='b']/following-sibling::*[1][substring(@style,1,1)!='s'] | preceding-sibling::chapter[@number]/following-sibling::*[1][substring(@style,1,1)!='s']) + 1"/>
 					<xsl:text>,</xsl:text>
 					<xsl:for-each select="node()">
-						<xsl:value-of select="."/>	
+						<xsl:value-of select="."/>
 					</xsl:for-each>
 					<xsl:text>,</xsl:text>
 					<xsl:text>,</xsl:text>
@@ -83,7 +83,7 @@
 			<xsl:variable name="secs" select="preceding-sibling::para[starts-with(@style,'s')]"/>
 			<xsl:variable name="secsCount" select="count($secs)"/>
 			<xsl:for-each select="$secs[$secsCount]/node()">
-				<xsl:value-of select="."/>	
+				<xsl:value-of select="."/>
 			</xsl:for-each>
 			<xsl:text>,</xsl:text>
 			<xsl:text>,</xsl:text>

@@ -1,0 +1,366 @@
+		1	JER	1:1-3	
+1	The Call of Jeremiah				
+		1	JER	1:4-4	
+		2	JER	1:6-6	
+		3	JER	1:7-8	
+		4	JER	1:9-10	
+		5	JER	1:11-11	
+		7	JER	1:12-12	
+		8	JER	1:13-13	
+		10	JER	1:14-15	
+		11	JER	1:17-19	
+2	Israel Forsakes God				
+		1	JER	2:1-2	
+		2	JER	2:5-5	
+		3	JER	2:31-31	
+3	Unfaithful Israel				
+		1	JER	3:6-10	
+		2	JER	3:11-12	
+		3	JER	3:14-18	
+		4	JER	3:19-19	
+		5	JER	4:3-3	
+4	Disaster From the North				
+		1	JER	4:10-10	
+		2	JER	4:11-12	
+		3	JER	4:27-27	
+5	Not One Is Upright				
+		1	JER	5:14-14	
+		2	JER	5:18-19	
+6	Jerusalem Under Siege				
+		1	JER	6:6-6	
+		2	JER	6:9-9	
+		3	JER	6:16-16	
+		4	JER	6:21-21	
+		5	JER	6:22-22	
+7	False Religion Worthless				
+		1	JER	7:1-2	
+		2	JER	7:3-8	
+		3	JER	7:9-11	
+		4	JER	7:12-15	
+		5	JER	7:16-19	
+		6	JER	7:20-20	
+		7	JER	7:21-26	
+		8	JER	7:27-29	
+8	The Valley of Slaughter				
+		1	JER	7:30-34	
+		2	JER	8:1-3	
+9	Sin and Punishment				
+		1	JER	8:4-4	
+		2	JER	9:7-7	
+		3	JER	9:12-12	
+		4	JER	9:13-16	
+		5	JER	9:17-17	
+		6	JER	9:22-22	
+		7	JER	9:23-23	
+		8	JER	9:25-26	
+10	God and Idols				
+		1	JER	10:1-2	
+		2	JER	10:11-11	
+11	Coming Destruction				
+12	Jeremiah's Prayer				
+13	The Covenant Is Broken				
+		1	JER	11:1-5	
+		3	JER	11:6-8	
+		4	JER	11:9-13	
+		5	JER	11:14-14	
+14	Plot Against Jeremiah				
+		1	JER	11:18-19	
+		2	JER	11:21-23	
+15	Jeremiah's Complaint				
+16	God's Answer				
+		1	JER	12:14-17	
+17	A Linen Belt				
+		1	JER	13:1-2	
+		2	JER	13:3-5	
+		3	JER	13:6-7	
+		4	JER	13:8-11	
+18	Wineskins				
+		1	JER	13:12-14	
+19	Threat of Captivity				
+20	Drought, Famine, Sword				
+		1	JER	14:1-1	
+		2	JER	14:10-10	
+		3	JER	14:11-12	
+		4	JER	14:13-13	
+		5	JER	14:14-16	
+		6	JER	14:17-17	
+		7	JER	15:1-2	
+		8	JER	15:3-4	
+		9	JER	15:11-11	
+		10	JER	15:19-19	
+21	Day of Disaster				
+		1	JER	16:1-4	
+		2	JER	16:5-7	
+		3	JER	16:8-9	
+		4	JER	16:10-13	
+		5	JER	16:14-15	
+		6	JER	16:16-18	
+		7	JER	17:5-5	
+22	Keeping the Sabbath Holy				
+		1	JER	17:19-27	
+23	At the Potter's House				
+		1	JER	18:1-4	
+		2	JER	18:5-10	
+		3	JER	18:11-12	
+		4	JER	18:13-13	
+		5	JER	18:18-18	
+		6	JER	19:1-6	
+		7	JER	19:7-9	
+		8	JER	19:10-13	
+		9	JER	19:14-15	
+24	Jeremiah and Pashhur				
+		1	JER	20:1-6	
+25	Jeremiah's Complaint				
+26	God Rejects Zedekiah's Request				
+		1	JER	21:1-2	
+		2	JER	21:3-7	
+		3	JER	21:8-10	
+		4	JER	21:11-12	
+27	Judgment Against Evil Kings				
+		1	JER	22:1-5	
+		2	JER	22:6-6	
+		3	JER	22:8-9	
+		4	JER	22:24-27	
+28	The Righteous Branch				
+		1	JER	23:1-4	
+29	Lying Prophets				
+		1	JER	23:9-9	
+		2	JER	23:15-15	
+		3	JER	23:16-16	
+		4	JER	23:25-29	
+		5	JER	23:30-32	
+30	False Oracles and False Prophets				
+		1	JER	23:33-40	
+31	Two Baskets of Figs				
+		1	JER	24:1-2	
+		2	JER	24:3-3	
+		4	JER	24:4-7	
+		5	JER	24:8-10	
+32	Seventy Years of Captivity				
+		1	JER	25:1-3	
+		2	JER	25:4-6	
+		3	JER	25:7-7	
+		4	JER	25:8-11	
+		5	JER	25:12-14	
+33	The Cup of God's Wrath				
+		1	JER	25:15-16	
+		2	JER	25:17-26	
+		3	JER	25:27-29	
+		4	JER	25:30-30	
+		5	JER	25:32-32	
+34	Jeremiah Threatened With Death				
+		1	JER	26:1-6	
+		2	JER	26:7-9	
+		3	JER	26:10-11	
+		4	JER	26:12-15	
+		5	JER	26:16-16	
+		6	JER	26:17-18	
+		7	JER	26:20-23	
+		8	JER	26:24-24	
+35	Judah to Serve Nebuchadnezzar				
+		1	JER	27:1-7	
+		2	JER	27:8-11	
+		3	JER	27:12-15	
+		4	JER	27:16-22	
+36	The False Prophet Hananiah				
+		1	JER	28:1-4	
+		2	JER	28:5-9	
+		3	JER	28:10-11	
+		4	JER	28:12-14	
+		5	JER	28:15-16	
+		6	JER	28:17-17	
+37	A Letter to the Exiles				
+		1	JER	29:1-3	
+		2	JER	29:4-9	
+		3	JER	29:10-14	
+		4	JER	29:15-19	
+		5	JER	29:20-23	
+38	Message to Shemaiah				
+		1	JER	29:24-28	
+		2	JER	29:29-32	
+39	Restoration of Israel				
+		1	JER	30:1-3	
+		2	JER	30:4-5	
+		3	JER	30:12-12	
+		4	JER	30:18-18	
+		5	JER	31:1-1	
+		6	JER	31:2-2	
+		7	JER	31:3-3	
+		8	JER	31:7-7	
+		9	JER	31:15-15	
+		10	JER	31:16-16	
+		11	JER	31:23-25	
+		12	JER	31:26-26	
+		13	JER	31:27-29	
+		14	JER	31:35-35	
+		15	JER	31:37-37	
+		16	JER	31:38-40	
+40	Jeremiah Buys a Field				
+		1	JER	32:1-2	
+		2	JER	32:3-5	
+		3	JER	32:6-7	
+		4	JER	32:8-8	
+		5	JER	32:9-12	
+		6	JER	32:13-15	
+		7	JER	32:16-16	
+		8	JER	32:24-25	
+		9	JER	32:26-29	
+		10	JER	32:30-35	
+		11	JER	32:36-41	
+		12	JER	32:42-44	
+41	Promise of Restoration				
+		1	JER	33:1-5	
+		2	JER	33:6-9	
+		3	JER	33:10-11	
+		4	JER	33:12-13	
+		5	JER	33:14-14	
+		6	JER	33:19-22	
+		7	JER	33:23-26	
+42	Warning to Zedekiah				
+		1	JER	34:1-3	
+		2	JER	34:4-5	
+		3	JER	34:6-7	
+43	Freedom for Slaves				
+		1	JER	34:8-11	
+		2	JER	34:12-16	
+		3	JER	34:17-20	
+		4	JER	34:21-22	
+44	The Recabites				
+		1	JER	35:1-2	
+		2	JER	35:3-5	
+		3	JER	35:6-11	
+		4	JER	35:12-16	
+		5	JER	35:17-17	
+		6	JER	35:18-19	
+45	Jehoiakim Burns Jeremiah's Scroll				
+		1	JER	36:1-3	
+		2	JER	36:4-7	
+		3	JER	36:8-10	
+		4	JER	36:11-15	
+		5	JER	36:16-17	
+		6	JER	36:18-18	
+		7	JER	36:19-19	
+		8	JER	36:20-26	
+		9	JER	36:27-31	
+		10	JER	36:32-32	
+46	Jeremiah in Prison				
+		1	JER	37:1-2	
+		2	JER	37:3-3	
+		3	JER	37:4-5	
+		4	JER	37:6-8	
+		5	JER	37:9-10	
+		6	JER	37:11-13	
+		7	JER	37:14-15	
+		8	JER	37:16-17	
+		10	JER	37:18-20	
+		11	JER	37:21-21	
+47	Jeremiah Thrown Into a Cistern				
+		1	JER	38:1-3	
+		2	JER	38:4-4	
+		3	JER	38:5-5	
+		4	JER	38:6-6	
+		5	JER	38:7-9	
+		6	JER	38:10-10	
+		7	JER	38:11-13	
+48	Zedekiah Questions Jeremiah Again				
+		1	JER	38:14-14	
+		2	JER	38:15-15	
+		3	JER	38:16-16	
+		4	JER	38:17-18	
+		5	JER	38:19-19	
+		6	JER	38:20-22	
+		7	JER	38:23-23	
+		8	JER	38:24-26	
+		9	JER	38:27-27	
+		10	JER	38:28-28	
+49	The Fall of Jerusalem				
+		1	JER	39:1-4	
+		2	JER	39:5-7	
+		3	JER	39:8-10	
+		4	JER	39:11-14	
+		5	JER	39:15-18	
+50	Jeremiah Freed				
+		1	JER	40:1-5	
+		2	JER	40:6-6	
+51	Gedaliah Assassinated				
+		1	JER	40:7-10	
+		2	JER	40:11-12	
+		3	JER	40:13-14	
+		4	JER	40:15-15	
+		5	JER	40:16-16	
+		6	JER	41:1-3	
+		7	JER	41:4-9	
+		8	JER	41:10-10	
+		9	JER	41:11-15	
+52	Flight to Egypt				
+		1	JER	41:16-18	
+		2	JER	42:1-3	
+		3	JER	42:4-4	
+		4	JER	42:5-6	
+		5	JER	42:7-12	
+		6	JER	42:13-18	
+		7	JER	42:19-22	
+		8	JER	43:1-3	
+		9	JER	43:4-7	
+		10	JER	43:8-13	
+53	Disaster Because of Idolatry				
+		1	JER	44:1-6	
+		2	JER	44:7-10	
+		3	JER	44:11-14	
+		4	JER	44:15-18	
+		5	JER	44:19-19	
+		6	JER	44:20-23	
+		7	JER	44:24-25	
+		8	JER	44:26-28	
+		9	JER	44:29-30	
+54	A Message to Baruch				
+		1	JER	45:1-3	
+		2	JER	45:4-5	
+55	A Message About Egypt				
+		1	JER	46:1-1	
+		2	JER	46:2-2	
+		4	JER	46:13-13	
+		5	JER	46:25-26	
+56	A Message About the Philistines				
+		1	JER	47:1-1	
+		2	JER	47:2-2	
+57	A Message About Moab				
+		1	JER	48:1-1	
+		3	JER	48:40-40	
+58	A Message About Ammon				
+		1	JER	49:1-1	
+59	A Message About Edom				
+		1	JER	49:7-7	
+		3	JER	49:12-13	
+60	A Message About Damascus				
+		1	JER	49:23-23	
+61	A Message About Kedar and Hazor				
+		1	JER	49:28-28	
+62	A Message About Elam				
+		1	JER	49:34-34	
+		2	JER	49:35-35	
+63	A Message About Babylon				
+		1	JER	50:1-1	
+		2	JER	50:18-18	
+		3	JER	50:33-33	
+		4	JER	51:1-1	
+		5	JER	51:24-24	
+		6	JER	51:33-33	
+		7	JER	51:36-36	
+		8	JER	51:58-58	
+		9	JER	51:59-64	
+64	The Fall of Jerusalem				
+		1	JER	52:1-3	
+		3	JER	52:4-5	
+		4	JER	52:6-9	
+		5	JER	52:10-11	
+		6	JER	52:12-16	
+		7	JER	52:17-19	
+		8	JER	52:20-23	
+		9	JER	52:24-27	
+		10	JER	52:28-28	
+		12	JER	52:29-29	
+		14	JER	52:30-30	
+65	Jehoiachin Released				
+		1	JER	52:31-34	
+
