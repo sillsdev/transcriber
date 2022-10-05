@@ -23,11 +23,11 @@ import {
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import logo from '../routes/LogoNoShadow-4x.png';
 import { API_CONFIG } from '../api-variable';
 import about from '../assets/about.json';
 import stringReplace from 'react-string-replace';
 import { useSnackBar } from '../hoc/SnackBar';
+import { ApmLogo } from '../control/ApmLogo';
 const version = require('../../package.json').version;
 const copyright = require('../../package.json').build.copyright;
 const author = require('../../package.json').author.name;
@@ -60,12 +60,6 @@ const VersionDiv = styled('div')(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-}));
-
-const IconImg = styled('img')(() => ({
-  alignSelf: 'center',
-  width: '64px',
-  height: '64px',
 }));
 
 interface ItemsProps {
@@ -181,7 +175,7 @@ function AboutDialog(props: AboutDialogProps) {
         <Tooltip title={t.copyClipboard} onClick={handleVersionCopy}>
           <div>
             <ProductIdentBox>
-              <IconImg src={logo} alt="logo" />
+              <ApmLogo sx={{ width: '64px', height: '64px' }} />
               {'\u00A0'}
               <Typography variant="h4">{API_CONFIG.productName}</Typography>
             </ProductIdentBox>
