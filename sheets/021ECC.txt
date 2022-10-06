@@ -1,61 +1,0 @@
-1	Everything Is Meaningless				
-		1	ECC	1:1-1	
-2	Wisdom Is Meaningless				
-		1	ECC	1:12-14	
-		2	ECC	1:16-17	
-3	Pleasures Are Meaningless				
-		1	ECC	2:1-3	
-		2	ECC	2:4-9	
-4	Wisdom and Folly Are Meaningless				
-		1	ECC	2:15-15	
-5	Toil Is Meaningless				
-		1	ECC	2:17-23	
-		2	ECC	2:24-26	
-6	A Time for Everything				
-		1	ECC	3:9-14	
-		2	ECC	3:16-16	
-		3	ECC	3:17-17	
-		4	ECC	3:18-21	
-		5	ECC	3:22-22	
-7	Oppression, Toil, Friendlessness				
-		1	ECC	4:1-1	
-		2	ECC	4:4-4	
-		3	ECC	4:7-7	
-8	Advancement Is Meaningless				
-		1	ECC	4:13-16	
-9	Stand in Awe of God				
-		1	ECC	5:1-1	
-		2	ECC	5:4-7	
-10	Riches Are Meaningless				
-		1	ECC	5:8-9	
-		2	ECC	5:13-13	
-		3	ECC	5:16-16	
-		4	ECC	5:18-20	
-		5	ECC	6:1-2	
-		6	ECC	6:3-6	
-		7	ECC	6:12-12	
-11	Wisdom				
-		1	ECC	7:13-13	
-		2	ECC	7:15-15	
-		3	ECC	7:23-23	
-		4	ECC	7:27-27	
-12	Obey the King				
-		1	ECC	8:2-4	
-		2	ECC	8:9-10	
-		3	ECC	8:11-13	
-		4	ECC	8:14-15	
-		5	ECC	8:16-17	
-13	A Common Destiny for All				
-		1	ECC	9:1-2	
-		2	ECC	9:3-4	
-		3	ECC	9:7-10	
-		4	ECC	9:11-11	
-		5	ECC	9:12-12	
-14	Wisdom Better Than Folly				
-		1	ECC	9:13-16	
-15	Bread Upon the Waters				
-16	Remember Your Creator While Young				
-17	The Conclusion of the Matter				
-		1	ECC	12:9-10	
-		2	ECC	12:11-12	
-

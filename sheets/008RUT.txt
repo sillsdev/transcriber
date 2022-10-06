@@ -1,61 +1,0 @@
-1	Naomi and Ruth				
-		1	RUT	1:1-2	
-		2	RUT	1:3-5	
-		3	RUT	1:6-7	
-		4	RUT	1:8-9	
-		5	RUT	1:10-10	
-		6	RUT	1:11-13	
-		7	RUT	1:14-14	
-		8	RUT	1:15-15	
-		9	RUT	1:16-18	
-		10	RUT	1:19-19	
-		11	RUT	1:20-21	
-		12	RUT	1:22-22	
-2	Ruth Meets Boaz				
-		1	RUT	2:1-1	
-		2	RUT	2:2-2	
-		3	RUT	2:3-3	
-		4	RUT	2:4-4	
-		6	RUT	2:5-5	
-		7	RUT	2:6-7	
-		8	RUT	2:8-9	
-		9	RUT	2:10-10	
-		10	RUT	2:11-12	
-		11	RUT	2:13-13	
-		12	RUT	2:14-14	
-		13	RUT	2:15-16	
-		14	RUT	2:17-18	
-		15	RUT	2:19-19	
-		17	RUT	2:20-20	
-		18	RUT	2:21-21	
-		19	RUT	2:22-22	
-		20	RUT	2:23-23	
-3	Ruth and Boaz at the Threshing Floor				
-		1	RUT	3:1-4	
-		2	RUT	3:5-6	
-		3	RUT	3:7-8	
-		4	RUT	3:9-9	
-		6	RUT	3:10-13	
-		7	RUT	3:14-14	
-		8	RUT	3:15-15	
-		9	RUT	3:16-16	
-		10	RUT	3:17-17	
-		11	RUT	3:18-18	
-4	Boaz Marries Ruth				
-		1	RUT	4:1-1	
-		2	RUT	4:2-4	
-		4	RUT	4:5-5	
-		5	RUT	4:6-6	
-		6	RUT	4:7-7	
-		7	RUT	4:8-8	
-		8	RUT	4:9-10	
-		9	RUT	4:11-12	
-5	The Genealogy of David				
-		1	RUT	4:13-15	
-		2	RUT	4:16-17	
-		3	RUT	4:18-18	
-		5	RUT	4:19-19	
-		7	RUT	4:20-20	
-		9	RUT	4:21-21	
-		11	RUT	4:22-22	
-

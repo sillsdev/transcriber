@@ -1,109 +1,0 @@
-1	The Son Superior to Angels				
-		1	HEB	1:1-4	
-		2	HEB	1:5-5	
-2	Warning to Pay Attention				
-		1	HEB	2:1-4	
-3	Jesus Made Like His Brothers				
-		1	HEB	2:5-6	
-		2	HEB	2:10-12	
-		3	HEB	2:14-18	
-4	Jesus Greater Than Moses				
-		1	HEB	3:1-6	
-5	Warning Against Unbelief				
-		1	HEB	3:7-7	
-		2	HEB	3:12-15	
-		3	HEB	3:16-19	
-6	A Sabbath-Rest for the People of God				
-		1	HEB	4:1-3	
-		2	HEB	4:6-7	
-		3	HEB	4:12-13	
-7	Jesus the Great High Priest				
-		1	HEB	4:14-16	
-		2	HEB	5:1-3	
-		3	HEB	5:4-5	
-		4	HEB	5:7-10	
-8	Warning Against Falling Away				
-		1	HEB	5:11-14	
-		2	HEB	6:1-3	
-		3	HEB	6:4-6	
-		4	HEB	6:7-8	
-		5	HEB	6:9-12	
-9	The Certainty of God's Promise				
-		1	HEB	6:13-15	
-		2	HEB	6:16-20	
-10	Melchizedek the Priest				
-		1	HEB	7:1-3	
-		2	HEB	7:4-10	
-11	Jesus Like Melchizedek				
-		1	HEB	7:11-17	
-		2	HEB	7:18-19	
-		3	HEB	7:20-21	
-		4	HEB	7:23-25	
-		5	HEB	7:26-28	
-12	The High Priest of a New Covenant				
-		1	HEB	8:1-2	
-		2	HEB	8:3-6	
-		3	HEB	8:7-8	
-		4	HEB	8:13-13	
-13	Worship in the Earthly Tabernacle				
-		1	HEB	9:1-5	
-		2	HEB	9:6-10	
-14	The Blood of Christ				
-		1	HEB	9:11-14	
-		2	HEB	9:15-15	
-		3	HEB	9:16-22	
-		4	HEB	9:23-28	
-15	Christ's Sacrifice Once for All				
-		1	HEB	10:1-4	
-		2	HEB	10:5-5	
-		3	HEB	10:11-14	
-		4	HEB	10:15-15	
-16	A Call to Persevere				
-		1	HEB	10:19-25	
-		2	HEB	10:26-31	
-		3	HEB	10:32-34	
-		4	HEB	10:35-37	
-17	By Faith				
-		1	HEB	11:1-2	
-		2	HEB	11:3-4	
-		3	HEB	11:5-6	
-		4	HEB	11:7-7	
-		5	HEB	11:8-10	
-		6	HEB	11:11-12	
-		7	HEB	11:13-16	
-		8	HEB	11:17-19	
-		9	HEB	11:20-20	
-		10	HEB	11:21-21	
-		11	HEB	11:22-22	
-		12	HEB	11:23-23	
-		13	HEB	11:24-28	
-		14	HEB	11:29-29	
-		15	HEB	11:30-30	
-		16	HEB	11:31-31	
-		17	HEB	11:32-38	
-		18	HEB	11:39-40	
-18	God Disciplines His Sons				
-		1	HEB	12:1-3	
-		2	HEB	12:4-5	
-		3	HEB	12:7-11	
-		4	HEB	12:12-13	
-19	Warning Against Refusing God				
-		1	HEB	12:14-17	
-		2	HEB	12:18-21	
-		3	HEB	12:22-24	
-		4	HEB	12:25-27	
-		5	HEB	12:28-29	
-20	Concluding Exhortations				
-		1	HEB	13:1-3	
-		2	HEB	13:4-5	
-		3	HEB	13:7-8	
-		4	HEB	13:9-10	
-		5	HEB	13:11-14	
-		6	HEB	13:15-17	
-		7	HEB	13:18-19	
-		8	HEB	13:20-21	
-		9	HEB	13:22-22	
-		10	HEB	13:23-23	
-		11	HEB	13:24-24	
-		12	HEB	13:25-25	
-

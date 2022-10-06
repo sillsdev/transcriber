@@ -1,37 +1,0 @@
-		1	SNG	1:1-1	
-1	Beloved				
-2	Friends				
-3	Beloved				
-4	Friends				
-5	Lover				
-6	Beloved				
-7	Lover				
-8	Beloved				
-9	Lover				
-10	Beloved				
-11	Lover				
-12	Beloved				
-13	Lover				
-14	Beloved				
-15	Lover				
-16	Beloved				
-17	Lover				
-18	Friends				
-19	Beloved				
-20	Friends				
-21	Beloved				
-22	Friends				
-23	Beloved				
-24	Lover				
-25	Friends				
-26	Lover				
-27	Friends				
-28	Lover				
-29	Beloved				
-30	Friends				
-31	Beloved				
-32	Friends				
-33	Beloved				
-34	Lover				
-35	Beloved				
-

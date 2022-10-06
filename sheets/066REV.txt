@@ -1,188 +1,0 @@
-1	Prologue				
-		1	REV	1:1-3	
-2	Greetings and doxology				
-		1	REV	1:4-4	
-		3	REV	1:5-5	
-		4	REV	1:6-6	
-		5	REV	1:8-8	
-3	One like a Son of Man				
-		1	REV	1:9-11	
-		2	REV	1:12-16	
-		3	REV	1:17-18	
-		4	REV	1:19-20	
-4	To the church in Ephesus				
-		1	REV	2:1-1	
-		2	REV	2:2-3	
-		3	REV	2:4-6	
-		4	REV	2:7-7	
-5	To the Church in Smyrna				
-		1	REV	2:8-8	
-		2	REV	2:9-10	
-		3	REV	2:11-11	
-6	To the Church in Pergamum				
-		1	REV	2:12-12	
-		2	REV	2:13-13	
-		3	REV	2:14-16	
-		4	REV	2:17-17	
-7	To the Church in Thyatira				
-		1	REV	2:18-18	
-		2	REV	2:19-19	
-		3	REV	2:20-25	
-		4	REV	2:26-26	
-8	To the Church in Sardis				
-		1	REV	3:1-1	
-		2	REV	3:2-3	
-		3	REV	3:4-6	
-9	To the Church in Philadelphia				
-		1	REV	3:7-7	
-		2	REV	3:8-10	
-		3	REV	3:11-13	
-10	To the Church in Laodicea				
-		1	REV	3:14-14	
-		2	REV	3:15-18	
-		3	REV	3:19-20	
-		4	REV	3:21-22	
-11	The Throne in Heaven				
-		1	REV	4:1-6	
-		2	REV	4:7-8	
-12	The Scroll and the Lamb				
-		1	REV	5:1-5	
-		2	REV	5:6-9	
-		3	REV	5:11-12	
-		4	REV	5:13-13	
-13	The Seals				
-		1	REV	6:1-2	
-		2	REV	6:3-4	
-		3	REV	6:5-6	
-		4	REV	6:7-8	
-		5	REV	6:9-11	
-		6	REV	6:12-14	
-		7	REV	6:15-17	
-14	144,000 Sealed				
-		1	REV	7:1-4	
-15	The Great Multitude in White Robes				
-		1	REV	7:9-10	
-		2	REV	7:13-13	
-		3	REV	7:14-14	
-		4	REV	7:15-15	
-16	The Seventh Seal and the Golden Censer				
-		1	REV	8:1-1	
-		2	REV	8:2-2	
-		3	REV	8:3-5	
-17	The Trumpets				
-		1	REV	8:6-6	
-		2	REV	8:7-7	
-		3	REV	8:8-9	
-		4	REV	8:10-11	
-		5	REV	8:12-12	
-		6	REV	8:13-13	
-		7	REV	9:1-6	
-		8	REV	9:7-11	
-		9	REV	9:12-12	
-		10	REV	9:13-16	
-		11	REV	9:17-19	
-		12	REV	9:20-21	
-18	The Angel and the Little Scroll				
-		1	REV	10:1-4	
-		2	REV	10:5-7	
-		3	REV	10:8-8	
-		4	REV	10:9-11	
-19	The Two Witnesses				
-		1	REV	11:1-6	
-		2	REV	11:7-10	
-		3	REV	11:11-12	
-		4	REV	11:13-13	
-		5	REV	11:14-14	
-20	The Seventh Trumpet				
-		1	REV	11:15-15	
-		2	REV	11:19-19	
-21	The Woman and the Dragon				
-		1	REV	12:1-6	
-		2	REV	12:7-9	
-		3	REV	12:10-10	
-		4	REV	12:13-17	
-		5	REV	13:1-1	
-22	The Beast out of the Sea				
-		1	REV	13:2-4	
-		2	REV	13:5-8	
-		3	REV	13:9-9	
-23	The Beast out of the Earth				
-		1	REV	13:11-17	
-		2	REV	13:18-18	
-24	The Lamb and the 144,000				
-		1	REV	14:1-5	
-25	The Three Angels				
-		1	REV	14:6-7	
-		2	REV	14:8-8	
-		3	REV	14:9-12	
-		4	REV	14:13-13	
-26	The Harvest of the Earth				
-		1	REV	14:14-16	
-		2	REV	14:17-20	
-27	Seven Angels with Seven Plagues				
-		1	REV	15:1-3	
-		2	REV	15:5-8	
-28	The Seven Bowls of God's Wrath				
-		1	REV	16:1-2	
-		2	REV	16:3-3	
-		3	REV	16:4-5	
-		4	REV	16:8-9	
-		5	REV	16:10-11	
-		6	REV	16:12-14	
-		7	REV	16:15-15	
-		8	REV	16:16-16	
-		9	REV	16:17-21	
-29	The Woman and the Beast				
-		1	REV	17:1-2	
-		2	REV	17:3-5	
-		7	REV	17:7-8	
-		8	REV	17:9-11	
-		9	REV	17:12-14	
-		10	REV	17:15-18	
-30	The Fall of Babylon				
-		1	REV	18:1-2	
-		2	REV	18:4-4	
-		3	REV	18:9-10	
-		4	REV	18:11-13	
-		5	REV	18:14-16	
-		6	REV	18:18-19	
-		7	REV	18:21-21	
-31	Hallelujah!				
-		1	REV	19:1-1	
-		2	REV	19:4-4	
-		3	REV	19:5-5	
-		4	REV	19:6-6	
-		5	REV	19:9-9	
-		6	REV	19:10-10	
-32	The Rider on the White Horse				
-		1	REV	19:11-16	
-		3	REV	19:17-18	
-		4	REV	19:19-21	
-33	The Thousand Years				
-		1	REV	20:1-3	
-		2	REV	20:4-6	
-34	Satan's Doom				
-		1	REV	20:7-10	
-35	The Dead Are Judged				
-		1	REV	20:11-15	
-36	The New Jerusalem				
-		1	REV	21:1-4	
-		2	REV	21:5-5	
-		3	REV	21:6-8	
-		4	REV	21:9-14	
-		5	REV	21:15-21	
-		6	REV	21:22-27	
-37	The River of Life				
-		1	REV	22:1-6	
-38	Jesus Is Coming				
-		1	REV	22:7-7	
-		2	REV	22:8-9	
-		3	REV	22:10-11	
-		4	REV	22:12-13	
-		5	REV	22:14-15	
-		6	REV	22:16-16	
-		7	REV	22:17-17	
-		8	REV	22:18-19	
-		9	REV	22:20-20	
-		11	REV	22:21-21	
-

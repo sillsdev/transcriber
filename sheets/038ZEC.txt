@@ -1,116 +1,0 @@
-1	A Call to Return to the 				
-		1	ZEC	1:1-1	
-		2	ZEC	1:2-6	
-2	The Man Among the Myrtle Trees				
-		1	ZEC	1:7-7	
-		2	ZEC	1:8-8	
-		3	ZEC	1:9-9	
-		5	ZEC	1:10-10	
-		6	ZEC	1:11-11	
-		7	ZEC	1:12-13	
-		8	ZEC	1:14-15	
-		9	ZEC	1:16-16	
-		10	ZEC	1:17-17	
-3	Four Horns and Four Craftsmen				
-		1	ZEC	1:18-19	
-		3	ZEC	1:20-21	
-4	A Man With a Measuring Line				
-		1	ZEC	2:1-2	
-		3	ZEC	2:3-5	
-		4	ZEC	2:6-6	
-		5	ZEC	2:7-9	
-		6	ZEC	2:10-13	
-5	Clean Garments for the High Priest				
-		1	ZEC	3:1-2	
-		2	ZEC	3:3-4	
-		4	ZEC	3:5-5	
-		5	ZEC	3:6-7	
-		6	ZEC	3:8-9	
-		7	ZEC	3:10-10	
-6	The Gold Lampstand and the Two Olive Trees				
-		1	ZEC	4:1-2	
-		2	ZEC	4:3-3	
-		3	ZEC	4:4-4	
-		4	ZEC	4:5-5	
-		6	ZEC	4:6-6	
-		7	ZEC	4:7-7	
-		8	ZEC	4:8-9	
-		9	ZEC	4:10-10	
-		11	ZEC	4:11-11	
-		12	ZEC	4:12-12	
-		13	ZEC	4:13-13	
-		15	ZEC	4:14-14	
-7	The Flying Scroll				
-		1	ZEC	5:1-1	
-		2	ZEC	5:2-2	
-		4	ZEC	5:3-4	
-8	The Woman in a Basket				
-		1	ZEC	5:5-5	
-		2	ZEC	5:6-6	
-		4	ZEC	5:7-8	
-		5	ZEC	5:9-9	
-		6	ZEC	5:10-10	
-		7	ZEC	5:11-11	
-9	Four Chariots				
-		1	ZEC	6:1-4	
-		2	ZEC	6:5-6	
-		3	ZEC	6:7-7	
-		4	ZEC	6:8-8	
-10	A Crown for Joshua				
-		1	ZEC	6:9-15	
-11	Justice and Mercy, Not Fasting				
-		1	ZEC	7:1-3	
-		2	ZEC	7:4-7	
-		3	ZEC	7:8-10	
-		4	ZEC	7:11-12	
-		5	ZEC	7:13-14	
-12	The 				
-		1	ZEC	8:1-2	
-		2	ZEC	8:3-3	
-		3	ZEC	8:4-5	
-		4	ZEC	8:6-6	
-		5	ZEC	8:7-8	
-		6	ZEC	8:9-11	
-		7	ZEC	8:12-13	
-		8	ZEC	8:14-17	
-		9	ZEC	8:18-19	
-		10	ZEC	8:20-22	
-		11	ZEC	8:23-23	
-13	Judgment on Israel's Enemies				
-14	An Oracle				
-15	The Coming of Zion's King				
-16	The 				
-17	The 				
-18	Two Shepherds				
-		1	ZEC	11:4-6	
-		2	ZEC	11:7-8	
-		3	ZEC	11:9-9	
-		4	ZEC	11:10-11	
-		5	ZEC	11:12-12	
-		6	ZEC	11:13-13	
-		7	ZEC	11:14-14	
-		8	ZEC	11:15-16	
-19	Jerusalem's Enemies to Be Destroyed				
-20	An Oracle				
-		1	ZEC	12:1-5	
-		2	ZEC	12:6-6	
-		3	ZEC	12:7-9	
-21	Mourning for the One They Pierced				
-		1	ZEC	12:10-14	
-22	Cleansing From Sin				
-		1	ZEC	13:1-1	
-		2	ZEC	13:2-3	
-		3	ZEC	13:4-6	
-23	The Shepherd Struck, the Sheep Scattered				
-24	The 				
-		1	ZEC	14:1-1	
-		2	ZEC	14:2-2	
-		3	ZEC	14:3-5	
-		4	ZEC	14:6-7	
-		5	ZEC	14:8-8	
-		6	ZEC	14:9-9	
-		7	ZEC	14:10-11	
-		8	ZEC	14:12-15	
-		9	ZEC	14:16-19	
-		10	ZEC	14:20-21	
-

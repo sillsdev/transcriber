@@ -1,154 +1,0 @@
-		1	ROM	1:1-6	
-		2	ROM	1:7-7	
-1	Paul's Longing to Visit Rome				
-		1	ROM	1:8-10	
-		2	ROM	1:11-13	
-		3	ROM	1:14-15	
-		4	ROM	1:16-17	
-2	God's Wrath Against Mankind				
-		1	ROM	1:18-20	
-		2	ROM	1:21-23	
-		3	ROM	1:24-25	
-		4	ROM	1:26-27	
-		5	ROM	1:28-32	
-3	God's Righteous Judgment				
-		1	ROM	2:1-4	
-		2	ROM	2:5-11	
-		3	ROM	2:12-16	
-4	The Jews and the Law				
-		1	ROM	2:17-24	
-		2	ROM	2:25-27	
-		3	ROM	2:28-29	
-5	God's Faithfulness				
-		1	ROM	3:1-2	
-		2	ROM	3:3-4	
-		3	ROM	3:5-8	
-6	No One is Righteous				
-		1	ROM	3:9-10	
-		2	ROM	3:19-20	
-7	Righteousness Through Faith				
-		1	ROM	3:21-26	
-		2	ROM	3:27-31	
-8	Abraham Justified by Faith				
-		1	ROM	4:1-3	
-		2	ROM	4:4-6	
-		3	ROM	4:9-12	
-		4	ROM	4:13-15	
-		5	ROM	4:16-17	
-		6	ROM	4:18-25	
-9	Peace and Joy				
-		1	ROM	5:1-5	
-		2	ROM	5:6-8	
-		3	ROM	5:9-11	
-10	Death Through Adam, Life Through Christ				
-		1	ROM	5:12-14	
-		2	ROM	5:15-17	
-		3	ROM	5:18-19	
-		4	ROM	5:20-21	
-11	Dead to Sin, Alive in Christ				
-		1	ROM	6:1-4	
-		2	ROM	6:5-7	
-		3	ROM	6:8-10	
-		4	ROM	6:11-14	
-12	Slaves to Righteousness				
-		1	ROM	6:15-18	
-		2	ROM	6:19-23	
-13	An Illustration From Marriage				
-		1	ROM	7:1-3	
-		2	ROM	7:4-6	
-14	Struggling With Sin				
-		1	ROM	7:7-10	
-		2	ROM	7:11-13	
-		3	ROM	7:14-20	
-		4	ROM	7:21-25	
-15	Life Through the Spirit				
-		1	ROM	8:1-4	
-		2	ROM	8:5-8	
-		3	ROM	8:9-11	
-		4	ROM	8:12-17	
-16	Future Glory				
-		1	ROM	8:18-21	
-		2	ROM	8:22-25	
-		3	ROM	8:26-27	
-17	More Than Conquerors				
-		1	ROM	8:28-30	
-		2	ROM	8:31-36	
-18	God's Sovereign Choice				
-		1	ROM	9:1-5	
-		2	ROM	9:6-9	
-		3	ROM	9:10-13	
-		4	ROM	9:14-15	
-		5	ROM	9:19-21	
-		6	ROM	9:22-25	
-		7	ROM	9:27-27	
-		8	ROM	9:29-29	
-19	Israel's Unbelief				
-		1	ROM	9:30-33	
-		2	ROM	10:1-4	
-		3	ROM	10:5-13	
-		4	ROM	10:14-15	
-		5	ROM	10:16-18	
-20	The Remnant of Israel				
-		1	ROM	11:1-6	
-		2	ROM	11:7-8	
-21	Ingrafted Branches				
-		1	ROM	11:11-12	
-		2	ROM	11:13-16	
-		3	ROM	11:17-21	
-		4	ROM	11:22-24	
-22	All Israel Will Be Saved				
-		1	ROM	11:25-26	
-		2	ROM	11:28-32	
-23	Doxology				
-24	Living Sacrifices				
-		1	ROM	12:1-2	
-		2	ROM	12:3-8	
-25	Love				
-		1	ROM	12:9-13	
-		2	ROM	12:14-16	
-		3	ROM	12:17-20	
-26	Submission to the Authorities				
-		1	ROM	13:1-7	
-27	Love, for the Day is Near				
-		1	ROM	13:8-10	
-		2	ROM	13:11-14	
-28	The Weak and the Strong				
-		1	ROM	14:1-4	
-		2	ROM	14:5-8	
-		3	ROM	14:9-11	
-		4	ROM	14:13-18	
-		5	ROM	14:19-21	
-		6	ROM	14:22-23	
-		7	ROM	15:1-4	
-		8	ROM	15:5-6	
-		9	ROM	15:7-9	
-		10	ROM	15:13-13	
-29	Paul the Minister to the Gentiles				
-		1	ROM	15:14-16	
-		2	ROM	15:17-21	
-30	Paul's Plan to Visit Rome				
-		1	ROM	15:23-29	
-		2	ROM	15:30-33	
-31	Personal Greetings				
-		1	ROM	16:1-2	
-		2	ROM	16:3-4	
-		3	ROM	16:5-5	
-		5	ROM	16:6-6	
-		6	ROM	16:7-7	
-		7	ROM	16:8-8	
-		8	ROM	16:9-9	
-		9	ROM	16:10-10	
-		11	ROM	16:11-11	
-		13	ROM	16:12-12	
-		15	ROM	16:13-13	
-		16	ROM	16:14-14	
-		17	ROM	16:15-15	
-		18	ROM	16:16-16	
-		20	ROM	16:17-19	
-		21	ROM	16:20-20	
-		23	ROM	16:21-21	
-		24	ROM	16:22-22	
-		25	ROM	16:23-23	
-		26	ROM	16:24-24	
-		27	ROM	16:25-27	
-

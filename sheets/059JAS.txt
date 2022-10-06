@@ -1,47 +1,0 @@
-		1	JAS	1:1-1	
-1	Trials and Temptations				
-		1	JAS	1:2-8	
-		2	JAS	1:9-11	
-		3	JAS	1:12-12	
-		4	JAS	1:13-15	
-		5	JAS	1:16-18	
-2	Listening and Doing				
-		1	JAS	1:19-21	
-		2	JAS	1:22-25	
-		3	JAS	1:26-27	
-3	Favoritism Forbidden				
-		1	JAS	2:1-4	
-		2	JAS	2:5-7	
-		3	JAS	2:8-11	
-		4	JAS	2:12-13	
-4	Faith and Deeds				
-		1	JAS	2:14-17	
-		2	JAS	2:18-18	
-		3	JAS	2:19-19	
-		4	JAS	2:20-24	
-		5	JAS	2:25-26	
-5	Taming the Tongue				
-		1	JAS	3:1-2	
-		2	JAS	3:3-6	
-		3	JAS	3:7-8	
-		4	JAS	3:9-12	
-6	Two Kinds of Wisdom				
-		1	JAS	3:13-16	
-		2	JAS	3:17-18	
-7	Submit Yourselves to God				
-		1	JAS	4:1-3	
-		2	JAS	4:4-6	
-		3	JAS	4:7-10	
-		4	JAS	4:11-12	
-8	Boasting About Tomorrow				
-		1	JAS	4:13-17	
-9	Warning to Rich Oppressors				
-		1	JAS	5:1-6	
-10	Patience in Suffering				
-		1	JAS	5:7-9	
-		2	JAS	5:10-11	
-		3	JAS	5:12-12	
-11	The Prayer of Faith				
-		1	JAS	5:13-16	
-		2	JAS	5:17-20	
-

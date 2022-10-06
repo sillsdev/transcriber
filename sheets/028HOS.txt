@@ -1,23 +1,0 @@
-		1	HOS	1:1-1	
-1	Hosea's Wife and Children				
-		1	HOS	1:2-3	
-		2	HOS	1:4-5	
-		3	HOS	1:6-7	
-		4	HOS	1:8-9	
-		5	HOS	1:10-11	
-		6	HOS	2:1-1	
-2	Israel Punished and Restored				
-3	Hosea's Reconciliation With His Wife				
-		1	HOS	3:1-1	
-		2	HOS	3:2-3	
-		3	HOS	3:4-5	
-4	The Charge Against Israel				
-5	Judgment Against Israel				
-6	Israel Unrepentant				
-7	Israel to Reap the Whirlwind				
-8	Punishment for Israel				
-9	God's Love for Israel				
-10	Israel's Sin				
-11	The 				
-12	Repentance to Bring Blessing				
-
