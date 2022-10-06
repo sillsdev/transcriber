@@ -1,581 +1,0 @@
-1	The Genealogy of Jesus				
-		1	MAT	1:1-1	
-		2	MAT	1:2-2	
-		4	MAT	1:12-12	
-		5	MAT	1:17-17	
-2	The Birth of Jesus Christ				
-		1	MAT	1:18-19	
-		2	MAT	1:20-21	
-		3	MAT	1:22-23	
-		4	MAT	1:24-25	
-3	The Visit of the Magi				
-		1	MAT	2:1-2	
-		2	MAT	2:3-5	
-		3	MAT	2:7-8	
-		4	MAT	2:9-12	
-4	The Escape to Egypt				
-		1	MAT	2:13-15	
-		2	MAT	2:16-17	
-5	The Return to Nazareth				
-		1	MAT	2:19-20	
-		2	MAT	2:21-23	
-6	John the Baptist Prepares the Way				
-		1	MAT	3:1-3	
-		2	MAT	3:4-6	
-		3	MAT	3:7-10	
-		4	MAT	3:11-12	
-7	The Baptism of Jesus				
-		1	MAT	3:13-14	
-		2	MAT	3:15-15	
-		3	MAT	3:16-17	
-8	The Temptation of Jesus				
-		1	MAT	4:1-3	
-		2	MAT	4:4-4	
-		3	MAT	4:5-6	
-		4	MAT	4:7-7	
-		5	MAT	4:8-9	
-		6	MAT	4:10-10	
-		7	MAT	4:11-11	
-9	Jesus Begins to Preach				
-		1	MAT	4:12-14	
-		2	MAT	4:17-17	
-10	The Calling of the First Disciples				
-		1	MAT	4:18-20	
-		2	MAT	4:21-22	
-11	Jesus Heals the Sick				
-		1	MAT	4:23-25	
-12	The Beatitudes				
-		1	MAT	5:1-2	
-		2	MAT	5:11-12	
-13	Salt and Light				
-		1	MAT	5:13-13	
-		2	MAT	5:14-16	
-14	The Fulfillment of the Law				
-		1	MAT	5:17-20	
-15	Murder				
-		1	MAT	5:21-22	
-		2	MAT	5:23-24	
-		3	MAT	5:25-26	
-16	Adultery				
-		1	MAT	5:27-30	
-17	Divorce				
-		1	MAT	5:31-32	
-18	Oaths				
-		1	MAT	5:33-37	
-19	An Eye for an Eye				
-		1	MAT	5:38-42	
-20	Love for Enemies				
-		1	MAT	5:43-48	
-21	Giving to the Needy				
-		1	MAT	6:1-1	
-		2	MAT	6:2-4	
-22	Prayer				
-		1	MAT	6:5-8	
-		2	MAT	6:9-9	
-23	Fasting				
-		1	MAT	6:16-18	
-24	Treasures in Heaven				
-		1	MAT	6:19-21	
-		2	MAT	6:22-23	
-		3	MAT	6:24-24	
-25	Do Not Worry				
-		1	MAT	6:25-27	
-		2	MAT	6:28-34	
-26	Judging Others				
-		1	MAT	7:1-2	
-		2	MAT	7:3-5	
-		3	MAT	7:6-6	
-27	Ask, Seek, Knock				
-		1	MAT	7:7-8	
-		2	MAT	7:9-12	
-28	The Narrow and Wide Gates				
-		1	MAT	7:13-14	
-29	A Tree and Its Fruit				
-		1	MAT	7:15-20	
-		2	MAT	7:21-23	
-30	The Wise and Foolish Builders				
-		1	MAT	7:24-27	
-		2	MAT	7:28-29	
-31	The Man With Leprosy				
-		1	MAT	8:1-2	
-		2	MAT	8:3-4	
-32	The Faith of the Centurion				
-		1	MAT	8:5-6	
-		2	MAT	8:7-7	
-		3	MAT	8:8-9	
-		4	MAT	8:10-12	
-		5	MAT	8:13-13	
-33	Jesus Heals Many				
-		1	MAT	8:14-15	
-		2	MAT	8:16-17	
-34	The Cost of Following Jesus				
-		1	MAT	8:18-19	
-		2	MAT	8:20-20	
-		3	MAT	8:21-21	
-		4	MAT	8:22-22	
-35	Jesus Calms the Storm				
-		1	MAT	8:23-25	
-		2	MAT	8:26-26	
-		3	MAT	8:27-27	
-36	The Healing of Two Demon-possessed Men				
-		1	MAT	8:28-29	
-		2	MAT	8:30-31	
-		3	MAT	8:32-34	
-37	Jesus Heals a Paralytic				
-		1	MAT	9:1-2	
-		2	MAT	9:3-3	
-		3	MAT	9:4-8	
-38	The Calling of Matthew				
-		1	MAT	9:9-9	
-		2	MAT	9:10-11	
-		3	MAT	9:12-13	
-39	Jesus Questioned About Fasting				
-		1	MAT	9:14-14	
-		2	MAT	9:15-15	
-		3	MAT	9:16-17	
-40	A Dead Girl and a Sick Woman				
-		1	MAT	9:18-19	
-		2	MAT	9:20-21	
-		3	MAT	9:22-22	
-		4	MAT	9:23-26	
-41	Jesus Heals the Blind and Mute				
-		1	MAT	9:27-27	
-		2	MAT	9:28-28	
-		4	MAT	9:29-31	
-		5	MAT	9:32-33	
-		6	MAT	9:34-34	
-42	The Workers Are Few				
-		1	MAT	9:35-38	
-43	Jesus Sends Out the Twelve				
-		1	MAT	10:1-1	
-		2	MAT	10:2-4	
-		3	MAT	10:5-10	
-		4	MAT	10:11-16	
-		5	MAT	10:17-20	
-		6	MAT	10:21-23	
-		7	MAT	10:24-25	
-		8	MAT	10:26-31	
-		9	MAT	10:32-33	
-		10	MAT	10:34-35	
-		11	MAT	10:37-39	
-		12	MAT	10:40-42	
-44	Jesus and John the Baptist				
-		1	MAT	11:1-1	
-		2	MAT	11:2-3	
-		3	MAT	11:4-6	
-		4	MAT	11:7-10	
-		5	MAT	11:16-16	
-45	Woe on Unrepentant Cities				
-		1	MAT	11:20-24	
-46	Rest for the Weary				
-		1	MAT	11:25-26	
-		2	MAT	11:27-27	
-		3	MAT	11:28-30	
-47	Lord of the Sabbath				
-		1	MAT	12:1-2	
-		2	MAT	12:3-8	
-		3	MAT	12:9-10	
-		4	MAT	12:11-12	
-		5	MAT	12:13-14	
-48	God's Chosen Servant				
-		1	MAT	12:15-17	
-49	Jesus and Beelzebub				
-		1	MAT	12:22-23	
-		2	MAT	12:24-24	
-		3	MAT	12:25-28	
-		4	MAT	12:29-29	
-		5	MAT	12:30-32	
-		6	MAT	12:33-37	
-50	The Sign of Jonah				
-		1	MAT	12:38-38	
-		2	MAT	12:39-42	
-		3	MAT	12:43-45	
-51	Jesus' Mother and Brothers				
-		1	MAT	12:46-47	
-		2	MAT	12:48-50	
-52	The Parable of the Sower				
-		1	MAT	13:1-9	
-		2	MAT	13:10-10	
-		3	MAT	13:11-13	
-		4	MAT	13:18-23	
-53	The Parable of the Weeds				
-		1	MAT	13:24-26	
-		2	MAT	13:27-27	
-		3	MAT	13:28-28	
-		5	MAT	13:29-30	
-54	The Parables of the Mustard Seed and the Yeast				
-		1	MAT	13:31-32	
-		2	MAT	13:33-33	
-		3	MAT	13:34-35	
-55	The Parable of the Weeds Explained				
-		1	MAT	13:36-36	
-		2	MAT	13:37-39	
-		3	MAT	13:40-43	
-56	The Parables of the Hidden Treasure and the Pearl				
-		1	MAT	13:44-44	
-		2	MAT	13:45-46	
-57	The Parable of the Net				
-		1	MAT	13:47-50	
-		2	MAT	13:51-51	
-		4	MAT	13:52-52	
-58	A Prophet Without Honor				
-		1	MAT	13:53-57	
-		3	MAT	13:58-58	
-59	John the Baptist Beheaded				
-		1	MAT	14:1-2	
-		2	MAT	14:3-5	
-		3	MAT	14:6-12	
-60	Jesus Feeds the Five Thousand				
-		1	MAT	14:13-14	
-		2	MAT	14:15-15	
-		3	MAT	14:16-16	
-		4	MAT	14:17-17	
-		5	MAT	14:18-21	
-61	Jesus Walks on the Water				
-		1	MAT	14:22-24	
-		2	MAT	14:25-26	
-		3	MAT	14:27-27	
-		4	MAT	14:28-28	
-		5	MAT	14:29-29	
-		6	MAT	14:30-30	
-		7	MAT	14:31-31	
-		8	MAT	14:32-33	
-		9	MAT	14:34-36	
-62	Clean and Unclean				
-		1	MAT	15:1-2	
-		2	MAT	15:3-7	
-		3	MAT	15:10-11	
-		4	MAT	15:12-12	
-		5	MAT	15:13-14	
-		6	MAT	15:15-15	
-		7	MAT	15:16-20	
-63	The Faith of the Canaanite Woman				
-		1	MAT	15:21-22	
-		2	MAT	15:23-23	
-		3	MAT	15:24-24	
-		4	MAT	15:25-25	
-		5	MAT	15:26-26	
-		6	MAT	15:27-27	
-		7	MAT	15:28-28	
-64	Jesus Feeds the Four Thousand				
-		1	MAT	15:29-31	
-		2	MAT	15:32-32	
-		3	MAT	15:33-33	
-		4	MAT	15:34-34	
-		6	MAT	15:35-39	
-65	The Demand for a Sign				
-		1	MAT	16:1-1	
-		2	MAT	16:2-4	
-66	The Yeast of the Pharisees and Sadducees				
-		1	MAT	16:5-6	
-		2	MAT	16:7-7	
-		3	MAT	16:8-12	
-67	Peter's Confession of Christ				
-		1	MAT	16:13-13	
-		2	MAT	16:14-14	
-		3	MAT	16:15-15	
-		4	MAT	16:16-16	
-		5	MAT	16:17-20	
-68	Jesus Predicts His Death				
-		1	MAT	16:21-21	
-		2	MAT	16:22-22	
-		3	MAT	16:23-23	
-		4	MAT	16:24-28	
-69	The Transfiguration				
-		1	MAT	17:1-3	
-		2	MAT	17:4-4	
-		3	MAT	17:5-5	
-		4	MAT	17:6-8	
-		5	MAT	17:9-9	
-		6	MAT	17:10-10	
-		7	MAT	17:11-13	
-70	The Healing of a Boy With a Demon				
-		1	MAT	17:14-16	
-		2	MAT	17:17-18	
-		3	MAT	17:19-19	
-		4	MAT	17:20-21	
-		5	MAT	17:22-23	
-71	The Temple Tax				
-		1	MAT	17:24-24	
-		2	MAT	17:25-25	
-		4	MAT	17:26-26	
-		5	MAT	17:27-27	
-72	The Greatest in the Kingdom of Heaven				
-		1	MAT	18:1-1	
-		2	MAT	18:2-4	
-		3	MAT	18:5-6	
-		4	MAT	18:7-9	
-73	The Parable of the Lost Sheep				
-		1	MAT	18:10-11	
-		2	MAT	18:12-14	
-74	A Brother Who Sins Against You				
-		1	MAT	18:15-17	
-		2	MAT	18:18-18	
-		3	MAT	18:19-20	
-75	The Parable of the Unmerciful Servant				
-		1	MAT	18:21-21	
-		2	MAT	18:22-22	
-		3	MAT	18:23-25	
-		4	MAT	18:26-27	
-		5	MAT	18:28-28	
-		6	MAT	18:29-29	
-		7	MAT	18:30-31	
-		8	MAT	18:32-34	
-		9	MAT	18:35-35	
-76	Divorce				
-		1	MAT	19:1-2	
-		2	MAT	19:3-3	
-		3	MAT	19:4-6	
-		4	MAT	19:7-7	
-		5	MAT	19:8-9	
-		6	MAT	19:10-10	
-		7	MAT	19:11-12	
-77	The Little Children and Jesus				
-		1	MAT	19:13-13	
-		2	MAT	19:14-15	
-78	The Rich Young Man				
-		1	MAT	19:16-16	
-		2	MAT	19:17-17	
-		3	MAT	19:18-18	
-		4	MAT	19:19-19	
-		5	MAT	19:20-20	
-		6	MAT	19:21-21	
-		7	MAT	19:22-22	
-		8	MAT	19:23-24	
-		9	MAT	19:25-25	
-		10	MAT	19:26-26	
-		11	MAT	19:27-27	
-		12	MAT	19:28-30	
-79	The Parable of the Workers in the Vineyard				
-		1	MAT	20:1-2	
-		2	MAT	20:3-5	
-		3	MAT	20:6-6	
-		4	MAT	20:7-7	
-		6	MAT	20:8-8	
-		7	MAT	20:9-12	
-		8	MAT	20:13-15	
-		9	MAT	20:16-16	
-80	Jesus Again Predicts His Death				
-		1	MAT	20:17-19	
-81	A Mother's Request				
-		1	MAT	20:20-20	
-		2	MAT	20:21-21	
-		4	MAT	20:22-22	
-		6	MAT	20:23-23	
-		7	MAT	20:24-28	
-82	Two Blind Men Receive Sight				
-		1	MAT	20:29-30	
-		2	MAT	20:31-31	
-		3	MAT	20:32-32	
-		4	MAT	20:33-33	
-		5	MAT	20:34-34	
-83	The Triumphal Entry				
-		1	MAT	21:1-3	
-		2	MAT	21:4-4	
-		3	MAT	21:6-9	
-		4	MAT	21:10-10	
-		5	MAT	21:11-11	
-84	Jesus at the Temple				
-		1	MAT	21:12-13	
-		2	MAT	21:14-15	
-		3	MAT	21:16-16	
-		5	MAT	21:17-17	
-85	The Fig Tree Withers				
-		1	MAT	21:18-19	
-		2	MAT	21:20-20	
-		3	MAT	21:21-22	
-86	The Authority of Jesus Questioned				
-		1	MAT	21:23-23	
-		2	MAT	21:24-25	
-		3	MAT	21:26-26	
-		4	MAT	21:27-27	
-87	The Parable of the Two Sons				
-		1	MAT	21:28-28	
-		2	MAT	21:29-29	
-		3	MAT	21:30-30	
-		4	MAT	21:31-31	
-		6	MAT	21:32-32	
-88	The Parable of the Tenants				
-		1	MAT	21:33-34	
-		2	MAT	21:35-37	
-		3	MAT	21:38-39	
-		4	MAT	21:40-40	
-		5	MAT	21:41-41	
-		6	MAT	21:42-42	
-		7	MAT	21:43-44	
-		8	MAT	21:45-46	
-89	The Parable of the Wedding Banquet				
-		1	MAT	22:1-3	
-		2	MAT	22:4-4	
-		3	MAT	22:5-7	
-		4	MAT	22:8-10	
-		5	MAT	22:11-12	
-		6	MAT	22:13-13	
-		7	MAT	22:14-14	
-90	Paying Taxes to Caesar				
-		1	MAT	22:15-17	
-		2	MAT	22:18-20	
-		3	MAT	22:21-21	
-		5	MAT	22:22-22	
-91	Marriage at the Resurrection				
-		1	MAT	22:23-28	
-		2	MAT	22:29-32	
-		3	MAT	22:33-33	
-92	The Greatest Commandment				
-		1	MAT	22:34-35	
-		2	MAT	22:36-40	
-93	Whose Son Is the Christ				
-		1	MAT	22:41-42	
-		3	MAT	22:43-43	
-94	Seven Woes				
-		1	MAT	23:1-4	
-		2	MAT	23:5-7	
-		3	MAT	23:8-12	
-		4	MAT	23:13-14	
-		5	MAT	23:15-15	
-		6	MAT	23:16-22	
-		7	MAT	23:23-24	
-		8	MAT	23:25-26	
-		9	MAT	23:27-28	
-		10	MAT	23:29-32	
-		11	MAT	23:33-36	
-		12	MAT	23:37-39	
-95	Signs of the End of the Age				
-		1	MAT	24:1-2	
-		2	MAT	24:3-3	
-		3	MAT	24:4-8	
-		4	MAT	24:9-14	
-		5	MAT	24:15-25	
-		6	MAT	24:26-28	
-		7	MAT	24:29-29	
-		8	MAT	24:30-31	
-		9	MAT	24:32-35	
-96	The Day and Hour Unknown				
-		1	MAT	24:36-41	
-		2	MAT	24:42-44	
-		3	MAT	24:45-51	
-97	The Parable of the Ten Virgins				
-		1	MAT	25:1-5	
-		2	MAT	25:6-6	
-		3	MAT	25:7-8	
-		4	MAT	25:9-9	
-		5	MAT	25:10-10	
-		6	MAT	25:11-11	
-		7	MAT	25:12-12	
-		8	MAT	25:13-13	
-98	The Parable of the Talents				
-		1	MAT	25:14-18	
-		2	MAT	25:19-20	
-		3	MAT	25:21-21	
-		4	MAT	25:22-22	
-		5	MAT	25:23-23	
-		6	MAT	25:24-25	
-		7	MAT	25:26-27	
-		8	MAT	25:28-30	
-99	The Sheep and the Goats				
-		1	MAT	25:31-33	
-		2	MAT	25:34-36	
-		3	MAT	25:37-39	
-		4	MAT	25:40-40	
-		5	MAT	25:41-43	
-		6	MAT	25:44-44	
-		7	MAT	25:45-45	
-		8	MAT	25:46-46	
-100	The Plot Against Jesus				
-		1	MAT	26:1-2	
-		2	MAT	26:3-5	
-101	Jesus Anointed at Bethany				
-		1	MAT	26:6-7	
-		2	MAT	26:8-9	
-		3	MAT	26:10-13	
-102	Judas Agrees to Betray Jesus				
-		1	MAT	26:14-16	
-103	The Lord's Supper				
-		1	MAT	26:17-17	
-		2	MAT	26:18-19	
-		3	MAT	26:20-21	
-		4	MAT	26:22-22	
-		5	MAT	26:23-24	
-		6	MAT	26:25-25	
-		8	MAT	26:26-26	
-		9	MAT	26:27-29	
-		10	MAT	26:30-30	
-104	Jesus Predicts Peter's Denial				
-		1	MAT	26:31-31	
-		2	MAT	26:33-33	
-		3	MAT	26:34-34	
-		4	MAT	26:35-35	
-105	Gethsemane				
-		1	MAT	26:36-38	
-		2	MAT	26:39-39	
-		3	MAT	26:40-41	
-		4	MAT	26:42-42	
-		5	MAT	26:43-44	
-		6	MAT	26:45-46	
-106	Jesus Arrested				
-		1	MAT	26:47-49	
-		2	MAT	26:50-50	
-		3	MAT	26:51-51	
-		4	MAT	26:52-54	
-		5	MAT	26:55-56	
-107	Before the Sanhedrin				
-		1	MAT	26:57-58	
-		2	MAT	26:59-60	
-		3	MAT	26:61-61	
-		4	MAT	26:62-63	
-		6	MAT	26:64-64	
-		7	MAT	26:65-66	
-		9	MAT	26:67-68	
-108	Peter Disowns Jesus				
-		1	MAT	26:69-69	
-		2	MAT	26:70-70	
-		3	MAT	26:71-71	
-		4	MAT	26:72-72	
-		5	MAT	26:73-73	
-		6	MAT	26:74-74	
-		7	MAT	26:75-75	
-109	Judas Hangs Himself				
-		1	MAT	27:1-2	
-		2	MAT	27:3-4	
-		4	MAT	27:5-5	
-		5	MAT	27:6-10	
-110	Jesus Before Pilate				
-		1	MAT	27:11-11	
-		3	MAT	27:12-14	
-		4	MAT	27:15-18	
-		5	MAT	27:19-19	
-		6	MAT	27:20-20	
-		7	MAT	27:21-21	
-		9	MAT	27:22-22	
-		11	MAT	27:23-23	
-		13	MAT	27:24-24	
-		14	MAT	27:25-25	
-		15	MAT	27:26-26	
-111	The Soldiers Mock Jesus				
-		1	MAT	27:27-31	
-112	The Crucifixion				
-		1	MAT	27:32-40	
-		2	MAT	27:41-44	
-113	The Death of Jesus				
-		1	MAT	27:45-46	
-		2	MAT	27:47-47	
-		3	MAT	27:48-49	
-		4	MAT	27:50-50	
-		5	MAT	27:51-53	
-		6	MAT	27:54-54	
-		7	MAT	27:55-56	
-114	The Burial of Jesus				
-		1	MAT	27:57-61	
-115	The Guard at the Tomb				
-		1	MAT	27:62-64	
-		2	MAT	27:65-66	
-116	The Resurrection				
-		1	MAT	28:1-1	
-		2	MAT	28:2-4	
-		3	MAT	28:5-7	
-		4	MAT	28:8-10	
-117	The Guards' Report				
-		1	MAT	28:11-15	
-118	The Great Commission				
-		1	MAT	28:16-20	
-

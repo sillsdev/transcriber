@@ -1,29 +1,0 @@
-1	Jonah Flees From the 				
-		1	JON	1:1-2	
-		2	JON	1:3-3	
-		3	JON	1:4-5	
-		4	JON	1:6-6	
-		5	JON	1:7-7	
-		6	JON	1:8-8	
-		7	JON	1:9-9	
-		8	JON	1:10-10	
-		9	JON	1:11-11	
-		10	JON	1:12-12	
-		11	JON	1:13-16	
-		12	JON	1:17-17	
-2	Jonah's Prayer				
-		1	JON	2:1-2	
-		2	JON	2:10-10	
-3	Jonah Goes to Nineveh				
-		1	JON	3:1-2	
-		2	JON	3:3-5	
-		3	JON	3:6-7	
-		5	JON	3:8-9	
-		6	JON	3:10-10	
-4	Jonah's Anger at the 				
-		1	JON	4:1-3	
-		2	JON	4:4-4	
-		3	JON	4:5-8	
-		4	JON	4:9-9	
-		6	JON	4:10-11	
-

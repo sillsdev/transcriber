@@ -1,471 +1,0 @@
-1	The Word Became Flesh				
-		1	JHN	1:1-2	
-		2	JHN	1:3-5	
-		3	JHN	1:6-9	
-		4	JHN	1:10-13	
-		5	JHN	1:14-14	
-		6	JHN	1:15-18	
-2	John the Baptist Denies Being the Christ				
-		1	JHN	1:19-20	
-		2	JHN	1:21-21	
-		6	JHN	1:22-22	
-		7	JHN	1:23-23	
-		8	JHN	1:24-25	
-		9	JHN	1:26-27	
-		10	JHN	1:28-28	
-3	Jesus the Lamb of God				
-		1	JHN	1:29-31	
-		2	JHN	1:32-34	
-4	Jesus' First Disciples				
-		1	JHN	1:35-36	
-		2	JHN	1:37-38	
-		4	JHN	1:39-39	
-		6	JHN	1:40-42	
-5	Jesus Calls Philip and Nathanael				
-		1	JHN	1:43-43	
-		2	JHN	1:44-45	
-		3	JHN	1:46-46	
-		5	JHN	1:47-47	
-		6	JHN	1:48-48	
-		8	JHN	1:49-49	
-		9	JHN	1:50-51	
-6	Jesus Changes Water to Wine				
-		1	JHN	2:1-3	
-		2	JHN	2:4-4	
-		3	JHN	2:5-5	
-		4	JHN	2:6-6	
-		5	JHN	2:7-7	
-		6	JHN	2:8-8	
-		7	JHN	2:9-10	
-		8	JHN	2:11-11	
-7	Jesus Clears the Temple				
-		1	JHN	2:12-12	
-		2	JHN	2:13-16	
-		3	JHN	2:17-17	
-		4	JHN	2:18-18	
-		5	JHN	2:19-19	
-		6	JHN	2:20-22	
-		7	JHN	2:23-25	
-8	Jesus Teaches Nicodemus				
-		1	JHN	3:1-2	
-		2	JHN	3:3-3	
-		3	JHN	3:4-4	
-		4	JHN	3:5-8	
-		5	JHN	3:9-9	
-		6	JHN	3:10-15	
-		7	JHN	3:16-21	
-9	John the Baptist's Testimony About Jesus				
-		1	JHN	3:22-26	
-		2	JHN	3:27-30	
-		3	JHN	3:31-36	
-10	Jesus Talks With a Samaritan Woman				
-		1	JHN	4:1-3	
-		2	JHN	4:4-6	
-		3	JHN	4:7-8	
-		4	JHN	4:9-9	
-		5	JHN	4:10-10	
-		6	JHN	4:11-12	
-		7	JHN	4:13-14	
-		8	JHN	4:15-15	
-		9	JHN	4:16-16	
-		10	JHN	4:17-17	
-		11	JHN	4:18-18	
-		12	JHN	4:19-20	
-		13	JHN	4:21-24	
-		14	JHN	4:25-25	
-		15	JHN	4:26-26	
-11	The Disciples Rejoin Jesus				
-		1	JHN	4:27-27	
-		2	JHN	4:28-30	
-		3	JHN	4:31-31	
-		4	JHN	4:32-32	
-		5	JHN	4:33-33	
-		6	JHN	4:34-38	
-12	Many Samaritans Believe				
-		1	JHN	4:39-41	
-		2	JHN	4:42-42	
-13	Jesus Heals the Official's Son				
-		1	JHN	4:43-45	
-		2	JHN	4:46-47	
-		3	JHN	4:48-48	
-		4	JHN	4:49-49	
-		5	JHN	4:50-50	
-		6	JHN	4:51-52	
-		7	JHN	4:53-53	
-		8	JHN	4:54-54	
-14	The Healing at the Pool				
-		1	JHN	5:1-6	
-		2	JHN	5:7-7	
-		3	JHN	5:8-9	
-		4	JHN	5:10-10	
-		5	JHN	5:11-11	
-		6	JHN	5:12-12	
-		7	JHN	5:13-13	
-		8	JHN	5:14-15	
-15	Life Through the Son				
-		1	JHN	5:16-18	
-		2	JHN	5:19-23	
-		3	JHN	5:24-27	
-		4	JHN	5:28-30	
-16	Testimonies About Jesus				
-		1	JHN	5:31-32	
-		2	JHN	5:33-35	
-		3	JHN	5:36-40	
-		4	JHN	5:41-44	
-		5	JHN	5:45-47	
-17	Jesus Feeds the Five Thousand				
-		1	JHN	6:1-4	
-		2	JHN	6:5-6	
-		3	JHN	6:7-7	
-		4	JHN	6:8-9	
-		5	JHN	6:10-11	
-		6	JHN	6:12-13	
-		7	JHN	6:14-15	
-18	Jesus Walks on the Water				
-		1	JHN	6:16-21	
-		2	JHN	6:22-24	
-19	Jesus the Bread of Life				
-		1	JHN	6:25-25	
-		2	JHN	6:26-27	
-		3	JHN	6:28-28	
-		4	JHN	6:29-29	
-		5	JHN	6:30-31	
-		6	JHN	6:32-33	
-		7	JHN	6:34-34	
-		8	JHN	6:35-40	
-		9	JHN	6:41-42	
-		10	JHN	6:43-51	
-		11	JHN	6:52-52	
-		12	JHN	6:53-59	
-20	Many Disciples Desert Jesus				
-		1	JHN	6:60-60	
-		2	JHN	6:61-65	
-		3	JHN	6:66-66	
-		4	JHN	6:67-67	
-		5	JHN	6:68-69	
-		6	JHN	6:70-71	
-21	Jesus Goes to the Feast of Tabernacles				
-		1	JHN	7:1-5	
-		2	JHN	7:6-9	
-		3	JHN	7:10-11	
-		4	JHN	7:12-12	
-		5	JHN	7:13-13	
-22	Jesus Teaches at the Feast				
-		1	JHN	7:14-15	
-		2	JHN	7:16-19	
-		3	JHN	7:20-20	
-		4	JHN	7:21-24	
-23	Is Jesus the Christ?				
-		1	JHN	7:25-27	
-		2	JHN	7:28-29	
-		3	JHN	7:30-31	
-		4	JHN	7:32-32	
-		5	JHN	7:33-34	
-		6	JHN	7:35-36	
-		7	JHN	7:37-39	
-		8	JHN	7:40-40	
-		9	JHN	7:41-41	
-		10	JHN	7:42-44	
-24	Unbelief of the Jewish Leaders				
-		1	JHN	7:45-45	
-		2	JHN	7:46-46	
-		3	JHN	7:47-49	
-		4	JHN	7:50-51	
-		5	JHN	7:52-52	
-25	[The earliest and most reliable manuscripts and other ancient witnesses do not have John 7.53-8.11.]				
-		1	JHN	7:53-53	
-		2	JHN	8:1-6	
-		3	JHN	8:7-8	
-		4	JHN	8:9-10	
-		5	JHN	8:11-11	
-26	The Validity of Jesus' Testimony				
-		1	JHN	8:12-12	
-		2	JHN	8:13-13	
-		3	JHN	8:14-18	
-		4	JHN	8:19-19	
-		5	JHN	8:20-20	
-		6	JHN	8:21-21	
-		7	JHN	8:22-22	
-		8	JHN	8:23-24	
-		9	JHN	8:25-25	
-		10	JHN	8:26-26	
-		11	JHN	8:27-30	
-27	The Children of Abraham				
-		1	JHN	8:31-32	
-		2	JHN	8:33-33	
-		3	JHN	8:34-38	
-		4	JHN	8:39-39	
-		5	JHN	8:40-41	
-28	The Children of the Devil				
-		1	JHN	8:42-47	
-29	The Claims of Jesus About Himself				
-		1	JHN	8:48-48	
-		2	JHN	8:49-51	
-		3	JHN	8:52-53	
-		4	JHN	8:54-56	
-		5	JHN	8:57-57	
-		6	JHN	8:58-59	
-30	Jesus Heals a Man Born Blind				
-		1	JHN	9:1-2	
-		2	JHN	9:3-5	
-		3	JHN	9:6-7	
-		4	JHN	9:8-9	
-		7	JHN	9:10-10	
-		8	JHN	9:11-11	
-		9	JHN	9:12-12	
-31	The Pharisees Investigate the Healing				
-		1	JHN	9:13-15	
-		2	JHN	9:16-16	
-		4	JHN	9:17-17	
-		6	JHN	9:18-19	
-		7	JHN	9:20-23	
-		8	JHN	9:24-24	
-		9	JHN	9:25-25	
-		10	JHN	9:26-26	
-		11	JHN	9:27-27	
-		12	JHN	9:28-29	
-		13	JHN	9:30-33	
-		14	JHN	9:34-34	
-32	Spiritual Blindness				
-		1	JHN	9:35-35	
-		2	JHN	9:36-36	
-		3	JHN	9:37-37	
-		4	JHN	9:38-38	
-		5	JHN	9:39-39	
-		6	JHN	9:40-40	
-		7	JHN	9:41-41	
-33	The Shepherd and His Flock				
-		1	JHN	10:1-6	
-		2	JHN	10:7-10	
-		3	JHN	10:11-13	
-		4	JHN	10:14-18	
-		5	JHN	10:19-20	
-		6	JHN	10:21-21	
-34	The Unbelief of the Jews				
-		1	JHN	10:22-24	
-		2	JHN	10:25-30	
-		3	JHN	10:31-32	
-		4	JHN	10:33-33	
-		5	JHN	10:34-39	
-		6	JHN	10:40-42	
-35	The Death of Lazarus				
-		1	JHN	11:1-3	
-		2	JHN	11:4-6	
-		3	JHN	11:7-7	
-		4	JHN	11:8-8	
-		5	JHN	11:9-10	
-		6	JHN	11:11-11	
-		7	JHN	11:12-13	
-		8	JHN	11:14-15	
-		9	JHN	11:16-16	
-36	Jesus Comforts the Sisters				
-		1	JHN	11:17-20	
-		2	JHN	11:21-22	
-		3	JHN	11:23-23	
-		4	JHN	11:24-24	
-		5	JHN	11:25-26	
-		6	JHN	11:27-27	
-		7	JHN	11:28-31	
-		8	JHN	11:32-32	
-		9	JHN	11:33-34	
-		11	JHN	11:35-35	
-		12	JHN	11:36-36	
-		13	JHN	11:37-37	
-37	Jesus Raises Lazarus From the Dead				
-		1	JHN	11:38-39	
-		3	JHN	11:40-40	
-		4	JHN	11:41-42	
-		5	JHN	11:43-44	
-38	The Plot to Kill Jesus				
-		1	JHN	11:45-47	
-		2	JHN	11:48-48	
-		3	JHN	11:49-50	
-		4	JHN	11:51-53	
-		5	JHN	11:54-54	
-		6	JHN	11:55-57	
-39	Jesus Anointed at Bethany				
-		1	JHN	12:1-3	
-		2	JHN	12:4-6	
-		3	JHN	12:7-8	
-		4	JHN	12:9-11	
-40	The Triumphal Entry				
-		1	JHN	12:12-13	
-		2	JHN	12:16-16	
-		3	JHN	12:17-19	
-41	Jesus Predicts His Death				
-		1	JHN	12:20-22	
-		2	JHN	12:23-26	
-		3	JHN	12:27-28	
-		4	JHN	12:29-29	
-		5	JHN	12:30-33	
-		6	JHN	12:34-34	
-		7	JHN	12:35-36	
-42	The Jews Continue in Their Unbelief				
-		1	JHN	12:37-38	
-		2	JHN	12:39-39	
-		3	JHN	12:42-43	
-		4	JHN	12:44-46	
-		5	JHN	12:47-50	
-43	Jesus Washes His Disciples' Feet				
-		1	JHN	13:1-1	
-		2	JHN	13:2-5	
-		3	JHN	13:6-6	
-		4	JHN	13:7-7	
-		5	JHN	13:8-8	
-		7	JHN	13:9-9	
-		8	JHN	13:10-11	
-		9	JHN	13:12-17	
-44	Jesus Predicts His Betrayal				
-		1	JHN	13:18-18	
-		2	JHN	13:19-20	
-		3	JHN	13:21-21	
-		4	JHN	13:22-24	
-		5	JHN	13:25-25	
-		6	JHN	13:26-27	
-		7	JHN	13:28-30	
-45	Jesus Predicts Peter's Denial				
-		1	JHN	13:31-32	
-		2	JHN	13:33-33	
-		3	JHN	13:34-35	
-		4	JHN	13:36-36	
-		6	JHN	13:37-37	
-		7	JHN	13:38-38	
-46	Jesus Comforts His Disciples				
-		1	JHN	14:1-4	
-47	Jesus the Way to the Father				
-		1	JHN	14:5-5	
-		2	JHN	14:6-7	
-		3	JHN	14:8-8	
-		4	JHN	14:9-14	
-48	Jesus Promises the Holy Spirit				
-		1	JHN	14:15-21	
-		2	JHN	14:22-22	
-		3	JHN	14:23-24	
-		4	JHN	14:25-27	
-		5	JHN	14:28-31	
-49	The Vine and the Branches				
-		1	JHN	15:1-4	
-		2	JHN	15:5-8	
-		3	JHN	15:9-17	
-50	The World Hates the Disciples				
-		1	JHN	15:18-25	
-		2	JHN	15:26-27	
-		3	JHN	16:1-4	
-51	The Work of the Holy Spirit				
-		1	JHN	16:5-11	
-		2	JHN	16:12-15	
-		3	JHN	16:16-16	
-52	The Disciples' Grief Will Turn to Joy				
-		1	JHN	16:17-18	
-		2	JHN	16:19-24	
-		3	JHN	16:25-28	
-		4	JHN	16:29-30	
-		5	JHN	16:31-32	
-		6	JHN	16:33-33	
-53	Jesus Prays for Himself				
-		1	JHN	17:1-1	
-		2	JHN	17:2-5	
-54	Jesus Prays for His Disciples				
-		1	JHN	17:6-12	
-		2	JHN	17:13-19	
-55	Jesus Prays for All Believers				
-		1	JHN	17:20-23	
-		2	JHN	17:24-24	
-		3	JHN	17:25-26	
-56	Jesus Arrested				
-		1	JHN	18:1-1	
-		2	JHN	18:2-3	
-		3	JHN	18:4-4	
-		4	JHN	18:5-5	
-		5	JHN	18:6-6	
-		6	JHN	18:7-7	
-		8	JHN	18:8-9	
-		9	JHN	18:10-10	
-		10	JHN	18:11-11	
-57	Jesus Taken to Annas				
-		1	JHN	18:12-14	
-58	Peter's First Denial				
-		1	JHN	18:15-16	
-		2	JHN	18:17-17	
-		4	JHN	18:18-18	
-59	The High Priest Questions Jesus				
-		1	JHN	18:19-19	
-		2	JHN	18:20-21	
-		3	JHN	18:22-22	
-		4	JHN	18:23-24	
-60	Peter's Second and Third Denials				
-		1	JHN	18:25-25	
-		3	JHN	18:26-27	
-61	Jesus Before Pilate				
-		1	JHN	18:28-29	
-		2	JHN	18:30-30	
-		3	JHN	18:31-31	
-		4	JHN	18:32-32	
-		5	JHN	18:33-33	
-		6	JHN	18:34-34	
-		7	JHN	18:35-35	
-		8	JHN	18:36-36	
-		9	JHN	18:37-37	
-		11	JHN	18:38-39	
-		12	JHN	18:40-40	
-62	Jesus Sentenced to be Crucified				
-		1	JHN	19:1-3	
-		2	JHN	19:4-5	
-		3	JHN	19:6-6	
-		5	JHN	19:7-7	
-		6	JHN	19:8-10	
-		7	JHN	19:11-11	
-		8	JHN	19:12-12	
-		9	JHN	19:13-14	
-		11	JHN	19:15-15	
-		14	JHN	19:16-16	
-63	The Crucifixion				
-		1	JHN	19:17-18	
-		2	JHN	19:19-21	
-		3	JHN	19:22-22	
-		4	JHN	19:23-23	
-		5	JHN	19:24-24	
-		7	JHN	19:25-27	
-64	The Death of Jesus				
-		1	JHN	19:28-30	
-		2	JHN	19:31-37	
-65	The Burial of Jesus				
-		1	JHN	19:38-42	
-66	The Empty Tomb				
-		1	JHN	20:1-2	
-		2	JHN	20:3-9	
-67	Jesus Appears to Mary Magdalene				
-		1	JHN	20:10-12	
-		2	JHN	20:13-13	
-		3	JHN	20:14-14	
-		4	JHN	20:15-15	
-		6	JHN	20:16-16	
-		8	JHN	20:17-17	
-		9	JHN	20:18-18	
-68	Jesus Appears to His Disciples				
-		1	JHN	20:19-20	
-		2	JHN	20:21-23	
-69	Jesus Appears to Thomas				
-		1	JHN	20:24-25	
-		3	JHN	20:26-27	
-		4	JHN	20:28-28	
-		5	JHN	20:29-29	
-		6	JHN	20:30-31	
-70	Jesus and the Miraculous Catch of Fish				
-		1	JHN	21:1-3	
-		2	JHN	21:4-4	
-		3	JHN	21:5-5	
-		5	JHN	21:6-6	
-		6	JHN	21:7-9	
-		7	JHN	21:10-10	
-		8	JHN	21:11-14	
-71	Jesus Reinstates Peter				
-		1	JHN	21:15-15	
-		4	JHN	21:16-16	
-		7	JHN	21:17-17	
-		9	JHN	21:18-19	
-		10	JHN	21:20-21	
-		11	JHN	21:22-23	
-		12	JHN	21:24-24	
-		13	JHN	21:25-25	
-
