@@ -196,6 +196,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     infoRef.current = newInfo;
     setData(newData);
     dataRef.current = newData;
+    if (segmentsRef.current) handleSegment(segmentsRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
