@@ -91,6 +91,7 @@ export function useWaveSurferRegions(
     wavesurferRef.current = ws;
     if (ws) {
       ws.on('region-created', function (r: any) {
+        //console.log('region-created', r);
         if (singleRegionRef.current) {
           r.drag = true;
           if (currentRegion()) currentRegion().remove();
@@ -108,7 +109,9 @@ export function useWaveSurferRegions(
               onRegion(numRegions(), paramsRef.current, true);
             })
             .catch((reason) => console.log(reason))
-            .finally(() => setCurrentRegion(r));
+            .finally(() => {
+              setCurrentRegion(findRegion(progress(), true));
+            });
         }
       });
       ws.on('region-removed', function (r: any) {
