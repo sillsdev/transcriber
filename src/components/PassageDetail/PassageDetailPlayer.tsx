@@ -74,6 +74,7 @@ export function PassageDetailPlayer(props: IProps) {
     const segs = mediafile?.attributes?.segments || '{}';
     if (allowSegment) segmentsRef.current = getSegments(allowSegment, segs);
     setDefaultSegments(segmentsRef.current);
+    onSegment && onSegment(segmentsRef.current);
   };
 
   useEffect(() => {
