@@ -3253,7 +3253,13 @@
 				<target>Les données collées doivent contenir deux ou trois colonnes. L'une d'entre elles doit être la référence.</target>
 			</segment>
 		</unit>
-		<unit id="passageDetailArtifacts.pasteNoChange">
+		<unit id="passageDetailArtifacts.pasteError">
+         <segment>
+            <source>Unable to parse {0} segment boundaries. {1} segment boundaries were adjusted.</source>
+         	<target>Impossible d'analyser les limites de {0} segments. Les limites du segment {1} ont été ajustées.</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.pasteNoChange">
 			<segment>
 				<source>Nothing changed! Perhaps no references matched?</source>
 				<target>Rien n'a changé ! Peut-être aucune référence ne correspondait-elle ?</target>
