@@ -180,7 +180,7 @@ function MediaUpload(props: IProps) {
   const { showMessage } = useSnackBar();
   const [acceptextension, setAcceptExtension] = useState('');
   const [acceptmime, setAcceptMime] = useState('');
-  const [hasRights, setHasRight] = useState(!onSpeaker);
+  const [hasRights, setHasRight] = useState(!onSpeaker || Boolean(speaker));
   const title = [
     t.title,
     t.resourceTitle,
