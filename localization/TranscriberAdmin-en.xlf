@@ -3256,6 +3256,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.pasteError">
+         <segment>
+            <source>Unable to parse {0} segment boundaries. {1} segment boundaries were adjusted.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.pasteNoChange">
          <segment>
             <source>Nothing changed! Perhaps no references matched?</source>
