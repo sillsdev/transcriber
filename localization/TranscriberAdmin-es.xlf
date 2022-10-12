@@ -1114,7 +1114,7 @@
 		<unit id="electronImport.lastExported">
 			<segment>
 				<source>Current data in audio project {name0} was last exported {date0}.</source>
-				<target/>
+				<target>Los datos actuales del proyecto de audio {nombre0} se exportaron por última vez el {fecha0}.</target>
 			</segment>
 		</unit>
 		<unit id="electronImport.members">
@@ -1126,13 +1126,13 @@
 		<unit id="electronImport.neverExported">
 			<segment>
 				<source>Current data in audio project {name0} has never been exported to an itf file to preserve changes.</source>
-				<target/>
+				<target>Los datos actuales del proyecto de audio {nombre0} nunca se han exportado a un archivo itf para conservar los cambios.</target>
 			</segment>
 		</unit>
 		<unit id="electronImport.newerVersion">
 			<segment>
 				<source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
-				<target/>
+				<target>Este archivo se exportó con una versión más reciente del programa. Debería descargar la última versión antes de importarlo. Si continúa, es posible que algunos datos no se importen correctamente.</target>
 			</segment>
 		</unit>
 		<unit id="electronImport.project">
@@ -3251,6 +3251,12 @@
 			<segment>
 				<source>Pasted data must contain two or three columns. One of them must be the reference.</source>
 				<target>Los datos pegados deben contener dos o tres columnas. Una de ellas debe ser la referencia.</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.pasteError">
+			<segment>
+				<source>Unable to parse {0} segment boundaries. {1} segment boundaries were adjusted.</source>
+				<target>No se han podido analizar los límites de los segmentos {0}. Se han ajustado los límites de los segmentos de {1}.</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.pasteNoChange">
