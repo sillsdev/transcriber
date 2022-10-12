@@ -1,6 +1,5 @@
 import Axios from 'axios';
 import { API_CONFIG } from '../../api-variable';
-import Auth from '../../auth/Auth';
 import {
   Passage,
   ActivityStates,
@@ -52,7 +51,7 @@ export const resetParatextText = () => async (dispatch: any) => {
 };
 export const getParatextText =
   (
-    auth: Auth,
+    token: string,
     passageId: number,
     artifactId: string | null,
     errorReporter: any,
@@ -69,7 +68,7 @@ export const getParatextText =
       if (artifactId) url += `/${artifactId}`;
       let response = await Axios.get(url, {
         headers: {
-          Authorization: 'Bearer ' + auth.accessToken,
+          Authorization: 'Bearer ' + token,
         },
       });
       dispatch({ payload: response.data, type: TEXT_SUCCESS });
@@ -118,7 +117,7 @@ export const getParatextTextLocal =
   };
 
 export const getUserName =
-  (auth: Auth, errorReporter: any, pendingmsg: string) =>
+  (token: string, errorReporter: any, pendingmsg: string) =>
   async (dispatch: any) => {
     dispatch({
       payload: pendingStatus(pendingmsg),
@@ -133,7 +132,7 @@ export const getUserName =
           API_CONFIG.host + '/api/paratext/username',
           {
             headers: {
-              Authorization: 'Bearer ' + auth.accessToken,
+              Authorization: 'Bearer ' + token,
             },
           }
         );
@@ -164,7 +163,12 @@ export const resetProjects = () => (dispatch: any) => {
 };
 
 export const getProjects =
-  (auth: Auth, pendingmsg: string, errorReporter: any, languageTag?: string) =>
+  (
+    token: string,
+    pendingmsg: string,
+    errorReporter: any,
+    languageTag?: string
+  ) =>
   (dispatch: any) => {
     dispatch({
       payload: pendingStatus(pendingmsg),
@@ -174,23 +178,23 @@ export const getProjects =
     if (languageTag) url += '/' + languageTag;
     Axios.get(url, {
       headers: {
-        Authorization: 'Bearer ' + auth.accessToken,
+        Authorization: 'Bearer ' + token,
       },
     })
       .then((response) => {
         let pt: ParatextProject[] = [];
-        for (let ix = 0; ix < response.data.length; ix++) {
+        var data = response.data;
+        for (let ix = 0; ix < data?.length; ix++) {
           let o: ParatextProject = {
-            Name: response.data[ix].Name,
-            ShortName: response.data[ix].ShortName,
-            ParatextId: response.data[ix].ParatextId,
-            LanguageName: response.data[ix].LanguageName,
-            LanguageTag: response.data[ix].LanguageTag,
-            CurrentUserRole: response.data[ix].CurrentUserRole,
-            ProjectIds: response.data[ix].ProjectIds,
-            ProjectType: response.data[ix].ProjectType,
-            BaseProject: response.data[ix].BaseProject,
-            IsConnectable: response.data[ix].IsConnectable,
+            Name: data[ix].name,
+            ShortName: data[ix].shortName,
+            ParatextId: data[ix].paratextId,
+            LanguageName: data[ix].languageName,
+            LanguageTag: data[ix].languageTag,
+            CurrentUserRole: data[ix].currentUserRole,
+            ProjectType: data[ix].projectType,
+            BaseProject: data[ix].baseProject,
+            IsConnectable: data[ix].isConnectable,
           };
           pt.push(o);
         }
@@ -233,7 +237,6 @@ const localProjects = (
           LanguageTag: langIso,
           CurrentUserRole:
             setting.Editable._text === 'T' ? 'pt_translator' : '',
-          ProjectIds: Array<string>(),
           IsConnectable: setting.Editable._text === 'T',
           ProjectType: setting.TranslationInfo._text.split(':')[0],
           BaseProject: setting.TranslationInfo._text.split(':')[2],
@@ -272,11 +275,6 @@ export const getLocalProjects =
     });
     if (ptPath === '') return;
     let pts = localProjects(ptPath, languageTag);
-    pts?.forEach((pt) => {
-      pt.ProjectIds = pt.ProjectIds.concat(
-        projIds.filter((pi) => pi.Name === pt.Name).map((pi) => pi.Id)
-      );
-    });
     dispatch({ payload: pts, type: PROJECTS_SUCCESS });
   };
 
@@ -286,19 +284,24 @@ export const resetCount = () => (dispatch: any) => {
     type: COUNT_PENDING,
   });
 };
-
+//not used
 export const getCount =
-  (auth: Auth, projectId: number, errorReporter: any, pendingmsg: string) =>
+  (
+    token: string,
+    kind: string,
+    id: number,
+    errorReporter: any,
+    pendingmsg: string
+  ) =>
   (dispatch: any) => {
     dispatch({
       payload: pendingStatus(pendingmsg),
       type: COUNT_PENDING,
     });
-    let path =
-      API_CONFIG.host + '/api/paratext/project/' + projectId + '/count';
+    let path = API_CONFIG.host + '/api/paratext/' + kind + '/' + id + '/count';
     Axios.get(path, {
       headers: {
-        Authorization: 'Bearer ' + auth.accessToken,
+        Authorization: 'Bearer ' + token,
       },
     })
       .then((response) => {
@@ -317,20 +320,27 @@ export const getLocalCount =
     memory: MemorySource,
     errorReporter: any,
     t: IIntegrationStrings,
-    artifactId: string | null
+    artifactId: string | null,
+    passageId: string | undefined
   ) =>
   (dispatch: any) => {
     dispatch({
       payload: pendingStatus(t.countPending),
       type: COUNT_PENDING,
     });
-    const ready = getMediaInPlans([plan], mediafiles, artifactId, true).filter(
+    const media = plan
+      ? getMediaInPlans([plan], mediafiles, artifactId, true)
+      : [];
+    let ready = media.filter(
       (m) =>
         m.attributes?.transcriptionstate === ActivityStates.Approved &&
         Boolean(related(m, 'passage'))
     );
+    if (passageId)
+      ready = ready.filter((m) => related(m, 'passage') === passageId);
+
     const refMissing = ready.filter((m) => {
-      var passage = findRecord(
+      const passage = findRecord(
         memory,
         'passage',
         related(m, 'passage')
@@ -356,9 +366,39 @@ export const getLocalCount =
 export const resetSync = () => (dispatch: any) => {
   dispatch({ payload: undefined, type: SYNC_PENDING });
 };
+export const syncPassage =
+  (
+    token: string,
+    passageId: number,
+    typeId: number, //0 for vernacular?
+    errorReporter: any,
+    pendingmsg: string,
+    successmsg: string
+  ) =>
+  (dispatch: any) => {
+    dispatch({ payload: pendingStatus(pendingmsg), type: SYNC_PENDING });
+
+    Axios.post(
+      `${API_CONFIG.host}/api/paratext/passage/${passageId}/${typeId}`,
+      null,
+      {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      }
+    )
+      .then((response) => {
+        dispatch({ payload: successmsg, type: SYNC_SUCCESS });
+      })
+      .catch((err) => {
+        logError(Severity.error, errorReporter, infoMsg(err, 'Sync Failed'));
+        dispatch({ payload: errStatus(err), type: SYNC_ERROR });
+      });
+  };
+
 export const syncProject =
   (
-    auth: Auth,
+    token: string,
     projectId: number,
     typeId: number, //0 for vernacular?
     errorReporter: any,
@@ -373,13 +413,12 @@ export const syncProject =
       null,
       {
         headers: {
-          Authorization: 'Bearer ' + auth.accessToken,
+          Authorization: 'Bearer ' + token,
         },
       }
     )
       .then((response) => {
         dispatch({ payload: successmsg, type: SYNC_SUCCESS });
-        getCount(auth, projectId, errorReporter, '');
       })
       .catch((err) => {
         logError(Severity.error, errorReporter, infoMsg(err, 'Sync Failed'));

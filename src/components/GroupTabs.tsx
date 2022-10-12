@@ -1,40 +1,23 @@
-import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
-import { IState, IGroupTabsStrings } from '../model';
-import localStrings from '../selector/localize';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { AppBar, Tabs, Tab } from '@material-ui/core';
+import { IGroupTabsStrings } from '../model';
+import { AppBar, Tabs, Tab } from '@mui/material';
 import UserTable from '../components/UserTable';
 import GroupSettings from '../components/GroupSettings/GroupSettings';
 import InvitationTable from '../components/InvitationTable';
+import { TabBox } from '../control';
 import Peer from './Peers/Peer';
+import { groupTabsSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      width: '100%',
-      backgroundColor: theme.palette.background.paper,
-      flexDirection: 'column',
-    },
-  })
-);
-
-interface IStateProps {
-  t: IGroupTabsStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   changeTab?: (v: number) => void;
 }
 
 const GroupTabs = (props: IProps) => {
-  const { t, changeTab } = props;
-  const classes = useStyles();
+  const { changeTab } = props;
   const [tab, setTab] = useGlobal('tab');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [isDeveloper] = useGlobal('developer');
+  const t: IGroupTabsStrings = useSelector(groupTabsSelector, shallowEqual);
 
   const handleChange = (event: any, value: number) => {
     setTab(value);
@@ -43,10 +26,10 @@ const GroupTabs = (props: IProps) => {
     }
   };
 
-  const last = useMemo(() => (isDeveloper ? 3 : 2), [isDeveloper]);
+  const last = 3;
 
   return (
-    <div className={classes.root}>
+    <TabBox>
       <AppBar position="static" color="default">
         <Tabs
           value={tab || 0}
@@ -58,20 +41,16 @@ const GroupTabs = (props: IProps) => {
         >
           <Tab label={t.users} />
           <Tab label={t.roles} />
-          {isDeveloper && <Tab label={t.peerGroups} />}
+          <Tab label={t.peerGroups} />
           {!offlineOnly && <Tab label={t.invitations} />}
         </Tabs>
       </AppBar>
       {((tab || 0) === 0 || tab > last) && <UserTable {...props} />}
       {tab === 1 && <GroupSettings {...props} />}
-      {isDeveloper && tab === 2 && <Peer />}
+      {tab === 2 && <Peer />}
       {tab === last && <InvitationTable {...props} />}
-    </div>
+    </TabBox>
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'groupTabs' }),
-});
-
-export default connect(mapStateToProps)(GroupTabs) as any;
+export default GroupTabs;

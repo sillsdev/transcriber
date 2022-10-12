@@ -34,6 +34,7 @@ export const parseRegions = (regionstr: string) => {
 };
 export function useWaveSurferRegions(
   singleRegionOnly: boolean,
+  defaultRegionIndex: number,
   onRegion: (
     count: number,
     params: IRegionParams | undefined,
@@ -90,6 +91,7 @@ export function useWaveSurferRegions(
     wavesurferRef.current = ws;
     if (ws) {
       ws.on('region-created', function (r: any) {
+        //console.log('region-created', r);
         if (singleRegionRef.current) {
           r.drag = true;
           if (currentRegion()) currentRegion().remove();
@@ -107,7 +109,9 @@ export function useWaveSurferRegions(
               onRegion(numRegions(), paramsRef.current, true);
             })
             .catch((reason) => console.log(reason))
-            .finally(() => setCurrentRegion(r));
+            .finally(() => {
+              setCurrentRegion(findRegion(progress(), true));
+            });
         }
       });
       ws.on('region-removed', function (r: any) {
@@ -335,7 +339,8 @@ export function useWaveSurferRegions(
     });
   };
   function clearRegions() {
-    if (!wavesurferRef.current || !regionIds().length) return;
+    if (!wavesurferRef.current || !regionIds().length || loadingRef.current)
+      return;
     loadingRef.current = true;
     wavesurferRef.current.regions.clear();
     currentRegionRef.current = undefined;
@@ -377,6 +382,11 @@ export function useWaveSurferRegions(
     ).finally(() => {
       setPrevNext(regionIds());
       onRegion(regarray.length, paramsRef.current, newRegions);
+      if (defaultRegionIndex >= 0) {
+        currentRegionRef.current = regarray[defaultRegionIndex];
+      } else {
+        onRegionGoTo(0);
+      }
       loadingRef.current = false;
     });
   }

@@ -276,7 +276,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="artifactType.backtranslation">
-            <source>Back Translation</source>
+            <source>Phrase Back Translation</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AlertDialog.tsx</context>
@@ -297,7 +297,7 @@
       		</context-group>
       	</trans-unit>
          <trans-unit id="artifactType.qanda">
-            <source>Question and Answer</source>
+            <source>Community Test Question and Answer</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AlertDialog.tsx</context>
@@ -311,7 +311,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="artifactType.retell">
-            <source>Retelling</source>
+            <source>Community Test Retell</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AlertDialog.tsx</context>
@@ -333,6 +333,13 @@
          </trans-unit>
          <trans-unit id="artifactType.vernacular">
             <source>Vernacular</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.wholebacktranslation">
+            <source>Whole Back Translation</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AlertDialog.tsx</context>
@@ -744,6 +751,13 @@
                <context context-type="sourcefile">AddCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.Render">
+            <source>Render to Paratext</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TeamDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.save">
             <source>Save</source>
             <target/>
@@ -800,8 +814,43 @@
                <context context-type="sourcefile">AddCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="commentCard.approve">
+            <source>Approve</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">CommentCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="commentCard.approved">
+            <source>Approved</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">CommentCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="commentCard.confirmDelete">
             <source>Delete this comment?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">CommentCard.tsx</context>
+            </context-group>
+         </trans-unit>
+      	<trans-unit id="commentCard.playOrStop">
+      		<source>Play / Stop</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CommentCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="commentCard.previousVersion">
+      		<source>Previous Version</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CommentCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="commentCard.unapproved">
+            <source>Unapproved</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">CommentCard.tsx</context>
@@ -835,28 +884,70 @@
                <context context-type="sourcefile">CommentCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="community.deleteItem">
+      	<trans-unit id="community.addSpeaker">
+      		<source>Add '{0}'</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">SpeakerName.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.deleteItem">
             <source>Delete Item</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="community.playTest">
+      	<trans-unit id="community.later">
+      		<source>Do later</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">SpeakerName.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.loading">
+      		<source>Loading:</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">SpeakerName.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.playTest">
             <source>Play Test</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="community.record">
+      	<trans-unit id="community.provideRights">
+      		<source>Provide Rights</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Community.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.record">
             <source>Record</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="community.saveFirst">
+      	<trans-unit id="community.releaseRights">
+      		<source>Upload or record a statement releasing the rights to publish material recorded by this speaker.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Community.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.rights">
+      		<source>Rights</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Community.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="community.saveFirst">
             <source>Save or Clear your recording before uploading.</source>
             <target/>
             <context-group>
@@ -874,7 +965,7 @@
             <source>Speaker</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Community.tsx</context>
+               <context context-type="sourcefile">SpeakerName.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="community.topic">
@@ -940,15 +1031,43 @@
                <context context-type="sourcefile">DeleteExpansion.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="discussionCard.assignRole">
-            <source>Assign to a Role</source>
+      	<trans-unit id="discussionCard.addComment">
+      		<source>Add Comment</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="discussionCard.assign">
+            <source>Assign to a Group or Team Member</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+      	<trans-unit id="discussionCard.earlierVersion">
+      		<source>From an earlier version</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="discussionCard.groupuser">
+            <source>Group/Team Member</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.assignGroup">
+            <source>Assign to a Group</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="discussionCard.assignUser">
-            <source>Assign to a User</source>
+            <source>Assign to a Team Member</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>
@@ -961,7 +1080,14 @@
                <context context-type="sourcefile">DiscussionCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="discussionCard.collapse">
+      	<trans-unit id="discussionCard.changeAssignment">
+      		<source>Change Assignment</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="discussionCard.collapse">
             <source>Show/Hide Comments</source>
             <target/>
             <context-group>
@@ -1054,6 +1180,13 @@
          </trans-unit>
          <trans-unit id="discussionList.filterStatus">
             <source>{0} / {1} discussions</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">discussionList.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionList.saveFilter">
+            <source>Save as the Team default?</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">discussionList.tsx</context>
@@ -2243,7 +2376,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="invite.addInvite">
-            <source>Invite Member</source>
+            <source>Invite Person</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -2348,7 +2481,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="invite.newInviteTask">
-            <source>Enter the email address of the member to invite.</source>
+            <source>Enter the email address of the person to invite.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -2568,7 +2701,7 @@
             <source>Continue</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.continueCurrentUser">
@@ -2617,7 +2750,7 @@
             <source>Exit</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.export">
@@ -2820,14 +2953,14 @@
             <source>Your session will expire in {0} seconds. Would you like to continue?</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.sessionExpiring">
             <source>Session Expiring</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.settings">
@@ -2848,7 +2981,7 @@
             <source>Switch Mode or User</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">TokenCheck.tsx</context>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.tasks">
@@ -3026,6 +3159,13 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaTab.cancelling">
+      		<source>Cancelling with {0} of {1} completed.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="mediaTab.choosePassage">
             <source>Choose Passage</source>
             <target/>
@@ -3278,7 +3418,21 @@
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaUpload.invalidFile">
+      	<trans-unit id="mediaUpload.intellectualPropertyTask">
+      		<source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaUpload.intellectualPropertyTitle">
+      		<source>Upload Intellectual Property Release</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaUpload.invalidFile">
             <source>Not valid for this operation: {0} </source>
             <target/>
             <context-group>
@@ -3642,6 +3796,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.pasteError">
+      		<source>Unable to parse {0} segment boundaries. {1} segment boundaries were adjusted.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.pasteNoChange">
       		<source>Nothing changed! Perhaps no references matched?</source>
       		<target/>
@@ -3894,11 +4055,32 @@
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="peer.permissions">
+      		<source>Special permission</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="peer.noSpecialPermission">
+      		<source>No special permission</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="peer.member">
       		<source>Member</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">Peer.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peer.name">
+      		<source>Peer Group Name</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="peer.newPeerGroup">
@@ -3924,6 +4106,76 @@
       	</trans-unit>
       	<trans-unit id="peer.removeConfirm">
       		<source>Do you want to remove the peer group and information about who are the members?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="permission.admin">
+      		<source>Admin</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="permission.adminTip">
+      		<source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.consultant">
+      		<source>Consultant</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.consultantTip">
+      		<source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.consultantInTraining">
+      		<source>Consultant In Training</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.consultantInTrainingTip">
+      		<source>CITs comments will only be visible to Mentors until a mentor approves the comment.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.nsp">
+      		<source>General</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.mentor">
+      		<source>Mentor</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.mentorTip">
+      		<source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="permission.nspTip">
+      		<source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">GroupDialog.tsx</context>
@@ -4041,8 +4293,43 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="planSheet.insertFirstPassage">
+            <source>Add passage as first in {0} {1}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.insertLastPassage">
+            <source>Add passage as last in {0} {1}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.passageBelow">
-            <source>Insert passage below {0}</source>
+            <source>Insert passage below passage {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.passageEnd">
+            <source>Add Passage to End</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.passageToPrevSection">
+            <source>Move Passage to Previous Section</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.passageToNextSection">
+            <source>Move Passage to Next Section</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -4084,7 +4371,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.sectionAbove">
-            <source>Insert {0} above</source>
+            <source>Insert {0} above {1} {2}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.sectionEnd">
+            <source>Add {0} to End</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -4216,6 +4510,20 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="profile.defaultLocale">
+      		<source>Default locale set.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Profile.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="profile.defaultTimezone">
+      		<source>Default timezone set.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Profile.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="profile.deleteExplained">
             <source>Deleting your user will block you from using the program and remove references to your work.</source>
             <target/>
@@ -4230,6 +4538,20 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="profile.discardChanges">
+      		<source>Discard unsaved Changes?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Profile.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="profile.discardChangesExplained">
+      		<source>Discard unsaved Changes? ({0})</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Profile.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="profile.email">
             <source>Email</source>
             <target/>
@@ -4357,7 +4679,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="profile.sendDigest">
-            <source>Receive daily digests</source>
+            <source>Receive Email Notifications and Digests</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>
@@ -4503,15 +4825,8 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="scriptureTable.pasteInvalidColumnsGeneral">
-            <source>Invalid number of columns ({0}). Expecting 5 columns.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ScriptureTable.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="scriptureTable.pasteInvalidColumnsScripture">
-            <source>Invalid number of columns ({0}). Expecting 6 columns.</source>
+         <trans-unit id="scriptureTable.pasteInvalidColumns">
+            <source>Invalid number of columns ({0}). Expecting {1} columns.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -4701,13 +5016,6 @@
          </trans-unit>
          <trans-unit id="shared.admin">
             <source>Admin</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="shared.backtranslator">
-            <source>Back Translator</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
@@ -4979,8 +5287,15 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shared.user">
-            <source>User</source>
+      	<trans-unit id="shared.uploadRights">
+      		<source>Upload Rights File</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="shared.user">
+            <source>Team Member</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">integration.tsx</context>
@@ -5364,14 +5679,21 @@
                <context context-type="sourcefile">ToDoTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="toDoTable.state">
-            <source>State</source>
+         <trans-unit id="toDoTable.speaker">
+            <source>Speaker</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ToDoTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="toDoTable.tasks">
+      	<trans-unit id="toDoTable.state">
+      		<source>State</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ToDoTable.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="toDoTable.tasks">
             <source>Tasks</source>
             <target/>
             <context-group>
@@ -5385,7 +5707,14 @@
                <context context-type="sourcefile">TaskItem.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="toDoTable.transcriber">
+      	<trans-unit id="toDoTable.topic">
+      		<source>Topic</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ToDoTable.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="toDoTable.transcriber">
             <source>Transcribe</source>
             <target/>
             <context-group>
@@ -5513,13 +5842,6 @@
          </trans-unit>
          <trans-unit id="transcriber.addNote">
             <source>Add Note</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Transcriber.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="transcriber.backToWorkflow">
-            <source>Back to Workflow</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
@@ -5805,6 +6127,13 @@
                <context context-type="sourcefile">ExportTab.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="transcriptionTab.download">
+      		<source>Download Vernacular Audio</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="transcriptionTab.cancel">
             <source>Cancel</source>
             <target/>
@@ -5959,6 +6288,20 @@
       			<context context-type="sourcefile">TranscriptionTab.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="transcriptionTab.offlineData">
+      		<source>You cannot export an online project after creating new content offline (recordings, discussions, comments etc.). Please export an ITF file.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="transcriptionTab.changed">
+      		<source>Changed</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="transcriptionTab.passages">
             <source>Passages</source>
             <target/>
@@ -6079,7 +6422,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="usertable.addNewUser">
-            <source>Add New User</source>
+            <source>Add New Member</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">UserAdd.tsx</context>
@@ -6666,6 +7009,20 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="workflowSteps.pBTTranscribe">
+            <source>Phrase BT Transcribe</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.pBTParatextSync">
+            <source>Phrase BT Paratext</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="workflowSteps.preliminaryApproval">
             <source>Preliminary Approval</source>
             <target/>
@@ -6710,6 +7067,20 @@
          </trans-unit>
          <trans-unit id="workflowSteps.wholeBackTranslation">
             <source>Whole Back Translate</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.wBTTranscribe">
+            <source>Whole BT Transcribe</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.wBTParatextSync">
+            <source>Whole BT Paratext</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>

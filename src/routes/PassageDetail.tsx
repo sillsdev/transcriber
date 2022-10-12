@@ -14,7 +14,6 @@ import styled from 'styled-components';
 import AppHead from '../components/App/AppHead';
 import ViewMode, { ViewOption } from '../control/ViewMode';
 import { UnsavedContext } from '../context/UnsavedContext';
-import Auth from '../auth/Auth';
 import SplitPane, { Pane } from 'react-split-pane';
 import { HeadHeight } from '../App';
 import {
@@ -30,30 +29,36 @@ import PassageDetailArtifacts from '../components/PassageDetail/Internalization/
 import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord';
-import PassageDetailArtifact from '../components/PassageDetail/PassageDetailItem';
+import PassageDetailItem from '../components/PassageDetail/PassageDetailItem';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
-import PassageChooser from '../components/PassageDetail/PassageChooser';
+import PassageDetailChooser from '../components/PassageDetail/PassageDetailChooser';
 import IntegrationTab from '../components/Integration';
 import TranscriptionTab from '../components/TranscriptionTab';
 import {
   ArtifactTypeSlug,
+  remoteIdGuid,
   ToolSlug,
+  useArtifactType,
   useProjectType,
   useRole,
   useStepTool,
   useUrlContext,
 } from '../crud';
 import { RoleNames, Plan, IToolStrings } from '../model';
-import { forceLogin, LocalKey, localUserKey } from '../utils';
+import { forceLogin, LocalKey, localUserKey, NamedRegions } from '../utils';
 import { memory } from '../schema';
 import { useSelector, shallowEqual } from 'react-redux';
 import { toolSelector } from '../selector';
 import { QueryBuilder } from '@orbit/data';
 
+const minWidth = 800;
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      minWidth: `${minWidth}px`,
+      minHeight: '700px',
     },
     paper: {
       padding: theme.spacing(2),
@@ -153,28 +158,45 @@ const Wrapper = styled.div`
     min-height: 0;
   }
 `;
-interface IProps {
-  auth: Auth;
-}
 interface ParamTypes {
   prjId: string;
 }
 
-const PassageDetailGrids = (props: IProps) => {
-  const { auth } = props;
+const PassageDetailGrids = () => {
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
+  const [topFilter, setTopFilter] = useState(false);
   const ctx = useContext(PassageDetailContext);
   const { currentstep, discussionSize, setDiscussionSize, orgWorkflowSteps } =
     ctx.state;
-  const tool = useStepTool(currentstep);
+  const { tool, settings } = useStepTool(currentstep);
+  const { slugFromId } = useArtifactType();
+
+  const artifactId = useMemo(() => {
+    if (settings) {
+      var id = JSON.parse(settings).artifactTypeId;
+      if (id) return remoteIdGuid('artifacttype', id, memory.keyMap) ?? id;
+    }
+    return null;
+  }, [settings]);
+
+  const artifactSlug = useMemo(() => {
+    return artifactId ? slugFromId(artifactId) : ArtifactTypeSlug.Vernacular;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [artifactId]);
+
   const [communitySlugs] = useState([
     ArtifactTypeSlug.Retell,
     ArtifactTypeSlug.QandA,
   ]);
-  const [backTranslationSlugs] = useState([ArtifactTypeSlug.BackTranslation]);
+  const [phraseBackTranslationSlugs] = useState([
+    ArtifactTypeSlug.PhraseBackTranslation,
+  ]);
+  const [wholeBackTranslationSlugs] = useState([
+    ArtifactTypeSlug.WholeBackTranslation,
+  ]);
   const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
   const handleSplitSize = debounce((e: number) => {
@@ -182,12 +204,16 @@ const PassageDetailGrids = (props: IProps) => {
   }, 50);
 
   const setDimensions = () => {
-    setWidth(window.innerWidth);
+    setWidth(Math.max(window.innerWidth, minWidth));
     setDiscussionSize({
       width: discussionSize.width, //should we be smarter here?
       height: window.innerHeight - 330,
     });
     // setPaperStyle({ width: window.innerWidth - 10 });
+  };
+
+  const handleFilter = (filtered: boolean) => {
+    setTopFilter(filtered);
   };
 
   useEffect(() => {
@@ -229,19 +255,24 @@ const PassageDetailGrids = (props: IProps) => {
           <WorkflowSteps />
         </Grid>
         <Grid item xs={12}>
-          <PassageChooser />
+          <PassageDetailChooser />
         </Grid>
         {tool === ToolSlug.Resource && (
           <Grid container direction="row" className={classes.row}>
             <Grid item xs={12}>
               <Grid container>
-                <PassageDetailArtifacts auth={auth} />
+                <PassageDetailArtifacts />
               </Grid>
             </Grid>
           </Grid>
         )}
         {tool === ToolSlug.Paratext && (
-          <IntegrationTab {...props} auth={auth} />
+          <IntegrationTab
+            artifactType={artifactSlug}
+            passage={ctx.state.passage}
+            setStepComplete={ctx.state.setStepComplete}
+            currentstep={currentstep}
+          />
         )}
         {(tool === ToolSlug.Discuss ||
           tool === ToolSlug.TeamCheck ||
@@ -258,7 +289,7 @@ const PassageDetailGrids = (props: IProps) => {
                 <Pane className={classes.pane}>
                   {tool === ToolSlug.Record && (
                     <Grid item className={classes.description} xs={12}>
-                      <PassageDetailRecord auth={auth} />
+                      <PassageDetailRecord />
                     </Grid>
                   )}
                   {tool !== ToolSlug.Record && tool !== ToolSlug.Transcribe && (
@@ -268,54 +299,53 @@ const PassageDetailGrids = (props: IProps) => {
                   )}
                   {tool === ToolSlug.TeamCheck && (
                     <Grid item className={classes.description} xs={12}>
-                      <TeamCheckReference auth={auth} />
+                      <TeamCheckReference />
                     </Grid>
                   )}
                   {tool === ToolSlug.Transcribe && (
                     <Grid item className={classes.description} xs={12}>
                       <PassageDetailTranscribe
-                        auth={auth}
                         width={width - discussionSize.width - 16}
+                        artifactTypeId={artifactId}
+                        onFilter={handleFilter}
                       />
                     </Grid>
                   )}
                 </Pane>
-                <Pane className={classes.pane}>
-                  <Grid item xs={12} sm container>
-                    <Grid item container direction="column">
-                      <DiscussionList auth={auth} />
+                {!topFilter && (
+                  <Pane className={classes.pane}>
+                    <Grid item xs={12} sm container>
+                      <Grid item container direction="column">
+                        <DiscussionList />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Pane>
+                  </Pane>
+                )}
               </SplitPane>
             </Wrapper>
           </Paper>
         )}
-        {tool === ToolSlug.Community && (
-          <Grid container direction="row" className={classes.row}>
-            <Grid item xs={12}>
-              <Grid container>
-                <PassageDetailArtifact
-                  auth={auth}
-                  width={width}
-                  slugs={communitySlugs}
-                  segments={false}
-                  showTopic={true}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-        )}
-        {(tool === ToolSlug.PhraseBackTranslate ||
+        {(tool === ToolSlug.Community ||
+          tool === ToolSlug.PhraseBackTranslate ||
           tool === ToolSlug.WholeBackTranslate) && (
           <Grid container direction="row" className={classes.row}>
             <Grid item xs={12}>
               <Grid container>
-                <PassageDetailArtifact
-                  auth={auth}
+                <PassageDetailItem
                   width={width}
-                  slugs={backTranslationSlugs}
-                  segments={tool === ToolSlug.PhraseBackTranslate}
+                  slugs={
+                    tool === ToolSlug.Community
+                      ? communitySlugs
+                      : tool === ToolSlug.PhraseBackTranslate
+                      ? phraseBackTranslationSlugs
+                      : wholeBackTranslationSlugs
+                  }
+                  showTopic={tool === ToolSlug.Community}
+                  segments={
+                    tool === ToolSlug.PhraseBackTranslate
+                      ? NamedRegions.BackTranslation
+                      : undefined
+                  }
                 />
               </Grid>
             </Grid>
@@ -326,7 +356,6 @@ const PassageDetailGrids = (props: IProps) => {
           <Grid container>
             <Grid item xs={12}>
               <TranscriptionTab
-                {...props}
                 projectPlans={plans}
                 floatTop
                 step={currentstep}
@@ -340,7 +369,7 @@ const PassageDetailGrids = (props: IProps) => {
   );
 };
 
-export const PassageDetail = (props: IProps) => {
+export const PassageDetail = () => {
   const classes = useStyles();
   const { prjId } = useParams<ParamTypes>();
   const { pathname } = useLocation();
@@ -385,9 +414,9 @@ export const PassageDetail = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <AppHead {...props} SwitchTo={SwitchTo} />
-      <PassageDetailProvider {...props}>
-        <PassageDetailGrids {...props} />
+      <AppHead SwitchTo={SwitchTo} />
+      <PassageDetailProvider>
+        <PassageDetailGrids />
       </PassageDetailProvider>
     </div>
   );

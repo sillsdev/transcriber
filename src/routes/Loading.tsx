@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Axios from 'axios';
 import { useGlobal } from 'reactn';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import { Redirect, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -14,12 +14,10 @@ import {
   ISharedStrings,
   IFetchResults,
 } from '../model';
-import { TransformBuilder, QueryBuilder } from '@orbit/data';
+import { QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { Typography, Paper, Button } from '@material-ui/core';
+import { Box, SxProps } from '@mui/material';
 import * as action from '../store';
-import logo from './LogoNoShadow-4x.png';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -43,6 +41,7 @@ import {
   useOfflineSetup,
   useRole,
   useProjectType,
+  AcceptInvitation,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -50,47 +49,10 @@ import AppHead from '../components/App/AppHead';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import ImportTab from '../components/ImportTab';
 import jwtDecode from 'jwt-decode';
+import { ApmSplash } from '../components/ApmSplash';
+import { AltButton, PriButton } from '../control';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    container: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    appBar: {
-      width: '100%',
-      boxShadow: 'none',
-    },
-    paper: {
-      paddingTop: 16,
-      paddingBottom: 16,
-      marginTop: theme.spacing(10),
-      width: '30%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignContent: 'center',
-      [theme.breakpoints.down('md')]: {
-        width: '100%',
-      },
-    },
-    button: { margin: theme.spacing(1) },
-    icon: {
-      alignSelf: 'center',
-      width: '256px',
-      height: '256px',
-    },
-    message: {
-      alignSelf: 'center',
-      textAlign: 'center',
-    },
-  })
-);
+const centerProps = { display: 'flex', justifyContent: 'center' } as SxProps;
 
 interface IStateProps {
   t: IMainStrings;
@@ -108,13 +70,10 @@ interface IDispatchProps {
   resetOrbitError: typeof action.resetOrbitError;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
-  auth: Auth;
-}
+interface IProps extends IStateProps, IDispatchProps {}
 
 export function Loading(props: IProps) {
-  const { orbitFetchResults, auth, t } = props;
-  const classes = useStyles();
+  const { orbitFetchResults, t } = props;
   const {
     fetchOrbitData,
     orbitComplete,
@@ -140,6 +99,8 @@ export function Loading(props: IProps) {
   const [, setPlan] = useGlobal('plan');
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
+  const tokenCtx = useContext(TokenContext);
+  const { accessToken, profile, isAuthenticated } = tokenCtx.state;
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [, setCompleted] = useGlobal('progress');
   const { showMessage } = useSnackBar();
@@ -153,12 +114,7 @@ export function Loading(props: IProps) {
   const offlineSetup = useOfflineSetup();
   const { setMyProjRole } = useRole();
   const { setProjectType } = useProjectType();
-  const LoadProjData = useLoadProjectData(
-    auth,
-    t,
-    doOrbitError,
-    resetOrbitError
-  );
+  const LoadProjData = useLoadProjectData(t, doOrbitError, resetOrbitError);
   const [view, setView] = useState('');
   const [inviteError, setInviteError] = useState('');
 
@@ -169,48 +125,40 @@ export function Loading(props: IProps) {
 
     //filter will be passed to api which will lowercase the email before comparison
     var allinvites: Invitation[] = (await newremote.query((q: QueryBuilder) =>
-      q
-        .findRecords('invitation')
-        .filter(
-          { attribute: 'email', value: userEmail },
-          { attribute: 'accepted', value: false }
-        )
+      q.findRecords('invitation').filter(
+        { attribute: 'email', value: userEmail }
+        // { attribute: 'accepted', value: false }  //went from AND to OR between attributes :/
+      )
     )) as any;
-    allinvites.forEach(async (invitation) => {
-      await newremote.update((t: TransformBuilder) =>
-        t.replaceAttribute(invitation, 'accepted', true)
-      );
-    });
+    allinvites
+      .filter((i) => !i.attributes.accepted)
+      .forEach(async (invitation) => {
+        await AcceptInvitation(newremote, invitation);
+      });
 
     if (inviteId) {
-      let invite = allinvites.find(
-        (i) => i.attributes.silId === parseInt(inviteId)
-      );
+      let invite = allinvites.find((i) => i.id === inviteId);
       if (!invite) {
         try {
-          const thisinvite: Invitation[] = (await newremote.query(
-            (q: QueryBuilder) =>
-              q
-                .findRecords('invitation')
-                .filter({ attribute: 'silId', value: parseInt(inviteId) })
-          )) as any;
-          if (!thisinvite.length) {
-            //it's either deleted, or I don't have access to it
-            //check if my paratext email is linked
-            if (!(await checkAlternateParatextEmail(inviteId))) {
-              inviteErr = t.inviteError;
-            }
-          } else {
-            if (
-              thisinvite[0].attributes.email.toLowerCase() !==
-              userEmail.toLowerCase()
-            ) {
-              /* they must have logged in with another email */
-              inviteErr = t.inviteError;
-            }
+          //ARGH...this ignores the id and just gets them all...
+          const thisinvite: Invitation[] = (
+            (await newremote.query((q: QueryBuilder) =>
+              q.findRecord({ type: 'invitation', id: inviteId })
+            )) as Invitation[]
+          ).filter((i) => i.keys?.remoteId === inviteId);
+          if (
+            thisinvite[0].attributes.email.toLowerCase() !==
+            userEmail.toLowerCase()
+          ) {
+            /* they must have logged in with another email */
+            inviteErr = t.inviteError;
           }
         } catch {
-          inviteErr = t.deletedInvitation;
+          //it's either deleted, or I don't have access to it
+          //check if my paratext email is linked
+          if (!(await checkAlternateParatextEmail(inviteId))) {
+            inviteErr = t.deletedInvitation;
+          }
         }
       }
       if (inviteErr !== '') {
@@ -229,7 +177,7 @@ export function Loading(props: IProps) {
         API_CONFIG.host + '/api/paratext/useremail/' + inviteId,
         {
           headers: {
-            Authorization: 'Bearer ' + auth.accessToken,
+            Authorization: 'Bearer ' + accessToken,
           },
         }
       );
@@ -239,9 +187,9 @@ export function Loading(props: IProps) {
     }
   };
   useEffect(() => {
-    if (!offline && !auth?.isAuthenticated()) return;
+    if (!offline && !isAuthenticated()) return;
     if (!offline) {
-      const decodedToken = jwtDecode(auth.getAccessToken()) as IToken;
+      const decodedToken = jwtDecode(accessToken || '') as IToken;
       setExpireAt(decodedToken.exp);
     }
     setLanguage(localeDefault(isDeveloper));
@@ -249,7 +197,7 @@ export function Loading(props: IProps) {
     fetchLocalization();
     fetchOrbitData(
       coordinator,
-      auth,
+      tokenCtx,
       fingerprint,
       setUser,
       setProjectsLoaded,
@@ -257,7 +205,8 @@ export function Loading(props: IProps) {
       setLang,
       globalStore,
       getOfflineProject,
-      offlineSetup
+      offlineSetup,
+      showMessage
     );
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
@@ -350,9 +299,14 @@ export function Loading(props: IProps) {
 
   useEffect(() => {
     const finishRemoteLoad = () => {
+      const tokData = profile || { sub: '' };
       localStorage.removeItem('goingOnline');
       remote
-        .pull((q) => q.findRecords('currentuser'))
+        .pull((q) =>
+          q
+            .findRecords('user')
+            .filter({ attribute: 'auth0Id', value: tokData.sub })
+        )
         .then((tr) => {
           const user = (tr[0].operations[0] as any).record as User;
           InviteUser(remote, user?.attributes?.email || 'neverhere').then(
@@ -392,56 +346,40 @@ export function Loading(props: IProps) {
     setView('Logout');
   };
 
-  if (!offline && !auth?.isAuthenticated()) return <Redirect to="/" />;
+  if (!offline && !isAuthenticated()) return <Redirect to="/" />;
   if (view !== '') return <Redirect to={view} />;
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ width: '100%' }}>
       <AppHead {...props} />
-      <div className={classes.container}>
-        <Paper className={classes.paper}>
-          <img src={logo} className={classes.icon} alt="logo" />
-          <div>
-            <Typography variant="h6" className={classes.message}>
-              {inviteError}
-            </Typography>
-            <Typography variant="h6" className={classes.message}>
-              {t.loadingTranscriber.replace('{0}', API_CONFIG.productName)}
-            </Typography>
-          </div>
-          {loadComplete && inviteError && (
-            <div className={classes.container}>
-              <Button
-                id="errCont"
-                variant="contained"
-                className={classes.button}
-                onClick={continueWithCurrentUser}
-              >
-                {t.continueCurrentUser}
-              </Button>
-
-              <Button
-                id="errLogout"
-                variant="contained"
-                className={classes.button}
-                onClick={logoutAndTryAgain}
-              >
-                {t.logout}
-              </Button>
-            </div>
-          )}
-          {isElectron && importOpen && (
-            <ImportTab
-              syncBuffer={orbitFetchResults?.syncBuffer}
-              syncFile={orbitFetchResults?.syncFile}
-              auth={auth}
-              isOpen={importOpen}
-              onOpen={setImportOpen}
-            />
-          )}
-        </Paper>
-      </div>
-    </div>
+      <Box sx={centerProps}>
+        <ApmSplash
+          message={inviteError}
+          component={
+            <>
+              {loadComplete && inviteError && (
+                <Box sx={centerProps}>
+                  <PriButton id="errCont" onClick={continueWithCurrentUser}>
+                    {t.continueCurrentUser}
+                  </PriButton>
+                  <AltButton id="errLogout" onClick={logoutAndTryAgain}>
+                    {t.logout}
+                  </AltButton>
+                </Box>
+              )}
+              {isElectron && importOpen && (
+                <ImportTab
+                  syncBuffer={orbitFetchResults?.syncBuffer}
+                  syncFile={orbitFetchResults?.syncFile}
+                  isOpen={importOpen}
+                  onOpen={setImportOpen}
+                />
+              )}
+            </>
+          }
+        />
+      </Box>
+    </Box>
   );
 }
 

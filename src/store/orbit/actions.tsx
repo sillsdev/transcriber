@@ -8,10 +8,11 @@ import {
   FETCH_ORBIT_DATA_COMPLETE,
 } from './types';
 import Coordinator from '@orbit/coordinator';
-import Auth from '../../auth/Auth';
 import { Sources } from '../../Sources';
 import { Severity } from '../../utils';
 import { OfflineProject, Plan, VProject } from '../../model';
+import { ITokenContext } from '../../context/TokenProvider';
+import { AlertSeverity } from '../../hoc/SnackBar';
 
 export const orbitError = (ex: IApiError) => {
   return ex.response.status !== Severity.retry
@@ -51,7 +52,7 @@ export const orbitSaving = (val: boolean) => {
 export const fetchOrbitData =
   (
     coordinator: Coordinator,
-    auth: Auth,
+    tokenCtx: ITokenContext,
     fingerprint: string,
     setUser: (id: string) => void,
     setProjectsLoaded: (value: string[]) => void,
@@ -59,12 +60,13 @@ export const fetchOrbitData =
     setLang: (locale: string) => void,
     global: any,
     getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
-    offlineSetup: () => Promise<void>
+    offlineSetup: () => Promise<void>,
+    showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void
   ) =>
   (dispatch: any) => {
     Sources(
       coordinator,
-      auth,
+      tokenCtx,
       fingerprint,
       setUser,
       setProjectsLoaded,
@@ -73,7 +75,8 @@ export const fetchOrbitData =
       setLang,
       global,
       getOfflineProject,
-      offlineSetup
+      offlineSetup,
+      showMessage
     ).then((fr) => {
       dispatch({ type: FETCH_ORBIT_DATA, payload: fr });
     });

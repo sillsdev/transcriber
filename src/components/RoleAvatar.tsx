@@ -1,32 +1,19 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { ISharedStrings, IState, Role } from '../model';
 import { connect } from 'react-redux';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
-import { Avatar } from '@material-ui/core';
+import { Avatar } from '@mui/material';
 import { makeAbbr } from '../utils';
 import { dataPath, PathType } from '../utils/dataPath';
 import { remoteId } from '../crud';
 import { isElectron } from '../api-variable';
 import localStrings from '../selector/localize';
 import { localizeRole } from '../utils';
+import { avatarSize } from '../control';
 const os = require('os');
 const fs = require('fs');
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    small: {
-      width: theme.spacing(3),
-      height: theme.spacing(3),
-    },
-    medium: {
-      width: theme.spacing(5),
-      height: theme.spacing(5),
-    },
-  })
-);
 
 interface IStateProps {
   ts: ISharedStrings;
@@ -44,7 +31,6 @@ interface IProps extends IStateProps, IRecordProps {
 
 export function RoleAvatar(props: IProps) {
   const { roleRec, org, small, ts } = props;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
 
   var src = dataPath(roleRec.attributes.roleName, PathType.AVATARS, {
@@ -64,10 +50,10 @@ export function RoleAvatar(props: IProps) {
     <Avatar
       alt={roleRec.attributes.roleName}
       src={src}
-      className={small ? classes.small : classes.medium}
+      sx={avatarSize(small)}
     />
   ) : roleRec.attributes && roleRec.attributes.roleName !== '' ? (
-    <Avatar className={small ? classes.small : classes.medium}>
+    <Avatar sx={avatarSize(small)}>
       {makeAbbr(localizeRole(roleRec.attributes.roleName, ts, !org))}
     </Avatar>
   ) : (

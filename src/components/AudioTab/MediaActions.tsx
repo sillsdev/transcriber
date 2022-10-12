@@ -1,27 +1,14 @@
-import React from 'react';
 import { IMediaActionsStrings, IState } from '../../model';
-import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
-import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
+import { IconButton, Box, SxProps } from '@mui/material';
+import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import { FaPaperclip, FaUnlink } from 'react-icons/fa';
-import PauseIcon from '@material-ui/icons/Pause';
+import PauseIcon from '@mui/icons-material/Pause';
 import localStrings from '../../selector/localize';
 import { connect } from 'react-redux';
 import { isElectron } from '../../api-variable';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    arrangeActions: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    actionButton: {
-      color: theme.palette.primary.light,
-    },
-    icon: {
-      fontSize: '16px',
-    },
-  })
-);
+const actionProps = { color: 'primary.light' } as SxProps;
+
 interface IStateProps {
   t: IMediaActionsStrings;
 }
@@ -48,7 +35,6 @@ export function MediaActions(props: IProps) {
     isPlaying,
     attached,
   } = props;
-  const classes = useStyles();
 
   const handlePlayStatus = () => {
     onPlayStatus(mediaId);
@@ -59,25 +45,25 @@ export function MediaActions(props: IProps) {
   };
 
   return (
-    <div className={classes.arrangeActions}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       {!readonly && (
         <IconButton
           id="audActAttach"
-          className={classes.actionButton}
+          sx={actionProps}
           title={!attached ? t.attach : t.detach}
           onClick={handleAttach}
         >
           {!attached ? (
-            <FaPaperclip className={classes.icon} />
+            <FaPaperclip fontSize="16px" />
           ) : (
-            <FaUnlink className={classes.icon} />
+            <FaUnlink fontSize="16px" />
           )}
         </IconButton>
       )}
       {(isElectron || online) && (
         <IconButton
           id="audActPlayStop"
-          className={classes.actionButton}
+          sx={actionProps}
           title={isPlaying ? t.pause : t.play}
           disabled={(mediaId || '') === ''}
           onClick={handlePlayStatus}
@@ -85,7 +71,7 @@ export function MediaActions(props: IProps) {
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </IconButton>
       )}
-    </div>
+    </Box>
   );
 }
 const mapStateToProps = (state: IState): IStateProps => ({

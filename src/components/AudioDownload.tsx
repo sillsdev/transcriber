@@ -8,23 +8,15 @@ import {
   ISharedStrings,
 } from '../model';
 import localStrings from '../selector/localize';
-import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
-import DownloadIcon from '@material-ui/icons/GetAppOutlined';
+import { IconButton, IconButtonProps, styled } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/GetAppOutlined';
 import { remoteIdGuid, useFetchMediaUrl, MediaSt } from '../crud';
-import Auth from '../auth/Auth';
 import { loadBlob, removeExtension } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    actionButton: {
-      color: theme.palette.primary.light,
-    },
-    icon: {
-      fontSize: '16px',
-    },
-  })
-);
+const StyledIcon = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+  color: theme.palette.primary.light,
+}));
 
 interface IStateProps {
   t: IAudioDownloadStrings;
@@ -32,15 +24,12 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps {
-  auth: Auth;
   title?: string;
   mediaId: string;
 }
 
 export const AudioDownload = (props: IProps) => {
   const { mediaId, title, t, ts } = props;
-  const { auth } = props;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -59,7 +48,7 @@ export const AudioDownload = (props: IProps) => {
     const version = mediaRec?.attributes?.versionNumber || '1';
     setAudName(`${name}-ver${version}.${ext}`);
     if (id !== mediaState.id) {
-      fetchMediaUrl({ id, auth });
+      fetchMediaUrl({ id });
     }
   };
 
@@ -84,21 +73,25 @@ export const AudioDownload = (props: IProps) => {
         setAudName('');
         setBlobUrl('');
       }
+      fetchMediaUrl({ id: '' });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blobUrl, audName]);
 
   return (
     <div>
-      <IconButton
+      <StyledIcon
         id="audDownload"
-        className={classes.actionButton}
         title={title || t.downloadMedia}
-        disabled={(mediaId || '') === ''}
+        disabled={
+          (mediaId || '') === '' ||
+          mediaId === mediaState.remoteId ||
+          audName !== ''
+        }
         onClick={handleDownload}
       >
         <DownloadIcon />
-      </IconButton>
+      </StyledIcon>
       {blobUrl && (
         /* eslint-disable-next-line jsx-a11y/anchor-has-content */
         <a

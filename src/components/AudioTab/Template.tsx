@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
-import localStrings from '../../selector/localize';
-import { IState, ITemplateStrings, Plan, PlanType } from '../../model';
+import { ITemplateStrings, Plan, PlanType } from '../../model';
 import { QueryBuilder } from '@orbit/data';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   Paper,
   InputBase,
@@ -17,53 +14,30 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-} from '@material-ui/core';
-import DoneIcon from '@material-ui/icons/Done';
-import InfoIcon from '@material-ui/icons/Info';
+  SxProps,
+} from '@mui/material';
+import DoneIcon from '@mui/icons-material/Done';
+import InfoIcon from '@mui/icons-material/Info';
 import { related, useOrganizedBy } from '../../crud';
 import { IMatchData } from './makeRefMap';
+import { templateSelector } from '../../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
 interface IstrMap {
   [key: string]: string;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      padding: '2px 4px',
-      display: 'flex',
-      alignItems: 'center',
-      width: 600,
-    },
-    input: {
-      marginLeft: theme.spacing(1),
-      flex: 1,
-    },
-    iconButton: {
-      padding: 10,
-    },
-    divider: {
-      height: 28,
-      margin: 4,
-    },
-  })
-);
+const iconProps = { p: 1 } as SxProps;
 
-interface IStateProps {
-  t: ITemplateStrings;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'template' }),
-});
-
-interface InfoDialogProps extends IStateProps {
+interface InfoDialogProps {
   open: boolean;
   onClose: () => void;
   organizedBy: string;
 }
 
-const InfoDialog = connect(mapStateToProps)((props: InfoDialogProps) => {
-  const { onClose, open, t, organizedBy } = props;
+const InfoDialog = (props: InfoDialogProps) => {
+  const { onClose, open, organizedBy } = props;
+  const t: ITemplateStrings = useSelector(templateSelector, shallowEqual);
 
   const pattern: IstrMap = {
     BOOK: t.book,
@@ -79,7 +53,12 @@ const InfoDialog = connect(mapStateToProps)((props: InfoDialogProps) => {
   };
 
   return (
-    <Dialog onClose={handleClose} open={open} aria-labelledby="templDlg">
+    <Dialog
+      onClose={handleClose}
+      open={open}
+      aria-labelledby="templDlg"
+      disableEnforceFocus
+    >
       <DialogTitle id="templDlg">{t.templateCodes}</DialogTitle>
       <List>
         {Object.keys(pattern).map((pat) => (
@@ -91,22 +70,23 @@ const InfoDialog = connect(mapStateToProps)((props: InfoDialogProps) => {
       </List>
     </Dialog>
   );
-});
+};
 
-export interface ITemplateProps extends IStateProps {
+export interface ITemplateProps {
   matchMap: (pat: string, options: IMatchData) => void;
   options: IMatchData;
 }
 
 export function Template(props: ITemplateProps) {
-  const { t, matchMap, options } = props;
+  const { matchMap, options } = props;
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
-  const classes = useStyles();
   const [template, setTemplate] = useState<string>();
   const [templateInfo, setTemplateInfo] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
+  const t: ITemplateStrings = useSelector(templateSelector, shallowEqual);
+
   const handleTemplateChange = (e: any) => {
     setTemplate(e.target.value);
     localStorage.setItem('template', e.target.value);
@@ -171,27 +151,35 @@ export function Template(props: ITemplateProps) {
   }, []);
 
   return (
-    <Paper component="form" className={classes.root}>
+    <Paper
+      component="form"
+      sx={{
+        padding: '2px 4px',
+        display: 'flex',
+        alignItems: 'center',
+        width: 600,
+      }}
+    >
       <InputLabel>{`${t.fileTemplate}:`}</InputLabel>
       <InputBase
-        className={classes.input}
+        sx={{ ml: 1, flex: 1 }}
         value={template}
         onChange={handleTemplateChange}
       />
       <IconButton
         id="templApply"
-        className={classes.iconButton}
+        sx={iconProps}
         aria-label={t.apply}
         onClick={handleApply}
         title={t.apply}
       >
         <DoneIcon />
       </IconButton>
-      <Divider className={classes.divider} orientation="vertical" />
+      <Divider orientation="vertical" sx={{ height: '28px', m: '4px' }} />
       <IconButton
         id="templCodes"
         color="primary"
-        className={classes.iconButton}
+        sx={iconProps}
         onClick={handleTemplateInfo}
         title={t.templateCodes}
       >
@@ -205,4 +193,4 @@ export function Template(props: ITemplateProps) {
     </Paper>
   );
 }
-export default connect(mapStateToProps)(Template);
+export default Template;

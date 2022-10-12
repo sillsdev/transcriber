@@ -5,16 +5,17 @@ import {
   ArtifactCategory,
   ArtifactType,
   RoleNames,
+  WorkflowStep,
 } from '../model';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
-import WorkflowStep from '../model/workflowStep';
+import { ArtifactTypeSlug, useArtifactType } from '.';
 
 export const useOfflineSetup = () => {
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const backup = coordinator.getSource('backup') as IndexedDBSource;
-
+  const { getTypeId } = useArtifactType();
   const makeTypeRecs = async (kind: string) => {
     const allTypeRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords(`${kind}type`)
@@ -245,6 +246,51 @@ export const useOfflineSetup = () => {
       });
       await memory.sync(await backup.push(ops));
     }
+    if (
+      offlineRecs.filter((w) => w.attributes.process === 'Render').length === 0
+    ) {
+      const t = new TransformBuilder();
+      const WBT = getTypeId(ArtifactTypeSlug.WholeBackTranslation, true);
+      const PBT = getTypeId(ArtifactTypeSlug.PhraseBackTranslation, true);
+      console.log('WBT', WBT, 'PBT', PBT);
+      process = 'Render';
+      let ops = [
+        { name: 'Transcribe', tool: 'transcribe' },
+        { name: 'ParatextSync', tool: 'paratext' },
+        { name: 'WholeBackTranslation', tool: 'wholeBackTranslate' },
+        {
+          name: 'WBTTranscribe',
+          tool: 'transcribe',
+          settings: WBT,
+        },
+        {
+          name: 'WBTParatextSync',
+          tool: 'paratext',
+          settings: WBT,
+        },
+        { name: 'PhraseBackTranslation', tool: 'phraseBackTranslate' },
+        { name: 'PBTTranscribe', tool: 'transcribe', settings: PBT },
+        { name: 'PBTParatextSync', tool: 'paratext', settings: PBT },
+      ].map((step, ix) => {
+        console.log(step, 'step.settings', step.settings);
+        var tool =
+          `{"tool": "${step.tool}", "settings":` +
+          (step.settings ? `{"artifactTypeId": "${step.settings}"}}` : `""}`);
+        let rec = {
+          type: 'workflowstep',
+          attributes: {
+            process: process,
+            name: step.name,
+            sequencenum: ix + 1,
+            tool: tool,
+            permissions: '{}',
+          },
+        } as WorkflowStep;
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
+      });
+      await memory.sync(await backup.push(ops));
+    }
   };
   const makeArtifactCategoryRecs = async () => {
     const allRecs = memory.cache.query((q: QueryBuilder) =>
@@ -302,6 +348,40 @@ export const useOfflineSetup = () => {
       });
       await memory.sync(await backup.push(ops));
     }
+    if (offlineRecs.length < 10) {
+      const t = new TransformBuilder();
+      const ops = ['intellectualproperty', 'wholebacktranslation'].map((n) => {
+        let rec = {
+          type: 'artifacttype',
+          attributes: {
+            typename: n,
+          },
+        } as ArtifactType;
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
+      });
+      await memory.sync(await backup.push(ops));
+    }
+  };
+  const makeMoreArtifactTypeRecs = async () => {
+    const allRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('artifacttype')
+    ) as WorkflowStep[];
+    const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
+    if (offlineRecs.length < 10) {
+      const t = new TransformBuilder();
+      const ops = ['intellectualproperty', 'wholebacktranslation'].map((n) => {
+        let rec = {
+          type: 'artifacttype',
+          attributes: {
+            typename: n,
+          },
+        } as ArtifactType;
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
+      });
+      await memory.sync(await backup.push(ops));
+    }
   };
   return async () => {
     // local update only, migrate offlineproject to include offlineAvailable
@@ -312,6 +392,9 @@ export const useOfflineSetup = () => {
       await makeArtifactCategoryRecs();
       await makeArtifactTypeRecs();
       await makeWorkflowStepsRecs();
+    }
+    if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
+      await makeMoreArtifactTypeRecs();
     }
   };
 };

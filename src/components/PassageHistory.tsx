@@ -1,7 +1,6 @@
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import Auth from '../auth/Auth';
 import { related, remoteIdGuid } from '../crud';
 import { ActivityStates, PassageStateChange, User } from '../model';
 import withData from '../mods/react-orbitjs/components/withData';
@@ -17,8 +16,8 @@ import {
 } from '@material-ui/core';
 import UserAvatar from './UserAvatar';
 import { useGlobal } from 'reactn';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import useTodo from '../context/useTodo';
 import TranscribeAddNote from './TranscribeAddNote';
 import { UpdateRecord } from '../model/baseModel';
@@ -33,7 +32,6 @@ interface IRecordProps {
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   passageId: string;
-  auth: Auth;
   boxHeight: number;
 }
 const useStyles = makeStyles((theme: Theme) =>

@@ -10,7 +10,7 @@ export const wfNumChanges = (
   workflow: IWorkflow[],
   lastSaved: string | undefined
 ) =>
-  workflow.reduce((prev, cur, i) => {
+  workflow.reduce((prev, cur) => {
     let secChange = false;
     if (isSectionRow(cur) && isSectionUpdated(cur, lastSaved)) {
       secChange = true;

@@ -15,7 +15,8 @@ export const usePassageNavigate = (cb: () => void) => {
       if (view) {
         if (view !== pathname) {
           checkSavedFn(() => {
-            localStorage.setItem(localUserKey(LocalKey.url), view);
+            if (!view.endsWith('null'))
+              localStorage.setItem(localUserKey(LocalKey.url), view);
             push(view);
             cb();
             // Jump to first uncompleted step

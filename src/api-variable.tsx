@@ -25,7 +25,7 @@ export const API_CONFIG = {
   productName:
     (process.env.REACT_APP_SITE_TITLE
       ? process.env.REACT_APP_SITE_TITLE
-      : 'SIL Transcriber') + (isElectron ? ' Desktop' : ''),
+      : 'Audio Project Manager') + (isElectron ? ' Desktop' : ''),
   flatSample: process.env.REACT_APP_FLAT ? process.env.REACT_APP_FLAT : '',
   hierarchicalSample: process.env.REACT_APP_HIERARCHICAL
     ? process.env.REACT_APP_HIERARCHICAL

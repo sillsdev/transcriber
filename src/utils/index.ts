@@ -63,3 +63,7 @@ export * from './burritoMetadata';
 export * from './eqSet';
 export * from './cleanClipboard';
 export * from './isVisual';
+export * from './restoreScroll';
+export * from './startEnd';
+export * from './rememberCurrentPassage';
+export * from './onlyUnique';

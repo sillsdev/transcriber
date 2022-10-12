@@ -1,17 +1,16 @@
 import { SortableElement } from 'react-sortable-hoc';
-import { ListItem, IconButton, makeStyles } from '@material-ui/core';
-import HideIcon from '@material-ui/icons/VisibilityOff';
-import ShowIcon from '@material-ui/icons/Visibility';
+import { ListItem, IconButton, styled } from '@mui/material';
+import HideIcon from '@mui/icons-material/VisibilityOff';
+import ShowIcon from '@mui/icons-material/Visibility';
 import { IStepRow, DragHandle, stepEditorSelector } from '.';
 import StepName from './StepName';
 import ToolChoice from './ToolChoice';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IStepEditorStrings } from '../../model';
+import SettingsIcon from '@mui/icons-material/Settings';
 
-const useStyles = makeStyles({
-  step: { minWidth: 250 },
-  tool: { minWidth: 250 },
-});
+const StepSpan = styled('span')(() => ({ minWidth: 250 }));
+const ToolSpan = styled('span')(() => ({ minWidth: 250 }));
 
 interface IProps {
   value: IStepRow;
@@ -20,11 +19,20 @@ interface IProps {
   onToolChange: (tool: string, index: number) => void;
   onDelete: (index: number) => void;
   onRestore: (index: number) => void;
+  onSettings?: (index: number) => void;
+  settingsTitle?: string;
 }
 
 export const StepItem = SortableElement(
-  ({ value, onNameChange, onToolChange, onDelete, onRestore }: IProps) => {
-    const classes = useStyles();
+  ({
+    value,
+    onNameChange,
+    onToolChange,
+    onDelete,
+    onRestore,
+    onSettings,
+    settingsTitle,
+  }: IProps) => {
     const se: IStepEditorStrings = useSelector(
       stepEditorSelector,
       shallowEqual
@@ -40,22 +48,30 @@ export const StepItem = SortableElement(
       if (value.seq >= 0) onDelete(value.rIdx);
       else onRestore(value.rIdx);
     };
+    const handleSettings = () => {
+      if (onSettings) onSettings(value.rIdx);
+    };
 
     return (
       <ListItem>
         <DragHandle />
-        <span className={classes.step}>
+        <StepSpan>
           <StepName name={value.name} onChange={handleNameChange} />
-        </span>
-        <span className={classes.tool}>
+        </StepSpan>
+        <ToolSpan>
           <ToolChoice tool={value.tool} onChange={handleToolChange} />
-        </span>
+        </ToolSpan>
         <IconButton
           onClick={handleDeleteOrRestore}
           title={value.seq >= 0 ? se.hide : se.show}
         >
           {value.seq < 0 ? <HideIcon /> : <ShowIcon />}
         </IconButton>
+        {onSettings && (
+          <IconButton onClick={handleSettings} title={settingsTitle ?? ''}>
+            {<SettingsIcon />}
+          </IconButton>
+        )}
       </ListItem>
     );
   }

@@ -3,7 +3,6 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, IPassageRecordStrings } from '../model';
 import localStrings from '../selector/localize';
-import Auth from '../auth/Auth';
 import {
   Button,
   createStyles,
@@ -18,6 +17,7 @@ import {
 import { useFetchMediaUrl } from '../crud';
 import MediaRecord from './MediaRecord';
 import { UnsavedContext } from '../context/UnsavedContext';
+import SpeakerName from './SpeakerName';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,22 +50,23 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-interface IDispatchProps {}
 interface IStateProps {
   t: IPassageRecordStrings;
 }
-interface IProps extends IStateProps {}
-interface IProps extends IStateProps, IDispatchProps {
+interface IProps extends IStateProps {
   visible: boolean;
   onVisible: (visible: boolean) => void;
   onCancel?: () => void;
   mediaId: string;
-  auth: Auth;
   metaData?: JSX.Element;
   defaultFilename?: string;
   ready: () => boolean;
   uploadMethod?: (files: File[]) => Promise<void>;
   allowWave?: boolean;
+  speaker?: string;
+  onSpeaker?: (speaker: string) => void;
+  createProject?: (name: string) => Promise<string>;
+  team?: string;
 }
 
 function PassageRecordDlg(props: IProps) {
@@ -74,19 +75,23 @@ function PassageRecordDlg(props: IProps) {
     visible,
     onVisible,
     mediaId,
-    auth,
     defaultFilename,
     uploadMethod,
     onCancel,
     ready,
     metaData,
     allowWave,
+    speaker,
+    onSpeaker,
+    createProject,
+    team,
   } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [canCancel, setCanCancel] = useState(false);
+  const [hasRights, setHasRights] = useState(false);
   const classes = useStyles();
   const { startSave, saveCompleted } = useContext(UnsavedContext).state;
 
@@ -102,8 +107,13 @@ function PassageRecordDlg(props: IProps) {
     onVisible(false);
   };
 
+  const handleRights = (hasRights: boolean) => setHasRights(hasRights);
+  const handleSpeaker = (speaker: string) => {
+    onSpeaker && onSpeaker(speaker);
+  };
+
   useEffect(() => {
-    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId, auth });
+    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
 
@@ -123,16 +133,24 @@ function PassageRecordDlg(props: IProps) {
       open={visible}
       onClose={handleCancel}
       aria-labelledby="recDlg"
+      disableEnforceFocus
     >
       <DialogTitle id="recDlg">{t.title}</DialogTitle>
       <DialogContent>
+        <SpeakerName
+          name={speaker || ''}
+          onRights={handleRights}
+          onChange={handleSpeaker}
+          createProject={createProject}
+          team={team}
+        />
         <MediaRecord
           toolId={myToolId}
           mediaId={mediaId}
-          auth={auth}
           uploadMethod={uploadMethod}
           onReady={onReady}
           defaultFilename={defaultFilename}
+          allowRecord={hasRights}
           allowWave={allowWave}
           showFilename={allowWave}
           setCanSave={setCanSave}

@@ -8,16 +8,8 @@ import {
   MediaFile,
   SectionResource,
 } from '../../../model';
-import {
-  makeStyles,
-  createStyles,
-  Theme,
-  IconButton,
-  Button,
-  Paper,
-  debounce,
-} from '@material-ui/core';
-import SkipIcon from '@material-ui/icons/NotInterested';
+import { IconButton, Paper, PaperProps, debounce, styled } from '@mui/material';
+import SkipIcon from '@mui/icons-material/NotInterested';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
@@ -28,7 +20,7 @@ import { prettySegment, cleanClipboard } from '../../../utils';
 import {
   resourceSelector,
   sharedSelector,
-  transcriptiontabSelector,
+  transcriptionTabSelector,
 } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { UnsavedContext } from '../../../context/UnsavedContext';
@@ -38,55 +30,49 @@ import { useProjectSegmentSave } from './useProjectSegmentSave';
 import { useFullReference, IInfo } from './useFullReference';
 import { findRecord, related } from '../../../crud';
 import { useSnackBar } from '../../../hoc/SnackBar';
+import {
+  ActionRow,
+  AltButton,
+  GrowingSpacer,
+  PriButton,
+} from '../../../control';
 
 const wizToolId = 'ProjResWizard';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    grow: {
-      flexGrow: 1,
+const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  marginBottom: theme.spacing(1),
+  '& .MuiPaper-rounded': {
+    borderRadius: '8px',
+  },
+  overflow: 'auto',
+  paddingTop: theme.spacing(2),
+}));
+
+const StyledTable = styled('div')(({ theme }) => ({
+  padding: theme.spacing(4),
+  '& .data-grid .cell': {
+    height: '48px',
+  },
+  '& .cTitle': {
+    fontWeight: 'bold',
+  },
+  '& .lim': {
+    verticalAlign: 'inherit !important',
+    '& .value-viewer': {
+      textAlign: 'center',
     },
-    actions: {
-      display: 'flex',
-      justifyContent: 'flex-end',
+  },
+  '& .ref': {
+    verticalAlign: 'inherit !important',
+  },
+  '& .des': {
+    verticalAlign: 'inherit !important',
+    '& .value-viewer': {
+      textAlign: 'left',
     },
-    button: { margin: theme.spacing(2) },
-    para: { margin: '6pt 0pt' },
-    root: {
-      backgroundColor: theme.palette.background.default,
-      marginBottom: theme.spacing(1),
-      '& .MuiPaper-rounded': {
-        borderRadius: '8px',
-      },
-      overflow: 'auto',
-      paddingTop: theme.spacing(2),
-    },
-    table: {
-      padding: theme.spacing(4),
-      '& .data-grid .cell': {
-        height: '48px',
-      },
-      '& .cTitle': {
-        fontWeight: 'bold',
-      },
-      '& .lim': {
-        verticalAlign: 'inherit !important',
-        '& .value-viewer': {
-          textAlign: 'center',
-        },
-      },
-      '& .ref': {
-        verticalAlign: 'inherit !important',
-      },
-      '& .des': {
-        verticalAlign: 'inherit !important',
-        '& .value-viewer': {
-          textAlign: 'left',
-        },
-      },
-    },
-  })
-);
+  },
+}));
 
 interface ICell {
   value: any;
@@ -115,10 +101,11 @@ interface IProps extends IRecordProps {
 
 export const ProjectResourceConfigure = (props: IProps) => {
   const { media, items, onOpen, mediafiles, sectionResources } = props;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [, setComplete] = useGlobal('progress');
   const [data, setData] = useState<ICell[][]>([]);
+  const [numSegments, setNumSegments] = useState(0);
+  const [pastedSegments, setPastedSegments] = useState('');
   const [heightStyle, setHeightStyle] = useState({
     maxHeight: `${window.innerHeight - 450}px`,
   });
@@ -131,7 +118,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     shallowEqual
   );
   const tt: ITranscriptionTabStrings = useSelector(
-    transcriptiontabSelector,
+    transcriptionTabSelector,
     shallowEqual
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
@@ -177,6 +164,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
   const rowCells = (row: string[], first = false) =>
     row.map(
       (v, i) =>
@@ -209,6 +197,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     infoRef.current = newInfo;
     setData(newData);
     dataRef.current = newData;
+    if (segmentsRef.current) handleSegment(segmentsRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
@@ -243,7 +232,14 @@ export const ProjectResourceConfigure = (props: IProps) => {
           }
           setComplete(Math.min((ix * 100) / total, 100));
         }
-        projectSegmentSave({ media, segments: segmentsRef.current })
+        projectSegmentSave({
+          media,
+          segments: updateSegments(
+            NamedRegions.ProjectResource,
+            media.attributes?.segments,
+            segmentsRef.current
+          ),
+        })
           .then(() => {
             saveCompleted(wizToolId);
             savingRef.current = false;
@@ -316,6 +312,38 @@ export const ProjectResourceConfigure = (props: IProps) => {
     else showMessage(tt.noData.replace('{0}', t.projectResourceConfigure));
   };
 
+  const loadPastedSegments = (newData: ICell[][]) => {
+    var psgIndexes = items.map((r) => r.type === 'passage');
+    var segBoundaries = newData
+      .filter((r, i) => i > 0 && psgIndexes[i - 1])
+      .map((s) => s[ColName.Limits].value); //should be like "0.0-34.9"
+    var regs = segBoundaries
+      .map((b: string) => {
+        var boundaries = b.split('-');
+        if (
+          boundaries.length > 1 &&
+          !isNaN(parseFloat(boundaries[0])) &&
+          !isNaN(parseFloat(boundaries[1]))
+        )
+          return {
+            start: parseFloat(boundaries[0]),
+            end: parseFloat(boundaries[1]),
+          };
+        return { start: 0, end: 0 };
+      })
+      .filter((r) => r.end > 0);
+    var errors = segBoundaries.length - regs.length;
+    var updated = 0;
+    regs.forEach((r, i) => {
+      if (i > 0 && r.start !== regs[i - 1].end) {
+        r.start = regs[i - 1].end;
+        updated++;
+      }
+    });
+    setNumSegments(regs.length);
+    setPastedSegments(JSON.stringify({ regions: JSON.stringify(regs) }));
+    return { errors, updated };
+  };
   const handleParsePaste = (clipBoard: string) => {
     const rawData = cleanClipboard(clipBoard);
     if (rawData.length === 0) {
@@ -356,9 +384,15 @@ export const ProjectResourceConfigure = (props: IProps) => {
       showMessage(t.pasteNoChange);
       return [];
     }
-    setData(newData);
-    dataRef.current = newData;
-    if (!isChanged(wizToolId)) toolChanged(wizToolId);
+    var ret = loadPastedSegments(newData);
+    if (ret.errors || ret.updated) {
+      showMessage(
+        t.pasteError
+          .replace('{0}', ret.errors.toString())
+          .replace('{1}', ret.updated.toString())
+      );
+    }
+
     return [];
   };
 
@@ -370,7 +404,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     setData(newData);
     dataRef.current = newData;
   };
-
+  /*
   const fix = (regions: IRegion[]) => {
     const last = regions.length - 1;
     if (last < 0) return;
@@ -385,20 +419,21 @@ export const ProjectResourceConfigure = (props: IProps) => {
   };
 
   const d1 = (n: number) => `${Math.round(n * 10) / 10}`;
+*/
 
   const handleSegment = (segments: string) => {
-    const regions = parseRegions(segments)
-      .regions.filter((r) => d1(r.start) !== d1(r.end) && d1(r.end) !== `0.0`)
-      .sort((i, j) => i.start - j.start);
-    fix(regions);
+    const regions = parseRegions(segments).regions.sort(
+      (i, j) => i.start - j.start
+    );
+    //.regions.filter((r) => d1(r.start) !== d1(r.end) && d1(r.end) !== `0.0`)
+    //fix(regions);
+
+    setNumSegments(regions.length);
+
     // console.log('______');
     // regions.forEach((r) => console.log(prettySegment(r)));
-    segmentsRef.current = updateSegments(
-      NamedRegions.ProjectResource,
-      segments,
-      JSON.stringify(regions)
-    );
-    // console.log(segmentsRef.current);
+    segmentsRef.current = segments;
+
     let change = false;
     let newData = new Array<ICell[]>();
     newData.push(dataRef.current[0]);
@@ -478,47 +513,41 @@ export const ProjectResourceConfigure = (props: IProps) => {
 
   return (
     <>
-      <PassageDetailPlayer allowSegment={true} onSegment={handleSegment} />
-      <Paper id="proj-res-sheet" className={classes.root} style={heightStyle}>
-        <div id="proj-res-sheet" className={classes.table}>
+      <PassageDetailPlayer
+        allowSegment={NamedRegions.ProjectResource}
+        onSegment={handleSegment}
+        suggestedSegments={pastedSegments}
+      />
+      <StyledPaper id="proj-res-sheet" style={heightStyle}>
+        <StyledTable id="proj-res-sheet">
           <DataSheet
             data={data}
             valueRenderer={handleValueRenderer}
             onCellsChanged={handleCellsChanged}
             parsePaste={handleParsePaste}
           />
-        </div>
-      </Paper>
-      <div className={classes.actions}>
-        <Button
+        </StyledTable>
+      </StyledPaper>
+      <ActionRow>
+        <AltButton
           id="copy-configure"
           onClick={handleCopy}
-          variant="contained"
-          className={classes.button}
-          disabled={!isChanged(wizToolId)}
+          disabled={numSegments === 0}
         >
           {t.copyToClipboard}
-        </Button>
-        <div className={classes.grow}>{'\u00A0'}</div>
-        <Button
+        </AltButton>
+        <GrowingSpacer />
+        <PriButton
           id="res-create"
           onClick={handleCreate}
-          variant="contained"
-          className={classes.button}
-          color="primary"
-          disabled={!isChanged(wizToolId)}
+          disabled={numSegments === 0 || savingRef.current}
         >
           {t.createResources}
-        </Button>
-        <Button
-          id="res-create-cancel"
-          onClick={handleCancel}
-          variant="contained"
-          className={classes.button}
-        >
+        </PriButton>
+        <AltButton id="res-create-cancel" onClick={handleCancel}>
           {ts.cancel}
-        </Button>
-      </div>
+        </AltButton>
+      </ActionRow>
     </>
   );
 };

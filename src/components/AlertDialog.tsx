@@ -1,22 +1,29 @@
-import React, { useState } from 'react';
-import clsx from 'clsx';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { IState, IAlertStrings } from '../model';
 import localStrings from '../selector/localize';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
 
-const useStyles = makeStyles({
-  actions: {
+// see: https://mui.com/material-ui/customization/how-to-customize/
+interface StyledActionsProps extends DialogActionsProps {
+  noOnLeft?: boolean;
+}
+const StyledDialogActions = styled(DialogActions, {
+  shouldForwardProp: (prop) => prop !== 'noOnLeft',
+})<StyledActionsProps>(({ noOnLeft }) => ({
+  ...(noOnLeft && {
     display: 'flex',
     justifyContent: 'space-between',
-  },
-});
+  }),
+}));
 
 interface IStateProps {
   t: IAlertStrings;
@@ -46,7 +53,6 @@ function AlertDialog(props: IProps) {
     isDelete,
     t,
   } = props;
-  const classes = useStyles();
   const [open, setOpen] = useState(true);
 
   const handleClose = () => {
@@ -69,40 +75,39 @@ function AlertDialog(props: IProps) {
   };
 
   return (
-    <div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alertDlg"
-        aria-describedby="alertDesc"
-      >
-        <DialogTitle id="alertDlg">
-          {title || (isDelete ? t.delete : t.confirmation)}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContent id="alertJsx">{jsx}</DialogContent>
-          <DialogContentText id="alertDesc">
-            {text || t.areYouSure}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions className={clsx({ [classes.actions]: noOnLeft })}>
-          <Button id="alertNo" onClick={handleNo} color="primary">
-            {no || t.no}
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="alertDlg"
+      aria-describedby="alertDesc"
+      disableEnforceFocus
+    >
+      <DialogTitle id="alertDlg">
+        {title || (isDelete ? t.delete : t.confirmation)}
+      </DialogTitle>
+      <DialogContent>
+        <DialogContent id="alertJsx">{jsx}</DialogContent>
+        <DialogContentText id="alertDesc">
+          {text || t.areYouSure}
+        </DialogContentText>
+      </DialogContent>
+      <StyledDialogActions noOnLeft={noOnLeft}>
+        <Button id="alertNo" onClick={handleNo} color="primary">
+          {no || t.no}
+        </Button>
+        {yes !== '' && (
+          <Button
+            id="alertYes"
+            onClick={handleYes}
+            variant="contained"
+            color="primary"
+            autoFocus
+          >
+            {yes || t.yes}
           </Button>
-          {yes !== '' && (
-            <Button
-              id="alertYes"
-              onClick={handleYes}
-              variant="contained"
-              color="primary"
-              autoFocus
-            >
-              {yes || t.yes}
-            </Button>
-          )}
-        </DialogActions>
-      </Dialog>
-    </div>
+        )}
+      </StyledDialogActions>
+    </Dialog>
   );
 }
 

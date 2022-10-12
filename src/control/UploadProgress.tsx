@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { IState, IUploadProgressStrings } from '../model';
 import localStrings from '../selector/localize';
-import { makeStyles, Typography } from '@material-ui/core';
 import {
   Button,
   Dialog,
@@ -15,17 +14,10 @@ import {
   ListItemAvatar,
   ListItemText,
   Avatar,
-} from '@material-ui/core';
-import CheckIcon from '@material-ui/icons/Check';
-
-const useStyles = makeStyles({
-  progress: {
-    width: '100%',
-  },
-  avatar: {
-    color: 'green',
-  },
-});
+  Typography,
+  Box,
+} from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
 
 interface IStateProps {
   t: IUploadProgressStrings;
@@ -44,8 +36,7 @@ interface IProps extends IStateProps {
 export function UploadProgress(props: IProps) {
   const { open, title, progress, action, allowCancel, t } = props;
   const { steps, currentStep } = props;
-  const classes = useStyles();
-  const cancelRef = React.useRef(false);
+  const cancelRef = useRef(false);
 
   const handleChoice = (choice: string) => () => {
     if (!cancelRef.current) {
@@ -62,6 +53,7 @@ export function UploadProgress(props: IProps) {
       open={open}
       onClose={handleChoice('Close')}
       aria-labelledby="uploadProgDlg"
+      disableEnforceFocus
     >
       <DialogTitle id="uploadProgDlg">{title || t.progressTitle}</DialogTitle>
       <DialogContent>
@@ -70,7 +62,7 @@ export function UploadProgress(props: IProps) {
             {steps.map((s, i) => (
               <ListItem key={i} role="listitem">
                 <ListItemAvatar>
-                  <Avatar className={classes.avatar}>
+                  <Avatar sx={{ color: 'green' }}>
                     {currentStep > i && <CheckIcon />}
                   </Avatar>
                 </ListItemAvatar>
@@ -80,10 +72,10 @@ export function UploadProgress(props: IProps) {
             <ListItem />
           </List>
         )}
-        <div className={classes.progress}>
+        <Box sx={{ width: '100%' }}>
           <LinearProgress variant="determinate" value={progress} />
           {cancelRef.current && <Typography>{t.canceling}</Typography>}
-        </div>
+        </Box>
       </DialogContent>
       {allowCancel && (
         <DialogActions>

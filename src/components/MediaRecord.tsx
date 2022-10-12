@@ -10,7 +10,6 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, IPassageRecordStrings } from '../model';
 import localStrings from '../selector/localize';
-import Auth from '../auth/Auth';
 import * as actions from '../store';
 import {
   Button,
@@ -85,7 +84,6 @@ interface IProps extends IStateProps, IDispatchProps {
   onRecording: (r: boolean) => void;
   onPlayStatus: (p: boolean) => void;
   mediaId: string;
-  auth: Auth;
   metaData?: JSX.Element;
   defaultFilename?: string;
   startSave: boolean;
@@ -94,6 +92,7 @@ interface IProps extends IStateProps, IDispatchProps {
   setStatusText: (status: string) => void;
   uploadMethod?: (files: File[]) => Promise<void>;
   cancelMethod?: () => void;
+  allowRecord?: boolean;
   allowWave?: boolean;
   showFilename?: boolean;
   size?: number;
@@ -111,12 +110,12 @@ function MediaRecord(props: IProps) {
     onRecording,
     onPlayStatus,
     mediaId,
-    auth,
     defaultFilename,
     uploadMethod,
     setCanSave,
     setCanCancel,
     setStatusText,
+    allowRecord,
     allowWave,
     showFilename,
     autoStart,
@@ -178,7 +177,7 @@ function MediaRecord(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId, auth });
+    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
 
@@ -339,6 +338,8 @@ function MediaRecord(props: IProps) {
   };
 
   const handleLoadAudio = () => {
+    showMessage(t.loading);
+    if (loading) return;
     setLoading(true);
     reset();
     loadBlob(mediaState.url, (urlorError, b) => {
@@ -349,7 +350,8 @@ function MediaRecord(props: IProps) {
       } else {
         showMessage(urlorError);
         //force it to go get another (unexpired) s3 url
-        fetchMediaUrl({ id: mediaId, auth });
+        fetchMediaUrl({ id: mediaId });
+        setLoading(false);
       }
     });
     if (!mediaId) {
@@ -371,15 +373,17 @@ function MediaRecord(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preload]);
 
+  const segments = '{}';
+
   return (
     <Paper id="mediaRecord">
       {mediaState.status === MediaSt.FETCHED && mediaState.id === mediaId && (
         <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
-          {loading ? t.loading : t.loadfile}
+          {t.loadfile}
         </Button>
       )}
       <WSAudioPlayer
-        allowRecord={true}
+        allowRecord={allowRecord !== false}
         allowSilence={allowWave}
         size={size || 350}
         blob={originalBlob}
@@ -390,6 +394,7 @@ function MediaRecord(props: IProps) {
         onPlayStatus={onPlayStatus}
         doReset={doReset}
         autoStart={autoStart}
+        segments={segments}
       />
       <div className={classes.row}>
         {showFilename && (

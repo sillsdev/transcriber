@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, CSSProperties } from 'react';
 import { useGlobal } from 'reactn';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { CSSProperties } from '@material-ui/core/styles/withStyles';
-import clsx from 'clsx';
-import { IconButton, Typography } from '@material-ui/core';
-import PlayIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import CloseIcon from '@material-ui/icons/Close';
+import { IconButton, Typography, Box, BoxProps, styled } from '@mui/material';
+import PlayIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import CloseIcon from '@mui/icons-material/Close';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import useTodo from '../context/useTodo';
 import ShapingTable from './ShapingTable';
@@ -17,9 +14,8 @@ import IntegrationTab from './Integration';
 import ExportTab from './TranscriptionTab';
 import Visualize from './Visualize';
 import ProjectMenu from './Team/ProjectMenu';
-import { formatTime, LightTooltip } from '../control';
+import { formatTime, GrowingSpacer, LightTooltip, iconSize } from '../control';
 import { ChipText } from './TaskFlag';
-import Auth from '../auth/Auth';
 import {
   sectionNumber,
   sectionDescription,
@@ -38,74 +34,62 @@ import { shallowEqual, useSelector } from 'react-redux';
 
 export const TaskItemWidth = 240;
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      '&[data-list="true"] table': {
-        minWidth: `${TaskItemWidth}px !important`,
-      },
-      '&[data-list="true"] thead': {
-        display: 'none',
-      },
-      '& .MuiListItem-root': {
-        padding: '0 16px',
-      },
-      '& .MuiList-root': {
-        padding: 0,
-      },
-      '& colgroup col:first-child': {
-        width: '1px !important',
-      },
-      '&[data-list="true"] colgroup col:nth-child(2)': {
-        width: `${TaskItemWidth}px !important`,
-      },
-      '& tbody > tr:first-child': {
-        display: 'none',
-      },
-    },
-    container: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    paper: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignContent: 'center',
-      [theme.breakpoints.up('sm')]: {
-        paddingLeft: 0,
-        paddingRight: 0,
-      },
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    dialogHeader: {
-      width: `${TaskItemWidth - 30}px`,
-      paddingLeft: theme.spacing(2),
-      paddingTop: theme.spacing(1),
-      paddingBottom: '8px',
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    filterHeader: {
-      width: 'auto',
-    },
-    editIcon: {
-      fontSize: 16,
-    },
-    link: {},
-    button: {},
-    icon: {},
-    playIcon: {
-      fontSize: 16,
-    },
-    list: {
-      display: 'flex',
-    },
-  })
-);
+const TaskTableDiv = styled('div')(() => ({
+  width: '100%',
+  '&[data-list="true"] table': {
+    minWidth: `${TaskItemWidth}px !important`,
+  },
+  '&[data-list="true"] thead': {
+    display: 'none',
+  },
+  '& .MuiListItem-root': {
+    padding: '0 16px',
+  },
+  '& .MuiList-root': {
+    padding: 0,
+  },
+  '& colgroup col:first-of-type': {
+    width: '1px !important',
+  },
+  '&[data-list="true"] colgroup col:nth-of-type(2)': {
+    width: `${TaskItemWidth}px !important`,
+  },
+  '& tbody > tr:first-of-type': {
+    display: 'none',
+  },
+}));
+
+const StyledPaper = styled(Box)<BoxProps>(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignContent: 'center',
+  [theme.breakpoints.up('sm')]: {
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
+}));
+
+// see: https://mui.com/material-ui/customization/how-to-customize/
+export interface HeaderProps extends BoxProps {
+  filter?: boolean;
+}
+export const Header = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'filter',
+})<HeaderProps>(({ filter, theme }) => ({
+  paddingLeft: theme.spacing(2),
+  paddingTop: theme.spacing(1),
+  paddingBottom: '8px',
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  ...(filter
+    ? {
+        width: 'auto',
+      }
+    : {
+        width: `${TaskItemWidth - 30}px`,
+      }),
+}));
 
 interface IRow {
   composite: JSX.Element | null;
@@ -115,6 +99,8 @@ interface IRow {
   sectPass: string;
   title: string;
   description: string;
+  topic: string;
+  speaker: string;
   length: string;
   state: string;
   assigned: string;
@@ -123,12 +109,12 @@ interface IRow {
 }
 
 interface IProps {
-  auth: Auth;
   onFilter?: (top: boolean) => void;
+  isDetail?: boolean;
 }
 
 export function TaskTable(props: IProps) {
-  const { auth, onFilter } = props;
+  const { onFilter, isDetail } = props;
   const {
     rowData,
     activityStateStr,
@@ -146,7 +132,6 @@ export function TaskTable(props: IProps) {
   } = useTodo();
   const t = todoStr;
   const tpb = projButtonStr;
-  const classes = useStyles();
   const [user] = useGlobal('user');
   const tm: IMediaActionsStrings = useSelector(
     mediaActionsSelector,
@@ -160,7 +145,7 @@ export function TaskTable(props: IProps) {
   const [projectId] = useGlobal('project');
   const [projRole] = useGlobal('projRole');
   const projectPlans = useProjectPlans();
-  const [openIntegration, setOpenIntegration] = React.useState(false);
+  const [openIntegration, setOpenIntegration] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openReports, setOpenReports] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
@@ -174,6 +159,8 @@ export function TaskTable(props: IProps) {
     { name: 'title', title: t.title },
     { name: 'sectPass', title: t.passage },
     { name: 'description', title: t.description },
+    { name: 'topic', title: t.topic },
+    { name: 'speaker', title: t.speaker },
     { name: 'length', title: t.length },
     { name: 'state', title: t.state },
     { name: 'assigned', title: t.assigned },
@@ -191,6 +178,8 @@ export function TaskTable(props: IProps) {
       align: 'left',
       wordWrapEnabled: true,
     },
+    { columnName: 'topic', width: 100, align: 'left' },
+    { columnName: 'speaker', width: 100, align: 'left' },
     { columnName: 'length', width: 100, align: 'left' },
     { columnName: 'state', width: 150, align: 'left' },
     { columnName: 'assigned', width: 150, align: 'left' },
@@ -208,7 +197,7 @@ export function TaskTable(props: IProps) {
   const defaultGrouping = [{ columnName: 'plan' }];
 
   const [rows, setRows] = useState(Array<IRow>());
-  const [style, setStyle] = React.useState<CSSProperties>({
+  const [style, setStyle] = useState<CSSProperties>({
     height: window.innerHeight - 100,
     overflowY: 'auto',
     cursor: 'default',
@@ -321,9 +310,9 @@ export function TaskTable(props: IProps) {
       ]);
     } else {
       let addHead = 50;
-      let addWid = (width - 1037) / 3;
+      let addWid = (width - 1237) / 3;
       if (width < 1283) {
-        addHead = addWid = width > 1037 ? (width - 1037) / 5 : 0;
+        addHead = addWid = width > 1237 ? (width - 1237) / 7 : 0;
       }
       setColumnFormatting([
         { columnName: 'composite', width: 1, align: 'left' },
@@ -348,6 +337,8 @@ export function TaskTable(props: IProps) {
           align: 'left',
           wordWrapEnabled: true,
         },
+        { columnName: 'topic', width: 65 + addHead, align: 'left' },
+        { columnName: 'speaker', width: 65 + addHead, align: 'left' },
         { columnName: 'length', width: 100, align: 'left' },
         { columnName: 'duration', width: 100, align: 'right' },
         { columnName: 'state', width: 150, align: 'left' },
@@ -374,6 +365,8 @@ export function TaskTable(props: IProps) {
       sectPass: r.sectPass,
       title: sectionDescription(r.section),
       description: r.passage?.attributes?.title,
+      topic: r.mediafile?.attributes?.topic || '',
+      speaker: r.mediafile?.attributes?.performedBy || '',
       length: r.duration ? formatTime(r.duration) : '',
       state:
         r.state !== ''
@@ -397,7 +390,7 @@ export function TaskTable(props: IProps) {
 
   interface ICell {
     value: any;
-    style?: React.CSSProperties;
+    style?: CSSProperties;
     mediaId?: string;
     row: IRow;
     column: any;
@@ -412,16 +405,15 @@ export function TaskTable(props: IProps) {
         key={'audio-' + mediaId}
         aria-label={'audio-' + mediaId}
         color="primary"
-        className={classes.link}
         onClick={handlePlay(mediaId || '')}
       >
         {value === mediaId && playing ? (
           <LightTooltip title={tm.pause}>
-            <PauseIcon className={classes.playIcon} />
+            <PauseIcon sx={iconSize} />
           </LightTooltip>
         ) : (
           <LightTooltip title={tm.play}>
-            <PlayIcon className={classes.playIcon} />
+            <PlayIcon sx={iconSize} />
           </LightTooltip>
         )}
       </IconButton>
@@ -468,35 +460,31 @@ export function TaskTable(props: IProps) {
   };
 
   return (
-    <div
+    <TaskTableDiv
       id="TaskTable"
       ref={formRef}
-      className={classes.root}
       style={style}
       data-list={!filter ? 'true' : ''}
     >
-      <div className={classes.container}>
-        <div className={classes.paper}>
-          <div
-            className={clsx(classes.dialogHeader, {
-              [classes.filterHeader]: filter,
-            })}
-          >
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <StyledPaper>
+          <Header filter={filter}>
             <Typography variant="h6">{t.tasks}</Typography>
-            <div className={classes.grow}>{'\u00A0'}</div>
+            <GrowingSpacer />
             <ProjectMenu
               action={handleProjectMenu}
               stopPlayer={handleStopPlayer}
               inProject={true}
               isOwner={projRole === RoleNames.Admin}
               project={projectId}
+              justFilter={isDetail}
             />
             {filter && (
               <IconButton id="taskFiltClose" onClick={handleToggleFilter}>
                 <CloseIcon />
               </IconButton>
             )}
-          </div>
+          </Header>
           <ShapingTable
             columns={columns}
             columnFormatting={filter ? columnFormatting : []}
@@ -515,10 +503,9 @@ export function TaskTable(props: IProps) {
             shaping={filter}
             rows={rows}
           />
-        </div>
-      </div>
+        </StyledPaper>
+      </Box>
       <MediaPlayer
-        auth={auth}
         srcMediaId={playItem}
         requestPlay={playing}
         onEnded={playEnded}
@@ -528,7 +515,7 @@ export function TaskTable(props: IProps) {
         isOpen={openIntegration}
         onOpen={setOpenIntegration}
       >
-        <IntegrationTab {...props} auth={auth} stopPlayer={handleStopPlayer} />
+        <IntegrationTab {...props} stopPlayer={handleStopPlayer} />
       </BigDialog>
       <BigDialog
         title={tpb.exportTitle.replace('{0}', planName)}
@@ -537,7 +524,6 @@ export function TaskTable(props: IProps) {
       >
         <ExportTab
           {...props}
-          auth={auth}
           projectPlans={projectPlans(projectId)}
           planColumn={true}
         />
@@ -549,7 +535,7 @@ export function TaskTable(props: IProps) {
       >
         <Visualize selectedPlan={planId} />
       </BigDialog>
-    </div>
+    </TaskTableDiv>
   );
 }
 

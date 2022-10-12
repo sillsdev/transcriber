@@ -76,7 +76,7 @@ export const ItemDescription = ({
   const relatedMedia = related(mediafile, 'sourceMedia');
   if (relatedMedia) {
     var s = findRecord(memory, 'mediafile', relatedMedia) as MediaFile;
-    version = s.attributes.versionNumber.toString();
+    version = s.attributes?.versionNumber?.toString();
   }
   return (
     <div className={col ? classes.descriptionCol : classes.descriptionRow}>

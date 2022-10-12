@@ -28,8 +28,8 @@ import {
   TextareaAutosize,
 } from '@material-ui/core';
 import useTodo from '../context/useTodo';
-import PullIcon from '@material-ui/icons/GetAppOutlined';
-import HistoryIcon from '@material-ui/icons/History';
+import PullIcon from '@mui/icons-material/GetAppOutlined';
+import HistoryIcon from '@mui/icons-material/History';
 import { formatTime, LightTooltip } from '../control';
 import TranscribeReject from './TranscribeReject';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -43,6 +43,8 @@ import {
   AddPassageStateChangeToOps,
   remoteId,
   ArtifactTypeSlug,
+  useArtifactType,
+  findRecord,
 } from '../crud';
 import {
   insertAtCursor,
@@ -55,15 +57,13 @@ import {
   waitForIt,
   dataPath,
   PathType,
-  localUserKey,
-  LocalKey,
   integrationSlug,
   getSegments,
   NamedRegions,
   updateSegments,
 } from '../utils';
 import { isElectron } from '../api-variable';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import { debounce } from 'lodash';
 import { TaskItemWidth } from '../components/TaskTable';
 import { AllDone } from './AllDone';
@@ -82,7 +82,6 @@ import TaskFlag from './TaskFlag';
 import Spelling from './Spelling';
 import { SectionPassageTitle } from '../control/SectionPassageTitle';
 import { UnsavedContext } from '../context/UnsavedContext';
-import StickyRedirect from './StickyRedirect';
 import { activitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 
@@ -231,13 +230,11 @@ const mapStateToProps = (state: IState): IStateProps => ({
   paratext_usernameStatus: state.paratext.usernameStatus,
 });
 interface IProps extends IStateProps, IRecordProps, IDispatchProps {
-  auth: Auth;
   defaultWidth?: number;
 }
 
 export function Transcriber(props: IProps) {
   const {
-    auth,
     mediafiles,
     projintegrations,
     integrations,
@@ -267,7 +264,7 @@ export function Transcriber(props: IProps) {
     loading,
     artifactId,
   } = useTodo();
-  const { pasId, slug } = useParams<ParamTypes>();
+  const { slug } = useParams<ParamTypes>();
   const { safeURL } = useFetchMediaUrl();
   const { section, passage, duration, mediafile, state, role } = rowData[
     index
@@ -288,6 +285,7 @@ export function Transcriber(props: IProps) {
   const [user] = useGlobal('user');
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
+  const { accessToken } = useContext(TokenContext).state;
   const [assigned, setAssigned] = useState('');
   const [projData, setProjData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
@@ -334,10 +332,10 @@ export function Transcriber(props: IProps) {
   const [style, setStyle] = useState({
     cursor: 'default',
   });
-  const [jumpBack] = useState(
-    localStorage.getItem(localUserKey(LocalKey.jumpBack))
-  );
-  const [view, setView] = useState('');
+
+  const [artifactTypeSlug, setArtifactTypeSlug] = useState(slug);
+  const { slugFromId } = useArtifactType();
+
   const [textAreaStyle, setTextAreaStyle] = useState({
     overflow: 'auto',
     backgroundColor: '#cfe8fc',
@@ -436,7 +434,7 @@ export function Transcriber(props: IProps) {
       const intfind = integrations.findIndex(
         (i) =>
           i.attributes &&
-          i.attributes.name === integrationSlug(slug, offline) &&
+          i.attributes.name === integrationSlug(artifactTypeSlug, offline) &&
           Boolean(i.keys?.remoteId) !== offline
       );
       if (intfind > -1) setParatextIntegration(integrations[intfind].id);
@@ -475,7 +473,7 @@ export function Transcriber(props: IProps) {
       const intfind = integrations.findIndex(
         (i) =>
           i.attributes &&
-          i.attributes.name === integrationSlug(slug, offline) &&
+          i.attributes.name === integrationSlug(artifactTypeSlug, offline) &&
           Boolean(i.keys?.remoteId) !== offline
       );
       if (intfind > -1) setParatextIntegration(integrations[intfind].id);
@@ -502,7 +500,8 @@ export function Transcriber(props: IProps) {
   }, [height, playerSize]);
 
   useEffect(() => {
-    if (!saving.current && selected) showTranscription(getTranscription());
+    if (!selected) showTranscription({ transcription: '', position: 0 });
+    else if (!saving.current) showTranscription(getTranscription());
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [selected]);
 
@@ -576,10 +575,8 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     if (project && project !== '') {
-      var r = memory.cache.query((q) =>
-        q.findRecord({ type: 'project', id: project })
-      ) as Project;
-      setProjData(getFontData(r, offline));
+      var r = findRecord(memory, 'project', project) as Project;
+      if (r) setProjData(getFontData(r, offline));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
@@ -599,21 +596,26 @@ export function Transcriber(props: IProps) {
       ) as MediaFile[];
       //check if the url we have loaded is for the current mediaId
       const oldRec = mediaRecs.filter((m) => m.id === mediafile.id);
-      var mediaRecUrl =
-        oldRec.length > 0
-          ? safeURL(dataPath(oldRec[0].attributes.audioUrl, PathType.MEDIA))
-          : '';
-      var cut = mediaUrl.lastIndexOf('&Signature');
-      var check = cut > 0 ? mediaUrl.substr(0, cut) : mediaUrl;
-      if (check === (cut > 0 ? mediaRecUrl.substr(0, cut) : mediaRecUrl)) {
-        memory
-          .update((t: TransformBuilder) =>
-            t.replaceAttribute(oldRec[0], 'duration', Math.floor(totalSeconds))
-          )
-          .then(() => {
-            refresh();
-          });
-        // console.log(`update duration to ${Math.floor(totalSeconds)}`);
+      if (oldRec.length) {
+        var mediaRecUrl = safeURL(
+          dataPath(oldRec[0].attributes.audioUrl, PathType.MEDIA)
+        );
+        var cut = mediaUrl.lastIndexOf('&Signature');
+        var check = cut > 0 ? mediaUrl.substring(0, cut) : mediaUrl;
+        if (check === (cut > 0 ? mediaRecUrl.substring(0, cut) : mediaRecUrl)) {
+          memory
+            .update((t: TransformBuilder) =>
+              t.replaceAttribute(
+                oldRec[0],
+                'duration',
+                Math.floor(totalSeconds)
+              )
+            )
+            .then(() => {
+              refresh();
+            });
+          // console.log(`update duration to ${Math.floor(totalSeconds)}`);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -621,8 +623,8 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     if (!offline) {
-      if (!paratext_usernameStatus && projType.toLowerCase() === 'scripture') {
-        getUserName(auth, errorReporter, '');
+      if (!paratext_usernameStatus && !noParatext) {
+        getUserName(accessToken || '', errorReporter, '');
       }
       setHasParatextName(paratext_username !== '');
     } else setHasParatextName(true);
@@ -665,7 +667,7 @@ export function Transcriber(props: IProps) {
       );
     } else {
       getParatextText(
-        auth,
+        accessToken || '',
         remoteIdNum('passage', passage.id, memory.keyMap),
         artifactId && remoteId('artifacttype', artifactId, memory.keyMap),
         errorReporter,
@@ -727,6 +729,7 @@ export function Transcriber(props: IProps) {
     transcribed: ActivityStates.Approved,
     needsNewTranscription: ActivityStates.Transcribed,
   };
+
   const forcePosition = (position: number) => {
     setDefaultPosition(playedSecsRef.current || 0);
     setDefaultPosition(position);
@@ -734,10 +737,7 @@ export function Transcriber(props: IProps) {
   const handleSubmit = async () => {
     if (next.hasOwnProperty(state)) {
       let nextState = next[state];
-      if (
-        nextState === ActivityStates.Approved &&
-        projType.toLowerCase() !== 'scripture'
-      )
+      if (nextState === ActivityStates.Approved && noParatext)
         nextState = ActivityStates.Done;
       await save(nextState, 0, segmentsRef.current, '');
       forcePosition(0);
@@ -760,11 +760,10 @@ export function Transcriber(props: IProps) {
   ];
 
   const handleAssign = async (curState: string) => {
-    const secRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord(section)
-    );
+    const secRec = findRecord(memory, 'section', section.id);
     const role = stateRole[curState];
     if (
+      secRec &&
       role &&
       projRole &&
       roleHierarchy.indexOf(camel2Title(role) as RoleNames) <=
@@ -942,14 +941,6 @@ export function Transcriber(props: IProps) {
   };
 
   const handleAutosave = async () => {
-    console.log(
-      'do autosave? not playing',
-      !playingRef.current,
-      'not saving',
-      !saving.current,
-      'changed',
-      transcriptionIn.current !== transcriptionRef.current?.firstChild?.value
-    );
     if (
       !playingRef.current &&
       !saving.current &&
@@ -1004,45 +995,28 @@ export function Transcriber(props: IProps) {
     playingRef.current = newPlaying;
   };
 
-  const handleWorkflow = async () => {
-    if (changed) await handleSave();
-    localStorage.removeItem(localUserKey(LocalKey.jumpBack));
-    setView(jumpBack || '#');
-  };
-
-  const noPull = React.useMemo(
+  const noParatext = React.useMemo(
     () =>
       [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
-        (slug || '') as ArtifactTypeSlug
-      ),
-    [slug]
+        (artifactTypeSlug || '') as ArtifactTypeSlug
+      ) || projType.toLowerCase() !== 'scripture',
+    [artifactTypeSlug, projType]
   );
-
-  const allowBack = React.useMemo(() => {
-    return jumpBack && jumpBack.split('/').pop() === pasId;
-  }, [jumpBack, pasId]);
-
-  if (view) return <StickyRedirect to={view} />;
+  useEffect(() => {
+    setArtifactTypeSlug(
+      slug
+        ? slug
+        : artifactId
+        ? slugFromId(artifactId)
+        : ArtifactTypeSlug.Vernacular
+    );
+  }, [slug, artifactId, slugFromId]);
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} style={paperStyle}>
-        {allDone && !props.defaultWidth ? (
-          <div>
-            {allowBack && (
-              <div className={classes.grow}>
-                <div className={classes.grow}>{'\u00A0'}</div>
-                <Button
-                  id="back-to-workflow"
-                  onClick={handleWorkflow}
-                  variant="contained"
-                >
-                  {t.backToWorkflow}
-                </Button>
-              </div>
-            )}
-            <AllDone />
-          </div>
+        {allDone ? (
+          <AllDone />
         ) : (
           <Grid container direction="column" style={style}>
             {props.defaultWidth === undefined && (
@@ -1058,17 +1032,6 @@ export function Transcriber(props: IProps) {
                     allBookData={allBookData}
                   />
                 </Grid>
-                {allowBack && (
-                  <Grid item md={3} container alignContent="flex-end">
-                    <Button
-                      id="back-to-workflow"
-                      onClick={handleWorkflow}
-                      variant="contained"
-                    >
-                      {t.backToWorkflow}
-                    </Button>
-                  </Grid>
-                )}
               </Grid>
             )}
             <Wrapper>
@@ -1085,7 +1048,7 @@ export function Transcriber(props: IProps) {
                     {role === 'transcriber' &&
                       hasParatextName &&
                       paratextProject &&
-                      !noPull && (
+                      !noParatext && (
                         <Grid item>
                           <LightTooltip title={t.pullParatextTip}>
                             <span>
@@ -1111,7 +1074,11 @@ export function Transcriber(props: IProps) {
                           id="audioPlayer"
                           allowRecord={false}
                           allowAutoSegment={true}
-                          allowSegment={selected !== '' && role !== 'view'}
+                          allowSegment={
+                            selected !== '' && role !== 'view'
+                              ? NamedRegions.Transcription
+                              : undefined
+                          }
                           allowZoom={true}
                           allowSpeed={true}
                           size={playerSize}

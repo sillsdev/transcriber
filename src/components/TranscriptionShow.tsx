@@ -3,7 +3,6 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, ITranscriptionShowStrings } from '../model';
 import localStrings from '../selector/localize';
-import { makeStyles } from '@material-ui/core/styles';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -17,7 +16,7 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FaCopy } from 'react-icons/fa';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
@@ -27,13 +26,6 @@ import {
   useTranscription,
   related,
 } from '../crud';
-
-const useStyles = makeStyles({
-  actions: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-});
 
 interface IStateProps {
   t: ITranscriptionShowStrings;
@@ -49,12 +41,12 @@ interface IProps extends IRecordProps, IStateProps {
   visible: boolean;
   closeMethod?: () => void;
   exportId?: string | null;
+  version?: number;
 }
 
 function TranscriptionShow(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
-  const { id, isMediaId, t, visible, closeMethod, exportId } = props;
-  const classes = useStyles();
+  const { id, isMediaId, t, visible, closeMethod, exportId, version } = props;
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [open, setOpen] = useState(visible);
@@ -62,7 +54,7 @@ function TranscriptionShow(props: IProps) {
   const [transcription, setTranscription] = useState('');
   const [fontData, setFontData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
-  const getTranscription = useTranscription(true);
+  const getTranscription = useTranscription(true, undefined, version);
   const loadStatus = (status: string) => {
     setFontStatus(status);
   };
@@ -110,7 +102,12 @@ function TranscriptionShow(props: IProps) {
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="transShowDlg">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="transShowDlg"
+        disableEnforceFocus
+      >
         <DialogTitle id="transShowDlg">{t.transcription}</DialogTitle>
         <DialogContent>
           <DialogContentText>{t.transcriptionDisplay}</DialogContentText>
@@ -148,7 +145,9 @@ function TranscriptionShow(props: IProps) {
             />
           )}
         </DialogContent>
-        <DialogActions className={classes.actions}>
+        <DialogActions
+          sx={{ display: 'flex', justifyContent: 'space-between' }}
+        >
           <IconButton id="transCopy" onClick={handleCopy(transcription)}>
             <FaCopy />
           </IconButton>

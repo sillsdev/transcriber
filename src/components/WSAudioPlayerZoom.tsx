@@ -9,9 +9,9 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { LightTooltip } from '../control';
 import { IState, IWsAudioPlayerZoomStrings } from '../model';
 import { HotKeyContext } from '../context/HotKeyContext';
-import ZoomInIcon from '@material-ui/icons/ZoomIn';
-import ZoomOutIcon from '@material-ui/icons/ZoomOut';
-import ZoomWidthIcon from '@material-ui/icons/Pageview';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import ZoomOutIcon from '@mui/icons-material/ZoomOut';
+import ZoomWidthIcon from '@mui/icons-material/Pageview';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
 

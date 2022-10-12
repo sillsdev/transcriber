@@ -1,65 +1,49 @@
-import React, { useEffect } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as action from '../store';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Auth from '../auth/Auth';
+import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import { TokenContext } from '../context/TokenProvider';
 import { isElectron } from '../api-variable';
 import { Redirect } from 'react-router-dom';
 import { localeDefault } from '../utils';
 import { useGlobal } from 'reactn';
 import { LogLevel } from '@orbit/coordinator';
+import { GrowingSpacer } from '../control';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
-
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  appBar: {
-    display: 'flex',
-    flexDirection: 'row',
-    boxShadow: 'none',
-  },
-  version: {
-    alignSelf: 'center',
-  },
-});
 
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
 }
 
-interface IProps extends IDispatchProps {
-  auth: Auth;
-}
+interface IProps extends IDispatchProps {}
 
 export function Logout(props: IProps) {
-  const { auth } = props;
   const { logout } = useAuth0();
-  const classes = useStyles();
+  const { pathname } = useLocation();
+  const curPath = useRef('');
   const { fetchLocalization, setLanguage } = props;
   const [coordinator] = useGlobal('coordinator');
-  const [, setUser] = useGlobal('user');
+  const [user, setUser] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
   const [, setIsOffline] = useGlobal('offline');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
-  const [view, setView] = React.useState('');
+  const ctx = useContext(TokenContext).state;
+  const [view, setView] = useState('');
 
   const handleLogout = async () => {
     const wasOfflineOnly = offlineOnly;
     if (offlineOnly) setOfflineOnly(false);
     setUser('');
 
-    if (auth.accessToken) {
+    if (ctx.accessToken) {
       localStorage.removeItem('isLoggedIn');
       setIsOffline(isElectron);
       if (isElectron && coordinator?.sourceNames.includes('remote')) {
@@ -72,40 +56,70 @@ export function Logout(props: IProps) {
         coordinator.removeSource('remote');
         await coordinator.activate({ logLevel: LogLevel.Warnings });
       }
-      auth.logout();
-      !isElectron && logout({ returnTo: window.origin });
+      if (isElectron) {
+        ctx.logout();
+      } else {
+        logout({ returnTo: window.origin });
+      }
     }
     setView(wasOfflineOnly ? 'offline' : 'online');
   };
 
   useEffect(() => {
+    curPath.current = pathname;
+  }, [pathname]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
     setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
     if (!isElectron) {
-      auth.logout();
-      !isElectron && logout({ returnTo: window.origin });
+      // ctx.logout();
+      if (user) {
+        logout({ returnTo: window.origin });
+      } else {
+        timer = setTimeout(() => {
+          console.log(`timer fired path=${curPath.current}`);
+          if (curPath.current === '/logout') {
+            logout({ returnTo: window.origin });
+          }
+        }, 4000);
+      }
     } else handleLogout();
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   if (/online|offline/i.test(view)) return <Redirect to={`/access/${view}`} />;
 
   return (
-    <div className={classes.root}>
-      <AppBar className={classes.appBar} position="static" color="inherit">
+    <Box sx={{ width: '100%' }}>
+      <AppBar
+        position="static"
+        color="inherit"
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          boxShadow: 'none',
+        }}
+      >
         <Toolbar>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
+          <Typography variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
             {process.env.REACT_APP_SITE_TITLE}
           </Typography>
         </Toolbar>
-        <div className={classes.grow}>{'\u00A0'}</div>
-        <div className={classes.version}>
+        <GrowingSpacer />
+        <Box sx={{ alignSelf: 'center' }}>
           {version}
           <br />
           {buildDate}
-        </div>
+        </Box>
       </AppBar>
-    </div>
+    </Box>
   );
 }
 

@@ -1,28 +1,17 @@
-import React from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
-import { IState, IGroupSettingsStrings, RoleNames } from '../../model';
-import localStrings from '../../selector/localize';
-import {
-  FormLabel,
-  FormGroup,
-  List,
-  IconButton,
-  Grid,
-} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { RoleNames } from '../../model';
+import { FormLabel, FormGroup, List, IconButton, Grid } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import useStyles from './GroupSettingsStyles';
 import PersonItems from './PersonItems';
 import { useRole } from '../../crud';
+import { GrowingSpacer } from '../StepEditor';
 
-interface IStateProps {
-  t: IGroupSettingsStrings;
-}
 export interface IPerson {
   canDelete: boolean;
   user: string;
 }
-interface IProps extends IStateProps {
+interface IProps {
   detail: boolean;
   title: string;
   titledetail: string;
@@ -31,6 +20,8 @@ interface IProps extends IStateProps {
   add: () => void;
   del?: (id: string, name: string) => void;
   allUsers?: boolean;
+  noDeleteInfo?: string;
+  noDeleteAllUsersInfo?: string;
 }
 
 function TeamCol(props: IProps) {
@@ -57,7 +48,7 @@ function TeamCol(props: IProps) {
       <FormGroup className={classes.group}>
         <FormLabel className={classes.label}>
           {title} {titledetail}
-          <div className={classes.grow}>{'\u00A0'}</div>
+          <GrowingSpacer />
           {canEdit() && (
             <IconButton
               id={`teamColAdd${title}`}
@@ -86,8 +77,4 @@ function TeamCol(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'groupSettings' }),
-});
-
-export default connect(mapStateToProps)(TeamCol) as any;
+export default TeamCol;

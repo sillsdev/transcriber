@@ -1,36 +1,20 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { useParams, useLocation } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core';
+import { Box } from '@mui/material';
 import AppHead from '../components/App/AppHead';
 import { PlanProvider } from '../context/PlanContext';
 import ViewMode, { ViewOption } from '../control/ViewMode';
 import PlanTabs from '../components/PlanTabs';
 import { useUrlContext, useRole, useProjectType } from '../crud';
 import { forceLogin, localUserKey, LocalKey } from '../utils';
-import Auth from '../auth/Auth';
 import { UnsavedContext } from '../context/UnsavedContext';
 import StickyRedirect from '../components/StickyRedirect';
-
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-  },
-  teamScreen: {
-    display: 'flex',
-    paddingTop: '80px',
-  },
-});
-
-interface IProps {
-  auth: Auth;
-}
 
 interface ParamTypes {
   prjId: string;
 }
-export const PlanScreen = (props: IProps) => {
-  const classes = useStyles();
+export const PlanScreen = () => {
   const { pathname } = useLocation();
   const { prjId } = useParams<ParamTypes>();
   const setUrlContext = useUrlContext();
@@ -85,14 +69,14 @@ export const PlanScreen = (props: IProps) => {
   if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
 
   return (
-    <div className={classes.root}>
-      <AppHead {...props} SwitchTo={SwitchTo} />
-      <PlanProvider {...props}>
-        <div id="PlanScreen" className={classes.teamScreen}>
-          <PlanTabs {...props} checkSaved={checkSavedFn} />
-        </div>
+    <Box sx={{ width: '100%' }}>
+      <AppHead SwitchTo={SwitchTo} />
+      <PlanProvider>
+        <Box id="PlanScreen" sx={{ display: 'flex', paddingTop: '80px' }}>
+          <PlanTabs checkSaved={checkSavedFn} />
+        </Box>
       </PlanProvider>
-    </div>
+    </Box>
   );
 };
 

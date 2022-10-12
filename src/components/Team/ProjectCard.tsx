@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useGlobal, useEffect } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -8,7 +8,7 @@ import {
   Typography,
   Chip,
 } from '@material-ui/core';
-import ScriptureIcon from '@material-ui/icons/MenuBook';
+import ScriptureIcon from '@mui/icons-material/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
 import moment from 'moment';
 import { VProject, DialogMode } from '../../model';
@@ -29,7 +29,7 @@ import {
   related,
 } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
-import OfflineIcon from '@material-ui/icons/OfflinePin';
+import OfflineIcon from '@mui/icons-material/OfflinePin';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
       '& .MuiTypography-root': {
         cursor: 'default ',
       },
+      cursor: 'pointer',
     },
     card: {
       minWidth: 275,
@@ -88,7 +89,6 @@ export const ProjectCard = (props: IProps) => {
   const { project } = props;
   const ctx = React.useContext(TeamContext);
   const {
-    auth,
     loadProject,
     selectProject,
     setProjectParams,
@@ -101,6 +101,7 @@ export const ProjectCard = (props: IProps) => {
     cardStrings,
     vProjectStrings,
     projButtonStrings,
+    sections,
     doImport,
   } = ctx.state;
   const { getPlanName } = usePlan();
@@ -256,7 +257,11 @@ export const ProjectCard = (props: IProps) => {
 
   moment.locale(ctx.state.lang);
 
-  const sectionCount = projectSections(project);
+  const sectionCount = useMemo(
+    () => projectSections(project),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [project, sections.length]
+  );
 
   return (
     <div className={classes.root}>
@@ -337,7 +342,7 @@ export const ProjectCard = (props: IProps) => {
         isOpen={openIntegration}
         onOpen={setOpenIntegration}
       >
-        <IntegrationTab {...props} auth={auth} />
+        <IntegrationTab {...props} />
       </BigDialog>
       <BigDialog
         title={tpb.exportTitle.replace('{0}', getPlanName(project.id))}
@@ -346,7 +351,6 @@ export const ProjectCard = (props: IProps) => {
       >
         <ExportTab
           {...props}
-          auth={auth}
           projectPlans={projectPlans(projectId)}
           planColumn={true}
         />

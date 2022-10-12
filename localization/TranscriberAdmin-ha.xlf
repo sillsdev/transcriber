@@ -2091,7 +2091,7 @@
       </unit>
       <unit id="profile.sendDigest">
          <segment>
-            <source>Receive daily digests</source>
+            <source>Receive Email Notifications and Digests</source>
             <target/>
          </segment>
       </unit>
@@ -2197,15 +2197,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="scriptureTable.pasteInvalidColumnsGeneral">
+      <unit id="scriptureTable.pasteInvalidColumns">
          <segment>
-            <source>Invalid number of columns ({0}). Expecting 5 columns.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="scriptureTable.pasteInvalidColumnsScripture">
-         <segment>
-            <source>Invalid number of columns ({0}). Expecting 6 columns.</source>
+            <source>Invalid number of columns ({0}). Expecting {1} columns.</source>
             <target/>
          </segment>
       </unit>

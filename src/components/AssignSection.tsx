@@ -14,14 +14,11 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { makeStyles } from '@material-ui/core/styles';
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
   List,
   ListItem,
   ListItemIcon,
@@ -29,13 +26,18 @@ import {
   Paper,
   Radio,
   ListItemAvatar,
+  IconButton,
+} from '@mui/material';
+import {
+  Grid,
   Table,
   TableHead,
   TableRow,
   TableCell,
   TableBody,
-  IconButton,
-} from '@material-ui/core';
+  Box,
+  SxProps,
+} from '@mui/material';
 import UserAvatar from './UserAvatar';
 import {
   related,
@@ -47,21 +49,10 @@ import {
 } from '../crud';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import { UpdateLastModifiedBy, UpdateRelatedRecord } from '../model/baseModel';
+import { PriButton } from '../control';
 
-const useStyles = makeStyles({
-  gridRoot: {
-    margin: 'auto',
-  },
-  paper: {},
-  headerCell: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  grids: { minWidth: 650 },
-  avatar: {
-    margin: 10,
-  },
-});
+const headProps = { display: 'flex', alignItems: 'center' } as SxProps;
+const gridProps = { m: 'auto', p: 1 } as SxProps;
 
 interface IStateProps {
   t: IAssignSectionStrings;
@@ -91,7 +82,6 @@ function AssignSection(props: IProps) {
     visible,
     closeMethod,
   } = props;
-  const classes = useStyles();
   const [project] = useGlobal('project');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
@@ -242,6 +232,7 @@ function AssignSection(props: IProps) {
         maxWidth="md"
         onClose={handleClose}
         aria-labelledby="assignDlg"
+        disableEnforceFocus
       >
         <DialogTitle id="assignDlg">
           {t.title.replace('{0}', organizedBy)}
@@ -252,24 +243,24 @@ function AssignSection(props: IProps) {
             spacing={2}
             justifyContent="center"
             alignItems="flex-start"
-            className={classes.gridRoot}
+            sx={gridProps}
           >
-            <Paper className={classes.paper}>
-              <Table className={classes.grids} size="small">
+            <Paper>
+              <Table sx={{ minWidth: 650 }} size="small">
                 <TableHead>
                   <TableRow>
                     <TableCell>{organizedBy}</TableCell>
                     <TableCell align="right">
-                      <div className={classes.headerCell}>
+                      <Box sx={headProps}>
                         <EditorIcon />
                         {ts.editor}
-                      </div>
+                      </Box>
                     </TableCell>
                     <TableCell align="right">
-                      <div className={classes.headerCell}>
+                      <Box sx={headProps}>
                         <TranscriberIcon />
                         {ts.transcriber}
-                      </div>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -282,10 +273,10 @@ function AssignSection(props: IProps) {
             spacing={2}
             justifyContent="center"
             alignItems="flex-start"
-            className={classes.gridRoot}
+            sx={gridProps}
           >
             <Grid item>
-              <Paper className={classes.paper}>
+              <Paper>
                 <List dense component="div">
                   <ListItem key="head">
                     <IconButton>
@@ -298,7 +289,7 @@ function AssignSection(props: IProps) {
               </Paper>
             </Grid>
             <Grid item>
-              <Paper className={classes.paper}>
+              <Paper>
                 <List dense component="div">
                   <ListItem key="head">
                     <TranscriberIcon />
@@ -311,14 +302,9 @@ function AssignSection(props: IProps) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button
-            id="assignClose"
-            onClick={handleClose}
-            variant="contained"
-            color="primary"
-          >
+          <PriButton id="assignClose" onClick={handleClose}>
             {t.close}
-          </Button>
+          </PriButton>
         </DialogActions>
       </Dialog>
     </div>

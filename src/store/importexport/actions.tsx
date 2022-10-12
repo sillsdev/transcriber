@@ -19,7 +19,6 @@ import {
 } from '../../model';
 import * as actions from '../../store';
 import { API_CONFIG } from '../../api-variable';
-import Auth from '../../auth/Auth';
 import { ResourceDocument } from '@orbit/jsonapi';
 import {
   getSerializer,
@@ -50,10 +49,12 @@ import {
   findRecord,
   mediaArtifacts,
   IExportArtifacts,
+  ArtifactTypeSlug,
 } from '../../crud';
 import { logError, orbitInfo, Severity } from '../../utils';
 import Coordinator from '@orbit/coordinator';
 import { axiosPost } from '../../utils/axios';
+import { updateBackTranslationType } from '../../crud/updateBackTranslationType';
 
 export const exportComplete = () => (dispatch: any) => {
   dispatch({
@@ -72,10 +73,11 @@ export const exportProject =
     fingerprint: string,
     userid: number | string,
     numberOfMedia: number,
-    auth: Auth,
+    token: string | null,
     errorReporter: any, //global errorReporter
     pendingmsg: string,
     nodatamsg: string,
+    noNewAllowedmsg: string,
     localizedArtifact: string,
     getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
     target?: string,
@@ -97,7 +99,7 @@ export const exportProject =
         })
       ) as Project;
     };
-    if (!auth.accessToken || exportType === ExportType.ITFSYNC) {
+    if (!token || exportType === ExportType.ITFSYNC) {
       // equivalent to offline ie isElectron and not online
       electronExport(
         exportType,
@@ -108,6 +110,7 @@ export const exportProject =
         fingerprint,
         userid,
         nodatamsg,
+        noNewAllowedmsg,
         localizedArtifact,
         getOfflineProject,
         target,
@@ -160,12 +163,12 @@ export const exportProject =
         await axiosPost(
           `offlineData/project/export/${exportType}/${remProjectId}/${start}`,
           bodyFormData,
-          auth
+          token
         )
           // eslint-disable-next-line no-loop-func
           .then((response) => {
             var fr = response.data as FileResponse;
-            start = Number(fr.data.id);
+            start = Number(fr.id);
             switch (start) {
               case -1:
                 dispatch({
@@ -175,7 +178,7 @@ export const exportProject =
                 break;
               case -2:
                 dispatch({
-                  payload: errorStatus(undefined, fr.data.attributes.message),
+                  payload: errorStatus(undefined, fr.message),
                   type: EXPORT_ERROR,
                 });
                 break;
@@ -216,7 +219,7 @@ const importFromElectron =
     filename: string,
     file: Blob,
     projectid: number,
-    auth: Auth,
+    token: string | null,
     errorReporter: any, //global errorReporter
     pendingmsg: string,
     completemsg: string
@@ -229,18 +232,15 @@ const importFromElectron =
     var url = API_CONFIG.host + '/api/offlineData/project/import/' + filename;
     Axios.get(url, {
       headers: {
-        Authorization: 'Bearer ' + auth.accessToken,
+        Authorization: 'Bearer ' + token,
       },
     })
       .then((response) => {
-        const filename = response.data.data.attributes.message;
+        const filename = response.data.message;
         const xhr = new XMLHttpRequest();
         /* FUTURE TODO Limit is 5G, but it's recommended to use a multipart upload > 100M */
-        xhr.open('PUT', response.data.data.attributes.fileurl, true);
-        xhr.setRequestHeader(
-          'Content-Type',
-          response.data.data.attributes.contenttype
-        );
+        xhr.open('PUT', response.data.fileURL, true);
+        xhr.setRequestHeader('Content-Type', response.data.contentType);
         xhr.send(file.slice());
         xhr.onload = () => {
           if (xhr.status < 300) {
@@ -261,15 +261,15 @@ const importFromElectron =
 
             Axios.put(url, null, {
               headers: {
-                Authorization: 'Bearer ' + auth.accessToken,
+                Authorization: 'Bearer ' + token,
               },
             })
-              .then((response) => {
-                if (response.data.status === 200)
+              .then((putresponse) => {
+                if (putresponse.data.status === 200)
                   dispatch({
                     payload: {
                       status: completemsg,
-                      msg: response.data.message,
+                      msg: putresponse.data.message,
                     },
                     type: IMPORT_SUCCESS,
                   });
@@ -277,12 +277,12 @@ const importFromElectron =
                   logError(
                     Severity.error,
                     errorReporter,
-                    'import error' + response.data.message
+                    'import error' + putresponse.data.message
                   );
                   dispatch({
                     payload: errorStatus(
-                      response.data.status,
-                      response.data.message
+                      putresponse.data.status,
+                      putresponse.data.message
                     ),
                     type: IMPORT_ERROR,
                   });
@@ -326,7 +326,7 @@ export const importSyncFromElectron =
   (
     filename: string,
     file: Buffer,
-    auth: Auth,
+    token: string | null,
     errorReporter: any,
     pendingmsg: string,
     completemsg: string
@@ -337,7 +337,7 @@ export const importSyncFromElectron =
         filename,
         new Blob([file]),
         0,
-        auth,
+        token,
         errorReporter,
         pendingmsg,
         completemsg
@@ -349,7 +349,7 @@ export const importProjectFromElectron =
   (
     files: File[],
     projectid: number,
-    auth: Auth,
+    token: string | null,
     errorReporter: any,
     pendingmsg: string,
     completemsg: string
@@ -360,7 +360,7 @@ export const importProjectFromElectron =
         files[0].name,
         files[0],
         projectid,
-        auth,
+        token,
         errorReporter,
         pendingmsg,
         completemsg
@@ -377,9 +377,14 @@ export const importProjectToElectron =
     offlineOnly: boolean,
     AddProjectLoaded: (project: string) => void,
     reportError: typeof actions.doOrbitError,
+    getTypeId: (slug: string) => string | null,
     pendingmsg: string,
     completemsg: string,
-    oldfilemsg: string
+    oldfilemsg: string,
+    token: string | null,
+    user: string,
+    errorReporter: any,
+    offlineSetup: () => Promise<void>
   ) =>
   (dispatch: any) => {
     var tb: TransformBuilder = new TransformBuilder();
@@ -476,7 +481,12 @@ export const importProjectToElectron =
       var mediaids = (
         memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
       )
-        .filter((m) => planids.includes(related(m, 'plan')))
+        .filter(
+          (m) =>
+            planids.includes(related(m, 'plan')) &&
+            related(m, 'artifacttype') !==
+              getTypeId(ArtifactTypeSlug.IntellectualProperty)
+        )
         .map((m) => m.id);
       var discussionids = (
         memory.cache.query((q) => q.findRecords('discussion')) as Discussion[]
@@ -610,6 +620,7 @@ export const importProjectToElectron =
             dataDate
           )) || project;
       }
+
       return project;
     }
 
@@ -679,6 +690,15 @@ export const importProjectToElectron =
           if (oparray.length > 0) {
             await saveToMemory(oparray, 'remove extra records');
             await saveToBackup(oparray, 'remove extra records from backup');
+          }
+          if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
+            updateBackTranslationType(
+              memory,
+              token,
+              user,
+              errorReporter,
+              offlineSetup
+            );
           }
           AddProjectLoaded(project?.id || '');
           dispatch({

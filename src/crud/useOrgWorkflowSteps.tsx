@@ -88,9 +88,9 @@ export const useOrgWorkflowSteps = () => {
     var orgworkflowsteps = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('orgworkflowstep')
     ) as OrgWorkflowStep[];
-    if (orgworkflowsteps.length === 0) {
+    if (orgworkflowsteps.length === 0 && remote) {
       //check remote
-      orgworkflowsteps = (await memory.query((q: QueryBuilder) =>
+      orgworkflowsteps = (await remote.query((q: QueryBuilder) =>
         q.findRecords('orgworkflowstep')
       )) as OrgWorkflowStep[];
     }

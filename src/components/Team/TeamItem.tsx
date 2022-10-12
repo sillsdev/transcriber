@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { Grid, Paper, Typography, Button } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import GroupIcon from '@material-ui/icons/Group';
+import GroupIcon from '@mui/icons-material/Group';
 import { Organization, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
@@ -54,6 +54,7 @@ export const TeamItem = (props: IProps) => {
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setOrganization] = useGlobal('organization');
+  const [busy] = useGlobal('importexportBusy');
   const [editOpen, setEditOpen] = React.useState(false);
   const [showWorkflow, setShowWorkflow] = React.useState(false);
   const [deleteItem, setDeleteItem] = React.useState<Organization>();
@@ -146,6 +147,7 @@ export const TeamItem = (props: IProps) => {
                 id="teamSettings"
                 variant="contained"
                 onClick={handleSettings(team)}
+                disabled={busy}
               >
                 {t.settings}
               </Button>
@@ -167,7 +169,7 @@ export const TeamItem = (props: IProps) => {
         onOpen={setOpenMember}
         bp={BigDialogBp.md}
       >
-        <GroupTabs {...props} />
+        <GroupTabs />
       </BigDialog>
       <BigDialog
         title={t.editWorkflow.replace(

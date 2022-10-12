@@ -12,17 +12,22 @@ import { playerSelector } from '../../selector';
 import { NamedRegions, getSegments, updateSegments } from '../../utils';
 import { findRecord } from '../../crud';
 
-interface IStateProps {}
-
-interface IProps extends IStateProps {
-  allowSegment?: boolean;
+interface IProps {
+  allowSegment?: NamedRegions | undefined;
   saveSegments?: boolean;
   allowAutoSegment?: boolean;
+  suggestedSegments?: string;
   onSegment?: (segment: string) => void;
 }
 
 export function PassageDetailPlayer(props: IProps) {
-  const { allowSegment, allowAutoSegment, saveSegments, onSegment } = props;
+  const {
+    allowSegment,
+    allowAutoSegment,
+    saveSegments,
+    suggestedSegments,
+    onSegment,
+  } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const {
@@ -50,6 +55,7 @@ export function PassageDetailPlayer(props: IProps) {
     setPlaying,
     currentstep,
     playerSize,
+    currentSegmentIndex,
     setCurrentSegment,
     discussionMarkers,
     highlightDiscussion,
@@ -73,14 +79,24 @@ export function PassageDetailPlayer(props: IProps) {
       | MediaFile
       | undefined;
     const segs = mediafile?.attributes?.segments || '{}';
-    segmentsRef.current = getSegments(NamedRegions.BackTranslation, segs);
+    if (allowSegment) segmentsRef.current = getSegments(allowSegment, segs);
     setDefaultSegments(segmentsRef.current);
+    onSegment && onSegment(segmentsRef.current);
   };
 
   useEffect(() => {
-    loadSegments();
+    if (allowSegment && suggestedSegments) {
+      segmentsRef.current = suggestedSegments;
+      setDefaultSegments(segmentsRef.current);
+      onSegment && onSegment(segmentsRef.current);
+    }
+  }, [allowSegment, onSegment, suggestedSegments]);
+
+  useEffect(() => {
+    if (allowSegment) loadSegments();
+    else setDefaultSegments('{}');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [allowSegment]);
 
   const writeSegments = async () => {
     if (!savingRef.current) {
@@ -221,6 +237,7 @@ export function PassageDetailPlayer(props: IProps) {
         allowAutoSegment={allowAutoSegment}
         defaultRegionParams={defaultSegParams}
         segments={defaultSegments}
+        currentSegmentIndex={currentSegmentIndex}
         markers={discussionMarkers}
         onMarkerClick={handleHighlightDiscussion}
         setBusy={setPDBusy}
@@ -248,4 +265,4 @@ export function PassageDetailPlayer(props: IProps) {
   );
 }
 
-export default PassageDetailPlayer as any;
+export default PassageDetailPlayer;

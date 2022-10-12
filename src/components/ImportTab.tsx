@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { TokenContext } from '../context/TokenProvider';
 import { errorStatus, IAxiosStatus } from '../store/AxiosStatus';
 import {
   Project,
@@ -22,18 +23,18 @@ import { WithDataProps, withData } from '../mods/react-orbitjs';
 import Confirm from './AlertDialog';
 import {
   Button,
-  makeStyles,
-  Theme,
-  createStyles,
   Typography,
   LinearProgress,
   AppBar,
+  AppBarProps,
   Dialog,
+  DialogProps,
   DialogTitle,
   DialogContent,
   DialogActions,
-} from '@material-ui/core';
-import Auth from '../auth/Auth';
+  styled,
+  SxProps,
+} from '@mui/material';
 import localStrings from '../selector/localize';
 import { bindActionCreators } from 'redux';
 import Memory from '@orbit/memory';
@@ -55,8 +56,8 @@ import {
 } from '../crud';
 import ShapingTable from './ShapingTable';
 import { isElectron } from '../api-variable';
-import FilterIcon from '@material-ui/icons/FilterList';
-import SelectAllIcon from '@material-ui/icons/SelectAll';
+import FilterIcon from '@mui/icons-material/FilterList';
+import SelectAllIcon from '@mui/icons-material/SelectAll';
 import { doDataChanges } from '../hoc/DataChanges';
 import { HeadHeight } from '../App';
 import {
@@ -67,6 +68,31 @@ import {
   axiosError,
   tryParseJSON,
 } from '../utils';
+import { ActionRow, AltButton, iconMargin } from '../control';
+
+const headerProps = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+} as SxProps;
+
+const StyledDialog = styled(Dialog)<DialogProps>(({ theme }) => ({
+  '& .MuiDialog-paper': {
+    maxWidth: '90%',
+    minWidth: '600px',
+    minHeight: '80%',
+  },
+  '& .MuiTable-root': {
+    tableLayout: 'auto',
+    paddingRight: theme.spacing(1),
+  },
+}));
+
+const ProgressBar = styled(AppBar)<AppBarProps>(({ theme }) => ({
+  top: `calc(${HeadHeight}px - ${theme.spacing(1)})`,
+  zIndex: 100,
+  width: '100%',
+}));
 
 interface IStateProps {
   t: IImportStrings;
@@ -94,7 +120,6 @@ interface IProps
     IDispatchProps,
     IRecordProps,
     WithDataProps {
-  auth: Auth;
   project?: string;
   planName?: string;
   syncBuffer: Buffer | undefined;
@@ -111,7 +136,6 @@ export function ImportTab(props: IProps) {
     t,
     ta,
     ts,
-    auth,
     importComplete,
     importStatus,
     importProjectToElectron,
@@ -138,6 +162,7 @@ export function ImportTab(props: IProps) {
   const [errorReporter] = useGlobal('errorReporter');
   const [user] = useGlobal('user');
   const [isOffline] = useGlobal('offline');
+  const token = useContext(TokenContext).state.accessToken;
   const { showMessage } = useSnackBar();
   const [changeData, setChangeData] = useState(Array<IRow>());
   const [importTitle, setImportTitle] = useState('');
@@ -207,62 +232,6 @@ export function ImportTab(props: IProps) {
     { columnName: 'old', aligh: 'left', wordWrapEnabled: true },
     { columnName: 'imported', aligh: 'left', wordWrapEnabled: true },
   ];
-  const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-      root: {
-        '& .MuiDialog-paper': {
-          maxWidth: '90%',
-          minWidth: '600px',
-          minHeight: '80%',
-        },
-        '& .MuiTable-root': {
-          tableLayout: 'auto',
-          paddingRight: theme.spacing(1),
-        },
-      },
-      container: {
-        display: 'flex',
-        margin: theme.spacing(4),
-      },
-      paper: {},
-      actions: {
-        paddingBottom: 16,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-      },
-      button: {
-        margin: theme.spacing(1),
-        variant: 'outlined',
-        color: 'primary',
-      },
-      label: { margin: theme.spacing(4) },
-      textarea: {
-        width: '100%',
-        border: 'none',
-        outline: 'none',
-        resize: 'none',
-        'background-color': 'transparent',
-      },
-      icon: {
-        marginLeft: theme.spacing(1),
-      },
-      grow: {
-        flexGrow: 1,
-      },
-      dialogHeader: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-      },
-      progress: {
-        top: `calc(${HeadHeight}px - ${theme.spacing(1)}px)`,
-        zIndex: 100,
-        width: '100%',
-      },
-    })
-  );
-  const classes = useStyles();
 
   useEffect(() => {
     const electronImport = () => {
@@ -310,7 +279,7 @@ export function ImportTab(props: IProps) {
         importProjectFromElectron(
           files,
           remoteIdNum('project', project, memory.keyMap),
-          auth,
+          token,
           errorReporter,
           t.importPending,
           t.importComplete
@@ -324,7 +293,7 @@ export function ImportTab(props: IProps) {
     importSyncFromElectron(
       fileName,
       buffer,
-      auth,
+      token,
       errorReporter,
       t.importPending,
       t.importComplete
@@ -715,7 +684,7 @@ export function ImportTab(props: IProps) {
           importComplete();
           if (remote)
             doDataChanges(
-              auth,
+              token || '',
               coordinator,
               fingerprint,
               projectsLoaded,
@@ -744,13 +713,12 @@ export function ImportTab(props: IProps) {
   const isString = (what: any) => typeof what === 'string';
 
   return (
-    <Dialog
-      className={classes.root}
+    <StyledDialog
       open={isOpen}
       onClose={handleClose}
-      disableBackdropClick={true}
       disableEscapeKeyDown={true}
       aria-labelledby="importDlg"
+      disableEnforceFocus
     >
       <DialogTitle id="importDlg">
         {syncBuffer ? t.importSync : t.importProject + ' ' + (planName || '')}
@@ -759,52 +727,45 @@ export function ImportTab(props: IProps) {
         <div>
           <Typography variant="h5">{importTitle}</Typography>
           <br />
-          <Typography variant="subtitle2" className={classes.dialogHeader}>
+          <Typography variant="subtitle2" sx={headerProps}>
             {fileName}
           </Typography>
-          <Typography variant="h4" className={classes.dialogHeader}>
+          <Typography variant="h4" sx={headerProps}>
             {importProject}
           </Typography>
           <br />
-          <Typography variant="body1" className={classes.dialogHeader}>
+          <Typography variant="body1" sx={headerProps}>
             {importStatus
               ? importStatus.statusMsg +
                 (importStatus.errMsg !== '' ? ': ' + importStatus.errMsg : '')
               : ''}
           </Typography>
           {changeData.length > 0 && (
-            <div className={classes.actions}>
-              <div className={classes.grow}>{'\u00A0'}</div>
-              <Button
+            <ActionRow>
+              <AltButton
                 id="importCopy"
                 key="copy"
                 aria-label={t.copy}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
                 onClick={handleCopy}
                 title={t.copy}
               >
                 {t.copy}
-              </Button>
-              <Button
+              </AltButton>
+              <AltButton
                 id="importFilt"
                 key="filter"
                 aria-label={t.filter}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
                 onClick={handleFilter}
                 title={t.showHideFilter}
               >
                 {t.filter}
                 {filter ? (
-                  <SelectAllIcon className={classes.icon} />
+                  <SelectAllIcon sx={iconMargin} />
                 ) : (
-                  <FilterIcon className={classes.icon} />
+                  <FilterIcon sx={iconMargin} />
                 )}
-              </Button>
-            </div>
+              </AltButton>
+            </ActionRow>
           )}
           {changeData.length > 0 && (
             <ShapingTable
@@ -821,13 +782,9 @@ export function ImportTab(props: IProps) {
             />
           )}
           {!importStatus || (
-            <AppBar
-              position="fixed"
-              className={classes.progress}
-              color="inherit"
-            >
+            <ProgressBar position="fixed" color="inherit">
               <LinearProgress variant="indeterminate" />
-            </AppBar>
+            </ProgressBar>
           )}
           <MediaUpload
             visible={uploadVisible}
@@ -849,7 +806,14 @@ export function ImportTab(props: IProps) {
           )}
         </div>
       </DialogContent>
-      <DialogActions className={classes.actions}>
+      <DialogActions
+        sx={{
+          pb: 2,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+        }}
+      >
         <Button
           id="importClose"
           onClick={handleClose}
@@ -860,7 +824,7 @@ export function ImportTab(props: IProps) {
           {t.close}
         </Button>
       </DialogActions>
-    </Dialog>
+    </StyledDialog>
   );
 }
 const mapStateToProps = (state: IState): IStateProps => ({

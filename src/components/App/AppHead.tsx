@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'reactn';
-import clsx from 'clsx';
 import { Redirect, useLocation } from 'react-router-dom';
 import { IState, IMainStrings } from '../../model';
 import { connect } from 'react-redux';
@@ -12,15 +11,16 @@ import {
   IconButton,
   LinearProgress,
   Tooltip,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core';
-import HomeIcon from '@material-ui/icons/Home';
-import SystemUpdateIcon from '@material-ui/icons/SystemUpdateAlt';
-import Auth from '../../auth/Auth';
+  Box,
+} from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
+import SystemUpdateIcon from '@mui/icons-material/SystemUpdateAlt';
 import { API_CONFIG, isElectron } from '../../api-variable';
+import { TokenContext } from '../../context/TokenProvider';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import HelpMenu from '../HelpMenu';
 import UserMenu from '../UserMenu';
+import { GrowingSpacer } from '../../control';
 import {
   resetData,
   exitElectronApp,
@@ -38,7 +38,7 @@ import { withBucket } from '../../hoc/withBucket';
 import { usePlan, useLoadStatic } from '../../crud';
 import Busy from '../Busy';
 import StickyRedirect from '../StickyRedirect';
-import CloudOffIcon from '@material-ui/icons/CloudOff';
+import CloudOffIcon from '@mui/icons-material/CloudOff';
 import ProjectDownloadAlert from '../ProjectDownloadAlert';
 import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
@@ -48,27 +48,8 @@ import JSONAPISource from '@orbit/jsonapi';
 
 const shell = isElectron ? require('electron').shell : null;
 
-const useStyles = makeStyles({
-  appBar: {
-    width: '100%',
-    display: 'flex',
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  progress: {
-    width: '100%',
-  },
-  spacing: {
-    padding: '12px',
-  },
-  twoIcon: {
-    minWidth: `calc(${48 * 2}px)`,
-  },
-  threeIcon: {
-    minWidth: `calc(${48 * 3}px)`,
-  },
-});
+const twoIcon = { minWidth: `calc(${48 * 2}px)` } as React.CSSProperties;
+const threeIcon = { minWidth: `calc(${48 * 3}px)` } as React.CSSProperties;
 
 interface INameProps {
   setView: React.Dispatch<React.SetStateAction<string>>;
@@ -117,15 +98,12 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
 
 interface IProps extends IStateProps {
-  auth: Auth;
   resetRequests: () => Promise<void>;
   SwitchTo?: React.FC;
 }
 
 export const AppHead = (props: IProps) => {
-  const { auth, resetRequests, SwitchTo, t, orbitStatus, orbitErrorMsg } =
-    props;
-  const classes = useStyles();
+  const { resetRequests, SwitchTo, t, orbitStatus, orbitErrorMsg } = props;
   const { pathname } = useLocation();
   const [errorReporter] = useGlobal('errorReporter');
   const [coordinator] = useGlobal('coordinator');
@@ -133,8 +111,10 @@ export const AppHead = (props: IProps) => {
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [connected] = useGlobal('connected');
+  const tokenCtx = useContext(TokenContext);
   const ctx = useContext(UnsavedContext);
   const { checkSavedFn, startSave, toolsChanged, anySaving } = ctx.state;
+  const [cssVars, setCssVars] = useState<React.CSSProperties>(twoIcon);
   const [view, setView] = useState('');
   const [busy] = useGlobal('remoteBusy');
   const [dataChangeCount] = useGlobal('dataChangeCount');
@@ -142,7 +122,7 @@ export const AppHead = (props: IProps) => {
   const [globalStore] = useGlobal();
   const [isChanged] = useGlobal('changed');
   const [lang] = useGlobal('lang');
-  const [exitAlert, setExitAlert] = React.useState(false);
+  const [exitAlert, setExitAlert] = useState(false);
   const isMounted = useMounted('apphead');
   const [version, setVersion] = useState('');
   const [updates] = useState(
@@ -151,7 +131,7 @@ export const AppHead = (props: IProps) => {
   const [latestVersion, setLatestVersion] = useGlobal('latestVersion');
   const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
   const [complete] = useGlobal('progress');
-  const [downloadAlert, setDownloadAlert] = React.useState(false);
+  const [downloadAlert, setDownloadAlert] = useState(false);
   const [updateTipOpen, setUpdateTipOpen] = useState(false);
   const [showTerms, setShowTerms] = useState('');
 
@@ -191,7 +171,8 @@ export const AppHead = (props: IProps) => {
       });
       return;
     }
-    localStorage.setItem(localUserKey(LocalKey.url), lastpath);
+    if (!lastpath.endsWith('null'))
+      localStorage.setItem(localUserKey(LocalKey.url), lastpath);
     if (!/Close/i.test(what)) {
       if (/ClearLogout/i.test(what)) {
         forceLogin();
@@ -216,11 +197,11 @@ export const AppHead = (props: IProps) => {
   };
 
   useEffect(() => {
-    if (auth.expiresAt === -1) {
+    if (tokenCtx.state.expiresAt === -1) {
       handleUserMenu('Logout');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth.expiresAt]);
+  }, [tokenCtx.state]);
 
   const downDone = () => {
     setDownloadAlert(false);
@@ -307,6 +288,11 @@ export const AppHead = (props: IProps) => {
 
   useEffect(() => {
     if (remote && latestVersion) checkStaticTables(latestVersion);
+    setCssVars(
+      latestVersion !== '' && latestVersion !== version && isElectron
+        ? threeIcon
+        : twoIcon
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remote, latestVersion]);
 
@@ -335,43 +321,36 @@ export const AppHead = (props: IProps) => {
   if (view === 'Terms') return <Redirect to="/terms" />;
   if (view === 'Privacy') return <Redirect to="/privacy" />;
   return (
-    <AppBar position="fixed" className={classes.appBar} color="inherit">
+    <AppBar
+      position="fixed"
+      sx={{ width: '100%', display: 'flex' }}
+      color="inherit"
+    >
       <>
         {complete === 0 || complete === 100 || (
-          <div className={classes.progress}>
+          <Box sx={{ width: '100%' }}>
             <LinearProgress id="prog" variant="determinate" value={complete} />
-          </div>
+          </Box>
         )}
         {(!busy && !saving && !dataChangeCount) || complete !== 0 || (
           <LinearProgress id="busy" variant="indeterminate" />
         )}
         <Toolbar>
           {projRole && <ProjectName setView={setView} />}
-          {!projRole && (
-            <span
-              className={clsx(classes.twoIcon, {
-                [classes.threeIcon]:
-                  latestVersion !== '' &&
-                  latestVersion !== version &&
-                  isElectron,
-              })}
-            >
-              {'\u00A0'}
-            </span>
-          )}
-          <div className={classes.grow}>{'\u00A0'}</div>
+          {!projRole && <span style={cssVars}>{'\u00A0'}</span>}
+          <GrowingSpacer />
           {(pathname === '/' || pathname.startsWith('/access')) && (
             <>
               <Typography variant="h6" noWrap>
                 {API_CONFIG.productName}
               </Typography>
-              <div className={classes.grow}>{'\u00A0'}</div>
+              <GrowingSpacer />
             </>
           )}
           {SwitchTo && <SwitchTo />}
           {'\u00A0'}
           {(isOffline || orbitStatus !== undefined || !connected) && (
-            <CloudOffIcon className={classes.spacing} color="action" />
+            <CloudOffIcon sx={{ p: '12pt' }} color="action" />
           )}
           {latestVersion !== '' && latestVersion !== version && isElectron && (
             <Tooltip
@@ -390,11 +369,11 @@ export const AppHead = (props: IProps) => {
           )}
           <HelpMenu online={!isOffline} />
           {pathname !== '/' && !pathname.startsWith('/access') && (
-            <UserMenu action={handleUserMenu} auth={auth} />
+            <UserMenu action={handleUserMenu} />
           )}
         </Toolbar>
         {!importexportBusy || <Busy />}
-        {downloadAlert && <ProjectDownloadAlert auth={auth} cb={downDone} />}
+        {downloadAlert && <ProjectDownloadAlert cb={downDone} />}
         <PolicyDialog
           isOpen={Boolean(showTerms)}
           content={showTerms}

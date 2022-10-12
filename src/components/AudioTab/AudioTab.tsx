@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import clsx from 'clsx';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../../store';
@@ -18,17 +17,19 @@ import localStrings from '../../selector/localize';
 import { withData, WithDataProps } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import JSONAPISource from '@orbit/jsonapi';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, AppBar } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-// import FilterIcon from '@material-ui/icons/FilterList';
-// import SelectAllIcon from '@material-ui/icons/SelectAll';
-import { ActionHeight, tabActions, actionBar } from '../PlanTabs';
+import { Box } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import {
+  AltButton,
+  GrowingSpacer,
+  PaddedBox,
+  TabActions,
+  TabAppBar,
+} from '../../control';
 import { useSnackBar } from '../../hoc/SnackBar';
 import BigDialog from '../../hoc/BigDialog';
 import AudioTable from './AudioTable';
 import Uploader from '../Uploader';
-import Auth from '../../auth/Auth';
 import {
   getMediaInPlans,
   usePlan,
@@ -36,7 +37,6 @@ import {
   VernacularTag,
 } from '../../crud';
 import { useGlobal } from 'reactn';
-import { HeadHeight } from '../../App';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
 import PassageChooser from './PassageChooser';
@@ -52,42 +52,6 @@ import {
 } from '.';
 import { IMatchData, makeMatchMap } from './makeRefMap';
 import { UnsavedContext } from '../../context/UnsavedContext';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-    },
-    paper: {},
-    bar: actionBar,
-    highBar: {
-      top: `${HeadHeight}px`,
-    },
-    content: {
-      paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
-    },
-    progress: {
-      width: '100%',
-    },
-    actions: tabActions,
-    grow: {
-      flexGrow: 1,
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-    icon: {
-      marginLeft: theme.spacing(1),
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    template: {
-      marginBottom: theme.spacing(2),
-    },
-  })
-);
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -109,22 +73,11 @@ interface IProps
   extends IStateProps,
     IDispatchProps,
     IRecordProps,
-    WithDataProps {
-  auth: Auth;
-}
+    WithDataProps {}
 
 export function AudioTab(props: IProps) {
-  const {
-    t,
-    ts,
-    doOrbitError,
-    mediaFiles,
-    passages,
-    sections,
-    auth,
-    allBookData,
-  } = props;
-  const classes = useStyles();
+  const { t, ts, doOrbitError, mediaFiles, passages, sections, allBookData } =
+    props;
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const [coordinator] = useGlobal('coordinator');
@@ -153,14 +106,17 @@ export function AudioTab(props: IProps) {
   const [planMedia, setPlanMedia] = useState<MediaFile[]>([]);
   const [uploadMedia, setUploadMedia] = useState<string>();
   const inProcess = React.useRef<boolean>(false);
+  const [speaker, setSpeaker] = useState('');
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
     doOrbitError,
   });
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(0);
   const cloudSync = useRef(false);
 
   const myToolId = 'AudioTab';
+
+  const handleRefresh = () => setRefresh(refresh + 1);
 
   const hasPassage = (pRow: number) => {
     for (let mediaId of Object.keys(attachMap)) {
@@ -174,9 +130,14 @@ export function AudioTab(props: IProps) {
     setUploadVisible(true);
   };
 
+  const handleNameChange = (name: string) => {
+    setSpeaker(name);
+  };
+
   const handleAutoMatch = () => setAutoMatch(!autoMatch);
 
   const handleAttachCancel = () => {
+    setUploadMedia(undefined);
     setAttachVisible(false);
     setPCheck(-1);
     setMCheck(-1);
@@ -200,11 +161,17 @@ export function AudioTab(props: IProps) {
       setComplete(Math.min((n * 100) / total, 100));
     }
     setAttachMap({});
-    if (cancelled.current) cancelled.current = false;
-    else showMessage(t.savingComplete);
+    if (cancelled.current) {
+      cancelled.current = false;
+      showMessage(
+        t.cancelling
+          .replace('{0}', n.toString())
+          .replace('{1}', total.toString())
+      );
+    } else showMessage(t.savingComplete);
     inProcess.current = false;
     saveCompleted(myToolId);
-    showMessage('Cloud Sync');
+    setTimeout(() => showMessage(t.cloudSync), 1500);
     requests.current = remote?.requestQueue.length;
     cloudSync.current = Boolean(requests.current);
     const progressMessage = () => {
@@ -287,10 +254,10 @@ export function AudioTab(props: IProps) {
   };
 
   useEffect(() => {
-    if (plan && mediaFiles.length > 0) {
+    if (plan) {
       setPlanMedia(getMediaInPlans([plan], mediaFiles, VernacularTag, true));
     }
-  }, [mediaFiles, plan]);
+  }, [mediaFiles, plan, refresh]);
 
   // Check if playItem changes
   useEffect(() => {
@@ -320,7 +287,6 @@ export function AudioTab(props: IProps) {
     };
     const newData = getMedia(planMedia, mediaData);
     setData(newData);
-    setRefresh(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planMedia, passages, sections, refresh]);
 
@@ -379,89 +345,56 @@ export function AudioTab(props: IProps) {
   };
 
   return (
-    <div className={classes.container}>
-      <div className={classes.paper}>
-        <AppBar
-          position="fixed"
-          className={clsx(classes.bar, {
-            [classes.highBar]: false,
-          })}
-          color="default"
-        >
-          <div className={classes.actions}>
+    <Box sx={{ display: 'flex' }}>
+      <div>
+        <TabAppBar position="fixed" color="default">
+          <TabActions>
             {projRole === RoleNames.Admin && (!isOffline || offlineOnly) && (
               <>
-                <Button
+                <AltButton
                   id="audUpload"
                   key="upload"
                   aria-label={ts.uploadMediaPlural}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
                   onClick={handleUpload}
                 >
                   {ts.uploadMediaPlural}
-                  <AddIcon className={classes.icon} />
-                </Button>
-                <Button
+                  <AddIcon sx={{ ml: 1 }} />
+                </AltButton>
+                <AltButton
                   id="audMatch"
                   key={t.autoMatch}
                   aria-label={t.autoMatch}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
                   onClick={handleAutoMatch}
                 >
                   {t.autoMatch}
-                </Button>
+                </AltButton>
               </>
             )}
-            <div className={classes.grow}>{'\u00A0'}</div>
+            <GrowingSpacer />
             {complete !== 0 && complete !== 100 && !cloudSync.current && (
-              <Button
+              <AltButton
                 id="uploadCancel"
                 aria-label={ts.cancel}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
                 onClick={handleUploadCancel}
               >
                 {ts.cancel}
-              </Button>
+              </AltButton>
             )}
-            {/* <Button
-              id="audFilt"
-              key="filter"
-              aria-label={t.filter}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handleFilter}
-              title={t.showHideFilter}
-            >
-              {t.filter}
-              {filter ? (
-                <SelectAllIcon className={classes.icon} />
-              ) : (
-                <FilterIcon className={classes.icon} />
-              )}
-            </Button> */}
-          </div>
-        </AppBar>
-        <div className={classes.content}>
+          </TabActions>
+        </TabAppBar>
+        <PaddedBox>
           {autoMatch && (
-            <div className={classes.template}>
+            <Box sx={{ mb: 2 }}>
               <Template
                 matchMap={matchMap}
                 options={{ data, pdata, attachMap } as IMatchData}
               />
-            </div>
+            </Box>
           )}
-          <div className={classes.row}>
+          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
             <AudioTable
               data={data}
-              auth={auth}
-              setRefresh={setRefresh}
+              setRefresh={handleRefresh}
               playItem={playItem}
               setPlayItem={setPlayItem}
               onAttach={onAttach}
@@ -485,20 +418,21 @@ export function AudioTab(props: IProps) {
                 />
               </BigDialog>
             )}
-          </div>
-        </div>
+          </Box>
+        </PaddedBox>
       </div>
       <Uploader
         recordAudio={false}
-        auth={auth}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}
         multiple={true}
         finish={afterUpload}
         cancelled={cancelled}
+        performedBy={speaker}
+        onSpeakerChange={handleNameChange}
       />
-    </div>
+    </Box>
   );
 }
 

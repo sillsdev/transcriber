@@ -17,13 +17,7 @@ import {
 import localStrings from '../../selector/localize';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import {
-  createStyles,
-  Grid,
-  makeStyles,
-  Theme,
-  Typography,
-} from '@material-ui/core';
+import { Grid, Typography, Box, BoxProps, styled } from '@mui/material';
 import useOwnerIds from './useOwnerIds';
 import useReviewerIds from './useReviewerIds';
 import useTranscriberIds from './useTranscriberIds';
@@ -35,21 +29,14 @@ import { related, useRole } from '../../crud';
 import { localizeRole } from '../../utils';
 import { ReplaceRelatedRecord } from '../../model/baseModel';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      backgroundColor: theme.palette.background.default,
-      marginTop: theme.spacing(3),
-      '& .MuiPaper-rounded': {
-        borderRadius: '8px',
-      },
-    },
-    title: {
-      marginBottom: theme.spacing(3),
-    },
-  })
-);
+const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
+  width: '100%',
+  backgroundColor: theme.palette.background.default,
+  marginTop: theme.spacing(3),
+  '& .MuiPaper-rounded': {
+    borderRadius: '8px',
+  },
+}));
 
 interface IStateProps {
   t: IGroupSettingsStrings;
@@ -72,7 +59,6 @@ interface IProps extends IStateProps, IRecordProps {
 function Team(props: IProps) {
   const { groupMemberships, users, orgMemberships, t, ts, selectedGroup } =
     props;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [project] = useGlobal('project');
   const [group, setGroup] = useGlobal('group');
@@ -206,8 +192,8 @@ function Team(props: IProps) {
   }, [project, selectedGroup]);
 
   return (
-    <div className={classes.root}>
-      <Typography variant="h6" className={classes.title}>
+    <StyledBox>
+      <Typography variant="h6" sx={{ mb: 3 }}>
         {t.transcriptionTitle}
       </Typography>
       <Grid container>
@@ -268,7 +254,7 @@ function Team(props: IProps) {
       ) : (
         <></>
       )}
-    </div>
+    </StyledBox>
   );
 }
 

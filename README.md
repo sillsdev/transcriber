@@ -100,7 +100,7 @@ REACT_APP_SNAGID=(bugsnag client id)
 REACT_APP_OFFLINE_not=true
 BROWSER=none
 REACT_APP_CALLBACK=http://localhost:3000/callback
-REACT_APP_SITE_TITLE=SIL Transcriber DEV
+REACT_APP_SITE_TITLE=Audio Project Manager DEV
 ```
 
 Example _env-config/.env.dev.local_:

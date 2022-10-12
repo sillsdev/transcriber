@@ -1,15 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
-import { IState, ISpellingStrings } from '../model';
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import { ISpellingStrings } from '../model';
+import { AppBar, Tabs, Tab, Typography, Box } from '@mui/material';
 import SpellLanguagePicker from './SpellLanguagePicker';
 import CustomList from './SpellCustomList';
+import { spellingSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -44,27 +39,16 @@ function a11yProps(index: any) {
   };
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
-interface IStateProps {
-  t: ISpellingStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   codes: string[];
   setCodes: (codes: string[]) => void;
   setChanged: (changed: boolean) => void;
 }
 
 export function SpellingTabs(props: IProps) {
-  const { codes, setCodes, setChanged, t } = props;
-  const classes = useStyles();
+  const { codes, setCodes, setChanged } = props;
   const [value, setValue] = React.useState(0);
+  const t: ISpellingStrings = useSelector(spellingSelector, shallowEqual);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
@@ -75,7 +59,7 @@ export function SpellingTabs(props: IProps) {
   };
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ flexGrow: 1, backgroundColor: 'background.paper' }}>
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="spelling tabs">
           <Tab label={t.dictionaries} {...a11yProps(0)} />
@@ -88,12 +72,8 @@ export function SpellingTabs(props: IProps) {
       <TabPanel value={value} index={1}>
         <CustomList />
       </TabPanel>
-    </div>
+    </Box>
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'spelling' }),
-});
-
-export default connect(mapStateToProps)(SpellingTabs);
+export default SpellingTabs;

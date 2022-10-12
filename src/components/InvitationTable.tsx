@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -14,12 +14,11 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem, Typography } from '@material-ui/core';
-import DropDownIcon from '@material-ui/icons/ArrowDropDown';
-import AddIcon from '@material-ui/icons/Add';
-import FilterIcon from '@material-ui/icons/FilterList';
-import SelectAllIcon from '@material-ui/icons/SelectAll';
+import { Menu, MenuItem, Typography, Box } from '@mui/material';
+import DropDownIcon from '@mui/icons-material/ArrowDropDown';
+import AddIcon from '@mui/icons-material/Add';
+import FilterIcon from '@mui/icons-material/FilterList';
+import SelectAllIcon from '@mui/icons-material/SelectAll';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import Invite, { IInviteData } from './Invite';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -28,35 +27,13 @@ import ShapingTable from './ShapingTable';
 import { related } from '../crud';
 import { localizeRole } from '../utils';
 import { useRole } from '../crud';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-    },
-    paper: {},
-    actions: {
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-    buttonIcon: {
-      marginLeft: theme.spacing(1),
-    },
-    editIcon: {
-      fontSize: 16,
-    },
-    addIcon: {},
-    link: {},
-  })
-);
+import {
+  ActionRow,
+  AltButton,
+  GrowingSpacer,
+  PriButton,
+  iconMargin,
+} from '../control';
 
 interface IRow {
   email: string;
@@ -105,7 +82,6 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
 
 export function InvitationTable(props: IProps) {
   const { t, ts, roles, invitations } = props;
-  const classes = useStyles();
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const { showMessage } = useSnackBar();
@@ -189,36 +165,30 @@ export function InvitationTable(props: IProps) {
     return projRole === RoleNames.Admin && !offline;
   };
   return (
-    <div className={classes.container}>
-      <div className={classes.paper}>
-        <div className={classes.actions}>
+    <Box sx={{ display: 'flex' }}>
+      <div>
+        <ActionRow>
           {canEdit() && (
             <>
-              <Button
+              <PriButton
                 id="inviteAdd"
                 key="add"
                 aria-label={t.invite}
-                variant="contained"
-                color="primary"
-                className={classes.button}
                 onClick={handleAdd}
               >
                 {t.invite}
-                <AddIcon className={classes.buttonIcon} />
-              </Button>
-              <Button
+                <AddIcon sx={iconMargin} />
+              </PriButton>
+              <AltButton
                 id="inviteAction"
                 key="action"
                 aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
                 aria-label={t.action}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
                 onClick={handleMenu}
               >
                 {t.action}
-                <DropDownIcon className={classes.buttonIcon} />
-              </Button>
+                <DropDownIcon sx={iconMargin} />
+              </AltButton>
               <Menu
                 id="action-menu"
                 anchorEl={actionMenuItem}
@@ -234,25 +204,22 @@ export function InvitationTable(props: IProps) {
               </Menu>
             </>
           )}
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <Button
+          <GrowingSpacer />
+          <AltButton
             id="inviteFilt"
             key="filter"
             aria-label={t.filter}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
             onClick={handleFilter}
             title={t.showHideFilter}
           >
             {t.filter}
             {filter ? (
-              <SelectAllIcon className={classes.buttonIcon} />
+              <SelectAllIcon sx={iconMargin} />
             ) : (
-              <FilterIcon className={classes.buttonIcon} />
+              <FilterIcon sx={iconMargin} />
             )}
-          </Button>
-        </div>
+          </AltButton>
+        </ActionRow>
         <ShapingTable
           columns={columnDefs}
           columnWidths={columnWidths}
@@ -277,7 +244,7 @@ export function InvitationTable(props: IProps) {
       ) : (
         <></>
       )}
-    </div>
+    </Box>
   );
 }
 

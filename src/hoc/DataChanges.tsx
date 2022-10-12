@@ -26,10 +26,12 @@ import {
   isElectron,
   OrbitNetworkErrorRetries,
 } from '../api-variable';
-import Auth from '../auth/Auth';
 import {
+  AcceptInvitation,
   findRecord,
+  GetUser,
   offlineProjectUpdateSnapshot,
+  related,
   remoteId,
   remoteIdGuid,
   SetUserLanguage,
@@ -37,11 +39,21 @@ import {
 import { currentDateTime, localUserKey, LocalKey } from '../utils';
 import { electronExport } from '../store/importexport/electronExport';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
-import { ExportType, IState, OfflineProject, Plan, VProject } from '../model';
+import {
+  ExportType,
+  GroupMembership,
+  Invitation,
+  IState,
+  OfflineProject,
+  OrganizationMembership,
+  Plan,
+  VProject,
+} from '../model';
 import IndexedDBSource from '@orbit/indexeddb';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { TokenContext } from '../context/TokenProvider';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { ReplaceRelatedRecord } from '../model/baseModel';
 interface IStateProps {}
@@ -52,7 +64,6 @@ interface IDispatchProps {
 }
 
 interface IProps extends IStateProps, IDispatchProps {
-  auth: Auth;
   children: JSX.Element;
 }
 const mapStateToProps = (state: IState): IStateProps => ({});
@@ -68,7 +79,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 
 export const doDataChanges = async (
-  auth: Auth,
+  token: string,
   coordinator: Coordinator,
   fingerprint: string,
   projectsLoaded: string[],
@@ -104,7 +115,7 @@ export const doDataChanges = async (
     relationship: string,
     record: RecordIdentity
   ) => {
-    var table = relationship;
+    let table = relationship;
     switch (relationship) {
       case 'transcriber':
       case 'editor':
@@ -120,7 +131,7 @@ export const doDataChanges = async (
     localOps: Operation[]
   ) => {
     if (offlineId) {
-      var myRecord = findRecord(memory, type, offlineId);
+      const myRecord = findRecord(memory, type, offlineId);
       if (myRecord) {
         localOps.push(
           tb.removeRecord({
@@ -132,24 +143,51 @@ export const doDataChanges = async (
     }
   };
 
+  const reloadOrgs = async (localId: string) => {
+    const orgmem = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'organizationmembership', id: localId })
+    ) as OrganizationMembership;
+    if (related(orgmem, 'user') === user) {
+      memory.sync(await remote.pull((q) => q.findRecords('organization')));
+      memory.sync(await remote.pull((q) => q.findRecords('orgworkflowstep')));
+      memory.sync(
+        await remote.pull((q) => q.findRecords('organizationmembership'))
+      );
+    }
+  };
+
+  const reloadProjects = async (localId: string) => {
+    const grpmem = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'groupmembership', id: localId })
+    ) as GroupMembership;
+    if (related(grpmem, 'user') === user) {
+      memory.sync(await remote.pull((q) => q.findRecords('group')));
+      memory.sync(await remote.pull((q) => q.findRecords('project')));
+      memory.sync(await remote.pull((q) => q.findRecords('plan')));
+      memory.sync(await remote.pull((q) => q.findRecords('groupmembership')));
+    }
+  };
+
   const processDataChanges = async (
     api: string,
     params: any,
     started: number
   ) => {
     try {
-      var response = await Axios.get(api, {
+      const response = await Axios.get(api, {
         params: params,
         headers: {
-          Authorization: 'Bearer ' + auth.accessToken,
+          Authorization: 'Bearer ' + token,
         },
       });
-      var data = response.data.data as DataChange;
+      const data = response.data?.data as DataChange | null;
+      if (data === null) return started;
       const changes = data?.attributes?.changes;
       const deletes = data?.attributes?.deleted;
       setDataChangeCount(changes.length + deletes.length);
       for (const table of changes) {
         if (table.ids.length > 0) {
+          if (!remote) return started;
           remote
             .pull((q: QueryBuilder) =>
               q
@@ -158,15 +196,17 @@ export const doDataChanges = async (
             )
             .then(async (t: Transform[]) => {
               for (const tr of t) {
-                var tb = new TransformBuilder();
-                var localOps: Operation[] = [];
-                var newOps: Operation[] = [];
-                var upRec: UpdateRecordOperation;
-                //await UpdateOfflineIds(tr.operations, tb, newOps);
+                const tb = new TransformBuilder();
+                const localOps: Operation[] = [];
+                let upRec: UpdateRecordOperation;
                 await memory.sync(await backup.push(tr.operations));
                 for (const o of tr.operations) {
                   if (o.op === 'updateRecord') {
                     upRec = o as UpdateRecordOperation;
+                    if (!upRec.record.relationships)
+                      //this is just an included record and wasn't changed
+                      continue;
+
                     switch (upRec.record.type) {
                       case 'section':
                         if (
@@ -206,26 +246,58 @@ export const doDataChanges = async (
                           tb,
                           localOps
                         );
+                        break;
+                      case 'intellectualproperty':
+                        DeleteLocalCopy(
+                          upRec.record.attributes?.offlineId,
+                          upRec.record.type,
+                          tb,
+                          localOps
+                        );
+                        break;
+                      case 'invitation':
+                        const userrec = GetUser(memory, user);
+                        if (
+                          (
+                            upRec.record as Invitation
+                          ).attributes?.email.toLowerCase() ===
+                          userrec.attributes.email.toLowerCase()
+                        )
+                          AcceptInvitation(remote, upRec.record as Invitation);
+                        break;
+                      case 'organizationmembership':
+                        reloadOrgs(upRec.record.id);
+                        break;
+                      case 'groupmembership':
+                        reloadProjects(upRec.record.id);
+                        break;
                     }
                   }
                 }
                 if (localOps.length > 0)
                   memory.sync(await backup.push(localOps));
-                if (newOps.length > 0) memory.update(newOps);
               }
             });
         }
       }
       setDataChangeCount(deletes.length);
-      var tb: TransformBuilder = new TransformBuilder();
+      const tb: TransformBuilder = new TransformBuilder();
 
-      for (var ix = 0; ix < deletes.length; ix++) {
-        var table = deletes[ix];
+      for (let ix = 0; ix < deletes.length; ix++) {
+        const table = deletes[ix];
         let operations: Operation[] = [];
         // eslint-disable-next-line no-loop-func
         table.ids.forEach((r) => {
           const localId = remoteIdGuid(table.type, r.toString(), memory.keyMap);
           if (localId) {
+            switch (table.type) {
+              case 'organizationmembership':
+                reloadOrgs(localId);
+                break;
+              case 'groupmembership':
+                reloadProjects(localId);
+                break;
+            }
             operations.push(tb.removeRecord({ type: table.type, id: localId }));
           }
         });
@@ -240,15 +312,15 @@ export const doDataChanges = async (
       return started;
     }
   };
-  var version = backup.cache.dbVersion;
+  const version = backup.cache.dbVersion;
 
-  var api = API_CONFIG.host + '/api/datachanges/v' + version.toString() + '/';
-  var start = 1;
-  var tries = 5;
+  const api = API_CONFIG.host + '/api/datachanges/v' + version.toString() + '/';
+  let start = 1;
+  let tries = 5;
   if (isElectron) {
-    for (var ix = 0; ix < projectsLoaded.length; ix++) {
-      var p = projectsLoaded[ix];
-      var op = getOfflineProject(p);
+    for (let ix = 0; ix < projectsLoaded.length; ix++) {
+      const p = projectsLoaded[ix];
+      const op = getOfflineProject(p);
       if (
         op.attributes?.snapshotDate &&
         Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
@@ -294,7 +366,7 @@ export const doDataChanges = async (
 };
 
 export function DataChanges(props: IProps) {
-  const { auth, children, setLanguage, resetOrbitError } = props;
+  const { children, setLanguage, resetOrbitError } = props;
   const [isOffline] = useGlobal('offline');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
@@ -306,6 +378,8 @@ export function DataChanges(props: IProps) {
   const [user] = useGlobal('user');
   const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
+  const ctx = useContext(TokenContext).state;
+  const { isAuthenticated } = ctx;
   const [busyDelay, setBusyDelay] = useState<number | null>(null);
   const [dataDelay, setDataDelay] = useState<number | null>(null);
   const [firstRun, setFirstRun] = useState(true);
@@ -325,8 +399,8 @@ export function DataChanges(props: IProps) {
     const defaultDataDelay = 1000 * 100;
 
     setFirstRun(dataDelay === null);
-    var newDelay =
-      connected && loadComplete && remote && auth?.isAuthenticated()
+    const newDelay =
+      connected && loadComplete && remote && isAuthenticated()
         ? dataDelay === null
           ? 10
           : defaultDataDelay
@@ -334,12 +408,12 @@ export function DataChanges(props: IProps) {
     setDataDelay(newDelay);
     if (!remote) setBusy(false);
     setBusyDelay(
-      remote && auth?.isAuthenticated()
+      remote && isAuthenticated()
         ? defaultBusyDelay * (connected ? 1 : 10)
         : null
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [remote, auth, loadComplete, connected, firstRun]);
+  }, [remote, ctx, loadComplete, connected, firstRun]);
   const updateBusy = () => {
     const checkBusy =
       user === '' || (remote && remote.requestQueue.length !== 0);
@@ -351,11 +425,11 @@ export function DataChanges(props: IProps) {
     } else if (checkBusy !== busy) setBusy(checkBusy);
   };
   const updateData = async () => {
-    if (!doingChanges.current && !busy && !saving && auth?.isAuthenticated()) {
+    if (!doingChanges.current && !busy && !saving && isAuthenticated()) {
       doingChanges.current = true; //attempt to prevent double calls
       setFirstRun(false);
       await doDataChanges(
-        auth,
+        ctx.accessToken || '',
         coordinator,
         fingerprint,
         projectsLoaded,
@@ -368,6 +442,7 @@ export function DataChanges(props: IProps) {
       doingChanges.current = false; //attempt to prevent double calls
     }
   };
+
   const backupElectron = () => {
     if (!busy && !saving && project !== '') {
       electronExport(
@@ -378,6 +453,7 @@ export function DataChanges(props: IProps) {
         project,
         fingerprint,
         user,
+        '',
         '',
         '',
         getOfflineProject

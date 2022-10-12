@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -64,7 +64,6 @@ import { debounce } from 'lodash';
 import AudacityManager from './AudacityManager';
 import AssignSection from '../AssignSection';
 import StickyRedirect from '../StickyRedirect';
-import Auth from '../../auth/Auth';
 import Uploader from '../Uploader';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import { UpdateRecord } from '../../model/baseModel';
@@ -133,7 +132,6 @@ interface IProps
     IRecordProps,
     WithDataProps {
   colNames: string[];
-  auth: Auth;
 }
 
 interface ParamTypes {
@@ -164,7 +162,6 @@ export function ScriptureTable(props: IProps) {
     mediafiles,
     workflowSteps,
     orgWorkflowSteps,
-    auth,
   } = props;
   const classes = useStyles();
   const { prjId } = useParams<ParamTypes>();
@@ -225,6 +222,7 @@ export function ScriptureTable(props: IProps) {
     doOrbitError,
   });
   const checkOnline = useCheckOnline(resetOrbitError);
+  const [speaker, setSpeaker] = useState('');
   const getStepsBusy = useRef(false);
   const [orgSteps, setOrgSteps] = useState<OrgWorkflowStep[]>([]);
   const getFilteredSteps = useFilteredSteps();
@@ -302,6 +300,56 @@ export function ScriptureTable(props: IProps) {
     origrowid.title = '';
     data[index] = origrowid;
     data[index + 1] = newrowid;
+  };
+
+  const findSection = (
+    myWorkflow: IWorkflow[],
+    sectionIndex: number,
+    before: boolean
+  ) => {
+    while (
+      sectionIndex >= 0 &&
+      sectionIndex < myWorkflow.length &&
+      (myWorkflow[sectionIndex].deleted ||
+        !isSectionRow(myWorkflow[sectionIndex]))
+    )
+      sectionIndex = sectionIndex + (before ? -1 : 1);
+    if (sectionIndex < 0 || sectionIndex === myWorkflow.length) return -1;
+    return sectionIndex;
+  };
+  const movePassageTo = (
+    myWorkflow: IWorkflow[],
+    i: number,
+    before: boolean
+  ) => {
+    let passageRow = { ...myWorkflow[i] };
+    let originalSectionIndex = findSection(myWorkflow, i, true);
+    let newSectionIndex = findSection(
+      myWorkflow,
+      before ? originalSectionIndex - 1 : i,
+      before
+    );
+    if (newSectionIndex < 0) return;
+    let swapRowIndex = before ? originalSectionIndex : newSectionIndex;
+    let swapRow = { ...myWorkflow[swapRowIndex] };
+
+    passageRow.sectionSeq = myWorkflow[newSectionIndex].sectionSeq;
+    passageRow.passageUpdated = currentDateTime();
+    myWorkflow = wfResequencePassages(
+      wfResequencePassages(
+        updateRowAt(
+          updateRowAt(myWorkflow, passageRow, swapRowIndex),
+          swapRow,
+          i
+        ),
+        i,
+        flat
+      ),
+      before ? newSectionIndex : originalSectionIndex,
+      flat
+    );
+    setWorkflow(myWorkflow);
+    setChanged(true);
   };
 
   const addPassageTo = (
@@ -388,7 +436,16 @@ export function ScriptureTable(props: IProps) {
     if (ix !== undefined) var { i } = getByIndex(workflow, ix);
     addPassageTo(workflow, i, before);
   };
-
+  const movePassage = (ix: number, before: boolean) => {
+    if (savingRef.current) {
+      showMessage(t.saving);
+      return;
+    }
+    if (flat) return;
+    //find the undeleted index...
+    var { i } = getByIndex(workflow, ix);
+    movePassageTo(workflow, i, before);
+  };
   const getByIndex = (wf: IWorkflow[], index: number) => {
     let n = 0;
     let i = 0;
@@ -459,10 +516,15 @@ export function ScriptureTable(props: IProps) {
 
   const handleDelete = async (what: string, where: number[]) => {
     if (what === 'Delete') {
-      if (savingRef.current) {
-        showMessage(t.saving);
-        return false;
-      }
+      await waitForIt(
+        'saving before delete',
+        () => {
+          console.log('waiting for save before deleting.');
+          return !savingRef.current;
+        },
+        () => false,
+        1500
+      );
       await markDelete(where[0]);
       return true;
     }
@@ -486,8 +548,7 @@ export function ScriptureTable(props: IProps) {
     }
     const { valid, addedWorkflow } = paste(rows);
     if (valid) {
-      const newWorkflow = [...workflow].concat(addedWorkflow);
-      setWorkflow(newWorkflow);
+      setWorkflow(workflow.concat(addedWorkflow));
       setChanged(true);
       return Array<Array<string>>();
     }
@@ -506,10 +567,9 @@ export function ScriptureTable(props: IProps) {
       const { wf, i } = getByIndex(workflow, c.row);
       const myWf = wf as MyWorkflow | undefined;
       const name = colNames[c.col];
-      if (
-        (c.col === secNumCol && !isValidNumber(c.value || '')) ||
-        (c.col === passNumCol && !isValidNumber(c.value || ''))
-      ) {
+      const isNumberCol = c.col === secNumCol || c.col === passNumCol;
+
+      if (isNumberCol && !isValidNumber(c.value || '')) {
         showMessage(s.nonNumber);
       } else if (myWf && myWf[name] !== c.value) {
         const isSection = c.col < 2;
@@ -522,7 +582,7 @@ export function ScriptureTable(props: IProps) {
         const value = name === 'book' ? findBook(c.value as string) : c.value;
         workflow[i] = {
           ...wf,
-          [name]: value,
+          [name]: isNumberCol ? parseInt(value ?? '') : value,
           sectionUpdated,
           passageUpdated,
         } as IWorkflow;
@@ -660,6 +720,10 @@ export function ScriptureTable(props: IProps) {
     setVersionItem('');
   };
 
+  const handleNameChange = (name: string) => {
+    setSpeaker(name);
+  };
+
   const updateLastModified = async () => {
     var planRec = getPlan(plan) as Plan;
     if (planRec !== null) {
@@ -753,13 +817,22 @@ export function ScriptureTable(props: IProps) {
           setComplete(Math.floor((90 * start) / numChanges) + 10);
           end = 200;
           while (!isSectionRow(workflow[start + end]) && end > 0) end -= 1;
-          if (end === 0) throw new Error('The section has > 200 passages');
+          if (end === 0) {
+            //find the end
+            end = 200;
+            while (
+              end < workflow.length &&
+              !isSectionRow(workflow[start + end])
+            )
+              end++;
+          }
           change = (await saveFn(workflow.slice(start, start + end))) || change;
         }
       }
       change = (await saveFn(workflow.slice(start))) || change;
       //update plan section count and lastmodified
       await updateLastModified();
+      //not sure we need to do this because its going to be requeried next
       if (change) setWorkflow([...workflow]);
       setBusy(false);
     };
@@ -873,6 +946,12 @@ export function ScriptureTable(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [workflow, width, colNames, flat]);
 
+  const rowdata = useMemo(
+    () => workflowSheet(workflow, colNames),
+    [workflow, colNames]
+  );
+
+  const rowinfo = useMemo(() => workflow.filter((w) => !w.deleted), [workflow]);
   if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
@@ -891,14 +970,15 @@ export function ScriptureTable(props: IProps) {
       <PlanSheet
         {...props}
         columns={columns}
-        rowData={workflowSheet(workflow, colNames)}
-        rowInfo={workflow.filter((w) => !w.deleted)}
+        rowData={rowdata}
+        rowInfo={rowinfo}
         bookCol={colNames.findIndex((v) => v === 'book')}
         bookMap={bookMap}
         bookSuggestions={bookSuggestions}
         action={handleDelete}
         addSection={addSection}
         addPassage={addPassage}
+        movePassage={movePassage}
         updateData={updateData}
         paste={handleTablePaste}
         lookupBook={handleLookupBook}
@@ -911,21 +991,21 @@ export function ScriptureTable(props: IProps) {
         onUpload={handleUpload}
         onRecord={handleRecord}
         onHistory={handleVersions}
-        auth={auth}
         toolId={toolId}
         t={s}
         ts={ts}
       />
-      <AssignSection
-        sections={getSectionsWhere(assignSections)}
-        visible={assignSectionVisible}
-        closeMethod={handleAssignClose()}
-      />
+      {assignSectionVisible && (
+        <AssignSection
+          sections={getSectionsWhere(assignSections)}
+          visible={assignSectionVisible}
+          closeMethod={handleAssignClose()}
+        />
+      )}
       <Uploader
         recordAudio={recordAudio}
         allowWave={true}
         defaultFilename={defaultFilename}
-        auth={auth}
         mediaId={uploadItem.current?.mediaId?.id || ''}
         importList={importList}
         isOpen={uploadVisible}
@@ -935,6 +1015,8 @@ export function ScriptureTable(props: IProps) {
         finish={afterUpload}
         cancelled={cancelled}
         passageId={uploadItem.current?.passageId?.id}
+        performedBy={speaker}
+        onSpeakerChange={handleNameChange}
       />
       {audacityItem?.wf?.passageId && (
         <AudacityManager
@@ -944,6 +1026,8 @@ export function ScriptureTable(props: IProps) {
           passageId={audacityItem?.wf?.passageId as RecordIdentity}
           mediaId={audacityItem?.wf?.mediaId?.id || ''}
           onImport={handleAudacityImport}
+          speaker={speaker}
+          onSpeaker={handleNameChange}
         />
       )}
       <BigDialog
@@ -951,7 +1035,7 @@ export function ScriptureTable(props: IProps) {
         isOpen={versionItem !== ''}
         onOpen={handleVerHistClose}
       >
-        <VersionDlg auth={auth} passId={versionItem} />
+        <VersionDlg passId={versionItem} />
       </BigDialog>
     </div>
   );

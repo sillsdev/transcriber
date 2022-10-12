@@ -27,6 +27,7 @@ import {
   getFingerprintArray,
   waitForIt,
 } from './utils';
+import { updateableFiles, staticFiles, localFiles } from './crud';
 import {
   isElectron,
   API_CONFIG,
@@ -64,7 +65,14 @@ export async function restoreBackup() {
       () => false,
       300
     );
-    await memory.sync(await backup.pull((q) => q.findRecords()));
+    // TODO: update this code when ugrading to orbit 0.17
+    const sortedFiles = updateableFiles
+      .concat(staticFiles)
+      .concat(localFiles)
+      .sort((i, j) => (i.sort <= j.sort ? -1 : 1));
+    for (let file of sortedFiles) {
+      await memory.sync(await backup.pull((q) => q.findRecords(file.table)));
+    }
 
     const loadedplans = new Set(
       (

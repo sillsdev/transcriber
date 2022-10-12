@@ -64,6 +64,7 @@ function GroupMemberAdd(props: IProps) {
     const fileRole: RoleNames =
       role === 'owner' ? RoleNames.Admin : (role as RoleNames);
     const roleId = getRoleId(fileRole);
+    //NET6 This works only because it is going to the cache. Online query would use an OR
     const groupMemberRecs: GroupMembership[] = memory.cache.query(
       (q: QueryBuilder) =>
         q.findRecords('groupmembership').filter(
@@ -97,7 +98,12 @@ function GroupMemberAdd(props: IProps) {
   };
 
   return (
-    <Dialog open={open} onClose={handleCancel} aria-labelledby="memberDlg">
+    <Dialog
+      open={open}
+      onClose={handleCancel}
+      aria-labelledby="memberDlg"
+      disableEnforceFocus
+    >
       <DialogTitle id="memberDlg">
         {t.addGroupMember.replace('{0}', localizeRole(role, ts, true))}
       </DialogTitle>

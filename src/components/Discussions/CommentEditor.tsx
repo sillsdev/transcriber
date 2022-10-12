@@ -1,9 +1,9 @@
 import { Button, TextField, Tooltip } from '@material-ui/core';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
-import SendIcon from '@material-ui/icons/Send';
-import CancelIcon from '@material-ui/icons/CancelOutlined';
-import MicIcon from '@material-ui/icons/MicOutlined';
+import SendIcon from '@mui/icons-material/Send';
+import CancelIcon from '@mui/icons-material/CancelOutlined';
+import MicIcon from '@mui/icons-material/MicOutlined';
 import { waitForIt } from '../../utils';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import MediaRecord from '../MediaRecord';

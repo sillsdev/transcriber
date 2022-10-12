@@ -1,22 +1,26 @@
 {
-  "name": "sil-transcriber",
-  "version": "2.15.9",
-  "description": "Flexibly manage audio-text files for Paratext or Audacity",
+  "name": "audio-project-manager",
+  "version": "2.16.0-alpha.1",
+  "description": "Flexible audio-text orality solution",
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^1.9.0",
     "@bugsnag/js": "^6.5.2",
     "@bugsnag/plugin-react": "^6.5.0",
-    "@devexpress/dx-react-chart": "^2.7.2",
-    "@devexpress/dx-react-chart-material-ui": "^2.7.2",
-    "@devexpress/dx-react-core": "^2.7.2",
-    "@devexpress/dx-react-grid": "^2.7.2",
-    "@devexpress/dx-react-grid-material-ui": "^2.7.2",
+    "@devexpress/dx-react-chart": "^3.0.4",
+    "@devexpress/dx-react-chart-material-ui": "^3.0.4",
+    "@devexpress/dx-react-core": "^3.0.4",
+    "@devexpress/dx-react-grid": "^3.0.4",
+    "@devexpress/dx-react-grid-material-ui": "^3.0.4",
     "@dr-kobros/react-webfont-loader": "^8.0.0",
     "@electron/remote": "^1.0.4",
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.61",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/material": "^5.8.7",
     "@orbit/coordinator": "^0.16.7",
     "@orbit/core": "^0.16.3",
     "@orbit/data": "^0.16.7",
@@ -39,9 +43,9 @@
     "keycode": "^2.2.1",
     "keytar": "~7.6.0",
     "lodash": "^4.17.20",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.34",
-    "mui-language-picker": "^1.1.15",
+    "mui-language-picker": "^1.2.3",
     "node-html-encoder": "0.0.2",
     "original-fs": "^1.1.0",
     "react": "^17.0.2",
@@ -166,21 +170,22 @@
     "url": "http://sil.org"
   },
   "build": {
-    "appId": "sil.lsdev.sil-transcriber-electron",
-    "productName": "SIL Transcriber Desktop",
+    "appId": "sil.lsdev.audio-project-manager-electron",
+    "productName": "Audio Project Manager Desktop",
     "copyright": "Copyright © 2020-2022 ${author}",
     "win": {
-      "icon": "public/favicon.png"
+      "icon": "public/icon.png"
     },
     "linux": {
-      "icon": "debian/sil-transcriber.png",
-      "desktop": "debian/sil-transcriber.desktop",
+      "icon": "debian/audio-project-manager.png",
+      "desktop": "debian/audio-project-manager.desktop",
       "target": [
         "deb"
       ]
     },
     "mac": {
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "icon": "public/icon.png"
     },
     "directories": {
       "buildResources": "assets"

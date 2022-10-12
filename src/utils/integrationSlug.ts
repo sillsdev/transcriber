@@ -4,11 +4,11 @@ export const integrationSlug = (
   exportType: string | undefined,
   offline: boolean
 ) => {
-  return exportType === ArtifactTypeSlug.BackTranslation && offline
-    ? 'paratextlocalbacktranslation'
-    : exportType === ArtifactTypeSlug.BackTranslation
-    ? 'paratextbacktranslation'
-    : offline
-    ? 'paratextLocal'
-    : 'paratext';
+  var type =
+    exportType === ArtifactTypeSlug.PhraseBackTranslation
+      ? 'backtranslation'
+      : exportType === ArtifactTypeSlug.WholeBackTranslation
+      ? 'wholebacktranslation'
+      : '';
+  return 'paratext' + (offline ? 'Local' : '') + type;
 };

@@ -20,12 +20,7 @@ import {
 } from '../../model';
 import Memory from '@orbit/memory';
 import { getSerializer } from '../../serializers/JSONAPISerializerCustom';
-import {
-  QueryBuilder,
-  RecordIdentity,
-  Record,
-  TransformBuilder,
-} from '@orbit/data';
+import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import {
   related,
   remoteId,
@@ -37,6 +32,9 @@ import {
   IExportArtifacts,
   IExportScripturePath,
   mediaArtifacts,
+  fileInfo,
+  updateableFiles,
+  staticFiles,
 } from '../../crud';
 import {
   dataPath,
@@ -46,6 +44,7 @@ import {
   createFolder,
 } from '../../utils';
 import IndexedDBSource from '@orbit/indexeddb';
+import IntellectualProperty from '../../model/intellectualProperty';
 
 export async function electronExport(
   exportType: ExportType,
@@ -56,6 +55,7 @@ export async function electronExport(
   fingerprint: string,
   userid: number | string,
   nodatamsg: string,
+  noNewallowed: string,
   localizedArtifact: string,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
   target?: string,
@@ -73,17 +73,12 @@ export async function electronExport(
     changedRecs: number
   ): FileResponse => {
     return {
-      data: {
-        attributes: {
-          message: fileName,
-          fileurl: 'file:////' + fullpath,
-          contenttype: 'application/' + exportType,
-          buffer: buffer,
-          changes: changedRecs,
-        },
-        type: 'file-responses',
-        id: '1',
-      },
+      message: fileName,
+      fileURL: 'file:////' + fullpath,
+      contentType: 'application/' + exportType,
+      buffer: buffer,
+      changes: changedRecs,
+      id: '1',
     };
   };
 
@@ -340,6 +335,36 @@ export async function electronExport(
       }
       return ds;
     };
+    const IntellectualProperties = (
+      project: Project | undefined,
+      remoteIds: boolean
+    ) => {
+      var ips = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('intellectualproperty')
+      ) as IntellectualProperty[];
+      if (project) {
+        ips = ips.filter(
+          (rec) =>
+            related(rec, 'organization') === related(project, 'organization')
+        );
+      }
+      if (remoteIds) {
+        ips.forEach((ip) => {
+          if (!remoteId('intellectualproperty', ip.id, memory.keyMap))
+            ip.attributes.offlineId = ip.id;
+          if (
+            !remoteId(
+              'mediafile',
+              related(ip, 'releaseMediafile'),
+              memory.keyMap
+            )
+          )
+            ip.attributes.offlineMediafileId = related(ip, 'releaseMediafile');
+        });
+      }
+      return ips;
+    };
+
     const FromMedia = (media: MediaFile[], remoteIds: boolean) => {
       if (remoteIds) {
         media.forEach((m) => {
@@ -399,6 +424,18 @@ export async function electronExport(
         ).filter((r) => Boolean(r?.keys?.remoteId) === needsRemoteIds);
       };
       switch (info.table) {
+        case 'organization':
+          if (project)
+            return [
+              memory.cache.query((q: QueryBuilder) =>
+                q.findRecord({
+                  type: 'organization',
+                  id: related(project, 'organization'),
+                })
+              ) as Organization,
+            ];
+          return defaultQuery(info.table);
+
         case 'project':
           if (project) return [project];
           return defaultQuery(info.table);
@@ -418,19 +455,15 @@ export async function electronExport(
 
         case 'user':
           if (project) {
-            var gms = GroupMemberships(project).map((gm) => gm.id);
+            var projusers = GroupMemberships(project).map((gm) =>
+              related(gm, 'user')
+            );
             var users = memory.cache.query((q: QueryBuilder) =>
               q.findRecords(info.table)
             ) as User[];
+
             return users.filter(
-              (u) =>
-                related(u, 'groupMemberships') &&
-                gms.some(
-                  (gm) =>
-                    related(u, 'groupMemberships')
-                      .map((ri: RecordIdentity) => ri.id)
-                      .indexOf(gm) >= 0
-                )
+              (u) => projusers.find((p) => p === u.id) !== undefined
             );
           }
           return defaultQuery(info.table);
@@ -459,7 +492,19 @@ export async function electronExport(
             } as IExportArtifacts);
             if (media) return FromMedia(media, needsRemoteIds);
           }
-          return FromPassages(info.table, project, needsRemoteIds);
+          var tmp = FromPassages(info.table, project, needsRemoteIds);
+          if (info.table === 'mediafile') {
+            //get IP media
+            var ip = IntellectualProperties(project, needsRemoteIds).map((i) =>
+              related(i, 'releaseMediafile')
+            );
+            var media = memory.cache.query((q: QueryBuilder) =>
+              q.findRecords(info.table)
+            ) as MediaFile[];
+            var ipmedia = media.filter((m) => ip.includes(m.id));
+            return tmp.concat(ipmedia);
+          }
+          return tmp;
 
         case 'discussion':
           return Discussions(project, needsRemoteIds);
@@ -476,6 +521,9 @@ export async function electronExport(
               })
             ) as Record[];
           return defaultQuery(info.table);
+
+        case 'intellectualproperty':
+          return IntellectualProperties(project, needsRemoteIds);
 
         default:
           //activitystate,integration,plantype,projecttype,role
@@ -522,10 +570,18 @@ export async function electronExport(
     const AddAll = (
       info: fileInfo,
       project: Project | undefined,
-      needsRemoteIds: boolean
+      needsRemoteIds: boolean,
+      allowNew: boolean = true
     ) => {
       let recs = GetTableRecs(info, project, needsRemoteIds);
       if (recs && Array.isArray(recs) && recs.length > 0) {
+        if (
+          needsRemoteIds &&
+          !allowNew &&
+          recs.filter((r) => !Boolean(r.keys?.remoteId)).length > 0
+        ) {
+          throw new Error(noNewallowed);
+        }
         if (!scripturePackage) {
           AddJsonEntry(info.table + 's', recs, info.sort);
         }
@@ -549,41 +605,6 @@ export async function electronExport(
       return true; //should never get here
     };
 
-    interface fileInfo {
-      table: string;
-      sort: string;
-    }
-    const updateableFiles = [
-      { table: 'project', sort: 'D' },
-      { table: 'user', sort: 'A' },
-      { table: 'groupmembership', sort: 'D' },
-      { table: 'section', sort: 'F' },
-      { table: 'passage', sort: 'G' },
-      { table: 'mediafile', sort: 'H' },
-      { table: 'passagestatechange', sort: 'H' },
-      { table: 'discussion', sort: 'I' },
-      { table: 'comment', sort: 'J' },
-      { table: 'sectionresourceuser', sort: 'H' },
-    ];
-    /* If these can change in electron, they must extend BaseModel instead of Record,
-        call UpdateRecord instead of t.updateRecord, and be moved up to the files array */
-    const staticFiles = [
-      { table: 'activitystate', sort: 'B' },
-      { table: 'artifactcategory', sort: 'C' },
-      { table: 'artifacttype', sort: 'C' },
-      { table: 'integration', sort: 'B' },
-      { table: 'organization', sort: 'B' },
-      { table: 'plantype', sort: 'B' },
-      { table: 'projecttype', sort: 'B' },
-      { table: 'role', sort: 'B' },
-      { table: 'group', sort: 'C' },
-      { table: 'organizationmembership', sort: 'C' },
-      { table: 'plan', sort: 'E' },
-      { table: 'projectintegration', sort: 'E' }, //do we care that they synced locally??
-      { table: 'workflowstep', sort: 'B' },
-      { table: 'orgworkflowstep', sort: 'C' },
-      { table: 'sectionresource', sort: 'G' },
-    ];
     const op = getOfflineProject(projRec.id);
     const imported = moment.utc(op.attributes.snapshotDate || '01/01/1900');
     if (!scripturePackage) {
@@ -636,7 +657,7 @@ export async function electronExport(
         break;
       default:
         updateableFiles.forEach(
-          (info) => (numRecs += AddAll(info, limit, needsRemoteIds))
+          (info) => (numRecs += AddAll(info, limit, needsRemoteIds, false))
         );
         staticFiles.forEach((info) => AddAll(info, limit, needsRemoteIds));
         AddFonts();
@@ -668,8 +689,9 @@ export async function electronExport(
       .map((o) => related(o, 'project')) as string[];
     projects = projects.filter((p) => ids.includes(p.id));
     backupZip = new AdmZip();
-    if (exportType === ExportType.FULLBACKUP) exportType = ExportType.PTF;
-    else {
+    if (exportType === ExportType.FULLBACKUP) {
+      exportType = ExportType.PTF;
+    } else {
       projects = projects.filter(
         (p) => remoteId('project', p.id, memory.keyMap) !== undefined
       );

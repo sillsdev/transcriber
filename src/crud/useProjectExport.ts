@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { useGlobal } from 'reactn';
 import * as actions from '../store';
 import { QueryBuilder } from '@orbit/data';
@@ -8,18 +9,17 @@ import {
   ExportType,
 } from '../model';
 import { getMediaInPlans, related, remoteIdNum, useOfflnProjRead } from '.';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import IndexedDBSource from '@orbit/indexeddb';
 
 interface IProps {
-  auth: Auth;
   exportProject: typeof actions.exportProject;
   t: ITranscriptionTabStrings;
   message?: string;
 }
 
 export const useProjectExport = (props: IProps) => {
-  const { auth, message } = props;
+  const { message } = props;
   const { exportProject, t } = props;
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
@@ -28,6 +28,7 @@ export const useProjectExport = (props: IProps) => {
   const [userId] = useGlobal('user');
   const [, setBusy] = useGlobal('importexportBusy');
   const [errorReporter] = useGlobal('errorReporter');
+  const token = useContext(TokenContext).state.accessToken;
   const getOfflineProject = useOfflnProjRead();
 
   return (exportType: ExportType, projectId: string) => {
@@ -58,10 +59,11 @@ export const useProjectExport = (props: IProps) => {
       fingerprint,
       remoteIdNum('user', userId, memory.keyMap),
       media.length,
-      auth,
+      token,
       errorReporter,
       message || t.exportingProject,
       t.noData.replace('{0}', ''),
+      t.offlineData,
       '',
       getOfflineProject
     );

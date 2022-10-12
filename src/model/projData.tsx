@@ -4,7 +4,7 @@ export interface ProjData extends Record {
   attributes: {
     json: string;
     startnext: number;
-    projectid: number;
+    projectId: number;
     snapshotdate: string;
   };
 }

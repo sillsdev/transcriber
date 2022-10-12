@@ -14,6 +14,7 @@ import { localeDefault } from '../utils';
 import * as actions from '../store';
 import { related } from '.';
 import { UpdateRelatedRecord } from '../model/baseModel';
+import JSONAPISource from '@orbit/jsonapi';
 
 export function getUserById(users: User[], id: string): User {
   let findit = users.filter((u) => u.id === id);
@@ -28,7 +29,15 @@ export function GetUser(memory: Memory, user: string): User {
   ) as any;
   return getUserById(userRec, user);
 }
-
+export async function AcceptInvitation(
+  remote: JSONAPISource,
+  invitation: Invitation
+) {
+  if (!invitation.attributes.accepted)
+    await remote.update((t: TransformBuilder) =>
+      t.replaceAttribute(invitation, 'accepted', true)
+    );
+}
 export function SetUserLanguage(
   memory: Memory,
   user: string,

@@ -6,16 +6,9 @@ import {
   MediaFile,
 } from '../../model';
 import localStrings from '../../selector/localize';
-import {
-  Button,
-  createStyles,
-  makeStyles,
-  Theme,
-  Typography,
-} from '@material-ui/core';
-import Auth from '../../auth/Auth';
+import { Button, Typography, SxProps, Box } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { useFetchMediaUrl, VernacularTag } from '../../crud';
+import { findRecord, useFetchMediaUrl, VernacularTag } from '../../crud';
 import { useGlobal } from 'reactn';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
@@ -30,32 +23,20 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import Uploader from '../Uploader';
 import AudacityManager from '../Workflow/AudacityManager';
 import { isElectron } from '../../api-variable';
-import { AudacityLogo } from '../../control';
-import AddIcon from '@material-ui/icons/LibraryAddOutlined';
+import { AudacityLogo, PriButton } from '../../control';
+import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
-import VersionsIcon from '@material-ui/icons/List';
+import VersionsIcon from '@mui/icons-material/List';
 import { PlanProvider } from '../../context/PlanContext';
+import SpeakerName from '../SpeakerName';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    button: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      maxHeight: '40px',
-      alignSelf: 'center',
-    },
-    status: {
-      marginRight: theme.spacing(2),
-      alignSelf: 'center',
-      display: 'block',
-      gutterBottom: 'true',
-    },
-    unsupported: {
-      color: theme.palette.secondary.light,
-    },
-  })
-);
+const buttonProps = {
+  mx: 1,
+  maxHeight: '40px',
+  alignSelf: 'center',
+} as SxProps;
+
 interface IStateProps {
   t: IMediaTabStrings;
   ts: ISharedStrings;
@@ -71,12 +52,11 @@ interface IRecordProps {
   mediafiles: Array<MediaFile>;
 }
 interface IProps extends IRecordProps, IStateProps, IDispatchProps {
-  auth: Auth;
   ready?: () => boolean;
 }
 const SaveWait = 500;
 export function PassageDetailRecord(props: IProps) {
-  const { auth, ready, ts } = props;
+  const { ready, ts } = props;
   const { mediafiles } = props;
   const { startSave, toolChanged, toolsChanged, saveRequested, waitForSave } =
     useContext(UnsavedContext).state;
@@ -86,7 +66,6 @@ export function PassageDetailRecord(props: IProps) {
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
-  const classes = useStyles();
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const { passage, mediafileId } = usePassageDetailContext();
@@ -100,6 +79,8 @@ export function PassageDetailRecord(props: IProps) {
   const [versionVisible, setVersionVisible] = useState(false);
   const [preload, setPreload] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
+  const [speaker, setSpeaker] = useState('');
+  const [hasRights, setHasRight] = useState(false);
 
   useEffect(() => {
     toolChanged(toolId, canSave);
@@ -113,10 +94,11 @@ export function PassageDetailRecord(props: IProps) {
 
   useEffect(() => {
     if (!mediafileId) {
-      fetchMediaUrl({ id: mediafileId, auth });
+      fetchMediaUrl({ id: mediafileId });
       setResetMedia(true);
-    } else if (mediafileId !== mediaState.id)
-      fetchMediaUrl({ id: mediafileId, auth });
+    } else if (mediafileId !== mediaState.id) {
+      fetchMediaUrl({ id: mediafileId });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafileId, passage]);
 
@@ -125,6 +107,18 @@ export function PassageDetailRecord(props: IProps) {
       passageDefaultFilename(passage?.id, memory, VernacularTag)
     );
   }, [memory, passage, mediafiles]);
+
+  useEffect(() => {
+    const mediaRec = findRecord(memory, 'mediafile', mediafileId) as
+      | MediaFile
+      | undefined;
+    const performer = mediaRec?.attributes?.performedBy;
+    if (performer) {
+      setSpeaker(performer);
+      setHasRight(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mediafileId, mediafiles]);
 
   const handleSave = () => {
     startSave(toolId);
@@ -181,12 +175,14 @@ export function PassageDetailRecord(props: IProps) {
   const handleVerHistClose = () => {
     setVersionVisible(false);
   };
+  const handleNameChange = (name: string) => setSpeaker(name);
+  const handleRights = (hasRights: boolean) => setHasRight(hasRights);
 
   return (
     <PlanProvider {...props}>
       <div>
         <Button
-          className={classes.button}
+          sx={buttonProps}
           id="pdRecordVersions"
           onClick={handleVersions}
           title={ts.versionHistory}
@@ -195,7 +191,7 @@ export function PassageDetailRecord(props: IProps) {
           {ts.versionHistory}
         </Button>
         <Button
-          className={classes.button}
+          sx={buttonProps}
           id="pdRecordUpload"
           onClick={handleUpload}
           title={!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
@@ -206,7 +202,7 @@ export function PassageDetailRecord(props: IProps) {
 
         {isElectron && (
           <Button
-            className={classes.button}
+            sx={buttonProps}
             id="pdAudacity"
             onClick={handleAudacity}
             title={ts.launchAudacity}
@@ -215,13 +211,20 @@ export function PassageDetailRecord(props: IProps) {
             {ts.launchAudacity}
           </Button>
         )}
+        <Box sx={{ py: 1 }}>
+          <SpeakerName
+            name={speaker}
+            onChange={handleNameChange}
+            onRights={handleRights}
+          />
+        </Box>
         <MediaRecord
           toolId={toolId}
           mediaId={mediafileId}
-          auth={auth}
           uploadMethod={uploadMedia}
           onReady={onReady}
           defaultFilename={defaultFilename}
+          allowRecord={hasRights}
           allowWave={true}
           showFilename={true}
           preload={preload}
@@ -231,26 +234,30 @@ export function PassageDetailRecord(props: IProps) {
           setDoReset={setResetMedia}
           metaData={
             <>
-              <Typography variant="caption" className={classes.status}>
+              <Typography
+                variant="caption"
+                sx={{
+                  mr: 2,
+                  alignSelf: 'center',
+                  display: 'block',
+                  gutterBottom: 'true',
+                }}
+              >
                 {statusText}
               </Typography>
-              <Button
+              <PriButton
                 id="rec-save"
-                className={classes.button}
                 onClick={handleSave}
-                variant="contained"
-                color="primary"
-                disabled={(ready && !ready()) || !canSave}
+                disabled={(ready && !ready()) || !canSave || !hasRights}
               >
                 {ts.save}
-              </Button>
+              </PriButton>
             </>
           }
         />
 
         <Uploader
           recordAudio={false}
-          auth={auth}
           importList={importList}
           isOpen={uploadVisible}
           onOpen={handleUploadVisible}
@@ -259,6 +266,8 @@ export function PassageDetailRecord(props: IProps) {
           finish={afterUpload}
           cancelled={cancelled}
           passageId={passage.id}
+          performedBy={speaker}
+          onSpeakerChange={handleNameChange}
         />
         <AudacityManager
           item={1}
@@ -267,13 +276,15 @@ export function PassageDetailRecord(props: IProps) {
           passageId={{ type: 'passage', id: passage.id } as RecordIdentity}
           mediaId={mediafileId}
           onImport={handleAudacityImport}
+          speaker={speaker}
+          onSpeaker={handleNameChange}
         />
         <BigDialog
           title={ts.versionHistory}
           isOpen={versionVisible}
           onOpen={handleVerHistClose}
         >
-          <VersionDlg auth={auth} passId={passage.id} />
+          <VersionDlg passId={passage.id} />
         </BigDialog>
       </div>
     </PlanProvider>

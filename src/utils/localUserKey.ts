@@ -5,7 +5,8 @@ export enum LocalKey {
   url = 'fromUrl',
   deeplink = 'deeplink',
   start = 'startNext',
-  jumpBack = 'jumpBack',
+  passage = 'passage',
+  compare = 'compare',
 }
 
 export const localUserKey = (id: LocalKey) => {

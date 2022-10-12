@@ -40,6 +40,7 @@ export function useWaveSurfer(
   height: number = 128,
   singleRegionOnly: boolean = false,
   timelineContainer?: any,
+  currentSegmentIndex?: number,
   onCurrentRegion?: (currentRegion: IRegion | undefined) => void
 ) {
   //const isMounted = useMounted('wavesurfer');
@@ -143,6 +144,7 @@ export function useWaveSurfer(
     setWaveSurfer,
   } = useWaveSurferRegions(
     singleRegionOnly,
+    currentSegmentIndex ?? -1,
     onRegion,
     onRegionPlayStatus,
     wsDuration,
@@ -214,22 +216,24 @@ export function useWaveSurfer(
       ws.on('marker-click', function (marker: any, e: any) {
         //the seek right before this will cause any regions to be removed
         //wait for that...
-        if (singleRegionOnly)
+        if (singleRegionOnly) {
           waitForIt(
             'wavesurfer region clear',
             () => {
               return wsGetRegions().length <= '{"regions":"[]"}'.length;
             },
-            () => {
-              return false;
-            },
+            () => false,
             100
           )
             .catch()
             .finally(() => {
               onMarkerClick(marker.time);
             });
-        else onMarkerClick(marker.time);
+        } else {
+          setTimeout(() => {
+            onMarkerClick(marker.time);
+          }, 500);
+        }
       });
       // ws.drawer.on('click', (event: any, progress: number) => {
       // });
@@ -269,6 +273,12 @@ export function useWaveSurfer(
   };
 
   const wsClear = (preventUndo: boolean = false) => {
+    if (loadRequests.current) {
+      //queue this
+      blobToLoad.current = undefined;
+      loadRequests.current = 2; //if there was another, we'll bypass it
+      return;
+    }
     if (wavesurferPlayingRef.current) wavesurferRef.current?.stop();
     if (!preventUndo) {
       setUndoBuffer(copyOriginal());
@@ -331,6 +341,9 @@ export function useWaveSurfer(
     } else if (blobToLoad.current) {
       wavesurfer()?.loadBlob(blobToLoad.current);
       blobToLoad.current = undefined;
+    } else {
+      loadRequests.current--;
+      wsClear();
     }
   };
 
@@ -374,7 +387,10 @@ export function useWaveSurfer(
     }
     return undefined;
   };
-  const wsSkip = (amt: number) => wavesurfer()?.skip(amt);
+  const wsSkip = (amt: number) => {
+    userInteractionRef.current = false;
+    wavesurfer()?.skip(amt);
+  };
 
   const wsSetHeight = (height: number) => wavesurfer()?.setHeight(height);
 

@@ -42,7 +42,6 @@ import {
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob, logError, Severity } from '../utils';
-import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 
 export const getPlanName = (plan: Plan) => {
@@ -151,7 +150,7 @@ const TranscriberContext = React.createContext({} as IContext);
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   children: React.ReactElement;
-  auth: Auth;
+  artifactTypeId?: string | null | undefined;
 }
 interface ParamTypes {
   prjId: string;
@@ -164,6 +163,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     mapStateToProps,
     mapDispatchToProps
   )((props: IProps) => {
+    const { artifactTypeId } = props;
+    const [isDetail] = useState(artifactTypeId !== undefined);
     const [reporter] = useGlobal('errorReporter');
     const { passages, mediafiles, sections } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
@@ -207,8 +208,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const fetching = useRef('');
 
     const artifactId = useMemo(
-      () => (slug ? getTypeId(slug) : VernacularTag),
-      [slug, getTypeId]
+      () => (slug ? getTypeId(slug) : artifactTypeId ?? VernacularTag),
+      [slug, artifactTypeId, getTypeId]
     );
 
     useEffect(() => {
@@ -265,7 +266,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           remoteId('passage', r.passage.id, memory.keyMap) || r.passage.id;
         const remId =
           remoteId('mediafile', selected, memory.keyMap) || selected;
-        if (pasId !== psgId || (slug && remId !== medId)) {
+        if (!isDetail && (pasId !== psgId || (slug && remId !== medId))) {
           view.current = `/work/${prjId}/${psgId}`;
           if (slug) view.current += `/${slug}/${medId}`;
         }
@@ -278,7 +279,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           fetching.current = r.mediafile.id;
           fetchMediaUrl({
             id: r.mediafile.id,
-            auth: props.auth,
           });
           resetBlob = true;
         }
@@ -504,7 +504,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     useEffect(() => {
       const playItem = state.playItem;
       const rowList: IRowData[] = [];
-      if (pasId && slug) {
+      if (pasId && isDetail) {
         var psg = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
         passageMediaRef.current = planMediaRef.current.filter(
           (m) => related(m, 'passage') === psg
@@ -514,7 +514,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       if (role !== '') {
         selectTasks(true, rowList, playItem); // assigned
         selectTasks(false, rowList, playItem); // unassigned
-        const newAllDone = rowList.length === 0;
+        const newAllDone = rowList.length === 0 && !isDetail;
         if (newAllDone !== state.allDone) setAllDone(newAllDone);
         // ALL OTHERS
         addTasks('', 'view', rowList, false, playItem);
@@ -556,6 +556,22 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         if (selected === '') {
           setSelected(rowList[1].mediafile.id, rowList);
         }
+      } else {
+        //reset mediastate
+        fetchMediaUrl({
+          id: '',
+        });
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            audioBlob: undefined,
+            index: 0,
+            selected: '',
+            playing: false,
+            playItem: '',
+            loading: false,
+          };
+        });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [role, planMedia, refreshed, pasId, medId]);
@@ -638,7 +654,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         if (forcerefresh) refresh(); //force the transcriber pane to refresh also
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [mediafiles]);
+    }, [mediafiles, pasId]);
 
     useEffect(() => {
       if (mediaState.url && mediaState.id === fetching.current) {

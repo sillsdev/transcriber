@@ -14,7 +14,8 @@ export const StickyRedirect = ({ to }: IProps) => {
   const [memory] = useGlobal('memory');
 
   useEffect(() => {
-    localStorage.setItem(localUserKey(LocalKey.url), to);
+    if (!to.endsWith('null'))
+      localStorage.setItem(localUserKey(LocalKey.url), to);
     if (
       to.length > 4 &&
       pathname.length > 4 &&

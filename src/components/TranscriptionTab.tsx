@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import clsx from 'clsx';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -26,7 +25,6 @@ import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
   IconButton,
@@ -35,21 +33,24 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  AppBar,
-  Menu,
-  MenuItem,
-  PopoverOrigin,
-  useTheme,
-} from '@material-ui/core';
-// import CopyIcon from '@material-ui/icons/FileCopy';
-import FilterIcon from '@material-ui/icons/FilterList';
-import SelectAllIcon from '@material-ui/icons/SelectAll';
-import ViewIcon from '@material-ui/icons/RemoveRedEye';
+  Box,
+} from '@mui/material';
+// import CopyIcon from '@mui/icons-material/FileCopy';
+import FilterIcon from '@mui/icons-material/FilterList';
+import SelectAllIcon from '@mui/icons-material/SelectAll';
+import ViewIcon from '@mui/icons-material/RemoveRedEye';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
+import {
+  GrowingSpacer,
+  PaddedBox,
+  TabActions,
+  TabAppBar,
+  PriButton,
+} from '../control';
 import { useSnackBar } from '../hoc/SnackBar';
 import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import {
   related,
   sectionNumber,
@@ -74,54 +75,9 @@ import {
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
 import { dateOrTime } from '../utils';
-import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 import AudioDownload from './AudioDownload';
-import { SelectExportType } from '../control';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-    },
-    paper: {},
-    bar: actionBar,
-    highBar: {
-      left: 'auto',
-      top: 'auto',
-      position: 'unset',
-      width: '95%',
-    },
-    content: {
-      paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
-    },
-    actions: tabActions,
-    grow: {
-      flexGrow: 1,
-    },
-    button: {
-      margin: theme.spacing(1),
-      color: 'primary',
-    },
-    icon: {
-      marginLeft: theme.spacing(1),
-    },
-    actionIcon: {},
-    actionWords: {
-      fontSize: 'small',
-    },
-    viewIcon: {
-      fontSize: 16,
-    },
-    link: {},
-    downloadButtons: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    typeSelect: {
-      paddingRight: theme.spacing(2),
-    },
-  })
-);
+import { SelectExportType, iconMargin } from '../control';
+import AudioExportMenu from './AudioExportMenu';
 
 interface IRow {
   id: string;
@@ -181,7 +137,6 @@ interface IProps
     IDispatchProps,
     IRecordProps,
     WithDataProps {
-  auth: Auth;
   projectPlans: Plan[];
   planColumn?: boolean;
   floatTop?: boolean;
@@ -191,7 +146,6 @@ interface IProps
 
 export function TranscriptionTab(props: IProps) {
   const {
-    auth,
     activityState,
     t,
     ts,
@@ -211,7 +165,6 @@ export function TranscriptionTab(props: IProps) {
     step,
     orgSteps,
   } = props;
-  const classes = useStyles();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [busy, setBusy] = useGlobal('importexportBusy');
   const [plan, setPlan] = useGlobal('plan');
@@ -223,6 +176,7 @@ export function TranscriptionTab(props: IProps) {
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const [lang] = useGlobal('lang');
+  const token = useContext(TokenContext).state.accessToken;
   const { showMessage, showTitledMessage } = useSnackBar();
   const [openExport, setOpenExport] = useState(false);
   const [data, setData] = useState(Array<IRow>());
@@ -235,20 +189,6 @@ export function TranscriptionTab(props: IProps) {
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
-  const [actionMenuItem, setActionMenuItem] =
-    React.useState<null | HTMLElement>(null);
-  const handleMenu = (e: React.MouseEvent<HTMLButtonElement>) =>
-    setActionMenuItem(e.currentTarget);
-  const handleClose = () => setActionMenuItem(null);
-  const [anchorSpec] = useState<PopoverOrigin>({
-    vertical: 'bottom',
-    horizontal: 'left',
-  });
-  const theme = useTheme();
-  const [transformSpec] = useState<PopoverOrigin>({
-    vertical: -theme.spacing(5),
-    horizontal: 'left',
-  });
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const { getOrganizedBy } = useOrganizedBy();
   const [fingerprint] = useGlobal('fingerprint');
@@ -259,7 +199,8 @@ export function TranscriptionTab(props: IProps) {
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.Retell,
     ArtifactTypeSlug.QandA,
-    ArtifactTypeSlug.BackTranslation,
+    ArtifactTypeSlug.WholeBackTranslation,
+    ArtifactTypeSlug.PhraseBackTranslation,
   ]);
   const [artifactType, setArtifactType] = useState<ArtifactTypeSlug>(
     artifactTypes[0]
@@ -358,10 +299,16 @@ export function TranscriptionTab(props: IProps) {
       fingerprint,
       user,
       media.length,
-      auth,
+      token,
       errorReporter,
       t.exportingProject,
-      t.noData.replace('{0}', localizedArtifactType(artifactType)),
+      t.noData.replace(
+        '{0}',
+        onlyTypeId !== undefined
+          ? localizedArtifactType(artifactType)
+          : t.changed
+      ),
+      t.offlineData,
       localizedArtifact,
       getOfflineProject,
       step,
@@ -373,7 +320,6 @@ export function TranscriptionTab(props: IProps) {
     else doProjectExport(ExportType.PTF);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const exportId = useMemo(
     () => (artifactType ? getTypeId(artifactType) : VernacularTag),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -437,22 +383,17 @@ export function TranscriptionTab(props: IProps) {
       showMessage(t.noData.replace('{0}', localizedArtifactType(artifactType)));
   };
 
-  // const handleDbl = () => {
-  //   setActionMenuItem(null);
-  //   setBusy(true);
-  //   doProjectExport(ExportType.DBL);
-  // };
-
-  const handleBurrito = () => {
-    setActionMenuItem(null);
-    setBusy(true);
-    doProjectExport(ExportType.BURRITO);
-  };
-
-  const handleAudioExport = () => {
-    setActionMenuItem(null);
-    setBusy(true);
-    doProjectExport(ExportType.AUDIO);
+  const handleAudioExportMenu = (what: string) => {
+    if (what === 'zip') {
+      setBusy(true);
+      doProjectExport(ExportType.AUDIO);
+    } else if (what === 'burrito') {
+      setBusy(true);
+      doProjectExport(ExportType.BURRITO);
+      // } else if (what === 'dbl') {
+      //   setBusy(true);
+      //   doProjectExport(ExportType.DBL);
+    }
   };
 
   const handleBackup = () => {
@@ -535,8 +476,8 @@ export function TranscriptionTab(props: IProps) {
         if (exportStatus.complete) {
           setBusy(false);
           if (exportFile && exportName === '') {
-            setExportName(exportFile.data.attributes.message);
-            setExportUrl(exportFile.data.attributes.fileurl);
+            setExportName(exportFile.message);
+            setExportUrl(exportFile.fileURL);
           }
         }
       }
@@ -646,24 +587,23 @@ export function TranscriptionTab(props: IProps) {
         key={value}
         aria-label={value}
         color="primary"
-        className={classes.link}
         onClick={handleSelect(restProps.row.id)}
       >
         {value}
-        <ViewIcon className={classes.viewIcon} />
+        <ViewIcon sx={{ fontSize: '16px', ml: 1 }} />
       </Button>
     </Table.Cell>
   );
 
   const ActionCell = ({ value, style, mediaId, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
-      <div className={classes.downloadButtons}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <IconButton
           id={'eaf-' + value}
           key={'eaf-' + value}
           aria-label={'eaf-' + value}
           color="default"
-          className={classes.actionWords}
+          sx={{ fontSize: 'small' }}
           onClick={handleEaf(value)}
           disabled={!hasTranscription(value)}
         >
@@ -671,8 +611,8 @@ export function TranscriptionTab(props: IProps) {
           <br />
           {t.export}
         </IconButton>
-        <AudioDownload auth={auth} mediaId={mediaId} />
-      </div>
+        <AudioDownload mediaId={mediaId} title={t.download} />
+      </Box>
     </Table.Cell>
   );
 
@@ -701,8 +641,9 @@ export function TranscriptionTab(props: IProps) {
             .findRecords('mediafile')
             .filter({ relation: 'passage', record: passRec })
         ) as MediaFile[];
-        if (state !== ActivityStates.NoMedia && media.length > 0)
-          return <ActionCell {...props} mediaId={media[0].id} />;
+        const latest = plan ? getMediaInPlans([plan], media, null, true) : [];
+        if (state !== ActivityStates.NoMedia && latest.length > 0)
+          return <ActionCell {...props} mediaId={latest[0].id} />;
         else return <td className="MuiTableCell-root" />;
       }
     }
@@ -728,6 +669,7 @@ export function TranscriptionTab(props: IProps) {
         onClose={closeNoChoice}
         aria-labelledby="transExpDlg"
         aria-describedby="transExpDesc"
+        disableEnforceFocus
       >
         <DialogTitle id="transExpDlg">{t.exportType}</DialogTitle>
         <DialogContent>
@@ -736,7 +678,7 @@ export function TranscriptionTab(props: IProps) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button id="expCancel" onClick={closeNoChoice} color="default">
+          <Button id="expCancel" onClick={closeNoChoice} sx={{ color: 'grey' }}>
             {t.cancel}
           </Button>
           <Button id="expPtf" onClick={doPTF} color="primary">
@@ -751,120 +693,79 @@ export function TranscriptionTab(props: IProps) {
   };
 
   return (
-    <div id="TranscriptionTab" className={classes.container}>
-      <div className={classes.paper}>
-        <AppBar
+    <Box id="TranscriptionTab" sx={{ display: 'flex' }}>
+      <div>
+        <TabAppBar
           position="fixed"
-          className={clsx(classes.bar, {
-            [classes.highBar]: planColumn || floatTop,
-          })}
+          highBar={planColumn || floatTop}
           color="default"
         >
-          <div className={classes.actions}>
+          <TabActions>
             {(planColumn || floatTop) && (
-              <Button
+              <PriButton
                 id="transExp"
                 key="export"
                 aria-label={t.exportProject}
-                variant="contained"
-                color="primary"
-                className={classes.button}
                 onClick={handleProjectExport}
                 title={t.exportProject}
                 disabled={busy}
               >
                 {t.exportProject}
-              </Button>
+              </PriButton>
             )}
-            <Button
+            <PriButton
               id="transCopy"
               key="copy"
               aria-label={t.copyTranscriptions}
-              variant="contained"
-              color="primary"
-              className={classes.button}
               onClick={handleCopyPlan}
               title={t.copyTip}
             >
               {t.copyTranscriptions +
                 (localizedArtifact ? ' (' + localizedArtifact + ')' : '')}
-            </Button>
+            </PriButton>
             {step && (
-              <Button
-                id="audioExport"
+              <AudioExportMenu
                 key="audioexport"
-                aria-label={`audio export`}
-                aria-owns={actionMenuItem ? 'audio-export-menu' : undefined}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleMenu}
-              >
-                {t.audioExport}
-              </Button>
+                action={handleAudioExportMenu}
+                localizedArtifact={localizedArtifact}
+                isScripture={isScripture}
+              />
             )}
-            <Menu
-              id="audio-export-menu"
-              anchorEl={actionMenuItem}
-              open={Boolean(actionMenuItem)}
-              onClose={handleClose}
-              getContentAnchorEl={null}
-              anchorOrigin={anchorSpec}
-              transformOrigin={transformSpec}
-            >
-              <MenuItem id="zipExport" key={3} onClick={handleAudioExport}>
-                {t.latestAudio +
-                  (localizedArtifact ? ' (' + localizedArtifact + ')' : '')}
-              </MenuItem>
-              {/* <MenuItem id="dblExport" key={1} onClick={handleDbl}>
-                {`Digital Bible Library`}
-              </MenuItem> */}
-              {isScripture && (
-                <MenuItem id="burritoExport" key={2} onClick={handleBurrito}>
-                  {t.scriptureBurrito}
-                </MenuItem>
-              )}
-            </Menu>
             {planColumn && offline && projects.length > 1 && (
-              <Button
+              <PriButton
                 id="transBackup"
                 key="backup"
                 aria-label={t.electronBackup}
-                variant="contained"
-                color="primary"
-                className={classes.button}
                 onClick={handleBackup}
                 title={t.electronBackup}
               >
                 {t.electronBackup}
-              </Button>
+              </PriButton>
             )}
-            <div className={classes.grow}>{'\u00A0'}</div>
+            <GrowingSpacer />
             <SelectExportType
               exportType={artifactType}
               exportTypes={artifactTypes}
               setExportType={setArtifactType}
             />
-            <Button
+            <PriButton
               id="transFilt"
               key="filter"
               aria-label={t.filter}
               variant="outlined"
-              color="primary"
-              className={classes.button}
               onClick={handleFilter}
               title={t.showHideFilter}
             >
               {t.filter}
               {filter ? (
-                <SelectAllIcon className={classes.icon} />
+                <SelectAllIcon sx={iconMargin} />
               ) : (
-                <FilterIcon className={classes.icon} />
+                <FilterIcon sx={iconMargin} />
               )}
-            </Button>
-          </div>
-        </AppBar>
-        <div className={classes.content}>
+            </PriButton>
+          </TabActions>
+        </TabAppBar>
+        <PaddedBox>
           <TreeGrid
             columns={columnDefs}
             columnWidths={columnWidths}
@@ -891,7 +792,7 @@ export function TranscriptionTab(props: IProps) {
             showSelection={false}
             defaultHiddenColumnNames={defaultHiddenColumnNames}
           />
-        </div>
+        </PaddedBox>
       </div>
 
       {passageId !== '' && (
@@ -908,7 +809,7 @@ export function TranscriptionTab(props: IProps) {
       <a ref={eafAnchor} href={dataUrl} download={dataName} />
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <WhichExportDlg />
-    </div>
+    </Box>
   );
 }
 

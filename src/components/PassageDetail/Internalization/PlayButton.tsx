@@ -1,6 +1,6 @@
 import { IconButton } from '@material-ui/core';
-import PlayIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
+import PlayIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
 import { LightTooltip } from '../../StepEditor';
 import { IMediaActionsStrings } from '../../../model';
 import { mediaActionsSelector } from '../../../selector';

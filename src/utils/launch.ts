@@ -11,7 +11,7 @@ const os = require('os');
 export const launch = (target: string, online: boolean) => {
   if (/\.pdf$/i.test(target)) target = target.slice(18);
   if (online) shell.openExternal(target);
-  else if (os.platform() === 'win32') shell.openPath(target);
+  else if (os.platform() === 'win32') shell.openPath('file:///' + target);
   else {
     console.log(`launching ${target}`);
     const cmd = /\.sh/i.test(target) ? '' : 'xdg-open ';

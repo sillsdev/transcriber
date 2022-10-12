@@ -27,7 +27,7 @@ import {
   findRecord,
   usePlanType,
 } from '../../../crud';
-import { transcriptiontabSelector } from '../../../selector';
+import { transcriptionTabSelector } from '../../../selector';
 import { eqSet } from '../../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -99,7 +99,7 @@ export function SelectSections(props: IProps) {
   });
   const { getOrganizedBy } = useOrganizedBy();
   const t: ITranscriptionTabStrings = useSelector(
-    transcriptiontabSelector,
+    transcriptionTabSelector,
     shallowEqual
   );
   const ta: IPassageDetailArtifactsStrings = useSelector(
@@ -186,17 +186,17 @@ export function SelectSections(props: IProps) {
         if (!isFlat && passageCount > 1)
           rowData.push({
             id: section.id,
-            name: getSection(section).trim(),
+            name: getSection(section),
             passages: passageCount.toString(),
             parentId: '',
           });
         sectionpassages.forEach((passage: Passage) => {
           rowData.push({
             id: passage.id,
-            name: `${section?.attributes?.sequencenum}.${getReference(
+            name: `${sectionNumber(section)}.${getReference(
               passage,
               bookData
-            ).trim()}`,
+            )}`,
             passages: '',
             parentId: isFlat || passageCount === 1 ? '' : section.id,
           } as IRow);

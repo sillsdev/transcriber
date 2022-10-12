@@ -2,18 +2,26 @@ import React, { useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Card, CardContent } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import { VProject, DialogMode, OptionType } from '../../model';
+import AddIcon from '@mui/icons-material/Add';
+import { VProject, DialogMode, OptionType, Project, Plan } from '../../model';
 import { ProjectDialog, IProjectDialog, ProjectType } from './ProjectDialog';
 import { Language, ILanguage } from '../../control';
 import Uploader from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
-import { waitForRemoteId, remoteId, useOrganizedBy } from '../../crud';
+import { UpdateRecord } from '../../model/baseModel';
+import {
+  waitForRemoteId,
+  remoteId,
+  useOrganizedBy,
+  findRecord,
+  related,
+} from '../../crud';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
 import NewProjectGrid from './NewProjectGrid';
+import { restoreScroll } from '../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,12 +68,12 @@ export const AddCard = (props: IProps) => {
   const { team } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
+  const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
   const ctx = React.useContext(TeamContext);
   const {
     projectCreate,
     cardStrings,
-    auth,
     flatAdd,
     vProjectStrings,
     bookSuggestions,
@@ -89,7 +97,8 @@ export const AddCard = (props: IProps) => {
     t.passagesCreated,
   ]);
   const { fromLocalizedOrganizedBy } = useOrganizedBy();
-  const [step, setStep] = React.useState(0);
+  const stepRef = useRef(0);
+  const planRef = useRef('');
   const cancelled = useRef(false);
   const [, setPlan] = useGlobal('plan');
   const [pickOpen, setPickOpen] = React.useState(false);
@@ -97,6 +106,7 @@ export const AddCard = (props: IProps) => {
   const [view, setView] = React.useState('');
   const [forceType, setForceType] = React.useState(false);
   const [recordAudio, setRecordAudio] = React.useState(false);
+  const speakerRef = useRef<string>();
 
   useEffect(() => {
     if (localStorage.getItem('autoaddProject') !== null && team === null) {
@@ -119,6 +129,11 @@ export const AddCard = (props: IProps) => {
       setLanguage(initLang);
       setBook(null);
       cancelled.current = false;
+    } else {
+      // someplace it is being shut off if I reset it here so I wait
+      setTimeout(() => {
+        restoreScroll();
+      }, 500);
     }
   }, [uploadVisible]);
 
@@ -170,6 +185,10 @@ export const AddCard = (props: IProps) => {
     e.stopPropagation();
   };
 
+  const handleNameChange = (name: string) => {
+    speakerRef.current = name;
+  };
+
   const nameInUse = (newName: string) => {
     const projects = team ? teamProjects(team.id) : personalProjects;
     const sameNameRec = projects.filter((p) => p?.attributes?.name === newName);
@@ -210,13 +229,47 @@ export const AddCard = (props: IProps) => {
     );
   };
 
-  const createProject = async (fileList: File[]) => {
-    setStep(0);
-    const name = fileList[0]?.name.split('.')[0];
-    const planId = await projectCreate(
+  const nextName = (newName: string) => {
+    const projects = team ? teamProjects(team.id) : personalProjects;
+    const sameNameRec = projects.filter((p) => p?.attributes?.name === newName);
+    return sameNameRec.length > 0
+      ? `${newName} ${sameNameRec.length + 1}`
+      : newName;
+  };
+
+  const createProject = async (name: string) => {
+    if (stepRef.current === 1 && planRef.current) {
+      const planRec = findRecord(memory, 'plan', planRef.current);
+      const projRec = findRecord(
+        memory,
+        'project',
+        related(planRec, 'project')
+      ) as Project | undefined;
+      if (projRec) {
+        const newName = bookRef.current?.label || nextName(name);
+        const updProj = {
+          ...projRec,
+          attributes: {
+            ...projRec.attributes,
+            name: newName,
+            language: languageRef.current.bcp47,
+            languageName: languageRef.current.languageName,
+            spellCheck: languageRef.current.spellCheck,
+            defaultFont: languageRef.current.font,
+          },
+        } as Project;
+        await memory.update((t) => [
+          ...UpdateRecord(t, updProj, user),
+          t.replaceAttribute(planRec as Plan, 'name', newName),
+        ]);
+        return planRef.current;
+      }
+    }
+    stepRef.current = 0;
+    planRef.current = await projectCreate(
       {
         attributes: {
-          name: bookRef.current?.label || name,
+          name: bookRef.current?.label || nextName(name),
           description: '',
           type,
           language: languageRef.current.bcp47,
@@ -233,18 +286,21 @@ export const AddCard = (props: IProps) => {
       } as VProject,
       team
     );
-    setPlan(planId);
+    setPlan(planRef.current);
     if (!offlineOnly)
-      await waitForRemoteId({ type: 'plan', id: planId }, memory.keyMap);
-    setStep(1);
-    return planId;
+      await waitForRemoteId(
+        { type: 'plan', id: planRef.current },
+        memory.keyMap
+      );
+    stepRef.current = 1;
+    return planRef.current;
   };
 
   const makeSectionsAndPassages = async (
     planId: string,
     mediaRemoteIds?: string[]
   ) => {
-    setStep(2);
+    stepRef.current = 2;
     mediaRemoteIds &&
       (await flatAdd(
         planId,
@@ -252,11 +308,11 @@ export const AddCard = (props: IProps) => {
         bookRef.current?.value,
         setComplete
       ));
-    setStep(3);
+    stepRef.current = 3;
     setTimeout(() => {
       // Allow time for last check mark
       setInProgress(false);
-      setStep(0);
+      stepRef.current = 0;
       if (bookRef.current?.value)
         setView(`/plan/${remoteId('plan', planId, memory.keyMap) || planId}/0`);
       else
@@ -324,7 +380,6 @@ export const AddCard = (props: IProps) => {
       </Card>
       <Uploader
         recordAudio={recordAudio}
-        auth={auth}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}
@@ -336,13 +391,16 @@ export const AddCard = (props: IProps) => {
         cancelled={cancelled}
         defaultFilename={book?.value}
         allowWave={true}
+        team={team?.id || undefined}
+        performedBy={speakerRef.current}
+        onSpeakerChange={handleNameChange}
       />
       <Progress
         title={t.uploadProgress}
         open={!uploadVisible && inProgress && !cancelled.current}
         progress={complete}
         steps={steps}
-        currentStep={step}
+        currentStep={stepRef.current}
         action={cancelUpload}
         allowCancel={true}
       />

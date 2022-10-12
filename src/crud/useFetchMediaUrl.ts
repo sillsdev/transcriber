@@ -1,8 +1,8 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import Axios from 'axios';
 import { API_CONFIG, isElectron } from '../api-variable';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import { remoteIdGuid, remoteId } from '../crud';
 import { dataPath, PathType } from '../utils/dataPath';
 import { MediaFile } from '../model';
@@ -23,7 +23,6 @@ export interface IMediaState {
   url: string; // temporary url
   id: string; // media id
   remoteId: string;
-  auth: Auth | null;
   cancelled: boolean;
 }
 export const mediaClean: IMediaState = {
@@ -32,7 +31,6 @@ export const mediaClean: IMediaState = {
   url: '',
   id: '',
   remoteId: '',
-  auth: null,
   cancelled: false,
 };
 
@@ -73,12 +71,12 @@ const stateReducer = (state: IMediaState, action: Action): IMediaState => {
 
 interface IProps {
   id: string;
-  auth: Auth | null;
 }
 
 export const useFetchMediaUrl = (reporter?: any) => {
   const [state, dispatch] = useReducer(stateReducer, mediaClean);
   const [memory] = useGlobal('memory');
+  const { accessToken } = useContext(TokenContext).state;
 
   const guidId = (id: string) => {
     return !isNaN(Number(id))
@@ -129,7 +127,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
               if (cancelled()) return;
               dispatch({ payload: safeURL(path), type: MediaSt.FETCHED });
               return;
-            } else if (!state.auth?.accessToken) {
+            } else if (!accessToken) {
               dispatch({
                 payload: 'no offline file',
                 type: MediaSt.ERROR,
@@ -147,7 +145,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
       if (cancelled()) return;
       Axios.get(`${API_CONFIG.host}/api/mediafiles/${state.remoteId}/fileurl`, {
         headers: {
-          Authorization: 'Bearer ' + state.auth?.accessToken,
+          Authorization: 'Bearer ' + accessToken,
         },
       })
         .then((strings) => {
@@ -171,7 +169,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
   }, [state.id]);
 
   const fetchMediaUrl = (props: IProps) => {
-    let { id, auth } = props;
+    let { id } = props;
     if (!id) {
       dispatch({ payload: undefined, type: MediaSt.IDLE });
       return;
@@ -179,7 +177,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
     const remoteId = remId(id);
     id = guidId(id);
     dispatch({
-      payload: { ...mediaClean, id, remoteId, auth },
+      payload: { ...mediaClean, id, remoteId },
       type: MediaSt.PENDING,
     });
   };

@@ -12,8 +12,8 @@ import {
   IconButton,
   Tooltip,
 } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import InfoIcon from '@material-ui/icons/Info';
+import DeleteIcon from '@mui/icons-material/Delete';
+import InfoIcon from '@mui/icons-material/Info';
 import UserAvatar from '../UserAvatar';
 import useStyles from './GroupSettingsStyles';
 import Involvement from './Involvement';

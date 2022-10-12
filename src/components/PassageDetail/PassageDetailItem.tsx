@@ -6,32 +6,28 @@ import {
   MediaFile,
   RoleNames,
 } from '../../model';
-import { useLocation } from 'react-router-dom';
 import localStrings from '../../selector/localize';
 import {
   Button,
-  createStyles,
   debounce,
   FormControlLabel,
   Grid,
   IconButton,
-  makeStyles,
   Paper,
   Radio,
   RadioGroup,
   TextField,
-  Theme,
   Typography,
-} from '@material-ui/core';
-import TranscribeIcon from '../../control/TranscribeIcon';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Auth from '../../auth/Auth';
+  Box,
+  SxProps,
+  styled,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArtifactTypeSlug,
   findRecord,
   related,
-  remoteIdNum,
   useArtifactType,
   useFetchMediaUrl,
 } from '../../crud';
@@ -43,8 +39,8 @@ import { TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { cleanFileName } from '../../utils';
-import styled from 'styled-components';
+import { cleanFileName, NamedRegions } from '../../utils';
+import styledHtml from 'styled-components';
 import SplitPane, { Pane } from 'react-split-pane';
 import PassageDetailPlayer from './PassageDetailPlayer';
 import DiscussionList from '../Discussions/DiscussionList';
@@ -53,63 +49,32 @@ import MediaRecord from '../MediaRecord';
 import SelectRecording from './SelectRecording';
 import { useGlobal } from 'reactn';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { LocalKey, localUserKey } from '../../utils';
-import StickyRedirect from '../StickyRedirect';
 import Confirm from '../AlertDialog';
 import Uploader from '../Uploader';
-import AddIcon from '@material-ui/icons/LibraryAddOutlined';
-import { LightTooltip } from '../StepEditor';
+import AddIcon from '@mui/icons-material/LibraryAddOutlined';
+import { GrowingSpacer, LightTooltip, PriButton } from '../../control';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {},
-    button: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    status: {
-      marginRight: theme.spacing(2),
-      alignSelf: 'center',
-      display: 'block',
-      gutterBottom: 'true',
-    },
-    unsupported: {
-      color: theme.palette.secondary.light,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      margin: 'auto',
-      width: `calc(100% - 32px)`,
-    },
-    playSelect: {
-      display: 'flex',
-      flexDirection: 'row',
-      paddingRight: theme.spacing(4),
-      paddingBottom: theme.spacing(1),
-    },
-    pane: {},
-    formControl: {
-      margin: theme.spacing(1),
-      paddingBottom: theme.spacing(2),
-    },
-    playStatus: {
-      margin: theme.spacing(1),
-    },
-    row: {
-      display: 'flex',
-    },
-    grow: { flexGrow: 1 },
-    playerRow: {
-      width: '100%',
-      '& audio': {
-        display: 'flex',
-        width: 'inherit',
-      },
-      display: 'flex',
-    },
-  })
-);
-const Wrapper = styled.div`
+const PlayerRow = styled('div')(() => ({
+  width: '100%',
+  '& audio': {
+    display: 'flex',
+    width: 'inherit',
+  },
+  display: 'flex',
+}));
+
+const paperProps = { p: 2, m: 'auto', width: `calc(100% - 32px)` } as SxProps;
+const rowProp = { display: 'flex' };
+const buttonProp = { mx: 1 } as SxProps;
+const ctlProps = { m: 1, pb: 2 } as SxProps;
+const statusProps = {
+  mr: 2,
+  alignSelf: 'center',
+  display: 'block',
+  gutterBottom: 'true',
+} as SxProps;
+
+const Wrapper = styledHtml.div`
   .Resizer {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -164,6 +129,7 @@ const Wrapper = styled.div`
     min-height: 0;
   }
 `;
+
 interface IStateProps {
   t: ICommunityStrings;
   ts: ISharedStrings;
@@ -178,18 +144,15 @@ interface IRecordProps {
   mediafiles: Array<MediaFile>;
 }
 interface IProps extends IRecordProps, IStateProps, IDispatchProps {
-  auth: Auth;
   ready?: () => boolean;
   width: number;
   slugs: ArtifactTypeSlug[];
-  segments: boolean;
+  segments: NamedRegions | undefined;
   showTopic: boolean;
 }
 
 export function PassageDetailItem(props: IProps) {
-  const { auth, t, ts, width, slugs, segments, showTopic, mediafiles } = props;
-  const { pathname } = useLocation();
-  const [view, setView] = useState('');
+  const { t, ts, width, slugs, segments, showTopic } = props;
   const [reporter] = useGlobal('errorReporter');
   const [projRole] = useGlobal('projRole');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -197,14 +160,12 @@ export function PassageDetailItem(props: IProps) {
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
-  const classes = useStyles();
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const [speaker, setSpeaker] = useState('');
   const [topic, setTopic] = useState('');
   const [importList, setImportList] = useState<File[]>();
   const [uploadVisible, setUploadVisible] = useState(false);
-  const [playItemSourceIsLatest, setPlayItemSourceIsLatest] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [confirm, setConfirm] = useState('');
   const {
@@ -230,7 +191,7 @@ export function PassageDetailItem(props: IProps) {
   const { toolChanged, toolsChanged, startSave, saveCompleted, saveRequested } =
     useContext(UnsavedContext).state;
 
-  const { getTypeId, slugFromId, localizedArtifactType } = useArtifactType();
+  const { getTypeId, localizedArtifactType } = useArtifactType();
   const { showMessage } = useSnackBar();
   const [recordType, setRecordType] = useState<ArtifactTypeSlug>(slugs[0]);
   const [currentVersion, setCurrentVersion] = useState(1);
@@ -247,12 +208,16 @@ export function PassageDetailItem(props: IProps) {
   }, 50);
 
   useEffect(() => {
+    if (!slugs.find((s) => s === recordType)) setRecordType(slugs[0]);
+  }, [slugs, recordType]);
+
+  useEffect(() => {
     toolChanged(toolId, canSave);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSave]);
 
   useEffect(() => {
-    if (mediafileId !== mediaState.id) fetchMediaUrl({ id: mediafileId, auth });
+    if (mediafileId !== mediaState.id) fetchMediaUrl({ id: mediafileId });
     var mediaRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
     setCurrentVersion(mediaRec?.attributes?.versionNumber || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -262,12 +227,6 @@ export function PassageDetailItem(props: IProps) {
     () => getTypeId(recordType),
     [recordType, getTypeId]
   );
-
-  const itemCount = useMemo(() => {
-    const localType = localizedArtifactType(recordType);
-    return rowData.filter((r) => r.artifactType === localType).length;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, recordType]);
 
   useEffect(() => {
     var tmp = (passage.attributes.book || '') + passage.attributes.reference;
@@ -347,8 +306,8 @@ export function PassageDetailItem(props: IProps) {
     setTopic(e.target.value);
   };
   const handleSelect = (id: string, latest: boolean) => {
+    //latest isn't used anymore but might be useful...so leave it
     setPlayItem(id);
-    setPlayItemSourceIsLatest(latest);
     setItemPlaying(false);
     setCommentPlaying(false);
   };
@@ -371,32 +330,6 @@ export function PassageDetailItem(props: IProps) {
     setConfirm('');
   };
 
-  const handleTranscribe = () => {
-    if (!playItem) {
-      const localType = localizedArtifactType(recordType);
-      for (let r of rowData) {
-        if (r.artifactType === localType) {
-          setPlayItem(r.id);
-          break;
-        }
-      }
-    }
-    localStorage.setItem(localUserKey(LocalKey.jumpBack), pathname);
-    setView(pathname.replace('detail', 'work'));
-  };
-
-  const playItemId = useMemo(
-    () => remoteIdNum('mediafile', playItem, memory.keyMap) || playItem,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [playItem]
-  );
-  const playType = useMemo(() => {
-    var pi = mediafiles.find((m) => m.id === playItem);
-    if (pi) return slugFromId(related(pi, 'artifactType'));
-    return '';
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playItem, mediafiles]);
-
   const onRecordingOrPlaying = (doingsomething: boolean) => {
     if (doingsomething) {
       setPlaying(false); //stop the vernacular
@@ -405,11 +338,9 @@ export function PassageDetailItem(props: IProps) {
     }
   };
 
-  if (view) return <StickyRedirect to={`${view}/${playType}/${playItemId}`} />;
-
   return (
     <div>
-      <Paper className={classes.paper}>
+      <Paper sx={paperProps}>
         <div>
           <Wrapper>
             <SplitPane
@@ -418,7 +349,7 @@ export function PassageDetailItem(props: IProps) {
               split="vertical"
               onChange={handleSplitSize}
             >
-              <Pane className={classes.pane}>
+              <Pane className="pane">
                 <SplitPane
                   split="horizontal"
                   defaultSize={playerSize - 20}
@@ -426,19 +357,19 @@ export function PassageDetailItem(props: IProps) {
                   style={{ position: 'static' }}
                   onChange={handleHorizonalSplitSize}
                 >
-                  <Pane className={classes.pane}>
+                  <Pane className="pane">
                     <PassageDetailPlayer
                       allowSegment={segments}
-                      allowAutoSegment={segments}
-                      saveSegments={segments}
+                      allowAutoSegment={segments !== undefined}
+                      saveSegments={segments !== undefined}
                     />
                   </Pane>
                   {currentVersion !== 0 ? (
-                    <Pane className={classes.pane}>
-                      <Paper className={classes.paper}>
-                        <div className={classes.row}>
+                    <Pane className="pane">
+                      <Paper sx={paperProps}>
+                        <Box sx={rowProp}>
                           <Button
-                            className={classes.button}
+                            sx={buttonProp}
                             id="pdRecordUpload"
                             onClick={handleUpload}
                             title={
@@ -452,21 +383,19 @@ export function PassageDetailItem(props: IProps) {
                               ? ts.uploadMediaSingular
                               : ts.importMediaSingular}
                           </Button>
-                          <div className={classes.grow}>{'\u00A0'}</div>
+                          <GrowingSpacer />
                           {currentSegment && (
                             <TextField
-                              className={classes.formControl}
+                              sx={ctlProps}
                               id="segment"
                               value={currentSegment}
                               size={'small'}
                               label={t.segment}
                             />
                           )}
-                        </div>
-                        <div className={classes.row}>
-                          <Typography className={classes.status}>
-                            {t.record}
-                          </Typography>
+                        </Box>
+                        <Box sx={rowProp}>
+                          <Typography sx={statusProps}>{t.record}</Typography>
                           {slugs.length > 1 && (
                             <RadioGroup
                               row={true}
@@ -487,10 +416,10 @@ export function PassageDetailItem(props: IProps) {
                               ))}
                             </RadioGroup>
                           )}
-                          <div className={classes.grow}>{'\u00A0'}</div>
+                          <GrowingSpacer />
                           {showTopic && (
                             <TextField
-                              className={classes.formControl}
+                              sx={ctlProps}
                               id="itemtopic"
                               label={t.topic}
                               value={topic}
@@ -499,14 +428,14 @@ export function PassageDetailItem(props: IProps) {
                             />
                           )}
                           <TextField
-                            className={classes.formControl}
+                            sx={ctlProps}
                             id="speaker"
                             label={t.speaker}
                             value={speaker}
                             onChange={handleChangeSpeaker}
                             fullWidth={true}
                           />
-                        </div>
+                        </Box>
                         <MediaRecord
                           id="mediarecord"
                           toolId={toolId}
@@ -522,55 +451,42 @@ export function PassageDetailItem(props: IProps) {
                           onRecording={onRecordingOrPlaying}
                           onPlayStatus={onRecordingOrPlaying}
                         />
-                        <div className={classes.row}>
-                          <Typography
-                            variant="caption"
-                            className={classes.status}
-                          >
+                        <Box sx={rowProp}>
+                          <Typography variant="caption" sx={statusProps}>
                             {statusText}
                           </Typography>
-                          <div className={classes.grow}>{'\u00A0'}</div>
-                          <Button
+                          <GrowingSpacer />
+                          <PriButton
                             id="rec-save"
-                            className={classes.button}
+                            sx={buttonProp}
                             onClick={handleSave}
-                            variant="contained"
-                            color="primary"
                             disabled={!canSave}
                           >
                             {ts.save}
-                          </Button>
-                        </div>
+                          </PriButton>
+                        </Box>
                       </Paper>
-                      <Paper className={classes.paper}>
-                        <div className={classes.row}>
-                          <Paper className={classes.paper}>
-                            <div id="playselect" className={classes.playSelect}>
+                      <Paper sx={paperProps}>
+                        <Box sx={rowProp}>
+                          <Paper sx={paperProps}>
+                            <Box
+                              id="playselect"
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                pr: 4,
+                                pb: 1,
+                              }}
+                            >
                               <SelectRecording
                                 onChange={handleSelect}
                                 ts={ts}
                                 tags={slugs}
                                 latestVernacular={currentVersion}
                               />
-                              <Button
-                                id="load-transcriber"
-                                className={classes.button}
-                                onClick={handleTranscribe}
-                                variant="contained"
-                                color="primary"
-                                disabled={
-                                  canSave ||
-                                  itemCount < 1 ||
-                                  (playItem !== '' && !playItemSourceIsLatest)
-                                }
-                              >
-                                <TranscribeIcon color="white" />{' '}
-                                {`\u00A0${t.transcribe}`}
-                              </Button>
-                            </div>
-                            <div id="rowplayer" className={classes.playerRow}>
+                            </Box>
+                            <PlayerRow id="rowplayer">
                               <MediaPlayer
-                                auth={auth}
                                 srcMediaId={playItem}
                                 requestPlay={itemPlaying}
                                 onEnded={handleItemPlayEnd}
@@ -587,14 +503,14 @@ export function PassageDetailItem(props: IProps) {
                                   </IconButton>
                                 </LightTooltip>
                               )}
-                            </div>
+                            </PlayerRow>
                           </Paper>
-                        </div>
+                        </Box>
                       </Paper>
                     </Pane>
                   ) : (
-                    <Pane className={classes.pane}>
-                      <Paper className={classes.paper}>
+                    <Pane className="pane">
+                      <Paper sx={paperProps}>
                         <Typography variant="h2" align="center">
                           {ts.noAudio}
                         </Typography>
@@ -603,10 +519,10 @@ export function PassageDetailItem(props: IProps) {
                   )}
                 </SplitPane>
               </Pane>
-              <Pane className={classes.pane}>
+              <Pane className="pane">
                 <Grid item xs={12} sm container>
                   <Grid item container direction="column">
-                    <DiscussionList auth={auth} />
+                    <DiscussionList />
                   </Grid>
                 </Grid>
               </Pane>
@@ -624,7 +540,6 @@ export function PassageDetailItem(props: IProps) {
       <Uploader
         noBusy={true}
         recordAudio={false}
-        auth={auth}
         importList={importList}
         isOpen={uploadVisible}
         onOpen={handleUploadVisible}

@@ -44,7 +44,6 @@ import {
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob, logError, prettySegment, Severity } from '../utils';
-import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
@@ -167,6 +166,9 @@ const initState = {
   setCommentPlaying: (playing: boolean, ended?: boolean) => {},
   commentPlayId: '',
   setCommentPlayId: (mediaId: string) => {},
+  oldVernacularPlayItem: '',
+  oldVernacularPlaying: false,
+  handleOldVernacularPlayEnd: () => {},
   rowData: Array<IRow>(),
   sharedStr: {} as ISharedStrings,
   mediafileId: '',
@@ -222,7 +224,6 @@ const PassageDetailContext = React.createContext({} as IContext);
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   children: React.ReactElement;
-  auth: Auth;
 }
 interface ParamTypes {
   prjId: string;
@@ -235,7 +236,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     mapDispatchToProps
   )((props: IProps) => {
     const [reporter] = useGlobal('errorReporter');
-    const { auth, passages, sections, sectionResources, mediafiles } = props;
+    const { passages, sections, sectionResources, mediafiles } = props;
     const { artifactTypes, categories, userResources } = props;
     const { workflowSteps, orgWorkflowSteps } = props;
     const { wfStr, sharedStr, stepCompleteStr } = props;
@@ -273,8 +274,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { startSave, clearChanged, waitForSave } =
       useContext(UnsavedContext).state;
     const [plan] = useGlobal('plan');
-    const [oldVernacularPlayItem, setOldVernacularPlayItem] = useState('');
-    const [oldVernacularPlaying, setOldVernacularPlaying] = useState(false);
     const highlightRef = useRef<number>();
     const refreshRef = useRef<number>(0);
     const settingSegmentRef = useRef(false);
@@ -363,9 +362,10 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             playing,
             itemPlaying: playing ? false : state.itemPlaying,
             commentPlaying: playing ? false : state.commentPlaying,
+            oldVernacularPlaying: playing ? false : state.oldVernacularPlaying,
+            oldVernacularPlayItem: playing ? '' : state.oldVernacularPlayItem,
           };
         });
-        if (playing) setOldVernacularPlayItem('');
       }
     };
     const setItemPlaying = (itemPlaying: boolean) => {
@@ -376,9 +376,14 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             itemPlaying,
             playing: itemPlaying ? false : state.playing,
             commentPlaying: itemPlaying ? false : state.commentPlaying,
+            oldVernacularPlaying: itemPlaying
+              ? false
+              : state.oldVernacularPlaying,
+            oldVernacularPlayItem: itemPlaying
+              ? ''
+              : state.oldVernacularPlayItem,
           };
         });
-        if (itemPlaying) setOldVernacularPlayItem('');
       }
     };
     const setCommentPlaying = (
@@ -393,9 +398,14 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             commentPlayId: ended ? '' : state.commentPlayId,
             playing: commentPlaying ? false : state.playing,
             itemPlaying: commentPlaying ? false : state.itemPlaying,
+            oldVernacularPlaying: commentPlaying
+              ? false
+              : state.oldVernacularPlaying,
+            oldVernacularPlayItem: commentPlaying
+              ? ''
+              : state.oldVernacularPlayItem,
           };
         });
-        if (commentPlaying) setOldVernacularPlayItem('');
       }
     };
 
@@ -414,7 +424,15 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const handleCommentTogglePlay = () => {
       setCommentPlaying(!state.commentPlaying);
     };
-    const handleOldVernacularPlayEnd = () => setOldVernacularPlayItem('');
+    const handleOldVernacularPlayEnd = () => {
+      setState((state: ICtxState) => {
+        return {
+          ...state,
+          oldVernacularPlaying: false,
+          oldVernacularPlayItem: '',
+        };
+      });
+    };
     const setPDBusy = (busy: boolean) => {
       setState((state: ICtxState) => {
         return {
@@ -572,11 +590,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           fetching.current = r.mediafile.id;
           fetchMediaUrl({
             id: r.mediafile.id,
-            auth: props.auth,
           });
           resetBlob = true;
         }
-        currentSegmentRef.current = undefined;
+
+        if (resetBlob) currentSegmentRef.current = undefined;
         setState((state: ICtxState) => {
           return {
             ...state,
@@ -586,13 +604,12 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             playing: false,
             loading: fetching.current !== '',
             rowData: newRows.length > 0 ? newRows : rowData,
-            currentSegment: '',
-            currentSegmentIndex: 0,
+            currentSegment: resetBlob ? '' : state.currentSegment,
+            currentSegmentIndex: resetBlob ? 0 : state.currentSegmentIndex,
           };
         });
       } else if (r.isVernacular) {
         //play just the segment of an old one
-        setOldVernacularPlayItem(r.mediafile.id);
         setState((state: ICtxState) => {
           return {
             ...state,
@@ -601,6 +618,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             playing: false,
             commentPlaying: false,
             itemPlaying: false,
+            oldVernacularPlayItem: r.mediafile.id,
             rowData: newRows.length > 0 ? newRows : rowData,
           };
         });
@@ -655,8 +673,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       mediaStart.current = undefined;
       mediaEnd.current = undefined;
       mediaPosition.current = undefined;
-      setOldVernacularPlayItem('');
-      setOldVernacularPlaying(false);
+      handleOldVernacularPlayEnd();
     };
 
     const setMediaSelected = (id: string, start: number, end: number) => {
@@ -669,7 +686,12 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       if (mediaStart.current) {
         mediaPosition.current = mediaStart.current;
         mediaStart.current = undefined;
-        setOldVernacularPlaying(true);
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            oldVernacularPlaying: true,
+          };
+        });
       }
     };
 
@@ -869,10 +891,17 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     }, [sectionResources, mediafiles, pasId, userResources]);
 
     useEffect(() => {
+      let delayedPlay: NodeJS.Timeout | undefined = undefined;
       //if I set playing when I set the mediaId, it plays a bit of the old
       //if not starting at the beginning set to playing after loaded
       if (state.playItem && mediaStart.current === undefined)
-        setItemPlaying(true);
+        delayedPlay = setTimeout(() => {
+          setItemPlaying(true);
+        }, 2000);
+
+      return () => {
+        if (delayedPlay) clearTimeout(delayedPlay);
+      };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.playItem]);
 
@@ -947,6 +976,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             handleItemTogglePlay,
             handleCommentPlayEnd,
             handleCommentTogglePlay,
+            handleOldVernacularPlayEnd,
             setDiscussionMarkers,
             handleHighlightDiscussion,
           },
@@ -956,9 +986,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         {props.children}
         {/*this is only used to play old vernacular file segments*/}
         <MediaPlayer
-          auth={auth}
-          srcMediaId={oldVernacularPlayItem}
-          requestPlay={oldVernacularPlaying}
+          srcMediaId={state.oldVernacularPlayItem}
+          requestPlay={state.oldVernacularPlaying}
           onEnded={handleOldVernacularPlayEnd}
           onDuration={handleDuration}
           onPosition={handlePosition}

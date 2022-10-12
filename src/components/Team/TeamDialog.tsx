@@ -140,6 +140,7 @@ export function TeamDialog(props: IProps) {
         open={isOpen}
         onClose={handleClose}
         aria-labelledby="teamDlg"
+        disableEnforceFocus
       >
         <DialogTitle id="teamDlg">
           {mode === DialogMode.add ? t.addTeam : t.teamSettings}

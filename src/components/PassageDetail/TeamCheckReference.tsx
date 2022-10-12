@@ -1,39 +1,20 @@
 import { useContext, useRef } from 'react';
-import { Grid, makeStyles, createStyles, Theme } from '@material-ui/core';
+import { Grid, GridProps, styled } from '@mui/material';
 import SelectMyResource from './Internalization/SelectMyResource';
 import { MediaPlayer } from '../MediaPlayer';
-import Auth from '../../auth/Auth';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { getSegments, NamedRegions } from '../../utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    duration: {
-      margin: theme.spacing(1),
-    },
-    resource: {
-      margin: theme.spacing(1),
-    },
-    playStatus: {
-      margin: theme.spacing(1),
-      width: '100%',
-      '& audio': {
-        display: 'flex',
-        width: 'inherit',
-      },
-    },
-    controls: {
-      alignSelf: 'center',
-    },
-  })
-);
+const StyledGrid = styled(Grid)<GridProps>(({ theme }) => ({
+  margin: theme.spacing(1),
+  width: '100%',
+  '& audio': {
+    display: 'flex',
+    width: 'inherit',
+  },
+}));
 
-interface IProps {
-  auth: Auth;
-}
-
-export function TeamCheckReference({ auth }: IProps) {
-  const classes = useStyles();
+export function TeamCheckReference() {
   const ctx = useContext(PassageDetailContext);
   const {
     rowData,
@@ -72,7 +53,6 @@ export function TeamCheckReference({ auth }: IProps) {
     mediaStart.current = undefined;
     mediaEnd.current = undefined;
     mediaPosition.current = undefined;
-    setPlayItem('');
     handleItemPlayEnd();
   };
 
@@ -94,12 +74,11 @@ export function TeamCheckReference({ auth }: IProps) {
 
   return (
     <Grid container direction="column">
-      <Grid item xs={10} className={classes.resource}>
+      <Grid item xs={10} sx={{ m: 2, p: 2 }}>
         <SelectMyResource onChange={handleResource} />
       </Grid>
-      <Grid item xs={10} className={classes.playStatus}>
+      <StyledGrid item xs={10}>
         <MediaPlayer
-          auth={auth}
           srcMediaId={playItem}
           requestPlay={itemPlaying}
           onTogglePlay={handleItemTogglePlay}
@@ -109,7 +88,7 @@ export function TeamCheckReference({ auth }: IProps) {
           position={mediaPosition.current}
           controls={true}
         />
-      </Grid>
+      </StyledGrid>
     </Grid>
   );
 }

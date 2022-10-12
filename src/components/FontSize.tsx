@@ -1,26 +1,17 @@
-import React from 'react';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
+import { useState, useEffect } from 'react';
+import { Typography, Slider, SliderProps, Box, styled } from '@mui/material';
 
-const useStyles = makeStyles(theme =>
-  createStyles({
-    root: {
-      width: 300,
-    },
-    margin: {
-      height: theme.spacing(3),
-    },
-    sameRow: {
-      display: 'flex',
-    },
-    letter: {
-      alignSelf: 'center',
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-  })
-);
+const Letter = styled('div')(({ theme }) => ({
+  alignSelf: 'center',
+  marginLeft: theme.spacing(1),
+  marginRight: theme.spacing(1),
+}));
+
+const StyledSlider = styled(Slider)<SliderProps>(({ theme }) => ({
+  alignSelf: 'center',
+  marginLeft: theme.spacing(1),
+  marginRight: theme.spacing(1),
+}));
 
 const fontSizes = [
   'xx-small',
@@ -40,11 +31,10 @@ interface IProps {
   disabled?: boolean;
 }
 
-export default function DiscreteSlider(props: IProps) {
+export default function FontSize(props: IProps) {
   const { label, value, font, setSize, disabled } = props;
-  const [position, setPosition] = React.useState(4);
-  const [fontName, setFontNamne] = React.useState(font ? font : 'Charis SIL');
-  const classes = useStyles();
+  const [position, setPosition] = useState(4);
+  const [fontName, setFontNamne] = useState(font ? font : 'Charis SIL');
 
   const valuetext = (pos: number) => {
     return fontSizes[pos];
@@ -55,11 +45,11 @@ export default function DiscreteSlider(props: IProps) {
     if (setSize) setSize(valuetext(v));
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (font) setFontNamne(font);
   }, [font]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const pos = fontSizes.indexOf(value ? value : 'large');
     if (pos !== -1) {
       setPosition(pos);
@@ -67,19 +57,15 @@ export default function DiscreteSlider(props: IProps) {
   }, [value]);
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ width: '300px' }}>
       <Typography id="font-size-slider" gutterBottom>
         {label}
       </Typography>
-      <div className={classes.sameRow}>
-        <div
-          className={classes.letter}
-          style={{ fontSize: fontSizes[1], fontFamily: fontName }}
-        >
+      <Box sx={{ display: 'flex' }}>
+        <Letter style={{ fontSize: fontSizes[1], fontFamily: fontName }}>
           A
-        </div>
-        <Slider
-          className={classes.letter}
+        </Letter>
+        <StyledSlider
           getAriaValueText={valuetext}
           valueLabelDisplay="off"
           value={position}
@@ -90,16 +76,15 @@ export default function DiscreteSlider(props: IProps) {
           onChange={handleSlide}
           disabled={disabled ? disabled : false}
         />
-        <div
-          className={classes.letter}
+        <Letter
           style={{
             fontSize: value ? value : fontSizes[5],
             fontFamily: fontName,
           }}
         >
           A
-        </div>
-      </div>
-    </div>
+        </Letter>
+      </Box>
+    </Box>
   );
 }

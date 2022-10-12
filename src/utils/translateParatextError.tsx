@@ -49,7 +49,14 @@ export const translateParatextError = (
   if (err.errStatus === 401) return t.expiredToken;
   if (err.errStatus === 400) return t.invalidParatextLogin;
   if (err.errStatus === 500) {
-    if (err.errMsg.includes('401') || err.errMsg.includes('400'))
+    if (
+      (err?.errMsg?.length ?? 0) === 0 ||
+      err.errMsg.indexOf('Detail: ') + 'Detail: '.length ===
+        err.errMsg.length ||
+      err.errMsg.includes('SecurityException') ||
+      err.errMsg.includes('401') ||
+      err.errMsg.includes('400')
+    )
       return t.expiredParatextToken;
     if (err.errMsg.includes('logged in')) return t.invalidParatextLogin;
     if (err.errMsg.includes('ReferenceError')) {

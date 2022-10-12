@@ -1,13 +1,11 @@
 import { useGlobal } from 'reactn';
 import * as actions from '../store';
 import { IMainStrings } from '../model';
-import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 import { useCheckOnline, useProjectsLoaded } from '../utils';
 import { LoadProjectData } from '.';
 
 export const useLoadProjectData = (
-  auth: Auth,
   t: IMainStrings,
   doOrbitError: typeof actions.doOrbitError,
   resetOrbitError: typeof actions.resetOrbitError
@@ -20,6 +18,7 @@ export const useLoadProjectData = (
   const AddProjectLoaded = useProjectsLoaded();
   const { showMessage } = useSnackBar();
   const checkOnline = useCheckOnline(resetOrbitError);
+
   return (projectId: string, cb?: () => void) => {
     if (projectsLoaded.includes(projectId) || offlineOnly) {
       if (cb) cb();

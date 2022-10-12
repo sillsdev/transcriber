@@ -1,15 +1,20 @@
 import {
-  createStyles,
+  Checkbox,
+  FormControlLabel,
+  FormLabel,
   Grid,
+  GridProps,
   IconButton,
-  makeStyles,
+  styled,
   TextField,
-  Theme,
-} from '@material-ui/core';
+  TextFieldProps,
+} from '@mui/material';
 import { connect } from 'react-redux';
 import {
   Comment,
   Discussion,
+  Group,
+  GroupMembership,
   ICommentCardStrings,
   IState,
   MediaFile,
@@ -21,8 +26,13 @@ import localStrings from '../../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { findRecord, related } from '../../crud';
-import PlayIcon from '@material-ui/icons/PlayArrow';
+import {
+  findRecord,
+  PermissionName,
+  related,
+  usePermissions,
+} from '../../crud';
+import PlayIcon from '@mui/icons-material/PlayArrow';
 import UserAvatar from '../UserAvatar';
 import { dateOrTime } from '../../utils';
 import { useGlobal } from 'reactn';
@@ -31,77 +41,54 @@ import DiscussionMenu from './DiscussionMenu';
 import { useRecordComment } from './useRecordComment';
 import { bindActionCreators } from 'redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import Auth from '../../auth/Auth';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import MediaPlayer from '../MediaPlayer';
+import { OldVernVersion } from '../../control/OldVernVersion';
+import { useArtifactType } from '../../crud';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      flexGrow: 1,
-      '&:hover button': {
-        color: 'primary',
-      },
-      '& .MuiTypography-root': {
-        cursor: 'default ',
-      },
-    },
-    card: {
-      // minWidth: 275,
-      margin: theme.spacing(1),
-      backgroundColor: theme.palette.secondary.light,
-    },
-    selectedcard: {
-      // minWidth: 275,
-      margin: theme.spacing(1),
-      backgroundColor: theme.palette.secondary.dark,
-    },
-    spreadIt: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    content: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      color: theme.palette.primary.contrastText,
-    },
-    name: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    container: {
-      display: 'flex',
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    column: {
-      display: 'flex',
-      flexDirection: 'column',
-      color: theme.palette.primary.dark,
-    },
-    avatar: {
-      margin: theme.spacing(1),
-    },
-    text: {
-      color: theme.palette.primary.dark,
-      wordBreak: 'break-word',
-      '& .MuiInput-underline:before': {
-        content: 'none',
-      },
-    },
-    button: {
-      color: theme.palette.background.paper,
-    },
-  })
-);
+const StyledWrapper = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexGrow: 1,
+  '&:hover button': {
+    color: 'primary',
+  },
+  '& .MuiTypography-root': {
+    cursor: 'default ',
+  },
+}));
+
+const GridContainerSpread = styled(Grid)<GridProps>(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+}));
+const GridContainerRow = styled(Grid)<GridProps>(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+}));
+const GridContainerBorderedRow = styled(Grid)<GridProps>(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  borderTop: '1px solid #dfdfdf',
+}));
+const GridContainerCol = styled(Grid)<GridProps>(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  color: theme.palette.primary.dark,
+}));
+
+const StyledText = styled(TextField)<TextFieldProps>(({ theme }) => ({
+  wordBreak: 'break-word',
+  '& .MuiInput-underline:before': {
+    content: 'none',
+  },
+}));
+
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
   users: Array<User>;
+  groups: Array<Group>;
+  memberships: Array<GroupMembership>;
 }
 interface IStateProps {
   t: ICommentCardStrings;
@@ -114,17 +101,26 @@ interface IDispatchProps {
 }
 
 interface IProps extends IStateProps, IRecordProps, IDispatchProps {
-  auth: Auth;
   comment: Comment;
   discussion: Discussion;
   number: number;
   onEditing: (val: boolean) => void;
+  approvalStatus: boolean | undefined;
 }
 
 export const CommentCard = (props: IProps) => {
-  const { t, auth, comment, discussion, number, users, onEditing } = props;
+  const {
+    t,
+    comment,
+    discussion,
+    number,
+    users,
+    groups,
+    memberships,
+    onEditing,
+    approvalStatus,
+  } = props;
   const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
-  const classes = useStyles();
   const [author, setAuthor] = useState<User>();
   const [lang] = useGlobal('lang');
   const [user] = useGlobal('user');
@@ -149,6 +145,18 @@ export const CommentCard = (props: IProps) => {
   const [canSaveRecording, setCanSaveRecording] = useState(false);
   const [editComment, setEditComment] = useState('');
   const [confirmAction, setConfirmAction] = useState('');
+  const [approved, setApprovedx] = useState(approvalStatus);
+  const approvedRef = useRef(approvalStatus);
+  const { IsVernacularMedia } = useArtifactType();
+  const setApproved = (value: boolean) => {
+    setApprovedx(value);
+    approvedRef.current = value;
+  };
+  const { getAuthor, hasPermission } = usePermissions({
+    users,
+    groups,
+    memberships,
+  });
 
   const reset = () => {
     setEditing(false);
@@ -165,12 +173,20 @@ export const CommentCard = (props: IProps) => {
     discussion: discussion.id,
     cb: reset,
     doOrbitError,
+    users,
+    groups,
+    memberships,
   });
   const afterUploadcb = (mediaId: string) => {
-    saveComment(comment.id, editComment, mediaId);
+    saveComment(
+      comment.id,
+      editComment,
+      mediaId,
+      approvedRef.current,
+      comment.attributes?.visible
+    );
   };
   const { uploadMedia, fileName } = useRecordComment({
-    auth,
     discussion,
     number,
     afterUploadcb,
@@ -181,6 +197,7 @@ export const CommentCard = (props: IProps) => {
   });
   const text = comment.attributes?.commentText;
   const [mediaId, setMediaId] = useState('');
+  const [oldVernVer, setOldVernVer] = useState(0);
 
   useEffect(() => {
     setEditComment(comment.attributes.commentText);
@@ -229,11 +246,11 @@ export const CommentCard = (props: IProps) => {
     setConfirmAction('');
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = (approvedChange?: boolean) => {
     savingRef.current = true;
     //if we're recording and can save, the comment will save after upload
     if (!canSaveRecording) {
-      if (editComment.length > 0) afterUploadcb('');
+      if (editComment.length > 0 || approvedChange) afterUploadcb('');
       else saveCompleted(comment.id);
     }
   };
@@ -245,10 +262,21 @@ export const CommentCard = (props: IProps) => {
     setEditComment(newText);
     setChanged(true);
   };
-
+  const handleApprovedChange = () => {
+    setApproved(!approvedRef.current);
+    handleSaveEdit(true);
+  };
   const media = useMemo(() => {
     if (!mediaId || mediaId === '') return null;
-    return findRecord(memory, 'mediafile', mediaId);
+    const mediaRec = findRecord(memory, 'mediafile', mediaId) as
+      | MediaFile
+      | undefined;
+    if (mediaRec) {
+      if (IsVernacularMedia(mediaRec)) {
+        setOldVernVer(mediaRec.attributes?.versionNumber);
+      }
+    }
+    return mediaRec;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment, mediaId]);
 
@@ -260,56 +288,84 @@ export const CommentCard = (props: IProps) => {
   useEffect(() => {
     if (users) {
       var u = users.filter(
-        (u) => u.id === related(comment, 'lastModifiedByUser')
+        (u) =>
+          u.id ===
+          (getAuthor(comment.attributes.visible) ??
+            related(comment, 'lastModifiedByUser'))
       );
       if (u.length > 0) setAuthor(u[0]);
     }
     setMediaId(related(comment, 'mediafile'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment, users]);
 
   return (
-    <div className={classes.root}>
-      <Grid container className={classes.row}>
-        <Grid container className={classes.spreadIt}>
-          <Grid item className={classes.row}>
-            <Grid item id="user" className={classes.avatar}>
+    <StyledWrapper>
+      <GridContainerBorderedRow container>
+        <GridContainerSpread container>
+          <GridContainerRow item>
+            <Grid item id="user" sx={{ margin: 1 }}>
               <UserAvatar {...props} userRec={author} />
             </Grid>
             {commentPlayId && mediaId === commentPlayId ? (
-              <Grid item id="commentplayer" className={classes.column}>
+              <GridContainerCol item id="commentplayer">
                 <MediaPlayer
-                  auth={auth}
                   srcMediaId={mediaId === commentPlayId ? commentPlayId : ''}
                   requestPlay={commentPlaying}
                   onEnded={handleCommentPlayEnd}
                   onTogglePlay={handleCommentTogglePlay}
                   controls={mediaId === commentPlayId}
                 />
-              </Grid>
+              </GridContainerCol>
             ) : (
               <>
-                {media && (
+                {media && (!oldVernVer || oldVernVer === 0) && (
                   <IconButton id="playcomment" onClick={handlePlayComment}>
                     <PlayIcon />
                   </IconButton>
                 )}
-                <Grid container className={classes.column}>
+                <GridContainerCol container>
                   <Grid item id="author">
                     {author?.attributes?.name}
                   </Grid>
                   <Grid item id="datecreated">
                     {dateOrTime(comment.attributes.dateUpdated, lang)}
                   </Grid>
-                </Grid>
+                </GridContainerCol>
               </>
             )}
-          </Grid>
-          {mediaId !== commentPlayId && author?.id === user && (
+          </GridContainerRow>
+          {approvalStatus !== undefined &&
+            (hasPermission(PermissionName.Mentor) ? (
+              <FormControlLabel
+                sx={
+                  approved
+                    ? { color: 'secondary.light' }
+                    : { color: 'warning.dark' }
+                }
+                control={
+                  <Checkbox
+                    id="checkbox-approved"
+                    checked={approved}
+                    onChange={handleApprovedChange}
+                  />
+                }
+                label={approved ? t.approved : t.approve}
+                labelPlacement="top"
+              />
+            ) : (
+              !approved && (
+                <FormLabel id="unapproved" color="secondary">
+                  {t.unapproved}
+                </FormLabel>
+              )
+            ))}
+          {mediaId !== commentPlayId && author?.id === user && !oldVernVer && (
             <Grid item>
               <DiscussionMenu action={handleCommentAction} />
             </Grid>
           )}
-        </Grid>
+        </GridContainerSpread>
         <Grid item xs={12}>
           {editing ? (
             <CommentEditor
@@ -323,19 +379,27 @@ export const CommentCard = (props: IProps) => {
               fileName={fileName}
               uploadMethod={uploadMedia}
             />
-          ) : text ? (
-            <TextField
-              className={classes.text}
-              id="outlined-textarea"
-              value={text}
-              multiline
-              fullWidth
-            />
           ) : (
-            <></>
+            text && (
+              <>
+                <OldVernVersion
+                  id={comment.id}
+                  oldVernVer={oldVernVer}
+                  mediaId={mediaId}
+                  text={text}
+                />
+                <StyledText
+                  id="outlined-textarea"
+                  value={text}
+                  multiline
+                  fullWidth
+                  variant="standard"
+                />
+              </>
+            )
           )}
         </Grid>
-      </Grid>
+      </GridContainerBorderedRow>
 
       {confirmAction === '' || (
         <Confirm
@@ -344,12 +408,14 @@ export const CommentCard = (props: IProps) => {
           noResponse={handleActionRefused}
         />
       )}
-    </div>
+    </StyledWrapper>
   );
 };
 const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
   users: (q: QueryBuilder) => q.findRecords('user'),
+  groups: (q: QueryBuilder) => q.findRecords('group'),
+  memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -36,7 +36,7 @@ import {
   Avatar,
   MenuItem,
 } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
+import SaveIcon from '@mui/icons-material/Save';
 import Confirm from '../components/AlertDialog';
 import ParatextLinked from '../components/ParatextLinked';
 import DeleteExpansion from '../components/DeleteExpansion';
@@ -164,13 +164,12 @@ interface IProps
     IDispatchProps,
     IRecordProps,
     WithDataProps {
-  auth: Auth;
   noMargin?: boolean;
   finishAdd?: () => void;
 }
 
 export function Profile(props: IProps) {
-  const { users, t, noMargin, finishAdd, setLanguage, auth } = props;
+  const { users, t, noMargin, finishAdd, setLanguage } = props;
   const { paratext_username, paratext_usernameStatus, getUserName } = props;
   const classes = useStyles();
   const [isOffline] = useGlobal('offline');
@@ -185,6 +184,7 @@ export function Profile(props: IProps) {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
+  const { accessToken } = useContext(TokenContext).state;
   const { getUserRec } = useUser();
   const { getMbrRoleRec } = useRole();
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
@@ -224,11 +224,14 @@ export function Profile(props: IProps) {
   const { showMessage } = useSnackBar();
   const addToOrgAndGroup = useAddToOrgAndGroup();
   const teamDelete = useTeamDelete();
+  const toolId = 'profile';
+  const saving = useRef(false);
+  const [confirmCancel, setConfirmCancel] = useState<string>();
+
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
   };
-  const toolId = 'profile';
-  const saving = useRef(false);
+
   const handleNameChange = (e: any) => {
     if (e.target.value === email) {
       showMessage(t.nameNotEmail);
@@ -408,6 +411,25 @@ export function Profile(props: IProps) {
   };
 
   const handleCancel = () => {
+    if (myChanged) {
+      const defLocale =
+        currentUser?.attributes?.locale === '' ? t.defaultLocale : '';
+      const defTimezone =
+        currentUser?.attributes?.timezone === '' ? t.defaultTimezone : '';
+      let message = t.discardChanges;
+      let message2 = t.discardChangesExplained;
+      if (defLocale && defTimezone) {
+        message = message2.replace('{0}', `${defLocale} ${defTimezone}`);
+      } else if (defLocale) {
+        message = message2.replace('{0}', defLocale);
+      } else if (defTimezone) {
+        message = message2.replace('{0}', defTimezone);
+      }
+      setConfirmCancel(message);
+    } else handleCancelConrimed();
+  };
+  const handleCancelConrimed = () => {
+    setConfirmCancel(undefined);
     toolChanged(toolId, false);
     if (editId) {
       setEditId(null);
@@ -418,6 +440,9 @@ export function Profile(props: IProps) {
       }
     }
     setView('Team');
+  };
+  const handleCancelAborted = () => {
+    setConfirmCancel(undefined);
   };
 
   const handleDelete = () => {
@@ -551,7 +576,7 @@ export function Profile(props: IProps) {
   useEffect(() => {
     if (!isOffline) {
       if (!paratext_usernameStatus) {
-        getUserName(auth, errorReporter, t.checkingParatext);
+        getUserName(accessToken || '', errorReporter, t.checkingParatext);
       }
       setHasParatext(paratext_username !== '');
     }
@@ -837,6 +862,13 @@ export function Profile(props: IProps) {
           <Confirm
             yesResponse={handleDeleteConfirmed}
             noResponse={handleDeleteRefused}
+          />
+        )}
+        {confirmCancel && (
+          <Confirm
+            text="Discard unsaved data?"
+            yesResponse={handleCancelConrimed}
+            noResponse={handleCancelAborted}
           />
         )}
       </Paper>

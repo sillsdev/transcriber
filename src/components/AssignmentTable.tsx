@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import { useState, useEffect, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
@@ -17,14 +17,13 @@ import {
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, AppBar } from '@material-ui/core';
-import FilterIcon from '@material-ui/icons/FilterList';
-import SelectAllIcon from '@material-ui/icons/SelectAll';
+import { styled } from '@mui/material';
+import FilterIcon from '@mui/icons-material/FilterList';
+import SelectAllIcon from '@mui/icons-material/SelectAll';
+import { AltButton } from '../control';
 import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import TreeGrid from './TreeGrid';
-import Auth from '../auth/Auth';
 import AssignSection from './AssignSection';
 import {
   related,
@@ -37,37 +36,22 @@ import {
   useOrganizedBy,
   usePassageState,
 } from '../crud';
-import { ActionHeight, tabActions, actionBar } from './PlanTabs';
+import {
+  TabAppBar,
+  TabActions,
+  PaddedBox,
+  GrowingSpacer,
+  iconMargin,
+} from '../control';
 import { ReplaceRelatedRecord, UpdateLastModifiedBy } from '../model/baseModel';
 import { PlanContext } from '../context/PlanContext';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      '& tr > td > div > span.MuiButtonBase-root:nth-child(3)': {
-        visibility: 'hidden',
-      },
-    },
-    paper: {},
-    bar: actionBar,
-    content: {
-      paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
-    },
-    actions: tabActions,
-    grow: {
-      flexGrow: 1,
-    },
-    button: {
-      margin: theme.spacing(1),
-      variant: 'outlined',
-      color: 'primary',
-    },
-    icon: {
-      marginLeft: theme.spacing(1),
-    },
-  })
-);
+const AssignmentDiv = styled('div')(() => ({
+  display: 'flex',
+  '& tr > td > div > span.MuiButtonBase-root:nth-of-type(3)': {
+    visibility: 'hidden',
+  },
+}));
 
 interface IRow {
   id: string;
@@ -100,7 +84,6 @@ interface IRecordProps {
 
 interface IProps extends IStateProps, IRecordProps, WithDataProps {
   action?: (what: string, where: number[]) => boolean;
-  auth: Auth;
 }
 
 export function AssignmentTable(props: IProps) {
@@ -117,7 +100,6 @@ export function AssignmentTable(props: IProps) {
   } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const { showMessage } = useSnackBar();
@@ -265,59 +247,50 @@ export function AssignmentTable(props: IProps) {
   ]);
 
   return (
-    <div id="AssignmentTable" className={classes.container}>
-      <div className={classes.paper}>
-        <AppBar position="fixed" className={classes.bar} color="default">
-          <div className={classes.actions}>
+    <AssignmentDiv id="AssignmentTable">
+      <div>
+        <TabAppBar position="fixed" color="default">
+          <TabActions>
             {projRole === RoleNames.Admin && (
               <>
-                <Button
+                <AltButton
                   id="assignAdd"
                   key="assign"
                   aria-label={t.assignSec}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
                   onClick={handleAssignSection(true)}
                   title={t.assignSec.replace('{0}', organizedByPlural)}
                 >
                   {t.assignSec.replace('{0}', organizedByPlural)}
-                </Button>
-                <Button
+                </AltButton>
+                <AltButton
                   id="assignRem"
                   key="remove"
                   aria-label={t.removeSec}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
                   onClick={handleRemoveAssignments}
                   title={t.removeSec}
                 >
                   {t.removeSec}
-                </Button>
+                </AltButton>
               </>
             )}
-            <div className={classes.grow}>{'\u00A0'}</div>
-            <Button
+            <GrowingSpacer />
+            <AltButton
               id="assignFilt"
               key="filter"
               aria-label={t.filter}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
               onClick={handleFilter}
               title={t.showHideFilter}
             >
               {t.filter}
               {filter ? (
-                <SelectAllIcon className={classes.icon} />
+                <SelectAllIcon sx={iconMargin} />
               ) : (
-                <FilterIcon className={classes.icon} />
+                <FilterIcon sx={iconMargin} />
               )}
-            </Button>
-          </div>
-        </AppBar>
-        <div className={classes.content}>
+            </AltButton>
+          </TabActions>
+        </TabAppBar>
+        <PaddedBox>
           <TreeGrid
             columns={columnDefs}
             columnWidths={columnWidths}
@@ -338,7 +311,7 @@ export function AssignmentTable(props: IProps) {
             showgroups={filter}
             select={handleCheck}
           />
-        </div>
+        </PaddedBox>
       </div>
       <AssignSection
         sections={getSelectedSections()}
@@ -354,7 +327,7 @@ export function AssignmentTable(props: IProps) {
       ) : (
         <></>
       )}
-    </div>
+    </AssignmentDiv>
   );
 }
 

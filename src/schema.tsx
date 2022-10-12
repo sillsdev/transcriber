@@ -14,6 +14,16 @@ import { offlineProjectCreate, related } from './crud';
 import { MediaFile } from './model';
 
 const schemaDefinition: SchemaSettings = {
+  pluralize: (word: string) => {
+    if (!word) return word;
+    if (word.endsWith('y')) return word.substring(0, word.length - 1) + 'ies';
+    return word + 's';
+  },
+  singularize: (word: string) => {
+    if (!word) return word;
+    if (word.endsWith('ies')) return word.substring(0, word.length - 3) + 'y';
+    return word.substring(0, word.length - 1);
+  },
   models: {
     activitystate: {
       keys: { remoteId: {} },
@@ -34,6 +44,7 @@ const schemaDefinition: SchemaSettings = {
         name: { type: 'string' },
         abbreviation: { type: 'string' },
         ownerId: { type: 'number' },
+        permissions: { type: 'string' },
         allUsers: { type: 'boolean' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
@@ -91,7 +102,6 @@ const schemaDefinition: SchemaSettings = {
         loginLink: { type: 'string' },
         invitedBy: { type: 'string' },
         strings: { type: 'string' },
-        silId: { type: 'numer' },
         accepted: { type: 'boolean' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
@@ -126,7 +136,6 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         slug: { type: 'string' },
-        SilId: { type: 'number' },
         description: { type: 'string' },
         websiteUrl: { type: 'string' },
         logoUrl: { type: 'string' },
@@ -134,6 +143,7 @@ const schemaDefinition: SchemaSettings = {
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
+        defaultParams: { type: 'string' },
       },
       relationships: {
         owner: { type: 'hasOne', model: 'user' },
@@ -627,7 +637,7 @@ if (
     },
     relationships: {
       mediafile: { type: 'hasOne', model: 'mediafile' },
-      role: { type: 'hasOne', model: 'role' },
+      group: { type: 'hasOne', model: 'group' },
       user: { type: 'hasOne', model: 'user' },
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
       artifactCategory: { type: 'hasOne', model: 'artifactcategory' },
@@ -647,6 +657,7 @@ if (
       offlineId: { type: 'string' },
       offlineDiscussionId: { type: 'string' },
       offlineMediafileId: { type: 'string' },
+      visible: { type: 'string' },
     },
     relationships: {
       discussion: { type: 'hasOne', model: 'discussion' },
@@ -744,8 +755,36 @@ if (
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
+}
+if (
+  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4 &&
+  schemaDefinition.models
+) {
+  schemaDefinition.models.intellectualproperty = {
+    keys: { remoteId: {} },
+    attributes: {
+      rightsHolder: { type: 'string' },
+      notes: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' },
+      offlineId: { type: 'string' },
+      offlineMediafileId: { type: 'string' },
+    },
+    relationships: {
+      organization: {
+        type: 'hasOne',
+        model: 'organization',
+      },
+      releaseMediafile: {
+        type: 'hasOne',
+        model: 'mediafile',
+      },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
 
-  schemaDefinition.version = 4;
+  schemaDefinition.version = 5;
 }
 export const schema = new Schema(schemaDefinition);
 

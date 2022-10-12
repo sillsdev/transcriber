@@ -1,39 +1,30 @@
 import {
-  makeStyles,
-  withStyles,
-  Theme,
-  createStyles,
   Paper,
   IconButton,
   Typography,
-  Slider,
   InputLabel,
   Divider,
+  DividerProps,
   Input,
   Grid,
-} from '@material-ui/core';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  ChangeEvent,
-  useContext,
-} from 'react';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import ForwardIcon from '@material-ui/icons/Refresh';
-import ReplayIcon from '@material-ui/icons/Replay';
-import PlayIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import LoopIcon from '@material-ui/icons/Loop';
-import DeleteIcon from '@material-ui/icons/Delete';
-import SilenceIcon from '@material-ui/icons/SpaceBar';
-import TimerIcon from '@material-ui/icons/AccessTime';
-import NextSegmentIcon from '@material-ui/icons/ArrowRightAlt';
-import UndoIcon from '@material-ui/icons/Undo';
-import localStrings from '../selector/localize';
-import { IState, IWsAudioPlayerStrings } from '../model';
+  ToggleButton,
+  Box,
+  SxProps,
+} from '@mui/material';
+import { useState, useEffect, useRef, useContext } from 'react';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import ForwardIcon from '@mui/icons-material/Refresh';
+import ReplayIcon from '@mui/icons-material/Replay';
+import PlayIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import LoopIcon from '@mui/icons-material/Loop';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SilenceIcon from '@mui/icons-material/SpaceBar';
+import TimerIcon from '@mui/icons-material/AccessTime';
+import NextSegmentIcon from '@mui/icons-material/ArrowRightAlt';
+import UndoIcon from '@mui/icons-material/Undo';
+import { IWsAudioPlayerStrings } from '../model';
 import {
   FaHandScissors,
   FaAngleDoubleUp,
@@ -44,8 +35,7 @@ import {
 
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
 import { IMarker, useWaveSurfer } from '../crud/useWaveSurfer';
-import { Duration, LightTooltip } from '../control';
-import { connect } from 'react-redux';
+import { Duration, GrowingSpacer, LightTooltip, IosSlider } from '../control';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
 import WSAudioPlayerZoom from './WSAudioPlayerZoom';
@@ -57,136 +47,48 @@ import {
 } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
+import { NamedRegions } from '../utils';
+import { wsAudioPlayerSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      margin: 'auto',
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'column',
-      whiteSpace: 'nowrap',
-    },
-    toolbar: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyItems: 'flex-start',
-      display: 'flex',
-    },
-    labeledControl: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    slider: {
-      width: '50px',
-      display: 'flex',
-    },
-    record: {
-      color: 'red',
-    },
-    togglebutton: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    formControl: {
-      margin: theme.spacing(1),
-      maxWidth: 50,
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    smallFont: {
-      fontSize: 'small',
-    },
-    divider: {
-      marginLeft: '5px',
-      orientation: 'vertical', //this doesn't work - has to be below
-    },
-    duration: {
-      margin: '5px',
-    },
-    flipIcon: {
-      transform: 'rotate(180deg)',
-    },
-  })
+const VertDivider = (prop: DividerProps) => (
+  <Divider orientation="vertical" flexItem sx={{ ml: '5px' }} {...prop} />
 );
 
-const iOSBoxShadow =
-  '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)';
+const toolbarProp = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyItems: 'flex-start',
+  display: 'flex',
+} as SxProps;
 
-const IOSSlider = withStyles({
-  root: {
-    width: '50px',
-    color: '#3880ff',
-    height: 2,
-    padding: '15px 0',
-  },
-  thumb: {
-    height: 10,
-    width: 10,
-    boxShadow: iOSBoxShadow,
-    '&:focus, &:hover, &$active': {
-      boxShadow: iOSBoxShadow,
-      // Reset on touch devices, it doesn't add specificity
-      '@media (hover: none)': {
-        boxShadow: iOSBoxShadow,
-      },
-    },
-  },
-  active: {},
-  valueLabel: {
-    top: -15,
-    '& *': {
-      background: 'transparent',
-      color: '#000',
-    },
-  },
-  track: {
-    height: 2,
-  },
-  rail: {
-    height: 2,
-    opacity: 0.5,
-    backgroundColor: '#bfbfbf',
-  },
-  mark: {
-    backgroundColor: '#bfbfbf',
-    height: 3,
-    width: 1,
-    marginTop: -1,
-  },
-  markActive: {
-    opacity: 1,
-    backgroundColor: 'currentColor',
-  },
-})(Slider);
+const labeledControlProp = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};
 
-interface IStateProps {
-  t: IWsAudioPlayerStrings;
-}
+const smallLabel = { fontSize: 'small' } as SxProps;
 
-interface IProps extends IStateProps {
-  visible: boolean;
+interface IProps {
+  id?: string;
+  visible?: boolean;
   blob?: Blob;
   initialposition?: number;
   allowRecord?: boolean;
   allowZoom?: boolean;
-  allowSegment?: boolean;
+  allowSegment?: NamedRegions | undefined;
   allowAutoSegment?: boolean;
   allowSpeed?: boolean;
   allowSilence?: boolean;
+  alternatePlayer?: boolean;
   size: number;
   segments: string;
+  currentSegmentIndex?: number;
   markers?: IMarker[];
   metaData?: JSX.Element;
   isPlaying?: boolean;
-  loading: boolean;
+  loading?: boolean;
   busy?: boolean;
   defaultRegionParams?: IRegionParams;
   doReset?: boolean;
@@ -215,6 +117,7 @@ const SPEED_STEP = 0.1;
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 1.5;
 const PLAY_PAUSE_KEY = 'F1,CTRL+SPACE';
+const ALT_PLAY_PAUSE_KEY = 'ALT+F1,ALT+CTRL+SPACE';
 const HOME_KEY = 'CTRL+HOME';
 const BACK_KEY = 'F2,SHIFT+ARROWLEFT';
 const AHEAD_KEY = 'F3,SHIFT+ARROWRIGHT';
@@ -228,7 +131,6 @@ const RIGHT_KEY = 'CTRL+ARROWRIGHT';
 
 function WSAudioPlayer(props: IProps) {
   const {
-    t,
     blob,
     initialposition,
     allowRecord,
@@ -239,6 +141,7 @@ function WSAudioPlayer(props: IProps) {
     allowSilence,
     size,
     segments,
+    currentSegmentIndex,
     markers,
     metaData,
     isPlaying,
@@ -266,7 +169,6 @@ function WSAudioPlayer(props: IProps) {
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
 
-  const classes = useStyles();
   const [confirmAction, setConfirmAction] = useState<string | JSX.Element>('');
   const [jump] = useState(2);
   const playbackRef = useRef(1);
@@ -296,11 +198,16 @@ function WSAudioPlayer(props: IProps) {
   const justPlayButton = allowRecord;
   const processRecordRef = useRef(false);
   const { showMessage } = useSnackBar();
+  const t: IWsAudioPlayerStrings = useSelector(
+    wsAudioPlayerSelector,
+    shallowEqual
+  );
   const [style, setStyle] = useState({
     cursor: busy || loading ? 'progress' : 'default',
   });
-  const autostartTimer = React.useRef<NodeJS.Timeout>();
+  const autostartTimer = useRef<NodeJS.Timeout>();
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
+
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
   const {
@@ -347,6 +254,7 @@ function WSAudioPlayer(props: IProps) {
     size - 150,
     allowRecord,
     timelineRef.current,
+    currentSegmentIndex,
     onCurrentSegment
   );
   //because we have to call hooks consistently, call this even if we aren't going to record
@@ -358,7 +266,6 @@ function WSAudioPlayer(props: IProps) {
     onRecordDataAvailable
   );
 
-  const paperStyle = {};
   //#region hotkey handlers
   const handleFaster = () => {
     if (playbackRef.current === MAX_SPEED || recordingRef.current) return false;
@@ -465,7 +372,15 @@ function WSAudioPlayer(props: IProps) {
     { key: AHEAD_KEY, cb: handleJumpForward },
     { key: TIMER_KEY, cb: handleSendProgress },
   ];
-
+  const simplePlayerKeys = [
+    {
+      key: ALT_PLAY_PAUSE_KEY,
+      cb: () => {
+        handlePlayStatus();
+        return true;
+      },
+    },
+  ];
   const speedKeys = [
     { key: FASTER_KEY, cb: handleFaster },
     { key: SLOWER_KEY, cb: handleSlower },
@@ -479,17 +394,22 @@ function WSAudioPlayer(props: IProps) {
   ];
 
   useEffect(() => {
-    playerKeys.forEach((k) => subscribe(k.key, k.cb));
-
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       playerKeys.forEach((k) => unsubscribe(k.key));
+      simplePlayerKeys.forEach((k) => unsubscribe(k.key));
       recordKeys.forEach((k) => unsubscribe(k.key));
       segmentKeys.forEach((k) => unsubscribe(k.key));
       speedKeys.forEach((k) => unsubscribe(k.key));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (justPlayButton) simplePlayerKeys.forEach((k) => subscribe(k.key, k.cb));
+    else playerKeys.forEach((k) => subscribe(k.key, k.cb));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [justPlayButton]);
+
   useEffect(() => {
     if (allowRecord) recordKeys.forEach((k) => subscribe(k.key, k.cb));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -679,10 +599,7 @@ function WSAudioPlayer(props: IProps) {
     if (onPlayStatus) onPlayStatus(status);
   }
 
-  const handleSliderChange = (
-    event: ChangeEvent<{}>,
-    value: number | number[]
-  ) => {
+  const handleSliderChange = (event: Event, value: number | number[]) => {
     if (Array.isArray(value)) value = value[0]; //won't be
     setPlaybackRate(value / 100);
   };
@@ -762,479 +679,466 @@ function WSAudioPlayer(props: IProps) {
   const onSplit = (split: IRegionChange) => {};
 
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper} style={paperStyle}>
-        <div className={classes.main} style={style}>
-          <Grid container className={classes.toolbar}>
-            {allowRecord && (
-              <>
-                <Grid item>
-                  <LightTooltip
-                    id="wsAudioRecordTip"
-                    title={(recording ? t.pauseTip : t.record).replace(
-                      '{0}',
-                      RECORD_KEY
-                    )}
-                  >
-                    <span>
+    <Box sx={{ flexGrow: 1 }}>
+      <Paper sx={{ p: 2, margin: 'auto' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            whiteSpace: 'nowrap',
+          }}
+          style={style}
+        >
+          <>
+            <Grid container sx={toolbarProp}>
+              {allowRecord && (
+                <>
+                  <Grid item>
+                    <LightTooltip
+                      id="wsAudioRecordTip"
+                      title={(recording ? t.pauseTip : t.record).replace(
+                        '{0}',
+                        RECORD_KEY
+                      )}
+                    >
+                      <span>
+                        <IconButton
+                          id="wsAudioRecord"
+                          sx={{ color: 'red' }}
+                          onClick={handleRecorder}
+                          disabled={
+                            playingRef.current || processRecordRef.current
+                          }
+                        >
+                          {recording ? <FaStopCircle /> : <FaDotCircle />}
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+                  </Grid>
+                  <Grid item>
+                    <LightTooltip
+                      id="wsAudioPlayTip"
+                      title={(playing ? t.pauseTip : t.playTip).replace(
+                        '{0}',
+                        localizeHotKey(
+                          justPlayButton ? ALT_PLAY_PAUSE_KEY : PLAY_PAUSE_KEY
+                        )
+                      )}
+                    >
+                      <span>
+                        <IconButton
+                          id="wsAudioPlay"
+                          onClick={handlePlayStatus}
+                          disabled={duration === 0 || recording}
+                        >
+                          <>{playing ? <PauseIcon /> : <PlayIcon />}</>
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+                  </Grid>
+                  <VertDivider id="wsAudioDiv1" />
+                </>
+              )}
+              <Grid item>
+                <Typography sx={{ m: '5px' }}>
+                  <Duration id="wsAudioPosition" seconds={progress} /> {' / '}
+                  <Duration id="wsAudioDuration" seconds={duration} />
+                </Typography>
+              </Grid>
+              <VertDivider id="wsAudioDiv2" />
+              {allowZoom && (
+                <>
+                  <Grid item>
+                    <WSAudioPlayerZoom
+                      startBig={allowRecord || false}
+                      ready={ready}
+                      wsZoom={wsZoom}
+                      wsPctWidth={wsPctWidth}
+                      t={t}
+                    ></WSAudioPlayerZoom>
+                  </Grid>
+                  <VertDivider id="wsAudioDiv3" />
+                </>
+              )}
+              {allowRecord && (
+                <>
+                  {allowSilence && (
+                    <>
+                      <Box sx={labeledControlProp}>
+                        <>
+                          <InputLabel
+                            id="wsAudioAddSilenceLabel"
+                            sx={smallLabel}
+                          >
+                            {t.silence}
+                          </InputLabel>
+                          <LightTooltip
+                            id="wsAudioAddSilenceTip"
+                            title={t.silence}
+                          >
+                            <span>
+                              <IconButton
+                                id="wsAudioAddSilence"
+                                sx={{ mx: 1 }}
+                                onClick={handleAddSilence()}
+                                disabled={
+                                  !ready ||
+                                  recording ||
+                                  playingRef.current ||
+                                  processRecordRef.current
+                                }
+                              >
+                                <SilenceIcon />
+                              </IconButton>
+                            </span>
+                          </LightTooltip>
+                        </>
+                      </Box>
+                      <Box sx={labeledControlProp}>
+                        <>
+                          <InputLabel id="wsAudioSilenceLabel" sx={smallLabel}>
+                            {t.seconds}
+                          </InputLabel>
+                          <Input
+                            id="wsAudioSilence"
+                            sx={{ m: 1, maxWidth: 50 }}
+                            type="number"
+                            inputProps={{ min: '0.1', step: '0.1' }}
+                            value={silence}
+                            onChange={handleChangeSilence}
+                          />
+                        </>
+                      </Box>
+                      <VertDivider id="wsAudioDiv4" />{' '}
+                    </>
+                  )}
+                  {hasRegion !== 0 && (
+                    <LightTooltip
+                      id="wsAudioDeleteRegionTip"
+                      title={t.deleteRegion}
+                    >
                       <IconButton
-                        id="wsAudioRecord"
-                        className={classes.record}
-                        onClick={handleRecorder}
-                        disabled={
-                          playingRef.current || processRecordRef.current
-                        }
+                        id="wsAudioDeleteRegion"
+                        onClick={handleDeleteRegion}
+                        disabled={recording}
                       >
-                        {recording ? <FaStopCircle /> : <FaDotCircle />}
+                        <FaHandScissors />
                       </IconButton>
-                    </span>
-                  </LightTooltip>
-                </Grid>
-                <Grid item>
-                  <LightTooltip
-                    id="wsAudioPlayTip"
-                    title={(playing ? t.pauseTip : t.playTip).replace(
-                      '{0}',
-                      localizeHotKey(PLAY_PAUSE_KEY)
-                    )}
-                  >
-                    <span>
+                    </LightTooltip>
+                  )}
+                  {canUndo && (
+                    <LightTooltip id="wsUndoTip" title={t.undoTip}>
                       <IconButton
-                        id="wsAudioPlay"
-                        onClick={handlePlayStatus}
-                        disabled={duration === 0 || recording}
+                        id="wsUndo"
+                        onClick={handleUndo}
+                        disabled={recording}
                       >
-                        <>{playing ? <PauseIcon /> : <PlayIcon />}</>
+                        <UndoIcon />
                       </IconButton>
-                    </span>
-                  </LightTooltip>
-                </Grid>
-                <Divider
-                  id="wsAudioDiv1"
-                  className={classes.divider}
-                  orientation="vertical"
-                  flexItem
+                    </LightTooltip>
+                  )}
+                  {hasRegion === 0 && (
+                    <LightTooltip
+                      id="wsAudioDeleteTip"
+                      title={t.deleteRecording}
+                    >
+                      <span>
+                        <IconButton
+                          id="wsAudioDelete"
+                          onClick={handleDelete}
+                          disabled={recording || duration === 0}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+                  )}
+                  <GrowingSpacer />
+                </>
+              )}
+              {allowSegment && (
+                <WSAudioPlayerSegment
+                  ready={ready}
+                  onSplit={onSplit}
+                  loop={loopingRef.current || false}
+                  playing={playing}
+                  currentNumRegions={hasRegion}
+                  params={regionParams}
+                  wsAutoSegment={allowAutoSegment ? wsAutoSegment : undefined}
+                  wsRemoveSplitRegion={wsRemoveSplitRegion}
+                  wsAddOrRemoveRegion={wsAddOrRemoveRegion}
+                  wsClearRegions={wsClearRegions}
+                  setBusy={setBusy}
+                  t={t}
                 />
-              </>
-            )}
-            <Grid item>
-              <Typography className={classes.duration}>
-                <Duration id="wsAudioPosition" seconds={progress} /> {' / '}
-                <Duration id="wsAudioDuration" seconds={duration} />
-              </Typography>
+              )}
             </Grid>
-            <Divider
-              id="wsAudioDiv2"
-              className={classes.divider}
-              orientation="vertical"
-              flexItem
-            />
-            {allowZoom && (
-              <>
+            <div id="wsAudioTimeline" ref={timelineRef} />
+            <div id="wsAudioWaveform" ref={waveformRef} />
+            {justPlayButton || (
+              <Grid container sx={toolbarProp}>
                 <Grid item>
-                  <WSAudioPlayerZoom
-                    startBig={allowRecord || false}
-                    ready={ready}
-                    wsZoom={wsZoom}
-                    wsPctWidth={wsPctWidth}
-                    t={t}
-                  ></WSAudioPlayerZoom>
-                </Grid>
-                <Divider
-                  id="wsAudioDiv3"
-                  className={classes.divider}
-                  orientation="vertical"
-                  flexItem
-                />
-              </>
-            )}
-            {allowRecord && (
-              <>
-                {allowSilence && (
-                  <>
-                    <div className={classes.labeledControl}>
-                      <InputLabel
-                        id="wsAudioAddSilenceLabel"
-                        className={classes.smallFont}
+                  {allowAutoSegment && (
+                    <LightTooltip
+                      id="wsAudioLoopTip"
+                      title={looping ? t.loopon : t.loopoff}
+                    >
+                      <span>
+                        <ToggleButton
+                          id="wsAudioLoop"
+                          sx={{ mx: 1 }}
+                          value="loop"
+                          selected={looping}
+                          onChange={handleToggleLoop}
+                          disabled={!hasRegion}
+                        >
+                          <LoopIcon />
+                        </ToggleButton>
+                      </span>
+                    </LightTooltip>
+                  )}
+                  {allowSegment && (
+                    <>
+                      <LightTooltip
+                        id="wsPrevTip"
+                        title={t.prevRegion.replace(
+                          '{0}',
+                          localizeHotKey(LEFT_KEY)
+                        )}
                       >
-                        {t.silence}
-                      </InputLabel>
-                      <LightTooltip id="wsAudioAddSilenceTip" title={t.silence}>
                         <span>
                           <IconButton
-                            id="wsAudioAddSilence"
-                            className={classes.togglebutton}
-                            onClick={handleAddSilence()}
-                            disabled={
-                              !ready ||
-                              recording ||
-                              playingRef.current ||
-                              processRecordRef.current
+                            disabled={!hasRegion}
+                            id="wsNext"
+                            onClick={handlePrevRegion}
+                          >
+                            <NextSegmentIcon
+                              sx={{ transform: 'rotate(180deg)' }}
+                            />
+                          </IconButton>
+                        </span>
+                      </LightTooltip>
+                      <LightTooltip
+                        id="wsNextTip"
+                        title={t.nextRegion.replace(
+                          '{0}',
+                          localizeHotKey(RIGHT_KEY)
+                        )}
+                      >
+                        <span>
+                          <IconButton
+                            disabled={!hasRegion}
+                            id="wsNext"
+                            onClick={handleNextRegion}
+                          >
+                            <NextSegmentIcon />
+                          </IconButton>
+                        </span>
+                      </LightTooltip>
+                    </>
+                  )}
+                </Grid>
+                <VertDivider id="wsAudioDiv5" />
+                <Grid item>
+                  <>
+                    <LightTooltip
+                      id="wsAudioHomeTip"
+                      title={t.beginningTip.replace(
+                        '{0}',
+                        localizeHotKey(HOME_KEY)
+                      )}
+                    >
+                      <span>
+                        <IconButton
+                          id="wsAudioHome"
+                          onClick={handleGotoEv(0)}
+                          disabled={!ready || recording}
+                        >
+                          <SkipPreviousIcon />
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+                    <LightTooltip
+                      id="wsAudioBackTip"
+                      title={t.backTip
+                        .replace('{jump}', jump.toString())
+                        .replace('{1}', t.seconds)
+                        .replace('{0}', localizeHotKey(BACK_KEY))}
+                    >
+                      <span>
+                        <IconButton
+                          id="wsAudioBack"
+                          onClick={handleJumpEv(-1 * jump)}
+                          disabled={!ready || recording}
+                        >
+                          <ReplayIcon />
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+
+                    <LightTooltip
+                      id="wsAudioPlayTip"
+                      title={(playing ? t.pauseTip : t.playTip).replace(
+                        '{0}',
+                        localizeHotKey(PLAY_PAUSE_KEY)
+                      )}
+                    >
+                      <span>
+                        <IconButton
+                          id="wsAudioPlay"
+                          onClick={handlePlayStatus}
+                          disabled={duration === 0 || recording}
+                        >
+                          <>{playing ? <PauseIcon /> : <PlayIcon />}</>
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+                    <LightTooltip
+                      id="wsAudioForwardTip"
+                      title={t.aheadTip
+                        .replace('{jump}', jump.toString())
+                        .replace('{1}', t.seconds)
+                        .replace('{0}', localizeHotKey(AHEAD_KEY))}
+                    >
+                      <span>
+                        <IconButton
+                          id="wsAudioForward"
+                          onClick={handleJumpEv(jump)}
+                          disabled={!ready || recording}
+                        >
+                          <ForwardIcon />{' '}
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+
+                    <LightTooltip
+                      id="wsAudioEndTip"
+                      title={t.endTip.replace('{0}', localizeHotKey(END_KEY))}
+                    >
+                      <span>
+                        <IconButton
+                          id="wsAudioEnd"
+                          onClick={handleGoToEnd}
+                          disabled={!ready || recording}
+                        >
+                          <SkipNextIcon />{' '}
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+                  </>
+                </Grid>
+                {allowSpeed && (
+                  <>
+                    <VertDivider id="wsAudioDiv6" />
+                    <Grid item>
+                      <Box sx={toolbarProp}>
+                        <>
+                          <LightTooltip
+                            id="wsAudioSlowerTip"
+                            title={t.slowerTip.replace(
+                              '{0}',
+                              localizeHotKey(SLOWER_KEY)
+                            )}
+                          >
+                            <span>
+                              <IconButton
+                                id="wsAudioSlower"
+                                onClick={handleSlower}
+                                disabled={
+                                  playbackRate === MIN_SPEED || recording
+                                }
+                              >
+                                <FaAngleDoubleDown fontSize="small" />{' '}
+                              </IconButton>
+                            </span>
+                          </LightTooltip>
+                          <IosSlider
+                            id="wsAudioPlaybackSpeed"
+                            aria-label="ios slider"
+                            value={
+                              typeof playbackRate === 'number'
+                                ? playbackRate * 100
+                                : 0
                             }
+                            step={SPEED_STEP * 100}
+                            marks
+                            min={MIN_SPEED * 100}
+                            max={MAX_SPEED * 100}
+                            valueLabelDisplay="on"
+                            getAriaValueText={valuetext}
+                            valueLabelFormat={valuetext}
+                            onChange={handleSliderChange}
+                          />
+
+                          <LightTooltip
+                            id="wsAudioFasterTip"
+                            title={t.fasterTip.replace(
+                              '{0}',
+                              localizeHotKey(FASTER_KEY)
+                            )}
                           >
-                            <SilenceIcon />
-                          </IconButton>
-                        </span>
-                      </LightTooltip>
-                    </div>
-                    <div className={classes.labeledControl}>
-                      <InputLabel
-                        id="wsAudioSilenceLabel"
-                        className={classes.smallFont}
-                      >
-                        {t.seconds}
-                      </InputLabel>
-                      <Input
-                        id="wsAudioSilence"
-                        className={classes.formControl}
-                        type="number"
-                        inputProps={{ min: '0.1', step: '0.1' }}
-                        value={silence}
-                        onChange={handleChangeSilence}
-                      />
-                    </div>
-                    <Divider
-                      id="wsAudioDiv4"
-                      className={classes.divider}
-                      orientation="vertical"
-                      flexItem
-                    />{' '}
+                            <span>
+                              <IconButton
+                                id="wsAudioFaster"
+                                onClick={handleFaster}
+                                disabled={
+                                  playbackRate === MAX_SPEED || recording
+                                }
+                              >
+                                <FaAngleDoubleUp fontSize="small" />{' '}
+                              </IconButton>
+                            </span>
+                          </LightTooltip>
+                        </>
+                      </Box>
+                    </Grid>
                   </>
                 )}
-                {hasRegion !== 0 && (
-                  <LightTooltip
-                    id="wsAudioDeleteRegionTip"
-                    title={t.deleteRegion}
-                  >
-                    <IconButton
-                      id="wsAudioDeleteRegion"
-                      onClick={handleDeleteRegion}
-                      disabled={recording}
-                    >
-                      <FaHandScissors />
-                    </IconButton>
-                  </LightTooltip>
-                )}
-                {canUndo && (
-                  <LightTooltip id="wsUndoTip" title={t.undoTip}>
-                    <IconButton
-                      id="wsUndo"
-                      onClick={handleUndo}
-                      disabled={recording}
-                    >
-                      <UndoIcon />
-                    </IconButton>
-                  </LightTooltip>
-                )}
-                {hasRegion === 0 && (
-                  <LightTooltip id="wsAudioDeleteTip" title={t.deleteRecording}>
-                    <span>
-                      <IconButton
-                        id="wsAudioDelete"
-                        onClick={handleDelete}
-                        disabled={recording || duration === 0}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
-                )}
-                <div className={classes.grow}>{'\u00A0'}</div>
-              </>
-            )}
-            {allowSegment && (
-              <WSAudioPlayerSegment
-                ready={ready}
-                onSplit={onSplit}
-                loop={loopingRef.current || false}
-                playing={playing}
-                currentNumRegions={hasRegion}
-                params={regionParams}
-                wsAutoSegment={allowAutoSegment ? wsAutoSegment : undefined}
-                wsRemoveSplitRegion={wsRemoveSplitRegion}
-                wsAddOrRemoveRegion={wsAddOrRemoveRegion}
-                wsClearRegions={wsClearRegions}
-                setBusy={setBusy}
-                t={t}
-              />
-            )}
-          </Grid>
-          <div id="wsAudioTimeline" ref={timelineRef} />
-          <div id="wsAudioWaveform" ref={waveformRef} />
-          {justPlayButton || (
-            <Grid container className={classes.toolbar}>
-              <Grid item>
-                {allowAutoSegment && (
-                  <LightTooltip
-                    id="wsAudioLoopTip"
-                    title={looping ? t.loopon : t.loopoff}
-                  >
-                    <span>
-                      <ToggleButton
-                        id="wsAudioLoop"
-                        className={classes.togglebutton}
-                        value="loop"
-                        selected={looping}
-                        onChange={handleToggleLoop}
-                        disabled={!hasRegion}
-                      >
-                        <LoopIcon />
-                      </ToggleButton>
-                    </span>
-                  </LightTooltip>
-                )}
-                {allowSegment && (
+                {onSaveProgress && (
                   <>
-                    <LightTooltip
-                      id="wsPrevTip"
-                      title={t.prevRegion.replace(
-                        '{0}',
-                        localizeHotKey(LEFT_KEY)
-                      )}
-                    >
-                      <span>
-                        <IconButton
-                          disabled={!hasRegion}
-                          id="wsNext"
-                          onClick={handlePrevRegion}
-                        >
-                          <NextSegmentIcon className={classes.flipIcon} />
-                        </IconButton>
-                      </span>
-                    </LightTooltip>
-                    <LightTooltip
-                      id="wsNextTip"
-                      title={t.nextRegion.replace(
-                        '{0}',
-                        localizeHotKey(RIGHT_KEY)
-                      )}
-                    >
-                      <span>
-                        <IconButton
-                          disabled={!hasRegion}
-                          id="wsNext"
-                          onClick={handleNextRegion}
-                        >
-                          <NextSegmentIcon />
-                        </IconButton>
-                      </span>
-                    </LightTooltip>
+                    <VertDivider id="wsAudioDiv7" />
+                    <Grid item>
+                      <LightTooltip
+                        id="wsAudioTimestampTip"
+                        title={t.timerTip.replace(
+                          '{0}',
+                          localizeHotKey(TIMER_KEY)
+                        )}
+                      >
+                        <span>
+                          <IconButton
+                            id="wsAudioTimestamp"
+                            onClick={handleSendProgress}
+                          >
+                            <>
+                              <TimerIcon />
+                            </>
+                          </IconButton>
+                        </span>
+                      </LightTooltip>
+                    </Grid>
+                    {metaData}
                   </>
                 )}
+                <Grid item sx={{ flexGrow: 1 }}>
+                  {'\u00A0'}
+                </Grid>
+                {!onSaveProgress && <>{metaData}</>}
               </Grid>
-              <Divider
-                id="wsAudioDiv5"
-                className={classes.divider}
-                orientation="vertical"
-                flexItem
+            )}
+            {confirmAction === '' || (
+              <Confirm
+                jsx={<span></span>}
+                text={confirmAction}
+                yesResponse={handleActionConfirmed}
+                noResponse={handleActionRefused}
               />
-              <Grid item>
-                <>
-                  <LightTooltip
-                    id="wsAudioHomeTip"
-                    title={t.beginningTip.replace(
-                      '{0}',
-                      localizeHotKey(HOME_KEY)
-                    )}
-                  >
-                    <span>
-                      <IconButton
-                        id="wsAudioHome"
-                        onClick={handleGotoEv(0)}
-                        disabled={!ready || recording}
-                      >
-                        <SkipPreviousIcon />
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
-                  <LightTooltip
-                    id="wsAudioBackTip"
-                    title={t.backTip
-                      .replace('{jump}', jump.toString())
-                      .replace('{1}', t.seconds)
-                      .replace('{0}', localizeHotKey(BACK_KEY))}
-                  >
-                    <span>
-                      <IconButton
-                        id="wsAudioBack"
-                        onClick={handleJumpEv(-1 * jump)}
-                        disabled={!ready || recording}
-                      >
-                        <ReplayIcon />
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
-
-                  <LightTooltip
-                    id="wsAudioPlayTip"
-                    title={(playing ? t.pauseTip : t.playTip).replace(
-                      '{0}',
-                      localizeHotKey(PLAY_PAUSE_KEY)
-                    )}
-                  >
-                    <span>
-                      <IconButton
-                        id="wsAudioPlay"
-                        onClick={handlePlayStatus}
-                        disabled={duration === 0 || recording}
-                      >
-                        <>{playing ? <PauseIcon /> : <PlayIcon />}</>
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
-                  <LightTooltip
-                    id="wsAudioForwardTip"
-                    title={t.aheadTip
-                      .replace('{jump}', jump.toString())
-                      .replace('{1}', t.seconds)
-                      .replace('{0}', localizeHotKey(AHEAD_KEY))}
-                  >
-                    <span>
-                      <IconButton
-                        id="wsAudioForward"
-                        onClick={handleJumpEv(jump)}
-                        disabled={!ready || recording}
-                      >
-                        <ForwardIcon />{' '}
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
-
-                  <LightTooltip
-                    id="wsAudioEndTip"
-                    title={t.endTip.replace('{0}', localizeHotKey(END_KEY))}
-                  >
-                    <span>
-                      <IconButton
-                        id="wsAudioEnd"
-                        onClick={handleGoToEnd}
-                        disabled={!ready || recording}
-                      >
-                        <SkipNextIcon />{' '}
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
-                </>
-              </Grid>
-              {allowSpeed && (
-                <>
-                  <Divider
-                    id="wsAudioDiv6"
-                    className={classes.divider}
-                    orientation="vertical"
-                    flexItem
-                  />
-                  <Grid item>
-                    <div className={classes.toolbar}>
-                      <LightTooltip
-                        id="wsAudioSlowerTip"
-                        title={t.slowerTip.replace(
-                          '{0}',
-                          localizeHotKey(SLOWER_KEY)
-                        )}
-                      >
-                        <span>
-                          <IconButton
-                            id="wsAudioSlower"
-                            onClick={handleSlower}
-                            disabled={playbackRate === MIN_SPEED || recording}
-                          >
-                            <FaAngleDoubleDown fontSize="small" />{' '}
-                          </IconButton>
-                        </span>
-                      </LightTooltip>
-                      <IOSSlider
-                        id="wsAudioPlaybackSpeed"
-                        aria-label="ios slider"
-                        value={
-                          typeof playbackRate === 'number'
-                            ? playbackRate * 100
-                            : 0
-                        }
-                        step={SPEED_STEP * 100}
-                        marks
-                        min={MIN_SPEED * 100}
-                        max={MAX_SPEED * 100}
-                        valueLabelDisplay="on"
-                        getAriaValueText={valuetext}
-                        valueLabelFormat={valuetext}
-                        onChange={handleSliderChange}
-                      />
-
-                      <LightTooltip
-                        id="wsAudioFasterTip"
-                        title={t.fasterTip.replace(
-                          '{0}',
-                          localizeHotKey(FASTER_KEY)
-                        )}
-                      >
-                        <span>
-                          <IconButton
-                            id="wsAudioFaster"
-                            onClick={handleFaster}
-                            disabled={playbackRate === MAX_SPEED || recording}
-                          >
-                            <FaAngleDoubleUp fontSize="small" />{' '}
-                          </IconButton>
-                        </span>
-                      </LightTooltip>
-                    </div>
-                  </Grid>
-                </>
-              )}
-              {onSaveProgress && (
-                <>
-                  <Divider
-                    id="wsAudioDiv7"
-                    className={classes.divider}
-                    orientation="vertical"
-                    flexItem
-                  />
-                  <Grid item>
-                    <LightTooltip
-                      id="wsAudioTimestampTip"
-                      title={t.timerTip.replace(
-                        '{0}',
-                        localizeHotKey(TIMER_KEY)
-                      )}
-                    >
-                      <span>
-                        <IconButton
-                          id="wsAudioTimestamp"
-                          onClick={handleSendProgress}
-                        >
-                          <>
-                            <TimerIcon />
-                          </>
-                        </IconButton>
-                      </span>
-                    </LightTooltip>
-                  </Grid>
-                  {metaData}
-                </>
-              )}
-              <Grid item className={classes.grow}>
-                {'\u00A0'}
-              </Grid>
-              {!onSaveProgress && <>{metaData}</>}
-            </Grid>
-          )}
-          {confirmAction === '' || (
-            <Confirm
-              jsx={<span></span>}
-              text={confirmAction}
-              yesResponse={handleActionConfirmed}
-              noResponse={handleActionRefused}
-            />
-          )}
-        </div>
+            )}
+          </>
+        </Box>
       </Paper>
-    </div>
+    </Box>
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'wsAudioPlayer' }),
-});
-
-export default connect(mapStateToProps)(WSAudioPlayer) as any;
+export default WSAudioPlayer;

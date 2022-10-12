@@ -8,7 +8,6 @@ import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Button, Grid } from '@material-ui/core';
-import Auth from '../auth/Auth';
 import { useCheckOnline, localeDefault } from '../utils';
 import { isElectron } from '../api-variable';
 import AppHead from '../components/App/AppHead';
@@ -16,9 +15,9 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import MemorySource from '@orbit/memory';
 import ImportTab from '../components/ImportTab';
 import { IAxiosStatus } from '../store/AxiosStatus';
-import OfflineIcon from '@material-ui/icons/CloudOff';
-import OnlineIcon from '@material-ui/icons/CloudQueue';
-import InfoIcon from '@material-ui/icons/InfoOutlined';
+import OfflineIcon from '@mui/icons-material/CloudOff';
+import OnlineIcon from '@mui/icons-material/CloudQueue';
+import InfoIcon from '@mui/icons-material/InfoOutlined';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { AddRecord } from '../model/baseModel';
@@ -83,12 +82,10 @@ interface IDispatchProps {
   resetOrbitError: typeof action.resetOrbitError;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
-  auth: Auth;
-}
+interface IProps extends IStateProps, IDispatchProps {}
 
 export function Welcome(props: IProps) {
-  const { auth, t, importStatus, importComplete, resetOrbitError } = props;
+  const { t, importStatus, importComplete, resetOrbitError } = props;
   const classes = useStyles();
   const offlineSetup = useOfflineSetup();
   const { fetchLocalization, setLanguage } = props;
@@ -105,6 +102,7 @@ export function Welcome(props: IProps) {
   const [hasOnlineUsers, setHasOnlineUsers] = useState(false);
   const [hasOfflineProjects, setHasOfflineProjects] = useState(false);
   const [hasProjects, setHasProjects] = useState(false);
+  const [, setOfflineOnly] = useGlobal('offlineOnly');
   const checkOnline = useCheckOnline(resetOrbitError);
 
   const hasRecs = (recType: string, iRecs?: Record[], offline?: Boolean) => {
@@ -248,6 +246,7 @@ export function Welcome(props: IProps) {
   };
 
   const handleQuickOffline = () => {
+    setOfflineOnly(true);
     if (!hasOfflineProjects || !hasOfflineUsers)
       localStorage.setItem('autoaddProject', 'true');
 
@@ -393,9 +392,7 @@ export function Welcome(props: IProps) {
           </Grid>
         </div>
       )}
-      {importOpen && (
-        <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
-      )}
+      {importOpen && <ImportTab isOpen={importOpen} onOpen={setImportOpen} />}
     </div>
   );
 }

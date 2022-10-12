@@ -1,6 +1,5 @@
 import Axios from 'axios';
 import { API_CONFIG, isElectron } from '../../api-variable';
-import Auth from '../../auth/Auth';
 import {
   UPLOAD_LIST,
   UPLOAD_ITEM_PENDING,
@@ -18,6 +17,8 @@ import {
   createPathFolder,
   removeExtension,
 } from '../../utils';
+import moment from 'moment';
+import _ from 'lodash';
 var fs = require('fs');
 var path = require('path');
 
@@ -60,11 +61,11 @@ export const writeFileLocal = (file: File, remoteName?: string) => {
   reader.readAsBinaryString(file);
   return path.join(PathType.MEDIA, fullName.split(path.sep).pop());
 };
-export const uploadFile = (
+const uploadFile = (
   data: any,
   file: File,
   errorReporter: any,
-  auth: Auth,
+  token: string,
   cb?: (
     success: boolean,
     data: any,
@@ -87,7 +88,7 @@ export const uploadFile = (
       );
       Axios.delete(API_CONFIG.host + '/api/mediafiles/' + data.id, {
         headers: {
-          Authorization: 'Bearer ' + auth.accessToken,
+          Authorization: 'Bearer ' + token,
         },
       }).catch((err) => {
         logError(
@@ -105,14 +106,15 @@ export const nextUpload =
     record: any,
     files: File[],
     n: number,
-    auth: Auth,
+    token: string,
     offlineOnly: boolean,
     errorReporter: any,
     cb?: (n: number, success: boolean, data?: any) => void
   ) =>
   (dispatch: any) => {
     dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
-    const acceptExtPat = /\.wav$|\.mp3$|\.m4a$|\.ogg$|\.webm$|\.pdf$/i;
+    const acceptExtPat =
+      /\.wav$|\.mp3$|\.m4a$|\.ogg$|\.webm$|\.pdf$|\.png$|\.jpg$/i;
     if (!acceptExtPat.test(record.originalFile)) {
       dispatch({
         payload: {
@@ -158,15 +160,67 @@ export const nextUpload =
         if (cb) cb(n, false, data);
       }
     };
-
-    Axios.post(API_CONFIG.host + '/api/mediafiles', record, {
+    const toVnd = (record: any) => {
+      var vnd = {
+        data: {
+          type: 'mediafiles',
+          attributes: {
+            'version-number': record.versionNumber,
+            'original-file': record.originalFile,
+            'content-type': record.contentType,
+            'eaf-url': record.eafUrl,
+            'date-created': moment.utc(),
+            'source-segments': record.sourceSegments,
+            'performed-by': record.performedBy,
+            topic: record.topic,
+          },
+          relationships: {
+            lastmodifiedbyuser: {
+              data: {
+                type: 'lastmodifiedbyuser',
+                id: record.userId?.toString(),
+              },
+            },
+          },
+        },
+      } as any;
+      if (record.passageId)
+        vnd.data.relationships.passage = {
+          data: { type: 'passages', id: record.passageId.toString() },
+        };
+      if (record.planId)
+        vnd.data.relationships.plan = {
+          data: { type: 'plans', id: record.planId.toString() },
+        };
+      if (record.artifactTypeId)
+        vnd.data.relationships['artifact-type'] = {
+          data: { type: 'artifacttypes', id: record.artifactTypeId.toString() },
+        };
+      if (record.sourceMediaId)
+        vnd.data.relationships['source-media'] = {
+          data: { type: 'mediafiles', id: record.sourceMediaId.toString() },
+        };
+      return vnd;
+    };
+    const fromVnd = (data: any) => {
+      var json = _.mapKeys(data.data.attributes, (v, k) => _.camelCase(k));
+      json.id = data.data.id;
+      json.stringId = json.id.toString();
+      return json;
+    };
+    var vndRecord = toVnd(record);
+    //we have to use an axios call here because orbit is asynchronous
+    //(even if you await)
+    Axios.post(API_CONFIG.host + '/api/mediafiles', vndRecord, {
       headers: {
-        Authorization: 'Bearer ' + auth.accessToken,
+        'Content-Type': 'application/vnd.api+json',
+        Authorization: 'Bearer ' + token,
       },
     })
       .then((response) => {
         dispatch({ payload: n, type: UPLOAD_ITEM_CREATED });
-        uploadFile(response.data, files[n], errorReporter, auth, completeCB);
+        var json = fromVnd(response.data);
+        uploadFile(json, files[n], errorReporter, token, completeCB);
         if (isElectron) {
           try {
             writeFileLocal(files[n], response.data.audioUrl);

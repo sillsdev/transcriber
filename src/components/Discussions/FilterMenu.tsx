@@ -1,21 +1,12 @@
 import React, { useMemo } from 'react';
-import { connect } from 'react-redux';
-import { IState, IFilterMenuStrings } from '../../model';
-import localStrings from '../../selector/localize';
-import { withStyles } from '@material-ui/core/styles';
-import { MenuProps } from '@material-ui/core/Menu';
-import {
-  IconButton,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-  Badge,
-} from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import FilterIcon from '@material-ui/icons/FilterList';
-import BoxOpen from '@material-ui/icons/CheckBoxOutlineBlank';
-import BoxClose from '@material-ui/icons/CheckBox';
+import { IFilterMenuStrings } from '../../model';
+import { IconButton, ListItemIcon, ListItemText, Badge } from '@mui/material';
+import FilterIcon from '@mui/icons-material/FilterList';
+import BoxOpen from '@mui/icons-material/CheckBoxOutlineBlank';
+import BoxClose from '@mui/icons-material/CheckBox';
+import { StyledMenu, StyledMenuItem } from '../../control';
+import { filterMenuSelector } from '../../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
 export interface IFilterState {
   forYou: boolean;
@@ -26,50 +17,7 @@ export interface IFilterState {
   [key: string]: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    icon: {
-      color: theme.palette.primary.light,
-    },
-  })
-);
-
-const StyledMenu = withStyles({
-  paper: {
-    border: '1px solid #d3d4d5',
-  },
-})((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'right',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
-
-interface IStateProps {
-  t: IFilterMenuStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   state: IFilterState;
   action?: (what: string) => void;
   cats: number;
@@ -78,11 +26,12 @@ interface IProps extends IStateProps {
 }
 
 export function FilterMenu(props: IProps) {
-  const { action, cats, t, stopPlayer, disabled } = props;
+  const { action, cats, stopPlayer, disabled } = props;
   const { forYou, resolved, latestVersion, allPassages, allSteps } =
     props.state;
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const t: IFilterMenuStrings = useSelector(filterMenuSelector, shallowEqual);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
@@ -119,7 +68,7 @@ export function FilterMenu(props: IProps) {
         id="filterMenu"
         aria-controls="filter-menu"
         aria-haspopup="true"
-        className={classes.icon}
+        sx={{ color: 'primary.light' }}
         onClick={handleClick}
         disabled={disabled}
       >
@@ -171,8 +120,4 @@ export function FilterMenu(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'filterMenu' }),
-});
-
-export default connect(mapStateToProps)(FilterMenu) as any;
+export default FilterMenu;

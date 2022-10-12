@@ -3,13 +3,12 @@ import { useGlobal, useEffect } from 'reactn';
 import { IProjButtonsStrings } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Divider, Button, Menu, MenuItem } from '@material-ui/core';
-import DropDownIcon from '@material-ui/icons/ArrowDropDown';
+import DropDownIcon from '@mui/icons-material/ArrowDropDown';
 import BigDialog from '../hoc/BigDialog';
 import IntegrationTab from '../components/Integration';
 import ExportTab from '../components/TranscriptionTab';
 import ImportTab from '../components/ImportTab';
 import { useProjectPlans, usePlan } from '../crud';
-import Auth from '../auth/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,11 +32,10 @@ interface IProps extends IStateProps {
   noImExport?: boolean;
   noIntegrate?: boolean;
   onLeft?: boolean;
-  auth: Auth;
 }
 
 export const ProjButtons = (props: IProps) => {
-  const { noImExport, noIntegrate, onLeft, auth, t } = props;
+  const { noImExport, noIntegrate, onLeft, t } = props;
   const classes = useStyles();
   const { getPlanName } = usePlan();
   const [plan] = useGlobal('plan');
@@ -132,7 +130,6 @@ export const ProjButtons = (props: IProps) => {
       </BigDialog>
       {openImport && (
         <ImportTab
-          auth={auth}
           isOpen={openImport}
           onOpen={setOpenImport}
           planName={planName}

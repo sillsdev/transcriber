@@ -15,7 +15,6 @@ import MediaPlayer from '../MediaPlayer';
 import MediaActions from './MediaActions';
 import MediaActions2 from './MediaActions2';
 import Confirm from '../AlertDialog';
-import Auth from '../../auth/Auth';
 import { remoteId, useOrganizedBy } from '../../crud';
 import { numCompare, dateCompare, dateOrTime } from '../../utils';
 import { IRow } from '.';
@@ -28,9 +27,8 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps {
-  auth: Auth;
   data: IRow[];
-  setRefresh: (refresh: boolean) => void;
+  setRefresh: () => void;
   playItem: string;
   setPlayItem: (item: string) => void;
   mediaPlaying: boolean;
@@ -38,7 +36,7 @@ interface IProps extends IStateProps {
   onAttach?: (checks: number[], attach: boolean) => void;
 }
 export const AudioTable = (props: IProps) => {
-  const { data, setRefresh, lang, auth, t } = props;
+  const { data, setRefresh, lang, t } = props;
   const { playItem, setPlayItem, onAttach } = props;
   const ctx = React.useContext(PlanContext);
   const { connected, readonly, shared } = ctx.state;
@@ -81,7 +79,7 @@ export const AudioTable = (props: IProps) => {
   const columnWidths = shared
     ? [
         { columnName: 'planName', width: 150 },
-        { columnName: 'actions', width: onAttach ? 120 : 50 },
+        { columnName: 'actions', width: onAttach ? 120 : 70 },
         { columnName: 'fileName', width: 220 },
         { columnName: 'sectionDesc', width: 150 },
         { columnName: 'reference', width: 150 },
@@ -94,7 +92,7 @@ export const AudioTable = (props: IProps) => {
       ]
     : [
         { columnName: 'planName', width: 150 },
-        { columnName: 'actions', width: onAttach ? 120 : 50 },
+        { columnName: 'actions', width: onAttach ? 120 : 70 },
         { columnName: 'fileName', width: 220 },
         { columnName: 'sectionDesc', width: 150 },
         { columnName: 'reference', width: 150 },
@@ -132,8 +130,12 @@ export const AudioTable = (props: IProps) => {
   const [pageSizes] = useState<number[]>([]);
   const [hiddenColumnNames] = useState<string[]>(['planName']);
   const [verHist, setVerHist] = useState('');
+  const [verValue, setVerValue] = useState<number>();
 
   const handleShowTranscription = (id: string) => () => {
+    const row = data.find((r) => r.id === id);
+    const rowVer = row?.version;
+    if (rowVer) setVerValue(parseInt(rowVer));
     setShowId(id);
   };
   const handleChangeReadyToShare = (id: string) => () => {
@@ -142,7 +144,7 @@ export const AudioTable = (props: IProps) => {
     ) as MediaFile;
     mediaRec.attributes.readyToShare = !mediaRec.attributes.readyToShare;
     memory.update((t: TransformBuilder) => UpdateRecord(t, mediaRec, user));
-    setRefresh(true);
+    setRefresh();
   };
   const handleCloseTranscription = () => {
     setShowId('');
@@ -165,9 +167,10 @@ export const AudioTable = (props: IProps) => {
 
   const handleActionConfirmed = () => {
     if (confirmAction === 'Delete') {
-      handleDelete(deleteItem);
-      setDeleteItem(-1);
-      setRefresh(true);
+      handleDelete(deleteItem).then(() => {
+        setDeleteItem(-1);
+        setRefresh();
+      });
     }
     setConfirmAction('');
   };
@@ -236,10 +239,8 @@ export const AudioTable = (props: IProps) => {
     return (
       <Table.Cell {...props}>
         <MediaActions2
-          t={t}
           rowIndex={row.index}
-          mediaId={mediaId}
-          auth={auth}
+          mediaId={mediaId || ''}
           online={connected || offlineOnly}
           readonly={readonly}
           canDelete={!readonly}
@@ -336,7 +337,7 @@ export const AudioTable = (props: IProps) => {
           isOpen={Boolean(verHist)}
           onOpen={handleVerHistClose}
         >
-          <VersionDlg auth={auth} passId={verHist} />
+          <VersionDlg passId={verHist} />
         </BigDialog>
       )}
 
@@ -346,6 +347,7 @@ export const AudioTable = (props: IProps) => {
           isMediaId={true}
           visible={showId !== ''}
           closeMethod={handleCloseTranscription}
+          version={verValue}
         />
       )}
       {confirmAction === '' || (
@@ -356,7 +358,6 @@ export const AudioTable = (props: IProps) => {
         />
       )}
       <MediaPlayer
-        auth={auth}
         srcMediaId={playItem}
         requestPlay={mediaPlaying}
         onEnded={playEnded}

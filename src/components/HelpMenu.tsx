@@ -1,25 +1,15 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
-import { IState, IMainStrings, Plan } from '../model';
-import localStrings from '../selector/localize';
-import { withStyles } from '@material-ui/core/styles';
-import { MenuProps } from '@material-ui/core/Menu';
-import {
-  IconButton,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-} from '@material-ui/core';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import ReportIcon from '@material-ui/icons/Report';
-import HelpIcon from '@material-ui/icons/Help';
-import InfoIcon from '@material-ui/icons/Info';
-import DownloadIcon from '@material-ui/icons/CloudDownload';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+import { IMainStrings, Plan } from '../model';
+import { IconButton, ListItemIcon, ListItemText } from '@mui/material';
+import ReportIcon from '@mui/icons-material/Report';
+import HelpIcon from '@mui/icons-material/Help';
+import InfoIcon from '@mui/icons-material/Info';
+import DownloadIcon from '@mui/icons-material/CloudDownload';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { StyledMenu, StyledMenuItem } from '../control';
 import path from 'path';
 import { isElectron, API_CONFIG } from '../api-variable';
 import {
@@ -29,69 +19,26 @@ import {
   dataPath,
   PathType,
   execFolder,
+  restoreScroll,
 } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
 import AboutDialog from './AboutDialog';
 import { usePlan, remoteIdGuid } from '../crud';
+import { mainSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 const os = require('os');
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    help: {},
-    version: {
-      paddingTop: theme.spacing(2),
-      alignSelf: 'center',
-    },
-  })
-);
-
-const StyledMenu = withStyles({
-  paper: {
-    border: '1px solid #d3d4d5',
-  },
-})((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'right',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
-
-interface IStateProps {
-  t: IMainStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   online: boolean;
   action?: (what: string) => void;
 }
 
 export function HelpMenu(props: IProps) {
-  const { online, action, t } = props;
+  const { online, action } = props;
   const { pathname } = useLocation();
   const [offline] = useGlobal('offline');
   const [projType] = useGlobal('projType');
   const [memory] = useGlobal('memory');
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
   const [developer, setDeveloper] = useGlobal('developer');
@@ -101,6 +48,7 @@ export function HelpMenu(props: IProps) {
   const { showMessage } = useSnackBar();
   const { getPlan } = usePlan();
   const helpRef = React.useRef<any>();
+  const t: IMainStrings = useSelector(mainSelector, shallowEqual);
 
   interface IHelpLinkProps {
     topic?: string;
@@ -185,6 +133,8 @@ export function HelpMenu(props: IProps) {
 
   const handleAbout = (visible: boolean) => () => {
     if (visible !== aboutOpen) setAboutOpen(visible);
+    restoreScroll();
+    setAnchorEl(null);
   };
 
   const handle = (what: string) => () => {
@@ -258,7 +208,7 @@ export function HelpMenu(props: IProps) {
         color="primary"
         onClick={handleClick}
       >
-        <HelpIcon className={classes.help} />
+        <HelpIcon />
       </IconButton>
       <StyledMenu
         id="helpClose"
@@ -351,8 +301,4 @@ export function HelpMenu(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'main' }),
-});
-
-export default connect(mapStateToProps)(HelpMenu) as any;
+export default HelpMenu;

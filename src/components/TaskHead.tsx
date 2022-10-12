@@ -1,7 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import useTodo from '../context/useTodo';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import {
   List,
   ListItem,
@@ -14,7 +13,9 @@ import {
   Tooltip,
   Menu,
   MenuItem,
-} from '@material-ui/core';
+  Box,
+  SxProps,
+} from '@mui/material';
 import { TransformBuilder } from '@orbit/data';
 import {
   sectionNumber,
@@ -22,27 +23,13 @@ import {
   useOrganizedBy,
   useRole,
 } from '../crud';
-import PeopleIconOutline from '@material-ui/icons/PeopleAltOutlined';
+import PeopleIconOutline from '@mui/icons-material/PeopleAltOutlined';
 import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
 import { TaskItemWidth } from './TaskTable';
 import { Section } from '../model';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      minWidth: `${TaskItemWidth}px`,
-    },
-    menuItem: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    listAvatar: {
-      minWidth: theme.spacing(4),
-    },
-  })
-);
+const menuItemProps = { display: 'flex', flexDirection: 'row' } as SxProps;
 
 interface IProps {
   item: number;
@@ -56,7 +43,6 @@ export function TaskHead(props: IProps) {
     editor: '',
     section: {} as Section,
   };
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [menuItem, setMenuItem] = React.useState(null);
@@ -98,10 +84,10 @@ export function TaskHead(props: IProps) {
   };
 
   return (
-    <List className={classes.root}>
+    <List sx={{ width: '100%', minWidth: `${TaskItemWidth}px` }}>
       <Divider component="li" />
       <ListItem alignItems="flex-start">
-        <ListItemAvatar className={classes.listAvatar}>
+        <ListItemAvatar sx={{ minWidth: 4 }}>
           <>{'\u00A0'}</>
         </ListItemAvatar>
         <ListItemText
@@ -125,14 +111,14 @@ export function TaskHead(props: IProps) {
             onClick={handleAction(tranAction, 'transcriber')}
           >
             {
-              <div className={classes.menuItem}>
+              <Box sx={menuItemProps}>
                 <>{tranAction.replace('{0}', ts.transcriber) + '\u00A0'}</>
                 <TaskAvatar
                   assigned={
                     transcriber && transcriber !== '' ? transcriber : user
                   }
                 />
-              </div>
+              </Box>
             }
           </MenuItem>
           <MenuItem
@@ -141,12 +127,12 @@ export function TaskHead(props: IProps) {
             disabled={!userCanBeEditor()}
           >
             {
-              <div className={classes.menuItem}>
+              <Box sx={menuItemProps}>
                 <>{editAction.replace('{0}', ts.editor) + '\u00A0'}</>
                 <TaskAvatar
                   assigned={editor && editor !== '' ? editor : user}
                 />
-              </div>
+              </Box>
             }
           </MenuItem>
         </Menu>

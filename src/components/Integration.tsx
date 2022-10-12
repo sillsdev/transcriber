@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import * as actions from '../store';
 import { useGlobal, useState } from 'reactn';
 import { connect } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import {
   IState,
   IIntegrationStrings,
@@ -39,9 +38,9 @@ import {
   TextField,
   MenuItem,
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SyncIcon from '@material-ui/icons/Sync';
-import CheckIcon from '@material-ui/icons/Check';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SyncIcon from '@mui/icons-material/Sync';
+import CheckIcon from '@mui/icons-material/Check';
 import { useSnackBar } from '../hoc/SnackBar';
 import ParatextLogo from '../control/ParatextLogo';
 // import RenderLogo from '../control/RenderLogo';
@@ -53,6 +52,7 @@ import {
   ArtifactTypeSlug,
   useArtifactType,
   useTranscription,
+  findRecord,
 } from '../crud';
 import {
   localSync,
@@ -60,7 +60,7 @@ import {
   useCheckOnline,
   integrationSlug,
 } from '../utils';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import { bindActionCreators } from 'redux';
 import ParatextProject from '../model/paratextProject';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -142,6 +142,7 @@ interface IDispatchProps {
   getLocalProjects: typeof actions.getLocalProjects;
   getLocalCount: typeof actions.getLocalCount;
   syncProject: typeof actions.syncProject;
+  syncPassage: typeof actions.syncPassage;
   resetSync: typeof actions.resetSync;
   resetCount: typeof actions.resetCount;
   resetProjects: typeof actions.resetProjects;
@@ -161,15 +162,17 @@ interface IProps
     IDispatchProps,
     IRecordProps,
     WithDataProps {
-  auth: Auth;
   stopPlayer?: () => void;
+  artifactType?: ArtifactTypeSlug;
+  passage?: Passage;
+  currentstep?: string;
+  setStepComplete?: (stepId: string, complete: boolean) => {};
 }
 
 export function IntegrationPanel(props: IProps) {
   const {
     t,
     ts,
-    auth,
     paratext_username,
     paratext_usernameStatus,
     paratext_count,
@@ -178,6 +181,10 @@ export function IntegrationPanel(props: IProps) {
     paratext_projectsStatus,
     paratext_syncStatus,
     stopPlayer,
+    artifactType,
+    passage,
+    currentstep,
+    setStepComplete,
   } = props;
   const {
     getUserName,
@@ -185,6 +192,7 @@ export function IntegrationPanel(props: IProps) {
     getProjects,
     getLocalProjects,
     syncProject,
+    syncPassage,
     resetSync,
     resetCount,
     resetProjects,
@@ -196,7 +204,6 @@ export function IntegrationPanel(props: IProps) {
     props;
   const classes = useStyles();
   const [connected] = useGlobal('connected');
-  const { pathname } = useLocation();
   const [hasPtProj, setHasPtProj] = useState(false);
   const [ptProj, setPtProj] = useState(-1);
   const [ptProjName, setPtProjName] = useState('');
@@ -210,6 +217,7 @@ export function IntegrationPanel(props: IProps) {
   const [projectsLoaded] = useGlobal('projectsLoaded');
   const getOfflineProject = useOfflnProjRead();
   const [offline] = useGlobal('offline');
+  const { accessToken } = useContext(TokenContext).state;
   const [count, setCount] = useState(-1);
 
   const [paratextIntegration, setParatextIntegration] = useState('');
@@ -226,15 +234,12 @@ export function IntegrationPanel(props: IProps) {
   const setSyncing = (state: boolean) => (syncing.current = state);
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const checkOnline = useCheckOnline(resetOrbitError);
-  const [exportTypes] = useState([
+  const [exportTypes, setExportTypes] = useState([
     ArtifactTypeSlug.Vernacular,
-    ArtifactTypeSlug.BackTranslation,
+    ArtifactTypeSlug.WholeBackTranslation,
+    ArtifactTypeSlug.PhraseBackTranslation,
   ]);
-  const [exportType, setExportType] = useState(
-    pathname.indexOf(ArtifactTypeSlug.BackTranslation) !== -1
-      ? ArtifactTypeSlug.BackTranslation
-      : exportTypes[0]
-  );
+  const [exportType, setExportType] = useState(exportTypes[0]);
   const { getTypeId } = useArtifactType();
   const getTranscription = useTranscription(false, ActivityStates.Approved);
   const intSave = React.useRef('');
@@ -287,21 +292,18 @@ export function IntegrationPanel(props: IProps) {
     projInt: string,
     setting: string
   ): string => {
-    memory.update((t: TransformBuilder) =>
-      UpdateRecord(
-        t,
-        {
-          type: 'projectintegration',
-          id: projInt,
-          attributes: {
-            settings: setting,
-          },
-        } as ProjectIntegration,
-        user
-      )
-    );
+    var pi = findRecord(
+      memory,
+      'projectintegration',
+      projInt
+    ) as ProjectIntegration;
+    if (pi) {
+      pi.attributes.settings = setting;
+      memory.update((t: TransformBuilder) => UpdateRecord(t, pi, user));
+    }
     return projInt;
   };
+
   const getProjectIntegration = (integration: string): string => {
     const projint: ProjectIntegration[] = projectintegrations.filter(
       (pi) =>
@@ -312,18 +314,12 @@ export function IntegrationPanel(props: IProps) {
     if (projint.length === 0) return '';
     return projint[0].id;
   };
-  const removeProjectFromParatextList = (index: number) => {
-    paratext_projects[index].ProjectIds = paratext_projects[
-      index
-    ].ProjectIds.filter(
-      (p) => p !== (remoteId('project', project, memory.keyMap) || project)
-    );
-  };
+
   const handleParatextProjectChange = (e: any) => {
     let index: number = paratext_projects.findIndex(
       (p) => p.Name === e.target.value
     );
-    if (ptProj >= 0) removeProjectFromParatextList(ptProj);
+
     setPtProj(index);
     setPtProjName(e.target.value);
     if (index >= 0) {
@@ -341,28 +337,34 @@ export function IntegrationPanel(props: IProps) {
       } else {
         updateProjectIntegration(projint, JSON.stringify(setting));
       }
-      paratext_projects[index].ProjectIds.push(
-        remoteId('project', project, memory.keyMap) || project
-      );
     }
   };
   const handleSync = () => {
     if (stopPlayer) stopPlayer();
     setSyncing(true);
-    syncProject(
-      auth,
-      remoteIdNum('project', project, memory.keyMap),
-      getTypeId(exportType)
-        ? remoteIdNum(
-            'artifacttype',
-            getTypeId(exportType) || '',
-            memory.keyMap
-          )
-        : 0,
-      errorReporter,
-      t.syncPending,
-      t.syncComplete
-    );
+    var typeId = getTypeId(exportType)
+      ? remoteIdNum('artifacttype', getTypeId(exportType) || '', memory.keyMap)
+      : 0;
+    if (passage !== undefined) {
+      //from detail screen so just do passage
+      syncPassage(
+        accessToken || '',
+        remoteIdNum('passage', passage.id, memory.keyMap),
+        typeId,
+        errorReporter,
+        t.syncPending,
+        t.syncComplete
+      );
+    } else {
+      syncProject(
+        accessToken || '',
+        remoteIdNum('project', project, memory.keyMap),
+        typeId,
+        errorReporter,
+        t.syncPending,
+        t.syncComplete
+      );
+    }
   };
   const handleLocalSync = async () => {
     if (stopPlayer) stopPlayer();
@@ -375,11 +377,14 @@ export function IntegrationPanel(props: IProps) {
       passages,
       memory,
       user,
+      passage,
       getTypeId(exportType),
       getTranscription
     );
     showMessage(err || t.syncComplete);
     resetCount();
+    if (setStepComplete && currentstep && !err)
+      setStepComplete(currentstep, true);
     setSyncing(false);
   };
 
@@ -414,7 +419,7 @@ export function IntegrationPanel(props: IProps) {
       index = paratext_projects.findIndex(
         (p) =>
           Boolean(p.BaseProject) ===
-          (exportType === ArtifactTypeSlug.BackTranslation)
+          (exportType !== ArtifactTypeSlug.Vernacular)
       );
       if (index >= 0 && !intSave.current) {
         if (
@@ -428,7 +433,10 @@ export function IntegrationPanel(props: IProps) {
             LanguageTag: paratext_projects[index].LanguageTag,
             LanguageName: paratext_projects[index].LanguageName,
           };
-          addProjectIntegration(paratextIntegration, JSON.stringify(setting));
+          if (curInt.length > 0) {
+            updateProjectIntegration(curInt[0].id, JSON.stringify(setting));
+          } else
+            addProjectIntegration(paratextIntegration, JSON.stringify(setting));
         }
       }
     }
@@ -446,6 +454,13 @@ export function IntegrationPanel(props: IProps) {
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
     return replLang.replace('{lang0}', language || '');
   };
+
+  useEffect(() => {
+    if (artifactType) {
+      setExportType(artifactType);
+      setExportTypes([artifactType]);
+    }
+  }, [artifactType]);
 
   useEffect(() => {
     if (offline) {
@@ -482,15 +497,19 @@ export function IntegrationPanel(props: IProps) {
 
   useEffect(() => {
     resetCount();
-    if (plan)
-      getLocalCount(
-        mediafiles,
-        plan,
-        memory,
-        errorReporter,
-        t,
-        getTypeId(exportType)
-      );
+    setTimeout(() => {
+      if (plan)
+        getLocalCount(
+          mediafiles,
+          plan,
+          memory,
+          errorReporter,
+          t,
+          getTypeId(exportType),
+          passage?.id
+        );
+    }, 500);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafiles, plan, exportType]);
 
@@ -521,7 +540,7 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     if (!offline) {
       if (!paratext_usernameStatus) {
-        getUserName(auth, errorReporter, t.usernamePending);
+        getUserName(accessToken || '', errorReporter, t.usernamePending);
       } else if (paratext_usernameStatus.errStatus)
         showTitledMessage(
           t.usernameError,
@@ -558,7 +577,12 @@ export function IntegrationPanel(props: IProps) {
             getLocalProjects(ptPath, t.projectsPending, projIds, langTag);
           });
         } else {
-          getProjects(auth, t.projectsPending, errorReporter, langTag);
+          getProjects(
+            accessToken || '',
+            t.projectsPending,
+            errorReporter,
+            langTag
+          );
         }
       } else {
         if (paratext_projectsStatus.errStatus) {
@@ -595,7 +619,7 @@ export function IntegrationPanel(props: IProps) {
         resetSync();
         setSyncing(false);
         doDataChanges(
-          auth,
+          accessToken || '',
           coordinator,
           fingerprint,
           projectsLoaded,
@@ -605,6 +629,8 @@ export function IntegrationPanel(props: IProps) {
           setLanguage,
           setDataChangeCount
         );
+        if (setStepComplete && currentstep && !paratext_syncStatus.errStatus)
+          setStepComplete(currentstep, true);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -984,6 +1010,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       getLocalProjects: actions.getLocalProjects,
       getLocalCount: actions.getLocalCount,
       syncProject: actions.syncProject,
+      syncPassage: actions.syncPassage,
       resetSync: actions.resetSync,
       resetCount: actions.resetCount,
       resetProjects: actions.resetProjects,

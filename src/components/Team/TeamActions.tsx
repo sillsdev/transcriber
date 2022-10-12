@@ -6,7 +6,6 @@ import { DialogMode, Organization } from '../../model';
 import TeamDialog from './TeamDialog';
 import { TeamContext } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
-import Auth from '../../auth/Auth';
 import ImportTab from '../ImportTab';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -24,12 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IProps {
-  auth: Auth;
-}
-
-const TeamActions = (props: IProps) => {
-  const { auth } = props;
+const TeamActions = () => {
   const classes = useStyles();
   const [offline] = useGlobal('offline');
   const [isDeveloper] = useGlobal('developer');
@@ -92,7 +86,7 @@ const TeamActions = (props: IProps) => {
         disabled={isDeleting}
       />
       {isElectron && importOpen && (
-        <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
+        <ImportTab isOpen={importOpen} onOpen={setImportOpen} />
       )}
     </div>
   );

@@ -2,54 +2,25 @@ import React from 'react';
 import { IState, IDeleteExpansionStrings } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
   Typography,
+  TypographyProps,
   FormGroup,
   FormLabel,
   Button,
-} from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+  Box,
+  styled,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { GrowingSpacer } from '../control';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    panel: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(15) as any,
-      fontWeight: theme.typography.fontWeightRegular as any,
-    },
-    dangerGroup: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexGrow: 1,
-      padding: '20px',
-      border: '1px solid',
-      borderColor: theme.palette.secondary.main,
-    },
-    dangerHeader: {
-      paddingBottom: '10px',
-    },
-    deletePos: {
-      alignSelf: 'center',
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-    label: {},
-  })
-);
+const Heading = styled(Typography)<TypographyProps>(({ theme }) => ({
+  fontSize: theme.typography.pxToRem(15),
+  fontWeight: theme.typography.fontWeightRegular,
+}));
 
 interface IStateProps {
   t: IDeleteExpansionStrings;
@@ -64,52 +35,60 @@ interface IProps extends IStateProps {
 
 export function DeleteExpansion(props: IProps) {
   const { t, handleDelete, title, explain, inProgress } = props;
-  const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ width: '100%' }}>
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className={classes.heading}>{t.advanced}</Typography>
+          <Heading>{t.advanced}</Heading>
         </AccordionSummary>
-        <AccordionDetails className={classes.panel}>
-          <FormLabel className={classes.label}>
-            <Typography variant="h5" className={classes.dangerHeader}>
+        <AccordionDetails sx={{ display: 'flex', flexDirection: 'column' }}>
+          <FormLabel>
+            <Typography variant="h5" sx={{ pb: '10px' }}>
               {t.dangerZone}
             </Typography>
           </FormLabel>
-          <FormGroup className={classes.dangerGroup}>
+          <FormGroup
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              flexGrow: 1,
+              padding: '20px',
+              border: '1px solid',
+              borderColor: 'secondary.main',
+            }}
+          >
             <div>
-              <FormLabel className={classes.label}>
+              <FormLabel>
                 <Typography variant="h6">{title}</Typography>
               </FormLabel>
-              <FormLabel className={classes.label}>
+              <FormLabel>
                 <div>{explain}</div>
               </FormLabel>
             </div>
-            <div className={classes.grow}>{'\u00A0'}</div>
-            <div className={classes.deletePos}>
+            <GrowingSpacer />
+            <Box sx={{ alignSelf: 'center' }}>
               <Button
                 id="deleteExpand"
                 key="delete"
                 color="secondary"
                 aria-label={t.delete}
                 variant="contained"
-                className={classes.button}
+                sx={{ m: 1 }}
                 onClick={handleDelete}
                 disabled={inProgress}
               >
                 {t.delete}
               </Button>
-            </div>
+            </Box>
           </FormGroup>
         </AccordionDetails>
       </Accordion>
-    </div>
+    </Box>
   );
 }
 

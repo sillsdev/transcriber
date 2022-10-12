@@ -17,7 +17,6 @@ import {
   SectionResourceUser,
   Resource,
 } from '../../../model';
-import Auth from '../../../auth/Auth';
 import { withData } from '../../../mods/react-orbitjs';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
@@ -48,7 +47,7 @@ import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
 import { UploadType } from '../../MediaUpload';
 import MediaPlayer from '../../MediaPlayer';
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { Box, BoxProps, styled } from '@mui/material';
 import { ReplaceRelatedRecord } from '../../../model/baseModel';
 import { PassageResourceButton } from './PassageResourceButton';
 import ProjectResourceConfigure from './ProjectResourceConfigure';
@@ -62,24 +61,14 @@ import {
   isVisual,
 } from '../../../utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexGrow: 1,
-      paddingRight: theme.spacing(2),
-    },
-    playStatus: {
-      margin: theme.spacing(1),
-      width: '100%',
-      '& audio': {
-        display: 'flex',
-        width: 'inherit',
-      },
-    },
-  })
-);
+const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
+  margin: theme.spacing(1),
+  width: '100%',
+  '& audio': {
+    display: 'flex',
+    width: 'inherit',
+  },
+}));
 
 interface IRecordProps {
   sectionResources: SectionResource[];
@@ -93,17 +82,14 @@ interface IStateProps {
   t: IPassageDetailArtifactsStrings;
 }
 
-interface IProps extends IStateProps, IRecordProps {
-  auth: Auth;
-}
+interface IProps extends IStateProps, IRecordProps {}
 export enum ResourceTypeEnum {
   sectionResource,
   passageResource,
   projectResource,
 }
 export function PassageDetailArtifacts(props: IProps) {
-  const classes = useStyles();
-  const { sectionResources, mediafiles, artifactTypes, auth, t } = props;
+  const { sectionResources, mediafiles, artifactTypes, t } = props;
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
   const [offline] = useGlobal('offline');
@@ -172,6 +158,13 @@ export function PassageDetailArtifacts(props: IProps) {
     setArtifactTypeId(resourceType?.id);
     return resourceType?.id;
   }, [artifactTypes, offlineOnly]);
+
+  const otherResourcesAvailable = useMemo(
+    () =>
+      rowData.filter((r) => r.passageId && r.passageId !== passage.id).length >
+      0,
+    [passage, rowData]
+  );
 
   const isPassageResource = () =>
     resourceTypeRef.current === ResourceTypeEnum.passageResource;
@@ -291,6 +284,7 @@ export function PassageDetailArtifacts(props: IProps) {
     setEditResource(undefined);
     catIdRef.current = undefined;
     descriptionRef.current = '';
+    resourceTypeRef.current = ResourceTypeEnum.sectionResource;
   };
   const handleEditResourceVisible = (v: boolean) => {
     if (!v) resetEdit();
@@ -329,15 +323,12 @@ export function PassageDetailArtifacts(props: IProps) {
           ),
         ]);
       }
-      if (
-        mf &&
-        isPassageResource() !== Boolean(related(mf, 'resourcePassage'))
-      ) {
+      if (mf && isPassageResource() !== Boolean(related(mf, 'passage'))) {
         await memory.update((t: TransformBuilder) => [
           ...ReplaceRelatedRecord(
             t,
             mf,
-            'resourcePassage',
+            'passage',
             'passage',
             isPassageResource() ? passage.id : ''
           ),
@@ -480,9 +471,10 @@ export function PassageDetailArtifacts(props: IProps) {
               q.findRecord({ type: 'section', id: related(rec, 'section') })
             ) as Section);
       const secNum = secRec?.attributes.sequencenum || 0;
-      const topicIn = removeExtension(
-        projMediaRef.current?.attributes?.originalFile || ''
-      )?.name;
+      const topicIn =
+        projMediaRef.current?.attributes?.topic ||
+        removeExtension(projMediaRef.current?.attributes?.originalFile || '')
+          ?.name;
       await projectResourceSave({
         t,
         media: projMediaRef.current as MediaFile,
@@ -536,8 +528,8 @@ export function PassageDetailArtifacts(props: IProps) {
     if (mediaStart.current) {
       mediaPosition.current = mediaStart.current;
       mediaStart.current = undefined;
-      setItemPlaying(true);
     }
+    setItemPlaying(true);
   };
 
   const handlePosition = (position: number) => {
@@ -547,16 +539,14 @@ export function PassageDetailArtifacts(props: IProps) {
       }
     }
   };
-
   return (
     <>
-      <div className={classes.row}>
+      <Box sx={{ display: 'flex', flexDirection: 'row', flexGrow: 1, pr: 2 }}>
         {projRole === RoleNames.Admin && (!offline || offlineOnly) && (
           <AddResource action={handleAction} />
         )}
-        <div className={classes.playStatus}>
+        <MediaContainer>
           <MediaPlayer
-            auth={auth}
             srcMediaId={playItem}
             requestPlay={itemPlaying}
             onEnded={handleEnded}
@@ -566,13 +556,15 @@ export function PassageDetailArtifacts(props: IProps) {
             onTogglePlay={handleItemTogglePlay}
             controls={playItem !== ''}
           />
-        </div>
-        <PassageResourceButton
-          value={allResources}
-          label={t.allResources}
-          cb={handleAllResources}
-        />
-      </div>
+        </MediaContainer>
+        {otherResourcesAvailable && (
+          <PassageResourceButton
+            value={allResources}
+            label={t.allResources}
+            cb={handleAllResources}
+          />
+        )}
+      </Box>
       <SortableHeader />
       <SortableList onSortEnd={onSortEnd} useDragHandle>
         {rowData
@@ -593,7 +585,6 @@ export function PassageDetailArtifacts(props: IProps) {
       </SortableList>
       <Uploader
         recordAudio={false}
-        auth={auth}
         isOpen={uploadVisible}
         onOpen={handleUploadVisible}
         showMessage={showMessage}
@@ -677,12 +668,12 @@ export function PassageDetailArtifacts(props: IProps) {
       >
         <ResourceData
           catAllowNew={true}
-          initCategory={catIdRef.current}
+          initCategory={catIdRef.current || ''}
           onCategoryChange={handleCategory}
           initDescription={descriptionRef.current}
           onDescriptionChange={handleDescription}
           catRequired={false}
-          initPassRes={resourceTypeRef.current}
+          initPassRes={Boolean(resourceTypeRef.current)}
           onPassResChange={handlePassRes}
           allowProject={false}
         />
@@ -695,11 +686,7 @@ export function PassageDetailArtifacts(props: IProps) {
         />
       )}
       {displayId && (
-        <MediaDisplay
-          srcMediaId={displayId}
-          finish={handleFinish}
-          auth={auth}
-        />
+        <MediaDisplay srcMediaId={displayId} finish={handleFinish} />
       )}
     </>
   );

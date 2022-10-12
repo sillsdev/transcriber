@@ -1,42 +1,25 @@
 import React from 'react';
 import { Section } from '../model';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, Typography } from '@mui/material';
 import { sectionNumber } from '../crud';
-import { Typography } from '@material-ui/core';
-
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  number: {
-    width: '2em',
-  },
-  name: {
-    whiteSpace: 'normal',
-  },
-});
 
 interface IProps {
   section: Section;
 }
 
-export const SectionDescription = (props: IProps) => {
-  const { section } = props;
-  const classes = useStyles();
-
+export const SectionDescription = ({ section }: IProps) => {
   const name =
     section && section.attributes && section.attributes.name
       ? section.attributes.name
       : '';
 
   return (
-    <div id="SectionDescription" className={classes.root}>
-      <Typography className={classes.number}>
+    <Box id="SectionDescription" sx={{ display: 'flex', flexDirection: 'row' }}>
+      <Typography sx={{ width: '2em' }}>
         {sectionNumber(section) + '\u00A0\u00A0'}
       </Typography>
-      <Typography className={classes.name}>{name}</Typography>
-    </div>
+      <Typography sx={{ whiteSpace: 'normal' }}>{name}</Typography>
+    </Box>
   );
 };
 

@@ -10,9 +10,11 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Typography,
 } from '@material-ui/core';
 import path from 'path';
 import { useSnackBar } from '../hoc/SnackBar';
+import SpeakerName from './SpeakerName';
 
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
@@ -62,6 +64,7 @@ export enum UploadType {
   PTF = 3,
   LOGO = 4 /* do we need separate ones for org and avatar? */,
   ProjectResource = 5,
+  IntellectualProperty = 6,
 }
 
 interface ITargetProps extends IStateProps {
@@ -149,6 +152,10 @@ interface IProps extends IStateProps {
   cancelMethod?: () => void;
   metaData?: JSX.Element;
   ready?: () => boolean;
+  speaker?: string;
+  onSpeaker?: (speaker: string) => void;
+  createProject?: (name: string) => Promise<string>;
+  team?: string; // used to check for speakers when adding a card
 }
 
 function MediaUpload(props: IProps) {
@@ -162,6 +169,10 @@ function MediaUpload(props: IProps) {
     cancelMethod,
     metaData,
     ready,
+    speaker,
+    onSpeaker,
+    createProject,
+    team,
   } = props;
   const classes = useStyles();
   const [name, setName] = useState('');
@@ -169,6 +180,7 @@ function MediaUpload(props: IProps) {
   const { showMessage } = useSnackBar();
   const [acceptextension, setAcceptExtension] = useState('');
   const [acceptmime, setAcceptMime] = useState('');
+  const [hasRights, setHasRight] = useState(!onSpeaker);
   const title = [
     t.title,
     t.resourceTitle,
@@ -176,6 +188,7 @@ function MediaUpload(props: IProps) {
     t.PTFtitle,
     'FUTURE TODO',
     t.resourceTitle,
+    t.intellectualPropertyTitle,
   ];
   const text = [
     t.task,
@@ -184,6 +197,7 @@ function MediaUpload(props: IProps) {
     t.PTFtask,
     'FUTURE TODO',
     t.projectResourceTask,
+    t.intellectualPropertyTask,
   ];
 
   const handleAddOrSave = () => {
@@ -235,6 +249,11 @@ function MediaUpload(props: IProps) {
     }
   };
 
+  const handleRights = (hasRights: boolean) => setHasRight(hasRights);
+  const handleSpeaker = (speaker: string) => {
+    onSpeaker && onSpeaker(speaker);
+  };
+
   useEffect(() => {
     setAcceptExtension(
       [
@@ -244,11 +263,9 @@ function MediaUpload(props: IProps) {
         '.ptf',
         '.jpg, .svg, .png',
         '.mp3, .m4a, .wav, .ogg, .pdf',
+        '.mp3, .m4a, .wav, .ogg, .pdf, .png, .jpg',
       ].map((s) => s)[uploadType]
     );
-  }, [uploadType]);
-
-  useEffect(() => {
     setAcceptMime(
       [
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg',
@@ -257,6 +274,7 @@ function MediaUpload(props: IProps) {
         'application/ptf',
         'image/jpeg, image/svg+xml, image/png',
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf',
+        'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf, image/png, image/jpeg',
       ].map((s) => s)[uploadType]
     );
   }, [uploadType]);
@@ -267,19 +285,35 @@ function MediaUpload(props: IProps) {
         open={visible}
         onClose={handleCancel}
         aria-labelledby="audUploadDlg"
+        disableEnforceFocus
       >
         <DialogTitle id="audUploadDlg">{title[uploadType]}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{text[uploadType]}</DialogContentText>
-          <div className={classes.drop}>
-            <DropTarget
-              name={name}
-              handleFiles={handleFiles}
-              acceptextension={acceptextension}
-              acceptmime={acceptmime}
-              multiple={multiple}
-              t={t}
+          <DialogContentText>
+            {text[uploadType].replace('{0}', speaker || '')}
+          </DialogContentText>
+          {onSpeaker && uploadType === UploadType.Media && (
+            <SpeakerName
+              name={speaker || ''}
+              onRights={handleRights}
+              onChange={handleSpeaker}
+              createProject={createProject}
+              team={team}
             />
+          )}
+          <div className={classes.drop}>
+            {hasRights ? (
+              <DropTarget
+                name={name}
+                handleFiles={handleFiles}
+                acceptextension={acceptextension}
+                acceptmime={acceptmime}
+                multiple={multiple}
+                t={t}
+              />
+            ) : (
+              <Typography className={classes.label}>{'\u00A0'}</Typography>
+            )}
           </div>
           {metaData}
         </DialogContent>
@@ -297,7 +331,9 @@ function MediaUpload(props: IProps) {
             onClick={handleAddOrSave}
             variant="contained"
             color="primary"
-            disabled={(ready && !ready()) || !files || files.length === 0}
+            disabled={
+              (ready && !ready()) || !files || files.length === 0 || !hasRights
+            }
           >
             {t.upload}
           </Button>

@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import {
-  IState,
   Passage,
   ITranscribeAddNoteStrings,
   PassageStateChange,
 } from '../model';
-import localStrings from '../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
   Dialog,
@@ -15,30 +11,12 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-} from '@material-ui/core';
+} from '@mui/material';
+import { transcribeAddNoteSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
+import { commentProps } from '../control';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    menu: {
-      width: 300,
-    },
-    formControl: {
-      margin: theme.spacing(3),
-    },
-    comment: {
-      paddingTop: '16px',
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-    },
-  })
-);
-
-interface IStateProps {
-  t: ITranscribeAddNoteStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   passageIn?: Passage;
   pscIn?: PassageStateChange;
   visible: boolean;
@@ -48,19 +26,15 @@ interface IProps extends IStateProps {
 }
 
 function TranscribeAddNote(props: IProps) {
-  const {
-    t,
-    visible,
-    addMethod,
-    editMethod,
-    cancelMethod,
-    passageIn,
-    pscIn,
-  } = props;
-  const classes = useStyles();
+  const { visible, addMethod, editMethod, cancelMethod, passageIn, pscIn } =
+    props;
   const [open, setOpen] = useState(visible);
   const [comment, setComment] = useState('');
   const [inProcess, setInProcess] = useState(false);
+  const t: ITranscribeAddNoteStrings = useSelector(
+    transcribeAddNoteSelector,
+    shallowEqual
+  );
 
   const handleSave = () => {
     doAddOrSave();
@@ -103,18 +77,22 @@ function TranscribeAddNote(props: IProps) {
 
   return (
     <div>
-      <Dialog open={open} onClose={handleCancel} aria-labelledby="transAddDlg">
+      <Dialog
+        open={open}
+        onClose={handleCancel}
+        aria-labelledby="transAddDlg"
+        disableEnforceFocus
+      >
         <DialogTitle id="transAddDlg">{t.addNoteTitle}</DialogTitle>
         <DialogContent>
           <TextField
             id="transcriberNote.text"
             variant="filled"
             multiline
-            rowsMax={5}
-            className={classes.comment}
+            maxRows={5}
             value={comment}
             onChange={handleCommentChange}
-            style={{ overflow: 'auto', width: '400px' }}
+            sx={commentProps}
           />
         </DialogContent>
         <DialogActions>
@@ -141,8 +119,4 @@ function TranscribeAddNote(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'transcribeAddNote' }),
-});
-
-export default connect(mapStateToProps)(TranscribeAddNote) as any;
+export default TranscribeAddNote;

@@ -42,7 +42,7 @@ export const useMediaAttach = (props: IProps) => {
     if (!mediaRec) return;
     var isVernacular = IsVernacularMedia(mediaRec);
     if (related(mediaRec, 'passage') !== passage) {
-      if (isVernacular) {
+      if (isVernacular && plan) {
         var media = getMediaInPlans(
           [plan],
           memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[],

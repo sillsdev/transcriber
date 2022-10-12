@@ -4,9 +4,10 @@ import {
   AddRecord,
   ReplaceRelatedRecord,
   UpdateRecord,
+  UpdateRelatedRecord,
 } from '../../model/baseModel';
 import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
-import { UpdateRelatedPassageOps } from '../../crud';
+import { related, UpdateRelatedPassageOps } from '../../crud';
 import {
   isPassageAdding,
   isPassageRow,
@@ -102,6 +103,17 @@ export const useWfLocalSave = (props: IProps) => {
           } as Passage;
           const t = new TransformBuilder();
           const ops = UpdateRecord(t, passRec, user);
+          if (lastSec.id !== related(curPass, 'section'))
+            ops.push(
+              ...UpdateRelatedRecord(
+                t,
+                passRec,
+                'section',
+                'section',
+                lastSec.id,
+                user
+              )
+            );
           UpdateRelatedPassageOps(lastSec.id, plan, user, t, ops);
           await memory.update(ops);
         } else if (item.deleted) {

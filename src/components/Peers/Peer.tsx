@@ -10,8 +10,8 @@ import {
   Paper,
   IconButton,
 } from '@material-ui/core';
-import UncheckedIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckedIcon from '@material-ui/icons/CheckBoxOutlined';
+import UncheckedIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckedIcon from '@mui/icons-material/CheckBoxOutlined';
 import GroupDialog from './GroupDialog';
 import {
   User,
@@ -22,7 +22,7 @@ import {
 } from '../../model';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { related, useRole } from '../../crud';
+import { related, usePermissions, useRole } from '../../crud';
 import { AddRecord, ReplaceRelatedRecord } from '../../model/baseModel';
 import { toCamel } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
@@ -46,13 +46,21 @@ export function Peer(props: IProps) {
   const { userNames, peerGroups, check, setCheck, cKey } = usePeerGroups(props);
   const { getRoleId, getMyOrgRole } = useRole();
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
+  const { localizePermission } = usePermissions(props);
 
-  const handleSave = async (name: string, id?: string) => {
+  const handleSave = async (name: string, permissions: string, id?: string) => {
     if (id) {
       // update peer group
       for (let g of peerGroups) {
         if (g.id === id) {
           await memory.update((t) => t.replaceAttribute(g, 'name', name));
+          await memory.update((t) =>
+            t.replaceAttribute(
+              g,
+              'permissions',
+              JSON.stringify({ permissions: permissions })
+            )
+          );
           return;
         }
       }
@@ -65,6 +73,7 @@ export function Peer(props: IProps) {
         name,
         abbreviation: toCamel(name),
         allUsers: false,
+        permissions: JSON.stringify({ permissions: permissions }),
       },
     } as Group;
     await memory.update((t) => [
@@ -136,17 +145,25 @@ export function Peer(props: IProps) {
               .sort((i, j) => (i.attributes.name <= j.attributes.name ? -1 : 1))
               .map((col) => (
                 <TableCell align="center" key={col.id}>
-                  <GroupDialog
-                    cur={col}
-                    save={handleSave}
-                    remove={handleRemove}
-                    isAdmin={canEditPeer}
-                    inUse={inUse}
-                  />
+                  <div>
+                    <span
+                      title={localizePermission(col.attributes?.permissions)}
+                    >
+                      <GroupDialog
+                        key={col.id}
+                        cur={col}
+                        save={handleSave}
+                        remove={handleRemove}
+                        isAdmin={canEditPeer}
+                        inUse={inUse}
+                      />
+                    </span>
+                  </div>
                 </TableCell>
               ))}
             <TableCell align="center">
               <GroupDialog
+                key={'new'}
                 save={handleSave}
                 isAdmin={canEditPeer}
                 inUse={inUse}
@@ -158,7 +175,7 @@ export function Peer(props: IProps) {
           {userNames
             .sort((i, j) => (i.name <= j.name ? -1 : 1))
             .map((row) => (
-              <TableRow key={row.name}>
+              <TableRow key={row.userId}>
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>

@@ -1,10 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
 import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { styled } from '@mui/material';
 import localStrings from '../selector/localize';
 import MediaUpload, { UploadType } from './MediaUpload';
 import {
@@ -15,18 +15,15 @@ import {
   useArtifactType,
   useOfflnMediafileCreate,
 } from '../crud';
-import Auth from '../auth/Auth';
+import { TokenContext } from '../context/TokenProvider';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import PassageRecordDlg from './PassageRecordDlg';
+import { restoreScroll } from '../utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    unsupported: {
-      color: theme.palette.secondary.light,
-    },
-  })
-);
+const UnsupportedMessage = styled('span')(({ theme }) => ({
+  color: theme.palette.secondary.light,
+}));
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -41,9 +38,8 @@ interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
+interface IProps {
   noBusy?: boolean;
-  auth: Auth;
   recordAudio: boolean;
   allowWave?: boolean;
   defaultFilename?: string;
@@ -53,7 +49,7 @@ interface IProps extends IStateProps, IDispatchProps {
   finish?: (planId: string, mediaRemoteIds?: string[]) => void; // logic when upload complete
   metaData?: JSX.Element; // component embeded in dialog
   ready?: () => boolean; // if false control is disabled
-  createProject?: (file: File[]) => Promise<any>;
+  createProject?: (name: string) => Promise<string>;
   cancelled: React.MutableRefObject<boolean>;
   multiple?: boolean;
   mediaId?: string;
@@ -63,14 +59,15 @@ interface IProps extends IStateProps, IDispatchProps {
   sourceMediaId?: string;
   sourceSegments?: string;
   performedBy?: string;
+  onSpeakerChange?: (performedBy: string) => void;
   topic?: string;
   uploadType?: UploadType;
+  team?: string; // used when adding a card to check speakers
 }
 
-export const Uploader = (props: IProps) => {
+export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
   const {
     noBusy,
-    auth,
     mediaId,
     recordAudio,
     allowWave,
@@ -88,8 +85,10 @@ export const Uploader = (props: IProps) => {
     sourceMediaId,
     sourceSegments,
     performedBy,
+    onSpeakerChange,
     topic,
     uploadType,
+    team,
   } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
@@ -97,7 +96,6 @@ export const Uploader = (props: IProps) => {
   const { uploadFiles } = props;
   const { metaData, ready } = props;
   const { createProject } = props;
-  const classes = useStyles();
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -109,12 +107,17 @@ export const Uploader = (props: IProps) => {
   const planIdRef = useRef<string>(plan);
   const successCount = useRef<number>(0);
   const fileList = useRef<File[]>();
-  const authRef = useRef<Auth>(auth);
+  const ctx = useContext(TokenContext).state;
   const mediaIdRef = useRef<string[]>([]);
   const artifactTypeRef = useRef<string>('');
   const { createMedia } = useOfflnMediafileCreate(doOrbitError);
   const [, setComplete] = useGlobal('progress');
   const { localizedArtifactTypeFromId } = useArtifactType();
+
+  const handleSpeakerChange = (speaker: string) => {
+    onSpeakerChange && onSpeakerChange(speaker);
+  };
+
   const finishMessage = () => {
     setTimeout(() => {
       if (fileList.current)
@@ -200,6 +203,7 @@ export const Uploader = (props: IProps) => {
       contentType: uploadList[currentlyLoading].type,
       artifactTypeId: getArtifactTypeId(),
       passageId: getPassageId(),
+      userId: getUserId(),
       sourceMediaId: getSourceMediaId(),
       sourceSegments: sourceSegments,
       performedBy: performedBy,
@@ -213,7 +217,7 @@ export const Uploader = (props: IProps) => {
       mediaFile,
       uploadList,
       currentlyLoading,
-      authRef.current,
+      ctx.accessToken || '',
       offline,
       errorReporter,
       itemComplete
@@ -227,11 +231,14 @@ export const Uploader = (props: IProps) => {
       return;
     }
     if (!noBusy) setBusy(true);
-    if (createProject) planIdRef.current = await createProject(files);
+    let name =
+      uploadType === UploadType.IntellectualProperty
+        ? 'Project'
+        : files[0]?.name.split('.')[0];
+    if (createProject) planIdRef.current = await createProject(name);
     uploadFiles(files);
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
-    authRef.current = auth;
     artifactTypeRef.current = artifactTypeId || '';
     doUpload(0);
   };
@@ -239,20 +246,19 @@ export const Uploader = (props: IProps) => {
   const uploadCancel = () => {
     onOpen(false);
     if (cancelled) cancelled.current = true;
-    // This makes the scroll bar reappear on the parent
-    document.getElementsByTagName('body')[0].removeAttribute('style');
+    restoreScroll();
   };
 
   React.useEffect(() => {
-    if (uploadError !== '') {
+    if (uploadError && uploadError !== '') {
       if (uploadError.indexOf('unsupported') > 0)
         showMessage(
-          <span className={classes.unsupported}>
+          <UnsupportedMessage>
             {t.unsupported.replace(
               '{0}',
-              uploadError.substr(0, uploadError.indexOf(':unsupported'))
+              uploadError.substring(0, uploadError.indexOf(':unsupported'))
             )}
-          </span>
+          </UnsupportedMessage>
         );
       else showMessage(uploadError);
       setBusy(false);
@@ -278,7 +284,6 @@ export const Uploader = (props: IProps) => {
           visible={isOpen}
           onVisible={onOpen}
           mediaId={mediaId}
-          auth={auth}
           uploadMethod={uploadMedia}
           onCancel={uploadCancel}
           metaData={metaData}
@@ -286,6 +291,10 @@ export const Uploader = (props: IProps) => {
           defaultFilename={defaultFilename}
           allowWave={allowWave}
           showFilename={allowWave}
+          speaker={performedBy}
+          onSpeaker={handleSpeakerChange}
+          createProject={createProject}
+          team={team}
         />
       )}
       {!recordAudio && !importList && (
@@ -298,6 +307,15 @@ export const Uploader = (props: IProps) => {
           cancelMethod={uploadCancel}
           metaData={metaData}
           ready={ready}
+          speaker={performedBy}
+          onSpeaker={
+            !artifactTypeId &&
+            (uploadType || UploadType.Media) === UploadType.Media
+              ? handleSpeakerChange
+              : undefined
+          }
+          createProject={createProject}
+          team={team}
         />
       )}
     </div>
@@ -322,4 +340,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Uploader);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Uploader) as any as (props: IProps) => JSX.Element;

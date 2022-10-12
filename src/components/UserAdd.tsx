@@ -10,24 +10,18 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-} from '@material-ui/core';
-import { DialogProps } from '@material-ui/core/Dialog';
+  styled,
+  DialogProps,
+} from '@mui/material';
 import { QueryBuilder } from '@orbit/data';
 import UserList from '../control/UserList';
 import { related, allUsersRec } from '../crud';
-import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles({
-  root: {
-    '& .MuiPaper-root': {
-      minWidth: '300px',
-    },
+const StyledDialog = styled(Dialog)<DialogProps>(() => ({
+  '& .MuiPaper-root': {
+    minWidth: '300px',
   },
-  actions: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-});
+}));
 
 interface IStateProps {
   t: IUsertableStrings;
@@ -45,7 +39,6 @@ interface IProps extends IStateProps, IRecordProps {
 }
 export function UserAdd(props: IProps) {
   const { open, setOpen, select, add, users, t } = props;
-  const classes = useStyles();
   const [scroll] = React.useState<DialogProps['scroll']>('paper');
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
@@ -67,8 +60,7 @@ export function UserAdd(props: IProps) {
   const isIncluded = (userId: string): boolean => {
     const userRec = users.filter((u) => u?.id === userId);
     if (userRec.length === 0) return false;
-    const allUsers = allUsersRec(memory, organization);
-    const groupId = allUsers.length > 0 && allUsers[0]?.id;
+    const groupId = allUsersRec(memory, organization)?.id;
     const memberRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('groupmembership')
     ) as GroupMembership[];
@@ -96,12 +88,11 @@ export function UserAdd(props: IProps) {
 
   return (
     <div>
-      <Dialog
+      <StyledDialog
         open={open}
         onClose={handleClose}
         scroll={scroll}
         aria-labelledby="userAddDlg"
-        className={classes.root}
       >
         <DialogTitle id="userAddDlg">{t.selectUser}</DialogTitle>
         <DialogContent dividers={scroll === 'paper'}>
@@ -109,7 +100,9 @@ export function UserAdd(props: IProps) {
             <UserList isSelected={isIncluded} select={select} />
           )}
         </DialogContent>
-        <DialogActions className={classes.actions}>
+        <DialogActions
+          sx={{ display: 'flex', justifyContent: 'space-between' }}
+        >
           <Button id="userAdd" variant="contained" onClick={handleAdd}>
             {t.addNewUser}
           </Button>
@@ -117,7 +110,7 @@ export function UserAdd(props: IProps) {
             {t.cancel}
           </Button>
         </DialogActions>
-      </Dialog>
+      </StyledDialog>
     </div>
   );
 }
