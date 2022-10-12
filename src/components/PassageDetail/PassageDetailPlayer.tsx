@@ -16,11 +16,18 @@ interface IProps {
   allowSegment?: NamedRegions | undefined;
   saveSegments?: boolean;
   allowAutoSegment?: boolean;
+  suggestedSegments?: string;
   onSegment?: (segment: string) => void;
 }
 
 export function PassageDetailPlayer(props: IProps) {
-  const { allowSegment, allowAutoSegment, saveSegments, onSegment } = props;
+  const {
+    allowSegment,
+    allowAutoSegment,
+    saveSegments,
+    suggestedSegments,
+    onSegment,
+  } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const {
@@ -76,6 +83,14 @@ export function PassageDetailPlayer(props: IProps) {
     setDefaultSegments(segmentsRef.current);
     onSegment && onSegment(segmentsRef.current);
   };
+
+  useEffect(() => {
+    if (allowSegment && suggestedSegments) {
+      segmentsRef.current = suggestedSegments;
+      setDefaultSegments(segmentsRef.current);
+      onSegment && onSegment(segmentsRef.current);
+    }
+  }, [allowSegment, onSegment, suggestedSegments]);
 
   useEffect(() => {
     if (allowSegment) loadSegments();

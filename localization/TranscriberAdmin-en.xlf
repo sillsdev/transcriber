@@ -3256,6 +3256,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.pasteError">
+         <segment>
+            <source>Unable to parse all segment boundaries. Check for missing segments.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.pasteNoChange">
          <segment>
             <source>Nothing changed! Perhaps no references matched?</source>

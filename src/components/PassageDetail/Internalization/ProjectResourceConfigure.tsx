@@ -105,6 +105,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
   const [, setComplete] = useGlobal('progress');
   const [data, setData] = useState<ICell[][]>([]);
   const [numSegments, setNumSegments] = useState(0);
+  const [pastedSegments, setPastedSegments] = useState('');
   const [heightStyle, setHeightStyle] = useState({
     maxHeight: `${window.innerHeight - 450}px`,
   });
@@ -311,6 +312,37 @@ export const ProjectResourceConfigure = (props: IProps) => {
     else showMessage(tt.noData.replace('{0}', t.projectResourceConfigure));
   };
 
+  const loadPastedSegments = (newData: ICell[][]) => {
+    var psgIndexes = items.map((r) => r.type === 'passage');
+    var segBoundaries = newData
+      .filter((r, i) => i > 0 && psgIndexes[i - 1])
+      .map((s) => s[ColName.Limits].value); //should be like "0.0-34.9"
+    var regs = segBoundaries
+      .map((b: string) => {
+        var boundaries = b.split('-');
+        if (
+          boundaries.length > 1 &&
+          !isNaN(parseFloat(boundaries[0])) &&
+          !isNaN(parseFloat(boundaries[1]))
+        )
+          return {
+            start: parseFloat(boundaries[0]),
+            end: parseFloat(boundaries[1]),
+          };
+        return { start: 0, end: 0 };
+      })
+      .filter((r) => r.end > 0);
+    var changed = false;
+    regs.forEach((r, i) => {
+      if (i > 0 && r.start !== regs[i - 1].end) {
+        r.start = regs[i - 1].end;
+        changed = true;
+      }
+    });
+    setNumSegments(regs.length);
+    setPastedSegments(JSON.stringify({ regions: JSON.stringify(regs) }));
+    return changed;
+  };
   const handleParsePaste = (clipBoard: string) => {
     const rawData = cleanClipboard(clipBoard);
     if (rawData.length === 0) {
@@ -351,9 +383,10 @@ export const ProjectResourceConfigure = (props: IProps) => {
       showMessage(t.pasteNoChange);
       return [];
     }
-    setData(newData);
-    dataRef.current = newData;
-    if (!isChanged(wizToolId)) toolChanged(wizToolId);
+    if (loadPastedSegments(newData)) {
+      showMessage(t.pasteError);
+    }
+
     return [];
   };
 
@@ -477,6 +510,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
       <PassageDetailPlayer
         allowSegment={NamedRegions.ProjectResource}
         onSegment={handleSegment}
+        suggestedSegments={pastedSegments}
       />
       <StyledPaper id="proj-res-sheet" style={heightStyle}>
         <StyledTable id="proj-res-sheet">

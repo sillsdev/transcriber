@@ -3796,6 +3796,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.pasteError">
+      		<source>Unable to parse all segment boundaries. Check for missing segments.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.pasteNoChange">
       		<source>Nothing changed! Perhaps no references matched?</source>
       		<target/>

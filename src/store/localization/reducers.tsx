@@ -694,6 +694,7 @@ const initialState = {
 			"link": "Link",
 			"passageResource": "Passage",
 			"pasteFormat": "Pasted data must contain two or three columns. One of them must be the reference.",
+			"pasteError": "Unable to parse all segment boundaries. Check for missing segments.",
 			"pasteNoChange": "Nothing changed! Perhaps no references matched?",
 			"projectResourcePassage": "Select {0} and Passages",
 			"projectResourceSheet": "Project Resource Sheet",
