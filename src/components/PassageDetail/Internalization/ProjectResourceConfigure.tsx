@@ -332,16 +332,17 @@ export const ProjectResourceConfigure = (props: IProps) => {
         return { start: 0, end: 0 };
       })
       .filter((r) => r.end > 0);
-    var changed = false;
+    var errors = segBoundaries.length - regs.length;
+    var updated = 0;
     regs.forEach((r, i) => {
       if (i > 0 && r.start !== regs[i - 1].end) {
         r.start = regs[i - 1].end;
-        changed = true;
+        updated++;
       }
     });
     setNumSegments(regs.length);
     setPastedSegments(JSON.stringify({ regions: JSON.stringify(regs) }));
-    return changed;
+    return { errors, updated };
   };
   const handleParsePaste = (clipBoard: string) => {
     const rawData = cleanClipboard(clipBoard);
@@ -383,8 +384,13 @@ export const ProjectResourceConfigure = (props: IProps) => {
       showMessage(t.pasteNoChange);
       return [];
     }
-    if (loadPastedSegments(newData)) {
-      showMessage(t.pasteError);
+    var ret = loadPastedSegments(newData);
+    if (ret.errors || ret.updated) {
+      showMessage(
+        t.pasteError
+          .replace('{0}', ret.errors.toString())
+          .replace('{1}', ret.updated.toString())
+      );
     }
 
     return [];

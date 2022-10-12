@@ -3797,7 +3797,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.pasteError">
-      		<source>Unable to parse all segment boundaries. Check for missing segments.</source>
+      		<source>Unable to parse {0} segment boundaries. {1} segment boundaries were adjusted.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">AddResource.tsx</context>
