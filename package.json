@@ -1,6 +1,6 @@
 {
   "name": "audio-project-manager",
-  "version": "2.16.0-alpha.1",
+  "version": "2.16.0",
   "description": "Flexible audio-text orality solution",
   "private": true,
   "dependencies": {
@@ -171,7 +171,7 @@
   },
   "build": {
     "appId": "sil.lsdev.audio-project-manager-electron",
-    "productName": "Audio Project Manager Desktop",
+    "productName": "Audio Project Manager",
     "copyright": "Copyright © 2020-2022 ${author}",
     "win": {
       "icon": "public/icon.png"
