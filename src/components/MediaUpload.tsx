@@ -180,7 +180,7 @@ function MediaUpload(props: IProps) {
   const { showMessage } = useSnackBar();
   const [acceptextension, setAcceptExtension] = useState('');
   const [acceptmime, setAcceptMime] = useState('');
-  const [hasRights, setHasRight] = useState(!onSpeaker || Boolean(speaker));
+  const [hasRights, setHasRight] = useState(!onSpeaker);
   const title = [
     t.title,
     t.resourceTitle,
@@ -294,7 +294,7 @@ function MediaUpload(props: IProps) {
           </DialogContentText>
           {onSpeaker && uploadType === UploadType.Media && (
             <SpeakerName
-              name={speaker || ''}
+              name={hasRights ? speaker || '' : ''}
               onRights={handleRights}
               onChange={handleSpeaker}
               createProject={createProject}
