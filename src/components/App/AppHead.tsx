@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import SystemUpdateIcon from '@mui/icons-material/SystemUpdateAlt';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { API_CONFIG, isElectron } from '../../api-variable';
 import { TokenContext } from '../../context/TokenProvider';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -211,7 +212,9 @@ export const AppHead = (props: IProps) => {
 
   const handleDownloadClick = (event: React.MouseEvent<HTMLElement>) => {
     if (shell)
-      shell.openExternal('https://software.sil.org/siltranscriber/download/');
+      shell.openExternal(
+        'https://software.sil.org/audioprojectmanager/download/'
+      );
     // remote?.getCurrentWindow().close();
   };
 
@@ -260,7 +263,7 @@ export const AppHead = (props: IProps) => {
           lr = moment(lr).locale(lang).format('L');
           setLatestVersion(lv);
           setLatestRelease(lr);
-          if (isElectron && lv !== version)
+          if (isElectron && lv.split(' ')[0] !== version)
             showMessage(
               <span>
                 {t.updateAvailable.replace('{0}', lv).replace('{1}', lr)}
@@ -352,21 +355,44 @@ export const AppHead = (props: IProps) => {
           {(isOffline || orbitStatus !== undefined || !connected) && (
             <CloudOffIcon sx={{ p: '12pt' }} color="action" />
           )}
-          {latestVersion !== '' && latestVersion !== version && isElectron && (
-            <Tooltip
-              arrow
-              open={updateTipOpen}
-              onOpen={handleUpdateOpen}
-              onClose={handleUpdateClose}
-              title={t.updateAvailable
-                .replace('{0}', latestVersion)
-                .replace('{1}', latestRelease)}
-            >
-              <IconButton id="systemUpdate" onClick={handleDownloadClick}>
-                <SystemUpdateIcon color="primary" />
-              </IconButton>
-            </Tooltip>
-          )}
+          {latestVersion !== '' &&
+            isElectron &&
+            latestVersion.split(' ')[0] !== version && (
+              <Tooltip
+                arrow
+                open={updateTipOpen}
+                onOpen={handleUpdateOpen}
+                onClose={handleUpdateClose}
+                title={t.updateAvailable
+                  .replace('{0}', latestVersion)
+                  .replace('{1}', latestRelease)}
+              >
+                <IconButton id="systemUpdate" onClick={handleDownloadClick}>
+                  <SystemUpdateIcon color="primary" />
+                </IconButton>
+              </Tooltip>
+            )}
+          {latestVersion !== '' &&
+            !isElectron &&
+            latestVersion.split(' ')[0] !== version &&
+            latestVersion.split(' ').length > 1 && (
+              <Tooltip
+                arrow
+                open={updateTipOpen}
+                onOpen={handleUpdateOpen}
+                onClose={handleUpdateClose}
+                title={t.updateAvailable
+                  .replace('{0}', latestVersion)
+                  .replace('{1}', latestRelease)}
+              >
+                <IconButton
+                  id="systemUpdate"
+                  href="https://app.audioprojectmanager.org"
+                >
+                  <ExitToAppIcon color="primary" />
+                </IconButton>
+              </Tooltip>
+            )}
           <HelpMenu online={!isOffline} />
           {pathname !== '/' && !pathname.startsWith('/access') && (
             <UserMenu action={handleUserMenu} />
