@@ -1,11 +1,5 @@
 import { useState, useEffect, useGlobal } from 'reactn';
-import {
-  Snackbar,
-  IconButton,
-  makeStyles,
-  Theme,
-  createStyles,
-} from '@material-ui/core';
+import { Snackbar, IconButton, styled, BoxProps, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { useMounted } from '../utils';
@@ -24,21 +18,11 @@ export enum AlertSeverity {
 interface IProps {
   children: JSX.Element;
 }
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    alert: {
-      display: 'flex',
-    },
-    bar: {
-      '& .MuiPaper-root': {
-        alignItems: 'center',
-      },
-    },
-    close: {
-      padding: theme.spacing(0.5),
-    },
-  })
-);
+const BarBox = styled(Box)<BoxProps>(() => ({
+  '& .MuiPaper-root': {
+    alignItems: 'center',
+  },
+}));
 
 export const useSnackBar = () => {
   const [message, setMessage] = useGlobal('snackMessage');
@@ -77,7 +61,6 @@ export const useSnackBar = () => {
     const isMounted = useMounted('snackbar');
     const { message } = props;
     const [alert] = useGlobal('snackAlert');
-    const classes = useStyles();
     const [open, setOpen] = useState(false);
 
     const handleClose = () => {
@@ -97,7 +80,7 @@ export const useSnackBar = () => {
         key="close"
         aria-label="Close"
         color="inherit"
-        className={classes.close}
+        sx={{ p: 0.5 }}
         onClick={handleClose}
         component="span"
       >
@@ -123,11 +106,11 @@ export const useSnackBar = () => {
         />
       ) : (
         <Snackbar open={open} onClose={handleClose} autoHideDuration={30000}>
-          <div className={classes.bar}>
+          <BarBox>
             <Alert severity={alert} action={CloseButton()}>
               {message}
             </Alert>
-          </div>
+          </BarBox>
         </Snackbar>
       )
     ) : (

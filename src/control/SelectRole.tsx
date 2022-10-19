@@ -1,27 +1,13 @@
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ISharedStrings, IState, Role } from '../model';
 import { localizeRole } from '../utils';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { QueryBuilder } from '@orbit/data';
 import { useGlobal } from 'reactn';
 import { withData } from '../mods/react-orbitjs';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    menu: {},
-    label: { marginTop: theme.spacing(1) },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      display: 'flex',
-      flexGrow: 1,
-      minWidth: '8rem',
-    },
-  })
-);
 interface IStateProps {
   ts: ISharedStrings;
 }
@@ -49,7 +35,6 @@ export const SelectRole = (props: IProps) => {
     label,
     rowid,
   } = props;
-  const classes = useStyles();
   const [offlineOnly] = useGlobal('offlineOnly');
   const [role, setRole] = useState(initRole);
 
@@ -65,16 +50,11 @@ export const SelectRole = (props: IProps) => {
   return (
     <TextField
       id={(org ? 'selectteamrole' : 'selectprojectrole') + (rowid || '')}
-      className={classes.textField}
+      sx={{ mx: 1, display: 'flex', flexGrow: 1, minWidth: '8rem' }}
       select
       label={org ? ts.teamrole : ts.projectrole}
       value={role}
       onChange={handleRoleChange}
-      SelectProps={{
-        MenuProps: {
-          className: classes.menu,
-        },
-      }}
       helperText={label || ''}
       margin="normal"
       variant="filled"

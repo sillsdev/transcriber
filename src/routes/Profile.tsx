@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { TokenContext } from '../context/TokenProvider';
 import { connect } from 'react-redux';
@@ -18,24 +17,23 @@ import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
-  withStyles,
-  makeStyles,
-  createStyles,
-  Theme,
-} from '@material-ui/core/styles';
-import {
   Paper,
   Grid,
   TextField,
   FormControl,
   FormGroup,
   FormControlLabel,
-  Button,
   Checkbox,
   Typography,
   Avatar,
   MenuItem,
-} from '@material-ui/core';
+  Box,
+  styled,
+  PaperProps,
+  SxProps,
+  TypographyProps,
+  GridProps,
+} from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import Confirm from '../components/AlertDialog';
 import ParatextLinked from '../components/ParatextLinked';
@@ -69,80 +67,53 @@ import StickyRedirect from '../components/StickyRedirect';
 import { useSnackBar } from '../hoc/SnackBar';
 import SelectRole from '../control/SelectRole';
 import { UnsavedContext } from '../context/UnsavedContext';
+import { ActionRow, AltButton, PriButton } from '../control';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    appBar: {
-      width: '100%',
-      boxShadow: 'none',
-    },
-    container: {
-      display: 'flex',
-      flexGrow: 1,
-      margin: theme.spacing(4),
-      marginTop: '80px',
-      padding: '40px',
-      justifyContent: 'center',
-    },
-    fullContainer: {
-      margin: 0,
-    },
-    paper: {
-      paddingLeft: theme.spacing(4),
-    },
-    group: {
-      paddingBottom: theme.spacing(3),
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    locale: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 206,
-    },
-    timezone: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 206,
-    },
-    menu: {
-      width: 200,
-    },
-    actions: {
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-    icon: {
-      marginLeft: theme.spacing(1),
-    },
-    caption: {
-      width: 150,
-      textAlign: 'left',
-      textOverflow: 'ellipsis',
-      overflow: 'hidden',
-    },
-    notLinked: {
-      fontWeight: 'bold',
-      paddingTop: theme.spacing(2),
-    },
-    bigAvatar: {
-      width: 150,
-      height: 150,
-    },
-  })
-);
+// see: https://mui.com/material-ui/customization/how-to-customize/
+interface ContainerProps extends PaperProps {
+  noMargin?: boolean;
+}
+const PaperContainer = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== 'noMargin',
+})<ContainerProps>(({ noMargin, theme }) => ({
+  ...(noMargin && {
+    display: 'flex',
+    flexGrow: 1,
+    margin: theme.spacing(4),
+    marginTop: '80px',
+    padding: '40px',
+    justifyContent: 'center',
+  }),
+}));
+
+const Caption = styled(Typography)<TypographyProps>(() => ({
+  width: 150,
+  textAlign: 'left',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+}));
+
+const textFieldProps = { mx: 1 } as SxProps;
+const selectProps = { mx: 1, width: '206px' } as SxProps;
+const menuProps = { width: '200px' } as SxProps;
+const bigAvatarProps = { width: '150px', height: '150px' } as SxProps;
+
+interface IBigAvatarProps {
+  avatarUrl: string | null;
+  name: string;
+}
+const BigAvatar = (props: IBigAvatarProps) => {
+  const { avatarUrl, name } = props;
+
+  if (!avatarUrl || avatarUrl === '') {
+    return <Avatar sx={bigAvatarProps}>{makeAbbr(name)}</Avatar>;
+  }
+  return <Avatar sx={bigAvatarProps} src={avatarUrl} />;
+};
+
+const StyledGrid = styled(Grid)<GridProps>(() => ({
+  padding: '0 30px',
+}));
 
 interface IStateProps {
   t: IProfileStrings;
@@ -171,7 +142,6 @@ interface IProps
 export function Profile(props: IProps) {
   const { users, t, noMargin, finishAdd, setLanguage } = props;
   const { paratext_username, paratext_usernameStatus, getUserName } = props;
-  const classes = useStyles();
   const [isOffline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
@@ -479,21 +449,6 @@ export function Profile(props: IProps) {
     setDeleteItem('');
   };
 
-  interface IBigAvatarProps {
-    avatarUrl: string | null;
-    name: string;
-  }
-  const BigAvatar = (props: IBigAvatarProps) => {
-    const { avatarUrl, name } = props;
-
-    if (!avatarUrl || avatarUrl === '') {
-      return <Avatar className={classes.bigAvatar}>{makeAbbr(name)}</Avatar>;
-    }
-    return <Avatar className={classes.bigAvatar} src={avatarUrl} />;
-  };
-
-  const StyledGrid = withStyles({ item: { padding: '0 30px' } })(Grid);
-
   useEffect(() => {
     if (isOffline) getParatextDataPath().then((val) => setPtPath(val));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -599,23 +554,15 @@ export function Profile(props: IProps) {
   if (/Team/i.test(view)) return <StickyRedirect to="/team" />;
 
   return (
-    <div id="Profile" className={classes.root}>
+    <Box id="Profile" sx={{ width: '100%' }}>
       <AppHead {...props} />
-      <Paper
-        className={clsx(classes.container, {
-          [classes.fullContainer]: noMargin,
-        })}
-      >
-        <div className={classes.paper}>
+      <PaperContainer noMargin={noMargin}>
+        <Box sx={{ pl: 4 }}>
           <Grid container>
             <StyledGrid item xs={12} md={5}>
               <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-              {name !== email && (
-                <Typography variant="h6" className={classes.caption}>
-                  {name || ''}
-                </Typography>
-              )}
-              <Typography className={classes.caption}>{email || ''}</Typography>
+              {name !== email && <Caption variant="h6">{name || ''}</Caption>}
+              <Caption>{email || ''}</Caption>
               <ParatextLinked
                 hasParatext={hasParatext}
                 ptPath={ptPath}
@@ -633,13 +580,13 @@ export function Profile(props: IProps) {
               )}
 
               <FormControl>
-                <FormGroup className={classes.group}>
+                <FormGroup sx={{ pb: 3 }}>
                   <FormControlLabel
                     control={
                       <TextField
                         id="profileName"
                         label={t.name}
-                        className={classes.textField}
+                        sx={textFieldProps}
                         value={name}
                         onChange={handleNameChange}
                         onClick={handleNameClick}
@@ -663,7 +610,7 @@ export function Profile(props: IProps) {
                       <TextField
                         id="given"
                         label={t.given}
-                        className={classes.textField}
+                        sx={textFieldProps}
                         value={given || ''}
                         onChange={handleGivenChange}
                         margin="normal"
@@ -678,7 +625,7 @@ export function Profile(props: IProps) {
                       <TextField
                         id="family"
                         label={t.family}
-                        className={classes.textField}
+                        sx={textFieldProps}
                         value={family || ''}
                         onChange={handleFamilyChange}
                         margin="normal"
@@ -707,12 +654,12 @@ export function Profile(props: IProps) {
                         id="select-locale"
                         select
                         label={t.locale}
-                        className={classes.locale}
+                        sx={selectProps}
                         value={locale}
                         onChange={handleLocaleChange}
                         SelectProps={{
                           MenuProps: {
-                            className: classes.menu,
+                            sx: menuProps,
                           },
                         }}
                         margin="normal"
@@ -734,12 +681,12 @@ export function Profile(props: IProps) {
                         id="select-timezone"
                         select
                         label={t.timezone}
-                        className={classes.timezone}
+                        sx={selectProps}
                         value={timezone}
                         onChange={handleTimezoneChange}
                         SelectProps={{
                           MenuProps: {
-                            className: classes.menu,
+                            sx: menuProps,
                           },
                         }}
                         margin="normal"
@@ -760,7 +707,7 @@ export function Profile(props: IProps) {
 
                   {email !== '' && (
                     <FormControlLabel
-                      className={classes.textField}
+                      sx={textFieldProps}
                       control={
                         <Checkbox
                           id="digest"
@@ -778,7 +725,7 @@ export function Profile(props: IProps) {
                           <TextField
                             id="phone"
                             label={t.phone}
-                            className={classes.textField}
+                            sx={textFieldProps}
                             value={phone}
                             onChange={handlePhoneChange}
                             margin="normal"
@@ -789,7 +736,7 @@ export function Profile(props: IProps) {
                       />
                       {orgRole === RoleNames.Admin && (
                         <FormControlLabel
-                          className={classes.textField}
+                          sx={textFieldProps}
                           control={
                             <Checkbox
                               id="checkbox-locked"
@@ -804,30 +751,24 @@ export function Profile(props: IProps) {
                   )}
                 </FormGroup>
               </FormControl>
-              <div className={classes.actions}>
+              <ActionRow>
                 {((editId && /Add/i.test(editId)) ||
                   (currentUser &&
                     currentUser.attributes?.name !==
                       currentUser.attributes?.email)) && (
-                  <Button
+                  <AltButton
                     id="profileCancel"
                     key="cancel"
                     aria-label={t.cancel}
-                    variant="outlined"
-                    color="primary"
-                    className={classes.button}
                     onClick={handleCancel}
                   >
                     {t.cancel}
-                  </Button>
+                  </AltButton>
                 )}
-                <Button
+                <PriButton
                   id="profileSave"
                   key="add"
                   aria-label={t.add}
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
                   disabled={
                     !requiredComplete() ||
                     !myChanged ||
@@ -841,9 +782,9 @@ export function Profile(props: IProps) {
                     : userNotComplete()
                     ? t.next
                     : t.save}
-                  <SaveIcon className={classes.icon} />
-                </Button>
-              </div>
+                  <SaveIcon sx={{ ml: 1 }} />
+                </PriButton>
+              </ActionRow>
             </Grid>
           </Grid>
           {(!isOffline || offlineOnly) &&
@@ -857,7 +798,7 @@ export function Profile(props: IProps) {
                 inProgress={deleteItem !== ''}
               />
             )}
-        </div>
+        </Box>
         {deleteItem !== '' && (
           <Confirm
             yesResponse={handleDeleteConfirmed}
@@ -871,8 +812,8 @@ export function Profile(props: IProps) {
             noResponse={handleCancelAborted}
           />
         )}
-      </Paper>
-    </div>
+      </PaperContainer>
+    </Box>
   );
 }
 

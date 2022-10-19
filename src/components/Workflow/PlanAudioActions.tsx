@@ -1,30 +1,31 @@
 import React, { useMemo } from 'react';
-import { IPlanActionsStrings, IState, IMediaShare } from '../../model';
-import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
-//import AddIcon from '@mui/icons-material/AddCircleOutline';
+import { IPlanActionsStrings, IMediaShare } from '../../model';
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import PauseIcon from '@mui/icons-material/Pause';
 import TranscribeIcon from '../../control/TranscribeIcon';
 import SharedCheckbox from '@mui/icons-material/CheckBoxOutlined';
 import NotSharedCheckbox from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import VersionsIcon from '@mui/icons-material/List';
-import localStrings from '../../selector/localize';
-import { connect } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
+import { IconButton, Box, IconButtonProps, styled } from '@mui/material';
+import { planActionsSelector } from '../../selector';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    arrangeActions: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    actionButton: {
-      color: theme.palette.primary.light,
-    },
-    oldShared: {
-      color: theme.palette.secondary.light,
-    },
-  })
-);
+// see: https://mui.com/material-ui/customization/how-to-customize/
+interface StyledIconButtonProps extends IconButtonProps {
+  shared?: boolean;
+}
+const StyledIconButton = styled(IconButton, {
+  shouldForwardProp: (prop) => prop !== 'shared',
+})<StyledIconButtonProps>(({ shared, theme }) => ({
+  ...(shared
+    ? {
+        color: theme.palette.secondary.light,
+      }
+    : {
+        color: theme.palette.primary.light,
+      }),
+}));
+
 interface IStateProps {
   t: IPlanActionsStrings;
 }
@@ -48,7 +49,6 @@ interface IProps extends IStateProps {
 
 export function PlanAudioActions(props: IProps) {
   const {
-    t,
     rowIndex,
     isPassage,
     mediaId,
@@ -58,7 +58,7 @@ export function PlanAudioActions(props: IProps) {
     onTranscribe,
     isPlaying,
   } = props;
-  const classes = useStyles();
+  const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
 
   const handlePlayStatus = () => () => {
     onPlayStatus(mediaId);
@@ -74,15 +74,11 @@ export function PlanAudioActions(props: IProps) {
   }, [mediaId]);
 
   return (
-    <div className={classes.arrangeActions}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       {isPassage && (
-        <IconButton
+        <StyledIconButton
           id="passageShare"
-          className={
-            mediaShared === IMediaShare.OldVersionOnly
-              ? classes.oldShared
-              : classes.actionButton
-          }
+          shared={mediaShared === IMediaShare.OldVersionOnly}
           title={t.versions}
           disabled={disabled}
           onClick={onHistory(rowIndex)}
@@ -94,34 +90,29 @@ export function PlanAudioActions(props: IProps) {
           ) : (
             <SharedCheckbox />
           )}
-        </IconButton>
+        </StyledIconButton>
       )}
       {isPassage && (
-        <IconButton
+        <StyledIconButton
           id="planAudPlayStop"
-          className={classes.actionButton}
           title={t.playpause}
           disabled={disabled}
           onClick={handlePlayStatus()}
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
-        </IconButton>
+        </StyledIconButton>
       )}
       {isPassage && (
-        <IconButton
+        <StyledIconButton
           id="planActTrans"
-          className={classes.actionButton}
           title={t.transcribe}
           onClick={handleTranscribe(rowIndex)}
           disabled={disabled}
         >
           <TranscribeIcon color={disabled ? 'grey' : undefined} />
-        </IconButton>
+        </StyledIconButton>
       )}
-    </div>
+    </Box>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'planActions' }),
-});
-export default connect(mapStateToProps)(PlanAudioActions) as any as any;
+export default PlanAudioActions;

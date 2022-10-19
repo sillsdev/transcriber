@@ -1,21 +1,11 @@
 import React, { ChangeEvent } from 'react';
 import { OptionType } from '../model';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { TextField } from '@material-ui/core';
-import Autocomplete, {
+import {
+  TextField,
+  Autocomplete,
   AutocompleteChangeReason,
   AutocompleteRenderInputParams,
-} from '@material-ui/lab/Autocomplete';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    book: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 256,
-    },
-  })
-);
+} from '@mui/material';
 
 const t = {
   book: 'Book',
@@ -30,7 +20,6 @@ interface IProps {
 
 export const BookCombobox = (props: IProps) => {
   const { value, suggestions, variant } = props;
-  const classes = useStyles();
 
   const handleChange = (
     e: ChangeEvent<{}>,
@@ -56,7 +45,7 @@ export const BookCombobox = (props: IProps) => {
   return (
     <Autocomplete
       id="book-combobox"
-      className={classes.book}
+      sx={{ mx: 1, with: '256px' }}
       options={suggestions}
       openOnFocus
       autoHighlight
