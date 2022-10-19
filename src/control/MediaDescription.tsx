@@ -1,24 +1,28 @@
-import { Chip } from '@material-ui/core';
+import { Box, BoxProps, Chip, styled } from '@mui/material';
 import { MediaFile } from '../model';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { findRecord, related, useArtifactType } from '../crud';
 import { dateOrTime, prettySegment } from '../utils';
 import { useGlobal } from 'reactn';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    descriptionRow: {
-      paddingLeft: theme.spacing(2),
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    descriptionCol: {
-      paddingLeft: theme.spacing(2),
-      display: 'flex',
-      flexDirection: 'column',
-    },
-  })
-);
+// see: https://mui.com/material-ui/customization/how-to-customize/
+interface StyledBoxProps extends BoxProps {
+  col?: boolean;
+}
+const StyledBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'col',
+})<StyledBoxProps>(({ col, theme }) => ({
+  ...(col
+    ? {
+        paddingLeft: theme.spacing(2),
+        display: 'flex',
+        flexDirection: 'column',
+      }
+    : {
+        paddingLeft: theme.spacing(2),
+        display: 'flex',
+        flexDirection: 'row',
+      }),
+}));
 
 const PerformedBy = ({ mediafile }: { mediafile?: MediaFile }) => {
   const speaker = mediafile?.attributes?.performedBy;
@@ -67,7 +71,6 @@ export const ItemDescription = ({
   mediafile?: MediaFile;
   col?: boolean;
 }) => {
-  const classes = useStyles();
   const { localizedArtifactTypeFromId } = useArtifactType();
   const [memory] = useGlobal('memory');
   const [locale] = useGlobal('lang');
@@ -79,7 +82,7 @@ export const ItemDescription = ({
     version = s.attributes?.versionNumber?.toString();
   }
   return (
-    <div className={col ? classes.descriptionCol : classes.descriptionRow}>
+    <StyledBox col={col}>
       <span>
         {mediafile
           ? localizedArtifactTypeFromId(related(mediafile, 'artifactType'))
@@ -89,6 +92,6 @@ export const ItemDescription = ({
       <PerformedBy mediafile={mediafile} />
       <Segments mediafile={mediafile} version={version} />
       <Created mediafile={mediafile} lang={locale} />
-    </div>
+    </StyledBox>
   );
 };

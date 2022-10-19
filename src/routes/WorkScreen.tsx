@@ -1,8 +1,6 @@
 import React from 'react';
-import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { useLocation, useParams } from 'react-router-dom';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import AppHead from '../components/App/AppHead';
 import { TranscriberProvider } from '../context/TranscriberContext';
 import { TaskItemWidth } from '../components/TaskTable';
@@ -14,40 +12,33 @@ import { UnsavedContext } from '../context/UnsavedContext';
 import { useProjectType, useRole, useUrlContext } from '../crud';
 import { forceLogin, localUserKey, LocalKey } from '../utils';
 import { HeadHeight } from '../App';
+import { Box, BoxProps, styled } from '@mui/material';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    teamScreen: {
-      display: 'flex',
-      paddingTop: '80px',
-    },
-    panel2: {
-      display: 'flex',
-      flexDirection: 'row',
-      paddingTop: `${HeadHeight}px`,
-    },
-    topFilter: {
-      zIndex: 2,
-      position: 'absolute',
-      left: 0,
-      backgroundColor: 'white',
-    },
-    topTranscriber: {
-      zIndex: 1,
-      position: 'absolute',
-      left: TaskItemWidth + theme.spacing(0.5),
-    },
-  })
-);
+// see: https://mui.com/material-ui/customization/how-to-customize/
+interface TaskTableBoxProps extends BoxProps {
+  topFilter?: boolean;
+}
+const TaskTableBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'topFilter',
+})<TaskTableBoxProps>(({ topFilter }) => ({
+  ...(topFilter && {
+    zIndex: 2,
+    position: 'absolute',
+    left: 0,
+    backgroundColor: 'white',
+  }),
+}));
+
+const TranscriberBox = styled(Box)<BoxProps>(({ theme }) => ({
+  zIndex: 1,
+  position: 'absolute',
+  left: TaskItemWidth + theme.spacing(0.5),
+}));
 
 interface ParamTypes {
   prjId: string;
 }
 export const WorkScreen = () => {
-  const classes = useStyles();
   const { pathname } = useLocation();
   const { prjId } = useParams<ParamTypes>();
   const [project] = useGlobal('project');
@@ -104,21 +95,27 @@ export const WorkScreen = () => {
   if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ width: '100%' }}>
       <AppHead SwitchTo={SwitchTo} />
       <TranscriberProvider>
-        <div className={classes.panel2}>
-          <div className={clsx({ [classes.topFilter]: topFilter })}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            paddingTop: `${HeadHeight}px`,
+          }}
+        >
+          <TaskTableBox topFilter={topFilter}>
             <TaskTable onFilter={handleTopFilter} />
-          </div>
+          </TaskTableBox>
           {!topFilter && (
-            <div className={classes.topTranscriber}>
+            <TranscriberBox>
               <Transcriber />
-            </div>
+            </TranscriberBox>
           )}
-        </div>
+        </Box>
       </TranscriberProvider>
-    </div>
+    </Box>
   );
 };
 

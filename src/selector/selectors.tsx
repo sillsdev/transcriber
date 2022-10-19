@@ -1,8 +1,17 @@
 import { IState } from '../model';
 import localStrings from './localize';
 
+export const accessSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'access' });
+
 export const activitySelector = (state: IState) =>
   localStrings(state as IState, { layout: 'activityState' });
+
+export const artifactCategorySelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'selectArtifactCategory' });
+
+export const artifactTypeSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'selectArtifactType' });
 
 export const cardsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'cards' });
@@ -12,6 +21,9 @@ export const commentCardSelector = (state: IState) =>
 
 export const communitySelector = (state: IState) =>
   localStrings(state as IState, { layout: 'community' });
+
+export const controlSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'control' });
 
 export const discussionCardSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'discussionCard' });
@@ -52,6 +64,9 @@ export const permissionsSelector = (state: IState) =>
 export const planSheetSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'planSheet' });
 
+export const planActionsSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'planActions' });
+
 export const playerSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'wsAudioPlayer' });
 
@@ -90,6 +105,15 @@ export const transcribeRejectSelector = (state: IState) =>
 
 export const transcriptionTabSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'transcriptionTab' });
+
+export const viewModeSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'viewMode' });
+
+export const userListModeSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'userListMode' });
+
+export const welcomeSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'welcome' });
 
 export const wsAudioPlayerSegmentSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'wsAudioPlayerSegment' });
