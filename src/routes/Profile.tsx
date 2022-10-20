@@ -76,14 +76,18 @@ interface ContainerProps extends PaperProps {
 const PaperContainer = styled(Paper, {
   shouldForwardProp: (prop) => prop !== 'noMargin',
 })<ContainerProps>(({ noMargin, theme }) => ({
-  ...(noMargin && {
-    display: 'flex',
-    flexGrow: 1,
-    margin: theme.spacing(4),
-    marginTop: '80px',
-    padding: '40px',
-    justifyContent: 'center',
-  }),
+  display: 'flex',
+  flexGrow: 1,
+  marginTop: '80px',
+  padding: '40px',
+  justifyContent: 'center',
+  ...(noMargin
+    ? {
+        margin: 0,
+      }
+    : {
+        margin: theme.spacing(4),
+      }),
 }));
 
 const Caption = styled(Typography)<TypographyProps>(() => ({
