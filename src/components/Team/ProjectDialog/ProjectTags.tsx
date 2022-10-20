@@ -2,31 +2,17 @@ import React, { useState } from 'react';
 import keycode from 'keycode';
 import { ITag } from '../../../model';
 import {
-  // Grid,
   FormLabel,
   FormControlLabel,
   Checkbox,
   TextField,
   FormGroup,
-} from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+} from '@mui/material';
 import { IProjectDialogState } from './ProjectDialog';
 import { useEffect } from 'reactn';
 import { localizeProjectTag } from '../../../utils/localizeProjectTag';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    label: {
-      color: theme.palette.secondary.main,
-    },
-    otherBox: {
-      marginBottom: theme.spacing(2),
-    },
-  })
-);
-
 export const ProjectTags = (props: IProjectDialogState) => {
-  const classes = useStyles();
   const { state, setState } = props;
   const { tags } = state;
   const t = state.vProjectStrings;
@@ -102,7 +88,7 @@ export const ProjectTags = (props: IProjectDialogState) => {
 
   return (
     <>
-      <FormLabel className={classes.label}>{t.tags}</FormLabel>
+      <FormLabel sx={{ color: 'secondary.main' }}>{t.tags}</FormLabel>
       <FormGroup>
         {Object.keys(check).map((k, i) => {
           return (
@@ -128,7 +114,7 @@ export const ProjectTags = (props: IProjectDialogState) => {
             <TextField
               id="other-tag"
               margin="dense"
-              className={classes.otherBox}
+              sx={{ mb: 2 }}
               label={t.other}
               value={other}
               onChange={handleOther}

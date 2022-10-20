@@ -1,20 +1,22 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import moment from 'moment';
-import { connect } from 'react-redux';
-import { IState, IAudacityManagerStrings, MediaFile } from '../../model';
-import localStrings from '../../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { shallowEqual, useSelector } from 'react-redux';
+import { IAudacityManagerStrings, MediaFile } from '../../model';
 import {
   Button,
   Dialog,
   DialogTitle,
   DialogActions,
-  Grid,
   FormControl,
   TextField,
   Typography,
-} from '@material-ui/core';
+  styled,
+  Grid,
+  GridProps,
+  Box,
+  BoxProps,
+} from '@mui/material';
 import {
   useAudacityProjUpdate,
   useAudacityProjRead,
@@ -35,48 +37,31 @@ import {
 import { dataPath, PathType } from '../../utils';
 import { extensions, mimes } from '.';
 import SpeakerName from '../SpeakerName';
+import { audacityManagerSelector } from '../../selector';
 
 const fs = require('fs');
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 const path = require('path');
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      minWidth: '900px',
-    },
-    grid: {
-      minWidth: '800px',
-      '& .MuiAutocomplete-root': {
-        paddingBottom: '20px',
-        width: 'unset',
-      },
-    },
-    name: {
-      minWidth: '500px',
-      margin: theme.spacing(2),
-    },
-    actions: {
-      display: 'flex',
-      flexDirection: 'column',
-      padding: theme.spacing(2),
-      marginLeft: theme.spacing(1),
-      '& .MuiButton-root': {
-        marginBottom: theme.spacing(2),
-      },
-      // '& .MuiButton-label': {
-      //   justifyContent: 'flex-end',
-      // },
-    },
-    label: { margin: theme.spacing(2) },
-  })
-);
+const StyledGrid = styled(Grid)<GridProps>(() => ({
+  minWidth: '800px',
+  '& .MuiAutocomplete-root': {
+    paddingBottom: '20px',
+    width: 'unset',
+  },
+}));
 
-interface IStateProps {
-  t: IAudacityManagerStrings;
-}
+const ActionRow = styled(Box)<BoxProps>(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  padding: theme.spacing(2),
+  marginLeft: theme.spacing(1),
+  '& .MuiButton-root': {
+    marginBottom: theme.spacing(2),
+  },
+}));
 
-export interface IProps extends IStateProps {
+export interface IProps {
   item: number;
   passageId: RecordIdentity;
   mediaId: string;
@@ -88,8 +73,7 @@ export interface IProps extends IStateProps {
 }
 
 function AudacityManager(props: IProps) {
-  const classes = useStyles();
-  const { passageId, mediaId, onClose, open, t } = props;
+  const { passageId, mediaId, onClose, open } = props;
   const { item, onImport } = props;
   const { speaker, onSpeaker } = props;
   const [hasRights, setHasRight] = React.useState(!onSpeaker);
@@ -103,6 +87,10 @@ function AudacityManager(props: IProps) {
   const [changed] = useGlobal('changed');
   const { showMessage } = useSnackBar();
   const getProjName = useAudProjName();
+  const t: IAudacityManagerStrings = useSelector(
+    audacityManagerSelector,
+    shallowEqual
+  );
 
   const handleClose = () => {
     onClose();
@@ -281,13 +269,6 @@ function AudacityManager(props: IProps) {
     setName('');
   };
 
-  // const handleDelete = () => {
-  //   const audRec = audRead(passageId.id);
-  //   fs.unlinkSync(audRec?.attributes?.audacityName);
-  //   audDelete(passageId.id);
-  //   setName('');
-  // };
-
   const nameUpdate = debounce(() => {
     audUpdate(passageId.id, name);
   }, 100);
@@ -319,7 +300,7 @@ function AudacityManager(props: IProps) {
       disableEnforceFocus
     >
       <DialogTitle id="manager-title">{t.title}</DialogTitle>
-      <Grid container className={classes.grid}>
+      <StyledGrid container>
         {exists && name !== '' ? (
           <Grid container justifyContent="center">
             <Grid item xs={8}>
@@ -329,7 +310,7 @@ function AudacityManager(props: IProps) {
                   autoFocus
                   required
                   label={t.audacityProject}
-                  className={classes.name}
+                  sx={{ m: 2, minWidth: '500px' }}
                   value={name}
                   onChange={handleAudacityName}
                   helperText={exists || name === '' ? null : t.missingProject}
@@ -337,7 +318,7 @@ function AudacityManager(props: IProps) {
               </FormControl>
             </Grid>
             <Grid item xs={4}>
-              <div className={classes.actions}>
+              <ActionRow>
                 <Button onClick={handleOpen} variant="outlined">
                   {t.open}
                 </Button>
@@ -357,29 +338,29 @@ function AudacityManager(props: IProps) {
                   {t.unlink}
                 </Button>
                 {/* <Button onClick={handleDelete}>Delete</Button> */}
-              </div>
+              </ActionRow>
             </Grid>
           </Grid>
         ) : (
           <Grid container justifyContent="center">
             <Grid item xs={9}>
-              <FormControl className={classes.label}>
+              <FormControl sx={{ m: 2 }}>
                 <Typography>{t.tip}</Typography>
               </FormControl>
             </Grid>
             <Grid item xs={3}>
-              <div className={classes.actions}>
+              <ActionRow>
                 <Button onClick={handleCreate} variant="outlined">
                   {t.create}
                 </Button>
                 <Button onClick={handleBrowse} variant="outlined">
                   {t.browse}
                 </Button>
-              </div>
+              </ActionRow>
             </Grid>
           </Grid>
         )}
-      </Grid>
+      </StyledGrid>
       <DialogActions>
         <Button onClick={handleClose} variant="contained" color="primary">
           {t.close}
@@ -389,8 +370,4 @@ function AudacityManager(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'audacityManager' }),
-});
-
-export default connect(mapStateToProps)(AudacityManager) as any;
+export default AudacityManager;

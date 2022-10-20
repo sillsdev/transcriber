@@ -6,39 +6,30 @@ import {
   ISharedStrings,
   User,
 } from '../../model';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import {
+  Button,
+  IconButton,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  Tooltip,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector, shallowEqual } from 'react-redux';
 import { peerSelector, sharedSelector } from '../../selector';
 import Confirm from '../AlertDialog';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { usePermissions } from '../../crud/usePermissions';
-import {
-  createStyles,
-  FormControlLabel,
-  FormLabel,
-  makeStyles,
-  Radio,
-  RadioGroup,
-  Theme,
-  Tooltip,
-} from '@material-ui/core';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    label: {
-      marginTop: theme.spacing(3),
-    },
-  })
-);
+
 interface IRecordProps {
   users: Array<User>;
   groups: Array<Group>;
@@ -62,7 +53,6 @@ export const GroupDialog = ({
   groups,
   memberships,
 }: IProps) => {
-  const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [confirm, setConfirm] = useState<string>();
@@ -172,7 +162,7 @@ export const GroupDialog = ({
             helperText={showInUse() && t.inUse}
           />
 
-          <FormLabel component="legend" className={classes.label}>
+          <FormLabel component="legend" sx={{ mt: 3 }}>
             {t.permissions}
           </FormLabel>
           <RadioGroup value={permissions} onChange={handleChange}>

@@ -1,33 +1,17 @@
-import { IState, IStepEditorStrings } from '../../model';
-import { connect } from 'react-redux';
-import localStrings from '../../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import { TextField } from '@material-ui/core';
+import { IStepEditorStrings } from '../../model';
+import { shallowEqual, useSelector } from 'react-redux';
+import { TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { stepEditorSelector } from './StepEditor';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      display: 'flex',
-      flexGrow: 1,
-    },
-  })
-);
-
-interface IStateProps {
-  t: IStepEditorStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   name: string;
   onChange: (name: string) => void;
 }
 
-export const StepName = ({ name, onChange, t }: IProps) => {
-  const classes = useStyles();
+export const StepName = ({ name, onChange }: IProps) => {
   const [response, setResponse] = useState(name);
+  const t: IStepEditorStrings = useSelector(stepEditorSelector, shallowEqual);
 
   const handleChange = (e: any) => {
     const name = e.target.value;
@@ -47,13 +31,9 @@ export const StepName = ({ name, onChange, t }: IProps) => {
       value={response}
       onChange={handleChange}
       variant="filled"
-      className={classes.textField}
+      sx={{ mx: 1, display: 'flex', flexGrow: 1 }}
     />
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'stepEditor' }),
-});
-
-export default connect(mapStateToProps)(StepName) as any;
+export default StepName;
