@@ -32,7 +32,7 @@ const TaskTableBox = styled(Box, {
 const TranscriberBox = styled(Box)<BoxProps>(({ theme }) => ({
   zIndex: 1,
   position: 'absolute',
-  left: TaskItemWidth + theme.spacing(0.5),
+  left: `${TaskItemWidth + 4}px`,
 }));
 
 interface ParamTypes {
