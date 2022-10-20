@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { ISharedStrings, IPlanActionsStrings, IMediaShare } from '../../model';
+import { ISharedStrings, IPlanActionsStrings } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
   Button,
@@ -27,15 +27,12 @@ interface IProps {
   rowIndex: number;
   isSection: boolean;
   isPassage: boolean;
-  mediaShared: IMediaShare;
-  online: boolean;
   readonly: boolean;
-  isPlaying: boolean;
   canAssign: boolean;
   canDelete: boolean;
   active: boolean;
   onPlayStatus: (mediaId: string) => void;
-  onRecord: (i: number) => () => void;
+  onRecord: (i: number) => void;
   onUpload: (i: number) => () => void;
   onAudacity: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;

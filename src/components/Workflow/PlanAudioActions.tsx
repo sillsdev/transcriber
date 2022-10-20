@@ -26,24 +26,14 @@ const StyledIconButton = styled(IconButton, {
       }),
 }));
 
-interface IStateProps {
-  t: IPlanActionsStrings;
-}
-interface IProps extends IStateProps {
+interface IProps {
   rowIndex: number;
-  isSection: boolean;
   isPassage: boolean;
   mediaId: string;
   mediaShared: IMediaShare;
-  online: boolean;
-  readonly: boolean;
   isPlaying: boolean;
-  canAssign: boolean;
-  canDelete: boolean;
   onTranscribe: (i: number) => void;
-  onAssign: (where: number[]) => () => void;
   onPlayStatus: (mediaId: string) => void;
-  onDelete: (i: number) => () => void;
   onHistory: (i: number) => () => void;
 }
 
