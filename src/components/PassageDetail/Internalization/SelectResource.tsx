@@ -5,18 +5,12 @@ import {
   IPassageDetailArtifactsStrings,
 } from '../../../model';
 import {
-  makeStyles,
-  createStyles,
-  Theme,
   ListItemSecondaryAction,
-} from '@material-ui/core';
-import {
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Button,
-} from '@material-ui/core';
+} from '@mui/material';
 import Checked from '@mui/icons-material/CheckBoxOutlined';
 import UnChecked from '@mui/icons-material/CheckBoxOutlineBlank';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
@@ -28,19 +22,7 @@ import {
   sharedSelector,
 } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    actions: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-    button: { margin: theme.spacing(2) },
-    listItem: {
-      margin: theme.spacing(4),
-    },
-  })
-);
+import { ActionRow, PriButton, AltButton } from '../../../control';
 
 interface SecondaryProps {
   id: string;
@@ -79,7 +61,6 @@ interface IProps {
 
 export const SelectResource = (props: IProps) => {
   const { onSelect, onOpen } = props;
-  const classes = useStyles();
   const [resource, setResouce] = useState<Resource[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
   const [catMap] = useState<CatMap>({});
@@ -136,11 +117,7 @@ export const SelectResource = (props: IProps) => {
     <div id="selectResource">
       <List component="div">
         {resource.map((r, i) => (
-          <ListItem
-            key={i}
-            onClick={handleClick(i)}
-            className={classes.listItem}
-          >
+          <ListItem key={i} onClick={handleClick(i)} sx={{ m: 4 }}>
             <ListItemIcon>
               {selected.indexOf(i) !== -1 ? (
                 <Checked id={`res-${i}-yes`} />
@@ -158,26 +135,18 @@ export const SelectResource = (props: IProps) => {
           </ListItem>
         ))}
       </List>
-      <div className={classes.actions}>
-        <Button
+      <ActionRow>
+        <PriButton
           id="res-selected"
           onClick={handleSelect}
-          variant="contained"
-          className={classes.button}
-          color="primary"
           disabled={selected.length === 0}
         >
           {t.link}
-        </Button>
-        <Button
-          id="res-select-cancel"
-          onClick={handleCancel}
-          variant="contained"
-          className={classes.button}
-        >
+        </PriButton>
+        <AltButton id="res-select-cancel" onClick={handleCancel}>
           {ts.cancel}
-        </Button>
-      </div>
+        </AltButton>
+      </ActionRow>
     </div>
   );
 };

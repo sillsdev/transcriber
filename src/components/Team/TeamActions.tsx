@@ -1,30 +1,22 @@
 import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import { Button } from '@material-ui/core';
+import { Box, BoxProps, styled } from '@mui/material';
 import { DialogMode, Organization } from '../../model';
 import TeamDialog from './TeamDialog';
 import { TeamContext } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
 import ImportTab from '../ImportTab';
+import { AltButton } from '../../control';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      padding: theme.spacing(2),
-      minWidth: theme.spacing(20),
-      display: 'flex',
-      flexDirection: 'column',
-      alignContent: 'center',
-    },
-    button: {
-      marginBottom: theme.spacing(2),
-    },
-  })
-);
+const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
+  padding: theme.spacing(2),
+  minWidth: theme.spacing(20),
+  display: 'flex',
+  flexDirection: 'column',
+  alignContent: 'center',
+}));
 
 const TeamActions = () => {
-  const classes = useStyles();
   const [offline] = useGlobal('offline');
   const [isDeveloper] = useGlobal('developer');
   const [openAdd, setOpenAdd] = useState(false);
@@ -55,28 +47,20 @@ const TeamActions = () => {
   };
 
   return (
-    <div className={classes.root}>
+    <RootBox>
       {(!offline || isDeveloper) && (
-        <Button
-          id="TeamActAdd"
-          variant="contained"
-          color="default"
-          className={classes.button}
-          onClick={handleClickOpen}
-        >
+        <AltButton id="TeamActAdd" sx={{ mb: 2 }} onClick={handleClickOpen}>
           {t.addTeam}
-        </Button>
+        </AltButton>
       )}
       {offline && (
-        <Button
+        <AltButton
           id="teamActImport"
-          variant="contained"
-          color="default"
-          className={classes.button}
+          sx={{ mb: 2 }}
           onClick={handleClickImport}
         >
           {t.import}
-        </Button>
+        </AltButton>
       )}
       <TeamDialog
         mode={DialogMode.add}
@@ -88,7 +72,7 @@ const TeamActions = () => {
       {isElectron && importOpen && (
         <ImportTab isOpen={importOpen} onOpen={setImportOpen} />
       )}
-    </div>
+    </RootBox>
   );
 };
 

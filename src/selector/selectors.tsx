@@ -13,6 +13,9 @@ export const artifactCategorySelector = (state: IState) =>
 export const artifactTypeSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'selectArtifactType' });
 
+export const audacityManagerSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'audacityManager' });
+
 export const cardsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'cards' });
 
@@ -87,6 +90,9 @@ export const sortMenuSelector = (state: IState) =>
 
 export const spellingSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'spelling' });
+
+export const stepEditorSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'stepEditor' });
 
 export const templateSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'template' });
