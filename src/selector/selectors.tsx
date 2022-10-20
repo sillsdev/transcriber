@@ -97,6 +97,9 @@ export const stepEditorSelector = (state: IState) =>
 export const templateSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'template' });
 
+export const teamCheckRefSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'teamCheckReference' });
+
 export const toDoTableSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'toDoTable' });
 
