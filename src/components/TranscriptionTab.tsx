@@ -46,6 +46,7 @@ import {
   TabActions,
   TabAppBar,
   PriButton,
+  AltButton,
 } from '../control';
 import { useSnackBar } from '../hoc/SnackBar';
 import TreeGrid from './TreeGrid';
@@ -702,7 +703,7 @@ export function TranscriptionTab(props: IProps) {
         >
           <TabActions>
             {(planColumn || floatTop) && (
-              <PriButton
+              <AltButton
                 id="transExp"
                 key="export"
                 aria-label={t.exportProject}
@@ -711,9 +712,9 @@ export function TranscriptionTab(props: IProps) {
                 disabled={busy}
               >
                 {t.exportProject}
-              </PriButton>
+              </AltButton>
             )}
-            <PriButton
+            <AltButton
               id="transCopy"
               key="copy"
               aria-label={t.copyTranscriptions}
@@ -722,8 +723,8 @@ export function TranscriptionTab(props: IProps) {
             >
               {t.copyTranscriptions +
                 (localizedArtifact ? ' (' + localizedArtifact + ')' : '')}
-            </PriButton>
-            {step && (
+            </AltButton>
+            {step && false && (
               <AudioExportMenu
                 key="audioexport"
                 action={handleAudioExportMenu}
@@ -748,11 +749,10 @@ export function TranscriptionTab(props: IProps) {
               exportTypes={artifactTypes}
               setExportType={setArtifactType}
             />
-            <PriButton
+            <AltButton
               id="transFilt"
               key="filter"
               aria-label={t.filter}
-              variant="outlined"
               onClick={handleFilter}
               title={t.showHideFilter}
             >
@@ -762,7 +762,7 @@ export function TranscriptionTab(props: IProps) {
               ) : (
                 <FilterIcon sx={iconMargin} />
               )}
-            </PriButton>
+            </AltButton>
           </TabActions>
         </TabAppBar>
         <PaddedBox>

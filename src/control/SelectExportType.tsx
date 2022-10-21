@@ -1,5 +1,14 @@
-import { TextField, MenuItem } from '@mui/material';
+import { TextField, TextFieldProps, MenuItem, styled } from '@mui/material';
 import { ArtifactTypeSlug, useArtifactType } from '../crud';
+
+const StyledTextField = styled(TextField)<TextFieldProps>(({ theme }) => ({
+  '& #select-export-type': {
+    color: theme.palette.primary.main,
+  },
+  '& svg': {
+    color: theme.palette.primary.main,
+  },
+}));
 
 interface IProps {
   exportType: string;
@@ -16,7 +25,7 @@ export const SelectExportType = (props: IProps) => {
   };
 
   return (
-    <TextField
+    <StyledTextField
       id="select-export-type"
       select
       value={exportType}
@@ -28,6 +37,6 @@ export const SelectExportType = (props: IProps) => {
           {localizedArtifactType(t)}
         </MenuItem>
       ))}
-    </TextField>
+    </StyledTextField>
   );
 };
