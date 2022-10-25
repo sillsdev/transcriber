@@ -170,7 +170,7 @@
     "url": "http://sil.org"
   },
   "build": {
-    "appId": "sil.lsdev.audio-project-manager-electron",
+    "appId": "sil.lsdev.audio-project-manager",
     "productName": "Audio Project Manager",
     "copyright": "Copyright © 2020-2022 ${author}",
     "win": {
@@ -216,5 +216,7 @@
         ]
       }
     ]
-  }
+  },
+  "main": "public/electron.js",
+  "homepage": "./"
 }

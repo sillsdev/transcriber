@@ -1,87 +1,93 @@
+sil-transcriber (2.16.0.0)  experimental; urgency=high
+
+  * Audio Project Manager rebranding
+
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 13 Oct 2022 10:33:00 -0600
+
 sil-transcriber (2.15.9.0)  experimental; urgency=high
 
-* include latest Indonesian localizations
+  * include latest Indonesian localizations
 
--- Greg Trihus <greg_trihus@sil.org>  Mon, 7 Jul 2022 10:33:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 7 Jul 2022 10:33:00 -0600
 
 sil-transcriber (2.15.8.7)  experimental; urgency=high
 
-* TT-3100 Resource Delete Confirm (#812)
-* TT-3393 Resource tool tips
-* TT-3798 Passage Resources (#811)
-* TT-3805 update test for visual resource
-* TT-3830 Require Vernacular (#810)
-* TT-3831 set sourceMediaOfflineId in prep for API export changes (#840)
-* TT-3844 scrolling windows and wording changes
-* TT-3918 use tool name not step name to filter Paratext step (#841)
-* TT-3919 Save Back Translation Segments (#815)
-* TT-3997 Maintain Resource order (#805)
-* TT-3998 Add Transcriber to Work flow (#807)
-* TT-3998b move transcribe button next to play item
-* TT-4001 Handle names with slashes
-* TT-4002 Display Transcription State (#817)
-* TT-4005 Shared Resource Create error (#816)
-* TT-4006 Moving Resources (#813)
-* TT-4023 add message when too many segments
-* TT-4024 chunking resources for flat plans
-* TT-4026 deleting project resource
-* TT-4028 Cancelling resource creation
-* TT-4030c Chunk paste edge cases
-* TT-4035b fix removing extra hyphens on language tags
-* TT-4038, TT-4040 finding files for offline projects
-* TT-4039 no offline resouce edits
-* update help
+  * TT-3100 Resource Delete Confirm (#812)
+  * TT-3393 Resource tool tips
+  * TT-3798 Passage Resources (#811)
+  * TT-3805 update test for visual resource
+  * TT-3830 Require Vernacular (#810)
+  * TT-3831 set sourceMediaOfflineId in prep for API export changes (#840)
+  * TT-3844 scrolling windows and wording changes
+  * TT-3918 use tool name not step name to filter Paratext step (#841)
+  * TT-3919 Save Back Translation Segments (#815)
+  * TT-3997 Maintain Resource order (#805)
+  * TT-3998 Add Transcriber to Work flow (#807)
+  * TT-3998b move transcribe button next to play item
+  * TT-4001 Handle names with slashes
+  * TT-4002 Display Transcription State (#817)
+  * TT-4005 Shared Resource Create error (#816)
+  * TT-4006 Moving Resources (#813)
+  * TT-4023 add message when too many segments
+  * TT-4024 chunking resources for flat plans
+  * TT-4026 deleting project resource
+  * TT-4028 Cancelling resource creation
+  * TT-4030c Chunk paste edge cases
+  * TT-4035b fix removing extra hyphens on language tags
+  * TT-4038, TT-4040 finding files for offline projects
+  * TT-4039 no offline resouce edits
+  * update help
 
--- Greg Trihus <greg_trihus@sil.org>  Mon, 30 Jun 2022 13:01:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 30 Jun 2022 13:01:00 -0600
 
 sil-transcriber (2.15.7.0)  experimental; urgency=high
 
-* fix local Paratext sync - code does not end in dash
+  * fix local Paratext sync - code does not end in dash
 
--- Greg Trihus <greg_trihus@sil.org>  Mon, 24 Jun 2022 08:33:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 24 Jun 2022 08:33:00 -0600
 
 sil-transcriber (2.15.6.0)  experimental; urgency=high
 
-* fix local Paratext sync with complicated language code
+  * fix local Paratext sync with complicated language code
 
--- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Jun 2022 11:13:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Jun 2022 11:13:00 -0600
 
 sil-transcriber (2.15.5.4)  experimental; urgency=high
 
-* TT-3895 Allow playing resources multiple times
-* TT-3957 Allow working through all passages of a section
-* TT-3958 All discussions to be visible on the record step
-* TT-3959 Discussion scroll bar
-* TT-3960 don't play two audio (no player on record)
-* TT-3963 display unsaved dialog on slider navigation
-* TT-3966 hot keys control recorder (no player on record)
-* TT-3968 fix player count, show reference, step complete advances
-* TT-3974 No fast complete action
-* TT-3975 Clear content if user refuses save
-* TT-3976 Complete Unsaved Recording save without error
-* update help
+  * TT-3895 Allow playing resources multiple times
+  * TT-3957 Allow working through all passages of a section
+  * TT-3958 All discussions to be visible on the record step
+  * TT-3959 Discussion scroll bar
+  * TT-3960 don't play two audio (no player on record)
+  * TT-3963 display unsaved dialog on slider navigation
+  * TT-3966 hot keys control recorder (no player on record)
+  * TT-3968 fix player count, show reference, step complete advances
+  * TT-3974 No fast complete action
+  * TT-3975 Clear content if user refuses save
+  * TT-3976 Complete Unsaved Recording save without error
+  * update help
 
--- Greg Trihus <greg_trihus@sil.org>  Mon, 18 May 2022 11:54:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 18 May 2022 11:54:00 -0600
 
 sil-transcriber (2.15.4.0)  experimental; urgency=high
 
-* export audio available online too
-* revert upgrade api to use EC2 for production
+  * export audio available online too
+  * revert upgrade api to use EC2 for production
 
--- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Apr 2022 21:40:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Apr 2022 21:40:00 -0600
 
 sil-transcriber (2.15.3.0)  experimental; urgency=high
 
-* export audio only available offline
-* revert upgrade api to use dotnet 3.1 and latest lambda
+  * export audio only available offline
+  * revert upgrade api to use dotnet 3.1 and latest lambda
 
--- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Apr 2022 21:40:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Apr 2022 21:40:00 -0600
 
 sil-transcriber (2.15.2.0)  experimental; urgency=high
 
   * upgrade api to use dotnet 3.1 and latest lambda
 
--- Greg Trihus <greg_trihus@sil.org>  Mon, 21 Apr 2022 12:19:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 21 Apr 2022 12:19:00 -0600
 
 sil-transcriber (2.15.1.0)  experimental; urgency=high
 

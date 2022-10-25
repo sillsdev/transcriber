@@ -196,7 +196,7 @@ The _dist_ command creates a folder in the dist folder with an executable that c
 
 To get setup to do this on you Linux installations you will need:
 
-- `sudo apt-get -a install devscripts debhelper autotools-dev`
+- `sudo apt install devscripts debhelper autotools-dev`
 
 The electron-builder program doesn't include the icon as part of the .deb package. It also doesn't install the help file reader. In order to create a more complete .deb package for Linux, use this command:
 
