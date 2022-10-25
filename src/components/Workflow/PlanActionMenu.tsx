@@ -1,22 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { useGlobal } from 'reactn';
+import { ISharedStrings, IPlanActionsStrings } from '../../model';
+import { shallowEqual, useSelector } from 'react-redux';
 import {
-  ISharedStrings,
-  IPlanActionsStrings,
-  IState,
-  IMediaShare,
-} from '../../model';
-import localStrings from '../../selector/localize';
-import { connect } from 'react-redux';
-import Button from '@material-ui/core/Button';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Grow from '@material-ui/core/Grow';
-import Paper from '@material-ui/core/Paper';
-import Popper from '@material-ui/core/Popper';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+  Button,
+  Grow,
+  Paper,
+  Popper,
+  MenuItem,
+  MenuList,
+  ClickAwayListener,
+  Box,
+} from '@mui/material';
 import MoreIcon from '@mui/icons-material/MoreHoriz';
 import AssignIcon from '@mui/icons-material/PeopleAltOutlined';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
@@ -25,41 +21,18 @@ import MicIcon from '@mui/icons-material/Mic';
 import { elemOffset } from '../../utils';
 import { isElectron } from '../../api-variable';
 import { AudacityLogo } from '../../control';
+import { planActionsSelector, sharedSelector } from '../../selector';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-    },
-    paper: {
-      marginRight: theme.spacing(2),
-    },
-    list: {
-      display: 'flex',
-    },
-    action: {
-      color: theme.palette.primary.light,
-    },
-  })
-);
-
-interface IStateProps {
-  t: IPlanActionsStrings;
-  ts: ISharedStrings;
-}
-interface IProps extends IStateProps {
+interface IProps {
   rowIndex: number;
   isSection: boolean;
   isPassage: boolean;
-  mediaShared: IMediaShare;
-  online: boolean;
   readonly: boolean;
-  isPlaying: boolean;
   canAssign: boolean;
   canDelete: boolean;
   active: boolean;
   onPlayStatus: (mediaId: string) => void;
-  onRecord: (i: number) => () => void;
+  onRecord: (i: number) => void;
   onUpload: (i: number) => () => void;
   onAudacity: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
@@ -67,8 +40,6 @@ interface IProps extends IStateProps {
 }
 export function PlanActionMenu(props: IProps) {
   const {
-    t,
-    ts,
     rowIndex,
     isSection,
     isPassage,
@@ -83,8 +54,9 @@ export function PlanActionMenu(props: IProps) {
     canDelete,
     active,
   } = props;
-  const classes = useStyles();
   const [offlineOnly] = useGlobal('offlineOnly');
+  const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [open, setOpen] = React.useState(false);
   const [hover, setHover] = React.useState(false);
   const top = React.useRef<number>(0);
@@ -101,7 +73,7 @@ export function PlanActionMenu(props: IProps) {
     setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleClose = (event: React.MouseEvent<EventTarget>) => {
+  const handleClose = (event: MouseEvent | TouchEvent) => {
     if (
       anchorRef.current &&
       anchorRef.current.contains(event.target as HTMLElement)
@@ -170,7 +142,7 @@ export function PlanActionMenu(props: IProps) {
   }, [active]);
 
   return (
-    <div ref={menuRef} className={classes.root}>
+    <Box ref={menuRef} sx={{ display: 'flex' }}>
       <div>
         <Button
           id="planMore"
@@ -179,7 +151,7 @@ export function PlanActionMenu(props: IProps) {
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          <MoreIcon className={classes.action} />
+          <MoreIcon sx={{ color: 'primary.light' }} />
         </Button>
         <Popper
           open={open || hover}
@@ -203,7 +175,7 @@ export function PlanActionMenu(props: IProps) {
                     autoFocusItem={open}
                     id="menu-list-grow"
                     onKeyDown={handleListKeyDown}
-                    className={classes.list}
+                    sx={{ display: 'flex' }}
                   >
                     {isSection && canAssign && !readonly && (
                       <MenuItem
@@ -211,7 +183,7 @@ export function PlanActionMenu(props: IProps) {
                         title={t.assign}
                         onClick={onAssign([rowIndex])}
                       >
-                        <AssignIcon className={classes.action} />
+                        <AssignIcon sx={{ color: 'primary.light' }} />
                       </MenuItem>
                     )}
                     {isPassage && (
@@ -224,7 +196,7 @@ export function PlanActionMenu(props: IProps) {
                             : ts.importMediaSingular
                         }
                       >
-                        <AddIcon className={classes.action} />
+                        <AddIcon sx={{ color: 'primary.light' }} />
                       </MenuItem>
                     )}
                     {isPassage && (
@@ -233,7 +205,7 @@ export function PlanActionMenu(props: IProps) {
                         onClick={handleRecord(rowIndex)}
                         title={t.recordAudio}
                       >
-                        <MicIcon className={classes.action} />
+                        <MicIcon sx={{ color: 'primary.light' }} />
                       </MenuItem>
                     )}
                     {isElectron && isPassage && (
@@ -251,7 +223,7 @@ export function PlanActionMenu(props: IProps) {
                         title={t.delete}
                         onClick={onDelete(rowIndex)}
                       >
-                        <DeleteIcon className={classes.action} />
+                        <DeleteIcon sx={{ color: 'primary.light' }} />
                       </MenuItem>
                     )}
                   </MenuList>
@@ -261,12 +233,8 @@ export function PlanActionMenu(props: IProps) {
           )}
         </Popper>
       </div>
-    </div>
+    </Box>
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'planActions' }),
-  ts: localStrings(state, { layout: 'shared' }),
-});
-export default connect(mapStateToProps)(PlanActionMenu) as any as any;
+export default PlanActionMenu;

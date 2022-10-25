@@ -4,39 +4,19 @@ import JwtDecode from 'jwt-decode';
 import { connect } from 'react-redux';
 import { IState, IToken, IEmailUnverifiedStrings } from '../model';
 import localStrings from '../selector/localize';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { Typography, Grid, Button } from '@material-ui/core';
+import { Typography, Grid, styled, Box, BoxProps } from '@mui/material';
 import { Redirect } from 'react-router';
 import { API_CONFIG, isElectron } from '../api-variable';
 import Axios from 'axios';
 import { TokenContext } from '../context/TokenProvider';
 import { doLogout, goOnline } from './Access';
+import { ActionRow, PriButton } from '../control';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    fullScreen: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      width: '100%',
-      height: `calc(100vh - 120px)`,
-    },
-    list: {
-      alignSelf: 'center',
-    },
-    button: {
-      margin: theme.spacing(1),
-      variant: 'outlined',
-      color: 'primary',
-    },
-    actions: {
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-    },
-  })
-);
+const FullScreen = styled(Box)<BoxProps>(() => ({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+}));
 
 interface IStateProps {
   t: IEmailUnverifiedStrings;
@@ -46,7 +26,6 @@ interface IProps extends IStateProps {}
 
 export const EmailUnverified = (props: IProps) => {
   const { t } = props;
-  const classes = useStyles();
   const { getAccessTokenSilently, user } = useAuth0();
   const { accessToken, setAuthSession } = useContext(TokenContext).state;
   const [view, setView] = useState('');
@@ -93,7 +72,7 @@ export const EmailUnverified = (props: IProps) => {
   if (/Loading/i.test(view)) return <Redirect to="/loading" />;
 
   return (
-    <div className={classes.fullScreen}>
+    <FullScreen>
       <Typography align="center" variant="h6">
         {t.emailUnverified}
         <br></br>
@@ -109,41 +88,19 @@ export const EmailUnverified = (props: IProps) => {
         alignItems="center"
         spacing={0}
       >
-        <div className={classes.actions}>
-          <Button
-            id="emailResent"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleResend}
-          >
+        <ActionRow>
+          <PriButton id="emailResent" onClick={handleResend}>
             {t.resend}
-          </Button>
-        </div>
-        <div className={classes.actions}>
-          <Button
-            id="emailVerified"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleVerified}
-          >
+          </PriButton>
+          <PriButton id="emailVerified" onClick={handleVerified}>
             {t.verified}
-          </Button>
-        </div>
-        <div className={classes.actions}>
-          <Button
-            id="emailLogout"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleLogout}
-          >
+          </PriButton>
+          <PriButton id="emailLogout" onClick={handleLogout}>
             {t.logout}
-          </Button>
-        </div>
+          </PriButton>
+        </ActionRow>
       </Grid>
-    </div>
+    </FullScreen>
   );
 };
 

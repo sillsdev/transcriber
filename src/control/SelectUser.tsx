@@ -1,7 +1,6 @@
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ISharedStrings, IState, OrganizationMembership, User } from '../model';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { QueryBuilder } from '@orbit/data';
 import { useGlobal } from 'reactn';
 import { withData } from '../mods/react-orbitjs';
@@ -9,20 +8,6 @@ import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
 import { related } from '../crud';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    menu: {},
-    label: { marginTop: theme.spacing(1) },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      display: 'flex',
-      flexGrow: 1,
-      overflow: 'hidden',
-      textOverflow: 'ellipse',
-    },
-  })
-);
 interface IStateProps {
   ts: ISharedStrings;
 }
@@ -38,7 +23,6 @@ interface IProps extends IStateProps, IRecordProps {
 }
 export const SelectUser = (props: IProps) => {
   const { ts, users, orgmems, onChange, initUser, required, label } = props;
-  const classes = useStyles();
   const [offlineOnly] = useGlobal('offlineOnly');
   const [organization] = useGlobal('organization');
   const [orgUsers, setOrgUsers] = useState<User[]>([]);
@@ -80,16 +64,17 @@ export const SelectUser = (props: IProps) => {
   return (
     <TextField
       id="select-user"
-      className={classes.textField}
+      sx={{
+        mx: 1,
+        display: 'flex',
+        flexGrow: 1,
+        overflow: 'hidden',
+        textOverflow: 'ellipse',
+      }}
       select
       label={ts.user}
       value={role}
       onChange={handleUserChange}
-      SelectProps={{
-        MenuProps: {
-          className: classes.menu,
-        },
-      }}
       helperText={label || ts.user}
       margin="normal"
       variant="filled"

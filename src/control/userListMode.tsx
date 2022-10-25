@@ -1,29 +1,8 @@
 import { useState } from 'react';
-import clsx from 'clsx';
-import { connect } from 'react-redux';
-import { IState, IUserListModeStrings } from '../model';
-import localStrings from '../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    actionToggle: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      '& .MuiButton-label': {
-        fontSize: 'x-small',
-      },
-    },
-    bar: {
-      fontSize: 'x-small',
-    },
-    modeSelect: {
-      textDecoration: 'underline',
-    },
-  })
-);
+import { shallowEqual, useSelector } from 'react-redux';
+import { IUserListModeStrings } from '../model';
+import { userListModeSelector } from '../selector';
+import { ActionToggle, SmallBar, UndButton } from './ActionToggle';
 
 export enum ListMode {
   SwitchUser,
@@ -31,11 +10,7 @@ export enum ListMode {
   LogOut,
 }
 
-interface IStateProps {
-  t: IUserListModeStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   mode: ListMode;
   onMode: (mode: ListMode) => void;
   loggedIn: boolean;
@@ -43,9 +18,12 @@ interface IProps extends IStateProps {
 }
 
 export function UserListMode(props: IProps) {
-  const { onMode, loggedIn, allowOffline, t } = props;
-  const classes = useStyles();
+  const { onMode, loggedIn, allowOffline } = props;
   const [listMode, setListMode] = useState<ListMode>(props.mode);
+  const t: IUserListModeStrings = useSelector(
+    userListModeSelector,
+    shallowEqual
+  );
 
   const handleMode = (mode: ListMode) => () => {
     setListMode(mode);
@@ -53,52 +31,42 @@ export function UserListMode(props: IProps) {
   };
 
   return (
-    <div className={classes.actionToggle}>
+    <ActionToggle>
       {(allowOffline || loggedIn) && (
-        <Button
+        <UndButton
           id="switchUserMode"
-          className={clsx({
-            [classes.modeSelect]: listMode === ListMode.SwitchUser,
-          })}
+          active={listMode === ListMode.SwitchUser}
           onClick={handleMode(ListMode.SwitchUser)}
         >
           {t.switchUser}
-        </Button>
+        </UndButton>
       )}
       {allowOffline && (
         <>
-          <span className={classes.bar}>|</span>
-          <Button
+          <SmallBar />
+          <UndButton
             id="workOfflineMode"
-            className={clsx({
-              [classes.modeSelect]: listMode === ListMode.WorkOffline,
-            })}
+            active={listMode === ListMode.WorkOffline}
             onClick={handleMode(ListMode.WorkOffline)}
           >
             {t.workOffline}
-          </Button>
+          </UndButton>
         </>
       )}
       {loggedIn && (
         <>
-          <span className={classes.bar}>|</span>
-          <Button
+          <SmallBar />
+          <UndButton
             id="logOutMode"
-            className={clsx({
-              [classes.modeSelect]: listMode === ListMode.LogOut,
-            })}
+            active={listMode === ListMode.LogOut}
             onClick={handleMode(ListMode.LogOut)}
           >
             {t.logOut}
-          </Button>
+          </UndButton>
         </>
       )}
-    </div>
+    </ActionToggle>
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'userListMode' }),
-});
-
-export default connect(mapStateToProps)(UserListMode) as any;
+export default UserListMode;

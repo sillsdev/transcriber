@@ -1,28 +1,14 @@
 import React, { useState } from 'react';
 import { useGlobal, useEffect } from 'reactn';
 import { IProjButtonsStrings } from '../model';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Divider, Button, Menu, MenuItem } from '@material-ui/core';
+import { Divider, Menu, MenuItem } from '@mui/material';
 import DropDownIcon from '@mui/icons-material/ArrowDropDown';
 import BigDialog from '../hoc/BigDialog';
 import IntegrationTab from '../components/Integration';
 import ExportTab from '../components/TranscriptionTab';
 import ImportTab from '../components/ImportTab';
 import { useProjectPlans, usePlan } from '../crud';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    button: {
-      margin: theme.spacing(1),
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      justifyContent: 'flex-start',
-    },
-    icon: {
-      marginLeft: theme.spacing(1),
-    },
-  })
-);
+import { AltButton } from '.';
 
 interface IStateProps {
   t: IProjButtonsStrings;
@@ -36,7 +22,6 @@ interface IProps extends IStateProps {
 
 export const ProjButtons = (props: IProps) => {
   const { noImExport, noIntegrate, onLeft, t } = props;
-  const classes = useStyles();
   const { getPlanName } = usePlan();
   const [plan] = useGlobal('plan');
   const [project] = useGlobal('project');
@@ -68,20 +53,17 @@ export const ProjButtons = (props: IProps) => {
   return (
     <>
       {!onLeft && <Divider orientation="vertical" flexItem />}
-      <Button
+      <AltButton
         id="projButton"
         key="importExport"
         aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
         aria-label={t.importExport}
-        variant="outlined"
-        color="primary"
-        className={classes.button}
         disabled={noImExport}
         onClick={handleMenu}
       >
         {t.importExport}
-        <DropDownIcon className={classes.icon} />
-      </Button>
+        <DropDownIcon sx={{ ml: 1 }} />
+      </AltButton>
       <Menu
         id="import-export-menu"
         anchorEl={actionMenuItem}
@@ -97,18 +79,15 @@ export const ProjButtons = (props: IProps) => {
         </MenuItem>
       </Menu>
       {projType.toLowerCase() === 'scripture' && (
-        <Button
+        <AltButton
           id="projButtonInt"
           key="integrations"
           aria-label={t.integrations}
-          variant="outlined"
-          color="primary"
-          className={classes.button}
           disabled={noIntegrate}
           onClick={handleIntegrations}
         >
           {t.integrations}
-        </Button>
+        </AltButton>
       )}
       <BigDialog
         title={t.integrationsTitle.replace('{0}', planName)}

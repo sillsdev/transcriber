@@ -7,4 +7,6 @@ export const TabActions = styled('div')(() => ({
   '& .MuiButton-label': { fontSize: '.8rem' },
   '& .MuiButtonBase-root': { margin: '5px', padding: '2px 10px' },
   '& .MuiSvgIcon-root': { fontSize: '.9rem' },
+  '& .MuiFormControl-root': { margin: '5px' },
+  '& #select-export-type': { padding: '4px 24px' },
 }));

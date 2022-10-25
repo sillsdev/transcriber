@@ -294,7 +294,7 @@ function MediaUpload(props: IProps) {
           </DialogContentText>
           {onSpeaker && uploadType === UploadType.Media && (
             <SpeakerName
-              name={speaker || ''}
+              name={hasRights ? speaker || '' : ''}
               onRights={handleRights}
               onChange={handleSpeaker}
               createProject={createProject}

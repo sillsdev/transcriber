@@ -1,29 +1,8 @@
 import { useState } from 'react';
-import clsx from 'clsx';
-import { connect } from 'react-redux';
-import { IState, IViewModeStrings } from '../model';
-import localStrings from '../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    actionToggle: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      '& .MuiButton-label': {
-        fontSize: 'x-small',
-      },
-    },
-    bar: {
-      fontSize: 'x-small',
-    },
-    modeSelect: {
-      textDecoration: 'underline',
-    },
-  })
-);
+import { shallowEqual, useSelector } from 'react-redux';
+import { IViewModeStrings } from '../model';
+import { viewModeSelector } from '../selector';
+import { ActionToggle, SmallBar, UndButton } from './ActionToggle';
 
 export enum ViewOption {
   AudioProject,
@@ -31,19 +10,15 @@ export enum ViewOption {
   Detail,
 }
 
-interface IStateProps {
-  t: IViewModeStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   mode: ViewOption;
   onMode: (mode: ViewOption) => void;
 }
 
 export function ViewMode(props: IProps) {
-  const { mode, onMode, t } = props;
-  const classes = useStyles();
+  const { mode, onMode } = props;
   const [viewOption, setViewOption] = useState<ViewOption>(props.mode);
+  const t: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
 
   const handleMode = (mode: ViewOption) => () => {
     setViewOption(mode);
@@ -51,45 +26,35 @@ export function ViewMode(props: IProps) {
   };
 
   return (
-    <div className={classes.actionToggle}>
-      <Button
+    <ActionToggle>
+      <UndButton
         id="audioProjectMode"
-        className={clsx({
-          [classes.modeSelect]: viewOption === ViewOption.AudioProject,
-        })}
+        active={viewOption === ViewOption.AudioProject}
         onClick={handleMode(ViewOption.AudioProject)}
       >
         {t.audioProject}
-      </Button>
-      <span className={classes.bar}>|</span>
+      </UndButton>
+      <SmallBar />
       {mode !== ViewOption.Detail && (
-        <Button
+        <UndButton
           id="transcribeMode"
-          className={clsx({
-            [classes.modeSelect]: viewOption === ViewOption.Transcribe,
-          })}
+          active={viewOption === ViewOption.Transcribe}
           onClick={handleMode(ViewOption.Transcribe)}
         >
           {t.transcribe}
-        </Button>
+        </UndButton>
       )}
       {mode === ViewOption.Detail && (
-        <Button
+        <UndButton
           id="detailMode"
-          className={clsx({
-            [classes.modeSelect]: viewOption === ViewOption.Detail,
-          })}
+          active={viewOption === ViewOption.Detail}
           onClick={handleMode(ViewOption.Detail)}
         >
           {'Detail'}
-        </Button>
+        </UndButton>
       )}
-    </div>
+    </ActionToggle>
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'viewMode' }),
-});
-
-export default connect(mapStateToProps)(ViewMode) as any;
+export default ViewMode;

@@ -15,17 +15,17 @@ build:
 tests:
 	npm test
 install:
-	rm -rf $(DESTDIR)$(prefix)/lib/sil-transcriber
-	mkdir -p $(DESTDIR)$(prefix)/lib/sil-transcriber
-	cp -r $(bindst)/. $(DESTDIR)$(prefix)/lib/sil-transcriber
+	rm -rf $(DESTDIR)$(prefix)/lib/audio-project-manager
+	mkdir -p $(DESTDIR)$(prefix)/lib/audio-project-manager
+	cp -r $(bindst)/. $(DESTDIR)$(prefix)/lib/audio-project-manager
 	mkdir -p $(DESTDIR)$(prefix)/bin
-	cp $(binsrc)/src/script/sil-transcriber.sh $(DESTDIR)$(prefix)/bin/sil-transcriber
+	cp $(binsrc)/src/script/audio-project-manager.sh $(DESTDIR)$(prefix)/bin/audio-project-manager
 	mkdir -p $(DESTDIR)$(prefix)/share/python-support
 	chmod 777 $(DESTDIR)$(prefix)/share/python-support
-	mkdir -p $(DESTDIR)$(prefix)/share/doc/sil-transcriber
-	chmod 777 $(DESTDIR)$(prefix)/share/doc/sil-transcriber
-	mkdir -p $(DESTDIR)$(prefix)/share/sil-transcriber
-	chmod 777 $(DESTDIR)$(prefix)/share/sil-transcriber
+	mkdir -p $(DESTDIR)$(prefix)/share/doc/audio-project-manager
+	chmod 777 $(DESTDIR)$(prefix)/share/doc/audio-project-manager
+	mkdir -p $(DESTDIR)$(prefix)/share/audio-project-manager
+	chmod 777 $(DESTDIR)$(prefix)/share/audio-project-manager
 	mkdir -p $(DESTDIR)$(prefix)/share/applications
 	chmod 777 $(DESTDIR)$(prefix)/share/applications
 	cp debian/*.desktop $(DESTDIR)$(prefix)/share/applications
@@ -38,18 +38,18 @@ install:
 clean:
 	rm -rf build dist coverage
 uninstall:
-	-sudo apt-get -y remove sil-transcriber
-	sudo rm -rf $(DESTDIR)$(prefix)/lib/sil-transcriber
-	-sudo rm $(DESTDIR)$(prefix)/bin/sil-transcriber
-	-sudo rm -rf $(DESTDIR)$(prefix)/share/doc/sil-transcriber
-	-sudo rm -rf $(DESTDIR)$(prefix)/share/sil-transcriber
-	-xdg-desktop-menu uninstall /etc/pathway/sil-transcriber.desktop
-	-rm -rf ~/.config/sil-transcriber
+	-sudo apt-get -y remove audio-project-manager
+	sudo rm -rf $(DESTDIR)$(prefix)/lib/audio-project-manager
+	-sudo rm $(DESTDIR)$(prefix)/bin/audio-project-manager
+	-sudo rm -rf $(DESTDIR)$(prefix)/share/doc/audio-project-manager
+	-sudo rm -rf $(DESTDIR)$(prefix)/share/audio-project-manager
+	-xdg-desktop-menu uninstall /etc/pathway/audio-project-manager.desktop
+	-rm -rf ~/.config/audio-project-manager
 clean-build:
-	rm -rf debian/sil-transcriber ../sil-transcriber-*
+	rm -rf debian/audio-project-manager ../audio-project-manager-*
 	rm -f debian/*.log *.log debian/*.debhelper debian/*.substvars debian/files
-	rm -f ../sil-transcriber_*.tar.gz ../sil-transcriber_*.build ../sil-transcriber_*.diff.gz
-	rm -f ../sil-transcriber_*.buildinfo ../sil-transcriber*.bz2
+	rm -f ../audio-project-manager_*.tar.gz ../audio-project-manager_*.build ../audio-project-manager_*.diff.gz
+	rm -f ../audio-project-manager_*.buildinfo ../audio-project-manager*.bz2
 erase-build:
-	rm -f ../*.dsc ../*.changes ../sil-transcriber*.deb ../sil-transcriber*.snap
+	rm -f ../*.dsc ../*.changes ../audio-project-manager*.deb ../audio-project-manager*.snap
 

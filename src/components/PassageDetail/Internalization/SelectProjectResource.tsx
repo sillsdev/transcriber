@@ -7,19 +7,13 @@ import {
   IPassageDetailArtifactsStrings,
 } from '../../../model';
 import {
-  makeStyles,
-  createStyles,
-  Theme,
   ListItemSecondaryAction,
   IconButton,
-} from '@material-ui/core';
-import {
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Button,
-} from '@material-ui/core';
+} from '@mui/material';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { useArtifactCategory, related } from '../../../crud';
 import {
@@ -32,19 +26,7 @@ import AudioIcon from '@mui/icons-material/Hearing';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Confirm from '../../AlertDialog';
 import { isVisual } from '../../../utils';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    actions: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-    button: { margin: theme.spacing(2) },
-    listItem: {
-      margin: theme.spacing(4),
-    },
-  })
-);
+import { ActionRow, AltButton } from '../../../control';
 
 interface IProps {
   onSelect?: (media: MediaFile) => void;
@@ -53,7 +35,6 @@ interface IProps {
 
 export const SelectProjectResource = (props: IProps) => {
   const { onSelect, onOpen } = props;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [complete, setComplete] = useGlobal('progress');
   const [isOffline] = useGlobal('offline');
@@ -130,12 +111,7 @@ export const SelectProjectResource = (props: IProps) => {
     <div id="selectProjectResource">
       <List component="div">
         {resource.map((r, i) => (
-          <ListItem
-            button
-            key={i}
-            onClick={handleClick(r)}
-            className={classes.listItem}
-          >
+          <ListItem button key={i} onClick={handleClick(r)} sx={{ m: 4 }}>
             <ListItemIcon>
               {isVisual(r) ? <ShowIcon /> : <AudioIcon />}
             </ListItemIcon>
@@ -159,16 +135,15 @@ export const SelectProjectResource = (props: IProps) => {
           </ListItem>
         ))}
       </List>
-      <div className={classes.actions}>
-        <Button
+      <ActionRow>
+        <AltButton
           id="proj-res-select-cancel"
           onClick={handleCancel}
-          variant="contained"
-          className={classes.button}
+          sx={{ m: 2 }}
         >
           {ts.cancel}
-        </Button>
-      </div>
+        </AltButton>
+      </ActionRow>
       {confirm && (
         <Confirm
           text={ts.delete.replace(

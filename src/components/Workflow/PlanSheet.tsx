@@ -530,7 +530,8 @@ export function PlanSheet(props: IProps) {
         rowData.map((row, rowIndex) => {
           const section = isSection(rowIndex);
           const passage = isPassage(rowIndex);
-          const iscurrent = currentRow === rowIndex + 1 ? ' currentrow ' : '';
+          const iscurrent: string =
+            currentRow === rowIndex + 1 ? ' currentrow ' : '';
 
           return [
             {
@@ -569,16 +570,13 @@ export function PlanSheet(props: IProps) {
                     {
                       value: (
                         <PlanAudioActions
-                          {...props}
                           rowIndex={rowIndex}
                           isPassage={passage}
-                          mediaId={rowInfo[rowIndex].mediaId?.id}
+                          mediaId={rowInfo[rowIndex].mediaId?.id || ''}
                           mediaShared={rowInfo[rowIndex].mediaShared}
                           onPlayStatus={handlePlayStatus}
-                          onPassageDetail={handlePassageDetail}
                           onTranscribe={handleTranscribe}
-                          online={connected || offlineOnly}
-                          readonly={readonly}
+                          onHistory={props.onHistory}
                           isPlaying={
                             srcMediaId === rowInfo[rowIndex].mediaId?.id &&
                             mediaPlaying
@@ -635,17 +633,16 @@ export function PlanSheet(props: IProps) {
               {
                 value: (
                   <PlanActionMenu
-                    {...props}
                     rowIndex={rowIndex}
                     isSection={section}
                     isPassage={passage}
                     readonly={readonly || check.length > 0}
-                    online={connected || offlineOnly}
-                    mediaId={rowInfo[rowIndex].mediaId?.id}
-                    mediaShared={rowInfo[rowIndex].mediaShared}
                     onDelete={handleConfirmDelete}
                     onPlayStatus={handlePlayStatus}
                     onAudacity={handleAudacity}
+                    onRecord={props.onRecord}
+                    onUpload={props.onUpload}
+                    onAssign={props.onAssign}
                     canAssign={projRole === RoleNames.Admin}
                     canDelete={projRole === RoleNames.Admin}
                     active={active - 1 === rowIndex}
