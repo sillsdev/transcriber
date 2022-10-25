@@ -494,6 +494,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     if (change) {
       setData(newData);
       dataRef.current = newData;
+      setPastedSegments('');
       if (!isChanged(wizToolId)) toolChanged(wizToolId);
     }
   };
