@@ -1,6 +1,7 @@
-sil-transcriber (2.16.0.0)  experimental; urgency=high
+audio-project-manager (2.16.0.1)  experimental; urgency=high
 
   * Audio Project Manager rebranding
+  * fix Linux build
 
  -- Greg Trihus <greg_trihus@sil.org>  Mon, 13 Oct 2022 10:33:00 -0600
 

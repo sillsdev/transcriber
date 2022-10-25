@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 Encoding=UTF-8
-Name=Audio Project Manager Desktop
-Name[fr]=Audio Project Manager de bureau
+Name=Audio Project Manager
+Name[fr]=Audio Project Manager
 Comment=Flexible audio-text orality solution
 Comment[fr]=Solution flexible d'oralité audio-textuelle
 Exec=/usr/bin/audio-project-manager
