@@ -42,10 +42,10 @@ const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
 const prod = API_CONFIG.host.indexOf('prod') !== -1;
 const bugsnagClient = prodOrQa
   ? bugsnag({
-      apiKey: API_CONFIG.snagId,
-      appVersion,
-      releaseStage: prod ? 'production' : 'staging',
-    })
+    apiKey: API_CONFIG.snagId,
+    appVersion,
+    releaseStage: prod ? 'production' : 'staging',
+  })
   : undefined;
 bugsnagClient?.use(bugsnagReact, React);
 const SnagBoundary = bugsnagClient?.getPlugin('react');
@@ -114,7 +114,7 @@ const errorManagedApp = bugsnagClient ? (
   </ErrorBoundary>
 );
 
-const onRedirectingCallbck = (appState: { returnTo?: string }) => {
+const onRedirectingCallbck = (appState?: { returnTo?: string }) => {
   history.push(
     appState && appState.returnTo ? appState.returnTo : window.location.pathname
   );
