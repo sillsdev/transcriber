@@ -8,7 +8,7 @@
 
 RELEASE=${1:-"2.0.8.4"}
 rm -rf ../audio-project-manager-*
-rm -rf ../sil-transcriber_*
+rm -rf ../audio-project-manager_*
 mkdir ../audio-project-manager-${RELEASE}
 #git archive HEAD | tar -x -C ../audio-project-manager-${RELEASE} || exit 2
 #cd ../audio-project-manager-${RELEASE}
@@ -33,7 +33,7 @@ find audio-project-manager-${RELEASE} -type d -iname obj -exec rm -rf {} \;
 
 # Tar it up and create symlink for .orig.bz2
 tar jcf audio-project-manager-${RELEASE}.tar.bz2 audio-project-manager-${RELEASE} || exit 3
-ln -fs audio-project-manager-${RELEASE}.tar.bz2 sil-transcriber_${RELEASE}.orig.tar.bz2
+ln -fs audio-project-manager-${RELEASE}.tar.bz2 audio-project-manager_${RELEASE}.orig.tar.bz2
 
 # Do an initial unsigned source build in host OS environment
 cd audio-project-manager-${RELEASE}
