@@ -33,3 +33,4 @@ export * from './StyledMenu';
 export * from './commentProps';
 export * from './avatarSize';
 export * from './ActionToggle';
+export * from './StyledHeading';

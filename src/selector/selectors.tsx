@@ -46,6 +46,9 @@ export const groupTabsSelector = (state: IState) =>
 export const mediaActionsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'mediaActions' });
 
+export const mediaUploadSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'mediaUpload' });
+
 export const mainSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'main' });
 
@@ -57,6 +60,9 @@ export const passageDetailArtifactsSelector = (state: IState) =>
 
 export const passageDetailStepCompleteSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'passageDetailStepComplete' });
+
+export const passageRecordSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'passageRecord' });
 
 export const peerSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'peer' });
