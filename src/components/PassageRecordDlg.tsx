@@ -41,7 +41,7 @@ interface IProps {
   mediaId: string;
   metaData?: JSX.Element;
   defaultFilename?: string;
-  ready: () => boolean;
+  ready?: () => boolean;
   uploadMethod?: (files: File[]) => Promise<void>;
   allowWave?: boolean;
   speaker?: string;

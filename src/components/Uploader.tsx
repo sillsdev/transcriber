@@ -283,14 +283,13 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
         <PassageRecordDlg
           visible={isOpen}
           onVisible={onOpen}
-          mediaId={mediaId}
+          mediaId={mediaId || ''}
           uploadMethod={uploadMedia}
           onCancel={uploadCancel}
           metaData={metaData}
           ready={ready}
           defaultFilename={defaultFilename}
           allowWave={allowWave}
-          showFilename={allowWave}
           speaker={performedBy}
           onSpeaker={handleSpeakerChange}
           createProject={createProject}
