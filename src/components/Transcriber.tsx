@@ -1,10 +1,16 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+  CSSProperties,
+} from 'react';
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import SplitPane, { Pane } from 'react-split-pane';
-import styled from 'styled-components';
+import styledComp from 'styled-components';
 import {
   MediaFile,
   Project,
@@ -18,19 +24,23 @@ import {
   IActivityStateStrings,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid,
   Paper,
   Typography,
-  Button,
   IconButton,
   TextareaAutosize,
-} from '@material-ui/core';
+} from '@mui/material';
 import useTodo from '../context/useTodo';
 import PullIcon from '@mui/icons-material/GetAppOutlined';
 import HistoryIcon from '@mui/icons-material/History';
-import { formatTime, LightTooltip } from '../control';
+import {
+  AltButton,
+  formatTime,
+  GrowingDiv,
+  LightTooltip,
+  PriButton,
+} from '../control';
 import TranscribeReject from './TranscribeReject';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
@@ -90,44 +100,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 const HISTORY_KEY = 'F7,CTRL+7';
 const INIT_PLAYER_HEIGHT = 180;
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      margin: 'auto',
-    },
-    description: {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-    },
-    row: {
-      alignItems: 'center',
-      whiteSpace: 'nowrap',
-    },
-    padRow: {
-      paddingTop: '16px',
-    },
-    taskFlag: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    button: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    pane: {},
-    textarea: { resize: 'none' },
-    grow: {
-      flexGrow: 1,
-      display: 'flex',
-      flexDirection: 'row',
-    },
-  })
-);
-const Wrapper = styled.div`
+const Wrapper = styledComp.div`
   .Resizer {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -277,7 +250,6 @@ export function Transcriber(props: IProps) {
     role: '',
   };
   const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
@@ -336,7 +308,7 @@ export function Transcriber(props: IProps) {
   const [artifactTypeSlug, setArtifactTypeSlug] = useState(slug);
   const { slugFromId } = useArtifactType();
 
-  const [textAreaStyle, setTextAreaStyle] = useState({
+  const [textAreaStyle, setTextAreaStyle] = useState<CSSProperties>({
     overflow: 'auto',
     backgroundColor: '#cfe8fc',
     height: boxHeight,
@@ -345,6 +317,7 @@ export function Transcriber(props: IProps) {
     fontSize: projData?.fontSize,
     direction: projData?.fontDir as any,
     cursor: 'default',
+    resize: 'none',
   });
   const ta: IActivityStateStrings = useSelector(activitySelector, shallowEqual);
   const toolId = 'transcriber';
@@ -1013,8 +986,8 @@ export function Transcriber(props: IProps) {
   }, [slug, artifactId, slugFromId]);
 
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper} style={paperStyle}>
+    <GrowingDiv>
+      <Paper sx={{ p: 2, m: 'auto' }} style={paperStyle}>
         {allDone ? (
           <AllDone />
         ) : (
@@ -1043,8 +1016,12 @@ export function Transcriber(props: IProps) {
                 split="horizontal"
                 onChange={handleSplitSize}
               >
-                <Pane className={classes.pane}>
-                  <Grid container direction="row" className={classes.row}>
+                <Pane>
+                  <Grid
+                    container
+                    direction="row"
+                    sx={{ alignItems: 'center', whiteSpace: 'nowrap' }}
+                  >
                     {role === 'transcriber' &&
                       hasParatextName &&
                       paratextProject &&
@@ -1104,7 +1081,7 @@ export function Transcriber(props: IProps) {
                     </Grid>
                   </Grid>
                 </Pane>
-                <Pane className={classes.pane}>
+                <Pane>
                   <Grid item xs={12} sm container>
                     <Grid
                       ref={transcriptionRef}
@@ -1119,7 +1096,6 @@ export function Transcriber(props: IProps) {
                           onStatus={loadStatus}
                         >
                           <TextareaAutosize
-                            className={classes.textarea}
                             autoFocus
                             id="transcriber.text"
                             value={textValue}
@@ -1132,7 +1108,6 @@ export function Transcriber(props: IProps) {
                         </WebFontLoader>
                       ) : (
                         <TextareaAutosize
-                          className={classes.textarea}
                           autoFocus
                           id="transcriber.text"
                           value={textValue}
@@ -1157,20 +1132,17 @@ export function Transcriber(props: IProps) {
               </SplitPane>
             </Wrapper>
 
-            <Grid container direction="row" className={classes.padRow}>
-              <Grid item className={classes.taskFlag}>
+            <Grid container direction="row" sx={{ pt: '16px' }}>
+              <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
                 {!props.defaultWidth ? (
                   <>
-                    <Button
+                    <AltButton
                       id="transcriber.showNote"
-                      variant="outlined"
-                      color="primary"
-                      className={classes.button}
                       onClick={handleShowAddNote}
                       disabled={selected === ''}
                     >
                       {t.addNote}
-                    </Button>
+                    </AltButton>
 
                     <LightTooltip
                       title={t.historyTip.replace(
@@ -1208,30 +1180,25 @@ export function Transcriber(props: IProps) {
                     />
                     {role !== 'view' ? (
                       <>
-                        <Button
+                        <AltButton
                           id="transcriber.reject"
-                          variant="outlined"
-                          color="primary"
-                          className={classes.button}
                           onClick={handleReject}
                           disabled={selected === '' || playing}
                         >
                           {t.reject}
-                        </Button>
+                        </AltButton>
                         <LightTooltip
                           title={transcribing ? t.saveTip : t.saveReviewTip}
                         >
                           <span>
-                            <Button
+                            <AltButton
                               id="transcriber.save"
                               variant={changed ? 'contained' : 'outlined'}
-                              color="primary"
-                              className={classes.button}
                               onClick={handleSaveButton}
                               disabled={selected === '' || playing}
                             >
                               {t.save}
-                            </Button>
+                            </AltButton>
                           </span>
                         </LightTooltip>
                         <LightTooltip
@@ -1242,25 +1209,19 @@ export function Transcriber(props: IProps) {
                           }
                         >
                           <span>
-                            <Button
+                            <PriButton
                               id="transcriber.submit"
-                              variant="contained"
-                              color="primary"
-                              className={classes.button}
                               onClick={handleSubmit}
                               disabled={selected === '' || playing}
                             >
                               {t.submit}
-                            </Button>
+                            </PriButton>
                           </span>
                         </LightTooltip>
                       </>
                     ) : (
-                      <Button
+                      <AltButton
                         id="transcriber.reopen"
-                        variant="outlined"
-                        color="primary"
-                        className={classes.button}
                         onClick={handleReopen}
                         disabled={
                           selected === '' ||
@@ -1271,7 +1232,7 @@ export function Transcriber(props: IProps) {
                         }
                       >
                         {t.reopen}
-                      </Button>
+                      </AltButton>
                     )}
                   </div>
                 </Grid>
@@ -1292,7 +1253,7 @@ export function Transcriber(props: IProps) {
           cancelMethod={handleAddNoteCancel}
         />
       </Paper>
-    </div>
+    </GrowingDiv>
   );
 }
 
