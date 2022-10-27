@@ -28,15 +28,11 @@ import about from '../assets/about.json';
 import stringReplace from 'react-string-replace';
 import { useSnackBar } from '../hoc/SnackBar';
 import { ApmLogo } from '../control/ApmLogo';
+import { StyledHeading } from '../control';
 const version = require('../../package.json').version;
 const copyright = require('../../package.json').build.copyright;
 const author = require('../../package.json').author.name;
 const buildDate = require('../buildDate.json').date;
-
-const StyledHeading = styled(Typography)<TypographyProps>(({ theme }) => ({
-  fontSize: theme.typography.pxToRem(15),
-  fontWeight: theme.typography.fontWeightRegular,
-}));
 
 const CopyrightText = styled(Typography)<TypographyProps>(() => ({
   display: 'flex',

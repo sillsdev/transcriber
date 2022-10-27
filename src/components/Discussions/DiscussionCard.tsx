@@ -1,16 +1,21 @@
 import React, { useContext, useMemo, useRef, useState } from 'react';
 import { useEffect, useGlobal } from 'reactn';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
+  Box,
+  BoxProps,
   Button,
   Card,
   CardContent,
+  CardProps,
   Chip,
   Grid,
   IconButton,
+  IconButtonProps,
+  styled,
+  SxProps,
   TextField,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import Confirm from '../AlertDialog';
 import {
   Discussion,
@@ -65,124 +70,89 @@ import SelectDiscussionAssignment from '../../control/SelectDiscussionAssignment
 import { usePeerGroups } from '../Peers/usePeerGroups';
 import { OldVernVersion } from '../../control/OldVernVersion';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      display: 'flex',
-      '&:hover button': {
-        color: 'black',
-      },
-      '&:hover button[disabled]': {
-        color: 'grey',
-      },
-      '& .MuiTypography-root': {
-        cursor: 'default ',
-      },
-      '& button': {
-        color: 'lightgrey',
-      },
-      '& .MuiChip-root': {
-        backgroundColor: 'lightgrey',
-      },
-    },
-    card: {
-      margin: theme.spacing(1),
-      backgroundColor: theme.palette.primary.light,
-      flexGrow: 1,
-    },
-    highlightedcard: {
-      margin: theme.spacing(1),
-      backgroundColor: theme.palette.secondary.light,
-      flexGrow: 1,
-    },
-    resolvedcard: {
-      margin: theme.spacing(1),
-      backgroundColor: 'grey',
-      flexGrow: 1,
-    },
-    content: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      color: theme.palette.primary.contrastText,
-    },
-    commentCount: {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    ref: {
-      overflow: 'hidden',
-    },
-    topicItem: {
-      overflow: 'hidden',
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    topic: {
-      marginRight: theme.spacing(2),
-      alignSelf: 'center',
-    },
-    pos: {
-      marginBottom: 12,
-    },
-    title: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      flexGrow: 1,
-      flexWrap: 'unset',
-    },
-    titleControls: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    cardFlow: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-      backgroundColor: theme.palette.background.paper,
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    actionButton: {
-      color: theme.palette.background.paper,
-    },
-    smallButton: {
-      width: theme.spacing(3),
-      height: theme.spacing(3),
-      color: theme.palette.background.paper,
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      display: 'flex',
-      flexGrow: 1,
-    },
-    menu: {},
-    edit: {
-      backgroundColor: theme.palette.background.paper,
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      width: '100%',
-    },
-    editText: {
-      margin: theme.spacing(1),
-      marginTop: theme.spacing(3),
-      color: theme.palette.primary.dark,
-    },
-    oldVersion: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-  })
-);
+const DiscussionCardRoot = styled(Box)<BoxProps>(() => ({
+  width: '100%',
+  display: 'flex',
+  '&:hover button': {
+    color: 'black',
+  },
+  '&:hover button[disabled]': {
+    color: 'grey',
+  },
+  '& .MuiTypography-root': {
+    cursor: 'default ',
+  },
+  '& button': {
+    color: 'lightgrey',
+  },
+  '& .MuiChip-root': {
+    backgroundColor: 'lightgrey',
+  },
+}));
+
+const EditContainer = styled('div')(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  display: 'flex',
+  flexDirection: 'column',
+  flexGrow: 1,
+  width: '100%',
+}));
+
+// see: https://mui.com/material-ui/customization/how-to-customize/
+interface StyledCardProps extends CardProps {
+  resolved?: boolean;
+  highlight?: boolean;
+}
+const StyledCard = styled(Card, {
+  shouldForwardProp: (prop) => prop !== 'resolved' && prop !== 'highlight',
+})<StyledCardProps>(({ resolved, highlight, theme }) => ({
+  ...(resolved
+    ? {
+        margin: theme.spacing(1),
+        backgroundColor: 'grey',
+        flexGrow: 1,
+      }
+    : highlight
+    ? {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.light,
+        flexGrow: 1,
+      }
+    : {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.primary.light,
+        flexGrow: 1,
+      }),
+}));
+
+const SmallButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+  width: theme.spacing(3),
+  height: theme.spacing(3),
+  color: theme.palette.background.paper,
+}));
+
+const topicProps = { mr: 2, alignSelf: 'center' } as SxProps;
+const topicItemProps = {
+  overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'row',
+} as SxProps;
+const titleProps = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  flexGrow: 1,
+  flexWrap: 'unset',
+} as SxProps;
+const tilteCtrlProps = { display: 'flex', flexDirection: 'row' } as SxProps;
+const cardFlowProps = {
+  px: 2,
+  bgColor: 'background.paper',
+  display: 'flex',
+  flexDirection: 'column',
+} as SxProps;
+const lightButton = { color: 'background.paper' } as SxProps;
+
 interface IRecordProps {
   comments: Array<Comment>;
   mediafiles: Array<MediaFile>;
@@ -213,7 +183,6 @@ export const DiscussionRegion = (discussion: Discussion) => {
 };
 
 export const DiscussionCard = (props: IProps) => {
-  const classes = useStyles();
   const {
     id,
     t,
@@ -790,23 +759,27 @@ export const DiscussionCard = (props: IProps) => {
   };
 
   return (
-    <div className={classes.root}>
-      <Card
+    <DiscussionCardRoot>
+      <StyledCard
         ref={cardRef}
         key={discussion.id}
         id={id}
-        className={
-          discussion.attributes.resolved
-            ? classes.resolvedcard
-            : myRegion?.start && myRegion?.start === highlightDiscussion
-            ? classes.highlightedcard
-            : classes.card
-        }
+        resolved={discussion.attributes.resolved}
+        highlight={Boolean(
+          myRegion?.start && myRegion?.start === highlightDiscussion
+        )}
         onClick={handleSelect(discussion)}
       >
-        <CardContent className={classes.content}>
+        <CardContent
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            color: 'primary.contrastText',
+          }}
+        >
           {editing ? (
-            <div className={classes.edit}>
+            <EditContainer>
               <TextField
                 autoFocus
                 margin="dense"
@@ -817,7 +790,7 @@ export const DiscussionCard = (props: IProps) => {
                 required
                 fullWidth
               />
-              <div className={classes.row}>
+              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                 <SelectGroup
                   id={`group-${discussion.id}`}
                   org={false}
@@ -829,7 +802,7 @@ export const DiscussionCard = (props: IProps) => {
                 <Typography
                   variant="h6"
                   component="h2"
-                  className={classes.editText}
+                  sx={{ m: 1, mt: 3, color: 'primary.dark' }}
                 >
                   {t.or}
                 </Typography>
@@ -840,7 +813,7 @@ export const DiscussionCard = (props: IProps) => {
                   required={false}
                   label={t.assignUser}
                 />
-              </div>
+              </Box>
               <SelectArtifactCategory
                 id={`category-${discussion.id}`}
                 initCategory={editCategory}
@@ -852,11 +825,11 @@ export const DiscussionCard = (props: IProps) => {
                 scripture={ScriptureEnum.hide}
                 discussion={true}
               />
-              <div className={classes.row}>
+              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                 <Button
                   id={`ok-${discussion.id}`}
                   onClick={handleSave}
-                  className={classes.actionButton}
+                  sx={lightButton}
                   disabled={editSubject === ''}
                 >
                   {t.addComment}
@@ -864,20 +837,20 @@ export const DiscussionCard = (props: IProps) => {
                 <Button
                   id={`cancel-${discussion.id}`}
                   onClick={handleCancel}
-                  className={classes.actionButton}
+                  sx={lightButton}
                 >
                   {ts.cancel}
                 </Button>
-              </div>
-            </div>
+              </Box>
+            </EditContainer>
           ) : (
-            <Grid container className={classes.title}>
-              <Grid item className={classes.topicItem}>
+            <Grid container sx={titleProps}>
+              <Grid item sx={topicItemProps}>
                 {myRegion && related(discussion, 'mediafile') === mediafileId && (
                   <IconButton
                     id={`locate-${discussion.id}`}
                     size="small"
-                    className={classes.actionButton}
+                    sx={lightButton}
                     title={t.locate}
                     onClick={handleLocateClick}
                   >
@@ -885,25 +858,25 @@ export const DiscussionCard = (props: IProps) => {
                   </IconButton>
                 )}
                 {myRegion && related(discussion, 'mediafile') !== mediafileId && (
-                  <div className={classes.oldVersion}>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <OldVernVersion
                       id={discussion.id}
                       oldVernVer={version}
                       mediaId={related(discussion, 'mediafile')}
                       text={discussion.attributes?.subject}
                     />
-                  </div>
+                  </Box>
                 )}
                 <Typography
                   variant="h6"
                   component="h2"
-                  className={classes.topic}
+                  sx={topicProps}
                   title={discussionDescription()}
                 >
                   {discussion.attributes?.subject}
                 </Typography>
               </Grid>
-              <Grid item className={classes.titleControls}>
+              <Grid item sx={tilteCtrlProps}>
                 {assignedGroup && (
                   <LightTooltip title={t.changeAssignment}>
                     <IconButton onClick={handleAssignedClick}>
@@ -933,7 +906,7 @@ export const DiscussionCard = (props: IProps) => {
                 {!discussion.attributes.resolved && (
                   <IconButton
                     id={`resolveDiscussion-${discussion.id}`}
-                    className={classes.actionButton}
+                    sx={lightButton}
                     title={t.resolved}
                     onClick={handleResolveButton}
                   >
@@ -950,15 +923,21 @@ export const DiscussionCard = (props: IProps) => {
             </Grid>
           )}
 
-          <div className={classes.commentCount}>
-            <IconButton
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <SmallButton
               id={`collapseDiscussion-${discussion.id}`}
-              className={classes.smallButton}
               title={t.collapse}
               onClick={handleToggleCollapse}
             >
               {showComments ? <HideIcon /> : <ShowIcon />}
-            </IconButton>
+            </SmallButton>
             <Typography variant="body2" component="p">
               {t.comments.replace('{0}', myComments.length.toString())}
             </Typography>
@@ -974,14 +953,14 @@ export const DiscussionCard = (props: IProps) => {
                 variant="body2"
                 component="p"
                 title={reference}
-                className={classes.ref}
+                sx={{ overflow: 'hidden' }}
               >
                 {reference}
               </Typography>
             )}
-          </div>
+          </Box>
           {showComments && !onAddComplete && (
-            <Grid container className={classes.cardFlow}>
+            <Grid container sx={cardFlowProps}>
               {myComments.map((i, j) => (
                 <CommentCard
                   key={i.id}
@@ -1002,7 +981,7 @@ export const DiscussionCard = (props: IProps) => {
             </Grid>
           )}
         </CardContent>
-      </Card>
+      </StyledCard>
       {confirmAction === '' || (
         <Confirm
           text={t.confirmDelete}
@@ -1010,7 +989,7 @@ export const DiscussionCard = (props: IProps) => {
           noResponse={handleActionRefused}
         />
       )}
-    </div>
+    </DiscussionCardRoot>
   );
 };
 const mapRecordsToProps = {

@@ -1,6 +1,12 @@
-import { Button, TextField, Tooltip } from '@material-ui/core';
+import {
+  Button,
+  TextField,
+  Tooltip,
+  styled,
+  Typography,
+  TypographyProps,
+} from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import SendIcon from '@mui/icons-material/Send';
 import CancelIcon from '@mui/icons-material/CancelOutlined';
 import MicIcon from '@mui/icons-material/MicOutlined';
@@ -12,36 +18,23 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { localStrings, sharedSelector } from '../../selector';
 import { UnsavedContext } from '../../context/UnsavedContext';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      backgroudColor: theme.palette.primary.dark,
-      display: 'flex',
-      flexFlow: 'column',
-      flexGrow: 1,
-      '&:hover button': {
-        color: 'black',
-      },
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    column: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    button: {
-      color: theme.palette.background.paper,
-    },
-    status: {
-      marginRight: theme.spacing(2),
-      alignSelf: 'center',
-      color: theme.palette.primary.dark,
-    },
-  })
-);
+const RowDiv = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+}));
+
+const ColumnDiv = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
+const StatusMessage = styled(Typography)<TypographyProps>(({ theme }) => ({
+  marginRight: theme.spacing(2),
+  alignSelf: 'center',
+  color: theme.palette.primary.dark,
+}));
+
 interface IStateProps {}
 interface IProps extends IStateProps {
   toolId: string;
@@ -87,7 +80,6 @@ export const CommentEditor = (props: IProps) => {
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
-  const classes = useStyles();
   const [canSave, setCanSave] = useState(false);
   const [curText, setCurText] = useState(comment);
   const [startRecord, setStartRecord] = useState(false);
@@ -193,7 +185,7 @@ export const CommentEditor = (props: IProps) => {
   }, [refresh]);
 
   return (
-    <div id="commentedit" className={classes.column}>
+    <ColumnDiv id="commentedit">
       <TextField
         autoFocus
         margin="dense"
@@ -217,7 +209,7 @@ export const CommentEditor = (props: IProps) => {
           autoStart={true}
         />
       )}
-      <div className={classes.row}>
+      <RowDiv>
         {!doRecordRef.current ? (
           <Tooltip title={commentRecording ? t.recordUnavailable : t.record}>
             <span>
@@ -234,16 +226,14 @@ export const CommentEditor = (props: IProps) => {
           <div>{'\u00A0'}</div>
         )}
         <div>
-          <Typography variant="caption" className={classes.status}>
-            {statusText}
-          </Typography>
+          <StatusMessage variant="caption">{statusText}</StatusMessage>
           {(!cancelOnlyIfChanged || doRecordRef.current || myChanged) && (
             <Tooltip title={ts.cancel}>
               <span>
                 <Button
                   id="cancel"
                   onClick={handleCancel}
-                  className={classes.button}
+                  sx={{ color: 'background.paper' }}
                   disabled={recording}
                 >
                   <CancelIcon />
@@ -256,7 +246,7 @@ export const CommentEditor = (props: IProps) => {
               <Button
                 id="ok"
                 onClick={handleOk}
-                className={classes.button}
+                sx={{ color: 'background.paper' }}
                 disabled={
                   (!canSave && !curText.length) || !myChanged || recording
                 }
@@ -266,7 +256,7 @@ export const CommentEditor = (props: IProps) => {
             </span>
           </Tooltip>
         </div>
-      </div>
-    </div>
+      </RowDiv>
+    </ColumnDiv>
   );
 };

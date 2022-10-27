@@ -12,17 +12,18 @@ import { IState, MediaFile, IPassageRecordStrings } from '../model';
 import localStrings from '../selector/localize';
 import * as actions from '../store';
 import {
+  Box,
+  BoxProps,
   Button,
-  createStyles,
   FormControl,
   FormControlLabel,
-  makeStyles,
   Paper,
   Radio,
   RadioGroup,
+  styled,
+  SxProps,
   TextField,
-  Theme,
-} from '@material-ui/core';
+} from '@mui/material';
 import WSAudioPlayer from './WSAudioPlayer';
 import { QueryBuilder } from '@orbit/data';
 import {
@@ -37,35 +38,12 @@ import { useSnackBar } from '../hoc/SnackBar';
 import { bindActionCreators } from 'redux';
 import { UnsavedContext } from '../context/UnsavedContext';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      '& .MuiDialog-paper': {
-        maxWidth: '90%',
-        minWidth: '90%',
-      },
-    },
-    paper: {
-      padding: theme.spacing(2),
-      margin: 'auto',
-    },
-    button: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    formControl: {
-      margin: theme.spacing(1),
-    },
-    row: {
-      display: 'flex',
-    },
-    status: {
-      marginRight: theme.spacing(2),
-      alignSelf: 'center',
-    },
-  })
-);
+const Row = styled(Box)<BoxProps>(() => ({
+  display: 'flex',
+}));
+
+const controlProps = { m: 1 } as SxProps;
+
 interface IDispatchProps {
   convertBlob: typeof actions.convertBlob;
   resetConvertBlob: typeof actions.resetConvertBlob;
@@ -166,7 +144,6 @@ function MediaRecord(props: IProps) {
     ],
     []
   );
-  const classes = useStyles();
 
   useEffect(() => {
     setConverting(false);
@@ -396,10 +373,10 @@ function MediaRecord(props: IProps) {
         autoStart={autoStart}
         segments={segments}
       />
-      <div className={classes.row}>
+      <Row>
         {showFilename && (
           <TextField
-            className={classes.formControl}
+            sx={controlProps}
             id="filename"
             label={t.fileName}
             value={name}
@@ -409,7 +386,7 @@ function MediaRecord(props: IProps) {
           />
         )}
         {allowWave && (
-          <FormControl component="fieldset" className={classes.formControl}>
+          <FormControl component="fieldset" sx={controlProps}>
             <RadioGroup
               row={true}
               id="filetype"
@@ -434,7 +411,7 @@ function MediaRecord(props: IProps) {
           </FormControl>
         )}
         {metaData}
-      </div>
+      </Row>
     </Paper>
   );
 }

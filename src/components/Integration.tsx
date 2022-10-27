@@ -14,7 +14,6 @@ import {
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import {
   AddRecord,
   ReplaceRelatedRecord,
@@ -29,7 +28,6 @@ import {
   FormGroup,
   FormControlLabel,
   FormHelperText,
-  Button,
   List,
   ListItem,
   ListItemText,
@@ -37,7 +35,9 @@ import {
   Avatar,
   TextField,
   MenuItem,
-} from '@material-ui/core';
+  Box,
+  SxProps,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SyncIcon from '@mui/icons-material/Sync';
 import CheckIcon from '@mui/icons-material/Check';
@@ -71,58 +71,14 @@ import localStrings from '../selector/localize';
 import { doDataChanges } from '../hoc/DataChanges';
 import Memory from '@orbit/memory';
 import { translateParatextError } from '../utils/translateParatextError';
-import { SelectExportType } from '../control';
+import { PriButton, SelectExportType, StyledHeading } from '../control';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    panel: {
-      flexDirection: 'column',
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(15) as any,
-      fontWeight: theme.typography.fontWeightRegular as any,
-    },
-    legend: {
-      paddingTop: theme.spacing(4),
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 600,
-    },
-    //style for font size
-    formTextInput: {
-      fontSize: 'small',
-    },
-    formTextLabel: {
-      fontSize: 'small',
-    },
-    listItem: {
-      alignItems: 'flex-start',
-    },
-    formControl: {
-      margin: theme.spacing(3),
-    },
-    explain: {
-      marginTop: 0,
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-    icon: {
-      marginLeft: theme.spacing(1),
-    },
-    avatar: {
-      color: 'green',
-    },
-    menu: {
-      width: 300,
-    },
-  })
-);
+const panelProps = { flexDirection: 'column' } as SxProps;
+const textFieldProps = { mx: 1, width: '600px' } as SxProps;
+const formText = { fontSize: 'small' } as SxProps;
+const startAlign = { alignItems: 'flex-start' } as SxProps;
+const avatarProps = { color: 'green' } as SxProps;
+const menuProps = { width: '300px' } as SxProps;
 
 interface IStateProps {
   paratext_count: number; //state.paratext.count,
@@ -202,7 +158,6 @@ export function IntegrationPanel(props: IProps) {
   } = props;
   const { projectintegrations, integrations, projects, passages, mediafiles } =
     props;
-  const classes = useStyles();
   const [connected] = useGlobal('connected');
   const [hasPtProj, setHasPtProj] = useState(false);
   const [ptProj, setPtProj] = useState(-1);
@@ -653,23 +608,23 @@ export function IntegrationPanel(props: IProps) {
   const pRef = React.useRef<HTMLDivElement>(null);
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ width: '100%' }}>
       <Accordion id="int-online" defaultExpanded={!offline} disabled={offline}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={t.paratext}
           id={t.paratext}
         >
-          <Typography className={classes.heading}>
+          <StyledHeading>
             <ParatextLogo />
             {'\u00A0' + t.paratext}
-          </Typography>
+          </StyledHeading>
         </AccordionSummary>
-        <AccordionDetails className={classes.panel}>
+        <AccordionDetails sx={panelProps}>
           <List id="onl-criteria" dense component="div">
             <ListItem id="onlineexporttype" key="export-type">
               <ListItemAvatar>
-                <Avatar className={classes.avatar}>
+                <Avatar sx={avatarProps}>
                   <CheckIcon />
                 </Avatar>
               </ListItemAvatar>
@@ -685,7 +640,7 @@ export function IntegrationPanel(props: IProps) {
             </ListItem>
             <ListItem key="connected">
               <ListItemAvatar>
-                <Avatar className={classes.avatar}>
+                <Avatar sx={avatarProps}>
                   <>{!connected || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
@@ -694,9 +649,9 @@ export function IntegrationPanel(props: IProps) {
                 secondary={connected ? t.yes : t.no}
               />
             </ListItem>
-            <ListItem key="hasProj" className={classes.listItem}>
+            <ListItem key="hasProj" sx={startAlign}>
               <ListItemAvatar>
-                <Avatar className={classes.avatar}>
+                <Avatar sx={avatarProps}>
                   <>{!hasPtProj || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
@@ -713,24 +668,16 @@ export function IntegrationPanel(props: IProps) {
                     id="select-project"
                     select
                     label={getProjectLabel()}
-                    className={classes.textField}
+                    sx={textFieldProps}
                     value={ptProjName}
                     onChange={handleParatextProjectChange}
                     SelectProps={{
                       MenuProps: {
-                        className: classes.menu,
+                        sx: menuProps,
                       },
                     }}
-                    InputProps={{
-                      classes: {
-                        input: classes.formTextInput,
-                      },
-                    }}
-                    InputLabelProps={{
-                      classes: {
-                        root: classes.formTextLabel,
-                      },
-                    }}
+                    InputProps={{ sx: formText }}
+                    InputLabelProps={{ sx: formText }}
                     margin="normal"
                     variant="filled"
                     required={true}
@@ -750,7 +697,7 @@ export function IntegrationPanel(props: IProps) {
             </ListItem>
             <ListItem key="hasParatext">
               <ListItemAvatar>
-                <Avatar className={classes.avatar}>
+                <Avatar sx={avatarProps}>
                   <>{!hasParatext || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
@@ -770,7 +717,7 @@ export function IntegrationPanel(props: IProps) {
             </ListItem>
             <ListItem key="hasPermission">
               <ListItemAvatar>
-                <Avatar className={classes.avatar}>
+                <Avatar sx={avatarProps}>
                   <>{!hasPermission || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
@@ -787,7 +734,7 @@ export function IntegrationPanel(props: IProps) {
             </ListItem>
             <ListItem key="ready">
               <ListItemAvatar>
-                <Avatar className={classes.avatar}>
+                <Avatar sx={avatarProps}>
                   <>{count <= 0 || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
@@ -798,17 +745,14 @@ export function IntegrationPanel(props: IProps) {
             </ListItem>
           </List>
 
-          <FormControl component="fieldset" className={classes.formControl}>
+          <FormControl component="fieldset" sx={{ m: 3 }}>
             <FormGroup>
               <FormControlLabel
                 control={
-                  <Button
+                  <PriButton
                     id="IntWebSync"
                     key="sync"
                     aria-label={t.sync}
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
                     disabled={
                       syncing.current ||
                       !connected ||
@@ -820,8 +764,8 @@ export function IntegrationPanel(props: IProps) {
                     onClick={handleSync}
                   >
                     {t.sync}
-                    <SyncIcon className={classes.icon} />
-                  </Button>
+                    <SyncIcon sx={{ ml: 1 }} />
+                  </PriButton>
                 }
                 label=""
               />
@@ -836,16 +780,16 @@ export function IntegrationPanel(props: IProps) {
           aria-controls={t.paratextLocal}
           id={t.paratextLocal}
         >
-          <Typography className={classes.heading}>
+          <StyledHeading>
             <ParatextLogo />
             {'\u00A0' + t.paratextLocal}
-          </Typography>
+          </StyledHeading>
         </AccordionSummary>
-        <AccordionDetails className={classes.panel}>
+        <AccordionDetails sx={panelProps}>
           <List id="offln-criteria" dense component="div">
             <ListItem key="export-type">
               <ListItemAvatar>
-                <Avatar className={classes.avatar}>
+                <Avatar sx={avatarProps}>
                   <CheckIcon />
                 </Avatar>
               </ListItemAvatar>
@@ -861,7 +805,7 @@ export function IntegrationPanel(props: IProps) {
             </ListItem>
             <ListItem key="installed">
               <ListItemAvatar>
-                <Avatar className={classes.avatar}>
+                <Avatar sx={avatarProps}>
                   <>{!ptPath || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
@@ -870,9 +814,9 @@ export function IntegrationPanel(props: IProps) {
                 secondary={ptPath ? t.yes : t.no}
               />
             </ListItem>
-            <ListItem key="hasLocalProj" className={classes.listItem}>
+            <ListItem key="hasLocalProj" sx={startAlign}>
               <ListItemAvatar>
-                <Avatar className={classes.avatar}>
+                <Avatar sx={avatarProps}>
                   <>{!hasPtProj || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
@@ -889,24 +833,16 @@ export function IntegrationPanel(props: IProps) {
                     id="select-project"
                     select
                     label={getProjectLabel()}
-                    className={classes.textField}
+                    sx={textFieldProps}
                     value={ptProjName}
                     onChange={handleParatextProjectChange}
                     SelectProps={{
                       MenuProps: {
-                        className: classes.menu,
+                        sx: menuProps,
                       },
                     }}
-                    InputProps={{
-                      classes: {
-                        input: classes.formTextInput,
-                      },
-                    }}
-                    InputLabelProps={{
-                      classes: {
-                        root: classes.formTextLabel,
-                      },
-                    }}
+                    InputProps={{ sx: formText }}
+                    InputLabelProps={{ sx: formText }}
                     margin="normal"
                     variant="filled"
                     required={true}
@@ -924,7 +860,7 @@ export function IntegrationPanel(props: IProps) {
             </ListItem>
             <ListItem key="localReady">
               <ListItemAvatar>
-                <Avatar className={classes.avatar}>
+                <Avatar sx={avatarProps}>
                   <>{count <= 0 || <CheckIcon />}</>
                 </Avatar>
               </ListItemAvatar>
@@ -934,17 +870,14 @@ export function IntegrationPanel(props: IProps) {
               />
             </ListItem>
           </List>
-          <FormControl component="fieldset" className={classes.formControl}>
+          <FormControl component="fieldset" sx={{ m: 3 }}>
             <FormGroup>
               <FormControlLabel
                 control={
-                  <Button
+                  <PriButton
                     id="IntLocalSync"
                     key="localSync"
                     aria-label={t.sync}
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
                     disabled={
                       syncing.current ||
                       !ptPath ||
@@ -954,8 +887,8 @@ export function IntegrationPanel(props: IProps) {
                     onClick={handleLocalSync}
                   >
                     {t.sync}
-                    <SyncIcon className={classes.icon} />
-                  </Button>
+                    <SyncIcon sx={{ ml: 1 }} />
+                  </PriButton>
                 }
                 label=""
               />
@@ -964,31 +897,7 @@ export function IntegrationPanel(props: IProps) {
           </FormControl>
         </AccordionDetails>
       </Accordion>
-      {/* <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2a-content"
-          id="panel2a-header"
-        >
-          <Typography className={classes.heading}>
-            <RenderLogo />
-            {'\u00A0' + t.render}
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>{'Not Implemented'}</Typography>
-        </AccordionDetails>
-      </Accordion> */}
-      {/* <Accordion disabled>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel3a-content"
-          id="panel3a-header"
-        >
-          <Typography className={classes.heading}>{t.onestory}</Typography>
-        </AccordionSummary>
-      </Accordion> */}
-    </div>
+    </Box>
   );
 }
 const mapStateToProps = (state: IState): IStateProps => ({
