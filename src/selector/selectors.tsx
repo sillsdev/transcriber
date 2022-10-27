@@ -127,6 +127,9 @@ export const transcribeRejectSelector = (state: IState) =>
 export const transcriptionTabSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'transcriptionTab' });
 
+export const treeChartSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'treeChart' });
+
 export const viewModeSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'viewMode' });
 

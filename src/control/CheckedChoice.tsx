@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel } from `@mui/material';
+import { Checkbox, FormControlLabel } from '@mui/material';
 
 interface IProps {
   label: string;
