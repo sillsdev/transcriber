@@ -40,6 +40,9 @@ export const discussionMenuSelector = (state: IState) =>
 export const filterMenuSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'filterMenu' });
 
+export const gridSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'grid' });
+
 export const groupSettingsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'groupSettings' });
 

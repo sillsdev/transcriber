@@ -1,11 +1,5 @@
 import React from 'react';
-import { Input } from '@material-ui/core';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-  Theme,
-} from '@material-ui/core/styles';
+import { Input, styled } from '@mui/material';
 import {
   Column,
   FilteringState,
@@ -44,42 +38,14 @@ import {
   TableSummaryRow,
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import { IGridStrings, IState } from '../model';
-import { useEffect } from 'reactn';
+import { IGridStrings } from '../model';
+import { useEffect } from 'react';
 import { localizeGrid } from '../utils';
-import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
+import { shallowEqual, useSelector } from 'react-redux';
+import { gridSelector } from '../selector';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    container: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    paper: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignContent: 'center',
-    },
-    size: {
-      display: 'flex',
-      flexGrow: 1,
-      justifyContent: 'flex-end',
-      marginRight: theme.spacing(5),
-      fontWeight: theme.typography.fontWeightMedium as any,
-    },
-    numericInput: {
-      width: '100%',
-    },
-  });
-
-type SizeFormatterProps = DataTypeProvider.ValueFormatterProps &
-  WithStyles<typeof styles>;
-type SizeEditorProps = DataTypeProvider.ValueEditorProps &
-  WithStyles<typeof styles>;
+type SizeFormatterProps = DataTypeProvider.ValueFormatterProps;
+type SizeEditorProps = DataTypeProvider.ValueEditorProps;
 
 const availableFilterOperations: string[] = [
   'equal',
@@ -90,41 +56,57 @@ const availableFilterOperations: string[] = [
   'lessThanOrEqual',
 ];
 
+const PREFIX = 'st';
+const classes = {
+  size: `${PREFIX}-size`,
+  numericInput: `${PREFIX}-numericInput`,
+};
+const StyledInput = styled(Input)(({ theme }) => ({
+  [`& .${classes.numericInput}`]: {
+    width: '100%',
+  },
+}));
+const StyledI = styled('i')(({ theme }) => ({
+  [`& .${classes.size}`]: {
+    display: 'flex',
+    flexGrow: 1,
+    justifyContent: 'flex-end',
+    marginRight: theme.spacing(5),
+    fontWeight: theme.typography.fontWeightMedium,
+  },
+}));
+
 const getInputValue = (value?: string): string =>
   value === undefined ? '' : value;
 
-const SizeEditor = withStyles(styles)(
-  ({ onValueChange, classes, value }: SizeEditorProps) => {
-    const handleChange = (event: any) => {
-      const { value: targetValue } = event.target;
-      if (targetValue.trim() === '') {
-        onValueChange(undefined);
-        return;
-      }
-      onValueChange(parseInt(targetValue, 10));
-    };
-    return (
-      <Input
-        type="number"
-        classes={{
-          input: classes.numericInput,
-        }}
-        fullWidth={true}
-        value={getInputValue(value)}
-        inputProps={{
-          min: 0,
-          placeholder: 'Filter...',
-        }}
-        onChange={handleChange}
-      />
-    );
-  }
-);
+const SizeEditor = ({ onValueChange, value }: SizeEditorProps) => {
+  const handleChange = (event: any) => {
+    const { value: targetValue } = event.target;
+    if (targetValue.trim() === '') {
+      onValueChange(undefined);
+      return;
+    }
+    onValueChange(parseInt(targetValue, 10));
+  };
+  return (
+    <StyledInput
+      type="number"
+      classes={{
+        input: classes.numericInput,
+      }}
+      fullWidth={true}
+      value={getInputValue(value)}
+      inputProps={{
+        min: 0,
+        placeholder: 'Filter...',
+      }}
+      onChange={handleChange}
+    />
+  );
+};
 
-const SizeFormatter = withStyles(styles)(
-  ({ value, classes }: SizeFormatterProps) => (
-    <i className={classes.size}>{value}</i>
-  )
+const SizeFormatter = ({ value }: SizeFormatterProps) => (
+  <StyledI>{value}</StyledI>
 );
 
 const SizeTypeProvider: React.ComponentType<DataTypeProviderProps> = (
@@ -137,13 +119,8 @@ const SizeTypeProvider: React.ComponentType<DataTypeProviderProps> = (
     {...props}
   />
 );
-interface IStateProps {
-  tg: IGridStrings;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  tg: localStrings(state, { layout: 'grid' }),
-});
-interface IProps extends IStateProps {
+
+interface IProps {
   columns: Array<Column>;
   columnWidths?: Array<TableColumnWidthInfo>;
   columnFormatting?: Table.ColumnExtension[];
@@ -172,7 +149,6 @@ interface IProps extends IStateProps {
 
 function ShapingTable(props: IProps) {
   const {
-    tg,
     columns,
     columnWidths,
     columnFormatting,
@@ -198,7 +174,7 @@ function ShapingTable(props: IProps) {
     bandHeader,
     summaryItems,
   } = props;
-
+  const tg: IGridStrings = useSelector(gridSelector, shallowEqual);
   const [myGroups, setMyGroups] = React.useState<string[]>();
   const [currentFilters, setCurrentFilters] = React.useState(filters || []);
   const {
@@ -372,4 +348,4 @@ function ShapingTable(props: IProps) {
     </Grid>
   );
 }
-export default connect(mapStateToProps)(ShapingTable) as any as any;
+export default ShapingTable;
