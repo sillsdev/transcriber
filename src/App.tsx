@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Route } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@material-ui/core';
+import { ThemeProvider, createTheme } from '@mui/material';
 import Logout from './routes/Logout';
 import Loading from './routes/Loading';
 import Profile from './routes/Profile';

@@ -6,7 +6,6 @@ import localStrings from '../selector/localize';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-// import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
   TextField,

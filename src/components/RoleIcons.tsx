@@ -1,6 +1,6 @@
 import Transcriber from '@mui/icons-material/ReceiptOutlined';
 import Editor from '@mui/icons-material/RateReviewOutlined';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import React, { FunctionComponent } from 'react';
 import { connect } from 'react-redux';
 import { IState } from '../model/state';

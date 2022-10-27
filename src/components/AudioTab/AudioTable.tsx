@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { PlanContext } from '../../context/PlanContext';
 import { IState, IMediaTabStrings, MediaFile } from '../../model';
-import { Button, Checkbox, FormControlLabel } from '@material-ui/core';
+import { Button, Checkbox, FormControlLabel } from '@mui/material';
 import localStrings from '../../selector/localize';
 import { TransformBuilder } from '@orbit/data';
 import { Table } from '@devexpress/dx-react-grid-material-ui';

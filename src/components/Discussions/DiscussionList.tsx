@@ -7,6 +7,7 @@ import {
   styled,
   SxProps,
   Typography,
+  TypographyProps,
   useTheme,
 } from '@mui/material';
 import QueryBuilder from '@orbit/data/dist/types/query-builder';
@@ -44,7 +45,6 @@ import Confirm from '../AlertDialog';
 import { onlyUnique, waitForIt } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import SortMenu, { ISortState } from './SortMenu';
-import { TypographyProps } from '@material-ui/core';
 import { discussionListSelector } from '../../selector';
 
 const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({

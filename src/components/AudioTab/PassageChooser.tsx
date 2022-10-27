@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { IState, IMediaTabStrings, RoleNames } from '../../model';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import localStrings from '../../selector/localize';
-import { FormControlLabel, Switch, Radio } from '@material-ui/core';
+import { FormControlLabel, Switch, Radio } from '@mui/material';
 import ShapingTable from '../ShapingTable';
 import { useOrganizedBy } from '../../crud';
 import { IRow, IPRow } from '.';

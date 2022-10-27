@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { IconButton } from '@material-ui/core';
+import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { LightTooltip } from '../../StepEditor';

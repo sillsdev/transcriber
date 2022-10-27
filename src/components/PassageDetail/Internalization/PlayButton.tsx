@@ -1,4 +1,4 @@
-import { IconButton } from '@material-ui/core';
+import { IconButton } from '@mui/material';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import { LightTooltip } from '../../StepEditor';

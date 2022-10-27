@@ -4,7 +4,7 @@ import {
   ActivityStates,
   localizeActivityState,
 } from '../model';
-import { Chip } from '@material-ui/core';
+import { Chip } from '@mui/material';
 
 interface IStateProps {
   ta: IActivityStateStrings;
