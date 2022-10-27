@@ -2,11 +2,11 @@ Source: audio-project-manager
 Section: sound
 Priority: extra
 Maintainer: Greg Trihus <greg_trihus@sil.org>
-Build-Depends: debhelper (>= 7)
+Build-Depends: debhelper (>= 7),libsecret-1-dev
 Standards-Version: 3.9.7
-Homepage: http://software.sil.org/siltranscriber
-Vcs-Git: git://github.com/sillsdev/web-transcriber-admin.git
-Vcs-Browser: http://github.com/sillsdev/web-transcriber-admin/
+Homepage: www.audioprojectmanager.org
+Vcs-Git: git://github.com/sillsdev/transcriber.git
+Vcs-Browser: http://github.com/sillsdev/transcriber/
 
 Package: audio-project-manager
 Architecture: all
