@@ -28,8 +28,7 @@ import { withData, WithDataProps } from '../../mods/react-orbitjs';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
-import { Link } from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Box, Link } from '@mui/material';
 import { useSnackBar } from '../../hoc/SnackBar';
 import PlanSheet, { ICellChange } from './PlanSheet';
 import {
@@ -75,31 +74,6 @@ import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import { UnsavedContext } from '../../context/UnsavedContext';
 
 const SaveWait = 500;
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    progress: {
-      width: '100%',
-    },
-    paper: {},
-    actions: {
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-    icon: {
-      marginLeft: theme.spacing(1),
-    },
-  })
-);
 
 interface IStateProps {
   t: IScriptureTableStrings;
@@ -163,7 +137,6 @@ export function ScriptureTable(props: IProps) {
     workflowSteps,
     orgWorkflowSteps,
   } = props;
-  const classes = useStyles();
   const { prjId } = useParams<ParamTypes>();
   const [width, setWidth] = React.useState(window.innerWidth);
   const [plan] = useGlobal('plan');
@@ -966,7 +939,7 @@ export function ScriptureTable(props: IProps) {
     lookupBook({ book, allBookData, bookMap });
 
   return (
-    <div className={classes.container}>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <PlanSheet
         {...props}
         columns={columns}
@@ -1037,7 +1010,7 @@ export function ScriptureTable(props: IProps) {
       >
         <VersionDlg passId={versionItem} />
       </BigDialog>
-    </div>
+    </Box>
   );
 }
 

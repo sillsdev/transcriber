@@ -4,43 +4,14 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
-} from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+} from '@mui/material';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import { TeamContext } from '../../../context/TeamContext';
 import FontSize from '../../FontSize';
 import { IProjectDialogState } from './ProjectDialog';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    label: {
-      color: theme.palette.secondary.main,
-    },
-    group: {
-      paddingBottom: theme.spacing(3),
-    },
-    sameLine: {
-      display: 'flex',
-    },
-    languageField: {
-      marginLeft: 0,
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    sameCol: {
-      flexDirection: 'column',
-    },
-    previewCol: {
-      marginTop: theme.spacing(2),
-    },
-  })
-);
-
 export const EditorSettings = (props: IProjectDialogState) => {
   const { state, setState } = props;
-  const classes = useStyles();
   const ctx = React.useContext(TeamContext);
   const t = ctx.state.vProjectStrings;
   const { font, fontSize, rtl } = state;
@@ -61,10 +32,10 @@ export const EditorSettings = (props: IProjectDialogState) => {
 
   return (
     <>
-      <FormLabel className={classes.label}>{t.editorSettings}</FormLabel>
-      <FormGroup className={classes.group}>
+      <FormLabel sx={{ color: 'secondary.main' }}>{t.editorSettings}</FormLabel>
+      <FormGroup sx={{ pb: 3 }}>
         <FormControlLabel
-          className={classes.textField}
+          sx={{ mx: 1 }}
           control={
             <FontSize
               label={t.fontSize}
@@ -76,7 +47,7 @@ export const EditorSettings = (props: IProjectDialogState) => {
           label=""
         />
         <FormControlLabel
-          className={classes.textField}
+          sx={{ mx: 1 }}
           control={
             <Checkbox
               id="checkbox-rtl"

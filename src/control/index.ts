@@ -36,3 +36,4 @@ export * from './ActionToggle';
 export * from './StyledHeading';
 export * from './GrowingDiv';
 export * from './ToolbarGrid';
+export * from './TeamPaper';

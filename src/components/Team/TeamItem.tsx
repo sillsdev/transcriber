@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { Grid, Paper, Typography, Button } from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import { Grid, Button } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import { Organization, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
@@ -13,36 +12,7 @@ import TeamDialog from './TeamDialog';
 import { useRole, useAllUserGroup, defaultWorkflow } from '../../crud';
 import Confirm from '../AlertDialog';
 import { UnsavedContext } from '../../context/UnsavedContext';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      backgroundColor: theme.palette.background.default,
-      marginBottom: theme.spacing(2),
-      '& .MuiPaper-rounded': {
-        borderRadius: '8px',
-      },
-    },
-    teamHead: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      padding: theme.spacing(2),
-    },
-    name: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    icon: {
-      paddingRight: theme.spacing(1),
-    },
-    cardFlow: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
-  })
-);
+import { TeamPaper, TeamHeadDiv, TeamName } from '../../control';
 
 interface IProps {
   team: Organization;
@@ -50,7 +20,6 @@ interface IProps {
 
 export const TeamItem = (props: IProps) => {
   const { team } = props;
-  const classes = useStyles();
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setOrganization] = useGlobal('organization');
@@ -118,12 +87,12 @@ export const TeamItem = (props: IProps) => {
   ) => (!offline && isAdmin(team)) || offlineOnly;
 
   return (
-    <Paper id="TeamItem" className={classes.root}>
-      <div className={classes.teamHead}>
-        <Typography variant="h5" className={classes.name}>
-          <GroupIcon className={classes.icon} />
+    <TeamPaper id="TeamItem">
+      <TeamHeadDiv>
+        <TeamName variant="h5">
+          <GroupIcon sx={{ pr: 1 }} />
           {team?.attributes?.name}
-        </Typography>
+        </TeamName>
         <div>
           <Button
             id="teamMembers"
@@ -154,7 +123,7 @@ export const TeamItem = (props: IProps) => {
             </>
           )}
         </div>
-      </div>
+      </TeamHeadDiv>
       <TeamDialog
         mode={DialogMode.edit}
         values={team}
@@ -187,12 +156,12 @@ export const TeamItem = (props: IProps) => {
           noResponse={handleDeleteRefused}
         />
       )}
-      <Grid container className={classes.cardFlow}>
+      <Grid container sx={{ px: 2 }}>
         {teamProjects(team.id).map((i) => {
           return <ProjectCard key={i.id} project={i} />;
         })}
         {canModify(offline, team, offlineOnly) && <AddCard team={team} />}
       </Grid>
-    </Paper>
+    </TeamPaper>
   );
 };

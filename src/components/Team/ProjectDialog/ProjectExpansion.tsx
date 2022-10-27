@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import {
   Accordion,
   AccordionSummary,
@@ -8,7 +7,11 @@ import {
   FormControlLabel,
   Checkbox,
   FormLabel,
-} from '@material-ui/core';
+  Box,
+  styled,
+  AccordionSummaryProps,
+  TypographyProps,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { TeamContext } from '../../../context/TeamContext';
 import { IProjectDialogState } from './ProjectDialog';
@@ -18,45 +21,44 @@ import RenderLogo from '../../../control/RenderLogo';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import { useOrganizedBy } from '../../../crud';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    panel: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    summary: {
-      '& .MuiTypography-root': {
-        color: theme.palette.secondary.main,
-      },
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(18) as any,
-      fontWeight: theme.typography.fontWeightRegular as any,
-    },
-    logo: {
-      width: '16px',
-      height: '16px',
-    },
-    render: {
-      display: 'flex',
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
-    label: {
+const StyledAccordionSummary = styled(AccordionSummary)<AccordionSummaryProps>(
+  ({ theme }) => ({
+    '& .MuiTypography-root': {
       color: theme.palette.secondary.main,
-      paddingTop: theme.spacing(4),
     },
   })
 );
 
+const Heading = styled(Typography)<TypographyProps>(({ theme }) => ({
+  fontSize: theme.typography.pxToRem(18),
+  fontWeight: theme.typography.fontWeightRegular,
+}));
+
+const RenderRecommended = () => {
+  const ctx = React.useContext(TeamContext);
+  const t = ctx.state.vProjectStrings;
+
+  return (
+    <Typography variant="caption" sx={{ display: 'flex' }}>
+      <RenderLogo />
+      {'\u00A0' + t.renderRecommended}
+    </Typography>
+  );
+};
+
+const RenderCustomize = () => {
+  const ctx = React.useContext(TeamContext);
+  const t = ctx.state.vProjectStrings;
+
+  return (
+    <Typography variant="caption" sx={{ display: 'flex' }}>
+      <RenderLogo />
+      {'\u00A0' + t.renderCustomize}
+    </Typography>
+  );
+};
+
 export function ProjectExpansion(props: IProjectDialogState) {
-  const classes = useStyles();
   const { state, setState } = props;
   const { organizedBy, isPublic } = state;
   const { localizedOrganizedBy, fromLocalizedOrganizedBy } = useOrganizedBy();
@@ -107,39 +109,24 @@ export function ProjectExpansion(props: IProjectDialogState) {
     return true;
   };
 
-  const RenderRecommended = () => (
-    <Typography variant="caption" className={classes.render}>
-      <RenderLogo />
-      {'\u00A0' + t.renderRecommended}
-    </Typography>
-  );
-
-  const RenderCustomize = () => (
-    <Typography variant="caption" className={classes.render}>
-      <RenderLogo />
-      {'\u00A0' + t.renderCustomize}
-    </Typography>
-  );
-
   const decoration = {
     [t.sets]: <RenderRecommended />,
     [t.flat]: <RenderRecommended />,
   };
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ width: '100%' }}>
       <Accordion>
-        <AccordionSummary
+        <StyledAccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          className={classes.summary}
           aria-controls="proj-exp-content"
           id="proj-exp-header"
         >
-          <Typography className={classes.heading}>{t.advanced}</Typography>
+          <Heading>{t.advanced}</Heading>
           {'\u00A0 '}
           <RenderCustomize />
-        </AccordionSummary>
-        <AccordionDetails className={classes.panel}>
+        </StyledAccordionSummary>
+        <AccordionDetails sx={{ display: 'flex', flexDirection: 'column' }}>
           <EditorSettings state={state} setState={setState} />
 
           <Options
@@ -158,9 +145,11 @@ export function ProjectExpansion(props: IProjectDialogState) {
             otherLabel={t.other}
             decorations={decoration}
           />
-          <FormLabel className={classes.label}>{t.sharedResources}</FormLabel>
+          <FormLabel sx={{ pt: 4, color: 'secondary.main' }}>
+            {t.sharedResources}
+          </FormLabel>
           <FormControlLabel
-            className={classes.textField}
+            sx={{ mx: 1, mb: 1 }}
             control={
               <Checkbox
                 id="checkbox-shared"
@@ -173,6 +162,6 @@ export function ProjectExpansion(props: IProjectDialogState) {
         </AccordionDetails>
       </Accordion>
       <SnackBar message={message} />
-    </div>
+    </Box>
   );
 }
