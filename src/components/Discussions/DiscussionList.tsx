@@ -1,16 +1,17 @@
 import {
-  createStyles,
+  Box,
   Grid,
   IconButton,
-  makeStyles,
   Paper,
-  Theme,
+  PaperProps,
+  styled,
+  SxProps,
   Typography,
   useTheme,
-} from '@material-ui/core';
+} from '@mui/material';
 import QueryBuilder from '@orbit/data/dist/types/query-builder';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import {
   findRecord,
@@ -22,7 +23,6 @@ import {
 import {
   Discussion,
   IDiscussionListStrings,
-  IState,
   MediaFile,
   Group,
   User,
@@ -30,7 +30,6 @@ import {
   RoleNames,
   Organization,
 } from '../../model';
-import localStrings from '../../selector/localize';
 import AddIcon from '@mui/icons-material/Add';
 import HideIcon from '@mui/icons-material/ArrowDropUp';
 import ShowIcon from '@mui/icons-material/ArrowDropDown';
@@ -45,39 +44,26 @@ import Confirm from '../AlertDialog';
 import { onlyUnique, waitForIt } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import SortMenu, { ISortState } from './SortMenu';
+import { TypographyProps } from '@material-ui/core';
+import { discussionListSelector } from '../../selector';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      backgroundColor: theme.palette.background.default,
-      marginBottom: theme.spacing(1),
-      '& .MuiPaper-rounded': {
-        borderRadius: '8px',
-      },
-      overflow: 'auto',
-    },
-    discussionHead: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      padding: theme.spacing(1),
-    },
-    name: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    icon: {
-      paddingRight: theme.spacing(1),
-    },
-    actionButton: {
-      color: theme.palette.primary.light,
-    },
-    cardFlow: {},
-  })
-);
-interface IStateProps {
-  t: IDiscussionListStrings;
-}
+const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  marginBottom: theme.spacing(1),
+  '& .MuiPaper-rounded': {
+    borderRadius: '8px',
+  },
+  overflow: 'auto',
+}));
+
+const Title = styled(Typography)<TypographyProps>(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+}));
+
+const actionButtonProps = { color: 'primary.light' } as SxProps;
+
 interface IRecordProps {
   discussions: Discussion[];
   mediafiles: MediaFile[];
@@ -85,12 +71,11 @@ interface IRecordProps {
   groups: Group[];
   groupMemberships: GroupMembership[];
 }
-interface IProps extends IStateProps, IRecordProps {}
+interface IProps {}
 export const NewDiscussionToolId = 'newDiscussion';
 
-export function DiscussionList(props: IProps) {
-  const { t, discussions, mediafiles, users, groups, groupMemberships } = props;
-  const classes = useStyles();
+export function DiscussionList(props: IProps & IRecordProps) {
+  const { discussions, mediafiles, users, groups, groupMemberships } = props;
   const theme = useTheme();
   const [planId] = useGlobal('plan');
   const [userId] = useGlobal('user');
@@ -115,6 +100,10 @@ export function DiscussionList(props: IProps) {
     setDiscussionMarkers,
   } = ctx.state;
   const { toolsChanged } = useContext(UnsavedContext).state;
+  const t: IDiscussionListStrings = useSelector(
+    discussionListSelector,
+    shallowEqual
+  );
 
   const [rootWidthStyle, setRootWidthStyle] = useState({
     width: `${discussionSize.width - 30}px`, //leave room for scroll bar
@@ -457,13 +446,11 @@ export function DiscussionList(props: IProps) {
   );
 
   return (
-    <Paper id="DiscussionListHeader" className={classes.root}>
+    <StyledPaper id="DiscussionListHeader">
       <>
-        <div className={classes.discussionHead}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1 }}>
           <div>
-            <Typography variant="h6" className={classes.name}>
-              {t.title}
-            </Typography>
+            <Title variant="h6">{t.title}</Title>
             <Typography>{filterStatus}</Typography>
           </div>
           <div>
@@ -480,7 +467,7 @@ export function DiscussionList(props: IProps) {
             />
             <IconButton
               id="addDiscussion"
-              className={classes.actionButton}
+              sx={actionButtonProps}
               title={t.add}
               onClick={handleAddDiscussion}
               disabled={adding || isMediaMissing()}
@@ -489,21 +476,16 @@ export function DiscussionList(props: IProps) {
             </IconButton>
             <IconButton
               id="collapseDiscussion"
-              className={classes.actionButton}
+              sx={actionButtonProps}
               title={t.collapse}
               onClick={handleToggleCollapse}
             >
               {collapsed ? <ShowIcon /> : <HideIcon />}
             </IconButton>
           </div>
-        </div>
-        <Paper
-          ref={formRef}
-          id="DiscussionList"
-          className={classes.root}
-          style={rootWidthStyle}
-        >
-          <Grid container className={classes.cardFlow}>
+        </Box>
+        <StyledPaper ref={formRef} id="DiscussionList" style={rootWidthStyle}>
+          <Grid container>
             {displayDiscussions.map((i, j) => (
               <DiscussionCard
                 id={`card-${j}`}
@@ -520,7 +502,7 @@ export function DiscussionList(props: IProps) {
               />
             ))}
           </Grid>
-        </Paper>
+        </StyledPaper>
         <BigDialog
           title={t.categoryList}
           isOpen={categoryOpen}
@@ -545,13 +527,10 @@ export function DiscussionList(props: IProps) {
           />
         )}
       </>
-    </Paper>
+    </StyledPaper>
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'discussionList' }),
-});
 const mapRecordsToProps = {
   discussions: (q: QueryBuilder) => q.findRecords('discussion'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
@@ -560,6 +539,4 @@ const mapRecordsToProps = {
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
 
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(DiscussionList) as any as any
-) as any;
+export default withData(mapRecordsToProps)(DiscussionList) as IProps;

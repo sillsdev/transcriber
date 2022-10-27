@@ -31,6 +31,9 @@ export const controlSelector = (state: IState) =>
 export const discussionCardSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'discussionCard' });
 
+export const discussionListSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'discussionList' });
+
 export const discussionMenuSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'discussionMenu' });
 

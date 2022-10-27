@@ -1,8 +1,8 @@
 import { useGlobal } from 'reactn';
 import { RoleNames } from '../../model';
-import { FormLabel, FormGroup, List, IconButton, Grid } from '@mui/material';
+import { FormGroup, List, IconButton, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import useStyles from './GroupSettingsStyles';
+import { StyledFormLabel } from './GroupSettingsStyles';
 import PersonItems from './PersonItems';
 import { useRole } from '../../crud';
 import { GrowingSpacer } from '../StepEditor';
@@ -27,7 +27,6 @@ interface IProps {
 function TeamCol(props: IProps) {
   const { detail, people, add, del, allUsers, title, titledetail, roledetail } =
     props;
-  const classes = useStyles();
   const [organization] = useGlobal('organization');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -45,24 +44,22 @@ function TeamCol(props: IProps) {
 
   return (
     <Grid item xs={12} md={4}>
-      <FormGroup className={classes.group}>
-        <FormLabel className={classes.label}>
+      <FormGroup sx={{ pb: 3 }}>
+        <StyledFormLabel>
           {title} {titledetail}
           <GrowingSpacer />
           {canEdit() && (
             <IconButton
               id={`teamColAdd${title}`}
               size="small"
-              className={classes.addButton}
+              sx={{ mr: 2 }}
               onClick={add}
             >
               <AddIcon />
             </IconButton>
           )}
-        </FormLabel>
-        {roledetail && (
-          <FormLabel className={classes.label}>{roledetail}</FormLabel>
-        )}
+        </StyledFormLabel>
+        {roledetail && <StyledFormLabel>{roledetail}</StyledFormLabel>}
         <List dense={true}>
           <PersonItems
             {...props}

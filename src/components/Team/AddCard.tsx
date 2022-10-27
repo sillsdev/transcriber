@@ -1,7 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Card, CardContent } from '@material-ui/core';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardContentProps,
+  CardProps,
+  styled,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { VProject, DialogMode, OptionType, Project, Plan } from '../../model';
 import { ProjectDialog, IProjectDialog, ProjectType } from './ProjectDialog';
@@ -23,33 +29,21 @@ import StickyRedirect from '../StickyRedirect';
 import NewProjectGrid from './NewProjectGrid';
 import { restoreScroll } from '../../utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      minWidth: 275,
-      minHeight: 176,
-      margin: theme.spacing(1),
-      display: 'flex',
-      backgroundColor: theme.palette.primary.light,
-    },
-    content: {
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      justifyContent: 'center',
-      color: theme.palette.primary.contrastText,
-    },
-    buttons: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'space-around',
-      flexGrow: 1,
-    },
-    icon: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
+const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
+  minWidth: 275,
+  minHeight: 176,
+  margin: theme.spacing(1),
+  display: 'flex',
+  backgroundColor: theme.palette.primary.light,
+}));
+
+const StyledCardContent = styled(CardContent)<CardContentProps>(
+  ({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    justifyContent: 'center',
+    color: theme.palette.primary.contrastText,
   })
 );
 
@@ -66,7 +60,6 @@ interface IProps {
 
 export const AddCard = (props: IProps) => {
   const { team } = props;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -352,13 +345,9 @@ export const AddCard = (props: IProps) => {
 
   return (
     <>
-      <Card
-        id={`teamAdd-${team}`}
-        className={classes.root}
-        onClick={handleSolutionShow}
-      >
-        <CardContent className={classes.content}>
-          <div className={classes.icon}>
+      <StyledCard id={`teamAdd-${team}`} onClick={handleSolutionShow}>
+        <StyledCardContent>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <AddIcon fontSize="large" />
             <NewProjectGrid
               open={pickOpen && !open && !uploadVisible}
@@ -375,9 +364,9 @@ export const AddCard = (props: IProps) => {
               onCommit={handleCommit}
               nameInUse={nameInUse}
             />
-          </div>
-        </CardContent>
-      </Card>
+          </Box>
+        </StyledCardContent>
+      </StyledCard>
       <Uploader
         recordAudio={recordAudio}
         isOpen={uploadVisible}
