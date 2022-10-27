@@ -10,6 +10,7 @@ import {
   CardProps,
   CardContentProps,
   Box,
+  ChipProps,
 } from '@mui/material';
 import ScriptureIcon from '@mui/icons-material/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
@@ -65,6 +66,10 @@ const FirstLineDiv = styled('div')(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+}));
+
+const StyledChip = styled(Chip)<ChipProps>(({ theme }) => ({
+  backgroundColor: theme.palette.grey[400],
 }));
 
 interface IProps {
@@ -304,7 +309,7 @@ export const ProjectCard = (props: IProps) => {
               {Object.keys(project?.attributes?.tags)
                 .filter((t) => project?.attributes?.tags[t])
                 .map((t) => (
-                  <Chip
+                  <StyledChip
                     key={t}
                     size="small"
                     label={localizeProjectTag(t, vProjectStrings)}

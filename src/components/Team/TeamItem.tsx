@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { Grid, Button } from '@mui/material';
+import { Grid } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import { Organization, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
@@ -12,7 +12,7 @@ import TeamDialog from './TeamDialog';
 import { useRole, useAllUserGroup, defaultWorkflow } from '../../crud';
 import Confirm from '../AlertDialog';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { TeamPaper, TeamHeadDiv, TeamName } from '../../control';
+import { TeamPaper, TeamHeadDiv, TeamName, AltButton } from '../../control';
 
 interface IProps {
   team: Organization;
@@ -94,32 +94,23 @@ export const TeamItem = (props: IProps) => {
           {team?.attributes?.name}
         </TeamName>
         <div>
-          <Button
-            id="teamMembers"
-            variant="contained"
-            onClick={handleMembers(team)}
-          >
+          <AltButton id="teamMembers" onClick={handleMembers(team)}>
             {t.members.replace('{0}', teamMembers(team.id).toString())}
-          </Button>
+          </AltButton>
           {' \u00A0'}
           {canModify(offline, team, offlineOnly) && (
             <>
-              <Button
-                id="editWorkflow"
-                onClick={handleEditWorkflow}
-                variant="contained"
-              >
+              <AltButton id="editWorkflow" onClick={handleEditWorkflow}>
                 {t.editWorkflow.replace('{0}', '')}
-              </Button>
+              </AltButton>
               {' \u00A0'}
-              <Button
+              <AltButton
                 id="teamSettings"
-                variant="contained"
                 onClick={handleSettings(team)}
                 disabled={busy}
               >
                 {t.settings}
-              </Button>
+              </AltButton>
             </>
           )}
         </div>

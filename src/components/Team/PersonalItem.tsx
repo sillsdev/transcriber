@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { Grid, Button } from '@mui/material';
+import { Grid } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { TeamContext } from '../../context/TeamContext';
 import BigDialog from '../../hoc/BigDialog';
@@ -8,7 +8,7 @@ import { ProjectCard, AddCard } from '.';
 import { StepEditor } from '../StepEditor';
 import { useNewTeamId, defaultWorkflow } from '../../crud';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { TeamPaper, TeamHeadDiv, TeamName } from '../../control';
+import { TeamPaper, TeamHeadDiv, TeamName, AltButton } from '../../control';
 
 export const PersonalItem = () => {
   const ctx = React.useContext(TeamContext);
@@ -51,13 +51,9 @@ export const PersonalItem = () => {
         </TeamName>
         {'\u00A0'}
         {canModify(isOffline, offlineOnly) && (
-          <Button
-            id="editWorkflow"
-            onClick={handleEditWorkflow}
-            variant="contained"
-          >
+          <AltButton id="editWorkflow" onClick={handleEditWorkflow}>
             {t.editWorkflow.replace('{0}', '')}
-          </Button>
+          </AltButton>
         )}
       </TeamHeadDiv>
       <Grid container sx={{ px: 2 }}>
