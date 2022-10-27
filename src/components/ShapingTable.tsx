@@ -22,6 +22,7 @@ import {
   DataTypeProvider,
   DataTypeProviderProps,
   TableColumnVisibility,
+  GridColumnExtension,
 } from '@devexpress/dx-react-grid';
 import {
   DragDropProvider,
@@ -123,12 +124,12 @@ const SizeTypeProvider: React.ComponentType<DataTypeProviderProps> = (
 interface IProps {
   columns: Array<Column>;
   columnWidths?: Array<TableColumnWidthInfo>;
-  columnFormatting?: Table.ColumnExtension[];
+  columnFormatting?: Array<GridColumnExtension>;
   columnSorting?: Array<IntegratedSorting.ColumnExtension>;
   pageSizes?: Array<number>;
   sortingEnabled?: Array<SortingState.ColumnExtension>;
   filteringEnabled?: Array<FilteringState.ColumnExtension>;
-  filterCell: any;
+  filterCell?: any;
   filters?: Filter[];
   onFiltersChange?: (filters: Filter[]) => void; // this caused problems
   hiddenColumnNames?: Array<string>;

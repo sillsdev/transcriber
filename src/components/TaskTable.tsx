@@ -31,6 +31,7 @@ import MediaPlayer from './MediaPlayer';
 import { RoleNames, IMediaActionsStrings } from '../model';
 import { mediaActionsSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import { GridColumnExtension } from '@devexpress/dx-react-grid';
 
 export const TaskItemWidth = 240;
 
@@ -165,7 +166,9 @@ export function TaskTable(props: IProps) {
     { name: 'state', title: t.state },
     { name: 'assigned', title: t.assigned },
   ]);
-  const [columnFormatting, setColumnFormatting] = useState([
+  const [columnFormatting, setColumnFormatting] = useState<
+    GridColumnExtension[]
+  >([
     { columnName: 'composite', width: TaskItemWidth, align: 'left' },
     { columnName: 'play', width: 65, align: 'left' },
     { columnName: 'plan', width: 100, align: 'left', wordWrapEnabled: true },

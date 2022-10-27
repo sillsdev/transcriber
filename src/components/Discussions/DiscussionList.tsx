@@ -539,4 +539,6 @@ const mapRecordsToProps = {
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
 
-export default withData(mapRecordsToProps)(DiscussionList) as IProps;
+export default withData(mapRecordsToProps)(DiscussionList) as any as (
+  props: IProps
+) => JSX.Element;

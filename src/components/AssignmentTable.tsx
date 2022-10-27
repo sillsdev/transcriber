@@ -309,6 +309,7 @@ export function AssignmentTable(props: IProps) {
             treeColumn={'name'}
             showfilters={filter}
             showgroups={filter}
+            checks={check}
             select={handleCheck}
           />
         </PaddedBox>
