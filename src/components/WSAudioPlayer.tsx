@@ -99,6 +99,7 @@ interface IProps {
   onPlayStatus?: (playing: boolean) => void;
   onProgress?: (progress: number) => void;
   onSegmentChange?: (segments: string) => void;
+  onSegmentParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
   onBlobReady?: (blob: Blob) => void;
   setBlobReady?: (ready: boolean) => void;
   setChanged?: (changed: boolean) => void;
@@ -155,6 +156,7 @@ function WSAudioPlayer(props: IProps) {
     setAcceptedMimes,
     onProgress,
     onSegmentChange,
+    onSegmentParamChange,
     onPlayStatus,
     onBlobReady,
     setBlobReady,
@@ -582,13 +584,8 @@ function WSAudioPlayer(props: IProps) {
     setProgress(progress);
     if (onProgress) onProgress(progress);
   }
-  function onWSRegion(
-    count: number,
-    params: IRegionParams | undefined,
-    newRegion: boolean
-  ) {
+  function onWSRegion(count: number, newRegion: boolean) {
     setHasRegion(count);
-    setRegionParams(params);
     if (onSegmentChange && newRegion) onSegmentChange(wsGetRegions());
   }
   function onWSCanUndo(canUndo: boolean) {
@@ -677,6 +674,11 @@ function WSAudioPlayer(props: IProps) {
     setSilence(e.target.value);
   };
   const onSplit = (split: IRegionChange) => {};
+
+  const onParamChange = (params: IRegionParams, teamDefault: boolean) => {
+    setRegionParams(params);
+    onSegmentParamChange && onSegmentParamChange(params, teamDefault);
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -860,6 +862,7 @@ function WSAudioPlayer(props: IProps) {
                 <WSAudioPlayerSegment
                   ready={ready}
                   onSplit={onSplit}
+                  onParamChange={onParamChange}
                   loop={loopingRef.current || false}
                   playing={playing}
                   currentNumRegions={hasRegion}

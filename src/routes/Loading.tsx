@@ -98,6 +98,7 @@ export function Loading(props: IProps) {
   const [isDeveloper] = useGlobal('developer');
   const [, setPlan] = useGlobal('plan');
   const [, setOrganization] = useGlobal('organization');
+  const { setMyOrgRole } = useRole();
   const [, setProject] = useGlobal('project');
   const tokenCtx = useContext(TokenContext);
   const { accessToken, profile, isAuthenticated } = tokenCtx.state;
@@ -289,6 +290,7 @@ export function Loading(props: IProps) {
               setProject(projectId);
               const orgId = related(projRec, 'organization') as string;
               setOrganization(orgId);
+              setMyOrgRole(orgId);
             }
           }
         }

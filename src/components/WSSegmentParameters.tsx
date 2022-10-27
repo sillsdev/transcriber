@@ -7,9 +7,11 @@ import {
   DialogTitle,
   IconButton,
   SxProps,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
-import { IWsAudioPlayerSegmentStrings } from '../model';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { IWsAudioPlayerSegmentStrings, RoleNames } from '../model';
 import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
@@ -17,6 +19,7 @@ import { IRegionParams } from '../crud/useWavesurferRegions';
 import { AltButton, GrowingSpacer, IosSlider, PriButton } from '../control';
 import { wsAudioPlayerSegmentSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import { useGlobal } from 'reactn';
 
 const btnProp = { m: 1 } as SxProps;
 const rowProp = { display: 'flex' } as SxProps;
@@ -29,7 +32,7 @@ interface IProps {
   wsAutoSegment: (loop: boolean, params: IRegionParams) => number;
   isOpen: boolean;
   onOpen: (isOpen: boolean) => void;
-  onSave: (silence: number, silenceLen: number, segmentLen: number) => void;
+  onSave: (params: IRegionParams, teamDefault: boolean) => void;
   setBusy?: (value: boolean) => void;
 }
 
@@ -44,15 +47,19 @@ function WSSegmentParameters(props: IProps) {
     onSave,
     setBusy,
   } = props;
+  const [orgRole] = useGlobal('orgRole');
   const [silenceValue, setSilenceValue] = useState(0);
   const [timeValue, setTimeValue] = useState(0);
   const [segLength, setSegmentLen] = useState(0);
   const [numRegions, setNumRegions] = useState(currentNumRegions);
+  const [teamDefault, setTeamDefault] = useState(false);
   const applyingRef = useRef(false);
   const t: IWsAudioPlayerSegmentStrings = useSelector(
     wsAudioPlayerSegmentSelector,
     shallowEqual
   );
+
+  const isAdmin = useMemo(() => orgRole === RoleNames.Admin, [orgRole]);
 
   useEffect(() => {
     setNumRegions(currentNumRegions);
@@ -82,14 +89,13 @@ function WSSegmentParameters(props: IProps) {
   };
   const handleApply = () => {
     setApplying(true);
-    setNumRegions(
-      wsAutoSegment(loop, {
-        silenceThreshold: silenceValue / 1000,
-        timeThreshold: timeValue / 100,
-        segLenThreshold: segLength,
-      })
-    );
-    onSave(silenceValue / 1000, timeValue / 100, segLength);
+    const params = {
+      silenceThreshold: silenceValue / 1000,
+      timeThreshold: timeValue / 100,
+      segLenThreshold: segLength,
+    };
+    setNumRegions(wsAutoSegment(loop, params));
+    onSave(params, teamDefault);
     setApplying(false);
   };
 
@@ -200,6 +206,18 @@ function WSSegmentParameters(props: IProps) {
         >
           {t.close}
         </AltButton>
+        {isAdmin && (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={teamDefault}
+                onChange={(event) => setTeamDefault(event.target.checked)}
+                value="teamDefault"
+              />
+            }
+            label={'xTeam Default'}
+          />
+        )}
       </DialogActions>
     </Dialog>
   );

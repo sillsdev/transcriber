@@ -22,6 +22,7 @@ import {
   ProjectIntegration,
   RoleNames,
   IActivityStateStrings,
+  Organization,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import {
@@ -94,6 +95,9 @@ import { SectionPassageTitle } from '../control/SectionPassageTitle';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { activitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import PassageDetailPlayer from './PassageDetail/PassageDetailPlayer';
+import usePassageDetailContext from '../context/usePassageDetailContext';
+import { IRegionParams } from '../crud/useWavesurferRegions';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -236,6 +240,7 @@ export function Transcriber(props: IProps) {
     audioBlob,
     loading,
     artifactId,
+    isDetail,
   } = useTodo();
   const { slug } = useParams<ParamTypes>();
   const { safeURL } = useFetchMediaUrl();
@@ -255,6 +260,7 @@ export function Transcriber(props: IProps) {
   const [project] = useGlobal('project');
   const [projType] = useGlobal('projType');
   const [user] = useGlobal('user');
+  const [organization] = useGlobal('organization');
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
   const { accessToken } = useContext(TokenContext).state;
@@ -300,9 +306,15 @@ export function Transcriber(props: IProps) {
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
   const t = transcriberStr;
-  const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
+  const { playerSize, setPlayerSize } = usePassageDetailContext();
+  const [myPlayerSize, setMyPlayerSize] = useState(INIT_PLAYER_HEIGHT);
   const [style, setStyle] = useState({
     cursor: 'default',
+  });
+  const [segParams, setSegParams] = useState<IRegionParams>({
+    silenceThreshold: 0.004,
+    timeThreshold: 0.02,
+    segLenThreshold: 0.5,
   });
 
   const [artifactTypeSlug, setArtifactTypeSlug] = useState(slug);
@@ -367,6 +379,19 @@ export function Transcriber(props: IProps) {
   useEffect(() => {
     playingRef.current = playing;
   }, [playing]);
+
+  useEffect(() => {
+    const org = findRecord(
+      memory,
+      'organization',
+      organization
+    ) as Organization;
+    const json = JSON.parse(org.attributes.defaultParams ?? '{}');
+    if (json[NamedRegions.Transcription]) {
+      setSegParams(json[NamedRegions.Transcription]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organization]);
 
   useEffect(() => {
     setStyle({
@@ -467,10 +492,12 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     const headHeight = props.defaultWidth ? 120 : 0;
-    const newBoxHeight = height - (playerSize + 220) - headHeight;
+    const newBoxHeight = height - (myPlayerSize + 220) - headHeight;
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
+    if (setPlayerSize && playerSize !== myPlayerSize)
+      setPlayerSize(myPlayerSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [height, playerSize]);
+  }, [height, playerSize, myPlayerSize]);
 
   useEffect(() => {
     if (!selected) showTranscription({ transcription: '', position: 0 });
@@ -489,7 +516,7 @@ export function Transcriber(props: IProps) {
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediafiles]);
+  }, [mediafiles, mediafile]);
 
   useEffect(() => {
     if (autosaveTimer.current === undefined) {
@@ -947,8 +974,17 @@ export function Transcriber(props: IProps) {
 
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
+    setInitialSegments(segmentsRef.current);
     toolChanged(toolId, true);
   };
+  const onSegmentParamChange = (
+    params: IRegionParams,
+    teamDefault: boolean
+  ) => {
+    setSegParams(params);
+    if (teamDefault) console.log('SAVE THE TEAM DEFAULT');
+  };
+
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {
       focusOnTranscription();
@@ -960,7 +996,7 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleSplitSize = debounce((e: any) => {
-    setPlayerSize(e);
+    setMyPlayerSize(e);
   }, 50);
 
   const onPlayStatus = (newPlaying: boolean) => {
@@ -1046,38 +1082,51 @@ export function Transcriber(props: IProps) {
                         </Grid>
                       )}
                     <Grid item xs id="transcriberplayer">
-                      <Grid container justifyContent="center">
-                        <WSAudioPlayer
-                          id="audioPlayer"
-                          allowRecord={false}
+                      {isDetail ? (
+                        <PassageDetailPlayer
+                          allowSegment={NamedRegions.Transcription}
                           allowAutoSegment={true}
-                          allowSegment={
-                            selected !== '' && role !== 'view'
-                              ? NamedRegions.Transcription
-                              : undefined
-                          }
-                          allowZoom={true}
-                          allowSpeed={true}
-                          size={playerSize}
-                          blob={audioBlob}
-                          initialposition={defaultPosition}
-                          segments={initialSegments}
-                          isPlaying={playing}
-                          loading={loading}
-                          busy={trBusy}
-                          setBusy={setTrBusy}
-                          onProgress={onProgress}
-                          onSegmentChange={onSegmentChange}
-                          onPlayStatus={onPlayStatus}
-                          onDuration={onDuration}
-                          onInteraction={onInteraction}
-                          onSaveProgress={
-                            selected === '' || role === 'view'
-                              ? undefined
-                              : onSaveProgress
-                          }
+                          saveSegments={true}
+                          onSegment={onSegmentChange}
+                          onSegmentParamChange={onSegmentParamChange}
+                          defaultSegParams={segParams}
                         />
-                      </Grid>
+                      ) : (
+                        <Grid container justifyContent="center">
+                          <WSAudioPlayer
+                            id="audioPlayer"
+                            allowRecord={false}
+                            allowAutoSegment={true}
+                            defaultRegionParams={segParams}
+                            allowSegment={
+                              selected !== '' && role !== 'view'
+                                ? NamedRegions.Transcription
+                                : undefined
+                            }
+                            allowZoom={true}
+                            allowSpeed={true}
+                            size={myPlayerSize}
+                            blob={audioBlob}
+                            initialposition={defaultPosition}
+                            segments={initialSegments}
+                            isPlaying={playing}
+                            loading={loading}
+                            busy={trBusy}
+                            setBusy={setTrBusy}
+                            onProgress={onProgress}
+                            onSegmentChange={onSegmentChange}
+                            onSegmentParamChange={onSegmentParamChange}
+                            onPlayStatus={onPlayStatus}
+                            onDuration={onDuration}
+                            onInteraction={onInteraction}
+                            onSaveProgress={
+                              selected === '' || role === 'view'
+                                ? undefined
+                                : onSaveProgress
+                            }
+                          />
+                        </Grid>
+                      )}
                     </Grid>
                   </Grid>
                 </Pane>

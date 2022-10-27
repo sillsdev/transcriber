@@ -24,7 +24,8 @@ interface IProps extends IStateProps {
   params: IRegionParams;
   playing: boolean;
   onSplit: (split: IRegionChange) => void;
-  wsAutoSegment?: (loop: boolean, params: IRegionParams) => number;
+  onParamChange: (params: IRegionParams, teamDefault: boolean) => void;
+  wsAutoSegment: (loop: boolean, params: IRegionParams) => number;
   wsRemoveSplitRegion: (next?: boolean) => IRegionChange | undefined;
   wsAddOrRemoveRegion: () => IRegionChange | undefined;
   wsClearRegions: () => void;
@@ -40,6 +41,7 @@ function WSAudioPlayerSegment(props: IProps) {
     params,
     playing,
     onSplit,
+    onParamChange,
     wsAutoSegment,
     wsRemoveSplitRegion,
     wsAddOrRemoveRegion,
@@ -126,15 +128,11 @@ function WSAudioPlayerSegment(props: IProps) {
     return true;
   };
   const handleSegParamChange = (
-    silence: number,
-    silLen: number,
-    segLen: number
+    params: IRegionParams,
+    teamDefault: boolean
   ) => {
-    setSegParams({
-      silenceThreshold: silence,
-      timeThreshold: silLen,
-      segLenThreshold: segLen,
-    });
+    setSegParams(params);
+    onParamChange(params, teamDefault);
   };
   return (
     <GrowingDiv>

@@ -3,7 +3,11 @@ import { Button } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { IRegion, parseRegions } from '../../crud/useWavesurferRegions';
+import {
+  IRegion,
+  IRegionParams,
+  parseRegions,
+} from '../../crud/useWavesurferRegions';
 import WSAudioPlayer from '../WSAudioPlayer';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IWsAudioPlayerStrings, MediaFile } from '../../model';
@@ -17,7 +21,9 @@ interface IProps {
   saveSegments?: boolean;
   allowAutoSegment?: boolean;
   suggestedSegments?: string;
+  defaultSegParams?: IRegionParams;
   onSegment?: (segment: string) => void;
+  onSegmentParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
 }
 
 export function PassageDetailPlayer(props: IProps) {
@@ -26,7 +32,9 @@ export function PassageDetailPlayer(props: IProps) {
     allowAutoSegment,
     saveSegments,
     suggestedSegments,
+    defaultSegParams,
     onSegment,
+    onSegmentParamChange,
   } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
@@ -63,11 +71,7 @@ export function PassageDetailPlayer(props: IProps) {
     selected,
   } = ctx.state;
   const highlightRef = useRef(highlightDiscussion);
-  const defaultSegParams = {
-    silenceThreshold: 0.004,
-    timeThreshold: 0.12,
-    segLenThreshold: 4.5,
-  };
+
   const [defaultSegments, setDefaultSegments] = useState('{}');
 
   const segmentsRef = useRef('');
@@ -114,7 +118,7 @@ export function PassageDetailPlayer(props: IProps) {
                 id: mediafile.id,
                 attributes: {
                   segments: updateSegments(
-                    NamedRegions.BackTranslation,
+                    allowSegment ?? NamedRegions.BackTranslation,
                     mediafile.attributes?.segments,
                     segmentsRef.current
                   ),
@@ -242,6 +246,7 @@ export function PassageDetailPlayer(props: IProps) {
         onMarkerClick={handleHighlightDiscussion}
         setBusy={setPDBusy}
         onSegmentChange={onSegmentChange}
+        onSegmentParamChange={onSegmentParamChange}
         onPlayStatus={onPlayStatus}
         onInteraction={onInteraction}
         onCurrentSegment={onCurrentSegment}

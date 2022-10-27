@@ -196,7 +196,11 @@ export function PassageDetailItem(props: IProps) {
   const [recordType, setRecordType] = useState<ArtifactTypeSlug>(slugs[0]);
   const [currentVersion, setCurrentVersion] = useState(1);
   const cancelled = useRef(false);
-
+  const defaultSegParams = {
+    silenceThreshold: 0.004,
+    timeThreshold: 0.12,
+    segLenThreshold: 4.5,
+  };
   const toolId = 'RecordArtifactTool';
 
   const handleSplitSize = debounce((e: number) => {
@@ -362,6 +366,7 @@ export function PassageDetailItem(props: IProps) {
                       allowSegment={segments}
                       allowAutoSegment={segments !== undefined}
                       saveSegments={segments !== undefined}
+                      defaultSegParams={defaultSegParams}
                     />
                   </Pane>
                   {currentVersion !== 0 ? (

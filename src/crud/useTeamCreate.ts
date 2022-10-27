@@ -33,6 +33,7 @@ export const useTeamCreate = (props: IProps) => {
   const [coordinator] = useGlobal('coordinator');
   const [user] = useGlobal('user');
   const [, setOrganization] = useGlobal('organization');
+  const [, setOrgRole] = useGlobal('orgRole');
   const [, setProject] = useGlobal('project');
   const [, offlineOnly] = useGlobal('offlineOnly');
   const { showMessage } = useSnackBar();
@@ -111,6 +112,7 @@ export const useTeamCreate = (props: IProps) => {
     await OrgRelated(coordinator, orgRec, user);
 
     setOrganization(orgRec.id);
+    setOrgRole(RoleNames.Admin);
     setDefaultProj(orgRec.id, memory, setProject, setProjectType);
     return orgRec.id;
   };

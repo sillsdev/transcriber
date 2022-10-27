@@ -6,7 +6,6 @@ import { createWaveSurfer } from '../components/WSAudioPlugins';
 import { logError, Severity, waitForIt } from '../utils';
 import {
   IRegion,
-  IRegionParams,
   IRegions,
   parseRegions,
   useWaveSurferRegions,
@@ -27,11 +26,7 @@ export function useWaveSurfer(
   container: any,
   onReady: () => void = noop,
   onProgress: (progress: number) => void = noop1,
-  onRegion: (
-    count: number,
-    params: IRegionParams | undefined,
-    newRegion: boolean
-  ) => void = noop1,
+  onRegion: (count: number, newRegion: boolean) => void = noop1,
   onCanUndo: (canUndo: boolean) => void = noop1,
   onPlayStatus: (playing: boolean) => void = noop,
   onInteraction: () => void = noop,
@@ -565,7 +560,7 @@ export function useWaveSurfer(
 
     loadDecoded(uberSegment);
     wavesurfer()?.regions.clear();
-    onRegion(0, undefined, true);
+    onRegion(0, true);
     var tmp = start - 0.03;
     if (tmp < 0) tmp = 0;
     wsGoto(tmp);
