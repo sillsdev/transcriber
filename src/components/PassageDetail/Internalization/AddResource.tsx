@@ -78,7 +78,7 @@ export const AddResource = (props: IProps) => {
                 getOrganizedBy(true).toLocaleLowerCase()
               )}
             >
-              <InfoIcon fontSize="small" />
+              <InfoIcon />
             </LightTooltip>
           </ListItemText>
         </StyledMenuItem>
@@ -97,13 +97,10 @@ export const AddResource = (props: IProps) => {
                 getOrganizedBy(false).toLocaleLowerCase()
               )}
             >
-              <InfoIcon fontSize="small" />
+              <InfoIcon />
             </LightTooltip>
           </ListItemText>
         </StyledMenuItem>
-        {/* <StyledMenuItem id="activity" onClick={handle('activity')}>
-          <ListItemText primary={t.activity} />
-        </StyledMenuItem> */}
       </StyledMenu>
     </div>
   );

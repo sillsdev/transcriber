@@ -1,11 +1,4 @@
-import {
-  Box,
-  IconButton,
-  MenuItem,
-  Paper,
-  SxProps,
-  TextField,
-} from '@mui/material';
+import { Box, IconButton, Paper, SxProps, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
   IArtifactCategory,
@@ -19,7 +12,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
-import { LightTooltip } from '../../control';
+import { LightTooltip, StyledMenuItem } from '../../control';
 import { artifactCategorySelector } from '../../selector';
 
 interface IRecordProps {
@@ -158,12 +151,12 @@ export const SelectArtifactCategory = (props: IProps) => {
         {artifactCategorys
           .sort((i, j) => (i.category < j.category ? -1 : 1))
           .map((option: IArtifactCategory, i) => (
-            <MenuItem key={i} value={option.id}>
+            <StyledMenuItem key={i} value={option.id}>
               {option.category + '\u00A0\u00A0'}
               {scripture === ScriptureEnum.highlight ? (
                 scriptureTypeCategory(option.slug) ? (
                   <LightTooltip title={t.scriptureHighlight}>
-                    <InfoIcon sx={{ color: 'primary.light' }} />
+                    <InfoIcon />
                   </LightTooltip>
                 ) : (
                   <></>
@@ -171,14 +164,14 @@ export const SelectArtifactCategory = (props: IProps) => {
               ) : (
                 <></>
               )}
-            </MenuItem>
+            </StyledMenuItem>
           ))
           .concat(
             allowNew ? (
-              <MenuItem key={t.addNewCategory} value={t.addNewCategory}>
+              <StyledMenuItem key={t.addNewCategory} value={t.addNewCategory}>
                 {t.addNewCategory + '\u00A0\u00A0'}
                 <AddIcon />
-              </MenuItem>
+              </StyledMenuItem>
             ) : (
               <div key={'noNew'}></div>
             )
