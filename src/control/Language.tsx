@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import {
   TextField,
   Checkbox,
@@ -7,7 +7,6 @@ import {
   FormControlLabel,
   Box,
 } from '@mui/material';
-import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import { LanguagePicker } from 'mui-language-picker';
 import { TeamContext } from '../context/TeamContext';
 

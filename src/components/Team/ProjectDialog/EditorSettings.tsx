@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import {
   FormLabel,
   FormGroup,
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import { TeamContext } from '../../../context/TeamContext';
 import FontSize from '../../FontSize';
 import { IProjectDialogState } from './ProjectDialog';

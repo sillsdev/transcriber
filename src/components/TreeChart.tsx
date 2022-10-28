@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IGridStrings, ITreeChartStrings } from '../model';
-import { Paper, PaperProps, styled } from '@mui/material';
+import { Paper, PaperProps, styled, Typography } from '@mui/material';
 import { RowDetailState } from '@devexpress/dx-react-grid';
 import { scaleBand } from '@devexpress/dx-chart-core';
 import { ArgumentScale, Stack } from '@devexpress/dx-react-chart';
@@ -17,7 +17,6 @@ import {
   TableHeaderRow,
   TableRowDetail,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Typography } from '@material-ui/core';
 import { shallowEqual, useSelector } from 'react-redux';
 import { localizeGrid } from '../utils';
 import { gridSelector, treeChartSelector } from '../selector';
