@@ -1016,7 +1016,7 @@ export function Transcriber(props: IProps) {
                 split="horizontal"
                 onChange={handleSplitSize}
               >
-                <Pane>
+                <Pane className="pane">
                   <Grid
                     container
                     direction="row"
@@ -1081,7 +1081,7 @@ export function Transcriber(props: IProps) {
                     </Grid>
                   </Grid>
                 </Pane>
-                <Pane>
+                <Pane className="pane">
                   <Grid item xs={12} sm container>
                     <Grid
                       ref={transcriptionRef}

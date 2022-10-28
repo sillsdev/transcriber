@@ -14,7 +14,7 @@ interface StyledButtonProps extends ButtonProps {
   active?: boolean;
 }
 export const UndButton = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'noOnLeft',
+  shouldForwardProp: (prop) => prop !== 'active',
 })<StyledButtonProps>(({ active }) => ({
   ...(active && {
     textDecoration: 'underline',
