@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { UnsavedContext } from '../../context/UnsavedContext';

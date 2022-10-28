@@ -1,4 +1,3 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import {
   Discussion,
   Group,
@@ -17,49 +16,8 @@ import { connect } from 'react-redux';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { useMounted } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
+import { Box } from '@mui/material';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      flexFlow: 'column',
-      flexGrow: 1,
-    },
-
-    commentLine: {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    content: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      color: theme.palette.primary.contrastText,
-    },
-    name: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    container: {
-      display: 'flex',
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexGrow: 1,
-    },
-    column: {
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 'inherit',
-    },
-    avatar: {
-      margin: theme.spacing(1),
-    },
-  })
-);
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
   users: Array<User>;
@@ -82,7 +40,6 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 export const ReplyCard = (props: IProps) => {
   const { discussion, number, users, groups, memberships } = props;
   const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
-  const classes = useStyles();
   const [refresh, setRefresh] = useState(0);
   const isMounted = useMounted('replycard');
   const {
@@ -165,7 +122,7 @@ export const ReplyCard = (props: IProps) => {
   }, [canSaveRecording]);
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ display: 'flex', flexFlow: 'column', flexGrow: 1 }}>
       <CommentEditor
         toolId={myToolId}
         comment={commentText.current}
@@ -178,7 +135,7 @@ export const ReplyCard = (props: IProps) => {
         onTextChange={handleTextChange}
         cancelOnlyIfChanged={true}
       />
-    </div>
+    </Box>
   );
 };
 const mapRecordsToProps = {

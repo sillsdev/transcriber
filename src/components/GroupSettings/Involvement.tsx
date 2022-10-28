@@ -4,9 +4,9 @@ import { IState, Section, Plan, IGroupSettingsStrings } from '../../model';
 import localStrings from '../../selector/localize';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import { List, ListItem, ListItemText, Typography } from '@mui/material';
 import { related, useOrganizedBy } from '../../crud';
-import useStyles from './GroupSettingsStyles';
+import { detailProps } from './GroupSettingsStyles';
 import getPlan from './GetPlan';
 
 interface IPlanData {
@@ -30,7 +30,6 @@ interface IProps extends IStateProps, IRecordProps {
 function Involvement(props: IProps) {
   const { user, rev, t } = props;
   const { sections, plans } = props;
-  const classes = useStyles();
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(false));
 
@@ -59,12 +58,12 @@ function Involvement(props: IProps) {
   return (
     <>
       <Typography>{t.projectPlans}</Typography>
-      <List className={classes.detail}>
+      <List sx={detailProps}>
         {keys
           .sort((i, j) => (i <= j ? -1 : 1))
           .map((p) => {
             return (
-              <ListItem className={classes.detail}>
+              <ListItem sx={detailProps}>
                 <ListItemText
                   primary={
                     <>

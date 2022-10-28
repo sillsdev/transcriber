@@ -31,11 +31,17 @@ export const controlSelector = (state: IState) =>
 export const discussionCardSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'discussionCard' });
 
+export const discussionListSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'discussionList' });
+
 export const discussionMenuSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'discussionMenu' });
 
 export const filterMenuSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'filterMenu' });
+
+export const gridSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'grid' });
 
 export const groupSettingsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'groupSettings' });
@@ -120,6 +126,9 @@ export const transcribeRejectSelector = (state: IState) =>
 
 export const transcriptionTabSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'transcriptionTab' });
+
+export const treeChartSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'treeChart' });
 
 export const viewModeSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'viewMode' });

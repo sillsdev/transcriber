@@ -9,7 +9,7 @@ import {
   TableRow,
   Paper,
   IconButton,
-} from '@material-ui/core';
+} from '@mui/material';
 import UncheckedIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckedIcon from '@mui/icons-material/CheckBoxOutlined';
 import GroupDialog from './GroupDialog';

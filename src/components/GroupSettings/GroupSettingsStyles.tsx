@@ -1,66 +1,23 @@
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { FormLabel, FormLabelProps, styled, SxProps } from '@mui/material';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      paddingTop: theme.spacing(2),
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    paper: {
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      paddingLeft: theme.spacing(4),
-    },
-    group: {
-      paddingBottom: theme.spacing(3),
-    },
-    label: {
-      display: 'flex',
-      marginBottom: theme.spacing(1),
-      // color: theme.palette.primary.dark,
-    },
-    noProjects: {
-      marginLeft: theme.spacing(3),
-      marginRight: theme.spacing(3),
-      backgroundColor: theme.palette.grey[200],
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    dense: {
-      marginTop: 16,
-    },
-    actions: {
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-    addButton: {
-      marginRight: theme.spacing(2),
-    },
-    icon: {
-      marginLeft: theme.spacing(1),
-    },
-    detail: {
-      paddingTop: 0,
-      marginTop: 0,
-    },
-    avatar: {
-      alignSelf: 'start',
-    },
-    menu: {
-      width: 200,
-    },
+export const ContainerDiv = styled('div')(({ theme }) => ({
+  display: 'flex',
+  paddingTop: theme.spacing(2),
+}));
+
+export const PaperDiv = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  flexGrow: 1,
+  paddingLeft: theme.spacing(4),
+}));
+
+export const StyledFormLabel = styled(FormLabel)<FormLabelProps>(
+  ({ theme }) => ({
+    display: 'flex',
+    marginBottom: theme.spacing(1),
   })
 );
 
-export default useStyles;
+export const detailProps = { paddingTop: 0, marginTop: 0 } as SxProps;
+export const menuProps = { width: '200px' } as SxProps;

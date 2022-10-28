@@ -19,10 +19,10 @@ import {
   DialogActions,
   TextField,
   MenuItem,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { OptionType } from '../../model';
-import useStyles from './GroupSettingsStyles';
+import { menuProps } from './GroupSettingsStyles';
 import { addGroupMember, useRole } from '../../crud';
 import { UpdateRelatedRecord } from '../../model/baseModel';
 import { localizeRole } from '../../utils';
@@ -41,7 +41,6 @@ interface IProps extends IStateProps {
 
 function GroupMemberAdd(props: IProps) {
   const { open, role, orgPeople, t, ts, setOpen } = props;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [group] = useGlobal('group');
@@ -115,13 +114,9 @@ function GroupMemberAdd(props: IProps) {
           id="choos-group-member"
           select
           value={currentPerson}
-          className={classes.menu}
+          sx={menuProps}
           onChange={handleCommit}
-          SelectProps={{
-            MenuProps: {
-              className: classes.menu,
-            },
-          }}
+          SelectProps={{ MenuProps: { sx: menuProps } }}
           margin="normal"
           variant="filled"
           required

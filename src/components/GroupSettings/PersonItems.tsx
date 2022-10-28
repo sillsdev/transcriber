@@ -11,11 +11,10 @@ import {
   ListItemText,
   IconButton,
   Tooltip,
-} from '@material-ui/core';
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 import UserAvatar from '../UserAvatar';
-import useStyles from './GroupSettingsStyles';
 import Involvement from './Involvement';
 import { IPerson } from './TeamCol';
 
@@ -46,7 +45,6 @@ function PersonItems(props: IProps) {
     noDeleteInfo,
     noDeleteAllUsersInfo,
   } = props;
-  const classes = useStyles();
   const [orgRole] = useGlobal('orgRole');
 
   const handleDel = (id: string, name: string) => () => {
@@ -67,7 +65,7 @@ function PersonItems(props: IProps) {
               !detail && !ids.filter((id) => id.user === u.id)[0].canDelete
             }
           >
-            <ListItemAvatar className={classes.avatar}>
+            <ListItemAvatar sx={{ alignSelf: 'start' }}>
               <UserAvatar {...props} userRec={u} />
             </ListItemAvatar>
             <ListItemText

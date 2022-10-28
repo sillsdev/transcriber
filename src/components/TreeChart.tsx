@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { IGridStrings, IState, ITreeChartStrings } from '../model';
-import Paper from '@material-ui/core/Paper';
+import { IGridStrings, ITreeChartStrings } from '../model';
+import { Paper, PaperProps, styled, Typography } from '@mui/material';
 import { RowDetailState } from '@devexpress/dx-react-grid';
 import { scaleBand } from '@devexpress/dx-chart-core';
 import { ArgumentScale, Stack } from '@devexpress/dx-react-chart';
@@ -17,68 +17,50 @@ import {
   TableHeaderRow,
   TableRowDetail,
 } from '@devexpress/dx-react-grid-material-ui';
-import {
-  withStyles,
-  Theme,
-  createStyles,
-  makeStyles,
-} from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
-import localStrings from '../selector/localize';
-import { connect } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import { localizeGrid } from '../utils';
+import { gridSelector, treeChartSelector } from '../selector';
 
-const detailContainerStyles = (theme: Theme) =>
-  createStyles({
-    detailContainer: {
-      marginBottom: theme.spacing(3),
+const PREFIX = 'tg';
+const classes = {
+  detailContainer: `${PREFIX}-detailContainer`,
+  title: `${PREFIX}-title`,
+  paper: `${PREFIX}-paper`,
+  paper2: `${PREFIX}-paper2`,
+};
+const StyledDiv = styled('div')(({ theme }) => ({
+  [`&.${classes.detailContainer}`]: {
+    marginBottom: theme.spacing(3),
+  },
+  [`& .${classes.title}`]: {
+    color: theme.palette.text.primary,
+    fontSize: theme.typography.fontSize,
+  },
+  [`& .${classes.paper}`]: {
+    paddingTop: theme.spacing(3.5),
+  },
+  [`& .${classes.paper2}`]: {
+    paddingTop: theme.spacing(3.5),
+    '& #bottom-axis-container': {
+      visibility: 'hidden',
     },
-    title: {
-      color: theme.palette.text.primary,
-      fontSize: theme.typography.fontSize as any,
-    },
-    paper: {
-      paddingTop: theme.spacing(3.5),
-    },
-    paper2: {
-      paddingTop: theme.spacing(3.5),
-      '& #bottom-axis-container': {
-        visibility: 'hidden',
-      },
-    },
-  });
-const legendStyles = () =>
-  createStyles({
-    root: {
-      display: 'flex',
-      margin: 'auto',
-      flexDirection: 'row',
-    },
-  });
-const legendLabelStyles = () =>
-  createStyles({
-    label: {
-      whiteSpace: 'nowrap',
-    },
-  });
+  },
+}));
 
 const valueFormatter = ({ value }: any) => value;
 const AxisLabel = ({ text, ...restProps }: any) => (
   <ValueAxis.Label {...restProps} text={valueFormatter({ value: text })} />
 );
 
-const LegendRootBase = ({ classes, ...restProps }: any) => (
-  <Legend.Root {...restProps} className={classes.root} />
-);
-const LegendRoot: any = withStyles(legendStyles, { name: 'LegendRoot' })(
-  LegendRootBase
+const LegendRoot = (props: Legend.RootProps) => (
+  <Legend.Root
+    {...props}
+    sx={{ display: 'flex', margin: 'auto', flexDirection: 'row' }}
+  />
 );
 
-const LegendLabelBase = ({ classes, ...restProps }: any) => (
-  <Legend.Label className={classes.label} {...restProps} />
-);
-const LegendLabel: any = withStyles(legendLabelStyles, { name: 'LegendLabel' })(
-  LegendLabelBase
+const LegendLabel = (props: Legend.LabelProps) => (
+  <Legend.Label {...props} sx={{ whiteSpace: 'nowrap' }} />
 );
 
 const barSeriesForTask = (planwork: any) => {
@@ -128,7 +110,7 @@ const gridDetailContainerBase =
     }, []);
 
     return (
-      <div className={classes.detailContainer}>
+      <StyledDiv className={classes.detailContainer}>
         <h5 className={classes.title}>
           {t.contributions} {row.plan}
         </h5>
@@ -163,39 +145,22 @@ const gridDetailContainerBase =
             />
           </Chart>
         </Paper>
-      </div>
+      </StyledDiv>
     );
   };
-const gridDetailContainer: any = (
-  t: ITreeChartStrings,
-  data1: any,
-  data2: any
-) =>
-  withStyles(detailContainerStyles, { name: 'ChartContainer' })(
-    gridDetailContainerBase(t, data1, data2)
+
+const gridDetailContainer = (t: ITreeChartStrings, data1: any, data2: any) =>
+  gridDetailContainerBase(t, data1, data2);
+
+const NoDataCell = ({ value, style, tg, ...restProps }: any) => {
+  return (
+    <Table.Cell {...restProps} style={{ ...style }} value>
+      <Typography variant="h6" align="center">
+        {tg.noData}
+      </Typography>
+    </Table.Cell>
   );
-
-interface IStateProps {
-  t: ITreeChartStrings;
-  tg: IGridStrings;
-}
-
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'treeChart' }),
-  tg: localStrings(state, { layout: 'grid' }),
-});
-
-const NoDataCell = connect(mapStateToProps)(
-  ({ value, style, tg, ...restProps }: any) => {
-    return (
-      <Table.Cell {...restProps} style={{ ...style }} value>
-        <Typography variant="h6" align="center">
-          {tg.noData}
-        </Typography>
-      </Table.Cell>
-    );
-  }
-) as any;
+};
 
 export interface IPlanRow {
   plan: string;
@@ -212,31 +177,27 @@ export interface IWork {
   work: Array<ITargetWork>;
 }
 
-const useStyles = makeStyles({
-  root: {
-    '& .MuiTableRow-head': {
-      display: 'none',
-    },
+const ChartPaper = styled(Paper)<PaperProps>(() => ({
+  '& .MuiTableRow-head': {
+    display: 'none',
   },
-});
-interface IStateProps {
-  t: ITreeChartStrings;
-  tg: IGridStrings;
-}
-interface IProps extends IStateProps {
+}));
+
+interface IProps {
   rows: Array<IPlanRow>;
   data1: Array<IWork>;
   data2: Array<IWork>;
 }
 
 export const TreeChart = (props: IProps) => {
-  const { t, tg, rows, data1, data2 } = props;
-  const classes = useStyles();
+  const { rows, data1, data2 } = props;
   const [columns] = React.useState([{ name: 'plan', title: 'Plan' }]);
+  const t: ITreeChartStrings = useSelector(treeChartSelector, shallowEqual);
+  const tg: IGridStrings = useSelector(gridSelector, shallowEqual);
   const { localizeTableMessages } = localizeGrid(tg);
 
   return (
-    <Paper id="TreeChart" className={classes.root}>
+    <ChartPaper id="TreeChart">
       <Grid rows={rows} columns={columns}>
         {/* <RowDetailState defaultExpandedRowIds={[1]} /> */}
         <RowDetailState expandedRowIds={rows.map((v, i) => i)} />
@@ -249,7 +210,7 @@ export const TreeChart = (props: IProps) => {
           contentComponent={gridDetailContainer(t, data1, data2)}
         />
       </Grid>
-    </Paper>
+    </ChartPaper>
   );
 };
-export default connect(mapStateToProps)(TreeChart) as any as any;
+export default TreeChart;

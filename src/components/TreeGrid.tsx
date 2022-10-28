@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Paper from '@material-ui/core/Paper';
+import { Paper } from '@mui/material';
 import {
   Column,
   TreeDataState,
@@ -32,19 +32,11 @@ import {
   DragDropProvider,
 } from '@devexpress/dx-react-grid-material-ui';
 import { localizeGrid } from '../utils';
-import { IGridStrings, IState } from '../model';
-import localStrings from '../selector/localize';
-import { connect } from 'react-redux';
+import { IGridStrings } from '../model';
+import { shallowEqual, useSelector } from 'react-redux';
+import { gridSelector } from '../selector';
 
-interface IStateProps {
-  tg: IGridStrings;
-}
-
-const mapStateToProps = (state: IState): IStateProps => ({
-  tg: localStrings(state, { layout: 'grid' }),
-});
-
-interface IProps extends IStateProps {
+interface IProps {
   rows: Array<any>;
   columns: Array<Column>;
   columnWidths: Array<TableColumnWidthInfo>;
@@ -68,7 +60,6 @@ interface IProps extends IStateProps {
 
 function TreeGrid(props: IProps) {
   const {
-    tg,
     columns,
     columnWidths,
     rows,
@@ -88,12 +79,14 @@ function TreeGrid(props: IProps) {
     dataCell,
     noDataCell,
   } = props;
+  const tg: IGridStrings = useSelector(gridSelector, shallowEqual);
   const {
     localizeFilter,
     localizeGroupingPanel,
     localizePaging,
     localizeTableMessages,
   } = localizeGrid(tg);
+
   const handleSelect = (checks: Array<string | number>) => {
     if (select) {
       select(checks.map((c) => (typeof c === 'string' ? parseInt(c) : c)));
@@ -103,6 +96,7 @@ function TreeGrid(props: IProps) {
   const noCols = () => <></>;
   //const totalSummaryItems = [{ columnName: 'passages', type: 'count' }];
   //const groupSummaryItems = [{ columnName: 'passages', type: 'count' }];
+
   return (
     <Paper>
       <Grid rows={rows} columns={columns}>
@@ -226,4 +220,4 @@ function TreeGrid(props: IProps) {
     </Paper>
   );
 }
-export default connect(mapStateToProps)(TreeGrid) as any as any;
+export default TreeGrid;

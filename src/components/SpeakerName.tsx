@@ -11,7 +11,7 @@ import ProvideRights from './ProvideRights';
 import { communitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ArtifactTypeSlug, related } from '../crud';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 
 interface NameOptionType {
   inputValue?: string;

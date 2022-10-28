@@ -242,7 +242,7 @@ const PassageDetailGrids = () => {
                 split="vertical"
                 onChange={handleSplitSize}
               >
-                <Pane>
+                <Pane className="pane">
                   {tool === ToolSlug.Record && (
                     <Grid item sx={descProps} xs={12}>
                       <PassageDetailRecord />
@@ -269,7 +269,7 @@ const PassageDetailGrids = () => {
                   )}
                 </Pane>
                 {!topFilter && (
-                  <Pane>
+                  <Pane className="pane">
                     <Grid item xs={12} sm container>
                       <Grid item container direction="column">
                         <DiscussionList />

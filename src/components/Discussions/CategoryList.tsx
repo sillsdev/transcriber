@@ -10,7 +10,7 @@ import localStrings from '../../selector/localize';
 import QueryBuilder from '@orbit/data/dist/types/query-builder';
 import { connect } from 'react-redux';
 import { withData } from '../../mods/react-orbitjs';
-import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import SelectedIcon from '@mui/icons-material/CheckBoxOutlined';
 import NotSelectedIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { related, useDiscussionOrg } from '../../crud';

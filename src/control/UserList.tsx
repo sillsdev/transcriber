@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { User } from '../model';
-import { List } from '@material-ui/core';
+import { List } from '@mui/material';
 import { UserListItem } from '.';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';

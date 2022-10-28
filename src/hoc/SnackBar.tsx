@@ -1,7 +1,7 @@
 import { useState, useEffect, useGlobal } from 'reactn';
 import { Snackbar, IconButton, styled, BoxProps, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { useMounted } from '../utils';
 
 const Alert = (props: AlertProps) => {

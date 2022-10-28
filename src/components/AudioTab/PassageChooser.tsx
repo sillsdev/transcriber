@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import { IState, IMediaTabStrings, RoleNames } from '../../model';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import localStrings from '../../selector/localize';
-import { FormControlLabel, Switch, Radio } from '@material-ui/core';
+import { FormControlLabel, Switch, Radio } from '@mui/material';
 import ShapingTable from '../ShapingTable';
 import { useOrganizedBy } from '../../crud';
 import { IRow, IPRow } from '.';
+import { Sorting } from '@devexpress/dx-react-grid';
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -46,7 +47,7 @@ export const PassageChooser = (props: IProps) => {
     { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
     { columnName: 'reference', aligh: 'left', wordWrapEnabled: true },
   ];
-  const sorting = [{ columnName: 'sort', direction: 'asc' }];
+  const sorting: Sorting[] = [{ columnName: 'sort', direction: 'asc' }];
   const hiddenColumnNames = ['sort', 'attached'];
   const summaryItems = [{ columnName: 'reference', type: 'count' }];
   const [attachedFilter, setAttachedFilter] = useState({

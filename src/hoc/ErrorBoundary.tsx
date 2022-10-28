@@ -6,18 +6,12 @@ import localStrings from '../selector/localize';
 import { bindActionCreators } from 'redux';
 import * as actions from '../store';
 import {
-  withStyles,
-  WithStyles,
-  Theme,
-  createStyles,
-} from '@material-ui/core/styles';
-import {
   Typography,
-  Button,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-} from '@material-ui/core';
+  styled,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   logError,
@@ -28,44 +22,41 @@ import {
 } from '../utils';
 import { withBucket } from './withBucket';
 import Memory from '@orbit/memory';
+import { PriButton } from '../control';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    modal: {
-      position: 'fixed' /* Stay in place */,
-      zIndex: 1 /* Sit on top */,
-      paddingTop: '100px' /* Location of the box */,
-      left: 0,
-      top: 0,
-      width: '100%' /* Full width */,
-      height: '100%' /* Full height */,
-      overflow: 'auto' /* Enable scroll if needed */,
-      backgroundColor: 'rgba(0, 0, 0, 0.4)' /* Black w/ opacity */,
-    },
-    modalContent: {
-      backgroundColor: '#fefefe',
-      margin: 'auto',
-      padding: '20px',
-      border: '1px solid #888',
-      width: '80%',
-      height: '40%',
-      textAlign: 'center',
-      display: 'flex',
-      flexDirection: 'column',
-      '& #detail': {
-        textAlign: 'left',
-        fontSize: 'small',
-      },
-    },
-    modalActions: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-  });
+const ModalDiv = styled('div')(() => ({
+  position: 'fixed' /* Stay in place */,
+  zIndex: 1 /* Sit on top */,
+  paddingTop: '100px' /* Location of the box */,
+  left: 0,
+  top: 0,
+  width: '100%' /* Full width */,
+  height: '100%' /* Full height */,
+  overflow: 'auto' /* Enable scroll if needed */,
+  backgroundColor: 'rgba(0, 0, 0, 0.4)' /* Black w/ opacity */,
+}));
+
+const ModalContentDiv = styled('div')(() => ({
+  backgroundColor: '#fefefe',
+  margin: 'auto',
+  padding: '20px',
+  border: '1px solid #888',
+  width: '80%',
+  height: '40%',
+  textAlign: 'center',
+  display: 'flex',
+  flexDirection: 'column',
+  '& #detail': {
+    textAlign: 'left',
+    fontSize: 'small',
+  },
+}));
+
+const ModalActionsDiv = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+}));
 
 interface IStateProps {
   t: IMainStrings;
@@ -79,10 +70,7 @@ interface IDispatchProps {
   resetOrbitError: typeof actions.resetOrbitError;
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    WithStyles<typeof styles> {
+interface IProps extends IStateProps, IDispatchProps {
   errorReporter: any;
   memory: Memory;
   resetRequests: () => Promise<void>;
@@ -132,19 +120,13 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
   }
 
   render() {
-    const {
-      classes,
-      t,
-      orbitStatus,
-      orbitMessage,
-      orbitDetails,
-      errorReporter,
-    } = this.props;
+    const { t, orbitStatus, orbitMessage, orbitDetails, errorReporter } =
+      this.props;
 
     const modalMessage = (message: ReactElement | string, details?: string) => {
       return (
-        <div id="myModal" className={classes.modal} key={this.state.errCount}>
-          <div className={classes.modalContent}>
+        <ModalDiv id="myModal" key={this.state.errCount}>
+          <ModalContentDiv>
             <Typography>{t.crashMessage}</Typography>
             {message}
             {(details || this.state.details) && (
@@ -157,28 +139,18 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
                 </AccordionDetails>
               </Accordion>
             )}
-            <div className={classes.modalActions}>
+            <ModalActionsDiv>
               {orbitStatus !== 401 && (
-                <Button
-                  id="errCont"
-                  variant="contained"
-                  className={classes.button}
-                  onClick={this.continue}
-                >
+                <PriButton id="errCont" onClick={this.continue}>
                   {t.continue}
-                </Button>
+                </PriButton>
               )}
-              <Button
-                id="errLogout"
-                variant="contained"
-                className={classes.button}
-                onClick={this.logout}
-              >
+              <PriButton id="errLogout" onClick={this.logout}>
                 {t.logout}
-              </Button>
-            </div>
-          </div>
-        </div>
+              </PriButton>
+            </ModalActionsDiv>
+          </ModalContentDiv>
+        </ModalDiv>
       );
     };
     //this didn't work because resetorbiterror sent us off to loading and it never come back to where we wanted
@@ -246,6 +218,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ),
 });
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(withBucket(ErrorBoundary))
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withBucket(ErrorBoundary));

@@ -791,6 +791,7 @@ export function TranscriptionTab(props: IProps) {
             showgroups={filter}
             showSelection={false}
             defaultHiddenColumnNames={defaultHiddenColumnNames}
+            checks={[]}
           />
         </PaddedBox>
       </div>

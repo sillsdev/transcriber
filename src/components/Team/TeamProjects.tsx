@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { TeamContext } from '../../context/TeamContext';
 import { PersonalItem, TeamItem } from '.';
 import ImportTab from '../ImportTab';
