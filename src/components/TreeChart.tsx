@@ -86,7 +86,7 @@ const barSeriesForTask = (planwork: any) => {
 
 const gridDetailContainerBase =
   (t: ITreeChartStrings, data1: any, data2: any) =>
-  ({ row, classes }: any) => {
+  ({ row }: any) => {
     const planwork1 = data1.reduce((acc: any, item: any) => {
       const currentwork = item.work.reduce((current: any, itemTarget: any) => {
         let currentObj = {};
@@ -152,7 +152,9 @@ const gridDetailContainerBase =
 const gridDetailContainer = (t: ITreeChartStrings, data1: any, data2: any) =>
   gridDetailContainerBase(t, data1, data2);
 
-const NoDataCell = ({ value, style, tg, ...restProps }: any) => {
+const NoDataCell = ({ value, style, ...restProps }: any) => {
+  const tg: IGridStrings = useSelector(gridSelector, shallowEqual);
+
   return (
     <Table.Cell {...restProps} style={{ ...style }} value>
       <Typography variant="h6" align="center">
