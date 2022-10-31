@@ -25,6 +25,18 @@ export interface INamedRegion {
   name: string;
   regionInfo: IRegions;
 }
+export const parseRegionParams = (
+  regionstr: string,
+  defaultParams: IRegionParams | undefined
+) => {
+  if (!regionstr) return defaultParams;
+  var segs = JSON.parse(regionstr);
+  if (segs.params) {
+    if (segs.params.timeThreshold) return segs.params;
+  }
+  return defaultParams;
+};
+
 export const parseRegions = (regionstr: string) => {
   if (!regionstr) return { params: {}, regions: [] as IRegion[] } as IRegions;
   var segs = JSON.parse(regionstr);

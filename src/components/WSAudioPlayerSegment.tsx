@@ -23,6 +23,7 @@ interface IProps extends IStateProps {
   currentNumRegions: number;
   params: IRegionParams;
   playing: boolean;
+  canSetDefault?: boolean;
   onSplit: (split: IRegionChange) => void;
   onParamChange: (params: IRegionParams, teamDefault: boolean) => void;
   wsAutoSegment: (loop: boolean, params: IRegionParams) => number;
@@ -40,6 +41,7 @@ function WSAudioPlayerSegment(props: IProps) {
     currentNumRegions,
     params,
     playing,
+    canSetDefault,
     onSplit,
     onParamChange,
     wsAutoSegment,
@@ -168,6 +170,7 @@ function WSAudioPlayerSegment(props: IProps) {
               <WSSegmentParameters
                 loop={loop}
                 params={segParams}
+                canSetDefault={canSetDefault ?? false}
                 currentNumRegions={currentNumRegions}
                 wsAutoSegment={wsAutoSegment}
                 isOpen={showSettings && !playing}

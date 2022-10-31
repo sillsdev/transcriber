@@ -22,7 +22,6 @@ import {
   ProjectIntegration,
   RoleNames,
   IActivityStateStrings,
-  Organization,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import {
@@ -95,9 +94,9 @@ import { SectionPassageTitle } from '../control/SectionPassageTitle';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { activitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-import PassageDetailPlayer from './PassageDetail/PassageDetailPlayer';
 import usePassageDetailContext from '../context/usePassageDetailContext';
 import { IRegionParams } from '../crud/useWavesurferRegions';
+import { useOrgDefaults } from '../crud/useOrgDefaults';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -240,7 +239,6 @@ export function Transcriber(props: IProps) {
     audioBlob,
     loading,
     artifactId,
-    isDetail,
   } = useTodo();
   const { slug } = useParams<ParamTypes>();
   const { safeURL } = useFetchMediaUrl();
@@ -311,11 +309,14 @@ export function Transcriber(props: IProps) {
   const [style, setStyle] = useState({
     cursor: 'default',
   });
-  const [segParams, setSegParams] = useState<IRegionParams>({
+  const transcribeDefaultParams = {
     silenceThreshold: 0.004,
     timeThreshold: 0.02,
     segLenThreshold: 0.5,
-  });
+  };
+  const [segParams, setSegParams] = useState(transcribeDefaultParams);
+
+  const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
 
   const [artifactTypeSlug, setArtifactTypeSlug] = useState(slug);
   const { slugFromId } = useArtifactType();
@@ -381,15 +382,9 @@ export function Transcriber(props: IProps) {
   }, [playing]);
 
   useEffect(() => {
-    const org = findRecord(
-      memory,
-      'organization',
-      organization
-    ) as Organization;
-    const json = JSON.parse(org.attributes.defaultParams ?? '{}');
-    if (json[NamedRegions.Transcription]) {
-      setSegParams(json[NamedRegions.Transcription]);
-    }
+    var def = getOrgDefault(NamedRegions.Transcription);
+    if (def) setSegParams(def);
+    else setSegParams(transcribeDefaultParams);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organization]);
 
@@ -982,7 +977,7 @@ export function Transcriber(props: IProps) {
     teamDefault: boolean
   ) => {
     setSegParams(params);
-    if (teamDefault) console.log('SAVE THE TEAM DEFAULT');
+    if (teamDefault) setOrgDefault(NamedRegions.Transcription, params);
   };
 
   const onSaveProgress = (progress: number) => {
@@ -1082,51 +1077,41 @@ export function Transcriber(props: IProps) {
                         </Grid>
                       )}
                     <Grid item xs id="transcriberplayer">
-                      {isDetail ? (
-                        <PassageDetailPlayer
-                          allowSegment={NamedRegions.Transcription}
+                      <Grid container justifyContent="center">
+                        <WSAudioPlayer
+                          id="audioPlayer"
+                          allowRecord={false}
                           allowAutoSegment={true}
-                          saveSegments={true}
-                          onSegment={onSegmentChange}
+                          defaultRegionParams={segParams}
+                          canSetDefaultParams={canSetOrgDefault}
+                          allowSegment={
+                            selected !== '' && role !== 'view'
+                              ? NamedRegions.Transcription
+                              : undefined
+                          }
+                          allowZoom={true}
+                          allowSpeed={true}
+                          size={myPlayerSize}
+                          blob={audioBlob}
+                          initialposition={defaultPosition}
+                          segments={initialSegments}
+                          isPlaying={playing}
+                          loading={loading}
+                          busy={trBusy}
+                          setBusy={setTrBusy}
+                          onProgress={onProgress}
+                          onSegmentChange={onSegmentChange}
                           onSegmentParamChange={onSegmentParamChange}
-                          defaultSegParams={segParams}
+                          onPlayStatus={onPlayStatus}
+                          onDuration={onDuration}
+                          onInteraction={onInteraction}
+                          onSaveProgress={
+                            selected === '' || role === 'view'
+                              ? undefined
+                              : onSaveProgress
+                          }
                         />
-                      ) : (
-                        <Grid container justifyContent="center">
-                          <WSAudioPlayer
-                            id="audioPlayer"
-                            allowRecord={false}
-                            allowAutoSegment={true}
-                            defaultRegionParams={segParams}
-                            allowSegment={
-                              selected !== '' && role !== 'view'
-                                ? NamedRegions.Transcription
-                                : undefined
-                            }
-                            allowZoom={true}
-                            allowSpeed={true}
-                            size={myPlayerSize}
-                            blob={audioBlob}
-                            initialposition={defaultPosition}
-                            segments={initialSegments}
-                            isPlaying={playing}
-                            loading={loading}
-                            busy={trBusy}
-                            setBusy={setTrBusy}
-                            onProgress={onProgress}
-                            onSegmentChange={onSegmentChange}
-                            onSegmentParamChange={onSegmentParamChange}
-                            onPlayStatus={onPlayStatus}
-                            onDuration={onDuration}
-                            onInteraction={onInteraction}
-                            onSaveProgress={
-                              selected === '' || role === 'view'
-                                ? undefined
-                                : onSaveProgress
-                            }
-                          />
-                        </Grid>
-                      )}
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Pane>

@@ -43,6 +43,7 @@ import {
   IRegion,
   IRegionChange,
   IRegionParams,
+  parseRegionParams,
   parseRegions,
 } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
@@ -91,6 +92,7 @@ interface IProps {
   loading?: boolean;
   busy?: boolean;
   defaultRegionParams?: IRegionParams;
+  canSetDefaultParams?: boolean;
   doReset?: boolean;
   autoStart?: boolean;
   setBusy?: (busy: boolean) => void;
@@ -149,6 +151,7 @@ function WSAudioPlayer(props: IProps) {
     loading,
     busy,
     defaultRegionParams,
+    canSetDefaultParams,
     doReset,
     autoStart,
     setBusy,
@@ -181,9 +184,6 @@ function WSAudioPlayer(props: IProps) {
   const [looping, setLoopingx] = useState(false);
   const [hasRegion, setHasRegion] = useState(0);
   const [canUndo, setCanUndo] = useState(false);
-  const [regionParams, setRegionParams] = useState<IRegionParams | undefined>(
-    defaultRegionParams
-  );
   const recordStartPosition = useRef(0);
   const recordOverwritePosition = useRef<number | undefined>(undefined);
   const recordingRef = useRef(false);
@@ -478,16 +478,23 @@ function WSAudioPlayer(props: IProps) {
     if (segments !== segmentsRef.current) {
       segmentsRef.current = segments;
       if (ready && segmentsRef.current !== wsGetRegions()) {
-        wsLoadRegions(segments, loopingRef.current);
-        var region = parseRegions(segments);
-        if (region.regions.length) {
-          const start = region.regions[0].start;
-          wsGoto(start);
-        }
+        loadRegions();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [segments, looping]);
+
+  const loadRegions = () => {
+    wsLoadRegions(segmentsRef.current, loopingRef.current);
+    var region = parseRegions(segmentsRef.current);
+    if (region.regions.length) {
+      const start = region.regions[0].start;
+      wsGoto(start);
+    }
+    var params = parseRegionParams(segmentsRef.current, defaultRegionParams);
+    if (params && params !== defaultRegionParams && onSegmentParamChange)
+      onSegmentParamChange(params, false);
+  };
 
   useEffect(() => {
     onSaveProgressRef.current = onSaveProgress;
@@ -575,8 +582,8 @@ function WSAudioPlayer(props: IProps) {
   function onWSReady() {
     setReady(true);
     setDuration(wsDuration());
-    if (segmentsRef.current?.length > 2)
-      wsLoadRegions(segmentsRef.current, loopingRef.current);
+    if (segmentsRef.current?.length > 2) loadRegions();
+
     if (setBusy) setBusy(false);
     if (initialPosRef.current) wsGoto(initialPosRef.current);
   }
@@ -674,11 +681,6 @@ function WSAudioPlayer(props: IProps) {
     setSilence(e.target.value);
   };
   const onSplit = (split: IRegionChange) => {};
-
-  const onParamChange = (params: IRegionParams, teamDefault: boolean) => {
-    setRegionParams(params);
-    onSegmentParamChange && onSegmentParamChange(params, teamDefault);
-  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -856,17 +858,19 @@ function WSAudioPlayer(props: IProps) {
                     </LightTooltip>
                   )}
                   <GrowingSpacer />
+                  defaultRegionParams
                 </>
               )}
               {allowSegment && (
                 <WSAudioPlayerSegment
                   ready={ready}
                   onSplit={onSplit}
-                  onParamChange={onParamChange}
+                  onParamChange={onSegmentParamChange}
                   loop={loopingRef.current || false}
                   playing={playing}
                   currentNumRegions={hasRegion}
-                  params={regionParams}
+                  params={defaultRegionParams}
+                  canSetDefault={canSetDefaultParams}
                   wsAutoSegment={allowAutoSegment ? wsAutoSegment : undefined}
                   wsRemoveSplitRegion={wsRemoveSplitRegion}
                   wsAddOrRemoveRegion={wsAddOrRemoveRegion}

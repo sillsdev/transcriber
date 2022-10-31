@@ -22,6 +22,7 @@ interface IProps {
   allowAutoSegment?: boolean;
   suggestedSegments?: string;
   defaultSegParams?: IRegionParams;
+  canSetDefaultParams?: boolean;
   onSegment?: (segment: string) => void;
   onSegmentParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
 }
@@ -33,6 +34,7 @@ export function PassageDetailPlayer(props: IProps) {
     saveSegments,
     suggestedSegments,
     defaultSegParams,
+    canSetDefaultParams,
     onSegment,
     onSegmentParamChange,
   } = props;
@@ -240,6 +242,7 @@ export function PassageDetailPlayer(props: IProps) {
         allowSegment={allowSegment}
         allowAutoSegment={allowAutoSegment}
         defaultRegionParams={defaultSegParams}
+        canSetDefaultParams={canSetDefaultParams}
         segments={defaultSegments}
         currentSegmentIndex={currentSegmentIndex}
         markers={discussionMarkers}

@@ -10,8 +10,8 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { IWsAudioPlayerSegmentStrings, RoleNames } from '../model';
+import { useEffect, useRef, useState } from 'react';
+import { IWsAudioPlayerSegmentStrings } from '../model';
 import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
@@ -19,7 +19,6 @@ import { IRegionParams } from '../crud/useWavesurferRegions';
 import { AltButton, GrowingSpacer, IosSlider, PriButton } from '../control';
 import { wsAudioPlayerSegmentSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-import { useGlobal } from 'reactn';
 
 const btnProp = { m: 1 } as SxProps;
 const rowProp = { display: 'flex' } as SxProps;
@@ -30,6 +29,7 @@ interface IProps {
   params: IRegionParams;
   currentNumRegions: number;
   wsAutoSegment: (loop: boolean, params: IRegionParams) => number;
+  canSetDefault: boolean;
   isOpen: boolean;
   onOpen: (isOpen: boolean) => void;
   onSave: (params: IRegionParams, teamDefault: boolean) => void;
@@ -42,12 +42,13 @@ function WSSegmentParameters(props: IProps) {
     params,
     currentNumRegions,
     wsAutoSegment,
+    canSetDefault,
     isOpen,
     onOpen,
     onSave,
     setBusy,
   } = props;
-  const [orgRole] = useGlobal('orgRole');
+
   const [silenceValue, setSilenceValue] = useState(0);
   const [timeValue, setTimeValue] = useState(0);
   const [segLength, setSegmentLen] = useState(0);
@@ -59,8 +60,6 @@ function WSSegmentParameters(props: IProps) {
     shallowEqual
   );
 
-  const isAdmin = useMemo(() => orgRole === RoleNames.Admin, [orgRole]);
-
   useEffect(() => {
     setNumRegions(currentNumRegions);
   }, [currentNumRegions]);
@@ -71,6 +70,10 @@ function WSSegmentParameters(props: IProps) {
     setSegmentLen(params.segLenThreshold);
   }, [params]);
 
+  const handleTeamCheck = (value: boolean) => {
+    setTeamDefault(value);
+    onSave(params, value);
+  };
   const handleSilenceChange = (event: Event, value: number | number[]) => {
     if (Array.isArray(value)) value = value[0];
     setSilenceValue(value);
@@ -206,12 +209,12 @@ function WSSegmentParameters(props: IProps) {
         >
           {t.close}
         </AltButton>
-        {isAdmin && (
+        {canSetDefault && (
           <FormControlLabel
             control={
               <Checkbox
                 checked={teamDefault}
-                onChange={(event) => setTeamDefault(event.target.checked)}
+                onChange={(event) => handleTeamCheck(event.target.checked)}
                 value="teamDefault"
               />
             }
