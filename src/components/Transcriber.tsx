@@ -55,6 +55,7 @@ import {
   ArtifactTypeSlug,
   useArtifactType,
   findRecord,
+  useOrgDefaults,
 } from '../crud';
 import {
   insertAtCursor,
@@ -96,7 +97,6 @@ import { activitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import usePassageDetailContext from '../context/usePassageDetailContext';
 import { IRegionParams } from '../crud/useWavesurferRegions';
-import { useOrgDefaults } from '../crud/useOrgDefaults';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 

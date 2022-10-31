@@ -27,9 +27,11 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArtifactTypeSlug,
   findRecord,
+  IRegionParams,
   related,
   useArtifactType,
   useFetchMediaUrl,
+  useOrgDefaults,
 } from '../../crud';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import * as actions from '../../store';
@@ -53,8 +55,6 @@ import Confirm from '../AlertDialog';
 import Uploader from '../Uploader';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import { GrowingSpacer, LightTooltip, PriButton } from '../../control';
-import { IRegionParams } from '../../crud/useWavesurferRegions';
-import { useOrgDefaults } from '../../crud/useOrgDefaults';
 
 const PlayerRow = styled('div')(() => ({
   width: '100%',
