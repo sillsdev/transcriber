@@ -7,6 +7,8 @@ import {
   DialogTitle,
   IconButton,
   SxProps,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { IWsAudioPlayerSegmentStrings } from '../model';
@@ -27,9 +29,10 @@ interface IProps {
   params: IRegionParams;
   currentNumRegions: number;
   wsAutoSegment: (loop: boolean, params: IRegionParams) => number;
+  canSetDefault: boolean;
   isOpen: boolean;
   onOpen: (isOpen: boolean) => void;
-  onSave: (silence: number, silenceLen: number, segmentLen: number) => void;
+  onSave: (params: IRegionParams, teamDefault: boolean) => void;
   setBusy?: (value: boolean) => void;
 }
 
@@ -39,15 +42,18 @@ function WSSegmentParameters(props: IProps) {
     params,
     currentNumRegions,
     wsAutoSegment,
+    canSetDefault,
     isOpen,
     onOpen,
     onSave,
     setBusy,
   } = props;
+
   const [silenceValue, setSilenceValue] = useState(0);
   const [timeValue, setTimeValue] = useState(0);
   const [segLength, setSegmentLen] = useState(0);
   const [numRegions, setNumRegions] = useState(currentNumRegions);
+  const [teamDefault, setTeamDefault] = useState(false);
   const applyingRef = useRef(false);
   const t: IWsAudioPlayerSegmentStrings = useSelector(
     wsAudioPlayerSegmentSelector,
@@ -64,6 +70,10 @@ function WSSegmentParameters(props: IProps) {
     setSegmentLen(params.segLenThreshold);
   }, [params]);
 
+  const handleTeamCheck = (value: boolean) => {
+    setTeamDefault(value);
+    onSave(params, value);
+  };
   const handleSilenceChange = (event: Event, value: number | number[]) => {
     if (Array.isArray(value)) value = value[0];
     setSilenceValue(value);
@@ -82,14 +92,13 @@ function WSSegmentParameters(props: IProps) {
   };
   const handleApply = () => {
     setApplying(true);
-    setNumRegions(
-      wsAutoSegment(loop, {
-        silenceThreshold: silenceValue / 1000,
-        timeThreshold: timeValue / 100,
-        segLenThreshold: segLength,
-      })
-    );
-    onSave(silenceValue / 1000, timeValue / 100, segLength);
+    const params = {
+      silenceThreshold: silenceValue / 1000,
+      timeThreshold: timeValue / 100,
+      segLenThreshold: segLength,
+    };
+    setNumRegions(wsAutoSegment(loop, params));
+    onSave(params, teamDefault);
     setApplying(false);
   };
 
@@ -200,6 +209,18 @@ function WSSegmentParameters(props: IProps) {
         >
           {t.close}
         </AltButton>
+        {canSetDefault && (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={teamDefault}
+                onChange={(event) => handleTeamCheck(event.target.checked)}
+                value="teamDefault"
+              />
+            }
+            label={t.teamDefault}
+          />
+        )}
       </DialogActions>
     </Dialog>
   );

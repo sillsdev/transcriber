@@ -55,6 +55,7 @@ import {
   ArtifactTypeSlug,
   useArtifactType,
   findRecord,
+  useOrgDefaults,
 } from '../crud';
 import {
   insertAtCursor,
@@ -94,6 +95,8 @@ import { SectionPassageTitle } from '../control/SectionPassageTitle';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { activitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import usePassageDetailContext from '../context/usePassageDetailContext';
+import { IRegionParams } from '../crud/useWavesurferRegions';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -255,6 +258,7 @@ export function Transcriber(props: IProps) {
   const [project] = useGlobal('project');
   const [projType] = useGlobal('projType');
   const [user] = useGlobal('user');
+  const [organization] = useGlobal('organization');
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
   const { accessToken } = useContext(TokenContext).state;
@@ -300,10 +304,19 @@ export function Transcriber(props: IProps) {
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
   const t = transcriberStr;
-  const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
+  const { playerSize, setPlayerSize } = usePassageDetailContext();
+  const [myPlayerSize, setMyPlayerSize] = useState(INIT_PLAYER_HEIGHT);
   const [style, setStyle] = useState({
     cursor: 'default',
   });
+  const transcribeDefaultParams = {
+    silenceThreshold: 0.004,
+    timeThreshold: 0.02,
+    segLenThreshold: 0.5,
+  };
+  const [segParams, setSegParams] = useState(transcribeDefaultParams);
+
+  const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
 
   const [artifactTypeSlug, setArtifactTypeSlug] = useState(slug);
   const { slugFromId } = useArtifactType();
@@ -367,6 +380,13 @@ export function Transcriber(props: IProps) {
   useEffect(() => {
     playingRef.current = playing;
   }, [playing]);
+
+  useEffect(() => {
+    var def = getOrgDefault(NamedRegions.Transcription);
+    if (def) setSegParams(def);
+    else setSegParams(transcribeDefaultParams);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organization]);
 
   useEffect(() => {
     setStyle({
@@ -467,10 +487,12 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     const headHeight = props.defaultWidth ? 120 : 0;
-    const newBoxHeight = height - (playerSize + 220) - headHeight;
+    const newBoxHeight = height - (myPlayerSize + 220) - headHeight;
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
+    if (setPlayerSize && playerSize !== myPlayerSize)
+      setPlayerSize(myPlayerSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [height, playerSize]);
+  }, [height, playerSize, myPlayerSize]);
 
   useEffect(() => {
     if (!selected) showTranscription({ transcription: '', position: 0 });
@@ -489,7 +511,7 @@ export function Transcriber(props: IProps) {
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediafiles]);
+  }, [mediafiles, mediafile]);
 
   useEffect(() => {
     if (autosaveTimer.current === undefined) {
@@ -947,8 +969,17 @@ export function Transcriber(props: IProps) {
 
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
+    setInitialSegments(segmentsRef.current);
     toolChanged(toolId, true);
   };
+  const onSegmentParamChange = (
+    params: IRegionParams,
+    teamDefault: boolean
+  ) => {
+    setSegParams(params);
+    if (teamDefault) setOrgDefault(NamedRegions.Transcription, params);
+  };
+
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {
       focusOnTranscription();
@@ -960,7 +991,7 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleSplitSize = debounce((e: any) => {
-    setPlayerSize(e);
+    setMyPlayerSize(e);
   }, 50);
 
   const onPlayStatus = (newPlaying: boolean) => {
@@ -1051,6 +1082,8 @@ export function Transcriber(props: IProps) {
                           id="audioPlayer"
                           allowRecord={false}
                           allowAutoSegment={true}
+                          defaultRegionParams={segParams}
+                          canSetDefaultParams={canSetOrgDefault}
                           allowSegment={
                             selected !== '' && role !== 'view'
                               ? NamedRegions.Transcription
@@ -1058,7 +1091,7 @@ export function Transcriber(props: IProps) {
                           }
                           allowZoom={true}
                           allowSpeed={true}
-                          size={playerSize}
+                          size={myPlayerSize}
                           blob={audioBlob}
                           initialposition={defaultPosition}
                           segments={initialSegments}
@@ -1068,6 +1101,7 @@ export function Transcriber(props: IProps) {
                           setBusy={setTrBusy}
                           onProgress={onProgress}
                           onSegmentChange={onSegmentChange}
+                          onSegmentParamChange={onSegmentParamChange}
                           onPlayStatus={onPlayStatus}
                           onDuration={onDuration}
                           onInteraction={onInteraction}

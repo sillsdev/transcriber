@@ -279,11 +279,11 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
 
   return (
     <div>
-      {recordAudio && !importList && (
+      {recordAudio && ready && !importList && (
         <PassageRecordDlg
           visible={isOpen}
           onVisible={onOpen}
-          mediaId={mediaId || ''}
+          mediaId={mediaId ?? ''}
           uploadMethod={uploadMedia}
           onCancel={uploadCancel}
           metaData={metaData}

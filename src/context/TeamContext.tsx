@@ -252,12 +252,14 @@ const TeamProvider = withData(mapRecordsToProps)(
     const { setProjectType } = useProjectType();
     const { getPlan } = usePlan();
     const LoadData = useLoadProjectData(t, doOrbitError, resetOrbitError);
+    const { setMyOrgRole } = useRole();
 
     const setProjectParams = (plan: Plan) => {
       const projectId = related(plan, 'project');
       const team = vProject(plan);
       const orgId = related(team, 'organization');
       setOrganization(orgId);
+      setMyOrgRole(orgId);
       setProject(projectId);
       setProjectType(projectId);
       setPlan(plan.id);
@@ -397,6 +399,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       setOrganization('');
       setProject('');
       setPlan('');
+      setMyOrgRole('');
     };
 
     const teamCreate = (

@@ -27,9 +27,11 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArtifactTypeSlug,
   findRecord,
+  IRegionParams,
   related,
   useArtifactType,
   useFetchMediaUrl,
+  useOrgDefaults,
 } from '../../crud';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import * as actions from '../../store';
@@ -155,6 +157,7 @@ export function PassageDetailItem(props: IProps) {
   const { t, ts, width, slugs, segments, showTopic } = props;
   const [reporter] = useGlobal('errorReporter');
   const [projRole] = useGlobal('projRole');
+  const [organization] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
@@ -195,9 +198,25 @@ export function PassageDetailItem(props: IProps) {
   const { showMessage } = useSnackBar();
   const [recordType, setRecordType] = useState<ArtifactTypeSlug>(slugs[0]);
   const [currentVersion, setCurrentVersion] = useState(1);
-  const cancelled = useRef(false);
 
+  const cancelled = useRef(false);
+  const btDefaultSegParams = {
+    silenceThreshold: 0.004,
+    timeThreshold: 0.12,
+    segLenThreshold: 4.5,
+  };
+  const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
+  const [segParams, setSegParams] = useState<IRegionParams>(btDefaultSegParams);
   const toolId = 'RecordArtifactTool';
+
+  useEffect(() => {
+    if (segments) {
+      var def = getOrgDefault(segments);
+      if (def) setSegParams(def);
+      else setSegParams(btDefaultSegParams);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organization]);
 
   const handleSplitSize = debounce((e: number) => {
     setDiscussionSize({ width: width - e, height: discussionSize.height });
@@ -337,6 +356,13 @@ export function PassageDetailItem(props: IProps) {
       setCommentPlaying(false);
     }
   };
+  const onSegmentParamChange = (
+    params: IRegionParams,
+    teamDefault: boolean
+  ) => {
+    setSegParams(params);
+    if (teamDefault && segments) setOrgDefault(segments, params);
+  };
 
   return (
     <div>
@@ -362,6 +388,9 @@ export function PassageDetailItem(props: IProps) {
                       allowSegment={segments}
                       allowAutoSegment={segments !== undefined}
                       saveSegments={segments !== undefined}
+                      defaultSegParams={segParams}
+                      canSetDefaultParams={canSetOrgDefault}
+                      onSegmentParamChange={onSegmentParamChange}
                     />
                   </Pane>
                   {currentVersion !== 0 ? (

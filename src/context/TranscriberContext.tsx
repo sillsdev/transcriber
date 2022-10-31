@@ -137,6 +137,7 @@ const initState = {
   setTrBusy: (trBusy: boolean) => {},
   flat: false,
   artifactId: null as string | null,
+  isDetail: false,
 };
 
 export type ICtxState = typeof initState;
@@ -202,6 +203,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       transcriberStr,
       projButtonStr,
       sharedStr,
+      isDetail,
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const { getTypeId } = useArtifactType();

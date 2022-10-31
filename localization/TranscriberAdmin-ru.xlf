@@ -6283,6 +6283,12 @@
 				<target>Добавить/удалить границу [двойной щелчок/{0}]</target>
 			</segment>
 		</unit>
+      <unit id="wsAudioPlayerSegment.teamDefault">
+         <segment>
+            <source>Save as Team Default</source>
+            <target>Сохранить как команду по умолчанию</target>
+         </segment>
+      </unit>
 		<unit id="wsAudioPlayerZoom.fitToWidth">
 			<segment>
 				<source>Fit to Width</source>

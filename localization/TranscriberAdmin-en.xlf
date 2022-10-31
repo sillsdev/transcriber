@@ -6286,6 +6286,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayerSegment.teamDefault">
+         <segment>
+            <source>Save as Team Default</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayerZoom.fitToWidth">
          <segment>
             <source>Fit to Width</source>

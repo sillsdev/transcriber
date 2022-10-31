@@ -6283,6 +6283,12 @@
 				<target>Adicionar/Remover Limite [Clique Duplo/{0}]</target>
 			</segment>
 		</unit>
+      <unit id="wsAudioPlayerSegment.teamDefault">
+         <segment>
+            <source>Save as Team Default</source>
+            <target>Salvar como padrão da equipe</target>
+         </segment>
+      </unit>
 		<unit id="wsAudioPlayerZoom.fitToWidth">
 			<segment>
 				<source>Fit to Width</source>

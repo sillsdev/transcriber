@@ -7331,6 +7331,13 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="wsAudioPlayerSegment.teamDefault">
+            <source>Save as Team Default</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="wsAudioPlayerZoom.fitToWidth">
             <source>Fit to Width</source>
             <target/>
