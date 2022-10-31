@@ -1283,6 +1283,7 @@ export interface IWsAudioPlayerSegmentStrings extends Localize.LocalizedStringsM
     "silenceLength": string;
     "silenceThreshold": string;
     "splitSegment": string;
+    "teamDefault": string;
 };
 
 export interface IWsAudioPlayerZoomStrings extends Localize.LocalizedStringsMethods {

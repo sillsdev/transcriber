@@ -1367,6 +1367,7 @@ const initialState = {
 			"silenceLength": "Minimum Length of Silence (100ths second)",
 			"silenceThreshold": "Silence Threshold (1000th dB)",
 			"splitSegment": "Add/Remove Boundary [Double Click/{0}]",
+			"teamDefault": "Save as Team Default",
 		}
 	}),
 	"wsAudioPlayerZoom": new LocalizedStrings({

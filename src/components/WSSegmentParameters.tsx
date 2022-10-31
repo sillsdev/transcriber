@@ -218,7 +218,7 @@ function WSSegmentParameters(props: IProps) {
                 value="teamDefault"
               />
             }
-            label={'xTeam Default'}
+            label={t.teamDefault}
           />
         )}
       </DialogActions>
