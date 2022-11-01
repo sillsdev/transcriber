@@ -724,7 +724,7 @@ export function TranscriptionTab(props: IProps) {
               {t.copyTranscriptions +
                 (localizedArtifact ? ' (' + localizedArtifact + ')' : '')}
             </AltButton>
-            {step && false && (
+            {step && (
               <AudioExportMenu
                 key="audioexport"
                 action={handleAudioExportMenu}
