@@ -858,7 +858,6 @@ function WSAudioPlayer(props: IProps) {
                     </LightTooltip>
                   )}
                   <GrowingSpacer />
-                  defaultRegionParams
                 </>
               )}
               {allowSegment && (
