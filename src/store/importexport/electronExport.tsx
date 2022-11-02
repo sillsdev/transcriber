@@ -502,7 +502,7 @@ export async function electronExport(
               q.findRecords(info.table)
             ) as MediaFile[];
             var ipmedia = media.filter((m) => ip.includes(m.id));
-            return tmp.concat(ipmedia);
+            return tmp.concat(FromMedia(ipmedia, needsRemoteIds));
           }
           return tmp;
 
