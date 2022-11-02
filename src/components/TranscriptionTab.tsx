@@ -264,20 +264,6 @@ export function TranscriptionTab(props: IProps) {
     ) as Plan[];
 
     var projectplans = plans.filter((pl) => related(pl, 'project') === project);
-    let media: MediaFile[] = getMediaInPlans(
-      projectplans.map((p) => p.id),
-      mediaFiles,
-      VernacularTag,
-      true
-    );
-    const attached = media
-      .map((m) => related(m, 'passage'))
-      .filter((p) => p && p !== '');
-    if (!attached.length) {
-      showMessage(t.incompletePlan);
-      setBusy(false);
-      return;
-    }
     /* get correct count */
     const onlyTypeId = [ExportType.DBL, ExportType.BURRITO].includes(exportType)
       ? VernacularTag
@@ -285,7 +271,7 @@ export function TranscriptionTab(props: IProps) {
       ? getTypeId(artifactType)
       : undefined;
     const onlyLatest = onlyTypeId !== undefined;
-    media = getMediaInPlans(
+    let media = getMediaInPlans(
       projectplans.map((p) => p.id),
       mediaFiles,
       onlyTypeId,

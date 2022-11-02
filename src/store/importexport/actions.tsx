@@ -183,11 +183,12 @@ export const exportProject =
                 });
                 break;
               default:
+                var pct = Math.min(
+                  Math.round(start / (numberOfMedia + 15)) * 100,
+                  85
+                );
                 dispatch({
-                  payload: pendingmsg.replace(
-                    '{0}',
-                    Math.round((start / (numberOfMedia + 15)) * 100).toString()
-                  ),
+                  payload: pendingmsg.replace('{0}', pct.toString()),
                   type: EXPORT_PENDING,
                 });
             }
