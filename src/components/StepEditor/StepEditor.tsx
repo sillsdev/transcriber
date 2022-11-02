@@ -117,7 +117,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   const handleSortEnd = ({ oldIndex, newIndex }: SortEndProps) => {
     setToolSettingsRow(-1);
     let newRows = arrayMove(rows, oldIndex, newIndex).map((r, i) =>
-      r.seq !== i ? { ...r, seq: i } : r
+      r.seq !== -1 && r.seq !== i ? { ...r, seq: i } : r
     );
     setRows(newRows);
     toolChanged(toolId, true);
