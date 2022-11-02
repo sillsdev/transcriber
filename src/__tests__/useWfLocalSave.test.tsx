@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { setGlobal } from 'reactn';
-import { Section, Passage, IWorkflow, IwfKind } from '../model';
+import { Section, Passage, IWorkflow, IwfKind, IMediaShare } from '../model';
 import { DataProvider } from '../mods/react-orbitjs';
 import { useWfLocalSave } from '../components/Workflow';
 import { memory } from '../schema';
@@ -69,6 +69,7 @@ test('save one section and one passage', async () => {
       reference: '4:1-13',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
   ];
 
@@ -110,6 +111,7 @@ test('delete one section and one passage', async () => {
       passageId: { type: 'passage', id: 'pa1' },
       passageUpdated: '2021-09-22',
       deleted: true,
+      mediaShared: IMediaShare.NotPublic,
     },
   ];
 
@@ -152,6 +154,7 @@ test('update section and passage', async () => {
       passageId: { type: 'passage', id: 'pa1' },
       passageUpdated: '2021-09-22',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
   ];
 
@@ -162,7 +165,6 @@ test('update section and passage', async () => {
       attributes: {
         sequencenum: 2,
         name: 'old title',
-        state: 'old state',
         dateCreated: '2021-09-21',
         dateUpdated: '2021-09-21',
         lastModifiedBy: 1,
@@ -227,6 +229,7 @@ test('no update if same date', async () => {
       passageId: { type: 'passage', id: 'pa1' },
       passageUpdated: '2021-09-22',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
   ];
 
@@ -237,7 +240,6 @@ test('no update if same date', async () => {
       attributes: {
         sequencenum: 2,
         name: 'old title',
-        state: 'old state',
         dateCreated: '2021-09-21',
         dateUpdated: '2021-09-21',
         lastModifiedBy: 1,
