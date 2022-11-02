@@ -31,11 +31,6 @@ export const TeamScreen = () => {
     if (project !== '' && projRole) {
       const remProjId = remoteId('plan', plan, memory.keyMap);
       const loc = `/plan/${remProjId || plan}/0`;
-      /*
-        projRole === RoleNames.Admin && (!isOffline || offlineOnly)
-          ? `/plan/${remProjId || plan}/0`
-          : `/work/${remProjId || plan}`;
-          */
       if (loc !== localStorage.getItem(localUserKey(LocalKey.url))) {
         setView(loc);
       } else {
