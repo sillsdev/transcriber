@@ -832,7 +832,7 @@ export const DiscussionCard = (props: IProps) => {
                   sx={lightButton}
                   disabled={editSubject === ''}
                 >
-                  {t.addComment}
+                  {discussion.id ? ts.save : t.addComment}
                 </Button>
                 <Button
                   id={`cancel-${discussion.id}`}
