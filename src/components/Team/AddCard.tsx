@@ -306,10 +306,7 @@ export const AddCard = (props: IProps) => {
       // Allow time for last check mark
       setInProgress(false);
       stepRef.current = 0;
-      if (bookRef.current?.value)
-        setView(`/plan/${remoteId('plan', planId, memory.keyMap) || planId}/0`);
-      else
-        setView(`/work/${remoteId('plan', planId, memory.keyMap) || planId}`);
+      setView(`/plan/${remoteId('plan', planId, memory.keyMap) || planId}/0`);
     }, 1000);
   };
 
