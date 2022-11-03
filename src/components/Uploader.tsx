@@ -172,7 +172,7 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
         psgId,
         artifactTypeId !== undefined ? artifactTypeId : '',
         sourceMediaId || '',
-        recordAudio ? user : ''
+        user
       );
       mediaIdRef.current.push(newMediaRec.id);
     }
@@ -204,6 +204,7 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
       artifactTypeId: getArtifactTypeId(),
       passageId: getPassageId(),
       userId: getUserId(),
+      recordedbyUserId: getUserId(),
       sourceMediaId: getSourceMediaId(),
       sourceSegments: sourceSegments,
       performedBy: performedBy,
@@ -212,7 +213,7 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
         ? ts.mediaAttached
         : localizedArtifactTypeFromId(artifactTypeId), //put psc message here
     } as any;
-    if (recordAudio) mediaFile.recordedbyUserId = getUserId();
+
     nextUpload(
       mediaFile,
       uploadList,

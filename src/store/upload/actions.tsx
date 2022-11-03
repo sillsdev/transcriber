@@ -175,9 +175,9 @@ export const nextUpload =
             topic: record.topic,
           },
           relationships: {
-            lastmodifiedbyuser: {
+            'last-modified-by-user': {
               data: {
-                type: 'lastmodifiedbyuser',
+                type: 'users',
                 id: record.userId?.toString(),
               },
             },
@@ -199,6 +199,10 @@ export const nextUpload =
       if (record.sourceMediaId)
         vnd.data.relationships['source-media'] = {
           data: { type: 'mediafiles', id: record.sourceMediaId.toString() },
+        };
+      if (record.recordedbyUserId)
+        vnd.data.relationships['recordedby-user'] = {
+          data: { type: 'users', id: record.recordedbyUserId.toString() },
         };
       return vnd;
     };
