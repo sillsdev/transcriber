@@ -21,6 +21,8 @@ import {
   WorkflowStep,
   OrgWorkflowStep,
   IWorkflowStepsStrings,
+  GroupMembership,
+  Discussion,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import * as actions from '../../store';
@@ -38,6 +40,9 @@ import {
   usePlan,
   useFilteredSteps,
   VernacularTag,
+  useDiscussionCount,
+  getTool,
+  ToolSlug,
 } from '../../crud';
 import {
   lookupBook,
@@ -72,6 +77,8 @@ import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import { UnsavedContext } from '../../context/UnsavedContext';
+import { ISTFilterState } from './filterMenu';
+import { useProjectDefaults } from '../../crud/useProjectDefaults';
 
 const SaveWait = 500;
 
@@ -96,6 +103,8 @@ interface IRecordProps {
   passages: Array<Passage>;
   sections: Array<Section>;
   mediafiles: Array<MediaFile>;
+  discussions: Array<Discussion>;
+  groupmemberships: Array<GroupMembership>;
   workflowSteps: WorkflowStep[];
   orgWorkflowSteps: OrgWorkflowStep[];
 }
@@ -134,11 +143,14 @@ export function ScriptureTable(props: IProps) {
     passages,
     sections,
     mediafiles,
+    discussions,
+    groupmemberships,
     workflowSteps,
     orgWorkflowSteps,
   } = props;
   const { prjId } = useParams<ParamTypes>();
   const [width, setWidth] = React.useState(window.innerWidth);
+  const [project] = useGlobal('project');
   const [plan] = useGlobal('plan');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
@@ -198,11 +210,36 @@ export function ScriptureTable(props: IProps) {
   const [speaker, setSpeaker] = useState('');
   const getStepsBusy = useRef(false);
   const [orgSteps, setOrgSteps] = useState<OrgWorkflowStep[]>([]);
+  const { getProjectDefault, setProjectDefault, canSetProjectDefault } =
+    useProjectDefaults();
   const getFilteredSteps = useFilteredSteps();
+  const getDiscussionCount = useDiscussionCount({
+    mediafiles,
+    discussions,
+    groupmemberships,
+  });
+  const defaultFilterState = {
+    minStep: '', //orgworkflow step to show this step or after
+    maxStep: '', //orgworkflow step to show this step or before
+    hideDone: false,
+    minSection: 1,
+    maxSection: -1,
+    assignedToMe: false,
+  };
+  const filterParam = 'ProjectFilter';
+
+  const [filterState, setFilterState] =
+    useState<ISTFilterState>(defaultFilterState);
   const secNumCol = React.useMemo(() => {
     return colNames.indexOf('sectionSeq');
   }, [colNames]);
 
+  const onFilterChange = (filter: ISTFilterState, projDefault: boolean) => {
+    setFilterState(filter);
+    if (projDefault) {
+      setProjectDefault(filterParam, filter);
+    }
+  };
   const setWorkflow = (wf: IWorkflow[]) => {
     workflowRef.current = wf;
     setWorkflowx(wf);
@@ -751,17 +788,35 @@ export function ScriptureTable(props: IProps) {
   }, []); //do this once to get the default;
 
   useEffect(() => {
+    var def = getProjectDefault(filterParam);
+    if (def) setFilterState(def);
+    else setFilterState(defaultFilterState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project]);
+
+  useEffect(() => {
     if (!getStepsBusy.current) {
       getStepsBusy.current = true;
-
       getFilteredSteps((orgSteps) => {
-        setOrgSteps(orgSteps);
         getStepsBusy.current = false;
+        setOrgSteps(
+          orgSteps.sort(
+            (i, j) => i.attributes.sequencenum - j.attributes.sequencenum
+          )
+        );
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workflowSteps, orgWorkflowSteps]);
 
+  const doneStepId = useMemo(() => {
+    if (getStepsBusy.current) return 'notready';
+    var tmp = orgSteps.find(
+      (s) => getTool(s.attributes?.tool) === ToolSlug.Done
+    );
+    if (tmp) return tmp.id;
+    return 'noDoneStep';
+  }, [orgSteps]);
   // Save locally or online in batches
   useEffect(() => {
     let prevSave = '';
@@ -862,7 +917,8 @@ export function ScriptureTable(props: IProps) {
         shared,
         memory,
         orgSteps,
-        wfStr
+        wfStr,
+        getDiscussionCount
       );
       setWorkflow(newWorkflow);
       getLastModified(plan);
@@ -919,12 +975,33 @@ export function ScriptureTable(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [workflow, width, colNames, flat]);
 
+  const rowinfo = useMemo(() => {
+    const stepIndex = (stepId: string) =>
+      orgSteps.findIndex((s) => s.id === stepId);
+    return workflow.filter(
+      (w) =>
+        !w.deleted &&
+        ((!w.passageId && !w.sectionId) || //unsaved rows can stay
+          ((!filterState.hideDone || w.stepId !== doneStepId) &&
+            (!filterState.assignedToMe || w.discussionCount > 0) &&
+            (!filterState.maxStep ||
+              !w.stepId ||
+              stepIndex(w.stepId) <= stepIndex(filterState.maxStep)) &&
+            (!filterState.minStep ||
+              !w.stepId ||
+              stepIndex(w.stepId) >= stepIndex(filterState.minStep)) &&
+            (filterState.minSection === 1 ||
+              w.sectionSeq >= filterState.minSection) &&
+            (filterState.maxSection === -1 ||
+              w.sectionSeq <= filterState.maxSection)))
+    );
+  }, [workflow, orgSteps, filterState, doneStepId]);
+
   const rowdata = useMemo(
-    () => workflowSheet(workflow, colNames),
-    [workflow, colNames]
+    () => workflowSheet(rowinfo, colNames),
+    [rowinfo, colNames]
   );
 
-  const rowinfo = useMemo(() => workflow.filter((w) => !w.deleted), [workflow]);
   if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
@@ -964,6 +1041,11 @@ export function ScriptureTable(props: IProps) {
         onUpload={handleUpload}
         onRecord={handleRecord}
         onHistory={handleVersions}
+        onFilterChange={onFilterChange}
+        filterState={filterState}
+        maximumSection={workflow[workflow.length - 1]?.sectionSeq ?? 0}
+        orgSteps={orgSteps}
+        canSetDefault={canSetProjectDefault}
         toolId={toolId}
         t={s}
         ts={ts}
@@ -1040,6 +1122,8 @@ const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  discussions: (q: QueryBuilder) => q.findRecords('discussion'),
+  groupmemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
   workflowSteps: (q: QueryBuilder) => q.findRecords('workflowstep'),
   orgWorkflowSteps: (q: QueryBuilder) => q.findRecords('orgworkflowstep'),
 };

@@ -7,6 +7,7 @@ import {
   OptionType,
   IWorkflow,
   RoleNames,
+  OrgWorkflowStep,
 } from '../../model';
 import { Badge, Box, styled } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
@@ -34,7 +35,7 @@ import {
   rememberCurrentPassage,
 } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
-import { remoteIdGuid, useDiscussionCount } from '../../crud';
+import { remoteIdGuid } from '../../crud';
 import TaskAvatar from '../TaskAvatar';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
@@ -43,7 +44,7 @@ import { TabAppBar } from '../../control';
 import PlanAudioActions from './PlanAudioActions';
 import { HotKeyContext } from '../../context/HotKeyContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
-
+import FilterMenu, { ISTFilterState } from './filterMenu';
 const MemoizedTaskAvatar = memo(TaskAvatar);
 
 const DOWN_ARROW = 'ARROWDOWN';
@@ -141,6 +142,10 @@ interface IProps extends IStateProps {
   bookCol: number;
   bookSuggestions?: OptionType[];
   bookMap?: BookNameMap;
+  filterState: ISTFilterState;
+  maximumSection: number;
+  orgSteps: OrgWorkflowStep[];
+  canSetDefault: boolean;
   updateData: (changes: ICellChange[]) => void;
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => Promise<boolean>;
@@ -157,6 +162,7 @@ interface IProps extends IStateProps {
   onUpload: (i: number) => () => void;
   onRecord: (i: number) => void;
   onHistory: (i: number) => () => void;
+  onFilterChange: (newstate: ISTFilterState, isDefault: boolean) => void;
 }
 
 export function PlanSheet(props: IProps) {
@@ -170,6 +176,10 @@ export function PlanSheet(props: IProps) {
     bookCol,
     bookSuggestions,
     bookMap,
+    filterState,
+    maximumSection,
+    orgSteps,
+    canSetDefault,
     updateData,
     action,
     addPassage,
@@ -181,21 +191,11 @@ export function PlanSheet(props: IProps) {
     onTranscribe,
     onAudacity,
     onPassageDetail,
+    onFilterChange,
   } = props;
   const ctx = useContext(PlanContext);
-  const {
-    projButtonStr,
-    mediafiles,
-    discussions,
-    groupmemberships,
-    connected,
-    readonly,
-  } = ctx.state;
-  const getDiscussionCount = useDiscussionCount({
-    mediafiles,
-    discussions,
-    groupmemberships,
-  });
+  const { projButtonStr, connected, readonly } = ctx.state;
+
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [memory] = useGlobal('memory');
@@ -537,10 +537,7 @@ export function PlanSheet(props: IProps) {
             {
               value: passage && (
                 <Badge
-                  badgeContent={getDiscussionCount(
-                    rowInfo[rowIndex].passageId?.id || '',
-                    rowInfo[rowIndex]?.stepId || ''
-                  )}
+                  badgeContent={rowInfo[rowIndex].discussionCount}
                   color="secondary"
                 >
                   <StageReport
@@ -757,6 +754,13 @@ export function PlanSheet(props: IProps) {
                   t={projButtonStr}
                 />
                 <GrowingSpacer />
+                <FilterMenu
+                  canSetDefault={canSetDefault}
+                  state={filterState}
+                  onFilterChange={onFilterChange}
+                  orgSteps={orgSteps}
+                  maximumSection={maximumSection}
+                />
                 <PriButton
                   id="planSheetSave"
                   key="save"

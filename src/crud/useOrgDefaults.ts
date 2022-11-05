@@ -9,6 +9,8 @@ export const useOrgDefaults = () => {
   const [orgRole] = useGlobal('orgRole');
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
+  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline');
 
   const getOrgDefault = (label: string) => {
     const org = findRecord(
@@ -33,8 +35,8 @@ export const useOrgDefaults = () => {
     memory.update((t: TransformBuilder) => UpdateRecord(t, org, user));
   };
   const canSetOrgDefault = useMemo(
-    () => orgRole === RoleNames.Admin,
-    [orgRole]
+    () => orgRole === RoleNames.Admin && (offlineOnly || !offline),
+    [offline, offlineOnly, orgRole]
   );
 
   return { getOrgDefault, setOrgDefault, canSetOrgDefault };

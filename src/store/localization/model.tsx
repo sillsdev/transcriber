@@ -746,6 +746,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "audio": string;
     "bookSelect": string;
     "confirm": string;
+    "filter": string;
     "nonNumber": string;
     "insertFirstPassage": string;
     "insertLastPassage": string;
@@ -845,6 +846,17 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "saveFirst": string;
     "saving": string;
     "title": string;
+};
+
+export interface IScriptureTableFilterStrings extends Localize.LocalizedStringsMethods {
+    "assignedToMe": string;
+    "hideDone": string;
+    "step": string;
+    "minStep": string;
+    "maxStep": string;
+    "minimum": string;
+    "maximum": string;
+    "saveFilter": string;
 };
 
 export interface ISectionResourcesStrings extends Localize.LocalizedStringsMethods {
@@ -1242,6 +1254,7 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "wholeBackTranslation": string;
     "wBTTranscribe": string;
     "wBTParatextSync": string;
+    "none": string;
 };
 
 export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods {
@@ -1345,6 +1358,7 @@ export interface ILocalizedStrings {
 	projButtons: IProjButtonsStrings;
 	projectDownload: IProjectDownloadStrings;
 	scriptureTable: IScriptureTableStrings;
+	scriptureTableFilter: IScriptureTableFilterStrings;
 	sectionResources: ISectionResourcesStrings;
 	selectArtifactCategory: ISelectArtifactCategoryStrings;
 	selectArtifactType: ISelectArtifactTypeStrings;

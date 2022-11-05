@@ -33,6 +33,7 @@ export interface IWorkflow {
   step?: string;
   stepId?: string;
   deleted: boolean;
+  discussionCount: number;
 }
 
 export const flatScrColNames = [

@@ -4286,6 +4286,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="planSheet.filter">
+            <source>Filter</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.nonNumber">
             <source>Do not change to non-number.</source>
             <target/>
@@ -4869,6 +4876,62 @@
          </trans-unit>
          <trans-unit id="scriptureTable.title">
             <source>Title</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.assignedToMe">
+            <source>Show only steps assigned to me.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.hideDone">
+            <source>Hide Done steps.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.step">
+            <source>Workflow Step</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.minStep">
+            <source>At or after this step.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.maxStep">
+            <source>At or before this step.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.minimum">
+            <source>Minimum</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.maximum">
+            <source>Maximum</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.saveFilter">
+            <source>Save as the Project default?</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -7081,6 +7144,13 @@
          </trans-unit>
          <trans-unit id="workflowSteps.wBTParatextSync">
             <source>Whole BT Paratext</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.none">
+            <source>(None)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>

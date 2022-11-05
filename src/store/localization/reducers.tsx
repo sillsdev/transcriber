@@ -796,6 +796,7 @@ const initialState = {
 			"audio": "Audio",
 			"bookSelect": "Select Book...",
 			"confirm": "{0} {1} Item(s). Are you sure?",
+			"filter": "Filter",
 			"nonNumber": "Do not change to non-number.",
 			"insertFirstPassage": "Add passage as first in {0} {1}",
 			"insertLastPassage": "Add passage as last in {0} {1}",
@@ -900,6 +901,18 @@ const initialState = {
 			"saveFirst": "You must save changes first!",
 			"saving": "Saving...",
 			"title": "Title",
+		}
+	}),
+	"scriptureTableFilter": new LocalizedStrings({
+		"en": {
+			"assignedToMe": "Show only steps assigned to me.",
+			"hideDone": "Hide Done steps.",
+			"step": "Workflow Step",
+			"minStep": "At or after this step.",
+			"maxStep": "At or before this step.",
+			"minimum": "Minimum",
+			"maximum": "Maximum",
+			"saveFilter": "Save as the Project default?",
 		}
 	}),
 	"sectionResources": new LocalizedStrings({
@@ -1324,6 +1337,7 @@ const initialState = {
 			"wholeBackTranslation": "Whole Back Translate",
 			"wBTTranscribe": "Whole BT Transcribe",
 			"wBTParatextSync": "Whole BT Paratext",
+			"none": "(None)",
 		}
 	}),
 	"wsAudioPlayer": new LocalizedStrings({
@@ -1435,6 +1449,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"projButtons" : new LocalizedStrings(action.payload.data.projButtons),
 				"projectDownload" : new LocalizedStrings(action.payload.data.projectDownload),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
+				"scriptureTableFilter" : new LocalizedStrings(action.payload.data.scriptureTableFilter),
 				"sectionResources" : new LocalizedStrings(action.payload.data.sectionResources),
 				"selectArtifactCategory" : new LocalizedStrings(action.payload.data.selectArtifactCategory),
 				"selectArtifactType" : new LocalizedStrings(action.payload.data.selectArtifactType),
