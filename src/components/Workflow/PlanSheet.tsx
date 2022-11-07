@@ -770,7 +770,7 @@ export function PlanSheet(props: IProps) {
                   disabled={saving || !changed}
                 >
                   {t.save}
-                  <SaveIcon sx={iconMargin} />
+                  <SaveIcon sx={iconMargin} className="small-icon" />
                 </PriButton>
               </>
             </TabActions>
