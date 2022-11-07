@@ -101,6 +101,7 @@ export const getWorkflow = (
   memory: Memory,
   orgWorkflowSteps: OrgWorkflowStep[],
   wfStr: IWorkflowStepsStrings,
+  getDiscussionCount: (passageId: string, stepId: string) => number,
   current?: IWorkflow[]
 ) => {
   const myWork = current || Array<IWorkflow>();
@@ -172,6 +173,9 @@ export const getWorkflow = (
             wfStr.getString(toCamel(stepRec.attributes.name)) ||
             stepRec.attributes.name;
           item.stepId = stepRec.id;
+          item.discussionCount = item.passageId
+            ? getDiscussionCount(item.passageId.id, item.stepId)
+            : 0;
         }
       }
       //console.log(`item ${JSON.stringify(item, null, 2)}`);

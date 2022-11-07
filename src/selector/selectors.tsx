@@ -94,6 +94,9 @@ export const selectRecordingSelector = (state: IState) =>
 export const projButtonsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'projButtons' });
 
+export const scriptureTableFilterMenuSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'scriptureTableFilter' });
+
 export const sharedSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'shared' });
 

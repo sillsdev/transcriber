@@ -3676,6 +3676,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.nonNumber">
          <segment>
             <source>Do not change to non-number.</source>
@@ -4177,6 +4183,54 @@
       <unit id="scriptureTable.title">
          <segment>
             <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.assignedToMe">
+         <segment>
+            <source>Show only steps assigned to me.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.hideDone">
+         <segment>
+            <source>Hide Done steps.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.step">
+         <segment>
+            <source>Workflow Step</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.minStep">
+         <segment>
+            <source>At or after this step.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.maxStep">
+         <segment>
+            <source>At or before this step.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.minimum">
+         <segment>
+            <source>Minimum</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.maximum">
+         <segment>
+            <source>Maximum</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.saveFilter">
+         <segment>
+            <source>Save as the Project default?</source>
             <target/>
          </segment>
       </unit>
@@ -6073,6 +6127,12 @@
       <unit id="workflowSteps.wBTParatextSync">
          <segment>
             <source>Whole BT Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.none">
+         <segment>
+            <source>(None)</source>
             <target/>
          </segment>
       </unit>
