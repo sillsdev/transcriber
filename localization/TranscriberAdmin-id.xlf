@@ -256,7 +256,7 @@
 		<unit id="artifactType.qanda">
 			<segment>
 				<source>Community Test Question and Answer</source>
-				<target>Soal dan Jawaban Tes Komunitas</target>
+				<target>Tanya Jawab Masyarakat</target>
 			</segment>
 		</unit>
 		<unit id="artifactType.resource">
@@ -268,7 +268,7 @@
 		<unit id="artifactType.retell">
 			<segment>
 				<source>Community Test Retell</source>
-				<target>Tes Komunitas Menceritakan Kembali</target>
+				<target>Cerita Ulang Masyarakat</target>
 			</segment>
 		</unit>
 		<unit id="artifactType.sharedresource">
