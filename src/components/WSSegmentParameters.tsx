@@ -54,6 +54,7 @@ function WSSegmentParameters(props: IProps) {
   const [segLength, setSegmentLen] = useState(0);
   const [numRegions, setNumRegions] = useState(currentNumRegions);
   const [teamDefault, setTeamDefault] = useState(false);
+  const teamDefaultRef = useRef(false);
   const applyingRef = useRef(false);
   const t: IWsAudioPlayerSegmentStrings = useSelector(
     wsAudioPlayerSegmentSelector,
@@ -72,7 +73,8 @@ function WSSegmentParameters(props: IProps) {
 
   const handleTeamCheck = (value: boolean) => {
     setTeamDefault(value);
-    onSave(params, value);
+    teamDefaultRef.current = value;
+    if (value) handleApply();
   };
   const handleSilenceChange = (event: Event, value: number | number[]) => {
     if (Array.isArray(value)) value = value[0];
@@ -98,7 +100,7 @@ function WSSegmentParameters(props: IProps) {
       segLenThreshold: segLength,
     };
     setNumRegions(wsAutoSegment(loop, params));
-    onSave(params, teamDefault);
+    onSave(params, teamDefaultRef.current);
     setApplying(false);
   };
 

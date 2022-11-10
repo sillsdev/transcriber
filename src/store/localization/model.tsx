@@ -746,7 +746,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "audio": string;
     "bookSelect": string;
     "confirm": string;
-    "filter": string;
+    "filtered": string;
     "nonNumber": string;
     "insertFirstPassage": string;
     "insertLastPassage": string;
@@ -849,11 +849,12 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
 };
 
 export interface IScriptureTableFilterStrings extends Localize.LocalizedStringsMethods {
+    "apply": string;
     "assignedToMe": string;
+    "clear": string;
+    "disable": string;
     "hideDone": string;
     "step": string;
-    "minStep": string;
-    "maxStep": string;
     "minimum": string;
     "maximum": string;
     "saveFilter": string;

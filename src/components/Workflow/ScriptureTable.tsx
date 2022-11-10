@@ -43,6 +43,8 @@ import {
   useDiscussionCount,
   getTool,
   ToolSlug,
+  remoteId,
+  remoteIdGuid,
 } from '../../crud';
 import {
   lookupBook,
@@ -210,21 +212,27 @@ export function ScriptureTable(props: IProps) {
   const [speaker, setSpeaker] = useState('');
   const getStepsBusy = useRef(false);
   const [orgSteps, setOrgSteps] = useState<OrgWorkflowStep[]>([]);
-  const { getProjectDefault, setProjectDefault, canSetProjectDefault } =
-    useProjectDefaults();
+  const {
+    getProjectDefault,
+    setProjectDefault,
+    canSetProjectDefault,
+    getLocalDefault,
+    setLocalDefault,
+  } = useProjectDefaults();
   const getFilteredSteps = useFilteredSteps();
   const getDiscussionCount = useDiscussionCount({
     mediafiles,
     discussions,
     groupmemberships,
   });
-  const defaultFilterState = {
+  const defaultFilterState: ISTFilterState = {
     minStep: '', //orgworkflow step to show this step or after
     maxStep: '', //orgworkflow step to show this step or before
     hideDone: false,
     minSection: 1,
     maxSection: -1,
     assignedToMe: false,
+    disabled: false,
   };
   const filterParam = 'ProjectFilter';
 
@@ -234,11 +242,32 @@ export function ScriptureTable(props: IProps) {
     return colNames.indexOf('sectionSeq');
   }, [colNames]);
 
-  const onFilterChange = (filter: ISTFilterState, projDefault: boolean) => {
-    setFilterState(filter);
+  const onFilterChange = (
+    filter: ISTFilterState | undefined,
+    projDefault: boolean
+  ) => {
+    setLocalDefault(filterParam, filter);
     if (projDefault) {
-      setProjectDefault(filterParam, filter);
+      var def = { ...filter };
+      if (filter) {
+        //convert steps to remote id
+        if (filter.minStep)
+          def.minStep = remoteId(
+            'orgworkflowstep',
+            filter.minStep,
+            memory.keyMap
+          );
+        if (filter.maxStep)
+          def.maxStep = remoteId(
+            'orgworkflowstep',
+            filter.maxStep,
+            memory.keyMap
+          );
+      }
+      setProjectDefault(filterParam, def);
     }
+    if (filter) setFilterState(filter);
+    else setFilterState(defaultFilterState);
   };
   const setWorkflow = (wf: IWorkflow[]) => {
     workflowRef.current = wf;
@@ -787,10 +816,27 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); //do this once to get the default;
 
+  const getFilter = () => {
+    var filter =
+      getLocalDefault(filterParam) ??
+      getProjectDefault(filterParam) ??
+      defaultFilterState;
+    if (filter.minStep && !isNaN(Number(filter.minStep)))
+      filter.minStep = remoteIdGuid(
+        'orgworkflowstep',
+        filter.minStep,
+        memory.keyMap
+      );
+    if (filter.maxStep && !isNaN(Number(filter.maxStep)))
+      filter.maxStep = remoteIdGuid(
+        'orgworkflowstep',
+        filter.maxStep,
+        memory.keyMap
+      );
+    return filter;
+  };
   useEffect(() => {
-    var def = getProjectDefault(filterParam);
-    if (def) setFilterState(def);
-    else setFilterState(defaultFilterState);
+    setFilterState(getFilter());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
 
@@ -978,22 +1024,24 @@ export function ScriptureTable(props: IProps) {
   const rowinfo = useMemo(() => {
     const stepIndex = (stepId: string) =>
       orgSteps.findIndex((s) => s.id === stepId);
+
+    if (filterState.disabled) return workflow.filter((w) => !w.deleted);
+
     return workflow.filter(
       (w) =>
         !w.deleted &&
-        ((!w.passageId && !w.sectionId) || //unsaved rows can stay
-          ((!filterState.hideDone || w.stepId !== doneStepId) &&
-            (!filterState.assignedToMe || w.discussionCount > 0) &&
-            (!filterState.maxStep ||
-              !w.stepId ||
-              stepIndex(w.stepId) <= stepIndex(filterState.maxStep)) &&
-            (!filterState.minStep ||
-              !w.stepId ||
-              stepIndex(w.stepId) >= stepIndex(filterState.minStep)) &&
-            (filterState.minSection === 1 ||
-              w.sectionSeq >= filterState.minSection) &&
-            (filterState.maxSection === -1 ||
-              w.sectionSeq <= filterState.maxSection)))
+        (!filterState.hideDone || w.stepId !== doneStepId) &&
+        (!filterState.assignedToMe || w.discussionCount > 0) &&
+        (!filterState.maxStep ||
+          !w.stepId ||
+          stepIndex(w.stepId) <= stepIndex(filterState.maxStep)) &&
+        (!filterState.minStep ||
+          !w.stepId ||
+          stepIndex(w.stepId) >= stepIndex(filterState.minStep)) &&
+        (filterState.minSection === 1 ||
+          w.sectionSeq >= filterState.minSection) &&
+        (filterState.maxSection === -1 ||
+          w.sectionSeq <= filterState.maxSection)
     );
   }, [workflow, orgSteps, filterState, doneStepId]);
 

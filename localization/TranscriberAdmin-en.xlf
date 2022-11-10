@@ -3676,9 +3676,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.filter">
+      <unit id="planSheet.filtered">
          <segment>
-            <source>Filter</source>
+            <source>Disable filter to add rows.</source>
             <target/>
          </segment>
       </unit>
@@ -4186,9 +4186,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTableFilter.apply">
+         <segment>
+            <source>Apply</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTableFilter.assignedToMe">
          <segment>
             <source>Show only steps assigned to me.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.clear">
+         <segment>
+            <source>Clear</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.disable">
+         <segment>
+            <source>Disable filter so I can edit rows.</source>
             <target/>
          </segment>
       </unit>
@@ -4201,18 +4219,6 @@
       <unit id="scriptureTableFilter.step">
          <segment>
             <source>Workflow Step</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.minStep">
-         <segment>
-            <source>At or after this step.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.maxStep">
-         <segment>
-            <source>At or before this step.</source>
             <target/>
          </segment>
       </unit>

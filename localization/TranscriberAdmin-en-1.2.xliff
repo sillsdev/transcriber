@@ -4286,8 +4286,8 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="planSheet.filter">
-            <source>Filter</source>
+         <trans-unit id="planSheet.filtered">
+            <source>Disable filter to add rows.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -4881,8 +4881,29 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="scriptureTableFilter.apply">
+            <source>Apply</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="scriptureTableFilter.assignedToMe">
             <source>Show only steps assigned to me.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.clear">
+            <source>Clear</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.disable">
+            <source>Disable filter so I can edit rows.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -4897,20 +4918,6 @@
          </trans-unit>
          <trans-unit id="scriptureTableFilter.step">
             <source>Workflow Step</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ScriptureTable.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="scriptureTableFilter.minStep">
-            <source>At or after this step.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ScriptureTable.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="scriptureTableFilter.maxStep">
-            <source>At or before this step.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>

@@ -3673,6 +3673,12 @@
 				<target/>
 			</segment>
 		</unit>
+        <unit id="planSheet.filtered">
+         <segment>
+            <source>Disable filter to add rows.</source>
+            <target>Отключите фильтр, чтобы добавить строки.</target>
+         </segment>
+      </unit>
 		<unit id="planSheet.nonNumber">
 			<segment>
 				<source>Do not change to non-number.</source>
@@ -4177,6 +4183,36 @@
 				<target/>
 			</segment>
 		</unit>
+      <unit id="scriptureTableFilter.apply">
+         <segment>
+            <source>Apply</source>
+ 			<target>Применить</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.assignedToMe">
+         <segment>
+            <source>Show only steps assigned to me.</source>
+            <target>Показать только назначенные мне шаги.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.clear">
+         <segment>
+            <source>Clear</source>
+            <target>чистый</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.disable">
+         <segment>
+            <source>Disable filter so I can edit rows.</source>
+            <target>Отключите фильтр, чтобы я мог редактировать строки.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.hideDone">
+         <segment>
+            <source>Hide 'Done' steps.</source>
+            <target>Скрыть шаги «Готово».</target>
+         </segment>
+      </unit>
 		<unit id="sectionResources.close">
 			<segment>
 				<source>Close</source>
@@ -4750,7 +4786,7 @@
 		<unit id="template.apply">
 			<segment>
 				<source>Apply</source>
-				<target/>
+				<target>Применить</target>
 			</segment>
 		</unit>
 		<unit id="template.beginning">

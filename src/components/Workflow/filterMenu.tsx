@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { IScriptureTableFilterStrings, OrgWorkflowStep } from '../../model';
 import {
   IconButton,
@@ -11,11 +11,18 @@ import {
   TextField,
   Box,
   Typography,
+  SxProps,
+  Switch,
 } from '@mui/material';
 import FilterIcon from '@mui/icons-material/FilterList';
 import BoxOpen from '@mui/icons-material/CheckBoxOutlineBlank';
 import BoxClose from '@mui/icons-material/CheckBox';
-import { iconMargin, StyledMenu, StyledMenuItem } from '../../control';
+import {
+  iconMargin,
+  PriButton,
+  StyledMenu,
+  StyledMenuItem,
+} from '../../control';
 import { scriptureTableFilterMenuSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { OrgWorkflowStepList } from './OrgWorkflowStepList';
@@ -28,16 +35,20 @@ export interface ISTFilterState {
   maxSection: number;
   assignedToMe: boolean;
   hideDone: boolean;
+  disabled: boolean;
 }
-
+const btnProp = { m: 1 } as SxProps;
 interface IProps {
   state: ISTFilterState;
   canSetDefault: boolean;
   orgSteps: OrgWorkflowStep[];
   maximumSection: number;
-  onFilterChange: (newstate: ISTFilterState, isDefault: boolean) => void;
-  stopPlayer?: () => void;
-  disabled?: boolean;
+  onFilterChange: (
+    newstate: ISTFilterState | undefined,
+    isDefault: boolean
+  ) => void;
+  filtered: boolean;
+  setBusy?: (value: boolean) => void;
 }
 
 export function FilterMenu(props: IProps) {
@@ -46,35 +57,58 @@ export function FilterMenu(props: IProps) {
     canSetDefault,
     maximumSection,
     onFilterChange,
-    stopPlayer,
-    disabled,
+    filtered,
+    setBusy,
   } = props;
-  const { minStep, maxStep, hideDone, minSection, maxSection, assignedToMe } =
-    props.state;
+  const [localState, setLocalState] = useState(props.state);
   const [isDefault, setIsDefault] = useState(false);
+  const defaultRef = useRef(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const t: IScriptureTableFilterStrings = useSelector(
     scriptureTableFilterMenuSelector,
     shallowEqual
   );
+  const [changed, setChanged] = useState(false);
+
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
-
+  const applyingRef = useRef(false);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     if (anchorEl) setAnchorEl(null);
     else setAnchorEl(event.currentTarget);
-    if (stopPlayer) stopPlayer();
   };
 
+  const setApplying = (value: boolean) => {
+    applyingRef.current = value;
+    if (setBusy) setBusy(value);
+  };
+
+  const handleApply = () => {
+    setApplying(true);
+    onFilterChange(localState, defaultRef.current);
+    setApplying(false);
+    setChanged(false);
+  };
+  const handleClear = () => {
+    setApplying(true);
+    onFilterChange(undefined, defaultRef.current);
+    setApplying(false);
+    setChanged(false);
+    setAnchorEl(null);
+  };
+  useEffect(() => {
+    setLocalState(props.state);
+  }, [props.state]);
+
   const filterChange = (what: string, value: any) => {
-    var newstate = { ...props.state } as any;
+    var newstate = { ...localState } as any;
     newstate[what] = value;
-    onFilterChange(newstate, isDefault);
+    setLocalState(newstate);
+    setChanged(true);
   };
   const handleBool = (what: string) => (e: React.MouseEvent) => {
     e.stopPropagation();
-    // setAnchorEl(null);
     filterChange(what, !Boolean((props.state as any)[what] ?? true));
   };
   const handleClose = (e: React.MouseEvent) => {
@@ -91,25 +125,16 @@ export function FilterMenu(props: IProps) {
 
   const handleDefaultCheck = (value: boolean) => {
     setIsDefault(value);
-    if (value) onFilterChange({ ...props.state }, value);
-    setAnchorEl(null);
+    defaultRef.current = value;
+    setChanged(true);
   };
-
-  const anyFilter = useMemo(
-    () =>
-      minStep !== '' ||
-      maxStep !== '' ||
-      hideDone ||
-      minSection > 0 ||
-      maxSection > 0 ||
-      assignedToMe,
-
-    [minStep, maxStep, hideDone, minSection, maxSection, assignedToMe]
-  );
+  const handleDisabled = (event: React.ChangeEvent<HTMLInputElement>) => {
+    filterChange('disabled', event.target.checked);
+  };
 
   return (
     <Badge
-      badgeContent={anyFilter ? ' ' : 0}
+      badgeContent={filtered ? ' ' : 0}
       overlap="circular"
       variant="dot"
       color="secondary"
@@ -120,7 +145,6 @@ export function FilterMenu(props: IProps) {
         aria-haspopup="true"
         sx={{ color: 'primary.light' }}
         onClick={handleClick}
-        disabled={disabled}
       >
         <FilterIcon />
       </IconButton>
@@ -133,13 +157,21 @@ export function FilterMenu(props: IProps) {
       >
         <StyledMenuItem id="for-me-filt" onClick={handleBool('assignedToMe')}>
           <ListItemIcon>
-            {assignedToMe ? <BoxClose id="yesme" /> : <BoxOpen id="nome" />}
+            {localState.assignedToMe ? (
+              <BoxClose id="yesme" />
+            ) : (
+              <BoxOpen id="nome" />
+            )}
           </ListItemIcon>
           <ListItemText primary={t.assignedToMe} />
         </StyledMenuItem>
         <StyledMenuItem id="done-filt" onClick={handleBool('hideDone')}>
           <ListItemIcon>
-            {hideDone ? <BoxClose id="yesdone" /> : <BoxOpen id="nodone" />}
+            {localState.hideDone ? (
+              <BoxClose id="yesdone" />
+            ) : (
+              <BoxOpen id="nodone" />
+            )}
           </ListItemIcon>
           <ListItemText primary={t.hideDone} />
         </StyledMenuItem>
@@ -147,13 +179,13 @@ export function FilterMenu(props: IProps) {
           <Typography gutterBottom>{t.step}</Typography>
           <OrgWorkflowStepList
             label={t.minimum}
-            defaultChoice={minStep}
+            defaultChoice={localState.minStep}
             stepData={orgSteps}
             onStepFilter={(chosen: string) => handle('minStep', chosen)}
           />
           <OrgWorkflowStepList
             label={t.maximum}
-            defaultChoice={maxStep}
+            defaultChoice={localState.maxStep}
             stepData={orgSteps}
             onStepFilter={(chosen: string) => handle('maxStep', chosen)}
           />
@@ -166,7 +198,7 @@ export function FilterMenu(props: IProps) {
               name="minSection"
               label={t.minimum}
               type="number"
-              value={minSection}
+              value={localState.minSection}
               InputProps={{ inputProps: { min: 1, max: maximumSection } }}
               onChange={handleNumberChange('minSection')}
             />
@@ -175,9 +207,13 @@ export function FilterMenu(props: IProps) {
               name="maxSection"
               label={t.maximum}
               type="number"
-              value={maxSection > 0 ? maxSection : maximumSection}
+              value={
+                localState.maxSection > 0
+                  ? localState.maxSection
+                  : maximumSection
+              }
               InputProps={{
-                inputProps: { min: minSection, max: maximumSection },
+                inputProps: { min: localState.minSection, max: maximumSection },
               }}
               onChange={handleNumberChange('maxSection')}
             />
@@ -186,18 +222,45 @@ export function FilterMenu(props: IProps) {
 
         <Divider />
         {canSetDefault && (
-          <FormControlLabel
-            control={
-              <Checkbox
-                sx={iconMargin}
-                checked={isDefault}
-                onChange={(event) => handleDefaultCheck(event.target.checked)}
-                value="projDefault"
-              />
-            }
-            label={t.saveFilter}
-          />
+          <Box sx={{ display: 'inline-flex', flexDirection: 'column' }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  sx={iconMargin}
+                  checked={isDefault}
+                  onChange={(event) => handleDefaultCheck(event.target.checked)}
+                  value="projDefault"
+                />
+              }
+              label={t.saveFilter}
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={localState.disabled}
+                  onChange={handleDisabled}
+                />
+              }
+              label={t.disable}
+            />
+          </Box>
         )}
+        <PriButton
+          autoFocus
+          sx={btnProp}
+          onClick={handleClear}
+          disabled={applyingRef.current || !filtered}
+        >
+          {t.clear}
+        </PriButton>
+        <PriButton
+          autoFocus
+          sx={btnProp}
+          onClick={handleApply}
+          disabled={applyingRef.current || !changed}
+        >
+          {t.apply}
+        </PriButton>
       </StyledMenu>
     </Badge>
   );

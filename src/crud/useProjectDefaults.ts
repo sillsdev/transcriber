@@ -21,7 +21,8 @@ export const useProjectDefaults = () => {
   const setProjectDefault = (label: string, value: any) => {
     const proj = findRecord(memory, 'project', project) as Project;
     const json = JSON.parse(proj.attributes.defaultParams ?? '{}');
-    json[label] = JSON.stringify(value);
+    if (value) json[label] = JSON.stringify(value);
+    else delete json[label];
     proj.attributes.defaultParams = JSON.stringify(json);
     memory.update((t: TransformBuilder) => UpdateRecord(t, proj, user));
   };
@@ -30,6 +31,20 @@ export const useProjectDefaults = () => {
     () => orgRole === RoleNames.Admin && (offlineOnly || !offline),
     [offline, offlineOnly, orgRole]
   );
-
-  return { getProjectDefault, setProjectDefault, canSetProjectDefault };
+  const getLocalDefault = (label: string) => {
+    var str = localStorage.getItem(label + project);
+    if (str) return JSON.parse(str);
+    return undefined;
+  };
+  const setLocalDefault = (label: string, value: any) => {
+    if (value) localStorage.setItem(label + project, JSON.stringify(value));
+    else localStorage.removeItem(label + project);
+  };
+  return {
+    getProjectDefault,
+    setProjectDefault,
+    canSetProjectDefault,
+    getLocalDefault,
+    setLocalDefault,
+  };
 };
