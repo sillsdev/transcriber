@@ -1059,6 +1059,7 @@ export function ScriptureTable(props: IProps) {
       setUploadVisible(false);
     }
   };
+  const isReady = () => true;
 
   const handleLookupBook = (book: string) =>
     lookupBook({ book, allBookData, bookMap });
@@ -1120,6 +1121,7 @@ export function ScriptureTable(props: IProps) {
         passageId={uploadItem.current?.passageId?.id}
         performedBy={speaker}
         onSpeakerChange={handleNameChange}
+        ready={isReady}
       />
       {audacityItem?.wf?.passageId && (
         <AudacityManager
