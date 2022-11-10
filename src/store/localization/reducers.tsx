@@ -796,7 +796,7 @@ const initialState = {
 			"audio": "Audio",
 			"bookSelect": "Select Book...",
 			"confirm": "{0} {1} Item(s). Are you sure?",
-			"filter": "Filter",
+			"filtered": "Disable filter to add rows.",
 			"nonNumber": "Do not change to non-number.",
 			"insertFirstPassage": "Add passage as first in {0} {1}",
 			"insertLastPassage": "Add passage as last in {0} {1}",
@@ -905,11 +905,12 @@ const initialState = {
 	}),
 	"scriptureTableFilter": new LocalizedStrings({
 		"en": {
+			"apply": "Apply",
 			"assignedToMe": "Show only steps assigned to me.",
+			"clear": "Clear",
+			"disable": "Disable filter so I can edit rows.",
 			"hideDone": "Hide Done steps.",
 			"step": "Workflow Step",
-			"minStep": "At or after this step.",
-			"maxStep": "At or before this step.",
 			"minimum": "Minimum",
 			"maximum": "Maximum",
 			"saveFilter": "Save as the Project default?",

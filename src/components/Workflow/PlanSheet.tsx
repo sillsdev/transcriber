@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext, memo } from 'react';
+import { useState, useEffect, useRef, useContext, memo, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import {
   IPlanSheetStrings,
@@ -162,7 +162,10 @@ interface IProps extends IStateProps {
   onUpload: (i: number) => () => void;
   onRecord: (i: number) => void;
   onHistory: (i: number) => () => void;
-  onFilterChange: (newstate: ISTFilterState, isDefault: boolean) => void;
+  onFilterChange: (
+    newstate: ISTFilterState | undefined,
+    isDefault: boolean
+  ) => void;
 }
 
 export function PlanSheet(props: IProps) {
@@ -706,6 +709,19 @@ export function PlanSheet(props: IProps) {
       ? rowData[currentRowRef.current - 1][PassageSeqCol].toString()
       : '';
 
+  const filtered = useMemo(
+    () =>
+      !filterState.disabled &&
+      (filterState.minStep !== '' ||
+        filterState.maxStep !== '' ||
+        filterState.hideDone ||
+        filterState.minSection > 1 ||
+        (filterState.maxSection > -1 &&
+          filterState.maxSection < maximumSection) ||
+        filterState.assignedToMe),
+    [filterState, maximumSection]
+  );
+
   return (
     <Box sx={{ display: 'flex' }}>
       <div>
@@ -727,12 +743,13 @@ export function PlanSheet(props: IProps) {
                   addSection={addSection}
                   addPassage={addPassage}
                   movePassage={movePassage}
+                  filtered={filtered}
                 />
                 <AltButton
                   id="planSheetImp"
                   key="importExcel"
                   aria-label={t.tablePaste}
-                  disabled={pasting || readonly}
+                  disabled={pasting || readonly || filtered}
                   onClick={handleTablePaste}
                 >
                   {t.tablePaste}
@@ -741,7 +758,7 @@ export function PlanSheet(props: IProps) {
                   id="planSheetReseq"
                   key="resequence"
                   aria-label={t.resequence}
-                  disabled={pasting || data.length < 2 || readonly}
+                  disabled={pasting || data.length < 2 || readonly || filtered}
                   onClick={handleResequence}
                 >
                   {t.resequence}
@@ -760,6 +777,7 @@ export function PlanSheet(props: IProps) {
                   onFilterChange={onFilterChange}
                   orgSteps={orgSteps}
                   maximumSection={maximumSection}
+                  filtered={filtered}
                 />
                 <PriButton
                   id="planSheetSave"

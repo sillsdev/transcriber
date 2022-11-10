@@ -3673,6 +3673,12 @@
 				<target>{0} {1} item(ns). Tem certeza?</target>
 			</segment>
 		</unit>
+        <unit id="planSheet.filtered">
+         <segment>
+            <source>Disable filter to add rows.</source>
+            <target>Desative o filtro para adicionar linhas.</target>
+         </segment>
+      </unit>
 		<unit id="planSheet.nonNumber">
 			<segment>
 				<source>Do not change to non-number.</source>
@@ -4177,6 +4183,60 @@
 				<target>Título</target>
 			</segment>
 		</unit>
+      <unit id="scriptureTableFilter.apply">
+         <segment>
+            <source>Apply</source>
+ 			<target>Aplicar</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.assignedToMe">
+         <segment>
+            <source>Show only steps assigned to me.</source>
+            <target>Mostrar apenas as etapas atribuídas a mim.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.clear">
+         <segment>
+            <source>Clear</source>
+            <target>Claro</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.disable">
+         <segment>
+            <source>Disable filter so I can edit rows.</source>
+            <target>Desative o filtro para que eu possa editar linhas.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.hideDone">
+         <segment>
+            <source>Hide 'Done' steps.</source>
+            <target>Ocultar etapas 'Concluídas'.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.step">
+         <segment>
+            <source>Workflow Step</source>
+            <target>Langkah alur kerja</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.minimum">
+         <segment>
+            <source>Minimum</source>
+            <target>Minimum</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.maximum">
+         <segment>
+            <source>Maximum</source>
+            <target>Maksimum</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.saveFilter">
+         <segment>
+            <source>Save as the Project default.</source>
+            <target>Simpan sebagai default Proyek.</target>
+         </segment>
+      </unit>
 		<unit id="sectionResources.close">
 			<segment>
 				<source>Close</source>
