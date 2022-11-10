@@ -1186,7 +1186,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="discussionList.saveFilter">
-            <source>Save as the Team default?</source>
+            <source>Save as team default</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">discussionList.tsx</context>
@@ -4889,7 +4889,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="scriptureTableFilter.assignedToMe">
-            <source>Show only steps assigned to me.</source>
+            <source>Show only rows assigned to me</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -4903,14 +4903,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="scriptureTableFilter.disable">
-            <source>Disable filter so I can edit rows.</source>
+            <source>Disable filter so I can edit rows</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="scriptureTableFilter.hideDone">
-            <source>Hide Done steps.</source>
+            <source>Hide Done rows</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -4938,7 +4938,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="scriptureTableFilter.saveFilter">
-            <source>Save as the Project default?</source>
+            <source>Save as project default</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -7409,7 +7409,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayerSegment.teamDefault">
-            <source>Save as Team Default</source>
+            <source>Save as team default</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

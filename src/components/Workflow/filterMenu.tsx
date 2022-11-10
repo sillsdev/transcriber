@@ -2,8 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { IScriptureTableFilterStrings, OrgWorkflowStep } from '../../model';
 import {
   IconButton,
-  ListItemIcon,
-  ListItemText,
   Badge,
   FormControlLabel,
   Checkbox,
@@ -15,14 +13,7 @@ import {
   Switch,
 } from '@mui/material';
 import FilterIcon from '@mui/icons-material/FilterList';
-import BoxOpen from '@mui/icons-material/CheckBoxOutlineBlank';
-import BoxClose from '@mui/icons-material/CheckBox';
-import {
-  iconMargin,
-  PriButton,
-  StyledMenu,
-  StyledMenuItem,
-} from '../../control';
+import { iconMargin, PriButton, StyledMenu } from '../../control';
 import { scriptureTableFilterMenuSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { OrgWorkflowStepList } from './OrgWorkflowStepList';
@@ -36,6 +27,7 @@ export interface ISTFilterState {
   assignedToMe: boolean;
   hideDone: boolean;
   disabled: boolean;
+  canHideDone: boolean;
 }
 const btnProp = { m: 1 } as SxProps;
 interface IProps {
@@ -107,15 +99,12 @@ export function FilterMenu(props: IProps) {
     setLocalState(newstate);
     setChanged(true);
   };
-  const handleBool = (what: string) => (e: React.MouseEvent) => {
-    e.stopPropagation();
-    filterChange(what, !Boolean((props.state as any)[what] ?? true));
-  };
+
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
     setAnchorEl(null);
   };
-  const handle = (what: string, value: string) => {
+  const handle = (what: string, value: any) => {
     filterChange(what, value);
   };
   const handleNumberChange = (what: string) => (e: any) => {
@@ -155,26 +144,34 @@ export function FilterMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <StyledMenuItem id="for-me-filt" onClick={handleBool('assignedToMe')}>
-          <ListItemIcon>
-            {localState.assignedToMe ? (
-              <BoxClose id="yesme" />
-            ) : (
-              <BoxOpen id="nome" />
-            )}
-          </ListItemIcon>
-          <ListItemText primary={t.assignedToMe} />
-        </StyledMenuItem>
-        <StyledMenuItem id="done-filt" onClick={handleBool('hideDone')}>
-          <ListItemIcon>
-            {localState.hideDone ? (
-              <BoxClose id="yesdone" />
-            ) : (
-              <BoxOpen id="nodone" />
-            )}
-          </ListItemIcon>
-          <ListItemText primary={t.hideDone} />
-        </StyledMenuItem>
+        <Box sx={{ display: 'inline-flex', flexDirection: 'column' }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                id="assignedToMe"
+                sx={iconMargin}
+                checked={localState.assignedToMe}
+                onChange={(event) =>
+                  handle('assignedToMe', event.target.checked)
+                }
+              />
+            }
+            label={t.assignedToMe}
+          />
+          {localState.canHideDone && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  id="donefilter"
+                  sx={iconMargin}
+                  checked={localState.hideDone}
+                  onChange={(event) => handle('hideDone', event.target.checked)}
+                />
+              }
+              label={t.hideDone}
+            />
+          )}
+        </Box>
         <Box sx={{ mx: 1 }}>
           <Typography gutterBottom>{t.step}</Typography>
           <OrgWorkflowStepList
@@ -237,6 +234,7 @@ export function FilterMenu(props: IProps) {
             <FormControlLabel
               control={
                 <Switch
+                  sx={{ mx: 1 }}
                   checked={localState.disabled}
                   onChange={handleDisabled}
                 />

@@ -225,7 +225,7 @@ export function ScriptureTable(props: IProps) {
     discussions,
     groupmemberships,
   });
-  const defaultFilterState: ISTFilterState = {
+  const [defaultFilterState, setDefaultFilterState] = useState<ISTFilterState>({
     minStep: '', //orgworkflow step to show this step or after
     maxStep: '', //orgworkflow step to show this step or before
     hideDone: false,
@@ -233,7 +233,8 @@ export function ScriptureTable(props: IProps) {
     maxSection: -1,
     assignedToMe: false,
     disabled: false,
-  };
+    canHideDone: true,
+  });
   const filterParam = 'ProjectFilter';
 
   const [filterState, setFilterState] =
@@ -821,6 +822,7 @@ export function ScriptureTable(props: IProps) {
       getLocalDefault(filterParam) ??
       getProjectDefault(filterParam) ??
       defaultFilterState;
+
     if (filter.minStep && !isNaN(Number(filter.minStep)))
       filter.minStep = remoteIdGuid(
         'orgworkflowstep',
@@ -838,7 +840,7 @@ export function ScriptureTable(props: IProps) {
   useEffect(() => {
     setFilterState(getFilter());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [project]);
+  }, [project, defaultFilterState]);
 
   useEffect(() => {
     if (!getStepsBusy.current) {
@@ -860,9 +862,15 @@ export function ScriptureTable(props: IProps) {
     var tmp = orgSteps.find(
       (s) => getTool(s.attributes?.tool) === ToolSlug.Done
     );
-    if (tmp) return tmp.id;
-    return 'noDoneStep';
-  }, [orgSteps]);
+
+    if (defaultFilterState.canHideDone !== Boolean(tmp))
+      setDefaultFilterState({
+        ...defaultFilterState,
+        canHideDone: Boolean(tmp),
+      });
+    return tmp?.id ?? 'noDoneStep';
+  }, [defaultFilterState, orgSteps]);
+
   // Save locally or online in batches
   useEffect(() => {
     let prevSave = '';
