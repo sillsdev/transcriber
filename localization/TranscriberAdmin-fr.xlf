@@ -4203,7 +4203,7 @@
       </unit>
       <unit id="scriptureTableFilter.disable">
          <segment>
-            <source>Disable filter so I can edit rows.</source>
+            <source>Disable filter to add rows</source>
             <target>Désactiver le filtre pour que je puisse modifier les lignes.</target>
          </segment>
       </unit>

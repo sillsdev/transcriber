@@ -76,18 +76,24 @@ export function FilterMenu(props: IProps) {
     if (setBusy) setBusy(value);
   };
 
-  const handleApply = () => {
+  const apply = (
+    filterState: ISTFilterState | undefined,
+    projDefault: boolean
+  ) => {
     setApplying(true);
-    onFilterChange(localState, defaultRef.current);
+    onFilterChange(filterState, projDefault);
     setApplying(false);
     setChanged(false);
   };
+  const handleApply = () => {
+    apply(localState, defaultRef.current);
+  };
   const handleClear = () => {
-    setApplying(true);
-    onFilterChange(undefined, defaultRef.current);
-    setApplying(false);
-    setChanged(false);
+    apply(undefined, defaultRef.current);
     setAnchorEl(null);
+  };
+  const handleDisabled = (event: React.ChangeEvent<HTMLInputElement>) => {
+    apply({ ...localState, disabled: event.target.checked }, false);
   };
   useEffect(() => {
     setLocalState(props.state);
@@ -102,6 +108,7 @@ export function FilterMenu(props: IProps) {
 
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setLocalState(props.state);
     setAnchorEl(null);
   };
   const handle = (what: string, value: any) => {
@@ -116,9 +123,6 @@ export function FilterMenu(props: IProps) {
     setIsDefault(value);
     defaultRef.current = value;
     setChanged(true);
-  };
-  const handleDisabled = (event: React.ChangeEvent<HTMLInputElement>) => {
-    filterChange('disabled', event.target.checked);
   };
 
   return (
@@ -237,6 +241,7 @@ export function FilterMenu(props: IProps) {
                   sx={{ mx: 1 }}
                   checked={localState.disabled}
                   onChange={handleDisabled}
+                  disabled={!filtered && !localState.disabled}
                 />
               }
               label={t.disable}
