@@ -908,7 +908,7 @@ const initialState = {
 			"apply": "Apply",
 			"assignedToMe": "Show only rows assigned to me",
 			"clear": "Clear",
-			"disable": "Disable filter so I can edit rows",
+			"disable": "Disable filter to add rows",
 			"hideDone": "Hide Done rows",
 			"step": "Workflow Step",
 			"minimum": "Minimum",
