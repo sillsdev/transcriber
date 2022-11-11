@@ -9,15 +9,15 @@ export const useTranscription = (
   const [memory] = useGlobal('memory');
 
   return (passageId: string, exportId?: string | null) => {
+    const mediaRec = getVernacularMediaRec(passageId, memory);
     if (exportId === VernacularTag) {
-      const mediaRec = getVernacularMediaRec(passageId, memory);
       return mediaRec?.attributes?.transcription || '';
     } else {
       const transcriptions = getAllMediaRecs(
         passageId,
         memory,
         exportId,
-        version
+        version ?? mediaRec?.attributes.versionNumber
       )
         .sort((i, j) =>
           i.attributes?.dateCreated <= j.attributes?.dateCreated ? -1 : 1
