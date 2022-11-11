@@ -4903,7 +4903,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="scriptureTableFilter.disable">
-            <source>Disable filter so I can edit rows</source>
+            <source>Disable filter to add rows</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
