@@ -1017,8 +1017,8 @@
 		</unit>
 		<unit id="discussionList.saveFilter">
 			<segment>
-				<source>Save as the Team default?</source>
-				<target>Salvar como o padrão da equipe?</target>
+				<source>Save as team default</source>
+				<target>Salvar como o padrão da equipe</target>
 			</segment>
 		</unit>
 		<unit id="discussionList.saveFirst">
@@ -4233,8 +4233,8 @@
       </unit>
       <unit id="scriptureTableFilter.saveFilter">
          <segment>
-            <source>Save as the Project default.</source>
-            <target>Simpan sebagai default Proyek.</target>
+            <source>Save as project default</source>
+            <target>Simpan sebagai default proyek</target>
          </segment>
       </unit>
 		<unit id="sectionResources.close">
@@ -6345,7 +6345,7 @@
 		</unit>
       <unit id="wsAudioPlayerSegment.teamDefault">
          <segment>
-            <source>Save as Team Default</source>
+            <source>Save as team default</source>
             <target>Salvar como padrão da equipe</target>
          </segment>
       </unit>

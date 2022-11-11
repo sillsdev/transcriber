@@ -241,7 +241,7 @@ const initialState = {
 			"collapse": "Show/Hide All Comments",
 			"discussionFilter": "Discussion Filter",
 			"filterStatus": "{0} / {1} discussions",
-			"saveFilter": "Save as the Team default?",
+			"saveFilter": "Save as team default",
 			"saveFirst": "Save changed discussions and comments first?",
 			"title": "Discussions",
 		}
@@ -906,14 +906,14 @@ const initialState = {
 	"scriptureTableFilter": new LocalizedStrings({
 		"en": {
 			"apply": "Apply",
-			"assignedToMe": "Show only steps assigned to me.",
+			"assignedToMe": "Show only rows assigned to me",
 			"clear": "Clear",
-			"disable": "Disable filter so I can edit rows.",
-			"hideDone": "Hide Done steps.",
+			"disable": "Disable filter so I can edit rows",
+			"hideDone": "Hide Done rows",
 			"step": "Workflow Step",
 			"minimum": "Minimum",
 			"maximum": "Maximum",
-			"saveFilter": "Save as the Project default?",
+			"saveFilter": "Save as project default",
 		}
 	}),
 	"sectionResources": new LocalizedStrings({
@@ -1382,7 +1382,7 @@ const initialState = {
 			"silenceLength": "Minimum Length of Silence (100ths second)",
 			"silenceThreshold": "Silence Threshold (1000th dB)",
 			"splitSegment": "Add/Remove Boundary [Double Click/{0}]",
-			"teamDefault": "Save as Team Default",
+			"teamDefault": "Save as team default",
 		}
 	}),
 	"wsAudioPlayerZoom": new LocalizedStrings({

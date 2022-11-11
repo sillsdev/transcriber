@@ -1020,7 +1020,7 @@
       </unit>
       <unit id="discussionList.saveFilter">
          <segment>
-            <source>Save as the Team default?</source>
+            <source>Save as team default</source>
             <target/>
          </segment>
       </unit>
@@ -4194,7 +4194,7 @@
       </unit>
       <unit id="scriptureTableFilter.assignedToMe">
          <segment>
-            <source>Show only steps assigned to me.</source>
+            <source>Show only rows assigned to me</source>
             <target/>
          </segment>
       </unit>
@@ -4206,13 +4206,13 @@
       </unit>
       <unit id="scriptureTableFilter.disable">
          <segment>
-            <source>Disable filter so I can edit rows.</source>
+            <source>Disable filter so I can edit rows</source>
             <target/>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.hideDone">
          <segment>
-            <source>Hide Done steps.</source>
+            <source>Hide Done rows</source>
             <target/>
          </segment>
       </unit>
@@ -4236,7 +4236,7 @@
       </unit>
       <unit id="scriptureTableFilter.saveFilter">
          <segment>
-            <source>Save as the Project default?</source>
+            <source>Save as project default</source>
             <target/>
          </segment>
       </unit>
@@ -6354,7 +6354,7 @@
       </unit>
       <unit id="wsAudioPlayerSegment.teamDefault">
          <segment>
-            <source>Save as Team Default</source>
+            <source>Save as team default</source>
             <target/>
          </segment>
       </unit>

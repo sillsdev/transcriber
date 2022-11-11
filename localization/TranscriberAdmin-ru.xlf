@@ -1017,8 +1017,8 @@
 		</unit>
 		<unit id="discussionList.saveFilter">
 			<segment>
-				<source>Save as the Team default?</source>
-				<target>Сохранить как команду по умолчанию?</target>
+				<source>Save as project default</source>
+				<target>Сохранить как команду по умолчанию</target>
 			</segment>
 		</unit>
 		<unit id="discussionList.saveFirst">
@@ -6321,7 +6321,7 @@
 		</unit>
       <unit id="wsAudioPlayerSegment.teamDefault">
          <segment>
-            <source>Save as Team Default</source>
+            <source>Save as team default</source>
             <target>Сохранить как команду по умолчанию</target>
          </segment>
       </unit>

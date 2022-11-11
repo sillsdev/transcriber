@@ -15,7 +15,7 @@ export const useProjectDefaults = () => {
   const getProjectDefault = (label: string) => {
     const proj = findRecord(memory, 'project', project) as Project;
     const json = JSON.parse(proj?.attributes.defaultParams ?? '{}');
-    if (json[label]) return JSON.parse(json[label]);
+    if (json.hasOwnProperty(label)) return JSON.parse(json[label]);
     return undefined;
   };
   const setProjectDefault = (label: string, value: any) => {

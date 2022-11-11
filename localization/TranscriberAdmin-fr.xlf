@@ -1017,8 +1017,8 @@
 		</unit>
 		<unit id="discussionList.saveFilter">
 			<segment>
-				<source>Save as the Team default?</source>
-				<target>Enregistrer en tant qu'équipe par défaut?</target>
+				<source>Save as the Team default</source>
+				<target>Enregistrer en tant qu'équipe par défaut</target>
 			</segment>
 		</unit>
 		<unit id="discussionList.saveFirst">
@@ -4233,7 +4233,7 @@
       </unit>
       <unit id="scriptureTableFilter.saveFilter">
          <segment>
-            <source>Save as the Project default.</source>
+            <source>Save as Project Default</source>
             <target>Enregistrer en tant que projet par défaut.</target>
          </segment>
       </unit>
