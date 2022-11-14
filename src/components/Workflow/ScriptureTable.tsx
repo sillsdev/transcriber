@@ -249,8 +249,9 @@ export function ScriptureTable(props: IProps) {
   ) => {
     setLocalDefault(filterParam, filter);
     if (projDefault) {
-      var def = { ...filter };
+      var def;
       if (filter) {
+        def = { ...filter };
         //convert steps to remote id
         if (filter.minStep)
           def.minStep = remoteId(
