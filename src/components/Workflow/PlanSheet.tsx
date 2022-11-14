@@ -725,9 +725,9 @@ export function PlanSheet(props: IProps) {
   return (
     <Box sx={{ display: 'flex' }}>
       <div>
-        {projRole === RoleNames.Admin && (
-          <TabAppBar position="fixed" color="default">
-            <TabActions>
+        <TabAppBar position="fixed" color="default">
+          <TabActions>
+            {projRole === RoleNames.Admin && (
               <>
                 <AddSectionPassageButtons
                   inlinePassages={inlinePassages}
@@ -763,22 +763,26 @@ export function PlanSheet(props: IProps) {
                 >
                   {t.resequence}
                 </AltButton>
-
                 <ProjButtons
                   {...props}
                   noImExport={pasting}
                   noIntegrate={pasting || data.length < 2}
                   t={projButtonStr}
                 />
-                <GrowingSpacer />
-                <FilterMenu
-                  canSetDefault={canSetDefault}
-                  state={filterState}
-                  onFilterChange={onFilterChange}
-                  orgSteps={orgSteps}
-                  maximumSection={maximumSection}
-                  filtered={filtered}
-                />
+              </>
+            )}
+
+            <GrowingSpacer />
+            <FilterMenu
+              canSetDefault={canSetDefault}
+              state={filterState}
+              onFilterChange={onFilterChange}
+              orgSteps={orgSteps}
+              maximumSection={maximumSection}
+              filtered={filtered}
+            />
+            {projRole === RoleNames.Admin && (
+              <>
                 <PriButton
                   id="planSheetSave"
                   key="save"
@@ -791,9 +795,9 @@ export function PlanSheet(props: IProps) {
                   <SaveIcon sx={iconMargin} className="small-icon" />
                 </PriButton>
               </>
-            </TabActions>
-          </TabAppBar>
-        )}
+            )}
+          </TabActions>
+        </TabAppBar>
         <ContentDiv id="PlanSheet" ref={sheetRef}>
           {warning && <WarningDiv>{warning}</WarningDiv>}
           <DataSheet
