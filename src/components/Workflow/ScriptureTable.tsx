@@ -65,6 +65,8 @@ import {
   wfNumChanges,
   getWorkflow,
   workflowSheet,
+  isSectionFiltered,
+  isPassageFiltered,
 } from '.';
 import { debounce } from 'lodash';
 import AudacityManager from './AudacityManager';
@@ -411,6 +413,8 @@ export function ScriptureTable(props: IProps) {
       passageUpdated: currentDateTime(),
       passageId: undefined,
       mediaShared: shared ? IMediaShare.None : IMediaShare.NotPublic,
+      deleted: false,
+      filtered: false,
     } as IWorkflow;
 
     if (flat && isSectionRow(myWorkflow[index])) {
@@ -491,7 +495,7 @@ export function ScriptureTable(props: IProps) {
     let n = 0;
     let i = 0;
     while (i < wf.length) {
-      if (!wf[i].deleted) {
+      if (!wf[i].deleted && !wf[i].filtered) {
         if (n === index) break;
         n += 1;
       }
@@ -973,6 +977,8 @@ export function ScriptureTable(props: IProps) {
         memory,
         orgSteps,
         wfStr,
+        filterState,
+        doneStepId,
         getDiscussionCount
       );
       setWorkflow(newWorkflow);
@@ -1030,29 +1036,30 @@ export function ScriptureTable(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [workflow, width, colNames, flat]);
 
+  useEffect(() => {
+    const newWork: IWorkflow[] = [];
+    var changed = false;
+    workflowRef.current.forEach((w) => {
+      var filtered = false;
+      if (isSectionRow(w))
+        filtered = isSectionFiltered(filterState, w.sectionSeq);
+
+      if (isPassageRow(w))
+        filtered =
+          filtered || isPassageFiltered(w, filterState, orgSteps, doneStepId);
+      if (filtered !== w.filtered) changed = true;
+      newWork.push({
+        ...w,
+        filtered,
+      });
+    });
+    if (changed) setWorkflow(newWork);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orgSteps, filterState, doneStepId]);
+
   const rowinfo = useMemo(() => {
-    const stepIndex = (stepId: string) =>
-      orgSteps.findIndex((s) => s.id === stepId);
-
-    if (filterState.disabled) return workflow.filter((w) => !w.deleted);
-
-    return workflow.filter(
-      (w) =>
-        !w.deleted &&
-        (!filterState.hideDone || w.stepId !== doneStepId) &&
-        (!filterState.assignedToMe || w.discussionCount > 0) &&
-        (!filterState.maxStep ||
-          !w.stepId ||
-          stepIndex(w.stepId) <= stepIndex(filterState.maxStep)) &&
-        (!filterState.minStep ||
-          !w.stepId ||
-          stepIndex(w.stepId) >= stepIndex(filterState.minStep)) &&
-        (filterState.minSection === 1 ||
-          w.sectionSeq >= filterState.minSection) &&
-        (filterState.maxSection === -1 ||
-          w.sectionSeq <= filterState.maxSection)
-    );
-  }, [workflow, orgSteps, filterState, doneStepId]);
+    return workflow.filter((w) => !w.deleted && !w.filtered);
+  }, [workflow]);
 
   const rowdata = useMemo(
     () => workflowSheet(rowinfo, colNames),
