@@ -104,7 +104,6 @@ interface IDispatchProps {
   resetProjects: typeof actions.resetProjects;
   resetUserName: typeof actions.resetUserName;
   setLanguage: typeof actions.setLanguage;
-  resetOrbitError: typeof actions.resetOrbitError;
 }
 interface IRecordProps {
   projectintegrations: Array<ProjectIntegration>;
@@ -154,7 +153,6 @@ export function IntegrationPanel(props: IProps) {
     resetProjects,
     resetUserName,
     setLanguage,
-    resetOrbitError,
   } = props;
   const { projectintegrations, integrations, projects, passages, mediafiles } =
     props;
@@ -188,7 +186,7 @@ export function IntegrationPanel(props: IProps) {
   const syncing = React.useRef<boolean>(false);
   const setSyncing = (state: boolean) => (syncing.current = state);
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
-  const checkOnline = useCheckOnline(resetOrbitError);
+  const checkOnline = useCheckOnline();
   const [exportTypes, setExportTypes] = useState([
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.WholeBackTranslation,
@@ -925,7 +923,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       resetProjects: actions.resetProjects,
       resetUserName: actions.resetUserName,
       setLanguage: actions.setLanguage,
-      resetOrbitError: actions.resetOrbitError,
     },
     dispatch
   ),

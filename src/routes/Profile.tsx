@@ -55,7 +55,7 @@ import {
   getParatextDataPath,
   waitForIt,
 } from '../utils';
-import { Redirect } from 'react-router';
+import { useNavigate } from 'react-router';
 import moment from 'moment-timezone';
 import {
   AddRecord,
@@ -158,6 +158,7 @@ export function Profile(props: IProps) {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
+  const navigate = useNavigate();
   const { accessToken } = useContext(TokenContext).state;
   const { getUserRec } = useUser();
   const { getMbrRoleRec } = useRole();
@@ -553,8 +554,8 @@ export function Profile(props: IProps) {
     (timezone || '') !== '' &&
     (locale || '') !== '';
 
-  if (/Logout/i.test(view)) return <Redirect to="/logout" />;
-  if (/access/i.test(view)) return <Redirect to="/" />;
+  if (/Logout/i.test(view)) navigate('/logout');
+  if (/access/i.test(view)) navigate('/');
   if (/Team/i.test(view)) return <StickyRedirect to="/team" />;
 
   return (

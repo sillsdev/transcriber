@@ -104,9 +104,6 @@ const Wrapper = styled.div`
     min-height: 0;
   }
 `;
-interface ParamTypes {
-  prjId: string;
-}
 
 const PassageDetailGrids = () => {
   const [projRole] = useGlobal('projRole');
@@ -326,7 +323,7 @@ const PassageDetailGrids = () => {
 };
 
 export const PassageDetail = () => {
-  const { prjId } = useParams<ParamTypes>();
+  const { prjId } = useParams();
   const { pathname } = useLocation();
   const setUrlContext = useUrlContext();
   const uctx = React.useContext(UnsavedContext);
@@ -353,7 +350,7 @@ export const PassageDetail = () => {
   };
 
   useEffect(() => {
-    const projectId = setUrlContext(prjId);
+    const projectId = setUrlContext(prjId ?? '');
     if (!projRole)
       if (!setMyProjRole(projectId)) {
         // If after proj role set there is none, force reload

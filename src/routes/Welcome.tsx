@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { Redirect } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { parseQuery } from '../utils/parseQuery';
 import { IState, IWelcomeStrings, User, OfflineProject } from '../model';
 import { Record } from '@orbit/data';
 import * as action from '../store';
@@ -12,11 +12,10 @@ import AppHead from '../components/App/AppHead';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import MemorySource from '@orbit/memory';
 import ImportTab from '../components/ImportTab';
-import { IAxiosStatus } from '../store/AxiosStatus';
 import OfflineIcon from '@mui/icons-material/CloudOff';
 import OnlineIcon from '@mui/icons-material/CloudQueue';
 import InfoIcon from '@mui/icons-material/InfoOutlined';
-import { connect, shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { AddRecord } from '../model/baseModel';
 import { useOfflineSetup, useRecOfType } from '../crud';
@@ -89,24 +88,20 @@ const HelpTip = () => {
   );
 };
 
-interface IStateProps {
-  importStatus: IAxiosStatus | undefined;
-}
-
-interface IDispatchProps {
-  fetchLocalization: typeof action.fetchLocalization;
-  setLanguage: typeof action.setLanguage;
-  importComplete: typeof action.importComplete;
-  resetOrbitError: typeof action.resetOrbitError;
-}
-
-interface IProps extends IStateProps, IDispatchProps {}
+interface IProps {}
 
 export function Welcome(props: IProps) {
-  const { importStatus, importComplete, resetOrbitError } = props;
+  const importStatus = useSelector(
+    (state: IState) => state.importexport.importexportStatus
+  );
+  const dispatch = useDispatch();
+  const setLanguage = action.setLanguage;
+  const fetchLocalization = action.fetchLocalization;
+  const importComplete = action.importComplete;
   const t: IWelcomeStrings = useSelector(welcomeSelector, shallowEqual);
+  const { search } = useLocation();
+  const navigate = useNavigate();
   const offlineSetup = useOfflineSetup();
-  const { fetchLocalization, setLanguage } = props;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_busy, setBusy] = useGlobal('importexportBusy');
   const [user, setUser] = useGlobal('user');
@@ -121,7 +116,7 @@ export function Welcome(props: IProps) {
   const [hasOfflineProjects, setHasOfflineProjects] = useState(false);
   const [hasProjects, setHasProjects] = useState(false);
   const [, setOfflineOnly] = useGlobal('offlineOnly');
-  const checkOnline = useCheckOnline(resetOrbitError);
+  const checkOnline = useCheckOnline();
 
   const hasRecs = (recType: string, iRecs?: Record[], offline?: Boolean) => {
     const recs = iRecs || recOfType(recType);
@@ -179,8 +174,14 @@ export function Welcome(props: IProps) {
   };
 
   useEffect(() => {
-    setLanguage(localeDefault(isDeveloper));
-    fetchLocalization();
+    if (search !== '') {
+      const params = parseQuery(search);
+      if (params.inviteId && typeof params.inviteId === 'string') {
+        localStorage.setItem('inviteId', params.inviteId);
+      }
+    }
+    dispatch(setLanguage(localeDefault(isDeveloper)));
+    dispatch(fetchLocalization());
     checkOnline((connected) => {});
     const choice = localStorage.getItem('offlineAdmin');
 
@@ -195,7 +196,7 @@ export function Welcome(props: IProps) {
 
   useEffect(() => {
     if (importStatus?.complete) {
-      importComplete();
+      dispatch(importComplete());
       setBusy(false);
       const { onlineUsers } = userTypes();
       checkUsers(true, onlineUsers ? 'online-local' : 'offline');
@@ -303,7 +304,7 @@ export function Welcome(props: IProps) {
   };
 
   if (!isElectron || whichUsers !== null) {
-    return <Redirect to={'/access/' + whichUsers} />;
+    navigate('/access/' + whichUsers);
   }
 
   return (
@@ -376,20 +377,4 @@ export function Welcome(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  importStatus: state.importexport.importexportStatus,
-});
-
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      fetchLocalization: action.fetchLocalization,
-      setLanguage: action.setLanguage,
-      importComplete: action.importComplete,
-      resetOrbitError: action.resetOrbitError,
-    },
-    dispatch
-  ),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Welcome) as any;
+export default Welcome;

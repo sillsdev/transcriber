@@ -153,12 +153,6 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   children: React.ReactElement;
   artifactTypeId?: string | null | undefined;
 }
-interface ParamTypes {
-  prjId: string;
-  pasId: string;
-  slug?: string;
-  medId?: string;
-}
 const TranscriberProvider = withData(mapRecordsToProps)(
   connect(
     mapStateToProps,
@@ -177,7 +171,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       projButtonStr,
       sharedStr,
     } = props;
-    const { prjId, pasId, slug, medId } = useParams<ParamTypes>();
+    const { prjId, pasId, slug, medId } = useParams();
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [devPlan] = useGlobal('plan');
@@ -535,7 +529,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           let mediaId = medId;
           if (!mediaId) {
             //vernacular so should just be one
-            const psg = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+            const psg =
+              remoteIdGuid('passage', pasId ?? '', memory.keyMap) || pasId;
             const p = rowList.filter((r) => r.passage.id === psg);
             if (p.length > 0) mediaId = p[0].mediafile.id;
           }

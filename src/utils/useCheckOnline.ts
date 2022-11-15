@@ -4,6 +4,7 @@ import Axios from 'axios';
 import JSONAPISource from '@orbit/jsonapi';
 import { OrbitNetworkErrorRetries } from '../api-variable';
 import { API_CONFIG } from '../api-variable';
+import { useDispatch } from 'react-redux';
 
 function Online(doCheck: boolean, cb: (result: boolean) => void) {
   const opts = {
@@ -24,9 +25,9 @@ function Online(doCheck: boolean, cb: (result: boolean) => void) {
       cb(reason.response !== undefined);
     });
 }
-export const useCheckOnline = (
-  resetOrbitError: typeof actions.resetOrbitError
-) => {
+export const useCheckOnline = () => {
+  const dispatch = useDispatch();
+  const resetOrbitError = actions.resetOrbitError;
   const [connected, setConnected] = useGlobal('connected');
   const [orbitRetries, setOrbitRetries] = useGlobal('orbitRetries');
   const [coordinator] = useGlobal('coordinator');
@@ -41,7 +42,7 @@ export const useCheckOnline = (
       if (connected !== result) {
         setConnected(result);
         if (result) {
-          resetOrbitError();
+          dispatch(resetOrbitError());
           if (orbitRetries < OrbitNetworkErrorRetries) {
             remote.requestQueue.retry();
             setOrbitRetries(OrbitNetworkErrorRetries);

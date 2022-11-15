@@ -10,7 +10,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import ErrorBoundary from './hoc/ErrorBoundary';
-import { Router, HashRouter } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { DataProvider } from './mods/react-orbitjs';
 import { Provider } from 'react-redux';
 import { coordinator, memory, backup, schema } from './schema';
@@ -18,7 +18,6 @@ import configureStore from './store';
 import { setGlobal } from 'reactn';
 import bugsnag from '@bugsnag/js';
 import bugsnagReact from '@bugsnag/plugin-react';
-import history from './history';
 import {
   logError,
   Severity,
@@ -26,6 +25,7 @@ import {
   logFile,
   getFingerprintArray,
   waitForIt,
+  LocalKey,
 } from './utils';
 import { updateableFiles, staticFiles, localFiles } from './crud';
 import {
@@ -36,16 +36,17 @@ import {
 import { QueryBuilder } from '@orbit/data';
 import { related } from './crud';
 import { Section, Plan } from './model';
+import { TokenProvider } from './context/TokenProvider';
 const appVersion = require('../package.json').version;
 
 const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
 const prod = API_CONFIG.host.indexOf('prod') !== -1;
 const bugsnagClient = prodOrQa
   ? bugsnag({
-    apiKey: API_CONFIG.snagId,
-    appVersion,
-    releaseStage: prod ? 'production' : 'staging',
-  })
+      apiKey: API_CONFIG.snagId,
+      appVersion,
+      releaseStage: prod ? 'production' : 'staging',
+    })
   : undefined;
 bugsnagClient?.use(bugsnagReact, React);
 const SnagBoundary = bugsnagClient?.getPlugin('react');
@@ -102,42 +103,61 @@ if (isElectron) {
   console.log('Running on the Web, Filesystem access disabled.');
 }
 
-const errorManagedApp = bugsnagClient ? (
-  <SnagBoundary>
-    <ErrorBoundary errorReporter={bugsnagClient} memory={memory}>
+const ErrorManagedApp = () =>
+  bugsnagClient ? (
+    <SnagBoundary>
+      <ErrorBoundary errorReporter={bugsnagClient} memory={memory}>
+        <App />
+      </ErrorBoundary>
+    </SnagBoundary>
+  ) : (
+    <ErrorBoundary errorReporter={electronLog} memory={memory}>
       <App />
     </ErrorBoundary>
-  </SnagBoundary>
-) : (
-  <ErrorBoundary errorReporter={electronLog} memory={memory}>
-    <App />
-  </ErrorBoundary>
+  );
+
+const TokenChecked = () => (
+  <TokenProvider>
+    <ErrorManagedApp />
+  </TokenProvider>
 );
 
-const onRedirectingCallbck = (appState?: { returnTo?: string }) => {
-  history.push(
-    appState && appState.returnTo ? appState.returnTo : window.location.pathname
+const AuthApp = () => {
+  // const navigate = useNavigate();
+
+  const onRedirectingCallbck = (appState?: { returnTo?: string }) => {
+    // navigate(
+    //   appState && appState.returnTo
+    //     ? appState.returnTo
+    //     : window.location.pathname
+    // );
+    localStorage.setItem(
+      LocalKey.deeplink,
+      appState && appState.returnTo
+        ? appState.returnTo
+        : window.location.pathname
+    );
+  };
+
+  return (
+    <Auth0Provider
+      domain={auth0Domain}
+      clientId={webClientId}
+      audience={apiIdentifier}
+      redirectUri={process.env.REACT_APP_CALLBACK}
+      useRefreshTokens={true}
+      onRedirectCallback={onRedirectingCallbck}
+    >
+      <TokenChecked />
+    </Auth0Provider>
   );
 };
 
-const router = isElectron ? (
-  <HashRouter>{errorManagedApp}</HashRouter>
-) : (
-  <Auth0Provider
-    domain={auth0Domain}
-    clientId={webClientId}
-    audience={apiIdentifier}
-    redirectUri={process.env.REACT_APP_CALLBACK}
-    useRefreshTokens={true}
-    onRedirectCallback={onRedirectingCallbck}
-  >
-    <Router history={history}>{errorManagedApp}</Router>
-  </Auth0Provider>
-);
-
 const Root = () => (
   <DataProvider dataStore={memory}>
-    <Provider store={store as any}>{router}</Provider>
+    <Provider store={store as any}>
+      {isElectron ? <TokenChecked /> : <AuthApp />}
+    </Provider>
   </DataProvider>
 );
 const promises = [];

@@ -11,12 +11,9 @@ import { forceLogin, localUserKey, LocalKey } from '../utils';
 import { UnsavedContext } from '../context/UnsavedContext';
 import StickyRedirect from '../components/StickyRedirect';
 
-interface ParamTypes {
-  prjId: string;
-}
 export const PlanScreen = () => {
   const { pathname } = useLocation();
-  const { prjId } = useParams<ParamTypes>();
+  const { prjId } = useParams();
   const setUrlContext = useUrlContext();
   const uctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = uctx.state;
@@ -44,7 +41,7 @@ export const PlanScreen = () => {
   };
 
   React.useEffect(() => {
-    const projectId = setUrlContext(prjId);
+    const projectId = setUrlContext(prjId ?? '');
     if (!projRole)
       if (!setMyProjRole(projectId)) {
         // If after proj role set there is none, force reload
@@ -57,7 +54,7 @@ export const PlanScreen = () => {
   }, []);
 
   React.useEffect(() => {
-    setUrlContext(prjId);
+    setUrlContext(prjId ?? '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prjId]);
 

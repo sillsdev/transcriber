@@ -1,16 +1,17 @@
 import React, { useState, useContext } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import JwtDecode from 'jwt-decode';
-import { connect } from 'react-redux';
-import { IState, IToken, IEmailUnverifiedStrings } from '../model';
-import localStrings from '../selector/localize';
+import { shallowEqual, useSelector } from 'react-redux';
+import { IToken, IEmailUnverifiedStrings } from '../model';
 import { Typography, Grid, styled, Box, BoxProps } from '@mui/material';
-import { Redirect } from 'react-router';
+import { useNavigate } from 'react-router';
 import { API_CONFIG, isElectron } from '../api-variable';
 import Axios from 'axios';
 import { TokenContext } from '../context/TokenProvider';
 import { doLogout, goOnline } from './Access';
 import { ActionRow, PriButton } from '../control';
+import { emailUnverifiedSelector } from '../selector';
+import { useMounted } from '../utils';
 
 const FullScreen = styled(Box)<BoxProps>(() => ({
   display: 'flex',
@@ -18,18 +19,19 @@ const FullScreen = styled(Box)<BoxProps>(() => ({
   alignItems: 'center',
 }));
 
-interface IStateProps {
-  t: IEmailUnverifiedStrings;
-}
-
-interface IProps extends IStateProps {}
+interface IProps {}
 
 export const EmailUnverified = (props: IProps) => {
-  const { t } = props;
+  const isMounted = useMounted('unverfied');
+  const navigate = useNavigate();
   const { getAccessTokenSilently, user } = useAuth0();
   const { accessToken, setAuthSession } = useContext(TokenContext).state;
   const [view, setView] = useState('');
   const [message, setMessage] = useState('');
+  const t: IEmailUnverifiedStrings = useSelector(
+    emailUnverifiedSelector,
+    shallowEqual
+  );
 
   const handleResend = (e: any) => {
     var url = API_CONFIG.host + '/api/auth/resend';
@@ -60,6 +62,7 @@ export const EmailUnverified = (props: IProps) => {
     if (user?.email_verified) {
       (async () => {
         const token = await getAccessTokenSilently();
+        if (!isMounted()) return;
         const decodedToken = JwtDecode(token) as IToken;
         setAuthSession(user, token, decodedToken.exp);
         setView('Loading');
@@ -68,8 +71,8 @@ export const EmailUnverified = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  if (/Logout/i.test(view)) return <Redirect to="/logout" />;
-  if (/Loading/i.test(view)) return <Redirect to="/loading" />;
+  if (/Logout/i.test(view)) navigate('/logout');
+  if (/Loading/i.test(view)) navigate('/loading');
 
   return (
     <FullScreen>
@@ -104,8 +107,4 @@ export const EmailUnverified = (props: IProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'emailUnverified' }),
-});
-
-export default connect(mapStateToProps)(EmailUnverified) as any;
+export default EmailUnverified;

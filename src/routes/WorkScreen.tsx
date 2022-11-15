@@ -35,12 +35,9 @@ const TranscriberBox = styled(Box)<BoxProps>(({ theme }) => ({
   left: `${TaskItemWidth + 4}px`,
 }));
 
-interface ParamTypes {
-  prjId: string;
-}
 export const WorkScreen = () => {
   const { pathname } = useLocation();
-  const { prjId } = useParams<ParamTypes>();
+  const { prjId } = useParams();
   const [project] = useGlobal('project');
   const [organization] = useGlobal('organization');
   const setUrlContext = useUrlContext();
@@ -71,7 +68,7 @@ export const WorkScreen = () => {
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   React.useEffect(() => {
-    const projectId = setUrlContext(prjId);
+    const projectId = setUrlContext(prjId ?? '');
     if (!projRole)
       if (!setMyProjRole(projectId)) {
         // If after proj role set there is none, force reload
@@ -84,7 +81,7 @@ export const WorkScreen = () => {
   }, []);
 
   React.useEffect(() => {
-    setUrlContext(prjId);
+    setUrlContext(prjId ?? '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prjId]);
 

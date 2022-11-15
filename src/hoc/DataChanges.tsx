@@ -60,7 +60,6 @@ interface IStateProps {}
 
 interface IDispatchProps {
   setLanguage: typeof actions.setLanguage;
-  resetOrbitError: typeof actions.resetOrbitError;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -366,7 +365,7 @@ export const doDataChanges = async (
 };
 
 export function DataChanges(props: IProps) {
-  const { children, setLanguage, resetOrbitError } = props;
+  const { children, setLanguage } = props;
   const [isOffline] = useGlobal('offline');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
@@ -388,7 +387,7 @@ export function DataChanges(props: IProps) {
   const [orbitRetries] = useGlobal('orbitRetries');
   const doingChanges = useRef(false);
   const getOfflineProject = useOfflnProjRead();
-  const checkOnline = useCheckOnline(resetOrbitError);
+  const checkOnline = useCheckOnline();
   const { anySaving, toolsChanged } = useContext(UnsavedContext).state;
   const defaultBackupDelay = isOffline ? 1000 * 60 * 30 : null; //30 minutes;
   // eslint-disable-next-line react-hooks/exhaustive-deps

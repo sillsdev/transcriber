@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { LocalKey, localUserKey } from '../utils/localUserKey';
 
 interface IProps {
@@ -8,7 +8,7 @@ interface IProps {
 }
 
 export const StickyRedirect = ({ to }: IProps) => {
-  const { push, replace } = useHistory();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const [reporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
@@ -21,8 +21,8 @@ export const StickyRedirect = ({ to }: IProps) => {
       pathname.length > 4 &&
       to.slice(0, 4) === pathname.slice(0, 4)
     )
-      replace(to);
-    else push(to);
+      navigate(to, { replace: true });
+    else navigate(to);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memory, reporter, to]);
 

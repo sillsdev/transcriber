@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import Axios from 'axios';
 import { useGlobal } from 'reactn';
 import { TokenContext } from '../context/TokenProvider';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -67,18 +67,16 @@ interface IDispatchProps {
   setExpireAt: typeof action.setExpireAt;
   doOrbitError: typeof action.doOrbitError;
   orbitComplete: typeof action.orbitComplete;
-  resetOrbitError: typeof action.resetOrbitError;
 }
 
-interface IProps extends IStateProps, IDispatchProps {}
+interface IProps {}
 
-export function Loading(props: IProps) {
+export function Loading(props: IProps & IStateProps & IDispatchProps) {
   const { orbitFetchResults, t } = props;
   const {
     fetchOrbitData,
     orbitComplete,
     doOrbitError,
-    resetOrbitError,
     fetchLocalization,
     setLanguage,
     setExpireAt,
@@ -105,7 +103,7 @@ export function Loading(props: IProps) {
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [, setCompleted] = useGlobal('progress');
   const { showMessage } = useSnackBar();
-  const { push } = useHistory();
+  const navigate = useNavigate();
   const getOfflineProject = useOfflnProjRead();
   const { getPlan } = usePlan();
   const [importOpen, setImportOpen] = useState(false);
@@ -115,7 +113,7 @@ export function Loading(props: IProps) {
   const offlineSetup = useOfflineSetup();
   const { setMyProjRole } = useRole();
   const { setProjectType } = useProjectType();
-  const LoadProjData = useLoadProjectData(t, doOrbitError, resetOrbitError);
+  const LoadProjData = useLoadProjectData(t, doOrbitError);
   const [view, setView] = useState('');
   const [inviteError, setInviteError] = useState('');
 
@@ -188,6 +186,7 @@ export function Loading(props: IProps) {
     }
   };
   useEffect(() => {
+    // console.clear();
     if (!offline && !isAuthenticated()) return;
     if (!offline) {
       const decodedToken = jwtDecode(accessToken || '') as IToken;
@@ -238,7 +237,10 @@ export function Loading(props: IProps) {
   }, [doSync, importOpen, setBusy]);
 
   const getGotoUrl = () => {
-    let fromUrl = localStorage.getItem(localUserKey(LocalKey.url));
+    let fromUrl =
+      localStorage.getItem(LocalKey.deeplink) ??
+      localStorage.getItem(localUserKey(LocalKey.url));
+    localStorage.removeItem(LocalKey.deeplink);
     if (fromUrl) {
       localStorage.removeItem(localUserKey(LocalKey.deeplink));
       return fromUrl;
@@ -296,7 +298,7 @@ export function Loading(props: IProps) {
         }
       } else if (!/^\/profile/.test(fromUrl)) fromUrl = null;
     }
-    push(fromUrl || '/team');
+    navigate(fromUrl || '/team');
   };
 
   useEffect(() => {
@@ -348,8 +350,8 @@ export function Loading(props: IProps) {
     setView('Logout');
   };
 
-  if (!offline && !isAuthenticated()) return <Redirect to="/" />;
-  if (view !== '') return <Redirect to={view} />;
+  if (!offline && !isAuthenticated()) navigate('/');
+  if (view !== '') navigate(view);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -400,10 +402,11 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       setExpireAt: action.setExpireAt,
       doOrbitError: action.doOrbitError,
       orbitComplete: action.orbitComplete,
-      resetOrbitError: action.resetOrbitError,
     },
     dispatch
   ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Loading) as any;
+export default connect(mapStateToProps, mapDispatchToProps)(Loading) as any as (
+  props: IProps
+) => JSX.Element;

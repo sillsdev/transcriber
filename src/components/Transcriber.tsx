@@ -159,13 +159,6 @@ const Wrapper = styledComp.div`
   }
 `;
 
-interface ParamTypes {
-  prjId: string;
-  pasId: string;
-  slug?: string;
-  medId?: string;
-}
-
 interface IRecordProps {
   mediafiles: MediaFile[];
   integrations: Integration[];
@@ -240,7 +233,7 @@ export function Transcriber(props: IProps) {
     loading,
     artifactId,
   } = useTodo();
-  const { slug } = useParams<ParamTypes>();
+  const { slug } = useParams();
   const { safeURL } = useFetchMediaUrl();
   const { section, passage, duration, mediafile, state, role } = rowData[
     index
