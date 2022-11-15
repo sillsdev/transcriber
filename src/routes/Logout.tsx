@@ -10,11 +10,11 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { TokenContext } from '../context/TokenProvider';
 import { isElectron } from '../api-variable';
-import { Redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { localeDefault } from '../utils';
 import { useGlobal } from 'reactn';
-import { LogLevel } from '@orbit/coordinator';
 import { GrowingSpacer } from '../control';
+import { useLogoutResets } from '../utils/useLogoutResets';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -23,44 +23,29 @@ interface IDispatchProps {
   setLanguage: typeof action.setLanguage;
 }
 
-interface IProps extends IDispatchProps {}
+interface IProps {}
 
-export function Logout(props: IProps) {
+export function Logout(props: IProps & IDispatchProps) {
   const { logout } = useAuth0();
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const curPath = useRef('');
   const { fetchLocalization, setLanguage } = props;
-  const [coordinator] = useGlobal('coordinator');
-  const [user, setUser] = useGlobal('user');
+  const [user] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
-  const [, setIsOffline] = useGlobal('offline');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
   const ctx = useContext(TokenContext).state;
   const [view, setView] = useState('');
+  const logoutResets = useLogoutResets();
 
   const handleLogout = async () => {
     const wasOfflineOnly = offlineOnly;
     if (offlineOnly) setOfflineOnly(false);
-    setUser('');
-
-    if (ctx.accessToken) {
-      localStorage.removeItem('isLoggedIn');
-      setIsOffline(isElectron);
-      if (isElectron && coordinator?.sourceNames.includes('remote')) {
-        await coordinator.deactivate();
-        coordinator.removeStrategy('remote-push-fail');
-        coordinator.removeStrategy('remote-pull-fail');
-        coordinator.removeStrategy('remote-request');
-        coordinator.removeStrategy('remote-update');
-        coordinator.removeStrategy('remote-sync');
-        coordinator.removeSource('remote');
-        await coordinator.activate({ logLevel: LogLevel.Warnings });
-      }
-      if (isElectron) {
-        ctx.logout();
-      } else {
-        logout({ returnTo: window.origin });
-      }
+    await logoutResets();
+    if (isElectron) {
+      ctx.logout();
+    } else {
+      logout({ returnTo: window.origin });
     }
     setView(wasOfflineOnly ? 'offline' : 'online');
   };
@@ -94,7 +79,7 @@ export function Logout(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
-  if (/online|offline/i.test(view)) return <Redirect to={`/access/${view}`} />;
+  if (/online|offline/i.test(view)) navigate(`/access/${view}`);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -133,4 +118,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ),
 });
 
-export default connect(null, mapDispatchToProps)(Logout) as any;
+export default connect(null, mapDispatchToProps)(Logout) as any as (
+  props: IProps
+) => JSX.Element;

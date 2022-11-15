@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { Redirect, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { connect, shallowEqual, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -108,10 +108,9 @@ interface IStateProps {
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
-  resetOrbitError: typeof action.resetOrbitError;
 }
 
-interface IProps extends IRecordProps, IStateProps, IDispatchProps {}
+interface IProps {}
 export const goOnline = (email?: string) => {
   const lastTime = localStorage.getItem('electron-lastTime');
   localStorage.removeItem('auth-id');
@@ -131,7 +130,9 @@ export const switchUser = async () => {
     goOnline();
   }, 2000);
 };
-export function Access(props: IProps) {
+export function Access(
+  props: IProps & IRecordProps & IStateProps & IDispatchProps
+) {
   const {
     t,
     importStatus,
@@ -142,7 +143,8 @@ export function Access(props: IProps) {
     sections,
   } = props;
   const { pathname } = useLocation();
-  const { setLanguage, resetOrbitError } = props;
+  const navigate = useNavigate();
+  const { setLanguage } = props;
   const { loginWithRedirect, isAuthenticated } = useAuth0();
   const [offline, setOffline] = useGlobal('offline');
   const [user] = useGlobal('user');
@@ -172,7 +174,7 @@ export function Access(props: IProps) {
   );
   const [goOnlineConfirmation, setGoOnlineConfirmation] =
     useState<React.MouseEvent<HTMLElement>>();
-  const checkOnline = useCheckOnline(resetOrbitError);
+  const checkOnline = useCheckOnline();
   const handleModeChange = (mode: ListMode) => {
     setListMode(mode);
   };
@@ -382,19 +384,19 @@ export function Access(props: IProps) {
 
   if (tokenCtx.state.accessToken && !tokenCtx.state.email_verified) {
     if (localStorage.getItem('isLoggedIn') === 'true')
-      return <Redirect to="/emailunverified" />;
+      navigate('/emailunverified');
     else doLogout();
   } else if (
     (!isElectron && tokenCtx.state.isAuthenticated()) ||
     offlineOnly ||
     (isElectron && selectedUser !== '')
   ) {
-    return <Redirect to="/loading" />;
+    navigate('/loading');
   }
   if (/Logout/i.test(view)) {
-    return <Redirect to="/logout" />;
+    navigate('/logout');
   }
-  if (whichUsers === '') return <Redirect to="/" />;
+  if (whichUsers === '') navigate('/');
 
   const handleCurUser = () => {
     handleSelect(curUser?.id || '');
@@ -560,7 +562,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
-      resetOrbitError: action.resetOrbitError,
     },
     dispatch
   ),
@@ -575,4 +576,4 @@ const mapRecordsToProps = {
 
 export default withData(mapRecordsToProps)(
   connect(mapStateToProps, mapDispatchToProps)(Access) as any
-) as any;
+) as any as (props: IProps) => JSX.Element;

@@ -98,7 +98,6 @@ interface IStateProps {
 interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
   doOrbitError: typeof actions.doOrbitError;
-  resetOrbitError: typeof actions.resetOrbitError;
 }
 
 interface IRecordProps {
@@ -119,10 +118,6 @@ interface IProps
   colNames: string[];
 }
 
-interface ParamTypes {
-  prjId: string;
-}
-
 interface AudacityInfo {
   wf: IWorkflow;
   index: number;
@@ -141,7 +136,6 @@ export function ScriptureTable(props: IProps) {
     allBookData,
     fetchBooks,
     doOrbitError,
-    resetOrbitError,
     passages,
     sections,
     mediafiles,
@@ -150,7 +144,7 @@ export function ScriptureTable(props: IProps) {
     workflowSteps,
     orgWorkflowSteps,
   } = props;
-  const { prjId } = useParams<ParamTypes>();
+  const { prjId } = useParams();
   const [width, setWidth] = React.useState(window.innerWidth);
   const [project] = useGlobal('project');
   const [plan] = useGlobal('plan');
@@ -208,7 +202,7 @@ export function ScriptureTable(props: IProps) {
     ...props,
     doOrbitError,
   });
-  const checkOnline = useCheckOnline(resetOrbitError);
+  const checkOnline = useCheckOnline();
   const [speaker, setSpeaker] = useState('');
   const getStepsBusy = useRef(false);
   const [orgSteps, setOrgSteps] = useState<OrgWorkflowStep[]>([]);
@@ -1171,7 +1165,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       fetchBooks: actions.fetchBooks,
       doOrbitError: actions.doOrbitError,
-      resetOrbitError: actions.resetOrbitError,
     },
     dispatch
   ),

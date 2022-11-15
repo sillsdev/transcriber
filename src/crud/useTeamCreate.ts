@@ -1,11 +1,11 @@
 import { useGlobal, useRef } from 'reactn';
 import {
   Organization,
-  ISharedStrings,
   OrganizationMembership,
   Group,
   GroupMembership,
   RoleNames,
+  ISharedStrings,
 } from '../model';
 import { useCheckOnline, cleanFileName } from '../utils';
 import { offlineError, useProjectType, useRole } from '.';
@@ -16,20 +16,12 @@ import { TransformBuilder } from '@orbit/data';
 import { setDefaultProj, allUsersRec } from '.';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { useTeamApiPull } from './useTeamApiPull';
-import * as actions from '../store';
+import { shallowEqual, useSelector } from 'react-redux';
+import { sharedSelector } from '../selector';
 
-interface IDispatchProps {
-  resetOrbitError: typeof actions.resetOrbitError;
-}
-
-interface IStateProps {
-  ts: ISharedStrings;
-}
-
-interface IProps extends IStateProps, IDispatchProps {}
+interface IProps {}
 
 export const useTeamCreate = (props: IProps) => {
-  const { resetOrbitError } = props;
   const [coordinator] = useGlobal('coordinator');
   const [user] = useGlobal('user');
   const [, setOrganization] = useGlobal('organization');
@@ -40,8 +32,9 @@ export const useTeamCreate = (props: IProps) => {
   const { setProjectType } = useProjectType();
   const { getRoleRec } = useRole();
   const teamApiPull = useTeamApiPull();
-  const checkOnline = useCheckOnline(resetOrbitError);
+  const checkOnline = useCheckOnline();
   const workingOnItRef = useRef(false);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const OrgRelated = async (
     coordinator: Coordinator,
     orgRec: Organization,
@@ -143,7 +136,7 @@ export const useTeamCreate = (props: IProps) => {
         .catch((err) => {
           checkOnline((online) => {
             workingOnItRef.current = false;
-            offlineError({ ...props, online, showMessage, err });
+            offlineError({ ts, online, showMessage, err });
           });
         });
     }

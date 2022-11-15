@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'reactn';
-import { Redirect, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { IState, IMainStrings } from '../../model';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
@@ -106,6 +106,7 @@ interface IProps extends IStateProps {
 export const AppHead = (props: IProps) => {
   const { resetRequests, SwitchTo, t, orbitStatus, orbitErrorMsg } = props;
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const [errorReporter] = useGlobal('errorReporter');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -316,13 +317,13 @@ export const AppHead = (props: IProps) => {
   const handleUpdateClose = () => setUpdateTipOpen(pathname === '/');
   const handleTermsClose = () => setShowTerms('');
 
-  if (view === 'Error') return <Redirect to="/error" />;
+  if (view === 'Error') navigate('/error');
   if (view === 'Profile') return <StickyRedirect to="/profile" />;
-  if (view === 'Logout') return <Redirect to="/logout" />;
-  if (view === 'Access') return <Redirect to="/" />;
+  if (view === 'Logout') navigate('/logout');
+  if (view === 'Access') navigate('/');
   if (view === 'Home') return <StickyRedirect to="/team" />;
-  if (view === 'Terms') return <Redirect to="/terms" />;
-  if (view === 'Privacy') return <Redirect to="/privacy" />;
+  if (view === 'Terms') navigate('/terms');
+  if (view === 'Privacy') navigate('/privacy');
   return (
     <AppBar
       position="fixed"

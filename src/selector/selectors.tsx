@@ -37,6 +37,9 @@ export const discussionListSelector = (state: IState) =>
 export const discussionMenuSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'discussionMenu' });
 
+export const emailUnverifiedSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'emailUnverified' });
+
 export const filterMenuSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'filterMenu' });
 

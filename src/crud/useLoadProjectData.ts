@@ -7,8 +7,7 @@ import { LoadProjectData } from '.';
 
 export const useLoadProjectData = (
   t: IMainStrings,
-  doOrbitError: typeof actions.doOrbitError,
-  resetOrbitError: typeof actions.resetOrbitError
+  doOrbitError: typeof actions.doOrbitError
 ) => {
   const [coordinator] = useGlobal('coordinator');
   const [isOffline] = useGlobal('offline');
@@ -17,7 +16,7 @@ export const useLoadProjectData = (
   const [, setBusy] = useGlobal('importexportBusy');
   const AddProjectLoaded = useProjectsLoaded();
   const { showMessage } = useSnackBar();
-  const checkOnline = useCheckOnline(resetOrbitError);
+  const checkOnline = useCheckOnline();
 
   return (projectId: string, cb?: () => void) => {
     if (projectsLoaded.includes(projectId) || offlineOnly) {

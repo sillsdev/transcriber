@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable jsx-a11y/anchor-has-content */
+import React, { useRef } from 'react';
 import { User, useAuth0 } from '@auth0/auth0-react';
 import { IToken } from '../model';
 import Busy from '../components/Busy';
@@ -50,6 +51,7 @@ function TokenProvider(props: IProps) {
   const [errorReporter] = useGlobal('errorReporter');
   const updateOrbitToken = useUpdateOrbitToken();
   const view = React.useRef<any>('');
+  const logoutRef = useRef<any>();
   const [state, setState] = React.useState({
     ...initState,
   });
@@ -139,11 +141,12 @@ function TokenProvider(props: IProps) {
     setState((state) => ({ ...state, expiresAt: -1 }));
     view.current = 'loggedOut';
     setModalOpen(false);
+    if (!offline) logoutRef.current && logoutRef.current.click();
   };
 
   const checkTokenExpired = () => {
     if (!offline) {
-      if (state.expiresAt) {
+      if ((state.expiresAt ?? 0) > 0) {
         const currentUnix = moment().locale('en').format('X');
         const expires = moment
           .unix(state?.expiresAt || 0)
@@ -219,6 +222,7 @@ function TokenProvider(props: IProps) {
       }}
     >
       {children}
+      <a ref={logoutRef} href="/logout"></a>
     </TokenContext.Provider>
   );
 }

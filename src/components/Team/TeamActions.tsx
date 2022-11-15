@@ -7,6 +7,7 @@ import { TeamContext } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
 import ImportTab from '../ImportTab';
 import { AltButton } from '../../control';
+import { useNavigate } from 'react-router-dom';
 
 const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
   padding: theme.spacing(2),
@@ -22,6 +23,7 @@ const TeamActions = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const ctx = React.useContext(TeamContext);
+  const navigate = useNavigate();
   const { teamCreate, cardStrings, isDeleting } = ctx.state;
   const t = cardStrings;
 
@@ -60,6 +62,11 @@ const TeamActions = () => {
           onClick={handleClickImport}
         >
           {t.import}
+        </AltButton>
+      )}
+      {isDeveloper && (
+        <AltButton id="Error" sx={{ mt: 2 }} onClick={() => navigate('/error')}>
+          Error
         </AltButton>
       )}
       <TeamDialog

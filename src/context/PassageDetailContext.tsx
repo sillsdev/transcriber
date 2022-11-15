@@ -225,11 +225,6 @@ const PassageDetailContext = React.createContext({} as IContext);
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   children: React.ReactElement;
 }
-interface ParamTypes {
-  prjId: string;
-  pasId: string;
-  mediaId: string;
-}
 const PassageDetailProvider = withData(mapRecordsToProps)(
   connect(
     mapStateToProps,
@@ -241,7 +236,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { workflowSteps, orgWorkflowSteps } = props;
     const { wfStr, sharedStr, stepCompleteStr } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
-    const { pasId, prjId } = useParams<ParamTypes>();
+    const { pasId, prjId } = useParams();
     const [memory] = useGlobal('memory');
     const [coordinator] = useGlobal('coordinator');
     const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -256,7 +251,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       ...initState,
       allBookData,
       wfStr,
-      prjId,
+      prjId: prjId ?? '',
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const fetching = useRef('');
@@ -495,7 +490,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       });
       const recId = {
         type: 'passage',
-        id: remoteIdGuid('passage', pasId, memory.keyMap) || pasId,
+        id: remoteIdGuid('passage', pasId ?? '', memory.keyMap) || pasId || '',
       };
       var tb = new TransformBuilder();
       var ops = [] as Operation[];
@@ -743,7 +738,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     };
 
     useEffect(() => {
-      const passageId = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+      const passageId =
+        remoteIdGuid('passage', pasId ?? '', memory.keyMap) || pasId || '';
       var p = passages.find((p) => p.id === passageId);
       if (p) {
         const complete = getStepComplete(p);
@@ -861,7 +857,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     }, [saveResult]);
 
     useEffect(() => {
-      const passageId = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+      const passageId =
+        remoteIdGuid('passage', pasId ?? '', memory.keyMap) || pasId || '';
       const allMedia = getAllMediaRecs(passageId, memory);
       const localize = {
         localizedCategory: localizedArtifactCategory,

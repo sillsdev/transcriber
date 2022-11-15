@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal, useEffect } from 'reactn';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { connect, shallowEqual, useSelector } from 'react-redux';
 import * as actions from '../store';
 import {
   IState,
-  IControlStrings,
+  // IControlStrings,
   GroupMembership,
   Project,
   Plan,
@@ -49,12 +49,12 @@ import {
   useLoadProjectData,
   useProjectType,
 } from '../crud';
+import { controlSelector } from '../selector';
 
 export type TeamIdType = Organization | null;
 
 interface IStateProps {
   lang: string;
-  controlStrings: IControlStrings;
   t: IMainStrings;
   cardStrings: ICardsStrings;
   sharedStrings: ISharedStrings;
@@ -70,7 +70,6 @@ interface IStateProps {
 const mapStateToProps = (state: IState): IStateProps => ({
   lang: state.strings.lang,
   sharedStrings: localStrings(state, { layout: 'shared' }),
-  controlStrings: localStrings(state, { layout: 'control' }),
   t: localStrings(state, { layout: 'main' }),
   cardStrings: localStrings(state, { layout: 'cards' }),
   vProjectStrings: localStrings(state, { layout: 'vProject' }),
@@ -119,7 +118,6 @@ const mapRecordsToProps = {
 };
 
 const initState = {
-  controlStrings: {} as IControlStrings,
   lang: 'en',
   ts: {} as ISharedStrings,
   resetOrbitError: (() => {}) as typeof actions.resetOrbitError,
@@ -195,7 +193,6 @@ const TeamProvider = withData(mapRecordsToProps)(
       plans,
       planTypes,
       lang,
-      controlStrings,
       t,
       ts,
       sharedStrings,
@@ -224,7 +221,6 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [importProject, setImportProject] = useState<VProject>();
     const [state, setState] = useState({
       ...initState,
-      controlStrings,
       lang,
       cardStrings,
       sharedStrings,
@@ -236,6 +232,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       ts,
       resetOrbitError,
     });
+    const controlStrings = useSelector(controlSelector, shallowEqual);
     const vProjectCreate = useVProjectCreate();
     const vProjectUpdate = useVProjectUpdate();
     const vProjectDelete = useVProjectDelete();
@@ -251,7 +248,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
     const { setProjectType } = useProjectType();
     const { getPlan } = usePlan();
-    const LoadData = useLoadProjectData(t, doOrbitError, resetOrbitError);
+    const LoadData = useLoadProjectData(t, doOrbitError);
     const { setMyOrgRole } = useRole();
 
     const setProjectParams = (plan: Plan) => {

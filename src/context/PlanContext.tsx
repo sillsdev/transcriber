@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -18,20 +17,12 @@ import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { usePlanType } from '../crud';
 import { useCheckOnline, useInterval } from '../utils';
-import * as actions from '../store';
 
 interface IStateProps {
   projButtonStr: IProjButtonsStrings;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   projButtonStr: localStrings(state, { layout: 'projButtons' }),
-});
-
-interface IDispatchProps {
-  resetOrbitError: typeof actions.resetOrbitError;
-}
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators({ resetOrbitError: actions.resetOrbitError }, dispatch),
 });
 
 interface IRecordProps {
@@ -69,22 +60,13 @@ interface IContext {
 
 const PlanContext = React.createContext({} as IContext);
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps extends IStateProps, IRecordProps {
   children: React.ReactElement;
 }
 
 const PlanProvider = withData(mapRecordsToProps)(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )((props: IProps) => {
-    const {
-      projButtonStr,
-      mediafiles,
-      discussions,
-      groupmemberships,
-      resetOrbitError,
-    } = props;
+  connect(mapStateToProps)((props: IProps) => {
+    const { projButtonStr, mediafiles, discussions, groupmemberships } = props;
     const [memory] = useGlobal('memory');
     const [plan] = useGlobal('plan');
     const [project] = useGlobal('project');
@@ -103,7 +85,7 @@ const PlanProvider = withData(mapRecordsToProps)(
       discussions,
       groupmemberships,
     });
-    const checkOnline = useCheckOnline(resetOrbitError);
+    const checkOnline = useCheckOnline();
 
     useEffect(() => {
       const { scripture, flat } = getPlanType(plan);
