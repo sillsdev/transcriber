@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
-import React, { useRef } from 'react';
+import React from 'react';
 import { User, useAuth0 } from '@auth0/auth0-react';
 import { IToken } from '../model';
 import Busy from '../components/Busy';
@@ -20,6 +20,7 @@ const initState = {
   expiresAt: 0 as number | null,
   email_verified: false as boolean | undefined,
   logout: () => {},
+  resetExpiresAt: () => {},
   isAuthenticated: () => false,
   setAuthSession: (
     profile: User | undefined,
@@ -43,15 +44,20 @@ interface IProps {
 
 function TokenProvider(props: IProps) {
   const { children } = props;
-  const { getAccessTokenSilently, user, isLoading, isAuthenticated, error } =
-    useAuth0();
+  const {
+    getAccessTokenSilently,
+    getAccessTokenWithPopup,
+    user,
+    isLoading,
+    isAuthenticated,
+    error,
+  } = useAuth0();
   const [modalOpen, setModalOpen] = React.useState(false);
   const [secondsToExpire, setSecondsToExpire] = React.useState(0);
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const updateOrbitToken = useUpdateOrbitToken();
   const view = React.useRef<any>('');
-  const logoutRef = useRef<any>();
   const [state, setState] = React.useState({
     ...initState,
   });
@@ -98,6 +104,7 @@ function TokenProvider(props: IProps) {
   };
 
   const resetExpiresAt = () => {
+    if (offline) return;
     if (isElectron) {
       ipc
         ?.invoke('refresh-token')
@@ -110,6 +117,8 @@ function TokenProvider(props: IProps) {
           setAuthSession(myUser, myToken, decodedToken.exp);
         })
         .catch((e: Error) => {
+          localStorage.setItem('offlineAdmin', 'false');
+          localStorage.removeItem('user-id');
           handleLogOut();
           logError(Severity.error, errorReporter, e);
         });
@@ -124,6 +133,7 @@ function TokenProvider(props: IProps) {
         .catch((e: Error) => {
           handleLogOut();
           logError(Severity.error, errorReporter, e);
+          getAccessTokenWithPopup();
         });
     }
   };
@@ -141,7 +151,6 @@ function TokenProvider(props: IProps) {
     setState((state) => ({ ...state, expiresAt: -1 }));
     view.current = 'loggedOut';
     setModalOpen(false);
-    if (!offline) logoutRef.current && logoutRef.current.click();
   };
 
   const checkTokenExpired = () => {
@@ -217,12 +226,12 @@ function TokenProvider(props: IProps) {
           setAuthSession,
           logout,
           isAuthenticated: authenticated,
+          resetExpiresAt,
         },
         setState,
       }}
     >
       {children}
-      <a ref={logoutRef} href="/logout"></a>
     </TokenContext.Provider>
   );
 }

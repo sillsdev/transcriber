@@ -196,18 +196,17 @@ export const ErrorPage = () => {
         },
       } as any);
     }
-    if (error.message === 'Error: Login required') {
-      console.log('logging out');
-      localStorage.removeItem('isLoggedIn');
-      ctx.logout();
-    }
     console.error(error);
-    setState({
-      ...state,
-      errCount: state.errCount + 1,
-      error: (error as any)?.error?.toString() ?? error.message,
-      details: (error as any)?.opts?.stack ?? error.stack ?? '',
-    });
+    if (error.message === 'Error: Login required') {
+      ctx.resetExpiresAt();
+    } else {
+      setState({
+        ...state,
+        errCount: state.errCount + 1,
+        error: (error as any)?.error?.toString() ?? error.message,
+        details: (error as any)?.opts?.stack ?? error.stack ?? '',
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
