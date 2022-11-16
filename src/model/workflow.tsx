@@ -33,6 +33,7 @@ export interface IWorkflow {
   step?: string;
   stepId?: string;
   deleted: boolean;
+  filtered: boolean;
   discussionCount: number;
 }
 

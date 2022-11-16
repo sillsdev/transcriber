@@ -721,6 +721,8 @@ export function PlanSheet(props: IProps) {
         filterState.assignedToMe),
     [filterState, maximumSection]
   );
+  const disableFilter = () =>
+    onFilterChange({ ...filterState, disabled: true }, false);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -744,6 +746,7 @@ export function PlanSheet(props: IProps) {
                   addPassage={addPassage}
                   movePassage={movePassage}
                   filtered={filtered}
+                  disableFilter={disableFilter}
                 />
                 <AltButton
                   id="planSheetImp"

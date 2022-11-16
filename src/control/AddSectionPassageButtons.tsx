@@ -21,6 +21,7 @@ interface IProps {
   sectionSequenceNumber: string;
   passageSequenceNumber: string;
   filtered: boolean;
+  disableFilter: () => void;
   isSection: (i: number) => boolean;
   isPassage: (i: number) => boolean;
   handleNoContextMenu: () => void;
@@ -39,6 +40,7 @@ export const AddSectionPassageButtons = (props: IProps) => {
     sectionSequenceNumber,
     passageSequenceNumber,
     filtered,
+    disableFilter,
     isSection,
     isPassage,
     handleNoContextMenu,
@@ -154,7 +156,11 @@ export const AddSectionPassageButtons = (props: IProps) => {
         }
         onClose={handleClose}
       >
-        {filtered && <MenuItem id="filtered">{t.filtered}</MenuItem>}
+        {filtered && (
+          <MenuItem id="filtered" onClick={disableFilter}>
+            {t.filtered}
+          </MenuItem>
+        )}
         {!filtered && currentrow >= 0 && numRows > 0 && (
           <MenuItem id="secAbove" onClick={handleSectionAbove}>
             {t.sectionAbove
