@@ -112,9 +112,9 @@ interface IRecordProps {
 
 interface IProps
   extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+  IDispatchProps,
+  IRecordProps,
+  WithDataProps {
   colNames: string[];
 }
 
@@ -435,13 +435,19 @@ export function ScriptureTable(props: IProps) {
     setChanged(true);
   };
 
+  const getUndelIndex = (workflow: IWorkflow[], ix: number | undefined) => {
+    // find the undeleted index...
+    let i: number = ix ?? 0;
+    if (ix !== undefined) i = getByIndex(workflow, ix).i;
+    return i;
+  }
+
   const addSection = (ix?: number) => {
     if (savingRef.current) {
       showMessage(t.saving);
       return;
     }
-    //find the undeleted index...
-    if (ix !== undefined) var { i } = getByIndex(workflow, ix);
+    const i = getUndelIndex(workflow, ix);
 
     const sequenceNums = workflow.map((row, j) =>
       !i || j < i ? (!row.deleted && row.sectionSeq) || 0 : 0
@@ -467,8 +473,7 @@ export function ScriptureTable(props: IProps) {
       showMessage(t.saving);
       return;
     }
-    //find the undeleted index...
-    if (ix !== undefined) var { i } = getByIndex(workflow, ix);
+    const i = getUndelIndex(workflow, ix);
     addPassageTo(workflow, i, before);
   };
   const movePassage = (ix: number, before: boolean) => {
@@ -477,8 +482,7 @@ export function ScriptureTable(props: IProps) {
       return;
     }
     if (flat) return;
-    //find the undeleted index...
-    var { i } = getByIndex(workflow, ix);
+    const i = getUndelIndex(workflow, ix);
     movePassageTo(workflow, i, before);
   };
   const getByIndex = (wf: IWorkflow[], index: number) => {
