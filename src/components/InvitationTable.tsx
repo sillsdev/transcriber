@@ -9,7 +9,6 @@ import {
   IInvitationTableStrings,
   Group,
   ISharedStrings,
-  RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -24,9 +23,9 @@ import Invite, { IInviteData } from './Invite';
 import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
-import { related } from '../crud';
+import { related, useRole } from '../crud';
 import { localizeRole } from '../utils';
-import { useRole } from '../crud';
+
 import {
   ActionRow,
   AltButton,
@@ -103,7 +102,7 @@ export function InvitationTable(props: IProps) {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [dialogData, setDialogData] = useState(null as Invitation | null);
   const [offline] = useGlobal('offline');
-  const { getInviteProjRole } = useRole();
+  const { userIsAdmin } = useRole();
 
   const handleAdd = () => {
     setDialogData(null);
@@ -161,8 +160,7 @@ export function InvitationTable(props: IProps) {
     setData(getInvites(organization, roles, invitations, ts));
   }, [organization, roles, invitations, confirmAction, ts]);
   const canEdit = () => {
-    const projRole = getInviteProjRole(organization);
-    return projRole === RoleNames.Admin && !offline;
+    return userIsAdmin && !offline;
   };
   return (
     <Box sx={{ display: 'flex' }}>

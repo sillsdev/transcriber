@@ -25,12 +25,11 @@ interface IRecordProps {
 
 interface IProps extends IStateProps, IRecordProps {
   roleRec: Role;
-  org: boolean;
   small?: boolean;
 }
 
 export function RoleAvatar(props: IProps) {
-  const { roleRec, org, small, ts } = props;
+  const { roleRec, small, ts } = props;
   const [memory] = useGlobal('memory');
 
   var src = dataPath(roleRec.attributes.roleName, PathType.AVATARS, {
@@ -54,7 +53,7 @@ export function RoleAvatar(props: IProps) {
     />
   ) : roleRec.attributes && roleRec.attributes.roleName !== '' ? (
     <Avatar sx={avatarSize(small)}>
-      {makeAbbr(localizeRole(roleRec.attributes.roleName, ts, !org))}
+      {makeAbbr(localizeRole(roleRec.attributes.roleName, ts))}
     </Avatar>
   ) : (
     <></>

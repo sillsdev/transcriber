@@ -28,7 +28,7 @@ import { numCompare } from '../utils';
 import { useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
 import MediaPlayer from './MediaPlayer';
-import { RoleNames, IMediaActionsStrings } from '../model';
+import { IMediaActionsStrings } from '../model';
 import { mediaActionsSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { GridColumnExtension } from '@devexpress/dx-react-grid';
@@ -144,7 +144,6 @@ export function TaskTable(props: IProps) {
   const [planId] = useGlobal('plan');
   const [planName, setPlanName] = useState('');
   const [projectId] = useGlobal('project');
-  const [projRole] = useGlobal('projRole');
   const projectPlans = useProjectPlans();
   const [openIntegration, setOpenIntegration] = useState(false);
   const [openExport, setOpenExport] = useState(false);
@@ -478,7 +477,6 @@ export function TaskTable(props: IProps) {
               action={handleProjectMenu}
               stopPlayer={handleStopPlayer}
               inProject={true}
-              isOwner={projRole === RoleNames.Admin}
               project={projectId}
               justFilter={isDetail}
             />

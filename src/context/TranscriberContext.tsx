@@ -18,7 +18,6 @@ import {
   IProjButtonsStrings,
   BookName,
   ActivityStates,
-  RoleNames,
   ISharedStrings,
   IActivityStateStrings,
 } from '../model';
@@ -34,7 +33,6 @@ import {
   useFetchMediaUrl,
   MediaSt,
   usePlan,
-  useRole,
   useArtifactType,
   getMediaInPlans,
   findRecord,
@@ -176,14 +174,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [user] = useGlobal('user');
     const [devPlan] = useGlobal('plan');
     const { getPlan } = usePlan();
-    const [projRole] = useGlobal('projRole');
     const [errorReporter] = useGlobal('errorReporter');
     const view = React.useRef('');
     const [refreshed, setRefreshed] = useState(0);
     const mediaUrlRef = useRef('');
     const { showMessage } = useSnackBar();
     const [trackedTask, setTrackedTask] = useGlobal('trackedTask');
-    const { userCanTranscribe, userCanBeEditor } = useRole();
     const [planMedia, setPlanMedia] = useState<MediaFile[]>([]);
     const planMediaRef = useRef<MediaFile[]>([]);
     const passageMediaRef = useRef<MediaFile[]>([]);
@@ -423,30 +419,19 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         });
     };
 
-    const role = React.useMemo(() => {
-      if (userCanTranscribe()) {
-        if (userCanBeEditor()) return RoleNames.Editor;
-        else return RoleNames.Transcriber;
-      } else return '';
-
-      /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [projRole]);
-
     const selectTasks = (
       onlyAvailable: boolean,
       rowList: IRowData[],
       item: string
     ) => {
       // IN PROGRESS TASKS
-      if (role === RoleNames.Editor) {
-        addTasks(
-          ActivityStates.Reviewing,
-          'editor',
-          rowList,
-          onlyAvailable,
-          item
-        );
-      }
+      addTasks(
+        ActivityStates.Reviewing,
+        'editor',
+        rowList,
+        onlyAvailable,
+        item
+      );
 
       addTasks(
         ActivityStates.Transcribing,
@@ -474,15 +459,13 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       );
 
       // READY TO BEGIN TASKS
-      if (role === RoleNames.Editor) {
-        addTasks(
-          ActivityStates.Transcribed,
-          'editor',
-          rowList,
-          onlyAvailable,
-          item
-        );
-      }
+      addTasks(
+        ActivityStates.Transcribed,
+        'editor',
+        rowList,
+        onlyAvailable,
+        item
+      );
 
       addTasks(
         ActivityStates.TranscribeReady,
@@ -507,16 +490,13 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         );
       } else passageMediaRef.current = planMediaRef.current;
 
-      if (role !== '') {
-        selectTasks(true, rowList, playItem); // assigned
-        selectTasks(false, rowList, playItem); // unassigned
-        const newAllDone = rowList.length === 0 && !isDetail;
-        if (newAllDone !== state.allDone) setAllDone(newAllDone);
-        // ALL OTHERS
-        addTasks('', 'view', rowList, false, playItem);
-      } else {
-        addTasks('', 'view', rowList, false, playItem);
-      }
+      selectTasks(true, rowList, playItem); // assigned
+      selectTasks(false, rowList, playItem); // unassigned
+      const newAllDone = rowList.length === 0 && !isDetail;
+      if (newAllDone !== state.allDone) setAllDone(newAllDone);
+      // ALL OTHERS
+      addTasks('', 'view', rowList, false, playItem);
+
       setRows(rowList.map((r) => r));
       const exGrp: string[] = [];
       rowList.forEach((r) => {
@@ -571,7 +551,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [role, planMedia, refreshed, pasId, medId]);
+    }, [planMedia, refreshed, pasId, medId]);
 
     const actor: { [key: string]: string } = {
       [ActivityStates.TranscribeReady]: 'transcriber',
@@ -598,8 +578,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
             r.mediafile.attributes?.transcriptionstate ||
             ActivityStates.TranscribeReady;
           let rowRole = actor[state] || 'view';
-          if (rowRole === 'editor' && role !== RoleNames.Editor)
-            rowRole = 'view';
           const assigned = related(section, rowRole);
           rowData.push({
             ...r,

@@ -1,10 +1,9 @@
 import { CSSProperties, useEffect, useState } from 'react';
-import { useGlobal } from 'reactn';
 import { ListItem, Tooltip, Box } from '@mui/material';
 import { IRow } from '../../../context/PassageDetailContext';
 import { DragHandle } from '.';
-import { IPassageDetailArtifactsStrings, RoleNames } from '../../../model';
-import { useOrganizedBy } from '../../../crud';
+import { IPassageDetailArtifactsStrings } from '../../../model';
+import { useOrganizedBy, useRole } from '../../../crud';
 import { useSelector, shallowEqual } from 'react-redux';
 import { resourceSelector } from '../../../selector';
 
@@ -14,7 +13,6 @@ interface IProps {
 }
 
 export const TableRow = ({ value, header }: IProps) => {
-  const [projRole] = useGlobal('projRole');
   const [headBold, setHeadBold] = useState<CSSProperties>({});
   const [headHide, setHeadHide] = useState<CSSProperties>({});
   const { getOrganizedBy } = useOrganizedBy();
@@ -22,7 +20,7 @@ export const TableRow = ({ value, header }: IProps) => {
     resourceSelector,
     shallowEqual
   );
-
+  const { userIsAdmin } = useRole();
   useEffect(() => {
     setHeadBold(header ? { fontWeight: 'bold' } : {});
     setHeadHide(header ? { visibility: 'hidden' } : {});
@@ -30,7 +28,7 @@ export const TableRow = ({ value, header }: IProps) => {
 
   return (
     <ListItem>
-      {projRole === RoleNames.Admin && (
+      {userIsAdmin && (
         <span style={headHide}>
           <DragHandle />
           {'\u00A0'}
@@ -60,7 +58,7 @@ export const TableRow = ({ value, header }: IProps) => {
       <Box style={headBold} sx={{ minWidth: 100, textAlign: 'center' }}>
         {value.done}
       </Box>
-      {projRole === RoleNames.Admin && (
+      {userIsAdmin && (
         <Box style={headBold} sx={{ minWidth: 100, textAlign: 'center' }}>
           {value.editAction}
         </Box>

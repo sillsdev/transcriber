@@ -61,14 +61,12 @@ const ProjectName = ({ setView }: INameProps) => {
   const { checkSavedFn } = ctx.state;
   const { getPlanName } = usePlan();
   const [, setProject] = useGlobal('project');
-  const [, setProjRole] = useGlobal('projRole');
   const [, setProjType] = useGlobal('projType');
   const [plan, setPlan] = useGlobal('plan');
 
   const handleHome = () => {
     setProject('');
     setPlan('');
-    setProjRole(undefined);
     setProjType('');
     setView('Home');
   };
@@ -107,11 +105,11 @@ export const AppHead = (props: IProps) => {
   const { resetRequests, SwitchTo, t, orbitStatus, orbitErrorMsg } = props;
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const [orgRole] = useGlobal('orgRole');
   const [errorReporter] = useGlobal('errorReporter');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [isOffline] = useGlobal('offline');
-  const [projRole] = useGlobal('projRole');
   const [connected] = useGlobal('connected');
   const tokenCtx = useContext(TokenContext);
   const ctx = useContext(UnsavedContext);
@@ -340,8 +338,8 @@ export const AppHead = (props: IProps) => {
           <LinearProgress id="busy" variant="indeterminate" />
         )}
         <Toolbar>
-          {projRole && <ProjectName setView={setView} />}
-          {!projRole && <span style={cssVars}>{'\u00A0'}</span>}
+          {orgRole && <ProjectName setView={setView} />}
+          {!orgRole && <span style={cssVars}>{'\u00A0'}</span>}
           <GrowingSpacer />
           {(pathname === '/' || pathname.startsWith('/access')) && (
             <>

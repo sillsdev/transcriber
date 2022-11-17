@@ -19,7 +19,12 @@ import FilterIcon from '@mui/icons-material/FilterList';
 import UncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { isElectron } from '../../api-variable';
-import { useOfflnProjRead, useProjectType, ArtifactTypeSlug } from '../../crud';
+import {
+  useOfflnProjRead,
+  useProjectType,
+  ArtifactTypeSlug,
+  useRole,
+} from '../../crud';
 import { StyledMenu, StyledMenuItem } from '../../control';
 import {
   cardsSelector,
@@ -30,7 +35,6 @@ import { shallowEqual, useSelector } from 'react-redux';
 
 interface IProps {
   inProject?: boolean;
-  isOwner?: boolean;
   project: string | VProject;
   justFilter?: boolean;
   action?: (what: string) => void;
@@ -38,7 +42,7 @@ interface IProps {
 }
 
 export function ProjectMenu(props: IProps) {
-  const { inProject, action, isOwner, project, justFilter, stopPlayer } = props;
+  const { inProject, action, project, justFilter, stopPlayer } = props;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { pathname } = useLocation();
@@ -57,6 +61,7 @@ export function ProjectMenu(props: IProps) {
     setAnchorEl(event.currentTarget);
     if (stopPlayer) stopPlayer();
   };
+  const { userIsAdmin } = useRole();
 
   useEffect(() => {
     setProjectType(getProjType(project));
@@ -90,7 +95,7 @@ export function ProjectMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        {!inProject && isOwner && (!isOffline || offlineOnly) && (
+        {!inProject && userIsAdmin && (!isOffline || offlineOnly) && (
           <StyledMenuItem id="projMenuSettings" onClick={handle('settings')}>
             <ListItemIcon>
               <SettingsIcon />
@@ -130,7 +135,7 @@ export function ProjectMenu(props: IProps) {
               <ListItemText primary={tpb.integrations} />
             </StyledMenuItem>
           )}
-        {!justFilter && isOwner && !inProject && (
+        {!justFilter && userIsAdmin && !inProject && (
           <StyledMenuItem id="projMenuImp" onClick={handle('import')}>
             <ListItemIcon>
               <ImportIcon />
@@ -155,7 +160,7 @@ export function ProjectMenu(props: IProps) {
           </StyledMenuItem>
         ) : (
           (!isOffline || offlineOnly) &&
-          isOwner && (
+          userIsAdmin && (
             <StyledMenuItem id="projMenuDel" onClick={handle('delete')}>
               <ListItemIcon>
                 <DeleteIcon />

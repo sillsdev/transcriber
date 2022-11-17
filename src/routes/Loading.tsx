@@ -111,7 +111,6 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
   const [syncComplete, setSyncComplete] = useState(false);
   const [, setBusy] = useGlobal('importexportBusy');
   const offlineSetup = useOfflineSetup();
-  const { setMyProjRole } = useRole();
   const { setProjectType } = useProjectType();
   const LoadProjData = useLoadProjectData(t, doOrbitError);
   const [view, setView] = useState('');
@@ -283,7 +282,6 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
             LoadProjData(projectId, () => {
               setPlan(planId);
               setProjectType(projectId);
-              setMyProjRole(projectId);
             });
             const projRec = memory.cache.query((q: QueryBuilder) =>
               q.findRecord({ type: 'project', id: projectId })

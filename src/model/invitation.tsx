@@ -16,9 +16,6 @@ export interface Invitation extends BaseModel {
   relationships?: {
     organization: RecordRelationship;
     role: RecordRelationship;
-    allUsersRole: RecordRelationship;
-    group: RecordRelationship;
-    groupRole: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }

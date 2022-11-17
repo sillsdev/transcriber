@@ -9,7 +9,7 @@ import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
 import StickyRedirect from '../components/StickyRedirect';
 import { UnsavedContext } from '../context/UnsavedContext';
-import { useProjectType, useRole, useUrlContext } from '../crud';
+import { useProjectType, useUrlContext } from '../crud';
 import { forceLogin, localUserKey, LocalKey } from '../utils';
 import { HeadHeight } from '../App';
 import { Box, BoxProps, styled } from '@mui/material';
@@ -41,11 +41,9 @@ export const WorkScreen = () => {
   const [project] = useGlobal('project');
   const [organization] = useGlobal('organization');
   const setUrlContext = useUrlContext();
-  const [projRole] = useGlobal('projRole');
   const [projType] = useGlobal('projType');
   const { setProjectType } = useProjectType();
   const [topFilter, setTopFilter] = React.useState(false);
-  const { setMyProjRole } = useRole();
   const uctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = uctx.state;
   const [view, setView] = React.useState('');
@@ -69,14 +67,14 @@ export const WorkScreen = () => {
 
   React.useEffect(() => {
     const projectId = setUrlContext(prjId ?? '');
-    if (!projRole)
-      if (!setMyProjRole(projectId)) {
-        // If after proj role set there is none, force reload
-        localStorage.removeItem(localUserKey(LocalKey.url));
-        forceLogin();
-        setView('/logout');
-      }
     if (projType === '') setProjectType(projectId);
+    if (!projType) {
+      // If after proj type set there is none, force reload
+      localStorage.removeItem(localUserKey(LocalKey.url));
+      forceLogin();
+      setView('/logout');
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

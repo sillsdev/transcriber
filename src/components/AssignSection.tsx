@@ -6,10 +6,8 @@ import {
   Section,
   IAssignSectionStrings,
   User,
-  Project,
-  GroupMembership,
-  RoleNames,
   ISharedStrings,
+  OrganizationMembership,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -41,7 +39,6 @@ import {
 import UserAvatar from './UserAvatar';
 import {
   related,
-  useRole,
   sectionTranscriberName,
   sectionEditorName,
   sectionNumber,
@@ -61,8 +58,7 @@ interface IStateProps {
 
 interface IRecordProps {
   users: Array<User>;
-  projects: Array<Project>;
-  groupMemberships: Array<GroupMembership>;
+  orgMemberships: Array<OrganizationMembership>;
 }
 
 interface IProps extends IStateProps, IRecordProps {
@@ -70,22 +66,16 @@ interface IProps extends IStateProps, IRecordProps {
   visible: boolean;
   closeMethod?: () => void;
 }
-
+export enum TranscriberActors {
+  Transcriber = 'Transcriber',
+  Editor = 'Editor',
+}
 function AssignSection(props: IProps) {
-  const {
-    users,
-    projects,
-    groupMemberships,
-    sections,
-    t,
-    ts,
-    visible,
-    closeMethod,
-  } = props;
-  const [project] = useGlobal('project');
+  const { users, orgMemberships, sections, t, ts, visible, closeMethod } =
+    props;
+  const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const { getTranscriberRoleIds, getEditorRoleIds } = useRole();
   const [open, setOpen] = useState(visible);
   const [selectedTranscriber, setSelectedTranscriber] = useState('');
   const [selectedReviewer, setSelectedReviewer] = useState('');
@@ -99,7 +89,11 @@ function AssignSection(props: IProps) {
     setOpen(false);
   };
 
-  const assign = async (section: Section, userId: string, role: RoleNames) => {
+  const assign = async (
+    section: Section,
+    userId: string,
+    role: TranscriberActors
+  ) => {
     await memory.update((t: TransformBuilder) => [
       ...UpdateRelatedRecord(
         t,
@@ -121,14 +115,14 @@ function AssignSection(props: IProps) {
     const newVal = id !== selectedTranscriber ? id : '';
     setSelectedTranscriber(newVal);
     sections.forEach(function (s) {
-      assign(s, newVal, RoleNames.Transcriber);
+      assign(s, newVal, TranscriberActors.Transcriber);
     });
   };
   const handleSelectReviewer = (id: string) => () => {
     const newVal = id !== selectedReviewer ? id : '';
     setSelectedReviewer(newVal);
     sections.forEach(function (s) {
-      assign(s, newVal, RoleNames.Editor);
+      assign(s, newVal, TranscriberActors.Editor);
     });
   };
 
@@ -142,21 +136,12 @@ function AssignSection(props: IProps) {
     doSetSelected(sections[0]);
   }, [visible, sections]);
 
-  const projectRec = projects.filter((p) => p.id === project);
-  const groupId = projectRec.length > 0 ? related(projectRec[0], 'group') : '';
-  const transcriberRoleIds = getTranscriberRoleIds();
-  const editorRoleIds = getEditorRoleIds();
-
-  const transcriberIds = groupMemberships
-    .filter(
-      (gm) =>
-        related(gm, 'group') === groupId &&
-        transcriberRoleIds.includes(related(gm, 'role'))
-    )
+  const memberIds = orgMemberships
+    .filter((gm) => related(gm, 'organization') === organization)
     .map((gm) => related(gm, 'user'));
 
   const transcriberUserList = users
-    .filter((u) => u.attributes && transcriberIds.indexOf(u.id) !== -1)
+    .filter((u) => u.attributes && memberIds.indexOf(u.id) !== -1)
     .map((m, index) => {
       const labelId = 'user-' + m.attributes.name;
       return (
@@ -181,15 +166,8 @@ function AssignSection(props: IProps) {
       );
     });
 
-  const editorIds = groupMemberships
-    .filter(
-      (gm) =>
-        related(gm, 'group') === groupId &&
-        editorRoleIds.includes(related(gm, 'role'))
-    )
-    .map((gm) => related(gm, 'user'));
   const editorUserList = users
-    .filter((u) => u.attributes && editorIds.indexOf(u.id) !== -1)
+    .filter((u) => u.attributes && memberIds.indexOf(u.id) !== -1)
     .map((m, index) => {
       const labelId = 'user-' + m.attributes.name;
       return (
@@ -318,8 +296,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
 
 const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
-  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
+  orgMemberships: (q: QueryBuilder) => q.findRecords('organizationmembership'),
 };
 
 export default withData(mapRecordsToProps)(

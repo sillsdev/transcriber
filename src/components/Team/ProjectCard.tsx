@@ -88,7 +88,6 @@ export const ProjectCard = (props: IProps) => {
     projectLanguage,
     projectUpdate,
     projectDelete,
-    isOwner,
     cardStrings,
     vProjectStrings,
     projButtonStrings,
@@ -275,7 +274,6 @@ export const ProjectCard = (props: IProps) => {
             </Typography>
             <ProjectMenu
               action={handleProjectAction}
-              isOwner={isOwner(project)}
               project={project}
               inProject={false}
             />

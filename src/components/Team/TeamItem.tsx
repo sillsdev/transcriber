@@ -9,7 +9,7 @@ import { StepEditor } from '../StepEditor';
 import GroupTabs from '../GroupTabs';
 import { ProjectCard, AddCard } from '.';
 import TeamDialog from './TeamDialog';
-import { useRole, useAllUserGroup, defaultWorkflow } from '../../crud';
+import { useRole, defaultWorkflow } from '../../crud';
 import Confirm from '../AlertDialog';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { TeamPaper, TeamHeadDiv, TeamName, AltButton } from '../../control';
@@ -33,15 +33,12 @@ export const TeamItem = (props: IProps) => {
   const t = ctx.state.cardStrings;
   const [openMember, setOpenMember] = React.useState(false);
   const { setMyOrgRole } = useRole();
-  const [, setGroup] = useGlobal('group');
-  const allUserGroup = useAllUserGroup();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [changed] = useGlobal('changed');
 
   const handleMembers = (team: Organization) => () => {
     setOrganization(team.id);
     setMyOrgRole(team.id);
-    setGroup(allUserGroup(team.id)?.id);
     setOpenMember(true);
   };
 

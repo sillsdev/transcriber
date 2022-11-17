@@ -1372,138 +1372,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="groupSettings.add">
-         <segment>
-            <source>Ok</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.addGroupMember">
-         <segment>
-            <source>Choose {0}</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.addMemberInstruction">
-         <segment>
-            <source>Choose a person who will act as a {0} for audio projects in this group.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.allReviewersCanTranscribe">
-         <segment>
-            <source>All Editors are allowed to transcribe.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.assignedSections">
-         <segment>
-            <source>  Assigned {0}: </source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.cancel">
-         <segment>
-            <source>Cancel</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.delete">
-         <segment>
-            <source>Delete</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.editors">
-         <segment>
-            <source>Editors</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.editorsDetail">
-         <segment>
-            <source>(Review + Transcribe)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.loadingTable">
-         <segment>
-            <source>Loading data</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.name">
-         <segment>
-            <source>Name</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.noDeleteAdmin">
-         <segment>
-            <source>The only Administrator cannot be deleted.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.noDeleteAllUsersInfo">
-         <segment>
-            <source>Cannot delete members from the All Members group</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.noDeleteInfo">
-         <segment>
-            <source>This role is included in a higher role and cannot be deleted.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.owners">
-         <segment>
-            <source>Owners</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.ownersDetail">
-         <segment>
-            <source>(Manage + Review + Transcribe)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.projectPlans">
-         <segment>
-            <source>Audio Project Plans</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.roles">
-         <segment>
-            <source>Roles:{0}</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.save">
-         <segment>
-            <source>Save</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.transcribers">
-         <segment>
-            <source>Transcribers</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.transcribersDetail">
-         <segment>
-            <source>(Transcribe)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.transcriptionTitle">
-         <segment>
-            <source>Users in Transcription Roles</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="groupTabs.groups">
          <segment>
             <source>Groups</source>
@@ -2086,18 +1954,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.groupRole">
-         <segment>
-            <source>Audio Project Role</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="invite.groups">
-         <segment>
-            <source>Audio Project</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="invite.instructions">
          <segment>
             <source>Please click the following link to accept the invitation:</source>
@@ -2136,7 +1992,7 @@
       </unit>
       <unit id="invite.noProjects">
          <segment>
-            <source>No audio projects are associated with this group.</source>
+            <source>This team has no audio projects.</source>
             <target/>
          </segment>
       </unit>
@@ -2167,12 +2023,6 @@
       <unit id="invite.save">
          <segment>
             <source>Save</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="invite.selectProjectRole">
-         <segment>
-            <source>Select audio project role.</source>
             <target/>
          </segment>
       </unit>
@@ -2458,12 +2308,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.owner">
-         <segment>
-            <source>Owner</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="main.passages">
          <segment>
             <source>Passages</source>
@@ -2482,9 +2326,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.projRole">
+      <unit id="main.orgRole">
          <segment>
-            <source>Role in Audio Project:</source>
+            <source>Role:</source>
             <target/>
          </segment>
       </unit>
@@ -4194,7 +4038,7 @@
       </unit>
       <unit id="scriptureTableFilter.assignedToMe">
          <segment>
-            <source>Show only rows assigned to me</source>
+            <source>Only rows with discussions assigned to me</source>
             <target/>
          </segment>
       </unit>
@@ -4504,12 +4348,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="shared.owner">
-         <segment>
-            <source>Owner</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="shared.paratextchapterSpan">
          <segment>
             <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
@@ -4525,12 +4363,6 @@
       <unit id="shared.peerreviewer">
          <segment>
             <source>Peer Reviewer</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="shared.projectrole">
-         <segment>
-            <source>Project Role</source>
             <target/>
          </segment>
       </unit>

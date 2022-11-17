@@ -178,7 +178,6 @@ Promise.all(promises)
       organization: '',
       orgRole: undefined,
       project: '',
-      projRole: undefined,
       projType: '',
       plan: '',
       tab: undefined,

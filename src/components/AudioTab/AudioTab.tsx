@@ -11,7 +11,6 @@ import {
   Plan,
   BookName,
   ISharedStrings,
-  RoleNames,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import { withData, WithDataProps } from '../../mods/react-orbitjs';
@@ -35,6 +34,7 @@ import {
   usePlan,
   remoteIdGuid,
   VernacularTag,
+  useRole,
 } from '../../crud';
 import { useGlobal } from 'reactn';
 import { useMediaAttach } from '../../crud/useMediaAttach';
@@ -78,7 +78,6 @@ interface IProps
 export function AudioTab(props: IProps) {
   const { t, ts, doOrbitError, mediaFiles, passages, sections, allBookData } =
     props;
-  const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
@@ -112,6 +111,7 @@ export function AudioTab(props: IProps) {
     doOrbitError,
   });
   const [refresh, setRefresh] = useState(0);
+  const { userIsAdmin } = useRole();
   const cloudSync = useRef(false);
 
   const myToolId = 'AudioTab';
@@ -349,7 +349,7 @@ export function AudioTab(props: IProps) {
       <div>
         <TabAppBar position="fixed" color="default">
           <TabActions>
-            {projRole === RoleNames.Admin && (!isOffline || offlineOnly) && (
+            {userIsAdmin && (!isOffline || offlineOnly) && (
               <>
                 <AltButton
                   id="audUpload"

@@ -4,7 +4,6 @@ import {
   ISharedStrings,
   IState,
   MediaFile,
-  RoleNames,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import {
@@ -39,6 +38,7 @@ import {
   useArtifactType,
   useFetchMediaUrl,
   useOrgDefaults,
+  useRole,
 } from '../../crud';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import * as actions from '../../store';
@@ -176,7 +176,6 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 export function PassageDetailItem(props: IProps) {
   const { t, ts, width, slugs, segments, showTopic } = props;
   const [reporter] = useGlobal('errorReporter');
-  const [projRole] = useGlobal('projRole');
   const [organization] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -191,6 +190,7 @@ export function PassageDetailItem(props: IProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [confirm, setConfirm] = useState('');
+  const { userIsAdmin } = useRole();
   const {
     passage,
     mediafileId,
@@ -542,7 +542,7 @@ export function PassageDetailItem(props: IProps) {
                                 onTogglePlay={handleItemTogglePlay}
                                 controls={true}
                               />
-                              {playItem && projRole === RoleNames.Admin && (
+                              {playItem && userIsAdmin && (
                                 <LightTooltip title={t.deleteItem}>
                                   <IconButton
                                     id="delete-recording"

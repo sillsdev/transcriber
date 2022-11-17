@@ -6,7 +6,6 @@ import {
   BookNameMap,
   OptionType,
   IWorkflow,
-  RoleNames,
   OrgWorkflowStep,
 } from '../../model';
 import { Badge, Box, styled } from '@mui/material';
@@ -35,7 +34,7 @@ import {
   rememberCurrentPassage,
 } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
-import { remoteIdGuid } from '../../crud';
+import { remoteIdGuid, useRole } from '../../crud';
 import TaskAvatar from '../TaskAvatar';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
@@ -200,7 +199,6 @@ export function PlanSheet(props: IProps) {
   const { projButtonStr, connected, readonly } = ctx.state;
 
   const [isOffline] = useGlobal('offline');
-  const [projRole] = useGlobal('projRole');
   const [memory] = useGlobal('memory');
   const [global] = useGlobal();
   const { showMessage } = useSnackBar();
@@ -242,7 +240,7 @@ export function PlanSheet(props: IProps) {
   const [changed, setChanged] = useState(false); //for button enabling
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
-
+  const { userIsAdmin } = useRole();
   const handleSave = () => {
     startSave();
   };
@@ -355,7 +353,7 @@ export function PlanSheet(props: IProps) {
     j: number
   ) => {
     e.preventDefault();
-    if (i > 0 && (!isOffline || offlineOnly) && projRole === RoleNames.Admin) {
+    if (i > 0 && (!isOffline || offlineOnly) && userIsAdmin) {
       setPosition({ mouseX: e.clientX - 2, mouseY: e.clientY - 4, i, j });
     }
   };
@@ -522,7 +520,7 @@ export function PlanSheet(props: IProps) {
           {
             value: t.action,
             readOnly: true,
-            width: projRole === RoleNames.Admin ? 50 : 20,
+            width: userIsAdmin ? 50 : 20,
           } as ICell,
         ].concat(
           columns.map((col) => {
@@ -643,8 +641,8 @@ export function PlanSheet(props: IProps) {
                     onRecord={props.onRecord}
                     onUpload={props.onUpload}
                     onAssign={props.onAssign}
-                    canAssign={projRole === RoleNames.Admin}
-                    canDelete={projRole === RoleNames.Admin}
+                    canAssign={userIsAdmin}
+                    canDelete={userIsAdmin}
                     active={active - 1 === rowIndex}
                   />
                 ),
@@ -680,7 +678,6 @@ export function PlanSheet(props: IProps) {
     columns,
     srcMediaId,
     mediaPlaying,
-    projRole,
     currentRow,
     check,
   ]);
@@ -721,15 +718,16 @@ export function PlanSheet(props: IProps) {
         filterState.assignedToMe),
     [filterState, maximumSection]
   );
-  const disableFilter = () =>
+  const disableFilter = () => {
     onFilterChange({ ...filterState, disabled: true }, false);
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
       <div>
         <TabAppBar position="fixed" color="default">
           <TabActions>
-            {projRole === RoleNames.Admin && (
+            {userIsAdmin && (
               <>
                 <AddSectionPassageButtons
                   inlinePassages={inlinePassages}
@@ -784,7 +782,7 @@ export function PlanSheet(props: IProps) {
               maximumSection={maximumSection}
               filtered={filtered}
             />
-            {projRole === RoleNames.Admin && (
+            {userIsAdmin && (
               <>
                 <PriButton
                   id="planSheetSave"

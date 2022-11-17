@@ -12,7 +12,6 @@ import {
   Project,
   Plan,
   Section,
-  RoleNames,
 } from '../model';
 import { TokenContext } from '../context/TokenProvider';
 import localStrings from '../selector/localize';
@@ -163,7 +162,6 @@ export function Access(
   const [, setOrganization] = useGlobal('organization');
   const [, setOrgRole] = useGlobal('orgRole');
   const [, setProject] = useGlobal('project');
-  const [, setProjRole] = useGlobal('projRole');
   const [, setProjType] = useGlobal('projType');
   const [, setPlan] = useGlobal('plan');
   const offlineProjRead = useOfflnProjRead();
@@ -312,10 +310,9 @@ export function Access(
   useEffect(() => {
     if (isElectron) persistData();
     setOrganization('');
-    setOrgRole(RoleNames.Member);
+    setOrgRole(undefined);
     setProject('');
     setPlan('');
-    setProjRole(undefined);
     setProjType('');
     checkOnline((online) => {}, true);
     if (!tokenCtx.state.isAuthenticated() && !isAuthenticated) {

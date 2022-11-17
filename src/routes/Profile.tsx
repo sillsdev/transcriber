@@ -9,7 +9,6 @@ import {
   IProfileStrings,
   DigestPreference,
   OrganizationMembership,
-  RoleNames,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
@@ -154,14 +153,13 @@ export function Profile(props: IProps) {
   const [organization] = useGlobal('organization');
   const [user, setUser] = useGlobal('user');
   const [, setLang] = useGlobal('lang');
-  const [orgRole] = useGlobal('orgRole');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
   const navigate = useNavigate();
   const { accessToken } = useContext(TokenContext).state;
   const { getUserRec } = useUser();
-  const { getMbrRoleRec } = useRole();
+  const { getMbrRoleRec, userIsAdmin } = useRole();
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [name, setName] = useState('');
@@ -202,7 +200,6 @@ export function Profile(props: IProps) {
   const toolId = 'profile';
   const saving = useRef(false);
   const [confirmCancel, setConfirmCancel] = useState<string>();
-
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
   };
@@ -640,11 +637,10 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
-                  {orgRole === RoleNames.Admin && editId && email !== '' && (
+                  {userIsAdmin && editId && email !== '' && (
                     <FormControlLabel
                       control={
                         <SelectRole
-                          org={true}
                           initRole={role}
                           onChange={handleRoleChange}
                           required={true}
@@ -739,7 +735,7 @@ export function Profile(props: IProps) {
                         }
                         label=""
                       />
-                      {orgRole === RoleNames.Admin && (
+                      {userIsAdmin && (
                         <FormControlLabel
                           sx={textFieldProps}
                           control={
