@@ -10,11 +10,11 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { IWsAudioPlayerSegmentStrings } from '../model';
 import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
-import Draggable from 'react-draggable';
+import { default as DraggableBar, DraggableProps } from 'react-draggable';
 import { IRegionParams } from '../crud/useWavesurferRegions';
 import { AltButton, GrowingSpacer, IosSlider, PriButton } from '../control';
 import { wsAudioPlayerSegmentSelector } from '../selector';
@@ -23,6 +23,10 @@ import { shallowEqual, useSelector } from 'react-redux';
 const btnProp = { m: 1 } as SxProps;
 const rowProp = { display: 'flex' } as SxProps;
 const colProp = { display: 'flex', flexDirection: 'column' } as SxProps;
+
+const Draggable = (props: Partial<DraggableProps> & PropsWithChildren) => {
+  return <DraggableBar {...props} />;
+};
 
 interface IProps {
   loop: boolean;

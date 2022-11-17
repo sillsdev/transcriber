@@ -45,9 +45,9 @@
     "mui-language-picker": "^1.2.6",
     "node-html-encoder": "0.0.2",
     "original-fs": "^1.1.0",
-    "react": "^17.0.2",
+    "react": "^18.2.0",
     "react-datasheet": "1.4.9",
-    "react-dom": "^17.0.2",
+    "react-dom": "^18.2.0",
     "react-draggable": "^4.4.4",
     "react-hot-loader": "^4.13.0",
     "react-icons": "^3.10.0",
@@ -133,8 +133,8 @@
     "@types/jwt-decode": "^2.2.1",
     "@types/lodash": "^4.14.179",
     "@types/node": "^12.20.47",
-    "@types/react": "^17.0.40",
-    "@types/react-dom": "^17.0.13",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
     "@types/react-redux": "^7.1.23",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-select": "^3.0.21",
@@ -157,7 +157,7 @@
     "redux-devtools-extension": "^2.13.8",
     "rimraf": "^3.0.2",
     "source-map-explorer": "^2.5.0",
-    "typescript": "^4.4.4",
+    "typescript": "4.8.4",
     "wait-on": "^4.0.2",
     "write": "^2.0.0"
   },
@@ -213,7 +213,5 @@
         ]
       }
     ]
-  },
-  "main": "public/electron-dev.js",
-  "homepage": "./"
+  }
 }

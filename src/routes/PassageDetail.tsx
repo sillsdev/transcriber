@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useContext, useMemo } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useMemo,
+  PropsWithChildren,
+} from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation, useParams } from 'react-router-dom';
 import { Grid, debounce, Paper, Box, SxProps } from '@mui/material';
@@ -7,7 +13,12 @@ import styled from 'styled-components';
 import AppHead from '../components/App/AppHead';
 import ViewMode, { ViewOption } from '../control/ViewMode';
 import { UnsavedContext } from '../context/UnsavedContext';
-import SplitPane, { Pane } from 'react-split-pane';
+import {
+  default as SplitPaneBar,
+  Pane as PaneBar,
+  PaneProps,
+  SplitPaneProps,
+} from 'react-split-pane';
 import { HeadHeight } from '../App';
 import {
   PassageDetailProvider,
@@ -104,6 +115,14 @@ const Wrapper = styled.div`
     min-height: 0;
   }
 `;
+
+const SplitPane = (props: SplitPaneProps & PropsWithChildren) => {
+  return <SplitPaneBar {...props} />;
+};
+
+const Pane = (props: PaneProps & PropsWithChildren) => {
+  return <PaneBar {...props} className={props.className || 'pane'} />;
+};
 
 const PassageDetailGrids = () => {
   const [projRole] = useGlobal('projRole');
@@ -239,7 +258,7 @@ const PassageDetailGrids = () => {
                 split="vertical"
                 onChange={handleSplitSize}
               >
-                <Pane className="pane">
+                <Pane>
                   {tool === ToolSlug.Record && (
                     <Grid item sx={descProps} xs={12}>
                       <PassageDetailRecord />
@@ -266,7 +285,7 @@ const PassageDetailGrids = () => {
                   )}
                 </Pane>
                 {!topFilter && (
-                  <Pane className="pane">
+                  <Pane>
                     <Grid item xs={12} sm container>
                       <Grid item container direction="column">
                         <DiscussionList />

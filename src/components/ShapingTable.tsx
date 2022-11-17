@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { Input, styled } from '@mui/material';
 import {
   Column,
@@ -26,7 +26,7 @@ import {
 } from '@devexpress/dx-react-grid';
 import {
   DragDropProvider,
-  Grid,
+  Grid as GridBar,
   GroupingPanel,
   PagingPanel,
   Table,
@@ -38,6 +38,7 @@ import {
   TableSelection,
   TableSummaryRow,
   Toolbar,
+  GridProps,
 } from '@devexpress/dx-react-grid-material-ui';
 import { IGridStrings } from '../model';
 import { useEffect } from 'react';
@@ -47,6 +48,10 @@ import { gridSelector } from '../selector';
 
 type SizeFormatterProps = DataTypeProvider.ValueFormatterProps;
 type SizeEditorProps = DataTypeProvider.ValueEditorProps;
+
+const Grid = (props: GridProps & PropsWithChildren) => {
+  return <GridBar {...props} />;
+};
 
 const availableFilterOperations: string[] = [
   'equal',

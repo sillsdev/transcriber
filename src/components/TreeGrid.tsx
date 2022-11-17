@@ -19,7 +19,7 @@ import {
   TableColumnVisibility,
 } from '@devexpress/dx-react-grid';
 import {
-  Grid,
+  Grid as GridBar,
   Table,
   TableHeaderRow,
   TableFilterRow,
@@ -30,11 +30,16 @@ import {
   GroupingPanel,
   TableGroupRow,
   DragDropProvider,
+  GridProps,
 } from '@devexpress/dx-react-grid-material-ui';
 import { localizeGrid } from '../utils';
 import { IGridStrings } from '../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { gridSelector } from '../selector';
+
+const Grid = (props: GridProps & React.PropsWithChildren) => {
+  return <GridBar {...props} />;
+};
 
 interface IProps {
   rows: Array<any>;
