@@ -5,14 +5,16 @@ import { RowDetailState } from '@devexpress/dx-react-grid';
 import { scaleBand } from '@devexpress/dx-chart-core';
 import { ArgumentScale, Stack } from '@devexpress/dx-react-chart';
 import {
-  Chart,
+  Chart as ChartBar,
   BarSeries,
   ArgumentAxis,
   ValueAxis,
   Legend,
+  ChartProps,
 } from '@devexpress/dx-react-chart-material-ui';
 import {
-  Grid,
+  Grid as GridBar,
+  GridProps,
   Table,
   TableHeaderRow,
   TableRowDetail,
@@ -62,6 +64,14 @@ const LegendRoot = (props: Legend.RootProps) => (
 const LegendLabel = (props: Legend.LabelProps) => (
   <Legend.Label {...props} sx={{ whiteSpace: 'nowrap' }} />
 );
+
+const Chart = (props: ChartProps & React.PropsWithChildren) => {
+  return <ChartBar {...props} />;
+};
+
+const Grid = (props: GridProps & React.PropsWithChildren) => {
+  return <GridBar {...props} />;
+};
 
 const barSeriesForTask = (planwork: any) => {
   var acc: any[] = [];

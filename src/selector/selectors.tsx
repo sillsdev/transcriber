@@ -58,6 +58,9 @@ export const mediaActionsSelector = (state: IState) =>
 export const mediaUploadSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'mediaUpload' });
 
+export const mediaTabSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'mediaTab' });
+
 export const mainSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'main' });
 

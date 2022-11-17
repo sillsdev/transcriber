@@ -4,12 +4,18 @@ import React, {
   useContext,
   useRef,
   CSSProperties,
+  PropsWithChildren,
 } from 'react';
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
-import SplitPane, { Pane } from 'react-split-pane';
+import {
+  default as SplitPaneBar,
+  Pane as PaneBar,
+  PaneProps,
+  SplitPaneProps,
+} from 'react-split-pane';
 import styledComp from 'styled-components';
 import {
   MediaFile,
@@ -158,6 +164,14 @@ const Wrapper = styledComp.div`
     min-height: 0;
   }
 `;
+
+const SplitPane = (props: SplitPaneProps & PropsWithChildren) => {
+  return <SplitPaneBar {...props} />;
+};
+
+const Pane = (props: PaneProps & PropsWithChildren) => {
+  return <PaneBar {...props} className={props.className || 'pane'} />;
+};
 
 interface IRecordProps {
   mediafiles: MediaFile[];
@@ -1040,7 +1054,7 @@ export function Transcriber(props: IProps) {
                 split="horizontal"
                 onChange={handleSplitSize}
               >
-                <Pane className="pane">
+                <Pane>
                   <Grid
                     container
                     direction="row"
@@ -1108,7 +1122,7 @@ export function Transcriber(props: IProps) {
                     </Grid>
                   </Grid>
                 </Pane>
-                <Pane className="pane">
+                <Pane>
                   <Grid item xs={12} sm container>
                     <Grid
                       ref={transcriptionRef}

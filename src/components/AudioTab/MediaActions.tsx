@@ -1,31 +1,27 @@
-import { IMediaActionsStrings, IState } from '../../model';
+import { IMediaActionsStrings } from '../../model';
 import { IconButton, Box, SxProps } from '@mui/material';
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import { FaPaperclip, FaUnlink } from 'react-icons/fa';
 import PauseIcon from '@mui/icons-material/Pause';
-import localStrings from '../../selector/localize';
-import { connect } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import { isElectron } from '../../api-variable';
+import { mediaActionsSelector } from '../../selector';
 
 const actionProps = { color: 'primary.light' } as SxProps;
 
-interface IStateProps {
-  t: IMediaActionsStrings;
-}
-interface IProps extends IStateProps {
+interface IProps {
   rowIndex: number;
   mediaId: string;
   online: boolean;
   readonly: boolean;
   isPlaying: boolean;
   attached: boolean;
-  onAttach: (where: number[], attach: boolean) => () => void;
+  onAttach?: (where: number[], attach: boolean) => void;
   onPlayStatus: (mediaId: string) => void;
 }
 
 export function MediaActions(props: IProps) {
   const {
-    t,
     rowIndex,
     mediaId,
     online,
@@ -35,13 +31,14 @@ export function MediaActions(props: IProps) {
     isPlaying,
     attached,
   } = props;
+  const t: IMediaActionsStrings = useSelector(mediaActionsSelector, shallowEqual);
 
   const handlePlayStatus = () => {
     onPlayStatus(mediaId);
   };
 
   const handleAttach = () => {
-    onAttach([rowIndex], !attached);
+    onAttach && onAttach([rowIndex], !attached);
   };
 
   return (
@@ -74,7 +71,4 @@ export function MediaActions(props: IProps) {
     </Box>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediaActions' }),
-});
-export default connect(mapStateToProps)(MediaActions) as any as any;
+export default MediaActions;

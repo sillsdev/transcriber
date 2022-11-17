@@ -23,7 +23,14 @@ import {
   styled,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   ArtifactTypeSlug,
   findRecord,
@@ -43,7 +50,12 @@ import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { cleanFileName, NamedRegions } from '../../utils';
 import styledHtml from 'styled-components';
-import SplitPane, { Pane } from 'react-split-pane';
+import {
+  default as SplitPaneBar,
+  Pane as PaneBar,
+  PaneProps,
+  SplitPaneProps,
+} from 'react-split-pane';
 import PassageDetailPlayer from './PassageDetailPlayer';
 import DiscussionList from '../Discussions/DiscussionList';
 import MediaPlayer from '../MediaPlayer';
@@ -131,6 +143,14 @@ const Wrapper = styledHtml.div`
     min-height: 0;
   }
 `;
+
+const SplitPane = (props: SplitPaneProps & PropsWithChildren) => {
+  return <SplitPaneBar {...props} />;
+};
+
+const Pane = (props: PaneProps & PropsWithChildren) => {
+  return <PaneBar {...props} className={props.className || 'pane'} />;
+};
 
 interface IStateProps {
   t: ICommunityStrings;
@@ -375,7 +395,7 @@ export function PassageDetailItem(props: IProps) {
               split="vertical"
               onChange={handleSplitSize}
             >
-              <Pane className="pane">
+              <Pane>
                 <SplitPane
                   split="horizontal"
                   defaultSize={playerSize - 20}
@@ -383,7 +403,7 @@ export function PassageDetailItem(props: IProps) {
                   style={{ position: 'static' }}
                   onChange={handleHorizonalSplitSize}
                 >
-                  <Pane className="pane">
+                  <Pane>
                     <PassageDetailPlayer
                       allowSegment={segments}
                       allowAutoSegment={segments !== undefined}
@@ -394,7 +414,7 @@ export function PassageDetailItem(props: IProps) {
                     />
                   </Pane>
                   {currentVersion !== 0 ? (
-                    <Pane className="pane">
+                    <Pane>
                       <Paper sx={paperProps}>
                         <Box sx={rowProp}>
                           <Button
@@ -538,7 +558,7 @@ export function PassageDetailItem(props: IProps) {
                       </Paper>
                     </Pane>
                   ) : (
-                    <Pane className="pane">
+                    <Pane>
                       <Paper sx={paperProps}>
                         <Typography variant="h2" align="center">
                           {ts.noAudio}
@@ -548,7 +568,7 @@ export function PassageDetailItem(props: IProps) {
                   )}
                 </SplitPane>
               </Pane>
-              <Pane className="pane">
+              <Pane>
                 <Grid item xs={12} sm container>
                   <Grid item container direction="column">
                     <DiscussionList />

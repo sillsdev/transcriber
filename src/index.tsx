@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import ReactDOM from 'react-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
 import {
@@ -11,7 +11,10 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import ErrorBoundary from './hoc/ErrorBoundary';
 // import { useNavigate } from 'react-router-dom';
-import { DataProvider } from './mods/react-orbitjs';
+import {
+  DataProvider as DataProviderBar,
+  DataProviderProps,
+} from './mods/react-orbitjs';
 import { Provider } from 'react-redux';
 import { coordinator, memory, backup, schema } from './schema';
 import configureStore from './store';
@@ -151,6 +154,10 @@ const AuthApp = () => {
       <TokenChecked />
     </Auth0Provider>
   );
+};
+
+const DataProvider = (props: DataProviderProps & PropsWithChildren) => {
+  return <DataProviderBar {...props} />;
 };
 
 const Root = () => (
