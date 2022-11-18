@@ -19,9 +19,7 @@ import { useTeamApiPull } from './useTeamApiPull';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../selector';
 
-interface IProps {}
-
-export const useTeamCreate = (props: IProps) => {
+export const useTeamCreate = () => {
   const [coordinator] = useGlobal('coordinator');
   const [user] = useGlobal('user');
   const [, setOrganization] = useGlobal('organization');

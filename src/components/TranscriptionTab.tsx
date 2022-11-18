@@ -133,7 +133,7 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps {
   projectPlans: Plan[];
   planColumn?: boolean;
   floatTop?: boolean;
@@ -141,7 +141,9 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   orgSteps?: OrgWorkflowStep[];
 }
 
-export function TranscriptionTab(props: IProps) {
+export function TranscriptionTab(
+  props: IProps & IStateProps & IDispatchProps & IRecordProps
+) {
   const {
     activityState,
     t,
@@ -805,7 +807,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   allBookData: state.books.bookData,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       exportProject: actions.exportProject,
@@ -824,5 +826,5 @@ const mapRecordsToProps = {
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(TranscriptionTab) as any
-) as any;
+  connect(mapStateToProps, mapDispatchToProps)(TranscriptionTab as any) as any
+) as any as (props: IProps) => JSX.Element;

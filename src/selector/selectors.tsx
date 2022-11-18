@@ -49,8 +49,17 @@ export const gridSelector = (state: IState) =>
 export const groupTabsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'groupTabs' });
 
+export const importSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'import' });
+
+export const integrationSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'integration' });
+
 export const inviteSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'invite' });
+
+export const invitationTableSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'invitationTable' });
 
 export const mediaActionsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'mediaActions' });
@@ -63,6 +72,9 @@ export const mediaTabSelector = (state: IState) =>
 
 export const mainSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'main' });
+
+export const newProjectSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'newProject' });
 
 export const passageChooserSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'passageChooser' });
@@ -81,6 +93,9 @@ export const peerSelector = (state: IState) =>
 
 export const permissionsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'permission' });
+
+export const pickerSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'languagePicker' });
 
 export const planSheetSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'planSheet' });
@@ -115,6 +130,9 @@ export const spellingSelector = (state: IState) =>
 export const stepEditorSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'stepEditor' });
 
+export const taskItemSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'taskItem' });
+
 export const templateSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'template' });
 
@@ -129,6 +147,9 @@ export const toolSelector = (state: IState) =>
 
 export const transcribeAddNoteSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'transcribeAddNote' });
+
+export const transcriberSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'transcriber' });
 
 export const transcribeRejectSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'transcribeReject' });
@@ -145,8 +166,17 @@ export const viewModeSelector = (state: IState) =>
 export const userListModeSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'userListMode' });
 
+export const usertableSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'usertable' });
+
+export const vProjectSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'vProject' });
+
 export const welcomeSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'welcome' });
+
+export const workflowStepsSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'workflowSteps' });
 
 export const wsAudioPlayerSegmentSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'wsAudioPlayerSegment' });

@@ -1,7 +1,15 @@
 import { Operation, TransformBuilder } from '@orbit/data';
+import { useDispatch } from 'react-redux';
 import { useGlobal } from 'reactn';
 import { findRecord, PermissionName, remoteIdGuid, usePermissions } from '.';
-import { MediaFile, Comment, GroupMembership, Group, User } from '../model';
+import {
+  MediaFile,
+  Comment,
+  GroupMembership,
+  Group,
+  User,
+  IApiError,
+} from '../model';
 import {
   AddRecord,
   UpdateRecord,
@@ -12,10 +20,7 @@ import {
 import { orbitErr } from '../utils';
 import * as actions from '../store';
 
-interface IDispatchProps {
-  doOrbitError: typeof actions.doOrbitError;
-}
-interface IProps extends IDispatchProps {
+interface IProps {
   discussion: string;
   cb: () => void;
   users: User[];
@@ -27,13 +32,15 @@ export const useSaveComment = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const { users, groups, memberships } = props;
+  const dispatch = useDispatch();
+  const doOrbitError = (ex: IApiError) => dispatch(actions.doOrbitError(ex));
   const { hasPermission, addAccess, addNeedsApproval, approve } =
     usePermissions({
       users,
       groups,
       memberships,
     });
-  const { discussion, cb, doOrbitError } = props;
+  const { discussion, cb } = props;
   return (
     commentId: string,
     commentText: string,

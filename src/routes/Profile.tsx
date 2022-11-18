@@ -824,7 +824,7 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       setLanguage: action.setLanguage,
@@ -835,5 +835,5 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Profile) as any
+  connect(mapStateToProps, mapDispatchToProps)(Profile as any) as any
 ) as any;

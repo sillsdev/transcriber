@@ -16,8 +16,8 @@ import {
   VProject,
   Discussion,
   OrgWorkflowStep,
+  IApiError,
 } from '../../model';
-import * as actions from '../../store';
 import { API_CONFIG } from '../../api-variable';
 import { ResourceDocument } from '@orbit/jsonapi';
 import {
@@ -323,15 +323,24 @@ const importFromElectron =
       });
   };
 
+export interface ImportSyncFromElectronProps {
+  filename: string;
+  file: Buffer;
+  token: string | null;
+  errorReporter: any;
+  pendingmsg: string;
+  completemsg: string;
+}
+
 export const importSyncFromElectron =
-  (
-    filename: string,
-    file: Buffer,
-    token: string | null,
-    errorReporter: any,
-    pendingmsg: string,
-    completemsg: string
-  ) =>
+  ({
+    filename,
+    file,
+    token,
+    errorReporter,
+    pendingmsg,
+    completemsg,
+  }: ImportSyncFromElectronProps) =>
   (dispatch: any) => {
     dispatch(
       importFromElectron(
@@ -346,15 +355,24 @@ export const importSyncFromElectron =
     );
   };
 
+export interface ImportProjectFromElectronProps {
+  files: File[];
+  projectid: number;
+  token: string | null;
+  errorReporter: any;
+  pendingmsg: string;
+  completemsg: string;
+}
+
 export const importProjectFromElectron =
-  (
-    files: File[],
-    projectid: number,
-    token: string | null,
-    errorReporter: any,
-    pendingmsg: string,
-    completemsg: string
-  ) =>
+  ({
+    files,
+    projectid,
+    token,
+    errorReporter,
+    pendingmsg,
+    completemsg,
+  }: ImportProjectFromElectronProps) =>
   (dispatch: any) => {
     dispatch(
       importFromElectron(
@@ -369,24 +387,42 @@ export const importProjectFromElectron =
     );
   };
 
+export interface ImportProjectToElectronProps {
+  filepath: string;
+  dataDate: string;
+  version: number;
+  coordinator: Coordinator;
+  offlineOnly: boolean;
+  AddProjectLoaded: (project: string) => void;
+  reportError: (ex: IApiError) => void;
+  getTypeId: (slug: string) => string | null;
+  pendingmsg: string;
+  completemsg: string;
+  oldfilemsg: string;
+  token: string | null;
+  user: string;
+  errorReporter: any;
+  offlineSetup: () => Promise<void>;
+}
+
 export const importProjectToElectron =
-  (
-    filepath: string,
-    dataDate: string,
-    version: number,
-    coordinator: Coordinator,
-    offlineOnly: boolean,
-    AddProjectLoaded: (project: string) => void,
-    reportError: typeof actions.doOrbitError,
-    getTypeId: (slug: string) => string | null,
-    pendingmsg: string,
-    completemsg: string,
-    oldfilemsg: string,
-    token: string | null,
-    user: string,
-    errorReporter: any,
-    offlineSetup: () => Promise<void>
-  ) =>
+  ({
+    filepath,
+    dataDate,
+    version,
+    coordinator,
+    offlineOnly,
+    AddProjectLoaded,
+    reportError,
+    getTypeId,
+    pendingmsg,
+    completemsg,
+    oldfilemsg,
+    token,
+    user,
+    errorReporter,
+    offlineSetup,
+  }: ImportProjectToElectronProps) =>
   (dispatch: any) => {
     var tb: TransformBuilder = new TransformBuilder();
     var oparray: Operation[] = [];

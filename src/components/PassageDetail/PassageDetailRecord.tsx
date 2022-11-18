@@ -1,19 +1,11 @@
-import { connect } from 'react-redux';
-import {
-  IMediaTabStrings,
-  ISharedStrings,
-  IState,
-  MediaFile,
-} from '../../model';
-import localStrings from '../../selector/localize';
+import { shallowEqual, useSelector } from 'react-redux';
+import { ISharedStrings, MediaFile } from '../../model';
 import { Button, Typography, SxProps, Box } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { findRecord, useFetchMediaUrl, VernacularTag } from '../../crud';
 import { useGlobal } from 'reactn';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
-import * as actions from '../../store';
-import { bindActionCreators } from 'redux';
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { withData } from 'react-orbitjs';
@@ -30,6 +22,7 @@ import VersionDlg from '../AudioTab/VersionDlg';
 import VersionsIcon from '@mui/icons-material/List';
 import { PlanProvider } from '../../context/PlanContext';
 import SpeakerName from '../SpeakerName';
+import { sharedSelector } from '../../selector';
 
 const buttonProps = {
   mx: 1,
@@ -37,27 +30,18 @@ const buttonProps = {
   alignSelf: 'center',
 } as SxProps;
 
-interface IStateProps {
-  t: IMediaTabStrings;
-  ts: ISharedStrings;
-  uploadError: string;
-}
-interface IDispatchProps {
-  uploadFiles: typeof actions.uploadFiles;
-  nextUpload: typeof actions.nextUpload;
-  uploadComplete: typeof actions.uploadComplete;
-  doOrbitError: typeof actions.doOrbitError;
-}
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
 }
-interface IProps extends IRecordProps, IStateProps, IDispatchProps {
+interface IProps {
   ready?: () => boolean;
 }
+
 const SaveWait = 500;
-export function PassageDetailRecord(props: IProps) {
-  const { ready, ts } = props;
-  const { mediafiles } = props;
+
+export function PassageDetailRecord(props: IProps & IRecordProps) {
+  const { ready, mediafiles } = props;
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { startSave, toolChanged, toolsChanged, saveRequested, waitForSave } =
     useContext(UnsavedContext).state;
   const [reporter] = useGlobal('errorReporter');
@@ -291,25 +275,10 @@ export function PassageDetailRecord(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  uploadError: state.upload.errmsg,
-  t: localStrings(state, { layout: 'mediaTab' }),
-  ts: localStrings(state, { layout: 'shared' }),
-});
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      uploadFiles: actions.uploadFiles,
-      nextUpload: actions.nextUpload,
-      uploadComplete: actions.uploadComplete,
-      doOrbitError: actions.doOrbitError,
-    },
-    dispatch
-  ),
-});
 const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(PassageDetailRecord) as any
-) as any;
+
+export default withData(mapRecordsToProps)(PassageDetailRecord) as any as (
+  props: IProps
+) => JSX.Element;

@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal, useEffect } from 'reactn';
-import { bindActionCreators } from 'redux';
-import { connect, shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import * as actions from '../store';
 import {
   IState,
-  // IControlStrings,
   GroupMembership,
   Project,
   Plan,
@@ -14,7 +12,6 @@ import {
   Organization,
   OrganizationMembership,
   VProject,
-  IMainStrings,
   ICardsStrings,
   IVProjectStrings,
   ILanguagePickerStrings,
@@ -29,7 +26,6 @@ import {
 import { OptionType } from '../model';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import localStrings from '../selector/localize';
 import {
   related,
   useFlatAdd,
@@ -49,54 +45,18 @@ import {
   useLoadProjectData,
   useProjectType,
 } from '../crud';
-import { controlSelector } from '../selector';
+import {
+  cardsSelector,
+  controlSelector,
+  newProjectSelector,
+  pickerSelector,
+  projButtonsSelector,
+  sharedSelector,
+  vProjectSelector,
+} from '../selector';
+import { useDispatch } from 'react-redux';
 
 export type TeamIdType = Organization | null;
-
-interface IStateProps {
-  lang: string;
-  t: IMainStrings;
-  cardStrings: ICardsStrings;
-  sharedStrings: ISharedStrings;
-  vProjectStrings: IVProjectStrings;
-  pickerStrings: ILanguagePickerStrings;
-  projButtonStrings: IProjButtonsStrings;
-  newProjectStrings: INewProjectStrings;
-  ts: ISharedStrings;
-  bookSuggestions: OptionType[];
-  bookMap: BookNameMap;
-  allBookData: BookName[];
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  lang: state.strings.lang,
-  sharedStrings: localStrings(state, { layout: 'shared' }),
-  t: localStrings(state, { layout: 'main' }),
-  cardStrings: localStrings(state, { layout: 'cards' }),
-  vProjectStrings: localStrings(state, { layout: 'vProject' }),
-  pickerStrings: localStrings(state, { layout: 'languagePicker' }),
-  projButtonStrings: localStrings(state, { layout: 'projButtons' }),
-  newProjectStrings: localStrings(state, { layout: 'newProject' }),
-  ts: localStrings(state, { layout: 'shared' }),
-  bookSuggestions: state.books.suggestions,
-  bookMap: state.books.map,
-  allBookData: state.books.bookData,
-});
-
-interface IDispatchProps {
-  fetchBooks: typeof actions.fetchBooks;
-  doOrbitError: typeof actions.doOrbitError;
-  resetOrbitError: typeof actions.resetOrbitError;
-}
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      fetchBooks: actions.fetchBooks,
-      doOrbitError: actions.doOrbitError,
-      resetOrbitError: actions.resetOrbitError,
-    },
-    dispatch
-  ),
-});
 
 interface IRecordProps {
   organizations: Organization[];
@@ -175,15 +135,12 @@ interface IContext {
 
 const TeamContext = React.createContext({} as IContext);
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps {
   children: React.ReactElement;
 }
 
 const TeamProvider = withData(mapRecordsToProps)(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )((props: IProps) => {
+  (props: IProps & IRecordProps) => {
     const {
       organizations,
       orgMembers,
@@ -191,23 +148,37 @@ const TeamProvider = withData(mapRecordsToProps)(
       groupMemberships,
       plans,
       planTypes,
-      lang,
-      t,
-      ts,
-      sharedStrings,
-      cardStrings,
-      vProjectStrings,
-      pickerStrings,
-      projButtonStrings,
-      newProjectStrings,
-      bookSuggestions,
-      bookMap,
-      allBookData,
+
       sections,
-      fetchBooks,
-      doOrbitError,
-      resetOrbitError,
     } = props;
+    const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+    const sharedStrings = ts;
+    const cardStrings: ICardsStrings = useSelector(cardsSelector, shallowEqual);
+    const vProjectStrings: IVProjectStrings = useSelector(
+      vProjectSelector,
+      shallowEqual
+    );
+    const pickerStrings: ILanguagePickerStrings = useSelector(
+      pickerSelector,
+      shallowEqual
+    );
+    const projButtonStrings: IProjButtonsStrings = useSelector(
+      projButtonsSelector,
+      shallowEqual
+    );
+    const newProjectStrings: INewProjectStrings = useSelector(
+      newProjectSelector,
+      shallowEqual
+    );
+    const lang = useSelector((state: IState) => state.strings.lang);
+    const allBookData = useSelector((state: IState) => state.books.bookData);
+    const bookMap = useSelector((state: IState) => state.books.map);
+    const bookSuggestions = useSelector(
+      (state: IState) => state.books.suggestions
+    );
+    const dispatch = useDispatch();
+    const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
+    const resetOrbitError = () => dispatch(actions.resetOrbitError());
     const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
     const [, setPlan] = useGlobal('plan');
@@ -235,19 +206,19 @@ const TeamProvider = withData(mapRecordsToProps)(
     const vProjectCreate = useVProjectCreate();
     const vProjectUpdate = useVProjectUpdate();
     const vProjectDelete = useVProjectDelete();
-    const orbitTeamCreate = useTeamCreate(props);
+    const orbitTeamCreate = useTeamCreate();
     const orbitTeamUpdate = useTeamUpdate();
     const orbitTeamDelete = useTeamDelete();
     const orbitFlatAdd = useFlatAdd(sharedStrings);
     const isPersonal = useIsPersonalTeam();
-    const getTeamId = useNewTeamId(props);
+    const getTeamId = useNewTeamId();
     const getPlanType = useTableType('plan');
     const vProject = useVProjectRead();
     const oProjRead = useOfflnProjRead();
     const { getMyOrgRole } = useRole();
     const { setProjectType } = useProjectType();
     const { getPlan } = usePlan();
-    const LoadData = useLoadProjectData(t, doOrbitError);
+    const LoadData = useLoadProjectData();
     const { setMyOrgRole } = useRole();
 
     const setProjectParams = (plan: Plan) => {
@@ -499,7 +470,7 @@ const TeamProvider = withData(mapRecordsToProps)(
         {props.children}
       </TeamContext.Provider>
     );
-  })
+  }
 );
 
 export { TeamContext, TeamProvider };

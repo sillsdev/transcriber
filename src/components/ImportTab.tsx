@@ -12,12 +12,10 @@ import {
   User,
   GroupMembership,
   Group,
-  BookName,
   ISharedStrings,
-  IDialog,
-  VProject,
   localizeActivityState,
   IActivityStateStrings,
+  IApiError,
 } from '../model';
 import { withData } from 'react-orbitjs';
 import Confirm from './AlertDialog';
@@ -35,12 +33,10 @@ import {
   styled,
   SxProps,
 } from '@mui/material';
-import localStrings from '../selector/localize';
-import { bindActionCreators } from 'redux';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { QueryBuilder, RecordIdentity } from '@orbit/data';
-import { connect } from 'react-redux';
+import { shallowEqual } from 'react-redux';
 import * as actions from '../store';
 import MediaUpload, { UploadType } from './MediaUpload';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -69,6 +65,14 @@ import {
   tryParseJSON,
 } from '../utils';
 import { ActionRow, AltButton, iconMargin } from '../control';
+import { useSelector } from 'react-redux';
+import { activitySelector, importSelector, sharedSelector } from '../selector';
+import { useDispatch } from 'react-redux';
+import {
+  ImportProjectFromElectronProps,
+  ImportProjectToElectronProps,
+  ImportSyncFromElectronProps,
+} from '../store';
 
 const headerProps = {
   display: 'flex',
@@ -94,56 +98,36 @@ const ProgressBar = styled(AppBar)<AppBarProps>(({ theme }) => ({
   width: '100%',
 }));
 
-interface IStateProps {
-  t: IImportStrings;
-  ta: IActivityStateStrings;
-  ts: ISharedStrings;
-  importStatus: IAxiosStatus | undefined;
-  allBookData: BookName[];
-}
-
-interface IDispatchProps {
-  importProjectToElectron: typeof actions.importProjectToElectron;
-  importProjectFromElectron: typeof actions.importProjectFromElectron;
-  importSyncFromElectron: typeof actions.importSyncFromElectron;
-  importComplete: typeof actions.importComplete;
-  orbitError: typeof actions.doOrbitError;
-  setLanguage: typeof actions.setLanguage;
-}
-
 interface IRecordProps {
   projects: Array<Project>;
 }
-interface IProps
-  extends IStateProps,
-    IDialog<VProject>,
-    IDispatchProps,
-    IRecordProps {
+interface IProps {
   project?: string;
   planName?: string;
-  syncBuffer: Buffer | undefined;
-  syncFile: string | undefined;
+  syncBuffer?: Buffer | undefined;
+  syncFile?: string | undefined;
+  isOpen: boolean;
+  onOpen: (val: boolean) => void;
 }
-export function ImportTab(props: IProps) {
-  const {
-    isOpen,
-    onOpen,
-    project,
-    planName,
-    syncBuffer,
-    syncFile,
-    t,
-    ta,
-    ts,
-    importComplete,
-    importStatus,
-    importProjectToElectron,
-    importProjectFromElectron,
-    importSyncFromElectron,
-    orbitError,
-    allBookData,
-    setLanguage,
-  } = props;
+export function ImportTab(props: IProps & IRecordProps) {
+  const { isOpen, onOpen, project, planName, syncBuffer, syncFile } = props;
+  const t: IImportStrings = useSelector(importSelector, shallowEqual);
+  const ta: IActivityStateStrings = useSelector(activitySelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const allBookData = useSelector((state: IState) => state.books.bookData);
+  const importStatus = useSelector(
+    (state: IState) => state.importexport.importexportStatus
+  );
+  const dispatch = useDispatch();
+  const setLanguage = (lang: string) => dispatch(actions.setLanguage(lang));
+  const orbitError = (ex: IApiError) => dispatch(actions.doOrbitError(ex));
+  const importComplete = () => dispatch(actions.importComplete());
+  const importProjectToElectron = (props: ImportProjectToElectronProps) =>
+    dispatch(actions.importProjectToElectron(props));
+  const importProjectFromElectron = (props: ImportProjectFromElectronProps) =>
+    dispatch(actions.importProjectFromElectron(props));
+  const importSyncFromElectron = (props: ImportSyncFromElectronProps) =>
+    dispatch(actions.importSyncFromElectron(props));
   interface IRow {
     plan: string;
     section: string;
@@ -175,8 +159,7 @@ export function ImportTab(props: IProps) {
   const [projectsLoaded] = useGlobal('projectsLoaded');
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const getOfflineProject = useOfflnProjRead();
-  const { handleElectronImport, getElectronImportData } =
-    useElectronImport(importComplete);
+  const { handleElectronImport, getElectronImportData } = useElectronImport();
   const handleFilter = () => setFilter(!filter);
   const headerRow = () =>
     t.plan +
@@ -275,28 +258,28 @@ export function ImportTab(props: IProps) {
     } else {
       if (project) {
         setBusy(true);
-        importProjectFromElectron(
+        importProjectFromElectron({
           files,
-          remoteIdNum('project', project, memory.keyMap),
+          projectid: remoteIdNum('project', project, memory.keyMap),
           token,
           errorReporter,
-          t.importPending,
-          t.importComplete
-        );
+          pendingmsg: t.importPending,
+          completemsg: t.importComplete,
+        });
       }
     }
     setUploadVisible(false);
   };
   const uploadSyncITF = (buffer: Buffer, fileName: string) => {
     setBusy(true);
-    importSyncFromElectron(
-      fileName,
-      buffer,
+    importSyncFromElectron({
+      filename: fileName,
+      file: buffer,
       token,
       errorReporter,
-      t.importPending,
-      t.importComplete
-    );
+      pendingmsg: t.importPending,
+      completemsg: t.importComplete,
+    });
   };
 
   const uploadCancel = () => {
@@ -826,32 +809,10 @@ export function ImportTab(props: IProps) {
     </StyledDialog>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'import' }),
-  ta: localStrings(state, { layout: 'activityState' }),
-  ts: localStrings(state, { layout: 'shared' }),
-  importStatus: state.importexport.importexportStatus,
-  allBookData: state.books.bookData,
-});
-
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      importProjectToElectron: actions.importProjectToElectron,
-      importProjectFromElectron: actions.importProjectFromElectron,
-      importSyncFromElectron: actions.importSyncFromElectron,
-      importComplete: actions.importComplete,
-      orbitError: actions.doOrbitError,
-      setLanguage: actions.setLanguage,
-    },
-    dispatch
-  ),
-});
-
 const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
 };
 
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(ImportTab) as any
-) as any;
+export default withData(mapRecordsToProps)(ImportTab) as any as (
+  props: IProps
+) => JSX.Element;

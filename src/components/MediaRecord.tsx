@@ -56,15 +56,15 @@ interface IStateProps {
   convert_guid: string;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
+interface IProps {
   toolId: string;
-  onReady: () => void;
-  onRecording: (r: boolean) => void;
-  onPlayStatus: (p: boolean) => void;
-  mediaId: string;
+  onReady?: () => void;
+  onRecording?: (r: boolean) => void;
+  onPlayStatus?: (p: boolean) => void;
+  mediaId?: string;
   metaData?: JSX.Element;
   defaultFilename?: string;
-  startSave: boolean;
+  startSave?: boolean;
   setCanSave: (canSave: boolean) => void;
   setCanCancel?: (canCancel: boolean) => void;
   setStatusText: (status: string) => void;
@@ -77,10 +77,10 @@ interface IProps extends IStateProps, IDispatchProps {
   doReset?: boolean;
   setDoReset?: (r: boolean) => void;
   preload?: boolean;
-  autoStart: boolean;
+  autoStart?: boolean;
 }
 
-function MediaRecord(props: IProps) {
+function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
   const {
     t,
     toolId,
@@ -154,7 +154,7 @@ function MediaRecord(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId });
+    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId ?? '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
 
@@ -255,7 +255,7 @@ function MediaRecord(props: IProps) {
             300
           ).then(() => convertBlob(audioBlob, mimeType, guidRef.current));
         } else {
-          doUpload(audioBlob).then(() => onReady());
+          doUpload(audioBlob).then(() => onReady && onReady());
         }
         return;
       }
@@ -327,7 +327,7 @@ function MediaRecord(props: IProps) {
       } else {
         showMessage(urlorError);
         //force it to go get another (unexpired) s3 url
-        fetchMediaUrl({ id: mediaId });
+        fetchMediaUrl({ id: mediaId ?? '' });
         setLoading(false);
       }
     });
@@ -415,7 +415,7 @@ function MediaRecord(props: IProps) {
     </Paper>
   );
 }
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       convertBlob: actions.convertBlob,
@@ -424,6 +424,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     dispatch
   ),
 });
+
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'passageRecord' }),
   convert_status: state.convertBlob.statusmsg,
@@ -431,4 +432,8 @@ const mapStateToProps = (state: IState): IStateProps => ({
   convert_blob: state.convertBlob.blob,
   convert_guid: state.convertBlob.guid,
 });
-export default connect(mapStateToProps, mapDispatchToProps)(MediaRecord) as any;
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MediaRecord as any) as any as (props: IProps) => JSX.Element;

@@ -1,11 +1,8 @@
 import React, { useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import * as actions from '../store';
 import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import { styled } from '@mui/material';
-import localStrings from '../selector/localize';
 import MediaUpload, { UploadType } from './MediaUpload';
 import {
   findRecord,
@@ -20,23 +17,14 @@ import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import PassageRecordDlg from './PassageRecordDlg';
 import { restoreScroll } from '../utils';
+import { shallowEqual, useSelector } from 'react-redux';
+import { NextUploadProps } from '../store';
+import { useDispatch } from 'react-redux';
+import { mediaTabSelector, sharedSelector } from '../selector';
 
 const UnsupportedMessage = styled('span')(({ theme }) => ({
   color: theme.palette.secondary.light,
 }));
-
-interface IStateProps {
-  t: IMediaTabStrings;
-  ts: ISharedStrings;
-  uploadError: string;
-}
-
-interface IDispatchProps {
-  uploadFiles: typeof actions.uploadFiles;
-  nextUpload: typeof actions.nextUpload;
-  uploadComplete: typeof actions.uploadComplete;
-  doOrbitError: typeof actions.doOrbitError;
-}
 
 interface IProps {
   noBusy?: boolean;
@@ -65,15 +53,13 @@ interface IProps {
   team?: string; // used when adding a card to check speakers
 }
 
-export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
+export const Uploader = (props: IProps) => {
   const {
     noBusy,
     mediaId,
     recordAudio,
     allowWave,
     defaultFilename,
-    t,
-    ts,
     isOpen,
     onOpen,
     showMessage,
@@ -90,12 +76,17 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
     uploadType,
     team,
   } = props;
-  const { nextUpload } = props;
-  const { uploadError } = props;
-  const { uploadComplete, finish, doOrbitError } = props;
-  const { uploadFiles } = props;
+  const { finish } = props;
   const { metaData, ready } = props;
   const { createProject } = props;
+  const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const uploadError = useSelector((state: IState) => state.upload.errmsg);
+  const dispatch = useDispatch();
+  const uploadFiles = (files: File[]) => dispatch(actions.uploadFiles(files));
+  const nextUpload = (props: NextUploadProps) =>
+    dispatch(actions.nextUpload(props));
+  const uploadComplete = () => dispatch(actions.uploadComplete());
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -110,7 +101,7 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
   const ctx = useContext(TokenContext).state;
   const mediaIdRef = useRef<string[]>([]);
   const artifactTypeRef = useRef<string>('');
-  const { createMedia } = useOfflnMediafileCreate(doOrbitError);
+  const { createMedia } = useOfflnMediafileCreate();
   const [, setComplete] = useGlobal('progress');
   const { localizedArtifactTypeFromId } = useArtifactType();
 
@@ -214,15 +205,15 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
         : localizedArtifactTypeFromId(artifactTypeId), //put psc message here
     } as any;
 
-    nextUpload(
-      mediaFile,
-      uploadList,
-      currentlyLoading,
-      ctx.accessToken || '',
-      offline,
+    nextUpload({
+      record: mediaFile,
+      files: uploadList,
+      n: currentlyLoading,
+      token: ctx.accessToken || '',
+      offlineOnly: offline,
       errorReporter,
-      itemComplete
-    );
+      cb: itemComplete,
+    });
   };
 
   const uploadMedia = async (files: File[]) => {
@@ -322,25 +313,4 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediaTab' }),
-  ts: localStrings(state, { layout: 'shared' }),
-  uploadError: state.upload.errmsg,
-});
-
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      uploadFiles: actions.uploadFiles,
-      nextUpload: actions.nextUpload,
-      uploadComplete: actions.uploadComplete,
-      doOrbitError: actions.doOrbitError,
-    },
-    dispatch
-  ),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Uploader) as any as (props: IProps) => JSX.Element;
+export default Uploader;

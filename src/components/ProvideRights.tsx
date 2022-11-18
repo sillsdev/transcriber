@@ -194,7 +194,6 @@ export function ProvideRights(props: IProps & IRecordProps) {
           <Typography sx={statusProps}>{t.record}</Typography>
         </Box>
         <MediaRecord
-          id="mediarecord"
           toolId={toolId}
           uploadMethod={uploadMedia}
           defaultFilename={defaultFilename}

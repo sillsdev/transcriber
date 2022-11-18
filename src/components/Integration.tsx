@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import * as actions from '../store';
 import { useGlobal, useState } from 'reactn';
-import { connect } from 'react-redux';
+import { connect, shallowEqual } from 'react-redux';
 import {
   IState,
   IIntegrationStrings,
@@ -71,6 +71,8 @@ import { doDataChanges } from '../hoc/DataChanges';
 import Memory from '@orbit/memory';
 import { translateParatextError } from '../utils/translateParatextError';
 import { PriButton, SelectExportType, StyledHeading } from '../control';
+import { useSelector } from 'react-redux';
+import { sharedSelector } from '../selector';
 
 const panelProps = { flexDirection: 'column' } as SxProps;
 const textFieldProps = { mx: 1, width: '600px' } as SxProps;
@@ -78,6 +80,12 @@ const formText = { fontSize: 'small' } as SxProps;
 const startAlign = { alignItems: 'flex-start' } as SxProps;
 const avatarProps = { color: 'green' } as SxProps;
 const menuProps = { width: '300px' } as SxProps;
+
+const TranslateSyncError = (err: IAxiosStatus): JSX.Element => {
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+
+  return <span>{translateParatextError(err, ts)}</span>;
+};
 
 interface IStateProps {
   paratext_count: number; //state.paratext.count,
@@ -111,7 +119,7 @@ interface IRecordProps {
   passages: Array<Passage>;
   mediafiles: Array<MediaFile>;
 }
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps {
   stopPlayer?: () => void;
   artifactType?: ArtifactTypeSlug;
   passage?: Passage;
@@ -119,7 +127,9 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   setStepComplete?: (stepId: string, complete: boolean) => {};
 }
 
-export function IntegrationPanel(props: IProps) {
+export function IntegrationPanel(
+  props: IProps & IRecordProps & IStateProps & IDispatchProps
+) {
   const {
     t,
     ts,
@@ -393,9 +403,6 @@ export function IntegrationPanel(props: IProps) {
     setPtShortName(index >= 0 ? paratext_projects[index].ShortName : '');
     if (pRef && pRef.current) pRef.current.focus();
   };
-  const translateSyncError = (err: IAxiosStatus): JSX.Element => {
-    return <span>{translateParatextError(err, ts)}</span>;
-  };
 
   const formatWithLanguage = (replLang: string): string => {
     let proj = getProject();
@@ -556,7 +563,7 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     if (paratext_syncStatus) {
       if (paratext_syncStatus.errStatus) {
-        showTitledMessage(t.syncError, translateSyncError(paratext_syncStatus));
+        showTitledMessage(t.syncError, TranslateSyncError(paratext_syncStatus));
         resetSync();
         setSyncing(false);
       } else if (paratext_syncStatus.statusMsg !== '') {
@@ -904,7 +911,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   paratext_projectsStatus: state.paratext.projectsStatus,
   paratext_syncStatus: state.paratext.syncStatus,
 });
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       getUserName: actions.getUserName,
@@ -922,6 +929,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     dispatch
   ),
 });
+
 const mapRecordsToProps = {
   projectintegrations: (q: QueryBuilder) => q.findRecords('projectintegration'),
   integrations: (q: QueryBuilder) => q.findRecords('integration'),
@@ -931,5 +939,5 @@ const mapRecordsToProps = {
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(IntegrationPanel) as any
-) as any;
+  connect(mapStateToProps, mapDispatchToProps)(IntegrationPanel as any) as any
+) as any as (props: IProps) => JSX.Element;

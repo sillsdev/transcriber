@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation } from 'react-router-dom';
 import { localizeRole, LocalKey, localUserKey } from '../utils';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { shallowEqual } from 'react-redux';
 import {
-  IState,
   User,
   Role,
   OrganizationMembership,
@@ -13,9 +11,8 @@ import {
   ISharedStrings,
   RoleNames,
 } from '../model';
-import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import { IconButton, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import FilterIcon from '@mui/icons-material/FilterList';
@@ -43,6 +40,8 @@ import {
   ActionRow,
   iconMargin,
 } from '../control';
+import { useSelector } from 'react-redux';
+import { sharedSelector, usertableSelector } from '../selector';
 
 interface IRow {
   type: string;
@@ -64,23 +63,20 @@ const getName = (om: OrganizationMembership, users: User[]) => {
   return u && u.length > 0 && u[0].attributes && u[0].attributes.name;
 };
 
-interface IStateProps {
-  t: IUsertableStrings;
-  ts: ISharedStrings;
-}
-
-interface IDispatchProps {}
-
 interface IRecordProps {
   users: Array<User>;
   roles: Array<Role>;
   organizationMemberships: Array<OrganizationMembership>;
 }
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
+interface IProps {
+  projectRole?: boolean;
+}
 
-export function UserTable(props: IProps) {
-  const { t, ts, users, roles, organizationMemberships } = props;
+export function UserTable(props: IProps & IRecordProps) {
+  const { users, roles, organizationMemberships } = props;
+  const t: IUsertableStrings = useSelector(usertableSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { pathname } = useLocation();
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
@@ -340,15 +336,6 @@ export function UserTable(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'usertable' }),
-  ts: localStrings(state, { layout: 'shared' }),
-});
-
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators({}, dispatch),
-});
-
 const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
   roles: (q: QueryBuilder) => q.findRecords('role'),
@@ -356,6 +343,6 @@ const mapRecordsToProps = {
     q.findRecords('organizationmembership'),
 };
 
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(UserTable) as any
-) as any;
+export default withData(mapRecordsToProps)(UserTable) as any as (
+  props: IProps
+) => JSX.Element;

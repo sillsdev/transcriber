@@ -48,13 +48,15 @@ interface IDispatchProps {
   exportComplete: typeof actions.exportComplete;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
+interface IProps {
   open: Boolean;
   projectIds: string[];
   finish: () => void;
 }
 
-export const ProjectDownload = (props: IProps) => {
+export const ProjectDownload = (
+  props: IProps & IStateProps & IDispatchProps
+) => {
   const { open, projectIds, t, ts, finish } = props;
   const { exportProject, exportComplete, exportStatus, exportFile } = props;
   const [errorReporter] = useGlobal('errorReporter');
@@ -206,7 +208,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   exportStatus: state.importexport.importexportStatus,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       exportProject: actions.exportProject,
@@ -219,4 +221,4 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProjectDownload) as any;
+)(ProjectDownload as any) as any;

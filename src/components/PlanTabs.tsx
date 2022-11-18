@@ -188,7 +188,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
         {tab === tabs.media && (
           <AudioTab
             {...props}
-            projectplans={plans.filter((p) => p.id === plan)}
+            // projectplans={plans.filter((p) => p.id === plan)}
           />
         )}
         {tab === tabs.assignment && <AssignmentTable {...props} />}

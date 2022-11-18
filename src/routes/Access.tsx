@@ -554,7 +554,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   importStatus: state.importexport.importexportStatus,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       fetchLocalization: action.fetchLocalization,
@@ -572,5 +572,5 @@ const mapRecordsToProps = {
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Access) as any
+  connect(mapStateToProps, mapDispatchToProps)(Access as any) as any
 ) as any as (props: IProps) => JSX.Element;

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import { useContext, useMemo, useRef, useState } from 'react';
 import { useEffect, useGlobal } from 'reactn';
 import {
   Box,
@@ -21,7 +21,6 @@ import {
   Discussion,
   Comment,
   IDiscussionCardStrings,
-  IState,
   Group,
   User,
   MediaFile,
@@ -36,11 +35,10 @@ import ResolveIcon from '@mui/icons-material/Check';
 import HideIcon from '@mui/icons-material/ArrowDropUp';
 import ShowIcon from '@mui/icons-material/ArrowDropDown';
 import LocationIcon from '@mui/icons-material/LocationSearching';
-import { connect } from 'react-redux';
-import localStrings from '../../selector/localize';
+import { shallowEqual } from 'react-redux';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
-import { PermissionName, related, usePermissions } from '../../crud';
+import { PermissionName, related, usePermissions, useRole } from '../../crud';
 import CommentCard from './CommentCard';
 import ReplyCard from './ReplyCard';
 import UserAvatar from '../UserAvatar';
@@ -68,6 +66,8 @@ import GroupAvatar from '../GroupAvatar';
 import SelectDiscussionAssignment from '../../control/SelectDiscussionAssignment';
 import { usePeerGroups } from '../Peers/usePeerGroups';
 import { OldVernVersion } from '../../control/OldVernVersion';
+import { useSelector } from 'react-redux';
+import { discussionCardSelector, sharedSelector } from '../../selector';
 
 const DiscussionCardRoot = styled(Box)<BoxProps>(() => ({
   width: '100%',
@@ -163,29 +163,25 @@ interface IRecordProps {
   users: Array<User>;
   memberships: Array<GroupMembership>;
 }
-interface IStateProps {
-  t: IDiscussionCardStrings;
-  ts: ISharedStrings;
-}
-interface IProps extends IRecordProps, IStateProps {
+
+interface IProps {
   id: string;
   discussion: Discussion;
   collapsed: boolean;
   showStep: boolean;
   showReference: boolean;
-  onAddComplete?: (id: string) => {};
-  setRef: (ref: any) => {};
+  onAddComplete?: (id: string) => void;
+  setRef: (ref: any) => void;
   requestHighlight: string;
 }
+
 export const DiscussionRegion = (discussion: Discussion) => {
   return startEnd(discussion.attributes?.subject);
 };
 
-export const DiscussionCard = (props: IProps) => {
+export const DiscussionCard = (props: IProps & IRecordProps) => {
   const {
     id,
-    t,
-    ts,
     discussion,
     collapsed,
     showStep,
@@ -203,7 +199,12 @@ export const DiscussionCard = (props: IProps) => {
     users,
     memberships,
   } = props;
+  const t: IDiscussionCardStrings = useSelector(
+    discussionCardSelector,
+    shallowEqual
+  );
   const tdcs = t;
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const ctx = useContext(PassageDetailContext);
   const {
     currentstep,
@@ -969,11 +970,7 @@ export const DiscussionCard = (props: IProps) => {
                 />
               ))}
               {!discussion.attributes.resolved && !editCard && (
-                <ReplyCard
-                  id={`reply-${discussion.id}`}
-                  discussion={discussion}
-                  number={myComments.length}
-                />
+                <ReplyCard discussion={discussion} number={myComments.length} />
               )}
             </Grid>
           )}
@@ -1000,10 +997,6 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
   memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'discussionCard' }),
-  ts: localStrings(state, { layout: 'shared' }),
-});
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(DiscussionCard) as any
-) as any;
+export default withData(mapRecordsToProps)(DiscussionCard) as any as (
+  props: IProps
+) => JSX.Element;
