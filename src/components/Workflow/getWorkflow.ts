@@ -111,7 +111,7 @@ export const isPassageFiltered = (
   return (
     !filterState.disabled &&
     ((filterState.hideDone && w.stepId === doneStepId) ||
-      (filterState.assignedToMe && w.discussionCount > 0) ||
+      (filterState.assignedToMe && w.discussionCount === 0) ||
       (filterState.maxStep &&
         w.stepId &&
         stepIndex(w.stepId) > stepIndex(filterState.maxStep)) ||

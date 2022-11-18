@@ -114,9 +114,9 @@ interface IRecordProps {
 
 interface IProps
   extends IStateProps,
-  IDispatchProps,
-  IRecordProps,
-  WithDataProps {
+    IDispatchProps,
+    IRecordProps,
+    WithDataProps {
   colNames: string[];
 }
 
@@ -238,7 +238,15 @@ export function ScriptureTable(props: IProps) {
   const secNumCol = React.useMemo(() => {
     return colNames.indexOf('sectionSeq');
   }, [colNames]);
-
+  const local: ILocal = {
+    sectionSeq: organizedBy,
+    title: t.title,
+    passageSeq: t.passage,
+    book: t.book,
+    reference: t.reference,
+    comment: t.description,
+    action: t.extras,
+  };
   const onFilterChange = (
     filter: ISTFilterState | undefined,
     projDefault: boolean
@@ -444,7 +452,7 @@ export function ScriptureTable(props: IProps) {
     let i: number = ix ?? 0;
     if (ix !== undefined) i = getByIndex(workflow, ix).i;
     return i;
-  }
+  };
 
   const addSection = (ix?: number) => {
     if (savingRef.current) {
@@ -994,15 +1002,7 @@ export function ScriptureTable(props: IProps) {
   // Reset column widths based on sheet content
   useEffect(() => {
     const curNames = [...colNames.concat(['action'])];
-    const local: ILocal = {
-      sectionSeq: organizedBy,
-      title: t.title,
-      passageSeq: t.passage,
-      book: t.book,
-      reference: t.reference,
-      comment: t.description,
-      action: t.extras,
-    };
+
     const minWidth = {
       sectionSeq: 60,
       title: 100,
@@ -1051,17 +1051,29 @@ export function ScriptureTable(props: IProps) {
         filtered,
       });
     });
-    if (changed) setWorkflow(newWork);
+    if (changed) {
+      setWorkflow(newWork);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgSteps, filterState, doneStepId]);
 
   const rowinfo = useMemo(() => {
-    return workflow.filter((w) => !w.deleted && !w.filtered);
+    var totalSections = new Set(
+      workflow.filter((w) => !w.deleted).map((w) => w.sectionSeq)
+    ).size;
+    var filtered = workflow.filter((w) => !w.deleted && !w.filtered);
+    var showingSections = new Set(filtered.map((w) => w.sectionSeq)).size;
+    if (showingSections < totalSections) {
+      local.sectionSeq =
+        organizedBy + ' (' + showingSections + '/' + totalSections + ')';
+    }
+    return filtered;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workflow]);
 
   const rowdata = useMemo(
-    () => workflowSheet(rowinfo, colNames),
-    [rowinfo, colNames]
+    () => workflowSheet(rowinfo, colNames, workflow),
+    [rowinfo, colNames, workflow]
   );
 
   if (view !== '') return <StickyRedirect to={view} />;

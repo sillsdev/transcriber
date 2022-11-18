@@ -199,7 +199,7 @@ export const AddSectionPassageButtons = (props: IProps) => {
           !inlinePassages &&
           (actionMenuItem?.id === 'planSheetAddPass' ||
             (isContextMenu && currentisPassage))
-        } // && projRole === RoleNames.Admin}
+        }
         onClose={handleClose}
         anchorReference={isContextMenu ? 'anchorPosition' : 'anchorEl'}
         anchorEl={actionMenuItem}
@@ -212,7 +212,11 @@ export const AddSectionPassageButtons = (props: IProps) => {
             : undefined
         }
       >
-        {filtered && <MenuItem id="filtered">{t.filtered}</MenuItem>}
+        {filtered && (
+          <MenuItem id="filtered" onClick={disableFilter}>
+            {t.filtered}
+          </MenuItem>
+        )}
         {!filtered && currentisSection && (
           <MenuItem id="psgAsFirst" onClick={handlePassageBelow}>
             {t.insertFirstPassage
