@@ -15,8 +15,10 @@ import { useMounted } from '../utils';
 
 const FullScreen = styled(Box)<BoxProps>(() => ({
   display: 'flex',
+  flexDirection: 'column',
   justifyContent: 'center',
-  alignItems: 'center',
+  width: '100%',
+  height: `calc(100vh - 120px)`,
 }));
 
 interface IProps {}
@@ -72,7 +74,7 @@ export const EmailUnverified = (props: IProps) => {
   }, [user]);
 
   if (/Logout/i.test(view)) navigate('/logout');
-  if (/Loading/i.test(view)) navigate('/loading');
+  // if (/Loading/i.test(view)) navigate('/loading');
 
   return (
     <FullScreen>
@@ -81,7 +83,7 @@ export const EmailUnverified = (props: IProps) => {
         <br></br>
         {t.verify}
       </Typography>
-      <Typography align="center" variant="h6">
+      <Typography align="center" variant="h6" sx={{ mb: 4 }}>
         {message}
       </Typography>
       <Grid
