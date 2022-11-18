@@ -46,7 +46,7 @@ import { bindActionCreators } from 'redux';
 import Memory from '@orbit/memory';
 import { TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { cleanFileName, NamedRegions } from '../../utils';
 import styledHtml from 'styled-components';

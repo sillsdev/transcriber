@@ -11,7 +11,7 @@ import {
   ISharedStrings,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { Menu, MenuItem, Typography, Box } from '@mui/material';
 import DropDownIcon from '@mui/icons-material/ArrowDropDown';

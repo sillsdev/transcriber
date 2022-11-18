@@ -29,7 +29,7 @@ import ShowIcon from '@mui/icons-material/ArrowDropDown';
 import DiscussionCard, { DiscussionRegion } from './DiscussionCard';
 import BigDialog from '../../hoc/BigDialog';
 import CategoryList, { CatData } from './CategoryList';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { useGlobal } from 'reactn';
 import { useDiscussionOrg, useOrgDefaults } from '../../crud';
 import FilterMenu, { IFilterState } from './FilterMenu';

@@ -11,8 +11,7 @@ import {
   MediaFile,
   ActivityStates,
 } from '../model';
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-import { withData, WithDataProps } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import {
   AddRecord,
@@ -112,11 +111,7 @@ interface IRecordProps {
   passages: Array<Passage>;
   mediafiles: Array<MediaFile>;
 }
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   stopPlayer?: () => void;
   artifactType?: ArtifactTypeSlug;
   passage?: Passage;

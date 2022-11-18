@@ -23,7 +23,7 @@ import {
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
   Button,
@@ -133,11 +133,7 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   projectPlans: Plan[];
   planColumn?: boolean;
   floatTop?: boolean;

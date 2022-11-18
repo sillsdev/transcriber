@@ -16,7 +16,7 @@ import * as actions from '../../store';
 import { bindActionCreators } from 'redux';
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import MediaRecord from '../MediaRecord';
 import { UnsavedContext } from '../../context/UnsavedContext';

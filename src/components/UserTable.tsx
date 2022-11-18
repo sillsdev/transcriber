@@ -14,8 +14,8 @@ import {
   RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
-import { QueryBuilder, RecordIdentity } from '@orbit/data';
+import { withData } from 'react-orbitjs';
+import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { IconButton, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import FilterIcon from '@mui/icons-material/FilterList';

@@ -19,7 +19,7 @@ import {
   localizeActivityState,
   IActivityStateStrings,
 } from '../model';
-import { WithDataProps, withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import Confirm from './AlertDialog';
 import {
   Button,
@@ -118,8 +118,7 @@ interface IProps
   extends IStateProps,
     IDialog<VProject>,
     IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+    IRecordProps {
   project?: string;
   planName?: string;
   syncBuffer: Buffer | undefined;

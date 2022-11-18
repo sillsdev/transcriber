@@ -2,7 +2,7 @@ import React from 'react';
 import { useGlobal } from 'reactn';
 import { User, GroupMembership, IState, IUsertableStrings } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { connect } from 'react-redux';
 import {
   Button,

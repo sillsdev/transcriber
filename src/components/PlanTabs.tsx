@@ -23,7 +23,7 @@ import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import StickyRedirect from './StickyRedirect';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { PlanContext } from '../context/PlanContext';
 import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
 import { HeadHeight } from '../App';

@@ -23,7 +23,7 @@ import {
   StepComplete,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   useFetchMediaUrl,

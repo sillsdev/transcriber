@@ -2,7 +2,7 @@ import React from 'react';
 import { useGlobal } from 'reactn';
 import { User } from '../model';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { Avatar } from '@mui/material';
 import { makeAbbr } from '../utils';
 import { dataPath, PathType } from '../utils/dataPath';

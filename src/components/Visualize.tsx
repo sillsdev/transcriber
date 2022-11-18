@@ -14,7 +14,7 @@ import {
   MediaFile,
   ActivityStates,
 } from '../model';
-import { withData, WithDataProps } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import TreeChart, {
   IPlanRow,
@@ -38,7 +38,7 @@ interface IRecordProps {
   mediafiles: Array<MediaFile>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithDataProps {
+interface IProps extends IStateProps, IRecordProps {
   selectedPlan?: string;
 }
 

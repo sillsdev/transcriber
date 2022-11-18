@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { ISharedStrings, IState, Role } from '../model';
 import { connect } from 'react-redux';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { Avatar } from '@mui/material';
 import { makeAbbr } from '../utils';
 import { dataPath, PathType } from '../utils/dataPath';

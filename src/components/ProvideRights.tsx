@@ -17,7 +17,7 @@ import {
 } from '../crud';
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../hoc/SnackBar';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { cleanFileName } from '../utils';
 import MediaRecord from './MediaRecord';

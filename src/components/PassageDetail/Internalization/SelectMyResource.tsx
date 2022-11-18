@@ -3,7 +3,7 @@ import { MenuItem, TextField } from '@mui/material';
 import { useContext, useEffect, useState, useRef, RefObject } from 'react';
 import { ITeamCheckReferenceStrings, SectionResource } from '../../../model';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { useArtifactCategory } from '../../../crud';
 import { teamCheckRefSelector } from '../../../selector';

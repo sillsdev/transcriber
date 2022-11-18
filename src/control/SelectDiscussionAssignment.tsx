@@ -9,7 +9,7 @@ import {
   OrganizationMembership,
 } from '../model';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { useSelector, shallowEqual } from 'react-redux';
 import { discussionCardSelector } from '../selector';

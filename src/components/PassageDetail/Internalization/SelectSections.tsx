@@ -12,7 +12,7 @@ import {
   IPassageDetailArtifactsStrings,
 } from '../../../model';
 import { ITranscriptionTabStrings } from '../../../model';
-import { withData, WithDataProps } from '../../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import {
   Box,
@@ -77,7 +77,7 @@ interface IRecordProps {
   sections: Array<Section>;
 }
 
-interface IProps extends IRecordProps, WithDataProps {
+interface IProps extends IRecordProps {
   visual?: boolean;
   onSelect?: (items: RecordIdentity[]) => void;
 }

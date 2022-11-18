@@ -12,7 +12,7 @@ import {
   GroupMembership,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { usePlanType, useRole } from '../crud';
 import { useCheckOnline, useInterval } from '../utils';

@@ -24,7 +24,7 @@ import * as actions from '../../store';
 import Confirm from '../AlertDialog';
 import localStrings from '../../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   findRecord,

@@ -27,7 +27,7 @@ import {
   Section,
 } from '../model';
 import { OptionType } from '../model';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import {

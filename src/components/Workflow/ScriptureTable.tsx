@@ -26,7 +26,7 @@ import {
 } from '../../model';
 import localStrings from '../../selector/localize';
 import * as actions from '../../store';
-import { withData, WithDataProps } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
@@ -112,11 +112,7 @@ interface IRecordProps {
   orgWorkflowSteps: OrgWorkflowStep[];
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   colNames: string[];
 }
 

@@ -13,7 +13,7 @@ import {
   ISharedStrings,
 } from '../../model';
 import localStrings from '../../selector/localize';
-import { withData, WithDataProps } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import JSONAPISource from '@orbit/jsonapi';
 import { Box } from '@mui/material';
@@ -69,11 +69,7 @@ interface IRecordProps {
   sections: Array<Section>;
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {}
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
 
 export function AudioTab(props: IProps) {
   const { t, ts, doOrbitError, mediaFiles, passages, sections, allBookData } =

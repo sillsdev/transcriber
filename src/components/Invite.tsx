@@ -10,7 +10,7 @@ import {
   User,
   Project,
 } from '../model';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   Button,
