@@ -74,7 +74,7 @@ export const EmailUnverified = (props: IProps) => {
   }, [user]);
 
   if (/Logout/i.test(view)) navigate('/logout');
-  // if (/Loading/i.test(view)) navigate('/loading');
+  if (/Loading/i.test(view)) navigate('/loading');
 
   return (
     <FullScreen>
