@@ -55,7 +55,6 @@ export const useOfflineSetup = () => {
         type: 'role',
         attributes: {
           orgRole: true,
-          groupRole: true,
           roleName: RoleNames.Admin,
         },
       } as Role;
@@ -64,71 +63,18 @@ export const useOfflineSetup = () => {
         type: 'role',
         attributes: {
           orgRole: true,
-          groupRole: false,
           roleName: RoleNames.Member,
         },
       } as Role;
       memory.schema.initializeRecord(memberRec);
-      let editorRec = {
-        type: 'role',
-        attributes: {
-          orgRole: false,
-          groupRole: true,
-          roleName: RoleNames.Editor,
-        },
-      } as Role;
-      memory.schema.initializeRecord(editorRec);
+
       await memory.sync(
         await backup.push((t: TransformBuilder) => [
           t.addRecord(adminRec),
           t.addRecord(memberRec),
-          t.addRecord(editorRec),
         ])
       );
     }
-    if (
-      offlineRoleRecs.findIndex(
-        (r) => r.attributes?.roleName === RoleNames.Transcriber
-      ) < 0
-    ) {
-      let transRec = {
-        type: 'role',
-        attributes: {
-          orgRole: false,
-          groupRole: true,
-          roleName: RoleNames.Transcriber,
-        },
-      } as Role;
-      memory.schema.initializeRecord(transRec);
-      await memory.sync(
-        await backup.push((t: TransformBuilder) => [t.addRecord(transRec)])
-      );
-    }
-    /*
-    if (offlineRoleRecs.findIndex(
-        (r) => r.attributes?.roleName === RoleNames.Transcriber
-      ) < 0) {
-      const t = new TransformBuilder();
-      const ops = [
-        'Translator',
-        'BackTranslator',
-        'Consultant',
-        'Observer',
-        'PeerReviewer',
-      ].map((name) => {
-        let rec = {
-          type: 'role',
-          attributes: {
-            orgRole: false,
-            groupRole: true,
-            roleName: name,
-          },
-        } as Role;
-        memory.schema.initializeRecord(rec);
-        return t.addRecord(rec);
-      });
-      await memory.sync(await backup.push(ops));
-    } */
   };
 
   const makeWorkflowStepsRecs = async () => {

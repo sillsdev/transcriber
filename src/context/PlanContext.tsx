@@ -7,7 +7,6 @@ import {
   IMainStrings,
   IProjButtonsStrings,
   Project,
-  RoleNames,
   MediaFile,
   Discussion,
   GroupMembership,
@@ -15,7 +14,7 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { usePlanType } from '../crud';
+import { usePlanType, useRole } from '../crud';
 import { useCheckOnline, useInterval } from '../utils';
 
 interface IStateProps {
@@ -71,12 +70,12 @@ const PlanProvider = withData(mapRecordsToProps)(
     const [plan] = useGlobal('plan');
     const [project] = useGlobal('project');
     const [connected] = useGlobal('connected');
-    const [projRole] = useGlobal('projRole');
     const [isOffline] = useGlobal('offline');
     const [offlineOnly] = useGlobal('offlineOnly');
     const getPlanType = usePlanType();
+    const { userIsAdmin } = useRole();
     const [readonly, setReadOnly] = useState(
-      (isOffline && !offlineOnly) || projRole !== RoleNames.Admin
+      (isOffline && !offlineOnly) || !userIsAdmin
     );
     const [state, setState] = useState({
       ...initState,
@@ -109,11 +108,9 @@ const PlanProvider = withData(mapRecordsToProps)(
     }, [project]);
 
     React.useEffect(() => {
-      const newValue =
-        (isOffline && !offlineOnly) || projRole !== RoleNames.Admin;
+      const newValue = (isOffline && !offlineOnly) || !userIsAdmin;
       if (readonly !== newValue) setReadOnly(newValue);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [projRole]);
+    }, [userIsAdmin, isOffline, offlineOnly, readonly]);
 
     //do this every 30 seconds to warn they can't save
     useInterval(

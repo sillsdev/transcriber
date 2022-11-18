@@ -15,7 +15,6 @@ export const TeamScreen = () => {
   const { pathname } = useLocation();
   const [isOffline] = useGlobal('offline');
   const [project, setProject] = useGlobal('project');
-  const [projRole, setProjRole] = useGlobal('projRole');
   const [projType, setProjType] = useGlobal('projType');
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
@@ -28,7 +27,7 @@ export const TeamScreen = () => {
   }, []);
 
   useEffect(() => {
-    if (project !== '' && projRole) {
+    if (project !== '' && projType) {
       const remProjId = remoteId('plan', plan, memory.keyMap);
       const loc = `/plan/${remProjId || plan}/0`;
       if (loc !== localStorage.getItem(localUserKey(LocalKey.url))) {
@@ -36,12 +35,11 @@ export const TeamScreen = () => {
       } else {
         localStorage.setItem(localUserKey(LocalKey.url), '/team');
         if (project !== '') setProject('');
-        if (projRole) setProjRole(undefined);
         if (projType !== '') setProjType('');
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [project, projRole, isOffline, plan]);
+  }, [project, projType, isOffline, plan]);
 
   if (view !== '' && view !== pathname) {
     return <StickyRedirect to={view} />;

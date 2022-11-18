@@ -1369,138 +1369,6 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="groupSettings.add">
-			<segment>
-				<source>Ok</source>
-				<target>Ok</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.addGroupMember">
-			<segment>
-				<source>Choose {0}</source>
-				<target>Escolher {0}</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.addMemberInstruction">
-			<segment>
-				<source>Choose a person who will act as a {0} for audio projects in this group.</source>
-				<target>Escolher uma pessoa que atuará como {0} para projetos neste grupo.</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.allReviewersCanTranscribe">
-			<segment>
-				<source>All Editors are allowed to transcribe.</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.assignedSections">
-			<segment>
-				<source>  Assigned {0}: </source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.cancel">
-			<segment>
-				<source>Cancel</source>
-				<target>Cancelar</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.delete">
-			<segment>
-				<source>Delete</source>
-				<target>Excluir</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.editors">
-			<segment>
-				<source>Editors</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.editorsDetail">
-			<segment>
-				<source>(Review + Transcribe)</source>
-				<target>(Revisar + Transcrever)</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.loadingTable">
-			<segment>
-				<source>Loading data</source>
-				<target>Carregando dados</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.name">
-			<segment>
-				<source>Name</source>
-				<target>Nome</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.noDeleteAdmin">
-			<segment>
-				<source>The only Administrator cannot be deleted.</source>
-				<target>O único administrador não pode ser excluído.</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.noDeleteAllUsersInfo">
-			<segment>
-				<source>Cannot delete members from the All Members group</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.noDeleteInfo">
-			<segment>
-				<source>This role is included in a higher role and cannot be deleted.</source>
-				<target>Esta função está incluída numa função superior e não pode ser excluída.</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.owners">
-			<segment>
-				<source>Owners</source>
-				<target>Proprietários</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.ownersDetail">
-			<segment>
-				<source>(Manage + Review + Transcribe)</source>
-				<target>(Gerenciar + Revisar + Transcrever)</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.projectPlans">
-			<segment>
-				<source>Audio Project Plans</source>
-				<target>Planos do Projeto</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.roles">
-			<segment>
-				<source>Roles:{0}</source>
-				<target>Funções:{0}</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.save">
-			<segment>
-				<source>Save</source>
-				<target>Salvar</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.transcribers">
-			<segment>
-				<source>Transcribers</source>
-				<target>Transcritores</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.transcribersDetail">
-			<segment>
-				<source>(Transcribe)</source>
-				<target>(Transcrever)</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.transcriptionTitle">
-			<segment>
-				<source>Users in Transcription Roles</source>
-				<target>Usuários em Funções de Transcrição</target>
-			</segment>
-		</unit>
 		<unit id="groupTabs.groups">
 			<segment>
 				<source>Groups</source>
@@ -2083,18 +1951,6 @@
 				<target>Convite do {0}</target>
 			</segment>
 		</unit>
-		<unit id="invite.groupRole">
-			<segment>
-				<source>Audio Project Role</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="invite.groups">
-			<segment>
-				<source>Audio Project</source>
-				<target>Projetos</target>
-			</segment>
-		</unit>
 		<unit id="invite.instructions">
 			<segment>
 				<source>Please click the following link to accept the invitation:</source>
@@ -2133,8 +1989,8 @@
 		</unit>
 		<unit id="invite.noProjects">
 			<segment>
-				<source>No audio projects are associated with this group.</source>
-				<target/>
+				<source>This team has no audio projects.</source>
+				<target>Esta equipe não tem projetos de áudio.</target>
 			</segment>
 		</unit>
 		<unit id="invite.organization">
@@ -2165,12 +2021,6 @@
 			<segment>
 				<source>Save</source>
 				<target>Salvar</target>
-			</segment>
-		</unit>
-		<unit id="invite.selectProjectRole">
-			<segment>
-				<source>Select audio project role.</source>
-				<target/>
 			</segment>
 		</unit>
 		<unit id="invite.selectTeamRole">
@@ -2455,12 +2305,6 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="main.owner">
-			<segment>
-				<source>Owner</source>
-				<target>Proprietário</target>
-			</segment>
-		</unit>
 		<unit id="main.passages">
 			<segment>
 				<source>Passages</source>
@@ -2479,10 +2323,10 @@
 				<target>Projetos</target>
 			</segment>
 		</unit>
-		<unit id="main.projRole">
+		<unit id="main.orgRole">
 			<segment>
-				<source>Role in Audio Project:</source>
-				<target>Função no Projeto:</target>
+				<source>Role:</source>
+				<target>Função:</target>
 			</segment>
 		</unit>
 		<unit id="main.reliesOn">
@@ -4501,12 +4345,6 @@
 				<target>Observador</target>
 			</segment>
 		</unit>
-		<unit id="shared.owner">
-			<segment>
-				<source>Owner</source>
-				<target/>
-			</segment>
-		</unit>
 		<unit id="shared.paratextchapterSpan">
 			<segment>
 				<source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
@@ -4523,12 +4361,6 @@
 			<segment>
 				<source>Peer Reviewer</source>
 				<target>Revisor de pares</target>
-			</segment>
-		</unit>
-		<unit id="shared.projectrole">
-			<segment>
-				<source>Project Role</source>
-				<target>Papel do projeto</target>
 			</segment>
 		</unit>
 		<unit id="shared.recordingInProgress">

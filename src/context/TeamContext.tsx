@@ -139,7 +139,6 @@ const initState = {
   projectSections: (project: Plan) => '',
   projectDescription: (project: Plan) => '',
   projectLanguage: (project: Plan) => '',
-  isOwner: (project: Plan) => false,
   projectCreate: async (project: VProject, team: TeamIdType) => '',
   projectUpdate: (project: VProject) => {},
   projectDelete: (project: VProject) => {},
@@ -245,7 +244,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const getPlanType = useTableType('plan');
     const vProject = useVProjectRead();
     const oProjRead = useOfflnProjRead();
-    const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
+    const { getMyOrgRole } = useRole();
     const { setProjectType } = useProjectType();
     const { getPlan } = usePlan();
     const LoadData = useLoadProjectData(t, doOrbitError);
@@ -279,15 +278,8 @@ const TeamProvider = withData(mapRecordsToProps)(
       const [projectId] = setProjectParams(plan);
       LoadData(projectId, () => {
         setProjectType(projectId);
-        if (!cb) setMyProjRole(projectId);
-        else cb();
+        if (cb) cb();
       });
-    };
-
-    const isOwner = (plan: Plan) => {
-      const projectId = related(plan, 'project');
-      const role = getMyProjRole(projectId);
-      return role === RoleNames.Admin;
     };
 
     const isAdmin = (org: Organization) => {
@@ -396,7 +388,6 @@ const TeamProvider = withData(mapRecordsToProps)(
       setOrganization('');
       setProject('');
       setPlan('');
-      setMyOrgRole('');
     };
 
     const teamCreate = (
@@ -486,7 +477,6 @@ const TeamProvider = withData(mapRecordsToProps)(
             projectSections,
             projectDescription,
             projectLanguage,
-            isOwner,
             selectProject,
             loadProject,
             setProjectParams,

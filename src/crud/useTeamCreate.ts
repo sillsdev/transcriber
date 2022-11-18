@@ -30,7 +30,7 @@ export const useTeamCreate = (props: IProps) => {
   const [, offlineOnly] = useGlobal('offlineOnly');
   const { showMessage } = useSnackBar();
   const { setProjectType } = useProjectType();
-  const { getRoleRec } = useRole();
+  const { getRoleId } = useRole();
   const teamApiPull = useTeamApiPull();
   const checkOnline = useCheckOnline();
   const workingOnItRef = useRef(false);
@@ -51,8 +51,8 @@ export const useTeamCreate = (props: IProps) => {
       attributes: {},
     } as GroupMembership;
 
-    const orgRoleRec = getRoleRec(RoleNames.Admin, true);
-    const grpRoleRec = getRoleRec(RoleNames.Admin, false);
+    const orgRoleId = getRoleId(RoleNames.Admin);
+
     let allUsersGroup = allUsersRec(memory, orgRec.id);
     if (!allUsersGroup) {
       let group: Group = {
@@ -79,13 +79,13 @@ export const useTeamCreate = (props: IProps) => {
         'organization',
         orgRec.id
       ),
-      ...ReplaceRelatedRecord(t, orgMember, 'role', 'role', orgRoleRec[0].id),
+      ...ReplaceRelatedRecord(t, orgMember, 'role', 'role', orgRoleId),
     ]);
     await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, groupMbr, user, memory),
       ...ReplaceRelatedRecord(t, groupMbr, 'user', 'user', user),
       ...ReplaceRelatedRecord(t, groupMbr, 'group', 'group', allUsersGroup?.id),
-      ...ReplaceRelatedRecord(t, groupMbr, 'role', 'role', grpRoleRec[0].id),
+      ...ReplaceRelatedRecord(t, groupMbr, 'role', 'role', orgRoleId),
     ]);
   };
 

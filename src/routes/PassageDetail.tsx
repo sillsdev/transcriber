@@ -48,7 +48,7 @@ import {
   useStepTool,
   useUrlContext,
 } from '../crud';
-import { RoleNames, Plan, IToolStrings } from '../model';
+import { Plan, IToolStrings } from '../model';
 import { forceLogin, LocalKey, localUserKey, NamedRegions } from '../utils';
 import { memory } from '../schema';
 import { useSelector, shallowEqual } from 'react-redux';
@@ -125,7 +125,6 @@ const Pane = (props: PaneProps & PropsWithChildren) => {
 };
 
 const PassageDetailGrids = () => {
-  const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
   const [topFilter, setTopFilter] = useState(false);
@@ -134,7 +133,7 @@ const PassageDetailGrids = () => {
     ctx.state;
   const { tool, settings } = useStepTool(currentstep);
   const { slugFromId } = useArtifactType();
-
+  const { userIsAdmin } = useRole();
   const artifactId = useMemo(() => {
     if (settings) {
       var id = JSON.parse(settings).artifactTypeId;
@@ -212,7 +211,7 @@ const PassageDetailGrids = () => {
           <Grid item id="tool" sx={rowProps} xs={3}>
             {tool && t.hasOwnProperty(tool) ? t.getString(tool) : tool}
           </Grid>
-          {projRole === RoleNames.Admin && (
+          {userIsAdmin && (
             <Grid
               item
               id="stepcomplete"
@@ -348,8 +347,6 @@ export const PassageDetail = () => {
   const uctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = uctx.state;
   const [view, setView] = useState('');
-  const [projRole] = useGlobal('projRole');
-  const { setMyProjRole } = useRole();
   const [projType] = useGlobal('projType');
   const { setProjectType } = useProjectType();
 
@@ -370,14 +367,13 @@ export const PassageDetail = () => {
 
   useEffect(() => {
     const projectId = setUrlContext(prjId ?? '');
-    if (!projRole)
-      if (!setMyProjRole(projectId)) {
-        // If after proj role set there is none, force reload
-        localStorage.removeItem(localUserKey(LocalKey.url));
-        forceLogin();
-        setView('/logout');
-      }
     if (projType === '') setProjectType(projectId);
+    if (!projType) {
+      // If after proj type set there is none, force reload
+      localStorage.removeItem(localUserKey(LocalKey.url));
+      forceLogin();
+      setView('/logout');
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 

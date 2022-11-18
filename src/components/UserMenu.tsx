@@ -51,7 +51,7 @@ interface IProps extends IStateProps, IRecordProps {
 
 export function UserMenu(props: IProps) {
   const { action, t, ts, users } = props;
-  const [projRole] = useGlobal('projRole');
+  const [orgRole] = useGlobal('orgRole');
   const [developer] = useGlobal('developer');
   const [user] = useGlobal('user');
   const { pathname } = useLocation();
@@ -97,13 +97,13 @@ export function UserMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handleAction('Close')}
       >
-        {projRole && (
+        {orgRole && (
           <StyledMenuItem>
             <ListItemText
               primary={
                 <div style={roleStyle}>
                   <Typography>
-                    {`${t.projRole} ${localizeRole(projRole, ts, true)}`}
+                    {`${t.orgRole} ${localizeRole(orgRole, ts)}`}
                   </Typography>
                 </div>
               }

@@ -9,11 +9,9 @@ declare module 'reactn/default' {
     organization: string;
     orgRole: RoleNames | undefined;
     project: string;
-    projRole: RoleNames | undefined;
     projType: string;
     plan: string;
     tab: number;
-    group: string;
     user: string;
     lang: string;
     coordinator: Coordinator;

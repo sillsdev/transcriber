@@ -15,7 +15,6 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 interface IProps extends IStateProps, IRecordProps {
-  org: boolean;
   initRole?: string;
   required: boolean;
   disabled: boolean;
@@ -24,17 +23,8 @@ interface IProps extends IStateProps, IRecordProps {
   onChange: (role: string, rowid?: string) => void;
 }
 export const SelectRole = (props: IProps) => {
-  const {
-    ts,
-    roles,
-    org,
-    onChange,
-    initRole,
-    required,
-    disabled,
-    label,
-    rowid,
-  } = props;
+  const { ts, roles, onChange, initRole, required, disabled, label, rowid } =
+    props;
   const [offlineOnly] = useGlobal('offlineOnly');
   const [role, setRole] = useState(initRole);
 
@@ -49,10 +39,10 @@ export const SelectRole = (props: IProps) => {
 
   return (
     <TextField
-      id={(org ? 'selectteamrole' : 'selectprojectrole') + (rowid || '')}
+      id={'selectteamrole' + (rowid || '')}
       sx={{ mx: 1, display: 'flex', flexGrow: 1, minWidth: '8rem' }}
       select
-      label={org ? ts.teamrole : ts.projectrole}
+      label={ts.teamrole}
       value={role}
       onChange={handleRoleChange}
       helperText={label || ''}
@@ -64,15 +54,13 @@ export const SelectRole = (props: IProps) => {
       {roles
         .filter(
           (r) =>
-            r.attributes &&
-            (org ? r.attributes.orgRole : r.attributes.groupRole) &&
-            Boolean(r?.keys?.remoteId) !== offlineOnly
+            r.attributes?.orgRole && Boolean(r?.keys?.remoteId) !== offlineOnly
         )
         .map((r) => ({
           ...r,
           attributes: {
             ...r.attributes,
-            roleName: localizeRole(r.attributes.roleName, ts, !org),
+            roleName: localizeRole(r.attributes.roleName, ts),
           },
         }))
         .sort((i, j) =>

@@ -14,7 +14,7 @@ import QueryBuilder from '@orbit/data/dist/types/query-builder';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { getMediaInPlans, related, VernacularTag } from '../../crud';
+import { getMediaInPlans, related, useRole, VernacularTag } from '../../crud';
 import {
   Discussion,
   IDiscussionListStrings,
@@ -22,7 +22,6 @@ import {
   Group,
   User,
   GroupMembership,
-  RoleNames,
 } from '../../model';
 import AddIcon from '@mui/icons-material/Add';
 import HideIcon from '@mui/icons-material/ArrowDropUp';
@@ -73,7 +72,6 @@ export function DiscussionList(props: IProps & IRecordProps) {
   const [planId] = useGlobal('plan');
   const [userId] = useGlobal('user');
   const [organization] = useGlobal('organization');
-  const [projRole] = useGlobal('projRole');
   const [isOffline] = useGlobal('offline');
   const [displayDiscussions, setDisplayDiscussions] = useState<Discussion[]>(
     []
@@ -137,6 +135,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
   const [highlightedRef, setHighlightedRef] = useState<any>();
   const [highlightNew, setHighlightNew] = useState('');
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
+  const { userIsAdmin } = useRole();
   const projGroups = useMemo(() => {
     const mygroups = groupMemberships.filter(
       (gm) => related(gm, 'user') === userId
@@ -153,7 +152,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
 
   const setFilterState = (filter: IFilterState) => {
     setFilterStatex(filter);
-    if (projRole === RoleNames.Admin && !isOffline) {
+    if (userIsAdmin && !isOffline) {
       //see if this is the new org default
       setConfirmFilterSave(true);
     }

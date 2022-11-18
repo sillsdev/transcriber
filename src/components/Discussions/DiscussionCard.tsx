@@ -27,7 +27,6 @@ import {
   MediaFile,
   ISharedStrings,
   ArtifactCategory,
-  RoleNames,
   Section,
   Plan,
   Passage,
@@ -41,7 +40,7 @@ import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from '../../mods/react-orbitjs';
-import { PermissionName, related, usePermissions } from '../../crud';
+import { PermissionName, related, usePermissions, useRole } from '../../crud';
 import CommentCard from './CommentCard';
 import ReplyCard from './ReplyCard';
 import UserAvatar from '../UserAvatar';
@@ -224,7 +223,6 @@ export const DiscussionCard = (props: IProps) => {
   } = useContext(UnsavedContext).state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
-  const [projRole] = useGlobal('projRole');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [myComments, setMyComments] = useState<Comment[]>([]);
@@ -267,6 +265,7 @@ export const DiscussionCard = (props: IProps) => {
   const [changeAssignment, setChangeAssignment] = useState<
     boolean | undefined
   >();
+  const { userIsAdmin } = useRole();
 
   const handleSelect = (discussion: Discussion) => () => {
     selectDiscussion(discussion);
@@ -818,9 +817,7 @@ export const DiscussionCard = (props: IProps) => {
                 id={`category-${discussion.id}`}
                 initCategory={editCategory}
                 onCategoryChange={onCategoryChange}
-                allowNew={
-                  projRole === RoleNames.Admin && (!offline || offlineOnly)
-                }
+                allowNew={userIsAdmin && (!offline || offlineOnly)}
                 required={false}
                 scripture={ScriptureEnum.hide}
                 discussion={true}

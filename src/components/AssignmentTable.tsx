@@ -11,7 +11,6 @@ import {
   Role,
   BookName,
   ISharedStrings,
-  RoleNames,
   MediaFile,
 } from '../model';
 import localStrings from '../selector/localize';
@@ -35,6 +34,7 @@ import {
   passageCompare,
   useOrganizedBy,
   usePassageState,
+  useRole,
 } from '../crud';
 import {
   TabAppBar,
@@ -100,7 +100,6 @@ export function AssignmentTable(props: IProps) {
   } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const { showMessage } = useSnackBar();
   const ctx = useContext(PlanContext);
@@ -131,6 +130,7 @@ export function AssignmentTable(props: IProps) {
     ],
     [flat]
   );
+  const { userIsAdmin } = useRole();
 
   const getAssignments = () => {
     let sectionRow: IRow;
@@ -251,7 +251,7 @@ export function AssignmentTable(props: IProps) {
       <div>
         <TabAppBar position="fixed" color="default">
           <TabActions>
-            {projRole === RoleNames.Admin && (
+            {userIsAdmin && (
               <>
                 <AltButton
                   id="assignAdd"

@@ -46,11 +46,11 @@ export const filterMenuSelector = (state: IState) =>
 export const gridSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'grid' });
 
-export const groupSettingsSelector = (state: IState) =>
-  localStrings(state as IState, { layout: 'groupSettings' });
-
 export const groupTabsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'groupTabs' });
+
+export const inviteSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'invite' });
 
 export const mediaActionsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'mediaActions' });

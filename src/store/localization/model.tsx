@@ -295,31 +295,6 @@ export interface IGridStrings extends Localize.LocalizedStringsMethods {
     "sum": string;
 };
 
-export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods {
-    "add": string;
-    "addGroupMember": string;
-    "addMemberInstruction": string;
-    "allReviewersCanTranscribe": string;
-    "assignedSections": string;
-    "cancel": string;
-    "delete": string;
-    "editors": string;
-    "editorsDetail": string;
-    "loadingTable": string;
-    "name": string;
-    "noDeleteAdmin": string;
-    "noDeleteAllUsersInfo": string;
-    "noDeleteInfo": string;
-    "owners": string;
-    "ownersDetail": string;
-    "projectPlans": string;
-    "roles": string;
-    "save": string;
-    "transcribers": string;
-    "transcribersDetail": string;
-    "transcriptionTitle": string;
-};
-
 export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {
     "groups": string;
     "invitations": string;
@@ -433,8 +408,6 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "editInvite": string;
     "email": string;
     "emailsubject": string;
-    "groupRole": string;
-    "groups": string;
     "instructions": string;
     "invalidEmail": string;
     "invitation": string;
@@ -447,7 +420,6 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "resend": string;
     "role": string;
     "save": string;
-    "selectProjectRole": string;
     "selectTeamRole": string;
     "send": string;
     "sil": string;
@@ -501,11 +473,10 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "media": string;
     "myAccount": string;
     "NoLoadOffline": string;
-    "owner": string;
     "passages": string;
     "privacy": string;
     "project": string;
-    "projRole": string;
+    "orgRole": string;
     "reliesOn": string;
     "reloadStatic": string;
     "reportIssue": string;
@@ -917,11 +888,9 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "noAudio": string;
     "NoSaveOffline": string;
     "observer": string;
-    "owner": string;
     "paratextchapterSpan": string;
     "part": string;
     "peerreviewer": string;
-    "projectrole": string;
     "recordingInProgress": string;
     "referenceNotFound": string;
     "role": string;
@@ -1331,7 +1300,6 @@ export interface ILocalizedStrings {
 	emailUnverified: IEmailUnverifiedStrings;
 	filterMenu: IFilterMenuStrings;
 	grid: IGridStrings;
-	groupSettings: IGroupSettingsStrings;
 	groupTabs: IGroupTabsStrings;
 	hotKey: IHotKeyStrings;
 	import: IImportStrings;

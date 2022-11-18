@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import {
   IPassageDetailArtifactsStrings,
   IState,
-  RoleNames,
   Passage,
   Section,
 } from '../../../model';
@@ -38,6 +37,7 @@ import {
   useSecResUserRead,
   useSecResUserDelete,
   useOrganizedBy,
+  useRole,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
@@ -91,7 +91,6 @@ export enum ResourceTypeEnum {
 export function PassageDetailArtifacts(props: IProps) {
   const { sectionResources, mediafiles, artifactTypes, t } = props;
   const [memory] = useGlobal('memory');
-  const [projRole] = useGlobal('projRole');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [complete, setComplete] = useGlobal('progress');
@@ -148,7 +147,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const mediaEnd = useRef<number | undefined>();
   const mediaPosition = useRef<number | undefined>();
   const projectResourceSave = useProjectResourceSave();
-
+  const { userIsAdmin } = useRole();
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
       (t) =>
@@ -542,7 +541,7 @@ export function PassageDetailArtifacts(props: IProps) {
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'row', flexGrow: 1, pr: 2 }}>
-        {projRole === RoleNames.Admin && (!offline || offlineOnly) && (
+        {userIsAdmin && (!offline || offlineOnly) && (
           <AddResource action={handleAction} />
         )}
         <MediaContainer>

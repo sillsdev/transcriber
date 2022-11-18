@@ -26,7 +26,6 @@ import {
   IState,
   Integration,
   ProjectIntegration,
-  RoleNames,
   IActivityStateStrings,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
@@ -62,6 +61,7 @@ import {
   useArtifactType,
   findRecord,
   useOrgDefaults,
+  useRole,
 } from '../crud';
 import {
   insertAtCursor,
@@ -69,7 +69,6 @@ import {
   Severity,
   currentDateTime,
   getParatextDataPath,
-  camel2Title,
   refMatch,
   waitForIt,
   dataPath,
@@ -266,7 +265,6 @@ export function Transcriber(props: IProps) {
   const [projType] = useGlobal('projType');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
-  const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
   const { accessToken } = useContext(TokenContext).state;
   const [assigned, setAssigned] = useState('');
@@ -321,6 +319,7 @@ export function Transcriber(props: IProps) {
     timeThreshold: 0.02,
     segLenThreshold: 0.5,
   };
+  const { userIsAdmin } = useRole();
   const [segParams, setSegParams] = useState(transcribeDefaultParams);
 
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
@@ -352,7 +351,7 @@ export function Transcriber(props: IProps) {
       projType,
       plan,
       user,
-      projRole,
+      orgRole,
       errorReporter,
       busy,
       assigned,
@@ -755,22 +754,10 @@ export function Transcriber(props: IProps) {
     transcribed: 'editor',
   };
 
-  const roleHierarchy = [
-    RoleNames.Transcriber,
-    RoleNames.Editor,
-    RoleNames.Admin,
-  ];
-
   const handleAssign = async (curState: string) => {
     const secRec = findRecord(memory, 'section', section.id);
     const role = stateRole[curState];
-    if (
-      secRec &&
-      role &&
-      projRole &&
-      roleHierarchy.indexOf(camel2Title(role) as RoleNames) <=
-        roleHierarchy.indexOf(projRole)
-    ) {
+    if (secRec && role) {
       const assigned = related(secRec, role);
       if (!assigned || assigned === '') {
         await memory.update(
@@ -1269,7 +1256,7 @@ export function Transcriber(props: IProps) {
                           !previous.hasOwnProperty(state) ||
                           playing ||
                           (user !== related(section, 'transcriber') &&
-                            projRole !== RoleNames.Admin)
+                            !userIsAdmin)
                         }
                       >
                         {t.reopen}

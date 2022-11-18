@@ -1598,160 +1598,6 @@
                <context context-type="sourcefile">shapingTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="groupSettings.add">
-            <source>Ok</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.addGroupMember">
-            <source>Choose {0}</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.addMemberInstruction">
-            <source>Choose a person who will act as a {0} for audio projects in this group.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.allReviewersCanTranscribe">
-            <source>All Editors are allowed to transcribe.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.assignedSections">
-            <source>  Assigned {0}: </source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.cancel">
-            <source>Cancel</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.delete">
-            <source>Delete</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.editors">
-            <source>Editors</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.editorsDetail">
-            <source>(Review + Transcribe)</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.loadingTable">
-            <source>Loading data</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.name">
-            <source>Name</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.noDeleteAdmin">
-            <source>The only Administrator cannot be deleted.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.noDeleteAllUsersInfo">
-            <source>Cannot delete members from the All Members group</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.noDeleteInfo">
-            <source>This role is included in a higher role and cannot be deleted.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.owners">
-            <source>Owners</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.ownersDetail">
-            <source>(Manage + Review + Transcribe)</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.projectPlans">
-            <source>Audio Project Plans</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.roles">
-            <source>Roles:{0}</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.save">
-            <source>Save</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.transcribers">
-            <source>Transcribers</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.transcribersDetail">
-            <source>(Transcribe)</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="groupSettings.transcriptionTitle">
-            <source>Users in Transcription Roles</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">GroupSettings.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="groupTabs.groups">
             <source>Groups</source>
             <target/>
@@ -2431,20 +2277,6 @@
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="invite.groupRole">
-            <source>Audio Project Role</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Invite.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="invite.groups">
-            <source>Audio Project</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Invite.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="invite.instructions">
             <source>Please click the following link to accept the invitation:</source>
             <target/>
@@ -2488,7 +2320,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="invite.noProjects">
-            <source>No audio projects are associated with this group.</source>
+            <source>This team has no audio projects.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -2524,13 +2356,6 @@
          </trans-unit>
          <trans-unit id="invite.save">
             <source>Save</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Invite.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="invite.selectProjectRole">
-            <source>Select audio project role.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -2865,13 +2690,6 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.owner">
-            <source>Owner</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">UserMenu.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="main.passages">
             <source>Passages</source>
             <target/>
@@ -2893,8 +2711,8 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.projRole">
-            <source>Role in Audio Project:</source>
+         <trans-unit id="main.orgRole">
+            <source>Role:</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">UserMenu.tsx</context>
@@ -4889,7 +4707,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="scriptureTableFilter.assignedToMe">
-            <source>Show only rows assigned to me</source>
+            <source>Only rows with discussions assigned to me</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -5252,13 +5070,6 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shared.owner">
-            <source>Owner</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="shared.paratextchapterSpan">
             <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
             <target/>
@@ -5278,13 +5089,6 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="shared.projectrole">
-            <source>Project Role</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">selectRole.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="shared.recordingInProgress">

@@ -6,7 +6,7 @@ import AppHead from '../components/App/AppHead';
 import { PlanProvider } from '../context/PlanContext';
 import ViewMode, { ViewOption } from '../control/ViewMode';
 import PlanTabs from '../components/PlanTabs';
-import { useUrlContext, useRole, useProjectType } from '../crud';
+import { useUrlContext, useProjectType } from '../crud';
 import { forceLogin, localUserKey, LocalKey } from '../utils';
 import { UnsavedContext } from '../context/UnsavedContext';
 import StickyRedirect from '../components/StickyRedirect';
@@ -17,8 +17,6 @@ export const PlanScreen = () => {
   const setUrlContext = useUrlContext();
   const uctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = uctx.state;
-  const [projRole] = useGlobal('projRole');
-  const { setMyProjRole } = useRole();
   const [projType] = useGlobal('projType');
   const { setProjectType } = useProjectType();
   const [project] = useGlobal('project');
@@ -42,14 +40,14 @@ export const PlanScreen = () => {
 
   React.useEffect(() => {
     const projectId = setUrlContext(prjId ?? '');
-    if (!projRole)
-      if (!setMyProjRole(projectId)) {
-        // If after proj role set there is none, force reload
-        localStorage.removeItem(localUserKey(LocalKey.url));
-        forceLogin();
-        setView('/logout');
-      }
     if (projType === '') setProjectType(projectId);
+    if (!projType) {
+      // If after proj type set there is none, force reload
+      localStorage.removeItem(localUserKey(LocalKey.url));
+      forceLogin();
+      setView('/logout');
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
