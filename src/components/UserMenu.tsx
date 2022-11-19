@@ -21,7 +21,7 @@ import UserAvatar from './UserAvatar';
 import { isElectron } from '../api-variable';
 import { useLocation } from 'react-router-dom';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { localizeRole } from '../utils';
 
 const TermsItem = styled(StyledMenuItem)<MenuItemProps>(() => ({

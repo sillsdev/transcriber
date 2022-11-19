@@ -14,7 +14,7 @@ import ErrorBoundary from './hoc/ErrorBoundary';
 import {
   DataProvider as DataProviderBar,
   DataProviderProps,
-} from './mods/react-orbitjs';
+} from 'react-orbitjs';
 import { Provider } from 'react-redux';
 import { coordinator, memory, backup, schema } from './schema';
 import configureStore from './store';

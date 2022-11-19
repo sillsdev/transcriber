@@ -108,7 +108,7 @@ export function Logout(props: IProps & IDispatchProps) {
   );
 }
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       fetchLocalization: action.fetchLocalization,
@@ -118,6 +118,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ),
 });
 
-export default connect(null, mapDispatchToProps)(Logout) as any as (
+export default connect(null, mapDispatchToProps)(Logout as any) as any as (
   props: IProps
 ) => JSX.Element;

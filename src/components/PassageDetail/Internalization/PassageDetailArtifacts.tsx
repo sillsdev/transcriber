@@ -16,7 +16,7 @@ import {
   SectionResourceUser,
   Resource,
 } from '../../../model';
-import { withData } from '../../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';

@@ -13,7 +13,7 @@ import {
 import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   Paper,
@@ -133,11 +133,7 @@ interface IRecordProps {
   users: Array<User>;
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   noMargin?: boolean;
   finishAdd?: () => void;
 }
@@ -828,7 +824,7 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       setLanguage: action.setLanguage,
@@ -839,5 +835,5 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Profile) as any
+  connect(mapStateToProps, mapDispatchToProps)(Profile as any) as any
 ) as any;

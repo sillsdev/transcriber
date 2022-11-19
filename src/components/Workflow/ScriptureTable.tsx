@@ -26,7 +26,7 @@ import {
 } from '../../model';
 import localStrings from '../../selector/localize';
 import * as actions from '../../store';
-import { withData, WithDataProps } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
@@ -99,7 +99,6 @@ interface IStateProps {
 
 interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
-  doOrbitError: typeof actions.doOrbitError;
 }
 
 interface IRecordProps {
@@ -112,11 +111,7 @@ interface IRecordProps {
   orgWorkflowSteps: OrgWorkflowStep[];
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+interface IProps {
   colNames: string[];
 }
 
@@ -125,7 +120,9 @@ interface AudacityInfo {
   index: number;
 }
 
-export function ScriptureTable(props: IProps) {
+export function ScriptureTable(
+  props: IProps & IStateProps & IDispatchProps & IRecordProps
+) {
   const {
     t,
     wfStr,
@@ -137,7 +134,6 @@ export function ScriptureTable(props: IProps) {
     bookMap,
     allBookData,
     fetchBooks,
-    doOrbitError,
     passages,
     sections,
     mediafiles,
@@ -202,7 +198,6 @@ export function ScriptureTable(props: IProps) {
   const onlineSave = useWfOnlineSave({ setComplete });
   const [detachPassage] = useMediaAttach({
     ...props,
-    doOrbitError,
   });
   const checkOnline = useCheckOnline();
   const [speaker, setSpeaker] = useState('');
@@ -1183,11 +1178,10 @@ const mapStateToProps = (state: IState): IStateProps => ({
   allBookData: state.books.bookData,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       fetchBooks: actions.fetchBooks,
-      doOrbitError: actions.doOrbitError,
     },
     dispatch
   ),
@@ -1204,5 +1198,5 @@ const mapRecordsToProps = {
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(ScriptureTable) as any
+  connect(mapStateToProps, mapDispatchToProps)(ScriptureTable as any) as any
 ) as any;

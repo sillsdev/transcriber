@@ -28,7 +28,7 @@ import Confirm from '../AlertDialog';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { usePermissions } from '../../crud/usePermissions';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 
 interface IRecordProps {
   users: Array<User>;

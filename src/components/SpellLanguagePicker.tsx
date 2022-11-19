@@ -9,7 +9,7 @@ import {
   Checkbox,
 } from '@mui/material';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { langName } from '../utils';
 import { isElectron } from '../api-variable';
 const ipc = isElectron ? require('electron').ipcRenderer : null;

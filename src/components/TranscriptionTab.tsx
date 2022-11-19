@@ -23,7 +23,7 @@ import {
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
   Button,
@@ -133,11 +133,7 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+interface IProps {
   projectPlans: Plan[];
   planColumn?: boolean;
   floatTop?: boolean;
@@ -145,7 +141,9 @@ interface IProps
   orgSteps?: OrgWorkflowStep[];
 }
 
-export function TranscriptionTab(props: IProps) {
+export function TranscriptionTab(
+  props: IProps & IStateProps & IDispatchProps & IRecordProps
+) {
   const {
     activityState,
     t,
@@ -809,7 +807,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   allBookData: state.books.bookData,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       exportProject: actions.exportProject,
@@ -828,5 +826,5 @@ const mapRecordsToProps = {
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(TranscriptionTab) as any
-) as any;
+  connect(mapStateToProps, mapDispatchToProps)(TranscriptionTab as any) as any
+) as any as (props: IProps) => JSX.Element;

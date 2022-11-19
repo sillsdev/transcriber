@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import {
   IState,
   MediaFile,

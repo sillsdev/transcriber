@@ -3,7 +3,7 @@ import { User } from '../model';
 import { List } from '@mui/material';
 import { UserListItem } from '.';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 
 export interface ListAction {
   [key: string]: ReactElement;

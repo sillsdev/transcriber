@@ -13,14 +13,9 @@ import * as actions from '../../store';
 import { cleanFileName } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { TokenContext } from '../../context/TokenProvider';
-interface IDispatchProps {
-  uploadFiles: typeof actions.uploadFiles;
-  nextUpload: typeof actions.nextUpload;
-  uploadComplete: typeof actions.uploadComplete;
-  doOrbitError: typeof actions.doOrbitError;
-}
+import { useDispatch } from 'react-redux';
 
-interface IProps extends IDispatchProps {
+interface IProps {
   discussion: Discussion;
   number: number;
   afterUploadcb: (mediaId: string) => void;
@@ -30,11 +25,12 @@ export const useRecordComment = ({
   discussion,
   number,
   afterUploadcb,
-  uploadFiles,
-  nextUpload,
-  uploadComplete,
-  doOrbitError,
 }: IProps) => {
+  const dispatch = useDispatch();
+  const uploadFiles = (files: File[]) => dispatch(actions.uploadFiles(files));
+  const nextUpload = (props: actions.NextUploadProps) =>
+    dispatch(actions.nextUpload(props));
+  const uploadComplete = () => dispatch(actions.uploadComplete);
   const [reporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
@@ -46,7 +42,7 @@ export const useRecordComment = ({
   const { commentId } = useArtifactType();
   const fileList = useRef<File[]>();
   const mediaIdRef = useRef('');
-  const { createMedia } = useOfflnMediafileCreate(doOrbitError);
+  const { createMedia } = useOfflnMediafileCreate();
 
   const passageId = useMemo(() => {
     const vernMediaId = related(discussion, 'mediafile');
@@ -111,15 +107,15 @@ export const useRecordComment = ({
       recordedByUserId: getUserId(),
       userId: getUserId(),
     } as any;
-    nextUpload(
-      mediaFile,
+    nextUpload({
+      record: mediaFile,
       files,
-      0,
-      accessToken || '',
-      offline,
-      reporter,
-      itemComplete
-    );
+      n: 0,
+      token: accessToken || '',
+      offlineOnly: offline,
+      errorReporter: reporter,
+      cb: itemComplete,
+    });
   };
   return { uploadMedia, fileName };
 };

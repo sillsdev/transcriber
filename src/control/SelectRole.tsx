@@ -4,7 +4,7 @@ import { ISharedStrings, IState, Role } from '../model';
 import { localizeRole } from '../utils';
 import { QueryBuilder } from '@orbit/data';
 import { useGlobal } from 'reactn';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
 

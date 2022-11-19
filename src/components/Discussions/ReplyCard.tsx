@@ -6,13 +6,10 @@ import {
   User,
 } from '../../model';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { useContext, useEffect, useRef, useState } from 'reactn';
 import { CommentEditor } from './CommentEditor';
-import * as actions from '../../store';
 import { useRecordComment } from './useRecordComment';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { useMounted } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -24,22 +21,13 @@ interface IRecordProps {
   groups: Array<Group>;
   memberships: Array<GroupMembership>;
 }
-interface IStateProps {}
-interface IDispatchProps {
-  uploadFiles: typeof actions.uploadFiles;
-  nextUpload: typeof actions.nextUpload;
-  uploadComplete: typeof actions.uploadComplete;
-  doOrbitError: typeof actions.doOrbitError;
-}
-
-interface IProps extends IRecordProps, IStateProps, IDispatchProps {
+interface IProps {
   discussion: Discussion;
   number: number;
 }
 
-export const ReplyCard = (props: IProps) => {
+export const ReplyCard = (props: IProps & IRecordProps) => {
   const { discussion, number, users, groups, memberships } = props;
-  const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
   const [refresh, setRefresh] = useState(0);
   const isMounted = useMounted('replycard');
   const {
@@ -61,7 +49,6 @@ export const ReplyCard = (props: IProps) => {
   const saveComment = useSaveComment({
     discussion: discussion.id,
     cb: afterSavecb,
-    doOrbitError,
     users,
     groups,
     memberships,
@@ -75,10 +62,6 @@ export const ReplyCard = (props: IProps) => {
     discussion,
     number,
     afterUploadcb,
-    uploadFiles,
-    nextUpload,
-    uploadComplete,
-    doOrbitError,
   });
   const savingRef = useRef(false);
   const [canSaveRecording, setCanSaveRecording] = useState(false);
@@ -144,20 +127,7 @@ const mapRecordsToProps = {
   groups: (q: QueryBuilder) => q.findRecords('group'),
   memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
-const mapStateToProps = () => ({});
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      fetchBooks: actions.fetchBooks,
-      uploadFiles: actions.uploadFiles,
-      nextUpload: actions.nextUpload,
-      uploadComplete: actions.uploadComplete,
-      doOrbitError: actions.doOrbitError,
-      resetOrbitError: actions.resetOrbitError,
-    },
-    dispatch
-  ),
-});
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(ReplyCard) as any
-) as any;
+
+export default withData(mapRecordsToProps)(ReplyCard) as any as (
+  props: IProps
+) => JSX.Element;

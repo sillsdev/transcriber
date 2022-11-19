@@ -7,7 +7,7 @@ import { useOrganizedBy } from '../../../crud';
 import { resourceSelector } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { PriButton, StyledMenu, StyledMenuItem } from '../../../control';
 

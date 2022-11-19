@@ -239,9 +239,9 @@ const PassageDetailGrids = () => {
         )}
         {tool === ToolSlug.Paratext && (
           <IntegrationTab
-            artifactType={artifactSlug}
+            artifactType={artifactSlug as ArtifactTypeSlug}
             passage={ctx.state.passage}
-            setStepComplete={ctx.state.setStepComplete}
+            setStepComplete={ctx.state.setStepComplete as any}
             currentstep={currentstep}
           />
         )}

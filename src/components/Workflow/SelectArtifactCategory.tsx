@@ -11,7 +11,7 @@ import CancelIcon from '@mui/icons-material/CancelOutlined';
 import { shallowEqual, useSelector } from 'react-redux';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { LightTooltip, StyledMenuItem } from '../../control';
 import { artifactCategorySelector } from '../../selector';
 

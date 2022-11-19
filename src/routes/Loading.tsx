@@ -112,7 +112,7 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
   const [, setBusy] = useGlobal('importexportBusy');
   const offlineSetup = useOfflineSetup();
   const { setProjectType } = useProjectType();
-  const LoadProjData = useLoadProjectData(t, doOrbitError);
+  const LoadProjData = useLoadProjectData();
   const [view, setView] = useState('');
   const [inviteError, setInviteError] = useState('');
 
@@ -391,7 +391,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   orbitFetchResults: state.orbit.fetchResults,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       fetchLocalization: action.fetchLocalization,
@@ -405,6 +405,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Loading) as any as (
-  props: IProps
-) => JSX.Element;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Loading as any) as any as (props: IProps) => JSX.Element;

@@ -3,8 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import moment, { Moment } from 'moment';
 import { OpenDialogSyncOptions } from 'electron';
-import { Project, IElectronImportStrings, IState } from '../model';
-import * as action from '../store';
+import { Project, IElectronImportStrings, IState, IApiError } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import {
   remoteIdGuid,
@@ -26,6 +25,7 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
 import IndexedDBSource from '@orbit/indexeddb';
 import { TokenContext } from '../context/TokenProvider';
+import { ImportProjectToElectronProps } from '../store';
 
 export interface IImportData {
   fileName: string;
@@ -42,9 +42,7 @@ const stringSelector = (state: IState) =>
 //const importStatusSelector = (state: IState) =>
 //  state.importexport.importexportStatus;
 
-export const useElectronImport = (
-  importComplete: typeof action.importComplete
-) => {
+export const useElectronImport = () => {
   const [coordinator] = useGlobal('coordinator');
   const token = useContext(TokenContext).state.accessToken;
   const [errorReporter] = useGlobal('errorReporter');
@@ -72,8 +70,8 @@ export const useElectronImport = (
 
   /* if we aren't electron - define these dummies */
   var handleElectronImport = (
-    importProjectToElectron: typeof action.importProjectToElectron,
-    reportError: typeof action.doOrbitError
+    importProjectToElectron: (props: ImportProjectToElectronProps) => void,
+    reportError: (ex: IApiError) => void
   ): void => {};
 
   var getElectronImportData = (project: string): IImportData => {
@@ -267,8 +265,8 @@ export const useElectronImport = (
     };
 
     handleElectronImport = (
-      importProjectToElectron: typeof action.importProjectToElectron,
-      reportError: typeof action.doOrbitError
+      importProjectToElectron: (props: ImportProjectToElectronProps) => void,
+      reportError: (ex: IApiError) => void
     ): void => {
       if (zipRef.current) {
         const where = dataPath();
@@ -303,23 +301,23 @@ export const useElectronImport = (
             flag: 'r',
           });
         var version = parseInt(versionstr);
-        importProjectToElectron(
-          path.join(where, 'data'),
+        importProjectToElectron({
+          filepath: path.join(where, 'data'),
           dataDate,
           version,
           coordinator,
-          isOfflinePtf.current,
+          offlineOnly: isOfflinePtf.current,
           AddProjectLoaded,
           reportError,
           getTypeId,
-          t.importPending,
-          t.importComplete,
-          t.importOldFile,
+          pendingmsg: t.importPending,
+          completemsg: t.importComplete,
+          oldfilemsg: t.importOldFile,
           token,
           user,
           errorReporter,
-          offlineSetup
-        );
+          offlineSetup,
+        });
         const userLastTimeKey = localUserKey(LocalKey.time);
         let lastTime = localStorage.getItem(userLastTimeKey) || '';
         if (!lastTime || moment(lastTime) > moment(dataDate)) {

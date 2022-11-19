@@ -14,7 +14,7 @@ import {
   MediaFile,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { styled } from '@mui/material';
 import FilterIcon from '@mui/icons-material/FilterList';
@@ -82,7 +82,7 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithDataProps {
+interface IProps extends IStateProps, IRecordProps {
   action?: (what: string, where: number[]) => boolean;
 }
 

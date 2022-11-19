@@ -23,7 +23,7 @@ import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import StickyRedirect from './StickyRedirect';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { PlanContext } from '../context/PlanContext';
 import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
 import { HeadHeight } from '../App';
@@ -188,7 +188,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
         {tab === tabs.media && (
           <AudioTab
             {...props}
-            projectplans={plans.filter((p) => p.id === plan)}
+            // projectplans={plans.filter((p) => p.id === plan)}
           />
         )}
         {tab === tabs.assignment && <AssignmentTable {...props} />}

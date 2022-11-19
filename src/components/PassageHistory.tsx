@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { related, remoteIdGuid } from '../crud';
 import { ActivityStates, PassageStateChange, User } from '../model';
-import withData from '../mods/react-orbitjs/components/withData';
+import { withData } from 'react-orbitjs';
 import Confirm from './AlertDialog';
 import {
   IconButton,

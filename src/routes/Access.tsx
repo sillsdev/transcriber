@@ -28,7 +28,7 @@ import { useCheckOnline, forceLogin, waitForIt } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { API_CONFIG, isElectron } from '../api-variable';
 import ImportTab from '../components/ImportTab';
 import Confirm from '../components/AlertDialog';
@@ -554,7 +554,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   importStatus: state.importexport.importexportStatus,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       fetchLocalization: action.fetchLocalization,
@@ -572,5 +572,5 @@ const mapRecordsToProps = {
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Access) as any
+  connect(mapStateToProps, mapDispatchToProps)(Access as any) as any
 ) as any as (props: IProps) => JSX.Element;

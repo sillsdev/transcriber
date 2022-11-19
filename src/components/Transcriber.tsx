@@ -85,7 +85,7 @@ import { TaskItemWidth } from '../components/TaskTable';
 import { AllDone } from './AllDone';
 import { LastEdit } from '../control';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
 import { bindActionCreators } from 'redux';
@@ -183,7 +183,7 @@ const mapRecordsToProps = {
   projintegrations: (q: QueryBuilder) => q.findRecords('projectintegration'),
 };
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       getUserName: action.getUserName,
@@ -211,11 +211,13 @@ const mapStateToProps = (state: IState): IStateProps => ({
   paratext_username: state.paratext.username,
   paratext_usernameStatus: state.paratext.usernameStatus,
 });
-interface IProps extends IStateProps, IRecordProps, IDispatchProps {
+interface IProps {
   defaultWidth?: number;
 }
 
-export function Transcriber(props: IProps) {
+export function Transcriber(
+  props: IProps & IStateProps & IDispatchProps & IRecordProps
+) {
   const {
     mediafiles,
     projintegrations,
@@ -1286,5 +1288,5 @@ export function Transcriber(props: IProps) {
 }
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Transcriber) as any
-) as any;
+  connect(mapStateToProps, mapDispatchToProps)(Transcriber as any) as any
+) as any as (props: IProps) => JSX.Element;

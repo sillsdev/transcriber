@@ -1,30 +1,16 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import * as actions from '../store';
-import {
-  Organization,
-  OrganizationMembership,
-  User,
-  ISharedStrings,
-} from '../model';
+import { Organization, OrganizationMembership, User } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import { waitForIt } from '../utils';
 import { useTeamCreate, useIsPersonalTeam } from '.';
 import related from './related';
 
-interface IStateProps {
-  ts: ISharedStrings;
-}
-interface IDispatchProps {
-  resetOrbitError: typeof actions.resetOrbitError;
-}
-interface IProps extends IStateProps, IDispatchProps {}
-
-export const useNewTeamId = (props: IProps) => {
+export const useNewTeamId = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const teamRef = React.useRef<string>();
-  const orbitTeamCreate = useTeamCreate(props);
+  const orbitTeamCreate = useTeamCreate();
   const isPersonal = useIsPersonalTeam();
 
   const newPersonal = () => {

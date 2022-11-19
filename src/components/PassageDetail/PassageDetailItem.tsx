@@ -1,11 +1,9 @@
-import { connect } from 'react-redux';
+import { shallowEqual } from 'react-redux';
 import {
   ICommunityStrings,
   ISharedStrings,
-  IState,
   MediaFile,
 } from '../../model';
-import localStrings from '../../selector/localize';
 import {
   Button,
   debounce,
@@ -41,12 +39,10 @@ import {
   useRole,
 } from '../../crud';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import * as actions from '../../store';
-import { bindActionCreators } from 'redux';
 import Memory from '@orbit/memory';
 import { TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { cleanFileName, NamedRegions } from '../../utils';
 import styledHtml from 'styled-components';
@@ -67,6 +63,8 @@ import Confirm from '../AlertDialog';
 import Uploader from '../Uploader';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import { GrowingSpacer, LightTooltip, PriButton } from '../../control';
+import { useSelector } from 'react-redux';
+import { communitySelector, sharedSelector } from '../../selector';
 
 const PlayerRow = styled('div')(() => ({
   width: '100%',
@@ -152,20 +150,11 @@ const Pane = (props: PaneProps & PropsWithChildren) => {
   return <PaneBar {...props} className={props.className || 'pane'} />;
 };
 
-interface IStateProps {
-  t: ICommunityStrings;
-  ts: ISharedStrings;
-}
-interface IDispatchProps {
-  uploadFiles: typeof actions.uploadFiles;
-  nextUpload: typeof actions.nextUpload;
-  uploadComplete: typeof actions.uploadComplete;
-  doOrbitError: typeof actions.doOrbitError;
-}
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
 }
-interface IProps extends IRecordProps, IStateProps, IDispatchProps {
+
+interface IProps {
   ready?: () => boolean;
   width: number;
   slugs: ArtifactTypeSlug[];
@@ -173,8 +162,10 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   showTopic: boolean;
 }
 
-export function PassageDetailItem(props: IProps) {
-  const { t, ts, width, slugs, segments, showTopic } = props;
+export function PassageDetailItem(props: IProps & IRecordProps) {
+  const { width, slugs, segments, showTopic } = props;
+  const t: ICommunityStrings = useSelector(communitySelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [reporter] = useGlobal('errorReporter');
   const [organization] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -486,7 +477,6 @@ export function PassageDetailItem(props: IProps) {
                           />
                         </Box>
                         <MediaRecord
-                          id="mediarecord"
                           toolId={toolId}
                           uploadMethod={uploadMedia}
                           defaultFilename={defaultFilename}
@@ -607,24 +597,9 @@ export function PassageDetailItem(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'community' }),
-  ts: localStrings(state, { layout: 'shared' }),
-});
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      uploadFiles: actions.uploadFiles,
-      nextUpload: actions.nextUpload,
-      uploadComplete: actions.uploadComplete,
-      doOrbitError: actions.doOrbitError,
-    },
-    dispatch
-  ),
-});
 const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(PassageDetailItem) as any
-) as any;
+export default withData(mapRecordsToProps)(PassageDetailItem) as any as (
+  props: IProps
+) => JSX.Element;

@@ -29,7 +29,7 @@ import ShowIcon from '@mui/icons-material/ArrowDropDown';
 import DiscussionCard, { DiscussionRegion } from './DiscussionCard';
 import BigDialog from '../../hoc/BigDialog';
 import CategoryList, { CatData } from './CategoryList';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { useGlobal } from 'reactn';
 import { useDiscussionOrg, useOrgDefaults } from '../../crud';
 import FilterMenu, { IFilterState } from './FilterMenu';
@@ -119,8 +119,8 @@ export function DiscussionList(props: IProps & IRecordProps) {
   const [catSelect, setCatSelect] = useState<string[]>([]);
   const [confirmFilterSave, setConfirmFilterSave] = useState(false);
   const [confirmAction, setConfirmAction] = useState<string>('');
-  const [startSave, setStartSave] = useState(false);
-  const [clearSave, setClearSave] = useState(false);
+  // const [startSave, setStartSave] = useState(false);
+  // const [clearSave, setClearSave] = useState(false);
   const discussionOrg = useDiscussionOrg();
   const anyChangedRef = useRef(false);
   const enum WaitSave {
@@ -341,8 +341,8 @@ export function DiscussionList(props: IProps & IRecordProps) {
       () => false,
       300
     ).then(() => {
-      setStartSave(false);
-      setClearSave(false);
+      // setStartSave(false);
+      // setClearSave(false);
       doTheThing();
     });
   };
@@ -354,12 +354,12 @@ export function DiscussionList(props: IProps & IRecordProps) {
     setConfirmFilterSave(false);
   };
   const handleSaveFirstConfirmed = () => {
-    setStartSave(true);
+    // setStartSave(true);
     waitSaveOrClear();
   };
 
   const handleSaveFirstRefused = () => {
-    setClearSave(true);
+    // setClearSave(true);
     waitSaveOrClear();
   };
 
@@ -477,8 +477,8 @@ export function DiscussionList(props: IProps & IRecordProps) {
                 onAddComplete={adding ? handleAddComplete : undefined}
                 showStep={allSteps}
                 showReference={allPassages}
-                startSave={startSave}
-                clearSave={clearSave}
+                // startSave={startSave}
+                // clearSave={clearSave}
                 setRef={setHighlightedRef}
                 requestHighlight={highlightNew}
               />

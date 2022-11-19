@@ -12,7 +12,7 @@ import { TeamPaper, TeamHeadDiv, TeamName, AltButton } from '../../control';
 
 export const PersonalItem = () => {
   const ctx = React.useContext(TeamContext);
-  const { personalProjects, cardStrings, ts, resetOrbitError } = ctx.state;
+  const { personalProjects, cardStrings } = ctx.state;
   const t = cardStrings;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -20,7 +20,7 @@ export const PersonalItem = () => {
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [showWorkflow, setShowWorkflow] = useState(false);
   const [org, setOrg] = useState('');
-  const getTeamId = useNewTeamId({ ts, resetOrbitError });
+  const getTeamId = useNewTeamId();
 
   const handleWorkflow = (isOpen: boolean) => {
     if (changed) {

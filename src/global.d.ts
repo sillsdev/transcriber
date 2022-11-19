@@ -3,6 +3,7 @@ import Coordinator from '@orbit/coordinator';
 import Memory from '@orbit/memory';
 import { AlertSeverity } from './hoc/SnackBar';
 import { RoleNames } from './model';
+import 'redux-thunk/extend-redux';
 
 declare module 'reactn/default' {
   export interface State {

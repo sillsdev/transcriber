@@ -20,7 +20,7 @@ import {
   RoleNames,
   IPeerStrings,
 } from '../../model';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { related, usePermissions, useRole } from '../../crud';
 import { AddRecord, ReplaceRelatedRecord } from '../../model/baseModel';

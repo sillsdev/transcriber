@@ -94,7 +94,7 @@ export const ProjButtons = (props: IProps) => {
         isOpen={openIntegration}
         onOpen={setOpenIntegration}
       >
-        <IntegrationTab {...props} />
+        <IntegrationTab />
       </BigDialog>
       <BigDialog
         title={t.exportTitle.replace('{0}', planName)}

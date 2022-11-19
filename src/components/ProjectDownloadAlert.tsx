@@ -9,7 +9,7 @@ import {
   Project,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import Alert from './AlertDialog';
 import ProjectDownload from './ProjectDownload';

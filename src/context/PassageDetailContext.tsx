@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { shallowEqual } from 'react-redux';
 import {
   IState,
   Plan,
@@ -22,8 +22,7 @@ import {
   IPassageDetailStepCompleteStrings,
   StepComplete,
 } from '../model';
-import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   useFetchMediaUrl,
@@ -46,7 +45,6 @@ import StickyRedirect from '../components/StickyRedirect';
 import { loadBlob, logError, prettySegment, Severity } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
-import { bindActionCreators } from 'redux';
 import JSONAPISource from '@orbit/jsonapi';
 import MediaPlayer from '../components/MediaPlayer';
 import {
@@ -61,39 +59,17 @@ import { UnsavedContext } from './UnsavedContext';
 import { IRegion } from '../crud/useWavesurferRegions';
 import { UpdateLastModifiedBy } from '../model/baseModel';
 import { IMarker } from '../crud/useWaveSurfer';
+import { useSelector } from 'react-redux';
+import {
+  passageDetailStepCompleteSelector,
+  sharedSelector,
+  workflowStepsSelector,
+} from '../selector';
+import { useDispatch } from 'react-redux';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
 };
-
-interface IStateProps {
-  wfStr: IWorkflowStepsStrings;
-  sharedStr: ISharedStrings;
-  stepCompleteStr: IPassageDetailStepCompleteStrings;
-  allBookData: BookName[];
-  booksLoaded: boolean;
-  lang: string;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  wfStr: localStrings(state, { layout: 'workflowSteps' }),
-  sharedStr: localStrings(state, { layout: 'shared' }),
-  stepCompleteStr: localStrings(state, { layout: 'passageDetailStepComplete' }),
-  allBookData: state.books.bookData,
-  booksLoaded: state.books.loaded,
-  lang: state.strings.lang,
-});
-
-interface IDispatchProps {
-  fetchBooks: typeof actions.fetchBooks;
-}
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      fetchBooks: actions.fetchBooks,
-    },
-    dispatch
-  ),
-});
 
 interface IRecordProps {
   passages: Passage[];
@@ -222,20 +198,29 @@ interface IContext {
 
 const PassageDetailContext = React.createContext({} as IContext);
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps {
   children: React.ReactElement;
 }
 const PassageDetailProvider = withData(mapRecordsToProps)(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )((props: IProps) => {
+  (props: IProps & IRecordProps) => {
     const [reporter] = useGlobal('errorReporter');
     const { passages, sections, sectionResources, mediafiles } = props;
     const { artifactTypes, categories, userResources } = props;
     const { workflowSteps, orgWorkflowSteps } = props;
-    const { wfStr, sharedStr, stepCompleteStr } = props;
-    const { lang, allBookData, fetchBooks, booksLoaded } = props;
+    const wfStr: IWorkflowStepsStrings = useSelector(
+      workflowStepsSelector,
+      shallowEqual
+    );
+    const sharedStr: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+    const stepCompleteStr: IPassageDetailStepCompleteStrings = useSelector(
+      passageDetailStepCompleteSelector,
+      shallowEqual
+    );
+    const lang = useSelector((state: IState) => state.strings.lang);
+    const allBookData = useSelector((state: IState) => state.books.bookData);
+    const booksLoaded = useSelector((state: IState) => state.books.loaded);
+    const dispatch = useDispatch();
+    const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
     const { pasId, prjId } = useParams();
     const [memory] = useGlobal('memory');
     const [coordinator] = useGlobal('coordinator');
@@ -1002,7 +987,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         )}
       </PassageDetailContext.Provider>
     );
-  })
+  }
 );
 
 export { PassageDetailContext, PassageDetailProvider };

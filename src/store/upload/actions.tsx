@@ -101,16 +101,25 @@ const uploadFile = (
     }
   };
 };
+export interface NextUploadProps {
+  record: any;
+  files: File[];
+  n: number;
+  token: string;
+  offlineOnly: boolean;
+  errorReporter: any;
+  cb?: (n: number, success: boolean, data?: any) => void;
+}
 export const nextUpload =
-  (
-    record: any,
-    files: File[],
-    n: number,
-    token: string,
-    offlineOnly: boolean,
-    errorReporter: any,
-    cb?: (n: number, success: boolean, data?: any) => void
-  ) =>
+  ({
+    record,
+    files,
+    n,
+    token,
+    offlineOnly,
+    errorReporter,
+    cb,
+  }: NextUploadProps) =>
   (dispatch: any) => {
     dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
     const acceptExtPat =
