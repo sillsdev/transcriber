@@ -229,7 +229,6 @@ const TeamProvider = withData(mapRecordsToProps)(
       setMyOrgRole(orgId);
       setProject(projectId);
       setProjectType(projectId);
-      setPlan(plan.id);
       return [projectId, orgId];
     };
 
@@ -249,6 +248,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       const [projectId] = setProjectParams(plan);
       LoadData(projectId, () => {
         setProjectType(projectId);
+        setPlan(plan.id);
         if (cb) cb();
       });
     };

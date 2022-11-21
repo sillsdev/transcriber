@@ -63,11 +63,13 @@ const ProjectName = ({ setView }: INameProps) => {
   const [, setProject] = useGlobal('project');
   const [, setProjType] = useGlobal('projType');
   const [plan, setPlan] = useGlobal('plan');
+  const [, setOrgRole] = useGlobal('orgRole');
 
   const handleHome = () => {
     setProject('');
     setPlan('');
     setProjType('');
+    setOrgRole(undefined);
     setView('Home');
   };
 
