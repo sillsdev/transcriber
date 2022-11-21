@@ -2788,13 +2788,6 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.switchTo">
-            <source>Switch to:</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">drawer.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="main.switchUser">
             <source>Switch Mode or User</source>
             <target/>
@@ -5014,6 +5007,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.loading">
+            <source>Loading...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">LastEdit.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.mediaAttached">
             <source>Audio Attached</source>
             <target/>
@@ -6400,8 +6400,8 @@
                <context context-type="sourcefile">ViewMode.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="viewMode.transcribe">
-            <source>Transcribe</source>
+         <trans-unit id="viewMode.home">
+            <source>Home</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ViewMode.tsx</context>

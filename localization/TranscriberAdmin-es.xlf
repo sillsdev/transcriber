@@ -2389,12 +2389,6 @@
 				<target>Configuración</target>
 			</segment>
 		</unit>
-		<unit id="main.switchTo">
-			<segment>
-				<source>Switch to:</source>
-				<target>Cambiar a:</target>
-			</segment>
-		</unit>
 		<unit id="main.switchUser">
 			<segment>
 				<source>Switch Mode or User</source>
@@ -4237,6 +4231,12 @@
 				<target>Iniciar Audacity</target>
 			</segment>
 		</unit>
+      <unit id="shared.loading">
+         <segment>
+            <source>Loading...</source>
+            <target>Carga...</target>
+         </segment>
+      </unit>
 		<unit id="shared.mediaAttached">
 			<segment>
 				<source>Audio Attached</source>
@@ -5425,10 +5425,10 @@
 				<target>Proyecto de audio</target>
 			</segment>
 		</unit>
-		<unit id="viewMode.transcribe">
+		<unit id="viewMode.home">
 			<segment>
-				<source>Transcribe</source>
-				<target>Transcribir</target>
+				<source>Home</source>
+				<target>Inicio</target>
 			</segment>
 		</unit>
 		<unit id="vProject.add">

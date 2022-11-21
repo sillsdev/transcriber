@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'reactn';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { IState, IMainStrings } from '../../model';
-import { connect } from 'react-redux';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { IState, IMainStrings, IViewModeStrings } from '../../model';
+import { connect, shallowEqual, useSelector } from 'react-redux';
 import localStrings from '../../selector/localize';
 import {
   AppBar,
@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import SystemUpdateIcon from '@mui/icons-material/SystemUpdateAlt';
+import TableViewIcon from '@mui/icons-material/TableView';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { API_CONFIG, isElectron } from '../../api-variable';
 import { TokenContext } from '../../context/TokenProvider';
@@ -46,6 +47,7 @@ import moment from 'moment';
 import { useSnackBar, AlertSeverity } from '../../hoc/SnackBar';
 import PolicyDialog from '../PolicyDialog';
 import JSONAPISource from '@orbit/jsonapi';
+import { viewModeSelector } from '../../selector';
 
 const shell = isElectron ? require('electron').shell : null;
 
@@ -54,9 +56,10 @@ const threeIcon = { minWidth: `calc(${48 * 3}px)` } as React.CSSProperties;
 
 interface INameProps {
   setView: React.Dispatch<React.SetStateAction<string>>;
+  switchTo: boolean;
 }
 
-const ProjectName = ({ setView }: INameProps) => {
+const ProjectName = ({ setView, switchTo }: INameProps) => {
   const ctx = useContext(UnsavedContext);
   const { checkSavedFn } = ctx.state;
   const { getPlanName } = usePlan();
@@ -64,7 +67,9 @@ const ProjectName = ({ setView }: INameProps) => {
   const [, setProjType] = useGlobal('projType');
   const [plan, setPlan] = useGlobal('plan');
   const [, setOrgRole] = useGlobal('orgRole');
-
+  const { prjId } = useParams();
+  const navigate = useNavigate();
+  const t: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
   const handleHome = () => {
     setProject('');
     setPlan('');
@@ -73,13 +78,27 @@ const ProjectName = ({ setView }: INameProps) => {
     setView('Home');
   };
 
+  const handleAudioProject = () => {
+    navigate(`/plan/${prjId}/0`);
+  };
+
+  const checkSavedAndGoAP = () => checkSavedFn(() => handleAudioProject());
   const checkSavedAndGoHome = () => checkSavedFn(() => handleHome());
 
   return (
     <>
-      <IconButton id="home" onClick={checkSavedAndGoHome}>
-        <HomeIcon />
-      </IconButton>
+      <Tooltip title={t.home}>
+        <IconButton id="home" onClick={checkSavedAndGoHome}>
+          <HomeIcon />
+        </IconButton>
+      </Tooltip>
+      {plan && switchTo && (
+        <Tooltip title={t.audioProject}>
+          <IconButton id="project" onClick={checkSavedAndGoAP}>
+            <TableViewIcon />
+          </IconButton>
+        </Tooltip>
+      )}
       <Typography variant="h6" noWrap>
         {getPlanName(plan)}
       </Typography>
@@ -100,11 +119,11 @@ const mapStateToProps = (state: IState): IStateProps => ({
 
 interface IProps extends IStateProps {
   resetRequests: () => Promise<void>;
-  SwitchTo?: React.FC;
+  switchTo: boolean;
 }
 
 export const AppHead = (props: IProps) => {
-  const { resetRequests, SwitchTo, t, orbitStatus, orbitErrorMsg } = props;
+  const { resetRequests, switchTo, t, orbitStatus, orbitErrorMsg } = props;
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [orgRole] = useGlobal('orgRole');
@@ -340,7 +359,7 @@ export const AppHead = (props: IProps) => {
           <LinearProgress id="busy" variant="indeterminate" />
         )}
         <Toolbar>
-          {orgRole && <ProjectName setView={setView} />}
+          {orgRole && <ProjectName setView={setView} switchTo={switchTo} />}
           {!orgRole && <span style={cssVars}>{'\u00A0'}</span>}
           <GrowingSpacer />
           {(pathname === '/' || pathname.startsWith('/access')) && (
@@ -351,7 +370,6 @@ export const AppHead = (props: IProps) => {
               <GrowingSpacer />
             </>
           )}
-          {SwitchTo && <SwitchTo />}
           {'\u00A0'}
           {(isOffline || orbitStatus !== undefined || !connected) && (
             <CloudOffIcon sx={{ p: '12pt' }} color="action" />

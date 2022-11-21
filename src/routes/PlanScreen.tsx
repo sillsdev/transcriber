@@ -4,7 +4,6 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import AppHead from '../components/App/AppHead';
 import { PlanProvider } from '../context/PlanContext';
-import ViewMode, { ViewOption } from '../control/ViewMode';
 import PlanTabs from '../components/PlanTabs';
 import { useUrlContext, useProjectType } from '../crud';
 import { forceLogin, localUserKey, LocalKey } from '../utils';
@@ -22,21 +21,6 @@ export const PlanScreen = () => {
   const [project] = useGlobal('project');
   const [organization] = useGlobal('organization');
   const [view, setView] = React.useState('');
-
-  const handleSwitchTo = () => {
-    setView(`/work/${prjId}`);
-  };
-
-  const SwitchTo = () => {
-    return (
-      <ViewMode
-        mode={ViewOption.AudioProject}
-        onMode={(mode: ViewOption) =>
-          mode === ViewOption.Transcribe && checkSavedFn(handleSwitchTo)
-        }
-      />
-    );
-  };
 
   React.useEffect(() => {
     const projectId = setUrlContext(prjId ?? '');
@@ -62,10 +46,10 @@ export const PlanScreen = () => {
   }, [project, organization]);
 
   if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
-
+  console.log('plan screen passing in false');
   return (
     <Box sx={{ width: '100%' }}>
-      <AppHead SwitchTo={SwitchTo} />
+      <AppHead switchTo={false} />
       <PlanProvider>
         <Box id="PlanScreen" sx={{ display: 'flex', paddingTop: '80px' }}>
           <PlanTabs checkSaved={checkSavedFn} />

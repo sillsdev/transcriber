@@ -656,16 +656,7 @@ export function ScriptureTable(
       SaveWait
     ).then(() => cb());
   };
-  const handleTranscribe = (i: number) => {
-    saveIfChanged(async () => {
-      waitForPassageId(i, () => {
-        const { wf } = getByIndex(workflowRef.current, i);
-        const id = wf?.passageId?.id || '';
-        const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
-        setView(`/work/${prjId}/${passageRemoteId}`);
-      });
-    });
-  };
+
   const handlePassageDetail = (i: number) => {
     saveIfChanged(async () => {
       waitForPassageId(i, () => {
@@ -1104,7 +1095,6 @@ export function ScriptureTable(
         lookupBook={handleLookupBook}
         resequence={handleResequence}
         inlinePassages={flat}
-        onTranscribe={handleTranscribe}
         onAudacity={handleAudacity}
         onPassageDetail={handlePassageDetail}
         onAssign={handleAssign}

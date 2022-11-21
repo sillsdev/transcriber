@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { IPlanActionsStrings, IMediaShare } from '../../model';
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import PauseIcon from '@mui/icons-material/Pause';
-import TranscribeIcon from '../../control/TranscribeIcon';
 import SharedCheckbox from '@mui/icons-material/CheckBoxOutlined';
 import NotSharedCheckbox from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import VersionsIcon from '@mui/icons-material/List';
@@ -32,7 +31,6 @@ interface IProps {
   mediaId: string;
   mediaShared: IMediaShare;
   isPlaying: boolean;
-  onTranscribe: (i: number) => void;
   onPlayStatus: (mediaId: string) => void;
   onHistory: (i: number) => () => void;
 }
@@ -45,18 +43,12 @@ export function PlanAudioActions(props: IProps) {
     mediaShared,
     onPlayStatus,
     onHistory,
-    onTranscribe,
     isPlaying,
   } = props;
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
 
   const handlePlayStatus = () => () => {
     onPlayStatus(mediaId);
-  };
-
-  const handleTranscribe = (i: number) => () => {
-    onPlayStatus('');
-    onTranscribe(i);
   };
 
   const disabled = useMemo(() => {
@@ -90,16 +82,6 @@ export function PlanAudioActions(props: IProps) {
           onClick={handlePlayStatus()}
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
-        </StyledIconButton>
-      )}
-      {isPassage && (
-        <StyledIconButton
-          id="planActTrans"
-          title={t.transcribe}
-          onClick={handleTranscribe(rowIndex)}
-          disabled={disabled}
-        >
-          <TranscribeIcon color={disabled ? 'grey' : undefined} />
         </StyledIconButton>
       )}
     </Box>

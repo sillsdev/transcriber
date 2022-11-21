@@ -11,8 +11,6 @@ import { Grid, debounce, Paper, Box, SxProps } from '@mui/material';
 
 import styled from 'styled-components';
 import AppHead from '../components/App/AppHead';
-import ViewMode, { ViewOption } from '../control/ViewMode';
-import { UnsavedContext } from '../context/UnsavedContext';
 import {
   default as SplitPaneBar,
   Pane as PaneBar,
@@ -344,26 +342,9 @@ export const PassageDetail = () => {
   const { prjId } = useParams();
   const { pathname } = useLocation();
   const setUrlContext = useUrlContext();
-  const uctx = React.useContext(UnsavedContext);
-  const { checkSavedFn } = uctx.state;
   const [view, setView] = useState('');
   const [projType] = useGlobal('projType');
   const { setProjectType } = useProjectType();
-
-  const handleSwitchTo = () => {
-    setView(`/plan/${prjId}/0`);
-  };
-
-  const SwitchTo = () => {
-    return (
-      <ViewMode
-        mode={ViewOption.Detail}
-        onMode={(mode: ViewOption) =>
-          mode === ViewOption.AudioProject && checkSavedFn(handleSwitchTo)
-        }
-      />
-    );
-  };
 
   useEffect(() => {
     const projectId = setUrlContext(prjId ?? '');
@@ -378,10 +359,10 @@ export const PassageDetail = () => {
   }, []);
 
   if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
-
+  console.log('passage detail passing in true');
   return (
     <Box sx={{ flexGrow: 1, minWidth: `${minWidth}px`, minHeight: '700px' }}>
-      <AppHead SwitchTo={SwitchTo} />
+      <AppHead switchTo={true} />
       <PassageDetailProvider>
         <PassageDetailGrids />
       </PassageDetailProvider>
