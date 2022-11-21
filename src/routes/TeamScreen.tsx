@@ -27,7 +27,7 @@ export const TeamScreen = () => {
   }, []);
 
   useEffect(() => {
-    if (project !== '' && projType) {
+    if (project !== '' && plan) {
       const remProjId = remoteId('plan', plan, memory.keyMap);
       const loc = `/plan/${remProjId || plan}/0`;
       if (loc !== localStorage.getItem(localUserKey(LocalKey.url))) {
