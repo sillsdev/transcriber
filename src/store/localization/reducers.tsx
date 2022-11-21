@@ -522,7 +522,6 @@ const initialState = {
 			"sessionExpireTask": "Your session will expire in {0} seconds. Would you like to continue?",
 			"sessionExpiring": "Session Expiring",
 			"settings": "Settings",
-			"switchTo": "Switch to:",
 			"switchUser": "Switch Mode or User",
 			"tasks": "Tasks",
 			"team": "Team",
@@ -940,6 +939,7 @@ const initialState = {
 			"invalidReference": "Passage {0}.{1} {2}: Invalid Reference",
 			"lastEdit": "Last save {0}",
 			"launchAudacity": "Launch Audacity",
+			"loading": "Loading...",
 			"mediaAttached": "Audio Attached",
 			"mediaDetached": "Audio Detached",
 			"mediaError": "Media is missing or has an unaccepted format.",
@@ -1214,7 +1214,7 @@ const initialState = {
 	"viewMode": new LocalizedStrings({
 		"en": {
 			"audioProject": "Audio Project",
-			"transcribe": "Transcribe",
+			"home": "Home",
 		}
 	}),
 	"vProject": new LocalizedStrings({

@@ -2392,12 +2392,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.switchTo">
-         <segment>
-            <source>Switch to:</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="main.switchUser">
          <segment>
             <source>Switch Mode or User</source>
@@ -4300,6 +4294,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.loading">
+         <segment>
+            <source>Loading...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.mediaAttached">
          <segment>
             <source>Audio Attached</source>
@@ -5488,9 +5488,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="viewMode.transcribe">
+      <unit id="viewMode.home">
          <segment>
-            <source>Transcribe</source>
+            <source>Home</source>
             <target/>
          </segment>
       </unit>

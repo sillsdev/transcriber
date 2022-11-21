@@ -10,7 +10,6 @@ import Loading from './Loading';
 import Profile from './Profile';
 import { default as Team } from './TeamScreen';
 import { default as Plan } from './PlanScreen';
-import { default as Work } from './WorkScreen';
 import Buggy from './Buggy';
 import EmailUnverified from './EmailUnverified';
 import Access from './Access';
@@ -35,12 +34,8 @@ const routes = createRoutesFromElements([
     <Route path="/profile" element={<Auth el={<Profile />} />} />
     <Route path="/team" element={<Auth el={<Team />} />} />
     <Route path="/plan/:prjId/:tabNm" element={<Auth el={<Plan />} />} />
-    <Route
-      path="/work/:prjId/:pasId/:slug/:medId"
-      element={<Auth el={<Work />} />}
-    />
-    <Route path="/work/:prjId/:pasId" element={<Auth el={<Work />} />} />
-    <Route path="/work/:prjId" element={<Auth el={<Work />} />} />
+    <Route path="/work/:prjId/:pasId" element={<Auth el={<Team />} />} />
+    <Route path="/work/:prjId" element={<Auth el={<Team />} />} />
     <Route
       path="/detail/:prjId/:pasId/:mediaId"
       element={<Auth el={<Detail />} />}

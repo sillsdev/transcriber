@@ -487,7 +487,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "sessionExpireTask": string;
     "sessionExpiring": string;
     "settings": string;
-    "switchTo": string;
     "switchUser": string;
     "tasks": string;
     "team": string;
@@ -880,6 +879,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "invalidReference": string;
     "lastEdit": string;
     "launchAudacity": string;
+    "loading": string;
     "mediaAttached": string;
     "mediaDetached": string;
     "mediaError": string;
@@ -1135,7 +1135,7 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
 
 export interface IViewModeStrings extends Localize.LocalizedStringsMethods {
     "audioProject": string;
-    "transcribe": string;
+    "home": string;
 };
 
 export interface IVProjectStrings extends Localize.LocalizedStringsMethods {

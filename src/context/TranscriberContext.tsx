@@ -23,7 +23,6 @@ import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
   related,
-  remoteId,
   sectionNumber,
   passageNumber,
   remoteIdGuid,
@@ -156,7 +155,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const dispatch = useDispatch();
     const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
     const sharedStr: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-    const { prjId, pasId, slug, medId } = useParams();
+    const { pasId, slug, medId } = useParams();
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [devPlan] = useGlobal('plan');
@@ -241,14 +240,16 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       const r = rowData[i];
 
       if (state.index !== i || state.selected !== selected) {
+        /*
         var psgId =
           remoteId('passage', r.passage.id, memory.keyMap) || r.passage.id;
         const remId =
           remoteId('mediafile', selected, memory.keyMap) || selected;
+
         if (!isDetail && (pasId !== psgId || (slug && remId !== medId))) {
           view.current = `/work/${prjId}/${psgId}`;
           if (slug) view.current += `/${slug}/${medId}`;
-        }
+        } */
         setTrackedTask(selected);
         var resetBlob = false;
         if (

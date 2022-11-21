@@ -154,7 +154,6 @@ interface IProps extends IStateProps {
   lookupBook: (book: string) => string;
   resequence: () => void;
   inlinePassages: boolean;
-  onTranscribe: (i: number) => void;
   onAudacity?: (i: number) => void;
   onPassageDetail: (i: number) => void;
   onAssign: (where: number[]) => () => void;
@@ -190,7 +189,6 @@ export function PlanSheet(props: IProps) {
     paste,
     resequence,
     inlinePassages,
-    onTranscribe,
     onAudacity,
     onPassageDetail,
     onFilterChange,
@@ -321,11 +319,6 @@ export function PlanSheet(props: IProps) {
     } else {
       setSrcMediaId(mediaId);
     }
-  };
-
-  const handleTranscribe = (i: number) => {
-    setSrcMediaId('');
-    onTranscribe(i);
   };
 
   const handleAudacity = (i: number) => () => {
@@ -573,7 +566,6 @@ export function PlanSheet(props: IProps) {
                           mediaId={rowInfo[rowIndex].mediaId?.id || ''}
                           mediaShared={rowInfo[rowIndex].mediaShared}
                           onPlayStatus={handlePlayStatus}
-                          onTranscribe={handleTranscribe}
                           onHistory={props.onHistory}
                           isPlaying={
                             srcMediaId === rowInfo[rowIndex].mediaId?.id &&
