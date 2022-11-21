@@ -444,9 +444,8 @@ export function ScriptureTable(
 
   const getUndelIndex = (workflow: IWorkflow[], ix: number | undefined) => {
     // find the undeleted index...
-    let i: number = ix ?? 0;
-    if (ix !== undefined) i = getByIndex(workflow, ix).i;
-    return i;
+    if (ix !== undefined) return getByIndex(workflow, ix).i;
+    return ix;
   };
 
   const addSection = (ix?: number) => {
@@ -490,7 +489,7 @@ export function ScriptureTable(
     }
     if (flat) return;
     const i = getUndelIndex(workflow, ix);
-    movePassageTo(workflow, i, before);
+    if (i !== undefined) movePassageTo(workflow, i, before);
   };
   const getByIndex = (wf: IWorkflow[], index: number) => {
     let n = 0;
