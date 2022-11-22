@@ -7,6 +7,7 @@ import 'redux-thunk/extend-redux';
 
 declare module 'reactn/default' {
   export interface State {
+    home: boolean;
     organization: string;
     orgRole: RoleNames | undefined;
     project: string;

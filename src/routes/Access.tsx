@@ -24,7 +24,7 @@ import {
   TypographyProps,
   BoxProps,
 } from '@mui/material';
-import { useCheckOnline, forceLogin, waitForIt } from '../utils';
+import { useCheckOnline, forceLogin, waitForIt, useHome } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
@@ -159,14 +159,10 @@ export function Access(
     pathname.substring('/access/'.length)
   );
   const [selectedUser, setSelectedUser] = useState('');
-  const [, setOrganization] = useGlobal('organization');
-  const [, setOrgRole] = useGlobal('orgRole');
-  const [, setProject] = useGlobal('project');
-  const [, setProjType] = useGlobal('projType');
-  const [, setPlan] = useGlobal('plan');
   const offlineProjRead = useOfflnProjRead();
   const offlineSetup = useOfflineSetup();
   const { showMessage } = useSnackBar();
+  const { resetProject } = useHome();
   const [listMode, setListMode] = useState<ListMode>(
     whichUsers === 'online-local' ? ListMode.WorkOffline : ListMode.SwitchUser
   );
@@ -309,11 +305,7 @@ export function Access(
 
   useEffect(() => {
     if (isElectron) persistData();
-    setOrganization('');
-    setOrgRole(undefined);
-    setProject('');
-    setPlan('');
-    setProjType('');
+    resetProject();
     checkOnline((online) => {}, true);
     if (!tokenCtx.state.isAuthenticated() && !isAuthenticated) {
       if (!offline && !isElectron) {

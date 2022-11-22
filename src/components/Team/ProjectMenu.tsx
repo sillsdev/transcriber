@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation } from 'react-router-dom';
 import {
@@ -19,12 +19,7 @@ import FilterIcon from '@mui/icons-material/FilterList';
 import UncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { isElectron } from '../../api-variable';
-import {
-  useOfflnProjRead,
-  useProjectType,
-  ArtifactTypeSlug,
-  useRole,
-} from '../../crud';
+import { useOfflnProjRead, ArtifactTypeSlug } from '../../crud';
 import { StyledMenu, StyledMenuItem } from '../../control';
 import {
   cardsSelector,
@@ -35,6 +30,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 
 interface IProps {
   inProject?: boolean;
+  isAdmin: boolean;
   project: string | VProject;
   justFilter?: boolean;
   action?: (what: string) => void;
@@ -42,14 +38,13 @@ interface IProps {
 }
 
 export function ProjectMenu(props: IProps) {
-  const { inProject, action, project, justFilter, stopPlayer } = props;
+  const { inProject, isAdmin, action, project, justFilter, stopPlayer } = props;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { pathname } = useLocation();
-  const { getProjType } = useProjectType();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const offlineProjectRead = useOfflnProjRead();
-  const [projectType, setProjectType] = useState('');
+  const [projectType] = useGlobal('projType');
   const t: ICardsStrings = useSelector(cardsSelector, shallowEqual);
   const tpb: IProjButtonsStrings = useSelector(
     projButtonsSelector,
@@ -61,11 +56,6 @@ export function ProjectMenu(props: IProps) {
     setAnchorEl(event.currentTarget);
     if (stopPlayer) stopPlayer();
   };
-  const { userIsAdmin } = useRole();
-
-  useEffect(() => {
-    setProjectType(getProjType(project));
-  }, [getProjType, project]);
 
   const handle = (what: string) => (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -74,6 +64,8 @@ export function ProjectMenu(props: IProps) {
       action(what);
     }
   };
+
+  useEffect(() => {});
 
   const offlineProject = offlineProjectRead(project);
 
@@ -95,7 +87,7 @@ export function ProjectMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        {!inProject && userIsAdmin && (!isOffline || offlineOnly) && (
+        {!inProject && isAdmin && (!isOffline || offlineOnly) && (
           <StyledMenuItem id="projMenuSettings" onClick={handle('settings')}>
             <ListItemIcon>
               <SettingsIcon />
@@ -135,7 +127,7 @@ export function ProjectMenu(props: IProps) {
               <ListItemText primary={tpb.integrations} />
             </StyledMenuItem>
           )}
-        {!justFilter && userIsAdmin && !inProject && (
+        {!justFilter && isAdmin && !inProject && (
           <StyledMenuItem id="projMenuImp" onClick={handle('import')}>
             <ListItemIcon>
               <ImportIcon />
@@ -160,7 +152,7 @@ export function ProjectMenu(props: IProps) {
           </StyledMenuItem>
         ) : (
           (!isOffline || offlineOnly) &&
-          userIsAdmin && (
+          isAdmin && (
             <StyledMenuItem id="projMenuDel" onClick={handle('delete')}>
               <ListItemIcon>
                 <DeleteIcon />

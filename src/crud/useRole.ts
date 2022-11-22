@@ -34,6 +34,9 @@ export const useRole = () => {
     return orgRole === RoleNames.Admin;
   }, [orgRole]);
 
+  const userIsOrgAdmin = (orgId: string) =>
+    getMyOrgRole(orgId) === RoleNames.Admin;
+
   const getRoleId = function (role: RoleNames): string {
     let findit = getRoleRec(role);
     if (findit.length > 0) return findit[0].id;
@@ -101,5 +104,6 @@ export const useRole = () => {
     setMyOrgRole,
     getMyOrgRole,
     userIsAdmin,
+    userIsOrgAdmin,
   };
 };

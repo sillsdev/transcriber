@@ -31,9 +31,11 @@ import {
   useOfflnProjRead,
   useOfflineAvailToggle,
   related,
+  useRole,
 } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
 import OfflineIcon from '@mui/icons-material/OfflinePin';
+import { useHome } from '../../utils';
 
 const ProjectCardRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -81,7 +83,6 @@ export const ProjectCard = (props: IProps) => {
   const ctx = React.useContext(TeamContext);
   const {
     loadProject,
-    selectProject,
     setProjectParams,
     projectSections,
     projectDescription,
@@ -108,11 +109,15 @@ export const ProjectCard = (props: IProps) => {
   const [openReports, setOpenReports] = useState(false);
   const [deleteItem, setDeleteItem] = useState<VProject>();
   const [open, setOpen] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
   const t = cardStrings;
   const tpb = projButtonStrings;
+  const { userIsOrgAdmin } = useRole();
+  const { leaveHome } = useHome();
 
   const handleSelect = (project: VProject) => () => {
-    selectProject(project);
+    loadProject(project);
+    leaveHome();
   };
 
   useEffect(() => {
@@ -127,6 +132,7 @@ export const ProjectCard = (props: IProps) => {
     setOrganizedByPlural(
       localizedOrganizedBy(project.attributes.organizedBy, false)
     );
+    setIsAdmin(userIsOrgAdmin(related(project, 'organization')));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
 
@@ -276,6 +282,7 @@ export const ProjectCard = (props: IProps) => {
               action={handleProjectAction}
               project={project}
               inProject={false}
+              isAdmin={isAdmin}
             />
           </FirstLineDiv>
           <Typography sx={{ mb: 2 }}>{projectDescription(project)}</Typography>

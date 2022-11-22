@@ -55,6 +55,7 @@ import {
   vProjectSelector,
 } from '../selector';
 import { useDispatch } from 'react-redux';
+import { useHome } from '../utils';
 
 export type TeamIdType = Organization | null;
 
@@ -90,8 +91,7 @@ const initState = {
   personalProjects: Array<VProject>(),
   teamProjects: (teamId: string) => Array<VProject>(),
   teamMembers: (teamId: string) => 0,
-  loadProject: (plan: Plan, cb: () => void) => {},
-  selectProject: (project: Plan) => {},
+  loadProject: (plan: Plan, cb?: () => void) => {},
   setProjectParams: (project: Plan) => {
     return ['', ''];
   },
@@ -220,15 +220,17 @@ const TeamProvider = withData(mapRecordsToProps)(
     const { getPlan } = usePlan();
     const LoadData = useLoadProjectData();
     const { setMyOrgRole } = useRole();
+    const { resetProject } = useHome();
 
-    const setProjectParams = (plan: Plan) => {
+    const setProjectParams = (plan: Plan | VProject) => {
       const projectId = related(plan, 'project');
-      const team = vProject(plan);
-      const orgId = related(team, 'organization');
+      const vproj = plan.type === 'plan' ? vProject(plan) : plan;
+      const orgId = related(vproj, 'organization');
       setOrganization(orgId);
       setMyOrgRole(orgId);
       setProject(projectId);
       setProjectType(projectId);
+      setPlan(plan.id);
       return [projectId, orgId];
     };
 
@@ -237,18 +239,12 @@ const TeamProvider = withData(mapRecordsToProps)(
       setImportOpen(true);
     };
 
-    const loadProject = (plan: Plan, cb: () => void) => {
-      selectProject(plan, cb);
-    };
-
-    const selectProject = (
+    const loadProject = (
       plan: Plan,
       cb: (() => void) | undefined = undefined
     ) => {
       const [projectId] = setProjectParams(plan);
       LoadData(projectId, () => {
-        setProjectType(projectId);
-        setPlan(plan.id);
         if (cb) cb();
       });
     };
@@ -356,9 +352,7 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const projectDelete = async (project: VProject) => {
       await vProjectDelete(project);
-      setOrganization('');
-      setProject('');
-      setPlan('');
+      resetProject();
     };
 
     const teamCreate = (
@@ -448,7 +442,6 @@ const TeamProvider = withData(mapRecordsToProps)(
             projectSections,
             projectDescription,
             projectLanguage,
-            selectProject,
             loadProject,
             setProjectParams,
             projectCreate,
