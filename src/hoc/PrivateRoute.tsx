@@ -14,7 +14,7 @@ export function PrivateRoute({ el }: IProps) {
   const navigate = useNavigate();
   const { isAuthenticated } = useContext(TokenContext).state;
 
-  if (typeof pathname === 'string')
+  if (typeof pathname === 'string' && pathname !== '/loading')
     localStorage.setItem(localUserKey(LocalKey.deeplink), pathname);
   if (!pathname?.endsWith('null'))
     localStorage.setItem(localUserKey(LocalKey.url), pathname);
