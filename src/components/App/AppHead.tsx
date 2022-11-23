@@ -48,6 +48,7 @@ import { useSnackBar, AlertSeverity } from '../../hoc/SnackBar';
 import PolicyDialog from '../PolicyDialog';
 import JSONAPISource from '@orbit/jsonapi';
 import { viewModeSelector } from '../../selector';
+import { useHome } from '../../utils/useHome';
 
 const shell = isElectron ? require('electron').shell : null;
 
@@ -63,19 +64,14 @@ const ProjectName = ({ setView, switchTo }: INameProps) => {
   const ctx = useContext(UnsavedContext);
   const { checkSavedFn } = ctx.state;
   const { getPlanName } = usePlan();
-  const [, setProject] = useGlobal('project');
-  const [, setProjType] = useGlobal('projType');
-  const [plan, setPlan] = useGlobal('plan');
-  const [, setOrgRole] = useGlobal('orgRole');
+  const [plan] = useGlobal('plan');
   const { prjId } = useParams();
   const navigate = useNavigate();
+  const { goHome } = useHome();
   const t: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
+
   const handleHome = () => {
-    setProject('');
-    setPlan('');
-    setProjType('');
-    setOrgRole(undefined);
-    setView('Home');
+    goHome();
   };
 
   const handleAudioProject = () => {
@@ -340,7 +336,6 @@ export const AppHead = (props: IProps) => {
   if (view === 'Profile') return <StickyRedirect to="/profile" />;
   if (view === 'Logout') navigate('/logout');
   if (view === 'Access') navigate('/');
-  if (view === 'Home') return <StickyRedirect to="/team" />;
   if (view === 'Terms') navigate('/terms');
   if (view === 'Privacy') navigate('/privacy');
   return (

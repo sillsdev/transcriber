@@ -175,6 +175,7 @@ if (isElectron) {
 Promise.all(promises)
   .then((promResults) => {
     setGlobal({
+      home: false,
       organization: '',
       orgRole: undefined,
       project: '',

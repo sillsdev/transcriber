@@ -40,8 +40,8 @@ import {
   SetUserLanguage,
   useOfflineSetup,
   useRole,
-  useProjectType,
   AcceptInvitation,
+  useProjectType,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -94,7 +94,6 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [loadComplete, setLoadComplete] = useGlobal('loadComplete');
   const [isDeveloper] = useGlobal('developer');
-  const [, setPlan] = useGlobal('plan');
   const [, setOrganization] = useGlobal('organization');
   const { setMyOrgRole } = useRole();
   const [, setProject] = useGlobal('project');
@@ -111,8 +110,9 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
   const [syncComplete, setSyncComplete] = useState(false);
   const [, setBusy] = useGlobal('importexportBusy');
   const offlineSetup = useOfflineSetup();
-  const { setProjectType } = useProjectType();
   const LoadProjData = useLoadProjectData();
+  const { setProjectType } = useProjectType();
+  const [, setPlan] = useGlobal('plan');
   const [view, setView] = useState('');
   const [inviteError, setInviteError] = useState('');
 
@@ -237,9 +237,9 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
 
   const getGotoUrl = () => {
     let fromUrl =
-      localStorage.getItem(LocalKey.deeplink) ??
+      localStorage.getItem(localUserKey(LocalKey.deeplink)) ??
       localStorage.getItem(localUserKey(LocalKey.url));
-    localStorage.removeItem(LocalKey.deeplink);
+    localStorage.removeItem(localUserKey(LocalKey.deeplink));
     if (fromUrl) {
       localStorage.removeItem(localUserKey(LocalKey.deeplink));
       return fromUrl;
@@ -265,8 +265,8 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
       return;
     }
     let fromUrl = getGotoUrl();
-
-    if (fromUrl && !/^\/profile|^\/work|^\/plan|^\/detail/.test(fromUrl))
+    let waitToNavigate = false;
+    if (fromUrl && !/^\/profile|^\/plan|^\/detail/.test(fromUrl))
       fromUrl = null;
     if (fromUrl) {
       const m = /^\/[workplandetail]+\/([0-9a-f-]+)/.exec(fromUrl);
@@ -279,24 +279,26 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
         } else {
           const projectId = related(planRec, 'project') as string | null;
           if (projectId) {
+            waitToNavigate = true;
             LoadProjData(projectId, () => {
-              setPlan(planId);
-              setProjectType(projectId);
+              const projRec = memory.cache.query((q: QueryBuilder) =>
+                q.findRecord({ type: 'project', id: projectId })
+              );
+              if (projRec) {
+                setProject(projectId);
+                const orgId = related(projRec, 'organization') as string;
+                setOrganization(orgId);
+                setMyOrgRole(orgId);
+                setProjectType(projectId);
+                setPlan(planId);
+              }
+              navigate(fromUrl || '/team');
             });
-            const projRec = memory.cache.query((q: QueryBuilder) =>
-              q.findRecord({ type: 'project', id: projectId })
-            );
-            if (projRec) {
-              setProject(projectId);
-              const orgId = related(projRec, 'organization') as string;
-              setOrganization(orgId);
-              setMyOrgRole(orgId);
-            }
           }
         }
       } else if (!/^\/profile/.test(fromUrl)) fromUrl = null;
     }
-    navigate(fromUrl || '/team');
+    if (!waitToNavigate) navigate(fromUrl || '/team');
   };
 
   useEffect(() => {

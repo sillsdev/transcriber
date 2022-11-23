@@ -23,6 +23,7 @@ import {
   useOrganizedBy,
   usePlan,
   useOfflineAvailToggle,
+  useRole,
 } from '../crud';
 import { numCompare } from '../utils';
 import { useProjectPlans } from '../crud';
@@ -209,7 +210,7 @@ export function TaskTable(props: IProps) {
   const selectedRef = useRef<any>();
   const notSelectedRef = useRef<any>();
   const busyRef = useRef(false);
-
+  const { userIsAdmin } = useRole();
   const hiddenColumnNames = useMemo(() => (flat ? ['sectPass'] : []), [flat]);
 
   const handleToggleFilter = () => {
@@ -477,6 +478,7 @@ export function TaskTable(props: IProps) {
               action={handleProjectMenu}
               stopPlayer={handleStopPlayer}
               inProject={true}
+              isAdmin={userIsAdmin}
               project={projectId}
               justFilter={isDetail}
             />

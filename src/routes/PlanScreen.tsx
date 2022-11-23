@@ -46,7 +46,7 @@ export const PlanScreen = () => {
   }, [project, organization]);
 
   if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
-  console.log('plan screen passing in false');
+
   return (
     <Box sx={{ width: '100%' }}>
       <AppHead switchTo={false} />
