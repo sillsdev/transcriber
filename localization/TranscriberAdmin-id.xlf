@@ -5481,8 +5481,8 @@
 		</unit>
 		<unit id="viewMode.audioProject">
 			<segment>
-				<source>Audio Project</source>
-				<target/>
+				<source>Audio Project Setup</source>
+				<target>Pengaturan Proyek Audio</target>
 			</segment>
 		</unit>
 		<unit id="viewMode.home">
@@ -5491,6 +5491,18 @@
 				<target>Awal</target>
 			</segment>
 		</unit>
+      <unit id="viewMode.work">
+         <segment>
+            <source>Work</source>
+            <target>Kerja</target>
+         </segment>
+      </unit>
+      <unit id="viewMode.gotowork">
+         <segment>
+            <source>Go to Work</source>
+            <target>Pergi bekerja</target>
+         </segment>
+      </unit>
 		<unit id="vProject.add">
 			<segment>
 				<source>Add</source>

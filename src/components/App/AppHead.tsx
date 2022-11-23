@@ -122,6 +122,7 @@ export const AppHead = (props: IProps) => {
   const { resetRequests, switchTo, t, orbitStatus, orbitErrorMsg } = props;
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const [home] = useGlobal('home');
   const [orgRole] = useGlobal('orgRole');
   const [errorReporter] = useGlobal('errorReporter');
   const [coordinator] = useGlobal('coordinator');
@@ -156,6 +157,7 @@ export const AppHead = (props: IProps) => {
   const saving = useMemo(() => anySaving(), [toolsChanged]);
   const { showMessage } = useSnackBar();
   const { loadStatic, checkStaticTables } = useLoadStatic();
+  const tv: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
 
   const handleUserMenuAction = (
     what: string,
@@ -354,8 +356,20 @@ export const AppHead = (props: IProps) => {
           <LinearProgress id="busy" variant="indeterminate" />
         )}
         <Toolbar>
-          {orgRole && <ProjectName setView={setView} switchTo={switchTo} />}
-          {!orgRole && <span style={cssVars}>{'\u00A0'}</span>}
+          {!home && orgRole && (
+            <ProjectName setView={setView} switchTo={switchTo} />
+          )}
+
+          {!home && orgRole && (
+            <>
+              <GrowingSpacer />
+              <Typography variant="h6">
+                {switchTo ? tv.work : tv.audioProject}
+              </Typography>
+              <GrowingSpacer />
+            </>
+          )}
+          {home && <span style={cssVars}>{'\u00A0'}</span>}
           <GrowingSpacer />
           {(pathname === '/' || pathname.startsWith('/access')) && (
             <>

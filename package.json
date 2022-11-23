@@ -210,5 +210,7 @@
         ]
       }
     ]
-  }
+  },
+  "main": "public/electron-dev.js",
+  "homepage": "./"
 }

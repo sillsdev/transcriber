@@ -1213,8 +1213,10 @@ const initialState = {
 	}),
 	"viewMode": new LocalizedStrings({
 		"en": {
-			"audioProject": "Audio Project",
+			"audioProject": "Audio Project Setup",
 			"home": "Home",
+			"work": "Work",
+			"gotowork": "Go to Work",
 		}
 	}),
 	"vProject": new LocalizedStrings({
