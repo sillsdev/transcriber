@@ -6394,7 +6394,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="viewMode.audioProject">
-            <source>Audio Project</source>
+            <source>Audio Project Setup</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ViewMode.tsx</context>
@@ -6402,6 +6402,20 @@
          </trans-unit>
          <trans-unit id="viewMode.home">
             <source>Home</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ViewMode.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="viewMode.work">
+            <source>Work</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ViewMode.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="viewMode.gotowork">
+            <source>Go to Work</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ViewMode.tsx</context>

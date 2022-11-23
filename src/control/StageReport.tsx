@@ -13,9 +13,10 @@ const ReportDiv = styled('div')(() => ({
 interface IProps {
   step: string;
   onClick?: any;
+  tip?: string;
 }
 
-export const StageReport = ({ step, onClick }: IProps) => {
+export const StageReport = ({ step, onClick, tip }: IProps) => {
   const theme = useTheme();
 
   return (
@@ -25,6 +26,7 @@ export const StageReport = ({ step, onClick }: IProps) => {
         label={step}
         color={theme.palette.grey[300]}
         select={onClick}
+        tip={tip}
       />
     </ReportDiv>
   );

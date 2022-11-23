@@ -1106,8 +1106,6 @@ export function ScriptureTable(
         orgSteps={orgSteps}
         canSetDefault={canSetProjectDefault}
         toolId={toolId}
-        t={s}
-        ts={ts}
       />
       {assignSectionVisible && (
         <AssignSection

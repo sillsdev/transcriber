@@ -1136,6 +1136,8 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
 export interface IViewModeStrings extends Localize.LocalizedStringsMethods {
     "audioProject": string;
     "home": string;
+    "work": string;
+    "gotowork": string;
 };
 
 export interface IVProjectStrings extends Localize.LocalizedStringsMethods {

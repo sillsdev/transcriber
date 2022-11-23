@@ -5457,8 +5457,8 @@
 		</unit>
 		<unit id="viewMode.audioProject">
 			<segment>
-				<source>Audio Project</source>
-				<target>Аудиопроект</target>
+				<source>Audio Project Setup</source>
+				<target>Настройка аудио проекта</target>
 			</segment>
 		</unit>
 		<unit id="viewMode.home">
@@ -5467,6 +5467,18 @@
 				<target>Домой</target>
 			</segment>
 		</unit>
+      <unit id="viewMode.work">
+         <segment>
+            <source>Work</source>
+            <target>Работа</target>
+         </segment>
+      </unit>
+      <unit id="viewMode.gotowork">
+         <segment>
+            <source>Go to Work</source>
+            <target>идти на работу</target>
+         </segment>
+      </unit>
 		<unit id="vProject.add">
 			<segment>
 				<source>Add</source>

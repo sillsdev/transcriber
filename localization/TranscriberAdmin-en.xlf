@@ -5484,13 +5484,25 @@
       </unit>
       <unit id="viewMode.audioProject">
          <segment>
-            <source>Audio Project</source>
+            <source>Audio Project Setup</source>
             <target/>
          </segment>
       </unit>
       <unit id="viewMode.home">
          <segment>
             <source>Home</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="viewMode.work">
+         <segment>
+            <source>Work</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="viewMode.gotowork">
+         <segment>
+            <source>Go to Work</source>
             <target/>
          </segment>
       </unit>

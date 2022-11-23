@@ -7,6 +7,7 @@ import {
   OptionType,
   IWorkflow,
   OrgWorkflowStep,
+  IViewModeStrings,
 } from '../../model';
 import { Badge, Box, styled } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
@@ -44,6 +45,12 @@ import PlanAudioActions from './PlanAudioActions';
 import { HotKeyContext } from '../../context/HotKeyContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import FilterMenu, { ISTFilterState } from './filterMenu';
+import {
+  planSheetSelector,
+  sharedSelector,
+  viewModeSelector,
+} from '../../selector';
+import { useSelector, shallowEqual } from 'react-redux';
 const MemoizedTaskAvatar = memo(TaskAvatar);
 
 const DOWN_ARROW = 'ARROWDOWN';
@@ -128,12 +135,7 @@ export interface ICellChange {
   value: string | null;
 }
 
-interface IStateProps {
-  t: IPlanSheetStrings;
-  ts: ISharedStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   toolId: string;
   columns: Array<ICell>;
   rowData: Array<Array<string | number>>;
@@ -172,8 +174,6 @@ export function PlanSheet(props: IProps) {
     columns,
     rowData,
     rowInfo,
-    t,
-    ts,
     bookCol,
     bookSuggestions,
     bookMap,
@@ -224,7 +224,9 @@ export function PlanSheet(props: IProps) {
   const [mediaPlaying, setMediaPlaying] = useState(false);
   const [warning, setWarning] = useState<string>();
   const [toRow, setToRow] = useState(0);
-
+  const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const tv: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
   const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
@@ -537,6 +539,7 @@ export function PlanSheet(props: IProps) {
                   <StageReport
                     onClick={handlePassageDetail(rowIndex)}
                     step={rowInfo[rowIndex].step || ''}
+                    tip={tv.gotowork}
                   />
                 </Badge>
               ),
