@@ -357,11 +357,8 @@ export const AppHead = (props: IProps) => {
         )}
         <Toolbar>
           {!home && orgRole && (
-            <ProjectName setView={setView} switchTo={switchTo} />
-          )}
-
-          {!home && orgRole && (
             <>
+              <ProjectName setView={setView} switchTo={switchTo} />
               <GrowingSpacer />
               <Typography variant="h6">
                 {switchTo ? tv.work : tv.audioProject}
