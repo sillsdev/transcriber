@@ -5251,7 +5251,13 @@
 				<target>Последние аудиозаписи</target>
 			</segment>
 		</unit>
-		<unit id="transcriptionTab.noData">
+        <unit id="transcriptionTab.latestAudioElan">
+			<segment>
+				<source>Latest Audio + Transcription</source>
+				<target>Последние аудиозаписи + Транскрипция</target>
+			</segment>
+		</unit>
+        <unit id="transcriptionTab.noData">
 			<segment>
 				<source>No {0} Data.</source>
 				<target>Нет {0} Данные.</target>

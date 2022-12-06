@@ -5275,6 +5275,12 @@
 				<target>Dernier audio</target>
 			</segment>
 		</unit>
+        <unit id="transcriptionTab.latestAudioElan">
+			<segment>
+				<source>Latest Audio + Transcription</source>
+				<target>Último audio + Transcription</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.noData">
 			<segment>
 				<source>No {0} Data.</source>

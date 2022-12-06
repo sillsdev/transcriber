@@ -158,10 +158,9 @@ export async function electronExport(
     const AddJsonEntry = (table: string, recs: Record[], sort: string) => {
       //put in the remoteIds for everything, then stringify
       const ser = projRec?.keys?.remoteId ? onlineSerlzr : offlineSrlzr;
-      let json =
-        exportType !== ExportType.AUDIO
-          ? '{"data":' + JSON.stringify(ser.serializeRecords(recs)) + '}'
-          : JSON.stringify(ser.serializeRecords(recs), null, 2);
+      let json = ![ExportType.AUDIO, ExportType.ELAN].includes(exportType)
+        ? '{"data":' + JSON.stringify(ser.serializeRecords(recs)) + '}'
+        : JSON.stringify(ser.serializeRecords(recs), null, 2);
       zip.addFile(
         'data/' + sort + '_' + table + '.json',
         Buffer.from(json),
@@ -222,7 +221,7 @@ export async function electronExport(
           projRec,
         } as IExportScripturePath);
         AddStreamEntry(mp, fullPath || mediapath + path.basename(mp));
-        if (!scripturePackage) {
+        if (exportType === ExportType.ELAN) {
           const eafCode = getMediaEaf(mf, memory);
           const name = path.basename(mp, path.extname(mp)) + '.eaf';
           zip.addFile(
@@ -649,6 +648,7 @@ export async function electronExport(
       case ExportType.DBL:
       case ExportType.BURRITO:
       case ExportType.AUDIO:
+      case ExportType.ELAN:
         numRecs += AddAll(
           { table: 'mediafile', sort: 'H' },
           limit,

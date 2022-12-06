@@ -265,7 +265,7 @@ export function TranscriptionTab(
     /* get correct count */
     const onlyTypeId = [ExportType.DBL, ExportType.BURRITO].includes(exportType)
       ? VernacularTag
-      : exportType === ExportType.AUDIO
+      : [ExportType.AUDIO, ExportType.ELAN].includes(exportType)
       ? getTypeId(artifactType)
       : undefined;
     const onlyLatest = onlyTypeId !== undefined;
@@ -369,15 +369,20 @@ export function TranscriptionTab(
   };
 
   const handleAudioExportMenu = (what: string) => {
-    if (what === 'zip') {
-      setBusy(true);
-      doProjectExport(ExportType.AUDIO);
-    } else if (what === 'burrito') {
-      setBusy(true);
-      doProjectExport(ExportType.BURRITO);
-      // } else if (what === 'dbl') {
-      //   setBusy(true);
-      //   doProjectExport(ExportType.DBL);
+    setBusy(true);
+    switch (what) {
+      case 'audio':
+        doProjectExport(ExportType.AUDIO);
+        break;
+      case 'elan':
+        doProjectExport(ExportType.ELAN);
+        break;
+      case 'burrito':
+        doProjectExport(ExportType.BURRITO);
+        break;
+      default:
+        setBusy(false);
+        break;
     }
   };
 

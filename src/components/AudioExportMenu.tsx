@@ -55,11 +55,23 @@ export function AudioExportMenu(props: IProps) {
         <StyledMenuItem
           id="zipExport"
           aria-hidden={!Boolean(anchorEl)}
-          onClick={handle('zip')}
+          onClick={handle('audio')}
         >
           <ListItemText
             primary={
               t.latestAudio +
+              (localizedArtifact ? ' (' + localizedArtifact + ')' : '')
+            }
+          />
+        </StyledMenuItem>
+        <StyledMenuItem
+          id="zipExport"
+          aria-hidden={!Boolean(anchorEl)}
+          onClick={handle('elan')}
+        >
+          <ListItemText
+            primary={
+              t.latestAudioElan +
               (localizedArtifact ? ' (' + localizedArtifact + ')' : '')
             }
           />

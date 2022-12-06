@@ -6155,6 +6155,13 @@
       			<context context-type="sourcefile">TranscriptionTab.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="transcriptionTab.latestAudioElan">
+      		<source>Latest Audio + Transcription</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="transcriptionTab.noData">
       		<source>No {0} Data.</source>
       		<target/>
