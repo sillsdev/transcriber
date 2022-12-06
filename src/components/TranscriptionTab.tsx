@@ -368,17 +368,14 @@ export function TranscriptionTab(
       showMessage(t.noData.replace('{0}', localizedArtifactType(artifactType)));
   };
 
-  const handleAudioExportMenu = (what: string) => {
+  const handleAudioExportMenu = (what: string | ExportType) => {
     setBusy(true);
     switch (what) {
-      case 'audio':
-        doProjectExport(ExportType.AUDIO);
-        break;
-      case 'elan':
-        doProjectExport(ExportType.ELAN);
-        break;
-      case 'burrito':
-        doProjectExport(ExportType.BURRITO);
+      case ExportType.AUDIO:
+      case ExportType.ELAN:
+      case ExportType.BURRITO:
+        //case ExportType.DBL:
+        doProjectExport(what);
         break;
       default:
         setBusy(false);
