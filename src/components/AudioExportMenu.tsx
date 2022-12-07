@@ -1,12 +1,12 @@
 import React from 'react';
-import { ITranscriptionTabStrings } from '../model';
+import { ExportType, ITranscriptionTabStrings } from '../model';
 import { ListItemText } from '@mui/material';
 import { AltButton, StyledMenu, StyledMenuItem } from '../control';
 import { transcriptionTabSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 
 interface IProps {
-  action?: (what: string) => void;
+  action?: (what: string | ExportType) => void;
   localizedArtifact: string;
   isScripture: boolean;
   stopPlayer?: () => void;
@@ -55,7 +55,7 @@ export function AudioExportMenu(props: IProps) {
         <StyledMenuItem
           id="zipExport"
           aria-hidden={!Boolean(anchorEl)}
-          onClick={handle('zip')}
+          onClick={handle(ExportType.AUDIO)}
         >
           <ListItemText
             primary={
@@ -64,11 +64,23 @@ export function AudioExportMenu(props: IProps) {
             }
           />
         </StyledMenuItem>
+        <StyledMenuItem
+          id="zipExport"
+          aria-hidden={!Boolean(anchorEl)}
+          onClick={handle(ExportType.ELAN)}
+        >
+          <ListItemText
+            primary={
+              t.latestAudioElan +
+              (localizedArtifact ? ' (' + localizedArtifact + ')' : '')
+            }
+          />
+        </StyledMenuItem>
         {isScripture && (
           <StyledMenuItem
             id="burritoExport"
             aria-hidden={!Boolean(anchorEl)}
-            onClick={handle('burrito')}
+            onClick={handle(ExportType.BURRITO)}
           >
             <ListItemText primary={t.scriptureBurrito} />
           </StyledMenuItem>

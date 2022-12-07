@@ -9,6 +9,7 @@ export enum ExportType {
   DBL = 'dbl', //Digital Bible Library Package
   BURRITO = 'burrito', //Scripture Burrito package
   AUDIO = 'audio', //Latest audio export
+  ELAN = 'elan', //Latest audio and eaf
 }
 export interface FileResponse {
   fileURL: string;
