@@ -34,7 +34,7 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
     sectionDesc: getSection(section),
     reference: getReference(passage, allBookData),
     duration: f.attributes.duration ? f.attributes.duration.toString() : '',
-    size: f.attributes.filesize,
+    size: Math.round((f.attributes.filesize / 1024 / 1024) * 10) / 10.0,
     version: f.attributes.versionNumber
       ? f.attributes.versionNumber.toString()
       : '',

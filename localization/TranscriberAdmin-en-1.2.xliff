@@ -3167,7 +3167,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="mediaTab.size">
-            <source>Size (KB)</source>
+            <source>Size (MB)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaTab.tsx</context>
