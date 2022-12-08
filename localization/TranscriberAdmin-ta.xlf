@@ -1534,7 +1534,7 @@
       </unit>
       <unit id="mediaTab.size">
          <segment>
-            <source>Size (KB)</source>
+            <source>Size (MB)</source>
             <target>அளவு (கேபி)</target>
          </segment>
       </unit>

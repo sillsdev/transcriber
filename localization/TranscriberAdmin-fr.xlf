@@ -2715,8 +2715,8 @@
 		</unit>
 		<unit id="mediaTab.size">
 			<segment>
-				<source>Size (KB)</source>
-				<target>Taille de fichier (KO)</target>
+				<source>Size (MB)</source>
+				<target>Taille (MO)</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.unsupported">
