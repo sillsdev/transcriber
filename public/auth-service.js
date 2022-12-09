@@ -1,6 +1,7 @@
 const envVariables = require('./auth0-variables');
 const jwtDecode = require('jwt-decode');
 const axios = require('axios');
+const https = require('https');
 const url = require('url');
 const keytar = require('keytar');
 const os = require('os');
@@ -42,6 +43,11 @@ function getAuthenticationURL(hasUsed, email) {
   );
 }
 
+// TODO: Remove httpsAgent once the Auth0 root certificates are registered
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false,
+});
+
 async function refreshTokens() {
   const refreshToken = await keytar.getPassword(keytarService, keytarAccount);
 
@@ -49,13 +55,17 @@ async function refreshTokens() {
     const refreshOptions = {
       method: 'POST',
       url: `https://${auth0Domain}/oauth/token`,
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        'Accept-Encoding': 'text/html; charset=UTF-8',
+      },
       data: {
         grant_type: 'refresh_token',
         client_id: desktopId,
         refresh_token: refreshToken,
       },
       timeout: 5000,
+      httpsAgent,
     };
 
     try {
@@ -89,8 +99,10 @@ async function loadTokens(callbackURL) {
     url: `https://${auth0Domain}/oauth/token`,
     headers: {
       'content-type': 'application/json',
+      'Accept-Encoding': 'text/html; charset=UTF-8',
     },
     data: JSON.stringify(exchangeOptions),
+    httpsAgent,
   };
 
   try {
