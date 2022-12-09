@@ -17,14 +17,14 @@ export const successStatusMsg = (status: string, msg: string): IAxiosStatus => {
   return { complete: true, statusMsg: status, errStatus: 0, errMsg: msg };
 };
 export const errStatus = (err: AxiosError): IAxiosStatus => {
-  if (err.response) {
+  if (err?.response) {
     // Request made and server responded
-    if (Array.isArray(err.response.data.errors)) {
-      let detail = err.response.data.errors[0];
+    let data = err?.response?.data as any;
+    if (Array.isArray(data?.errors)) {
+      let detail = data.errors[0];
       err.message += ' Detail: ' + detail.detail;
     } else {
-      err.message +=
-        ' Detail: ' + err.response.data.detail ?? err.response.data;
+      err.message += ' Detail: ' + data.detail ?? data;
     }
   } else if (err.request) {
     // The request was made but no response was received

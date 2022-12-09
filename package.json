@@ -1,6 +1,6 @@
 {
   "name": "audio-project-manager",
-  "version": "2.16.0",
+  "version": "2.16.1",
   "description": "Flexible audio-text orality solution",
   "private": true,
   "dependencies": {
@@ -29,7 +29,7 @@
     "array-move": "^4.0.0",
     "asar": "^2.1.0",
     "audio-recorder-polyfill": "^0.4.1",
-    "axios": "^0.21.1",
+    "axios": "1.2.0",
     "electron-is-dev": "^1.2.0",
     "execa": "^4.0.2",
     "fingerprintjs2": "^2.1.0",
