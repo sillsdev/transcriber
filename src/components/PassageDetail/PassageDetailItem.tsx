@@ -1,9 +1,5 @@
 import { shallowEqual } from 'react-redux';
-import {
-  ICommunityStrings,
-  ISharedStrings,
-  MediaFile,
-} from '../../model';
+import { ICommunityStrings, ISharedStrings, MediaFile } from '../../model';
 import {
   Button,
   debounce,
@@ -164,6 +160,7 @@ interface IProps {
 
 export function PassageDetailItem(props: IProps & IRecordProps) {
   const { width, slugs, segments, showTopic } = props;
+  const oneTryOnly = slugs.includes(ArtifactTypeSlug.WholeBackTranslation);
   const t: ICommunityStrings = useSelector(communitySelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [reporter] = useGlobal('errorReporter');
@@ -489,6 +486,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
                           size={200}
                           onRecording={onRecordingOrPlaying}
                           onPlayStatus={onRecordingOrPlaying}
+                          oneTryOnly={oneTryOnly}
                         />
                         <Box sx={rowProp}>
                           <Typography variant="caption" sx={statusProps}>

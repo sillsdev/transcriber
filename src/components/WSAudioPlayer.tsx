@@ -83,6 +83,7 @@ interface IProps {
   allowSpeed?: boolean;
   allowSilence?: boolean;
   alternatePlayer?: boolean;
+  oneTryOnly?: boolean;
   size: number;
   segments: string;
   currentSegmentIndex?: number;
@@ -142,6 +143,7 @@ function WSAudioPlayer(props: IProps) {
     allowAutoSegment,
     allowSpeed,
     allowSilence,
+    oneTryOnly,
     size,
     segments,
     currentSegmentIndex,
@@ -209,6 +211,7 @@ function WSAudioPlayer(props: IProps) {
   });
   const autostartTimer = useRef<NodeJS.Timeout>();
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
+  const [oneShotUsed, setOneShotUsed] = useState(false);
 
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
@@ -321,7 +324,12 @@ function WSAudioPlayer(props: IProps) {
     return false;
   };
   const handleRecorder = () => {
-    if (!allowRecord || playingRef.current || processRecordRef.current)
+    if (
+      !allowRecord ||
+      playingRef.current ||
+      processRecordRef.current ||
+      oneShotUsed
+    )
       return false;
     if (!recordingRef.current) {
       if (setBlobReady) setBlobReady(false);
@@ -335,6 +343,7 @@ function WSAudioPlayer(props: IProps) {
       stopRecording();
       wsStopRecord();
       setRecording(false);
+      if (oneTryOnly) setOneShotUsed(true);
     }
     return true;
   };
@@ -511,6 +520,7 @@ function WSAudioPlayer(props: IProps) {
       wsClear(true);
       initialPosRef.current = undefined;
       recordStartPosition.current = 0;
+      setOneShotUsed(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blob, doReset]); //passed in by user
@@ -649,6 +659,7 @@ function WSAudioPlayer(props: IProps) {
       setDuration(0);
       if (setChanged) setChanged(false);
       if (setBlobReady) setBlobReady(true);
+      if (oneShotUsed) setOneShotUsed(false);
       setReady(false);
     } else {
       wsRegionDelete();
@@ -697,28 +708,30 @@ function WSAudioPlayer(props: IProps) {
             <Grid container sx={toolbarProp}>
               {allowRecord && (
                 <>
-                  <Grid item>
-                    <LightTooltip
-                      id="wsAudioRecordTip"
-                      title={(recording ? t.pauseTip : t.record).replace(
-                        '{0}',
-                        RECORD_KEY
-                      )}
-                    >
-                      <span>
-                        <IconButton
-                          id="wsAudioRecord"
-                          sx={{ color: 'red' }}
-                          onClick={handleRecorder}
-                          disabled={
-                            playingRef.current || processRecordRef.current
-                          }
-                        >
-                          {recording ? <FaStopCircle /> : <FaDotCircle />}
-                        </IconButton>
-                      </span>
-                    </LightTooltip>
-                  </Grid>
+                  {!oneShotUsed && (
+                    <Grid item>
+                      <LightTooltip
+                        id="wsAudioRecordTip"
+                        title={(recording ? t.pauseTip : t.record).replace(
+                          '{0}',
+                          RECORD_KEY
+                        )}
+                      >
+                        <span>
+                          <IconButton
+                            id="wsAudioRecord"
+                            sx={{ color: 'red' }}
+                            onClick={handleRecorder}
+                            disabled={
+                              playingRef.current || processRecordRef.current
+                            }
+                          >
+                            {recording ? <FaStopCircle /> : <FaDotCircle />}
+                          </IconButton>
+                        </span>
+                      </LightTooltip>
+                    </Grid>
+                  )}
                   <Grid item>
                     <LightTooltip
                       id="wsAudioPlayTip"
@@ -816,7 +829,7 @@ function WSAudioPlayer(props: IProps) {
                       <VertDivider id="wsAudioDiv4" />{' '}
                     </>
                   )}
-                  {hasRegion !== 0 && (
+                  {hasRegion !== 0 && !oneShotUsed && (
                     <LightTooltip
                       id="wsAudioDeleteRegionTip"
                       title={t.deleteRegion}
@@ -830,7 +843,7 @@ function WSAudioPlayer(props: IProps) {
                       </IconButton>
                     </LightTooltip>
                   )}
-                  {canUndo && (
+                  {canUndo && !oneShotUsed && (
                     <LightTooltip id="wsUndoTip" title={t.undoTip}>
                       <IconButton
                         id="wsUndo"
