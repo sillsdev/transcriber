@@ -71,6 +71,7 @@ interface IProps {
   uploadMethod?: (files: File[]) => Promise<void>;
   cancelMethod?: () => void;
   allowRecord?: boolean;
+  oneTryOnly?: boolean;
   allowWave?: boolean;
   showFilename?: boolean;
   size?: number;
@@ -94,6 +95,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     setCanCancel,
     setStatusText,
     allowRecord,
+    oneTryOnly,
     allowWave,
     showFilename,
     autoStart,
@@ -362,6 +364,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
       <WSAudioPlayer
         allowRecord={allowRecord !== false}
         allowSilence={allowWave}
+        oneTryOnly={oneTryOnly}
         size={size || 350}
         blob={originalBlob}
         onBlobReady={onBlobReady}
