@@ -129,6 +129,7 @@ const PassageDetailGrids = () => {
   const ctx = useContext(PassageDetailContext);
   const { currentstep, discussionSize, setDiscussionSize, orgWorkflowSteps } =
     ctx.state;
+
   const { tool, settings } = useStepTool(currentstep);
   const { slugFromId } = useArtifactType();
   const { userIsAdmin } = useRole();
@@ -348,12 +349,14 @@ export const PassageDetail = () => {
 
   useEffect(() => {
     const projectId = setUrlContext(prjId ?? '');
-    if (projType === '') setProjectType(projectId);
-    if (!projType) {
-      // If after proj type set there is none, force reload
-      localStorage.removeItem(localUserKey(LocalKey.url));
-      forceLogin();
-      setView('/logout');
+    if (projType === '') {
+      var tmp = setProjectType(projectId);
+      if (!tmp) {
+        // If after proj type set there is none, force reload
+        localStorage.removeItem(localUserKey(LocalKey.url));
+        forceLogin();
+        setView('/logout');
+      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
