@@ -46,7 +46,7 @@ function TokenProvider(props: IProps) {
   const { children } = props;
   const {
     getAccessTokenSilently,
-    getAccessTokenWithPopup,
+    loginWithRedirect,
     user,
     isLoading,
     isAuthenticated,
@@ -81,9 +81,17 @@ function TokenProvider(props: IProps) {
     (async () => {
       if (isAuthenticated && user) {
         console.log(`checking for token`);
-        const token = await getAccessTokenSilently();
-        const decodedToken = jwtDecode(token) as IToken;
-        setAuthSession(user, token, decodedToken.exp);
+        getAccessTokenSilently()
+          .then((token) => {
+            updateOrbitToken(token);
+            const decodedToken = jwtDecode(token) as IToken;
+            setState((state) => ({ ...state, expireAt: decodedToken.exp }));
+            setAuthSession(user, token, decodedToken.exp);
+          })
+          .catch((e: any) => {
+            handleLogOut();
+            loginWithRedirect();
+          });
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,10 +138,10 @@ function TokenProvider(props: IProps) {
           setState((state) => ({ ...state, expireAt: decodedToken.exp }));
           setAuthSession(user, token, decodedToken.exp);
         })
-        .catch((e: Error) => {
+        .catch((e: any) => {
           handleLogOut();
           logError(Severity.error, errorReporter, e);
-          getAccessTokenWithPopup();
+          loginWithRedirect();
         });
     }
   };
