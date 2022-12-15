@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation } from 'react-router-dom';
 import {
@@ -19,7 +19,7 @@ import FilterIcon from '@mui/icons-material/FilterList';
 import UncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { isElectron } from '../../api-variable';
-import { useOfflnProjRead, ArtifactTypeSlug } from '../../crud';
+import { useOfflnProjRead, ArtifactTypeSlug, useProjectType } from '../../crud';
 import { StyledMenu, StyledMenuItem } from '../../control';
 import {
   cardsSelector,
@@ -44,13 +44,20 @@ export function ProjectMenu(props: IProps) {
   const { pathname } = useLocation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const offlineProjectRead = useOfflnProjRead();
-  const [projectType] = useGlobal('projType');
+  const [projType, setProjType] = useState('');
   const t: ICardsStrings = useSelector(cardsSelector, shallowEqual);
   const tpb: IProjButtonsStrings = useSelector(
     projButtonsSelector,
     shallowEqual
   );
+
+  const { getProjType } = useProjectType();
   const td: IToDoTableStrings = useSelector(toDoTableSelector, shallowEqual);
+
+  useEffect(() => {
+    setProjType(getProjType(project));
+  }, [project, getProjType]);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
@@ -117,7 +124,7 @@ export function ProjectMenu(props: IProps) {
         )}
         {!justFilter &&
           pathname &&
-          projectType.toLowerCase() === 'scripture' &&
+          projType.toLowerCase() === 'scripture' &&
           pathname.indexOf(ArtifactTypeSlug.Retell) === -1 &&
           pathname.indexOf(ArtifactTypeSlug.QandA) === -1 && (
             <StyledMenuItem id="projMenuInt" onClick={handle('integration')}>
