@@ -1,5 +1,5 @@
 import { isElectron } from '../api-variable';
-const ipc = isElectron ? require('electron').ipcRenderer : null;
+const ipc = (window as any)?.electron;
 const fs = isElectron ? require('fs-extra') : null;
 const path = require('path');
 
@@ -22,7 +22,7 @@ export const launch = (target: string, online: boolean) => {
 };
 
 export const launchCmd = async (target: string) => {
-  const temp = await ipc?.invoke('temp');
+  const temp = await ipc?.temp();
   if (!temp) throw new Error('Unable to find temp directory.'); //this is app.getPath('temp')
   if (os.platform() === 'win32') {
     const tempName = path.join(temp, 'transcriber-cmd.ps1');

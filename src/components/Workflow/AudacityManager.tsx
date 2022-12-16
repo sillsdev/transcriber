@@ -24,7 +24,7 @@ import {
   useAudProjName,
 } from '../../crud';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { API_CONFIG, isElectron } from '../../api-variable';
+import { API_CONFIG } from '../../api-variable';
 import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
 import {
@@ -40,7 +40,7 @@ import SpeakerName from '../SpeakerName';
 import { audacityManagerSelector } from '../../selector';
 
 const fs = require('fs');
-const ipc = isElectron ? require('electron').ipcRenderer : null;
+const ipc = (window as any)?.electron;
 const path = require('path');
 
 const StyledGrid = styled(Grid)<GridProps>(() => ({
@@ -101,7 +101,7 @@ function AudacityManager(props: IProps) {
   };
 
   const handleBrowse = () => {
-    ipc?.invoke('audacityOpen').then((fullName: string[]) => {
+    ipc?.audacityOpen().then((fullName: string[]) => {
       if (fullName && fullName.length > 0) {
         setAudacityPref(fullName[0]);
         // setAudacityPref creates the folders needed for audacity export

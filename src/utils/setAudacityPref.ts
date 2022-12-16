@@ -1,15 +1,14 @@
 import fs from 'fs';
 import path from 'path';
-import { isElectron } from '../api-variable';
-const ipc = isElectron ? require('electron').ipcRenderer : null;
+const ipc = (window as any)?.electron;
 const os = require('os');
 
 export const audPrefsName = async () => {
   if (os.platform() === 'win32') {
-    const appData = await ipc?.invoke('appData');
+    const appData = await ipc?.appData();
     return path.join(appData, 'audacity', 'audacity.cfg');
   } else {
-    const home = await ipc?.invoke('home');
+    const home = await ipc?.home();
     const snapName = path.join(
       home,
       'snap',

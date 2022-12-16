@@ -1,5 +1,5 @@
 let path = require('path');
-export const isElectron = process.env.REACT_APP_MODE === 'electron';
+export const isElectron = (window as any)?.electron;
 const help =
   isElectron && process.env.REACT_APP_DESKTOP_HELP
     ? process.env.REACT_APP_DESKTOP_HELP
