@@ -51,7 +51,6 @@ export * from './pad2';
 export * from './getAudacityExe';
 export * from './useInterval';
 export * from './generateUUID';
-export * from './isProcessRunning';
 export * from './useDebounce';
 export * from './prettySegment';
 export * from './integrationSlug';

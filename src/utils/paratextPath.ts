@@ -1,5 +1,5 @@
 import { fileJson, getRegVal } from '../utils';
-const path = require('path');
+const path = require('path-browserify');
 const ipc = (window as any)?.electron;
 
 const progVal91 = 'Paratext9_Full_Release_AppPath';

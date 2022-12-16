@@ -10,7 +10,7 @@ import DownloadIcon from '@mui/icons-material/CloudDownload';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { StyledMenu, StyledMenuItem } from '../control';
-import path from 'path';
+import path from 'path-browserify';
 import { isElectron, API_CONFIG } from '../api-variable';
 import {
   launch,
@@ -82,22 +82,25 @@ export function HelpMenu(props: IProps) {
   };
 
   const handleHelp = (topic?: string) => async () => {
+    const chmHelp = API_CONFIG.chmHelp;
+    const helpUrl = API_CONFIG.help;
     const topicS = topic || '';
     const topicWin = topic && decodeURIComponent(topic.slice(3));
     if (isElectron) {
+      const folder = await execFolder();
       // see https://stackoverflow.com/questions/22300244/open-a-chm-file-to-a-specific-topic
       if ((await ipc?.isWindows()) && topicWin && !online) {
         const target = `C:\\Windows\\hh.exe ${path.join(
-          execFolder(),
-          API_CONFIG.chmHelp
+          folder,
+          chmHelp
         )}::${topicWin}`;
         launchCmd(target);
       } else if (topic && !online) {
-        launchCmd(`xchm -c 1 ${path.join(execFolder(), API_CONFIG.chmHelp)}`);
+        launchCmd(`xchm -c 1 ${path.join(folder, chmHelp)}`);
       } else {
         const target = !online
-          ? path.join(execFolder(), API_CONFIG.chmHelp)
-          : API_CONFIG.help + '/' + helpLanguage() + indexName + topicS;
+          ? path.join(folder, chmHelp)
+          : helpUrl + '/' + helpLanguage() + indexName + topicS;
         launch(target, online);
       }
     } else if (helpRef.current) {
@@ -111,8 +114,9 @@ export function HelpMenu(props: IProps) {
     const loc = inOffline !== undefined ? inOffline : offline;
     const urlObj = new URL(url);
     const name = urlObj.pathname.split('/').pop() || '';
+    const folder = await execFolder();
     const localPath = loc
-      ? path.join(execFolder(), 'help', name)
+      ? path.join(folder, 'help', name)
       : dataPath(name, PathType.ZIP);
     if (!loc) await downloadFile({ url, localPath });
     launch(localPath, false);

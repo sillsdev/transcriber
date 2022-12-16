@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'path-browserify';
 const ipc = (window as any)?.electron;
 
 export const audPrefsName = async () => {
@@ -23,7 +23,7 @@ export const audPrefsName = async () => {
 
 const getAllPref = async (prefs: string) => {
   if (!(await ipc?.exists(prefs))) return false;
-  return await ipc?.readFile(prefs);
+  return await ipc?.read(prefs);
 };
 
 const getAudPrefContent = async (inPrefs?: string) => {
@@ -58,7 +58,7 @@ const setFolder = async (kind: string, target: string) => {
 };
 
 export const resetAudacityPref = (prefs: string, data: string) => {
-  ipc?.writeFile(prefs, data);
+  ipc?.write(prefs, data);
 };
 
 const changeValueTo1 = (data: string, m: RegExpExecArray) => {

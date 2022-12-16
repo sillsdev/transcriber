@@ -1,10 +1,10 @@
 const ipc = (window as any)?.electron;
-const path = require('path');
+const path = require('path-browserify');
 
 export const launch = async (target: string, online: boolean) => {
   if (/\.pdf$/i.test(target)) target = target.slice(18);
-  if (online) ipc?.shell.openExternal(target);
-  else if (await ipc?.isWindows()) ipc?.shell.openPath('file:///' + target);
+  if (online) ipc?.openExternal(target);
+  else if (await ipc?.isWindows()) ipc?.openPath('file:///' + target);
   else {
     console.log(`launching ${target}`);
     const cmd = /\.sh/i.test(target) ? '' : 'xdg-open ';

@@ -31,7 +31,7 @@ import {
 } from '../utils';
 import moment from 'moment';
 import eaf from '../utils/transcriptionEaf';
-import path from 'path';
+import path from 'path-browserify';
 
 const vernSort = (m: MediaFile) => (!related(m, 'artifactType') ? 0 : 1);
 

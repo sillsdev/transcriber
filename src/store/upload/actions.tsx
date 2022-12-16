@@ -20,7 +20,7 @@ import {
 import moment from 'moment';
 import _ from 'lodash';
 const ipc = (window as any)?.electron;
-var path = require('path');
+var path = require('path-browserify');
 
 export const uploadFiles = (files: File[]) => (dispatch: any) => {
   dispatch({

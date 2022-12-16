@@ -229,7 +229,7 @@ export const AppHead = (props: IProps) => {
 
   const handleDownloadClick = (event: React.MouseEvent<HTMLElement>) => {
     if (ipc)
-      ipc?.shell.openExternal(
+      ipc?.openExternal(
         'https://software.sil.org/audioprojectmanager/download/'
       );
     // remote?.getCurrentWindow().close();

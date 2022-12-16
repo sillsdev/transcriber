@@ -34,7 +34,7 @@ export const loadBlob = async (
       .catch((e) => setBlob(e?.message || e.toString(), undefined));
   } else {
     try {
-      const source = await ipc?.readFile(
+      const source = await ipc?.read(
         decodeURIComponent(url.replace(`transcribe-safe://`, ``))
       );
       setBlob(url, new Blob([source], { type: urlType(url) }));

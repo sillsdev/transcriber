@@ -1,4 +1,4 @@
-var path = require('path');
+var path = require('path-browserify');
 const ipc = (window as any)?.electron;
 
 export const createFolder = (folder: string) => {

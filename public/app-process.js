@@ -1,3 +1,4 @@
+const envVariables = require('./auth0-variables');
 const {
   app,
   ipcMain,
@@ -9,6 +10,7 @@ const {
 const path = require('path');
 const isDev = require('electron-is-dev');
 const appMenu = require('./app-menu');
+const { auth0Domain, authProviders } = envVariables;
 
 let mainWindow;
 let localString = { addToDict: 'Add to dictionary' };
@@ -28,7 +30,7 @@ function createAppWindow() {
     height: 768,
     icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
-      devTools: isDev,
+      devTools: true, // isDev,
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
       nodeIntegrationInSubFrames: false,
@@ -107,10 +109,10 @@ app.whenReady().then(() => {
         responseHeaders: {
           ...details.responseHeaders,
           'Content-Security-Policy': [
-            "base-uri 'self' https://transcriber-dev.auth0.com https://cdn.auth0.com",
+            `base-uri 'self' https://${auth0Domain} ${authProviders}`,
             "object-src 'none'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.auth0.com https://cdnjs.cloudflare.com", //'nonce-tVZvi9VxJuouaojo+5nChg=='
-            "style-src 'unsafe-inline' 'self' https://fonts.googleapis.com",
+            `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${authProviders}`, //'nonce-tVZvi9VxJuouaojo+5nChg=='
+            `style-src 'unsafe-inline' 'self' https://fonts.googleapis.com ${authProviders}`,
             "frame-src 'none'",
             "worker-src 'self'",
           ],
@@ -127,10 +129,10 @@ app.whenReady().then(() => {
         responseHeaders: {
           ...details.responseHeaders,
           'Content-Security-Policy': [
-            "base-uri 'self' https://transcriber-dev.auth0.com https://cdn.auth0.com",
+            `base-uri 'self' https://${auth0Domain} ${authProviders}`,
             "object-src 'none'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.auth0.com https://cdnjs.cloudflare.com", //'nonce-tVZvi9VxJuouaojo+5nChg=='
-            "style-src 'unsafe-inline' 'self' https://fonts.googleapis.com",
+            `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${authProviders}`, //'nonce-tVZvi9VxJuouaojo+5nChg=='
+            `style-src 'unsafe-inline' 'self' https://fonts.googleapis.com ${authProviders}`,
             "frame-src 'none'",
             "worker-src 'self'",
           ],
@@ -151,10 +153,12 @@ app.on('activate', () => {
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
+// WARNING: This code causes crashes during authentication!
+// app.on('window-all-closed', () => {
+//   console.log(`app all closed`);
+//   if (process.platform !== 'darwin') {
+//     app.quit();
+//   }
+// });
 
 module.exports = createAppWindow;

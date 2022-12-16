@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { join } from 'path';
+import { join } from 'path-browserify';
 import { Stats } from 'fs';
 import { createFolder } from '.';
 const ipc = (window as any)?.electron;

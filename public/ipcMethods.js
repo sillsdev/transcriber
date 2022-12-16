@@ -42,12 +42,28 @@ const ipcMethods = () => {
     return app.getPath('temp');
   });
 
-  ipcMain.handle('resourcePath', async () => {
-    return process.resourcesPath;
+  ipcMain.handle('execPath', async () => {
+    return process.helperExecPath.replace(/\\/g, '/');
   });
 
   ipcMain.handle('isWindows', async () => {
     return os.platform() === 'win32';
+  });
+
+  ipcMain.handle('isProcessRunning', async (event, name) => {
+    const platformMap = new Map([
+      ['win32', 'tasklist'],
+      ['darwin', `ps -ax | grep ${name}`],
+      ['linux', `ps -A`],
+    ]);
+    const cmd = platformMap.get(process.platform);
+    return new Promise((resolve, reject) => {
+      require('child_process').exec(cmd, (err, stdout, stderr) => {
+        if (err) reject(err);
+
+        resolve(stdout.toLowerCase().indexOf(name.toLowerCase()) > -1);
+      });
+    });
   });
 
   ipcMain.handle('home', async () => {
@@ -72,11 +88,11 @@ const ipcMethods = () => {
     }
   });
 
-  ipcMain.handle('appData', () => {
+  ipcMain.handle('appData', async () => {
     return process.env.AppData;
   });
 
-  ipcMain.handle('createFolder', async (folder) => {
+  ipcMain.handle('createFolder', async (event, folder) => {
     try {
       fs.statSync(folder);
     } catch (err) {
@@ -84,31 +100,31 @@ const ipcMethods = () => {
     }
   });
 
-  ipcMain.handle('exists', async (name) => {
+  ipcMain.handle('exists', async (event, name) => {
     return fs.existsSync(name);
   });
 
-  ipcMain.handle('stat', async (name, cb) => {
+  ipcMain.handle('stat', async (event, name, cb) => {
     return fs.stat(name, cb);
   });
 
-  ipcMain.handle('getStat', async (filePath) => {
+  ipcMain.handle('getStat', async (event, filePath) => {
     return fs.statSync(filePath);
   });
 
-  ipcMain.handle('createStream', async (filePath) => {
+  ipcMain.handle('createStream', async (event, filePath) => {
     return fs.createWriteStream(filePath);
   });
 
-  ipcMain.handle('read', async (filePath) => {
+  ipcMain.handle('read', async (event, filePath) => {
     return fs.readFileSync(filePath, 'utf-8');
   });
 
-  ipcMain.handle('write', async (filePath, data) => {
+  ipcMain.handle('write', async (event, filePath, data) => {
     return fs.writeFileSync(filePath, data, { encoding: 'utf-8' });
   });
 
-  ipcMain.handle('append', async (filePath, data) => {
+  ipcMain.handle('append', async (event, filePath, data) => {
     fs.open(filePath, 'a', (err, fd) => {
       if (err) throw err;
       fs.writeFile(fd, data, (err) => {
@@ -120,25 +136,25 @@ const ipcMethods = () => {
     });
   });
 
-  ipcMain.handle('delete', async (filePath) => {
+  ipcMain.handle('delete', async (event, filePath) => {
     return fs.unlink(filePath);
   });
 
-  ipcMain.handle('copyFile', async (from, to) => {
+  ipcMain.handle('copyFile', async (event, from, to) => {
     return fs.copyFileSync(from, to);
   });
 
-  ipcMain.handle('times', async (filePath, create, update) => {
+  ipcMain.handle('times', async (event, filePath, create, update) => {
     fs.utimesSync(filePath, create, update);
   });
 
-  ipcMain.handle('readDir', async (folder) => {
+  ipcMain.handle('readDir', async (event, folder) => {
     return fs.readdirSync(folder);
   });
 
   const convert = require('xml-js');
 
-  ipcMain.handle('fileJson', async (settings) => {
+  ipcMain.handle('fileJson', async (event, settings) => {
     if (fs.existsSync(settings)) {
       const data = fs.readFileSync(settings, 'utf-8');
       const jsonStr = convert.xml2json(data, { compact: true, spaces: 2 });
@@ -147,7 +163,7 @@ const ipcMethods = () => {
     return null;
   });
 
-  ipcMain.handle('importOpen', () => {
+  ipcMain.handle('importOpen', async () => {
     const options = {
       filters: [{ name: 'ptf', extensions: ['ptf'] }],
       properties: ['openFile'],
@@ -155,26 +171,30 @@ const ipcMethods = () => {
     return dialog.showOpenDialogSync(options);
   });
 
-  ipcMain.handle('audacityOpen', () => {
+  ipcMain.handle('audacityOpen', async () => {
     return dialog.showOpenDialogSync({
       filters: [{ name: 'Audacity', extensions: ['aup3'] }],
       properties: ['openFile'],
     });
   });
 
-  ipcMain.handle('shell', async (cmd) => {
-    shell(cmd);
+  ipcMain.handle('openExternal', async (event, cmd) => {
+    shell.openExternal(cmd);
   });
 
-  ipcMain.handle('exec', async (cmd, args, opts) => {
+  ipcMain.handle('openPath', async (event, cmd) => {
+    shell.openPath(cmd);
+  });
+
+  ipcMain.handle('exec', async (event, cmd, args, opts) => {
     return execa(cmd, args, opts);
   });
 
-  ipcMain.handle('exeCmd', async (cmd, opts) => {
+  ipcMain.handle('exeCmd', async (event, cmd, opts) => {
     return execa.command(cmd, opts);
   });
 
-  ipcMain.handle('binaryCopy', async (file, fullName) => {
+  ipcMain.handle('binaryCopy', async (event, file, fullName) => {
     const reader = new FileReader();
     reader.onload = (evt) => {
       fs.writeFileSync(fullName, evt?.target?.result, {
@@ -207,22 +227,22 @@ const ipcMethods = () => {
     }
   });
 
-  ipcMain.handle('get-profile', () => {
+  ipcMain.handle('get-profile', async () => {
     if (isLogOut) return null;
     return authService.getProfile();
   });
 
-  ipcMain.handle('get-token', () => {
+  ipcMain.handle('get-token', async () => {
     if (isLogOut) return null;
     return authService.getAccessToken();
   });
 
-  ipcMain.handle('refresh-token', () => {
+  ipcMain.handle('refresh-token', async () => {
     if (isLogOut) return null;
     return authService.refreshTokens();
   });
 
-  ipcMain.handle('logout', () => {
+  ipcMain.handle('logout', async () => {
     isLogingIn = false;
     isLogOut = true;
     createLogoutWindow();

@@ -12,7 +12,7 @@ interface PassageInfo {
   transcription: string;
 }
 const ipc = (window as any)?.electron;
-const path = require('path');
+const path = require('path-browserify');
 
 const domParser = new DOMParser();
 const xmlSerializer = new XMLSerializer();

@@ -29,9 +29,9 @@ import { RecordIdentity } from '@orbit/data';
 import {
   launchAudacity,
   loadBlob,
-  isProcessRunning,
   audPrefsName,
   setAudacityPref,
+  execFolder,
 } from '../../utils';
 import { dataPath, PathType } from '../../utils';
 import { extensions, mimes } from '.';
@@ -39,7 +39,7 @@ import SpeakerName from '../SpeakerName';
 import { audacityManagerSelector } from '../../selector';
 
 const ipc = (window as any)?.electron;
-const path = require('path');
+const path = require('path-browserify');
 
 const StyledGrid = styled(Grid)<GridProps>(() => ({
   minWidth: '800px',
@@ -164,13 +164,13 @@ function AudacityManager(props: IProps) {
           }
         }
         await ipc?.copyFile(
-          path.join(await ipc?.resourcePath(), 'new.aup3'),
+          path.join(await execFolder(), 'resources', 'new.aup3'),
           fullName
         );
       }
       setExists(true);
       setName(fullName);
-      if (beforeContent && (await isProcessRunning('audacity'))) {
+      if (beforeContent && (await ipc?.isProcessRunning('audacity'))) {
         showMessage(t.closeAudacity);
         return;
       }
@@ -190,7 +190,7 @@ function AudacityManager(props: IProps) {
       return;
     }
     const beforeContent = await setAudacityPref(name);
-    if (beforeContent && (await isProcessRunning('audacity'))) {
+    if (beforeContent && (await ipc?.isProcessRunning('audacity'))) {
       showMessage(t.closeAudacity);
       return;
     }

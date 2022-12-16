@@ -1,5 +1,6 @@
 import { IExeca } from '../model';
-import { getAudacityExe, logError, Severity, infoMsg } from '.';
+import { getAudacityExe, logError, Severity, infoMsg, execFolder } from '.';
+import path from 'path-browserify';
 const ipc = (window as any)?.electron;
 
 export const launchAudacity = async (proj: string, reporter: any) => {
@@ -9,7 +10,7 @@ export const launchAudacity = async (proj: string, reporter: any) => {
     ?.exec(`"${audacityExe}"`, args, {
       shell: true,
       detached: true,
-      cwd: await ipc?.resourcePath(),
+      cwd: path.join(await execFolder(), 'resources'),
       env: { ...{ ...process }.env },
     })
     .then((res: IExeca) => {

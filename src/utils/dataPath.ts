@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'path-browserify';
 import os from 'os';
 import url from 'url';
 import { isElectron } from '../api-variable';

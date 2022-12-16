@@ -41,7 +41,7 @@ function createAuthWindow(hasUsed, email) {
             return workOffline();
           },
         },
-        // { role: 'toggleDevTools' },
+        ...(isDev ? [{ role: 'toggleDevTools' }] : []),
         {
           label: 'Exit',
           click() {

@@ -217,7 +217,7 @@ const localProjects = (
   projName?: string
 ) => {
   if (ptPath === '') return;
-  const path = require('path');
+  const path = require('path-browserify');
   let pt: ParatextProject[] = [];
   ipc
     ?.readDir(ptPath)

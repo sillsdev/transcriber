@@ -1,7 +1,7 @@
 import { ExportType, FileResponse } from './types';
 import AdmZip from 'adm-zip';
 import fs from 'fs';
-import path from 'path';
+import path from 'path-browserify';
 import moment from 'moment';
 import {
   Project,

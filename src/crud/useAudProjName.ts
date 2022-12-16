@@ -4,7 +4,7 @@ import { RecordIdentity, Record } from '@orbit/data';
 import { related, usePlan } from '.';
 import { toCamel, pad2, cleanFileName } from '../utils';
 const ipc = (window as any)?.electron;
-const path = require('path');
+const path = require('path-browserify');
 
 const planSlug = (rec: Plan | null) => {
   const name = rec?.attributes?.name || '';

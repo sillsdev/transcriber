@@ -1,5 +1,5 @@
 import AdmZip from 'adm-zip';
-import path from 'path';
+import path from 'path-browserify';
 import moment, { Moment } from 'moment';
 import { Project, IElectronImportStrings, IState, IApiError } from '../model';
 import { QueryBuilder } from '@orbit/data';
@@ -275,7 +275,7 @@ export const useElectronImport = () => {
         .replace(/(\r\n|\n|\r)/gm, '');
       var versionstr = '3';
       if (await ipc?.exists(path.join(where, 'Version')))
-        versionstr = ipc?.readFile(path.join(where, 'Version'));
+        versionstr = ipc?.read(path.join(where, 'Version'));
       var version = parseInt(versionstr);
       importProjectToElectron({
         filepath: path.join(where, 'data'),

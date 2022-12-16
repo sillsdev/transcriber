@@ -31,8 +31,10 @@ contextBridge.exposeInMainWorld('electron', {
   relaunchApp: async () => await ipcRenderer.invoke('relaunchApp'),
   closeApp: async () => await ipcRenderer.invoke('closeApp'),
   importOpen: async () => await ipcRenderer.invoke('importOpen'),
-  resourcePath: async () => await ipcRenderer.invoke('resourcePath'),
+  execPath: async () => await ipcRenderer.invoke('execPath'),
   isWindows: async () => await ipcRenderer.invoke('isWindows'),
+  isProcessRunning: async (name) =>
+    await ipcRenderer.invoke('isProcessRunning', name),
   createFolder: async (folder) =>
     await ipcRenderer.invoke('createFolder', folder),
   createStream: async (filePath) =>
@@ -55,6 +57,8 @@ contextBridge.exposeInMainWorld('electron', {
   readDir: async (folder) => await ipcRenderer.invoke('readDir', folder),
   fileJson: async (settings) => await ipcRenderer.invoke('fileJson', settings),
   shell: async (cmd) => await ipcRenderer.invoke('shell', cmd),
+  openExternal: async (item) => await ipcRenderer.invoke('openExternal', item),
+  openPath: async (url) => await ipcRenderer.invoke('openPath', url),
   exec: async (cmd, args, opts) =>
     await ipcRenderer.invoke('exec', cmd, args, opts),
   exeCmd: async (cmd, opts) => await ipcRenderer.invoke('exeCmd', cmd, opts),
