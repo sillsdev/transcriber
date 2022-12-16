@@ -39,9 +39,7 @@ import { AltButton, PriButton, UserListItem } from '../control';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import UserListMode, { ListMode } from '../control/userListMode';
 import { accessSelector } from '../selector';
-const noop = {} as any;
 const ipc = (window as any)?.electron;
-const electronremote = isElectron ? require('@electron/remote') : noop;
 
 const SectionHead = styled(Typography)<TypographyProps>(({ theme }) => ({
   fontSize: '14pt',
@@ -116,7 +114,7 @@ export const goOnline = (email?: string) => {
   localStorage.setItem('isLoggedIn', 'true');
   const hasUsed = lastTime !== null;
   ipc?.login(hasUsed, email);
-  electronremote?.getCurrentWindow().close();
+  ipc?.closeApp();
 };
 export const doLogout = async () => {
   localStorage.removeItem('online-user-id');

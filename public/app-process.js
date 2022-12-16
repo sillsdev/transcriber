@@ -2,7 +2,6 @@ const { app, ipcMain, BrowserWindow, Menu, MenuItem } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const { shell } = require('electron');
-require('@electron/remote/main').initialize();
 
 let mainWindow;
 let localString = { addToDict: 'Add to dictionary' };

@@ -216,8 +216,8 @@ export function ImportTab(props: IProps & IRecordProps) {
   ];
 
   useEffect(() => {
-    const electronImport = () => {
-      var importData = getElectronImportData(project || '');
+    const electronImport = async () => {
+      var importData = await getElectronImportData(project || '');
       if (importData.valid) {
         setFileName(importData.fileName);
         setImportProject(importData.projectName);

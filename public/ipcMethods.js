@@ -1,4 +1,4 @@
-const { app, ipcMain, session, dialog } = require('electron');
+const { app, ipcMain, session, dialog, BrowserWindow } = require('electron');
 const createAppWindow = require('./app-process');
 const { createAuthWindow, createLogoutWindow } = require('./auth-process');
 const authService = require('./auth-service');
@@ -40,8 +40,30 @@ const ipcMethods = () => {
     return app.getPath(name);
   });
 
+  ipcMain.handle('exitApp', async () => {
+    app.exit();
+  });
+
+  ipcMain.handle('relaunchApp', async () => {
+    app.relaunch();
+  });
+
+  ipcMain.handle('closeApp', async () => {
+    for (let w of BrowserWindow.getAllWindows()) {
+      w.close();
+    }
+  });
+
   ipcMain.handle('appData', () => {
     return process.env.AppData;
+  });
+
+  ipcMain.handle('importOpen', () => {
+    const options = {
+      filters: [{ name: 'ptf', extensions: ['ptf'] }],
+      properties: ['openFile'],
+    };
+    return dialog.showOpenDialogSync(options);
   });
 
   ipcMain.handle('audacityOpen', () => {

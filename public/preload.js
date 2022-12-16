@@ -23,4 +23,8 @@ contextBridge.exposeInMainWorld('electron', {
   setAddToDict: (value) => ipcRenderer.invoke('setAddToDict', value),
   setSpellLangs: (codes) => ipcRenderer.invoke('setSpellLangs', codes),
   temp: async () => await ipcRenderer.invoke('temp'),
+  exitApp: async () => await ipcRenderer.invoke('exitApp'),
+  relaunchApp: async () => await ipcRenderer.invoke('relaunchApp'),
+  closeApp: async () => await ipcRenderer.invoke('closeApp'),
+  importOpen: async () => await ipcRenderer.invoke('importOpen'),
 });
