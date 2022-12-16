@@ -1,4 +1,3 @@
-let path = require('path');
 export const isElectron = (window as any)?.electron;
 const help =
   isElectron && process.env.REACT_APP_DESKTOP_HELP
@@ -36,8 +35,4 @@ export const API_CONFIG = {
   genHierarchicalSample: process.env.REACT_APP_GEN_HIERARCHICAL
     ? process.env.REACT_APP_GEN_HIERARCHICAL
     : '',
-  resourcePath:
-    process.env.NODE_ENV === 'development'
-      ? path.join(process.cwd(), 'src', 'script')
-      : process.resourcesPath,
 };

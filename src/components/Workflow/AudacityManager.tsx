@@ -24,7 +24,6 @@ import {
   useAudProjName,
 } from '../../crud';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { API_CONFIG } from '../../api-variable';
 import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
 import {
@@ -166,7 +165,7 @@ function AudacityManager(props: IProps) {
           }
         }
         fs.copyFileSync(
-          path.join(API_CONFIG.resourcePath, 'new.aup3'),
+          path.join(await ipc?.resourcePath(), 'new.aup3'),
           fullName
         );
       }

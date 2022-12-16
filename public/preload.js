@@ -27,4 +27,5 @@ contextBridge.exposeInMainWorld('electron', {
   relaunchApp: async () => await ipcRenderer.invoke('relaunchApp'),
   closeApp: async () => await ipcRenderer.invoke('closeApp'),
   importOpen: async () => await ipcRenderer.invoke('importOpen'),
+  resourcePath: async () => await ipcRenderer.invoke('resourcePath'),
 });

@@ -40,13 +40,15 @@ const nextVersion = (fileName: string) => {
 
 export const writeFileLocal = (file: File, remoteName?: string) => {
   var local = { localname: '' };
+  const filePath = (file as any)?.path || '';
+  if (!filePath) console.log('writeFileLocal missing filePath');
   dataPath(
-    remoteName ? remoteName : `http://${file.path}`,
+    remoteName ? remoteName : `http://${filePath}`,
     PathType.MEDIA,
     local
   );
   var fullName = local.localname;
-  if (!remoteName && file.path === '') fullName += path.sep + file.name;
+  if (!remoteName && filePath === '') fullName += path.sep + file.name;
   createPathFolder(fullName);
   while (fs.existsSync(fullName)) {
     fullName = nextVersion(fullName);
