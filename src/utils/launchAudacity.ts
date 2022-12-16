@@ -1,18 +1,17 @@
 import { IExeca } from '../model';
 import { getAudacityExe, logError, Severity, infoMsg } from '.';
-const isElectron = process.env.REACT_APP_MODE === 'electron';
-const execa = isElectron ? require('execa') : null;
 const ipc = (window as any)?.electron;
 
 export const launchAudacity = async (proj: string, reporter: any) => {
   const audacityExe = await getAudacityExe();
   const args = [`"${proj}"`];
-  execa(`"${audacityExe}"`, args, {
-    shell: true,
-    detached: true,
-    cwd: await ipc?.resourcePath(),
-    env: { ...{ ...process }.env },
-  })
+  ipc
+    ?.exec(`"${audacityExe}"`, args, {
+      shell: true,
+      detached: true,
+      cwd: await ipc?.resourcePath(),
+      env: { ...{ ...process }.env },
+    })
     .then((res: IExeca) => {
       if (typeof res?.stdout === 'string' && res.stdout.trim().length > 0) {
         const msg = `Launch Audacity Results:\n${res.stdout}`;

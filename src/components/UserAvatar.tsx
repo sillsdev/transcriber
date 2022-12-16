@@ -5,11 +5,8 @@ import { QueryBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
 import { Avatar } from '@mui/material';
 import { makeAbbr } from '../utils';
-import { dataPath, PathType } from '../utils/dataPath';
-import { remoteId } from '../crud';
-import { isElectron } from '../api-variable';
+import { useAvatarSource } from '../crud';
 import { avatarSize } from '../control';
-const os = require('os');
 
 interface IRecordProps {
   users: Array<User>;
@@ -23,7 +20,6 @@ interface IProps extends IRecordProps {
 export function UserAvatar(props: IProps) {
   const { userRec, users, small } = props;
   const [user] = useGlobal('user');
-  const [memory] = useGlobal('memory');
 
   const curUserRec = userRec
     ? []
@@ -32,27 +28,19 @@ export function UserAvatar(props: IProps) {
     ? userRec
     : curUserRec.length > 0
     ? curUserRec[0]
-    : { id: '', attributes: { avatarUrl: null, name: '', familyName: '' } };
+    : {
+        id: '',
+        type: 'user',
+        attributes: { avatarUrl: null, name: '', familyName: '' },
+      };
 
-  var src =
-    curUser.attributes && curUser.attributes.avatarUrl
-      ? dataPath(curUser.attributes.avatarUrl, PathType.AVATARS, {
-          localname:
-            remoteId('user', curUser.id, memory.keyMap) +
-            curUser.attributes.familyName +
-            '.png',
-        })
-      : '';
-  if (src && isElectron && !src.startsWith('http')) {
-    const url =
-      os.platform() === 'win32' ? new URL(src).toString().slice(8) : src;
-    src = `transcribe-safe://${url}`;
-  }
-  return src ? (
+  const source = useAvatarSource(curUser.attributes.familyName || '', curUser);
+
+  return source ? (
     <Avatar
       id="srcuser"
       alt={curUser.attributes.name}
-      src={src}
+      src={source}
       sx={avatarSize(small)}
     />
   ) : curUser.attributes && curUser.attributes.name !== '' ? (

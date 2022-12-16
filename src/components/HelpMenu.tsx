@@ -26,7 +26,7 @@ import AboutDialog from './AboutDialog';
 import { usePlan, remoteIdGuid } from '../crud';
 import { mainSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-const os = require('os');
+const ipc = (window as any)?.electron;
 
 interface IProps {
   online: boolean;
@@ -81,12 +81,12 @@ export function HelpMenu(props: IProps) {
     return 'en';
   };
 
-  const handleHelp = (topic?: string) => () => {
+  const handleHelp = (topic?: string) => async () => {
     const topicS = topic || '';
     const topicWin = topic && decodeURIComponent(topic.slice(3));
     if (isElectron) {
       // see https://stackoverflow.com/questions/22300244/open-a-chm-file-to-a-specific-topic
-      if (os.platform() === 'win32' && topicWin && !online) {
+      if ((await ipc?.isWindows()) && topicWin && !online) {
         const target = `C:\\Windows\\hh.exe ${path.join(
           execFolder(),
           API_CONFIG.chmHelp

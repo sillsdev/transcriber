@@ -36,6 +36,7 @@ import {
   axiosError,
 } from '../../utils';
 import MemorySource from '@orbit/memory';
+const ipc = (window as any)?.electron;
 
 export const resetUserName = () => (dispatch: any) => {
   dispatch({
@@ -216,10 +217,10 @@ const localProjects = (
   projName?: string
 ) => {
   if (ptPath === '') return;
-  const fs = require('fs');
   const path = require('path');
   let pt: ParatextProject[] = [];
-  fs.readdirSync(ptPath)
+  ipc
+    ?.readDir(ptPath)
     .filter((n: string) => n.indexOf('.') === -1 && n[0] !== '_')
     .forEach((n: string) => {
       const settingsPath = path.join(ptPath, n, 'Settings.xml');

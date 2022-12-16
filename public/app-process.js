@@ -1,10 +1,26 @@
-const { app, ipcMain, BrowserWindow, Menu, MenuItem } = require('electron');
+const {
+  app,
+  ipcMain,
+  BrowserWindow,
+  session,
+  Menu,
+  MenuItem,
+} = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
-const { shell } = require('electron');
+const appMenu = require('./app-menu');
 
 let mainWindow;
 let localString = { addToDict: 'Add to dictionary' };
+
+// Conditionally include the dev tools installer to load React Dev Tools
+// let installExtension, REACT_DEVELOPER_TOOLS;
+
+// if (isDev) {
+//   const devTools = require('electron-devtools-installer');
+//   installExtension = devTools.default;
+//   REACT_DEVELOPER_TOOLS = devTools.REACT_DEVELOPER_TOOLS;
+// }
 
 function createAppWindow() {
   mainWindow = new BrowserWindow({
@@ -12,130 +28,19 @@ function createAppWindow() {
     height: 768,
     icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
+      devTools: isDev,
+      nodeIntegration: false,
+      nodeIntegrationInWorker: false,
+      nodeIntegrationInSubFrames: false,
+      enableRemoteModule: false,
+      contextIsolation: true,
       webSecurity: false,
-      nodeIntegration: true,
-      enableRemoteModule: true,
       spellcheck: true,
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
-  const isMac = process.platform === 'darwin';
-  const execFolder = () =>
-    path.dirname(
-      process.helperExecPath.replace(
-        path.join('node_modules', 'electron', 'dist'),
-        path.join('dist', 'win-unpacked')
-      )
-    );
-
-  var menu = Menu.buildFromTemplate([
-    // { role: 'appMenu' }
-    ...(isMac
-      ? [
-          {
-            label: app.name,
-            submenu: [
-              { role: 'about' },
-              { type: 'separator' },
-              { role: 'services' },
-              { type: 'separator' },
-              { role: 'hide' },
-              { role: 'hideothers' },
-              { role: 'unhide' },
-              { type: 'separator' },
-              { role: 'quit' },
-            ],
-          },
-        ]
-      : []),
-    // { role: 'fileMenu' }
-    {
-      label: 'File',
-      submenu: [isMac ? { role: 'close' } : { role: 'quit' }],
-    },
-    // { role: 'editMenu' }
-    {
-      label: 'Edit',
-      submenu: [
-        { role: 'undo' },
-        { role: 'redo' },
-        { type: 'separator' },
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' },
-        ...(isMac
-          ? [
-              { role: 'pasteAndMatchStyle' },
-              { role: 'delete' },
-              { role: 'selectAll' },
-              { type: 'separator' },
-              {
-                label: 'Speech',
-                submenu: [{ role: 'startSpeaking' }, { role: 'stopSpeaking' }],
-              },
-            ]
-          : [{ role: 'delete' }, { type: 'separator' }, { role: 'selectAll' }]),
-      ],
-    },
-    // { role: 'viewMenu' }
-    {
-      label: 'View',
-      submenu: [
-        // { role: 'reload' }, doesn't work with code auth
-        // { role: 'forceReload' }, doesn't work with code auth
-        { role: 'toggleDevTools' },
-        // { type: 'separator' },
-        // { role: 'resetZoom' },
-        // { role: 'zoomIn' },
-        // { role: 'zoomOut' },
-        { type: 'separator' },
-        { role: 'togglefullscreen' },
-      ],
-    },
-    // { role: 'windowMenu' }
-    {
-      label: 'Window',
-      submenu: [
-        { role: 'minimize' },
-        ...(isMac
-          ? [
-              { type: 'separator' },
-              { role: 'front' },
-              { type: 'separator' },
-              { role: 'window' },
-            ]
-          : [{ role: 'close' }]),
-      ],
-    },
-    {
-      role: 'help',
-      submenu: [
-        {
-          label: 'Learn More',
-          click: () => {
-            shell.openPath(
-              path.join(execFolder(), 'help/Audio_Project_Manager_Help.chm')
-            );
-          },
-        },
-        {
-          label: 'Community Support',
-          click: () => {
-            shell.openExternal(
-              'https://community.scripture.software.sil.org/c/transcriber'
-            );
-          },
-        },
-        {
-          label: 'Web Site',
-          click: () => {
-            shell.openExternal('https://software.sil.org/siltranscriber');
-          },
-        },
-      ],
-    },
-  ]);
-  Menu.setApplicationMenu(menu);
+  appMenu();
 
   mainWindow.loadURL(
     isDev
@@ -176,7 +81,7 @@ function createAppWindow() {
   });
 
   if (isDev) {
-    mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools({ mode: 'detach' });
   }
 
   mainWindow.on('closed', () => (mainWindow = null));
@@ -184,6 +89,72 @@ function createAppWindow() {
 
 ipcMain.handle('setAddToDict', async (event, str) => {
   localString.addToDict = str;
+});
+
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.whenReady().then(() => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createAppWindow();
+  }
+
+  if (isDev) {
+    // https://www.electronjs.org/docs/latest/tutorial/security#7-define-a-content-security-policy
+    // https://github.com/reZach/secure-electron-template/issues/14
+    session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+      callback({
+        responseHeaders: {
+          ...details.responseHeaders,
+          'Content-Security-Policy': [
+            "base-uri 'self' https://transcriber-dev.auth0.com https://cdn.auth0.com",
+            "object-src 'none'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.auth0.com https://cdnjs.cloudflare.com", //'nonce-tVZvi9VxJuouaojo+5nChg=='
+            "style-src 'unsafe-inline' 'self' https://fonts.googleapis.com",
+            "frame-src 'none'",
+            "worker-src 'self'",
+          ],
+        },
+      });
+    });
+
+    // installExtension(REACT_DEVELOPER_TOOLS)
+    //   .then((name) => console.log(`Added Extension:  ${name}`))
+    //   .catch((error) => console.log(`An error occurred: , ${error}`));
+  } else {
+    session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+      callback({
+        responseHeaders: {
+          ...details.responseHeaders,
+          'Content-Security-Policy': [
+            "base-uri 'self' https://transcriber-dev.auth0.com https://cdn.auth0.com",
+            "object-src 'none'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.auth0.com https://cdnjs.cloudflare.com", //'nonce-tVZvi9VxJuouaojo+5nChg=='
+            "style-src 'unsafe-inline' 'self' https://fonts.googleapis.com",
+            "frame-src 'none'",
+            "worker-src 'self'",
+          ],
+        },
+      });
+    });
+  }
+});
+
+app.on('activate', () => {
+  // On macOS it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createAppWindow();
+  }
+});
+
+// Quit when all windows are closed, except on macOS. There, it's common
+// for applications and their menu bar to stay active until the user quits
+// explicitly with Cmd + Q.
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });
 
 module.exports = createAppWindow;

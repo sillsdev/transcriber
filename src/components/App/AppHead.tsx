@@ -49,8 +49,7 @@ import PolicyDialog from '../PolicyDialog';
 import JSONAPISource from '@orbit/jsonapi';
 import { viewModeSelector } from '../../selector';
 import { useHome } from '../../utils/useHome';
-
-const shell = isElectron ? require('electron').shell : null;
+const ipc = (window as any)?.electron;
 
 const twoIcon = { minWidth: `calc(${48 * 2}px)` } as React.CSSProperties;
 const threeIcon = { minWidth: `calc(${48 * 3}px)` } as React.CSSProperties;
@@ -229,8 +228,8 @@ export const AppHead = (props: IProps) => {
   };
 
   const handleDownloadClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (shell)
-      shell.openExternal(
+    if (ipc)
+      ipc?.shell.openExternal(
         'https://software.sil.org/audioprojectmanager/download/'
       );
     // remote?.getCurrentWindow().close();

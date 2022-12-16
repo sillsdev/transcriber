@@ -46,7 +46,6 @@ export * from './hasAuacity';
 export * from './setAudacityPref';
 export * from './hasPython';
 export * from './getWhereis';
-export * from './getFiles';
 export * from './launchAudacity';
 export * from './pad2';
 export * from './getAudacityExe';

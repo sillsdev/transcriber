@@ -11,10 +11,8 @@ interface PassageInfo {
   mediaId: string;
   transcription: string;
 }
-const isElectron = process.env.REACT_APP_MODE === 'electron';
 const ipc = (window as any)?.electron;
 const path = require('path');
-const fs = isElectron ? require('fs-extra') : null;
 
 const domParser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
@@ -533,7 +531,7 @@ const getChapter = async (
   ]);
   if (stdout) console.log(stdout);
 
-  const usx: string = fs.readFileSync(paths.chapterFile, 'utf-8');
+  const usx: string = await ipc?.read(paths.chapterFile);
   return domParser.parseFromString(usx);
 };
 
@@ -548,7 +546,7 @@ const writeChapter = async (
   usxDom: Document
 ) => {
   const usxXml: string = xmlSerializer.serializeToString(usxDom);
-  fs.writeFileSync(paths.chapterFile, usxXml, { encoding: 'utf-8' });
+  ipc?.write(paths.chapterFile, usxXml);
   return await paths.program([
     '-w',
     ptProjName,
@@ -599,7 +597,7 @@ const doChapter = async (
   }
   await memory.update(ops);
 
-  fs.unlinkSync(paths.chapterFile);
+  ipc?.delete(paths.chapterFile);
 };
 
 export const getLocalParatextText = async (

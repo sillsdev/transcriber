@@ -2,7 +2,7 @@ import path from 'path';
 import os from 'os';
 import url from 'url';
 import { isElectron } from '../api-variable';
-const fs = isElectron ? require('fs-extra') : null;
+const ipc = (window as any)?.electron;
 
 export enum PathType {
   AVATARS = 'avatars',
@@ -50,7 +50,7 @@ export const dataPath = (
         break;
     }
     if (local_out) local_out.localname = localName;
-    if (fs.existsSync(localName)) return localName;
+    if (ipc?.exists(localName)) return localName;
     //s3 paths look like https://sil-transcriber-userfiles-dev.s3.amazonaws.com/noorg/B14___01_2Thess______ENGESVN2DA.mp3?AWSAccessKeyId=xxx
     if (type === PathType.MEDIA && relPath?.includes('s3.amazonaws')) {
       // This logic handles names with slashes. Sholdn't nappen again
@@ -64,7 +64,7 @@ export const dataPath = (
         decodeURIComponent(fileName)
       );
       if (local_out) local_out.localname = localName;
-      if (fs.existsSync(localName)) return localName;
+      if (ipc?.exists(localName)) return localName;
     }
   }
   return relPath?.startsWith('http')

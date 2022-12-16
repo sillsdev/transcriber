@@ -1,5 +1,4 @@
 import AdmZip from 'adm-zip';
-import fs from 'fs';
 import path from 'path';
 import moment, { Moment } from 'moment';
 import { Project, IElectronImportStrings, IState, IApiError } from '../model';
@@ -246,24 +245,24 @@ export const useElectronImport = () => {
     return ret;
   };
 
-  const handleElectronImport = (
+  const handleElectronImport = async (
     importProjectToElectron: (props: ImportProjectToElectronProps) => void,
     reportError: (ex: IApiError) => void
-  ): void => {
+  ): Promise<void> => {
     if (!isElectron) return;
     if (zipRef.current) {
       const where = dataPath();
-      fs.mkdirSync(where, { recursive: true });
+      await ipc?.createFolder(where);
       //delete any old files
       try {
-        if (fs.existsSync(path.join(where, 'SILTranscriber')))
-          fs.unlinkSync(path.join(where, 'SILTranscriber'));
-        if (fs.existsSync(path.join(where, 'Version')))
-          fs.unlinkSync(path.join(where, 'Version'));
+        if (await ipc?.exists(path.join(where, 'SILTranscriber')))
+          await ipc?.delete(path.join(where, 'SILTranscriber'));
+        if (await ipc?.exists(path.join(where, 'Version')))
+          await ipc?.delete(path.join(where, 'Version'));
         var datapath = path.join(where, 'data');
-        const files = fs.readdirSync(datapath);
+        const files = await ipc?.readDir(datapath);
         for (const file of files) {
-          fs.unlinkSync(path.join(datapath, file));
+          await ipc?.delete(path.join(datapath, file));
         }
       } catch (err: any) {
         if (err.errno !== -4058)
@@ -271,18 +270,12 @@ export const useElectronImport = () => {
       }
       zipRef.current.extractAllTo(where, true);
       //get the exported date from SILTranscriber file
-      var dataDate = fs
-        .readFileSync(path.join(where, 'SILTranscriber'), {
-          encoding: 'utf8',
-          flag: 'r',
-        })
+      var dataDate = await ipc
+        ?.readFile(path.join(where, 'SILTranscriber'))
         .replace(/(\r\n|\n|\r)/gm, '');
       var versionstr = '3';
-      if (fs.existsSync(path.join(where, 'Version')))
-        versionstr = fs.readFileSync(path.join(where, 'Version'), {
-          encoding: 'utf8',
-          flag: 'r',
-        });
+      if (await ipc?.exists(path.join(where, 'Version')))
+        versionstr = ipc?.readFile(path.join(where, 'Version'));
       var version = parseInt(versionstr);
       importProjectToElectron({
         filepath: path.join(where, 'data'),

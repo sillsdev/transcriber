@@ -1,10 +1,8 @@
-import fs from 'fs';
 import path from 'path';
 const ipc = (window as any)?.electron;
-const os = require('os');
 
 export const audPrefsName = async () => {
-  if (os.platform() === 'win32') {
+  if (await ipc?.isWindows()) {
     const appData = await ipc?.appData();
     return path.join(appData, 'audacity', 'audacity.cfg');
   } else {
@@ -17,15 +15,15 @@ export const audPrefsName = async () => {
       '.audacity-data',
       'audacity.cfg'
     );
-    if (fs.existsSync(snapName)) return snapName;
+    if (await ipc?.exists(snapName)) return snapName;
     // const debName = path.join(home, '.audacity-data', 'audacity.cfg');
     // if (fs.existsSync(debName)) return debName;
   }
 };
 
 const getAllPref = async (prefs: string) => {
-  if (!fs.existsSync(prefs)) return false;
-  return fs.readFileSync(prefs, 'utf-8');
+  if (!(await ipc?.exists(prefs))) return false;
+  return await ipc?.readFile(prefs);
 };
 
 const getAudPrefContent = async (inPrefs?: string) => {
@@ -54,13 +52,13 @@ const getIoMatch = (content: string) => {
   );
 };
 
-const setFolder = (kind: string, target: string) => {
-  const ln = os.platform() === 'win32' ? '\r\n' : '\n';
+const setFolder = async (kind: string, target: string) => {
+  const ln = (await ipc?.isWindows()) ? '\r\n' : '\n';
   return `[Directories/${kind}]${ln}Default=${target}${ln}LastUsed=${target}${ln}`;
 };
 
 export const resetAudacityPref = (prefs: string, data: string) => {
-  fs.writeFileSync(prefs, data);
+  ipc?.writeFile(prefs, data);
 };
 
 const changeValueTo1 = (data: string, m: RegExpExecArray) => {
@@ -70,9 +68,9 @@ const changeValueTo1 = (data: string, m: RegExpExecArray) => {
 
 export const setAudacityPref = async (fullName: string) => {
   let folder = path.dirname(fullName);
-  fs.mkdirSync(folder, { recursive: true });
+  await ipc?.createFolder(folder);
   let ioFolder = folder.replace('aup3', 'io');
-  fs.mkdirSync(ioFolder, { recursive: true });
+  await ipc?.createFolder(ioFolder);
   if (path.sep === '\\') {
     folder = folder.replace(/\\/g, `\\\\`);
     ioFolder = ioFolder.replace(/\\/g, `\\\\`);

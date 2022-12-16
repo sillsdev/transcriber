@@ -1,7 +1,17 @@
-const { app, ipcMain, session, dialog, BrowserWindow } = require('electron');
+const {
+  app,
+  ipcMain,
+  session,
+  dialog,
+  BrowserWindow,
+  shell,
+} = require('electron');
 const createAppWindow = require('./app-process');
 const { createAuthWindow, createLogoutWindow } = require('./auth-process');
 const authService = require('./auth-service');
+const fs = require('fs-extra');
+const os = require('os');
+const execa = require('execa');
 
 const ipcMethods = () => {
   ipcMain.handle('availSpellLangs', async () => {
@@ -36,6 +46,10 @@ const ipcMethods = () => {
     return process.resourcesPath;
   });
 
+  ipcMain.handle('isWindows', async () => {
+    return os.platform() === 'win32';
+  });
+
   ipcMain.handle('home', async () => {
     return app.getPath('home');
   });
@@ -62,6 +76,77 @@ const ipcMethods = () => {
     return process.env.AppData;
   });
 
+  ipcMain.handle('createFolder', async (folder) => {
+    try {
+      fs.statSync(folder);
+    } catch (err) {
+      if (err.code === 'ENOENT') fs.mkdirSync(folder, { recursive: true });
+    }
+  });
+
+  ipcMain.handle('exists', async (name) => {
+    return fs.existsSync(name);
+  });
+
+  ipcMain.handle('stat', async (name, cb) => {
+    return fs.stat(name, cb);
+  });
+
+  ipcMain.handle('getStat', async (filePath) => {
+    return fs.statSync(filePath);
+  });
+
+  ipcMain.handle('createStream', async (filePath) => {
+    return fs.createWriteStream(filePath);
+  });
+
+  ipcMain.handle('read', async (filePath) => {
+    return fs.readFileSync(filePath, 'utf-8');
+  });
+
+  ipcMain.handle('write', async (filePath, data) => {
+    return fs.writeFileSync(filePath, data, { encoding: 'utf-8' });
+  });
+
+  ipcMain.handle('append', async (filePath, data) => {
+    fs.open(filePath, 'a', (err, fd) => {
+      if (err) throw err;
+      fs.writeFile(fd, data, (err) => {
+        fs.close(fd, (err) => {
+          if (err) throw err;
+        });
+        if (err) throw err;
+      });
+    });
+  });
+
+  ipcMain.handle('delete', async (filePath) => {
+    return fs.unlink(filePath);
+  });
+
+  ipcMain.handle('copyFile', async (from, to) => {
+    return fs.copyFileSync(from, to);
+  });
+
+  ipcMain.handle('times', async (filePath, create, update) => {
+    fs.utimesSync(filePath, create, update);
+  });
+
+  ipcMain.handle('readDir', async (folder) => {
+    return fs.readdirSync(folder);
+  });
+
+  const convert = require('xml-js');
+
+  ipcMain.handle('fileJson', async (settings) => {
+    if (fs.existsSync(settings)) {
+      const data = fs.readFileSync(settings, 'utf-8');
+      const jsonStr = convert.xml2json(data, { compact: true, spaces: 2 });
+      return JSON.parse(jsonStr);
+    }
+    return null;
+  });
+
   ipcMain.handle('importOpen', () => {
     const options = {
       filters: [{ name: 'ptf', extensions: ['ptf'] }],
@@ -75,6 +160,29 @@ const ipcMethods = () => {
       filters: [{ name: 'Audacity', extensions: ['aup3'] }],
       properties: ['openFile'],
     });
+  });
+
+  ipcMain.handle('shell', async (cmd) => {
+    shell(cmd);
+  });
+
+  ipcMain.handle('exec', async (cmd, args, opts) => {
+    return execa(cmd, args, opts);
+  });
+
+  ipcMain.handle('exeCmd', async (cmd, opts) => {
+    return execa.command(cmd, opts);
+  });
+
+  ipcMain.handle('binaryCopy', async (file, fullName) => {
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      fs.writeFileSync(fullName, evt?.target?.result, {
+        encoding: 'binary',
+        flag: 'wx', //write - fail if file exists
+      });
+    };
+    reader.readAsBinaryString(file);
   });
 
   let isLogingIn = false;

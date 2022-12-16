@@ -15,7 +15,7 @@ export const relaunchApp = () => {
 
 export const exitApp = () => {
   if (isElectron) {
-    ipc?.exit();
+    ipc?.exitApp();
   }
 };
 

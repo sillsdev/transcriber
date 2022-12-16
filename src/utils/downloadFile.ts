@@ -1,5 +1,5 @@
 import request from 'request';
-const fs = require('fs');
+const ipc = (window as any)?.electron;
 /**
  * Promise based download file method
  * See: https://ourcodeworld.com/articles/read/228/how-to-download-a-webfile-with-electron-save-it-and-show-download-progress
@@ -10,7 +10,7 @@ interface IProps {
   onProgress?: (received: number, total: number) => void;
 }
 export function downloadFile(props: IProps) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(async function (resolve, reject) {
     let received_bytes = 0;
     let total_bytes = 0;
     let error: Error | null = null;
@@ -20,7 +20,7 @@ export function downloadFile(props: IProps) {
       uri: props.url,
     });
 
-    const out = fs.createWriteStream(props.localPath);
+    const out = await ipc?.createStream(props.localPath);
     req.pipe(out);
 
     req.on('response', function (data) {

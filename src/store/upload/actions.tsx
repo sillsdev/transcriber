@@ -19,7 +19,7 @@ import {
 } from '../../utils';
 import moment from 'moment';
 import _ from 'lodash';
-var fs = require('fs');
+const ipc = (window as any)?.electron;
 var path = require('path');
 
 export const uploadFiles = (files: File[]) => (dispatch: any) => {
@@ -38,7 +38,7 @@ const nextVersion = (fileName: string) => {
   return `${name}.ver02.${ext}`;
 };
 
-export const writeFileLocal = (file: File, remoteName?: string) => {
+export const writeFileLocal = async (file: File, remoteName?: string) => {
   var local = { localname: '' };
   const filePath = (file as any)?.path || '';
   if (!filePath) console.log('writeFileLocal missing filePath');
@@ -50,17 +50,10 @@ export const writeFileLocal = (file: File, remoteName?: string) => {
   var fullName = local.localname;
   if (!remoteName && filePath === '') fullName += path.sep + file.name;
   createPathFolder(fullName);
-  while (fs.existsSync(fullName)) {
+  while (await ipc?.exists(fullName)) {
     fullName = nextVersion(fullName);
   }
-  const reader = new FileReader();
-  reader.onload = (evt) => {
-    fs.writeFileSync(fullName, evt?.target?.result, {
-      encoding: 'binary',
-      flag: 'wx', //write - fail if file exists
-    });
-  };
-  reader.readAsBinaryString(file);
+  ipc?.binaryCopy(file, fullName);
   return path.join(PathType.MEDIA, fullName.split(path.sep).pop());
 };
 const uploadFile = (

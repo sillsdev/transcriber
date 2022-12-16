@@ -1,14 +1,9 @@
-import { isElectron } from '../api-variable';
 var path = require('path');
-var fs = isElectron ? require('fs-extra') : undefined;
+const ipc = (window as any)?.electron;
 
 export const createFolder = (folder: string) => {
   // Create folder if it doesn't exist
-  try {
-    fs.statSync(folder);
-  } catch (err: any) {
-    if (err.code === 'ENOENT') fs.mkdirSync(folder, { recursive: true });
-  }
+  ipc?.createFolder(folder);
 };
 
 export const createPathFolder = (fullName: string) => {

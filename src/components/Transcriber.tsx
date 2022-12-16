@@ -600,25 +600,28 @@ export function Transcriber(
       //check if the url we have loaded is for the current mediaId
       const oldRec = mediaRecs.filter((m) => m.id === mediafile.id);
       if (oldRec.length) {
-        var mediaRecUrl = safeURL(
-          dataPath(oldRec[0].attributes.audioUrl, PathType.MEDIA)
+        safeURL(dataPath(oldRec[0].attributes.audioUrl, PathType.MEDIA)).then(
+          (mediaRecUrl) => {
+            var cut = mediaUrl.lastIndexOf('&Signature');
+            var check = cut > 0 ? mediaUrl.substring(0, cut) : mediaUrl;
+            if (
+              check === (cut > 0 ? mediaRecUrl.substring(0, cut) : mediaRecUrl)
+            ) {
+              memory
+                .update((t: TransformBuilder) =>
+                  t.replaceAttribute(
+                    oldRec[0],
+                    'duration',
+                    Math.floor(totalSeconds)
+                  )
+                )
+                .then(() => {
+                  refresh();
+                });
+              // console.log(`update duration to ${Math.floor(totalSeconds)}`);
+            }
+          }
         );
-        var cut = mediaUrl.lastIndexOf('&Signature');
-        var check = cut > 0 ? mediaUrl.substring(0, cut) : mediaUrl;
-        if (check === (cut > 0 ? mediaRecUrl.substring(0, cut) : mediaRecUrl)) {
-          memory
-            .update((t: TransformBuilder) =>
-              t.replaceAttribute(
-                oldRec[0],
-                'duration',
-                Math.floor(totalSeconds)
-              )
-            )
-            .then(() => {
-              refresh();
-            });
-          // console.log(`update duration to ${Math.floor(totalSeconds)}`);
-        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
