@@ -1,11 +1,7 @@
 import React, { PropsWithChildren } from 'react';
 import ReactDOM from 'react-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
-import {
-  auth0Domain,
-  webClientId,
-  apiIdentifier,
-} from './auth/auth0-variables.json';
+import envVariables from './auth/auth0-variables.json';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -41,6 +37,8 @@ import { related } from './crud';
 import { Section, Plan } from './model';
 import { TokenProvider } from './context/TokenProvider';
 const appVersion = require('../package.json').version;
+const { auth0Domain, webClientId, apiIdentifier } = envVariables;
+const ipc = (window as any)?.electron;
 
 const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
 const prod = API_CONFIG.host.indexOf('prod') !== -1;
@@ -167,6 +165,12 @@ const Root = () => (
     </Provider>
   </DataProvider>
 );
+
+// localStorage home used by dataPath to avoid Promise
+ipc?.home().then((folder: string) => {
+  localStorage.setItem('home', folder);
+});
+
 const promises = [];
 promises.push(getFingerprintArray());
 if (isElectron) {

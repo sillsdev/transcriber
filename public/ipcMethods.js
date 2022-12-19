@@ -12,6 +12,7 @@ const authService = require('./auth-service');
 const fs = require('fs-extra');
 const os = require('os');
 const execa = require('execa');
+const AdmZip = require('adm-zip');
 
 const ipcMethods = () => {
   ipcMain.handle('availSpellLangs', async () => {
@@ -149,7 +150,11 @@ const ipcMethods = () => {
   });
 
   ipcMain.handle('readDir', async (event, folder) => {
-    return fs.readdirSync(folder);
+    try {
+      return fs.readdirSync(folder);
+    } catch (err) {
+      return err;
+    }
   });
 
   const convert = require('xml-js');
@@ -203,6 +208,38 @@ const ipcMethods = () => {
       });
     };
     reader.readAsBinaryString(file);
+  });
+
+  ipcMain.handle('zipOpen', async (event, fullPath) => {
+    return new AdmZip(fullPath);
+  });
+
+  ipcMain.handle('zipGetEntries', async (event, zip) => {
+    return zip.getEntries();
+  });
+
+  ipcMain.handle('zipReadText', async (event, zip, name) => {
+    return zip.readAsText(name);
+  });
+
+  ipcMain.handle('zipAddFile', async (event, zip, name, data, comment) => {
+    return zip.addFile(name, data, comment);
+  });
+
+  ipcMain.handle('zipAddLocal', async (event, zip, full, folder, base) => {
+    return zip.addLocalFile(full, folder, base);
+  });
+
+  ipcMain.handle('zipToBuffer', async (event, zip) => {
+    return zip.toBuffer();
+  });
+
+  ipcMain.handle('zipWrite', async (event, zip, where) => {
+    return zip.writeZip(where);
+  });
+
+  ipcMain.handle('zipExtract', async (event, zip, folder, replace) => {
+    return zip.extractAllTo(folder, replace);
   });
 
   let isLogingIn = false;

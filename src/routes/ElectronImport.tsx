@@ -77,12 +77,12 @@ export const useElectronImport = () => {
       //they didn't pick a file
       return invalidReturn;
     }
-    var zip = new AdmZip(filePaths[0]);
+    var zip = (await ipc?.zipOpen(filePaths[0])) as AdmZip;
     let valid = false;
     var exportTime: Moment = moment.utc();
     var exportDate = '';
     var version = '3';
-    var zipEntries = zip.getEntries();
+    var zipEntries = await ipc?.getEntries(zip);
     for (let entry of zipEntries) {
       if (entry.entryName === 'SILTranscriber') {
         exportDate = entry.getData().toString('utf8');
@@ -119,7 +119,9 @@ export const useElectronImport = () => {
     }
     var userInProject = false;
     var users: Array<string> = [];
-    var importUsers = JSON.parse(zip.readAsText('data/A_users.json'));
+    var importUsers = JSON.parse(
+      await ipc?.zipReadText(zip, 'data/A_users.json')
+    );
     if (importUsers && Array.isArray(importUsers.data)) {
       importUsers.data.forEach((u: any) => {
         users.push(u.attributes.name);
@@ -131,7 +133,9 @@ export const useElectronImport = () => {
           userInProject = true;
       });
     }
-    var importProjs = JSON.parse(zip.readAsText('data/D_projects.json'));
+    var importProjs = JSON.parse(
+      await ipc?.zipReadText('data/D_projects.json')
+    );
     var importProj: any;
     if (
       importProjs &&

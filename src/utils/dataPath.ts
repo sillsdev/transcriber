@@ -1,6 +1,5 @@
 import path from 'path-browserify';
-import os from 'os';
-import url from 'url';
+import parse from 'url-parse';
 import { isElectron } from '../api-variable';
 const ipc = (window as any)?.electron;
 
@@ -17,6 +16,7 @@ export const dataPath = (
   type?: PathType,
   local_out?: { localname: string }
 ): string => {
+  const homeDir = localStorage.getItem('home') ?? '';
   if (isElectron && process.env.REACT_APP_OFFLINEDATA) {
     var localName = '';
     switch (type) {
@@ -24,7 +24,7 @@ export const dataPath = (
       case PathType.LOGOS:
       case PathType.FONTS:
         localName = path.join(
-          os.homedir(),
+          homeDir,
           process.env.REACT_APP_OFFLINEDATA,
           type,
           local_out?.localname || path.basename(relPath || '')
@@ -32,10 +32,10 @@ export const dataPath = (
         break;
       case PathType.MEDIA:
         const fileName = relPath?.startsWith('http')
-          ? url.parse(relPath).pathname?.split('?')[0].split('/').pop() || ''
+          ? parse(relPath).pathname?.split('?')[0].split('/').pop() || ''
           : path.basename(relPath || '');
         localName = path.join(
-          os.homedir(),
+          homeDir,
           process.env.REACT_APP_OFFLINEDATA,
           type,
           decodeURIComponent(fileName)
@@ -43,7 +43,7 @@ export const dataPath = (
         break;
       case PathType.ZIP:
         localName = path.join(
-          os.homedir(),
+          homeDir,
           process.env.REACT_APP_OFFLINEDATA,
           local_out?.localname || path.basename(relPath || '')
         );
@@ -54,11 +54,10 @@ export const dataPath = (
     //s3 paths look like https://sil-transcriber-userfiles-dev.s3.amazonaws.com/noorg/B14___01_2Thess______ENGESVN2DA.mp3?AWSAccessKeyId=xxx
     if (type === PathType.MEDIA && relPath?.includes('s3.amazonaws')) {
       // This logic handles names with slashes. Sholdn't nappen again
-      const fileParts =
-        url.parse(relPath).pathname?.split('?')[0].split('/') || [];
+      const fileParts = parse(relPath).pathname?.split('?')[0].split('/') || [];
       const fileName = fileParts.slice(3).join('/');
       localName = path.join(
-        os.homedir(),
+        homeDir,
         process.env.REACT_APP_OFFLINEDATA,
         type,
         decodeURIComponent(fileName)
@@ -70,7 +69,7 @@ export const dataPath = (
   return relPath?.startsWith('http')
     ? relPath
     : process.env.REACT_APP_OFFLINEDATA
-    ? path.join(os.homedir(), process.env.REACT_APP_OFFLINEDATA, relPath || '')
+    ? path.join(homeDir, process.env.REACT_APP_OFFLINEDATA, relPath || '')
     : '';
 };
 

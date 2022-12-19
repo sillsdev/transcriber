@@ -28,6 +28,8 @@ import {
 import AdmZip from 'adm-zip';
 import { Operation } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
+const ipc = (window as any)?.electron;
+
 enum Steps {
   Prepare,
   Download,
@@ -161,17 +163,19 @@ export const ProjectDownload = (
 
   React.useEffect(() => {
     if (progress === Steps.Import) {
-      const localPath = dataPath(exportName, PathType.ZIP);
-      const zip = new AdmZip(localPath);
-      zip.extractAllTo(dataPath(), true);
-      offlineProjectUpdateFilesDownloaded(
-        projectIds[currentStep],
-        offlineUpdates,
-        memory,
-        currentDateTime()
-      );
-      setProgress(Steps.Prepare);
-      setCurrentStep(currentStep + 1);
+      (async () => {
+        const localPath = dataPath(exportName, PathType.ZIP);
+        const zip = (await ipc?.zipOpen(localPath)) as AdmZip;
+        await ipc?.zipExtract(zip, dataPath(), true);
+        offlineProjectUpdateFilesDownloaded(
+          projectIds[currentStep],
+          offlineUpdates,
+          memory,
+          currentDateTime()
+        );
+        setProgress(Steps.Prepare);
+        setCurrentStep(currentStep + 1);
+      })();
     } else if (progress === Steps.Error) {
       setProgress(Steps.Prepare);
       setCurrentStep(currentStep + 1);
