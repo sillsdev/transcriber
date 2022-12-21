@@ -83,6 +83,7 @@ export const useElectronImport = () => {
     var exportDate = '';
     var version = '3';
     var zipEntries = await ipc?.getEntries(zip);
+    await ipc?.zipClose(zip);
     for (let entry of zipEntries) {
       if (entry.entryName === 'SILTranscriber') {
         exportDate = entry.getData().toString('utf8');

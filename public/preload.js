@@ -37,8 +37,6 @@ contextBridge.exposeInMainWorld('electron', {
     await ipcRenderer.invoke('isProcessRunning', name),
   createFolder: async (folder) =>
     await ipcRenderer.invoke('createFolder', folder),
-  createStream: async (filePath) =>
-    await ipcRenderer.invoke('createStream', filePath),
   exists: async (name) => await ipcRenderer.invoke('exists', name),
   stat: async (name, cb) => await ipcRenderer.invoke('stat', name, cb),
   getStat: async (folderPath) =>
@@ -50,8 +48,6 @@ contextBridge.exposeInMainWorld('electron', {
     await ipcRenderer.invoke('append', filePath, data),
   delete: async (filePath) => await ipcRenderer.invoke('delete', filePath),
   copyFile: async (from, to) => await ipcRenderer.invoke('copyFile', from, to),
-  binaryCopy: async (file, filePath) =>
-    await ipcRenderer.invoke('binaryCopy', file, filePath),
   times: async (filePath, create, modify) =>
     await ipcRenderer.invoke('times', filePath, create, modify),
   readDir: async (folder) => await ipcRenderer.invoke('readDir', folder),
@@ -73,4 +69,7 @@ contextBridge.exposeInMainWorld('electron', {
     await ipcRenderer.invoke('zipWrite', zip, where),
   zipExtract: async (zip, folder, replace) =>
     await ipcRenderer.invoke('zipExtract', zip, folder, replace),
+  zipClose: async (zip) => await ipcRenderer.invoke('zipClose', zip),
+  download: async (url, localFile, onProgress) =>
+    await ipcRenderer.invoke('download', url, localFile, onProgress),
 });

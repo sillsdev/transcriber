@@ -736,7 +736,8 @@ export async function electronExport(
     changedRecs += numRecs;
     if (backupZip) {
       if (numRecs)
-        backupZip.addFile(
+        await ipc?.zipAddFile(
+          backupZip,
           filename,
           await ipc?.zipToBuffer(zip),
           projects[ix].attributes.name
@@ -750,11 +751,11 @@ export async function electronExport(
     }
   }
   var backupWhere = dataPath(backupName);
-  if (backupZip) backupZip.writeZip(backupWhere);
-  return BuildFileResponse(
-    backupWhere,
-    backupName,
-    exportType === ExportType.ITF ? backupZip?.toBuffer() : undefined,
-    changedRecs
-  );
+  if (backupZip) await ipc?.zipWrite(backupZip, backupWhere);
+  const buffer =
+    exportType === ExportType.ITF
+      ? await ipc?.zipToBuffer(backupZip)
+      : undefined;
+  await ipc?.zipClose(backupZip);
+  return BuildFileResponse(backupWhere, backupName, buffer, changedRecs);
 }

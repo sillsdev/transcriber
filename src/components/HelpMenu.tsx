@@ -15,7 +15,6 @@ import { isElectron, API_CONFIG } from '../api-variable';
 import {
   launch,
   launchCmd,
-  downloadFile,
   dataPath,
   PathType,
   execFolder,
@@ -118,7 +117,7 @@ export function HelpMenu(props: IProps) {
     const localPath = loc
       ? path.join(folder, 'help', name)
       : dataPath(name, PathType.ZIP);
-    if (!loc) await downloadFile({ url, localPath });
+    if (!loc) await ipc?.downloadFile(url, localPath);
     launch(localPath, false);
     setAnchorEl(null);
     if (action) action('Download');

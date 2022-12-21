@@ -87,9 +87,9 @@ export async function logFile() {
   console.log(`logfile locale=${loc}`);
   const logName = `log-${moment().locale(loc).format('DD')}.log`;
   const logFullName = join(logFolder, logName);
-  ipc?.stat(logFullName, (err: IStatErr, stats: Stats) => {
+  ipc?.stat(logFullName, async (err: IStatErr, stats: Stats) => {
     if (err?.code === 'ENOENT') {
-      createFolder(logFolder);
+      await createFolder(logFolder);
       logFileHeader(logFullName);
     } else if (err) {
       console.log(JSON.stringify(err));

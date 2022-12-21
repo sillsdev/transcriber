@@ -20,7 +20,6 @@ import { offlineProjectUpdateFilesDownloaded, useProjectExport } from '../crud';
 import {
   currentDateTime,
   dataPath,
-  downloadFile,
   logError,
   PathType,
   Severity,
@@ -145,11 +144,12 @@ export const ProjectDownload = (
   React.useEffect(() => {
     if (progress === Steps.Download) {
       const localPath = dataPath(exportName, PathType.ZIP);
-      downloadFile({ url: exportUrl, localPath })
+      ipc
+        ?.downloadFile(exportUrl, localPath)
         .then(() => {
           setProgress(Steps.Import);
         })
-        .catch((ex) => logError(Severity.error, errorReporter, ex))
+        .catch((ex: any) => logError(Severity.error, errorReporter, ex))
         .finally(() => {
           URL.revokeObjectURL(exportUrl);
         });
@@ -167,6 +167,7 @@ export const ProjectDownload = (
         const localPath = dataPath(exportName, PathType.ZIP);
         const zip = (await ipc?.zipOpen(localPath)) as AdmZip;
         await ipc?.zipExtract(zip, dataPath(), true);
+        await ipc?.zipClose(zip);
         offlineProjectUpdateFilesDownloaded(
           projectIds[currentStep],
           offlineUpdates,

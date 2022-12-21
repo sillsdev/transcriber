@@ -219,7 +219,7 @@ function AudacityManager(props: IProps) {
       const ext = audioName.split('.').pop() || '';
       const extIdx = extensions.indexOf(ext);
       const fullName = path.join(audioFolder, audioName);
-      const stat = await ipc?.statSync(fullName);
+      const stat = JSON.parse(await ipc?.getStat(fullName));
       if (
         moment(stat.mtime).isAfter(moment(lastTime)) &&
         extensions.indexOf(ext) >= 0 &&

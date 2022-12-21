@@ -51,7 +51,7 @@ const bugsnagClient = prodOrQa
   : undefined;
 bugsnagClient?.use(bugsnagReact, React);
 const SnagBoundary = bugsnagClient?.getPlugin('react');
-const electronLog = isElectron ? logFile() : undefined;
+const electronLog = isElectron ? logFile : undefined;
 
 // Redux store
 const store = configureStore();

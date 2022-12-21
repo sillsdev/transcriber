@@ -24,7 +24,7 @@ export const getParatextDataPath = async () => {
       'values.xml'
     );
     let dir = null;
-    const keyJson = fileJson(regKeyFile);
+    const keyJson = await fileJson(regKeyFile);
     if (keyJson) {
       const vals = keyJson.values.value;
       if (Array.isArray(vals)) {
@@ -49,13 +49,15 @@ export const getReadWriteProg = async () => {
       (await getRegVal(regKey, progVal9)) ||
       (await getRegVal(regKey, progVal8));
     return async (args: string[]) => {
-      return await ipc?.exec(path.join(progPath, 'rdwrtp8'), args);
+      return JSON.parse(await ipc?.exec(path.join(progPath, 'rdwrtp8'), args));
     };
   } else {
     return async (args: string[]) => {
-      return await ipc?.exec('/usr/bin/paratext9', ['--rdwrtp8'].concat(args), {
-        env: { ...{ ...process }.env, DISPLAY: ':0' },
-      });
+      return JSON.parse(
+        await ipc?.exec('/usr/bin/paratext9', ['--rdwrtp8'].concat(args), {
+          env: { ...{ ...process }.env, DISPLAY: ':0' },
+        })
+      );
     };
   }
 };

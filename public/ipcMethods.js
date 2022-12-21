@@ -13,6 +13,7 @@ const fs = require('fs-extra');
 const os = require('os');
 const execa = require('execa');
 const AdmZip = require('adm-zip');
+const downloadFile = require('./downloadFile');
 
 const ipcMethods = () => {
   ipcMain.handle('availSpellLangs', async () => {
@@ -39,14 +40,6 @@ const ipcMethods = () => {
     session.defaultSession.addWordToSpellCheckerDictionary(word);
   });
 
-  ipcMain.handle('temp', async () => {
-    return app.getPath('temp');
-  });
-
-  ipcMain.handle('execPath', async () => {
-    return process.helperExecPath.replace(/\\/g, '/');
-  });
-
   ipcMain.handle('isWindows', async () => {
     return os.platform() === 'win32';
   });
@@ -67,12 +60,20 @@ const ipcMethods = () => {
     });
   });
 
+  ipcMain.handle('temp', async () => {
+    return app.getPath('temp').replace(/\\/g, '/');
+  });
+
+  ipcMain.handle('execPath', async () => {
+    return process.helperExecPath.replace(/\\/g, '/');
+  });
+
   ipcMain.handle('home', async () => {
-    return app.getPath('home');
+    return app.getPath('home').replace(/\\/g, '/');
   });
 
   ipcMain.handle('getPath', async (event, name) => {
-    return app.getPath(name);
+    return app.getPath(name).replace(/\\/g, '/');
   });
 
   ipcMain.handle('exitApp', async () => {
@@ -110,11 +111,7 @@ const ipcMethods = () => {
   });
 
   ipcMain.handle('getStat', async (event, filePath) => {
-    return fs.statSync(filePath);
-  });
-
-  ipcMain.handle('createStream', async (event, filePath) => {
-    return fs.createWriteStream(filePath);
+    return JSON.stringify(fs.statSync(filePath));
   });
 
   ipcMain.handle('read', async (event, filePath) => {
@@ -126,7 +123,7 @@ const ipcMethods = () => {
   });
 
   ipcMain.handle('append', async (event, filePath, data) => {
-    fs.open(filePath, 'a', (err, fd) => {
+    return fs.open(filePath, 'a', (err, fd) => {
       if (err) throw err;
       fs.writeFile(fd, data, (err) => {
         fs.close(fd, (err) => {
@@ -138,15 +135,15 @@ const ipcMethods = () => {
   });
 
   ipcMain.handle('delete', async (event, filePath) => {
-    return fs.unlink(filePath);
+    return await fs.unlink(filePath);
   });
 
   ipcMain.handle('copyFile', async (event, from, to) => {
-    return fs.copyFileSync(from, to);
+    return await fs.copyFile(from, to);
   });
 
   ipcMain.handle('times', async (event, filePath, create, update) => {
-    fs.utimesSync(filePath, create, update);
+    return await fs.utimes(filePath, create, update);
   });
 
   ipcMain.handle('readDir', async (event, folder) => {
@@ -162,8 +159,8 @@ const ipcMethods = () => {
   ipcMain.handle('fileJson', async (event, settings) => {
     if (fs.existsSync(settings)) {
       const data = fs.readFileSync(settings, 'utf-8');
-      const jsonStr = convert.xml2json(data, { compact: true, spaces: 2 });
-      return JSON.parse(jsonStr);
+      return convert.xml2json(data, { compact: true, spaces: 2 });
+      // return JSON.parse(jsonStr);
     }
     return null;
   });
@@ -184,62 +181,62 @@ const ipcMethods = () => {
   });
 
   ipcMain.handle('openExternal', async (event, cmd) => {
-    shell.openExternal(cmd);
+    return await shell.openExternal(cmd);
   });
 
   ipcMain.handle('openPath', async (event, cmd) => {
-    shell.openPath(cmd);
+    return await shell.openPath(cmd);
   });
 
   ipcMain.handle('exec', async (event, cmd, args, opts) => {
-    return execa(cmd, args, opts);
+    return JSON.stringify(await execa(cmd, args, opts));
   });
 
   ipcMain.handle('exeCmd', async (event, cmd, opts) => {
-    return execa.command(cmd, opts);
+    return JSON.stringify(await execa.command(cmd, opts));
   });
 
-  ipcMain.handle('binaryCopy', async (event, file, fullName) => {
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      fs.writeFileSync(fullName, evt?.target?.result, {
-        encoding: 'binary',
-        flag: 'wx', //write - fail if file exists
-      });
-    };
-    reader.readAsBinaryString(file);
-  });
-
+  let admZip = [0]; // valid index is not falsey
   ipcMain.handle('zipOpen', async (event, fullPath) => {
-    return new AdmZip(fullPath);
+    const index = admZip.length;
+    admZip.push(fullPath ? new AdmZip(fullPath) : new AdmZip());
+    return index;
   });
 
   ipcMain.handle('zipGetEntries', async (event, zip) => {
-    return zip.getEntries();
+    return admZip[zip].getEntries();
   });
 
   ipcMain.handle('zipReadText', async (event, zip, name) => {
-    return zip.readAsText(name);
+    return admZip[zip].readAsText(name);
   });
 
   ipcMain.handle('zipAddFile', async (event, zip, name, data, comment) => {
-    return zip.addFile(name, data, comment);
+    return admZip[zip].addFile(name, data, comment);
   });
 
   ipcMain.handle('zipAddLocal', async (event, zip, full, folder, base) => {
-    return zip.addLocalFile(full, folder, base);
+    return admZip[zip].addLocalFile(full, folder, base);
   });
 
   ipcMain.handle('zipToBuffer', async (event, zip) => {
-    return zip.toBuffer();
+    return admZip[zip].toBuffer();
   });
 
   ipcMain.handle('zipWrite', async (event, zip, where) => {
-    return zip.writeZip(where);
+    return admZip[zip].writeZip(where);
   });
 
   ipcMain.handle('zipExtract', async (event, zip, folder, replace) => {
-    return zip.extractAllTo(folder, replace);
+    return admZip[zip].extractAllTo(folder, replace);
+  });
+
+  ipcMain.handle('zipClose', async (event, zip) => {
+    if (admZip.length - 1 === zip) {
+      admZip.pop();
+    } else {
+      admZip = admZip.slice(0, zip).concat(admZip.slice(zip + 1));
+    }
   });
 
   let isLogingIn = false;
@@ -283,6 +280,10 @@ const ipcMethods = () => {
     isLogingIn = false;
     isLogOut = true;
     createLogoutWindow();
+  });
+
+  ipcMain.handle('download', async (event, url, localFile, onProgress) => {
+    return downloadFile(url, localFile, onProgress);
   });
 };
 

@@ -30,7 +30,6 @@ export * from './lookupBook';
 export * from './refMatch';
 export * from './localUserKey';
 export * from './getFIngerprint';
-export * from './downloadFile';
 export * from './useProjectsLoaded';
 export * from './useMounted';
 export * from './execFolder';

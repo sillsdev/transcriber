@@ -84,7 +84,7 @@ export const getParatextText =
     }
   };
 export const getParatextTextLocal =
-  (
+  async (
     ptPath: string,
     passage: Passage,
     ptProjName: string,
@@ -97,7 +97,7 @@ export const getParatextTextLocal =
       type: TEXT_PENDING,
     });
     try {
-      var pt = localProjects(ptPath, undefined, ptProjName);
+      var pt = await localProjects(ptPath, undefined, ptProjName);
       if (pt && pt.length > 0) {
         let response = await getLocalParatextText(passage, pt[0].ShortName);
         dispatch({ payload: response, type: TEXT_SUCCESS });
@@ -211,7 +211,7 @@ export const getProjects =
       });
   };
 
-const localProjects = (
+const localProjects = async (
   ptPath: string,
   languageTag?: string,
   projName?: string
@@ -219,31 +219,30 @@ const localProjects = (
   if (ptPath === '') return;
   const path = require('path-browserify');
   let pt: ParatextProject[] = [];
-  ipc
-    ?.readDir(ptPath)
-    .filter((n: string) => n.indexOf('.') === -1 && n[0] !== '_')
-    .forEach((n: string) => {
-      const settingsPath = path.join(ptPath, n, 'Settings.xml');
-      const settingsJson = fileJson(settingsPath);
-      if (settingsJson) {
-        const setting = settingsJson.ScriptureText;
-        const langIso = setting.LanguageIsoCode._text
-          .replace(/::?:?/g, '-')
-          .replace(/-$/, '');
-        pt.push({
-          ParatextId: setting.Guid._text,
-          Name: setting.FullName._text,
-          ShortName: setting.Name._text,
-          LanguageName: setting.Language._text,
-          LanguageTag: langIso,
-          CurrentUserRole:
-            setting.Editable._text === 'T' ? 'pt_translator' : '',
-          IsConnectable: setting.Editable._text === 'T',
-          ProjectType: setting.TranslationInfo._text.split(':')[0],
-          BaseProject: setting.TranslationInfo._text.split(':')[2],
-        } as ParatextProject);
-      }
-    });
+  const fileList = (await ipc?.readDir(ptPath)).filter(
+    (n: string) => n.indexOf('.') === -1 && n[0] !== '_'
+  );
+  for (let n of fileList) {
+    const settingsPath = path.join(ptPath, n, 'Settings.xml');
+    const settingsJson = await fileJson(settingsPath);
+    if (settingsJson) {
+      const setting = settingsJson.ScriptureText;
+      const langIso = setting.LanguageIsoCode._text
+        .replace(/::?:?/g, '-')
+        .replace(/-$/, '');
+      pt.push({
+        ParatextId: setting.Guid._text,
+        Name: setting.FullName._text,
+        ShortName: setting.Name._text,
+        LanguageName: setting.Language._text,
+        LanguageTag: langIso,
+        CurrentUserRole: setting.Editable._text === 'T' ? 'pt_translator' : '',
+        IsConnectable: setting.Editable._text === 'T',
+        ProjectType: setting.TranslationInfo._text.split(':')[0],
+        BaseProject: setting.TranslationInfo._text.split(':')[2],
+      } as ParatextProject);
+    }
+  }
   if (projName) {
     pt = pt.filter((p) => p.Name === projName);
   }

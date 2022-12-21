@@ -38,23 +38,28 @@ const nextVersion = (fileName: string) => {
   return `${name}.ver02.${ext}`;
 };
 
+let writeName = ''; // used for message if copy fails
+
 export const writeFileLocal = async (file: File, remoteName?: string) => {
   var local = { localname: '' };
   const filePath = (file as any)?.path || '';
-  if (!filePath) console.log('writeFileLocal missing filePath');
   dataPath(
     remoteName ? remoteName : `http://${filePath}`,
     PathType.MEDIA,
     local
   );
-  var fullName = local.localname;
-  if (!remoteName && filePath === '') fullName += path.sep + file.name;
-  createPathFolder(fullName);
-  while (await ipc?.exists(fullName)) {
-    fullName = nextVersion(fullName);
+  writeName = local.localname;
+  if (!remoteName && filePath === '') writeName += path.sep + file.name;
+  await createPathFolder(writeName);
+  while (await ipc?.exists(writeName)) {
+    writeName = nextVersion(writeName);
   }
-  ipc?.binaryCopy(file, fullName);
-  return path.join(PathType.MEDIA, fullName.split(path.sep).pop());
+  if (filePath) {
+    await ipc?.copyFile(filePath, writeName);
+  } else {
+    await ipc?.binaryCopy(JSON.stringify(file), writeName);
+  }
+  return path.join(PathType.MEDIA, writeName.split(path.sep).pop());
 };
 const uploadFile = (
   data: any,
@@ -225,18 +230,21 @@ export const nextUpload =
         Authorization: 'Bearer ' + token,
       },
     })
-      .then((response) => {
+      .then(async (response) => {
         dispatch({ payload: n, type: UPLOAD_ITEM_CREATED });
         var json = fromVnd(response.data);
         uploadFile(json, files[n], errorReporter, token, completeCB);
         if (isElectron) {
           try {
-            writeFileLocal(files[n], response.data.audioUrl);
+            await writeFileLocal(
+              files[n],
+              response.data.data.attributes['audio-url']
+            );
           } catch (err) {
             logError(
               Severity.error,
               errorReporter,
-              `failed writing ${files[n]}`
+              `failed copying ${(files[n] as any).path} to ${writeName}`
             );
           }
         }

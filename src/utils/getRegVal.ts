@@ -6,7 +6,9 @@ const lnRe = /([A-Za-z0-9_\\(\\)]+)[^A-Za-z0-9_]+([A-Z_]+)[^A-Za-z0-9_]+(.*)?/;
 export const getRegVal = async (key: string, name: string) => {
   let val: (string | undefined)[] = [];
   try {
-    const { stdout } = (await ipc?.exec('reg', ['query', key])) as IExeca;
+    const { stdout } = JSON.parse(
+      await ipc?.exec('reg', ['query', key])
+    ) as IExeca;
     val =
       typeof stdout === 'string'
         ? stdout
