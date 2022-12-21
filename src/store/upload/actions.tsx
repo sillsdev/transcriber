@@ -57,7 +57,14 @@ export const writeFileLocal = async (file: File, remoteName?: string) => {
   if (filePath) {
     await ipc?.copyFile(filePath, writeName);
   } else {
-    await ipc?.binaryCopy(JSON.stringify(file), writeName);
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      ipc?.write(writeName, evt?.target?.result, {
+        encoding: 'binary',
+        flag: 'wx', //write - fail if file exists
+      });
+    };
+    reader.readAsBinaryString(file);
   }
   return path.join(PathType.MEDIA, writeName.split(path.sep).pop());
 };

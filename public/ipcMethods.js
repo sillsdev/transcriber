@@ -114,12 +114,12 @@ const ipcMethods = () => {
     return JSON.stringify(fs.statSync(filePath));
   });
 
-  ipcMain.handle('read', async (event, filePath) => {
-    return fs.readFileSync(filePath, 'utf-8');
+  ipcMain.handle('read', async (event, filePath, options) => {
+    return fs.readFileSync(filePath, options);
   });
 
-  ipcMain.handle('write', async (event, filePath, data) => {
-    return fs.writeFileSync(filePath, data, { encoding: 'utf-8' });
+  ipcMain.handle('write', async (event, filePath, data, options) => {
+    return fs.writeFileSync(filePath, data, { encoding: 'utf-8', ...options });
   });
 
   ipcMain.handle('append', async (event, filePath, data) => {

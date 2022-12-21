@@ -280,7 +280,7 @@ export const useElectronImport = () => {
         .replace(/(\r\n|\n|\r)/gm, '');
       var versionstr = '3';
       if (await ipc?.exists(path.join(where, 'Version')))
-        versionstr = ipc?.read(path.join(where, 'Version'));
+        versionstr = ipc?.read(path.join(where, 'Version'), 'utf-8');
       var version = parseInt(versionstr);
       importProjectToElectron({
         filepath: path.join(where, 'data'),

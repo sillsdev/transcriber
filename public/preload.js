@@ -41,9 +41,10 @@ contextBridge.exposeInMainWorld('electron', {
   stat: async (name, cb) => await ipcRenderer.invoke('stat', name, cb),
   getStat: async (folderPath) =>
     await ipcRenderer.invoke('getStat', folderPath),
-  read: async (filePath) => await ipcRenderer.invoke('read', filePath),
-  write: async (filePath, data) =>
-    await ipcRenderer.invoke('write', filePath, data),
+  read: async (filePath, options) =>
+    await ipcRenderer.invoke('read', filePath, options),
+  write: async (filePath, data, options) =>
+    await ipcRenderer.invoke('write', filePath, data, options),
   append: async (filePath, data) =>
     await ipcRenderer.invoke('append', filePath, data),
   delete: async (filePath) => await ipcRenderer.invoke('delete', filePath),

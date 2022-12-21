@@ -23,7 +23,7 @@ export const audPrefsName = async () => {
 
 const getAllPref = async (prefs: string) => {
   if (!(await ipc?.exists(prefs))) return false;
-  return await ipc?.read(prefs);
+  return await ipc?.read(prefs, 'utf-8');
 };
 
 const getAudPrefContent = async (inPrefs?: string) => {

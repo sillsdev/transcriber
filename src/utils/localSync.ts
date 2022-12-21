@@ -531,7 +531,7 @@ const getChapter = async (
   ]);
   if (stdout) console.log(stdout);
 
-  const usx: string = await ipc?.read(paths.chapterFile);
+  const usx: string = await ipc?.read(paths.chapterFile, 'utf-8');
   return domParser.parseFromString(usx);
 };
 
