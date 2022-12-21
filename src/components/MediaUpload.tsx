@@ -10,7 +10,7 @@ import {
   DialogTitle,
   styled,
 } from '@mui/material';
-import path from 'path';
+import path from 'path-browserify';
 import { useSnackBar } from '../hoc/SnackBar';
 import SpeakerName from './SpeakerName';
 import { mediaUploadSelector } from '../selector';

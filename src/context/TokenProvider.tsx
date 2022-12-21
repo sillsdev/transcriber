@@ -10,7 +10,7 @@ import { useGlobal } from 'reactn';
 import { useUpdateOrbitToken } from '../crud';
 import { logError, Severity, useInterval } from '../utils';
 import { isElectron } from '../api-variable';
-const ipc = isElectron ? require('electron').ipcRenderer : null;
+const ipc = (window as any)?.electron;
 
 const Expires = 0; // Set to 7110 to test 1:30 token
 
@@ -117,8 +117,8 @@ function TokenProvider(props: IProps) {
       ipc
         ?.invoke('refresh-token')
         .then(async () => {
-          const myUser = await ipc?.invoke('get-profile');
-          const myToken = await ipc?.invoke('get-token');
+          const myUser = await ipc?.getProfile();
+          const myToken = await ipc?.getToken();
           updateOrbitToken(myToken);
           const decodedToken = jwtDecode(myToken) as IToken;
           setState((state) => ({ ...state, expireAt: decodedToken.exp }));

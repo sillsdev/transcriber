@@ -1,26 +1,21 @@
-import request from 'request';
-const fs = require('fs');
+const request = require('request');
+const fs = require('fs-extra');
 /**
  * Promise based download file method
  * See: https://ourcodeworld.com/articles/read/228/how-to-download-a-webfile-with-electron-save-it-and-show-download-progress
  */
-interface IProps {
-  url: string;
-  localPath: string;
-  onProgress?: (received: number, total: number) => void;
-}
-export function downloadFile(props: IProps) {
-  return new Promise(function (resolve, reject) {
+function downloadFile(url, localPath, onProgress) {
+  return new Promise(async function (resolve, reject) {
     let received_bytes = 0;
     let total_bytes = 0;
-    let error: Error | null = null;
+    let error = null;
 
     const req = request({
       method: 'GET',
-      uri: props.url,
+      uri: url,
     });
 
-    const out = fs.createWriteStream(props.localPath);
+    const out = await fs.createStream(localPath);
     req.pipe(out);
 
     req.on('response', function (data) {
@@ -29,7 +24,7 @@ export function downloadFile(props: IProps) {
 
     req.on('data', function (chunk) {
       received_bytes += chunk.length;
-      props.onProgress && props.onProgress(received_bytes, total_bytes);
+      onProgress && onProgress(received_bytes, total_bytes);
     });
 
     // req.on('end', function () {
@@ -45,9 +40,11 @@ export function downloadFile(props: IProps) {
       if (!error) resolve(undefined);
     });
 
-    out.on('error', function (err: Error) {
+    out.on('error', function (err) {
       error = err;
       reject(err);
     });
   });
 }
+
+module.exports = downloadFile;

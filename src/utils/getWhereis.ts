@@ -1,11 +1,10 @@
 import { IExeca } from '../model';
-const isElectron = process.env.REACT_APP_MODE === 'electron';
-const execa = isElectron ? require('execa') : null;
+const ipc = (window as any)?.electron;
 
 export const getWhereis = async (key: string, scall?: any) => {
   let val: string | undefined = undefined;
   try {
-    const { stdout } = (await (scall || execa)('whereis', [key], {
+    const { stdout } = (await (scall || ipc?.exec)('whereis', [key], {
       env: { ...{ ...process }.env, DISPLAY: ':0' },
     })) as IExeca;
     if (typeof stdout === 'string') val = stdout;

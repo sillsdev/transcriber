@@ -3,9 +3,8 @@ import { Plan, Passage, Section } from '../model';
 import { RecordIdentity, Record } from '@orbit/data';
 import { related, usePlan } from '.';
 import { toCamel, pad2, cleanFileName } from '../utils';
-import { isElectron } from '../api-variable';
-const ipc = isElectron ? require('electron').ipcRenderer : null;
-const path = require('path');
+const ipc = (window as any)?.electron;
+const path = require('path-browserify');
 
 const planSlug = (rec: Plan | null) => {
   const name = rec?.attributes?.name || '';
@@ -35,7 +34,7 @@ export const useAudProjName = () => {
       q.findRecord({ type: 'section', id: secId })
     ) as Section;
     const planRec = getPlan(related(secRec, 'plan'));
-    const docs = await ipc?.invoke('getPath', 'documents');
+    const docs = await ipc?.getPath('documents');
     const book = passRec?.attributes?.book;
     const secSeq = secRec?.attributes?.sequencenum || 0;
     let secPart = `${book ? '-' + book : ''}${recSlug(secRec, secSeq)}`;

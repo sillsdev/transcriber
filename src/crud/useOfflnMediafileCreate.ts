@@ -5,7 +5,7 @@ import { MediaFile } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils';
 import { useMediaAttach } from './useMediaAttach';
-import path from 'path';
+import path from 'path-browserify';
 
 export const useOfflnMediafileCreate = () => {
   const [memory] = useGlobal('memory');

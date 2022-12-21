@@ -1,19 +1,14 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
 import { ISharedStrings, IState, Role } from '../model';
 import { connect } from 'react-redux';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
 import { Avatar } from '@mui/material';
 import { makeAbbr } from '../utils';
-import { dataPath, PathType } from '../utils/dataPath';
-import { remoteId } from '../crud';
-import { isElectron } from '../api-variable';
+import { useAvatarSource } from '../crud';
 import localStrings from '../selector/localize';
 import { localizeRole } from '../utils';
 import { avatarSize } from '../control';
-const os = require('os');
-const fs = require('fs');
 
 interface IStateProps {
   ts: ISharedStrings;
@@ -30,25 +25,12 @@ interface IProps extends IStateProps, IRecordProps {
 
 export function RoleAvatar(props: IProps) {
   const { roleRec, small, ts } = props;
-  const [memory] = useGlobal('memory');
+  const source = useAvatarSource(roleRec.attributes.roleName, roleRec);
 
-  var src = dataPath(roleRec.attributes.roleName, PathType.AVATARS, {
-    localname:
-      remoteId('role', roleRec.id, memory.keyMap) +
-      roleRec.attributes.roleName +
-      '.png',
-  });
-  if (src && isElectron && !src.startsWith('http')) {
-    if (fs.existsSync(src)) {
-      const url =
-        os.platform() === 'win32' ? new URL(src).toString().slice(8) : src;
-      src = `transcribe-safe://${url}`;
-    } else src = '';
-  }
-  return src ? (
+  return source ? (
     <Avatar
       alt={roleRec.attributes.roleName}
-      src={src}
+      src={source}
       sx={avatarSize(small)}
     />
   ) : roleRec.attributes && roleRec.attributes.roleName !== '' ? (

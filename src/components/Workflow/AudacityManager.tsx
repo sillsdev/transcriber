@@ -24,24 +24,22 @@ import {
   useAudProjName,
 } from '../../crud';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { API_CONFIG, isElectron } from '../../api-variable';
 import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
 import {
   launchAudacity,
   loadBlob,
-  isProcessRunning,
   audPrefsName,
   setAudacityPref,
+  execFolder,
 } from '../../utils';
 import { dataPath, PathType } from '../../utils';
 import { extensions, mimes } from '.';
 import SpeakerName from '../SpeakerName';
 import { audacityManagerSelector } from '../../selector';
 
-const fs = require('fs');
-const ipc = isElectron ? require('electron').ipcRenderer : null;
-const path = require('path');
+const ipc = (window as any)?.electron;
+const path = require('path-browserify');
 
 const StyledGrid = styled(Grid)<GridProps>(() => ({
   minWidth: '800px',
@@ -101,7 +99,7 @@ function AudacityManager(props: IProps) {
   };
 
   const handleBrowse = () => {
-    ipc?.invoke('audacityOpen').then((fullName: string[]) => {
+    ipc?.audacityOpen().then((fullName: string[]) => {
       if (fullName && fullName.length > 0) {
         setAudacityPref(fullName[0]);
         // setAudacityPref creates the folders needed for audacity export
@@ -143,7 +141,7 @@ function AudacityManager(props: IProps) {
     if ((mediaId || '') !== '') {
       const url = getMediaUrl(mediaId);
       mediaName = dataPath(url, PathType.MEDIA);
-      if (!fs.existsSync(mediaName)) {
+      if (!(await ipc?.exists(mediaName))) {
         showMessage(t.checkDownload);
         return;
       }
@@ -152,27 +150,27 @@ function AudacityManager(props: IProps) {
       const fullName = await getProjName(passageId);
       const beforeContent = await setAudacityPref(fullName);
       // setAudacityPref creates the folders needed for the copy below
-      if (!fs.existsSync(fullName)) {
+      if (!(await ipc?.exists(fullName))) {
         if (Boolean(mediaName)) {
           let ext = mediaName.split('.').pop() || 'mp3';
           const mp3FullName = fullName
             .replace('aup3', 'io')
             .replace('.aup3', `.${ext}`);
-          if (!fs.existsSync(mp3FullName)) {
+          if (!(await ipc?.exists(mp3FullName))) {
             showMessage(t.loadingAudio);
-            fs.copyFileSync(mediaName, mp3FullName);
+            await ipc?.copyFile(mediaName, mp3FullName);
             const updated = new Date(getMediaUpdated(mediaId));
-            fs.utimesSync(mp3FullName, updated, updated);
+            await ipc?.times(mp3FullName, updated, updated);
           }
         }
-        fs.copyFileSync(
-          path.join(API_CONFIG.resourcePath, 'new.aup3'),
+        await ipc?.copyFile(
+          path.join(await execFolder(), 'resources', 'new.aup3'),
           fullName
         );
       }
       setExists(true);
       setName(fullName);
-      if (beforeContent && (await isProcessRunning('audacity'))) {
+      if (beforeContent && (await ipc?.isProcessRunning('audacity'))) {
         showMessage(t.closeAudacity);
         return;
       }
@@ -192,7 +190,7 @@ function AudacityManager(props: IProps) {
       return;
     }
     const beforeContent = await setAudacityPref(name);
-    if (beforeContent && (await isProcessRunning('audacity'))) {
+    if (beforeContent && (await ipc?.isProcessRunning('audacity'))) {
       showMessage(t.closeAudacity);
       return;
     }
@@ -213,7 +211,7 @@ function AudacityManager(props: IProps) {
     const nameOnly = name.replace('.aup3', '').split(path.sep).pop();
     const nmLen = nameOnly?.length;
     const audioFolder = path.dirname(name.replace('aup3', 'io'));
-    const result = fs.readdirSync(audioFolder) as string[];
+    const result = (await ipc?.readDir(audioFolder)) as string[];
     let mp3FullName = '';
     let mime = '';
     let lastTime = 0;
@@ -221,7 +219,7 @@ function AudacityManager(props: IProps) {
       const ext = audioName.split('.').pop() || '';
       const extIdx = extensions.indexOf(ext);
       const fullName = path.join(audioFolder, audioName);
-      const stat = fs.statSync(fullName);
+      const stat = JSON.parse(await ipc?.getStat(fullName));
       if (
         moment(stat.mtime).isAfter(moment(lastTime)) &&
         extensions.indexOf(ext) >= 0 &&
@@ -284,10 +282,12 @@ function AudacityManager(props: IProps) {
   }, []);
 
   React.useEffect(() => {
-    if (name) {
-      setExists(fs.existsSync(name));
-      nameUpdate();
-    }
+    (async () => {
+      if (name) {
+        setExists(await ipc?.exists(name));
+        nameUpdate();
+      }
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passageId, name]);
 

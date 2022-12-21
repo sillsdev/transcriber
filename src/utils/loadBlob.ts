@@ -1,5 +1,4 @@
-import { isElectron } from '../api-variable';
-const fs = isElectron ? require('fs') : null;
+const ipc = (window as any)?.electron;
 
 interface MimeMap {
   [key: string]: string;
@@ -24,7 +23,7 @@ const urlType = (url: string) => {
   return mimeMap.hasOwnProperty(ext) ? mimeMap[ext] : '';
 };
 
-export const loadBlob = (
+export const loadBlob = async (
   url: string,
   setBlob: (urlorError: string, blob: Blob | undefined) => void
 ) => {
@@ -35,7 +34,7 @@ export const loadBlob = (
       .catch((e) => setBlob(e?.message || e.toString(), undefined));
   } else {
     try {
-      const source = fs.readFileSync(
+      const source = await ipc?.read(
         decodeURIComponent(url.replace(`transcribe-safe://`, ``))
       );
       setBlob(url, new Blob([source], { type: urlType(url) }));

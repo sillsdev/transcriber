@@ -39,9 +39,7 @@ import { AltButton, PriButton, UserListItem } from '../control';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import UserListMode, { ListMode } from '../control/userListMode';
 import { accessSelector } from '../selector';
-const noop = {} as any;
-const ipc = isElectron ? require('electron').ipcRenderer : null;
-const electronremote = isElectron ? require('@electron/remote') : noop;
+const ipc = (window as any)?.electron;
 
 const SectionHead = styled(Typography)<TypographyProps>(({ theme }) => ({
   fontSize: '14pt',
@@ -115,13 +113,13 @@ export const goOnline = (email?: string) => {
   localStorage.removeItem('auth-id');
   localStorage.setItem('isLoggedIn', 'true');
   const hasUsed = lastTime !== null;
-  ipc?.invoke('login', hasUsed, email);
-  electronremote?.getCurrentWindow().close();
+  ipc?.login(hasUsed, email);
+  ipc?.closeApp();
 };
 export const doLogout = async () => {
   localStorage.removeItem('online-user-id');
   forceLogin();
-  await ipc?.invoke('logout');
+  await ipc?.logout();
 };
 export const switchUser = async () => {
   await doLogout();
@@ -195,7 +193,7 @@ export function Access(
           ? curUser?.attributes?.email
           : undefined;
         goOnline(email);
-      } else ipc?.invoke('logout');
+      } else ipc?.logout();
     }
     setGoOnlineConfirmation(undefined);
   };
@@ -343,10 +341,10 @@ export function Access(
 
   useEffect(() => {
     if (isElectron && selectedUser === '') {
-      ipc?.invoke('get-profile').then((result: any) => {
+      ipc?.getProfile().then((result: any) => {
         if (result) {
           // Even tho async, this executes first b/c users takes time to load
-          ipc?.invoke('get-token').then((accessToken: any) => {
+          ipc?.getToken().then((accessToken: any) => {
             const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
             if (loggedIn) {
               if (offline) setOffline(false);

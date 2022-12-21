@@ -1,16 +1,17 @@
 import { isElectron } from '../api-variable';
-import { launch } from '.';
+import { execFolder, launch } from '.';
 
 const noop = {} as any;
-const os = isElectron ? require('os') : noop;
-const path = isElectron ? require('path') : noop;
+const path = isElectron ? require('path-browserify') : noop;
+const ipc = (window as any)?.electron;
 
-export const resetData = () => {
+export const resetData = async () => {
   if (isElectron) {
-    if (os.platform() === 'win32') {
-      launch(path.join(process.resourcesPath, 'resetData.bat'), false);
+    const folder = path.join(await execFolder(), 'resources');
+    if (await ipc?.isWindows()) {
+      launch(path.join(folder, 'resetData.bat'), false);
     } else {
-      launch(path.join(process.resourcesPath, 'resetData.sh'), false);
+      launch(path.join(folder, 'resetData.sh'), false);
     }
   }
 };
