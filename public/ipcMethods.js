@@ -107,12 +107,13 @@ const ipcMethods = () => {
     return fs.existsSync(name);
   });
 
-  ipcMain.handle('stat', async (event, name, cb) => {
-    return fs.stat(name, cb);
-  });
-
-  ipcMain.handle('getStat', async (event, filePath) => {
-    return JSON.stringify(fs.statSync(filePath));
+  ipcMain.handle('stat', async (event, filePath) => {
+    try {
+      const stats = fs.statSync(filePath);
+      return JSON.stringify(stats);
+    } catch (err) {
+      return JSON.stringify(err);
+    }
   });
 
   ipcMain.handle('read', async (event, filePath, options) => {

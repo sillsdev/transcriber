@@ -1,4 +1,5 @@
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import ReactDOM from 'react-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
 import envVariables from './auth/auth0-variables.json';
@@ -51,7 +52,6 @@ const bugsnagClient = prodOrQa
   : undefined;
 bugsnagClient?.use(bugsnagReact, React);
 const SnagBoundary = bugsnagClient?.getPlugin('react');
-const electronLog = isElectron ? logFile : undefined;
 
 // Redux store
 const store = configureStore();
@@ -104,8 +104,19 @@ if (isElectron) {
   console.log('Running on the Web, Filesystem access disabled.');
 }
 
-const ErrorManagedApp = () =>
-  bugsnagClient ? (
+const ErrorManagedApp = () => {
+  const [electronLog, setElectronLog] = useGlobal('errorReporter');
+
+  useEffect(() => {
+    if (isElectron) {
+      logFile().then((fullName: string) => {
+        setElectronLog(fullName);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return bugsnagClient ? (
     <SnagBoundary>
       <ErrorBoundary errorReporter={bugsnagClient} memory={memory}>
         <App />
@@ -116,7 +127,7 @@ const ErrorManagedApp = () =>
       <App />
     </ErrorBoundary>
   );
-
+};
 const TokenChecked = () => (
   <TokenProvider>
     <ErrorManagedApp />
@@ -204,7 +215,7 @@ Promise.all(promises)
       editUserId: null,
       developer: localStorage.getItem('developer'),
       offline: isElectron,
-      errorReporter: !isElectron ? bugsnagClient : electronLog,
+      errorReporter: bugsnagClient,
       alertOpen: false,
       fingerprint: promResults[0][0],
       orbitRetries: OrbitNetworkErrorRetries,
