@@ -2,15 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
 import { IState, ISpellingStrings } from '../model';
-import { IconButton } from '@material-ui/core';
+import { IconButton } from '@mui/material';
 import SpellCheckIcon from '@mui/icons-material/Spellcheck';
 import SpellingTabs from './SpellingTabs';
 import BigDialog from '../hoc/BigDialog';
 import Confirm from './AlertDialog';
 import { LightTooltip } from '../control';
 import { relaunchApp, exitApp } from '../utils';
-import { isElectron } from '../api-variable';
-const ipc = isElectron ? require('electron').ipcRenderer : null;
+const ipc = (window as any)?.electron;
 
 interface IStateProps {
   t: ISpellingStrings;
@@ -33,7 +32,7 @@ export const Spelling = (props: IStateProps) => {
 
   const handleSave = () => {
     if (changed) {
-      ipc?.invoke('setSpellLangs', codes);
+      ipc?.setSpellLangs(codes);
       setConfirm(true);
     }
     setOpen(false);
@@ -49,7 +48,7 @@ export const Spelling = (props: IStateProps) => {
   };
 
   React.useEffect(() => {
-    ipc?.invoke('setAddToDict', t.addToDict);
+    ipc?.setAddToDict(t.addToDict);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

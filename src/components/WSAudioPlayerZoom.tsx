@@ -1,12 +1,6 @@
-import {
-  makeStyles,
-  Theme,
-  createStyles,
-  IconButton,
-  Grid,
-} from '@material-ui/core';
+import { IconButton, Grid } from '@mui/material';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { LightTooltip } from '../control';
+import { GrowingDiv, LightTooltip, ToolbarGrid } from '../control';
 import { IState, IWsAudioPlayerZoomStrings } from '../model';
 import { HotKeyContext } from '../context/HotKeyContext';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
@@ -15,32 +9,6 @@ import ZoomWidthIcon from '@mui/icons-material/Pageview';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'column',
-      whiteSpace: 'nowrap',
-    },
-    toolbar: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyItems: 'flex-start',
-      display: 'flex',
-    },
-    togglebutton: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    formControl: {
-      margin: theme.spacing(1),
-      maxWidth: 50,
-    },
-  })
-);
 interface IStateProps {
   t: IWsAudioPlayerZoomStrings;
 }
@@ -50,7 +18,6 @@ interface IProps extends IStateProps {
   wsPctWidth: () => number;
 }
 function WSAudioPlayerZoom(props: IProps) {
-  const classes = useStyles();
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
   const [zoomMin, setZoomMin] = useState(5);
@@ -104,8 +71,8 @@ function WSAudioPlayerZoom(props: IProps) {
   }, []);
 
   return (
-    <div className={classes.root}>
-      <Grid container className={classes.toolbar}>
+    <GrowingDiv>
+      <ToolbarGrid container>
         <Grid item>
           <LightTooltip
             id="wszoominTip"
@@ -147,8 +114,8 @@ function WSAudioPlayerZoom(props: IProps) {
             </span>
           </LightTooltip>
         </Grid>
-      </Grid>
-    </div>
+      </ToolbarGrid>
+    </GrowingDiv>
   );
 }
 const mapStateToProps = (state: IState): IStateProps => ({

@@ -1,4 +1,4 @@
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
   GroupMembership,
@@ -8,28 +8,14 @@ import {
   Group,
   OrganizationMembership,
 } from '../model';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { useSelector, shallowEqual } from 'react-redux';
 import { discussionCardSelector } from '../selector';
 import { related } from '../crud';
 import { useGlobal } from 'reactn';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    menu: {},
-    label: { marginTop: theme.spacing(1) },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      display: 'flex',
-      flexGrow: 1,
-      minWidth: '8rem',
-    },
-  })
-);
 interface IStateProps {
   ts: ISharedStrings;
 }
@@ -64,7 +50,6 @@ export const SelectDiscussionAssignment = (props: IProps) => {
     userPrefix,
     groupPrefix,
   } = props;
-  const classes = useStyles();
   const { peerGroups } = usePeerGroups({ users, groups, memberships });
   const [orgUsers, setOrgUsers] = useState<User[]>([]);
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -110,16 +95,11 @@ export const SelectDiscussionAssignment = (props: IProps) => {
   return (
     <TextField
       id="selectassignment"
-      className={classes.textField}
+      sx={{ mx: 1, display: 'flex', flexGrow: 1, minWidth: '8rem' }}
       select
       label={t.groupuser}
       value={value}
       onChange={handleAssigmentChange}
-      SelectProps={{
-        MenuProps: {
-          className: classes.menu,
-        },
-      }}
       helperText={label || ''}
       margin="normal"
       variant="filled"

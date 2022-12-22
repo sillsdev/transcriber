@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import Axios from 'axios';
 import { useGlobal } from 'reactn';
 import { TokenContext } from '../context/TokenProvider';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -40,8 +40,8 @@ import {
   SetUserLanguage,
   useOfflineSetup,
   useRole,
-  useProjectType,
   AcceptInvitation,
+  useProjectType,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -67,18 +67,16 @@ interface IDispatchProps {
   setExpireAt: typeof action.setExpireAt;
   doOrbitError: typeof action.doOrbitError;
   orbitComplete: typeof action.orbitComplete;
-  resetOrbitError: typeof action.resetOrbitError;
 }
 
-interface IProps extends IStateProps, IDispatchProps {}
+interface IProps {}
 
-export function Loading(props: IProps) {
+export function Loading(props: IProps & IStateProps & IDispatchProps) {
   const { orbitFetchResults, t } = props;
   const {
     fetchOrbitData,
     orbitComplete,
     doOrbitError,
-    resetOrbitError,
     fetchLocalization,
     setLanguage,
     setExpireAt,
@@ -96,15 +94,15 @@ export function Loading(props: IProps) {
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [loadComplete, setLoadComplete] = useGlobal('loadComplete');
   const [isDeveloper] = useGlobal('developer');
-  const [, setPlan] = useGlobal('plan');
   const [, setOrganization] = useGlobal('organization');
+  const { setMyOrgRole } = useRole();
   const [, setProject] = useGlobal('project');
   const tokenCtx = useContext(TokenContext);
   const { accessToken, profile, isAuthenticated } = tokenCtx.state;
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [, setCompleted] = useGlobal('progress');
   const { showMessage } = useSnackBar();
-  const { push } = useHistory();
+  const navigate = useNavigate();
   const getOfflineProject = useOfflnProjRead();
   const { getPlan } = usePlan();
   const [importOpen, setImportOpen] = useState(false);
@@ -112,9 +110,9 @@ export function Loading(props: IProps) {
   const [syncComplete, setSyncComplete] = useState(false);
   const [, setBusy] = useGlobal('importexportBusy');
   const offlineSetup = useOfflineSetup();
-  const { setMyProjRole } = useRole();
+  const LoadProjData = useLoadProjectData();
   const { setProjectType } = useProjectType();
-  const LoadProjData = useLoadProjectData(t, doOrbitError, resetOrbitError);
+  const [, setPlan] = useGlobal('plan');
   const [view, setView] = useState('');
   const [inviteError, setInviteError] = useState('');
 
@@ -187,6 +185,7 @@ export function Loading(props: IProps) {
     }
   };
   useEffect(() => {
+    // console.clear();
     if (!offline && !isAuthenticated()) return;
     if (!offline) {
       const decodedToken = jwtDecode(accessToken || '') as IToken;
@@ -237,7 +236,10 @@ export function Loading(props: IProps) {
   }, [doSync, importOpen, setBusy]);
 
   const getGotoUrl = () => {
-    let fromUrl = localStorage.getItem(localUserKey(LocalKey.url));
+    let fromUrl =
+      localStorage.getItem(localUserKey(LocalKey.deeplink)) ??
+      localStorage.getItem(localUserKey(LocalKey.url));
+    localStorage.removeItem(localUserKey(LocalKey.deeplink));
     if (fromUrl) {
       localStorage.removeItem(localUserKey(LocalKey.deeplink));
       return fromUrl;
@@ -263,8 +265,8 @@ export function Loading(props: IProps) {
       return;
     }
     let fromUrl = getGotoUrl();
-
-    if (fromUrl && !/^\/profile|^\/work|^\/plan|^\/detail/.test(fromUrl))
+    let waitToNavigate = false;
+    if (fromUrl && !/^\/profile|^\/plan|^\/detail/.test(fromUrl))
       fromUrl = null;
     if (fromUrl) {
       const m = /^\/[workplandetail]+\/([0-9a-f-]+)/.exec(fromUrl);
@@ -277,24 +279,26 @@ export function Loading(props: IProps) {
         } else {
           const projectId = related(planRec, 'project') as string | null;
           if (projectId) {
+            waitToNavigate = true;
             LoadProjData(projectId, () => {
-              setPlan(planId);
-              setProjectType(projectId);
-              setMyProjRole(projectId);
+              const projRec = memory.cache.query((q: QueryBuilder) =>
+                q.findRecord({ type: 'project', id: projectId })
+              );
+              if (projRec) {
+                setProject(projectId);
+                const orgId = related(projRec, 'organization') as string;
+                setOrganization(orgId);
+                setMyOrgRole(orgId);
+                setProjectType(projectId);
+                setPlan(planId);
+              }
+              navigate(fromUrl || '/team');
             });
-            const projRec = memory.cache.query((q: QueryBuilder) =>
-              q.findRecord({ type: 'project', id: projectId })
-            );
-            if (projRec) {
-              setProject(projectId);
-              const orgId = related(projRec, 'organization') as string;
-              setOrganization(orgId);
-            }
           }
         }
       } else if (!/^\/profile/.test(fromUrl)) fromUrl = null;
     }
-    push(fromUrl || '/team');
+    if (!waitToNavigate) navigate(fromUrl || '/team');
   };
 
   useEffect(() => {
@@ -346,8 +350,8 @@ export function Loading(props: IProps) {
     setView('Logout');
   };
 
-  if (!offline && !isAuthenticated()) return <Redirect to="/" />;
-  if (view !== '') return <Redirect to={view} />;
+  if (!offline && !isAuthenticated()) navigate('/');
+  if (view !== '') navigate(view);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -389,7 +393,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   orbitFetchResults: state.orbit.fetchResults,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       fetchLocalization: action.fetchLocalization,
@@ -398,10 +402,12 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       setExpireAt: action.setExpireAt,
       doOrbitError: action.doOrbitError,
       orbitComplete: action.orbitComplete,
-      resetOrbitError: action.resetOrbitError,
     },
     dispatch
   ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Loading) as any;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Loading as any) as any as (props: IProps) => JSX.Element;

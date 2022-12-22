@@ -13,7 +13,7 @@ import SkipIcon from '@mui/icons-material/NotInterested';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
-import { withData } from '../../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import PassageDetailPlayer from '../PassageDetailPlayer';
 import { parseRegions, IRegion } from '../../../crud/useWavesurferRegions';
 import { prettySegment, cleanClipboard } from '../../../utils';
@@ -494,6 +494,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     if (change) {
       setData(newData);
       dataRef.current = newData;
+      setPastedSegments('');
       if (!isChanged(wizToolId)) toolChanged(wizToolId);
     }
   };

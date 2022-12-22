@@ -1,4 +1,4 @@
-import { IWorkflow, IwfKind } from '../model';
+import { IWorkflow, IwfKind, IMediaShare } from '../model';
 import { wfResequence } from '../components/Workflow';
 
 test('resequence empty give empty', () => {
@@ -21,6 +21,7 @@ test('resequence 3 sections', () => {
       reference: 'Section 1:1–4',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -32,6 +33,7 @@ test('resequence 3 sections', () => {
       reference: '1:1-4',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 0,
@@ -43,6 +45,7 @@ test('resequence 3 sections', () => {
       reference: 'Section 1:5–25',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -54,6 +57,7 @@ test('resequence 3 sections', () => {
       reference: '1:5-7',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -65,6 +69,7 @@ test('resequence 3 sections', () => {
       reference: '1:8-10',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -76,6 +81,7 @@ test('resequence 3 sections', () => {
       reference: '1:11-17',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -87,6 +93,7 @@ test('resequence 3 sections', () => {
       reference: '1:18-20',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -98,6 +105,7 @@ test('resequence 3 sections', () => {
       reference: '1:21-25',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 0,
@@ -109,6 +117,7 @@ test('resequence 3 sections', () => {
       reference: 'Section 1:26–38',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -120,6 +129,7 @@ test('resequence 3 sections', () => {
       reference: '1:26-28',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -131,6 +141,7 @@ test('resequence 3 sections', () => {
       reference: '1:29-34',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -142,6 +153,7 @@ test('resequence 3 sections', () => {
       reference: '1:35-38',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
   ];
 
@@ -176,6 +188,7 @@ test('correct sequence is unchanged', () => {
       reference: 'Section 1:1–4',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -187,6 +200,7 @@ test('correct sequence is unchanged', () => {
       reference: '1:1-4',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 0,
@@ -198,6 +212,7 @@ test('correct sequence is unchanged', () => {
       reference: 'Section 1:5–25',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -209,6 +224,7 @@ test('correct sequence is unchanged', () => {
       reference: '1:5-7',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -220,6 +236,7 @@ test('correct sequence is unchanged', () => {
       reference: '1:8-10',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -231,6 +248,7 @@ test('correct sequence is unchanged', () => {
       reference: '1:11-17',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -242,6 +260,7 @@ test('correct sequence is unchanged', () => {
       reference: '1:18-20',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -253,6 +272,7 @@ test('correct sequence is unchanged', () => {
       reference: '1:21-25',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 0,
@@ -264,6 +284,7 @@ test('correct sequence is unchanged', () => {
       reference: 'Section 1:26–38',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -275,6 +296,7 @@ test('correct sequence is unchanged', () => {
       reference: '1:26-28',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -286,6 +308,7 @@ test('correct sequence is unchanged', () => {
       reference: '1:29-34',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -297,6 +320,7 @@ test('correct sequence is unchanged', () => {
       reference: '1:35-38',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
   ];
 
@@ -331,6 +355,7 @@ test('flat set sections in order, passage is 1', () => {
       reference: '4:1-13',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 0,
@@ -342,6 +367,7 @@ test('flat set sections in order, passage is 1', () => {
       reference: '4:31-37',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 0,
@@ -353,6 +379,7 @@ test('flat set sections in order, passage is 1', () => {
       reference: '4:38-44',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 0,
@@ -364,6 +391,7 @@ test('flat set sections in order, passage is 1', () => {
       reference: '5:1-11',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 0,
@@ -375,6 +403,7 @@ test('flat set sections in order, passage is 1', () => {
       reference: '5:12-16',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 0,
@@ -386,6 +415,7 @@ test('flat set sections in order, passage is 1', () => {
       reference: '5:17-26',
       comment: '',
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
   ];
 

@@ -1,12 +1,5 @@
-import { connect } from 'react-redux';
-import {
-  ICommunityStrings,
-  ISharedStrings,
-  IState,
-  MediaFile,
-  RoleNames,
-} from '../../model';
-import localStrings from '../../selector/localize';
+import { shallowEqual } from 'react-redux';
+import { ICommunityStrings, ISharedStrings, MediaFile } from '../../model';
 import {
   Button,
   debounce,
@@ -23,25 +16,38 @@ import {
   styled,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   ArtifactTypeSlug,
   findRecord,
+  IRegionParams,
   related,
   useArtifactType,
   useFetchMediaUrl,
+  useOrgDefaults,
+  useRole,
 } from '../../crud';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import * as actions from '../../store';
-import { bindActionCreators } from 'redux';
 import Memory from '@orbit/memory';
 import { TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { cleanFileName, NamedRegions } from '../../utils';
 import styledHtml from 'styled-components';
-import SplitPane, { Pane } from 'react-split-pane';
+import {
+  default as SplitPaneBar,
+  Pane as PaneBar,
+  PaneProps,
+  SplitPaneProps,
+} from 'react-split-pane';
 import PassageDetailPlayer from './PassageDetailPlayer';
 import DiscussionList from '../Discussions/DiscussionList';
 import MediaPlayer from '../MediaPlayer';
@@ -53,6 +59,8 @@ import Confirm from '../AlertDialog';
 import Uploader from '../Uploader';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import { GrowingSpacer, LightTooltip, PriButton } from '../../control';
+import { useSelector } from 'react-redux';
+import { communitySelector, sharedSelector } from '../../selector';
 
 const PlayerRow = styled('div')(() => ({
   width: '100%',
@@ -130,20 +138,19 @@ const Wrapper = styledHtml.div`
   }
 `;
 
-interface IStateProps {
-  t: ICommunityStrings;
-  ts: ISharedStrings;
-}
-interface IDispatchProps {
-  uploadFiles: typeof actions.uploadFiles;
-  nextUpload: typeof actions.nextUpload;
-  uploadComplete: typeof actions.uploadComplete;
-  doOrbitError: typeof actions.doOrbitError;
-}
+const SplitPane = (props: SplitPaneProps & PropsWithChildren) => {
+  return <SplitPaneBar {...props} />;
+};
+
+const Pane = (props: PaneProps & PropsWithChildren) => {
+  return <PaneBar {...props} className={props.className || 'pane'} />;
+};
+
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
 }
-interface IProps extends IRecordProps, IStateProps, IDispatchProps {
+
+interface IProps {
   ready?: () => boolean;
   width: number;
   slugs: ArtifactTypeSlug[];
@@ -151,10 +158,13 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   showTopic: boolean;
 }
 
-export function PassageDetailItem(props: IProps) {
-  const { t, ts, width, slugs, segments, showTopic } = props;
+export function PassageDetailItem(props: IProps & IRecordProps) {
+  const { width, slugs, segments, showTopic } = props;
+  const oneTryOnly = slugs.includes(ArtifactTypeSlug.WholeBackTranslation);
+  const t: ICommunityStrings = useSelector(communitySelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [reporter] = useGlobal('errorReporter');
-  const [projRole] = useGlobal('projRole');
+  const [organization] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
@@ -168,6 +178,7 @@ export function PassageDetailItem(props: IProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [confirm, setConfirm] = useState('');
+  const { userIsAdmin } = useRole();
   const {
     passage,
     mediafileId,
@@ -195,9 +206,25 @@ export function PassageDetailItem(props: IProps) {
   const { showMessage } = useSnackBar();
   const [recordType, setRecordType] = useState<ArtifactTypeSlug>(slugs[0]);
   const [currentVersion, setCurrentVersion] = useState(1);
-  const cancelled = useRef(false);
 
+  const cancelled = useRef(false);
+  const btDefaultSegParams = {
+    silenceThreshold: 0.004,
+    timeThreshold: 0.12,
+    segLenThreshold: 4.5,
+  };
+  const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
+  const [segParams, setSegParams] = useState<IRegionParams>(btDefaultSegParams);
   const toolId = 'RecordArtifactTool';
+
+  useEffect(() => {
+    if (segments) {
+      var def = getOrgDefault(segments);
+      if (def) setSegParams(def);
+      else setSegParams(btDefaultSegParams);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organization]);
 
   const handleSplitSize = debounce((e: number) => {
     setDiscussionSize({ width: width - e, height: discussionSize.height });
@@ -337,6 +364,13 @@ export function PassageDetailItem(props: IProps) {
       setCommentPlaying(false);
     }
   };
+  const onSegmentParamChange = (
+    params: IRegionParams,
+    teamDefault: boolean
+  ) => {
+    setSegParams(params);
+    if (teamDefault && segments) setOrgDefault(segments, params);
+  };
 
   return (
     <div>
@@ -349,7 +383,7 @@ export function PassageDetailItem(props: IProps) {
               split="vertical"
               onChange={handleSplitSize}
             >
-              <Pane className="pane">
+              <Pane>
                 <SplitPane
                   split="horizontal"
                   defaultSize={playerSize - 20}
@@ -357,15 +391,18 @@ export function PassageDetailItem(props: IProps) {
                   style={{ position: 'static' }}
                   onChange={handleHorizonalSplitSize}
                 >
-                  <Pane className="pane">
+                  <Pane>
                     <PassageDetailPlayer
                       allowSegment={segments}
                       allowAutoSegment={segments !== undefined}
                       saveSegments={segments !== undefined}
+                      defaultSegParams={segParams}
+                      canSetDefaultParams={canSetOrgDefault}
+                      onSegmentParamChange={onSegmentParamChange}
                     />
                   </Pane>
                   {currentVersion !== 0 ? (
-                    <Pane className="pane">
+                    <Pane>
                       <Paper sx={paperProps}>
                         <Box sx={rowProp}>
                           <Button
@@ -437,7 +474,6 @@ export function PassageDetailItem(props: IProps) {
                           />
                         </Box>
                         <MediaRecord
-                          id="mediarecord"
                           toolId={toolId}
                           uploadMethod={uploadMedia}
                           defaultFilename={defaultFilename}
@@ -450,6 +486,7 @@ export function PassageDetailItem(props: IProps) {
                           size={200}
                           onRecording={onRecordingOrPlaying}
                           onPlayStatus={onRecordingOrPlaying}
+                          oneTryOnly={oneTryOnly}
                         />
                         <Box sx={rowProp}>
                           <Typography variant="caption" sx={statusProps}>
@@ -493,7 +530,7 @@ export function PassageDetailItem(props: IProps) {
                                 onTogglePlay={handleItemTogglePlay}
                                 controls={true}
                               />
-                              {playItem && projRole === RoleNames.Admin && (
+                              {playItem && userIsAdmin && (
                                 <LightTooltip title={t.deleteItem}>
                                   <IconButton
                                     id="delete-recording"
@@ -509,7 +546,7 @@ export function PassageDetailItem(props: IProps) {
                       </Paper>
                     </Pane>
                   ) : (
-                    <Pane className="pane">
+                    <Pane>
                       <Paper sx={paperProps}>
                         <Typography variant="h2" align="center">
                           {ts.noAudio}
@@ -519,7 +556,7 @@ export function PassageDetailItem(props: IProps) {
                   )}
                 </SplitPane>
               </Pane>
-              <Pane className="pane">
+              <Pane>
                 <Grid item xs={12} sm container>
                   <Grid item container direction="column">
                     <DiscussionList />
@@ -558,24 +595,9 @@ export function PassageDetailItem(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'community' }),
-  ts: localStrings(state, { layout: 'shared' }),
-});
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      uploadFiles: actions.uploadFiles,
-      nextUpload: actions.nextUpload,
-      uploadComplete: actions.uploadComplete,
-      doOrbitError: actions.doOrbitError,
-    },
-    dispatch
-  ),
-});
 const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(PassageDetailItem) as any
-) as any;
+export default withData(mapRecordsToProps)(PassageDetailItem) as any as (
+  props: IProps
+) => JSX.Element;

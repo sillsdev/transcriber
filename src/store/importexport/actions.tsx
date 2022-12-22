@@ -1,6 +1,5 @@
 import Axios, { AxiosError } from 'axios';
-import fs from 'fs';
-import path from 'path';
+import path from 'path-browserify';
 import {
   Comment,
   Project,
@@ -16,8 +15,8 @@ import {
   VProject,
   Discussion,
   OrgWorkflowStep,
+  IApiError,
 } from '../../model';
-import * as actions from '../../store';
 import { API_CONFIG } from '../../api-variable';
 import { ResourceDocument } from '@orbit/jsonapi';
 import {
@@ -55,6 +54,7 @@ import { logError, orbitInfo, Severity } from '../../utils';
 import Coordinator from '@orbit/coordinator';
 import { axiosPost } from '../../utils/axios';
 import { updateBackTranslationType } from '../../crud/updateBackTranslationType';
+const ipc = (window as any)?.electron;
 
 export const exportComplete = () => (dispatch: any) => {
   dispatch({
@@ -183,11 +183,12 @@ export const exportProject =
                 });
                 break;
               default:
+                var pct = Math.min(
+                  Math.round(start / (numberOfMedia + 15)) * 100,
+                  85
+                );
                 dispatch({
-                  payload: pendingmsg.replace(
-                    '{0}',
-                    Math.round((start / (numberOfMedia + 15)) * 100).toString()
-                  ),
+                  payload: pendingmsg.replace('{0}', pct.toString()),
                   type: EXPORT_PENDING,
                 });
             }
@@ -322,15 +323,24 @@ const importFromElectron =
       });
   };
 
+export interface ImportSyncFromElectronProps {
+  filename: string;
+  file: Buffer;
+  token: string | null;
+  errorReporter: any;
+  pendingmsg: string;
+  completemsg: string;
+}
+
 export const importSyncFromElectron =
-  (
-    filename: string,
-    file: Buffer,
-    token: string | null,
-    errorReporter: any,
-    pendingmsg: string,
-    completemsg: string
-  ) =>
+  ({
+    filename,
+    file,
+    token,
+    errorReporter,
+    pendingmsg,
+    completemsg,
+  }: ImportSyncFromElectronProps) =>
   (dispatch: any) => {
     dispatch(
       importFromElectron(
@@ -345,15 +355,24 @@ export const importSyncFromElectron =
     );
   };
 
+export interface ImportProjectFromElectronProps {
+  files: File[];
+  projectid: number;
+  token: string | null;
+  errorReporter: any;
+  pendingmsg: string;
+  completemsg: string;
+}
+
 export const importProjectFromElectron =
-  (
-    files: File[],
-    projectid: number,
-    token: string | null,
-    errorReporter: any,
-    pendingmsg: string,
-    completemsg: string
-  ) =>
+  ({
+    files,
+    projectid,
+    token,
+    errorReporter,
+    pendingmsg,
+    completemsg,
+  }: ImportProjectFromElectronProps) =>
   (dispatch: any) => {
     dispatch(
       importFromElectron(
@@ -368,37 +387,63 @@ export const importProjectFromElectron =
     );
   };
 
+export interface ImportProjectToElectronProps {
+  filepath: string;
+  dataDate: string;
+  version: number;
+  coordinator: Coordinator;
+  offlineOnly: boolean;
+  AddProjectLoaded: (project: string) => void;
+  reportError: (ex: IApiError) => void;
+  getTypeId: (slug: string) => string | null;
+  pendingmsg: string;
+  completemsg: string;
+  oldfilemsg: string;
+  token: string | null;
+  user: string;
+  errorReporter: any;
+  offlineSetup: () => Promise<void>;
+}
+
 export const importProjectToElectron =
-  (
-    filepath: string,
-    dataDate: string,
-    version: number,
-    coordinator: Coordinator,
-    offlineOnly: boolean,
-    AddProjectLoaded: (project: string) => void,
-    reportError: typeof actions.doOrbitError,
-    getTypeId: (slug: string) => string | null,
-    pendingmsg: string,
-    completemsg: string,
-    oldfilemsg: string,
-    token: string | null,
-    user: string,
-    errorReporter: any,
-    offlineSetup: () => Promise<void>
-  ) =>
-  (dispatch: any) => {
+  ({
+    filepath,
+    dataDate,
+    version,
+    coordinator,
+    offlineOnly,
+    AddProjectLoaded,
+    reportError,
+    getTypeId,
+    pendingmsg,
+    completemsg,
+    oldfilemsg,
+    token,
+    user,
+    errorReporter,
+    offlineSetup,
+  }: ImportProjectToElectronProps) =>
+  async (dispatch: any) => {
     var tb: TransformBuilder = new TransformBuilder();
     var oparray: Operation[] = [];
 
     const memory = coordinator.getSource('memory') as Memory;
     const backup = coordinator.getSource('backup') as IndexedDBSource;
 
-    function getProjectFromFile(ser: JSONAPISerializerCustom) {
-      var file = path.join(filepath, 'D_projects.json');
-      var data = fs.readFileSync(file);
-      var json = ser.deserialize(
-        JSON.parse(data.toString()) as ResourceDocument
-      );
+    const importJson = async (
+      ser: JSONAPISerializerCustom,
+      file: string,
+      folder?: string
+    ) => {
+      if (folder) {
+        file = path.join(folder, file);
+      }
+      const data = (await ipc?.read(file, 'utf-8')) as string;
+      return ser.deserialize(JSON.parse(data) as ResourceDocument);
+    };
+
+    async function getProjectFromFile(ser: JSONAPISerializerCustom) {
+      let json = await importJson(ser, 'D_projects.json', filepath);
       var project: any;
       if (Array.isArray(json.data)) project = json.data[0];
       else project = json.data;
@@ -420,7 +465,7 @@ export const importProjectToElectron =
       }
     }
     async function removeProject(ser: JSONAPISerializerCustom) {
-      var rec = getProjectFromFile(ser);
+      var rec = await getProjectFromFile(ser);
 
       if (!rec) return;
 
@@ -599,10 +644,7 @@ export const importProjectToElectron =
       ser: JSONAPISerializerCustom,
       dataDate: string
     ) {
-      var data = fs.readFileSync(file);
-      var json = ser.deserialize(
-        JSON.parse(data.toString()) as ResourceDocument
-      );
+      let json = await importJson(ser, file);
       var project: Project | undefined = undefined;
       if (!Array.isArray(json.data)) json.data = [json.data];
       for (let n = 0; n < json.data.length; n += 1) {
@@ -624,7 +666,7 @@ export const importProjectToElectron =
       return project;
     }
 
-    if (fs.existsSync(path.join(filepath, 'H_passagesections.json'))) {
+    if (await ipc?.exists(path.join(filepath, 'H_passagesections.json'))) {
       dispatch({
         payload: errorStatus(-1, oldfilemsg),
         type: IMPORT_ERROR,
@@ -635,82 +677,85 @@ export const importProjectToElectron =
       payload: pendingmsg.replace('{0}', '1'),
       type: IMPORT_PENDING,
     });
-    fs.readdir(filepath, async function (err, files) {
-      if (err) {
+    const result = (await ipc?.readDir(filepath)) as
+      | string[]
+      | NodeJS.ErrnoException;
+    const err = !Array.isArray(result) ? result : undefined;
+    if (err) {
+      dispatch({
+        payload: errorStatus(err.errno, err.message),
+        type: IMPORT_ERROR,
+      });
+    } else {
+      const files = result as string[];
+      const ser = getSerializer(memory, offlineOnly);
+      try {
+        //remove all project data
+        await removeProject(ser);
         dispatch({
-          payload: errorStatus(err.errno, err.message),
-          type: IMPORT_ERROR,
+          payload: pendingmsg.replace('{0}', '20'),
+          type: IMPORT_PENDING,
         });
-      } else {
-        const ser = getSerializer(memory, offlineOnly);
-        try {
-          //remove all project data
-          await removeProject(ser);
-          dispatch({
-            payload: pendingmsg.replace('{0}', '20'),
-            type: IMPORT_PENDING,
-          });
-          var project: Project | undefined = undefined;
-          for (let index = 0; index < files.length; index++) {
-            project =
-              (await processFile(
-                path.join(filepath, files[index]),
-                ser,
-                dataDate
-              )) || project;
-          }
-          dispatch({
-            payload: pendingmsg.replace('{0}', '25'),
-            type: IMPORT_PENDING,
-          });
-          await saveToMemory(oparray, 'import project to memory');
-          await saveToBackup(oparray, 'import project to backup');
-          dispatch({
-            payload: pendingmsg.replace('{0}', '80'),
-            type: IMPORT_PENDING,
-          });
-          //remove records with no attributes...i.e. groups created from user's groupmemberships that we didn't import
-          oparray = [];
-          var allrecs = await backup.pull((q) => q.findRecords());
+        var project: Project | undefined = undefined;
+        for (let index = 0; index < files.length; index++) {
+          project =
+            (await processFile(
+              path.join(filepath, files[index]),
+              ser,
+              dataDate
+            )) || project;
+        }
+        dispatch({
+          payload: pendingmsg.replace('{0}', '25'),
+          type: IMPORT_PENDING,
+        });
+        await saveToMemory(oparray, 'import project to memory');
+        await saveToBackup(oparray, 'import project to backup');
+        dispatch({
+          payload: pendingmsg.replace('{0}', '80'),
+          type: IMPORT_PENDING,
+        });
+        //remove records with no attributes...i.e. groups created from user's groupmemberships that we didn't import
+        oparray = [];
+        var allrecs = await backup.pull((q) => q.findRecords());
 
-          allrecs[0].operations.forEach((r: any) => {
-            if (r.record.attributes === undefined) {
-              oparray.push(
-                tb.removeRecord({ type: r.record.type, id: r.record.id })
-              );
-            }
-          });
-          if (version < 4 && project) {
-            syncPassageState(project, tb, oparray);
-          }
-          dispatch({
-            payload: pendingmsg.replace('{0}', '90'),
-            type: IMPORT_PENDING,
-          });
-          if (oparray.length > 0) {
-            await saveToMemory(oparray, 'remove extra records');
-            await saveToBackup(oparray, 'remove extra records from backup');
-          }
-          if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
-            updateBackTranslationType(
-              memory,
-              token,
-              user,
-              errorReporter,
-              offlineSetup
+        allrecs[0].operations.forEach((r: any) => {
+          if (r.record.attributes === undefined) {
+            oparray.push(
+              tb.removeRecord({ type: r.record.type, id: r.record.id })
             );
           }
-          AddProjectLoaded(project?.id || '');
-          dispatch({
-            payload: { status: completemsg, msg: '' },
-            type: IMPORT_SUCCESS,
-          });
-        } catch (err: any) {
-          dispatch({
-            payload: errorStatus(undefined, err.message),
-            type: IMPORT_ERROR,
-          });
+        });
+        if (version < 4 && project) {
+          syncPassageState(project, tb, oparray);
         }
+        dispatch({
+          payload: pendingmsg.replace('{0}', '90'),
+          type: IMPORT_PENDING,
+        });
+        if (oparray.length > 0) {
+          await saveToMemory(oparray, 'remove extra records');
+          await saveToBackup(oparray, 'remove extra records from backup');
+        }
+        if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
+          updateBackTranslationType(
+            memory,
+            token,
+            user,
+            errorReporter,
+            offlineSetup
+          );
+        }
+        AddProjectLoaded(project?.id || '');
+        dispatch({
+          payload: { status: completemsg, msg: '' },
+          type: IMPORT_SUCCESS,
+        });
+      } catch (err: any) {
+        dispatch({
+          payload: errorStatus(undefined, err.message),
+          type: IMPORT_ERROR,
+        });
       }
-    });
+    }
   };

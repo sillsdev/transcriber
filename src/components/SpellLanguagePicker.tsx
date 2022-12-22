@@ -9,10 +9,9 @@ import {
   Checkbox,
 } from '@mui/material';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { langName } from '../utils';
-import { isElectron } from '../api-variable';
-const ipc = isElectron ? require('electron').ipcRenderer : null;
+const ipc = (window as any)?.electron;
 
 interface IRecordProps {
   users: Array<User>;
@@ -58,11 +57,11 @@ export const SpellLanguagePicker = (props: IProps) => {
   };
 
   React.useEffect(() => {
-    ipc?.invoke('availSpellLangs').then((list: string[]) => {
+    ipc?.availSpellLangs().then((list: string[]) => {
       setCodes(list);
     });
 
-    ipc?.invoke('getSpellLangs').then((list: string[]) => {
+    ipc?.getSpellLangs().then((list: string[]) => {
       setChecked(list);
     });
 

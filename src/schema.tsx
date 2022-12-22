@@ -116,14 +116,6 @@ const schemaDefinition: SchemaSettings = {
           type: 'hasOne',
           model: 'role',
         },
-        group: {
-          type: 'hasOne',
-          model: 'group',
-        },
-        groupRole: {
-          type: 'hasOne',
-          model: 'role',
-        },
         allUsersRole: {
           type: 'hasOne',
           model: 'role',
@@ -226,6 +218,7 @@ const schemaDefinition: SchemaSettings = {
         dateExported: { type: 'date-time' },
         dateImported: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
+        defaultParams: { type: 'string' },
       },
       relationships: {
         projecttype: {
@@ -286,7 +279,7 @@ const schemaDefinition: SchemaSettings = {
       keys: { remoteId: {} },
       attributes: {
         orgRole: { type: 'boolean' },
-        groupRole: { type: 'boolean' },
+        groupRole: { type: 'boolean' }, //bkwd compat only
         roleName: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },

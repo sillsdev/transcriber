@@ -23,14 +23,16 @@ import {
   useOrganizedBy,
   usePlan,
   useOfflineAvailToggle,
+  useRole,
 } from '../crud';
 import { numCompare } from '../utils';
 import { useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
 import MediaPlayer from './MediaPlayer';
-import { RoleNames, IMediaActionsStrings } from '../model';
+import { IMediaActionsStrings } from '../model';
 import { mediaActionsSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import { GridColumnExtension } from '@devexpress/dx-react-grid';
 
 export const TaskItemWidth = 240;
 
@@ -143,7 +145,6 @@ export function TaskTable(props: IProps) {
   const [planId] = useGlobal('plan');
   const [planName, setPlanName] = useState('');
   const [projectId] = useGlobal('project');
-  const [projRole] = useGlobal('projRole');
   const projectPlans = useProjectPlans();
   const [openIntegration, setOpenIntegration] = useState(false);
   const [openExport, setOpenExport] = useState(false);
@@ -165,7 +166,9 @@ export function TaskTable(props: IProps) {
     { name: 'state', title: t.state },
     { name: 'assigned', title: t.assigned },
   ]);
-  const [columnFormatting, setColumnFormatting] = useState([
+  const [columnFormatting, setColumnFormatting] = useState<
+    GridColumnExtension[]
+  >([
     { columnName: 'composite', width: TaskItemWidth, align: 'left' },
     { columnName: 'play', width: 65, align: 'left' },
     { columnName: 'plan', width: 100, align: 'left', wordWrapEnabled: true },
@@ -207,7 +210,7 @@ export function TaskTable(props: IProps) {
   const selectedRef = useRef<any>();
   const notSelectedRef = useRef<any>();
   const busyRef = useRef(false);
-
+  const { userIsAdmin } = useRole();
   const hiddenColumnNames = useMemo(() => (flat ? ['sectPass'] : []), [flat]);
 
   const handleToggleFilter = () => {
@@ -475,7 +478,7 @@ export function TaskTable(props: IProps) {
               action={handleProjectMenu}
               stopPlayer={handleStopPlayer}
               inProject={true}
-              isOwner={projRole === RoleNames.Admin}
+              isAdmin={userIsAdmin}
               project={projectId}
               justFilter={isDetail}
             />

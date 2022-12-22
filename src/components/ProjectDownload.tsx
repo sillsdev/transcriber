@@ -20,7 +20,6 @@ import { offlineProjectUpdateFilesDownloaded, useProjectExport } from '../crud';
 import {
   currentDateTime,
   dataPath,
-  downloadFile,
   logError,
   PathType,
   Severity,
@@ -28,6 +27,8 @@ import {
 import AdmZip from 'adm-zip';
 import { Operation } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
+const ipc = (window as any)?.electron;
+
 enum Steps {
   Prepare,
   Download,
@@ -48,13 +49,15 @@ interface IDispatchProps {
   exportComplete: typeof actions.exportComplete;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
+interface IProps {
   open: Boolean;
   projectIds: string[];
   finish: () => void;
 }
 
-export const ProjectDownload = (props: IProps) => {
+export const ProjectDownload = (
+  props: IProps & IStateProps & IDispatchProps
+) => {
   const { open, projectIds, t, ts, finish } = props;
   const { exportProject, exportComplete, exportStatus, exportFile } = props;
   const [errorReporter] = useGlobal('errorReporter');
@@ -141,11 +144,12 @@ export const ProjectDownload = (props: IProps) => {
   React.useEffect(() => {
     if (progress === Steps.Download) {
       const localPath = dataPath(exportName, PathType.ZIP);
-      downloadFile({ url: exportUrl, localPath })
+      ipc
+        ?.downloadFile(exportUrl, localPath)
         .then(() => {
           setProgress(Steps.Import);
         })
-        .catch((ex) => logError(Severity.error, errorReporter, ex))
+        .catch((ex: any) => logError(Severity.error, errorReporter, ex))
         .finally(() => {
           URL.revokeObjectURL(exportUrl);
         });
@@ -159,17 +163,20 @@ export const ProjectDownload = (props: IProps) => {
 
   React.useEffect(() => {
     if (progress === Steps.Import) {
-      const localPath = dataPath(exportName, PathType.ZIP);
-      const zip = new AdmZip(localPath);
-      zip.extractAllTo(dataPath(), true);
-      offlineProjectUpdateFilesDownloaded(
-        projectIds[currentStep],
-        offlineUpdates,
-        memory,
-        currentDateTime()
-      );
-      setProgress(Steps.Prepare);
-      setCurrentStep(currentStep + 1);
+      (async () => {
+        const localPath = dataPath(exportName, PathType.ZIP);
+        const zip = (await ipc?.zipOpen(localPath)) as AdmZip;
+        await ipc?.zipExtract(zip, dataPath(), true);
+        await ipc?.zipClose(zip);
+        offlineProjectUpdateFilesDownloaded(
+          projectIds[currentStep],
+          offlineUpdates,
+          memory,
+          currentDateTime()
+        );
+        setProgress(Steps.Prepare);
+        setCurrentStep(currentStep + 1);
+      })();
     } else if (progress === Steps.Error) {
       setProgress(Steps.Prepare);
       setCurrentStep(currentStep + 1);
@@ -206,7 +213,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   exportStatus: state.importexport.importexportStatus,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       exportProject: actions.exportProject,
@@ -219,4 +226,4 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProjectDownload) as any;
+)(ProjectDownload as any) as any;

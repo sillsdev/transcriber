@@ -1,20 +1,22 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import moment from 'moment';
-import { connect } from 'react-redux';
-import { IState, IAudacityManagerStrings, MediaFile } from '../../model';
-import localStrings from '../../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { shallowEqual, useSelector } from 'react-redux';
+import { IAudacityManagerStrings, MediaFile } from '../../model';
 import {
   Button,
   Dialog,
   DialogTitle,
   DialogActions,
-  Grid,
   FormControl,
   TextField,
   Typography,
-} from '@material-ui/core';
+  styled,
+  Grid,
+  GridProps,
+  Box,
+  BoxProps,
+} from '@mui/material';
 import {
   useAudacityProjUpdate,
   useAudacityProjRead,
@@ -22,61 +24,42 @@ import {
   useAudProjName,
 } from '../../crud';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { API_CONFIG, isElectron } from '../../api-variable';
 import { debounce } from 'lodash';
 import { RecordIdentity } from '@orbit/data';
 import {
   launchAudacity,
   loadBlob,
-  isProcessRunning,
   audPrefsName,
   setAudacityPref,
+  execFolder,
 } from '../../utils';
 import { dataPath, PathType } from '../../utils';
 import { extensions, mimes } from '.';
 import SpeakerName from '../SpeakerName';
+import { audacityManagerSelector } from '../../selector';
 
-const fs = require('fs');
-const ipc = isElectron ? require('electron').ipcRenderer : null;
-const path = require('path');
+const ipc = (window as any)?.electron;
+const path = require('path-browserify');
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      minWidth: '900px',
-    },
-    grid: {
-      minWidth: '800px',
-      '& .MuiAutocomplete-root': {
-        paddingBottom: '20px',
-        width: 'unset',
-      },
-    },
-    name: {
-      minWidth: '500px',
-      margin: theme.spacing(2),
-    },
-    actions: {
-      display: 'flex',
-      flexDirection: 'column',
-      padding: theme.spacing(2),
-      marginLeft: theme.spacing(1),
-      '& .MuiButton-root': {
-        marginBottom: theme.spacing(2),
-      },
-      // '& .MuiButton-label': {
-      //   justifyContent: 'flex-end',
-      // },
-    },
-    label: { margin: theme.spacing(2) },
-  })
-);
+const StyledGrid = styled(Grid)<GridProps>(() => ({
+  minWidth: '800px',
+  '& .MuiAutocomplete-root': {
+    paddingBottom: '20px',
+    width: 'unset',
+  },
+}));
 
-interface IStateProps {
-  t: IAudacityManagerStrings;
-}
+const ActionRow = styled(Box)<BoxProps>(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  padding: theme.spacing(2),
+  marginLeft: theme.spacing(1),
+  '& .MuiButton-root': {
+    marginBottom: theme.spacing(2),
+  },
+}));
 
-export interface IProps extends IStateProps {
+export interface IProps {
   item: number;
   passageId: RecordIdentity;
   mediaId: string;
@@ -88,8 +71,7 @@ export interface IProps extends IStateProps {
 }
 
 function AudacityManager(props: IProps) {
-  const classes = useStyles();
-  const { passageId, mediaId, onClose, open, t } = props;
+  const { passageId, mediaId, onClose, open } = props;
   const { item, onImport } = props;
   const { speaker, onSpeaker } = props;
   const [hasRights, setHasRight] = React.useState(!onSpeaker);
@@ -103,6 +85,10 @@ function AudacityManager(props: IProps) {
   const [changed] = useGlobal('changed');
   const { showMessage } = useSnackBar();
   const getProjName = useAudProjName();
+  const t: IAudacityManagerStrings = useSelector(
+    audacityManagerSelector,
+    shallowEqual
+  );
 
   const handleClose = () => {
     onClose();
@@ -113,7 +99,7 @@ function AudacityManager(props: IProps) {
   };
 
   const handleBrowse = () => {
-    ipc?.invoke('audacityOpen').then((fullName: string[]) => {
+    ipc?.audacityOpen().then((fullName: string[]) => {
       if (fullName && fullName.length > 0) {
         setAudacityPref(fullName[0]);
         // setAudacityPref creates the folders needed for audacity export
@@ -155,7 +141,7 @@ function AudacityManager(props: IProps) {
     if ((mediaId || '') !== '') {
       const url = getMediaUrl(mediaId);
       mediaName = dataPath(url, PathType.MEDIA);
-      if (!fs.existsSync(mediaName)) {
+      if (!(await ipc?.exists(mediaName))) {
         showMessage(t.checkDownload);
         return;
       }
@@ -164,27 +150,27 @@ function AudacityManager(props: IProps) {
       const fullName = await getProjName(passageId);
       const beforeContent = await setAudacityPref(fullName);
       // setAudacityPref creates the folders needed for the copy below
-      if (!fs.existsSync(fullName)) {
+      if (!(await ipc?.exists(fullName))) {
         if (Boolean(mediaName)) {
           let ext = mediaName.split('.').pop() || 'mp3';
           const mp3FullName = fullName
             .replace('aup3', 'io')
             .replace('.aup3', `.${ext}`);
-          if (!fs.existsSync(mp3FullName)) {
+          if (!(await ipc?.exists(mp3FullName))) {
             showMessage(t.loadingAudio);
-            fs.copyFileSync(mediaName, mp3FullName);
+            await ipc?.copyFile(mediaName, mp3FullName);
             const updated = new Date(getMediaUpdated(mediaId));
-            fs.utimesSync(mp3FullName, updated, updated);
+            await ipc?.times(mp3FullName, updated, updated);
           }
         }
-        fs.copyFileSync(
-          path.join(API_CONFIG.resourcePath, 'new.aup3'),
+        await ipc?.copyFile(
+          path.join(await execFolder(), 'resources', 'new.aup3'),
           fullName
         );
       }
       setExists(true);
       setName(fullName);
-      if (beforeContent && (await isProcessRunning('audacity'))) {
+      if (beforeContent && (await ipc?.isProcessRunning('audacity'))) {
         showMessage(t.closeAudacity);
         return;
       }
@@ -204,7 +190,7 @@ function AudacityManager(props: IProps) {
       return;
     }
     const beforeContent = await setAudacityPref(name);
-    if (beforeContent && (await isProcessRunning('audacity'))) {
+    if (beforeContent && (await ipc?.isProcessRunning('audacity'))) {
       showMessage(t.closeAudacity);
       return;
     }
@@ -225,7 +211,7 @@ function AudacityManager(props: IProps) {
     const nameOnly = name.replace('.aup3', '').split(path.sep).pop();
     const nmLen = nameOnly?.length;
     const audioFolder = path.dirname(name.replace('aup3', 'io'));
-    const result = fs.readdirSync(audioFolder) as string[];
+    const result = (await ipc?.readDir(audioFolder)) as string[];
     let mp3FullName = '';
     let mime = '';
     let lastTime = 0;
@@ -233,7 +219,7 @@ function AudacityManager(props: IProps) {
       const ext = audioName.split('.').pop() || '';
       const extIdx = extensions.indexOf(ext);
       const fullName = path.join(audioFolder, audioName);
-      const stat = fs.statSync(fullName);
+      const stat = JSON.parse(await ipc?.stat(fullName));
       if (
         moment(stat.mtime).isAfter(moment(lastTime)) &&
         extensions.indexOf(ext) >= 0 &&
@@ -281,13 +267,6 @@ function AudacityManager(props: IProps) {
     setName('');
   };
 
-  // const handleDelete = () => {
-  //   const audRec = audRead(passageId.id);
-  //   fs.unlinkSync(audRec?.attributes?.audacityName);
-  //   audDelete(passageId.id);
-  //   setName('');
-  // };
-
   const nameUpdate = debounce(() => {
     audUpdate(passageId.id, name);
   }, 100);
@@ -303,10 +282,12 @@ function AudacityManager(props: IProps) {
   }, []);
 
   React.useEffect(() => {
-    if (name) {
-      setExists(fs.existsSync(name));
-      nameUpdate();
-    }
+    (async () => {
+      if (name) {
+        setExists(await ipc?.exists(name));
+        nameUpdate();
+      }
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passageId, name]);
 
@@ -319,7 +300,7 @@ function AudacityManager(props: IProps) {
       disableEnforceFocus
     >
       <DialogTitle id="manager-title">{t.title}</DialogTitle>
-      <Grid container className={classes.grid}>
+      <StyledGrid container>
         {exists && name !== '' ? (
           <Grid container justifyContent="center">
             <Grid item xs={8}>
@@ -329,7 +310,7 @@ function AudacityManager(props: IProps) {
                   autoFocus
                   required
                   label={t.audacityProject}
-                  className={classes.name}
+                  sx={{ m: 2, minWidth: '500px' }}
                   value={name}
                   onChange={handleAudacityName}
                   helperText={exists || name === '' ? null : t.missingProject}
@@ -337,7 +318,7 @@ function AudacityManager(props: IProps) {
               </FormControl>
             </Grid>
             <Grid item xs={4}>
-              <div className={classes.actions}>
+              <ActionRow>
                 <Button onClick={handleOpen} variant="outlined">
                   {t.open}
                 </Button>
@@ -357,29 +338,29 @@ function AudacityManager(props: IProps) {
                   {t.unlink}
                 </Button>
                 {/* <Button onClick={handleDelete}>Delete</Button> */}
-              </div>
+              </ActionRow>
             </Grid>
           </Grid>
         ) : (
           <Grid container justifyContent="center">
             <Grid item xs={9}>
-              <FormControl className={classes.label}>
+              <FormControl sx={{ m: 2 }}>
                 <Typography>{t.tip}</Typography>
               </FormControl>
             </Grid>
             <Grid item xs={3}>
-              <div className={classes.actions}>
+              <ActionRow>
                 <Button onClick={handleCreate} variant="outlined">
                   {t.create}
                 </Button>
                 <Button onClick={handleBrowse} variant="outlined">
                   {t.browse}
                 </Button>
-              </div>
+              </ActionRow>
             </Grid>
           </Grid>
         )}
-      </Grid>
+      </StyledGrid>
       <DialogActions>
         <Button onClick={handleClose} variant="contained" color="primary">
           {t.close}
@@ -389,8 +370,4 @@ function AudacityManager(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'audacityManager' }),
-});
-
-export default connect(mapStateToProps)(AudacityManager) as any;
+export default AudacityManager;

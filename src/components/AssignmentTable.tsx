@@ -11,11 +11,10 @@ import {
   Role,
   BookName,
   ISharedStrings,
-  RoleNames,
   MediaFile,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { styled } from '@mui/material';
 import FilterIcon from '@mui/icons-material/FilterList';
@@ -35,6 +34,7 @@ import {
   passageCompare,
   useOrganizedBy,
   usePassageState,
+  useRole,
 } from '../crud';
 import {
   TabAppBar,
@@ -82,7 +82,7 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithDataProps {
+interface IProps extends IStateProps, IRecordProps {
   action?: (what: string, where: number[]) => boolean;
 }
 
@@ -100,7 +100,6 @@ export function AssignmentTable(props: IProps) {
   } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const { showMessage } = useSnackBar();
   const ctx = useContext(PlanContext);
@@ -131,6 +130,7 @@ export function AssignmentTable(props: IProps) {
     ],
     [flat]
   );
+  const { userIsAdmin } = useRole();
 
   const getAssignments = () => {
     let sectionRow: IRow;
@@ -251,7 +251,7 @@ export function AssignmentTable(props: IProps) {
       <div>
         <TabAppBar position="fixed" color="default">
           <TabActions>
-            {projRole === RoleNames.Admin && (
+            {userIsAdmin && (
               <>
                 <AltButton
                   id="assignAdd"
@@ -309,6 +309,7 @@ export function AssignmentTable(props: IProps) {
             treeColumn={'name'}
             showfilters={filter}
             showgroups={filter}
+            checks={check}
             select={handleCheck}
           />
         </PaddedBox>

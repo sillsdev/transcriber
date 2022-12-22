@@ -1,37 +1,27 @@
 import React, { useEffect, useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   IState,
   IMainStrings,
   IProjButtonsStrings,
   Project,
-  RoleNames,
   MediaFile,
   Discussion,
   GroupMembership,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { usePlanType } from '../crud';
+import { usePlanType, useRole } from '../crud';
 import { useCheckOnline, useInterval } from '../utils';
-import * as actions from '../store';
 
 interface IStateProps {
   projButtonStr: IProjButtonsStrings;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   projButtonStr: localStrings(state, { layout: 'projButtons' }),
-});
-
-interface IDispatchProps {
-  resetOrbitError: typeof actions.resetOrbitError;
-}
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators({ resetOrbitError: actions.resetOrbitError }, dispatch),
 });
 
 interface IRecordProps {
@@ -69,32 +59,23 @@ interface IContext {
 
 const PlanContext = React.createContext({} as IContext);
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps extends IStateProps, IRecordProps {
   children: React.ReactElement;
 }
 
 const PlanProvider = withData(mapRecordsToProps)(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )((props: IProps) => {
-    const {
-      projButtonStr,
-      mediafiles,
-      discussions,
-      groupmemberships,
-      resetOrbitError,
-    } = props;
+  connect(mapStateToProps)((props: IProps) => {
+    const { projButtonStr, mediafiles, discussions, groupmemberships } = props;
     const [memory] = useGlobal('memory');
     const [plan] = useGlobal('plan');
     const [project] = useGlobal('project');
     const [connected] = useGlobal('connected');
-    const [projRole] = useGlobal('projRole');
     const [isOffline] = useGlobal('offline');
     const [offlineOnly] = useGlobal('offlineOnly');
     const getPlanType = usePlanType();
+    const { userIsAdmin } = useRole();
     const [readonly, setReadOnly] = useState(
-      (isOffline && !offlineOnly) || projRole !== RoleNames.Admin
+      (isOffline && !offlineOnly) || !userIsAdmin
     );
     const [state, setState] = useState({
       ...initState,
@@ -103,7 +84,7 @@ const PlanProvider = withData(mapRecordsToProps)(
       discussions,
       groupmemberships,
     });
-    const checkOnline = useCheckOnline(resetOrbitError);
+    const checkOnline = useCheckOnline();
 
     useEffect(() => {
       const { scripture, flat } = getPlanType(plan);
@@ -127,11 +108,9 @@ const PlanProvider = withData(mapRecordsToProps)(
     }, [project]);
 
     React.useEffect(() => {
-      const newValue =
-        (isOffline && !offlineOnly) || projRole !== RoleNames.Admin;
+      const newValue = (isOffline && !offlineOnly) || !userIsAdmin;
       if (readonly !== newValue) setReadOnly(newValue);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [projRole]);
+    }, [userIsAdmin, isOffline, offlineOnly, readonly]);
 
     //do this every 30 seconds to warn they can't save
     useInterval(

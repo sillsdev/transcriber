@@ -1,4 +1,4 @@
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
   GroupMembership,
@@ -7,26 +7,12 @@ import {
   User,
   Group,
 } from '../model';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { useSelector, shallowEqual } from 'react-redux';
 import { peerSelector } from '../selector';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    menu: {},
-    label: { marginTop: theme.spacing(1) },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      display: 'flex',
-      flexGrow: 1,
-      minWidth: '8rem',
-    },
-  })
-);
 interface IStateProps {
   ts: ISharedStrings;
 }
@@ -57,7 +43,6 @@ export const SelectPeerGroup = (props: IProps) => {
     label,
     groupId,
   } = props;
-  const classes = useStyles();
   const { peerGroups } = usePeerGroups({ users, groups, memberships });
   const [groupValue, setGroupValue] = useState(initGroup);
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
@@ -74,16 +59,11 @@ export const SelectPeerGroup = (props: IProps) => {
   return (
     <TextField
       id={'select-peer-group' + (groupId || '')}
-      className={classes.textField}
+      sx={{ mx: 1, display: 'flex', flexGrow: 1, minWidth: '8rem' }}
       select
       label={t.peerGroup}
       value={groupValue}
       onChange={handleRoleChange}
-      SelectProps={{
-        MenuProps: {
-          className: classes.menu,
-        },
-      }}
       helperText={label || ''}
       margin="normal"
       variant="filled"

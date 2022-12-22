@@ -10,8 +10,8 @@ const usePassageDetailContext = () => {
     ...state,
     filter,
     setFilter,
-    index: state.index,
-    selected: state.selected,
+    index: state?.index ?? 0,
+    selected: state?.selected ?? '',
   };
 };
 

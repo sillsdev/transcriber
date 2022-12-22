@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as actions from '../../store';
+import { shallowEqual } from 'react-redux';
 import {
   IState,
   MediaFile,
@@ -9,12 +7,9 @@ import {
   Section,
   IMediaTabStrings,
   Plan,
-  BookName,
   ISharedStrings,
-  RoleNames,
 } from '../../model';
-import localStrings from '../../selector/localize';
-import { withData, WithDataProps } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import JSONAPISource from '@orbit/jsonapi';
 import { Box } from '@mui/material';
@@ -35,6 +30,7 @@ import {
   usePlan,
   remoteIdGuid,
   VernacularTag,
+  useRole,
 } from '../../crud';
 import { useGlobal } from 'reactn';
 import { useMediaAttach } from '../../crud/useMediaAttach';
@@ -52,16 +48,8 @@ import {
 } from '.';
 import { IMatchData, makeMatchMap } from './makeRefMap';
 import { UnsavedContext } from '../../context/UnsavedContext';
-
-interface IStateProps {
-  t: IMediaTabStrings;
-  ts: ISharedStrings;
-  allBookData: BookName[];
-}
-
-interface IDispatchProps {
-  doOrbitError: typeof actions.doOrbitError;
-}
+import { useSelector } from 'react-redux';
+import { mediaTabSelector, sharedSelector } from '../../selector';
 
 interface IRecordProps {
   mediaFiles: Array<MediaFile>;
@@ -69,16 +57,13 @@ interface IRecordProps {
   sections: Array<Section>;
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {}
+interface IProps {}
 
-export function AudioTab(props: IProps) {
-  const { t, ts, doOrbitError, mediaFiles, passages, sections, allBookData } =
-    props;
-  const [projRole] = useGlobal('projRole');
+export function AudioTab(props: IProps & IRecordProps) {
+  const { mediaFiles, passages, sections } = props;
+  const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const allBookData = useSelector((state: IState) => state.books.bookData);
   const [plan] = useGlobal('plan');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
@@ -109,9 +94,9 @@ export function AudioTab(props: IProps) {
   const [speaker, setSpeaker] = useState('');
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
-    doOrbitError,
   });
   const [refresh, setRefresh] = useState(0);
+  const { userIsAdmin } = useRole();
   const cloudSync = useRef(false);
 
   const myToolId = 'AudioTab';
@@ -349,7 +334,7 @@ export function AudioTab(props: IProps) {
       <div>
         <TabAppBar position="fixed" color="default">
           <TabActions>
-            {projRole === RoleNames.Admin && (!isOffline || offlineOnly) && (
+            {userIsAdmin && (!isOffline || offlineOnly) && (
               <>
                 <AltButton
                   id="audUpload"
@@ -436,27 +421,12 @@ export function AudioTab(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediaTab' }),
-  ts: localStrings(state, { layout: 'shared' }),
-  allBookData: state.books.bookData,
-});
-
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      doOrbitError: actions.doOrbitError,
-    },
-    dispatch
-  ),
-});
-
 const mapRecordsToProps = {
   mediaFiles: (q: QueryBuilder) => q.findRecords('mediafile'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(AudioTab) as any
-) as any;
+export default withData(mapRecordsToProps)(AudioTab) as any as (
+  props: IProps
+) => JSX.Element;

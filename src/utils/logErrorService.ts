@@ -1,9 +1,8 @@
-import { isElectron } from '../api-variable';
 import moment from 'moment';
-import { join } from 'path';
-import { Stats } from 'fs';
+import { join } from 'path-browserify';
+import { Stats } from 'fs-extra';
 import { createFolder } from '.';
-var fs = isElectron ? require('fs-extra') : undefined;
+const ipc = (window as any)?.electron;
 
 export enum Severity {
   info = 0,
@@ -41,25 +40,16 @@ export function logError(
 const dayFormat = (s?: Date) => moment(s).format('YYYY-MM-DD');
 const isToday = (s: Date) => dayFormat(s) === dayFormat();
 
-const homedir = require('os').homedir();
-const LogFolder = join(homedir, '.transcriber-logs');
+const LogFolder = () =>
+  join(localStorage.getItem('home') || '', '.transcriber-logs');
 
 const logFileHeader = (logFullName: string) => {
   // Add file header
   console.log(`creating new file ${logFullName}`);
-  fs.open(logFullName, 'w', (err: IStatErr, fd: number) => {
-    if (err) throw err;
-    fs.writeFile(
-      fd,
-      `Log for ${moment().locale('en').format('L LT Z')}\n`,
-      (err: IStatErr) => {
-        fs.close(fd, (err: IStatErr) => {
-          if (err) throw err;
-        });
-        if (err) throw err;
-      }
-    );
-  });
+  ipc?.write(
+    logFullName,
+    `Log for ${moment().locale('en').format('L LT Z')}\n`
+  );
 };
 
 const levelText = (level: Severity) =>
@@ -72,26 +62,17 @@ const levelText = (level: Severity) =>
 const msgText = (message: Error | string) =>
   typeof message === 'string' ? message : JSON.stringify(message);
 
-const logMessage = (
+const logMessage = async (
   logFullName: string,
   level: Severity,
   msg: Error | string
 ) => {
   // Add file header
   console.log(`creating new file ${logFullName}`);
-  fs.open(logFullName, 'a', (err: IStatErr, fd: number) => {
-    if (err) throw err;
-    fs.writeFile(
-      fd,
-      `${new Date().toISOString()} ${levelText(level)}: ${msgText(msg)}\n`,
-      (err: IStatErr) => {
-        fs.close(fd, (err: IStatErr) => {
-          if (err) throw err;
-        });
-        if (err) throw err;
-      }
-    );
-  });
+  await ipc?.append(
+    logFullName,
+    `${new Date().toISOString()} ${levelText(level)}: ${msgText(msg)}\n`
+  );
 };
 
 interface IStatErr {
@@ -101,25 +82,28 @@ interface IStatErr {
   path: string;
 }
 
-export function logFile() {
+export async function logFile() {
+  const logFolder = LogFolder();
   const loc = Intl.NumberFormat().resolvedOptions().locale;
   console.log(`logfile locale=${loc}`);
   const logName = `log-${moment().locale(loc).format('DD')}.log`;
-  const logFullName = join(LogFolder, logName);
-  fs.stat(logFullName, (err: IStatErr, stats: Stats) => {
+  const logFullName = join(logFolder, logName);
+  const stats = JSON.parse(await ipc?.stat(logFullName)) as Stats & IStatErr;
+  if (stats?.code) {
+    const err = stats;
     if (err?.code === 'ENOENT') {
-      createFolder(LogFolder);
+      await createFolder(logFolder);
       logFileHeader(logFullName);
     } else if (err) {
       console.log(JSON.stringify(err));
-    } else {
-      if (!isToday(stats.ctime)) {
-        logFileHeader(logFullName);
-      } else {
-        console.log(`using existing file ${logFullName}`);
-      }
     }
-  });
+  } else {
+    if (!isToday(stats.ctime)) {
+      logFileHeader(logFullName);
+    } else {
+      console.log(`using existing file ${logFullName}`);
+    }
+  }
   return logFullName;
 }
 

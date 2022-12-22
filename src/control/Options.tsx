@@ -1,43 +1,22 @@
 import React from 'react';
 import keycode from 'keycode';
-import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
-import { IControlStrings, IState } from '../model';
+import { shallowEqual, useSelector } from 'react-redux';
+import { IControlStrings } from '../model';
 import {
   FormLabel,
   FormControlLabel,
   RadioGroup,
   Radio,
   TextField,
-} from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      paddingTop: theme.spacing(4),
-    },
-    label: {
-      color: theme.palette.secondary.main,
-    },
-    otherBox: {
-      marginBottom: theme.spacing(2),
-    },
-    itemLabel: {
-      display: 'flex',
-    },
-  })
-);
+  Box,
+} from '@mui/material';
+import { controlSelector } from '../selector';
 
 export interface IDecorations {
   [key: string]: JSX.Element;
 }
 
-interface IStateProps {
-  tc: IControlStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   label: string;
   defaultValue?: string;
   options: string[];
@@ -55,13 +34,12 @@ const OptionCtrl = (props: IProps) => {
     options,
     onChange,
     addOption,
-    tc,
     decorations,
     required,
     otherLabel,
   } = props;
-  const classes = useStyles();
   const [other, setOther] = React.useState<string | null>('');
+  const tc: IControlStrings = useSelector(controlSelector, shallowEqual);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!addOther()) onChange(e.target.value);
@@ -94,8 +72,8 @@ const OptionCtrl = (props: IProps) => {
   };
 
   return (
-    <div className={classes.root}>
-      <FormLabel required={required} className={classes.label}>
+    <Box sx={{ pt: 4 }}>
+      <FormLabel required={required} sx={{ color: 'secondary.main' }}>
         {label}
       </FormLabel>
       <RadioGroup
@@ -109,13 +87,13 @@ const OptionCtrl = (props: IProps) => {
               value={k}
               control={<Radio />}
               label={
-                <div className={classes.itemLabel}>
+                <Box sx={{ display: 'flex' }}>
                   {tc.hasOwnProperty(k) ? tc.getString(k) : k}
                   {'\u00A0 '}
                   {decorations &&
                     decorations.hasOwnProperty(k) &&
                     decorations[k]}
-                </div>
+                </Box>
               }
             />
           );
@@ -129,7 +107,7 @@ const OptionCtrl = (props: IProps) => {
               <TextField
                 id="other-option"
                 margin="dense"
-                className={classes.otherBox}
+                sx={{ mb: 2 }}
                 label={otherLabel}
                 value={other}
                 onChange={handleOther}
@@ -140,12 +118,8 @@ const OptionCtrl = (props: IProps) => {
           />
         )}
       </RadioGroup>
-    </div>
+    </Box>
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  tc: localStrings(state, { layout: 'control' }),
-});
-
-export const Options = connect(mapStateToProps)(OptionCtrl);
+export const Options = OptionCtrl;

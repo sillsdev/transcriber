@@ -25,6 +25,18 @@ export interface INamedRegion {
   name: string;
   regionInfo: IRegions;
 }
+export const parseRegionParams = (
+  regionstr: string,
+  defaultParams: IRegionParams | undefined
+) => {
+  if (!regionstr) return defaultParams;
+  var segs = JSON.parse(regionstr);
+  if (segs.params) {
+    if (segs.params.timeThreshold) return segs.params;
+  }
+  return defaultParams;
+};
+
 export const parseRegions = (regionstr: string) => {
   if (!regionstr) return { params: {}, regions: [] as IRegion[] } as IRegions;
   var segs = JSON.parse(regionstr);
@@ -35,11 +47,7 @@ export const parseRegions = (regionstr: string) => {
 export function useWaveSurferRegions(
   singleRegionOnly: boolean,
   defaultRegionIndex: number,
-  onRegion: (
-    count: number,
-    params: IRegionParams | undefined,
-    newRegion: boolean
-  ) => void,
+  onRegion: (count: number, newRegion: boolean) => void,
   onPlayStatus: (playing: boolean) => void,
   duration: () => number,
   isNear: (test: number) => boolean,
@@ -106,7 +114,7 @@ export function useWaveSurferRegions(
             500
           )
             .then(() => {
-              onRegion(numRegions(), paramsRef.current, true);
+              onRegion(numRegions(), true);
             })
             .catch((reason) => console.log(reason))
             .finally(() => {
@@ -129,7 +137,7 @@ export function useWaveSurferRegions(
             () => false,
             200
           ).then(() => {
-            onRegion(numRegions(), paramsRef.current, true);
+            onRegion(numRegions(), true);
             setCurrentRegion(findRegion(progress(), true));
           });
         }
@@ -172,7 +180,7 @@ export function useWaveSurferRegions(
             goto(duration());
           }
         }
-        onRegion(regionIds().length, paramsRef.current, true);
+        onRegion(regionIds().length, true);
       });
       // other potentially useful messages
       // ws.on('region-play', function (r: any) {
@@ -346,7 +354,7 @@ export function useWaveSurferRegions(
     currentRegionRef.current = undefined;
     loopingRegionRef.current = undefined;
     loadingRef.current = false;
-    onRegion(0, paramsRef.current, true);
+    onRegion(0, true);
   }
   function loadRegions(
     regions: IRegions | undefined,
@@ -381,7 +389,7 @@ export function useWaveSurferRegions(
       400
     ).finally(() => {
       setPrevNext(regionIds());
-      onRegion(regarray.length, paramsRef.current, newRegions);
+      onRegion(regarray.length, newRegions);
       if (defaultRegionIndex >= 0) {
         currentRegionRef.current = regarray[defaultRegionIndex];
       } else {
@@ -438,7 +446,7 @@ export function useWaveSurferRegions(
     if (r && r.loop && ret.newEnd < ret.end)
       //&& playing
       goto(ret.start + 0.01);
-    onRegion(numRegions(), paramsRef.current, true);
+    onRegion(numRegions(), true);
     return ret;
   };
 
@@ -461,7 +469,7 @@ export function useWaveSurferRegions(
         updateRegion(r, { start: prev.start });
         ret.newStart = prev.start;
         prev.remove();
-        onRegion(numRegions(), paramsRef.current, true);
+        onRegion(numRegions(), true);
         return;
       }
     }
@@ -475,7 +483,7 @@ export function useWaveSurferRegions(
       r.remove();
       singleRegionRef.current = true;
     }
-    onRegion(numRegions(), paramsRef.current, true);
+    onRegion(numRegions(), true);
     return ret;
   };
 
@@ -514,7 +522,7 @@ export function useWaveSurferRegions(
     var regions = extractRegions(params);
     paramsRef.current = params;
     loadRegions({ params: params, regions: regions }, loop, true);
-    onRegion(regions.length, paramsRef.current, true);
+    onRegion(regions.length, true);
     if (regions.length) goto(regions[0].start);
     return regions.length;
   }

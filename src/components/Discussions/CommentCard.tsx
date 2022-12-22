@@ -9,22 +9,19 @@ import {
   TextField,
   TextFieldProps,
 } from '@mui/material';
-import { connect } from 'react-redux';
+import { shallowEqual } from 'react-redux';
 import {
   Comment,
   Discussion,
   Group,
   GroupMembership,
   ICommentCardStrings,
-  IState,
   MediaFile,
   User,
 } from '../../model';
-import * as actions from '../../store';
 import Confirm from '../AlertDialog';
-import localStrings from '../../selector/localize';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   findRecord,
@@ -39,13 +36,14 @@ import { useGlobal } from 'reactn';
 import { CommentEditor } from './CommentEditor';
 import DiscussionMenu from './DiscussionMenu';
 import { useRecordComment } from './useRecordComment';
-import { bindActionCreators } from 'redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import MediaPlayer from '../MediaPlayer';
 import { OldVernVersion } from '../../control/OldVernVersion';
 import { useArtifactType } from '../../crud';
+import { useSelector } from 'react-redux';
+import { commentCardSelector } from '../../selector';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -90,17 +88,8 @@ interface IRecordProps {
   groups: Array<Group>;
   memberships: Array<GroupMembership>;
 }
-interface IStateProps {
-  t: ICommentCardStrings;
-}
-interface IDispatchProps {
-  uploadFiles: typeof actions.uploadFiles;
-  nextUpload: typeof actions.nextUpload;
-  uploadComplete: typeof actions.uploadComplete;
-  doOrbitError: typeof actions.doOrbitError;
-}
 
-interface IProps extends IStateProps, IRecordProps, IDispatchProps {
+interface IProps {
   comment: Comment;
   discussion: Discussion;
   number: number;
@@ -108,9 +97,8 @@ interface IProps extends IStateProps, IRecordProps, IDispatchProps {
   approvalStatus: boolean | undefined;
 }
 
-export const CommentCard = (props: IProps) => {
+export const CommentCard = (props: IProps & IRecordProps) => {
   const {
-    t,
     comment,
     discussion,
     number,
@@ -120,7 +108,7 @@ export const CommentCard = (props: IProps) => {
     onEditing,
     approvalStatus,
   } = props;
-  const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
+  const t: ICommentCardStrings = useSelector(commentCardSelector, shallowEqual);
   const [author, setAuthor] = useState<User>();
   const [lang] = useGlobal('lang');
   const [user] = useGlobal('user');
@@ -172,7 +160,6 @@ export const CommentCard = (props: IProps) => {
   const saveComment = useSaveComment({
     discussion: discussion.id,
     cb: reset,
-    doOrbitError,
     users,
     groups,
     memberships,
@@ -190,10 +177,6 @@ export const CommentCard = (props: IProps) => {
     discussion,
     number,
     afterUploadcb,
-    uploadFiles,
-    nextUpload,
-    uploadComplete,
-    doOrbitError,
   });
   const text = comment.attributes?.commentText;
   const [mediaId, setMediaId] = useState('');
@@ -417,20 +400,6 @@ const mapRecordsToProps = {
   groups: (q: QueryBuilder) => q.findRecords('group'),
   memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      uploadFiles: actions.uploadFiles,
-      nextUpload: actions.nextUpload,
-      uploadComplete: actions.uploadComplete,
-      doOrbitError: actions.doOrbitError,
-    },
-    dispatch
-  ),
-});
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'commentCard' }),
-});
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(CommentCard) as any
-) as any;
+export default withData(mapRecordsToProps)(CommentCard) as any as (
+  props: IProps
+) => JSX.Element;

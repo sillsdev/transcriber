@@ -1,9 +1,9 @@
 import { getRegVal } from '.';
-const os = require('os');
+const ipc = (window as any)?.electron;
 
 export const getAudacityExe = async () => {
   let audacityExe: string | undefined = 'audacity';
-  if (os.platform() === 'win32') {
+  if (await ipc?.isWindows()) {
     const key = 'HKCR\\Audacity.Project\\shell\\open\\command';
     const audacity = await getRegVal(key, '');
     audacityExe = audacity?.split('"')[0];

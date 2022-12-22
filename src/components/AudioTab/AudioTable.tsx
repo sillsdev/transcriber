@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import { PlanContext } from '../../context/PlanContext';
 import { IState, IMediaTabStrings, MediaFile } from '../../model';
-import { Button, Checkbox, FormControlLabel } from '@material-ui/core';
-import localStrings from '../../selector/localize';
+import { Button, Checkbox, FormControlLabel } from '@mui/material';
 import { TransformBuilder } from '@orbit/data';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import BigDialog from '../../hoc/BigDialog';
@@ -20,24 +19,20 @@ import { numCompare, dateCompare, dateOrTime } from '../../utils';
 import { IRow } from '.';
 import { Sorting } from '@devexpress/dx-react-grid';
 import { UpdateRecord } from '../../model/baseModel';
+import { mediaTabSelector } from '../../selector';
 
-interface IStateProps {
-  t: IMediaTabStrings;
-  lang: string;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   data: IRow[];
   setRefresh: () => void;
   playItem: string;
   setPlayItem: (item: string) => void;
-  mediaPlaying: boolean;
-  setMediaPlaying: (playing: boolean) => void;
   onAttach?: (checks: number[], attach: boolean) => void;
 }
 export const AudioTable = (props: IProps) => {
-  const { data, setRefresh, lang, t } = props;
+  const { data, setRefresh } = props;
   const { playItem, setPlayItem, onAttach } = props;
+  const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
+  const lang = useSelector((state: IState) => state.strings.lang);
   const ctx = React.useContext(PlanContext);
   const { connected, readonly, shared } = ctx.state;
   const [memory] = useGlobal('memory');
@@ -221,7 +216,6 @@ export const AudioTable = (props: IProps) => {
   const PlayCell = ({ value, style, row, mediaId, ...restProps }: ICell) => (
     <Table.Cell row={row} {...restProps} style={{ ...style }} value>
       <MediaActions
-        t={t}
         rowIndex={row.index}
         mediaId={row.id}
         online={connected || offlineOnly}
@@ -366,9 +360,4 @@ export const AudioTable = (props: IProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediaTab' }),
-  lang: state.strings.lang,
-});
-
-export default connect(mapStateToProps)(AudioTable) as any;
+export default AudioTable;

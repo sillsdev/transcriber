@@ -1,4 +1,4 @@
-import { IconButton } from '@material-ui/core';
+import { IconButton } from '@mui/material';
 import OpenIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DoneIcon from '@mui/icons-material/CheckBoxOutlined';
 import { SectionResource } from '../../../model';

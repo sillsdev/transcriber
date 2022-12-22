@@ -12,10 +12,16 @@ import {
   IPassageDetailArtifactsStrings,
 } from '../../../model';
 import { ITranscriptionTabStrings } from '../../../model';
-import { withData, WithDataProps } from '../../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, RecordIdentity } from '@orbit/data';
-import { Button, debounce, Paper } from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import {
+  Box,
+  Button,
+  debounce,
+  Paper,
+  PaperProps,
+  styled,
+} from '@mui/material';
 import TreeGrid from '../../TreeGrid';
 import {
   related,
@@ -30,27 +36,15 @@ import {
 import { transcriptionTabSelector } from '../../../selector';
 import { eqSet } from '../../../utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    content: {
-      paddingTop: theme.spacing(2),
-      maxHeight: '70%',
-    },
-    root: {
-      backgroundColor: theme.palette.background.default,
-      marginBottom: theme.spacing(1),
-      '& .MuiPaper-rounded': {
-        borderRadius: '8px',
-      },
-      overflow: 'auto',
-      paddingTop: theme.spacing(2),
-    },
-  })
-);
+const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  marginBottom: theme.spacing(1),
+  '& .MuiPaper-rounded': {
+    borderRadius: '8px',
+  },
+  overflow: 'auto',
+  paddingTop: theme.spacing(2),
+}));
 
 interface IRow {
   id: string;
@@ -83,14 +77,13 @@ interface IRecordProps {
   sections: Array<Section>;
 }
 
-interface IProps extends IRecordProps, WithDataProps {
+interface IProps extends IRecordProps {
   visual?: boolean;
   onSelect?: (items: RecordIdentity[]) => void;
 }
 
 export function SelectSections(props: IProps) {
   const { passages, sections, visual, onSelect } = props;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const [data, setData] = useState(Array<IRow>());
@@ -242,8 +235,8 @@ export function SelectSections(props: IProps) {
   };
 
   return (
-    <div id="SelectSections" className={classes.content}>
-      <Paper id="PassageList" className={classes.root} style={heightStyle}>
+    <Box id="SelectSections" sx={{ pt: 2, maxHeight: '70%' }}>
+      <StyledPaper id="PassageList" style={heightStyle}>
         <TreeGrid
           columns={columnDefs}
           columnWidths={columnWidths}
@@ -264,7 +257,7 @@ export function SelectSections(props: IProps) {
           select={handleSelect}
           checks={checks}
         />
-      </Paper>
+      </StyledPaper>
 
       <div>
         <Button
@@ -276,7 +269,7 @@ export function SelectSections(props: IProps) {
           {buttonText}
         </Button>
       </div>
-    </div>
+    </Box>
   );
 }
 

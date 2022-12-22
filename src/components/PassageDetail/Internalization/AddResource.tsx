@@ -7,7 +7,7 @@ import { useOrganizedBy } from '../../../crud';
 import { resourceSelector } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { PriButton, StyledMenu, StyledMenuItem } from '../../../control';
 
@@ -78,7 +78,7 @@ export const AddResource = (props: IProps) => {
                 getOrganizedBy(true).toLocaleLowerCase()
               )}
             >
-              <InfoIcon fontSize="small" />
+              <InfoIcon />
             </LightTooltip>
           </ListItemText>
         </StyledMenuItem>
@@ -97,13 +97,10 @@ export const AddResource = (props: IProps) => {
                 getOrganizedBy(false).toLocaleLowerCase()
               )}
             >
-              <InfoIcon fontSize="small" />
+              <InfoIcon />
             </LightTooltip>
           </ListItemText>
         </StyledMenuItem>
-        {/* <StyledMenuItem id="activity" onClick={handle('activity')}>
-          <ListItemText primary={t.activity} />
-        </StyledMenuItem> */}
       </StyledMenu>
     </div>
   );

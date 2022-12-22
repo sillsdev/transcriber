@@ -9,7 +9,7 @@ import {
   Project,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import Alert from './AlertDialog';
 import ProjectDownload from './ProjectDownload';
@@ -17,7 +17,7 @@ import { dataPath, PathType } from '../utils';
 import { related, useProjectPlans, getMediaInPlans } from '../crud';
 import { isElectron } from '../api-variable';
 
-import fs from 'fs';
+const ipc = (window as any)?.electron;
 
 interface PlanProject {
   [planId: string]: string;
@@ -47,7 +47,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
   const [downloadOpen, setDownloadOpen] = React.useState(false);
   const projectPlans = useProjectPlans();
 
-  const getNeedyRemoteIds = () => {
+  const getNeedyRemoteIds = async () => {
     const ops = offlineProjects.filter((op) => op.attributes.offlineAvailable);
     let planIds = Array<string>();
     const planProject: PlanProject = {};
@@ -64,16 +64,16 @@ export const ProjectDownloadAlert = (props: IProps) => {
     const mediaRecs = getMediaInPlans(planIds, mediafiles, undefined, false);
     const needyProject = new Set<string>();
     let totalSize = 0;
-    mediaRecs.forEach((m) => {
+    for (const m of mediaRecs) {
       if (related(m, 'artifactType') || related(m, 'passage')) {
         var local = { localname: '' };
         dataPath(m.attributes.audioUrl, PathType.MEDIA, local);
-        if (!fs.existsSync(local.localname)) {
+        if (await !ipc?.exists(local.localname)) {
           needyProject.add(planProject[related(m, 'plan')]);
           totalSize += m?.attributes?.filesize || 0;
         }
       }
-    });
+    }
     if (downloadSize !== totalSize) setDownloadSize(totalSize);
     return Array.from(needyProject);
   };
@@ -84,11 +84,12 @@ export const ProjectDownloadAlert = (props: IProps) => {
 
   React.useEffect(() => {
     if (isElectron && tokenCtx.state.accessToken) {
-      const projRemIds = getNeedyRemoteIds();
-      if (projRemIds.length > 0) {
-        setNeedyIds(projRemIds);
-        setAlert(true);
-      } else cb();
+      getNeedyRemoteIds().then((projRemIds) => {
+        if (projRemIds.length > 0) {
+          setNeedyIds(projRemIds);
+          setAlert(true);
+        } else cb();
+      });
     } else cb();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [offlineProjects, projects, mediafiles]);

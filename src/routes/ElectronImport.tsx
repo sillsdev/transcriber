@@ -1,10 +1,7 @@
 import AdmZip from 'adm-zip';
-import fs from 'fs';
-import path from 'path';
+import path from 'path-browserify';
 import moment, { Moment } from 'moment';
-import { OpenDialogSyncOptions } from 'electron';
-import { Project, IElectronImportStrings, IState } from '../model';
-import * as action from '../store';
+import { Project, IElectronImportStrings, IState, IApiError } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import {
   remoteIdGuid,
@@ -26,6 +23,8 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
 import IndexedDBSource from '@orbit/indexeddb';
 import { TokenContext } from '../context/TokenProvider';
+import { ImportProjectToElectronProps } from '../store';
+const ipc = (window as any)?.electron;
 
 export interface IImportData {
   fileName: string;
@@ -42,9 +41,7 @@ const stringSelector = (state: IState) =>
 //const importStatusSelector = (state: IState) =>
 //  state.importexport.importexportStatus;
 
-export const useElectronImport = (
-  importComplete: typeof action.importComplete
-) => {
+export const useElectronImport = () => {
   const [coordinator] = useGlobal('coordinator');
   const token = useContext(TokenContext).state.accessToken;
   const [errorReporter] = useGlobal('errorReporter');
@@ -70,264 +67,253 @@ export const useElectronImport = (
   };
   //var importStatus = useSelector(importStatusSelector, shallowEqual);
 
-  /* if we aren't electron - define these dummies */
-  var handleElectronImport = (
-    importProjectToElectron: typeof action.importProjectToElectron,
-    reportError: typeof action.doOrbitError
-  ): void => {};
+  const getData = async (zip: AdmZip, name: string) =>
+    ((await ipc?.zipReadText(zip, name)) as string).replace(
+      /(\r\n|\n|\r)/gm,
+      ''
+    );
 
-  var getElectronImportData = (project: string): IImportData => {
-    return invalidReturn;
-  };
+  const getElectronImportData = async (
+    project: string
+  ): Promise<IImportData> => {
+    if (!isElectron) return invalidReturn;
+    const filePaths = await ipc?.importOpen();
+    if (!filePaths || filePaths.length === 0) {
+      zipRef.current = undefined;
+      //they didn't pick a file
+      return invalidReturn;
+    }
+    var zip = (await ipc?.zipOpen(filePaths[0])) as AdmZip;
+    let valid = false;
+    var exportTime: Moment = moment.utc();
+    var exportDate = '';
+    var version = '3';
+    var zipEntries = JSON.parse(await ipc?.zipGetEntries(zip));
+    for (let entry of zipEntries) {
+      if (entry.entryName === 'SILTranscriber') {
+        exportDate = await getData(zip, 'SILTranscriber');
+        exportTime = moment.utc(exportDate, 'YYYY-MM-DDTHH:MM:SS.SSSSSSSZ');
+        valid = true;
+        if (isOfflinePtf.current) break;
+      } else if (entry.entryName === 'Offline') {
+        isOfflinePtf.current = true;
+        if (valid) break;
+      } else if (entry.entryName === 'Version') {
+        version = await getData(zip, 'Version');
+      }
+    }
+    if (!valid) {
+      showTitledMessage(t.importProject, t.ptfError);
+      zipRef.current = undefined;
+      isOfflinePtf.current = false;
+      return { ...invalidReturn, errMsg: t.ptfError };
+    }
 
-  if (isElectron) {
-    getElectronImportData = (project: string): IImportData => {
-      const electronremote = require('@electron/remote');
+    //we have a valid file
+    zipRef.current = zip;
+    var ret: IImportData = {
+      fileName: filePaths[0],
+      projectName: '',
+      valid: true,
+      warnMsg: '',
+      errMsg: '',
+      exportDate: exportDate,
+    };
+    var infoMsg;
+    if ((backup?.schema.version || 1) < parseInt(version)) {
+      ret.warnMsg = t.newerVersion;
+    }
+    var userInProject = false;
+    var users: Array<string> = [];
+    var importUsers = JSON.parse(
+      await ipc?.zipReadText(zip, 'data/A_users.json')
+    );
+    if (importUsers && Array.isArray(importUsers.data)) {
+      importUsers.data.forEach((u: any) => {
+        users.push(u.attributes.name);
+        if (
+          user === '' ||
+          remoteIdGuid('user', u.id, memory.keyMap) ||
+          u.id === user
+        )
+          userInProject = true;
+      });
+    }
+    var importProjs = JSON.parse(
+      await ipc?.zipReadText(zip, 'data/D_projects.json')
+    );
+    var importProj: any;
+    if (
+      importProjs &&
+      Array.isArray(importProjs.data) &&
+      importProjs.data.length > 0
+    ) {
+      importProj = importProjs.data[0];
+      ret.projectName = importProj.attributes.name;
+    } else {
+      return { ...invalidReturn, errMsg: t.ptfError };
+    }
+    infoMsg = (
+      <span>
+        {filePaths[0]}
+        <br />
+        <b>
+          {t.project}: {ret.projectName}
+        </b>
+        <br />
+        {t.members}: {users.join(',')}
+        <br />
+        <b>
+          {userInProject ? (
+            <></>
+          ) : (
+            <>
+              {t.userWontSeeProject}
+              <br />
+            </>
+          )}
+        </b>
+      </span>
+    );
 
-      const options = {
-        //: OpenDialogSyncOptions
-        filters: [{ name: 'ptf', extensions: ['ptf'] }],
-        properties: ['openFile'],
-      } as OpenDialogSyncOptions;
-      const filePaths = electronremote.dialog.showOpenDialogSync(options);
-      if (!filePaths || filePaths.length === 0) {
-        zipRef.current = undefined;
-        //they didn't pick a file
-        return invalidReturn;
-      }
-      var zip = new AdmZip(filePaths[0]);
-      let valid = false;
-      var exportTime: Moment = moment.utc();
-      var exportDate = '';
-      var version = '3';
-      var zipEntries = zip.getEntries();
-      for (let entry of zipEntries) {
-        if (entry.entryName === 'SILTranscriber') {
-          exportDate = entry.getData().toString('utf8');
-          exportTime = moment.utc(exportDate, 'YYYY-MM-DDTHH:MM:SS.SSSSSSSZ');
-          valid = true;
-          if (isOfflinePtf.current) break;
-        } else if (entry.entryName === 'Offline') {
-          isOfflinePtf.current = true;
-          if (valid) break;
-        } else if (entry.entryName === 'Version') {
-          version = entry.getData().toString('utf8');
-        }
-      }
-      if (!valid) {
-        showTitledMessage(t.importProject, t.ptfError);
-        zipRef.current = undefined;
-        isOfflinePtf.current = false;
-        return { ...invalidReturn, errMsg: t.ptfError };
-      }
-
-      //we have a valid file
-      zipRef.current = zip;
-      var ret: IImportData = {
-        fileName: filePaths[0],
-        projectName: '',
-        valid: true,
-        warnMsg: '',
-        errMsg: '',
-        exportDate: exportDate,
-      };
-      var infoMsg;
-      if ((backup?.schema.version || 1) < parseInt(version)) {
-        ret.warnMsg = t.newerVersion;
-      }
-      var userInProject = false;
-      var users: Array<string> = [];
-      var importUsers = JSON.parse(zip.readAsText('data/A_users.json'));
-      if (importUsers && Array.isArray(importUsers.data)) {
-        importUsers.data.forEach((u: any) => {
-          users.push(u.attributes.name);
-          if (
-            user === '' ||
-            remoteIdGuid('user', u.id, memory.keyMap) ||
-            u.id === user
-          )
-            userInProject = true;
-        });
-      }
-      var importProjs = JSON.parse(zip.readAsText('data/D_projects.json'));
-      var importProj: any;
-      if (
-        importProjs &&
-        Array.isArray(importProjs.data) &&
-        importProjs.data.length > 0
-      ) {
-        importProj = importProjs.data[0];
-        ret.projectName = importProj.attributes.name;
-      } else {
-        return { ...invalidReturn, errMsg: t.ptfError };
-      }
-      infoMsg = (
-        <span>
-          {filePaths[0]}
-          <br />
-          <b>
-            {t.project}: {ret.projectName}
-          </b>
-          <br />
-          {t.members}: {users.join(',')}
-          <br />
-          <b>
-            {userInProject ? (
-              <></>
-            ) : (
-              <>
-                {t.userWontSeeProject}
-                <br />
-              </>
-            )}
-          </b>
-        </span>
+    //if we already have projects...check dates
+    const projectRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('project')
+    ) as Project[];
+    if (projectRecs && projectRecs.length > 0) {
+      var projectNames: string = '';
+      var id = importProj.id;
+      const proj = projectRecs.find(
+        (pr) => pr.id === (remoteIdGuid('project', id, memory.keyMap) || id)
       );
 
-      //if we already have projects...check dates
-      const projectRecs = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('project')
-      ) as Project[];
-      if (projectRecs && projectRecs.length > 0) {
-        var projectNames: string = '';
-        var id = importProj.id;
-        const proj = projectRecs.find(
-          (pr) => pr.id === (remoteIdGuid('project', id, memory.keyMap) || id)
-        );
+      if (project !== '' && project !== proj?.id) {
+        showTitledMessage(t.importProject, t.invalidProject);
+        zipRef.current = undefined;
+        ret.valid = false;
+        ret.errMsg = t.invalidProject;
+        return ret;
+      }
 
-        if (project !== '' && project !== proj?.id) {
-          showTitledMessage(t.importProject, t.invalidProject);
-          zipRef.current = undefined;
-          ret.valid = false;
-          ret.errMsg = t.invalidProject;
-          return ret;
+      //was this one exported before our current data?
+      if (proj && proj.attributes) {
+        projectNames += proj.attributes.name + ',';
+        var op = getOfflineProject(proj.id);
+        if (
+          op.attributes &&
+          op.attributes.snapshotDate &&
+          moment.utc(op.attributes.snapshotDate) > exportTime
+        ) {
+          ret.warnMsg +=
+            t.importCreated.replace('{date0}', exportTime.toLocaleString()) +
+            ' ' +
+            t.projectImported
+              .replace('{name0}', importProj.attributes.name)
+              .replace(
+                '{date1}',
+                moment.utc(op.attributes.snapshotDate).toLocaleString()
+              ) +
+            '  ' +
+            t.allDataOverwritten.replace('{name0}', ret.projectName);
         }
-
-        //was this one exported before our current data?
-        if (proj && proj.attributes) {
-          projectNames += proj.attributes.name + ',';
-          var op = getOfflineProject(proj.id);
-          if (
-            op.attributes &&
-            op.attributes.snapshotDate &&
-            moment.utc(op.attributes.snapshotDate) > exportTime
-          ) {
+        //has our current data never been exported, or exported after incoming?
+        if (!op.attributes || !op.attributes.exportedDate) {
+          ret.warnMsg +=
+            t.neverExported.replace('{name0}', ret.projectName) +
+            '  ' +
+            t.allDataOverwritten.replace('{name0}', ret.projectName);
+        } else {
+          var myLastExport = moment.utc(op.attributes.exportedDate);
+          if (myLastExport > exportTime) {
             ret.warnMsg +=
               t.importCreated.replace('{date0}', exportTime.toLocaleString()) +
               ' ' +
-              t.projectImported
-                .replace('{name0}', importProj.attributes.name)
-                .replace(
-                  '{date1}',
-                  moment.utc(op.attributes.snapshotDate).toLocaleString()
-                ) +
+              t.lastExported
+                .replace('{name0}', ret.projectName)
+                .replace('{date0}', myLastExport.toLocaleString()) +
               '  ' +
-              t.allDataOverwritten.replace('{name0}', ret.projectName);
+              t.exportedLost;
           }
-          //has our current data never been exported, or exported after incoming?
-          if (!op.attributes || !op.attributes.exportedDate) {
-            ret.warnMsg +=
-              t.neverExported.replace('{name0}', ret.projectName) +
-              '  ' +
-              t.allDataOverwritten.replace('{name0}', ret.projectName);
-          } else {
-            var myLastExport = moment.utc(op.attributes.exportedDate);
-            if (myLastExport > exportTime) {
-              ret.warnMsg +=
-                t.importCreated.replace(
-                  '{date0}',
-                  exportTime.toLocaleString()
-                ) +
-                ' ' +
-                t.lastExported
-                  .replace('{name0}', ret.projectName)
-                  .replace('{date0}', myLastExport.toLocaleString()) +
-                '  ' +
-                t.exportedLost;
-            }
-          }
-        }
-
-        if (ret.warnMsg === '' && projectNames !== '') {
-          //general warning
-          ret.warnMsg = t.allDataOverwritten.replace(
-            '{name0}',
-            projectNames.substring(0, projectNames.length - 1)
-          );
         }
       }
-      ret.warnMsg = (
-        <span>
-          {infoMsg}
-          <br />
-          {ret.warnMsg}
-        </span>
-      );
-      return ret;
-    };
 
-    handleElectronImport = (
-      importProjectToElectron: typeof action.importProjectToElectron,
-      reportError: typeof action.doOrbitError
-    ): void => {
-      if (zipRef.current) {
-        const where = dataPath();
-        fs.mkdirSync(where, { recursive: true });
-        //delete any old files
-        try {
-          if (fs.existsSync(path.join(where, 'SILTranscriber')))
-            fs.unlinkSync(path.join(where, 'SILTranscriber'));
-          if (fs.existsSync(path.join(where, 'Version')))
-            fs.unlinkSync(path.join(where, 'Version'));
-          var datapath = path.join(where, 'data');
-          const files = fs.readdirSync(datapath);
-          for (const file of files) {
-            fs.unlinkSync(path.join(datapath, file));
-          }
-        } catch (err: any) {
-          if (err.errno !== -4058)
-            reportError(orbitInfo(err, `Delete failed for ${where}`));
-        }
-        zipRef.current.extractAllTo(where, true);
-        //get the exported date from SILTranscriber file
-        var dataDate = fs
-          .readFileSync(path.join(where, 'SILTranscriber'), {
-            encoding: 'utf8',
-            flag: 'r',
-          })
-          .replace(/(\r\n|\n|\r)/gm, '');
-        var versionstr = '3';
-        if (fs.existsSync(path.join(where, 'Version')))
-          versionstr = fs.readFileSync(path.join(where, 'Version'), {
-            encoding: 'utf8',
-            flag: 'r',
-          });
-        var version = parseInt(versionstr);
-        importProjectToElectron(
-          path.join(where, 'data'),
-          dataDate,
-          version,
-          coordinator,
-          isOfflinePtf.current,
-          AddProjectLoaded,
-          reportError,
-          getTypeId,
-          t.importPending,
-          t.importComplete,
-          t.importOldFile,
-          token,
-          user,
-          errorReporter,
-          offlineSetup
+      if (ret.warnMsg === '' && projectNames !== '') {
+        //general warning
+        ret.warnMsg = t.allDataOverwritten.replace(
+          '{name0}',
+          projectNames.substring(0, projectNames.length - 1)
         );
-        const userLastTimeKey = localUserKey(LocalKey.time);
-        let lastTime = localStorage.getItem(userLastTimeKey) || '';
-        if (!lastTime || moment(lastTime) > moment(dataDate)) {
-          localStorage.setItem(userLastTimeKey, dataDate);
-        }
-        isOfflinePtf.current = false;
       }
-    };
-  }
+    }
+    ret.warnMsg = (
+      <span>
+        {infoMsg}
+        <br />
+        {ret.warnMsg}
+      </span>
+    );
+    return ret;
+  };
+
+  const getFileText = async (folder: string, name: string) => {
+    const value = (await ipc?.read(path.join(folder, name), 'utf-8')) as string;
+    return value.replace(/(\r\n|\n|\r)/gm, '');
+  };
+
+  const handleElectronImport = async (
+    importProjectToElectron: (props: ImportProjectToElectronProps) => void,
+    reportError: (ex: IApiError) => void
+  ): Promise<void> => {
+    if (!isElectron) return;
+    if (zipRef.current) {
+      const where = dataPath();
+      await ipc?.createFolder(where);
+      //delete any old files
+      try {
+        if (await ipc?.exists(path.join(where, 'SILTranscriber')))
+          await ipc?.delete(path.join(where, 'SILTranscriber'));
+        if (await ipc?.exists(path.join(where, 'Version')))
+          await ipc?.delete(path.join(where, 'Version'));
+        var datapath = path.join(where, 'data');
+        const files = await ipc?.readDir(datapath);
+        for (const file of files) {
+          await ipc?.delete(path.join(datapath, file));
+        }
+      } catch (err: any) {
+        if (err.errno !== -4058)
+          reportError(orbitInfo(err, `Delete failed for ${where}`));
+      }
+      await ipc?.zipExtract(zipRef.current, where, true);
+      //get the exported date from SILTranscriber file
+      var dataDate = await getFileText(where, 'SILTranscriber');
+      var versionstr = '3';
+      if (await ipc?.exists(path.join(where, 'Version')))
+        versionstr = await getFileText(where, 'Version');
+      var version = parseInt(versionstr);
+      importProjectToElectron({
+        filepath: path.join(where, 'data'),
+        dataDate,
+        version,
+        coordinator,
+        offlineOnly: isOfflinePtf.current,
+        AddProjectLoaded,
+        reportError,
+        getTypeId,
+        pendingmsg: t.importPending,
+        completemsg: t.importComplete,
+        oldfilemsg: t.importOldFile,
+        token,
+        user,
+        errorReporter,
+        offlineSetup,
+      });
+      const userLastTimeKey = localUserKey(LocalKey.time);
+      let lastTime = localStorage.getItem(userLastTimeKey) || '';
+      if (!lastTime || moment(lastTime) > moment(dataDate)) {
+        localStorage.setItem(userLastTimeKey, dataDate);
+      }
+      isOfflinePtf.current = false;
+    }
+  };
   return { getElectronImportData, handleElectronImport };
 };

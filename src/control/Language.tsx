@@ -1,36 +1,14 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import {
   TextField,
   Checkbox,
   FormLabel,
   FormGroup,
   FormControlLabel,
-} from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import { CSSProperties } from '@material-ui/core/styles/withStyles';
+  Box,
+} from '@mui/material';
 import { LanguagePicker } from 'mui-language-picker';
 import { TeamContext } from '../context/TeamContext';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      paddingTop: theme.spacing(3),
-    },
-    label: {
-      color: theme.palette.secondary.main,
-    },
-    group: {
-      paddingBottom: theme.spacing(3),
-    },
-    languageField: {
-      marginLeft: 0,
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-  })
-);
 
 export interface ILanguage {
   bcp47: string;
@@ -44,7 +22,6 @@ interface IProps extends ILanguage {
 }
 
 export const Language = (props: IProps) => {
-  const classes = useStyles();
   const { bcp47, languageName, font, spellCheck, onChange } = props;
   const [state, setState] = React.useState<ILanguage>({
     bcp47,
@@ -94,13 +71,13 @@ export const Language = (props: IProps) => {
   const widthStyle: CSSProperties = { width: 400 };
 
   return (
-    <div className={classes.root}>
-      <FormLabel className={classes.label}>{t.language}</FormLabel>
-      <FormGroup className={classes.group}>
+    <Box sx={{ pt: 3 }}>
+      <FormLabel sx={{ color: 'secondary.main' }}>{t.language}</FormLabel>
+      <FormGroup sx={{ pb: 3 }}>
         <FormControlLabel
           id="language-code"
           ref={langEl}
-          className={classes.languageField}
+          sx={{ marginLeft: 0 }}
           control={
             <LanguagePicker
               value={bcp47}
@@ -119,7 +96,7 @@ export const Language = (props: IProps) => {
             <TextField
               id="language-font"
               label={t.font}
-              className={classes.textField}
+              sx={{ mx: 1 }}
               value={font}
               onClick={handleChangeFont}
               onKeyDown={handleChangeFont}
@@ -143,6 +120,6 @@ export const Language = (props: IProps) => {
           label={t.spellCheck}
         />
       </FormGroup>
-    </div>
+    </Box>
   );
 };

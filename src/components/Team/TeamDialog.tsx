@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
   Button,
@@ -11,8 +11,7 @@ import {
   DialogTitle,
   MenuItem,
   LinearProgress,
-} from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+} from '@mui/material';
 import {
   Organization,
   IDialog,
@@ -25,15 +24,6 @@ import { TeamContext } from '../../context/TeamContext';
 import { useTeamApiPull, defaultWorkflow } from '../../crud';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    process: {
-      width: '200px',
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-    },
-  })
-);
 interface IRecordProps {
   organizations: Array<Organization>;
 }
@@ -45,7 +35,6 @@ interface IProps extends IRecordProps, IDialog<Organization> {
 export function TeamDialog(props: IProps) {
   const { mode, values, isOpen, organizations, onOpen, onCommit, onDelete } =
     props;
-  const classes = useStyles();
   const [name, setName] = React.useState('');
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
@@ -168,7 +157,7 @@ export function TeamDialog(props: IProps) {
               label={t.process}
               value={process || ''}
               onChange={handleProcess}
-              className={classes.process}
+              sx={{ my: 2, width: '200px' }}
             >
               {processOptions
                 .sort((i, j) => (i.label <= j.label ? -1 : 1))

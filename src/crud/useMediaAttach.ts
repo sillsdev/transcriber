@@ -15,18 +15,16 @@ import {
 import { sharedSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ReplaceRelatedRecord, UpdateLastModifiedBy } from '../model/baseModel';
+import { useDispatch } from 'react-redux';
 
-interface IDispatchProps {
-  doOrbitError: typeof actions.doOrbitError;
-}
-
-interface IProps extends IDispatchProps {}
+interface IProps {}
 
 export const useMediaAttach = (props: IProps) => {
-  const { doOrbitError } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const dispatch = useDispatch();
+  const doOrbitError = actions.doOrbitError;
   const { IsVernacularMedia, localizedArtifactTypeFromId } = useArtifactType();
 
   const attach = async (
@@ -77,7 +75,7 @@ export const useMediaAttach = (props: IProps) => {
     );
 
     await memory.update(ops).catch((err: Error) => {
-      doOrbitError(orbitErr(err, 'attach passage'));
+      dispatch(doOrbitError(orbitErr(err, 'attach passage')));
     });
   };
 
@@ -114,7 +112,7 @@ export const useMediaAttach = (props: IProps) => {
     UpdateRelatedPassageOps(section, plan, user, tb, ops);
 
     await memory.update(ops).catch((err: Error) => {
-      doOrbitError(orbitErr(err, 'detach passage'));
+      dispatch(doOrbitError(orbitErr(err, 'detach passage')));
     });
   };
 

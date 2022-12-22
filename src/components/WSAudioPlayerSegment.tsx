@@ -1,12 +1,6 @@
-import {
-  makeStyles,
-  Theme,
-  createStyles,
-  IconButton,
-  Grid,
-} from '@material-ui/core';
+import { IconButton, Grid } from '@mui/material';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { LightTooltip } from '../control';
+import { GrowingDiv, LightTooltip, ToolbarGrid } from '../control';
 import { IWsAudioPlayerSegmentStrings, IState } from '../model';
 import { IoMdBarcode } from 'react-icons/io';
 import RemoveOneIcon from '@mui/icons-material/Clear';
@@ -19,34 +13,7 @@ import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
 import WSSegmentParameters from './WSSegmentParameters';
 import { useSnackBar } from '../hoc/SnackBar';
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'column',
-      whiteSpace: 'nowrap',
-    },
-    toolbar: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyItems: 'flex-start',
-      display: 'flex',
-    },
-    togglebutton: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    formControl: {
-      margin: theme.spacing(1),
-      maxWidth: 50,
-    },
-    rotate90: { rotate: '90' },
-    button: { margin: theme.spacing(1) },
-  })
-);
+
 interface IStateProps {
   t: IWsAudioPlayerSegmentStrings;
 }
@@ -56,8 +23,10 @@ interface IProps extends IStateProps {
   currentNumRegions: number;
   params: IRegionParams;
   playing: boolean;
+  canSetDefault?: boolean;
   onSplit: (split: IRegionChange) => void;
-  wsAutoSegment?: (loop: boolean, params: IRegionParams) => number;
+  onParamChange: (params: IRegionParams, teamDefault: boolean) => void;
+  wsAutoSegment: (loop: boolean, params: IRegionParams) => number;
   wsRemoveSplitRegion: (next?: boolean) => IRegionChange | undefined;
   wsAddOrRemoveRegion: () => IRegionChange | undefined;
   wsClearRegions: () => void;
@@ -65,7 +34,6 @@ interface IProps extends IStateProps {
 }
 
 function WSAudioPlayerSegment(props: IProps) {
-  const classes = useStyles();
   const {
     t,
     ready,
@@ -73,7 +41,9 @@ function WSAudioPlayerSegment(props: IProps) {
     currentNumRegions,
     params,
     playing,
+    canSetDefault,
     onSplit,
+    onParamChange,
     wsAutoSegment,
     wsRemoveSplitRegion,
     wsAddOrRemoveRegion,
@@ -160,19 +130,15 @@ function WSAudioPlayerSegment(props: IProps) {
     return true;
   };
   const handleSegParamChange = (
-    silence: number,
-    silLen: number,
-    segLen: number
+    params: IRegionParams,
+    teamDefault: boolean
   ) => {
-    setSegParams({
-      silenceThreshold: silence,
-      timeThreshold: silLen,
-      segLenThreshold: segLen,
-    });
+    setSegParams(params);
+    onParamChange(params, teamDefault);
   };
   return (
-    <div className={classes.root}>
-      <Grid container className={classes.toolbar}>
+    <GrowingDiv>
+      <ToolbarGrid container>
         <Grid item>
           {wsAutoSegment && (
             <>
@@ -204,6 +170,7 @@ function WSAudioPlayerSegment(props: IProps) {
               <WSSegmentParameters
                 loop={loop}
                 params={segParams}
+                canSetDefault={canSetDefault ?? false}
                 currentNumRegions={currentNumRegions}
                 wsAutoSegment={wsAutoSegment}
                 isOpen={showSettings && !playing}
@@ -250,8 +217,8 @@ function WSAudioPlayerSegment(props: IProps) {
             </span>
           </LightTooltip>
         </Grid>
-      </Grid>
-    </div>
+      </ToolbarGrid>
+    </GrowingDiv>
   );
 }
 const mapStateToProps = (state: IState): IStateProps => ({

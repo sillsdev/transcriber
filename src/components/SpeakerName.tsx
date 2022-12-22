@@ -4,14 +4,14 @@ import { ICommunityStrings } from '../model';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import IntellectualProperty from '../model/intellectualProperty';
 import BigDialog from '../hoc/BigDialog';
 import ProvideRights from './ProvideRights';
 import { communitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ArtifactTypeSlug, related } from '../crud';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 
 interface NameOptionType {
   inputValue?: string;

@@ -1,7 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Card, CardContent } from '@material-ui/core';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardContentProps,
+  CardProps,
+  styled,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { VProject, DialogMode, OptionType, Project, Plan } from '../../model';
 import { ProjectDialog, IProjectDialog, ProjectType } from './ProjectDialog';
@@ -16,40 +22,29 @@ import {
   useOrganizedBy,
   findRecord,
   related,
+  usePlan,
 } from '../../crud';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
 import NewProjectGrid from './NewProjectGrid';
-import { restoreScroll } from '../../utils';
+import { restoreScroll, useHome } from '../../utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      minWidth: 275,
-      minHeight: 176,
-      margin: theme.spacing(1),
-      display: 'flex',
-      backgroundColor: theme.palette.primary.light,
-    },
-    content: {
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      justifyContent: 'center',
-      color: theme.palette.primary.contrastText,
-    },
-    buttons: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'space-around',
-      flexGrow: 1,
-    },
-    icon: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
+const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
+  minWidth: 275,
+  minHeight: 176,
+  margin: theme.spacing(1),
+  display: 'flex',
+  backgroundColor: theme.palette.primary.light,
+}));
+
+const StyledCardContent = styled(CardContent)<CardContentProps>(
+  ({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    justifyContent: 'center',
+    color: theme.palette.primary.contrastText,
   })
 );
 
@@ -66,7 +61,6 @@ interface IProps {
 
 export const AddCard = (props: IProps) => {
   const { team } = props;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -79,6 +73,7 @@ export const AddCard = (props: IProps) => {
     bookSuggestions,
     teamProjects,
     personalProjects,
+    setProjectParams,
   } = ctx.state;
   const t = cardStrings;
   const { showMessage } = useSnackBar();
@@ -107,6 +102,8 @@ export const AddCard = (props: IProps) => {
   const [forceType, setForceType] = React.useState(false);
   const [recordAudio, setRecordAudio] = React.useState(false);
   const speakerRef = useRef<string>();
+  const { leaveHome } = useHome();
+  const { getPlan } = usePlan();
 
   useEffect(() => {
     if (localStorage.getItem('autoaddProject') !== null && team === null) {
@@ -226,7 +223,13 @@ export const AddCard = (props: IProps) => {
         },
       } as VProject,
       team
-    );
+    ).then((planId) => {
+      const planRec = getPlan(planId);
+      if (planRec) {
+        setProjectParams(planRec);
+        leaveHome();
+      }
+    });
   };
 
   const nextName = (newName: string) => {
@@ -313,10 +316,8 @@ export const AddCard = (props: IProps) => {
       // Allow time for last check mark
       setInProgress(false);
       stepRef.current = 0;
-      if (bookRef.current?.value)
-        setView(`/plan/${remoteId('plan', planId, memory.keyMap) || planId}/0`);
-      else
-        setView(`/work/${remoteId('plan', planId, memory.keyMap) || planId}`);
+      leaveHome();
+      setView(`/plan/${remoteId('plan', planId, memory.keyMap) || planId}/0`);
     }, 1000);
   };
 
@@ -352,13 +353,9 @@ export const AddCard = (props: IProps) => {
 
   return (
     <>
-      <Card
-        id={`teamAdd-${team}`}
-        className={classes.root}
-        onClick={handleSolutionShow}
-      >
-        <CardContent className={classes.content}>
-          <div className={classes.icon}>
+      <StyledCard id={`teamAdd-${team}`} onClick={handleSolutionShow}>
+        <StyledCardContent>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <AddIcon fontSize="large" />
             <NewProjectGrid
               open={pickOpen && !open && !uploadVisible}
@@ -375,9 +372,9 @@ export const AddCard = (props: IProps) => {
               onCommit={handleCommit}
               nameInUse={nameInUse}
             />
-          </div>
-        </CardContent>
-      </Card>
+          </Box>
+        </StyledCardContent>
+      </StyledCard>
       <Uploader
         recordAudio={recordAudio}
         isOpen={uploadVisible}

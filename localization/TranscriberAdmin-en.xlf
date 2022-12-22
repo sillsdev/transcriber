@@ -1020,7 +1020,7 @@
       </unit>
       <unit id="discussionList.saveFilter">
          <segment>
-            <source>Save as the Team default?</source>
+            <source>Save as team default</source>
             <target/>
          </segment>
       </unit>
@@ -1369,138 +1369,6 @@
       <unit id="grid.sum">
          <segment>
             <source>Sum</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.add">
-         <segment>
-            <source>Ok</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.addGroupMember">
-         <segment>
-            <source>Choose {0}</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.addMemberInstruction">
-         <segment>
-            <source>Choose a person who will act as a {0} for audio projects in this group.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.allReviewersCanTranscribe">
-         <segment>
-            <source>All Editors are allowed to transcribe.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.assignedSections">
-         <segment>
-            <source>  Assigned {0}: </source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.cancel">
-         <segment>
-            <source>Cancel</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.delete">
-         <segment>
-            <source>Delete</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.editors">
-         <segment>
-            <source>Editors</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.editorsDetail">
-         <segment>
-            <source>(Review + Transcribe)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.loadingTable">
-         <segment>
-            <source>Loading data</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.name">
-         <segment>
-            <source>Name</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.noDeleteAdmin">
-         <segment>
-            <source>The only Administrator cannot be deleted.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.noDeleteAllUsersInfo">
-         <segment>
-            <source>Cannot delete members from the All Members group</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.noDeleteInfo">
-         <segment>
-            <source>This role is included in a higher role and cannot be deleted.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.owners">
-         <segment>
-            <source>Owners</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.ownersDetail">
-         <segment>
-            <source>(Manage + Review + Transcribe)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.projectPlans">
-         <segment>
-            <source>Audio Project Plans</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.roles">
-         <segment>
-            <source>Roles:{0}</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.save">
-         <segment>
-            <source>Save</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.transcribers">
-         <segment>
-            <source>Transcribers</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.transcribersDetail">
-         <segment>
-            <source>(Transcribe)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.transcriptionTitle">
-         <segment>
-            <source>Users in Transcription Roles</source>
             <target/>
          </segment>
       </unit>
@@ -2086,18 +1954,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.groupRole">
-         <segment>
-            <source>Audio Project Role</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="invite.groups">
-         <segment>
-            <source>Audio Project</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="invite.instructions">
          <segment>
             <source>Please click the following link to accept the invitation:</source>
@@ -2136,7 +1992,7 @@
       </unit>
       <unit id="invite.noProjects">
          <segment>
-            <source>No audio projects are associated with this group.</source>
+            <source>This team has no audio projects.</source>
             <target/>
          </segment>
       </unit>
@@ -2167,12 +2023,6 @@
       <unit id="invite.save">
          <segment>
             <source>Save</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="invite.selectProjectRole">
-         <segment>
-            <source>Select audio project role.</source>
             <target/>
          </segment>
       </unit>
@@ -2458,12 +2308,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.owner">
-         <segment>
-            <source>Owner</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="main.passages">
          <segment>
             <source>Passages</source>
@@ -2482,9 +2326,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.projRole">
+      <unit id="main.orgRole">
          <segment>
-            <source>Role in Audio Project:</source>
+            <source>Role:</source>
             <target/>
          </segment>
       </unit>
@@ -2545,12 +2389,6 @@
       <unit id="main.settings">
          <segment>
             <source>Settings</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="main.switchTo">
-         <segment>
-            <source>Switch to:</source>
             <target/>
          </segment>
       </unit>
@@ -2880,7 +2718,7 @@
       </unit>
       <unit id="mediaTab.size">
          <segment>
-            <source>Size (KB)</source>
+            <source>Size (MB)</source>
             <target/>
          </segment>
       </unit>
@@ -3676,6 +3514,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.filtered">
+         <segment>
+            <source>Disable filter to add rows.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.nonNumber">
          <segment>
             <source>Do not change to non-number.</source>
@@ -4180,6 +4024,60 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTableFilter.apply">
+         <segment>
+            <source>Apply</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.assignedToMe">
+         <segment>
+            <source>Only rows with discussions assigned to me</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.clear">
+         <segment>
+            <source>Clear</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.disable">
+         <segment>
+            <source>Disable filter to add rows</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.hideDone">
+         <segment>
+            <source>Hide Done rows</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.step">
+         <segment>
+            <source>Workflow Step</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.minimum">
+         <segment>
+            <source>Minimum</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.maximum">
+         <segment>
+            <source>Maximum</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.saveFilter">
+         <segment>
+            <source>Save as project default</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="sectionResources.close">
          <segment>
             <source>Close</source>
@@ -4396,6 +4294,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.loading">
+         <segment>
+            <source>Loading...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.mediaAttached">
          <segment>
             <source>Audio Attached</source>
@@ -4444,12 +4348,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="shared.owner">
-         <segment>
-            <source>Owner</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="shared.paratextchapterSpan">
          <segment>
             <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
@@ -4465,12 +4363,6 @@
       <unit id="shared.peerreviewer">
          <segment>
             <source>Peer Reviewer</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="shared.projectrole">
-         <segment>
-            <source>Project Role</source>
             <target/>
          </segment>
       </unit>
@@ -5386,6 +5278,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.latestAudioElan">
+         <segment>
+            <source>Latest Audio + Transcription</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.noData">
          <segment>
             <source>No {0} Data.</source>
@@ -5592,13 +5490,25 @@
       </unit>
       <unit id="viewMode.audioProject">
          <segment>
-            <source>Audio Project</source>
+            <source>Audio Project Setup</source>
             <target/>
          </segment>
       </unit>
-      <unit id="viewMode.transcribe">
+      <unit id="viewMode.home">
          <segment>
-            <source>Transcribe</source>
+            <source>Home</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="viewMode.work">
+         <segment>
+            <source>Work</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="viewMode.gotowork">
+         <segment>
+            <source>Go to Work</source>
             <target/>
          </segment>
       </unit>
@@ -6076,6 +5986,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="workflowSteps.none">
+         <segment>
+            <source>(None)</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.aheadTip">
          <segment>
             <source>Ahead {jump} {1} [{0}]</source>
@@ -6283,6 +6199,12 @@
       <unit id="wsAudioPlayerSegment.splitSegment">
          <segment>
             <source>Add/Remove Boundary [Double Click/{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.teamDefault">
+         <segment>
+            <source>Save as team default</source>
             <target/>
          </segment>
       </unit>

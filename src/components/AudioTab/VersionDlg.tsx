@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import {
   IState,
   MediaFile,
@@ -39,9 +39,9 @@ export const VersionDlg = (props: IProps) => {
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [playItem, setPlayItem] = useState('');
   const [data, setData] = useState<IRow[]>([]);
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(0);
   const { IsVernacularMedia } = useArtifactType();
-
+  const handleRefresh = () => setRefresh(refresh + 1);
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
     const media: MediaFile[] = mediaFiles.filter(
@@ -60,12 +60,12 @@ export const VersionDlg = (props: IProps) => {
     if (newData.length !== data.length || playChange || refresh)
       setData(newData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediaFiles, sections, passages, planRec, passId, playItem]);
+  }, [mediaFiles, sections, passages, planRec, passId, playItem, refresh]);
 
   return (
     <AudioTable
       data={data}
-      setRefresh={setRefresh}
+      setRefresh={handleRefresh}
       playItem={playItem}
       setPlayItem={setPlayItem}
     />

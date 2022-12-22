@@ -10,7 +10,7 @@ endif
 build:
 	npm install --legacy-peer-deps
 	npm run stamp
-	npm run electron-pack
+	npm run pack
 	npm run dist
 tests:
 	npm test

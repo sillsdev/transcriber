@@ -23,7 +23,7 @@ import {
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
   Button,
@@ -46,6 +46,7 @@ import {
   TabActions,
   TabAppBar,
   PriButton,
+  AltButton,
 } from '../control';
 import { useSnackBar } from '../hoc/SnackBar';
 import TreeGrid from './TreeGrid';
@@ -132,11 +133,7 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+interface IProps {
   projectPlans: Plan[];
   planColumn?: boolean;
   floatTop?: boolean;
@@ -144,7 +141,9 @@ interface IProps
   orgSteps?: OrgWorkflowStep[];
 }
 
-export function TranscriptionTab(props: IProps) {
+export function TranscriptionTab(
+  props: IProps & IStateProps & IDispatchProps & IRecordProps
+) {
   const {
     activityState,
     t,
@@ -263,28 +262,14 @@ export function TranscriptionTab(props: IProps) {
     ) as Plan[];
 
     var projectplans = plans.filter((pl) => related(pl, 'project') === project);
-    let media: MediaFile[] = getMediaInPlans(
-      projectplans.map((p) => p.id),
-      mediaFiles,
-      VernacularTag,
-      true
-    );
-    const attached = media
-      .map((m) => related(m, 'passage'))
-      .filter((p) => p && p !== '');
-    if (!attached.length) {
-      showMessage(t.incompletePlan);
-      setBusy(false);
-      return;
-    }
     /* get correct count */
     const onlyTypeId = [ExportType.DBL, ExportType.BURRITO].includes(exportType)
       ? VernacularTag
-      : exportType === ExportType.AUDIO
+      : [ExportType.AUDIO, ExportType.ELAN].includes(exportType)
       ? getTypeId(artifactType)
       : undefined;
     const onlyLatest = onlyTypeId !== undefined;
-    media = getMediaInPlans(
+    let media = getMediaInPlans(
       projectplans.map((p) => p.id),
       mediaFiles,
       onlyTypeId,
@@ -383,16 +368,18 @@ export function TranscriptionTab(props: IProps) {
       showMessage(t.noData.replace('{0}', localizedArtifactType(artifactType)));
   };
 
-  const handleAudioExportMenu = (what: string) => {
-    if (what === 'zip') {
-      setBusy(true);
-      doProjectExport(ExportType.AUDIO);
-    } else if (what === 'burrito') {
-      setBusy(true);
-      doProjectExport(ExportType.BURRITO);
-      // } else if (what === 'dbl') {
-      //   setBusy(true);
-      //   doProjectExport(ExportType.DBL);
+  const handleAudioExportMenu = (what: string | ExportType) => {
+    setBusy(true);
+    switch (what) {
+      case ExportType.AUDIO:
+      case ExportType.ELAN:
+      case ExportType.BURRITO:
+        //case ExportType.DBL:
+        doProjectExport(what);
+        break;
+      default:
+        setBusy(false);
+        break;
     }
   };
 
@@ -702,7 +689,7 @@ export function TranscriptionTab(props: IProps) {
         >
           <TabActions>
             {(planColumn || floatTop) && (
-              <PriButton
+              <AltButton
                 id="transExp"
                 key="export"
                 aria-label={t.exportProject}
@@ -711,9 +698,9 @@ export function TranscriptionTab(props: IProps) {
                 disabled={busy}
               >
                 {t.exportProject}
-              </PriButton>
+              </AltButton>
             )}
-            <PriButton
+            <AltButton
               id="transCopy"
               key="copy"
               aria-label={t.copyTranscriptions}
@@ -722,7 +709,7 @@ export function TranscriptionTab(props: IProps) {
             >
               {t.copyTranscriptions +
                 (localizedArtifact ? ' (' + localizedArtifact + ')' : '')}
-            </PriButton>
+            </AltButton>
             {step && (
               <AudioExportMenu
                 key="audioexport"
@@ -748,11 +735,10 @@ export function TranscriptionTab(props: IProps) {
               exportTypes={artifactTypes}
               setExportType={setArtifactType}
             />
-            <PriButton
+            <AltButton
               id="transFilt"
               key="filter"
               aria-label={t.filter}
-              variant="outlined"
               onClick={handleFilter}
               title={t.showHideFilter}
             >
@@ -762,7 +748,7 @@ export function TranscriptionTab(props: IProps) {
               ) : (
                 <FilterIcon sx={iconMargin} />
               )}
-            </PriButton>
+            </AltButton>
           </TabActions>
         </TabAppBar>
         <PaddedBox>
@@ -791,6 +777,7 @@ export function TranscriptionTab(props: IProps) {
             showgroups={filter}
             showSelection={false}
             defaultHiddenColumnNames={defaultHiddenColumnNames}
+            checks={[]}
           />
         </PaddedBox>
       </div>
@@ -822,7 +809,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   allBookData: state.books.bookData,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       exportProject: actions.exportProject,
@@ -841,5 +828,5 @@ const mapRecordsToProps = {
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(TranscriptionTab) as any
-) as any;
+  connect(mapStateToProps, mapDispatchToProps)(TranscriptionTab as any) as any
+) as any as (props: IProps) => JSX.Element;

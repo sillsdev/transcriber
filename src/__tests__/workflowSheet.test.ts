@@ -1,6 +1,6 @@
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { IWorkflow, IwfKind } from '../model';
+import { IWorkflow, IwfKind, IMediaShare } from '../model';
 import { workflowSheet } from '../components/Workflow';
 
 afterEach(cleanup);
@@ -33,6 +33,7 @@ test('section only', () => {
       editor: undefined,
       passageSeq: 1,
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
   ];
   expect(workflowSheet(workflow, flatCols)).toEqual([[1, 'Intro', '', '', '']]);
@@ -56,6 +57,7 @@ test('section with passage', () => {
       transcriber: undefined,
       editor: undefined,
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
   ];
   expect(workflowSheet(workflow, flatCols)).toEqual([
@@ -76,6 +78,7 @@ test('two sections with passages', () => {
       transcriber: undefined,
       editor: undefined,
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -88,6 +91,7 @@ test('two sections with passages', () => {
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -100,6 +104,7 @@ test('two sections with passages', () => {
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa2' },
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -112,6 +117,7 @@ test('two sections with passages', () => {
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa3' },
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 0,
@@ -124,6 +130,7 @@ test('two sections with passages', () => {
       transcriber: undefined,
       editor: undefined,
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -136,6 +143,7 @@ test('two sections with passages', () => {
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa4' },
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
   ];
   expect(workflowSheet(workflow, levCols)).toEqual([
@@ -161,6 +169,7 @@ test('two sections with deleted passage', () => {
       transcriber: undefined,
       editor: undefined,
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -173,6 +182,7 @@ test('two sections with deleted passage', () => {
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa1' },
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -185,6 +195,7 @@ test('two sections with deleted passage', () => {
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa2' },
       deleted: true,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -197,6 +208,7 @@ test('two sections with deleted passage', () => {
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa3' },
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 0,
@@ -209,6 +221,7 @@ test('two sections with deleted passage', () => {
       transcriber: undefined,
       editor: undefined,
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
     {
       level: 1,
@@ -221,6 +234,7 @@ test('two sections with deleted passage', () => {
       passageUpdated: '2021-09-15',
       passageId: { type: 'passage', id: 'pa4' },
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
   ];
   expect(workflowSheet(workflow, levCols)).toEqual([

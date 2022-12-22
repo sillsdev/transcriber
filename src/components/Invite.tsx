@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import {
-  IState,
   Role,
   Invitation,
   IInviteStrings,
-  ISharedStrings,
-  IGroupSettingsStrings,
   Group,
   RoleNames,
   User,
   Project,
 } from '../model';
-import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   Button,
@@ -35,16 +31,11 @@ import { validateEmail } from '../utils';
 import { API_CONFIG } from '../api-variable';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import SelectRole from '../control/SelectRole';
+import { inviteSelector } from '../selector';
 
 const StyledLabel = styled('label')(({ theme }) => ({
   marginTop: theme.spacing(1),
 }));
-
-interface IStateProps {
-  t: IInviteStrings;
-  ts: ISharedStrings;
-  tg: IGroupSettingsStrings;
-}
 
 interface IRecordProps {
   roles: Array<Role>;
@@ -56,12 +47,9 @@ interface IRecordProps {
 export interface IInviteData {
   email: string;
   role: string;
-  group: string;
-  groupRole: string;
-  allUsersRole: string;
 }
 
-interface IProps extends IRecordProps, IStateProps {
+interface IProps extends IRecordProps {
   inviteIn: IInviteData | null;
   visible: boolean;
   addCompleteMethod?: (inviteRec: IInviteData) => void;
@@ -71,7 +59,6 @@ interface IProps extends IRecordProps, IStateProps {
 
 function Invite(props: IProps) {
   const {
-    t,
     visible,
     groups,
     users,
@@ -91,18 +78,13 @@ function Invite(props: IProps) {
   const [email, setEmail] = useState('');
   const [emailHelp, setEmailHelp] = useState(<></>);
   const [role, setRole] = useState('');
-  const [group, setGroup] = useState('');
-  const [groupRole, setGroupRole] = useState('');
-  const [allUsersRole, setAllUsersRole] = useState('');
   const [allUsersProjects, setAllUsersProjects] = useState('');
   const [allowMultiple, setallowMultiple] = useState(false);
+  const t: IInviteStrings = useSelector(inviteSelector, shallowEqual);
 
   const resetFields = () => {
     setEmail('');
     setRole(getRoleId(RoleNames.Member));
-    setGroup('');
-    setGroupRole('');
-    setAllUsersRole(getRoleId(RoleNames.Transcriber));
   };
   const handleAdd = async () => {
     const strings = {
@@ -135,15 +117,7 @@ function Invite(props: IProps) {
         organization
       ),
       ...ReplaceRelatedRecord(t, invitation, 'role', 'role', role),
-      ...ReplaceRelatedRecord(
-        t,
-        invitation,
-        'allUsersRole',
-        'role',
-        allUsersRole
-      ),
-      ...ReplaceRelatedRecord(t, invitation, 'group', 'group', group),
-      ...ReplaceRelatedRecord(t, invitation, 'groupRole', 'role', groupRole),
+      ...ReplaceRelatedRecord(t, invitation, 'allUsersRole', 'role', role),
     ]);
   };
   const handleEdit = async () => {
@@ -158,9 +132,6 @@ function Invite(props: IProps) {
           addCompleteMethod({
             email,
             role,
-            group,
-            groupRole,
-            allUsersRole,
           });
         }
         resetFields();
@@ -170,9 +141,6 @@ function Invite(props: IProps) {
           editCompleteMethod({
             email,
             role,
-            group,
-            groupRole,
-            allUsersRole,
           });
         }
       }
@@ -191,9 +159,6 @@ function Invite(props: IProps) {
   };
   const handleRoleChange = (e: string, rowid: string) => {
     setRole(e);
-  };
-  const handleAllUsersRoleChange = (e: string, rowid: string) => {
-    setAllUsersRole(e);
   };
   const hasInvite = (email: string) => {
     const selectInvite: Invitation[] = memory.cache.query((q: QueryBuilder) =>
@@ -235,9 +200,6 @@ function Invite(props: IProps) {
     if (inviteIn) {
       setEmail(inviteIn.email);
       setRole(inviteIn.role);
-      setAllUsersRole(inviteIn.allUsersRole);
-      setGroup(inviteIn.group);
-      setGroupRole(inviteIn.groupRole);
     } else {
       resetFields();
     }
@@ -315,20 +277,8 @@ function Invite(props: IProps) {
             </Grid>
             <Grid item xs={12}>
               <SelectRole
-                org={true}
                 initRole={role}
                 onChange={handleRoleChange}
-                required={true}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormLabel>{t.groups}</FormLabel>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <SelectRole
-                org={false}
-                initRole={allUsersRole}
-                onChange={handleAllUsersRoleChange}
                 required={true}
               />
             </Grid>
@@ -368,12 +318,6 @@ function Invite(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'invite' }),
-  ts: localStrings(state, { layout: 'shared' }),
-  tg: localStrings(state, { layout: 'groupSettings' }),
-});
-
 const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
   groups: (q: QueryBuilder) => q.findRecords('group'),
@@ -381,6 +325,4 @@ const mapRecordsToProps = {
   projects: (q: QueryBuilder) => q.findRecords('project'),
 };
 
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(Invite) as any
-) as any;
+export default withData(mapRecordsToProps)(Invite) as any;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext, memo } from 'react';
+import { useState, useEffect, useRef, useContext, memo, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import {
   IPlanSheetStrings,
@@ -6,7 +6,8 @@ import {
   BookNameMap,
   OptionType,
   IWorkflow,
-  RoleNames,
+  OrgWorkflowStep,
+  IViewModeStrings,
 } from '../../model';
 import { Badge, Box, styled } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
@@ -34,7 +35,7 @@ import {
   rememberCurrentPassage,
 } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
-import { remoteIdGuid, useDiscussionCount } from '../../crud';
+import { remoteIdGuid, useRole } from '../../crud';
 import TaskAvatar from '../TaskAvatar';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
@@ -43,7 +44,13 @@ import { TabAppBar } from '../../control';
 import PlanAudioActions from './PlanAudioActions';
 import { HotKeyContext } from '../../context/HotKeyContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
-
+import FilterMenu, { ISTFilterState } from './filterMenu';
+import {
+  planSheetSelector,
+  sharedSelector,
+  viewModeSelector,
+} from '../../selector';
+import { useSelector, shallowEqual } from 'react-redux';
 const MemoizedTaskAvatar = memo(TaskAvatar);
 
 const DOWN_ARROW = 'ARROWDOWN';
@@ -128,12 +135,7 @@ export interface ICellChange {
   value: string | null;
 }
 
-interface IStateProps {
-  t: IPlanSheetStrings;
-  ts: ISharedStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   toolId: string;
   columns: Array<ICell>;
   rowData: Array<Array<string | number>>;
@@ -141,6 +143,10 @@ interface IProps extends IStateProps {
   bookCol: number;
   bookSuggestions?: OptionType[];
   bookMap?: BookNameMap;
+  filterState: ISTFilterState;
+  maximumSection: number;
+  orgSteps: OrgWorkflowStep[];
+  canSetDefault: boolean;
   updateData: (changes: ICellChange[]) => void;
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => Promise<boolean>;
@@ -150,13 +156,16 @@ interface IProps extends IStateProps {
   lookupBook: (book: string) => string;
   resequence: () => void;
   inlinePassages: boolean;
-  onTranscribe: (i: number) => void;
   onAudacity?: (i: number) => void;
   onPassageDetail: (i: number) => void;
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
   onRecord: (i: number) => void;
   onHistory: (i: number) => () => void;
+  onFilterChange: (
+    newstate: ISTFilterState | undefined,
+    isDefault: boolean
+  ) => void;
 }
 
 export function PlanSheet(props: IProps) {
@@ -165,11 +174,13 @@ export function PlanSheet(props: IProps) {
     columns,
     rowData,
     rowInfo,
-    t,
-    ts,
     bookCol,
     bookSuggestions,
     bookMap,
+    filterState,
+    maximumSection,
+    orgSteps,
+    canSetDefault,
     updateData,
     action,
     addPassage,
@@ -178,26 +189,14 @@ export function PlanSheet(props: IProps) {
     paste,
     resequence,
     inlinePassages,
-    onTranscribe,
     onAudacity,
     onPassageDetail,
+    onFilterChange,
   } = props;
   const ctx = useContext(PlanContext);
-  const {
-    projButtonStr,
-    mediafiles,
-    discussions,
-    groupmemberships,
-    connected,
-    readonly,
-  } = ctx.state;
-  const getDiscussionCount = useDiscussionCount({
-    mediafiles,
-    discussions,
-    groupmemberships,
-  });
+  const { projButtonStr, connected, readonly } = ctx.state;
+
   const [isOffline] = useGlobal('offline');
-  const [projRole] = useGlobal('projRole');
   const [memory] = useGlobal('memory');
   const [global] = useGlobal();
   const { showMessage } = useSnackBar();
@@ -225,7 +224,9 @@ export function PlanSheet(props: IProps) {
   const [mediaPlaying, setMediaPlaying] = useState(false);
   const [warning, setWarning] = useState<string>();
   const [toRow, setToRow] = useState(0);
-
+  const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const tv: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
   const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
@@ -239,7 +240,7 @@ export function PlanSheet(props: IProps) {
   const [changed, setChanged] = useState(false); //for button enabling
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
-
+  const { userIsAdmin } = useRole();
   const handleSave = () => {
     startSave();
   };
@@ -322,11 +323,6 @@ export function PlanSheet(props: IProps) {
     }
   };
 
-  const handleTranscribe = (i: number) => {
-    setSrcMediaId('');
-    onTranscribe(i);
-  };
-
   const handleAudacity = (i: number) => () => {
     onAudacity && onAudacity(i);
   };
@@ -352,7 +348,7 @@ export function PlanSheet(props: IProps) {
     j: number
   ) => {
     e.preventDefault();
-    if (i > 0 && (!isOffline || offlineOnly) && projRole === RoleNames.Admin) {
+    if (i > 0 && (!isOffline || offlineOnly) && userIsAdmin) {
       setPosition({ mouseX: e.clientX - 2, mouseY: e.clientY - 4, i, j });
     }
   };
@@ -519,7 +515,7 @@ export function PlanSheet(props: IProps) {
           {
             value: t.action,
             readOnly: true,
-            width: projRole === RoleNames.Admin ? 50 : 20,
+            width: userIsAdmin ? 50 : 20,
           } as ICell,
         ].concat(
           columns.map((col) => {
@@ -530,21 +526,20 @@ export function PlanSheet(props: IProps) {
         rowData.map((row, rowIndex) => {
           const section = isSection(rowIndex);
           const passage = isPassage(rowIndex);
-          const iscurrent = currentRow === rowIndex + 1 ? ' currentrow ' : '';
+          const iscurrent: string =
+            currentRow === rowIndex + 1 ? ' currentrow ' : '';
 
           return [
             {
               value: passage && (
                 <Badge
-                  badgeContent={getDiscussionCount(
-                    rowInfo[rowIndex].passageId?.id || '',
-                    rowInfo[rowIndex]?.stepId || ''
-                  )}
+                  badgeContent={rowInfo[rowIndex].discussionCount}
                   color="secondary"
                 >
                   <StageReport
                     onClick={handlePassageDetail(rowIndex)}
                     step={rowInfo[rowIndex].step || ''}
+                    tip={tv.gotowork}
                   />
                 </Badge>
               ),
@@ -569,16 +564,12 @@ export function PlanSheet(props: IProps) {
                     {
                       value: (
                         <PlanAudioActions
-                          {...props}
                           rowIndex={rowIndex}
                           isPassage={passage}
-                          mediaId={rowInfo[rowIndex].mediaId?.id}
+                          mediaId={rowInfo[rowIndex].mediaId?.id || ''}
                           mediaShared={rowInfo[rowIndex].mediaShared}
                           onPlayStatus={handlePlayStatus}
-                          onPassageDetail={handlePassageDetail}
-                          onTranscribe={handleTranscribe}
-                          online={connected || offlineOnly}
-                          readonly={readonly}
+                          onHistory={props.onHistory}
                           isPlaying={
                             srcMediaId === rowInfo[rowIndex].mediaId?.id &&
                             mediaPlaying
@@ -635,19 +626,18 @@ export function PlanSheet(props: IProps) {
               {
                 value: (
                   <PlanActionMenu
-                    {...props}
                     rowIndex={rowIndex}
                     isSection={section}
                     isPassage={passage}
                     readonly={readonly || check.length > 0}
-                    online={connected || offlineOnly}
-                    mediaId={rowInfo[rowIndex].mediaId?.id}
-                    mediaShared={rowInfo[rowIndex].mediaShared}
                     onDelete={handleConfirmDelete}
                     onPlayStatus={handlePlayStatus}
                     onAudacity={handleAudacity}
-                    canAssign={projRole === RoleNames.Admin}
-                    canDelete={projRole === RoleNames.Admin}
+                    onRecord={props.onRecord}
+                    onUpload={props.onUpload}
+                    onAssign={props.onAssign}
+                    canAssign={userIsAdmin}
+                    canDelete={userIsAdmin}
                     active={active - 1 === rowIndex}
                   />
                 ),
@@ -683,7 +673,6 @@ export function PlanSheet(props: IProps) {
     columns,
     srcMediaId,
     mediaPlaying,
-    projRole,
     currentRow,
     check,
   ]);
@@ -712,12 +701,28 @@ export function PlanSheet(props: IProps) {
       ? rowData[currentRowRef.current - 1][PassageSeqCol].toString()
       : '';
 
+  const filtered = useMemo(
+    () =>
+      !filterState.disabled &&
+      (filterState.minStep !== '' ||
+        filterState.maxStep !== '' ||
+        filterState.hideDone ||
+        filterState.minSection > 1 ||
+        (filterState.maxSection > -1 &&
+          filterState.maxSection < maximumSection) ||
+        filterState.assignedToMe),
+    [filterState, maximumSection]
+  );
+  const disableFilter = () => {
+    onFilterChange({ ...filterState, disabled: true }, false);
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <div>
-        {projRole === RoleNames.Admin && (
-          <TabAppBar position="fixed" color="default">
-            <TabActions>
+        <TabAppBar position="fixed" color="default">
+          <TabActions>
+            {userIsAdmin && (
               <>
                 <AddSectionPassageButtons
                   inlinePassages={inlinePassages}
@@ -733,12 +738,14 @@ export function PlanSheet(props: IProps) {
                   addSection={addSection}
                   addPassage={addPassage}
                   movePassage={movePassage}
+                  filtered={filtered}
+                  disableFilter={disableFilter}
                 />
                 <AltButton
                   id="planSheetImp"
                   key="importExcel"
                   aria-label={t.tablePaste}
-                  disabled={pasting || readonly}
+                  disabled={pasting || readonly || filtered}
                   onClick={handleTablePaste}
                 >
                   {t.tablePaste}
@@ -747,19 +754,31 @@ export function PlanSheet(props: IProps) {
                   id="planSheetReseq"
                   key="resequence"
                   aria-label={t.resequence}
-                  disabled={pasting || data.length < 2 || readonly}
+                  disabled={pasting || data.length < 2 || readonly || filtered}
                   onClick={handleResequence}
                 >
                   {t.resequence}
                 </AltButton>
-
                 <ProjButtons
                   {...props}
                   noImExport={pasting}
                   noIntegrate={pasting || data.length < 2}
                   t={projButtonStr}
                 />
-                <GrowingSpacer />
+              </>
+            )}
+
+            <GrowingSpacer />
+            <FilterMenu
+              canSetDefault={canSetDefault}
+              state={filterState}
+              onFilterChange={onFilterChange}
+              orgSteps={orgSteps}
+              maximumSection={maximumSection}
+              filtered={filtered}
+            />
+            {userIsAdmin && (
+              <>
                 <PriButton
                   id="planSheetSave"
                   key="save"
@@ -769,12 +788,12 @@ export function PlanSheet(props: IProps) {
                   disabled={saving || !changed}
                 >
                   {t.save}
-                  <SaveIcon sx={iconMargin} />
+                  <SaveIcon sx={iconMargin} className="small-icon" />
                 </PriButton>
               </>
-            </TabActions>
-          </TabAppBar>
-        )}
+            )}
+          </TabActions>
+        </TabAppBar>
         <ContentDiv id="PlanSheet" ref={sheetRef}>
           {warning && <WarningDiv>{warning}</WarningDiv>}
           <DataSheet

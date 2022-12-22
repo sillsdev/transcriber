@@ -1,35 +1,100 @@
 import React from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Grid, Button, Typography, Tooltip } from '@material-ui/core';
+import {
+  Grid,
+  Button,
+  Typography,
+  Tooltip,
+  styled,
+  Box,
+  BoxProps,
+  SxProps,
+} from '@mui/material';
 import BigDialog from '../../hoc/BigDialog';
 import { TeamContext } from '../../context/TeamContext';
-import { ParatextLogo } from '../../control';
+import { AltButton, ParatextLogo } from '../../control';
 import { ChoiceHead } from '../../control/ChoiceHead';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      '& .MuiListSubheader-root': {
-        lineHeight: 'unset',
-      },
-      '& .MuiListItemIcon-root': {
-        minWidth: '30px',
-      },
-    },
-    action: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      alignSelf: 'center',
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-    notes: {
-      fontSize: 'small',
-    },
-  })
-);
+const NewProjectRoot = styled(Box)<BoxProps>(() => ({
+  flexGrow: 1,
+  '& .MuiListSubheader-root': {
+    lineHeight: 'unset',
+  },
+  '& .MuiListItemIcon-root': {
+    minWidth: '30px',
+  },
+}));
+
+const actionProps = {
+  p: 2,
+  textAlign: 'center',
+  alignSelf: 'center',
+} as SxProps;
+
+const spacer = '\u00A0';
+
+const ParatextDecoration = () => {
+  const ctx = React.useContext(TeamContext);
+  const { newProjectStrings } = ctx.state;
+  const t = newProjectStrings;
+
+  return (
+    <>
+      {spacer}
+      <Tooltip title={t.paratextIntegration}>
+        <span>
+          <ParatextLogo />
+        </span>
+      </Tooltip>
+    </>
+  );
+};
+
+enum Integration {
+  none,
+  pt,
+}
+
+interface IActionButtonProps {
+  kind: Integration;
+  onUpload: (e: React.MouseEvent) => void;
+  onRecord: (e: React.MouseEvent) => void;
+}
+
+const ActionButtons = ({ kind, onUpload, onRecord }: IActionButtonProps) => {
+  const ctx = React.useContext(TeamContext);
+  const { newProjectStrings } = ctx.state;
+  const t = newProjectStrings;
+
+  const actId = (kind: Integration, act: string) =>
+    `addProj${act}-${kind === Integration.pt ? 'aud' : 'oth'}-0`;
+
+  return (
+    <>
+      <AltButton id={actId(kind, 'Up')} onClick={onUpload}>
+        {t.uploadAudio}
+      </AltButton>
+      <AltButton id={actId(kind, 'Rec')} onClick={onRecord}>
+        {t.startRecording}
+      </AltButton>
+    </>
+  );
+};
+
+interface IConfigureActionProps {
+  onClick: (e: React.MouseEvent) => void;
+}
+
+const ConfigureAction = ({ onClick }: IConfigureActionProps) => {
+  const ctx = React.useContext(TeamContext);
+  const { newProjectStrings } = ctx.state;
+  const t = newProjectStrings;
+
+  return (
+    <Button id="config" onClick={onClick} variant="outlined" color="primary">
+      {t.configure}
+    </Button>
+  );
+};
 
 interface IProps {
   open: boolean;
@@ -43,15 +108,9 @@ interface IProps {
 export function NewProjectGrid(props: IProps) {
   const { open, onOpen } = props;
   const { doUpload, doRecord, doNewProj, setType } = props;
-  const classes = useStyles();
   const ctx = React.useContext(TeamContext);
   const { newProjectStrings } = ctx.state;
   const t = newProjectStrings;
-
-  enum Integration {
-    none,
-    pt,
-  }
 
   const doSetType = (kind: Integration) => {
     setType(kind === Integration.pt ? 'scripture' : 'other');
@@ -78,55 +137,6 @@ export function NewProjectGrid(props: IProps) {
     onOpen(false);
   };
 
-  const spacer = '\u00A0';
-
-  const ParatextDecoration = () => (
-    <>
-      {spacer}
-      <Tooltip title={t.paratextIntegration}>
-        <span>
-          <ParatextLogo />
-        </span>
-      </Tooltip>
-    </>
-  );
-
-  const actId = (kind: Integration, act: string) =>
-    `addProj${act}-${kind === Integration.pt ? 'aud' : 'oth'}-0`;
-
-  const ActionButtons = ({ kind }: { kind: Integration }) => (
-    <>
-      <Button
-        id={actId(kind, 'Up')}
-        onClick={handleUpload(kind)}
-        variant="outlined"
-        color="primary"
-      >
-        {t.uploadAudio}
-      </Button>
-      <Button
-        id={actId(kind, 'Rec')}
-        onClick={handleRecord(kind)}
-        variant="outlined"
-        className={classes.button}
-        color="primary"
-      >
-        {t.startRecording}
-      </Button>
-    </>
-  );
-
-  const ConfigureAction = () => (
-    <Button
-      id="config"
-      onClick={handleNewProj}
-      variant="outlined"
-      color="primary"
-    >
-      {t.configure}
-    </Button>
-  );
-
   const scriptureFactors = [t.scriptureFactor1, t.scriptureFactor2];
   const generalFactors = [t.generalFactor1, t.generalFactor2];
   const blankFactors = [t.blankFactor1, t.blankFactor2];
@@ -137,10 +147,10 @@ export function NewProjectGrid(props: IProps) {
       isOpen={open}
       onOpen={handleCancel}
       description={
-        <Typography className={classes.notes}>{t.likeTemplate}</Typography>
+        <Typography sx={{ fontSize: 'small' }}>{t.likeTemplate}</Typography>
       }
     >
-      <div className={classes.root}>
+      <NewProjectRoot>
         <Grid container spacing={3}>
           <Grid item xs={8}>
             <ChoiceHead
@@ -151,8 +161,12 @@ export function NewProjectGrid(props: IProps) {
               factors={scriptureFactors}
             />
           </Grid>
-          <Grid item xs={4} className={classes.action}>
-            <ActionButtons kind={Integration.pt} />
+          <Grid item xs={4} sx={actionProps}>
+            <ActionButtons
+              kind={Integration.pt}
+              onUpload={handleUpload(Integration.pt)}
+              onRecord={handleRecord(Integration.pt)}
+            />
           </Grid>
           <Grid item xs={8}>
             <ChoiceHead
@@ -162,8 +176,12 @@ export function NewProjectGrid(props: IProps) {
               factors={generalFactors}
             />
           </Grid>
-          <Grid item xs={4} className={classes.action}>
-            <ActionButtons kind={Integration.none} />
+          <Grid item xs={4} sx={actionProps}>
+            <ActionButtons
+              kind={Integration.none}
+              onUpload={handleUpload(Integration.none)}
+              onRecord={handleRecord(Integration.none)}
+            />
           </Grid>
           <Grid item xs={8}>
             <ChoiceHead
@@ -173,11 +191,11 @@ export function NewProjectGrid(props: IProps) {
               factors={blankFactors}
             />
           </Grid>
-          <Grid item xs={4} className={classes.action}>
-            <ConfigureAction />
+          <Grid item xs={4} sx={actionProps}>
+            <ConfigureAction onClick={handleNewProj} />
           </Grid>
         </Grid>
-      </div>
+      </NewProjectRoot>
     </BigDialog>
   );
 }

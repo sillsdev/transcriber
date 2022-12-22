@@ -1,9 +1,12 @@
 import { useGlobal } from 'reactn';
-import { Plan } from '../model';
+import { ISharedStrings, Plan } from '../model';
 import { QueryBuilder } from '@orbit/data';
+import { useSelector, shallowEqual } from 'react-redux';
+import { sharedSelector } from '../selector';
 
 export const usePlan = () => {
   const [memory] = useGlobal('memory');
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const getPlan = (planId: string) => {
     const plans = memory.cache.query((q: QueryBuilder) =>
@@ -15,7 +18,7 @@ export const usePlan = () => {
 
   const getPlanName = (planId: string) => {
     const planRec = getPlan(planId);
-    return planRec ? planRec?.attributes?.name : 'Unknown';
+    return planRec ? planRec?.attributes?.name : ts.loading;
   };
 
   return { getPlan, getPlanName };

@@ -61,6 +61,7 @@ export const useVProjectCreate = () => {
         allowClaim: true,
         dateCreated: currentDateTime(),
         dateUpdated: currentDateTime(),
+        defaultParams: '{}',
       },
     } as Project;
     memory.schema.initializeRecord(project);

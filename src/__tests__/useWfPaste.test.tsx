@@ -101,15 +101,14 @@ test('paste hieararchical', () => {
   ];
   const findBook = (val: string) => (/LUK/i.test(val) ? 'LUK' : val);
   const t = {
-    action: 'Action',
     book: 'Book',
     description: 'Description',
+    extras: 'Extras',
+    installAudacity: 'installAudacity',
     loadingTable: 'Loading data',
     passage: 'Passage',
-    pasteInvalidColumnsGeneral:
-      'Invalid number of columns ({0}). Expecting 5 columns.',
-    pasteInvalidColumnsScripture:
-      'Invalid number of columns ({0}). Expecting 6 columns.',
+    pasteInvalidColumns:
+      'Invalid number of columns ({0}). Expecting {1}} columns.',
     pasteInvalidSections: 'Invalid {0} number(s):',
     pasteNoRows: 'No Rows in clipboard.',
     reference: 'Reference',
@@ -126,6 +125,7 @@ test('paste hieararchical', () => {
       colNames,
       findBook,
       t,
+      shared: false,
     })
   );
   const { valid, addedWorkflow } = result.current(pasted);
@@ -415,15 +415,14 @@ test('paste flat', () => {
   ];
   const findBook = (val: string) => (/LUK/i.test(val) ? 'LUK' : val);
   const t = {
-    action: 'Action',
     book: 'Book',
     description: 'Description',
+    extras: 'Extras',
+    installAudacity: 'installAudacity',
     loadingTable: 'Loading data',
     passage: 'Passage',
-    pasteInvalidColumnsGeneral:
-      'Invalid number of columns ({0}). Expecting 5 columns.',
-    pasteInvalidColumnsScripture:
-      'Invalid number of columns ({0}). Expecting 6 columns.',
+    pasteInvalidColumns:
+      'Invalid number of columns ({0}). Expecting {1}} columns.',
     pasteInvalidSections: 'Invalid {0} number(s):',
     pasteNoRows: 'No Rows in clipboard.',
     reference: 'Reference',
@@ -440,6 +439,7 @@ test('paste flat', () => {
       colNames,
       findBook,
       t,
+      shared: false,
     })
   );
   const { valid, addedWorkflow } = result.current(pasted);
@@ -545,15 +545,14 @@ test('paste flat data into hierarchy', () => {
   ];
   const findBook = (val: string) => (/LUK/i.test(val) ? 'LUK' : val);
   const t = {
-    action: 'Action',
     book: 'Book',
     description: 'Description',
+    extras: 'Extras',
+    installAudacity: 'installAudacity',
     loadingTable: 'Loading data',
     passage: 'Passage',
-    pasteInvalidColumnsGeneral:
-      'Invalid number of columns ({0}). Expecting 5 columns.',
-    pasteInvalidColumnsScripture:
-      'Invalid number of columns ({0}). Expecting 6 columns.',
+    pasteInvalidColumns:
+      'Invalid number of columns ({0}). Expecting {1}} columns.',
     pasteInvalidSections: 'Invalid {0} number(s):',
     pasteNoRows: 'No Rows in clipboard.',
     reference: 'Reference',
@@ -570,6 +569,7 @@ test('paste flat data into hierarchy', () => {
       colNames,
       findBook,
       t,
+      shared: false,
     })
   );
   const { valid, addedWorkflow } = result.current(pasted);

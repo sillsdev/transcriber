@@ -1017,8 +1017,8 @@
 		</unit>
 		<unit id="discussionList.saveFilter">
 			<segment>
-				<source>Save as the Team default?</source>
-				<target>Сохранить как команду по умолчанию?</target>
+				<source>Save as project default</source>
+				<target>Сохранить как команду по умолчанию</target>
 			</segment>
 		</unit>
 		<unit id="discussionList.saveFirst">
@@ -1367,138 +1367,6 @@
 			<segment>
 				<source>Sum</source>
 				<target>Сумма</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.add">
-			<segment>
-				<source>Ok</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.addGroupMember">
-			<segment>
-				<source>Choose {0}</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.addMemberInstruction">
-			<segment>
-				<source>Choose a person who will act as a {0} for audio projects in this group.</source>
-				<target>"Выберите человека, который будет действовать как {0} для аудиопроектов втой группе."</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.allReviewersCanTranscribe">
-			<segment>
-				<source>All Editors are allowed to transcribe.</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.assignedSections">
-			<segment>
-				<source>  Assigned {0}: </source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.cancel">
-			<segment>
-				<source>Cancel</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.delete">
-			<segment>
-				<source>Delete</source>
-				<target>Удалить</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.editors">
-			<segment>
-				<source>Editors</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.editorsDetail">
-			<segment>
-				<source>(Review + Transcribe)</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.loadingTable">
-			<segment>
-				<source>Loading data</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.name">
-			<segment>
-				<source>Name</source>
-				<target>Фамилия Имя</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.noDeleteAdmin">
-			<segment>
-				<source>The only Administrator cannot be deleted.</source>
-				<target>Единственный администратор не может быть удален.</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.noDeleteAllUsersInfo">
-			<segment>
-				<source>Cannot delete members from the All Members group</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.noDeleteInfo">
-			<segment>
-				<source>This role is included in a higher role and cannot be deleted.</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.owners">
-			<segment>
-				<source>Owners</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.ownersDetail">
-			<segment>
-				<source>(Manage + Review + Transcribe)</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.projectPlans">
-			<segment>
-				<source>Audio Project Plans</source>
-				<target>Планы аудиопроектов</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.roles">
-			<segment>
-				<source>Roles:{0}</source>
-				<target>Роли:{0}</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.save">
-			<segment>
-				<source>Save</source>
-				<target>Сохранить</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.transcribers">
-			<segment>
-				<source>Transcribers</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.transcribersDetail">
-			<segment>
-				<source>(Transcribe)</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.transcriptionTitle">
-			<segment>
-				<source>Users in Transcription Roles</source>
-				<target>Пользователи в ролях транскрипции</target>
 			</segment>
 		</unit>
 		<unit id="groupTabs.groups">
@@ -2083,18 +1951,6 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="invite.groupRole">
-			<segment>
-				<source>Audio Project Role</source>
-				<target>Роль аудиопроекта</target>
-			</segment>
-		</unit>
-		<unit id="invite.groups">
-			<segment>
-				<source>Audio Project</source>
-				<target>Аудиопроект</target>
-			</segment>
-		</unit>
 		<unit id="invite.instructions">
 			<segment>
 				<source>Please click the following link to accept the invitation:</source>
@@ -2133,8 +1989,8 @@
 		</unit>
 		<unit id="invite.noProjects">
 			<segment>
-				<source>No audio projects are associated with this group.</source>
-				<target>С этой группой не связано ни одного аудиопроекта.</target>
+				<source>This team has no audio projects.</source>
+				<target>У этой команды нет аудиопроектов.</target>
 			</segment>
 		</unit>
 		<unit id="invite.organization">
@@ -2165,12 +2021,6 @@
 			<segment>
 				<source>Save</source>
 				<target>Сохранить</target>
-			</segment>
-		</unit>
-		<unit id="invite.selectProjectRole">
-			<segment>
-				<source>Select audio project role.</source>
-				<target>Выберите роль аудиопроекта.</target>
 			</segment>
 		</unit>
 		<unit id="invite.selectTeamRole">
@@ -2455,12 +2305,6 @@
 				<target>Невозможно загрузить данные аудиопроекта в автономном режиме.</target>
 			</segment>
 		</unit>
-		<unit id="main.owner">
-			<segment>
-				<source>Owner</source>
-				<target/>
-			</segment>
-		</unit>
 		<unit id="main.passages">
 			<segment>
 				<source>Passages</source>
@@ -2479,10 +2323,10 @@
 				<target>Аудиопроект</target>
 			</segment>
 		</unit>
-		<unit id="main.projRole">
+		<unit id="main.orgRole">
 			<segment>
-				<source>Role in Audio Project:</source>
-				<target>Роль в аудиопроекте:</target>
+				<source>Role:</source>
+				<target>Роль:</target>
 			</segment>
 		</unit>
 		<unit id="main.reliesOn">
@@ -2542,12 +2386,6 @@
 		<unit id="main.settings">
 			<segment>
 				<source>Settings</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="main.switchTo">
-			<segment>
-				<source>Switch to:</source>
 				<target/>
 			</segment>
 		</unit>
@@ -2877,7 +2715,7 @@
 		</unit>
 		<unit id="mediaTab.size">
 			<segment>
-				<source>Size (KB)</source>
+				<source>Size (MB)</source>
 				<target/>
 			</segment>
 		</unit>
@@ -3673,6 +3511,12 @@
 				<target/>
 			</segment>
 		</unit>
+        <unit id="planSheet.filtered">
+         <segment>
+            <source>Disable filter to add rows.</source>
+            <target>Отключите фильтр, чтобы добавить строки.</target>
+         </segment>
+      </unit>
 		<unit id="planSheet.nonNumber">
 			<segment>
 				<source>Do not change to non-number.</source>
@@ -4177,6 +4021,36 @@
 				<target/>
 			</segment>
 		</unit>
+      <unit id="scriptureTableFilter.apply">
+         <segment>
+            <source>Apply</source>
+ 			<target>Применить</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.assignedToMe">
+         <segment>
+            <source>Show only steps assigned to me.</source>
+            <target>Показать только назначенные мне шаги.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.clear">
+         <segment>
+            <source>Clear</source>
+            <target>чистый</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.disable">
+         <segment>
+            <source>Disable filter so I can edit rows.</source>
+            <target>Отключите фильтр, чтобы я мог редактировать строки.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.hideDone">
+         <segment>
+            <source>Hide 'Done' steps.</source>
+            <target>Скрыть шаги «Готово».</target>
+         </segment>
+      </unit>
 		<unit id="sectionResources.close">
 			<segment>
 				<source>Close</source>
@@ -4393,6 +4267,12 @@
 				<target>Запуск Audacity</target>
 			</segment>
 		</unit>
+      <unit id="shared.loading">
+         <segment>
+            <source>Loading...</source>
+            <target>Загружается...</target>
+         </segment>
+      </unit>
 		<unit id="shared.mediaAttached">
 			<segment>
 				<source>Audio Attached</source>
@@ -4441,12 +4321,6 @@
 				<target>Наблюдатель</target>
 			</segment>
 		</unit>
-		<unit id="shared.owner">
-			<segment>
-				<source>Owner</source>
-				<target>Maître</target>
-			</segment>
-		</unit>
 		<unit id="shared.paratextchapterSpan">
 			<segment>
 				<source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
@@ -4463,12 +4337,6 @@
 			<segment>
 				<source>Peer Reviewer</source>
 				<target>Коллега-рецензент</target>
-			</segment>
-		</unit>
-		<unit id="shared.projectrole">
-			<segment>
-				<source>Project Role</source>
-				<target>Роль проекта</target>
 			</segment>
 		</unit>
 		<unit id="shared.recordingInProgress">
@@ -4750,7 +4618,7 @@
 		<unit id="template.apply">
 			<segment>
 				<source>Apply</source>
-				<target/>
+				<target>Применить</target>
 			</segment>
 		</unit>
 		<unit id="template.beginning">
@@ -5383,7 +5251,13 @@
 				<target>Последние аудиозаписи</target>
 			</segment>
 		</unit>
-		<unit id="transcriptionTab.noData">
+        <unit id="transcriptionTab.latestAudioElan">
+			<segment>
+				<source>Latest Audio + Transcription</source>
+				<target>Последние аудиозаписи + Транскрипция</target>
+			</segment>
+		</unit>
+        <unit id="transcriptionTab.noData">
 			<segment>
 				<source>No {0} Data.</source>
 				<target>Нет {0} Данные.</target>
@@ -5589,16 +5463,28 @@
 		</unit>
 		<unit id="viewMode.audioProject">
 			<segment>
-				<source>Audio Project</source>
-				<target>Аудиопроект</target>
+				<source>Audio Project Setup</source>
+				<target>Настройка аудио проекта</target>
 			</segment>
 		</unit>
-		<unit id="viewMode.transcribe">
+		<unit id="viewMode.home">
 			<segment>
-				<source>Transcribe</source>
-				<target>Транскрибировать</target>
+				<source>Home</source>
+				<target>Домой</target>
 			</segment>
 		</unit>
+      <unit id="viewMode.work">
+         <segment>
+            <source>Work</source>
+            <target>Работа</target>
+         </segment>
+      </unit>
+      <unit id="viewMode.gotowork">
+         <segment>
+            <source>Go to Work</source>
+            <target>идти на работу</target>
+         </segment>
+      </unit>
 		<unit id="vProject.add">
 			<segment>
 				<source>Add</source>
@@ -6283,6 +6169,12 @@
 				<target>Добавить/удалить границу [двойной щелчок/{0}]</target>
 			</segment>
 		</unit>
+      <unit id="wsAudioPlayerSegment.teamDefault">
+         <segment>
+            <source>Save as team default</source>
+            <target>Сохранить как команду по умолчанию</target>
+         </segment>
+      </unit>
 		<unit id="wsAudioPlayerZoom.fitToWidth">
 			<segment>
 				<source>Fit to Width</source>

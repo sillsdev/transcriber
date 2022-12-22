@@ -1,13 +1,17 @@
 import React, { useMemo, useState } from 'react';
 import { useGlobal, useEffect } from 'reactn';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Card,
   CardActions,
   CardContent,
   Typography,
   Chip,
-} from '@material-ui/core';
+  styled,
+  CardProps,
+  CardContentProps,
+  Box,
+  ChipProps,
+} from '@mui/material';
 import ScriptureIcon from '@mui/icons-material/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
 import moment from 'moment';
@@ -27,77 +31,64 @@ import {
   useOfflnProjRead,
   useOfflineAvailToggle,
   related,
+  useRole,
 } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
 import OfflineIcon from '@mui/icons-material/OfflinePin';
+import { useHome } from '../../utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      '&:hover button': {
-        color: 'white',
-      },
-      '& .MuiTypography-root': {
-        cursor: 'default ',
-      },
-      cursor: 'pointer',
-    },
-    card: {
-      minWidth: 275,
-      margin: theme.spacing(1),
-      backgroundColor: theme.palette.primary.light,
-    },
-    rootLoaded: {
-      backgroundColor: theme.palette.primary.dark,
-    },
-    content: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      color: theme.palette.primary.contrastText,
-    },
-    firstLine: {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    name: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    button: {
-      textTransform: 'none',
-    },
-    pos: {
-      marginBottom: 12,
-    },
-    offline: {
-      display: 'flex',
-      color: theme.palette.primary.contrastText,
-    },
+const ProjectCardRoot = styled('div')(({ theme }) => ({
+  display: 'flex',
+  '&:hover button': {
+    color: 'white',
+  },
+  '& .MuiTypography-root': {
+    cursor: 'default ',
+  },
+  cursor: 'pointer',
+}));
+
+const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
+  minWidth: 275,
+  margin: theme.spacing(1),
+  backgroundColor: theme.palette.primary.light,
+}));
+
+const StyledCardContent = styled(CardContent)<CardContentProps>(
+  ({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    color: theme.palette.primary.contrastText,
   })
 );
+
+const FirstLineDiv = styled('div')(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+}));
+
+const StyledChip = styled(Chip)<ChipProps>(({ theme }) => ({
+  backgroundColor: theme.palette.grey[400],
+}));
 
 interface IProps {
   project: VProject;
 }
 
 export const ProjectCard = (props: IProps) => {
-  const classes = useStyles();
   const { project } = props;
   const ctx = React.useContext(TeamContext);
   const {
     loadProject,
-    selectProject,
     setProjectParams,
     projectSections,
     projectDescription,
     projectLanguage,
     projectUpdate,
     projectDelete,
-    isOwner,
     cardStrings,
     vProjectStrings,
     projButtonStrings,
@@ -118,11 +109,15 @@ export const ProjectCard = (props: IProps) => {
   const [openReports, setOpenReports] = useState(false);
   const [deleteItem, setDeleteItem] = useState<VProject>();
   const [open, setOpen] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
   const t = cardStrings;
   const tpb = projButtonStrings;
+  const { userIsOrgAdmin } = useRole();
+  const { leaveHome } = useHome();
 
   const handleSelect = (project: VProject) => () => {
-    selectProject(project);
+    loadProject(project);
+    leaveHome();
   };
 
   useEffect(() => {
@@ -137,6 +132,7 @@ export const ProjectCard = (props: IProps) => {
     setOrganizedByPlural(
       localizedOrganizedBy(project.attributes.organizedBy, false)
     );
+    setIsAdmin(userIsOrgAdmin(related(project, 'organization')));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
 
@@ -264,15 +260,15 @@ export const ProjectCard = (props: IProps) => {
   );
 
   return (
-    <div className={classes.root}>
-      <Card
-        id={`card-${project.id}`}
-        className={classes.card}
-        onClick={handleSelect(project)}
-      >
-        <CardContent className={classes.content}>
-          <div className={classes.firstLine}>
-            <Typography variant="h6" component="h2" className={classes.name}>
+    <ProjectCardRoot>
+      <StyledCard id={`card-${project.id}`} onClick={handleSelect(project)}>
+        <StyledCardContent>
+          <FirstLineDiv>
+            <Typography
+              variant="h6"
+              component="h2"
+              sx={{ display: 'flex', alignItems: 'center' }}
+            >
               {(project?.attributes?.type || '').toLowerCase() ===
               'scripture' ? (
                 <ScriptureIcon />
@@ -284,14 +280,12 @@ export const ProjectCard = (props: IProps) => {
             </Typography>
             <ProjectMenu
               action={handleProjectAction}
-              isOwner={isOwner(project)}
               project={project}
               inProject={false}
+              isAdmin={isAdmin}
             />
-          </div>
-          <Typography className={classes.pos}>
-            {projectDescription(project)}
-          </Typography>
+          </FirstLineDiv>
+          <Typography sx={{ mb: 2 }}>{projectDescription(project)}</Typography>
           <Typography variant="body2" component="p">
             {t.language.replace('{0}', projectLanguage(project))}
           </Typography>
@@ -306,21 +300,21 @@ export const ProjectCard = (props: IProps) => {
                     : organizedByPlural
                 )}
           </Typography>
-        </CardContent>
+        </StyledCardContent>
         {project?.attributes?.tags && (
           <CardActions>
             <>
               {offlineProjectRead(project).attributes?.offlineAvailable && (
-                <div className={classes.offline}>
+                <Box sx={{ display: 'flex', color: 'primary.contrastText' }}>
                   <OfflineIcon />
                   {'\u00A0'}
                   <Typography>{t.offline}</Typography>
-                </div>
+                </Box>
               )}
               {Object.keys(project?.attributes?.tags)
                 .filter((t) => project?.attributes?.tags[t])
                 .map((t) => (
-                  <Chip
+                  <StyledChip
                     key={t}
                     size="small"
                     label={localizeProjectTag(t, vProjectStrings)}
@@ -329,7 +323,7 @@ export const ProjectCard = (props: IProps) => {
             </>
           </CardActions>
         )}
-      </Card>
+      </StyledCard>
       <ProjectDialog
         mode={DialogMode.edit}
         values={projectValues(project)}
@@ -342,7 +336,7 @@ export const ProjectCard = (props: IProps) => {
         isOpen={openIntegration}
         onOpen={setOpenIntegration}
       >
-        <IntegrationTab {...props} />
+        <IntegrationTab />
       </BigDialog>
       <BigDialog
         title={tpb.exportTitle.replace('{0}', getPlanName(project.id))}
@@ -368,6 +362,6 @@ export const ProjectCard = (props: IProps) => {
           noResponse={handleDeleteRefused}
         />
       )}
-    </div>
+    </ProjectCardRoot>
   );
 };

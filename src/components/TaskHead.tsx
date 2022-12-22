@@ -17,12 +17,7 @@ import {
   SxProps,
 } from '@mui/material';
 import { TransformBuilder } from '@orbit/data';
-import {
-  sectionNumber,
-  sectionDescription,
-  useOrganizedBy,
-  useRole,
-} from '../crud';
+import { sectionNumber, sectionDescription, useOrganizedBy } from '../crud';
 import PeopleIconOutline from '@mui/icons-material/PeopleAltOutlined';
 import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
@@ -47,7 +42,6 @@ export function TaskHead(props: IProps) {
   const [user] = useGlobal('user');
   const [menuItem, setMenuItem] = React.useState(null);
   const { getOrganizedBy } = useOrganizedBy();
-  const { userCanBeEditor } = useRole();
 
   const t = taskItemStr;
   const ts = sharedStr;
@@ -124,7 +118,6 @@ export function TaskHead(props: IProps) {
           <MenuItem
             id="taskEditor"
             onClick={handleAction(editAction, 'editor')}
-            disabled={!userCanBeEditor()}
           >
             {
               <Box sx={menuItemProps}>

@@ -1,35 +1,15 @@
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import {
-  createStyles,
-  Grid,
-  Typography,
-  makeStyles,
-  Theme,
-} from '@material-ui/core';
+import { Grid, GridProps, styled, Typography } from '@mui/material';
 import { passageReference, sectionDescription } from '../crud';
 import { BookName, Passage, Section, Plan } from '../model';
 import { QueryBuilder } from '@orbit/data';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      margin: theme.spacing(1),
-    },
-    description: {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-    },
-    passage: {
-      justifyContent: 'end',
-    },
-    row: {
-      alignItems: 'center',
-      whiteSpace: 'nowrap',
-    },
-  })
-);
+const GridRoot = styled(Grid)<GridProps>(({ theme }) => ({
+  display: 'flex',
+  margin: theme.spacing(1),
+}));
+
 interface IProps {
   section: Section;
   passage: Passage;
@@ -37,7 +17,6 @@ interface IProps {
 }
 export const SectionPassageTitle = (props: IProps) => {
   const { section, passage, allBookData } = props;
-  const classes = useStyles();
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
 
@@ -54,16 +33,16 @@ export const SectionPassageTitle = (props: IProps) => {
   const refText = ref !== '' ? ` - ${ref}` : '';
 
   return (
-    <Grid container direction="row" className={classes.root}>
+    <GridRoot container direction="row">
       <Grid item xs={12}>
         <Typography
           variant="h6"
           id="sectionpassagetitle"
-          className={classes.description}
+          sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
         >
           {sectionDescription(section, passNum) + refText}
         </Typography>
       </Grid>
-    </Grid>
+    </GridRoot>
   );
 };

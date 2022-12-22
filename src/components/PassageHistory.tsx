@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { related, remoteIdGuid } from '../crud';
 import { ActivityStates, PassageStateChange, User } from '../model';
-import withData from '../mods/react-orbitjs/components/withData';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { withData } from 'react-orbitjs';
 import Confirm from './AlertDialog';
 import {
   IconButton,
@@ -13,7 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import UserAvatar from './UserAvatar';
 import { useGlobal } from 'reactn';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -34,22 +33,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   passageId: string;
   boxHeight: number;
 }
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      margin: 'auto',
-    },
-    history: {
-      overflow: 'auto',
-      backgroundColor: theme.palette.background.paper,
-    },
-    actionIcon: {},
-  })
-);
+
 export function PassageHistory(props: IProps) {
   const { passageId, boxHeight, passagestatechanges } = props;
   const [memory] = useGlobal('memory');
@@ -67,7 +51,6 @@ export function PassageHistory(props: IProps) {
   const { activityStateStr } = useTodo();
   const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
 
-  const classes = useStyles();
   useEffect(() => {
     if (passageId) {
       const curStateChanges = passagestatechanges
@@ -139,7 +122,6 @@ export function PassageHistory(props: IProps) {
                 key={'edit-' + psc.id}
                 aria-label={'edit-' + psc.id}
                 color="default"
-                className={classes.actionIcon}
                 onClick={handleEdit(psc.id)}
               >
                 <EditIcon />
@@ -149,7 +131,6 @@ export function PassageHistory(props: IProps) {
                 key={'del-' + psc.id}
                 aria-label={'del-' + psc.id}
                 color="default"
-                className={classes.actionIcon}
                 onClick={handleDelete(psc.id)}
               >
                 <DeleteIcon />
@@ -233,7 +214,10 @@ export function PassageHistory(props: IProps) {
 
   return (
     <>
-      <List style={historyStyle} className={classes.history}>
+      <List
+        style={historyStyle}
+        sx={{ overflow: 'auto', bgColor: 'background.paper' }}
+      >
         {historyContent}
       </List>
       <TranscribeAddNote

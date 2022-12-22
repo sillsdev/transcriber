@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { Redirect, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
-import { connect } from 'react-redux';
+import { connect, shallowEqual, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
   IState,
@@ -16,91 +16,78 @@ import {
 import { TokenContext } from '../context/TokenProvider';
 import localStrings from '../selector/localize';
 import * as action from '../store';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Typography,
   Button,
-  // Paper,
   Box,
-  // IconButton
-} from '@material-ui/core';
-import { useCheckOnline, forceLogin, waitForIt } from '../utils';
+  styled,
+  TypographyProps,
+  BoxProps,
+} from '@mui/material';
+import { useCheckOnline, forceLogin, waitForIt, useHome } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { API_CONFIG, isElectron } from '../api-variable';
 import ImportTab from '../components/ImportTab';
 import Confirm from '../components/AlertDialog';
 import UserList from '../control/UserList';
 import { useSnackBar } from '../hoc/SnackBar';
 import AppHead from '../components/App/AppHead';
-import { UserListItem } from '../control';
+import { AltButton, PriButton, UserListItem } from '../control';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-// import HelpIcon from '@mui/icons-material/Help';
 import UserListMode, { ListMode } from '../control/userListMode';
-const noop = {} as any;
-const ipc = isElectron ? require('electron').ipcRenderer : null;
-const electronremote = isElectron ? require('@electron/remote') : noop;
+import { accessSelector } from '../selector';
+const ipc = (window as any)?.electron;
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    page: {
-      display: 'block',
-    },
-    listHead: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      paddingTop: theme.spacing(4),
-      paddingBottom: 0,
-    },
-    hidden: {
-      visibility: 'hidden',
-    },
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    paper: {
-      padding: theme.spacing(3),
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    title: {
-      fontSize: '16pt',
-    },
-    sectionHead: {
-      fontSize: '14pt',
-      paddingTop: theme.spacing(2),
-    },
-    actions: {
-      paddingTop: theme.spacing(2),
-    },
-    button: {
-      margin: theme.spacing(1),
-      minWidth: theme.spacing(20),
-    },
-    box: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    helpIcon: {
-      paddingLeft: '1px',
-    },
-  })
-);
+const SectionHead = styled(Typography)<TypographyProps>(({ theme }) => ({
+  fontSize: '14pt',
+  paddingTop: theme.spacing(2),
+}));
+
+const ContainerBox = styled(Box)<BoxProps>(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+}));
+
+const ActionBox = styled(Box)<BoxProps>(({ theme }) => ({
+  paddingTop: theme.spacing(2),
+}));
+
+interface ICurrentUser {
+  curUser: User;
+  users: User[];
+  action?: () => void;
+  goOnline: () => void;
+  showTeams: boolean;
+}
+
+const CurrentUser = ({
+  curUser,
+  users,
+  action,
+  goOnline,
+  showTeams,
+}: ICurrentUser) => {
+  const t: IAccessStrings = useSelector(accessSelector, shallowEqual);
+
+  return (
+    <>
+      <SectionHead>{t.currentUser}</SectionHead>
+      <Box sx={{ pt: 2 }}>
+        <UserListItem
+          u={curUser}
+          users={users}
+          onSelect={action ? action : goOnline}
+          showTeams={showTeams}
+        />
+      </Box>
+    </>
+  );
+};
 
 interface IRecordProps {
   users: Array<User>;
@@ -118,22 +105,21 @@ interface IStateProps {
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
-  resetOrbitError: typeof action.resetOrbitError;
 }
 
-interface IProps extends IRecordProps, IStateProps, IDispatchProps {}
+interface IProps {}
 export const goOnline = (email?: string) => {
   const lastTime = localStorage.getItem('electron-lastTime');
   localStorage.removeItem('auth-id');
   localStorage.setItem('isLoggedIn', 'true');
   const hasUsed = lastTime !== null;
-  ipc?.invoke('login', hasUsed, email);
-  electronremote?.getCurrentWindow().close();
+  ipc?.login(hasUsed, email);
+  ipc?.closeApp();
 };
 export const doLogout = async () => {
   localStorage.removeItem('online-user-id');
   forceLogin();
-  await ipc?.invoke('logout');
+  await ipc?.logout();
 };
 export const switchUser = async () => {
   await doLogout();
@@ -141,7 +127,9 @@ export const switchUser = async () => {
     goOnline();
   }, 2000);
 };
-export function Access(props: IProps) {
+export function Access(
+  props: IProps & IRecordProps & IStateProps & IDispatchProps
+) {
   const {
     t,
     importStatus,
@@ -152,8 +140,8 @@ export function Access(props: IProps) {
     sections,
   } = props;
   const { pathname } = useLocation();
-  const classes = useStyles();
-  const { setLanguage, resetOrbitError } = props;
+  const navigate = useNavigate();
+  const { setLanguage } = props;
   const { loginWithRedirect, isAuthenticated } = useAuth0();
   const [offline, setOffline] = useGlobal('offline');
   const [user] = useGlobal('user');
@@ -169,20 +157,16 @@ export function Access(props: IProps) {
     pathname.substring('/access/'.length)
   );
   const [selectedUser, setSelectedUser] = useState('');
-  const [, setOrganization] = useGlobal('organization');
-  const [, setProject] = useGlobal('project');
-  const [, setProjRole] = useGlobal('projRole');
-  const [, setProjType] = useGlobal('projType');
-  const [, setPlan] = useGlobal('plan');
   const offlineProjRead = useOfflnProjRead();
   const offlineSetup = useOfflineSetup();
   const { showMessage } = useSnackBar();
+  const { resetProject } = useHome();
   const [listMode, setListMode] = useState<ListMode>(
     whichUsers === 'online-local' ? ListMode.WorkOffline : ListMode.SwitchUser
   );
   const [goOnlineConfirmation, setGoOnlineConfirmation] =
     useState<React.MouseEvent<HTMLElement>>();
-  const checkOnline = useCheckOnline(resetOrbitError);
+  const checkOnline = useCheckOnline();
   const handleModeChange = (mode: ListMode) => {
     setListMode(mode);
   };
@@ -209,7 +193,7 @@ export function Access(props: IProps) {
           ? curUser?.attributes?.email
           : undefined;
         goOnline(email);
-      } else ipc?.invoke('logout');
+      } else ipc?.logout();
     }
     setGoOnlineConfirmation(undefined);
   };
@@ -319,11 +303,7 @@ export function Access(props: IProps) {
 
   useEffect(() => {
     if (isElectron) persistData();
-    setOrganization('');
-    setProject('');
-    setPlan('');
-    setProjRole(undefined);
-    setProjType('');
+    resetProject();
     checkOnline((online) => {}, true);
     if (!tokenCtx.state.isAuthenticated() && !isAuthenticated) {
       if (!offline && !isElectron) {
@@ -361,10 +341,10 @@ export function Access(props: IProps) {
 
   useEffect(() => {
     if (isElectron && selectedUser === '') {
-      ipc?.invoke('get-profile').then((result: any) => {
+      ipc?.getProfile().then((result: any) => {
         if (result) {
           // Even tho async, this executes first b/c users takes time to load
-          ipc?.invoke('get-token').then((accessToken: any) => {
+          ipc?.getToken().then((accessToken: any) => {
             const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
             if (loggedIn) {
               if (offline) setOffline(false);
@@ -391,68 +371,51 @@ export function Access(props: IProps) {
 
   if (tokenCtx.state.accessToken && !tokenCtx.state.email_verified) {
     if (localStorage.getItem('isLoggedIn') === 'true')
-      return <Redirect to="/emailunverified" />;
+      navigate('/emailunverified');
     else doLogout();
   } else if (
     (!isElectron && tokenCtx.state.isAuthenticated()) ||
     offlineOnly ||
     (isElectron && selectedUser !== '')
   ) {
-    return <Redirect to="/loading" />;
+    navigate('/loading');
   }
   if (/Logout/i.test(view)) {
-    return <Redirect to="/logout" />;
+    navigate('/logout');
   }
-  if (whichUsers === '') return <Redirect to="/" />;
-
-  const CurrentUser = ({
-    curUser,
-    action,
-    showTeams,
-  }: {
-    curUser: User;
-    action?: () => void;
-    showTeams: boolean;
-  }) => (
-    <>
-      <Typography className={classes.sectionHead}>{t.currentUser}</Typography>
-      <div className={classes.actions}>
-        <UserListItem
-          u={curUser}
-          users={users}
-          onSelect={action ? action : handleGoOnline}
-          showTeams={showTeams}
-        />
-      </div>
-    </>
-  );
+  if (whichUsers === '') navigate('/');
 
   const handleCurUser = () => {
     handleSelect(curUser?.id || '');
   };
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ width: '100%' }}>
       <AppHead {...props} />
       {isElectron && (
-        <div className={classes.page}>
-          <Typography className={classes.sectionHead}>
-            Hello I'm under the AppHead
-          </Typography>
-          <div className={classes.listHead}>
+        <Box sx={{ display: 'block' }}>
+          <SectionHead>Hello I'm under the AppHead</SectionHead>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              pt: 4,
+              pb: 0,
+            }}
+          >
             <Button id="back" color="primary" onClick={handleBack}>
               <ArrowBackIcon />
               {t.back}
             </Button>
-            <Typography className={classes.title}>{t.title}</Typography>
-            <Button className={classes.hidden}>
+            <Typography sx={{ fontSize: '16pt' }}>{t.title}</Typography>
+            <Button sx={{ visibility: 'hidden' }}>
               <ArrowBackIcon />
               {t.back}
             </Button>
-          </div>
+          </Box>
 
           {whichUsers.startsWith('online') && (
-            <div className={classes.container}>
+            <ContainerBox>
               <>
                 <UserListMode
                   mode={listMode}
@@ -461,13 +424,16 @@ export function Access(props: IProps) {
                   allowOffline={hasOnlineUser()}
                 />
                 {listMode === ListMode.SwitchUser ? (
-                  <div className={classes.container}>
+                  <ContainerBox>
                     {curUser && (
                       <>
-                        <CurrentUser curUser={curUser} showTeams={false} />
-                        <Typography className={classes.sectionHead}>
-                          {t.availableUsers}
-                        </Typography>
+                        <CurrentUser
+                          curUser={curUser}
+                          users={users}
+                          showTeams={false}
+                          goOnline={handleGoOnline}
+                        />
+                        <SectionHead>{t.availableUsers}</SectionHead>
                       </>
                     )}
                     {!hasOnlineUser() && whichUsers === 'online-team' && (
@@ -482,32 +448,29 @@ export function Access(props: IProps) {
                         <Box>{t.noOnlineUsers4}</Box>
                       </div>
                     )}
-                    <div className={classes.actions}>
-                      <Button
+                    <ActionBox>
+                      <PriButton
                         id="accessSwitchUser"
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
                         onClick={handleSwitchUser}
                       >
                         {t.logIn}
-                      </Button>
-                    </div>
+                      </PriButton>
+                    </ActionBox>
                     {/* </Paper> */}
-                  </div>
+                  </ContainerBox>
                 ) : listMode === ListMode.WorkOffline ? (
                   <>
                     {curUser && (
                       <>
                         <CurrentUser
                           curUser={curUser}
+                          users={users}
                           action={handleCurUser}
+                          goOnline={handleGoOnline}
                           showTeams={true}
                         />
                         {countWorkOfflineUsers() > 1 && (
-                          <Typography className={classes.sectionHead}>
-                            {t.availableUsers}
-                          </Typography>
+                          <SectionHead>{t.availableUsers}</SectionHead>
                         )}
                       </>
                     )}
@@ -523,29 +486,23 @@ export function Access(props: IProps) {
                     <>
                       <CurrentUser
                         curUser={curUser}
+                        users={users}
                         action={handleLogout}
+                        goOnline={handleGoOnline}
                         showTeams={false}
                       />
-                      <Button
-                        id="logout"
-                        variant="outlined"
-                        color="primary"
-                        className={classes.button}
-                        onClick={handleLogout}
-                      >
+                      <AltButton id="logout" onClick={handleLogout}>
                         {t.logout}
-                      </Button>
+                      </AltButton>
                     </>
                   )
                 )}
               </>
-            </div>
+            </ContainerBox>
           )}
           {whichUsers === 'offline' && (
-            <div className={classes.container}>
-              <Typography className={classes.sectionHead}>
-                {t.offlineUsers}
-              </Typography>
+            <ContainerBox>
+              <SectionHead>{t.offlineUsers}</SectionHead>
               {importStatus?.complete !== false && hasOfflineUser() && (
                 <UserList
                   isSelected={isOfflineUserWithProjects}
@@ -553,34 +510,22 @@ export function Access(props: IProps) {
                   title={t.offlineUsers}
                 />
               )}
-              <div className={classes.actions}>
-                <Button
-                  id="accessCreateUser"
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleCreateUser}
-                >
+              <ActionBox>
+                <AltButton id="accessCreateUser" onClick={handleCreateUser}>
                   {t.createUser}
-                </Button>
-              </div>
-              <div className={classes.actions}>
-                <Button
-                  id="accessImport"
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleImport}
-                >
+                </AltButton>
+              </ActionBox>
+              <ActionBox>
+                <AltButton id="accessImport" onClick={handleImport}>
                   {t.importSnapshot}
-                </Button>
-              </div>
-            </div>
+                </AltButton>
+              </ActionBox>
+            </ContainerBox>
           )}
           {importOpen && (
             <ImportTab isOpen={importOpen} onOpen={setImportOpen} />
           )}
-        </div>
+        </Box>
       )}
       {isElectron && goOnlineConfirmation && (
         <Confirm
@@ -590,7 +535,7 @@ export function Access(props: IProps) {
           no={t.cancel}
         />
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -599,12 +544,11 @@ const mapStateToProps = (state: IState): IStateProps => ({
   importStatus: state.importexport.importexportStatus,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
-      resetOrbitError: action.resetOrbitError,
     },
     dispatch
   ),
@@ -618,5 +562,5 @@ const mapRecordsToProps = {
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Access) as any
-) as any;
+  connect(mapStateToProps, mapDispatchToProps)(Access as any) as any
+) as any as (props: IProps) => JSX.Element;

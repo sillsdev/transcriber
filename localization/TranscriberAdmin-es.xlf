@@ -1017,8 +1017,8 @@
 		</unit>
 		<unit id="discussionList.saveFilter">
 			<segment>
-				<source>Save as the Team default?</source>
-				<target>¿Guardar como el equipo por defecto?</target>
+				<source>Save as the Team default</source>
+				<target>Guardar como el equipo por defecto</target>
 			</segment>
 		</unit>
 		<unit id="discussionList.saveFirst">
@@ -1367,138 +1367,6 @@
 			<segment>
 				<source>Sum</source>
 				<target>Suma</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.add">
-			<segment>
-				<source>Ok</source>
-				<target>Ok</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.addGroupMember">
-			<segment>
-				<source>Choose {0}</source>
-				<target>Elija {0}</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.addMemberInstruction">
-			<segment>
-				<source>Choose a person who will act as a {0} for audio projects in this group.</source>
-				<target>Elija una persona que actuará como {0} para los proyectos de audio en este grupo.</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.allReviewersCanTranscribe">
-			<segment>
-				<source>All Editors are allowed to transcribe.</source>
-				<target>Todos los editores pueden transcribir.</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.assignedSections">
-			<segment>
-				<source>  Assigned {0}: </source>
-				<target>  Asignado {0}: </target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.cancel">
-			<segment>
-				<source>Cancel</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.delete">
-			<segment>
-				<source>Delete</source>
-				<target>Borrar</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.editors">
-			<segment>
-				<source>Editors</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.editorsDetail">
-			<segment>
-				<source>(Review + Transcribe)</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.loadingTable">
-			<segment>
-				<source>Loading data</source>
-				<target>Carga de datos</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.name">
-			<segment>
-				<source>Name</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.noDeleteAdmin">
-			<segment>
-				<source>The only Administrator cannot be deleted.</source>
-				<target>El único Administrador no puede ser eliminado.</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.noDeleteAllUsersInfo">
-			<segment>
-				<source>Cannot delete members from the All Members group</source>
-				<target>No se pueden eliminar miembros del grupo Todos los miembros</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.noDeleteInfo">
-			<segment>
-				<source>This role is included in a higher role and cannot be deleted.</source>
-				<target>Este rol está incluido en un rol superior y no puede ser eliminado.</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.owners">
-			<segment>
-				<source>Owners</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.ownersDetail">
-			<segment>
-				<source>(Manage + Review + Transcribe)</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.projectPlans">
-			<segment>
-				<source>Audio Project Plans</source>
-				<target>Planes de proyectos de audio</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.roles">
-			<segment>
-				<source>Roles:{0}</source>
-				<target>Roles:{0}</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.save">
-			<segment>
-				<source>Save</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.transcribers">
-			<segment>
-				<source>Transcribers</source>
-				<target>Transcriptores</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.transcribersDetail">
-			<segment>
-				<source>(Transcribe)</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.transcriptionTitle">
-			<segment>
-				<source>Users in Transcription Roles</source>
-				<target>Usuarios con roles de transcripción</target>
 			</segment>
 		</unit>
 		<unit id="groupTabs.groups">
@@ -2083,18 +1951,6 @@
 				<target>{0} Invitación</target>
 			</segment>
 		</unit>
-		<unit id="invite.groupRole">
-			<segment>
-				<source>Audio Project Role</source>
-				<target>Rol del proyecto de audio</target>
-			</segment>
-		</unit>
-		<unit id="invite.groups">
-			<segment>
-				<source>Audio Project</source>
-				<target>Proyecto de audio</target>
-			</segment>
-		</unit>
 		<unit id="invite.instructions">
 			<segment>
 				<source>Please click the following link to accept the invitation:</source>
@@ -2133,7 +1989,7 @@
 		</unit>
 		<unit id="invite.noProjects">
 			<segment>
-				<source>No audio projects are associated with this group.</source>
+				<source>This team has no audio projects.</source>
 				<target>No hay proyectos de audio asociados a este grupo.</target>
 			</segment>
 		</unit>
@@ -2165,12 +2021,6 @@
 			<segment>
 				<source>Save</source>
 				<target/>
-			</segment>
-		</unit>
-		<unit id="invite.selectProjectRole">
-			<segment>
-				<source>Select audio project role.</source>
-				<target>Seleccione el rol del proyecto de audio.</target>
 			</segment>
 		</unit>
 		<unit id="invite.selectTeamRole">
@@ -2455,12 +2305,6 @@
 				<target>No se pueden cargar los datos del proyecto de audio sin conexión.</target>
 			</segment>
 		</unit>
-		<unit id="main.owner">
-			<segment>
-				<source>Owner</source>
-				<target>Propietario</target>
-			</segment>
-		</unit>
 		<unit id="main.passages">
 			<segment>
 				<source>Passages</source>
@@ -2479,10 +2323,10 @@
 				<target>Proyecto de audio</target>
 			</segment>
 		</unit>
-		<unit id="main.projRole">
+		<unit id="main.orgRole">
 			<segment>
-				<source>Role in Audio Project:</source>
-				<target>Papel en el proyecto de audio:</target>
+				<source>Role:</source>
+				<target>Papel:</target>
 			</segment>
 		</unit>
 		<unit id="main.reliesOn">
@@ -2543,12 +2387,6 @@
 			<segment>
 				<source>Settings</source>
 				<target>Configuración</target>
-			</segment>
-		</unit>
-		<unit id="main.switchTo">
-			<segment>
-				<source>Switch to:</source>
-				<target>Cambiar a:</target>
 			</segment>
 		</unit>
 		<unit id="main.switchUser">
@@ -2877,8 +2715,8 @@
 		</unit>
 		<unit id="mediaTab.size">
 			<segment>
-				<source>Size (KB)</source>
-				<target>Tamaño (KB)</target>
+				<source>Size (MB)</source>
+				<target>Tamaño (MB)</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.unsupported">
@@ -4393,6 +4231,12 @@
 				<target>Iniciar Audacity</target>
 			</segment>
 		</unit>
+      <unit id="shared.loading">
+         <segment>
+            <source>Loading...</source>
+            <target>Carga...</target>
+         </segment>
+      </unit>
 		<unit id="shared.mediaAttached">
 			<segment>
 				<source>Audio Attached</source>
@@ -4441,12 +4285,6 @@
 				<target>Observador</target>
 			</segment>
 		</unit>
-		<unit id="shared.owner">
-			<segment>
-				<source>Owner</source>
-				<target>Propietario</target>
-			</segment>
-		</unit>
 		<unit id="shared.paratextchapterSpan">
 			<segment>
 				<source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
@@ -4463,12 +4301,6 @@
 			<segment>
 				<source>Peer Reviewer</source>
 				<target>Revisor de pares</target>
-			</segment>
-		</unit>
-		<unit id="shared.projectrole">
-			<segment>
-				<source>Project Role</source>
-				<target>Rol del proyecto</target>
 			</segment>
 		</unit>
 		<unit id="shared.recordingInProgress">
@@ -5383,6 +5215,12 @@
 				<target>Último audio</target>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.latestAudioElan">
+			<segment>
+				<source>Latest Audio + Transcription</source>
+				<target>Último audio + Transcripción</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.noData">
 			<segment>
 				<source>No {0} Data.</source>
@@ -5593,10 +5431,10 @@
 				<target>Proyecto de audio</target>
 			</segment>
 		</unit>
-		<unit id="viewMode.transcribe">
+		<unit id="viewMode.home">
 			<segment>
-				<source>Transcribe</source>
-				<target>Transcribir</target>
+				<source>Home</source>
+				<target>Inicio</target>
 			</segment>
 		</unit>
 		<unit id="vProject.add">

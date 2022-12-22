@@ -5,20 +5,19 @@ import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
-import { isElectron } from '../api-variable';
-const ipc = isElectron ? require('electron').ipcRenderer : null;
+const ipc = (window as any)?.electron;
 
 export function SpellCustomList() {
   const [list, setList] = React.useState<string[]>([]);
   const [refresh, setRefresh] = React.useState(0);
 
   const handleDelete = (value: string) => () => {
-    ipc?.invoke('customRemove', value);
+    ipc?.customRemove(value);
     setRefresh(refresh + 1);
   };
 
   React.useEffect(() => {
-    ipc?.invoke('customList').then((list: string[]) => {
+    ipc?.customList().then((list: string[]) => {
       setList(list);
     });
   }, [refresh]);

@@ -1,20 +1,22 @@
-import React, { useEffect, useState, useContext, useMemo } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useMemo,
+  PropsWithChildren,
+} from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation, useParams } from 'react-router-dom';
-import {
-  makeStyles,
-  createStyles,
-  Theme,
-  Grid,
-  debounce,
-  Paper,
-} from '@material-ui/core';
+import { Grid, debounce, Paper, Box, SxProps } from '@mui/material';
 
 import styled from 'styled-components';
 import AppHead from '../components/App/AppHead';
-import ViewMode, { ViewOption } from '../control/ViewMode';
-import { UnsavedContext } from '../context/UnsavedContext';
-import SplitPane, { Pane } from 'react-split-pane';
+import {
+  default as SplitPaneBar,
+  Pane as PaneBar,
+  PaneProps,
+  SplitPaneProps,
+} from 'react-split-pane';
 import { HeadHeight } from '../App';
 import {
   PassageDetailProvider,
@@ -44,7 +46,7 @@ import {
   useStepTool,
   useUrlContext,
 } from '../crud';
-import { RoleNames, Plan, IToolStrings } from '../model';
+import { Plan, IToolStrings } from '../model';
 import { forceLogin, LocalKey, localUserKey, NamedRegions } from '../utils';
 import { memory } from '../schema';
 import { useSelector, shallowEqual } from 'react-redux';
@@ -53,56 +55,9 @@ import { QueryBuilder } from '@orbit/data';
 
 const minWidth = 800;
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      minWidth: `${minWidth}px`,
-      minHeight: '700px',
-    },
-    paper: {
-      padding: theme.spacing(2),
-      margin: 'auto',
-      width: `calc(100% - 32px)`,
-    },
-    panel2: {
-      display: 'flex',
-      flexDirection: 'row',
-      paddingTop: `${HeadHeight}px`,
-    },
-    description: {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-    },
-    right: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-    column: {
-      alignItems: 'left',
-      whiteSpace: 'nowrap',
-    },
-    row: {
-      alignItems: 'center',
-      whiteSpace: 'nowrap',
-    },
-    padRow: {
-      paddingTop: '16px',
-    },
-    button: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    pane: {},
-    textarea: { resize: 'none' },
-    actionButton: {
-      color: theme.palette.primary.light,
-    },
-    transcriber: {
-      padding: theme.spacing(2),
-    },
-  })
-);
+const descProps = { overflow: 'hidden', textOverflow: 'ellipsis' } as SxProps;
+const rowProps = { alignItems: 'center', whiteSpace: 'nowrap' } as SxProps;
+
 const Wrapper = styled.div`
   .Resizer {
     -moz-box-sizing: border-box;
@@ -158,22 +113,26 @@ const Wrapper = styled.div`
     min-height: 0;
   }
 `;
-interface ParamTypes {
-  prjId: string;
-}
+
+const SplitPane = (props: SplitPaneProps & PropsWithChildren) => {
+  return <SplitPaneBar {...props} />;
+};
+
+const Pane = (props: PaneProps & PropsWithChildren) => {
+  return <PaneBar {...props} className={props.className || 'pane'} />;
+};
 
 const PassageDetailGrids = () => {
-  const classes = useStyles();
-  const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
   const [topFilter, setTopFilter] = useState(false);
   const ctx = useContext(PassageDetailContext);
   const { currentstep, discussionSize, setDiscussionSize, orgWorkflowSteps } =
     ctx.state;
+
   const { tool, settings } = useStepTool(currentstep);
   const { slugFromId } = useArtifactType();
-
+  const { userIsAdmin } = useRole();
   const artifactId = useMemo(() => {
     if (settings) {
       var id = JSON.parse(settings).artifactTypeId;
@@ -236,29 +195,40 @@ const PassageDetailGrids = () => {
   }, [plan]);
 
   return (
-    <div className={classes.panel2}>
-      <Grid container direction="row" className={classes.row}>
-        <Grid container direction="row" className={classes.row}>
-          <Grid item className={classes.row} xs={6}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        paddingTop: `${HeadHeight}px`,
+      }}
+    >
+      <Grid container direction="row" sx={rowProps}>
+        <Grid container direction="row" sx={rowProps}>
+          <Grid item sx={rowProps} xs={6}>
             <PassageDetailSectionPassage />
           </Grid>
-          <Grid item id="tool" className={classes.row} xs={3}>
+          <Grid item id="tool" sx={rowProps} xs={3}>
             {tool && t.hasOwnProperty(tool) ? t.getString(tool) : tool}
           </Grid>
-          {projRole === RoleNames.Admin && (
-            <Grid item id="stepcomplete" className={classes.right} xs={3}>
+          {userIsAdmin && (
+            <Grid
+              item
+              id="stepcomplete"
+              sx={{ display: 'flex', justifyContent: 'flex-end' }}
+              xs={3}
+            >
               <PassageDetailStepComplete />
             </Grid>
           )}
         </Grid>
-        <Grid item className={classes.description} xs={12}>
+        <Grid item sx={descProps} xs={12}>
           <WorkflowSteps />
         </Grid>
         <Grid item xs={12}>
           <PassageDetailChooser />
         </Grid>
         {tool === ToolSlug.Resource && (
-          <Grid container direction="row" className={classes.row}>
+          <Grid container direction="row" sx={rowProps}>
             <Grid item xs={12}>
               <Grid container>
                 <PassageDetailArtifacts />
@@ -268,9 +238,9 @@ const PassageDetailGrids = () => {
         )}
         {tool === ToolSlug.Paratext && (
           <IntegrationTab
-            artifactType={artifactSlug}
+            artifactType={artifactSlug as ArtifactTypeSlug}
             passage={ctx.state.passage}
-            setStepComplete={ctx.state.setStepComplete}
+            setStepComplete={ctx.state.setStepComplete as any}
             currentstep={currentstep}
           />
         )}
@@ -278,7 +248,7 @@ const PassageDetailGrids = () => {
           tool === ToolSlug.TeamCheck ||
           tool === ToolSlug.Record ||
           tool === ToolSlug.Transcribe) && (
-          <Paper className={classes.paper}>
+          <Paper sx={{ p: 2, margin: 'auto', width: `calc(100% - 32px)` }}>
             <Wrapper>
               <SplitPane
                 defaultSize={width - discussionSize.width - 16}
@@ -286,24 +256,24 @@ const PassageDetailGrids = () => {
                 split="vertical"
                 onChange={handleSplitSize}
               >
-                <Pane className={classes.pane}>
+                <Pane>
                   {tool === ToolSlug.Record && (
-                    <Grid item className={classes.description} xs={12}>
+                    <Grid item sx={descProps} xs={12}>
                       <PassageDetailRecord />
                     </Grid>
                   )}
                   {tool !== ToolSlug.Record && tool !== ToolSlug.Transcribe && (
-                    <Grid item className={classes.description} xs={12}>
+                    <Grid item sx={descProps} xs={12}>
                       <PassageDetailPlayer />
                     </Grid>
                   )}
                   {tool === ToolSlug.TeamCheck && (
-                    <Grid item className={classes.description} xs={12}>
+                    <Grid item sx={descProps} xs={12}>
                       <TeamCheckReference />
                     </Grid>
                   )}
                   {tool === ToolSlug.Transcribe && (
-                    <Grid item className={classes.description} xs={12}>
+                    <Grid item sx={descProps} xs={12}>
                       <PassageDetailTranscribe
                         width={width - discussionSize.width - 16}
                         artifactTypeId={artifactId}
@@ -313,7 +283,7 @@ const PassageDetailGrids = () => {
                   )}
                 </Pane>
                 {!topFilter && (
-                  <Pane className={classes.pane}>
+                  <Pane>
                     <Grid item xs={12} sm container>
                       <Grid item container direction="column">
                         <DiscussionList />
@@ -328,7 +298,7 @@ const PassageDetailGrids = () => {
         {(tool === ToolSlug.Community ||
           tool === ToolSlug.PhraseBackTranslate ||
           tool === ToolSlug.WholeBackTranslate) && (
-          <Grid container direction="row" className={classes.row}>
+          <Grid container direction="row" sx={rowProps}>
             <Grid item xs={12}>
               <Grid container>
                 <PassageDetailItem
@@ -365,60 +335,41 @@ const PassageDetailGrids = () => {
           </Grid>
         )}
       </Grid>
-    </div>
+    </Box>
   );
 };
 
 export const PassageDetail = () => {
-  const classes = useStyles();
-  const { prjId } = useParams<ParamTypes>();
+  const { prjId } = useParams();
   const { pathname } = useLocation();
   const setUrlContext = useUrlContext();
-  const uctx = React.useContext(UnsavedContext);
-  const { checkSavedFn } = uctx.state;
   const [view, setView] = useState('');
-  const [projRole] = useGlobal('projRole');
-  const { setMyProjRole } = useRole();
   const [projType] = useGlobal('projType');
   const { setProjectType } = useProjectType();
 
-  const handleSwitchTo = () => {
-    setView(`/plan/${prjId}/0`);
-  };
-
-  const SwitchTo = () => {
-    return (
-      <ViewMode
-        mode={ViewOption.Detail}
-        onMode={(mode: ViewOption) =>
-          mode === ViewOption.AudioProject && checkSavedFn(handleSwitchTo)
-        }
-      />
-    );
-  };
-
   useEffect(() => {
-    const projectId = setUrlContext(prjId);
-    if (!projRole)
-      if (!setMyProjRole(projectId)) {
-        // If after proj role set there is none, force reload
+    const projectId = setUrlContext(prjId ?? '');
+    if (projType === '') {
+      var tmp = setProjectType(projectId);
+      if (!tmp) {
+        // If after proj type set there is none, force reload
         localStorage.removeItem(localUserKey(LocalKey.url));
         forceLogin();
         setView('/logout');
       }
-    if (projType === '') setProjectType(projectId);
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
-
+  console.log('passage detail passing in true');
   return (
-    <div className={classes.root}>
-      <AppHead SwitchTo={SwitchTo} />
+    <Box sx={{ flexGrow: 1, minWidth: `${minWidth}px`, minHeight: '700px' }}>
+      <AppHead switchTo={true} />
       <PassageDetailProvider>
         <PassageDetailGrids />
       </PassageDetailProvider>
-    </div>
+    </Box>
   );
 };
 export default PassageDetail;

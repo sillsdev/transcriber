@@ -1017,8 +1017,8 @@
 		</unit>
 		<unit id="discussionList.saveFilter">
 			<segment>
-				<source>Save as the Team default?</source>
-				<target>Salvar como o padrão da equipe?</target>
+				<source>Save as team default</source>
+				<target>Salvar como o padrão da equipe</target>
 			</segment>
 		</unit>
 		<unit id="discussionList.saveFirst">
@@ -1367,138 +1367,6 @@
 			<segment>
 				<source>Sum</source>
 				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.add">
-			<segment>
-				<source>Ok</source>
-				<target>Ok</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.addGroupMember">
-			<segment>
-				<source>Choose {0}</source>
-				<target>Escolher {0}</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.addMemberInstruction">
-			<segment>
-				<source>Choose a person who will act as a {0} for audio projects in this group.</source>
-				<target>Escolher uma pessoa que atuará como {0} para projetos neste grupo.</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.allReviewersCanTranscribe">
-			<segment>
-				<source>All Editors are allowed to transcribe.</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.assignedSections">
-			<segment>
-				<source>  Assigned {0}: </source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.cancel">
-			<segment>
-				<source>Cancel</source>
-				<target>Cancelar</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.delete">
-			<segment>
-				<source>Delete</source>
-				<target>Excluir</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.editors">
-			<segment>
-				<source>Editors</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.editorsDetail">
-			<segment>
-				<source>(Review + Transcribe)</source>
-				<target>(Revisar + Transcrever)</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.loadingTable">
-			<segment>
-				<source>Loading data</source>
-				<target>Carregando dados</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.name">
-			<segment>
-				<source>Name</source>
-				<target>Nome</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.noDeleteAdmin">
-			<segment>
-				<source>The only Administrator cannot be deleted.</source>
-				<target>O único administrador não pode ser excluído.</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.noDeleteAllUsersInfo">
-			<segment>
-				<source>Cannot delete members from the All Members group</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="groupSettings.noDeleteInfo">
-			<segment>
-				<source>This role is included in a higher role and cannot be deleted.</source>
-				<target>Esta função está incluída numa função superior e não pode ser excluída.</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.owners">
-			<segment>
-				<source>Owners</source>
-				<target>Proprietários</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.ownersDetail">
-			<segment>
-				<source>(Manage + Review + Transcribe)</source>
-				<target>(Gerenciar + Revisar + Transcrever)</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.projectPlans">
-			<segment>
-				<source>Audio Project Plans</source>
-				<target>Planos do Projeto</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.roles">
-			<segment>
-				<source>Roles:{0}</source>
-				<target>Funções:{0}</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.save">
-			<segment>
-				<source>Save</source>
-				<target>Salvar</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.transcribers">
-			<segment>
-				<source>Transcribers</source>
-				<target>Transcritores</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.transcribersDetail">
-			<segment>
-				<source>(Transcribe)</source>
-				<target>(Transcrever)</target>
-			</segment>
-		</unit>
-		<unit id="groupSettings.transcriptionTitle">
-			<segment>
-				<source>Users in Transcription Roles</source>
-				<target>Usuários em Funções de Transcrição</target>
 			</segment>
 		</unit>
 		<unit id="groupTabs.groups">
@@ -2083,18 +1951,6 @@
 				<target>Convite do {0}</target>
 			</segment>
 		</unit>
-		<unit id="invite.groupRole">
-			<segment>
-				<source>Audio Project Role</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="invite.groups">
-			<segment>
-				<source>Audio Project</source>
-				<target>Projetos</target>
-			</segment>
-		</unit>
 		<unit id="invite.instructions">
 			<segment>
 				<source>Please click the following link to accept the invitation:</source>
@@ -2133,8 +1989,8 @@
 		</unit>
 		<unit id="invite.noProjects">
 			<segment>
-				<source>No audio projects are associated with this group.</source>
-				<target/>
+				<source>This team has no audio projects.</source>
+				<target>Esta equipe não tem projetos de áudio.</target>
 			</segment>
 		</unit>
 		<unit id="invite.organization">
@@ -2165,12 +2021,6 @@
 			<segment>
 				<source>Save</source>
 				<target>Salvar</target>
-			</segment>
-		</unit>
-		<unit id="invite.selectProjectRole">
-			<segment>
-				<source>Select audio project role.</source>
-				<target/>
 			</segment>
 		</unit>
 		<unit id="invite.selectTeamRole">
@@ -2455,12 +2305,6 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="main.owner">
-			<segment>
-				<source>Owner</source>
-				<target>Proprietário</target>
-			</segment>
-		</unit>
 		<unit id="main.passages">
 			<segment>
 				<source>Passages</source>
@@ -2479,10 +2323,10 @@
 				<target>Projetos</target>
 			</segment>
 		</unit>
-		<unit id="main.projRole">
+		<unit id="main.orgRole">
 			<segment>
-				<source>Role in Audio Project:</source>
-				<target>Função no Projeto:</target>
+				<source>Role:</source>
+				<target>Função:</target>
 			</segment>
 		</unit>
 		<unit id="main.reliesOn">
@@ -2543,12 +2387,6 @@
 			<segment>
 				<source>Settings</source>
 				<target>Configurações</target>
-			</segment>
-		</unit>
-		<unit id="main.switchTo">
-			<segment>
-				<source>Switch to:</source>
-				<target/>
 			</segment>
 		</unit>
 		<unit id="main.switchUser">
@@ -2877,8 +2715,8 @@
 		</unit>
 		<unit id="mediaTab.size">
 			<segment>
-				<source>Size (KB)</source>
-				<target>Tamanho (KB)</target>
+				<source>Size (MB)</source>
+				<target>Tamanho (MB)</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.unsupported">
@@ -3673,6 +3511,12 @@
 				<target>{0} {1} item(ns). Tem certeza?</target>
 			</segment>
 		</unit>
+        <unit id="planSheet.filtered">
+         <segment>
+            <source>Disable filter to add rows.</source>
+            <target>Desative o filtro para adicionar linhas.</target>
+         </segment>
+      </unit>
 		<unit id="planSheet.nonNumber">
 			<segment>
 				<source>Do not change to non-number.</source>
@@ -4177,6 +4021,60 @@
 				<target>Título</target>
 			</segment>
 		</unit>
+      <unit id="scriptureTableFilter.apply">
+         <segment>
+            <source>Apply</source>
+ 			<target>Aplicar</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.assignedToMe">
+         <segment>
+            <source>Show only steps assigned to me.</source>
+            <target>Mostrar apenas as etapas atribuídas a mim.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.clear">
+         <segment>
+            <source>Clear</source>
+            <target>Claro</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.disable">
+         <segment>
+            <source>Disable filter so I can edit rows.</source>
+            <target>Desative o filtro para que eu possa editar linhas.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.hideDone">
+         <segment>
+            <source>Hide 'Done' steps.</source>
+            <target>Ocultar etapas 'Concluídas'.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.step">
+         <segment>
+            <source>Workflow Step</source>
+            <target>Langkah alur kerja</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.minimum">
+         <segment>
+            <source>Minimum</source>
+            <target>Minimum</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.maximum">
+         <segment>
+            <source>Maximum</source>
+            <target>Maksimum</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.saveFilter">
+         <segment>
+            <source>Save as project default</source>
+            <target>Simpan sebagai default proyek</target>
+         </segment>
+      </unit>
 		<unit id="sectionResources.close">
 			<segment>
 				<source>Close</source>
@@ -4393,6 +4291,12 @@
 				<target>Audácia de lançamento</target>
 			</segment>
 		</unit>
+      <unit id="shared.loading">
+         <segment>
+            <source>Loading...</source>
+            <target>Carregando...</target>
+         </segment>
+      </unit>
 		<unit id="shared.mediaAttached">
 			<segment>
 				<source>Audio Attached</source>
@@ -4441,12 +4345,6 @@
 				<target>Observador</target>
 			</segment>
 		</unit>
-		<unit id="shared.owner">
-			<segment>
-				<source>Owner</source>
-				<target/>
-			</segment>
-		</unit>
 		<unit id="shared.paratextchapterSpan">
 			<segment>
 				<source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
@@ -4463,12 +4361,6 @@
 			<segment>
 				<source>Peer Reviewer</source>
 				<target>Revisor de pares</target>
-			</segment>
-		</unit>
-		<unit id="shared.projectrole">
-			<segment>
-				<source>Project Role</source>
-				<target>Papel do projeto</target>
 			</segment>
 		</unit>
 		<unit id="shared.recordingInProgress">
@@ -5383,6 +5275,12 @@
 				<target>Áudio mais recente</target>
 			</segment>
 		</unit>
+        <unit id="transcriptionTab.latestAudioElan">
+			<segment>
+				<source>Latest Audio + Transcription</source>
+				<target>Áudio mais recente + Transcrição</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.noData">
 			<segment>
 				<source>No {0} Data.</source>
@@ -5589,16 +5487,28 @@
 		</unit>
 		<unit id="viewMode.audioProject">
 			<segment>
-				<source>Audio Project</source>
-				<target/>
+				<source>Audio Project Setup</source>
+				<target>Configuração de Projeto de Áudio</target>
 			</segment>
 		</unit>
-		<unit id="viewMode.transcribe">
+		<unit id="viewMode.home">
 			<segment>
-				<source>Transcribe</source>
+				<source>Home</source>
 				<target/>
 			</segment>
 		</unit>
+      <unit id="viewMode.work">
+         <segment>
+            <source>Work</source>
+            <target>Trabalhar</target>
+         </segment>
+      </unit>
+      <unit id="viewMode.gotowork">
+         <segment>
+            <source>Go to Work</source>
+            <target>Ir trabalhar</target>
+         </segment>
+      </unit>
 		<unit id="vProject.add">
 			<segment>
 				<source>Add</source>
@@ -6283,6 +6193,12 @@
 				<target>Adicionar/Remover Limite [Clique Duplo/{0}]</target>
 			</segment>
 		</unit>
+      <unit id="wsAudioPlayerSegment.teamDefault">
+         <segment>
+            <source>Save as team default</source>
+            <target>Salvar como padrão da equipe</target>
+         </segment>
+      </unit>
 		<unit id="wsAudioPlayerZoom.fitToWidth">
 			<segment>
 				<source>Fit to Width</source>
