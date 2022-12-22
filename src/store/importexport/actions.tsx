@@ -430,12 +430,20 @@ export const importProjectToElectron =
     const memory = coordinator.getSource('memory') as Memory;
     const backup = coordinator.getSource('backup') as IndexedDBSource;
 
+    const importJson = async (
+      ser: JSONAPISerializerCustom,
+      file: string,
+      folder?: string
+    ) => {
+      if (folder) {
+        file = path.join(folder, file);
+      }
+      const data = (await ipc?.read(file, 'utf-8')) as string;
+      return ser.deserialize(JSON.parse(data) as ResourceDocument);
+    };
+
     async function getProjectFromFile(ser: JSONAPISerializerCustom) {
-      var file = path.join(filepath, 'D_projects.json');
-      var data = await ipc?.read(file);
-      var json = ser.deserialize(
-        JSON.parse(data.toString()) as ResourceDocument
-      );
+      let json = await importJson(ser, 'D_projects.json', filepath);
       var project: any;
       if (Array.isArray(json.data)) project = json.data[0];
       else project = json.data;
@@ -636,10 +644,7 @@ export const importProjectToElectron =
       ser: JSONAPISerializerCustom,
       dataDate: string
     ) {
-      const data = await ipc?.read(file);
-      const json = ser.deserialize(
-        JSON.parse(data.toString()) as ResourceDocument
-      );
+      let json = await importJson(ser, file);
       var project: Project | undefined = undefined;
       if (!Array.isArray(json.data)) json.data = [json.data];
       for (let n = 0; n < json.data.length; n += 1) {

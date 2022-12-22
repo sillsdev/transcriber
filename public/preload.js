@@ -61,6 +61,8 @@ contextBridge.exposeInMainWorld('electron', {
   exeCmd: async (cmd, opts) => await ipcRenderer.invoke('exeCmd', cmd, opts),
   zipOpen: async (fullPath) => await ipcRenderer.invoke('zipOpen', fullPath),
   zipGetEntries: async (zip) => await ipcRenderer.invoke('zipGetEntries', zip),
+  zipReadText: async (zip, name) =>
+    await ipcRenderer.invoke('zipReadText', zip, name),
   zipAddFile: async (zip, name, data, comment) =>
     await ipcRenderer.invoke('zipAddFile', zip, name, data, comment),
   zipAddLocalFile: async (zip, full, folder, base) =>

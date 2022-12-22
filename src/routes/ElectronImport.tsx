@@ -67,6 +67,12 @@ export const useElectronImport = () => {
   };
   //var importStatus = useSelector(importStatusSelector, shallowEqual);
 
+  const getData = async (zip: AdmZip, name: string) =>
+    ((await ipc?.zipReadText(zip, name)) as string).replace(
+      /(\r\n|\n|\r)/gm,
+      ''
+    );
+
   const getElectronImportData = async (
     project: string
   ): Promise<IImportData> => {
@@ -82,11 +88,10 @@ export const useElectronImport = () => {
     var exportTime: Moment = moment.utc();
     var exportDate = '';
     var version = '3';
-    var zipEntries = await ipc?.getEntries(zip);
-    await ipc?.zipClose(zip);
+    var zipEntries = JSON.parse(await ipc?.zipGetEntries(zip));
     for (let entry of zipEntries) {
       if (entry.entryName === 'SILTranscriber') {
-        exportDate = entry.getData().toString('utf8');
+        exportDate = await getData(zip, 'SILTranscriber');
         exportTime = moment.utc(exportDate, 'YYYY-MM-DDTHH:MM:SS.SSSSSSSZ');
         valid = true;
         if (isOfflinePtf.current) break;
@@ -94,7 +99,7 @@ export const useElectronImport = () => {
         isOfflinePtf.current = true;
         if (valid) break;
       } else if (entry.entryName === 'Version') {
-        version = entry.getData().toString('utf8');
+        version = await getData(zip, 'Version');
       }
     }
     if (!valid) {
@@ -135,7 +140,7 @@ export const useElectronImport = () => {
       });
     }
     var importProjs = JSON.parse(
-      await ipc?.zipReadText('data/D_projects.json')
+      await ipc?.zipReadText(zip, 'data/D_projects.json')
     );
     var importProj: any;
     if (
@@ -250,6 +255,11 @@ export const useElectronImport = () => {
     return ret;
   };
 
+  const getFileText = async (folder: string, name: string) => {
+    const value = (await ipc?.read(path.join(folder, name), 'utf-8')) as string;
+    return value.replace(/(\r\n|\n|\r)/gm, '');
+  };
+
   const handleElectronImport = async (
     importProjectToElectron: (props: ImportProjectToElectronProps) => void,
     reportError: (ex: IApiError) => void
@@ -273,14 +283,12 @@ export const useElectronImport = () => {
         if (err.errno !== -4058)
           reportError(orbitInfo(err, `Delete failed for ${where}`));
       }
-      zipRef.current.extractAllTo(where, true);
+      await ipc?.zipExtract(zipRef.current, where, true);
       //get the exported date from SILTranscriber file
-      var dataDate = await ipc
-        ?.readFile(path.join(where, 'SILTranscriber'))
-        .replace(/(\r\n|\n|\r)/gm, '');
+      var dataDate = await getFileText(where, 'SILTranscriber');
       var versionstr = '3';
       if (await ipc?.exists(path.join(where, 'Version')))
-        versionstr = ipc?.read(path.join(where, 'Version'), 'utf-8');
+        versionstr = await getFileText(where, 'Version');
       var version = parseInt(versionstr);
       importProjectToElectron({
         filepath: path.join(where, 'data'),
