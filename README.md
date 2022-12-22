@@ -1,6 +1,6 @@
 # web-transcriber-admin
 
-This project builds a front end web app and an electron app for desktop use. It was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and [craco](https://github.com/wwlib/cra-craco-electron-example) which enables file access using create-react-app. `Create-react-app` will manage dependency updates and web packaging.
+This project builds a front end web app and an electron app for desktop use. It was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Installation
 
@@ -8,10 +8,9 @@ Clone the app, go to the project directory, and execute:
 
 1. `npm install`
 2. `npm run stamp` _# this creates a file with the date to display in the version_
-3. If this is the first time installing, you will want to `amplify init` (see Amplify below)
 4. Get a copy of the `env-files-transcriber.zip` from a team member and unzip it into the `env-config` folder (see configuration below)
 5. Optionally rebuild the localization `string.json` file (see below)
-6. `npm run build`
+6. `npm run build` (web build)
 
 ### Visual Studio for (`strings.json` file)
 
@@ -24,14 +23,6 @@ You can use Visual Studio to build `updateLocalization.sln` (in the localization
 > NB. You may want ot download the strings from the [crowdin site](https://crowdin.com/project/sil-transcriber) and unzip the file in the localization folder before executing this command to get all the latest localization strings included.
 
 ## Running Locally
-
-### Amplify
-
-Install _amplify-cli_:
-
-- `npm install -g @aws-amplify/cli`
-
-The deployment configuration commands (e.g., `npm run dev`) require a configured _amplify_ environment. (See also: `npm run deploySetup`.) This will require an _AWS_ keyset and two configuration files:
 
 ```
 mkdir ~/.aws
@@ -62,19 +53,6 @@ output=json
 region=us-east-1
 output=json
 ```
-
-Initialize Amplify:
-
-- `amplify init`
-
-Follow the prompts as appropriate. If the `~/.aws` folder is configured correctly, you'll eventually be presented with these two options:
-
-```
-? Do you want to use an AWS profile? [Yes]
-? Please choose the profile you want to use [transcriber]
-```
-
->NB: After running `amplify init` it is wise to check out any files it has changed in your repo. It does not need to change the files that are checked in.
 
 ### Configuration
 
@@ -126,13 +104,14 @@ Example _env-config/auth0-variables.dev.json_
   "auth0Domain": "(url of auth0 domain)",
   "desktopId": "(auth0 desktop extension -- native client id)",
   "webClientId": "(auth0 spa client id)"
+  "authProviders" "urls needed for desktop auth"
 }
 ```
 ### Generate dev configuration files
 
 Having created or obtained the _.env.\*_ files listed above, generate the environment-appropriate _.env.development.local_, _.env.local_ and auth0-variables.json files by executing the following:
 
-- `npm run dev`
+- `npm run devs`
 
 > NB. You can use _qa_ or _prod_ in place of _dev_ in the command above depending on which environment you want to test with although localhost is only setup by default on the _dev_ environment as a valid source and callback. If you want to add it to the qa channel or the prod channel, you will need to add it in the auth0 console before using it with `npm start`
 
@@ -144,11 +123,7 @@ Having created or obtained the _.env.\*_ files listed above, generate the enviro
 
 ## Deployment
 
-The `npm run dev`, `npm run qa` and `npm run prod` commands configure the app to deploy to _dev_, _qa_, or _prod_ respectively. There are separate urls and separate _AWS S3_ buckets for each of these deployments. Once configuration files have been generated, execute the following to deploy the app:
-
-`npm run deploy`
-
-As with the _dev_ configuration above (see the example _.env.development.local_), _qa_ (quality assuarance) deployment requires _.env.qa.development.local_ and _.env.qa.local_ in the root project directory. As above, the `npm run qa` command will use these two files to over write _.env.development.local_ and _.env.local_ so the `npm run deploy` command will properly deploy to the _qa_ environment.
+The `npm run devs`, `npm run qas` and `npm run prods` commands configure the app to deploy to _dev_, _qa_, or _prod_ respectively. There are separate urls and separate _AWS S3_ buckets for each of these deployments. .
 
 # Electron (Desktop) app
 
@@ -180,14 +155,14 @@ const electronExtension = (BrowserWindow) => {
 module.exports = electronExtension;
 ```
 
-- `npm run electron-dev` _# launches electron in developer mode_
+- `npm run dev` _# launches electron in developer mode_
 
 > NB. This `dev` mode uses two Chrome extensions: [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi) and [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
 
 ## Creating installer
 
-1. `npm run clean` _# remove previous builds_
-2. `npm run electron-pack`
+1. `npm run stamp` _# mark build time_
+2. `npm run pack`
 3. `npm run dist`
 
 The _dist_ command creates a folder in the dist folder with an executable that can be launched directly by clicking on it. it also creates an installer in the _dist_ folder that can be distributed.
