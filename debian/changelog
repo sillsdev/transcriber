@@ -1,3 +1,9 @@
+audio-project-manager (2.16.2.0)  experimental; urgency=high
+
+  * Upgrade Electronjs 22.0 and React 18
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 22 Dec 2022 17:13:00 -0600
+
 audio-project-manager (2.16.1.0)  experimental; urgency=high
 
   * Fix Desktop start
