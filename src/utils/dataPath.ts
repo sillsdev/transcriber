@@ -41,6 +41,7 @@ export const dataPath = (
           decodeURIComponent(fileName)
         );
         break;
+      default:
       case PathType.ZIP:
         localName = path.join(
           homeDir,

@@ -14,6 +14,7 @@ const os = require('os');
 const execa = require('execa');
 const AdmZip = require('adm-zip');
 const downloadFile = require('./downloadFile');
+const generateUUID = require('./generateUUID');
 
 const ipcMethods = () => {
   ipcMain.handle('availSpellLangs', async () => {
@@ -196,47 +197,43 @@ const ipcMethods = () => {
     return JSON.stringify(await execa.command(cmd, opts));
   });
 
-  let admZip = [0]; // valid index is not falsey
+  let admZip = new Map();
   ipcMain.handle('zipOpen', async (event, fullPath) => {
-    const index = admZip.length;
-    admZip.push(fullPath ? new AdmZip(fullPath) : new AdmZip());
+    const index = generateUUID();
+    admZip.set(index, fullPath ? new AdmZip(fullPath) : new AdmZip());
     return index;
   });
 
   ipcMain.handle('zipGetEntries', async (event, zip) => {
-    return admZip[zip].getEntries();
+    return JSON.stringify(admZip.get(zip).getEntries());
   });
 
   ipcMain.handle('zipReadText', async (event, zip, name) => {
-    return admZip[zip].readAsText(name);
+    return admZip.get(zip).readAsText(name);
   });
 
   ipcMain.handle('zipAddFile', async (event, zip, name, data, comment) => {
-    return admZip[zip].addFile(name, data, comment);
+    return admZip.get(zip).addFile(name, data, comment);
   });
 
   ipcMain.handle('zipAddLocal', async (event, zip, full, folder, base) => {
-    return admZip[zip].addLocalFile(full, folder, base);
+    return admZip.get(zip).addLocalFile(full, folder, base);
   });
 
   ipcMain.handle('zipToBuffer', async (event, zip) => {
-    return admZip[zip].toBuffer();
+    return admZip.get(zip).toBuffer();
   });
 
   ipcMain.handle('zipWrite', async (event, zip, where) => {
-    return admZip[zip].writeZip(where);
+    return admZip.get(zip).writeZip(where);
   });
 
   ipcMain.handle('zipExtract', async (event, zip, folder, replace) => {
-    return admZip[zip].extractAllTo(folder, replace);
+    return admZip.get(zip).extractAllTo(folder, replace);
   });
 
   ipcMain.handle('zipClose', async (event, zip) => {
-    if (admZip.length - 1 === zip) {
-      admZip.pop();
-    } else {
-      admZip = admZip.slice(0, zip).concat(admZip.slice(zip + 1));
-    }
+    admZip.delete(zip);
   });
 
   let isLogingIn = false;

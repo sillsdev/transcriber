@@ -111,7 +111,7 @@ app.whenReady().then(() => {
           'Content-Security-Policy': [
             `base-uri 'self' https://${auth0Domain} ${authProviders}`,
             "object-src 'none'",
-            `script-src 'unsafe-inline' 'self' ${authProviders}`, //'nonce-tVZvi9VxJuouaojo+5nChg=='
+            `script-src 'unsafe-inline' 'self' 'unsafe-eval' ${authProviders}`, //'nonce-tVZvi9VxJuouaojo+5nChg=='
             `style-src 'unsafe-inline' 'self' https://fonts.googleapis.com ${authProviders}`,
             "frame-src 'none'",
             "worker-src 'self'",
@@ -131,7 +131,7 @@ app.whenReady().then(() => {
           'Content-Security-Policy': [
             `base-uri 'self' https://${auth0Domain} ${authProviders}`,
             "object-src 'none'",
-            `script-src 'unsafe-inline' 'self' ${authProviders}`, //'nonce-tVZvi9VxJuouaojo+5nChg=='
+            `script-src 'unsafe-inline' 'self' 'unsafe-eval' ${authProviders}`, //'nonce-tVZvi9VxJuouaojo+5nChg=='
             `style-src 'unsafe-inline' 'self' https://fonts.googleapis.com ${authProviders}`,
             "frame-src 'none'",
             "worker-src 'self'",
