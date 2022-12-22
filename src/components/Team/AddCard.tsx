@@ -22,12 +22,13 @@ import {
   useOrganizedBy,
   findRecord,
   related,
+  usePlan,
 } from '../../crud';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
 import NewProjectGrid from './NewProjectGrid';
-import { restoreScroll } from '../../utils';
+import { restoreScroll, useHome } from '../../utils';
 
 const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   minWidth: 275,
@@ -72,6 +73,7 @@ export const AddCard = (props: IProps) => {
     bookSuggestions,
     teamProjects,
     personalProjects,
+    setProjectParams,
   } = ctx.state;
   const t = cardStrings;
   const { showMessage } = useSnackBar();
@@ -100,6 +102,8 @@ export const AddCard = (props: IProps) => {
   const [forceType, setForceType] = React.useState(false);
   const [recordAudio, setRecordAudio] = React.useState(false);
   const speakerRef = useRef<string>();
+  const { leaveHome } = useHome();
+  const { getPlan } = usePlan();
 
   useEffect(() => {
     if (localStorage.getItem('autoaddProject') !== null && team === null) {
@@ -219,7 +223,13 @@ export const AddCard = (props: IProps) => {
         },
       } as VProject,
       team
-    );
+    ).then((planId) => {
+      const planRec = getPlan(planId);
+      if (planRec) {
+        setProjectParams(planRec);
+        leaveHome();
+      }
+    });
   };
 
   const nextName = (newName: string) => {
@@ -306,6 +316,7 @@ export const AddCard = (props: IProps) => {
       // Allow time for last check mark
       setInProgress(false);
       stepRef.current = 0;
+      leaveHome();
       setView(`/plan/${remoteId('plan', planId, memory.keyMap) || planId}/0`);
     }, 1000);
   };
