@@ -144,8 +144,9 @@ export const nextUpload =
     }
     if (offlineOnly) {
       try {
-        var filename = writeFileLocal(files[n]);
-        if (cb) cb(n, true, { ...record, audioUrl: filename });
+        writeFileLocal(files[n]).then((filename: string) => {
+          if (cb) cb(n, true, { ...record, audioUrl: filename });
+        });
       } catch (err: any) {
         logError(
           Severity.error,
