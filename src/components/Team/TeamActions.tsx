@@ -7,7 +7,7 @@ import { TeamContext } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
 import ImportTab from '../ImportTab';
 import { AltButton } from '../../control';
-import { useNavigate } from 'react-router-dom';
+import { useMyNavigate } from '../../utils';
 
 const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
   padding: theme.spacing(2),
@@ -23,7 +23,7 @@ const TeamActions = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const ctx = React.useContext(TeamContext);
-  const navigate = useNavigate();
+  const navigate = useMyNavigate();
   const { teamCreate, cardStrings, isDeleting } = ctx.state;
   const t = cardStrings;
 

@@ -64,3 +64,4 @@ export * from './startEnd';
 export * from './rememberCurrentPassage';
 export * from './onlyUnique';
 export * from './useHome';
+export * from './useMyNavigate';

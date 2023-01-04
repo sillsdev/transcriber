@@ -21,10 +21,8 @@ export const useUrlContext = () => {
       const projectId = related(planRec, 'project');
       const team = vProject(planRec);
       const orgId = related(team, 'organization');
-      if (orgId !== organization) {
-        setOrganization(orgId);
-        setMyOrgRole(orgId);
-      }
+      if (orgId !== organization) setOrganization(orgId);
+      setMyOrgRole(orgId); //do this even if the org hasn't changed because this gets reset more often
       if (projectId !== project) setProject(projectId);
       setProjectType(projectId);
       return projectId;

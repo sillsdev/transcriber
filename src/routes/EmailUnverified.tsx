@@ -4,14 +4,13 @@ import JwtDecode from 'jwt-decode';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IToken, IEmailUnverifiedStrings } from '../model';
 import { Typography, Grid, styled, Box, BoxProps } from '@mui/material';
-import { useNavigate } from 'react-router';
 import { API_CONFIG, isElectron } from '../api-variable';
 import Axios from 'axios';
 import { TokenContext } from '../context/TokenProvider';
 import { doLogout, goOnline } from './Access';
 import { ActionRow, PriButton } from '../control';
 import { emailUnverifiedSelector } from '../selector';
-import { useMounted } from '../utils';
+import { useMounted, useMyNavigate } from '../utils';
 
 const FullScreen = styled(Box)<BoxProps>(() => ({
   display: 'flex',
@@ -25,7 +24,7 @@ interface IProps {}
 
 export const EmailUnverified = (props: IProps) => {
   const isMounted = useMounted('unverfied');
-  const navigate = useNavigate();
+  const navigate = useMyNavigate();
   const { getAccessTokenSilently, user } = useAuth0();
   const { accessToken, setAuthSession } = useContext(TokenContext).state;
   const [view, setView] = useState('');

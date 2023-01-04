@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { To, useNavigate } from 'react-router-dom';
 import { useGlobal } from 'reactn';
 
 export const useHome = () => {
@@ -6,7 +6,7 @@ export const useHome = () => {
   const [, setProjType] = useGlobal('projType');
   const [, setPlan] = useGlobal('plan');
   const [, setOrgRole] = useGlobal('orgRole');
-  const [, setHome] = useGlobal('home');
+  const [home, setHome] = useGlobal('home');
   const navigate = useNavigate();
 
   const resetProject = () => {
@@ -20,9 +20,10 @@ export const useHome = () => {
     setHome(true);
     navigate('/team');
   };
-  const leaveHome = () => {
-    //assume all necessary project stuff is set;
-    setHome(false);
+
+  const checkHome = (to: To) => {
+    var gohome = !to || to === '/' || to === '/team';
+    if (home !== gohome) setHome(gohome);
   };
-  return { goHome, leaveHome, resetProject };
+  return { goHome, checkHome, resetProject };
 };

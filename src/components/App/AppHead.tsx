@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'reactn';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { IState, IMainStrings, IViewModeStrings } from '../../model';
 import { connect, shallowEqual, useSelector } from 'react-redux';
 import localStrings from '../../selector/localize';
@@ -35,6 +35,7 @@ import {
   Severity,
   infoMsg,
   exitApp,
+  useMyNavigate,
 } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
 import { usePlan, useLoadStatic } from '../../crud';
@@ -65,7 +66,7 @@ const ProjectName = ({ setView, switchTo }: INameProps) => {
   const { getPlanName } = usePlan();
   const [plan] = useGlobal('plan');
   const { prjId } = useParams();
-  const navigate = useNavigate();
+  const navigate = useMyNavigate();
   const { goHome } = useHome();
   const t: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
 
@@ -120,7 +121,7 @@ interface IProps extends IStateProps {
 export const AppHead = (props: IProps) => {
   const { resetRequests, switchTo, t, orbitStatus, orbitErrorMsg } = props;
   const { pathname } = useLocation();
-  const navigate = useNavigate();
+  const navigate = useMyNavigate();
   const [home] = useGlobal('home');
   const [orgRole] = useGlobal('orgRole');
   const [errorReporter] = useGlobal('errorReporter');

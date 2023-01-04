@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { connect, shallowEqual, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -24,7 +24,13 @@ import {
   TypographyProps,
   BoxProps,
 } from '@mui/material';
-import { useCheckOnline, forceLogin, waitForIt, useHome } from '../utils';
+import {
+  useCheckOnline,
+  forceLogin,
+  waitForIt,
+  useHome,
+  useMyNavigate,
+} from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
@@ -140,7 +146,7 @@ export function Access(
     sections,
   } = props;
   const { pathname } = useLocation();
-  const navigate = useNavigate();
+  const navigate = useMyNavigate();
   const { setLanguage } = props;
   const { loginWithRedirect, isAuthenticated } = useAuth0();
   const [offline, setOffline] = useGlobal('offline');
