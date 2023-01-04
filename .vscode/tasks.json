@@ -24,7 +24,7 @@
     {
       "label": "DebugMode",
       "type": "npm",
-      "script": "electron-debug",
+      "script": "start-electron",
       "options": {
         "cwd": "${workspaceFolder}"
       },

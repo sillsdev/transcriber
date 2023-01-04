@@ -78,6 +78,7 @@
     "clean": "node env-config/noHomepage.js && rimraf build dist converage",
     "stamp": "node env-config/writeDate.js",
     "start": "react-scripts start",
+    "start-electron": "node env-config/edPackage.js && env-cmd -f .env.electron npm start",
     "build": "npm run clean && react-scripts build",
     "test": "react-scripts test",
     "eject": "DON'T eject",
