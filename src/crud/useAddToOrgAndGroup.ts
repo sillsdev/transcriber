@@ -44,7 +44,7 @@ export const useAddToOrgAndGroup = () => {
           t,
           groupMbr,
           'group',
-          'role',
+          'group',
           allUsersGroup?.id
         ),
         ...ReplaceRelatedRecord(t, groupMbr, 'role', 'role', memberId),
