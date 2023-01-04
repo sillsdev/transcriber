@@ -98,7 +98,7 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
   const { setMyOrgRole } = useRole();
   const [, setProject] = useGlobal('project');
   const tokenCtx = useContext(TokenContext);
-  const { accessToken, profile, isAuthenticated } = tokenCtx.state;
+  const { accessToken, profile, authenticated } = tokenCtx.state;
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [, setCompleted] = useGlobal('progress');
   const { showMessage } = useSnackBar();
@@ -186,7 +186,7 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
   };
   useEffect(() => {
     // console.clear();
-    if (!offline && !isAuthenticated()) return;
+    if (!offline && !authenticated()) return;
     if (!offline) {
       const decodedToken = jwtDecode(accessToken || '') as IToken;
       setExpireAt(decodedToken.exp);
@@ -346,7 +346,7 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
     setView('Logout');
   };
 
-  if (!offline && !isAuthenticated()) navigate('/');
+  if (!offline && !authenticated()) navigate('/');
   if (view !== '') navigate(view);
 
   return (

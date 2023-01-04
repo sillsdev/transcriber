@@ -12,13 +12,13 @@ export function PrivateRoute({ el }: IProps) {
   const [offline] = useGlobal('offline');
   const { pathname } = useLocation();
   const navigate = useMyNavigate();
-  const { isAuthenticated } = useContext(TokenContext).state;
+  const { authenticated } = useContext(TokenContext).state;
 
   if (typeof pathname === 'string' && pathname !== '/loading')
     localStorage.setItem(LocalKey.deeplink, pathname);
   if (!pathname?.endsWith('null'))
     localStorage.setItem(localUserKey(LocalKey.url), pathname);
-  if (!offline && !isAuthenticated)
+  if (!offline && !authenticated())
     navigate('/', { state: { from: pathname } });
 
   return el;

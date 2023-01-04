@@ -20,10 +20,13 @@ export const useHome = () => {
     setHome(true);
     navigate('/team');
   };
-
+  const leaveHome = () => {
+    setHome(false);
+  };
   const checkHome = (to: To) => {
     var gohome = !to || to === '/' || to === '/team';
     if (home !== gohome) setHome(gohome);
   };
-  return { goHome, checkHome, resetProject };
+
+  return { goHome, leaveHome, checkHome, resetProject };
 };
