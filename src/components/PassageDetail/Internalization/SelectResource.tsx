@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import {
   Resource,
   ISharedStrings,
@@ -55,7 +55,7 @@ export interface CatMap {
 }
 
 interface IProps {
-  onSelect?: (resources: Resource[], catMap: CatMap) => void;
+  onSelect?: (resources: Resource[], catMap: CatMap) => Promise<void>;
   onOpen?: (open: boolean) => void;
 }
 
@@ -71,6 +71,7 @@ export const SelectResource = (props: IProps) => {
     shallowEqual
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const selecting = useRef(false);
 
   const select = (i: number, noToggle?: boolean) => {
     let newSelected = [...selected];
@@ -87,13 +88,17 @@ export const SelectResource = (props: IProps) => {
     select(i);
   };
 
-  const handleSelect = () => {
-    onSelect &&
-      onSelect(
-        resource.filter((r, i) => selected.indexOf(i) !== -1),
-        catMap
-      );
-    onOpen && onOpen(false);
+  const handleSelect = async () => {
+    if (!selecting.current) {
+      selecting.current = true;
+      onSelect &&
+        (await onSelect(
+          resource.filter((r, i) => selected.indexOf(i) !== -1),
+          catMap
+        ));
+      selecting.current = false;
+      onOpen && onOpen(false);
+    }
   };
 
   const handleCancel = () => {
@@ -139,7 +144,7 @@ export const SelectResource = (props: IProps) => {
         <PriButton
           id="res-selected"
           onClick={handleSelect}
-          disabled={selected.length === 0}
+          disabled={selected.length === 0 || selecting.current}
         >
           {t.link}
         </PriButton>
