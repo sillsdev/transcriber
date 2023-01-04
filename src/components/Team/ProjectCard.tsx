@@ -35,7 +35,6 @@ import {
 } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
 import OfflineIcon from '@mui/icons-material/OfflinePin';
-import { useHome } from '../../utils';
 
 const ProjectCardRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -113,11 +112,9 @@ export const ProjectCard = (props: IProps) => {
   const t = cardStrings;
   const tpb = projButtonStrings;
   const { userIsOrgAdmin } = useRole();
-  const { leaveHome } = useHome();
 
   const handleSelect = (project: VProject) => () => {
     loadProject(project);
-    leaveHome();
   };
 
   useEffect(() => {

@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from 'react';
 import Axios from 'axios';
 import { useGlobal } from 'reactn';
 import { TokenContext } from '../context/TokenProvider';
-import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -29,6 +28,7 @@ import {
   LocalKey,
   currentDateTime,
   forceLogin,
+  useMyNavigate,
 } from '../utils';
 import {
   related,
@@ -102,7 +102,7 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [, setCompleted] = useGlobal('progress');
   const { showMessage } = useSnackBar();
-  const navigate = useNavigate();
+  const navigate = useMyNavigate();
   const getOfflineProject = useOfflnProjRead();
   const { getPlan } = usePlan();
   const [importOpen, setImportOpen] = useState(false);
@@ -237,14 +237,10 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
 
   const getGotoUrl = () => {
     let fromUrl =
-      localStorage.getItem(localUserKey(LocalKey.deeplink)) ??
+      localStorage.getItem(LocalKey.deeplink) ??
       localStorage.getItem(localUserKey(LocalKey.url));
-    localStorage.removeItem(localUserKey(LocalKey.deeplink));
-    if (fromUrl) {
-      localStorage.removeItem(localUserKey(LocalKey.deeplink));
-      return fromUrl;
-    }
-    return localStorage.getItem(localUserKey(LocalKey.deeplink));
+    localStorage.removeItem(LocalKey.deeplink);
+    return fromUrl;
   };
   const LoadComplete = () => {
     setCompleted(100);

@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { LocalKey, localUserKey } from '../utils/localUserKey';
+import { useMyNavigate } from '../utils';
 
 interface IProps {
   to: string;
 }
 
 export const StickyRedirect = ({ to }: IProps) => {
-  const navigate = useNavigate();
+  const navigate = useMyNavigate();
   const { pathname } = useLocation();
   const [reporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');

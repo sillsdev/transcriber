@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { parseQuery } from '../utils/parseQuery';
 import { IState, IWelcomeStrings, User, OfflineProject } from '../model';
 import { Record } from '@orbit/data';
 import * as action from '../store';
 import { Typography, Grid, Box, BoxProps, SxProps } from '@mui/material';
-import { useCheckOnline, localeDefault } from '../utils';
+import { useCheckOnline, localeDefault, useMyNavigate } from '../utils';
 import { isElectron } from '../api-variable';
 import AppHead from '../components/App/AppHead';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -100,7 +100,7 @@ export function Welcome(props: IProps) {
   const importComplete = action.importComplete;
   const t: IWelcomeStrings = useSelector(welcomeSelector, shallowEqual);
   const { search } = useLocation();
-  const navigate = useNavigate();
+  const navigate = useMyNavigate();
   const offlineSetup = useOfflineSetup();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_busy, setBusy] = useGlobal('importexportBusy');

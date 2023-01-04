@@ -53,8 +53,8 @@ import {
   localeDefault,
   getParatextDataPath,
   waitForIt,
+  useMyNavigate,
 } from '../utils';
-import { useNavigate } from 'react-router';
 import moment from 'moment-timezone';
 import {
   AddRecord,
@@ -152,7 +152,7 @@ export function Profile(props: IProps) {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
-  const navigate = useNavigate();
+  const navigate = useMyNavigate();
   const { accessToken } = useContext(TokenContext).state;
   const { getUserRec } = useUser();
   const { getMbrRoleRec, userIsAdmin } = useRole();
@@ -394,9 +394,9 @@ export function Profile(props: IProps) {
         message = message2.replace('{0}', defTimezone);
       }
       setConfirmCancel(message);
-    } else handleCancelConrimed();
+    } else handleCancelConfirmed();
   };
-  const handleCancelConrimed = () => {
+  const handleCancelConfirmed = () => {
     setConfirmCancel(undefined);
     toolChanged(toolId, false);
     if (editId) {
@@ -805,7 +805,7 @@ export function Profile(props: IProps) {
         {confirmCancel && (
           <Confirm
             text="Discard unsaved data?"
-            yesResponse={handleCancelConrimed}
+            yesResponse={handleCancelConfirmed}
             noResponse={handleCancelAborted}
           />
         )}

@@ -7,7 +7,6 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import ErrorBoundary from './hoc/ErrorBoundary';
-// import { useNavigate } from 'react-router-dom';
 import {
   DataProvider as DataProviderBar,
   DataProviderProps,
@@ -135,8 +134,6 @@ const TokenChecked = () => (
 );
 
 const AuthApp = () => {
-  // const navigate = useNavigate();
-
   const onRedirectingCallbck = (appState?: { returnTo?: string }) => {
     // navigate(
     //   appState && appState.returnTo

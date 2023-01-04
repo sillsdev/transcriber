@@ -10,8 +10,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { TokenContext } from '../context/TokenProvider';
 import { isElectron } from '../api-variable';
-import { useNavigate } from 'react-router-dom';
-import { localeDefault } from '../utils';
+import { localeDefault, useMyNavigate } from '../utils';
 import { useGlobal } from 'reactn';
 import { GrowingSpacer } from '../control';
 import { useLogoutResets } from '../utils/useLogoutResets';
@@ -28,7 +27,7 @@ interface IProps {}
 export function Logout(props: IProps & IDispatchProps) {
   const { logout } = useAuth0();
   const { pathname } = useLocation();
-  const navigate = useNavigate();
+  const navigate = useMyNavigate();
   const curPath = useRef('');
   const { fetchLocalization, setLanguage } = props;
   const [user] = useGlobal('user');

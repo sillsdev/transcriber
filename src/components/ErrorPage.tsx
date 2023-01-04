@@ -11,13 +11,13 @@ import {
   styled,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { logError, Severity, forceLogin } from '../utils';
+import { logError, Severity, forceLogin, useMyNavigate } from '../utils';
 import { PriButton } from '../control';
 import { TokenContext } from '../context/TokenProvider';
 import { mainSelector } from '../selector';
 import { useGlobal } from 'reactn';
 import JSONAPISource from '@orbit/jsonapi';
-import { useNavigate, useRouteError } from 'react-router-dom';
+import { useRouteError } from 'react-router-dom';
 import { isElectron } from '../api-variable';
 import { useLogoutResets } from '../utils/useLogoutResets';
 
@@ -168,7 +168,7 @@ export const ErrorPage = () => {
   const logoutRef = useRef<any>();
   const logoutResets = useLogoutResets();
   const [view, setView] = useState('');
-  const navigate = useNavigate();
+  const navigate = useMyNavigate();
 
   const logout = async () => {
     const wasOfflineOnly = offlineOnly;

@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { TokenContext } from '../context/TokenProvider';
-import { LocalKey, localUserKey } from '../utils';
+import { LocalKey, localUserKey, useMyNavigate } from '../utils';
 
 interface IProps {
   el: JSX.Element;
@@ -11,11 +11,11 @@ interface IProps {
 export function PrivateRoute({ el }: IProps) {
   const [offline] = useGlobal('offline');
   const { pathname } = useLocation();
-  const navigate = useNavigate();
+  const navigate = useMyNavigate();
   const { isAuthenticated } = useContext(TokenContext).state;
 
   if (typeof pathname === 'string' && pathname !== '/loading')
-    localStorage.setItem(localUserKey(LocalKey.deeplink), pathname);
+    localStorage.setItem(LocalKey.deeplink, pathname);
   if (!pathname?.endsWith('null'))
     localStorage.setItem(localUserKey(LocalKey.url), pathname);
   if (!offline && !isAuthenticated)

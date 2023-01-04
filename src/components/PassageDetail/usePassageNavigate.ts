@@ -1,12 +1,12 @@
 import { useContext } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { LocalKey, localUserKey } from '../../utils';
+import { LocalKey, localUserKey, useMyNavigate } from '../../utils';
 
 export const usePassageNavigate = (cb: () => void) => {
   const { pathname } = useLocation();
-  const navigate = useNavigate();
+  const navigate = useMyNavigate();
   const { setCurrentStep } = usePassageDetailContext();
   const { checkSavedFn } = useContext(UnsavedContext).state;
 
