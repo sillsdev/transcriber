@@ -95,10 +95,10 @@ export const setAudacityPref = async (fullName: string) => {
   if (tmp) pos = cleanContent.indexOf(tmp[0]) + tmp[0].length;
   const passContent =
     cleanContent.slice(0, pos) +
-    setFolder('Save', folder) +
-    setFolder('Open', folder) +
-    setFolder('Import', ioFolder) +
-    setFolder('Export', ioFolder) +
+    (await setFolder('Save', folder)) +
+    (await setFolder('Open', folder)) +
+    (await setFolder('Import', ioFolder)) +
+    (await setFolder('Export', ioFolder)) +
     cleanContent.slice(pos);
   resetAudacityPref(prefName, passContent);
   return beforeContent;

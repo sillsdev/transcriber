@@ -282,6 +282,10 @@ function AudacityManager(props: IProps) {
   }, []);
 
   React.useEffect(() => {
+    if (speaker) handleRights(true);
+  }, [speaker]);
+
+  React.useEffect(() => {
     (async () => {
       if (name) {
         setExists(await ipc?.exists(name));
