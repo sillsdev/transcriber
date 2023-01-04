@@ -274,8 +274,9 @@ export const getLocalProjects =
       type: PROJECTS_PENDING,
     });
     if (ptPath === '') return;
-    let pts = localProjects(ptPath, languageTag);
-    dispatch({ payload: pts, type: PROJECTS_SUCCESS });
+    localProjects(ptPath, languageTag).then((pts) =>
+      dispatch({ payload: pts, type: PROJECTS_SUCCESS })
+    );
   };
 
 export const resetCount = () => (dispatch: any) => {
