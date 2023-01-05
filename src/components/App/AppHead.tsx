@@ -253,9 +253,10 @@ export const AppHead = (props: IProps) => {
       //are we here from a deeplink?
       if (
         pathname !== '/' &&
-        pathname !== '/access/null' &&
+        !pathname.startsWith('/access') &&
         pathname !== '/loading'
       ) {
+        console.log('pathname', pathname);
         setView('Access');
       }
     }
