@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { useEffect, useGlobal } from 'reactn';
+import React, { useMemo, useEffect } from 'react';
+import { useGlobal } from '../mods/reactn';
 import { connect } from 'react-redux';
 import { IState, IMainStrings, ISharedStrings, User } from '../model';
 import localStrings from '../selector/localize';

@@ -1,6 +1,6 @@
 import { Operation, TransformBuilder } from '@orbit/data';
 import { useDispatch } from 'react-redux';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { findRecord, PermissionName, remoteIdGuid, usePermissions } from '.';
 import {
   MediaFile,

@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { ActivityStates } from '../model';
 import { getVernacularMediaRec, getAllMediaRecs, VernacularTag } from '.';
 export const useTranscription = (

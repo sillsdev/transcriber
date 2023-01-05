@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { Discussion } from '../model';
 import { findRecord, related } from '.';
 

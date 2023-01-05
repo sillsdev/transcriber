@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';

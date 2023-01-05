@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { shallowEqual } from 'react-redux';
 import {
   Role,

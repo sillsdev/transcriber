@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   Section,
@@ -155,6 +155,6 @@ export const useProjectDelete = () => {
     );
     await memory.update(ops);
 
-    setProjectsLoaded(projectsLoaded.filter((p) => p !== projectid));
+    setProjectsLoaded(projectsLoaded.filter((p: string) => p !== projectid));
   };
 };

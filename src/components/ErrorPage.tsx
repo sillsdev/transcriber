@@ -15,7 +15,7 @@ import { logError, Severity, forceLogin, useMyNavigate } from '../utils';
 import { PriButton } from '../control';
 import { TokenContext } from '../context/TokenProvider';
 import { mainSelector } from '../selector';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import JSONAPISource from '@orbit/jsonapi';
 import { useRouteError } from 'react-router-dom';
 import { isElectron } from '../api-variable';

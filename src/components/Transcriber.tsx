@@ -6,7 +6,7 @@ import React, {
   CSSProperties,
   PropsWithChildren,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
@@ -853,7 +853,7 @@ export function Transcriber(
           saving.current = false;
           handleAssign(curState);
         })
-        .catch((err) => {
+        .catch((err: Error) => {
           //so we don't come here...we go to continue/logout
           saveCompleted(toolId, err.message);
           saving.current = false;

@@ -14,7 +14,7 @@ import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { useSelector, shallowEqual } from 'react-redux';
 import { discussionCardSelector } from '../selector';
 import { related } from '../crud';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 
 interface IStateProps {
   ts: ISharedStrings;

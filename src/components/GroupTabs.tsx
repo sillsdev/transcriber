@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { IGroupTabsStrings } from '../model';
 import { AppBar, Tabs, Tab } from '@mui/material';
 import UserTable from '../components/UserTable';

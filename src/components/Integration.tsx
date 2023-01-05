@@ -1,6 +1,6 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import * as actions from '../store';
-import { useGlobal, useState } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { connect, shallowEqual } from 'react-redux';
 import {
   IState,

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../mods/reactn';
 import { Column, TableColumnWidthInfo } from '@devexpress/dx-react-grid';
 import { useSelector, shallowEqual } from 'react-redux';
 import { passageDetailArtifactsSelector } from '../../../selector';

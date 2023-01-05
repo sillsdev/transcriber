@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { shallowEqual, useSelector } from 'react-redux';
 import { PlanContext } from '../../context/PlanContext';
 import { IState, IMediaTabStrings, MediaFile } from '../../model';
 import { Button, Checkbox, FormControlLabel } from '@mui/material';
-import { TransformBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from './VersionDlg';
@@ -134,7 +134,7 @@ export const AudioTable = (props: IProps) => {
     setShowId(id);
   };
   const handleChangeReadyToShare = (id: string) => () => {
-    const mediaRec = memory.cache.query((q) =>
+    const mediaRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'mediafile', id: id })
     ) as MediaFile;
     mediaRec.attributes.readyToShare = !mediaRec.attributes.readyToShare;

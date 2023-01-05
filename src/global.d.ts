@@ -1,4 +1,4 @@
-import 'reactn';
+import './mods/reactn';
 import Coordinator from '@orbit/coordinator';
 import Memory from '@orbit/memory';
 import { AlertSeverity } from './hoc/SnackBar';

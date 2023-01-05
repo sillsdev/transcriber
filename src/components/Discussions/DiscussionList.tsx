@@ -30,7 +30,7 @@ import DiscussionCard, { DiscussionRegion } from './DiscussionCard';
 import BigDialog from '../../hoc/BigDialog';
 import CategoryList, { CatData } from './CategoryList';
 import { withData } from 'react-orbitjs';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { useDiscussionOrg, useOrgDefaults } from '../../crud';
 import FilterMenu, { IFilterState } from './FilterMenu';
 import Confirm from '../AlertDialog';

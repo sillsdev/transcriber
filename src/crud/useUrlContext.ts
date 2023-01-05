@@ -1,5 +1,5 @@
 import { remoteIdGuid } from './remoteId';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { usePlan, useVProjectRead, related, useProjectType, useRole } from '.';
 
 export const useUrlContext = () => {

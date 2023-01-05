@@ -18,10 +18,10 @@ import {
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../hoc/SnackBar';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { cleanFileName } from '../utils';
 import MediaRecord from './MediaRecord';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { UnsavedContext } from '../context/UnsavedContext';
 import Uploader from './Uploader';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
@@ -127,7 +127,7 @@ export function ProvideRights(props: IProps & IRecordProps) {
             rightsHolder: speaker,
           },
         } as IntellectualProperty;
-        await memory.update((t) => [
+        await memory.update((t: TransformBuilder) => [
           ...AddRecord(t, ip, user, memory),
           ...ReplaceRelatedRecord(
             t,

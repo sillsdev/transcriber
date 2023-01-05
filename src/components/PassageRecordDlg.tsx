@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IPassageRecordStrings } from '../model';
 import {

@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { OrgWorkflowStep } from '../model';
 import { usePlanType, useOrgWorkflowSteps, getTool, ToolSlug } from '.';
 

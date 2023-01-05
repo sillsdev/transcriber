@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo, CSSProperties } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { IconButton, Typography, Box, BoxProps, styled } from '@mui/material';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';

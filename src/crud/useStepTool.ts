@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { OrgWorkflowStep } from '../model';
 import { findRecord } from '.';
 

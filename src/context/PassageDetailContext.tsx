@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { useParams } from 'react-router-dom';
 import { shallowEqual } from 'react-redux';
 import {

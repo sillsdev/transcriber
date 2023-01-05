@@ -8,7 +8,7 @@ import ResolveIcon from '@mui/icons-material/Check';
 import ReopenIcon from '@mui/icons-material/Unarchive';
 import LinkIcon from '@mui/icons-material/Link';
 import { StyledMenu, StyledMenuItem } from '../../control';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { discussionMenuSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 

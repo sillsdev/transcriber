@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { SectionPassage, IWorkflow } from '../../model';
 import { TransformBuilder, Operation } from '@orbit/data';
 import JSONAPISource from '@orbit/jsonapi';

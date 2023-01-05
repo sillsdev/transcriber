@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { LocalKey, localUserKey, useHome } from '../utils';
 import { Box } from '@mui/material';
 import AppHead from '../components/App/AppHead';

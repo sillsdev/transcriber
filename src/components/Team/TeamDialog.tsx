@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {

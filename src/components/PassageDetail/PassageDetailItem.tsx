@@ -53,7 +53,7 @@ import DiscussionList from '../Discussions/DiscussionList';
 import MediaPlayer from '../MediaPlayer';
 import MediaRecord from '../MediaRecord';
 import SelectRecording from './SelectRecording';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import Confirm from '../AlertDialog';
 import Uploader from '../Uploader';

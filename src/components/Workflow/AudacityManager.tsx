@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import moment from 'moment';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IAudacityManagerStrings, MediaFile } from '../../model';
@@ -25,7 +25,7 @@ import {
 } from '../../crud';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { debounce } from 'lodash';
-import { RecordIdentity } from '@orbit/data';
+import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import {
   launchAudacity,
   loadBlob,
@@ -111,7 +111,7 @@ function AudacityManager(props: IProps) {
   const getMediaUrl = (mediaId: string) => {
     let mediaUrl = '';
     if (mediaId !== '') {
-      const mediaRec = memory.cache.query((q) =>
+      const mediaRec = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'mediafile', id: mediaId })
       ) as MediaFile;
       mediaUrl = mediaRec?.attributes?.audioUrl || '';
@@ -122,7 +122,7 @@ function AudacityManager(props: IProps) {
   const getMediaUpdated = (mediaId: string) => {
     let mediaUpdated = '';
     if (mediaId !== '') {
-      const mediaRec = memory.cache.query((q) =>
+      const mediaRec = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'mediafile', id: mediaId })
       ) as MediaFile;
       mediaUpdated = mediaRec?.attributes?.dateUpdated || '';

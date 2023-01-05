@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { Project } from '../model';
 import { TransformBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';

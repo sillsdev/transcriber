@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { Operation, RecordIdentity } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import { audacityProjectCreate } from './audacityProjectCreate';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { Box, BoxProps, styled } from '@mui/material';
 import { DialogMode, Organization } from '../../model';
 import TeamDialog from './TeamDialog';

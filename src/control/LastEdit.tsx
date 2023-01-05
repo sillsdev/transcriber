@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { ISharedStrings } from '../model';
 import { dateOrTime } from '../utils';
 import { AltButton } from './AltButton';

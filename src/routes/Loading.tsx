@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import Axios from 'axios';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { TokenContext } from '../context/TokenProvider';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

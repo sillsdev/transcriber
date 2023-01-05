@@ -5,7 +5,7 @@ import React, {
   useMemo,
   PropsWithChildren,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { useLocation, useParams } from 'react-router-dom';
 import { Grid, debounce, Paper, Box, SxProps } from '@mui/material';
 

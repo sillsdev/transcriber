@@ -1,5 +1,5 @@
 import React, { useRef, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import * as actions from '../store';
 import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import { styled } from '@mui/material';

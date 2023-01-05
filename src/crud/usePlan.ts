@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { ISharedStrings, Plan } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import { useSelector, shallowEqual } from 'react-redux';

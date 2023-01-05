@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { TokenContext } from '../context/TokenProvider';
 import { isElectron } from '../api-variable';
 import { localeDefault, useMyNavigate } from '../utils';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { GrowingSpacer } from '../control';
 import { useLogoutResets } from '../utils/useLogoutResets';
 const version = require('../../package.json').version;

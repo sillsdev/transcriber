@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -13,6 +13,7 @@ import DownloadIcon from '@mui/icons-material/GetAppOutlined';
 import { remoteIdGuid, useFetchMediaUrl, MediaSt } from '../crud';
 import { loadBlob, removeExtension } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
+import { QueryBuilder } from '@orbit/data';
 
 const StyledIcon = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   color: theme.palette.primary.light,
@@ -40,7 +41,7 @@ export const AudioDownload = (props: IProps) => {
 
   const handleDownload = () => {
     const id = remoteIdGuid('mediafile', mediaId, memory.keyMap) || mediaId;
-    const mediaRec = memory.cache.query((q) =>
+    const mediaRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'mediafile', id })
     ) as MediaFile;
     const fullName = mediaRec?.attributes?.originalFile || `media-${id}`;

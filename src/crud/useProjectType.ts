@@ -1,5 +1,5 @@
-import { TransformBuilder } from '@orbit/data';
-import { useGlobal } from 'reactn';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { useGlobal } from '../mods/reactn';
 import { related } from '.';
 import { Project, ProjectType, VProject } from '../model';
 import { ReplaceRelatedRecord } from '../model/baseModel';
@@ -19,7 +19,7 @@ export const useProjectType = () => {
     } else pId = related(project, 'project');
     if (!pId) return '';
     try {
-      proj = memory.cache.query((q) =>
+      proj = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'project', id: pId })
       ) as Project;
     } catch (error) {
@@ -34,7 +34,7 @@ export const useProjectType = () => {
     var ptId = related(proj, 'projecttype');
     var pt: ProjectType;
     if (ptId) {
-      pt = memory.cache.query((q) =>
+      pt = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'projecttype', id: ptId })
       ) as ProjectType;
       return pt.attributes.name;
@@ -45,7 +45,7 @@ export const useProjectType = () => {
         errorReporter,
         `missing project type=project${proj.attributes.name}${proj.keys?.remoteId}`
       );
-      var pts = memory.cache.query((q) =>
+      var pts = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('projecttype')
       ) as ProjectType[];
       var online = Boolean(proj.keys?.remoteId);

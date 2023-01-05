@@ -1,5 +1,5 @@
-import React from 'react';
-import { useGlobal, useEffect } from 'reactn';
+import React, { useEffect } from 'react';
+import { useGlobal } from '../mods/reactn';
 import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {

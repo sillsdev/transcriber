@@ -1,8 +1,8 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { ISharedStrings, ActivityStates, MediaFile } from '../model';
 import { orbitErr } from '../utils';
 import * as actions from '../store';
-import { TransformBuilder, Operation } from '@orbit/data';
+import { TransformBuilder, Operation, QueryBuilder } from '@orbit/data';
 import {
   AddPassageStateChangeToOps,
   findRecord,
@@ -43,7 +43,9 @@ export const useMediaAttach = (props: IProps) => {
       if (isVernacular && plan) {
         var media = getMediaInPlans(
           [plan],
-          memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[],
+          memory.cache.query((q: QueryBuilder) =>
+            q.findRecords('mediafile')
+          ) as MediaFile[],
           VernacularTag,
           true
         ).filter((m) => related(m, 'passage') === passage);
@@ -89,7 +91,7 @@ export const useMediaAttach = (props: IProps) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
     const mediaRecId = { type: 'mediafile', id: mediaId };
-    const mediaRec = memory.cache.query((q) =>
+    const mediaRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord(mediaRecId)
     ) as MediaFile;
 

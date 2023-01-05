@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { Grid } from '@mui/material';
 import { TeamContext } from '../../context/TeamContext';
 import { PersonalItem, TeamItem } from '.';

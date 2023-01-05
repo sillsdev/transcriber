@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import Axios from 'axios';
 import { API_CONFIG, isElectron } from '../api-variable';
 import { TokenContext } from '../context/TokenProvider';
@@ -7,6 +7,7 @@ import { remoteIdGuid, remoteId } from '../crud';
 import { dataPath, PathType } from '../utils/dataPath';
 import { MediaFile } from '../model';
 import { infoMsg, logError, Severity } from '../utils';
+import { QueryBuilder } from '@orbit/data';
 const ipc = (window as any)?.electron;
 // See: https://www.smashingmagazine.com/2020/07/custom-react-hook-fetch-cache-data/
 
@@ -113,7 +114,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
       if (isElectron) {
         try {
           if (cancelled()) return;
-          const mediarec = memory.cache.query((q) =>
+          const mediarec = memory.cache.query((q: QueryBuilder) =>
             q.findRecord({
               type: 'mediafile',
               id: state.id,

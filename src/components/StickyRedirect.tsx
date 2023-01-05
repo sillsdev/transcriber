@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { useLocation } from 'react-router-dom';
 import { LocalKey, localUserKey } from '../utils/localUserKey';
 import { useMyNavigate } from '../utils';

@@ -1,5 +1,5 @@
 import { useMemo, useRef, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import {
   findRecord,
   pullPlanMedia,

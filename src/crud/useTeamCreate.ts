@@ -1,4 +1,5 @@
-import { useGlobal, useRef } from 'reactn';
+import { useRef } from 'react';
+import { useGlobal } from '../mods/reactn';
 import {
   Organization,
   OrganizationMembership,

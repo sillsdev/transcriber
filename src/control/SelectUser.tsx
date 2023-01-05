@@ -2,7 +2,7 @@ import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ISharedStrings, IState, OrganizationMembership, User } from '../model';
 import { QueryBuilder } from '@orbit/data';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { withData } from 'react-orbitjs';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import {
   Box,
   Card,
@@ -29,6 +29,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
 import NewProjectGrid from './NewProjectGrid';
 import { restoreScroll } from '../../utils';
+import { TransformBuilder } from '@orbit/data';
 
 const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   minWidth: 275,
@@ -259,7 +260,7 @@ export const AddCard = (props: IProps) => {
             defaultFont: languageRef.current.font,
           },
         } as Project;
-        await memory.update((t) => [
+        await memory.update((t: TransformBuilder) => [
           ...UpdateRecord(t, updProj, user),
           t.replaceAttribute(planRec as Plan, 'name', newName),
         ]);

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { ISharedStrings, IPlanActionsStrings } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import {

@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { useGlobal, useEffect } from 'reactn';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useGlobal } from '../../mods/reactn';
 import {
   Card,
   CardActions,

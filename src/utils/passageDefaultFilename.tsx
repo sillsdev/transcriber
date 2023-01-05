@@ -2,6 +2,7 @@ import { getVernacularMediaRec } from '../crud';
 import { Passage } from '../model';
 import Memory from '@orbit/memory';
 import { cleanFileName } from '.';
+import { QueryBuilder } from '@orbit/data';
 
 export const passageDefaultFilename = (
   passageId: string,
@@ -9,7 +10,7 @@ export const passageDefaultFilename = (
   vernacularId: string | null | undefined
 ) => {
   if (passageId) {
-    var passageRec = memory.cache.query((q) =>
+    var passageRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'passage', id: passageId })
     ) as Passage;
     var tmp =

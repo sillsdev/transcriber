@@ -1,6 +1,6 @@
 import { LogLevel } from '@orbit/coordinator';
 import { useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { isElectron } from '../api-variable';
 import { TokenContext } from '../context/TokenProvider';
 

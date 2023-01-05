@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal, setGlobal } from './mods/reactn';
 import ReactDOM from 'react-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
 import envVariables from './auth/auth0-variables.json';
@@ -14,7 +14,6 @@ import {
 import { Provider } from 'react-redux';
 import { coordinator, memory, backup, schema } from './schema';
 import configureStore from './store';
-import { setGlobal } from 'reactn';
 import bugsnag from '@bugsnag/js';
 import bugsnagReact from '@bugsnag/plugin-react';
 import {

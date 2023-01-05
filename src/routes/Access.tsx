@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { useLocation } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { connect, shallowEqual, useSelector } from 'react-redux';

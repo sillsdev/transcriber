@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../mods/reactn';
 import { Section, MediaFile, SectionResource } from '../../../model';
 import { Operation, TransformBuilder } from '@orbit/data';
 import {

@@ -4,7 +4,7 @@ import { dataPath, PathType } from '../utils/dataPath';
 import { remoteId } from '../crud';
 import { isElectron } from '../api-variable';
 import { RecordIdentity } from '@orbit/data';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 const ipc = (window as any)?.electron;
 
 export const useAvatarSource = (name: string, rec: RecordIdentity) => {

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { useFetchMediaUrl, MediaSt } from '../crud';
 import { logError, Severity } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';

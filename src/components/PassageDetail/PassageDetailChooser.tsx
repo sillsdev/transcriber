@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { Passage, IPassageChooserStrings } from '../../model';
 import { Typography, Box, BoxProps, styled, Tabs, Tab } from '@mui/material';
 import usePassageDetailContext from '../../context/usePassageDetailContext';

@@ -1,5 +1,5 @@
-import { useContext, useMemo, useRef, useState } from 'react';
-import { useEffect, useGlobal } from 'reactn';
+import { useContext, useMemo, useRef, useState, useEffect } from 'react';
+import { useGlobal } from '../../mods/reactn';
 import {
   Box,
   BoxProps,
@@ -844,27 +844,29 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
           ) : (
             <Grid container sx={titleProps}>
               <Grid item sx={topicItemProps}>
-                {myRegion && related(discussion, 'mediafile') === mediafileId && (
-                  <IconButton
-                    id={`locate-${discussion.id}`}
-                    size="small"
-                    sx={lightButton}
-                    title={t.locate}
-                    onClick={handleLocateClick}
-                  >
-                    <LocationIcon fontSize="small" />
-                  </IconButton>
-                )}
-                {myRegion && related(discussion, 'mediafile') !== mediafileId && (
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <OldVernVersion
-                      id={discussion.id}
-                      oldVernVer={version}
-                      mediaId={related(discussion, 'mediafile')}
-                      text={discussion.attributes?.subject}
-                    />
-                  </Box>
-                )}
+                {myRegion &&
+                  related(discussion, 'mediafile') === mediafileId && (
+                    <IconButton
+                      id={`locate-${discussion.id}`}
+                      size="small"
+                      sx={lightButton}
+                      title={t.locate}
+                      onClick={handleLocateClick}
+                    >
+                      <LocationIcon fontSize="small" />
+                    </IconButton>
+                  )}
+                {myRegion &&
+                  related(discussion, 'mediafile') !== mediafileId && (
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <OldVernVersion
+                        id={discussion.id}
+                        oldVernVer={version}
+                        mediaId={related(discussion, 'mediafile')}
+                        text={discussion.attributes?.subject}
+                      />
+                    </Box>
+                  )}
                 <Typography
                   variant="h6"
                   component="h2"

@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { ISharedStrings } from '../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { sharedSelector } from '../selector';

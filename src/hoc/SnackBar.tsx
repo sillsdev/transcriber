@@ -1,4 +1,5 @@
-import { useState, useEffect, useGlobal } from 'reactn';
+import { useState, useEffect } from 'react';
+import { useGlobal } from '../mods/reactn';
 import { Snackbar, IconButton, styled, BoxProps, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';

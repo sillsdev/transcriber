@@ -1,6 +1,7 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../mods/reactn';
 import { MediaFile } from '../../../model';
 import { UpdateRecord } from '../../../model/baseModel';
+import { TransformBuilder } from '@orbit/data';
 
 interface IProps {
   media: MediaFile;
@@ -11,7 +12,7 @@ export const useProjectSegmentSave = () => {
   const [user] = useGlobal('user');
 
   return async ({ media, segments }: IProps) => {
-    await memory.update((t) => [
+    await memory.update((t: TransformBuilder) => [
       ...UpdateRecord(
         t,
         {

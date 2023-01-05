@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import UserAvatar from './UserAvatar';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import useTodo from '../context/useTodo';

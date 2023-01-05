@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { useLocation, useParams } from 'react-router-dom';
 import { IState, IMainStrings, IViewModeStrings } from '../../model';
 import { connect, shallowEqual, useSelector } from 'react-redux';

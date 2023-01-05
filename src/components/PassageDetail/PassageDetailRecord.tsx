@@ -3,7 +3,7 @@ import { ISharedStrings, MediaFile } from '../../model';
 import { Button, Typography, SxProps, Box } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { findRecord, useFetchMediaUrl, VernacularTag } from '../../crud';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import Memory from '@orbit/memory';

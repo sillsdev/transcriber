@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { setGlobal } from 'reactn';
+import { setGlobal } from '../mods/reactn';
 import { Section, Passage, IWorkflow, IwfKind, IMediaShare } from '../model';
 import { DataProvider } from 'react-orbitjs';
 import { useWfLocalSave } from '../components/Workflow';

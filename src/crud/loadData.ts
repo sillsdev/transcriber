@@ -89,7 +89,7 @@ export async function insertData(
   try {
     if (item.keys && checkExisting) {
       var id = remoteIdGuid(item.type, item.keys['remoteId'], memory.keyMap);
-      rec = memory.cache.query((q) =>
+      rec = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: item.type, id: id })
       );
     }

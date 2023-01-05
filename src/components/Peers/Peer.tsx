@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import {
   Table,
   TableBody,
@@ -21,7 +21,7 @@ import {
   IPeerStrings,
 } from '../../model';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { related, usePermissions, useRole } from '../../crud';
 import { AddRecord, ReplaceRelatedRecord } from '../../model/baseModel';
 import { toCamel } from '../../utils';
@@ -53,8 +53,10 @@ export function Peer(props: IProps) {
       // update peer group
       for (let g of peerGroups) {
         if (g.id === id) {
-          await memory.update((t) => t.replaceAttribute(g, 'name', name));
-          await memory.update((t) =>
+          await memory.update((t: TransformBuilder) =>
+            t.replaceAttribute(g, 'name', name)
+          );
+          await memory.update((t: TransformBuilder) =>
             t.replaceAttribute(
               g,
               'permissions',
@@ -76,7 +78,7 @@ export function Peer(props: IProps) {
         permissions: JSON.stringify({ permissions: permissions }),
       },
     } as Group;
-    await memory.update((t) => [
+    await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, groupRec, user, memory),
       ...ReplaceRelatedRecord(
         t,
@@ -89,7 +91,9 @@ export function Peer(props: IProps) {
   };
 
   const handleRemove = async (id: string) => {
-    await memory.update((t) => t.removeRecord({ type: 'group', id }));
+    await memory.update((t: TransformBuilder) =>
+      t.removeRecord({ type: 'group', id })
+    );
   };
 
   const handleCheck = (row: IUserName, col: Group) => async () => {
@@ -97,7 +101,7 @@ export function Peer(props: IProps) {
     const membership: GroupMembership = {
       type: 'groupmembership',
     } as GroupMembership;
-    await memory.update((t) => [
+    await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, membership, user, memory),
       ...ReplaceRelatedRecord(t, membership, 'user', 'user', row.userId),
       ...ReplaceRelatedRecord(t, membership, 'group', 'group', col.id),
@@ -118,7 +122,7 @@ export function Peer(props: IProps) {
       (m) => related(m, 'user') === row.userId && related(m, 'group') === col.id
     );
     if (recs.length > 0)
-      await memory.update((t) =>
+      await memory.update((t: TransformBuilder) =>
         t.removeRecord({ type: 'groupmembership', id: recs[0].id })
       );
     setCheck(new Set(check));

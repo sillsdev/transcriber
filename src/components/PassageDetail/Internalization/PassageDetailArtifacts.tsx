@@ -1,5 +1,5 @@
 import { useState, useContext, useMemo, useRef } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../mods/reactn';
 import { connect } from 'react-redux';
 import {
   IPassageDetailArtifactsStrings,
@@ -298,7 +298,7 @@ export function PassageDetailArtifacts(props: IProps) {
         },
       });
       if (Boolean(related(editResource, 'passage')) !== isPassageResource()) {
-        await memory.update((t) => [
+        await memory.update((t: TransformBuilder) => [
           ...ReplaceRelatedRecord(
             t,
             editResource,
@@ -460,13 +460,13 @@ export function PassageDetailArtifacts(props: IProps) {
     let cnt = 0;
     const total = items.length;
     for (let i of items) {
-      const rec = memory.cache.query((q) => q.findRecord(i)) as
+      const rec = memory.cache.query((q: QueryBuilder) => q.findRecord(i)) as
         | Passage
         | Section;
       const secRec =
         rec?.type === 'section'
           ? (rec as Section)
-          : (memory.cache.query((q) =>
+          : (memory.cache.query((q: QueryBuilder) =>
               q.findRecord({ type: 'section', id: related(rec, 'section') })
             ) as Section);
       const secNum = secRec?.attributes.sequencenum || 0;

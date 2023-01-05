@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import * as actions from '../store';
 import { QueryBuilder } from '@orbit/data';
 import {

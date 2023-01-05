@@ -1,6 +1,6 @@
 import { Plan, PlanType } from '../model';
 import { QueryBuilder } from '@orbit/data';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { related, usePlan } from '.';
 
 export const usePlanType = () => {

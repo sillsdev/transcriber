@@ -41,7 +41,7 @@ import * as actions from '../store';
 import MediaUpload, { UploadType } from './MediaUpload';
 import { useSnackBar } from '../hoc/SnackBar';
 import { useElectronImport } from '../routes/ElectronImport';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import {
   remoteIdNum,
   passageDescription,

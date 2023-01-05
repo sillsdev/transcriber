@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { Plan, IState, IVProjectStrings } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';

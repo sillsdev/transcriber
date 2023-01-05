@@ -2,7 +2,7 @@ import { Box, BoxProps, Chip, styled } from '@mui/material';
 import { MediaFile } from '../model';
 import { findRecord, related, useArtifactType } from '../crud';
 import { dateOrTime, prettySegment } from '../utils';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 
 // see: https://mui.com/material-ui/customization/how-to-customize/
 interface StyledBoxProps extends BoxProps {

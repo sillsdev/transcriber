@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { ISharedStrings, IState, Role } from '../model';
 import { localizeRole } from '../utils';
 import { QueryBuilder } from '@orbit/data';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { withData } from 'react-orbitjs';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import keycode from 'keycode';
 import { ITag } from '../../../model';
 import {
@@ -9,7 +9,6 @@ import {
   FormGroup,
 } from '@mui/material';
 import { IProjectDialogState } from './ProjectDialog';
-import { useEffect } from 'reactn';
 import { localizeProjectTag } from '../../../utils/localizeProjectTag';
 
 export const ProjectTags = (props: IProjectDialogState) => {

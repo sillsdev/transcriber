@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import * as actions from '../store';
 import Axios from 'axios';
 import JSONAPISource from '@orbit/jsonapi';

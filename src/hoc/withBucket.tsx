@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import JSONAPISource from '@orbit/jsonapi';
 
 export const withBucket = (Component: any) => {

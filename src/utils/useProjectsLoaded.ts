@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 
 export const useProjectsLoaded = () => {
   const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');

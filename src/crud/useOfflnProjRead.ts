@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { Plan, VProject, OfflineProject } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import { related } from '.';

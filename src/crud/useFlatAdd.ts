@@ -1,6 +1,6 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { Passage, MediaFile, ActivityStates, ISharedStrings } from '../model';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { remoteIdGuid, saveNewSection, AddFlatPassage } from '.';
 
 export const useFlatAdd = (ts: ISharedStrings) => {
@@ -54,7 +54,7 @@ export const useFlatAdd = (ts: ISharedStrings) => {
         );
       }
     }
-    await memory.update((t) =>
+    await memory.update((t: TransformBuilder) =>
       t.replaceAttribute({ type: 'plan', id: planId }, 'sectionCount', total)
     );
     if (setComplete) setComplete(0);

@@ -1,5 +1,5 @@
 import { TransformBuilder } from '@orbit/data';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { findRecord, related } from '.';
 import { MediaFile } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';

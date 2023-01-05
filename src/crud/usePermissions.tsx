@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { Group, GroupMembership, IPermissionStrings, User } from '../model';
 import { permissionsSelector } from '../selector';

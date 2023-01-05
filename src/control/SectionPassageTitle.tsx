@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { Grid, GridProps, styled, Typography } from '@mui/material';
 import { passageReference, sectionDescription } from '../crud';
 import { BookName, Passage, Section, Plan } from '../model';

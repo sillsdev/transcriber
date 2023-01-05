@@ -456,7 +456,7 @@ export const importProjectToElectron =
         );
       }
       try {
-        var rec = memory.cache.query((q) =>
+        var rec = memory.cache.query((q: QueryBuilder) =>
           q.findRecord({ type: project.type, id: id })
         ) as Project;
         return rec;
@@ -469,19 +469,21 @@ export const importProjectToElectron =
 
       if (!rec) return;
 
-      var group = memory.cache.query((q) =>
+      var group = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'group', id: related(rec, 'group') })
       ) as Group;
       //if this is the only project using this group, then delete the group memberships
       //if not, we'd best leave them alone just in case
       var projectsWithGroup = (
-        memory.cache.query((q) => q.findRecords('project')) as Project[]
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('project')
+        ) as Project[]
       ).filter((p) => related(p, 'group') === group.id);
       var gmids: string[] = [];
       var userids: string[] = [];
       if (projectsWithGroup.length === 1) {
         var gms = (
-          memory.cache.query((q) =>
+          memory.cache.query((q: QueryBuilder) =>
             q.findRecords('groupmembership')
           ) as GroupMembership[]
         ).filter((gm) => related(gm, 'group') === group.id);
@@ -489,7 +491,7 @@ export const importProjectToElectron =
           gmids.push(gm.id);
           var thisuser = related(gm, 'user');
           var groupsForUser = (
-            memory.cache.query((q) =>
+            memory.cache.query((q: QueryBuilder) =>
               q.findRecords('groupmembership')
             ) as GroupMembership[]
           ).filter((ugm) => related(ugm, 'user') === thisuser);
@@ -497,34 +499,42 @@ export const importProjectToElectron =
         });
       }
       var projintids = (
-        memory.cache.query((q) =>
+        memory.cache.query((q: QueryBuilder) =>
           q.findRecords('projectintegration')
         ) as ProjectIntegration[]
       )
         .filter((pl) => related(pl, 'project') === rec?.id)
         .map((pi) => pi.id);
-      var planids = (memory.cache.query((q) => q.findRecords('plan')) as Plan[])
+      var planids = (
+        memory.cache.query((q: QueryBuilder) => q.findRecords('plan')) as Plan[]
+      )
         .filter((pl) => related(pl, 'project') === rec?.id)
         .map((pl) => pl.id);
       var sectionids = (
-        memory.cache.query((q) => q.findRecords('section')) as Section[]
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('section')
+        ) as Section[]
       )
         .filter((s) => planids.includes(related(s, 'plan')))
         .map((s) => s.id);
       var passageids = (
-        memory.cache.query((q) => q.findRecords('passage')) as Passage[]
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('passage')
+        ) as Passage[]
       )
         .filter((p) => sectionids.includes(related(p, 'section')))
         .map((p) => p.id);
       var pscids = (
-        memory.cache.query((q) =>
+        memory.cache.query((q: QueryBuilder) =>
           q.findRecords('passagestatechange')
         ) as PassageStateChange[]
       )
         .filter((psc) => passageids.includes(related(psc, 'passage')))
         .map((p) => p.id);
       var mediaids = (
-        memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('mediafile')
+        ) as MediaFile[]
       )
         .filter(
           (m) =>
@@ -534,12 +544,16 @@ export const importProjectToElectron =
         )
         .map((m) => m.id);
       var discussionids = (
-        memory.cache.query((q) => q.findRecords('discussion')) as Discussion[]
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('discussion')
+        ) as Discussion[]
       )
         .filter((d) => mediaids.includes(related(d, 'mediafile')))
         .map((d) => d.id);
       var commentids = (
-        memory.cache.query((q) => q.findRecords('comment')) as Comment[]
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('comment')
+        ) as Comment[]
       )
         .filter((c) => discussionids.includes(related(c, 'discussion')))
         .map((c) => c.id);
@@ -615,13 +629,17 @@ export const importProjectToElectron =
       tb: TransformBuilder,
       oparray: Operation[]
     ) {
-      var plans = memory.cache.query((q) => q.findRecords('plan')) as Plan[];
+      var plans = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('plan')
+      ) as Plan[];
       var planids = plans
         .filter((p) => related(p, 'project') === project.id)
         .map((p) => p.id);
 
       var media = (
-        memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('mediafile')
+        ) as MediaFile[]
       ).filter(
         (m) => planids.includes(related(m, 'plan')) && related(m, 'passage')
       );

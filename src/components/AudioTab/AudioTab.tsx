@@ -32,7 +32,7 @@ import {
   VernacularTag,
   useRole,
 } from '../../crud';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
 import PassageChooser from './PassageChooser';

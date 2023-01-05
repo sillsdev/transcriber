@@ -1,6 +1,6 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { Plan, Passage, Section } from '../model';
-import { RecordIdentity, Record } from '@orbit/data';
+import { RecordIdentity, Record, QueryBuilder } from '@orbit/data';
 import { related, usePlan } from '.';
 import { toCamel, pad2, cleanFileName } from '../utils';
 const ipc = (window as any)?.electron;
@@ -26,11 +26,11 @@ export const useAudProjName = () => {
   const { getPlan } = usePlan();
 
   return async (passageId: RecordIdentity) => {
-    const passRec = memory.cache.query((q) =>
+    const passRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord(passageId)
     ) as Passage;
     const secId = related(passRec, 'section');
-    const secRec = memory.cache.query((q) =>
+    const secRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'section', id: secId })
     ) as Section;
     const planRec = getPlan(related(secRec, 'plan'));

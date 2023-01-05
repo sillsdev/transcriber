@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { ITemplateStrings, Plan, PlanType } from '../../model';
 import { QueryBuilder } from '@orbit/data';
 import {

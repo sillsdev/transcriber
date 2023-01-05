@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { TokenContext } from '../context/TokenProvider';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -426,7 +426,7 @@ export function Profile(props: IProps) {
       200
     );
     await RemoveUserFromOrg(memory, deleteRec, undefined, user, teamDelete);
-    await memory.update((tb) =>
+    await memory.update((tb: TransformBuilder) =>
       tb.removeRecord({ type: 'user', id: deleteItem })
     );
     //wait to be sure orbit remote is done also

@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { AudacityProject } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import { related } from '.';

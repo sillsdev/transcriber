@@ -8,7 +8,7 @@ import {
 import { Button, Box } from '@mui/material';
 import localStrings from '../../selector/localize';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { StepItem, StepList } from '.';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';

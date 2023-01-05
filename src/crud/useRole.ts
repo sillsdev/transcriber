@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { Role, RoleNames } from '../model';
 import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import { related } from '../crud';

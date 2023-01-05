@@ -1,5 +1,6 @@
+import { useRef } from 'react';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
-import { useGlobal, useRef } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { related, remoteId } from '.';
 import {
   IState,

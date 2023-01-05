@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { IMainStrings, Plan } from '../model';
 import { IconButton, ListItemIcon, ListItemText } from '@mui/material';
 import ReportIcon from '@mui/icons-material/Report';

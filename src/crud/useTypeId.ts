@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { QueryBuilder, Record } from '@orbit/data';
 
 export const useTypeId = () => {

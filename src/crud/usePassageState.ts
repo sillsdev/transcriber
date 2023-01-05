@@ -1,5 +1,5 @@
 import { QueryBuilder } from '@orbit/data';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { related } from '.';
 import { ActivityStates, MediaFile, Passage } from '../model';
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { User, Group, GroupMembership } from '../../model';
 import { PermissionName, related, useAllUserGroup, useUser } from '../../crud';
 

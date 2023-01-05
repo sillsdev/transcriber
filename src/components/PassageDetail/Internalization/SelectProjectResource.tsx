@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, useRef } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../mods/reactn';
 import {
   MediaFile,
   SectionResource,
@@ -27,6 +27,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Confirm from '../../AlertDialog';
 import { isVisual } from '../../../utils';
 import { ActionRow, AltButton } from '../../../control';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 
 interface IProps {
   onSelect?: (media: MediaFile) => void;
@@ -59,7 +60,7 @@ export const SelectProjectResource = (props: IProps) => {
   const handleClick = (m: MediaFile) => () => handleSelect(m);
 
   const handleDelete = (m: MediaFile) => () => {
-    const mediafiles = memory.cache.query((q) =>
+    const mediafiles = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('mediafile')
     ) as MediaFile[];
     const affected = mediafiles.filter(
@@ -75,19 +76,20 @@ export const SelectProjectResource = (props: IProps) => {
     if (confirm && media.current) {
       const total = media.current.length + 1;
       let n = 0;
-      const secResources = memory.cache.query((q) =>
+      const secResources = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('sectionresource')
       ) as SectionResource[];
       for (let m of media.current) {
         const secRes = secResources.find(
           (r) => related(r, 'mediafile') === m.id
         );
-        if (secRes) await memory.update((t) => t.removeRecord(secRes));
-        await memory.update((t) => t.removeRecord(m));
+        if (secRes)
+          await memory.update((t: TransformBuilder) => t.removeRecord(secRes));
+        await memory.update((t: TransformBuilder) => t.removeRecord(m));
         setComplete(Math.min((n * 100) / total, 100));
         n += 1;
       }
-      await memory.update((t) => t.removeRecord(confirm));
+      await memory.update((t: TransformBuilder) => t.removeRecord(confirm));
       setComplete(0);
     }
     setConfirm(undefined);

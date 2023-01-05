@@ -1,5 +1,5 @@
 import JSONAPISource from '@orbit/jsonapi';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 
 export const useTeamApiPull = () => {
   const [memory] = useGlobal('memory');

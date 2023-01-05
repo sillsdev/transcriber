@@ -1,5 +1,5 @@
 import { To, useNavigate } from 'react-router-dom';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 
 export const useHome = () => {
   const [, setProject] = useGlobal('project');

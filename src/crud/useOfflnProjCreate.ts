@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { Project } from '../model';
 import { Operation } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';

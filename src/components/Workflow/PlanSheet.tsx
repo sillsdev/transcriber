@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext, memo, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import {
   IPlanSheetStrings,
   ISharedStrings,

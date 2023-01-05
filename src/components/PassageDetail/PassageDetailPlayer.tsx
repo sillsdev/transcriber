@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { Button } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
@@ -15,6 +15,7 @@ import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector } from '../../selector';
 import { NamedRegions, getSegments, updateSegments } from '../../utils';
 import { findRecord } from '../../crud';
+import { TransformBuilder } from '@orbit/data';
 
 interface IProps {
   allowSegment?: NamedRegions | undefined;
@@ -112,7 +113,7 @@ export function PassageDetailPlayer(props: IProps) {
         | undefined;
       if (mediafile) {
         await memory
-          .update((t) => [
+          .update((t: TransformBuilder) => [
             ...UpdateRecord(
               t,
               {
@@ -133,7 +134,7 @@ export function PassageDetailPlayer(props: IProps) {
             saveCompleted(toolId);
             savingRef.current = false;
           })
-          .catch((err) => {
+          .catch((err: Error) => {
             //so we don't come here...we go to continue/logout
             saveCompleted(toolId, err.message);
             savingRef.current = false;

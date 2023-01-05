@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { useLocation } from 'react-router-dom';
 import { TokenContext } from '../context/TokenProvider';
 import { LocalKey, localUserKey, useMyNavigate } from '../utils';

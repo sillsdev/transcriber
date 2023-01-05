@@ -32,7 +32,7 @@ import {
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import UserAvatar from '../UserAvatar';
 import { dateOrTime } from '../../utils';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { CommentEditor } from './CommentEditor';
 import DiscussionMenu from './DiscussionMenu';
 import { useRecordComment } from './useRecordComment';

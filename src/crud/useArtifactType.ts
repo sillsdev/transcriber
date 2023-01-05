@@ -1,4 +1,5 @@
-import { useGlobal, useMemo, useState } from 'reactn';
+import { useMemo, useState } from 'react';
+import { useGlobal } from '../mods/reactn';
 import {
   IState,
   IArtifactTypeStrings,

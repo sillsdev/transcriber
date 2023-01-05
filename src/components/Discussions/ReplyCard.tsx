@@ -1,3 +1,4 @@
+import { useContext, useEffect, useRef, useState } from 'react';
 import {
   Discussion,
   Group,
@@ -7,7 +8,6 @@ import {
 } from '../../model';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
-import { useContext, useEffect, useRef, useState } from 'reactn';
 import { CommentEditor } from './CommentEditor';
 import { useRecordComment } from './useRecordComment';
 import { useSaveComment } from '../../crud/useSaveComment';

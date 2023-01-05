@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { useLocation } from 'react-router-dom';
 import {
   ICardsStrings,

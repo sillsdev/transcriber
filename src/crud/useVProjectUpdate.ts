@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../mods/reactn';
 import { Plan, Project, VProject } from '../model';
 import { TransformBuilder } from '@orbit/data';
 import { related, useTypeId } from '.';

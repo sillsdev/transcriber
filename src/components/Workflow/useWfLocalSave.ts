@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../mods/reactn';
 import { Section, Passage, ActivityStates, IWorkflow } from '../../model';
 import {
   AddRecord,

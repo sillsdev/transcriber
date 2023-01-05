@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../mods/reactn';
 import {
   Section,
   IPassageDetailArtifactsStrings,
@@ -183,7 +183,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
   useEffect(() => {
     let newData: ICell[][] = emptyTable();
     const newInfo = items.map((v) => {
-      const rec = memory.cache.query((q) => q.findRecord(v));
+      const rec = memory.cache.query((q: QueryBuilder) => q.findRecord(v));
       const secRec = (
         v.type === 'passage'
           ? findRecord(memory, 'section', related(rec, 'section'))
