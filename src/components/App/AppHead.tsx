@@ -412,7 +412,7 @@ export const AppHead = (props: IProps) => {
               >
                 <IconButton
                   id="systemUpdate"
-                  href="https://app.audioprojectmanager.org"
+                  href="https://www.audioprojectmanager.org"
                 >
                   <ExitToAppIcon color="primary" />
                 </IconButton>
