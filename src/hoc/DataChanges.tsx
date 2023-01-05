@@ -406,6 +406,8 @@ export function DataChanges(props: IProps) {
         : null;
     setDataDelay(newDelay);
     if (!remote) setBusy(false);
+    // the busy delay is increased by 10 times if we aren't connected yet
+    // but should be because we have authenticated.
     setBusyDelay(
       remote && authenticated() ? defaultBusyDelay * (connected ? 1 : 10) : null
     );
