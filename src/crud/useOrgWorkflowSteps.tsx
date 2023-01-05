@@ -1,6 +1,6 @@
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useGlobal, useRef } from 'reactn';
-import { related } from '.';
+import { related, remoteId } from '.';
 import {
   IState,
   IWorkflowStepsStrings,
@@ -52,6 +52,9 @@ export const useOrgWorkflowSteps = () => {
     wf: WorkflowStep,
     org?: string
   ) => {
+    let myOrgId = org ?? global.organization;
+    let myOrgRemoteId = remoteId('organization', myOrgId, memory.keyMap);
+    if (!offline && !myOrgRemoteId) return; // offline users won't have an org remoteId
     var ops: Operation[] = [];
     const wfs = {
       type: 'orgworkflowstep',
@@ -61,13 +64,7 @@ export const useOrgWorkflowSteps = () => {
     } as OrgWorkflowStep;
     ops.push(...AddRecord(t, wfs, user, memory));
     ops.push(
-      ...ReplaceRelatedRecord(
-        t,
-        wfs,
-        'organization',
-        'organization',
-        org || global.organization
-      )
+      ...ReplaceRelatedRecord(t, wfs, 'organization', 'organization', myOrgId)
     );
     try {
       await memory.update(ops);
