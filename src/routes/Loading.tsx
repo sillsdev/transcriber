@@ -237,10 +237,13 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
 
   const getGotoUrl = () => {
     let fromUrl =
-      localStorage.getItem(LocalKey.deeplink) ??
+      localStorage.getItem(localUserKey(LocalKey.deeplink)) ??
       localStorage.getItem(localUserKey(LocalKey.url));
-    localStorage.removeItem(LocalKey.deeplink);
-    return fromUrl;
+    if (fromUrl) {
+      localStorage.removeItem(localUserKey(LocalKey.deeplink));
+      return fromUrl;
+    }
+    return localStorage.getItem(localUserKey(LocalKey.deeplink));
   };
   const LoadComplete = () => {
     setCompleted(100);

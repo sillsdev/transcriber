@@ -18,6 +18,10 @@ export const localUserKey = (id: LocalKey) => {
     case LocalKey.deeplink:
       userId = 'any';
   }
-  if (!userId) userId = localStorage.getItem('user-id') || '';
+  if (!userId)
+    userId =
+      localStorage.getItem('user-id') ||
+      localStorage.getItem('online-user-id') ||
+      '';
   return `${userId}-${id}`;
 };

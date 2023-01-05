@@ -25,6 +25,7 @@ import {
   getFingerprintArray,
   waitForIt,
   LocalKey,
+  localUserKey,
 } from './utils';
 import { updateableFiles, staticFiles, localFiles } from './crud';
 import {
@@ -141,7 +142,7 @@ const AuthApp = () => {
     //     : window.location.pathname
     // );
     localStorage.setItem(
-      LocalKey.deeplink,
+      localUserKey(LocalKey.deeplink),
       appState && appState.returnTo
         ? appState.returnTo
         : window.location.pathname
