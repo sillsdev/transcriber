@@ -21,7 +21,7 @@ const initState = {
   email_verified: false as boolean | undefined,
   logout: () => {},
   resetExpiresAt: () => {},
-  isAuthenticated: () => false,
+  authenticated: () => false,
   setAuthSession: (
     profile: User | undefined,
     accessToken: string,
@@ -233,7 +233,7 @@ function TokenProvider(props: IProps) {
           ...state,
           setAuthSession,
           logout,
-          isAuthenticated: authenticated,
+          authenticated,
           resetExpiresAt,
         },
         setState,

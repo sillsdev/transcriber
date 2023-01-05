@@ -311,7 +311,7 @@ export function Access(
     if (isElectron) persistData();
     resetProject();
     checkOnline((online) => {}, true);
-    if (!tokenCtx.state.isAuthenticated() && !isAuthenticated) {
+    if (!tokenCtx.state.authenticated() && !isAuthenticated) {
       if (!offline && !isElectron) {
         const hasUsed = localStorage.key(0) !== null;
         if (hasUsed) {
@@ -380,7 +380,7 @@ export function Access(
       navigate('/emailunverified');
     else doLogout();
   } else if (
-    (!isElectron && tokenCtx.state.isAuthenticated()) ||
+    (!isElectron && tokenCtx.state.authenticated()) ||
     offlineOnly ||
     (isElectron && selectedUser !== '')
   ) {

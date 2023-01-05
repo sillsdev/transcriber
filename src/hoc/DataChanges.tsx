@@ -378,7 +378,7 @@ export function DataChanges(props: IProps) {
   const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
   const ctx = useContext(TokenContext).state;
-  const { isAuthenticated } = ctx;
+  const { authenticated } = ctx;
   const [busyDelay, setBusyDelay] = useState<number | null>(null);
   const [dataDelay, setDataDelay] = useState<number | null>(null);
   const [firstRun, setFirstRun] = useState(true);
@@ -399,17 +399,17 @@ export function DataChanges(props: IProps) {
 
     setFirstRun(dataDelay === null);
     const newDelay =
-      connected && loadComplete && remote && isAuthenticated()
+      connected && loadComplete && remote && authenticated()
         ? dataDelay === null
           ? 10
           : defaultDataDelay
         : null;
     setDataDelay(newDelay);
     if (!remote) setBusy(false);
+    // the busy delay is increased by 10 times if we aren't connected yet
+    // but should be because we have authenticated.
     setBusyDelay(
-      remote && isAuthenticated()
-        ? defaultBusyDelay * (connected ? 1 : 10)
-        : null
+      remote && authenticated() ? defaultBusyDelay * (connected ? 1 : 10) : null
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remote, ctx, loadComplete, connected, firstRun]);
@@ -424,7 +424,7 @@ export function DataChanges(props: IProps) {
     } else if (checkBusy !== busy) setBusy(checkBusy);
   };
   const updateData = async () => {
-    if (!doingChanges.current && !busy && !saving && isAuthenticated()) {
+    if (!doingChanges.current && !busy && !saving && authenticated()) {
       doingChanges.current = true; //attempt to prevent double calls
       setFirstRun(false);
       await doDataChanges(
