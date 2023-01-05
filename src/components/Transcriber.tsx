@@ -662,15 +662,15 @@ export function Transcriber(
       return;
     }
     if (offline) {
-      getParatextDataPath().then((ptPath: string) =>
+      getParatextDataPath().then((ptPath: string) => {
         getParatextTextLocal(
           ptPath,
           passage,
           paratextProject,
           errorReporter,
           t.pullParatextStart
-        )
-      );
+        );
+      });
     } else {
       getParatextText(
         accessToken || '',

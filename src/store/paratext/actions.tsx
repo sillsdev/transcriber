@@ -84,28 +84,30 @@ export const getParatextText =
     }
   };
 export const getParatextTextLocal =
-  async (
+  (
     ptPath: string,
     passage: Passage,
     ptProjName: string,
     errorReporter: any,
     pendingmsg: string
   ) =>
-  async (dispatch: any) => {
+  (dispatch: any) => {
     dispatch({
       payload: pendingStatus(pendingmsg),
       type: TEXT_PENDING,
     });
     try {
-      var pt = await localProjects(ptPath, undefined, ptProjName);
-      if (pt && pt.length > 0) {
-        let response = await getLocalParatextText(passage, pt[0].ShortName);
-        dispatch({ payload: response, type: TEXT_SUCCESS });
-      } else
-        dispatch({
-          payload: errorStatus(undefined, 'No Local Project' + ptProjName),
-          type: TEXT_ERROR,
-        });
+      localProjects(ptPath, undefined, ptProjName).then((pt) => {
+        if (pt && pt.length > 0) {
+          getLocalParatextText(passage, pt[0].ShortName).then((response) =>
+            dispatch({ payload: response, type: TEXT_SUCCESS })
+          );
+        } else
+          dispatch({
+            payload: errorStatus(undefined, 'No Local Project' + ptProjName),
+            type: TEXT_ERROR,
+          });
+      });
     } catch (err: any) {
       if (err.errMsg !== 'no range')
         logError(
