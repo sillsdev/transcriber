@@ -1,10 +1,10 @@
 import { isElectron } from '../api-variable';
 
 export enum LocalKey {
-  time = 'lastTime',
-  url = 'fromUrl',
-  deeplink = 'deeplink',
-  start = 'startNext',
+  time = 'lastTime', //datachanges last done
+  url = 'fromUrl', //last place specific user was so we can go back there
+  deeplink = 'deeplink', //specific path was requested in browser url - we may not know the user.  Do NOT use LocalUserKey with deeplink
+  start = 'startNext', //in progress mediadownload
   passage = 'passage',
   compare = 'compare',
 }
@@ -16,7 +16,7 @@ export const localUserKey = (id: LocalKey) => {
       if (isElectron) userId = 'electron';
       break;
     case LocalKey.deeplink:
-      userId = 'any';
+      userId = 'DO NOT USE LOCALUSER';
   }
   if (!userId)
     userId =

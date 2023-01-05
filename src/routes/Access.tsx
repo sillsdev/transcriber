@@ -362,15 +362,18 @@ export function Access(
       });
     }
     const userId = localStorage.getItem('online-user-id');
-    if (isElectron && userId && !curUser) {
-      const thisUser = users.filter(
-        (u) => u.id === userId && Boolean(u?.keys?.remoteId)
-      );
-      setCurUser(thisUser[0]);
-      setLanguage(thisUser[0]?.attributes?.locale || 'en');
-    } else if (isElectron && !userId && whichUsers.startsWith('online-cloud')) {
-      localStorage.setItem('online-user-id', 'unknown');
-      handleGoOnline();
+
+    if (isElectron) {
+      if (userId && !curUser) {
+        const thisUser = users.filter(
+          (u) => u.id === userId && Boolean(u?.keys?.remoteId)
+        );
+        setCurUser(thisUser[0]);
+        setLanguage(thisUser[0]?.attributes?.locale || 'en');
+      } else if (!userId && whichUsers.startsWith('online-cloud')) {
+        localStorage.setItem('online-user-id', 'unknown');
+        handleGoOnline();
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users]);
