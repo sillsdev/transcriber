@@ -208,9 +208,10 @@ function AudacityManager(props: IProps) {
       showMessage(t.badProjName);
       return;
     }
-    const nameOnly = name.replace('.aup3', '').split(path.sep).pop();
+    const lname = name.replace(/\\/g, path.sep);
+    const nameOnly = lname.replace('.aup3', '').split(path.sep).pop();
     const nmLen = nameOnly?.length;
-    const audioFolder = path.dirname(name.replace('aup3', 'io'));
+    const audioFolder = path.dirname(lname.replace('aup3', 'io'));
     const result = (await ipc?.readDir(audioFolder)) as string[];
     let mp3FullName = '';
     let mime = '';
