@@ -6,7 +6,6 @@ import AppHead from '../components/App/AppHead';
 import { PlanProvider } from '../context/PlanContext';
 import PlanTabs from '../components/PlanTabs';
 import { useUrlContext, useProjectType } from '../crud';
-import { forceLogin, localUserKey, LocalKey } from '../utils';
 import { UnsavedContext } from '../context/UnsavedContext';
 import StickyRedirect from '../components/StickyRedirect';
 
@@ -20,18 +19,16 @@ export const PlanScreen = () => {
   const { setProjectType } = useProjectType();
   const [project] = useGlobal('project');
   const [organization] = useGlobal('organization');
+  const [user] = useGlobal('user');
   const [view, setView] = React.useState('');
 
   React.useEffect(() => {
     const projectId = setUrlContext(prjId ?? '');
     if (projType === '') setProjectType(projectId);
-    if (!projType) {
-      // If after proj type set there is none, force reload
-      localStorage.removeItem(localUserKey(LocalKey.url));
-      forceLogin();
-      setView('/logout');
+    if (user && !projType) {
+      // If user is set but we don't have this project, go to the team screen
+      setView('/team');
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

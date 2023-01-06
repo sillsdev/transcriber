@@ -25,7 +25,6 @@ import {
   getFingerprintArray,
   waitForIt,
   LocalKey,
-  localUserKey,
 } from './utils';
 import { updateableFiles, staticFiles, localFiles } from './crud';
 import {
@@ -136,13 +135,10 @@ const TokenChecked = () => (
 
 const AuthApp = () => {
   const onRedirectingCallbck = (appState?: { returnTo?: string }) => {
-    // navigate(
-    //   appState && appState.returnTo
-    //     ? appState.returnTo
-    //     : window.location.pathname
-    // );
+    //user has requested a specific path
+    //remember it to come back to after loading
     localStorage.setItem(
-      localUserKey(LocalKey.deeplink),
+      LocalKey.deeplink,
       appState && appState.returnTo
         ? appState.returnTo
         : window.location.pathname

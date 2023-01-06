@@ -126,6 +126,7 @@ export const AppHead = (props: IProps) => {
   const [orgRole] = useGlobal('orgRole');
   const [errorReporter] = useGlobal('errorReporter');
   const [coordinator] = useGlobal('coordinator');
+  const [user] = useGlobal('user');
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [isOffline] = useGlobal('offline');
   const [connected] = useGlobal('connected');
@@ -248,6 +249,17 @@ export const AppHead = (props: IProps) => {
       }
     };
     window.addEventListener('beforeunload', handleUnload);
+    if (!user) {
+      //are we here from a deeplink?
+      if (
+        pathname !== '/' &&
+        !pathname.startsWith('/access') &&
+        pathname !== '/loading'
+      ) {
+        console.log('pathname', pathname);
+        setView('Access');
+      }
+    }
     return () => {
       window.removeEventListener('beforeunload', handleUnload);
     };

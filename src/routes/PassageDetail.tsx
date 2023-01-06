@@ -47,7 +47,7 @@ import {
   useUrlContext,
 } from '../crud';
 import { Plan, IToolStrings } from '../model';
-import { forceLogin, LocalKey, localUserKey, NamedRegions } from '../utils';
+import { NamedRegions } from '../utils';
 import { memory } from '../schema';
 import { useSelector, shallowEqual } from 'react-redux';
 import { toolSelector } from '../selector';
@@ -345,17 +345,16 @@ export const PassageDetail = () => {
   const setUrlContext = useUrlContext();
   const [view, setView] = useState('');
   const [projType] = useGlobal('projType');
+  const [user] = useGlobal('user');
   const { setProjectType } = useProjectType();
 
   useEffect(() => {
     const projectId = setUrlContext(prjId ?? '');
-    if (projType === '') {
+    if (user && projType === '') {
       var tmp = setProjectType(projectId);
       if (!tmp) {
-        // If after proj type set there is none, force reload
-        localStorage.removeItem(localUserKey(LocalKey.url));
-        forceLogin();
-        setView('/logout');
+        // If user is set but we don't have this project, go to the team screen
+        setView('/team');
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
