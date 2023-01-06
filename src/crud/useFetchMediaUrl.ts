@@ -123,7 +123,11 @@ export const useFetchMediaUrl = (reporter?: any) => {
             if (cancelled()) return;
             const audioUrl = mediarec.attributes.audioUrl;
             const path = dataPath(audioUrl, PathType.MEDIA);
-            if (!path.startsWith('http')) {
+            const foundLocal = await ipc?.exists(path);
+            if (!foundLocal && accessToken) {
+              if (cancelled()) return;
+              dispatch({ payload: audioUrl, type: MediaSt.FETCHED });
+            } else if (!path.startsWith('http')) {
               if (cancelled()) return;
               dispatch({ payload: await safeURL(path), type: MediaSt.FETCHED });
               return;
