@@ -3,6 +3,7 @@ import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
+import path from 'path-browserify';
 import {
   IState,
   ITranscriptionTabStrings,
@@ -141,18 +142,51 @@ export const ProjectDownload = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exportFile, exportStatus]);
 
+  interface StatReply {
+    received: number;
+    total: number;
+    error: any;
+  }
+
   React.useEffect(() => {
     if (progress === Steps.Download) {
       const localPath = dataPath(exportName, PathType.ZIP);
-      ipc
-        ?.downloadFile(exportUrl, localPath)
-        .then(() => {
-          setProgress(Steps.Import);
-        })
-        .catch((ex: any) => logError(Severity.error, errorReporter, ex))
-        .finally(() => {
-          URL.revokeObjectURL(exportUrl);
-        });
+      ipc?.createFolder(path.dirname(localPath)).then(() => {
+        ipc
+          ?.downloadLaunch(exportUrl, localPath)
+          .then((token: string) => {
+            const timer = setInterval(() => {
+              ipc?.downloadStat(token).then((reply: string) => {
+                const { received, total, error } = JSON.parse(
+                  reply
+                ) as StatReply;
+                if (error) {
+                  logError(Severity.error, errorReporter, error);
+                  clearInterval(timer);
+                  ipc?.downloadClose(token);
+                } else if (received < total) {
+                  showTitledMessage(
+                    t.downloadProject,
+                    t.downloading.replace(
+                      '{0}',
+                      `${exportName} ${Math.round((received * 100) / total)}%`
+                    )
+                  );
+                } else {
+                  clearInterval(timer);
+                  ipc?.downloadClose(token);
+                  setProgress(Steps.Import);
+                }
+              });
+            }, 500);
+          })
+          .catch((ex: Error) => {
+            logError(Severity.error, errorReporter, ex);
+          })
+          .finally(() => {
+            URL.revokeObjectURL(exportUrl);
+          });
+      });
       showTitledMessage(
         t.downloadProject,
         t.downloading.replace('{0}', exportName)

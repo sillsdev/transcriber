@@ -71,6 +71,12 @@ contextBridge.exposeInMainWorld('electron', {
   zipExtract: async (zip, folder, replace) =>
     await ipcRenderer.invoke('zipExtract', zip, folder, replace),
   zipClose: async (zip) => await ipcRenderer.invoke('zipClose', zip),
-  download: async (url, localFile, onProgress) =>
-    await ipcRenderer.invoke('download', url, localFile, onProgress),
+  downloadFile: async (url, localFile) =>
+    await ipcRenderer.invoke('downloadFile', url, localFile),
+  downloadLaunch: async (url, localFile) =>
+    await ipcRenderer.invoke('downloadLaunch', url, localFile),
+  downloadStat: async (token) =>
+    await ipcRenderer.invoke('downloadStat', token),
+  downloadClose: async (token) =>
+    await ipcRenderer.invoke('downloadClose', token),
 });

@@ -13,7 +13,11 @@ const fs = require('fs-extra');
 const os = require('os');
 const execa = require('execa');
 const AdmZip = require('adm-zip');
-const downloadFile = require('./downloadFile');
+const {
+  downloadFile,
+  downloadStatus,
+  downloadClose,
+} = require('./downloadFile');
 const generateUUID = require('./generateUUID');
 
 const ipcMethods = () => {
@@ -152,7 +156,7 @@ const ipcMethods = () => {
     try {
       return fs.readdirSync(folder);
     } catch (err) {
-      return err;
+      return JSON.stringify(err);
     }
   });
 
@@ -280,8 +284,30 @@ const ipcMethods = () => {
     createLogoutWindow();
   });
 
-  ipcMain.handle('download', async (event, url, localFile, onProgress) => {
-    return downloadFile(url, localFile, onProgress);
+  ipcMain.handle('downloadFile', async (event, url, localFile) => {
+    if (os.platform() === 'win32') localFile = localFile.replace(/\//g, '\\');
+    try {
+      await downloadFile(url, localFile);
+      return;
+    } catch (err) {
+      return JSON.stringify(err);
+    }
+  });
+
+  ipcMain.handle('downloadLaunch', async (event, url, localFile) => {
+    if (os.platform() === 'win32') localFile = localFile.replace(/\//g, '\\');
+    const token = generateUUID();
+    downloadFile(url, localFile, token);
+    return token;
+  });
+
+  ipcMain.handle('downloadStat', async (event, token) => {
+    return downloadStatus(token);
+  });
+
+  ipcMain.handle('downloadClose', async (event, token) => {
+    downloadClose(token);
+    return;
   });
 };
 
