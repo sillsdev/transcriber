@@ -68,7 +68,8 @@ export const ProjectDownloadAlert = (props: IProps) => {
       if (related(m, 'artifactType') || related(m, 'passage')) {
         var local = { localname: '' };
         dataPath(m.attributes.audioUrl, PathType.MEDIA, local);
-        if (await !ipc?.exists(local.localname)) {
+        const found = await ipc?.exists(local.localname);
+        if (!found) {
           needyProject.add(planProject[related(m, 'plan')]);
           totalSize += m?.attributes?.filesize || 0;
         }
