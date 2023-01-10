@@ -254,7 +254,8 @@ export const AppHead = (props: IProps) => {
       if (
         pathname !== '/' &&
         !pathname.startsWith('/access') &&
-        pathname !== '/loading'
+        pathname !== '/loading' &&
+        pathname !== '/profile'
       ) {
         console.log('pathname', pathname);
         setView('Access');

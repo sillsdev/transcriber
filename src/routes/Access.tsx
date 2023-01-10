@@ -361,7 +361,11 @@ export function Access(
         }
       });
     }
-    const userId = localStorage.getItem('online-user-id');
+    const userId = localStorage.getItem(
+      localStorage.getItem('offlineAdmin') !== 'true'
+        ? 'online-user-id'
+        : 'user-id'
+    );
 
     if (isElectron) {
       if (userId && !curUser) {
