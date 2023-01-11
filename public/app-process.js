@@ -1,16 +1,7 @@
-const envVariables = require('./auth0-variables');
-const {
-  app,
-  ipcMain,
-  BrowserWindow,
-  session,
-  Menu,
-  MenuItem,
-} = require('electron');
+const { app, ipcMain, BrowserWindow, Menu, MenuItem } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const appMenu = require('./app-menu');
-const { auth0Domain, authProviders } = envVariables;
 
 let mainWindow;
 let localString = { addToDict: 'Add to dictionary' };
@@ -31,12 +22,6 @@ function createAppWindow() {
     icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
       devTools: true, // isDev,
-      nodeIntegration: false,
-      nodeIntegrationInWorker: false,
-      nodeIntegrationInSubFrames: false,
-      enableRemoteModule: false,
-      contextIsolation: true,
-      webSecurity: false,
       spellcheck: true,
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -99,46 +84,6 @@ ipcMain.handle('setAddToDict', async (event, str) => {
 app.whenReady().then(() => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createAppWindow();
-  }
-
-  if (isDev) {
-    // https://www.electronjs.org/docs/latest/tutorial/security#7-define-a-content-security-policy
-    // https://github.com/reZach/secure-electron-template/issues/14
-    session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-      callback({
-        responseHeaders: {
-          ...details.responseHeaders,
-          'Content-Security-Policy': [
-            `base-uri 'self' https://${auth0Domain} ${authProviders}`,
-            "object-src 'none'",
-            `script-src 'unsafe-inline' 'self' 'unsafe-eval' ${authProviders}`, //'nonce-tVZvi9VxJuouaojo+5nChg=='
-            `style-src 'unsafe-inline' 'self' https://fonts.googleapis.com https://s3.amazonaws.com/fonts.siltranscriber.org transcribe-safe://* ${authProviders}`,
-            "frame-src 'none'",
-            "worker-src 'self'",
-          ],
-        },
-      });
-    });
-
-    // installExtension(REACT_DEVELOPER_TOOLS)
-    //   .then((name) => console.log(`Added Extension:  ${name}`))
-    //   .catch((error) => console.log(`An error occurred: , ${error}`));
-  } else {
-    session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-      callback({
-        responseHeaders: {
-          ...details.responseHeaders,
-          'Content-Security-Policy': [
-            `base-uri 'self' https://${auth0Domain} ${authProviders}`,
-            "object-src 'none'",
-            `script-src 'unsafe-inline' 'self' 'unsafe-eval' ${authProviders}`, //'nonce-tVZvi9VxJuouaojo+5nChg=='
-            `style-src 'unsafe-inline' 'self' https://fonts.googleapis.com https://s3.amazonaws.com/fonts.siltranscriber.org transcribe-safe://* ${authProviders}`,
-            "frame-src 'none'",
-            "worker-src 'self'",
-          ],
-        },
-      });
-    });
   }
 });
 

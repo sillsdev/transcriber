@@ -16,13 +16,7 @@ function createAuthWindow(hasUsed, email) {
     webPreferences: {
       devTools: isDev,
       nodeIntegration: false,
-      nodeIntegrationInWorker: false,
-      nodeIntegrationInSubFrames: false,
       enableRemoteModule: false,
-      contextIsolation: true,
-      webSecurity: false,
-      spellcheck: true,
-      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
