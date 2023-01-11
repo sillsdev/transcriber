@@ -164,7 +164,7 @@
   "build": {
     "appId": "sil.lsdev.audio-project-manager",
     "productName": "Audio Project Manager",
-    "copyright": "Copyright © 2020-2022 ${author}",
+    "copyright": "Copyright © 2020-2023 ${author}",
     "win": {
       "icon": "public/icon.png"
     },
