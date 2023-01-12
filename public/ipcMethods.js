@@ -10,7 +10,6 @@ const createAppWindow = require('./app-process');
 const { createAuthWindow, createLogoutWindow } = require('./auth-process');
 const authService = require('./auth-service');
 const fs = require('fs-extra');
-const os = require('os');
 const execa = require('execa');
 const AdmZip = require('adm-zip');
 const {
@@ -46,7 +45,7 @@ const ipcMethods = () => {
   });
 
   ipcMain.handle('isWindows', async () => {
-    return os.platform() === 'win32';
+    return process.platform === 'win32';
   });
 
   ipcMain.handle('isProcessRunning', async (event, name) => {
@@ -285,7 +284,8 @@ const ipcMethods = () => {
   });
 
   ipcMain.handle('downloadFile', async (event, url, localFile) => {
-    if (os.platform() === 'win32') localFile = localFile.replace(/\//g, '\\');
+    if (process.platform === 'win32')
+      localFile = localFile.replace(/\//g, '\\');
     try {
       await downloadFile(url, localFile);
       return;
@@ -295,7 +295,8 @@ const ipcMethods = () => {
   });
 
   ipcMain.handle('downloadLaunch', async (event, url, localFile) => {
-    if (os.platform() === 'win32') localFile = localFile.replace(/\//g, '\\');
+    if (process.platform === 'win32')
+      localFile = localFile.replace(/\//g, '\\');
     const token = generateUUID();
     downloadFile(url, localFile, token);
     return token;

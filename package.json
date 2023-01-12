@@ -1,6 +1,6 @@
 {
   "name": "audio-project-manager",
-  "version": "2.16.2-alpha-0",
+  "version": "2.16.2",
   "description": "Flexible audio-text orality solution",
   "private": true,
   "dependencies": {
@@ -54,7 +54,7 @@
     "react-orbitjs": "^0.3.5",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.3",
-    "react-scripts": "^4.0.3",
+    "react-scripts": "^5.0.1",
     "react-select": "^3.0.8",
     "react-sortable-hoc": "^2.0.0",
     "react-split-pane": "^0.1.92",
@@ -66,6 +66,7 @@
     "reselect": "^4.1.7",
     "styled-components": "^5.3.6",
     "url-parse": "^1.5.10",
+    "use-force-update": "1.0.5",
     "wavesurfer.js": "^5.2.0",
     "web-vitals": "^3.1.0",
     "xml-js": "^1.6.11",
@@ -82,8 +83,8 @@
     "build": "npm run clean && react-scripts build",
     "test": "react-scripts test",
     "eject": "DON'T eject",
-    "dev": "node env-config/edPackage.js && concurrently --success first \"env-cmd -f .env.electron npm start\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=development electron --trace-warnings .\" -k",
-    "pack": "npm run stamp && node env-config/edPackage.js && env-cmd -f .env.electron react-scripts build -w",
+    "dev": "node env-config/edPackage.js && concurrently --success first \"env-cmd -f .env.electron craco start\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=development electron --trace-warnings .\" -k",
+    "pack": "npm run stamp && node env-config/edPackage.js && env-cmd -f .env.electron craco build -w",
     "dist": "electron-builder --publish never",
     "dist-32": "electron-builder --publish never --ia32",
     "devs": "node env-config/changeEnv.js dev",
@@ -113,6 +114,7 @@
     ]
   },
   "devDependencies": {
+    "@craco/craco": "^7.0.0",
     "@hot-loader/react-dom": "^16.12.0",
     "@redux-devtools/extension": "^3.2.3",
     "@testing-library/jest-dom": "^5.16.5",

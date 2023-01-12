@@ -41,6 +41,7 @@ import {
   currentDateTime,
   PathType,
   createFolder,
+  createPathFolder,
 } from '../../utils';
 import IndexedDBSource from '@orbit/indexeddb';
 import IntellectualProperty from '../../model/intellectualProperty';
@@ -745,12 +746,14 @@ export async function electronExport(
     } else {
       if (numRecs) {
         var where = dataPath(filename);
+        await createPathFolder(where);
         await ipc?.zipWrite(zip, where);
         return BuildFileResponse(where, filename, undefined, changedRecs);
       } else if (nodatamsg && projects.length === 1) throw new Error(nodatamsg);
     }
   }
   var backupWhere = dataPath(backupName);
+  await createPathFolder(backupWhere);
   if (backupZip) await ipc?.zipWrite(backupZip, backupWhere);
   const buffer =
     exportType === ExportType.ITF
