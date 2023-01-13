@@ -15,8 +15,8 @@ import { Provider } from 'react-redux';
 import { coordinator, memory, backup, schema } from './schema';
 import configureStore from './store';
 import { setGlobal } from 'reactn';
-import bugsnag from '@bugsnag/js';
-import bugsnagReact from '@bugsnag/plugin-react';
+import Bugsnag from '@bugsnag/js';
+import BugsnagReact from '@bugsnag/plugin-react';
 import {
   logError,
   Severity,
@@ -43,14 +43,14 @@ const ipc = (window as any)?.electron;
 const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
 const prod = API_CONFIG.host.indexOf('prod') !== -1;
 const bugsnagClient = prodOrQa
-  ? bugsnag({
+  ? Bugsnag.start({
       apiKey: API_CONFIG.snagId,
+      plugins: [new BugsnagReact()],
       appVersion,
       releaseStage: prod ? 'production' : 'staging',
     })
   : undefined;
-bugsnagClient?.use(bugsnagReact, React);
-const SnagBoundary = bugsnagClient?.getPlugin('react');
+const SnagBoundary = Bugsnag.getPlugin('react')?.createErrorBoundary(React);
 
 // Redux store
 const store = configureStore();
@@ -115,7 +115,7 @@ const ErrorManagedApp = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return bugsnagClient ? (
+  return bugsnagClient && SnagBoundary ? (
     <SnagBoundary>
       <ErrorBoundary errorReporter={bugsnagClient} memory={memory}>
         <App />

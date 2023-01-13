@@ -9,6 +9,7 @@ let localString = { addToDict: 'Add to dictionary' };
 // Conditionally include the dev tools installer to load React Dev Tools
 // let installExtension, REACT_DEVELOPER_TOOLS;
 
+// This doesn't seem to work with the latest version of electron
 // if (isDev) {
 //   const devTools = require('electron-devtools-installer');
 //   installExtension = devTools.default;
@@ -85,6 +86,13 @@ app.whenReady().then(() => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createAppWindow();
   }
+
+  // if (isDev) {
+  //   console.log(REACT_DEVELOPER_TOOLS);
+  //   installExtension(REACT_DEVELOPER_TOOLS)
+  //     .then((name) => console.log(`Added Extension:  ${name}`))
+  //     .catch((error) => console.log(`An error occurred: , ${error}`));
+  // }
 });
 
 app.on('activate', () => {
