@@ -8,6 +8,7 @@ This project builds a front end web app and an [electron app](https://www.electr
 
 Clone the app, go to the project directory, and execute:
 
+1. `nvm use 16` _# Currently using node v. 16_
 1. `npm install --legacy-peer-deps` _# legacy required for font loader_
 1. `npm run stamp` _# this creates a file with the date to display in the version_
 1. Get a copy of the `env-files-transcriber.zip` from a team member and unzip it into the `env-config` folder (see configuration below)

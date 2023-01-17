@@ -217,7 +217,15 @@ const ipcMethods = () => {
   });
 
   ipcMain.handle('zipAddFile', async (event, zip, name, data, comment) => {
-    return admZip.get(zip).addFile(name, data, comment);
+    return admZip
+      .get(zip)
+      .addFile(name, Buffer.alloc(data.length, data), comment);
+  });
+
+  ipcMain.handle('zipAddJson', async (event, zip, name, data, comment) => {
+    return admZip
+      .get(zip)
+      .addFile(name, Buffer.from(JSON.parse(data)), comment);
   });
 
   ipcMain.handle('zipAddLocal', async (event, zip, full, folder, base) => {
@@ -225,7 +233,7 @@ const ipcMethods = () => {
   });
 
   ipcMain.handle('zipToBuffer', async (event, zip) => {
-    return admZip.get(zip).toBuffer();
+    return JSON.stringify(admZip.get(zip).toBuffer());
   });
 
   ipcMain.handle('zipWrite', async (event, zip, where) => {

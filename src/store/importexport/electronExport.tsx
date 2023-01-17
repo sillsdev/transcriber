@@ -132,37 +132,22 @@ export async function electronExport(
       await ipc?.zipAddFile(
         zip,
         'SILTranscriberOffline',
-        Buffer.alloc(dt.length, dt),
+        dt,
         'Check Format and Date'
       );
       return dt;
     };
 
     const AddSourceEntry = async (dt: string): Promise<string> => {
-      await ipc?.zipAddFile(
-        zip,
-        'SILTranscriber',
-        Buffer.alloc(dt.length, dt),
-        'Imported Date'
-      );
+      await ipc?.zipAddFile(zip, 'SILTranscriber', dt, 'Imported Date');
       return dt;
     };
     const AddVersionEntry = async (ver: string): Promise<string> => {
-      await ipc?.zipAddFile(
-        zip,
-        'Version',
-        Buffer.alloc(ver.length, ver),
-        'IndexedDB Version'
-      );
+      await ipc?.zipAddFile(zip, 'Version', ver, 'IndexedDB Version');
       return ver;
     };
     const AddOfflineEntry = async (): Promise<void> => {
-      await ipc?.zipAddFile(
-        zip,
-        'Offline',
-        Buffer.alloc(0, ''),
-        'Present if Offline project'
-      );
+      await ipc?.zipAddFile(zip, 'Offline', '', 'Present if Offline project');
     };
     const AddJsonEntry = async (
       table: string,
@@ -174,16 +159,16 @@ export async function electronExport(
       let json = ![ExportType.AUDIO, ExportType.ELAN].includes(exportType)
         ? '{"data":' + JSON.stringify(ser.serializeRecords(recs)) + '}'
         : JSON.stringify(ser.serializeRecords(recs), null, 2);
-      await ipc?.zipAddFile(
+      await ipc?.zipAddJson(
         zip,
         'data/' + sort + '_' + table + '.json',
-        Buffer.from(json),
+        JSON.stringify(json),
         table
       );
     };
     const AddStreamEntry = async (local: string, name: string) => {
       if (await ipc?.exists(local)) {
-        await ipc?.zipAddLocalFile(
+        await ipc?.zipAddLocal(
           zip,
           local,
           path.dirname(name),
@@ -243,12 +228,7 @@ export async function electronExport(
         if (exportType === ExportType.ELAN) {
           const eafCode = getMediaEaf(mf, memory);
           const name = path.basename(mp, path.extname(mp)) + '.eaf';
-          await ipc?.zipAddFile(
-            zip,
-            mediapath + name,
-            Buffer.alloc(eafCode.length, eafCode),
-            'EAF'
-          );
+          await ipc?.zipAddFile(zip, mediapath + name, eafCode, 'EAF');
         }
       }
     };
@@ -260,7 +240,7 @@ export async function electronExport(
       for (var i = 0; i < items.length; i++) {
         var fontfile = path.join(dir, items[i]);
         if (await ipc?.exists(fontfile))
-          await ipc?.zipAddLocalFile(zip, fontfile, PathType.FONTS, items[i]);
+          await ipc?.zipAddLocal(zip, fontfile, PathType.FONTS, items[i]);
       }
     };
     const GroupMemberships = (project: Project) => {
@@ -642,12 +622,7 @@ export async function electronExport(
         target,
         orgWorkflowSteps,
       } as IBurritoMeta);
-      await ipc?.zipAddFile(
-        zip,
-        'metadata.json',
-        Buffer.alloc(burritoMetaStr.length, burritoMetaStr),
-        'metadata'
-      );
+      await ipc?.zipAddFile(zip, 'metadata.json', burritoMetaStr, 'metadata');
     }
     var needsRemoteIds = Boolean(projRec?.keys?.remoteId);
     if (!needsRemoteIds) await AddOfflineEntry();
@@ -740,7 +715,7 @@ export async function electronExport(
         await ipc?.zipAddFile(
           backupZip,
           filename,
-          await ipc?.zipToBuffer(zip),
+          JSON.parse(await ipc?.zipToBuffer(zip)),
           projects[ix].attributes.name
         );
     } else {
@@ -757,7 +732,7 @@ export async function electronExport(
   if (backupZip) await ipc?.zipWrite(backupZip, backupWhere);
   const buffer =
     exportType === ExportType.ITF
-      ? await ipc?.zipToBuffer(backupZip)
+      ? JSON.parse(await ipc?.zipToBuffer(backupZip))
       : undefined;
   await ipc?.zipClose(backupZip);
   return BuildFileResponse(backupWhere, backupName, buffer, changedRecs);
