@@ -712,10 +712,10 @@ export async function electronExport(
     changedRecs += numRecs;
     if (backupZip) {
       if (numRecs)
-        await ipc?.zipAddFile(
+        await ipc?.zipAddZip(
           backupZip,
           filename,
-          JSON.parse(await ipc?.zipToBuffer(zip)),
+          zip,
           projects[ix].attributes.name
         );
     } else {
@@ -732,7 +732,7 @@ export async function electronExport(
   if (backupZip) await ipc?.zipWrite(backupZip, backupWhere);
   const buffer =
     exportType === ExportType.ITF
-      ? JSON.parse(await ipc?.zipToBuffer(backupZip))
+      ? await ipc?.zipToBuffer(backupZip)
       : undefined;
   await ipc?.zipClose(backupZip);
   return BuildFileResponse(backupWhere, backupName, buffer, changedRecs);

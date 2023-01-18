@@ -5,7 +5,6 @@ module.exports = {
       // eslint-disable-next-line no-param-reassign
       config.resolve.fallback = {
         fs: require.resolve('fs'),
-        'orgiginal-fs': require.resolve('original-fs'),
       };
       config.plugins.push(
         new webpack.ProvidePlugin({
