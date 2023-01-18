@@ -65,6 +65,8 @@ contextBridge.exposeInMainWorld('electron', {
     await ipcRenderer.invoke('zipAddFile', zip, name, data, comment),
   zipAddJson: async (zip, name, data, comment) =>
     await ipcRenderer.invoke('zipAddJson', zip, name, data, comment),
+  zipAddZip: async (zip, name, addZip, comment) =>
+    await ipcRenderer.invoke('zipAddZip', zip, name, addZip, comment),
   zipAddLocal: async (zip, full, folder, base) =>
     await ipcRenderer.invoke('zipAddLocal', zip, full, folder, base),
   zipToBuffer: async (zip) => await ipcRenderer.invoke('zipToBuffer', zip),
