@@ -158,7 +158,8 @@ function TokenProvider(props: IProps) {
   const handleLogOut = () => {
     setState((state) => ({ ...state, expiresAt: -1 }));
     view.current = 'loggedOut';
-    setModalOpen(false);
+    localStorage.removeItem('isLoggedIn');
+    if (modalOpen) setModalOpen(false);
   };
 
   const checkTokenExpired = () => {
@@ -184,7 +185,7 @@ function TokenProvider(props: IProps) {
     }
   };
 
-  useInterval(checkTokenExpired, state?.expiresAt && !offline ? 1000 : null);
+  useInterval(checkTokenExpired, state?.expiresAt && !offline ? 5000 : null);
 
   const handleClose = (value: number) => {
     setModalOpen(false);

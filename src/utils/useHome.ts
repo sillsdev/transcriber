@@ -17,11 +17,11 @@ export const useHome = () => {
   };
   const goHome = () => {
     resetProject();
-    setHome(true);
+    if (!home) setHome(true);
     navigate('/team');
   };
   const leaveHome = () => {
-    setHome(false);
+    if (home) setHome(false);
   };
   const checkHome = (to: To) => {
     var gohome = !to || to === '/' || to === '/team';

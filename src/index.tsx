@@ -50,7 +50,9 @@ const bugsnagClient = prodOrQa
       releaseStage: prod ? 'production' : 'staging',
     })
   : undefined;
-const SnagBoundary = Bugsnag.getPlugin('react')?.createErrorBoundary(React);
+const SnagBoundary = prodOrQa
+  ? Bugsnag.getPlugin('react')?.createErrorBoundary(React)
+  : null;
 
 // Redux store
 const store = configureStore();
