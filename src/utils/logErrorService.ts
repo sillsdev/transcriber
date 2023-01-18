@@ -2,6 +2,7 @@ import moment from 'moment';
 import { join } from 'path-browserify';
 import { Stats } from 'fs-extra';
 import { createFolder } from '.';
+import Bugsnag from '@bugsnag/js';
 const ipc = (window as any)?.electron;
 
 export enum Severity {
@@ -19,16 +20,16 @@ export function logError(
     logMessage(reporter, level, error);
   } else if (reporter) {
     if (level === Severity.error) {
-      if (reporter.notify)
-        reporter.notify(typeof error === 'string' ? new Error(error) : error);
+      if (reporter)
+        Bugsnag.notify(typeof error === 'string' ? new Error(error) : error);
     } else if (level === Severity.info || level === Severity.retry) {
       if (typeof error === 'string') {
         if (error !== '' && reporter.leaveBreadcrumb) {
           reporter.leaveBreadcrumb(error);
         }
       } else {
-        if (reporter.leaveBreadcrumb)
-          reporter.leaveBreadcrumb(error.message, { name: error.name });
+        if (reporter)
+          Bugsnag.leaveBreadcrumb(error.message, { name: error.name });
       }
     }
   }
