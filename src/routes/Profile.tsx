@@ -367,6 +367,15 @@ export function Profile(props: IProps) {
       } else {
         addToOrgAndGroup(userRec, true);
       }
+      if (offlineOnly) {
+        await waitForIt(
+          'record added',
+          () => Boolean(userRec.id),
+          () => false,
+          100
+        );
+        if (offlineOnly) localStorage.setItem('user-id', userRec.id);
+      }
       toolChanged(toolId, false);
     }
     if (finishAdd) {

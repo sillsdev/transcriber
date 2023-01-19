@@ -275,9 +275,11 @@ export const useElectronImport = () => {
         if (await ipc?.exists(path.join(where, 'Version')))
           await ipc?.delete(path.join(where, 'Version'));
         var datapath = path.join(where, 'data');
-        const files = await ipc?.readDir(datapath);
-        for (const file of files) {
-          await ipc?.delete(path.join(datapath, file));
+        if (await ipc?.exists(datapath)) {
+          const files = await ipc?.readDir(datapath);
+          for (const file of files) {
+            await ipc?.delete(path.join(datapath, file));
+          }
         }
       } catch (err: any) {
         if (err.errno !== -4058)
