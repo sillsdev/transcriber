@@ -523,11 +523,13 @@ export function Access(
                   title={t.offlineUsers}
                 />
               )}
-              <ActionBox>
-                <AltButton id="accessCreateUser" onClick={handleCreateUser}>
-                  {t.createUser}
-                </AltButton>
-              </ActionBox>
+              {localStorage.getItem('offlineAdmin') !== 'true' && (
+                <ActionBox>
+                  <AltButton id="accessCreateUser" onClick={handleCreateUser}>
+                    {t.createUser}
+                  </AltButton>
+                </ActionBox>
+              )}
               <ActionBox>
                 <AltButton id="accessImport" onClick={handleImport}>
                   {t.importSnapshot}
