@@ -44,6 +44,7 @@
     "node-html-encoder": "0.0.2",
     "original-fs": "^1.1.0",
     "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-datasheet": "^1.4.9",
     "react-dom": "^18.2.0",
@@ -207,7 +208,5 @@
         ]
       }
     ]
-  },
-  "main": "public/electron.js",
-  "homepage": "./"
+  }
 }
