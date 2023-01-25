@@ -5,6 +5,7 @@ module.exports = {
       // eslint-disable-next-line no-param-reassign
       config.resolve.fallback = {
         fs: require.resolve('fs'),
+        'process/browser': require.resolve('process/browser'),
       };
       config.plugins.push(
         new webpack.ProvidePlugin({

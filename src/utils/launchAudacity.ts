@@ -1,6 +1,7 @@
 import { IExeca } from '../model';
 import { getAudacityExe, logError, Severity, infoMsg, execFolder } from '.';
 import path from 'path-browserify';
+import process from 'process';
 const ipc = (window as any)?.electron;
 
 export const launchAudacity = async (proj: string, reporter: any) => {
