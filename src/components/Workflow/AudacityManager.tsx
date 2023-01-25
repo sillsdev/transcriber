@@ -2,7 +2,7 @@ import React from 'react';
 import { useGlobal } from 'reactn';
 import moment from 'moment';
 import { shallowEqual, useSelector } from 'react-redux';
-import { IAudacityManagerStrings, MediaFile } from '../../model';
+import { IAudacityManagerStrings, IState, MediaFile } from '../../model';
 import {
   Button,
   Dialog,
@@ -22,6 +22,8 @@ import {
   useAudacityProjRead,
   useAudacityProjDelete,
   useAudProjName,
+  usePassageRec,
+  passageDescription,
 } from '../../crud';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { debounce } from 'lodash';
@@ -74,6 +76,9 @@ function AudacityManager(props: IProps) {
   const { passageId, mediaId, onClose, open } = props;
   const { item, onImport } = props;
   const { speaker, onSpeaker } = props;
+  const allBookData = useSelector((state: IState) => state.books.bookData);
+  const getPassage = usePassageRec();
+  const [passageRef, setPassageRef] = React.useState('');
   const [hasRights, setHasRight] = React.useState(!onSpeaker);
   const audUpdate = useAudacityProjUpdate();
   const audRead = useAudacityProjRead();
@@ -293,6 +298,10 @@ function AudacityManager(props: IProps) {
         nameUpdate();
       }
     })();
+    if (passageId?.id) {
+      const passRec = getPassage(passageId.id);
+      setPassageRef(passageDescription(passRec, allBookData));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passageId, name]);
 
@@ -304,7 +313,7 @@ function AudacityManager(props: IProps) {
       maxWidth="md"
       disableEnforceFocus
     >
-      <DialogTitle id="manager-title">{t.title}</DialogTitle>
+      <DialogTitle id="manager-title">{`${t.title} - ${passageRef}`}</DialogTitle>
       <StyledGrid container>
         {exists && name !== '' ? (
           <Grid container justifyContent="center">

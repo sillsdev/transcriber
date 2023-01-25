@@ -20,6 +20,7 @@ export * from './useFlatAdd';
 export * from './useIsPersonalTeam';
 export * from './useNewTeamId';
 export * from './useOrganizedBy';
+export * from './usePassageRec';
 export * from './usePlan';
 export * from './useProjectPlans';
 export * from './user';
