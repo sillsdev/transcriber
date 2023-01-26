@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file id="1" original="TranscriberDigest-en.xliff" source-language="en" target-language="tpi" datatype="plaintext">
+    <body>
+      <trans-unit id="digest.app">
+        <source>SIL Transcriber</source>
+        <target state="needs-translation">SIL Transcriber</target>
+        <note>Context: Application Name</note>
+        <fr>SIL Transcriber</fr>
+        <id>SIL Transcriber</id>
+      </trans-unit>
+      <trans-unit id="digest.project">
+        <source>Project</source>
+        <target state="needs-translation">Project</target>
+        <note>Context: Digest Email</note>
+        <fr>Projet</fr>
+        <id>Proyek</id>
+      </trans-unit>
+      <trans-unit id="digest.plan">
+        <source>Plan</source>
+        <target state="needs-translation">Plan</target>
+        <note>Context: Digest Email</note>
+        <fr>Plan</fr>
+        <id>Rencana</id>
+      </trans-unit>
+      <trans-unit id="digest.passage">
+        <source>Passage</source>
+        <target state="needs-translation">Passage</target>
+        <note>Context: Digest Email</note>
+        <fr>Passage</fr>
+        <id>bagian</id>
+      </trans-unit>
+      <trans-unit id="digest.state">
+        <source>State</source>
+        <target state="needs-translation">State</target>
+        <note>Context: Digest Email</note>
+        <fr>Etat</fr>
+        <id>negara</id>
+      </trans-unit>
+      <trans-unit id="digest.user">
+        <source>User</source>
+        <target state="needs-translation">User</target>
+        <note>Context: Digest Email</note>
+        <fr>Utilisateur</fr>
+        <id>Pengguna</id>
+      </trans-unit>
+      <trans-unit id="digest.comments">
+        <source>Comments</source>
+        <target state="needs-translation">Comments</target>
+        <note>Context: Digest Email</note>
+      </trans-unit>
+      <trans-unit id="digest.preferences">
+        <source>Change communication preferences</source>
+        <target state="needs-translation">Change communication preferences</target>
+        <note>Context: Digest Email</note>
+      </trans-unit>
+      <trans-unit id="digest.sil">
+        <source>SIL International</source>
+        <target state="needs-translation">SIL International</target>
+        <note>Context: Digest Email</note>
+      </trans-unit>
+      <trans-unit id="digest.subject">
+        <source>Daily Digest of SIL Transcriber Activity</source>
+        <target state="needs-translation">Daily Digest of SIL Transcriber Activity</target>
+        <note>Context: Digest Email</note>
+      </trans-unit>
+      <trans-unit id="activityState.approved">
+        <source>Ready to Sync</source>
+        <target state="needs-translation">Ready to Sync</target>
+        <context-group>
+          <context context-type="sourcefile"> Digest Email</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="activityState.done">
+        <source>Done</source>
+        <target state="needs-translation">Done</target>
+        <context-group>
+          <context context-type="sourcefile"> Digest Email</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="activityState.incomplete">
+        <source>Incomplete</source>
+        <target state="needs-translation">Incomplete</target>
+        <context-group>
+          <context context-type="sourcefile"> Digest Email</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="activityState.needsNewRecording">
+        <source>Recording Needed</source>
+        <target state="needs-translation">Recording Needed</target>
+        <context-group>
+          <context context-type="sourcefile"> Digest Email</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="activityState.needsNewTranscription">
+        <source>Correction Needed</source>
+        <target state="needs-translation">Correction Needed</target>
+        <context-group>
+          <context context-type="sourcefile"> Digest Email</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="activityState.noMedia">
+        <source>No Recording</source>
+        <target state="needs-translation">No Recording</target>
+        <context-group>
+          <context context-type="sourcefile"> Digest Email</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="activityState.review">
+        <source>Review</source>
+        <target state="needs-translation">Review</target>
+        <context-group>
+          <context context-type="sourcefile"> Digest Email</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="activityState.reviewing">
+        <source>Reviewing</source>
+        <target state="needs-translation">Reviewing</target>
+        <context-group>
+          <context context-type="sourcefile"> Digest Email</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="activityState.synced">
+        <source>Synced</source>
+        <target state="needs-translation">Synced</target>
+        <context-group>
+          <context context-type="sourcefile"> Digest Email</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="activityState.transcribe">
+        <source>Transcribe</source>
+        <target state="needs-translation">Transcribe</target>
+        <context-group>
+          <context context-type="sourcefile"> Digest Email</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="activityState.transcribed">
+        <source>Transcribed</source>
+        <target state="needs-translation">Transcribed</target>
+        <context-group>
+          <context context-type="sourcefile"> Digest Email</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="activityState.transcribeReady">
+        <source>Ready to Transcribe</source>
+        <target state="needs-translation">Ready to Transcribe</target>
+        <context-group>
+          <context context-type="sourcefile"> Digest Email</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="activityState.transcribing">
+        <source>Transcribing</source>
+        <target state="needs-translation">Transcribing</target>
+        <context-group>
+          <context context-type="sourcefile"> Digest Email</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

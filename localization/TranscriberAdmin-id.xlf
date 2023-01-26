@@ -2853,26 +2853,26 @@
 		</unit>
 		<unit id="newProject.blank">
 			<segment>
-				<source>Blank Audio Project</source>
-				<target/>
+				<source>Audio Project</source>
+				<target>Proyek Audio</target>
 			</segment>
 		</unit>
 		<unit id="newProject.blankFactor1">
 			<segment>
-				<source>Best option if multiple pre-recorded audio files are available</source>
-				<target/>
+				<source>you want to set up a project with multiple passages</source>
+				<target>Anda ingin menyiapkan proyek dengan beberapa bagian</target>
 			</segment>
 		</unit>
 		<unit id="newProject.blankFactor2">
 			<segment>
-				<source>Best option if passage list is available in a spreadsheet</source>
-				<target/>
+				<source>you plan to record each passage as part of the workflow</source>
+				<target>Anda berencana untuk merekam setiap bagian sebagai bagian dari alur kerja</target>
 			</segment>
 		</unit>
 		<unit id="newProject.blankTip">
 			<segment>
-				<source>All settings are manually chosen.</source>
-				<target/>
+				<source>Set up an empty project.</source>
+				<target>Siapkan proyek kosong.</target>
 			</segment>
 		</unit>
 		<unit id="newProject.configure">
@@ -2883,80 +2883,44 @@
 		</unit>
 		<unit id="newProject.general">
 			<segment>
-				<source>General Quick Start</source>
-				<target/>
+				<source>Quick Start</source>
+				<target>Mulai Cepat</target>
 			</segment>
 		</unit>
 		<unit id="newProject.generalFactor1">
 			<segment>
-				<source>Free-form references</source>
-				<target/>
+				<source>you have one or a few prerecorded audio files for passages</source>
+				<target>Anda memiliki satu atau beberapa file audio yang telah direkam sebelumnya untuk bagian-bagian</target>
 			</segment>
 		</unit>
 		<unit id="newProject.generalFactor2">
 			<segment>
-				<source>No Paratext sync expected or allowed</source>
-				<target/>
+				<source>you just want to try out the program before you set up an actual project</source>
+				<target>Anda hanya ingin mencoba program ini sebelum membuat proyek yang sebenarnya</target>
 			</segment>
 		</unit>
 		<unit id="newProject.generalTip">
 			<segment>
-				<source>General transcription can cover a wide range of working scenarios and product solutions.</source>
-				<target/>
+				<source>Create a project with one or a few audio files.</source>
+				<target>Membuat proyek dengan satu atau beberapa file audio.</target>
 			</segment>
 		</unit>
 		<unit id="newProject.keyFactors">
 			<segment>
-				<source>Key Factors</source>
-				<target/>
+				<source>Best option if...</source>
+				<target>Pilihan terbaik jika...</target>
 			</segment>
 		</unit>
 		<unit id="newProject.likeTemplate">
 			<segment>
-				<source>These options present different templates for getting started. Choices made here can be changed in the Edit Audio Project Settings dialog.</source>
-				<target/>
+				<source>Here are optional ways to get started. Later, you can use the Edit Audio Project Settings dialog box to change any of your initial settings.</source>
+				<target>Berikut ini adalah cara opsional untuk memulai. Kemudian, Anda dapat menggunakan kotak dialog Edit Pengaturan Proyek Audio untuk mengubah pengaturan awal Anda.</target>
 			</segment>
 		</unit>
 		<unit id="newProject.newProject">
 			<segment>
-				<source>New Audio Project</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="newProject.other">
-			<segment>
-				<source>Other</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="newProject.paratextIntegration">
-			<segment>
-				<source>Integrated with Paratext</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="newProject.scripture">
-			<segment>
-				<source>Scripture Quick Start</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="newProject.scriptureFactor1">
-			<segment>
-				<source>Uses Scripture Referencing: book, chapter, and verse</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="newProject.scriptureFactor2">
-			<segment>
-				<source>Workflow syncs with Paratext</source>
-				<target/>
-			</segment>
-		</unit>
-		<unit id="newProject.scriptureTip">
-			<segment>
-				<source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
-				<target/>
+				<source>Create New Audio Project</source>
+				<target>Membuat Proyek Audio Baru</target>
 			</segment>
 		</unit>
 		<unit id="newProject.startRecording">
@@ -2973,8 +2937,8 @@
 		</unit>
 		<unit id="newProject.uploadAudio">
 			<segment>
-				<source>Upload Audio</source>
-				<target/>
+				<source>Bulk Upload</source>
+				<target>Unggah Massal</target>
 			</segment>
 		</unit>
 		<unit id="passageChooser.passages">

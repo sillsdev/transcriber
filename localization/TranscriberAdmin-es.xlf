@@ -2853,26 +2853,26 @@
 		</unit>
 		<unit id="newProject.blank">
 			<segment>
-				<source>Blank Audio Project</source>
-				<target>Proyecto de audio en blanco</target>
+				<source>Audio Project</source>
+				<target>Proyecto de audio</target>
 			</segment>
 		</unit>
 		<unit id="newProject.blankFactor1">
 			<segment>
-				<source>Best option if multiple pre-recorded audio files are available</source>
-				<target>La mejor opción si se dispone de varios archivos de audio pregrabados</target>
+				<source>you want to set up a project with multiple passages</source>
+				<target>desea configurar un proyecto con varios pasajes</target>
 			</segment>
 		</unit>
 		<unit id="newProject.blankFactor2">
 			<segment>
-				<source>Best option if passage list is available in a spreadsheet</source>
-				<target>Mejor opción si se dispone de una lista de pasajes en una hoja de cálculo</target>
+				<source>you plan to record each passage as part of the workflow</source>
+				<target>planea grabar cada pasaje como parte del flujo de trabajo</target>
 			</segment>
 		</unit>
 		<unit id="newProject.blankTip">
 			<segment>
-				<source>All settings are manually chosen.</source>
-				<target>Todos los ajustes se eligen manualmente.</target>
+				<source>Set up an empty project.</source>
+				<target>Configure un proyecto vacío.</target>
 			</segment>
 		</unit>
 		<unit id="newProject.configure">
@@ -2883,80 +2883,44 @@
 		</unit>
 		<unit id="newProject.general">
 			<segment>
-				<source>General Quick Start</source>
-				<target>Inicio rápido general</target>
+				<source>Quick Start</source>
+				<target>Inicio rápido</target>
 			</segment>
 		</unit>
 		<unit id="newProject.generalFactor1">
 			<segment>
-				<source>Free-form references</source>
-				<target>Referencias de forma libre</target>
+				<source>you have one or a few prerecorded audio files for passages</source>
+				<target>tiene uno o varios archivos de audio pregrabados para pasajes</target>
 			</segment>
 		</unit>
 		<unit id="newProject.generalFactor2">
 			<segment>
-				<source>No Paratext sync expected or allowed</source>
-				<target>No se espera ni se permite la sincronización del paratexto</target>
+				<source>you just want to try out the program before you set up an actual project</source>
+				<target>sólo quiere probar el programa antes de crear un proyecto real</target>
 			</segment>
 		</unit>
 		<unit id="newProject.generalTip">
 			<segment>
-				<source>General transcription can cover a wide range of working scenarios and product solutions.</source>
-				<target>La transcripción general puede cubrir una amplia gama de escenarios de trabajo y soluciones de productos.</target>
+				<source>Create a project with one or a few audio files.</source>
+				<target>Crea un proyecto con uno o varios archivos de audio.</target>
 			</segment>
 		</unit>
 		<unit id="newProject.keyFactors">
 			<segment>
-				<source>Key Factors</source>
-				<target>Factores clave</target>
+				<source>Best option if...</source>
+				<target>La mejor opción si...</target>
 			</segment>
 		</unit>
 		<unit id="newProject.likeTemplate">
 			<segment>
-				<source>These options present different templates for getting started. Choices made here can be changed in the Edit Audio Project Settings dialog.</source>
-				<target>Estas opciones presentan diferentes plantillas para empezar. Las elecciones realizadas aquí pueden modificarse en el cuadro de diálogo Editar configuración del proyecto de audio.</target>
+				<source>Here are optional ways to get started. Later, you can use the Edit Audio Project Settings dialog box to change any of your initial settings.</source>
+				<target>Estas son formas opcionales de empezar. Más tarde, puede utilizar el cuadro de diálogo Editar configuración del proyecto de audio para cambiar cualquiera de los ajustes iniciales.</target>
 			</segment>
 		</unit>
 		<unit id="newProject.newProject">
 			<segment>
-				<source>New Audio Project</source>
-				<target>Nuevo proyecto de audio</target>
-			</segment>
-		</unit>
-		<unit id="newProject.other">
-			<segment>
-				<source>Other</source>
-				<target>Otros</target>
-			</segment>
-		</unit>
-		<unit id="newProject.paratextIntegration">
-			<segment>
-				<source>Integrated with Paratext</source>
-				<target>Integrado con Paratexto</target>
-			</segment>
-		</unit>
-		<unit id="newProject.scripture">
-			<segment>
-				<source>Scripture Quick Start</source>
-				<target>Inicio Rápido de la Escritura</target>
-			</segment>
-		</unit>
-		<unit id="newProject.scriptureFactor1">
-			<segment>
-				<source>Uses Scripture Referencing: book, chapter, and verse</source>
-				<target>Utiliza la referencia de las Escrituras: libro, capítulo y versículo</target>
-			</segment>
-		</unit>
-		<unit id="newProject.scriptureFactor2">
-			<segment>
-				<source>Workflow syncs with Paratext</source>
-				<target>El flujo de trabajo se sincroniza con Paratext</target>
-			</segment>
-		</unit>
-		<unit id="newProject.scriptureTip">
-			<segment>
-				<source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
-				<target>El producto final puede ser audio o texto y el tipo de contenido puede ser traducción, historias, redacción o adaptación.</target>
+				<source>Create New Audio Project</source>
+				<target>Crear nuevo proyecto de audio</target>
 			</segment>
 		</unit>
 		<unit id="newProject.startRecording">
@@ -2973,8 +2937,8 @@
 		</unit>
 		<unit id="newProject.uploadAudio">
 			<segment>
-				<source>Upload Audio</source>
-				<target>Cargar audio</target>
+				<source>Bulk Upload</source>
+				<target>Carga masiva</target>
 			</segment>
 		</unit>
 		<unit id="passageChooser.passages">

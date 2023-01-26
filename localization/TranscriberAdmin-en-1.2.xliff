@@ -3328,28 +3328,28 @@
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.blank">
-            <source>Blank Audio Project</source>
+            <source>Audio Project</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.blankFactor1">
-            <source>Best option if multiple pre-recorded audio files are available</source>
+            <source>you want to set up a project with multiple passages</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.blankFactor2">
-            <source>Best option if passage list is available in a spreadsheet</source>
+            <source>you plan to record each passage as part of the workflow</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.blankTip">
-            <source>All settings are manually chosen.</source>
+            <source>Set up an empty project.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
@@ -3363,91 +3363,49 @@
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.general">
-            <source>General Quick Start</source>
+            <source>Quick Start</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.generalFactor1">
-            <source>Free-form references</source>
+            <source>you have one or a few prerecorded audio files for passages</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.generalFactor2">
-            <source>No Paratext sync expected or allowed</source>
+            <source>you just want to try out the program before you set up an actual project</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.generalTip">
-            <source>General transcription can cover a wide range of working scenarios and product solutions.</source>
+            <source>Create a project with one or a few audio files.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.keyFactors">
-            <source>Key Factors</source>
+            <source>Best option if...</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.likeTemplate">
-            <source>These options present different templates for getting started. Choices made here can be changed in the Edit Audio Project Settings dialog.</source>
+            <source>Here are optional ways to get started. Later, you can use the Edit Audio Project Settings dialog box to change any of your initial settings.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.newProject">
-            <source>New Audio Project</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">NewProject.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="newProject.other">
-            <source>Other</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">NewProject.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="newProject.paratextIntegration">
-            <source>Integrated with Paratext</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">NewProject.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="newProject.scripture">
-            <source>Scripture Quick Start</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">NewProject.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="newProject.scriptureFactor1">
-            <source>Uses Scripture Referencing: book, chapter, and verse</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">NewProject.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="newProject.scriptureFactor2">
-            <source>Workflow syncs with Paratext</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">NewProject.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="newProject.scriptureTip">
-            <source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
+            <source>Create New Audio Project</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>
@@ -3468,7 +3426,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="newProject.uploadAudio">
-            <source>Upload Audio</source>
+            <source>Bulk Upload</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">NewProject.tsx</context>

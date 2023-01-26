@@ -2853,26 +2853,26 @@
 		</unit>
 		<unit id="newProject.blank">
 			<segment>
-				<source>Blank Audio Project</source>
-				<target>Пустой проект</target>
+				<source>Audio Project</source>
+				<target>Аудиопроект</target>
 			</segment>
 		</unit>
 		<unit id="newProject.blankFactor1">
 			<segment>
-				<source>Best option if multiple pre-recorded audio files are available</source>
-				<target>Лучший вариант при наличии нескольких предварительно записанныхудиофайлов</target>
+				<source>you want to set up a project with multiple passages</source>
+				<target>вы хотите создать проект с несколькими переходами</target>
 			</segment>
 		</unit>
 		<unit id="newProject.blankFactor2">
 			<segment>
-				<source>Best option if passage list is available in a spreadsheet</source>
-				<target>Лучший вариант, если список проходов доступен в электронной таблице</target>
+				<source>you plan to record each passage as part of the workflow</source>
+				<target>вы планируете записывать каждый отрывок как часть рабочего процесса</target>
 			</segment>
 		</unit>
 		<unit id="newProject.blankTip">
 			<segment>
-				<source>All settings are manually chosen.</source>
-				<target>Все настройки выбираются вручную.</target>
+				<source>Set up an empty project.</source>
+				<target>Создайте пустой проект.</target>
 			</segment>
 		</unit>
 		<unit id="newProject.configure">
@@ -2883,80 +2883,44 @@
 		</unit>
 		<unit id="newProject.general">
 			<segment>
-				<source>General Quick Start</source>
-				<target>Общая транскрипция</target>
+				<source>Quick Start</source>
+				<target>Быстрый старт</target>
 			</segment>
 		</unit>
 		<unit id="newProject.generalFactor1">
 			<segment>
-				<source>Free-form references</source>
-				<target>Ссылки в свободной форме</target>
+				<source>you have one or a few prerecorded audio files for passages</source>
+				<target>у вас есть один или несколько предварительно записанных аудиофайлов для отрывков</target>
 			</segment>
 		</unit>
 		<unit id="newProject.generalFactor2">
 			<segment>
-				<source>No Paratext sync expected or allowed</source>
-				<target>Синхронизация паратекста не ожидается и не допускается</target>
+				<source>you just want to try out the program before you set up an actual project</source>
+				<target>вы просто хотите опробовать программу перед созданием реального проекта</target>
 			</segment>
 		</unit>
 		<unit id="newProject.generalTip">
 			<segment>
-				<source>General transcription can cover a wide range of working scenarios and product solutions.</source>
-				<target>Общая транскрипция может охватывать широкий спектр рабочих сценариев иродуктовых решений.</target>
+				<source>Create a project with one or a few audio files.</source>
+				<target>Создайте проект с одним или несколькими аудиофайлами.</target>
 			</segment>
 		</unit>
 		<unit id="newProject.keyFactors">
 			<segment>
-				<source>Key Factors</source>
-				<target>Ключевые факторы</target>
+				<source>Best option if...</source>
+				<target>Лучший вариант, если...</target>
 			</segment>
 		</unit>
 		<unit id="newProject.likeTemplate">
 			<segment>
-				<source>These options present different templates for getting started. Choices made here can be changed in the Edit Audio Project Settings dialog.</source>
-				<target>Эти опции представляют собой различные шаблоны для начала работы. Сделанныйдесь выбор можно изменить в диалоговом окне Edit Project Settings.</target>
+				<source>Here are optional ways to get started. Later, you can use the Edit Audio Project Settings dialog box to change any of your initial settings.</source>
+				<target>Здесь приведены дополнительные способы начать работу. Позже вы можете использовать диалоговое окно Edit Audio Project Settings для изменения любых начальных настроек.</target>
 			</segment>
 		</unit>
 		<unit id="newProject.newProject">
 			<segment>
-				<source>New Audio Project</source>
-				<target>Новый проект</target>
-			</segment>
-		</unit>
-		<unit id="newProject.other">
-			<segment>
-				<source>Other</source>
-				<target>Другое</target>
-			</segment>
-		</unit>
-		<unit id="newProject.paratextIntegration">
-			<segment>
-				<source>Integrated with Paratext</source>
-				<target>Интеграция с Paratext</target>
-			</segment>
-		</unit>
-		<unit id="newProject.scripture">
-			<segment>
-				<source>Scripture Quick Start</source>
-				<target>Транскрипция Писания</target>
-			</segment>
-		</unit>
-		<unit id="newProject.scriptureFactor1">
-			<segment>
-				<source>Uses Scripture Referencing: book, chapter, and verse</source>
-				<target>Использует ссылки на Писание: книга, глава и стих</target>
-			</segment>
-		</unit>
-		<unit id="newProject.scriptureFactor2">
-			<segment>
-				<source>Workflow syncs with Paratext</source>
-				<target>Рабочий процесс синхронизируется с Paratext для проверки</target>
-			</segment>
-		</unit>
-		<unit id="newProject.scriptureTip">
-			<segment>
-				<source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
-				<target>Конечным продуктом может быть аудио или текст, а типом контента - перевод,ассказы, составление или адаптация.</target>
+				<source>Create New Audio Project</source>
+				<target>Создать новый аудиопроект</target>
 			</segment>
 		</unit>
 		<unit id="newProject.startRecording">
@@ -2973,8 +2937,8 @@
 		</unit>
 		<unit id="newProject.uploadAudio">
 			<segment>
-				<source>Upload Audio</source>
-				<target>Загрузить аудио</target>
+				<source>Bulk Upload</source>
+				<target>Массовая загрузка</target>
 			</segment>
 		</unit>
 		<unit id="passageChooser.passages">

@@ -15,7 +15,7 @@ import { Language, ILanguage } from '../../control';
 import Uploader from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
-import { UpdateRecord } from '../../model/baseModel';
+import { ReplaceRelatedRecord, UpdateRecord } from '../../model/baseModel';
 import {
   waitForRemoteId,
   remoteId,
@@ -23,12 +23,14 @@ import {
   findRecord,
   related,
   usePlan,
+  useTypeId,
 } from '../../crud';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
 import NewProjectGrid from './NewProjectGrid';
 import { restoreScroll } from '../../utils';
+import { RecordIdentity } from '@orbit/data';
 
 const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   minWidth: 275,
@@ -99,10 +101,10 @@ export const AddCard = (props: IProps) => {
   const [pickOpen, setPickOpen] = React.useState(false);
   const preventBoth = React.useRef(false);
   const [view, setView] = React.useState('');
-  const [forceType, setForceType] = React.useState(false);
   const [recordAudio, setRecordAudio] = React.useState(false);
   const speakerRef = useRef<string>();
   const { getPlan } = usePlan();
+  const getTypeId = useTypeId();
 
   useEffect(() => {
     if (localStorage.getItem('autoaddProject') !== null && team === null) {
@@ -133,11 +135,6 @@ export const AddCard = (props: IProps) => {
     }
   }, [uploadVisible]);
 
-  const handleForceType = (type: string) => {
-    setType(type);
-    setForceType(true);
-  };
-
   const handleSolutionShow = () => {
     if (!preventBoth.current) setPickOpen(true);
     preventBoth.current = false;
@@ -154,12 +151,14 @@ export const AddCard = (props: IProps) => {
   };
 
   const handleUpload = () => {
+    setType('other');
     setRecordAudio(false);
     setUploadVisible(true);
     setInProgress(true);
   };
 
   const handleRecord = () => {
+    setType('other');
     setRecordAudio(true);
     setUploadVisible(true);
     setInProgress(true);
@@ -265,6 +264,17 @@ export const AddCard = (props: IProps) => {
         ]);
         return planRef.current;
       }
+    } else if (planRef.current) {
+      const planRecId = { type: 'plan', id: planRef.current } as RecordIdentity;
+      await memory.update((t) => [
+        ...ReplaceRelatedRecord(
+          t,
+          planRecId,
+          'plantype',
+          'plantype',
+          getTypeId(type, 'plan')
+        ),
+      ]);
     }
     stepRef.current = 0;
     planRef.current = await projectCreate(
@@ -330,7 +340,7 @@ export const AddCard = (props: IProps) => {
     () => {
       return (
         <>
-          {forceType || <ProjectType type={type} onChange={setType} />}
+          <ProjectType type={type} onChange={setType} />
           {type.toLowerCase() === 'scripture' && (
             <BookCombobox
               value={book}
@@ -343,7 +353,7 @@ export const AddCard = (props: IProps) => {
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [bookSuggestions, language, type, book, forceType]
+    [bookSuggestions, language, type, book]
   );
 
   if (view !== '') return <StickyRedirect to={view} />;
@@ -360,7 +370,6 @@ export const AddCard = (props: IProps) => {
               doUpload={handleUpload}
               doRecord={handleRecord}
               doNewProj={handleClickOpen}
-              setType={handleForceType}
             />
             <ProjectDialog
               mode={DialogMode.add}

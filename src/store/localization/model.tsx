@@ -588,12 +588,6 @@ export interface INewProjectStrings extends Localize.LocalizedStringsMethods {
     "keyFactors": string;
     "likeTemplate": string;
     "newProject": string;
-    "other": string;
-    "paratextIntegration": string;
-    "scripture": string;
-    "scriptureFactor1": string;
-    "scriptureFactor2": string;
-    "scriptureTip": string;
     "startRecording": string;
     "textProduct": string;
     "uploadAudio": string;

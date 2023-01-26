@@ -2856,25 +2856,25 @@
       </unit>
       <unit id="newProject.blank">
          <segment>
-            <source>Blank Audio Project</source>
+            <source>Audio Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.blankFactor1">
          <segment>
-            <source>Best option if multiple pre-recorded audio files are available</source>
+            <source>you want to set up a project with multiple passages</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.blankFactor2">
          <segment>
-            <source>Best option if passage list is available in a spreadsheet</source>
+            <source>you plan to record each passage as part of the workflow</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.blankTip">
          <segment>
-            <source>All settings are manually chosen.</source>
+            <source>Set up an empty project.</source>
             <target/>
          </segment>
       </unit>
@@ -2886,79 +2886,43 @@
       </unit>
       <unit id="newProject.general">
          <segment>
-            <source>General Quick Start</source>
+            <source>Quick Start</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.generalFactor1">
          <segment>
-            <source>Free-form references</source>
+            <source>you have one or a few prerecorded audio files for passages</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.generalFactor2">
          <segment>
-            <source>No Paratext sync expected or allowed</source>
+            <source>you just want to try out the program before you set up an actual project</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.generalTip">
          <segment>
-            <source>General transcription can cover a wide range of working scenarios and product solutions.</source>
+            <source>Create a project with one or a few audio files.</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.keyFactors">
          <segment>
-            <source>Key Factors</source>
+            <source>Best option if...</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.likeTemplate">
          <segment>
-            <source>These options present different templates for getting started. Choices made here can be changed in the Edit Audio Project Settings dialog.</source>
+            <source>Here are optional ways to get started. Later, you can use the Edit Audio Project Settings dialog box to change any of your initial settings.</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.newProject">
          <segment>
-            <source>New Audio Project</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.other">
-         <segment>
-            <source>Other</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.paratextIntegration">
-         <segment>
-            <source>Integrated with Paratext</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.scripture">
-         <segment>
-            <source>Scripture Quick Start</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.scriptureFactor1">
-         <segment>
-            <source>Uses Scripture Referencing: book, chapter, and verse</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.scriptureFactor2">
-         <segment>
-            <source>Workflow syncs with Paratext</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.scriptureTip">
-         <segment>
-            <source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
+            <source>Create New Audio Project</source>
             <target/>
          </segment>
       </unit>
@@ -2976,7 +2940,7 @@
       </unit>
       <unit id="newProject.uploadAudio">
          <segment>
-            <source>Upload Audio</source>
+            <source>Bulk Upload</source>
             <target/>
          </segment>
       </unit>
