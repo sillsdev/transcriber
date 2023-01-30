@@ -46,6 +46,7 @@ const initState = {
   organizedBy: '',
   vProjectStrings: {} as IVProjectStrings,
 };
+export const initProjectState = { ...initState };
 export type IProjectDialog = typeof initState;
 
 export interface IProjectDialogState {
