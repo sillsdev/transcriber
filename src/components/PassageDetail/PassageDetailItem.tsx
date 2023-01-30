@@ -40,7 +40,7 @@ import { TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { cleanFileName, NamedRegions } from '../../utils';
+import { NamedRegions } from '../../utils';
 import styledHtml from 'styled-components';
 import {
   default as SplitPaneBar,
@@ -61,6 +61,7 @@ import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import { GrowingSpacer, LightTooltip, PriButton } from '../../control';
 import { useSelector } from 'react-redux';
 import { communitySelector, sharedSelector } from '../../selector';
+import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 
 const PlayerRow = styled('div')(() => ({
   width: '100%',
@@ -166,6 +167,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   const [reporter] = useGlobal('errorReporter');
   const [organization] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const [plan] = useGlobal('plan');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
@@ -256,22 +258,25 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   );
 
   useEffect(() => {
-    var tmp = (passage.attributes.book || '') + passage.attributes.reference;
-    if (!tmp.length) tmp = passage.id.slice(0, 4);
     var mediaRec = rowData.filter(
       (r) => related(r.mediafile, 'artifactType') === recordTypeId
     );
-    tmp += recordType + (mediaRec.length + 1).toString();
-    tmp += '_v' + currentVersion.toString();
-    if (currentSegmentIndex > 0) tmp += 's' + currentSegmentIndex.toString();
-    setDefaultFileName(cleanFileName(tmp));
+    var postfix =
+      recordType +
+      (mediaRec.length + 1).toString() +
+      '_v' +
+      currentVersion.toString();
+    if (currentSegmentIndex > 0)
+      postfix += 's' + currentSegmentIndex.toString();
+    setDefaultFileName(
+      passageDefaultFilename(passage, plan, memory, recordTypeId, postfix)
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     memory,
     passage,
     rowData,
     recordType,
-    speaker,
     currentSegmentIndex,
     currentVersion,
   ]);

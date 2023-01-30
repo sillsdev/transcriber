@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, MediaFile, IPassageRecordStrings } from '../model';
+import { IState, IPassageRecordStrings } from '../model';
 import localStrings from '../selector/localize';
 import * as actions from '../store';
 import {
@@ -25,14 +25,7 @@ import {
   TextField,
 } from '@mui/material';
 import WSAudioPlayer from './WSAudioPlayer';
-import { QueryBuilder } from '@orbit/data';
-import {
-  generateUUID,
-  loadBlob,
-  removeExtension,
-  waitForIt,
-  cleanFileName,
-} from '../utils';
+import { generateUUID, loadBlob, waitForIt, cleanFileName } from '../utils';
 import { MediaSt, useFetchMediaUrl } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { bindActionCreators } from 'redux';
@@ -119,7 +112,6 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
   const [originalBlob, setOriginalBlob] = useState<Blob>();
   const [audioBlob, setAudioBlob] = useState<Blob>();
   const [loading, setLoading] = useState(false);
-  const [memory] = useGlobal('memory');
   const [filechanged, setFilechanged] = useState(false);
   const [recording, setRecording] = useState(false);
   const [blobReady, setBlobReady] = useState(true);
@@ -333,16 +325,13 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
         setLoading(false);
       }
     });
+    if (defaultFilename) setName(defaultFilename);
+    else setName(t.defaultFilename);
+
     if (!mediaId) {
-      if (defaultFilename) setName(defaultFilename);
-      else setName(t.defaultFilename);
       setDoReset && setDoReset(true);
       return;
     }
-    const mediaRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'mediafile', id: mediaId })
-    ) as MediaFile;
-    setName(removeExtension(mediaRec.attributes.originalFile).name);
   };
 
   useEffect(() => {

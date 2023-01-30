@@ -21,6 +21,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { NextUploadProps } from '../store';
 import { useDispatch } from 'react-redux';
 import { mediaTabSelector, sharedSelector } from '../selector';
+import { passageDefaultPrefix } from '../utils/passageDefaultFilename';
 
 const UnsupportedMessage = styled('span')(({ theme }) => ({
   color: theme.palette.secondary.light,
@@ -228,6 +229,11 @@ export const Uploader = (props: IProps) => {
         ? 'Project'
         : files[0]?.name.split('.')[0];
     if (createProject) planIdRef.current = await createProject(name);
+    var prefix = passageDefaultPrefix(planIdRef.current, memory);
+    while (files.findIndex((f) => !f.name.startsWith(prefix)) > -1) {
+      var ix = files.findIndex((f) => !f.name.startsWith(prefix));
+      files.splice(ix, 1, new File([files[ix]], prefix + files[ix].name));
+    }
     uploadFiles(files);
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
