@@ -712,9 +712,13 @@ export function ScriptureTable(
     waitForPassageId(i, () => {
       const { wf } = getByIndex(workflowRef.current, i);
       uploadItem.current = wf;
-      setDefaultFilename(
-        passageDefaultFilename(wf?.passageId?.id || '', memory, VernacularTag)
-      );
+      if (wf?.passageId) {
+        var ident = wf.passageId; //make typescript stop complaining
+        var passage = memory.cache.query((q) => q.findRecord(ident)) as Passage;
+        setDefaultFilename(
+          passageDefaultFilename(passage, plan, memory, VernacularTag)
+        );
+      }
       setRecordAudio(record);
       setImportList(list);
       setUploadVisible(true);

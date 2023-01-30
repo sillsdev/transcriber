@@ -45,6 +45,7 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   const { startSave, toolChanged, toolsChanged, saveRequested, waitForSave } =
     useContext(UnsavedContext).state;
   const [reporter] = useGlobal('errorReporter');
+  const [plan] = useGlobal('plan');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
@@ -88,9 +89,9 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
 
   useEffect(() => {
     setDefaultFileName(
-      passageDefaultFilename(passage?.id, memory, VernacularTag)
+      passageDefaultFilename(passage, plan, memory, VernacularTag)
     );
-  }, [memory, passage, mediafiles]);
+  }, [memory, passage, mediafiles, plan]);
 
   useEffect(() => {
     const mediaRec = findRecord(memory, 'mediafile', mediafileId) as

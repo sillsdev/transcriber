@@ -1,28 +1,31 @@
-import { getVernacularMediaRec } from '../crud';
-import { Passage } from '../model';
+import { getVernacularMediaRec, VernacularTag } from '../crud';
+import { Passage, Plan } from '../model';
 import Memory from '@orbit/memory';
 import { cleanFileName } from '.';
 
+export const passageDefaultPrefix = (planId: string, memory: Memory) => {
+  var planRec = memory.cache.query((q) =>
+    q.findRecord({ type: 'plan', id: planId })
+  ) as Plan;
+  return planRec.attributes.slug + '_';
+};
 export const passageDefaultFilename = (
-  passageId: string,
+  passage: Passage,
+  planId: string,
   memory: Memory,
-  vernacularId: string | null | undefined
+  artifactType: string | null | undefined,
+  postfix = ''
 ) => {
-  if (passageId) {
-    var passageRec = memory.cache.query((q) =>
-      q.findRecord({ type: 'passage', id: passageId })
-    ) as Passage;
-    var tmp =
-      (passageRec.attributes.book || '') + passageRec.attributes.reference;
-    if (!tmp.length) tmp = passageRec.id.slice(0, 4);
-
-    if (vernacularId !== undefined) {
-      const mediaRec = getVernacularMediaRec(passageId, memory);
+  if (passage) {
+    var tmp = (passage.attributes.book || '') + passage.attributes.reference;
+    if (!tmp.length) tmp = passage.id.slice(0, 4);
+    if (artifactType === VernacularTag) {
+      const mediaRec = getVernacularMediaRec(passage.id, memory);
       if (mediaRec) {
         tmp += '_v' + (mediaRec.attributes.versionNumber + 1).toString();
       }
     }
-    return cleanFileName(tmp);
+    return cleanFileName(passageDefaultPrefix(planId, memory) + tmp + postfix);
   }
   return '';
 };
