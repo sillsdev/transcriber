@@ -86,6 +86,7 @@ function AudacityManager(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
   const [exists, setExists] = React.useState(false);
   const [name, setName] = React.useState('');
+  const nameRef = React.useRef('');
   const [memory] = useGlobal('memory');
   const [changed] = useGlobal('changed');
   const { showMessage } = useSnackBar();
@@ -274,22 +275,29 @@ function AudacityManager(props: IProps) {
   };
 
   const nameUpdate = debounce(() => {
-    audUpdate(passageId.id, name);
+    if (passageId?.id) audUpdate(passageId.id, name);
   }, 100);
-
-  React.useEffect(() => {
-    if (name === '' && (passageId?.id || '') !== '') {
-      const audRec = audRead(passageId.id);
-      if (audRec?.attributes?.audacityName) {
-        setName(audRec?.attributes?.audacityName);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   React.useEffect(() => {
     if (speaker) handleRights(true);
   }, [speaker]);
+
+  React.useEffect(() => {
+    if (passageId?.id) {
+      const audRec = audRead(passageId.id);
+      const newName = audRec?.attributes?.audacityName;
+      if (newName) {
+        if (newName !== name) setName(newName);
+        nameRef.current = newName;
+      } else {
+        setName('');
+        nameRef.current = '';
+      }
+      const passRec = getPassage(passageId.id);
+      setPassageRef(passageDescription(passRec, allBookData));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [passageId?.id]);
 
   React.useEffect(() => {
     (async () => {
@@ -298,12 +306,8 @@ function AudacityManager(props: IProps) {
         nameUpdate();
       }
     })();
-    if (passageId?.id) {
-      const passRec = getPassage(passageId.id);
-      setPassageRef(passageDescription(passRec, allBookData));
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passageId, name]);
+  }, [name]);
 
   return (
     <Dialog
