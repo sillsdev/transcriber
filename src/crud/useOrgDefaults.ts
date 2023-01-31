@@ -12,21 +12,21 @@ export const useOrgDefaults = () => {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [offline] = useGlobal('offline');
 
-  const getOrgDefault = (label: string) => {
+  const getOrgDefault = (label: string, orgIn?: string) => {
     const org = findRecord(
       memory,
       'organization',
-      organization
+      orgIn ?? organization
     ) as Organization;
     const json = JSON.parse(org?.attributes.defaultParams ?? '{}');
     if (json[label]) return JSON.parse(json[label]);
     return undefined;
   };
-  const setOrgDefault = (label: string, value: any) => {
+  const setOrgDefault = (label: string, value: any, orgIn?: string) => {
     const org = findRecord(
       memory,
       'organization',
-      organization
+      orgIn ?? organization
     ) as Organization;
 
     const json = JSON.parse(org.attributes.defaultParams ?? '{}');
