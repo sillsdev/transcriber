@@ -28,6 +28,7 @@ export const useOrgDefaults = () => {
       'organization',
       orgIn ?? organization
     ) as Organization;
+    if (!org) return; // no defaults on Personal Team
 
     const json = JSON.parse(org.attributes.defaultParams ?? '{}');
     json[label] = JSON.stringify(value);
