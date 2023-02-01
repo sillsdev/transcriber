@@ -291,17 +291,6 @@ export const AddCard = (props: IProps) => {
         ]);
         return planRef.current;
       }
-    } else if (planRef.current) {
-      const planRecId = { type: 'plan', id: planRef.current } as RecordIdentity;
-      await memory.update((t) => [
-        ...ReplaceRelatedRecord(
-          t,
-          planRecId,
-          'plantype',
-          'plantype',
-          getTypeId(type, 'plan')
-        ),
-      ]);
     }
     stepRef.current = 0;
     planRef.current = await projectCreate(
@@ -346,6 +335,18 @@ export const AddCard = (props: IProps) => {
         bookRef.current?.value,
         setComplete
       ));
+    if (planRef.current) {
+      const planRecId = { type: 'plan', id: planRef.current } as RecordIdentity;
+      await memory.update((t) => [
+        ...ReplaceRelatedRecord(
+          t,
+          planRecId,
+          'plantype',
+          'plantype',
+          getTypeId(type, 'plan')
+        ),
+      ]);
+    }
     stepRef.current = 3;
     setTimeout(() => {
       // Allow time for last check mark
