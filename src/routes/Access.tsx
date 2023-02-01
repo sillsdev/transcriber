@@ -150,6 +150,7 @@ export function Access(
   const { setLanguage } = props;
   const { loginWithRedirect, isAuthenticated } = useAuth0();
   const [offline, setOffline] = useGlobal('offline');
+  const [isDeveloper] = useGlobal('developer');
   const [user] = useGlobal('user');
 
   const [, setEditId] = useGlobal('editUserId');
@@ -523,7 +524,7 @@ export function Access(
                   title={t.offlineUsers}
                 />
               )}
-              {localStorage.getItem('offlineAdmin') !== 'true' && (
+              {isDeveloper && (
                 <ActionBox>
                   <AltButton id="accessCreateUser" onClick={handleCreateUser}>
                     {t.createUser}
