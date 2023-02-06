@@ -135,6 +135,8 @@ export const exportProject =
           ? projectid.toString()
           : remoteId('project', projectid, memory.keyMap);
       let start = 0;
+      let laststart = 0;
+      let laststartCount = 0;
       do {
         var projRec = getProjRec(projectid);
         var bodyFormData = new FormData();
@@ -183,9 +185,19 @@ export const exportProject =
                 });
                 break;
               default:
+                if (start === laststart) laststartCount++;
+                else {
+                  laststartCount = 0;
+                  laststart = start;
+                }
+                if (laststartCount > 20) {
+                  start = 0;
+                  laststart = 0;
+                  laststartCount = 0;
+                }
                 var pct = Math.min(
-                  Math.round(start / (numberOfMedia + 15)) * 100,
-                  85
+                  Math.round((start / (numberOfMedia + 15)) * 100),
+                  90
                 );
                 dispatch({
                   payload: pendingmsg.replace('{0}', pct.toString()),
@@ -206,6 +218,9 @@ export const exportProject =
               type: EXPORT_ERROR,
             });
           });
+        if (start > -1) {
+          await new Promise((r) => setTimeout(r, 3000));
+        }
       } while (start > -1);
     }
   };
