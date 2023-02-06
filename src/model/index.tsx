@@ -44,6 +44,8 @@ export * from './orgData';
 export * from './workflowStep';
 export * from './artifactCategory';
 export * from './artifactType';
+export * from './orgKeyterm';
+export * from './orgKeytermTarget';
 export * from './orgWorkflowStep';
 export * from './discussion';
 export * from './comment';
