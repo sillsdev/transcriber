@@ -102,7 +102,6 @@ export const ProjectDownload = (
           if (projRec) newSteps = newSteps.concat(projRec.attributes.name);
         });
         setSteps(newSteps);
-        setProgress(Steps.Prepare);
         doProjectExport(ExportType.PTF, projectIds[currentStep]);
       } else if (busy) {
         setBusy(false);
@@ -208,12 +207,12 @@ export const ProjectDownload = (
           memory,
           currentDateTime()
         );
-        setProgress(Steps.Prepare);
         setCurrentStep(currentStep + 1);
+        setProgress(Steps.Prepare);
       })();
     } else if (progress === Steps.Error) {
-      setProgress(Steps.Prepare);
       setCurrentStep(currentStep + 1);
+      setProgress(Steps.Prepare);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [progress]);
