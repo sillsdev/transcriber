@@ -15,6 +15,8 @@ export const updateableFiles = [
   { table: 'section', sort: 'F' },
   { table: 'sectionresourceuser', sort: 'H' },
   { table: 'user', sort: 'A' },
+  { table: 'orgkeyterm', sort: 'C' },
+  { table: 'orgkeytermtarget', sort: 'C' },
 ];
 
 /* If these can change in electron, they must extend BaseModel instead of Record,

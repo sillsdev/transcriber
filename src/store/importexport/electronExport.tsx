@@ -16,6 +16,8 @@ import {
   VProject,
   Discussion,
   OrgWorkflowStep,
+  OrgKeyterm,
+  OrgKeytermTarget,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { getSerializer } from '../../serializers/JSONAPISerializerCustom';
@@ -60,7 +62,9 @@ export async function electronExport(
   localizedArtifact: string,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
   target?: string,
-  orgWorkflowSteps?: OrgWorkflowStep[]
+  orgWorkflowSteps?: OrgWorkflowStep[],
+  orgKeyterms?: OrgKeyterm[],
+  orgOrgKeytermTargets?: OrgKeytermTarget[]
 ): Promise<FileResponse | null> {
   const onlineSerlzr = getSerializer(memory, false);
   const offlineSrlzr = getSerializer(memory, true);

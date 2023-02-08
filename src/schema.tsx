@@ -779,6 +779,43 @@ if (
 
   schemaDefinition.version = 5;
 }
+if (
+  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5 &&
+  schemaDefinition.models
+) {
+  schemaDefinition.models.orgkeyterm = {
+    keys: { remoteId: {} },
+    attributes: {
+      term: { type: 'string' },
+      gloss: { type: 'string' },
+      definition: { type: 'string' },
+      category: { type: 'string' },
+      offlineId: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+    },
+    relationships: {
+      organization: { type: 'hasOne', model: 'organization' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.orgkeytermtarget = {
+    keys: { remoteId: {} },
+    attributes: {
+      term: { type: 'string' },
+      offlineId: { type: 'string' },
+      offlineMediafileId: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+    },
+    relationships: {
+      organization: { type: 'hasOne', model: 'organization' },
+      mediafile: { type: 'hasOne', model: 'mediafile' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.version = 6;
+}
 export const schema = new Schema(schemaDefinition);
 
 export const keyMap = new KeyMap();
