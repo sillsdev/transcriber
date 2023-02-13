@@ -3,7 +3,7 @@ import { BaseModel } from './baseModel';
 export interface OrgKeytermTarget extends BaseModel {
   attributes: {
     term: string;
-    index: number;
+    termIndex: number;
     target: string;
     offlineid: string;
     offlineMediafileid: string;

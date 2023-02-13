@@ -15,7 +15,7 @@ import * as actions from '../store';
 interface ISaveTerm {
   termTargetId?: string;
   term: string;
-  index: number;
+  termIndex: number;
   target: string;
   mediaRemId: string;
 }
@@ -30,7 +30,13 @@ export const useKeyTermSave = ({ cb }: IProps) => {
   const [org] = useGlobal('organization');
   const dispatch = useDispatch();
   const doOrbitError = (ex: IApiError) => dispatch(actions.doOrbitError(ex));
-  return ({ termTargetId, term, index, target, mediaRemId }: ISaveTerm) => {
+  return ({
+    termTargetId,
+    term,
+    termIndex: index,
+    target,
+    mediaRemId,
+  }: ISaveTerm) => {
     let mediaRec: MediaFile | undefined = undefined;
     if (mediaRemId) {
       const id =
@@ -48,13 +54,13 @@ export const useKeyTermSave = ({ cb }: IProps) => {
         termTargetId
       ) as OrgKeytermTarget;
       termTargetRec.attributes.term = term;
-      termTargetRec.attributes.index = index;
+      termTargetRec.attributes.termIndex = index;
       termTargetRec.attributes.target = target;
       ops.push(...UpdateRecord(t, termTargetRec, user));
     } else {
       termTargetRec = {
         type: 'orgkeytermtarget',
-        attributes: { term, index, target },
+        attributes: { term, termIndex: index, target },
       } as any;
       ops.push(
         ...AddRecord(t, termTargetRec, user, memory),

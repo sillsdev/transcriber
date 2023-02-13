@@ -77,7 +77,12 @@ IProps) {
   const afterUploadCb = (mediaRemId: string) => {
     if (rowRef.current) {
       const { term, index } = rowRef.current;
-      saveKeyTermTarget({ term, index, mediaRemId, target: targetText });
+      saveKeyTermTarget({
+        term,
+        termIndex: index,
+        mediaRemId,
+        target: targetText,
+      });
     }
   };
   const { keyTermId } = useArtifactType();
