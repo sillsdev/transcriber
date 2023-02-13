@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { parseRef, useOrgDefaults } from '../../crud';
 import BigDialog from '../../hoc/BigDialog';
-import { IKeyTerm } from '../../model';
+import { IKeyTerm, OrgKeytermTarget } from '../../model';
 import { cleanFileName, SortBy, useKeyTerms } from '../../utils';
 import KeyTermDetail from './KeyTermDetail';
 import KeyTermExclude, { KtExcludeTag } from './KeyTermExclude';
@@ -12,10 +12,16 @@ import PassageDetailPlayer from './PassageDetailPlayer';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../model';
 import { keyTermsSelector } from '../../selector';
+import { QueryBuilder } from '@orbit/data';
+import { withData } from 'react-orbitjs';
 
 export const SortTag = 'ktSort';
 
-const KeyTerms = () => {
+interface IRecordProps {
+  keyTermTargets: OrgKeytermTarget[];
+}
+
+const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
   const { passage, mediafileId } = usePassageDetailContext();
   const { book } = passage.attributes;
   const {
@@ -96,9 +102,11 @@ const KeyTerms = () => {
         ).map((to) => ({
           term: to.W,
           source: ktDisplay(to),
-          target: [],
+          target: keyTermTargets
+            .filter((t) => t.attributes.termIndex === to.I)
+            .map((t) => t.attributes.target),
           index: to.I,
-          fileName: cleanFileName(to.W)
+          fileName: cleanFileName(to.W),
         }))}
         termClick={handleTermClick}
       />
@@ -112,4 +120,9 @@ const KeyTerms = () => {
     </>
   );
 };
-export default KeyTerms;
+const mapRecordsToProps = {
+  keyTermTargets: (q: QueryBuilder) => q.findRecords('orgkeytermtarget'),
+};
+export default withData(mapRecordsToProps)(
+  KeyTerms
+) as any as () => JSX.Element;

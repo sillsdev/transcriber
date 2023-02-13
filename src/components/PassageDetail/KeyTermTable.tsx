@@ -7,7 +7,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Chip } from '@mui/material';
+import PlayIcon from '@mui/icons-material/PlayArrow';
+import { Box, Chip, IconButton } from '@mui/material';
 import { elemOffset, generateUUID } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../model';
@@ -53,6 +54,8 @@ interface IProps {
   rows: IKeyTermRow[];
   termClick?: (term: number) => void;
   chipClick?: (target: string) => void;
+  chipPlay?: (target: string) => void;
+  chipDelete?: (target: string) => void;
   addTarget?: (term: number) => void;
 }
 
@@ -60,18 +63,21 @@ export default function KeyTermTable({
   rows,
   termClick,
   chipClick,
+  chipPlay,
+  chipDelete,
 }: // addTarget,
 IProps) {
   const bodyRef = React.useRef<HTMLTableSectionElement>(null);
   const [bodyHeight, setBodyHeight] = React.useState(window.innerHeight);
   const [targetText, setTargetText] = React.useState('');
   const rowRef = React.useRef<IKeyTermRow>();
-  const [, setCanSaveRecording] = React.useState(false);
+  const [canSaveRecording, setCanSaveRecording] = React.useState(false);
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
 
   const reset = () => {
     setTargetText('');
     rowRef.current = undefined;
+    setCanSaveRecording(false);
   };
   const saveKeyTermTarget = useKeyTermSave({ cb: reset });
   const afterUploadCb = (mediaRemId: string) => {
@@ -96,6 +102,14 @@ IProps) {
     chipClick && chipClick(target);
   };
 
+  const handleChipPlay = (target: string) => () => {
+    chipPlay && chipPlay(target);
+  };
+
+  const handleChipDelete = (target: string) => () => {
+    chipDelete && chipDelete(target);
+  };
+
   const getFilename = (row: IKeyTermRow) => {
     const uuid = generateUUID();
     return `${row.fileName}-${row.target.length}-${uuid.slice(0, 4)}`;
@@ -103,6 +117,10 @@ IProps) {
 
   const onOk = (row: IKeyTermRow) => {
     rowRef.current = row;
+    // If we have a recording, save after upload
+    if (!canSaveRecording) {
+      afterUploadCb(''); // save without recording
+    }
   };
 
   const onCancel = () => {
@@ -143,12 +161,19 @@ IProps) {
                 {row.source}
               </StyledTableCell>
               <StyledTableCell>
-                <>
+                <Box sx={{ display: 'flex' }}>
                   {row.target.map((t) => (
                     <Chip
+                      icon={
+                        <IconButton onClick={handleChipPlay(t)}>
+                          <PlayIcon fontSize="small" />
+                        </IconButton>
+                      }
                       label={t}
                       onClick={handleChipClick(t)}
-                      sx={{ mx: 1 }}
+                      onDelete={handleChipDelete(t)}
+                      size="small"
+                      sx={{ mr: 1 }}
                     />
                   ))}
                   <TargetWord
@@ -162,7 +187,7 @@ IProps) {
                     setCanSaveRecording={setCanSaveRecording}
                     onTextChange={onTextChange}
                   />
-                </>
+                </Box>
               </StyledTableCell>
             </StyledTableRow>
           ))}

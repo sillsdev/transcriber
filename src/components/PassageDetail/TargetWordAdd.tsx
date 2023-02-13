@@ -54,7 +54,6 @@ interface IProps {
   fileName: string;
   cancelOnlyIfChanged?: boolean;
   uploadMethod: (files: File[]) => Promise<void>;
-  refresh?: number;
   row: IKeyTermRow;
   onOk: (row: IKeyTermRow) => void;
   onCancel: () => void;
@@ -69,7 +68,6 @@ export default function TargetWordAdd(props: IProps) {
     word,
     fileName,
     uploadMethod,
-    refresh,
     onOk,
     onCancel,
     setCanSaveRecording,
@@ -189,11 +187,9 @@ export default function TargetWordAdd(props: IProps) {
   }, [startRecord, playing, itemPlaying, commentPlaying]);
 
   useEffect(() => {
-    if ((refresh ?? 0) > 0) {
-      reset();
-    }
+    reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh]);
+  }, [row.target.length]);
 
   const handleMouseDownSave = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
