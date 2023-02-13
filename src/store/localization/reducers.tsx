@@ -485,7 +485,7 @@ const initialState = {
 			"sortShow": "Sort and Show",
 			"source": "Source",
 			"strong": "Strong",
-			"target": "Target",
+			"translation": "Translation",
 			"termDetail": "Term Detail",
 			"transliteration": "Transliteration",
 			"unsaved": "Unsaved.",

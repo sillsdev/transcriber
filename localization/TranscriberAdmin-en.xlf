@@ -2194,9 +2194,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="keyTerms.target">
+      <unit id="keyTerms.translation">
          <segment>
-            <source>Target</source>
+            <source>Translation</source>
             <target/>
          </segment>
       </unit>

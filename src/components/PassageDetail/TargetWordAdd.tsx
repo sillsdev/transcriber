@@ -203,7 +203,7 @@ export default function TargetWordAdd(props: IProps) {
         <InputLabel htmlFor="outlined-adornment-term">{'\u200B'}</InputLabel>
         <StyledInput
           id="outlined-adornment-term"
-          sx={{ borderRadius: '24px', py: 0 }}
+          sx={{ borderRadius: '24px', py: 0, mb: 1 }}
           value={curText}
           onChange={handleTextChange}
           size="small"

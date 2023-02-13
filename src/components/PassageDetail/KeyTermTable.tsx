@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import PlayIcon from '@mui/icons-material/PlayArrow';
-import { Box, Chip, IconButton } from '@mui/material';
+import { Chip, Grid, IconButton } from '@mui/material';
 import { elemOffset, generateUUID } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../model';
@@ -29,6 +29,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     padding: `8px 16px`,
+    paddingBottom: 0,
   },
 }));
 
@@ -146,7 +147,7 @@ IProps) {
         <TableHead>
           <TableRow>
             <StyledTableCell>{t.source}</StyledTableCell>
-            <StyledTableCell>{t.target}</StyledTableCell>
+            <StyledTableCell>{t.translation}</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody ref={bodyRef}>
@@ -160,8 +161,8 @@ IProps) {
               >
                 {row.source}
               </StyledTableCell>
-              <StyledTableCell>
-                <Box sx={{ display: 'flex' }}>
+              <StyledTableCell sx={{ whiteSpace: 'break-spaces' }}>
+                <Grid container>
                   {row.target.map((t) => (
                     <Chip
                       icon={
@@ -173,7 +174,7 @@ IProps) {
                       onClick={handleChipClick(t)}
                       onDelete={handleChipDelete(t)}
                       size="small"
-                      sx={{ mr: 1 }}
+                      sx={{ mr: 1, mb: 1 }}
                     />
                   ))}
                   <TargetWord
@@ -187,7 +188,7 @@ IProps) {
                     setCanSaveRecording={setCanSaveRecording}
                     onTextChange={onTextChange}
                   />
-                </Box>
+                </Grid>
               </StyledTableCell>
             </StyledTableRow>
           ))}

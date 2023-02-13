@@ -451,7 +451,7 @@ export interface IKeyTermsStrings extends Localize.LocalizedStringsMethods {
     "sortShow": string;
     "source": string;
     "strong": string;
-    "target": string;
+    "translation": string;
     "termDetail": string;
     "transliteration": string;
     "unsaved": string;

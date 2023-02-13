@@ -2557,9 +2557,9 @@
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="keyTerms.target">
-        <source>Target</source>
-        <target state="needs-translation">Target</target>
+      <trans-unit id="keyTerms.translation">
+        <source>Translation</source>
+        <target state="needs-translation">Translation</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
