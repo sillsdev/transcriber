@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import { parseRef, useOrgDefaults } from '../../crud';
+import { parseRef, related, useOrgDefaults } from '../../crud';
 import BigDialog from '../../hoc/BigDialog';
 import { IKeyTerm, OrgKeytermTarget } from '../../model';
 import { cleanFileName, SortBy, useKeyTerms } from '../../utils';
@@ -14,6 +14,7 @@ import { IKeyTermsStrings } from '../../model';
 import { keyTermsSelector } from '../../selector';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
+import { useGlobal } from 'reactn';
 
 export const SortTag = 'ktSort';
 
@@ -22,6 +23,7 @@ interface IRecordProps {
 }
 
 const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
+  const [org] = useGlobal('organization');
   const { passage, mediafileId } = usePassageDetailContext();
   const { book } = passage.attributes;
   const {
@@ -103,7 +105,11 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
           term: to.W,
           source: ktDisplay(to),
           target: keyTermTargets
-            .filter((t) => t.attributes.termIndex === to.I)
+            .filter(
+              (t) =>
+                t.attributes.termIndex === to.I &&
+                related(t, 'organization') === org
+            )
             .map((t) => t.attributes.target),
           index: to.I,
           fileName: cleanFileName(to.W),

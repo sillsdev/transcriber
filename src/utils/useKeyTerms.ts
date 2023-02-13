@@ -1,6 +1,4 @@
 import React from 'react';
-import termData from '../assets/terms.json';
-import verseTermData from '../assets/verseTerm.json';
 import { useBookN } from './useBookN';
 import { bcvKey } from './bcvKey';
 import { IKeyTerm } from '../model';
@@ -44,8 +42,12 @@ export const useKeyTerms = () => {
 
   React.useEffect(() => {
     console.log(`key terms loading... `);
-    setTerms(new Map(termData as any));
-    setVerseTerm(new Map(verseTermData as any));
+    import('../assets/terms').then((termData) =>
+      setTerms(new Map(termData.default as any))
+    );
+    import('../assets/verseTerm').then((verseTermData) =>
+      setVerseTerm(new Map(verseTermData.default as any))
+    );
     console.log(`key terms loaded.`);
     initExcluded(['PN', 'FL', 'FA']);
   }, []);
