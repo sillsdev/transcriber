@@ -787,7 +787,7 @@ if (
     keys: { remoteId: {} },
     attributes: {
       term: { type: 'string' },
-      gloss: { type: 'string' },
+      domain: { type: 'string' },
       definition: { type: 'string' },
       category: { type: 'string' },
       offlineId: { type: 'string' },
