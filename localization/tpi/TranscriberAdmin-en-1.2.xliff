@@ -2382,6 +2382,216 @@
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="keyTerms.addTargetWord">
+        <source>Add Target Word</source>
+        <target state="needs-translation">Add Target Word</target>
+        <context-group>
+          <context context-type="sourcefile">TargetWordAdd.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.all">
+        <source>All</source>
+        <target state="needs-translation">All</target>
+        <context-group>
+          <context context-type="sourcefile">useKeyTerms.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.aramaic">
+        <source>Aramaic</source>
+        <target state="needs-translation">Aramaic</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.attribute">
+        <source>Attribute</source>
+        <target state="needs-translation">Attribute</target>
+        <context-group>
+          <context context-type="sourcefile">useKeyTerms.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.being">
+        <source>Being</source>
+        <target state="needs-translation">Being</target>
+        <context-group>
+          <context context-type="sourcefile">useKeyTerms.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.category">
+        <source>Category</source>
+        <target state="needs-translation">Category</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.definition">
+        <source>Definition</source>
+        <target state="needs-translation">Definition</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.domain">
+        <source>Domain</source>
+        <target state="needs-translation">Domain</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.exclude">
+        <source>Exclude</source>
+        <target state="needs-translation">Exclude</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermExclude.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.fauna">
+        <source>Fauna</source>
+        <target state="needs-translation">Fauna</target>
+        <context-group>
+          <context context-type="sourcefile">useKeyTerms.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.flora">
+        <source>Flora</source>
+        <target state="needs-translation">Flora</target>
+        <context-group>
+          <context context-type="sourcefile">useKeyTerms.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.gloss">
+        <source>Gloss</source>
+        <target state="needs-translation">Gloss</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.greek">
+        <source>Greek</source>
+        <target state="needs-translation">Greek</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.hebrew">
+        <source>Hebrew</source>
+        <target state="needs-translation">Hebrew</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.index">
+        <source>Index</source>
+        <target state="needs-translation">Index</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.language">
+        <source>Language</source>
+        <target state="needs-translation">Language</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.link">
+        <source>Link</source>
+        <target state="needs-translation">Link</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.misc">
+        <source>Miscellaneous</source>
+        <target state="needs-translation">Miscellaneous</target>
+        <context-group>
+          <context context-type="sourcefile">useKeyTerms.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.name">
+        <source>Name</source>
+        <target state="needs-translation">Name</target>
+        <context-group>
+          <context context-type="sourcefile">useKeyTerms.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.realia">
+        <source>Realia</source>
+        <target state="needs-translation">Realia</target>
+        <context-group>
+          <context context-type="sourcefile">useKeyTerms.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.ritual">
+        <source>Ritual</source>
+        <target state="needs-translation">Ritual</target>
+        <context-group>
+          <context context-type="sourcefile">useKeyTerms.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.saving">
+        <source>Saving...</source>
+        <target state="needs-translation">Saving...</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.sortShow">
+        <source>Sort and Show</source>
+        <target state="needs-translation">Sort and Show</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.source">
+        <source>Source</source>
+        <target state="needs-translation">Source</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.strong">
+        <source>Strong</source>
+        <target state="needs-translation">Strong</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.target">
+        <source>Target</source>
+        <target state="needs-translation">Target</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.termDetail">
+        <source>Term Detail</source>
+        <target state="needs-translation">Term Detail</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.transliteration">
+        <source>Transliteration</source>
+        <target state="needs-translation">Transliteration</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.unsaved">
+        <source>Unsaved.</source>
+        <target state="needs-translation">Unsaved.</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.word">
+        <source>Word</source>
+        <target state="needs-translation">Word</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="languagePicker.cancel">
         <source>Cancel</source>
         <target state="needs-translation">Cancel</target>
@@ -5584,6 +5794,13 @@
       <trans-unit id="tool.export">
         <source>Export</source>
         <target state="needs-translation">Export</target>
+        <context-group>
+          <context context-type="sourcefile">useTools.ts</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tool.keyTerm">
+        <source>Key Term</source>
+        <target state="needs-translation">Key Term</target>
         <context-group>
           <context context-type="sourcefile">useTools.ts</context>
         </context-group>

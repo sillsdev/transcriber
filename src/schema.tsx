@@ -803,6 +803,8 @@ if (
     keys: { remoteId: {} },
     attributes: {
       term: { type: 'string' },
+      index: { type: 'number' },
+      target: { type: 'string' },
       offlineId: { type: 'string' },
       offlineMediafileId: { type: 'string' },
       dateCreated: { type: 'date-time' },

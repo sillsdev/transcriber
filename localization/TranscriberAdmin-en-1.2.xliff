@@ -2382,7 +2382,217 @@
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="languagePicker.cancel">
+      	<trans-unit id="keyTerms.addTargetWord">
+      		<source>Add Target Word</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TargetWordAdd.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.all">
+      		<source>All</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.aramaic">
+      		<source>Aramaic</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.attribute">
+      		<source>Attribute</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.being">
+      		<source>Being</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.category">
+      		<source>Category</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.definition">
+      		<source>Definition</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>     	
+      	<trans-unit id="keyTerms.domain">
+      		<source>Domain</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.exclude">
+      		<source>Exclude</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermExclude.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.fauna">
+      		<source>Fauna</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.flora">
+      		<source>Flora</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.gloss">
+      		<source>Gloss</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.greek">
+      		<source>Greek</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.hebrew">
+      		<source>Hebrew</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.index">
+      		<source>Index</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.language">
+      		<source>Language</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.link">
+      		<source>Link</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.misc">
+      		<source>Miscellaneous</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.name">
+      		<source>Name</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.realia">
+      		<source>Realia</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.ritual">
+      		<source>Ritual</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.saving">
+      		<source>Saving...</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.sortShow">
+      		<source>Sort and Show</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.source">
+      		<source>Source</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.strong">
+      		<source>Strong</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.target">
+      		<source>Target</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.termDetail">
+      		<source>Term Detail</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.transliteration">
+      		<source>Transliteration</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.unsaved">
+      		<source>Unsaved.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.word">
+      		<source>Word</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="languagePicker.cancel">
             <source>Cancel</source>
             <target/>
             <context-group>
@@ -5587,6 +5797,13 @@
             <context-group>
                <context context-type="sourcefile">useTools.ts</context>
             </context-group>
+         </trans-unit>
+      	<trans-unit id="tool.keyTerm">
+         	<source>Key Term</source>
+         	<target/>
+         	<context-group>
+         		<context context-type="sourcefile">useTools.ts</context>
+         	</context-group>
          </trans-unit>
          <trans-unit id="tool.paratext">
             <source>Paratext Sync</source>

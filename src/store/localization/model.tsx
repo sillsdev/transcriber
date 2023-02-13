@@ -425,6 +425,39 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "sil": string;
 };
 
+export interface IKeyTermsStrings extends Localize.LocalizedStringsMethods {
+    "addTargetWord": string;
+    "all": string;
+    "aramaic": string;
+    "attribute": string;
+    "being": string;
+    "category": string;
+    "definition": string;
+    "domain": string;
+    "exclude": string;
+    "fauna": string;
+    "flora": string;
+    "gloss": string;
+    "greek": string;
+    "hebrew": string;
+    "index": string;
+    "language": string;
+    "link": string;
+    "misc": string;
+    "name": string;
+    "realia": string;
+    "ritual": string;
+    "saving": string;
+    "sortShow": string;
+    "source": string;
+    "strong": string;
+    "target": string;
+    "termDetail": string;
+    "transliteration": string;
+    "unsaved": string;
+    "word": string;
+};
+
 export interface ILanguagePickerStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
     "codeExplained": string;
@@ -986,6 +1019,7 @@ export interface IToolStrings extends Localize.LocalizedStringsMethods {
     "discuss": string;
     "done": string;
     "export": string;
+    "keyTerm": string;
     "paratext": string;
     "phraseBackTranslate": string;
     "record": string;
@@ -1303,6 +1337,7 @@ export interface ILocalizedStrings {
 	integration: IIntegrationStrings;
 	invitationTable: IInvitationTableStrings;
 	invite: IInviteStrings;
+	keyTerms: IKeyTermsStrings;
 	languagePicker: ILanguagePickerStrings;
 	main: IMainStrings;
 	mediaActions: IMediaActionsStrings;

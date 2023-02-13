@@ -53,3 +53,4 @@ export * from './resource';
 export * from './sectionResource';
 export * from './sectionResourceUser';
 export * from './stepComplete';
+export * from './keyTerm';

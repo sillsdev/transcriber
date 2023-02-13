@@ -2044,6 +2044,186 @@
             <target/>
          </segment>
       </unit>
+      <unit id="keyTerms.addTargetWord">
+         <segment>
+            <source>Add Target Word</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.all">
+         <segment>
+            <source>All</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.aramaic">
+         <segment>
+            <source>Aramaic</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.attribute">
+         <segment>
+            <source>Attribute</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.being">
+         <segment>
+            <source>Being</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.category">
+         <segment>
+            <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.definition">
+         <segment>
+            <source>Definition</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.domain">
+         <segment>
+            <source>Domain</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.exclude">
+         <segment>
+            <source>Exclude</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.fauna">
+         <segment>
+            <source>Fauna</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.flora">
+         <segment>
+            <source>Flora</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.gloss">
+         <segment>
+            <source>Gloss</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.greek">
+         <segment>
+            <source>Greek</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.hebrew">
+         <segment>
+            <source>Hebrew</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.index">
+         <segment>
+            <source>Index</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.language">
+         <segment>
+            <source>Language</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.link">
+         <segment>
+            <source>Link</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.misc">
+         <segment>
+            <source>Miscellaneous</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.name">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.realia">
+         <segment>
+            <source>Realia</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.ritual">
+         <segment>
+            <source>Ritual</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.sortShow">
+         <segment>
+            <source>Sort and Show</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.source">
+         <segment>
+            <source>Source</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.strong">
+         <segment>
+            <source>Strong</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.target">
+         <segment>
+            <source>Target</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.termDetail">
+         <segment>
+            <source>Term Detail</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.transliteration">
+         <segment>
+            <source>Transliteration</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.unsaved">
+         <segment>
+            <source>Unsaved.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.word">
+         <segment>
+            <source>Word</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="languagePicker.cancel">
          <segment>
             <source>Cancel</source>
@@ -4789,6 +4969,12 @@
       <unit id="tool.export">
          <segment>
             <source>Export</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.keyTerm">
+         <segment>
+            <source>Key Term</source>
             <target/>
          </segment>
       </unit>
