@@ -5798,7 +5798,7 @@
           <context context-type="sourcefile">useTools.ts</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="tool.keyTerm">
+      <trans-unit id="tool.keyterm">
         <source>Key Term</source>
         <target state="needs-translation">Key Term</target>
         <context-group>
@@ -5812,7 +5812,7 @@
           <context context-type="sourcefile">useTools.ts</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="tool.phraseBackTranslate">
+      <trans-unit id="tool.phrasebacktranslate">
         <source>Phrase Back Translate</source>
         <target state="needs-translation">Phrase Back Translate</target>
         <context-group>
@@ -5840,7 +5840,7 @@
           <context context-type="sourcefile">useTools.ts</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="tool.teamCheck">
+      <trans-unit id="tool.teamcheck">
         <source>Compare</source>
         <target state="needs-translation">Compare</target>
         <context-group>
@@ -5854,7 +5854,7 @@
           <context context-type="sourcefile">useTools.ts</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="tool.wholeBackTranslate">
+      <trans-unit id="tool.wholebacktranslate">
         <source>Whole Back Translate</source>
         <target state="needs-translation">Whole Back Translate</target>
         <context-group>

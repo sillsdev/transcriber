@@ -4789,13 +4789,19 @@
 				<target>Exportação</target>
 			</segment>
 		</unit>
+		<unit id="tool.keyterm">
+			<segment>
+				<source>Key Term</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="tool.paratext">
 			<segment>
 				<source>Paratext Sync</source>
 				<target>Paratext Sync</target>
 			</segment>
 		</unit>
-		<unit id="tool.phraseBackTranslate">
+		<unit id="tool.phrasebacktranslate">
 			<segment>
 				<source>Phrase Back Translate</source>
 				<target>Tradução de Frase Traseiro</target>
@@ -4819,7 +4825,7 @@
 				<target>Segmento</target>
 			</segment>
 		</unit>
-		<unit id="tool.teamCheck">
+		<unit id="tool.teamcheck">
 			<segment>
 				<source>Compare</source>
 				<target>Compare</target>
@@ -4831,7 +4837,7 @@
 				<target>Transcrição</target>
 			</segment>
 		</unit>
-		<unit id="tool.wholeBackTranslate">
+		<unit id="tool.wholebacktranslate">
 			<segment>
 				<source>Whole Back Translate</source>
 				<target>Voltar Traduzir</target>

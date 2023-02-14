@@ -4735,7 +4735,7 @@
 				<target>Sincronización de paratextos</target>
 			</segment>
 		</unit>
-		<unit id="tool.phraseBackTranslate">
+		<unit id="tool.phrasebacktranslate">
 			<segment>
 				<source>Phrase Back Translate</source>
 				<target>Traducir frase de vuelta</target>
@@ -4759,7 +4759,7 @@
 				<target>Segmentar</target>
 			</segment>
 		</unit>
-		<unit id="tool.teamCheck">
+		<unit id="tool.teamcheck">
 			<segment>
 				<source>Compare</source>
 				<target>Comparar</target>
@@ -4771,7 +4771,7 @@
 				<target>Transcribir</target>
 			</segment>
 		</unit>
-		<unit id="tool.wholeBackTranslate">
+		<unit id="tool.wholebacktranslate">
 			<segment>
 				<source>Whole Back Translate</source>
 				<target>Traducir en su totalidad</target>

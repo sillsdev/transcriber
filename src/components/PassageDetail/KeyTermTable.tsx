@@ -7,8 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import PlayIcon from '@mui/icons-material/PlayArrow';
-import { Chip, Grid, IconButton } from '@mui/material';
+import { Grid, GridProps } from '@mui/material';
 import { elemOffset, generateUUID } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../model';
@@ -17,6 +16,10 @@ import TargetWord from './TargetWordAdd';
 import { useMediaUpload } from './useMediaUpload';
 import { useArtifactType } from '../../crud';
 import { useKeyTermSave } from '../../crud/useKeyTermSave';
+import KeyTermChip from './KeyTermChip';
+import { UnsavedContext } from '../../context/UnsavedContext';
+import { PassageDetailContext } from '../../context/PassageDetailContext';
+import MediaPlayer from '../MediaPlayer';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -43,10 +46,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const GridContainerCol = styled(Grid)<GridProps>(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  color: theme.palette.primary.dark,
+}));
+
+export interface ITarget {
+  id: string;
+  label: string;
+  mediaId: string | undefined;
+}
+
 export interface IKeyTermRow {
   term: string;
   source: string;
-  target: string[];
+  target: ITarget[];
   index: number;
   fileName: string;
 }
@@ -55,30 +70,37 @@ interface IProps {
   rows: IKeyTermRow[];
   termClick?: (term: number) => void;
   chipClick?: (target: string) => void;
-  chipPlay?: (target: string) => void;
-  chipDelete?: (target: string) => void;
-  addTarget?: (term: number) => void;
+  targetDelete?: (id: string) => void;
 }
 
 export default function KeyTermTable({
   rows,
   termClick,
   chipClick,
-  chipPlay,
-  chipDelete,
-}: // addTarget,
-IProps) {
+  targetDelete,
+}: IProps) {
   const bodyRef = React.useRef<HTMLTableSectionElement>(null);
   const [bodyHeight, setBodyHeight] = React.useState(window.innerHeight);
   const [targetText, setTargetText] = React.useState('');
   const rowRef = React.useRef<IKeyTermRow>();
   const [canSaveRecording, setCanSaveRecording] = React.useState(false);
+  const [mediaId, setMediaId] = React.useState<string>();
+  const { toolChanged } = React.useContext(UnsavedContext).state;
+  const {
+    setSelected,
+    commentPlaying,
+    setCommentPlaying,
+    commentPlayId,
+    handleCommentPlayEnd,
+    handleCommentTogglePlay,
+  } = React.useContext(PassageDetailContext).state;
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
 
   const reset = () => {
     setTargetText('');
-    rowRef.current = undefined;
     setCanSaveRecording(false);
+    toolChanged(`${rowRef.current?.index}`, false);
+    rowRef.current = undefined;
   };
   const saveKeyTermTarget = useKeyTermSave({ cb: reset });
   const afterUploadCb = (mediaRemId: string) => {
@@ -103,12 +125,26 @@ IProps) {
     chipClick && chipClick(target);
   };
 
-  const handleChipPlay = (target: string) => () => {
-    chipPlay && chipPlay(target);
+  const handleChipPlay = (mediaId: string) => () => {
+    setMediaId(mediaId);
+    if (mediaId === commentPlayId) {
+      setCommentPlaying(!commentPlaying);
+    } else {
+      setSelected(mediaId);
+    }
   };
 
-  const handleChipDelete = (target: string) => () => {
-    chipDelete && chipDelete(target);
+  const handlePlayEnd = () => {
+    handleCommentPlayEnd();
+    setMediaId(undefined);
+  };
+
+  const handleTogglePlay = () => {
+    handleCommentTogglePlay();
+  };
+
+  const handleChipDelete = (id: string) => () => {
+    targetDelete && targetDelete(id);
   };
 
   const getFilename = (row: IKeyTermRow) => {
@@ -164,18 +200,31 @@ IProps) {
               <StyledTableCell sx={{ whiteSpace: 'break-spaces' }}>
                 <Grid container>
                   {row.target.map((t) => (
-                    <Chip
-                      icon={
-                        <IconButton onClick={handleChipPlay(t)}>
-                          <PlayIcon fontSize="small" />
-                        </IconButton>
-                      }
-                      label={t}
-                      onClick={handleChipClick(t)}
-                      onDelete={handleChipDelete(t)}
-                      size="small"
-                      sx={{ mr: 1, mb: 1 }}
-                    />
+                    <>
+                      <KeyTermChip
+                        label={t.label}
+                        onPlay={
+                          t.mediaId ? handleChipPlay(t.mediaId) : undefined
+                        }
+                        onClick={handleChipClick(t.label)}
+                        onDelete={handleChipDelete(t.id)}
+                      />
+                      {commentPlayId &&
+                        mediaId === commentPlayId &&
+                        t.mediaId === mediaId && (
+                          <GridContainerCol item id="keyTermPlayer">
+                            <MediaPlayer
+                              srcMediaId={
+                                mediaId === commentPlayId ? commentPlayId : ''
+                              }
+                              requestPlay={commentPlaying}
+                              onEnded={handlePlayEnd}
+                              onTogglePlay={handleTogglePlay}
+                              controls={mediaId === commentPlayId}
+                            />
+                          </GridContainerCol>
+                        )}
+                    </>
                   ))}
                   <TargetWord
                     toolId={`${row.index}`}

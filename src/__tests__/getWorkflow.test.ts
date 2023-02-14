@@ -12,9 +12,9 @@ import { memory } from '../schema';
 
 const wfStr = {
   internalize: 'Internalize',
-  peerReview: 'Peer Review',
+  peerreview: 'Peer Review',
   record: 'Record',
-  teamCheck: 'Team Check',
+  teamcheck: 'Team Check',
   getString: (v: string) => (wfStr as any)[v],
 } as IWorkflowStepsStrings;
 
@@ -243,7 +243,7 @@ const owf: OrgWorkflowStep[] = [
       process: 'OBT',
       name: 'TeamCheck',
       sequencenum: 3,
-      tool: '{"tool": "teamCheck"}',
+      tool: '{"tool": "teamcheck"}',
       permissions: '{}',
       dateCreated: '2021-09-14',
       dateUpdated: '2021-09-15',
@@ -262,7 +262,7 @@ const owf: OrgWorkflowStep[] = [
       process: 'OBT',
       name: 'PeerReview',
       sequencenum: 4,
-      tool: '{"tool": "teamCheck"}',
+      tool: '{"tool": "teamcheck"}',
       permissions: '{}',
       dateCreated: '2022-01-28T16:43:40.929',
       dateUpdated: '2022-01-28T16:43:40.929',

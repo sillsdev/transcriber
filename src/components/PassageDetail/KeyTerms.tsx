@@ -12,7 +12,7 @@ import PassageDetailPlayer from './PassageDetailPlayer';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../model';
 import { keyTermsSelector } from '../../selector';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
 import { useGlobal } from 'reactn';
 
@@ -24,6 +24,7 @@ interface IRecordProps {
 
 const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
   const [org] = useGlobal('organization');
+  const [memory] = useGlobal('memory');
   const { passage, mediafileId } = usePassageDetailContext();
   const { book } = passage.attributes;
   const {
@@ -76,6 +77,12 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
     setOrgDefault(KtExcludeTag, locExcl);
   };
 
+  const handleTargetDelete = (id: string) => {
+    memory.update((t: TransformBuilder) =>
+      t.removeRecord({ type: 'orgkeytermtarget', id })
+    );
+  };
+
   useEffect(() => {
     const by = getOrgDefault(SortTag) as SortBy;
     setSortBy(by);
@@ -110,11 +117,16 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
                 t.attributes.termIndex === to.I &&
                 related(t, 'organization') === org
             )
-            .map((t) => t.attributes.target),
+            .map((t) => ({
+              id: t.id,
+              label: t.attributes.target,
+              mediaId: related(t, 'mediafile'),
+            })),
           index: to.I,
           fileName: cleanFileName(to.W),
         }))}
         termClick={handleTermClick}
+        targetDelete={handleTargetDelete}
       />
       <BigDialog
         title={t.termDetail}

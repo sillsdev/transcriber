@@ -4972,7 +4972,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="tool.keyTerm">
+      <unit id="tool.keyterm">
          <segment>
             <source>Key Term</source>
             <target/>
@@ -4984,7 +4984,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="tool.phraseBackTranslate">
+      <unit id="tool.phrasebacktranslate">
          <segment>
             <source>Phrase Back Translate</source>
             <target/>
@@ -5008,7 +5008,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="tool.teamCheck">
+      <unit id="tool.teamcheck">
          <segment>
             <source>Compare</source>
             <target/>
@@ -5020,7 +5020,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="tool.wholeBackTranslate">
+      <unit id="tool.wholebacktranslate">
          <segment>
             <source>Whole Back Translate</source>
             <target/>
@@ -5992,31 +5992,31 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.backTranslation">
+      <unit id="workflowSteps.backtranslation">
          <segment>
             <source>Back Translate</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.communityTest1">
+      <unit id="workflowSteps.communitytest1">
          <segment>
             <source>Community Test 1</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.communityTest2">
+      <unit id="workflowSteps.communitytest2">
          <segment>
             <source>Community Test 2</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.communityTesting">
+      <unit id="workflowSteps.communitytesting">
          <segment>
             <source>Community Test</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.consultantCheck">
+      <unit id="workflowSteps.consultantcheck">
          <segment>
             <source>Consultant Check</source>
             <target/>
@@ -6034,13 +6034,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.finalRecording">
+      <unit id="workflowSteps.finalrecording">
          <segment>
             <source>Final Record</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.finalReview">
+      <unit id="workflowSteps.finalreview">
          <segment>
             <source>Final Review</source>
             <target/>
@@ -6052,37 +6052,37 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.paratextSync">
+      <unit id="workflowSteps.paratextsync">
          <segment>
             <source>Sync to Paratext</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.peerReview">
+      <unit id="workflowSteps.peerreview">
          <segment>
             <source>Peer Review</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.phraseBackTranslation">
+      <unit id="workflowSteps.phrasebacktranslation">
          <segment>
             <source>Phrase Back Translate</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.pBTTranscribe">
+      <unit id="workflowSteps.pbttranscribe">
          <segment>
             <source>Phrase BT Transcribe</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.pBTParatextSync">
+      <unit id="workflowSteps.pbtparatextSync">
          <segment>
             <source>Phrase BT Paratext</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.preliminaryApproval">
+      <unit id="workflowSteps.preliminaryapproval">
          <segment>
             <source>Preliminary Approval</source>
             <target/>
@@ -6100,7 +6100,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.teamCheck">
+      <unit id="workflowSteps.teamcheck">
          <segment>
             <source>Team Check</source>
             <target/>
@@ -6118,19 +6118,25 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.wholeBackTranslation">
+      <unit id="workflowSteps.wholebacktranslate">
          <segment>
             <source>Whole Back Translate</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.wBTTranscribe">
+      <unit id="workflowSteps.wholebacktranslation">
+         <segment>
+            <source>Whole Back Translate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.wbttranscribe">
          <segment>
             <source>Whole BT Transcribe</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.wBTParatextSync">
+      <unit id="workflowSteps.wbtparatextSync">
          <segment>
             <source>Whole BT Paratext</source>
             <target/>

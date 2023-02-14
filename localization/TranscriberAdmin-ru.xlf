@@ -4765,13 +4765,19 @@
 				<target>Экспортировать</target>
 			</segment>
 		</unit>
+		<unit id="tool.keyterm">
+			<segment>
+				<source>Key Term</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="tool.paratext">
 			<segment>
 				<source>Paratext Sync</source>
 				<target>Паратекст Синхронизация</target>
 			</segment>
 		</unit>
-		<unit id="tool.phraseBackTranslate">
+		<unit id="tool.phrasebacktranslate">
 			<segment>
 				<source>Phrase Back Translate</source>
 				<target>Обратный перевод фразы</target>
@@ -4795,7 +4801,7 @@
 				<target>Сегмент</target>
 			</segment>
 		</unit>
-		<unit id="tool.teamCheck">
+		<unit id="tool.teamcheck">
 			<segment>
 				<source>Compare</source>
 				<target>Сравнить</target>
@@ -4807,7 +4813,7 @@
 				<target>Транскрибировать</target>
 			</segment>
 		</unit>
-		<unit id="tool.wholeBackTranslate">
+		<unit id="tool.wholebacktranslate">
 			<segment>
 				<source>Whole Back Translate</source>
 				<target>Полный обратный перевод</target>

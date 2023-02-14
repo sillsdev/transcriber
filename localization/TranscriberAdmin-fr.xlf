@@ -4795,7 +4795,7 @@
 				<target>Paratext Sync</target>
 			</segment>
 		</unit>
-		<unit id="tool.phraseBackTranslate">
+		<unit id="tool.phrasebacktranslate">
 			<segment>
 				<source>Phrase Back Translate</source>
 				<target>Phrase Retour Traduire</target>
@@ -4819,7 +4819,7 @@
 				<target>Segment</target>
 			</segment>
 		</unit>
-		<unit id="tool.teamCheck">
+		<unit id="tool.teamcheck">
 			<segment>
 				<source>Compare</source>
 				<target>Comparez</target>
@@ -4831,7 +4831,7 @@
 				<target>Transcrire</target>
 			</segment>
 		</unit>
-		<unit id="tool.wholeBackTranslate">
+		<unit id="tool.wholebacktranslate">
 			<segment>
 				<source>Whole Back Translate</source>
 				<target>Traduire en arrière</target>

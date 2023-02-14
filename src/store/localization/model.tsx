@@ -1019,15 +1019,15 @@ export interface IToolStrings extends Localize.LocalizedStringsMethods {
     "discuss": string;
     "done": string;
     "export": string;
-    "keyTerm": string;
+    "keyterm": string;
     "paratext": string;
-    "phraseBackTranslate": string;
+    "phrasebacktranslate": string;
     "record": string;
     "resource": string;
     "segment": string;
-    "teamCheck": string;
+    "teamcheck": string;
     "transcribe": string;
-    "wholeBackTranslate": string;
+    "wholebacktranslate": string;
 };
 
 export interface ITranscribeStrings extends Localize.LocalizedStringsMethods {
@@ -1231,30 +1231,31 @@ export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods {
-    "backTranslation": string;
-    "communityTest1": string;
-    "communityTest2": string;
-    "communityTesting": string;
-    "consultantCheck": string;
+    "backtranslation": string;
+    "communitytest1": string;
+    "communitytest2": string;
+    "communitytesting": string;
+    "consultantcheck": string;
     "done": string;
     "export": string;
-    "finalRecording": string;
-    "finalReview": string;
+    "finalrecording": string;
+    "finalreview": string;
     "internalize": string;
-    "paratextSync": string;
-    "peerReview": string;
-    "phraseBackTranslation": string;
-    "pBTTranscribe": string;
-    "pBTParatextSync": string;
-    "preliminaryApproval": string;
+    "paratextsync": string;
+    "peerreview": string;
+    "phrasebacktranslation": string;
+    "pbttranscribe": string;
+    "pbtparatextSync": string;
+    "preliminaryapproval": string;
     "record": string;
     "saveFirst": string;
-    "teamCheck": string;
+    "teamcheck": string;
     "transcribe": string;
     "unsaved": string;
-    "wholeBackTranslation": string;
-    "wBTTranscribe": string;
-    "wBTParatextSync": string;
+    "wholebacktranslate": string;
+    "wholebacktranslation": string;
+    "wbttranscribe": string;
+    "wbtparatextSync": string;
     "none": string;
 };
 
