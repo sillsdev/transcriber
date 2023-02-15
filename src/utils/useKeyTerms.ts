@@ -6,7 +6,7 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../model';
 import { keyTermsSelector } from '../selector';
 
-export const ktStar = '\u2605';
+export const ktHide = 'HI';
 
 export enum SortBy {
   Word = 'W',
@@ -22,7 +22,7 @@ export const useKeyTerms = () => {
   const exclSet = React.useRef(new Set<string | number>());
   const [sortBy, setSortBy] = React.useState<SortBy>(SortBy.Word);
   const bookN = useBookN();
-  const ktCat = ['PN', 'FL', 'RE', 'FA', 'AT', 'BE', 'RI', 'MI'];
+  const ktCat = ['PN', 'FL', 'RE', 'FA', 'AT', 'BE', 'RI', 'MI', ktHide];
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
   const ktLabel = [
     t.name,
@@ -33,10 +33,12 @@ export const useKeyTerms = () => {
     t.being,
     t.ritual,
     t.misc,
+    t.hide,
   ];
 
   const initExcluded = (excArr: Array<string | number>) => {
     setExcluded(excArr);
+    exclSet.current.clear();
     excArr.forEach((i) => exclSet.current.add(i));
   };
 
@@ -49,7 +51,7 @@ export const useKeyTerms = () => {
       setVerseTerm(new Map(verseTermData.default as any))
     );
     console.log(`key terms loaded.`);
-    initExcluded(['PN', 'FL', 'FA']);
+    initExcluded(['PN', 'FL', 'FA', ktHide]);
   }, []);
 
   const oneTerm = (t: number) => ({
@@ -123,7 +125,7 @@ export const useKeyTerms = () => {
         .filter((t) => {
           const to = terms.get(t);
           if (exclSet.current.has(to?.C ?? 'x')) return false;
-          if (exclSet.current.has(t) && exclSet.current.has(ktStar))
+          if (exclSet.current.has(t) && exclSet.current.has(ktHide))
             return false;
           return true;
         })
@@ -154,7 +156,10 @@ export const useKeyTerms = () => {
     setExcluded(Array.from(exclSet.current));
   };
 
-  const isExcluded = (item: string | number) => exclSet.current.has(item);
+  const isExcluded = (item: string | number) => {
+    const result = exclSet.current.has(item);
+    return result;
+  };
 
   const catLabel = (cat: string) => {
     const index = ktCat.indexOf(cat);

@@ -6,12 +6,16 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-import { useKeyTerms } from '../../../utils';
+import HideIcon from '@mui/icons-material/VisibilityOff';
+import { ktHide, useKeyTerms } from '../../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../../model';
 import { keyTermsSelector } from '../../../selector';
+import { Box } from '@mui/material';
 
 export const KtExcludeTag = 'ktExcl';
+export type TermId = string | number;
+export type ExcludeArray = TermId[];
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -66,7 +70,18 @@ export default function KeyTermExclude({ init, onChange }: IProps) {
           {names.map((name) => (
             <MenuItem key={name} value={name}>
               <Checkbox checked={exclName.indexOf(name) > -1} />
-              <ListItemText primary={name} />
+              <ListItemText
+                primary={
+                  name !== catLabel(ktHide) ? (
+                    name
+                  ) : (
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      {name + '\u00A0'}
+                      <HideIcon fontSize="small" htmlColor="grey" />
+                    </Box>
+                  )
+                }
+              />
             </MenuItem>
           ))}
         </Select>

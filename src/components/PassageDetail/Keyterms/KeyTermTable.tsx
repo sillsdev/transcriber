@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Grid, GridProps } from '@mui/material';
+import { Grid, GridProps, IconButton } from '@mui/material';
 import { elemOffset, generateUUID } from '../../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../../model';
@@ -19,7 +19,9 @@ import { useKeyTermSave } from '../../../crud/useKeyTermSave';
 import KeyTermChip from './KeyTermChip';
 import { UnsavedContext } from '../../../context/UnsavedContext';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
+import Confirm from '../../AlertDialog';
 import MediaPlayer from '../../MediaPlayer';
+import AddIcon from '@mui/icons-material/Add';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -85,6 +87,9 @@ export default function KeyTermTable({
   const rowRef = React.useRef<IKeyTermRow>();
   const [canSaveRecording, setCanSaveRecording] = React.useState(false);
   const [mediaId, setMediaId] = React.useState<string>();
+  const [confirm, setConfirm] = React.useState<string>();
+  const deleteId = React.useRef<string>();
+  const [adding, setAdding] = React.useState<number[]>([]);
   const { toolChanged } = React.useContext(UnsavedContext).state;
   const {
     setSelected,
@@ -143,8 +148,29 @@ export default function KeyTermTable({
     handleCommentTogglePlay();
   };
 
-  const handleChipDelete = (id: string) => () => {
-    targetDelete && targetDelete(id);
+  const handleChipDelete = (chip: ITarget, source: string) => () => {
+    if (chip.label) {
+      setConfirm(
+        t.chipDelete.replace('{0}', chip.label).replace('{1}', source)
+      );
+    } else {
+      setConfirm(t.chipDeleteNoLabel.replace('{0}', source));
+    }
+    deleteId.current = chip.id;
+  };
+
+  const handleDeleteRejected = () => {
+    setConfirm(undefined);
+    deleteId.current = undefined;
+  };
+
+  const handleDeleteConfirmed = () => {
+    if (targetDelete && deleteId.current) targetDelete(deleteId.current);
+    handleDeleteRejected();
+  };
+
+  const handleEnableAdd = (id: number) => () => {
+    setAdding(adding.concat(id));
   };
 
   const getFilename = (row: IKeyTermRow) => {
@@ -207,7 +233,7 @@ export default function KeyTermTable({
                           t.mediaId ? handleChipPlay(t.mediaId) : undefined
                         }
                         onClick={handleChipClick(t.label)}
-                        onDelete={handleChipDelete(t.id)}
+                        onDelete={handleChipDelete(t, row.source)}
                       />
                       {commentPlayId &&
                         mediaId === commentPlayId &&
@@ -226,23 +252,40 @@ export default function KeyTermTable({
                         )}
                     </>
                   ))}
-                  <TargetWord
-                    toolId={`${row.index}`}
-                    fileName={getFilename(row)}
-                    uploadMethod={uploadMedia}
-                    row={row}
-                    onOk={onOk}
-                    onCancel={onCancel}
-                    cancelOnlyIfChanged
-                    setCanSaveRecording={setCanSaveRecording}
-                    onTextChange={onTextChange}
-                  />
+                  {row.target.length > 0 && adding.indexOf(row.index) === -1 ? (
+                    <IconButton
+                      sx={{ height: '24px' }}
+                      aria-label="add another translation"
+                      onClick={handleEnableAdd(row.index)}
+                    >
+                      <AddIcon fontSize="small" />
+                    </IconButton>
+                  ) : (
+                    <TargetWord
+                      toolId={`${row.index}`}
+                      fileName={getFilename(row)}
+                      uploadMethod={uploadMedia}
+                      row={row}
+                      onOk={onOk}
+                      onCancel={onCancel}
+                      cancelOnlyIfChanged
+                      setCanSaveRecording={setCanSaveRecording}
+                      onTextChange={onTextChange}
+                    />
+                  )}
                 </Grid>
               </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
       </Table>
+      {confirm && (
+        <Confirm
+          text={confirm}
+          yesResponse={handleDeleteConfirmed}
+          noResponse={handleDeleteRejected}
+        />
+      )}
     </TableContainer>
   );
 }

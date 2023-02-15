@@ -432,6 +432,8 @@ export interface IKeyTermsStrings extends Localize.LocalizedStringsMethods {
     "attribute": string;
     "being": string;
     "category": string;
+    "chipDelete": string;
+    "chipDeleteNoLabel": string;
     "definition": string;
     "domain": string;
     "exclude": string;
@@ -440,6 +442,7 @@ export interface IKeyTermsStrings extends Localize.LocalizedStringsMethods {
     "gloss": string;
     "greek": string;
     "hebrew": string;
+    "hide": string;
     "index": string;
     "language": string;
     "link": string;

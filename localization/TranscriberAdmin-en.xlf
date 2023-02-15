@@ -2080,6 +2080,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="keyTerms.chipDelete">
+         <segment>
+            <source>Delete {0} from {1}? Are you sure?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.chipDeleteNoLabel">
+         <segment>
+            <source>Delete translation from {0}? Are you sure?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="keyTerms.definition">
          <segment>
             <source>Definition</source>
@@ -2125,6 +2137,12 @@
       <unit id="keyTerms.hebrew">
          <segment>
             <source>Hebrew</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.hide">
+         <segment>
+            <source>Hide</source>
             <target/>
          </segment>
       </unit>

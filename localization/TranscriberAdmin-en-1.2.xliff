@@ -2424,6 +2424,20 @@
       			<context context-type="sourcefile">KeyTermSort.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="keyTerms.chipDelete">
+      		<source>Delete {0} from {1}? Are you sure?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.chipDeleteNoLabel">
+      		<source>Delete translation from {0}? Are you sure?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="keyTerms.definition">
       		<source>Definition</source>
       		<target/>
@@ -2475,6 +2489,13 @@
       	</trans-unit>
       	<trans-unit id="keyTerms.hebrew">
       		<source>Hebrew</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.hide">
+      		<source>Hide</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">KeyTermSort.tsx</context>

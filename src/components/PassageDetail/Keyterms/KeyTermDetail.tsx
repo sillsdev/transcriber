@@ -10,6 +10,8 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../../model';
 import { keyTermsSelector } from '../../../selector';
 import { useKeyTerms } from '../../../utils';
+import KeyTermVisible from './KeyTermVisible';
+import { Box } from '@mui/material';
 
 interface ITermRow {
   label: string;
@@ -30,9 +32,11 @@ const TermRow = ({ label, value }: ITermRow) => (
 
 interface IProps {
   term: IKeyTerm;
+  hide: boolean;
+  onVisible: () => void;
 }
 
-export default function KeyTermDetail({ term }: IProps) {
+export default function KeyTermDetail({ term, hide, onVisible }: IProps) {
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
   const { catLabel } = useKeyTerms();
   const langName = [t.hebrew, t.aramaic, t.greek];
@@ -56,6 +60,9 @@ export default function KeyTermDetail({ term }: IProps) {
           {term.P && <TermRow label={t.link} value={term.P} />}
         </TableBody>
       </Table>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mr: '20px' }}>
+        <KeyTermVisible hide={hide} onChange={onVisible} />
+      </Box>
     </TableContainer>
   ) : (
     <></>

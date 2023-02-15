@@ -5,7 +5,7 @@ import BigDialog from '../../../hoc/BigDialog';
 import { IKeyTerm, OrgKeytermTarget } from '../../../model';
 import { cleanFileName, SortBy, useKeyTerms } from '../../../utils';
 import KeyTermDetail from './KeyTermDetail';
-import KeyTermExclude, { KtExcludeTag } from './KeyTermExclude';
+import KeyTermExclude, { ExcludeArray, KtExcludeTag } from './KeyTermExclude';
 import KeyTermsSort from './KeyTermSort';
 import KeyTermTable from './KeyTermTable';
 import PassageDetailPlayer from '../PassageDetailPlayer';
@@ -83,10 +83,22 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
     );
   };
 
+  const handleVisibleToggle = (id: number) => () => {
+    if (isExcluded(id)) {
+      setOrgDefault(
+        KtExcludeTag,
+        excluded.filter((v) => v !== id)
+      );
+    } else {
+      setOrgDefault(KtExcludeTag, excluded.concat(id));
+    }
+    excludeToggle(id);
+  };
+
   useEffect(() => {
     const by = getOrgDefault(SortTag) as SortBy;
     setSortBy(by);
-    const excl = getOrgDefault(KtExcludeTag) as (string | number)[];
+    const excl = getOrgDefault(KtExcludeTag) as ExcludeArray;
     if (excl) initExcluded(excl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passage.id]);
@@ -97,7 +109,11 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <KeyTermsSort initSort={sortBy} onChange={handleSortBy} />
         <KeyTermExclude
-          init={excluded.filter((v) => typeof v === 'string') as string[]}
+          init={
+            excluded
+              .filter((v) => typeof v === 'string')
+              .map((v) => v) as string[]
+          }
           onChange={handleExclude}
         />
       </div>
@@ -133,7 +149,11 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
         isOpen={Boolean(term)}
         onOpen={handleClose}
       >
-        <KeyTermDetail term={term as IKeyTerm} />
+        <KeyTermDetail
+          term={term as IKeyTerm}
+          hide={isExcluded(term?.I ?? 0)}
+          onVisible={handleVisibleToggle(term?.I ?? 0)}
+        />
       </BigDialog>
     </>
   );
