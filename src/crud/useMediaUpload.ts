@@ -1,15 +1,11 @@
 import { useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import {
-  pullPlanMedia,
-  remoteIdNum,
-  useOfflnMediafileCreate,
-} from '../../crud';
-import * as actions from '../../store';
+import { pullPlanMedia, remoteIdNum, useOfflnMediafileCreate } from '.';
+import * as actions from '../store';
 import JSONAPISource from '@orbit/jsonapi';
-import { TokenContext } from '../../context/TokenProvider';
+import { TokenContext } from '../context/TokenProvider';
 import { useDispatch } from 'react-redux';
-import { PassageDetailContext } from '../../context/PassageDetailContext';
+import { PassageDetailContext } from '../context/PassageDetailContext';
 
 interface IProps {
   artifactId: string;

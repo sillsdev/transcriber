@@ -34,7 +34,7 @@ import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord
 import PassageDetailItem from '../components/PassageDetail/PassageDetailItem';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
 import PassageDetailChooser from '../components/PassageDetail/PassageDetailChooser';
-import KeyTerms from '../components/PassageDetail/KeyTerms';
+import KeyTerms from '../components/PassageDetail/Keyterms/KeyTerms';
 import IntegrationTab from '../components/Integration';
 import TranscriptionTab from '../components/TranscriptionTab';
 import {
@@ -264,11 +264,13 @@ const PassageDetailGrids = () => {
                       <PassageDetailRecord />
                     </Grid>
                   )}
-                  {tool !== ToolSlug.Record && tool !== ToolSlug.Transcribe && tool !== ToolSlug.KeyTerm && (
-                    <Grid item sx={descProps} xs={12}>
-                      <PassageDetailPlayer />
-                    </Grid>
-                  )}
+                  {tool !== ToolSlug.Record &&
+                    tool !== ToolSlug.Transcribe &&
+                    tool !== ToolSlug.KeyTerm && (
+                      <Grid item sx={descProps} xs={12}>
+                        <PassageDetailPlayer />
+                      </Grid>
+                    )}
                   {tool === ToolSlug.TeamCheck && (
                     <Grid item sx={descProps} xs={12}>
                       <TeamCheckReference />

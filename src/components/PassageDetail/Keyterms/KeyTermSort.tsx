@@ -4,10 +4,10 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { SortBy } from '../../utils';
+import { SortBy } from '../../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
-import { IKeyTermsStrings } from '../../model';
-import { keyTermsSelector } from '../../selector';
+import { IKeyTermsStrings } from '../../../model';
+import { keyTermsSelector } from '../../../selector';
 
 interface IProps {
   initSort?: SortBy;

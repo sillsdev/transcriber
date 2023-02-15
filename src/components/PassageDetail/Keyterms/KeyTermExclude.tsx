@@ -6,10 +6,10 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-import { useKeyTerms } from '../../utils';
+import { useKeyTerms } from '../../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
-import { IKeyTermsStrings } from '../../model';
-import { keyTermsSelector } from '../../selector';
+import { IKeyTermsStrings } from '../../../model';
+import { keyTermsSelector } from '../../../selector';
 
 export const KtExcludeTag = 'ktExcl';
 

@@ -8,18 +8,18 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Grid, GridProps } from '@mui/material';
-import { elemOffset, generateUUID } from '../../utils';
+import { elemOffset, generateUUID } from '../../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
-import { IKeyTermsStrings } from '../../model';
-import { keyTermsSelector } from '../../selector';
+import { IKeyTermsStrings } from '../../../model';
+import { keyTermsSelector } from '../../../selector';
 import TargetWord from './TargetWordAdd';
-import { useMediaUpload } from './useMediaUpload';
-import { useArtifactType } from '../../crud';
-import { useKeyTermSave } from '../../crud/useKeyTermSave';
+import { useMediaUpload } from '../../../crud/useMediaUpload';
+import { useArtifactType } from '../../../crud';
+import { useKeyTermSave } from '../../../crud/useKeyTermSave';
 import KeyTermChip from './KeyTermChip';
-import { UnsavedContext } from '../../context/UnsavedContext';
-import { PassageDetailContext } from '../../context/PassageDetailContext';
-import MediaPlayer from '../MediaPlayer';
+import { UnsavedContext } from '../../../context/UnsavedContext';
+import { PassageDetailContext } from '../../../context/PassageDetailContext';
+import MediaPlayer from '../../MediaPlayer';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

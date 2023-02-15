@@ -22,12 +22,12 @@ import CancelIcon from '@mui/icons-material/CancelOutlined';
 import CheckIcon from '@mui/icons-material/Check';
 import { styled } from '@mui/material';
 import { useSelector, shallowEqual } from 'react-redux';
-import { IKeyTermsStrings } from '../../model';
-import { keyTermsSelector } from '../../selector';
-import MediaRecord from '../MediaRecord';
-import { waitForIt } from '../../utils';
-import { UnsavedContext } from '../../context/UnsavedContext';
-import { PassageDetailContext } from '../../context/PassageDetailContext';
+import { IKeyTermsStrings } from '../../../model';
+import { keyTermsSelector } from '../../../selector';
+import MediaRecord from '../../MediaRecord';
+import { waitForIt } from '../../../utils';
+import { UnsavedContext } from '../../../context/UnsavedContext';
+import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { IKeyTermRow } from './KeyTermTable';
 
 const ColumnDiv = styled('div')(() => ({

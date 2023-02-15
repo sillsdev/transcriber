@@ -5,11 +5,11 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { IKeyTerm } from '../../model';
+import { IKeyTerm } from '../../../model';
 import { useSelector, shallowEqual } from 'react-redux';
-import { IKeyTermsStrings } from '../../model';
-import { keyTermsSelector } from '../../selector';
-import { useKeyTerms } from '../../utils';
+import { IKeyTermsStrings } from '../../../model';
+import { keyTermsSelector } from '../../../selector';
+import { useKeyTerms } from '../../../utils';
 
 interface ITermRow {
   label: string;
