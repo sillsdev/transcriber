@@ -2444,7 +2444,7 @@
       		<context-group>
       			<context context-type="sourcefile">KeyTermSort.tsx</context>
       		</context-group>
-      	</trans-unit>     	
+      	</trans-unit>
       	<trans-unit id="keyTerms.domain">
       		<source>Domain</source>
       		<target/>
@@ -5833,7 +5833,7 @@
                <context context-type="sourcefile">useTools.ts</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="tool.phrasebacktranslate">
+      	<trans-unit id="tool.phraseBackTranslate">
       		<source>Phrase Back Translate</source>
       		<target/>
       		<context-group>
@@ -5861,7 +5861,7 @@
                <context context-type="sourcefile">useTools.ts</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="tool.teamcheck">
+         <trans-unit id="tool.teamCheck">
             <source>Compare</source>
             <target/>
             <context-group>
@@ -5875,7 +5875,7 @@
                <context context-type="sourcefile">useTools.ts</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="tool.wholebacktranslate">
+      	<trans-unit id="tool.wholeBackTranslate">
       		<source>Whole Back Translate</source>
       		<target/>
       		<context-group>
@@ -7009,35 +7009,35 @@
                <context context-type="sourcefile">welcome.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.backtranslation">
+         <trans-unit id="workflowSteps.backTranslation">
             <source>Back Translate</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.communitytest1">
+         <trans-unit id="workflowSteps.communityTest1">
             <source>Community Test 1</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.communitytest2">
+         <trans-unit id="workflowSteps.communityTest2">
             <source>Community Test 2</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.communitytesting">
+         <trans-unit id="workflowSteps.communityTesting">
             <source>Community Test</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.consultantcheck">
+         <trans-unit id="workflowSteps.consultantCheck">
             <source>Consultant Check</source>
             <target/>
             <context-group>
@@ -7058,14 +7058,14 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.finalrecording">
+         <trans-unit id="workflowSteps.finalRecording">
             <source>Final Record</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.finalreview">
+         <trans-unit id="workflowSteps.finalReview">
             <source>Final Review</source>
             <target/>
             <context-group>
@@ -7079,42 +7079,42 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.paratextsync">
+         <trans-unit id="workflowSteps.paratextSync">
             <source>Sync to Paratext</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.peerreview">
+         <trans-unit id="workflowSteps.peerReview">
             <source>Peer Review</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.phrasebacktranslation">
+         <trans-unit id="workflowSteps.phraseBackTranslation">
             <source>Phrase Back Translate</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.pbttranscribe">
+         <trans-unit id="workflowSteps.pBTTranscribe">
             <source>Phrase BT Transcribe</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.pbtparatextSync">
+         <trans-unit id="workflowSteps.pBTParatextSync">
             <source>Phrase BT Paratext</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.preliminaryapproval">
+         <trans-unit id="workflowSteps.preliminaryApproval">
             <source>Preliminary Approval</source>
             <target/>
             <context-group>
@@ -7135,7 +7135,7 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.teamcheck">
+         <trans-unit id="workflowSteps.teamCheck">
             <source>Team Check</source>
             <target/>
             <context-group>
@@ -7156,28 +7156,28 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="workflowSteps.wholebacktranslate">
-      		<source>Whole Back Translate</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">passageDetail.tsx</context>
-      		</context-group>
-      	</trans-unit>
-         <trans-unit id="workflowSteps.wholebacktranslation">
+         <trans-unit id="workflowSteps.wholeBackTranslate">
             <source>Whole Back Translate</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.wbttranscribe">
+         <trans-unit id="workflowSteps.wholeBackTranslation">
+            <source>Whole Back Translate</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.wBTTranscribe">
             <source>Whole BT Transcribe</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.wbtparatextSync">
+         <trans-unit id="workflowSteps.wBTParatextSync">
             <source>Whole BT Paratext</source>
             <target/>
             <context-group>

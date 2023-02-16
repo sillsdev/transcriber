@@ -2038,7 +2038,205 @@
 		<unit id="invite.sil">
 			<segment>
 				<source>SIL International</source>
-				<target>SIL Internacional</target>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="keyTerms.addTargetWord">
+			<segment>
+				<source>Add Target Word</source>
+				<target>Adicionar palavra-alvo</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.all">
+			<segment>
+				<source>All</source>
+				<target>Todos</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.aramaic">
+			<segment>
+				<source>Aramaic</source>
+				<target>Aramaico</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.attribute">
+			<segment>
+				<source>Attribute</source>
+				<target>Atributo</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.being">
+			<segment>
+				<source>Being</source>
+				<target>Sendo</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.category">
+			<segment>
+				<source>Category</source>
+				<target>Categoria</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.chipDelete">
+			<segment>
+				<source>Delete {0} from {1}? Are you sure?</source>
+				<target>Eliminar {0} de {1}? Você tem certeza?</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.chipDeleteNoLabel">
+			<segment>
+				<source>Delete translation from {0}? Are you sure?</source>
+				<target>Excluir tradução de {0}? Você tem certeza?</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.definition">
+			<segment>
+				<source>Definition</source>
+				<target>Definição</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.domain">
+			<segment>
+				<source>Domain</source>
+				<target>Domínio</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.exclude">
+			<segment>
+				<source>Exclude</source>
+				<target>Excluir</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.fauna">
+			<segment>
+				<source>Fauna</source>
+				<target>Fauna</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.flora">
+			<segment>
+				<source>Flora</source>
+				<target>Flora</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.gloss">
+			<segment>
+				<source>Gloss</source>
+				<target>Gloss</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.greek">
+			<segment>
+				<source>Greek</source>
+				<target>Grego</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.hebrew">
+			<segment>
+				<source>Hebrew</source>
+				<target>Hebraico</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.hide">
+			<segment>
+				<source>Hide</source>
+				<target>Esconder</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.index">
+			<segment>
+				<source>Index</source>
+				<target>Índice</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.language">
+			<segment>
+				<source>Language</source>
+				<target>Idioma</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.link">
+			<segment>
+				<source>Link</source>
+				<target>Link</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.misc">
+			<segment>
+				<source>Miscellaneous</source>
+				<target>Diversos</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.name">
+			<segment>
+				<source>Name</source>
+				<target>Nome</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.realia">
+			<segment>
+				<source>Realia</source>
+				<target>Realia</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.ritual">
+			<segment>
+				<source>Ritual</source>
+				<target>Ritual</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.saving">
+			<segment>
+				<source>Saving...</source>
+				<target>Salvando...</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.sortShow">
+			<segment>
+				<source>Sort and Show</source>
+				<target>Classificar e Mostrar</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.source">
+			<segment>
+				<source>Source</source>
+				<target>Fonte</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.strong">
+			<segment>
+				<source>Strong</source>
+				<target>Forte</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.translation">
+			<segment>
+				<source>Translation</source>
+				<target>Tradução</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.termDetail">
+			<segment>
+				<source>Term Detail</source>
+				<target>Detalhe do Termo</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.transliteration">
+			<segment>
+				<source>Transliteration</source>
+				<target>Transliteração</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.unsaved">
+			<segment>
+				<source>Unsaved.</source>
+				<target>Não guardado.</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.word">
+			<segment>
+				<source>Word</source>
+				<target>Palavra</target>
 			</segment>
 		</unit>
 		<unit id="languagePicker.cancel">
@@ -3056,12 +3254,12 @@
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.pasteError">
-         <segment>
-            <source>Unable to parse {0} segment boundaries. {1} segment boundaries were adjusted.</source>
-         	<target>Incapaz de analisar {0} os limites do segmento. {1} os limites do segmento foram ajustados.</target>
-         </segment>
-      </unit>
-      <unit id="passageDetailArtifacts.pasteNoChange">
+			<segment>
+				<source>Unable to parse {0} segment boundaries. {1} segment boundaries were adjusted.</source>
+				<target>Incapaz de analisar {0} os limites do segmento. {1} os limites do segmento foram ajustados.</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.pasteNoChange">
 			<segment>
 				<source>Nothing changed! Perhaps no references matched?</source>
 				<target>Nada mudou! Talvez nenhuma referência coincidente?</target>
@@ -3475,12 +3673,12 @@
 				<target>{0} {1} item(ns). Tem certeza?</target>
 			</segment>
 		</unit>
-        <unit id="planSheet.filtered">
-         <segment>
-            <source>Disable filter to add rows.</source>
-            <target>Desative o filtro para adicionar linhas.</target>
-         </segment>
-      </unit>
+		<unit id="planSheet.filtered">
+			<segment>
+				<source>Disable filter to add rows.</source>
+				<target>Desative o filtro para adicionar linhas.</target>
+			</segment>
+		</unit>
 		<unit id="planSheet.nonNumber">
 			<segment>
 				<source>Do not change to non-number.</source>
@@ -3501,7 +3699,7 @@
 		</unit>
 		<unit id="planSheet.passageBelow">
 			<segment>
-				<source>Insert passage below {0}</source>
+				<source>Insert passage below passage {0}</source>
 				<target>Inserir passagem abaixo {0}.</target>
 			</segment>
 		</unit>
@@ -3985,60 +4183,60 @@
 				<target>Título</target>
 			</segment>
 		</unit>
-      <unit id="scriptureTableFilter.apply">
-         <segment>
-            <source>Apply</source>
- 			<target>Aplicar</target>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.assignedToMe">
-         <segment>
-            <source>Show only steps assigned to me.</source>
-            <target>Mostrar apenas as etapas atribuídas a mim.</target>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.clear">
-         <segment>
-            <source>Clear</source>
-            <target>Claro</target>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.disable">
-         <segment>
-            <source>Disable filter so I can edit rows.</source>
-            <target>Desative o filtro para que eu possa editar linhas.</target>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.hideDone">
-         <segment>
-            <source>Hide 'Done' steps.</source>
-            <target>Ocultar etapas 'Concluídas'.</target>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.step">
-         <segment>
-            <source>Workflow Step</source>
-            <target>Langkah alur kerja</target>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.minimum">
-         <segment>
-            <source>Minimum</source>
-            <target>Minimum</target>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.maximum">
-         <segment>
-            <source>Maximum</source>
-            <target>Maksimum</target>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.saveFilter">
-         <segment>
-            <source>Save as project default</source>
-            <target>Simpan sebagai default proyek</target>
-         </segment>
-      </unit>
+		<unit id="scriptureTableFilter.apply">
+			<segment>
+				<source>Apply</source>
+				<target>Aplicar</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.assignedToMe">
+			<segment>
+				<source>Only rows with discussions assigned to me</source>
+				<target>Mostrar apenas as etapas atribuídas a mim.</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.clear">
+			<segment>
+				<source>Clear</source>
+				<target>Claro</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.disable">
+			<segment>
+				<source>Disable filter to add rows</source>
+				<target>Desative o filtro para que eu possa editar linhas.</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.hideDone">
+			<segment>
+				<source>Hide Done rows</source>
+				<target>Ocultar etapas 'Concluídas'.</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.step">
+			<segment>
+				<source>Workflow Step</source>
+				<target>Langkah alur kerja</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.minimum">
+			<segment>
+				<source>Minimum</source>
+				<target>Minimum</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.maximum">
+			<segment>
+				<source>Maximum</source>
+				<target>Maksimum</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.saveFilter">
+			<segment>
+				<source>Save as project default</source>
+				<target>Simpan sebagai default proyek</target>
+			</segment>
+		</unit>
 		<unit id="sectionResources.close">
 			<segment>
 				<source>Close</source>
@@ -4255,12 +4453,12 @@
 				<target>Audácia de lançamento</target>
 			</segment>
 		</unit>
-      <unit id="shared.loading">
-         <segment>
-            <source>Loading...</source>
-            <target>Carregando...</target>
-         </segment>
-      </unit>
+		<unit id="shared.loading">
+			<segment>
+				<source>Loading...</source>
+				<target>Carregando...</target>
+			</segment>
+		</unit>
 		<unit id="shared.mediaAttached">
 			<segment>
 				<source>Audio Attached</source>
@@ -4792,7 +4990,7 @@
 		<unit id="tool.keyterm">
 			<segment>
 				<source>Key Term</source>
-				<target/>
+				<target>Termo chave</target>
 			</segment>
 		</unit>
 		<unit id="tool.paratext">
@@ -4801,7 +4999,7 @@
 				<target>Paratext Sync</target>
 			</segment>
 		</unit>
-		<unit id="tool.phrasebacktranslate">
+		<unit id="tool.phraseBackTranslate">
 			<segment>
 				<source>Phrase Back Translate</source>
 				<target>Tradução de Frase Traseiro</target>
@@ -4825,7 +5023,7 @@
 				<target>Segmento</target>
 			</segment>
 		</unit>
-		<unit id="tool.teamcheck">
+		<unit id="tool.teamCheck">
 			<segment>
 				<source>Compare</source>
 				<target>Compare</target>
@@ -4837,7 +5035,7 @@
 				<target>Transcrição</target>
 			</segment>
 		</unit>
-		<unit id="tool.wholebacktranslate">
+		<unit id="tool.wholeBackTranslate">
 			<segment>
 				<source>Whole Back Translate</source>
 				<target>Voltar Traduzir</target>
@@ -5245,7 +5443,7 @@
 				<target>Áudio mais recente</target>
 			</segment>
 		</unit>
-        <unit id="transcriptionTab.latestAudioElan">
+		<unit id="transcriptionTab.latestAudioElan">
 			<segment>
 				<source>Latest Audio + Transcription</source>
 				<target>Áudio mais recente + Transcrição</target>
@@ -5373,7 +5571,7 @@
 		</unit>
 		<unit id="usertable.addNewUser">
 			<segment>
-				<source>Add New User</source>
+				<source>Add New Member</source>
 				<target>Adicionar Novo Utilizador</target>
 			</segment>
 		</unit>
@@ -5464,21 +5662,21 @@
 		<unit id="viewMode.home">
 			<segment>
 				<source>Home</source>
-				<target/>
+				<target>Início</target>
 			</segment>
 		</unit>
-      <unit id="viewMode.work">
-         <segment>
-            <source>Work</source>
-            <target>Trabalhar</target>
-         </segment>
-      </unit>
-      <unit id="viewMode.gotowork">
-         <segment>
-            <source>Go to Work</source>
-            <target>Ir trabalhar</target>
-         </segment>
-      </unit>
+		<unit id="viewMode.work">
+			<segment>
+				<source>Work</source>
+				<target>Trabalhar</target>
+			</segment>
+		</unit>
+		<unit id="viewMode.gotowork">
+			<segment>
+				<source>Go to Work</source>
+				<target>Ir trabalhar</target>
+			</segment>
+		</unit>
 		<unit id="vProject.add">
 			<segment>
 				<source>Add</source>
@@ -5935,10 +6133,16 @@
 				<target>Conteúdo não guardado</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.wholeBackTranslation">
+		<unit id="workflowSteps.wholeBackTranslate">
 			<segment>
 				<source>Whole Back Translate</source>
 				<target>Traduzir todo o verso</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.wholeBackTranslation">
+			<segment>
+				<source>Whole Back Translate</source>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.wBTTranscribe">
@@ -5951,6 +6155,12 @@
 			<segment>
 				<source>Whole BT Paratext</source>
 				<target>Traduzir todo Sincronização</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.none">
+			<segment>
+				<source>(None)</source>
+				<target>(Nenhum)</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.aheadTip">
@@ -6163,12 +6373,12 @@
 				<target>Adicionar/Remover Limite [Clique Duplo/{0}]</target>
 			</segment>
 		</unit>
-      <unit id="wsAudioPlayerSegment.teamDefault">
-         <segment>
-            <source>Save as team default</source>
-            <target>Salvar como padrão da equipe</target>
-         </segment>
-      </unit>
+		<unit id="wsAudioPlayerSegment.teamDefault">
+			<segment>
+				<source>Save as team default</source>
+				<target>Salvar como padrão da equipe</target>
+			</segment>
+		</unit>
 		<unit id="wsAudioPlayerZoom.fitToWidth">
 			<segment>
 				<source>Fit to Width</source>

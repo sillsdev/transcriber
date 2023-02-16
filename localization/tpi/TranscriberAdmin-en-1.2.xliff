@@ -2424,6 +2424,20 @@
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="keyTerms.chipDelete">
+        <source>Delete {0} from {1}? Are you sure?</source>
+        <target state="needs-translation">Delete {0} from {1}? Are you sure?</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.chipDeleteNoLabel">
+        <source>Delete translation from {0}? Are you sure?</source>
+        <target state="needs-translation">Delete translation from {0}? Are you sure?</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="keyTerms.definition">
         <source>Definition</source>
         <target state="needs-translation">Definition</target>
@@ -2476,6 +2490,13 @@
       <trans-unit id="keyTerms.hebrew">
         <source>Hebrew</source>
         <target state="needs-translation">Hebrew</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.hide">
+        <source>Hide</source>
+        <target state="needs-translation">Hide</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
@@ -5812,7 +5833,7 @@
           <context context-type="sourcefile">useTools.ts</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="tool.phrasebacktranslate">
+      <trans-unit id="tool.phraseBackTranslate">
         <source>Phrase Back Translate</source>
         <target state="needs-translation">Phrase Back Translate</target>
         <context-group>
@@ -5840,7 +5861,7 @@
           <context context-type="sourcefile">useTools.ts</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="tool.teamcheck">
+      <trans-unit id="tool.teamCheck">
         <source>Compare</source>
         <target state="needs-translation">Compare</target>
         <context-group>
@@ -5854,7 +5875,7 @@
           <context context-type="sourcefile">useTools.ts</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="tool.wholebacktranslate">
+      <trans-unit id="tool.wholeBackTranslate">
         <source>Whole Back Translate</source>
         <target state="needs-translation">Whole Back Translate</target>
         <context-group>
@@ -7131,6 +7152,13 @@
       <trans-unit id="workflowSteps.unsaved">
         <source>Unsaved content</source>
         <target state="needs-translation">Unsaved content</target>
+        <context-group>
+          <context context-type="sourcefile">passageDetail.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="workflowSteps.wholeBackTranslate">
+        <source>Whole Back Translate</source>
+        <target state="needs-translation">Whole Back Translate</target>
         <context-group>
           <context context-type="sourcefile">passageDetail.tsx</context>
         </context-group>

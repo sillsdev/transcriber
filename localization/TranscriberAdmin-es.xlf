@@ -598,7 +598,7 @@
 		<unit id="cards.OBS">
 			<segment>
 				<source>Storying</source>
-				<target/>
+				<target>Storying</target>
 			</segment>
 		</unit>
 		<unit id="cards.OBT">
@@ -2041,6 +2041,204 @@
 				<target>SIL Internacional</target>
 			</segment>
 		</unit>
+		<unit id="keyTerms.addTargetWord">
+			<segment>
+				<source>Add Target Word</source>
+				<target>Añadir palabra objetivo</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.all">
+			<segment>
+				<source>All</source>
+				<target>Todos</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.aramaic">
+			<segment>
+				<source>Aramaic</source>
+				<target>Arameo</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.attribute">
+			<segment>
+				<source>Attribute</source>
+				<target>Atributo</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.being">
+			<segment>
+				<source>Being</source>
+				<target>Ser</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.category">
+			<segment>
+				<source>Category</source>
+				<target>Categoría</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.chipDelete">
+			<segment>
+				<source>Delete {0} from {1}? Are you sure?</source>
+				<target>¿Borrar {0} de {1}? ¿Está seguro?</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.chipDeleteNoLabel">
+			<segment>
+				<source>Delete translation from {0}? Are you sure?</source>
+				<target>¿Borrar traducción de {0}? ¿Está seguro?</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.definition">
+			<segment>
+				<source>Definition</source>
+				<target>Definición</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.domain">
+			<segment>
+				<source>Domain</source>
+				<target>Dominio</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.exclude">
+			<segment>
+				<source>Exclude</source>
+				<target>Excluir</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.fauna">
+			<segment>
+				<source>Fauna</source>
+				<target>Fauna</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.flora">
+			<segment>
+				<source>Flora</source>
+				<target>Flora</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.gloss">
+			<segment>
+				<source>Gloss</source>
+				<target>Glosa</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.greek">
+			<segment>
+				<source>Greek</source>
+				<target>Griego</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.hebrew">
+			<segment>
+				<source>Hebrew</source>
+				<target>Hebreo</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.hide">
+			<segment>
+				<source>Hide</source>
+				<target>Ocultar</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.index">
+			<segment>
+				<source>Index</source>
+				<target>Índice</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.language">
+			<segment>
+				<source>Language</source>
+				<target>Idioma</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.link">
+			<segment>
+				<source>Link</source>
+				<target>Enlace</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.misc">
+			<segment>
+				<source>Miscellaneous</source>
+				<target>Varios</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.name">
+			<segment>
+				<source>Name</source>
+				<target>Nombre</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.realia">
+			<segment>
+				<source>Realia</source>
+				<target>Realia</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.ritual">
+			<segment>
+				<source>Ritual</source>
+				<target>Ritual</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.saving">
+			<segment>
+				<source>Saving...</source>
+				<target>Guardar...</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.sortShow">
+			<segment>
+				<source>Sort and Show</source>
+				<target>Ordenar y mostrar</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.source">
+			<segment>
+				<source>Source</source>
+				<target>Fuente</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.strong">
+			<segment>
+				<source>Strong</source>
+				<target>Fuerte</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.translation">
+			<segment>
+				<source>Translation</source>
+				<target>Traducción</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.termDetail">
+			<segment>
+				<source>Term Detail</source>
+				<target>Detalle del término</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.transliteration">
+			<segment>
+				<source>Transliteration</source>
+				<target>Transliteración</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.unsaved">
+			<segment>
+				<source>Unsaved.</source>
+				<target>Sin guardar.</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.word">
+			<segment>
+				<source>Word</source>
+				<target>Palabra</target>
+			</segment>
+		</unit>
 		<unit id="languagePicker.cancel">
 			<segment>
 				<source>Cancel</source>
@@ -3475,6 +3673,12 @@
 				<target>{0} {1} Elemento(s). ¿Está seguro?</target>
 			</segment>
 		</unit>
+		<unit id="planSheet.filtered">
+			<segment>
+				<source>Disable filter to add rows.</source>
+				<target>Desactivar filtro para añadir filas.</target>
+			</segment>
+		</unit>
 		<unit id="planSheet.nonNumber">
 			<segment>
 				<source>Do not change to non-number.</source>
@@ -3979,6 +4183,60 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="scriptureTableFilter.apply">
+			<segment>
+				<source>Apply</source>
+				<target>Aplicar</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.assignedToMe">
+			<segment>
+				<source>Only rows with discussions assigned to me</source>
+				<target>Sólo filas con discusiones asignadas a mí</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.clear">
+			<segment>
+				<source>Clear</source>
+				<target>Borrar</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.disable">
+			<segment>
+				<source>Disable filter to add rows</source>
+				<target>Desactivar filtro para añadir filas</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.hideDone">
+			<segment>
+				<source>Hide Done rows</source>
+				<target>Ocultar filas hechas</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.step">
+			<segment>
+				<source>Workflow Step</source>
+				<target>Paso del flujo de trabajo</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.minimum">
+			<segment>
+				<source>Minimum</source>
+				<target>Mínimo</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.maximum">
+			<segment>
+				<source>Maximum</source>
+				<target>Máximo</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.saveFilter">
+			<segment>
+				<source>Save as project default</source>
+				<target>Guardar como proyecto por defecto</target>
+			</segment>
+		</unit>
 		<unit id="sectionResources.close">
 			<segment>
 				<source>Close</source>
@@ -4195,12 +4453,12 @@
 				<target>Iniciar Audacity</target>
 			</segment>
 		</unit>
-      <unit id="shared.loading">
-         <segment>
-            <source>Loading...</source>
-            <target>Carga...</target>
-         </segment>
-      </unit>
+		<unit id="shared.loading">
+			<segment>
+				<source>Loading...</source>
+				<target>Carga...</target>
+			</segment>
+		</unit>
 		<unit id="shared.mediaAttached">
 			<segment>
 				<source>Audio Attached</source>
@@ -4729,13 +4987,19 @@
 				<target>Exportar</target>
 			</segment>
 		</unit>
+		<unit id="tool.keyterm">
+			<segment>
+				<source>Key Term</source>
+				<target>Término clave</target>
+			</segment>
+		</unit>
 		<unit id="tool.paratext">
 			<segment>
 				<source>Paratext Sync</source>
 				<target>Sincronización de paratextos</target>
 			</segment>
 		</unit>
-		<unit id="tool.phrasebacktranslate">
+		<unit id="tool.phraseBackTranslate">
 			<segment>
 				<source>Phrase Back Translate</source>
 				<target>Traducir frase de vuelta</target>
@@ -4759,7 +5023,7 @@
 				<target>Segmentar</target>
 			</segment>
 		</unit>
-		<unit id="tool.teamcheck">
+		<unit id="tool.teamCheck">
 			<segment>
 				<source>Compare</source>
 				<target>Comparar</target>
@@ -4771,7 +5035,7 @@
 				<target>Transcribir</target>
 			</segment>
 		</unit>
-		<unit id="tool.wholebacktranslate">
+		<unit id="tool.wholeBackTranslate">
 			<segment>
 				<source>Whole Back Translate</source>
 				<target>Traducir en su totalidad</target>
@@ -5401,6 +5665,18 @@
 				<target>Inicio</target>
 			</segment>
 		</unit>
+		<unit id="viewMode.work">
+			<segment>
+				<source>Work</source>
+				<target>Trabajo</target>
+			</segment>
+		</unit>
+		<unit id="viewMode.gotowork">
+			<segment>
+				<source>Go to Work</source>
+				<target>Ir a Trabajo</target>
+			</segment>
+		</unit>
 		<unit id="vProject.add">
 			<segment>
 				<source>Add</source>
@@ -5857,6 +6133,12 @@
 				<target>Contenido no guardado</target>
 			</segment>
 		</unit>
+		<unit id="workflowSteps.wholeBackTranslate">
+			<segment>
+				<source>Whole Back Translate</source>
+				<target>Traducir entero de vuelta</target>
+			</segment>
+		</unit>
 		<unit id="workflowSteps.wholeBackTranslation">
 			<segment>
 				<source>Whole Back Translate</source>
@@ -5873,6 +6155,12 @@
 			<segment>
 				<source>Whole BT Paratext</source>
 				<target>Todo el BT Paratexto</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.none">
+			<segment>
+				<source>(None)</source>
+				<target>(Ninguno)</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.aheadTip">
@@ -6083,6 +6371,12 @@
 			<segment>
 				<source>Add/Remove Boundary [Double Click/{0}]</source>
 				<target>Añadir/Eliminar Límite [Doble clic/{0}]</target>
+			</segment>
+		</unit>
+		<unit id="wsAudioPlayerSegment.teamDefault">
+			<segment>
+				<source>Save as team default</source>
+				<target>Guardar como equipo por defecto</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayerZoom.fitToWidth">

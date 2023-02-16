@@ -1905,8 +1905,8 @@
 		</unit>
 		<unit id="invite.addInvite">
 			<segment>
-				<source>Invite Member</source>
-				<target>Пригласить члена группы</target>
+				<source>Invite Person</source>
+				<target>Пригласить человека</target>
 			</segment>
 		</unit>
 		<unit id="invite.allUsersProjects">
@@ -2039,6 +2039,204 @@
 			<segment>
 				<source>SIL International</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="keyTerms.addTargetWord">
+			<segment>
+				<source>Add Target Word</source>
+				<target>Добавить целевое слово</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.all">
+			<segment>
+				<source>All</source>
+				<target>Все</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.aramaic">
+			<segment>
+				<source>Aramaic</source>
+				<target>Арамейский</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.attribute">
+			<segment>
+				<source>Attribute</source>
+				<target>Атрибут</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.being">
+			<segment>
+				<source>Being</source>
+				<target>Быть</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.category">
+			<segment>
+				<source>Category</source>
+				<target>Категория</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.chipDelete">
+			<segment>
+				<source>Delete {0} from {1}? Are you sure?</source>
+				<target>Удалить {0} из {1}? Вы уверены?</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.chipDeleteNoLabel">
+			<segment>
+				<source>Delete translation from {0}? Are you sure?</source>
+				<target>Удалить перевод из {0}? Вы уверены?</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.definition">
+			<segment>
+				<source>Definition</source>
+				<target>Определение</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.domain">
+			<segment>
+				<source>Domain</source>
+				<target>Домен</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.exclude">
+			<segment>
+				<source>Exclude</source>
+				<target>Исключить</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.fauna">
+			<segment>
+				<source>Fauna</source>
+				<target>Фауна</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.flora">
+			<segment>
+				<source>Flora</source>
+				<target>Флора</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.gloss">
+			<segment>
+				<source>Gloss</source>
+				<target>Глосса</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.greek">
+			<segment>
+				<source>Greek</source>
+				<target>Греческий</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.hebrew">
+			<segment>
+				<source>Hebrew</source>
+				<target>Иврит</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.hide">
+			<segment>
+				<source>Hide</source>
+				<target>Скрыть</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.index">
+			<segment>
+				<source>Index</source>
+				<target>Указатель</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.language">
+			<segment>
+				<source>Language</source>
+				<target>Язык</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.link">
+			<segment>
+				<source>Link</source>
+				<target>Ссылка</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.misc">
+			<segment>
+				<source>Miscellaneous</source>
+				<target>Разное</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.name">
+			<segment>
+				<source>Name</source>
+				<target>Имя</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.realia">
+			<segment>
+				<source>Realia</source>
+				<target>Реалии</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.ritual">
+			<segment>
+				<source>Ritual</source>
+				<target>Ритуал</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.saving">
+			<segment>
+				<source>Saving...</source>
+				<target>Сохранение...</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.sortShow">
+			<segment>
+				<source>Sort and Show</source>
+				<target>Сортировать и показывать</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.source">
+			<segment>
+				<source>Source</source>
+				<target>Источник</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.strong">
+			<segment>
+				<source>Strong</source>
+				<target>Сильный</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.translation">
+			<segment>
+				<source>Translation</source>
+				<target>Перевод</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.termDetail">
+			<segment>
+				<source>Term Detail</source>
+				<target>Детализация термина</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.transliteration">
+			<segment>
+				<source>Transliteration</source>
+				<target>Транслитерация</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.unsaved">
+			<segment>
+				<source>Unsaved.</source>
+				<target>Несохраненный.</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.word">
+			<segment>
+				<source>Word</source>
+				<target>Слово</target>
 			</segment>
 		</unit>
 		<unit id="languagePicker.cancel">
@@ -2716,7 +2914,7 @@
 		<unit id="mediaTab.size">
 			<segment>
 				<source>Size (MB)</source>
-				<target/>
+				<target>Размер (МБ)</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.unsupported">
@@ -3056,12 +3254,12 @@
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.pasteError">
-         <segment>
-            <source>Unable to parse {0} segment boundaries. {1} segment boundaries were adjusted.</source>
-         	<target>Невозможно разобрать {0} границ сегментов. Границы сегментов {1} были скорректированы.</target>
-         </segment>
-      </unit>
-      <unit id="passageDetailArtifacts.pasteNoChange">
+			<segment>
+				<source>Unable to parse {0} segment boundaries. {1} segment boundaries were adjusted.</source>
+				<target>Невозможно разобрать {0} границ сегментов. Границы сегментов {1} были скорректированы.</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.pasteNoChange">
 			<segment>
 				<source>Nothing changed! Perhaps no references matched?</source>
 				<target>Ничего не изменилось! Возможно, ни одна ссылка не совпала?</target>
@@ -3475,12 +3673,12 @@
 				<target/>
 			</segment>
 		</unit>
-        <unit id="planSheet.filtered">
-         <segment>
-            <source>Disable filter to add rows.</source>
-            <target>Отключите фильтр, чтобы добавить строки.</target>
-         </segment>
-      </unit>
+		<unit id="planSheet.filtered">
+			<segment>
+				<source>Disable filter to add rows.</source>
+				<target>Отключите фильтр, чтобы добавить строки.</target>
+			</segment>
+		</unit>
 		<unit id="planSheet.nonNumber">
 			<segment>
 				<source>Do not change to non-number.</source>
@@ -3501,8 +3699,8 @@
 		</unit>
 		<unit id="planSheet.passageBelow">
 			<segment>
-				<source>Insert passage below {0}</source>
-				<target>Вставить отрывок ниже {0}</target>
+				<source>Insert passage below passage {0}</source>
+				<target>Вставить отрывок под отрывком {0}</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.passageEnd">
@@ -3985,36 +4183,60 @@
 				<target/>
 			</segment>
 		</unit>
-      <unit id="scriptureTableFilter.apply">
-         <segment>
-            <source>Apply</source>
- 			<target>Применить</target>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.assignedToMe">
-         <segment>
-            <source>Show only steps assigned to me.</source>
-            <target>Показать только назначенные мне шаги.</target>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.clear">
-         <segment>
-            <source>Clear</source>
-            <target>чистый</target>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.disable">
-         <segment>
-            <source>Disable filter so I can edit rows.</source>
-            <target>Отключите фильтр, чтобы я мог редактировать строки.</target>
-         </segment>
-      </unit>
-      <unit id="scriptureTableFilter.hideDone">
-         <segment>
-            <source>Hide 'Done' steps.</source>
-            <target>Скрыть шаги «Готово».</target>
-         </segment>
-      </unit>
+		<unit id="scriptureTableFilter.apply">
+			<segment>
+				<source>Apply</source>
+				<target>Применить</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.assignedToMe">
+			<segment>
+				<source>Only rows with discussions assigned to me</source>
+				<target>Показать только назначенные мне шаги.</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.clear">
+			<segment>
+				<source>Clear</source>
+				<target>чистый</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.disable">
+			<segment>
+				<source>Disable filter to add rows</source>
+				<target>Отключите фильтр, чтобы я мог редактировать строки.</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.hideDone">
+			<segment>
+				<source>Hide Done rows</source>
+				<target>Скрыть шаги «Готово».</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.step">
+			<segment>
+				<source>Workflow Step</source>
+				<target>Шаг рабочего процесса</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.minimum">
+			<segment>
+				<source>Minimum</source>
+				<target>Минимум</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.maximum">
+			<segment>
+				<source>Maximum</source>
+				<target>Максимальный</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTableFilter.saveFilter">
+			<segment>
+				<source>Save as project default</source>
+				<target>Сохранить как проект по умолчанию</target>
+			</segment>
+		</unit>
 		<unit id="sectionResources.close">
 			<segment>
 				<source>Close</source>
@@ -4231,12 +4453,12 @@
 				<target>Запуск Audacity</target>
 			</segment>
 		</unit>
-      <unit id="shared.loading">
-         <segment>
-            <source>Loading...</source>
-            <target>Загружается...</target>
-         </segment>
-      </unit>
+		<unit id="shared.loading">
+			<segment>
+				<source>Loading...</source>
+				<target>Загружается...</target>
+			</segment>
+		</unit>
 		<unit id="shared.mediaAttached">
 			<segment>
 				<source>Audio Attached</source>
@@ -4768,7 +4990,7 @@
 		<unit id="tool.keyterm">
 			<segment>
 				<source>Key Term</source>
-				<target/>
+				<target>Ключевой термин</target>
 			</segment>
 		</unit>
 		<unit id="tool.paratext">
@@ -4801,7 +5023,7 @@
 				<target>Сегмент</target>
 			</segment>
 		</unit>
-		<unit id="tool.teamcheck">
+		<unit id="tool.teamCheck">
 			<segment>
 				<source>Compare</source>
 				<target>Сравнить</target>
@@ -4813,7 +5035,7 @@
 				<target>Транскрибировать</target>
 			</segment>
 		</unit>
-		<unit id="tool.wholebacktranslate">
+		<unit id="tool.wholeBackTranslate">
 			<segment>
 				<source>Whole Back Translate</source>
 				<target>Полный обратный перевод</target>
@@ -5221,13 +5443,13 @@
 				<target>Последние аудиозаписи</target>
 			</segment>
 		</unit>
-        <unit id="transcriptionTab.latestAudioElan">
+		<unit id="transcriptionTab.latestAudioElan">
 			<segment>
 				<source>Latest Audio + Transcription</source>
 				<target>Последние аудиозаписи + Транскрипция</target>
 			</segment>
 		</unit>
-        <unit id="transcriptionTab.noData">
+		<unit id="transcriptionTab.noData">
 			<segment>
 				<source>No {0} Data.</source>
 				<target>Нет {0} Данные.</target>
@@ -5349,7 +5571,7 @@
 		</unit>
 		<unit id="usertable.addNewUser">
 			<segment>
-				<source>Add New User</source>
+				<source>Add New Member</source>
 				<target>Добавить нового пользователя</target>
 			</segment>
 		</unit>
@@ -5443,18 +5665,18 @@
 				<target>Домой</target>
 			</segment>
 		</unit>
-      <unit id="viewMode.work">
-         <segment>
-            <source>Work</source>
-            <target>Работа</target>
-         </segment>
-      </unit>
-      <unit id="viewMode.gotowork">
-         <segment>
-            <source>Go to Work</source>
-            <target>идти на работу</target>
-         </segment>
-      </unit>
+		<unit id="viewMode.work">
+			<segment>
+				<source>Work</source>
+				<target>Работа</target>
+			</segment>
+		</unit>
+		<unit id="viewMode.gotowork">
+			<segment>
+				<source>Go to Work</source>
+				<target>идти на работу</target>
+			</segment>
+		</unit>
 		<unit id="vProject.add">
 			<segment>
 				<source>Add</source>
@@ -5911,10 +6133,16 @@
 				<target>Несохраненное содержимое</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.wholeBackTranslation">
+		<unit id="workflowSteps.wholeBackTranslate">
 			<segment>
 				<source>Whole Back Translate</source>
 				<target>Обратный перевод целиком</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.wholeBackTranslation">
+			<segment>
+				<source>Whole Back Translate</source>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.wBTTranscribe">
@@ -5927,6 +6155,12 @@
 			<segment>
 				<source>Whole BT Paratext</source>
 				<target>Обратный перевод целиком синхронизировать</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.none">
+			<segment>
+				<source>(None)</source>
+				<target>(Нет)</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.aheadTip">
@@ -6139,12 +6373,12 @@
 				<target>Добавить/удалить границу [двойной щелчок/{0}]</target>
 			</segment>
 		</unit>
-      <unit id="wsAudioPlayerSegment.teamDefault">
-         <segment>
-            <source>Save as team default</source>
-            <target>Сохранить как команду по умолчанию</target>
-         </segment>
-      </unit>
+		<unit id="wsAudioPlayerSegment.teamDefault">
+			<segment>
+				<source>Save as team default</source>
+				<target>Сохранить как команду по умолчанию</target>
+			</segment>
+		</unit>
 		<unit id="wsAudioPlayerZoom.fitToWidth">
 			<segment>
 				<source>Fit to Width</source>

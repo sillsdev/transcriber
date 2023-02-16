@@ -1024,13 +1024,13 @@ export interface IToolStrings extends Localize.LocalizedStringsMethods {
     "export": string;
     "keyterm": string;
     "paratext": string;
-    "phrasebacktranslate": string;
+    "phraseBackTranslate": string;
     "record": string;
     "resource": string;
     "segment": string;
-    "teamcheck": string;
+    "teamCheck": string;
     "transcribe": string;
-    "wholebacktranslate": string;
+    "wholeBackTranslate": string;
 };
 
 export interface ITranscribeStrings extends Localize.LocalizedStringsMethods {
@@ -1234,31 +1234,31 @@ export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods {
-    "backtranslation": string;
-    "communitytest1": string;
-    "communitytest2": string;
-    "communitytesting": string;
-    "consultantcheck": string;
+    "backTranslation": string;
+    "communityTest1": string;
+    "communityTest2": string;
+    "communityTesting": string;
+    "consultantCheck": string;
     "done": string;
     "export": string;
-    "finalrecording": string;
-    "finalreview": string;
+    "finalRecording": string;
+    "finalReview": string;
     "internalize": string;
-    "paratextsync": string;
-    "peerreview": string;
-    "phrasebacktranslation": string;
-    "pbttranscribe": string;
-    "pbtparatextSync": string;
-    "preliminaryapproval": string;
+    "paratextSync": string;
+    "peerReview": string;
+    "phraseBackTranslation": string;
+    "pBTTranscribe": string;
+    "pBTParatextSync": string;
+    "preliminaryApproval": string;
     "record": string;
     "saveFirst": string;
-    "teamcheck": string;
+    "teamCheck": string;
     "transcribe": string;
     "unsaved": string;
-    "wholebacktranslate": string;
-    "wholebacktranslation": string;
-    "wbttranscribe": string;
-    "wbtparatextSync": string;
+    "wholeBackTranslate": string;
+    "wholeBackTranslation": string;
+    "wBTTranscribe": string;
+    "wBTParatextSync": string;
     "none": string;
 };
 
