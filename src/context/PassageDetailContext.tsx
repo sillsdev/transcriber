@@ -111,6 +111,7 @@ export interface IRow {
   isVernacular: boolean;
   isResource: boolean;
   isComment: boolean;
+  isKeyTerm: boolean;
   isText: boolean;
   sourceVersion: number;
 }
@@ -602,7 +603,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             rowData: newRows.length > 0 ? newRows : rowData,
           };
         });
-      } else if (r.isComment) {
+      } else if (r.isComment || r.isKeyTerm) {
         setState((state: ICtxState) => {
           return {
             ...state,

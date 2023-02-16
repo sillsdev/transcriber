@@ -25,6 +25,7 @@ export enum ArtifactTypeSlug {
   SharedResource = 'sharedResource',
   ProjectResource = 'projectresource',
   IntellectualProperty = 'intellectualproperty',
+  KeyTerm = 'keyterm',
 }
 interface ISwitches {
   [key: string]: any;
@@ -129,6 +130,11 @@ export const useArtifactType = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offlineOnly]);
 
+  const keyTermId = useMemo(() => {
+    return getTypeId(ArtifactTypeSlug.KeyTerm) as string;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offlineOnly]);
+
   const addNewArtifactType = async (newArtifactType: string) => {
     const artifactType: ArtifactType = {
       type: 'artifacttype',
@@ -156,6 +162,7 @@ export const useArtifactType = () => {
     localizedArtifactTypeFromId,
     fromLocalizedArtifactType,
     commentId,
+    keyTermId,
     getTypeId,
     IsVernacularMedia,
   };

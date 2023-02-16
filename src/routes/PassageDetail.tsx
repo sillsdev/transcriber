@@ -34,6 +34,7 @@ import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord
 import PassageDetailItem from '../components/PassageDetail/PassageDetailItem';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
 import PassageDetailChooser from '../components/PassageDetail/PassageDetailChooser';
+import KeyTerms from '../components/PassageDetail/Keyterms/KeyTerms';
 import IntegrationTab from '../components/Integration';
 import TranscriptionTab from '../components/TranscriptionTab';
 import {
@@ -247,7 +248,8 @@ const PassageDetailGrids = () => {
         {(tool === ToolSlug.Discuss ||
           tool === ToolSlug.TeamCheck ||
           tool === ToolSlug.Record ||
-          tool === ToolSlug.Transcribe) && (
+          tool === ToolSlug.Transcribe ||
+          tool === ToolSlug.KeyTerm) && (
           <Paper sx={{ p: 2, margin: 'auto', width: `calc(100% - 32px)` }}>
             <Wrapper>
               <SplitPane
@@ -262,11 +264,13 @@ const PassageDetailGrids = () => {
                       <PassageDetailRecord />
                     </Grid>
                   )}
-                  {tool !== ToolSlug.Record && tool !== ToolSlug.Transcribe && (
-                    <Grid item sx={descProps} xs={12}>
-                      <PassageDetailPlayer />
-                    </Grid>
-                  )}
+                  {tool !== ToolSlug.Record &&
+                    tool !== ToolSlug.Transcribe &&
+                    tool !== ToolSlug.KeyTerm && (
+                      <Grid item sx={descProps} xs={12}>
+                        <PassageDetailPlayer />
+                      </Grid>
+                    )}
                   {tool === ToolSlug.TeamCheck && (
                     <Grid item sx={descProps} xs={12}>
                       <TeamCheckReference />
@@ -279,6 +283,11 @@ const PassageDetailGrids = () => {
                         artifactTypeId={artifactId}
                         onFilter={handleFilter}
                       />
+                    </Grid>
+                  )}
+                  {tool === ToolSlug.KeyTerm && (
+                    <Grid item sx={descProps} xs={12}>
+                      <KeyTerms />
                     </Grid>
                   )}
                 </Pane>
@@ -361,7 +370,7 @@ export const PassageDetail = () => {
   }, []);
 
   if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
-  console.log('passage detail passing in true');
+
   return (
     <Box sx={{ flexGrow: 1, minWidth: `${minWidth}px`, minHeight: '700px' }}>
       <AppHead switchTo={true} />

@@ -88,3 +88,4 @@ export * from './usePermissions';
 export * from './useOrgDefaults';
 export * from './useWavesurferRegions';
 export * from './useAvatarSource';
+export * from './useMediaUpload';

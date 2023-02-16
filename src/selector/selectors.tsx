@@ -61,6 +61,9 @@ export const inviteSelector = (state: IState) =>
 export const invitationTableSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'invitationTable' });
 
+export const keyTermsSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'keyTerms' });
+
 export const mediaActionsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'mediaActions' });
 

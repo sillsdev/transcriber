@@ -71,6 +71,7 @@ export const oneMediaRow = ({
     isResource: isResource(typeNameSlug),
     passageId: related(media, 'passage') || '',
     isComment: typeNameSlug === 'comment',
+    isKeyTerm: typeNameSlug === 'keyterm',
     isVernacular: typeNameSlug === '' || typeNameSlug === 'vernacular',
     isText: isVisual(media),
     sourceVersion: sourceversion,

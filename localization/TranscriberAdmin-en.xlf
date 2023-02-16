@@ -2044,6 +2044,204 @@
             <target/>
          </segment>
       </unit>
+      <unit id="keyTerms.addTargetWord">
+         <segment>
+            <source>Add Target Word</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.all">
+         <segment>
+            <source>All</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.aramaic">
+         <segment>
+            <source>Aramaic</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.attribute">
+         <segment>
+            <source>Attribute</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.being">
+         <segment>
+            <source>Being</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.category">
+         <segment>
+            <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.chipDelete">
+         <segment>
+            <source>Delete {0} from {1}? Are you sure?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.chipDeleteNoLabel">
+         <segment>
+            <source>Delete translation from {0}? Are you sure?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.definition">
+         <segment>
+            <source>Definition</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.domain">
+         <segment>
+            <source>Domain</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.exclude">
+         <segment>
+            <source>Exclude</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.fauna">
+         <segment>
+            <source>Fauna</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.flora">
+         <segment>
+            <source>Flora</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.gloss">
+         <segment>
+            <source>Gloss</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.greek">
+         <segment>
+            <source>Greek</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.hebrew">
+         <segment>
+            <source>Hebrew</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.hide">
+         <segment>
+            <source>Hide</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.index">
+         <segment>
+            <source>Index</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.language">
+         <segment>
+            <source>Language</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.link">
+         <segment>
+            <source>Link</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.misc">
+         <segment>
+            <source>Miscellaneous</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.name">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.realia">
+         <segment>
+            <source>Realia</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.ritual">
+         <segment>
+            <source>Ritual</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.sortShow">
+         <segment>
+            <source>Sort and Show</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.source">
+         <segment>
+            <source>Source</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.strong">
+         <segment>
+            <source>Strong</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.translation">
+         <segment>
+            <source>Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.termDetail">
+         <segment>
+            <source>Term Detail</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.transliteration">
+         <segment>
+            <source>Transliteration</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.unsaved">
+         <segment>
+            <source>Unsaved.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.word">
+         <segment>
+            <source>Word</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="languagePicker.cancel">
          <segment>
             <source>Cancel</source>
@@ -4792,13 +4990,19 @@
             <target/>
          </segment>
       </unit>
+      <unit id="tool.keyterm">
+         <segment>
+            <source>Key Term</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="tool.paratext">
          <segment>
             <source>Paratext Sync</source>
             <target/>
          </segment>
       </unit>
-      <unit id="tool.phraseBackTranslate">
+      <unit id="tool.phrasebacktranslate">
          <segment>
             <source>Phrase Back Translate</source>
             <target/>
@@ -4822,7 +5026,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="tool.teamCheck">
+      <unit id="tool.teamcheck">
          <segment>
             <source>Compare</source>
             <target/>
@@ -4834,7 +5038,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="tool.wholeBackTranslate">
+      <unit id="tool.wholebacktranslate">
          <segment>
             <source>Whole Back Translate</source>
             <target/>
@@ -5806,31 +6010,31 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.backTranslation">
+      <unit id="workflowSteps.backtranslation">
          <segment>
             <source>Back Translate</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.communityTest1">
+      <unit id="workflowSteps.communitytest1">
          <segment>
             <source>Community Test 1</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.communityTest2">
+      <unit id="workflowSteps.communitytest2">
          <segment>
             <source>Community Test 2</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.communityTesting">
+      <unit id="workflowSteps.communitytesting">
          <segment>
             <source>Community Test</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.consultantCheck">
+      <unit id="workflowSteps.consultantcheck">
          <segment>
             <source>Consultant Check</source>
             <target/>
@@ -5848,13 +6052,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.finalRecording">
+      <unit id="workflowSteps.finalrecording">
          <segment>
             <source>Final Record</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.finalReview">
+      <unit id="workflowSteps.finalreview">
          <segment>
             <source>Final Review</source>
             <target/>
@@ -5866,37 +6070,37 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.paratextSync">
+      <unit id="workflowSteps.paratextsync">
          <segment>
             <source>Sync to Paratext</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.peerReview">
+      <unit id="workflowSteps.peerreview">
          <segment>
             <source>Peer Review</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.phraseBackTranslation">
+      <unit id="workflowSteps.phrasebacktranslation">
          <segment>
             <source>Phrase Back Translate</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.pBTTranscribe">
+      <unit id="workflowSteps.pbttranscribe">
          <segment>
             <source>Phrase BT Transcribe</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.pBTParatextSync">
+      <unit id="workflowSteps.pbtparatextSync">
          <segment>
             <source>Phrase BT Paratext</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.preliminaryApproval">
+      <unit id="workflowSteps.preliminaryapproval">
          <segment>
             <source>Preliminary Approval</source>
             <target/>
@@ -5914,7 +6118,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.teamCheck">
+      <unit id="workflowSteps.teamcheck">
          <segment>
             <source>Team Check</source>
             <target/>
@@ -5932,19 +6136,25 @@
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.wholeBackTranslation">
+      <unit id="workflowSteps.wholebacktranslate">
          <segment>
             <source>Whole Back Translate</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.wBTTranscribe">
+      <unit id="workflowSteps.wholebacktranslation">
+         <segment>
+            <source>Whole Back Translate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.wbttranscribe">
          <segment>
             <source>Whole BT Transcribe</source>
             <target/>
          </segment>
       </unit>
-      <unit id="workflowSteps.wBTParatextSync">
+      <unit id="workflowSteps.wbtparatextSync">
          <segment>
             <source>Whole BT Paratext</source>
             <target/>

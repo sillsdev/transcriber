@@ -6,11 +6,12 @@ import { useSelector, shallowEqual } from 'react-redux';
 export enum ToolSlug {
   Resource = 'resource',
   Record = 'record',
-  TeamCheck = 'teamCheck',
+  KeyTerm = 'keyterm',
+  TeamCheck = 'teamcheck',
   Discuss = 'discuss',
   Transcribe = 'transcribe',
-  PhraseBackTranslate = 'phraseBackTranslate',
-  WholeBackTranslate = 'wholeBackTranslate',
+  PhraseBackTranslate = 'phrasebacktranslate',
+  WholeBackTranslate = 'wholebacktranslate',
   Paratext = 'paratext',
   Community = 'community',
   Export = 'export',
@@ -20,6 +21,7 @@ export enum ToolSlug {
 const toolSlugs = [
   ToolSlug.Resource,
   ToolSlug.Record,
+  ToolSlug.KeyTerm,
   ToolSlug.TeamCheck,
   ToolSlug.Discuss,
   ToolSlug.Transcribe,

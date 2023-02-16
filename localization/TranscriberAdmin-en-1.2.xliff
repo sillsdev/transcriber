@@ -2382,7 +2382,238 @@
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="languagePicker.cancel">
+      	<trans-unit id="keyTerms.addTargetWord">
+      		<source>Add Target Word</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TargetWordAdd.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.all">
+      		<source>All</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.aramaic">
+      		<source>Aramaic</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.attribute">
+      		<source>Attribute</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.being">
+      		<source>Being</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.category">
+      		<source>Category</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.chipDelete">
+      		<source>Delete {0} from {1}? Are you sure?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.chipDeleteNoLabel">
+      		<source>Delete translation from {0}? Are you sure?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.definition">
+      		<source>Definition</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>     	
+      	<trans-unit id="keyTerms.domain">
+      		<source>Domain</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.exclude">
+      		<source>Exclude</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermExclude.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.fauna">
+      		<source>Fauna</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.flora">
+      		<source>Flora</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.gloss">
+      		<source>Gloss</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.greek">
+      		<source>Greek</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.hebrew">
+      		<source>Hebrew</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.hide">
+      		<source>Hide</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.index">
+      		<source>Index</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.language">
+      		<source>Language</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.link">
+      		<source>Link</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.misc">
+      		<source>Miscellaneous</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.name">
+      		<source>Name</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.realia">
+      		<source>Realia</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.ritual">
+      		<source>Ritual</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.saving">
+      		<source>Saving...</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.sortShow">
+      		<source>Sort and Show</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.source">
+      		<source>Source</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.strong">
+      		<source>Strong</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.translation">
+      		<source>Translation</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.termDetail">
+      		<source>Term Detail</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.transliteration">
+      		<source>Transliteration</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.unsaved">
+      		<source>Unsaved.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.word">
+      		<source>Word</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="languagePicker.cancel">
             <source>Cancel</source>
             <target/>
             <context-group>
@@ -5588,6 +5819,13 @@
                <context context-type="sourcefile">useTools.ts</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="tool.keyterm">
+         	<source>Key Term</source>
+         	<target/>
+         	<context-group>
+         		<context context-type="sourcefile">useTools.ts</context>
+         	</context-group>
+         </trans-unit>
          <trans-unit id="tool.paratext">
             <source>Paratext Sync</source>
             <target/>
@@ -5595,7 +5833,7 @@
                <context context-type="sourcefile">useTools.ts</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="tool.phraseBackTranslate">
+      	<trans-unit id="tool.phrasebacktranslate">
       		<source>Phrase Back Translate</source>
       		<target/>
       		<context-group>
@@ -5623,7 +5861,7 @@
                <context context-type="sourcefile">useTools.ts</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="tool.teamCheck">
+         <trans-unit id="tool.teamcheck">
             <source>Compare</source>
             <target/>
             <context-group>
@@ -5637,7 +5875,7 @@
                <context context-type="sourcefile">useTools.ts</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="tool.wholeBackTranslate">
+      	<trans-unit id="tool.wholebacktranslate">
       		<source>Whole Back Translate</source>
       		<target/>
       		<context-group>
@@ -6771,35 +7009,35 @@
                <context context-type="sourcefile">welcome.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.backTranslation">
+         <trans-unit id="workflowSteps.backtranslation">
             <source>Back Translate</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.communityTest1">
+         <trans-unit id="workflowSteps.communitytest1">
             <source>Community Test 1</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.communityTest2">
+         <trans-unit id="workflowSteps.communitytest2">
             <source>Community Test 2</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.communityTesting">
+         <trans-unit id="workflowSteps.communitytesting">
             <source>Community Test</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.consultantCheck">
+         <trans-unit id="workflowSteps.consultantcheck">
             <source>Consultant Check</source>
             <target/>
             <context-group>
@@ -6820,14 +7058,14 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.finalRecording">
+         <trans-unit id="workflowSteps.finalrecording">
             <source>Final Record</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.finalReview">
+         <trans-unit id="workflowSteps.finalreview">
             <source>Final Review</source>
             <target/>
             <context-group>
@@ -6841,42 +7079,42 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.paratextSync">
+         <trans-unit id="workflowSteps.paratextsync">
             <source>Sync to Paratext</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.peerReview">
+         <trans-unit id="workflowSteps.peerreview">
             <source>Peer Review</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.phraseBackTranslation">
+         <trans-unit id="workflowSteps.phrasebacktranslation">
             <source>Phrase Back Translate</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.pBTTranscribe">
+         <trans-unit id="workflowSteps.pbttranscribe">
             <source>Phrase BT Transcribe</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.pBTParatextSync">
+         <trans-unit id="workflowSteps.pbtparatextSync">
             <source>Phrase BT Paratext</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.preliminaryApproval">
+         <trans-unit id="workflowSteps.preliminaryapproval">
             <source>Preliminary Approval</source>
             <target/>
             <context-group>
@@ -6897,7 +7135,7 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.teamCheck">
+         <trans-unit id="workflowSteps.teamcheck">
             <source>Team Check</source>
             <target/>
             <context-group>
@@ -6918,21 +7156,28 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.wholeBackTranslation">
+      	<trans-unit id="workflowSteps.wholebacktranslate">
+      		<source>Whole Back Translate</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="workflowSteps.wholebacktranslation">
             <source>Whole Back Translate</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.wBTTranscribe">
+         <trans-unit id="workflowSteps.wbttranscribe">
             <source>Whole BT Transcribe</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="workflowSteps.wBTParatextSync">
+         <trans-unit id="workflowSteps.wbtparatextSync">
             <source>Whole BT Paratext</source>
             <target/>
             <context-group>

@@ -787,7 +787,7 @@ if (
     keys: { remoteId: {} },
     attributes: {
       term: { type: 'string' },
-      gloss: { type: 'string' },
+      domain: { type: 'string' },
       definition: { type: 'string' },
       category: { type: 'string' },
       offlineId: { type: 'string' },
@@ -803,6 +803,8 @@ if (
     keys: { remoteId: {} },
     attributes: {
       term: { type: 'string' },
+      termIndex: { type: 'number' },
+      target: { type: 'string' },
       offlineId: { type: 'string' },
       offlineMediafileId: { type: 'string' },
       dateCreated: { type: 'date-time' },

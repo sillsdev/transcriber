@@ -3,7 +3,7 @@ import { BaseModel } from './baseModel';
 export interface OrgKeyterm extends BaseModel {
   attributes: {
     term: string;
-    gloss: string;
+    domain: string;
     definition: string;
     category: string;
     offlineid: string;
