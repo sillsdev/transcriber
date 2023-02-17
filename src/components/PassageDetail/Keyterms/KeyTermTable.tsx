@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Grid, GridProps, IconButton } from '@mui/material';
+import { Box, Grid, GridProps, IconButton } from '@mui/material';
 import { elemOffset, generateUUID } from '../../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../../model';
@@ -207,7 +207,7 @@ export default function KeyTermTable({
     <TableContainer component={Paper} style={{ height: `${bodyHeight}px` }}>
       <Table stickyHeader sx={{ minWidth: 400 }} aria-label="customized table">
         <TableHead>
-          <TableRow>
+          <TableRow key={'head'}>
             <StyledTableCell>{t.source}</StyledTableCell>
             <StyledTableCell>{t.translation}</StyledTableCell>
           </TableRow>
@@ -226,7 +226,10 @@ export default function KeyTermTable({
               <StyledTableCell sx={{ whiteSpace: 'break-spaces' }}>
                 <Grid container>
                   {row.target.map((t) => (
-                    <>
+                    <Box
+                      sx={{ display: 'flex', flexDirection: 'column' }}
+                      key={t.id}
+                    >
                       <KeyTermChip
                         label={t.label}
                         onPlay={
@@ -250,7 +253,7 @@ export default function KeyTermTable({
                             />
                           </GridContainerCol>
                         )}
-                    </>
+                    </Box>
                   ))}
                   {row.target.length > 0 && adding.indexOf(row.index) === -1 ? (
                     <IconButton

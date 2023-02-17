@@ -2046,7 +2046,7 @@
       </unit>
       <unit id="keyTerms.addTargetWord">
          <segment>
-            <source>Add Target Word</source>
+            <source>Add Translation</source>
             <target/>
          </segment>
       </unit>

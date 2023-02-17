@@ -2383,8 +2383,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.addTargetWord">
-        <source>Add Target Word</source>
-        <target state="needs-translation">Add Target Word</target>
+        <source>Add Translation</source>
+        <target state="needs-translation">Add Translation</target>
         <context-group>
           <context context-type="sourcefile">TargetWordAdd.tsx</context>
         </context-group>

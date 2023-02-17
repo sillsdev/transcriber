@@ -65,6 +65,5 @@ export * from './rememberCurrentPassage';
 export * from './onlyUnique';
 export * from './useHome';
 export * from './useMyNavigate';
-export * from './useKeyTerms';
 export * from './useBookN';
 export * from './bcvKey';

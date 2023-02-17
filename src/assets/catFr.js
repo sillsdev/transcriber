@@ -1,0 +1,2 @@
+/* eslint-disable import/no-anonymous-default-export */
+export default [["AT","Attributs"],["BE","Êtres"],["FA","Faune"],["FL","Flore"],["PN","Noms propres"],["RE","Objets réels"],["RI","Rituels"],["MI","Divers"]];
