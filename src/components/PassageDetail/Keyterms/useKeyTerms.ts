@@ -1,10 +1,11 @@
 import React from 'react';
-import { useBookN } from './useBookN';
-import { bcvKey } from './bcvKey';
-import { IKeyTerm } from '../model';
+import { useBookN } from '../../../utils/useBookN';
+import { bcvKey } from '../../../utils/bcvKey';
+import { IKeyTerm, ILocalTerm } from '../../../model';
 import { useSelector, shallowEqual } from 'react-redux';
-import { IKeyTermsStrings } from '../model';
-import { keyTermsSelector } from '../selector';
+import { IKeyTermsStrings } from '../../../model';
+import { keyTermsSelector } from '../../../selector';
+import { useGlobal } from 'reactn';
 
 export const ktHide = 'HI';
 
@@ -15,16 +16,32 @@ export enum SortBy {
   All = 'A',
 }
 
+export const localeLanguages = [
+  'En',
+  'Es',
+  'Fr',
+  'Id',
+  'Pt-BR',
+  'Pt',
+  'zh-Hans',
+  'zh-Hant',
+];
+
 export const useKeyTerms = () => {
   const [terms, setTerms] = React.useState<Map<number, IKeyTerm>>();
+  const [localTerm, setLocalTerm] = React.useState<Map<number, ILocalTerm>>();
   const [verseTerm, setVerseTerm] = React.useState<Map<string, number[]>>();
   const [excluded, setExcluded] = React.useState(Array<string | number>());
+  const [lang] = useGlobal('lang');
+  const [language, setLanguage] = React.useState(
+    localeLanguages.find((v) => v.split('-')[0].toLowerCase() === lang) ?? 'En'
+  );
   const exclSet = React.useRef(new Set<string | number>());
   const [sortBy, setSortBy] = React.useState<SortBy>(SortBy.Word);
   const bookN = useBookN();
   const ktCat = ['PN', 'FL', 'RE', 'FA', 'AT', 'BE', 'RI', 'MI', ktHide];
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
-  const ktLabel = [
+  const defaultLabels = [
     t.name,
     t.flora,
     t.realia,
@@ -35,6 +52,7 @@ export const useKeyTerms = () => {
     t.misc,
     t.hide,
   ];
+  const [ktLabel, setKtLabel] = React.useState(defaultLabels);
 
   const initExcluded = (excArr: Array<string | number>) => {
     setExcluded(excArr);
@@ -44,18 +62,30 @@ export const useKeyTerms = () => {
 
   React.useEffect(() => {
     console.log(`key terms loading... `);
-    import('../assets/terms').then((termData) =>
+    import('../../../assets/terms').then((termData) =>
       setTerms(new Map(termData.default as any))
     );
-    import('../assets/verseTerm').then((verseTermData) =>
+    import('../../../assets/verseTerm').then((verseTermData) =>
       setVerseTerm(new Map(verseTermData.default as any))
     );
     console.log(`key terms loaded.`);
     initExcluded(['PN', 'FL', 'FA', ktHide]);
   }, []);
 
+  React.useEffect(() => {
+    import(`../../../assets/cat${language}`).then((catData) => {
+      const catMap = new Map<string, string>(catData.default as any);
+      setKtLabel(ktCat.map((v, d) => catMap.get(v) ?? defaultLabels[d]));
+    });
+    import(`../../../assets/term${language}`).then((termData) => {
+      setLocalTerm(new Map(termData.default as any));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language]);
+
   const oneTerm = (t: number) => ({
     ...(terms?.get(t) as IKeyTerm),
+    ...(localTerm?.get(t) as ILocalTerm),
     I: t,
   });
 
@@ -69,9 +99,9 @@ export const useKeyTerms = () => {
   };
 
   const glossComp = (i: number, j: number) => {
-    if (!terms) return 0;
-    const iObj = terms.get(i);
-    const jObj = terms.get(j);
+    if (!localTerm || !terms) return 0;
+    const iObj = localTerm.get(i) ?? terms.get(i);
+    const jObj = localTerm.get(j) ?? terms?.get(j);
     const iG = iObj?.G.toLocaleLowerCase() ?? '';
     const jG = jObj?.G.toLocaleLowerCase() ?? '';
     return iG > jG ? 1 : -1;
@@ -135,16 +165,18 @@ export const useKeyTerms = () => {
     return [];
   };
 
-  const ktDisplay = (to: IKeyTerm) => {
+  const ktDisplay = (i: number) => {
+    const to = terms?.get(i);
+    const lt = localTerm?.get(i) ?? terms?.get(i);
     if (sortBy === SortBy.All) {
-      return `${to.W} /${to.T}/ ${to.G}`;
+      return `${to?.W} /${to?.T}/ ${lt?.G}`;
     }
     if (sortBy === SortBy.Gloss) {
-      const m = /^[-a-zA-Z0-9 ]+/.exec(to.G);
-      return m ? m[0] : to.G;
+      const m = /^[^,;\uff1b\u3002\uff0c]+/u.exec(lt?.G ?? '');
+      return m ? m[0] : lt?.G.trim() ?? '';
     }
-    if (sortBy === SortBy.Transliteration) return to.T;
-    return to.W;
+    if (sortBy === SortBy.Transliteration) return to?.T ?? '';
+    return to?.W ?? '';
   };
 
   const excludeToggle = (cat: string | number) => {
@@ -166,6 +198,11 @@ export const useKeyTerms = () => {
     return index >= 0 ? ktLabel[index] : '';
   };
 
+  const setLocale = (code: string) => {
+    if (localeLanguages.find((v) => code === v) && language !== code)
+      setLanguage(code);
+  };
+
   return {
     verseTerms,
     ktCat,
@@ -178,5 +215,6 @@ export const useKeyTerms = () => {
     setSortBy: handleSetSort,
     ktDisplay,
     oneTerm,
+    setLocale,
   };
 };

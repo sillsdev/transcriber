@@ -4,6 +4,7 @@ import React, {
   useContext,
   useMemo,
   PropsWithChildren,
+  Suspense,
 } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation, useParams } from 'react-router-dom';
@@ -34,7 +35,6 @@ import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord
 import PassageDetailItem from '../components/PassageDetail/PassageDetailItem';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
 import PassageDetailChooser from '../components/PassageDetail/PassageDetailChooser';
-import KeyTerms from '../components/PassageDetail/Keyterms/KeyTerms';
 import IntegrationTab from '../components/Integration';
 import TranscriptionTab from '../components/TranscriptionTab';
 import {
@@ -53,6 +53,10 @@ import { memory } from '../schema';
 import { useSelector, shallowEqual } from 'react-redux';
 import { toolSelector } from '../selector';
 import { QueryBuilder } from '@orbit/data';
+import Busy from '../components/Busy';
+const KeyTerms = React.lazy(
+  () => import('../components/PassageDetail/Keyterms/KeyTerms')
+);
 
 const minWidth = 800;
 
@@ -287,7 +291,9 @@ const PassageDetailGrids = () => {
                   )}
                   {tool === ToolSlug.KeyTerm && (
                     <Grid item sx={descProps} xs={12}>
-                      <KeyTerms />
+                      <Suspense fallback={<Busy />}>
+                        <KeyTerms />
+                      </Suspense>
                     </Grid>
                   )}
                 </Pane>

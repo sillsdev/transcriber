@@ -4,14 +4,23 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select, { SelectChangeEvent, SelectProps } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import HideIcon from '@mui/icons-material/VisibilityOff';
-import { ktHide, useKeyTerms } from '../../../utils';
+import ShowIcon from '@mui/icons-material/Visibility';
+import SwapHoriz from '@mui/icons-material/SwapHoriz';
+import { ktHide } from './useKeyTerms';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../../model';
 import { keyTermsSelector } from '../../../selector';
-import { Box } from '@mui/material';
+import { Box, styled } from '@mui/material';
+
+const StyledSelect = styled(Select)<SelectProps>(() => ({
+  '& #exclude-multiple': {
+    paddingTop: '5px',
+    paddingBottom: '5px',
+  },
+}));
 
 export const KtExcludeTag = 'ktExcl';
 export type TermId = string | number;
@@ -29,17 +38,23 @@ const MenuProps = {
 };
 interface IProps {
   init: string[];
+  cat: string[];
   onChange: (excl: string[]) => void;
+  getLabel: (cat: string) => string;
 }
-export default function KeyTermExclude({ init, onChange }: IProps) {
-  const { ktCat, catLabel } = useKeyTerms();
+export default function KeyTermExclude({
+  init,
+  cat,
+  onChange,
+  getLabel,
+}: IProps) {
   const [names, setNames] = React.useState<string[]>([]);
   const [exclName, setExclName] = React.useState<string[]>([]);
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
 
   React.useEffect(() => {
-    setNames(ktCat.map((c) => catLabel(c)));
-    setExclName(init.map((c) => catLabel(c)));
+    setNames(cat.map((c) => getLabel(c)));
+    setExclName(init.map((c) => getLabel(c)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [init]);
 
@@ -50,21 +65,21 @@ export default function KeyTermExclude({ init, onChange }: IProps) {
     // On autofill we get a stringified value.
     const newValue = typeof value === 'string' ? value.split(',') : value;
     setExclName(newValue);
-    onChange(newValue.map((v) => ktCat[names.indexOf(v)]));
+    onChange(newValue.map((v) => cat[names.indexOf(v)]));
   };
 
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-checkbox-label">{t.exclude}</InputLabel>
-        <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
+        <InputLabel id="exclude-multiple-label">{t.exclude}</InputLabel>
+        <StyledSelect
+          labelId="exclude-multiple-label"
+          id="exclude-multiple"
           multiple
           value={exclName}
-          onChange={handleChange}
+          onChange={handleChange as any}
           input={<OutlinedInput label={t.exclude} />}
-          renderValue={(selected) => selected.join(', ')}
+          renderValue={(selected: unknown) => (selected as string[]).join(', ')}
           MenuProps={MenuProps}
         >
           {names.map((name) => (
@@ -72,11 +87,21 @@ export default function KeyTermExclude({ init, onChange }: IProps) {
               <Checkbox checked={exclName.indexOf(name) > -1} />
               <ListItemText
                 primary={
-                  name !== catLabel(ktHide) ? (
+                  name !== getLabel(ktHide) ? (
                     name
                   ) : (
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      {name + '\u00A0'}
+                      {name}
+                      <ShowIcon
+                        fontSize="small"
+                        htmlColor="grey"
+                        sx={{ pl: 2 }}
+                      />
+                      <SwapHoriz
+                        fontSize="small"
+                        htmlColor="grey"
+                        sx={{ px: 1 }}
+                      />
                       <HideIcon fontSize="small" htmlColor="grey" />
                     </Box>
                   )
@@ -84,7 +109,7 @@ export default function KeyTermExclude({ init, onChange }: IProps) {
               />
             </MenuItem>
           ))}
-        </Select>
+        </StyledSelect>
       </FormControl>
     </div>
   );

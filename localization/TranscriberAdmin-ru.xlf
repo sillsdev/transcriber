@@ -2043,8 +2043,8 @@
 		</unit>
 		<unit id="keyTerms.addTargetWord">
 			<segment>
-				<source>Add Target Word</source>
-				<target>Добавить целевое слово</target>
+				<source>Add Translation</source>
+				<target>Добавить перевод</target>
 			</segment>
 		</unit>
 		<unit id="keyTerms.all">

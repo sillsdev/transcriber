@@ -208,5 +208,10 @@
         ]
       }
     ]
+  },
+  "fork-ts-checker": {
+    "typescript": {
+      "memoryLimit": 5000
+    }
   }
 }

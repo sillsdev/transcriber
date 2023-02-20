@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { parseRef, related, useOrgDefaults } from '../../../crud';
 import BigDialog from '../../../hoc/BigDialog';
-import { IKeyTerm, OrgKeytermTarget } from '../../../model';
-import { cleanFileName, SortBy, useKeyTerms } from '../../../utils';
+import { IKeyTerm, ILocalTerm, OrgKeytermTarget } from '../../../model';
+import { SortBy, useKeyTerms } from './useKeyTerms';
+import { cleanFileName } from '../../../utils';
 import KeyTermDetail from './KeyTermDetail';
 import KeyTermExclude, { ExcludeArray, KtExcludeTag } from './KeyTermExclude';
 import KeyTermsSort from './KeyTermSort';
@@ -15,8 +16,10 @@ import { keyTermsSelector } from '../../../selector';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
 import { useGlobal } from 'reactn';
+import KeyTermSetting from './KeyTermSetting';
 
 export const SortTag = 'ktSort';
+export const KtLang = 'ktLang';
 
 interface IRecordProps {
   keyTermTargets: OrgKeytermTarget[];
@@ -34,15 +37,17 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
     sortBy,
     ktCat,
     excluded,
+    catLabel,
     isExcluded,
     excludeToggle,
     initExcluded,
     oneTerm,
+    setLocale,
   } = useKeyTerms();
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   parseRef(passage);
   const { startChapter, startVerse, endVerse } = passage;
-  const [term, setTerm] = useState<IKeyTerm>();
+  const [term, setTerm] = useState<IKeyTerm & ILocalTerm>();
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
 
   const handleTermClick = (term: number) => {
@@ -95,9 +100,16 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
     excludeToggle(id);
   };
 
+  const handleLang = (code: string) => {
+    setLocale(code);
+    setOrgDefault(KtLang, code);
+  };
+
   useEffect(() => {
     const by = getOrgDefault(SortTag) as SortBy;
     setSortBy(by);
+    const ktLang = getOrgDefault(KtLang) as string;
+    setLocale(ktLang);
     const excl = getOrgDefault(KtExcludeTag) as ExcludeArray;
     if (excl) initExcluded(excl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -114,8 +126,11 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
               .filter((v) => typeof v === 'string')
               .map((v) => v) as string[]
           }
+          cat={ktCat}
+          getLabel={catLabel}
           onChange={handleExclude}
         />
+        <KeyTermSetting onChange={handleLang} />
       </div>
       <KeyTermTable
         rows={verseTerms(
@@ -126,7 +141,7 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
           sortBy
         ).map((to) => ({
           term: to.W,
-          source: ktDisplay(to),
+          source: ktDisplay(to.I),
           target: keyTermTargets
             .filter(
               (t) =>
@@ -150,9 +165,10 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
         onOpen={handleClose}
       >
         <KeyTermDetail
-          term={term as IKeyTerm}
+          term={term as IKeyTerm & ILocalTerm}
           hide={isExcluded(term?.I ?? 0)}
           onVisible={handleVisibleToggle(term?.I ?? 0)}
+          getLabel={catLabel}
         />
       </BigDialog>
     </>

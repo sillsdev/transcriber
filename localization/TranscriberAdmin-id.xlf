@@ -2043,8 +2043,8 @@
 		</unit>
 		<unit id="keyTerms.addTargetWord">
 			<segment>
-				<source>Add Target Word</source>
-				<target/>
+				<source>Add Translation</source>
+				<target>Tambahkan Terjemahan</target>
 			</segment>
 		</unit>
 		<unit id="keyTerms.all">

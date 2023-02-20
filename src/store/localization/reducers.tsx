@@ -460,7 +460,7 @@ const initialState = {
 	}),
 	"keyTerms": new LocalizedStrings({
 		"en": {
-			"addTargetWord": "Add Target Word",
+			"addTargetWord": "Add Translation",
 			"all": "All",
 			"aramaic": "Aramaic",
 			"attribute": "Attribute",

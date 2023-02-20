@@ -230,6 +230,7 @@ export default function TargetWordAdd(props: IProps) {
                     aria-label="save target term"
                     onClick={handleOk}
                     onMouseDown={handleMouseDownSave}
+                    disabled={recording}
                     edge="end"
                   >
                     <CheckIcon fontSize="small" />
@@ -238,6 +239,7 @@ export default function TargetWordAdd(props: IProps) {
                     aria-label="save target term"
                     onClick={handleCancel}
                     onMouseDown={handleMouseDownSave}
+                    disabled={recording}
                     edge="end"
                   >
                     <CancelIcon fontSize="small" />
