@@ -2417,6 +2417,13 @@
       			<context context-type="sourcefile">useKeyTerms.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="keyTerms.cancel">
+      		<source>Cancel Translation</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="keyTerms.category">
       		<source>Category</source>
       		<target/>
@@ -2536,8 +2543,22 @@
       			<context context-type="sourcefile">useKeyTerms.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="keyTerms.play">
+      		<source>Play Translation</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="keyTerms.realia">
       		<source>Realia</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.record">
+      		<source>Record Translation</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">useKeyTerms.tsx</context>
@@ -2550,8 +2571,22 @@
       			<context context-type="sourcefile">useKeyTerms.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="keyTerms.save">
+      		<source>Save Translation</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="keyTerms.saving">
       		<source>Saving...</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">KeyTermSort.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="keyTerms.settingLanguage">
+      		<source>Set Langauge</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">KeyTermSort.tsx</context>
@@ -2586,7 +2621,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="keyTerms.termDetail">
-      		<source>Term Detail</source>
+      		<source>Term Details</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">KeyTermSort.tsx</context>
@@ -5820,7 +5855,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="tool.keyterm">
-         	<source>Key Term</source>
+         	<source>Term Verify</source>
          	<target/>
          	<context-group>
          		<context context-type="sourcefile">useTools.ts</context>

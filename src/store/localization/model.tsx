@@ -431,6 +431,7 @@ export interface IKeyTermsStrings extends Localize.LocalizedStringsMethods {
     "aramaic": string;
     "attribute": string;
     "being": string;
+    "cancel": string;
     "category": string;
     "chipDelete": string;
     "chipDeleteNoLabel": string;
@@ -448,9 +449,13 @@ export interface IKeyTermsStrings extends Localize.LocalizedStringsMethods {
     "link": string;
     "misc": string;
     "name": string;
+    "play": string;
     "realia": string;
+    "record": string;
     "ritual": string;
+    "save": string;
     "saving": string;
+    "settingLanguage": string;
     "sortShow": string;
     "source": string;
     "strong": string;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
+import InputLabel, { InputLabelProps } from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
@@ -19,6 +19,12 @@ const StyledSelect = styled(Select)<SelectProps>(() => ({
   '& #exclude-multiple': {
     paddingTop: '5px',
     paddingBottom: '5px',
+  },
+}));
+
+const StyledLabel = styled(InputLabel)<InputLabelProps>(() => ({
+  '&[data-shrink="false"]': {
+    top: '-10px',
   },
 }));
 
@@ -71,9 +77,7 @@ export default function KeyTermExclude({
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="exclude-multiple-label" sx={{ top: '-10px' }}>
-          {t.exclude}
-        </InputLabel>
+        <StyledLabel id="exclude-multiple-label">{t.exclude}</StyledLabel>
         <StyledSelect
           labelId="exclude-multiple-label"
           id="exclude-multiple"

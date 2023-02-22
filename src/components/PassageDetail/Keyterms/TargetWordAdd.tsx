@@ -15,6 +15,7 @@ import {
   FormControl,
   Typography,
   TypographyProps,
+  Tooltip,
 } from '@mui/material';
 // import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/MicOutlined';
@@ -211,39 +212,48 @@ export default function TargetWordAdd(props: IProps) {
           placeholder={t.addTargetWord}
           startAdornment={
             <InputAdornment position="start">
-              <IconButton
-                aria-label="record target term"
-                onClick={handleRecord}
-                onMouseDown={handleMouseDownSave}
-                disabled={commentRecording || recording}
-                edge="start"
-              >
-                <MicIcon fontSize="small" />
-              </IconButton>
+              <Tooltip title={t.record}>
+                <IconButton
+                  id="record-translation"
+                  aria-label="record target term"
+                  onClick={handleRecord}
+                  onMouseDown={handleMouseDownSave}
+                  disabled={commentRecording || recording}
+                  edge="start"
+                >
+                  <MicIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
             </InputAdornment>
           }
           endAdornment={
             <InputAdornment position="end">
               {hasContent() && (
                 <>
-                  <IconButton
-                    aria-label="save target term"
-                    onClick={handleOk}
-                    onMouseDown={handleMouseDownSave}
-                    disabled={recording}
-                    edge="end"
-                  >
-                    <CheckIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    aria-label="save target term"
-                    onClick={handleCancel}
-                    onMouseDown={handleMouseDownSave}
-                    disabled={recording}
-                    edge="end"
-                  >
-                    <CancelIcon fontSize="small" />
-                  </IconButton>
+                  <Tooltip title={t.save}>
+                    <IconButton
+                      id="save-translation"
+                      aria-label="save target term"
+                      onClick={handleOk}
+                      onMouseDown={handleMouseDownSave}
+                      disabled={recording}
+                      edge="end"
+                    >
+                      <CheckIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={t.cancel}>
+                    <IconButton
+                      id="cancel-translation"
+                      aria-label="save target term"
+                      onClick={handleCancel}
+                      onMouseDown={handleMouseDownSave}
+                      disabled={recording}
+                      edge="end"
+                    >
+                      <CancelIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
                 </>
               )}
             </InputAdornment>

@@ -2417,6 +2417,13 @@
           <context context-type="sourcefile">useKeyTerms.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="keyTerms.cancel">
+        <source>Cancel Translation</source>
+        <target state="needs-translation">Cancel Translation</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="keyTerms.category">
         <source>Category</source>
         <target state="needs-translation">Category</target>
@@ -2536,9 +2543,23 @@
           <context context-type="sourcefile">useKeyTerms.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="keyTerms.play">
+        <source>Play Translation</source>
+        <target state="needs-translation">Play Translation</target>
+        <context-group>
+          <context context-type="sourcefile">useKeyTerms.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="keyTerms.realia">
         <source>Realia</source>
         <target state="needs-translation">Realia</target>
+        <context-group>
+          <context context-type="sourcefile">useKeyTerms.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.record">
+        <source>Record Translation</source>
+        <target state="needs-translation">Record Translation</target>
         <context-group>
           <context context-type="sourcefile">useKeyTerms.tsx</context>
         </context-group>
@@ -2550,9 +2571,23 @@
           <context context-type="sourcefile">useKeyTerms.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="keyTerms.save">
+        <source>Save Translation</source>
+        <target state="needs-translation">Save Translation</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="keyTerms.saving">
         <source>Saving...</source>
         <target state="needs-translation">Saving...</target>
+        <context-group>
+          <context context-type="sourcefile">KeyTermSort.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="keyTerms.settingLanguage">
+        <source>Set Langauge</source>
+        <target state="needs-translation">Set Langauge</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
@@ -2586,8 +2621,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.termDetail">
-        <source>Term Detail</source>
-        <target state="needs-translation">Term Detail</target>
+        <source>Term Details</source>
+        <target state="needs-translation">Term Details</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
@@ -5820,8 +5855,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="tool.keyterm">
-        <source>Key Term</source>
-        <target state="needs-translation">Key Term</target>
+        <source>Term Verify</source>
+        <target state="needs-translation">Term Verify</target>
         <context-group>
           <context context-type="sourcefile">useTools.ts</context>
         </context-group>

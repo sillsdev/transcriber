@@ -2071,7 +2071,13 @@
 				<target>Être</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.category">
+		<unit id="keyTerms.cancel">
+         <segment>
+            <source>Cancel Translation</source>
+            <target>Annuler la traduction</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.category">
 			<segment>
 				<source>Category</source>
 				<target>Catégorie</target>
@@ -2173,25 +2179,49 @@
 				<target>Nom</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.realia">
+		<unit id="keyTerms.play">
+         <segment>
+            <source>Play Translation</source>
+            <target>Lire la traduction</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.realia">
 			<segment>
 				<source>Realia</source>
 				<target>Realia</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.ritual">
+		<unit id="keyTerms.record">
+         <segment>
+            <source>Record Translation</source>
+            <target>Enregistrer la traduction</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.ritual">
 			<segment>
 				<source>Ritual</source>
 				<target>Rituel</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.saving">
+		<unit id="keyTerms.save">
+         <segment>
+            <source>Save Translation</source>
+            <target>Sauvegarder la traduction</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.saving">
 			<segment>
 				<source>Saving...</source>
 				<target>Sauvegarder...</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.sortShow">
+		<unit id="keyTerms.settingLanguage">
+         <segment>
+            <source>Set Langauge</source>
+            <target>Définir la langue</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.sortShow">
 			<segment>
 				<source>Sort and Show</source>
 				<target>Trier et montrer</target>
@@ -4987,12 +5017,12 @@
 				<target>Exporter</target>
 			</segment>
 		</unit>
-		<unit id="tool.keyterm">
-			<segment>
-				<source>Key Term</source>
-				<target>Terme clé</target>
-			</segment>
-		</unit>
+      <unit id="tool.keyterm">
+         <segment>
+            <source>Term Verify</source>
+            <target>Vérification du terme</target>
+         </segment>
+      </unit>
 		<unit id="tool.paratext">
 			<segment>
 				<source>Paratext Sync</source>
