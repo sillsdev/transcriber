@@ -43,6 +43,7 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
     initExcluded,
     oneTerm,
     setLocale,
+    language,
   } = useKeyTerms();
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   parseRef(passage);
@@ -51,7 +52,6 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
 
   const handleTermClick = (term: number) => {
-    console.log(`you chose ${term}`);
     setTerm(oneTerm(term));
   };
 
@@ -130,7 +130,7 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
           getLabel={catLabel}
           onChange={handleExclude}
         />
-        <KeyTermSetting onChange={handleLang} />
+        <KeyTermSetting curCode={language} onChange={handleLang} />
       </div>
       <KeyTermTable
         rows={verseTerms(

@@ -216,5 +216,6 @@ export const useKeyTerms = () => {
     ktDisplay,
     oneTerm,
     setLocale,
+    language,
   };
 };
