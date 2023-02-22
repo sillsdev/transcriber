@@ -2071,7 +2071,13 @@
 				<target>Быть</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.category">
+		<unit id="keyTerms.cancel">
+         <segment>
+            <source>Cancel Translation</source>
+            <target>Отменить перевод</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.category">
 			<segment>
 				<source>Category</source>
 				<target>Категория</target>
@@ -2173,25 +2179,49 @@
 				<target>Имя</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.realia">
+		<unit id="keyTerms.play">
+         <segment>
+            <source>Play Translation</source>
+            <target>Воспроизвести перевод</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.realia">
 			<segment>
 				<source>Realia</source>
 				<target>Реалии</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.ritual">
+		<unit id="keyTerms.record">
+         <segment>
+            <source>Record Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.ritual">
 			<segment>
 				<source>Ritual</source>
 				<target>Ритуал</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.saving">
+		<unit id="keyTerms.save">
+         <segment>
+            <source>Save Translation</source>
+            <target>Сохранить перевод</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.saving">
 			<segment>
 				<source>Saving...</source>
 				<target>Сохранение...</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.sortShow">
+		<unit id="keyTerms.settingLanguage">
+         <segment>
+            <source>Set Langauge</source>
+            <target>Установить язык</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.sortShow">
 			<segment>
 				<source>Sort and Show</source>
 				<target>Сортировать и показывать</target>
@@ -2217,8 +2247,8 @@
 		</unit>
 		<unit id="keyTerms.termDetail">
 			<segment>
-				<source>Term Detail</source>
-				<target>Детализация термина</target>
+				<source>Term Details</source>
+				<target>Детали термина</target>
 			</segment>
 		</unit>
 		<unit id="keyTerms.transliteration">
@@ -4989,8 +5019,8 @@
 		</unit>
 		<unit id="tool.keyterm">
 			<segment>
-				<source>Key Term</source>
-				<target>Ключевой термин</target>
+				<source>Term Verify</source>
+				<target>Проверка термина</target>
 			</segment>
 		</unit>
 		<unit id="tool.paratext">

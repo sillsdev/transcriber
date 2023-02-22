@@ -2074,6 +2074,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="keyTerms.cancel">
+         <segment>
+            <source>Cancel Translation</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="keyTerms.category">
          <segment>
             <source>Category</source>
@@ -2176,9 +2182,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="keyTerms.play">
+         <segment>
+            <source>Play Translation</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="keyTerms.realia">
          <segment>
             <source>Realia</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.record">
+         <segment>
+            <source>Record Translation</source>
             <target/>
          </segment>
       </unit>
@@ -2188,9 +2206,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="keyTerms.save">
+         <segment>
+            <source>Save Translation</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="keyTerms.saving">
          <segment>
             <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.settingLanguage">
+         <segment>
+            <source>Set Langauge</source>
             <target/>
          </segment>
       </unit>
@@ -2220,7 +2250,7 @@
       </unit>
       <unit id="keyTerms.termDetail">
          <segment>
-            <source>Term Detail</source>
+            <source>Term Details</source>
             <target/>
          </segment>
       </unit>
@@ -4992,7 +5022,7 @@
       </unit>
       <unit id="tool.keyterm">
          <segment>
-            <source>Key Term</source>
+            <source>Term Verify</source>
             <target/>
          </segment>
       </unit>

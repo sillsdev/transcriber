@@ -2071,7 +2071,13 @@
 				<target>Sendo</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.category">
+		<unit id="keyTerms.cancel">
+         <segment>
+            <source>Cancel Translation</source>
+            <target>Cancelar tradução</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.category">
 			<segment>
 				<source>Category</source>
 				<target>Categoria</target>
@@ -2173,25 +2179,49 @@
 				<target>Nome</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.realia">
+		<unit id="keyTerms.play">
+         <segment>
+            <source>Play Translation</source>
+            <target>Tradução de jogos</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.realia">
 			<segment>
 				<source>Realia</source>
 				<target>Realia</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.ritual">
+		<unit id="keyTerms.record">
+         <segment>
+            <source>Record Translation</source>
+            <target>Tradução de Registros</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.ritual">
 			<segment>
 				<source>Ritual</source>
 				<target>Ritual</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.saving">
+		<unit id="keyTerms.save">
+         <segment>
+            <source>Save Translation</source>
+            <target>Salvar Tradução</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.saving">
 			<segment>
 				<source>Saving...</source>
 				<target>Salvando...</target>
 			</segment>
 		</unit>
-		<unit id="keyTerms.sortShow">
+		<unit id="keyTerms.settingLanguage">
+         <segment>
+            <source>Set Langauge</source>
+            <target>Conjunto Langauge</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.sortShow">
 			<segment>
 				<source>Sort and Show</source>
 				<target>Classificar e Mostrar</target>
@@ -2217,8 +2247,8 @@
 		</unit>
 		<unit id="keyTerms.termDetail">
 			<segment>
-				<source>Term Detail</source>
-				<target>Detalhe do Termo</target>
+				<source>Term Details</source>
+				<target>Detalhes do Termo</target>
 			</segment>
 		</unit>
 		<unit id="keyTerms.transliteration">
@@ -4989,8 +5019,8 @@
 		</unit>
 		<unit id="tool.keyterm">
 			<segment>
-				<source>Key Term</source>
-				<target>Termo chave</target>
+				<source>Term Verify</source>
+				<target>Termo Verificar</target>
 			</segment>
 		</unit>
 		<unit id="tool.paratext">
