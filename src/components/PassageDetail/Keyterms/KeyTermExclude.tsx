@@ -71,7 +71,9 @@ export default function KeyTermExclude({
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="exclude-multiple-label">{t.exclude}</InputLabel>
+        <InputLabel id="exclude-multiple-label" sx={{ top: '-10px' }}>
+          {t.exclude}
+        </InputLabel>
         <StyledSelect
           labelId="exclude-multiple-label"
           id="exclude-multiple"
