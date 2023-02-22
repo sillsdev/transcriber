@@ -60,7 +60,8 @@ interface IProps {
   onOk: (row: IKeyTermRow) => void;
   onCancel: () => void;
   setCanSaveRecording: (canSave: boolean) => void;
-  onTextChange: (txt: string) => void;
+  onTextChange: (txt: string, row: IKeyTermRow) => void;
+  onSetRecordRow: (row: IKeyTermRow | undefined) => void;
 }
 
 export default function TargetWordAdd(props: IProps) {
@@ -74,6 +75,7 @@ export default function TargetWordAdd(props: IProps) {
     onCancel,
     setCanSaveRecording,
     onTextChange,
+    onSetRecordRow,
   } = props;
   const {
     playing,
@@ -119,7 +121,7 @@ export default function TargetWordAdd(props: IProps) {
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCurText(e.target.value);
-    onTextChange(e.target.value);
+    onTextChange(e.target.value, row);
     toolChanged(toolId, true);
   };
 
@@ -129,6 +131,7 @@ export default function TargetWordAdd(props: IProps) {
     setCommentPlaying(false, true);
     setStartRecord(true);
     setCommentRecording(true);
+    onSetRecordRow(row);
   };
 
   const handleOk = () => {
@@ -153,6 +156,7 @@ export default function TargetWordAdd(props: IProps) {
     doRecordRef.current = false;
     clearChanged(toolId);
     saving.current = false;
+    onSetRecordRow(undefined);
   };
 
   const handleCancel = () => {

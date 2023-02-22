@@ -190,8 +190,13 @@ export default function KeyTermTable({
     reset();
   };
 
-  const onTextChange = (text: string) => {
+  const onTextChange = (text: string, row: IKeyTermRow) => {
+    rowRef.current = text ? row : undefined;
     setTargetText(text);
+  };
+
+  const onSetRecordRow = (row: IKeyTermRow | undefined) => {
+    rowRef.current = row;
   };
 
   React.useEffect(() => {
@@ -263,7 +268,7 @@ export default function KeyTermTable({
                     >
                       <AddIcon fontSize="small" />
                     </IconButton>
-                  ) : (
+                  ) : !rowRef.current || rowRef.current.index === row.index ? (
                     <TargetWord
                       toolId={`${row.index}`}
                       fileName={getFilename(row)}
@@ -274,7 +279,10 @@ export default function KeyTermTable({
                       cancelOnlyIfChanged
                       setCanSaveRecording={setCanSaveRecording}
                       onTextChange={onTextChange}
+                      onSetRecordRow={onSetRecordRow}
                     />
+                  ) : (
+                    <></>
                   )}
                 </Grid>
               </StyledTableCell>
