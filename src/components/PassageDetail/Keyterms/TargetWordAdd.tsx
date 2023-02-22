@@ -30,6 +30,7 @@ import { waitForIt } from '../../../utils';
 import { UnsavedContext } from '../../../context/UnsavedContext';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { IKeyTermRow } from './KeyTermTable';
+import { useSnackBar } from '../../../hoc/SnackBar';
 
 const ColumnDiv = styled('div')(() => ({
   display: 'flex',
@@ -101,6 +102,8 @@ export default function TargetWordAdd(props: IProps) {
     // isChanged,
   } = useContext(UnsavedContext).state;
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
+  const saving = useRef(false);
+  const { showMessage } = useSnackBar();
 
   const handleSetCanSave = (valid: boolean) => {
     if (valid !== canSave) {
@@ -129,6 +132,11 @@ export default function TargetWordAdd(props: IProps) {
   };
 
   const handleOk = () => {
+    if (saving.current) {
+      showMessage(t.saving);
+      return;
+    }
+    saving.current = true;
     //start the passage recorder if it's going...
     if (!saveRequested(toolId)) {
       startSave(toolId);
@@ -144,6 +152,7 @@ export default function TargetWordAdd(props: IProps) {
     setCurText('');
     doRecordRef.current = false;
     clearChanged(toolId);
+    saving.current = false;
   };
 
   const handleCancel = () => {
