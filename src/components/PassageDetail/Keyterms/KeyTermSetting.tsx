@@ -8,10 +8,11 @@ import { localeLanguages } from './useKeyTerms';
 import { langName } from '../../../utils';
 
 interface IProps {
+  curCode: string;
   onChange?: (code: string) => void;
 }
 
-export default function KeyTermSetting({ onChange }: IProps) {
+export default function KeyTermSetting({ curCode, onChange }: IProps) {
   const [locale] = useGlobal('lang');
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -52,6 +53,7 @@ export default function KeyTermSetting({ onChange }: IProps) {
             key={'loc' + idx}
             value={option}
             onClick={handleChange(option)}
+            sx={{ backgroundColor: option === curCode ? 'lightgrey' : 'white' }}
           >
             {langName(locale, option.split('-')[0].toLowerCase()) +
               ` [${option}]`}
