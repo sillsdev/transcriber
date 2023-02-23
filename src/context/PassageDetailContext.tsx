@@ -42,7 +42,13 @@ import {
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
-import { loadBlob, logError, prettySegment, Severity } from '../utils';
+import {
+  loadBlob,
+  logError,
+  prettySegment,
+  Severity,
+  waitForIt,
+} from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
 import JSONAPISource from '@orbit/jsonapi';
@@ -780,7 +786,17 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             if (!b) {
               if (urlOrError.includes('403')) {
                 //force requery for new media url
-                setSelected(state.selected);
+                fetchMediaUrl({
+                  id: '',
+                });
+                waitForIt(
+                  'requery url',
+                  () => mediaState.id === '',
+                  () => false,
+                  500
+                ).then(() => {
+                  setSelected(state.selected);
+                });
               } else {
                 //no blob
                 showMessage(urlOrError);
