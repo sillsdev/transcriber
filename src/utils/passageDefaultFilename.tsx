@@ -16,7 +16,7 @@ export const passageDefaultFilename = (
   artifactType: string | null | undefined,
   postfix = ''
 ) => {
-  if (passage) {
+  if (passage?.attributes) {
     var tmp = (passage.attributes.book || '') + passage.attributes.reference;
     if (!tmp.length) tmp = passage.id.slice(0, 4);
     if (artifactType === VernacularTag) {
