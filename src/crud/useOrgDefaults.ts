@@ -19,7 +19,9 @@ export const useOrgDefaults = () => {
       orgIn ?? organization
     ) as Organization;
     const json = JSON.parse(org?.attributes.defaultParams ?? '{}');
-    if (json[label]) return JSON.parse(json[label]);
+    if (json[label])
+      if (typeof json[label] === 'string') return JSON.parse(json[label]);
+      else return json[label];
     return undefined;
   };
   const setOrgDefault = (label: string, value: any, orgIn?: string) => {
