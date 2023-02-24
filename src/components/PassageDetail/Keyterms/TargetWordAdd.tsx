@@ -120,6 +120,10 @@ export default function TargetWordAdd(props: IProps) {
   };
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (recording) {
+      showMessage(`t.recording`);
+      return;
+    }
     setCurText(e.target.value);
     onTextChange(e.target.value, row);
     toolChanged(toolId, true);

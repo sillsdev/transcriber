@@ -2564,6 +2564,13 @@
       			<context context-type="sourcefile">useKeyTerms.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="keyTerms.recording">
+      		<source>Recording in progress.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useKeyTerms.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="keyTerms.ritual">
       		<source>Ritual</source>
       		<target/>

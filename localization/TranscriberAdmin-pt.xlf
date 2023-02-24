@@ -2197,6 +2197,12 @@
             <target>Tradução de Registros</target>
          </segment>
       </unit>
+      <unit id="keyTerms.recording">
+         <segment>
+            <source>Recording in progress.</source>
+            <target>Gravação em andamento.</target>
+         </segment>
+      </unit>
       <unit id="keyTerms.ritual">
 			<segment>
 				<source>Ritual</source>

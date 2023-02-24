@@ -2197,6 +2197,12 @@
             <target>Rekam Terjemahan</target>
          </segment>
       </unit>
+      <unit id="keyTerms.recording">
+         <segment>
+            <source>Recording in progress.</source>
+            <target>Perekaman sedang berlangsung.</target>
+         </segment>
+      </unit>
       <unit id="keyTerms.ritual">
 			<segment>
 				<source>Ritual</source>

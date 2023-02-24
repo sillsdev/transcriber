@@ -2194,7 +2194,13 @@
 		<unit id="keyTerms.record">
          <segment>
             <source>Record Translation</source>
-            <target/>
+            <target>Перевод записей</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.recording">
+         <segment>
+            <source>Recording in progress.</source>
+            <target>Идет запись.</target>
          </segment>
       </unit>
       <unit id="keyTerms.ritual">
