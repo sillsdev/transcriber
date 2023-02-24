@@ -708,6 +708,8 @@ export async function electronExport(
     const filename =
       exportType === ExportType.ITFBACKUP
         ? itfb_fileName(projects[ix])
+        : exportType === ExportType.AUDIO || exportType === ExportType.BURRITO
+        ? fileName(projects[ix], `${localizedArtifact}_${exportType}`, 'zip')
         : fileName(projects[ix], localizedArtifact, exportType);
     changedRecs += numRecs;
     if (backupZip) {
