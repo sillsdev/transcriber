@@ -102,13 +102,10 @@ export default function KeyTermTable({
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
 
   const reset = () => {
-    // give time for any outstanding operation to complete.
-    setTimeout(() => {
-      setTargetText('');
-      setCanSaveRecording(false);
-      toolChanged(`${rowRef.current?.index}`, false);
-      rowRef.current = undefined;
-    }, 1000);
+    setTargetText('');
+    setCanSaveRecording(false);
+    toolChanged(`${rowRef.current?.index}`, false);
+    rowRef.current = undefined;
   };
   const saveKeyTermTarget = useKeyTermSave({ cb: reset });
   const afterUploadCb = (mediaRemId: string) => {

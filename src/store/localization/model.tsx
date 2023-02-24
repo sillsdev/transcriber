@@ -452,6 +452,7 @@ export interface IKeyTermsStrings extends Localize.LocalizedStringsMethods {
     "play": string;
     "realia": string;
     "record": string;
+    "recording": string;
     "ritual": string;
     "save": string;
     "saving": string;

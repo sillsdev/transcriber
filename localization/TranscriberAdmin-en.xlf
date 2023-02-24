@@ -2200,6 +2200,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="keyTerms.recording">
+         <segment>
+            <source>Recording in progress.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="keyTerms.ritual">
          <segment>
             <source>Ritual</source>

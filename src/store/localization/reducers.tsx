@@ -486,6 +486,7 @@ const initialState = {
 			"play": "Play Translation",
 			"realia": "Realia",
 			"record": "Record Translation",
+			"recording": "Recording in progress.",
 			"ritual": "Ritual",
 			"save": "Save Translation",
 			"saving": "Saving...",

@@ -2197,6 +2197,12 @@
             <target>Enregistrer la traduction</target>
          </segment>
       </unit>
+      <unit id="keyTerms.recording">
+         <segment>
+            <source>Recording in progress.</source>
+            <target>Enregistrement en cours.</target>
+         </segment>
+      </unit>
       <unit id="keyTerms.ritual">
 			<segment>
 				<source>Ritual</source>
