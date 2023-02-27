@@ -32,6 +32,10 @@ import {
   IMPORT_SUCCESS,
   IMPORT_ERROR,
   IMPORT_COMPLETE,
+  COPY_PENDING,
+  COPY_SUCCESS,
+  COPY_ERROR,
+  COPY_COMPLETE,
   FileResponse,
   ExportType,
 } from './types';
@@ -337,7 +341,76 @@ const importFromElectron =
         });
       });
   };
+export interface CopyProjectProps {
+  projectid: number;
+  sameorg: boolean;
+  token: string | null;
+  errorReporter: any;
+  pendingmsg: string;
+  completemsg: string;
+}
+export const copyProject =
+  ({
+    projectid,
+    sameorg,
+    token,
+    errorReporter,
+    pendingmsg,
+    completemsg,
+  }: CopyProjectProps) =>
+  async (dispatch: any) => {
+    dispatch({
+      payload: pendingmsg.replace('{0}', 'same ' + sameorg.toString()),
+      type: COPY_PENDING,
+    });
+    var start = 0;
+    var url = `${API_CONFIG.host}/api/offlineData/project/copyp/${sameorg}/${projectid}/${start}`;
 
+    do {
+      var response = await Axios.put(url, null, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      });
+      start = response.data.id;
+      var returnstatus = response.data.status;
+      var status = response.data.message;
+      var newproject = response.data.fileURL;
+      dispatch({
+        payload: pendingmsg.replace('{0}', status),
+        type: COPY_PENDING,
+      });
+      url = `${API_CONFIG.host}/api/offlineData/project/copyp/${projectid}/${start}/${newproject}`;
+    } while (returnstatus === 200 && start !== -1);
+    if (start === -1)
+      dispatch({
+        payload: {
+          status: completemsg.replace('{0}', status),
+          msg: status,
+        },
+        type: COPY_SUCCESS,
+      });
+    else {
+      logError(Severity.error, errorReporter, 'import error' + returnstatus);
+      dispatch({
+        payload: errorStatus(returnstatus, status),
+        type: COPY_ERROR,
+      });
+    }
+    //clean it up
+    url = `${API_CONFIG.host}/api/offlineData/project/copyp/${newproject}`;
+    response = await Axios.put(url, null, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+  };
+export const copyComplete = () => (dispatch: any) => {
+  dispatch({
+    payload: undefined,
+    type: COPY_COMPLETE,
+  });
+};
 export interface ImportSyncFromElectronProps {
   filename: string;
   file: Buffer;

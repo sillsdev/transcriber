@@ -10,6 +10,7 @@ import {
 import { IconButton, ListItemIcon, ListItemText } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SettingsIcon from '@mui/icons-material/Settings';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ParatextLogo from '../../control/ParatextLogo';
 import ImportIcon from '@mui/icons-material/CloudUpload';
 import ExportIcon from '@mui/icons-material/CloudDownload';
@@ -46,6 +47,7 @@ export function ProjectMenu(props: IProps) {
   const offlineProjectRead = useOfflnProjRead();
   const [projType, setProjType] = useState('');
   const t: ICardsStrings = useSelector(cardsSelector, shallowEqual);
+  const [shift, setShift] = React.useState(false);
   const tpb: IProjButtonsStrings = useSelector(
     projButtonsSelector,
     shallowEqual
@@ -60,6 +62,7 @@ export function ProjectMenu(props: IProps) {
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
+    setShift(event.shiftKey);
     setAnchorEl(event.currentTarget);
     if (stopPlayer) stopPlayer();
   };
@@ -100,6 +103,22 @@ export function ProjectMenu(props: IProps) {
               <SettingsIcon />
             </ListItemIcon>
             <ListItemText primary={t.settings} />
+          </StyledMenuItem>
+        )}
+        {shift && !inProject && isAdmin && !isOffline && (
+          <StyledMenuItem id="projMenuCopySameOrg" onClick={handle('copysame')}>
+            <ListItemIcon>
+              <ContentCopyIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.copySame} />
+          </StyledMenuItem>
+        )}
+        {shift && !inProject && isAdmin && !isOffline && (
+          <StyledMenuItem id="projMenuCopyNewOrg" onClick={handle('copynew')}>
+            <ListItemIcon>
+              <ContentCopyIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.copyNew} />
           </StyledMenuItem>
         )}
         {isElectron && !isOffline && !justFilter && (

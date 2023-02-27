@@ -532,6 +532,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.copyComplete">
+         <segment>
+            <source>Copy Complete {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.copyNew">
+         <segment>
+            <source>Copy project to new team.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.copySame">
+         <segment>
+            <source>Copy project to same team.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.copyStatus">
+         <segment>
+            <source>Copy to {0}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.delete">
          <segment>
             <source>Delete</source>

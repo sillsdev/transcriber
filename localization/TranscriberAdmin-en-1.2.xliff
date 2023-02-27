@@ -618,6 +618,34 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.copyComplete">
+            <source>Copy Complete {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.copyNew">
+            <source>Copy project to new team.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.copySame">
+            <source>Copy project to same team.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.copyStatus">
+            <source>Copy to {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.delete">
             <source>Delete</source>
             <target/>
