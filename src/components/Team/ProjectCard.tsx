@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useGlobal, useEffect } from 'reactn';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
   CardActions,
@@ -12,10 +13,11 @@ import {
   Box,
   ChipProps,
 } from '@mui/material';
+import * as actions from '../../store';
 import ScriptureIcon from '@mui/icons-material/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
 import moment from 'moment';
-import { VProject, DialogMode } from '../../model';
+import { VProject, DialogMode, IState } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import ProjectMenu from './ProjectMenu';
 import BigDialog from '../../hoc/BigDialog';
@@ -32,10 +34,14 @@ import {
   useOfflineAvailToggle,
   related,
   useRole,
+  remoteIdNum,
 } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
 import OfflineIcon from '@mui/icons-material/OfflinePin';
 import { useHome } from '../../utils';
+import { copyComplete, CopyProjectProps } from '../../store';
+import { TokenContext } from '../../context/TokenProvider';
+import { useSnackBar } from '../../hoc/SnackBar';
 
 const ProjectCardRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -95,6 +101,18 @@ export const ProjectCard = (props: IProps) => {
     sections,
     doImport,
   } = ctx.state;
+  const dispatch = useDispatch();
+
+  const copyProject = (props: CopyProjectProps) =>
+    dispatch(actions.copyProject(props));
+  const copyStatus = useSelector(
+    (state: IState) => state.importexport.importexportStatus
+  );
+  const { accessToken } = useContext(TokenContext).state;
+  const [errorReporter] = useGlobal('errorReporter');
+  const [memory] = useGlobal('memory');
+  const { showMessage } = useSnackBar();
+  const [, setBusy] = useGlobal('importexportBusy');
   const { getPlanName } = usePlan();
   const { localizedOrganizedBy } = useOrganizedBy();
   const [organizedBySing, setOrganizedBySing] = useState('');
@@ -135,6 +153,16 @@ export const ProjectCard = (props: IProps) => {
     setIsAdmin(userIsOrgAdmin(related(project, 'organization')));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
+  useEffect(() => {
+    if (copyStatus) {
+      if (copyStatus.errStatus || copyStatus.complete) {
+        copyComplete();
+        setBusy(false);
+      }
+      showMessage(copyStatus.statusMsg);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [copyStatus]);
 
   const LoadAndGo = async (what: string) => {
     loadProject(project, () => {
@@ -165,6 +193,17 @@ export const ProjectCard = (props: IProps) => {
         break;
       case 'delete':
         setDeleteItem(project);
+        break;
+      case 'copysame':
+      case 'copynew':
+        copyProject({
+          projectid: remoteIdNum('project', projectId, memory.keyMap),
+          sameorg: what === 'copysame',
+          token: accessToken,
+          errorReporter: errorReporter,
+          pendingmsg: t.copyStatus,
+          completemsg: t.copyComplete,
+        });
         break;
       case 'import':
       case 'export':
