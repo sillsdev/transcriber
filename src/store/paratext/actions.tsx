@@ -74,7 +74,8 @@ export const getParatextText =
       });
       dispatch({ payload: response.data, type: TEXT_SUCCESS });
     } catch (err: any) {
-      if (err.errMsg !== 'no range')
+      var msg: string = err.response?.data?.toString() ?? err.errMsg;
+      if (!msg.includes('no range') && !msg.includes('401'))
         logError(
           Severity.error,
           errorReporter,
