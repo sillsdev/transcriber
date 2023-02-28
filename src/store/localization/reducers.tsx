@@ -1064,7 +1064,8 @@ const initialState = {
 		"en": {
 			"apply": "Apply",
 			"beginning": "Starting verse number",
-			"book": "Paratext book identifier",
+			"book": "Paratext book identifier (Length 3 uppercase)",
+			"bookname": "Book name",
 			"chapter": "Chapter number",
 			"end": "Ending verse number",
 			"fileTemplate": "File Name Template",

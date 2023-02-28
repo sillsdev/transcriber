@@ -11,10 +11,10 @@ import {
   Dialog,
   DialogTitle,
   List,
-  ListItem,
   ListItemText,
   ListItemIcon,
   SxProps,
+  ListItemButton,
 } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
 import InfoIcon from '@mui/icons-material/Info';
@@ -32,15 +32,17 @@ const iconProps = { p: 1 } as SxProps;
 interface InfoDialogProps {
   open: boolean;
   onClose: () => void;
+  onClick: (template: string) => void;
   organizedBy: string;
 }
 
 const InfoDialog = (props: InfoDialogProps) => {
-  const { onClose, open, organizedBy } = props;
+  const { onClose, onClick, open, organizedBy } = props;
   const t: ITemplateStrings = useSelector(templateSelector, shallowEqual);
 
   const pattern: IstrMap = {
     BOOK: t.book,
+    BOOKNAME: t.bookname,
     SECT: organizedBy,
     PASS: t.passage.replace('{0}', organizedBy),
     CHAP: t.chapter,
@@ -52,6 +54,10 @@ const InfoDialog = (props: InfoDialogProps) => {
     onClose();
   };
 
+  const handleListItemClick = (index: number) => {
+    onClick(Object.keys(pattern)[index]);
+  };
+
   return (
     <Dialog
       onClose={handleClose}
@@ -61,11 +67,11 @@ const InfoDialog = (props: InfoDialogProps) => {
     >
       <DialogTitle id="templDlg">{t.templateCodes}</DialogTitle>
       <List>
-        {Object.keys(pattern).map((pat) => (
-          <ListItem button key={pat}>
+        {Object.keys(pattern).map((pat, index) => (
+          <ListItemButton key={pat} onClick={() => handleListItemClick(index)}>
             <ListItemIcon>{`{${pat}}`}</ListItemIcon>
             <ListItemText primary={pattern[pat]} />
-          </ListItem>
+          </ListItemButton>
         ))}
       </List>
     </Dialog>
@@ -81,15 +87,18 @@ export function Template(props: ITemplateProps) {
   const { matchMap, options } = props;
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
-  const [template, setTemplate] = useState<string>();
+  const [template, setTemplatex] = useState<string>();
   const [templateInfo, setTemplateInfo] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const t: ITemplateStrings = useSelector(templateSelector, shallowEqual);
 
+  const setTemplate = (t: string) => {
+    setTemplatex(t);
+    localStorage.setItem('template', t);
+  };
   const handleTemplateChange = (e: any) => {
     setTemplate(e.target.value);
-    localStorage.setItem('template', e.target.value);
   };
 
   const handleTemplateInfo = () => {
@@ -99,14 +108,18 @@ export function Template(props: ITemplateProps) {
   const handleClose = () => {
     setTemplateInfo(false);
   };
+  const handleClick = (newpart: string) => {
+    setTemplate(template + `{${newpart}}`);
+  };
 
   const handleApply = () => {
     if (!template) return;
     const terms = template
-      .match(/{([A-Za-z]{3,4})}/g)
+      .match(/{([A-Za-z]{3,8})}/g)
       ?.map((v) => v.slice(1, -1));
     const rex: IstrMap = {
       BOOK: '([A-Z1-3]{3})',
+      BOOKNAME: '([A-Za-z]+)',
       SECT: '([0-9]+)',
       PASS: '([0-9]+)',
       CHAP: '([0-9]{1,3})',
@@ -188,6 +201,7 @@ export function Template(props: ITemplateProps) {
       <InfoDialog
         open={templateInfo}
         onClose={handleClose}
+        onClick={handleClick}
         organizedBy={organizedBy}
       />
     </Paper>
