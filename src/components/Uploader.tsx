@@ -6,7 +6,7 @@ import { styled } from '@mui/material';
 import MediaUpload, { UploadType } from './MediaUpload';
 import {
   findRecord,
-  pullPlanMedia,
+  pullTableList,
   related,
   remoteIdNum,
   useArtifactType,
@@ -22,6 +22,7 @@ import { NextUploadProps } from '../store';
 import { useDispatch } from 'react-redux';
 import { mediaTabSelector, sharedSelector } from '../selector';
 import { passageDefaultPrefix } from '../utils/passageDefaultFilename';
+import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
 
 const UnsupportedMessage = styled('span')(({ theme }) => ({
   color: theme.palette.secondary.light,
@@ -91,6 +92,7 @@ export const Uploader = (props: IProps) => {
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [errorReporter] = useGlobal('errorReporter');
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
@@ -174,7 +176,14 @@ export const Uploader = (props: IProps) => {
     if (next < uploadList.length && !cancelled.current) {
       doUpload(next);
     } else if (!offline) {
-      pullPlanMedia(planIdRef.current, memory, remote).then(() => {
+      pullTableList(
+        'mediafile',
+        mediaIdRef.current,
+        memory,
+        remote,
+        backup,
+        errorReporter
+      ).then(() => {
         finishMessage();
       });
     } else {

@@ -108,7 +108,7 @@ export default function KeyTermTable({
     rowRef.current = undefined;
   };
   const saveKeyTermTarget = useKeyTermSave({ cb: reset });
-  const afterUploadCb = (mediaRemId: string) => {
+  const afterUploadCb = async (mediaRemId: string) => {
     if (rowRef.current) {
       const { term, index } = rowRef.current;
       saveKeyTermTarget({

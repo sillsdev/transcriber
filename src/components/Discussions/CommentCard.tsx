@@ -164,8 +164,8 @@ export const CommentCard = (props: IProps & IRecordProps) => {
     groups,
     memberships,
   });
-  const afterUploadcb = (mediaId: string) => {
-    saveComment(
+  const afterUploadcb = async (mediaId: string) => {
+    await saveComment(
       comment.id,
       editComment,
       mediaId,

@@ -1,15 +1,16 @@
 import { useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { pullPlanMedia, remoteIdNum, useOfflnMediafileCreate } from '.';
+import { pullTableList, remoteIdNum, useOfflnMediafileCreate } from '.';
 import * as actions from '../store';
 import JSONAPISource from '@orbit/jsonapi';
 import { TokenContext } from '../context/TokenProvider';
 import { useDispatch } from 'react-redux';
 import { PassageDetailContext } from '../context/PassageDetailContext';
+import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
 
 interface IProps {
   artifactId: string;
-  afterUploadCb: (mediaId: string) => void;
+  afterUploadCb: (mediaId: string) => Promise<void>;
 }
 export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offline] = useGlobal('offline');
@@ -51,7 +53,14 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
       ).id;
     }
     if (!offline) {
-      pullPlanMedia(plan, memory, remote).then(() => {
+      pullTableList(
+        'mediafile',
+        Array(mediaIdRef.current),
+        memory,
+        remote,
+        backup,
+        reporter
+      ).then(() => {
         uploadComplete();
         afterUploadCb(mediaIdRef.current);
       });

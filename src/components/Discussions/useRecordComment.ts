@@ -2,7 +2,7 @@ import { useMemo, useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import {
   findRecord,
-  pullPlanMedia,
+  pullTableList,
   related,
   remoteIdNum,
   useArtifactType,
@@ -14,11 +14,12 @@ import { cleanFileName } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { TokenContext } from '../../context/TokenProvider';
 import { useDispatch } from 'react-redux';
+import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
 
 interface IProps {
   discussion: Discussion;
   number: number;
-  afterUploadcb: (mediaId: string) => void;
+  afterUploadcb: (mediaId: string) => Promise<void>;
 }
 
 export const useRecordComment = ({
@@ -35,6 +36,7 @@ export const useRecordComment = ({
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offline] = useGlobal('offline');
@@ -77,7 +79,14 @@ export const useRecordComment = ({
       ).id;
     }
     if (!offline) {
-      pullPlanMedia(plan, memory, remote).then(() => {
+      pullTableList(
+        'mediafile',
+        Array(mediaIdRef.current),
+        memory,
+        remote,
+        backup,
+        reporter
+      ).then(() => {
         uploadComplete();
         afterUploadcb(mediaIdRef.current);
       });
