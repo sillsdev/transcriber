@@ -5687,7 +5687,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="template.book">
-            <source>Paratext book identifier</source>
+            <source>Paratext book identifier (Length 3 uppercase)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">template.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="template.bookname">
+            <source>Book name</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">template.tsx</context>

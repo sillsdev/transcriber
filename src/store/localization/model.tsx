@@ -998,6 +998,7 @@ export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
     "apply": string;
     "beginning": string;
     "book": string;
+    "bookname": string;
     "chapter": string;
     "end": string;
     "fileTemplate": string;

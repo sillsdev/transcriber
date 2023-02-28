@@ -316,7 +316,7 @@ export function AudioTab(props: IProps & IRecordProps) {
 
   const matchMap = (pat: string, options: IMatchData) => {
     if (pdata.length === 0 || data.length === 0) return;
-    const result = makeMatchMap(pat, options);
+    const result = makeMatchMap(pat, options, allBookData);
     if (result) {
       const { found, newMap } = result;
       if (found) {

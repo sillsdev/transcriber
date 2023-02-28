@@ -4878,7 +4878,13 @@
       </unit>
       <unit id="template.book">
          <segment>
-            <source>Paratext book identifier</source>
+            <source>Paratext book identifier (Length 3 uppercase)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="template.bookname">
+         <segment>
+            <source>Book name</source>
             <target/>
          </segment>
       </unit>
