@@ -15,8 +15,22 @@ export const waitForRemoteId = async (
     const val = remoteId(rec.type, rec.id, keyMap);
     if (val !== undefined) return val;
     maxTries -= 1;
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
   }
   throw new Error('waitForRemoteId: remote id not set');
+};
+export const waitForLocalId = async (
+  table: string,
+  remoteId: string,
+  keyMap: KeyMap
+) => {
+  let maxTries = 5 * 60; // 300 tries for five minutes
+  while (maxTries > 0) {
+    const val = remoteIdGuid(table, remoteId, keyMap);
+    if (val !== undefined) return val;
+    maxTries -= 1;
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+  throw new Error('waitForLocalId: record not in keyMap yet');
 };
 export default remoteIdNum;
