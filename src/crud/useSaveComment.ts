@@ -1,7 +1,7 @@
 import { Operation, TransformBuilder } from '@orbit/data';
 import { useDispatch } from 'react-redux';
 import { useGlobal } from 'reactn';
-import { findRecord, PermissionName, usePermissions, waitForLocalId } from '.';
+import { findRecord, PermissionName, remoteIdGuid, usePermissions } from '.';
 import {
   MediaFile,
   Comment,
@@ -41,7 +41,7 @@ export const useSaveComment = (props: IProps) => {
       memberships,
     });
   const { discussion, cb } = props;
-  return async (
+  return (
     commentId: string,
     commentText: string,
     mediaRemId: string,
@@ -50,7 +50,7 @@ export const useSaveComment = (props: IProps) => {
   ) => {
     var mediafile = undefined;
     if (mediaRemId) {
-      const id = await waitForLocalId('mediafile', mediaRemId, memory.keyMap);
+      const id = remoteIdGuid('mediafile', mediaRemId, memory.keyMap);
       mediafile = findRecord(memory, 'mediafile', id) as MediaFile;
     }
     interface IIndexable {

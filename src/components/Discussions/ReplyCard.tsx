@@ -55,7 +55,7 @@ export const ReplyCard = (props: IProps & IRecordProps) => {
   });
   const commentText = useRef('');
   const afterUploadcb = async (mediaId: string) => {
-    await saveComment('', commentText.current, mediaId, undefined);
+    saveComment('', commentText.current, mediaId, undefined);
     commentText.current = '';
   };
   const { uploadMedia, fileName } = useRecordComment({

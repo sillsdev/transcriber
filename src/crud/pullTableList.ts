@@ -3,6 +3,7 @@ import JSONAPISource from '@orbit/jsonapi';
 import { QueryBuilder, Transform } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import { logError, Severity } from '../utils';
+import { waitForLocalId } from '.';
 
 export const pullTableList = async (
   table: string,
@@ -12,18 +13,19 @@ export const pullTableList = async (
   backup: IndexedDBSource,
   errorReporter: any
 ) => {
-  remote
-    .pull((q: QueryBuilder) =>
+  try {
+    var t: Transform[] = await remote.pull((q: QueryBuilder) =>
       q
         .findRecords(table)
         .filter({ attribute: 'id-list', value: ids.join('|') })
-    )
-    .then(async (t: Transform[]) => {
-      for (const tr of t) {
-        await memory.sync(await backup.push(tr.operations));
-      }
-    })
-    .catch((err: Error) => {
-      logError(Severity.error, errorReporter, err.message);
-    });
+    );
+    for (const tr of t) {
+      await memory.sync(await backup.push(tr.operations));
+    }
+    for (const id of ids) {
+      await waitForLocalId(table, id, memory.keyMap);
+    }
+  } catch (err: any) {
+    logError(Severity.error, errorReporter, err.message);
+  }
 };

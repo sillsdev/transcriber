@@ -9,7 +9,6 @@ import KeyTermDetail from './KeyTermDetail';
 import KeyTermExclude, { ExcludeArray, KtExcludeTag } from './KeyTermExclude';
 import KeyTermsSort from './KeyTermSort';
 import KeyTermTable from './KeyTermTable';
-import PassageDetailPlayer from '../PassageDetailPlayer';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../../model';
 import { keyTermsSelector } from '../../../selector';
@@ -28,7 +27,7 @@ interface IRecordProps {
 const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
   const [org] = useGlobal('organization');
   const [memory] = useGlobal('memory');
-  const { passage, mediafileId } = usePassageDetailContext();
+  const { passage } = usePassageDetailContext();
   const { book } = passage.attributes;
   const {
     verseTerms,
@@ -117,7 +116,6 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
 
   return (
     <>
-      {mediafileId && <PassageDetailPlayer />}
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <KeyTermsSort initSort={sortBy} onChange={handleSortBy} />
         <KeyTermExclude
