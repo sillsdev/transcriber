@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import * as actions from '../store';
 import { useGlobal, useState } from 'reactn';
-import { connect, shallowEqual } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   IState,
   IIntegrationStrings,
@@ -71,8 +71,6 @@ import { doDataChanges } from '../hoc/DataChanges';
 import Memory from '@orbit/memory';
 import { translateParatextError } from '../utils/translateParatextError';
 import { PriButton, SelectExportType, StyledHeading } from '../control';
-import { useSelector } from 'react-redux';
-import { sharedSelector } from '../selector';
 
 const panelProps = { flexDirection: 'column' } as SxProps;
 const textFieldProps = { mx: 1, width: '600px' } as SxProps;
@@ -80,12 +78,6 @@ const formText = { fontSize: 'small' } as SxProps;
 const startAlign = { alignItems: 'flex-start' } as SxProps;
 const avatarProps = { color: 'green' } as SxProps;
 const menuProps = { width: '300px' } as SxProps;
-
-const TranslateSyncError = (err: IAxiosStatus): JSX.Element => {
-  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-
-  return <span>{translateParatextError(err, ts)}</span>;
-};
 
 interface IStateProps {
   paratext_count: number; //state.paratext.count,
@@ -201,6 +193,10 @@ export function IntegrationPanel(
   const { getTypeId } = useArtifactType();
   const getTranscription = useTranscription(false, ActivityStates.Approved);
   const intSave = React.useRef('');
+
+  const TranslateSyncError = (err: IAxiosStatus): JSX.Element => {
+    return <span>{translateParatextError(err, ts)}</span>;
+  };
 
   const getProject = () => {
     if (!project) return undefined;
