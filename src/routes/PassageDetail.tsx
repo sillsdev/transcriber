@@ -54,6 +54,7 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { toolSelector } from '../selector';
 import { QueryBuilder } from '@orbit/data';
 import Busy from '../components/Busy';
+
 const KeyTerms = React.lazy(
   () => import('../components/PassageDetail/Keyterms/KeyTerms')
 );
@@ -128,12 +129,23 @@ const Pane = (props: PaneProps & PropsWithChildren) => {
 };
 
 const PassageDetailGrids = () => {
+  const INIT_PLAYERPANE_HEIGHT = 130;
+  const SMALLPLAYERDIFF = 25;
   const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
+  const [height, setHeight] = useState(window.innerHeight);
+  //const [myPlayerSize, setMyPlayerSize] = useState(INIT_PLAYER_HEIGHT);
+
   const [topFilter, setTopFilter] = useState(false);
   const ctx = useContext(PassageDetailContext);
-  const { currentstep, discussionSize, setDiscussionSize, orgWorkflowSteps } =
-    ctx.state;
+  const {
+    currentstep,
+    discussionSize,
+    setDiscussionSize,
+    setPlayerSize,
+    orgWorkflowSteps,
+    mediafileId,
+  } = ctx.state;
 
   const { tool, settings } = useStepTool(currentstep);
   const { slugFromId } = useArtifactType();
@@ -163,16 +175,22 @@ const PassageDetailGrids = () => {
   ]);
   const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
-  const handleSplitSize = debounce((e: number) => {
+  const handleVertSplitSize = debounce((e: number) => {
     setDiscussionSize({ width: width - e, height: discussionSize.height });
+  }, 50);
+
+  const handleHorzSplitSize = debounce((e: number) => {
+    setPlayerSize(e + SMALLPLAYERDIFF);
   }, 50);
 
   const setDimensions = () => {
     setWidth(Math.max(window.innerWidth, minWidth));
+    setHeight(window.innerHeight);
     setDiscussionSize({
       width: discussionSize.width, //should we be smarter here?
       height: window.innerHeight - 330,
     });
+    setPlayerSize(INIT_PLAYERPANE_HEIGHT + SMALLPLAYERDIFF);
     // setPaperStyle({ width: window.innerWidth - 10 });
   };
 
@@ -260,42 +278,55 @@ const PassageDetailGrids = () => {
                 defaultSize={width - discussionSize.width - 16}
                 style={{ position: 'static' }}
                 split="vertical"
-                onChange={handleSplitSize}
+                onChange={handleVertSplitSize}
               >
                 <Pane>
-                  {tool === ToolSlug.Record && (
-                    <Grid item sx={descProps} xs={12}>
-                      <PassageDetailRecord />
-                    </Grid>
-                  )}
-                  {tool !== ToolSlug.Record &&
-                    tool !== ToolSlug.Transcribe &&
-                    tool !== ToolSlug.KeyTerm && (
-                      <Grid item sx={descProps} xs={12}>
-                        <PassageDetailPlayer />
-                      </Grid>
-                    )}
-                  {tool === ToolSlug.TeamCheck && (
-                    <Grid item sx={descProps} xs={12}>
-                      <TeamCheckReference />
-                    </Grid>
-                  )}
-                  {tool === ToolSlug.Transcribe && (
-                    <Grid item sx={descProps} xs={12}>
-                      <PassageDetailTranscribe
-                        width={width - discussionSize.width - 16}
-                        artifactTypeId={artifactId}
-                        onFilter={handleFilter}
-                      />
-                    </Grid>
-                  )}
-                  {tool === ToolSlug.KeyTerm && (
-                    <Grid item sx={descProps} xs={12}>
-                      <Suspense fallback={<Busy />}>
-                        <KeyTerms />
-                      </Suspense>
-                    </Grid>
-                  )}
+                  <SplitPane
+                    defaultSize={INIT_PLAYERPANE_HEIGHT}
+                    minSize={INIT_PLAYERPANE_HEIGHT}
+                    maxSize={height - 280}
+                    style={{ position: 'static' }}
+                    split="horizontal"
+                    onChange={handleHorzSplitSize}
+                  >
+                    <Pane>
+                      {tool === ToolSlug.Record && (
+                        <Grid item sx={descProps} xs={12}>
+                          <PassageDetailRecord />
+                        </Grid>
+                      )}
+                      {tool !== ToolSlug.Record &&
+                        tool !== ToolSlug.Transcribe &&
+                        (tool !== ToolSlug.KeyTerm || mediafileId) && (
+                          <Grid item sx={descProps} xs={12}>
+                            <PassageDetailPlayer />
+                          </Grid>
+                        )}
+                    </Pane>
+                    <Pane>
+                      {tool === ToolSlug.TeamCheck && (
+                        <Grid item sx={descProps} xs={12}>
+                          <TeamCheckReference />
+                        </Grid>
+                      )}
+                      {tool === ToolSlug.Transcribe && (
+                        <Grid item sx={descProps} xs={12}>
+                          <PassageDetailTranscribe
+                            width={width - discussionSize.width - 16}
+                            artifactTypeId={artifactId}
+                            onFilter={handleFilter}
+                          />
+                        </Grid>
+                      )}
+                      {tool === ToolSlug.KeyTerm && (
+                        <Grid item sx={descProps} xs={12}>
+                          <Suspense fallback={<Busy />}>
+                            <KeyTerms />
+                          </Suspense>
+                        </Grid>
+                      )}
+                    </Pane>
+                  </SplitPane>
                 </Pane>
                 {!topFilter && (
                   <Pane>
