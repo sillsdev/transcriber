@@ -132,6 +132,7 @@ const schemaDefinition: SchemaSettings = {
         websiteUrl: { type: 'string' },
         logoUrl: { type: 'string' },
         publicByDefault: { type: 'boolean' },
+        clusterbase: { type: 'boolean' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
@@ -141,6 +142,7 @@ const schemaDefinition: SchemaSettings = {
         owner: { type: 'hasOne', model: 'user' },
         users: { type: 'hasMany', model: 'user' },
         groups: { type: 'hasMany', model: 'group', inverse: 'owner' },
+        cluster: { type: 'hasOne', model: 'organization' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
@@ -813,6 +815,59 @@ if (
     relationships: {
       organization: { type: 'hasOne', model: 'organization' },
       mediafile: { type: 'hasOne', model: 'mediafile' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.orgkeytermreference = {
+    keys: { remoteId: {} },
+    attributes: {
+      term: { type: 'string' },
+      termIndex: { type: 'number' },
+      target: { type: 'string' },
+      offlineId: { type: 'string' },
+      offlineMediafileId: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+    },
+    relationships: {
+      orgkeyterm: { type: 'hasOne', model: 'orgkeyterm' },
+      project: { type: 'hasOne', model: 'project' },
+      section: { type: 'hasOne', model: 'section' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.sharedresource = {
+    keys: { remoteId: {} },
+    attributes: {
+      title: { type: 'string' },
+      description: { type: 'string' },
+      languagebcp47: { type: 'string' },
+      termsOfUse: { type: 'string' },
+      keywords: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+    },
+    relationships: {
+      passage: { type: 'hasOne', model: 'passage' },
+      cluster: { type: 'hasOne', model: 'organization' },
+      artifactCategory: { type: 'hasOne', model: 'artifactcategory' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.sharedresourcereference = {
+    keys: { remoteId: {} },
+    attributes: {
+      book: { type: 'string' },
+      chapter: { type: 'number' },
+      verse: { type: 'number' }, //or maybe this isn't here at all?
+      verseRanges: { type: 'string' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+    },
+    relationships: {
+      sharedResource: { type: 'hasOne', model: 'sharedresource' },
+      cluster: { type: 'hasOne', model: 'organization' },
+      artifactcateory: { type: 'hasOne', model: 'artifactcategory' },
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
