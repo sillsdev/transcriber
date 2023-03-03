@@ -196,7 +196,7 @@ export default function KeyTermTable({
   };
 
   const onSetRecordRow = (row: IKeyTermRow | undefined) => {
-    rowRef.current = row;
+    if (row) rowRef.current = row;
   };
 
   React.useEffect(() => {
