@@ -133,7 +133,18 @@ export const useOrgWorkflowSteps = () => {
         () => false,
         100
       );
-    var orgsteps = await QueryOrgWorkflowSteps(process, org);
+    if (!org) {
+      //hopefully we'll be back...
+      return;
+    }
+    //try to avoid creating orgworkflowsteps when we're switching modes
+    var retry = 0;
+    do {
+      if (retry > 0) await new Promise((resolve) => setTimeout(resolve, 1000));
+      var orgsteps = await QueryOrgWorkflowSteps(process, org);
+      retry++;
+    } while (orgsteps.length === 0 && retry < 5);
+
     if (orgsteps.length === 0) {
       orgsteps = await CreateOrgWorkflowSteps(
         process === 'ANY' ? defaultWorkflow : process,
