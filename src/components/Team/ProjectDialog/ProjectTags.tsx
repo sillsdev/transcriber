@@ -18,9 +18,7 @@ export const ProjectTags = (props: IProjectDialogState) => {
   const t = state.vProjectStrings;
 
   const [check, setCheck] = useState<ITag>({
-    [t.testing]: false,
     [t.training]: false,
-    [t.backtranslation]: false,
   });
   const [other, setOther] = useState('');
 
@@ -40,12 +38,6 @@ export const ProjectTags = (props: IProjectDialogState) => {
       switch (k) {
         case t.training:
           tag = { ...tag, training: localized[k] };
-          break;
-        case t.testing:
-          tag = { ...tag, testing: localized[k] };
-          break;
-        case t.backtranslation:
-          tag = { ...tag, backTranslation: localized[k] };
           break;
         default:
           tag = { ...tag, [k]: localized[k] };
