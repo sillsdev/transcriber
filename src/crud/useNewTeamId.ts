@@ -1,9 +1,9 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { Organization, OrganizationMembership, User } from '../model';
+import { Organization, User } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import { waitForIt } from '../utils';
-import { useTeamCreate, useIsPersonalTeam } from '.';
+import { useTeamCreate, useIsPersonalTeam, remoteIdNum } from '.';
 import related from './related';
 
 export const useNewTeamId = () => {
@@ -14,23 +14,16 @@ export const useNewTeamId = () => {
   const isPersonal = useIsPersonalTeam();
 
   const newPersonal = () => {
-    teamRef.current = undefined;
-    const users = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('user')
-    ) as User[];
-    const userRecs = users.filter((u) => u.id === user);
-    const userName =
-      userRecs.length > 0 ? userRecs[0]?.attributes?.name : 'user';
-    const personalOrg = `>${userName} Personal<`;
-    const orgs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('organization')
-    ) as Organization[];
-    const orgRecs = orgs.filter(
-      (o) => related(o, 'owner') === user && o.attributes?.name === personalOrg
-    );
-    if (orgRecs.length > 0) {
-      teamRef.current = orgRecs[0].id;
-    } else {
+    if (!user) return;
+    teamRef.current = getPersonalId();
+    if (!teamRef.current) {
+      const users = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('user')
+      ) as User[];
+      const userRecs = users.filter((u) => u.id === user);
+      const userName =
+        userRecs.length > 0 ? userRecs[0]?.attributes?.name : 'user';
+      const personalOrg = `>${userName} Personal<`;
       orbitTeamCreate(
         {
           attributes: { name: personalOrg },
@@ -43,19 +36,18 @@ export const useNewTeamId = () => {
   };
 
   const getPersonalId = () => {
-    const memberIds = (
-      memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('organizationmembership')
-      ) as OrganizationMembership[]
-    )
-      .filter((m) => related(m, 'user') === user)
-      .map((m) => related(m, 'organization'));
-    const teamRecs = (
-      memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('organization')
-      ) as Organization[]
-    ).filter((o) => isPersonal(o.id) && memberIds.includes(o.id));
-    return teamRecs.length > 0 ? teamRecs[0].id : null;
+    const orgs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('organization')
+    ) as Organization[];
+    //Ugh, there's more than one per person.  Always get the last one created
+    const orgRecs = orgs
+      .filter((o) => related(o, 'owner') === user && isPersonal(o.id))
+      .sort(
+        (a, b) =>
+          remoteIdNum('organization', b.id, memory.keyMap) -
+          remoteIdNum('organization', a.id, memory.keyMap)
+      );
+    return orgRecs.length > 0 ? orgRecs[0].id : undefined;
   };
 
   return async (teamIdType: string | undefined) => {

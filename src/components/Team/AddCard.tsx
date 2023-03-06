@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
 import {
   Box,
@@ -30,6 +30,7 @@ import {
   usePlan,
   useTypeId,
   useOrgDefaults,
+  useNewTeamId,
 } from '../../crud';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
@@ -109,11 +110,13 @@ export const AddCard = (props: IProps) => {
   const cancelled = useRef(false);
   const [, setPlan] = useGlobal('plan');
   const [isDeveloper] = useGlobal('developer');
-  const [pickOpen, setPickOpen] = React.useState(false);
-  const preventBoth = React.useRef(false);
-  const [view, setView] = React.useState('');
-  const [recordAudio, setRecordAudio] = React.useState(false);
+  const [pickOpen, setPickOpen] = useState(false);
+  const preventBoth = useRef(false);
+  const [view, setView] = useState('');
+  const [recordAudio, setRecordAudio] = useState(false);
   const speakerRef = useRef<string>();
+  const getTeamId = useNewTeamId();
+  const [org, setOrg] = useState(team?.id ?? '');
   const { getPlan } = usePlan();
   const getTypeId = useTypeId();
 
@@ -170,17 +173,26 @@ export const AddCard = (props: IProps) => {
     handleSolutionHide();
   };
 
+  const getOrgBeforeUpload = () => {
+    if (team === null) {
+      getTeamId(undefined).then((val: string) => {
+        setOrg(val);
+        setUploadVisible(true);
+      });
+    } else setUploadVisible(true);
+  };
+
   const handleUpload = () => {
     setType('other');
     setRecordAudio(false);
-    setUploadVisible(true);
+    getOrgBeforeUpload();
     setInProgress(true);
   };
 
   const handleRecord = () => {
     setType('other');
     setRecordAudio(true);
-    setUploadVisible(true);
+    getOrgBeforeUpload();
     setInProgress(true);
   };
 
@@ -423,7 +435,7 @@ export const AddCard = (props: IProps) => {
         cancelled={cancelled}
         defaultFilename={book?.value}
         allowWave={true}
-        team={team?.id || undefined}
+        team={org}
         performedBy={speakerRef.current}
         onSpeakerChange={handleNameChange}
       />
