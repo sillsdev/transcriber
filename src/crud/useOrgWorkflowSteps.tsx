@@ -135,7 +135,7 @@ export const useOrgWorkflowSteps = () => {
       );
     if (!org) {
       //hopefully we'll be back...
-      return;
+      return [];
     }
     //try to avoid creating orgworkflowsteps when we're switching modes
     var retry = 0;
