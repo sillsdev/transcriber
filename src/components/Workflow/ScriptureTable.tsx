@@ -150,6 +150,7 @@ export function ScriptureTable(
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
+  const [org] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setBusy] = useGlobal('importexportBusy');
   const myChangedRef = useRef(false);
@@ -855,7 +856,7 @@ export function ScriptureTable(
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workflowSteps, orgWorkflowSteps]);
+  }, [workflowSteps, orgWorkflowSteps, org]);
 
   const doneStepId = useMemo(() => {
     if (getStepsBusy.current) return 'notready';

@@ -233,6 +233,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const [coordinator] = useGlobal('coordinator');
     const remote = coordinator.getSource('remote') as JSONAPISource;
     const [user] = useGlobal('user');
+    const [org] = useGlobal('organization');
     const [errorReporter] = useGlobal('errorReporter');
     const [saveResult, setSaveResult] = useGlobal('saveResult');
     const [confirm, setConfirm] = useState('');
@@ -917,7 +918,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [plan, orgWorkflowSteps, workflowSteps]);
+    }, [plan, orgWorkflowSteps, workflowSteps, org]);
 
     useEffect(() => {
       const wf: SimpleWf[] = state.orgWorkflowSteps.map((s) => ({
