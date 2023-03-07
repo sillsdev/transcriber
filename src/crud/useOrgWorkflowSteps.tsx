@@ -73,7 +73,7 @@ export const useOrgWorkflowSteps = () => {
     }
   };
 
-  const QueryOrgWorkflowSteps = async (process: string, org?: string) => {
+  const QueryOrgWorkflowSteps = async (process: string, org: string) => {
     /* wait for new workflow steps remote id to fill in */
     await waitForIt(
       'waiting for workflow update',
@@ -95,13 +95,13 @@ export const useOrgWorkflowSteps = () => {
       .filter(
         (s) =>
           (process === 'ANY' || s.attributes.process === process) &&
-          related(s, 'organization') === (org || global.organization) &&
+          related(s, 'organization') === org &&
           Boolean(s.keys?.remoteId) !== offlineOnly
       )
       .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
   };
 
-  const CreateOrgWorkflowSteps = async (process: string, org?: string) => {
+  const CreateOrgWorkflowSteps = async (process: string, org: string) => {
     creatingRef.current = true;
     const workflowsteps = (
       memory.cache.query((q: QueryBuilder) =>
@@ -121,7 +121,7 @@ export const useOrgWorkflowSteps = () => {
 
   interface IGetSteps {
     process: string;
-    org?: string;
+    org: string;
     showAll?: boolean;
   }
 
@@ -143,7 +143,7 @@ export const useOrgWorkflowSteps = () => {
       if (retry > 0) await new Promise((resolve) => setTimeout(resolve, 1000));
       var orgsteps = await QueryOrgWorkflowSteps(process, org);
       retry++;
-    } while (orgsteps.length === 0 && retry < 5);
+    } while (orgsteps.length === 0 && retry < 3);
 
     if (orgsteps.length === 0) {
       orgsteps = await CreateOrgWorkflowSteps(
