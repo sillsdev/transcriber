@@ -49,7 +49,7 @@ interface SortEndProps {
 
 interface IProps {
   process?: string;
-  org?: string;
+  org: string;
 }
 
 const wfStepsSelector = (state: IState) =>
