@@ -518,7 +518,7 @@ export function Transcriber(props: IProps) {
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediafiles]);
+  }, [mediafiles, mediafile]);
 
   useEffect(() => {
     if (autosaveTimer.current === undefined) {
@@ -533,8 +533,9 @@ export function Transcriber(props: IProps) {
         autosaveTimer.current = undefined;
       }
     };
+    /* any variable used in save that isn't in a ref needs to be here! */
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, []);
+  }, [passage]);
 
   useEffect(() => {
     if (paratext_textStatus?.errStatus) {
