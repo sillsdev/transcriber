@@ -324,6 +324,7 @@ export function Transcriber(props: IProps) {
   const [changed, setChanged] = useState(false);
   const transcriptionRef = React.useRef<any>();
   const playingRef = useRef<Boolean>();
+  const mediaRef = useRef<MediaFile>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
@@ -506,6 +507,7 @@ export function Transcriber(props: IProps) {
   }, [selected]);
 
   useEffect(() => {
+    mediaRef.current = mediafile;
     if (mediafile && mediafile.attributes) {
       const trans = getTranscription();
       if (trans.transcription !== transcriptionIn.current && !saving.current) {
@@ -532,7 +534,7 @@ export function Transcriber(props: IProps) {
       }
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediafile]);
+  }, []);
 
   useEffect(() => {
     if (paratext_textStatus?.errStatus) {
@@ -809,7 +811,7 @@ export function Transcriber(props: IProps) {
     segments: string,
     thiscomment: string | undefined
   ) => {
-    if (transcriptionRef.current) {
+    if (transcriptionRef.current && mediaRef.current) {
       saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;
       const curState = stateRef.current;
@@ -833,13 +835,13 @@ export function Transcriber(props: IProps) {
           tb,
           {
             type: 'mediafile',
-            id: mediafile.id,
+            id: mediaRef.current.id,
             attributes: {
               transcription: transcription,
               position: newPosition,
               segments: updateSegments(
                 NamedRegions.Transcription,
-                mediafile.attributes?.segments,
+                mediaRef.current.attributes?.segments,
                 segments
               ),
               transcriptionstate: nextState,
