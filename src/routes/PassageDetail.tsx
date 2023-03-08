@@ -129,7 +129,7 @@ const Pane = (props: PaneProps & PropsWithChildren) => {
 };
 
 const PassageDetailGrids = () => {
-  const INIT_PLAYERPANE_HEIGHT = 130;
+  const INIT_PLAYERPANE_HEIGHT = 150;
   const SMALLPLAYERDIFF = 25;
   const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
@@ -281,52 +281,46 @@ const PassageDetailGrids = () => {
                 onChange={handleVertSplitSize}
               >
                 <Pane>
-                  <SplitPane
-                    defaultSize={INIT_PLAYERPANE_HEIGHT}
-                    minSize={INIT_PLAYERPANE_HEIGHT}
-                    maxSize={height - 280}
-                    style={{ position: 'static' }}
-                    split="horizontal"
-                    onChange={handleHorzSplitSize}
-                  >
-                    <Pane>
-                      {tool === ToolSlug.Record && (
-                        <Grid item sx={descProps} xs={12}>
-                          <PassageDetailRecord />
-                        </Grid>
-                      )}
-                      {tool !== ToolSlug.Record &&
-                        tool !== ToolSlug.Transcribe &&
-                        (tool !== ToolSlug.KeyTerm || mediafileId) && (
-                          <Grid item sx={descProps} xs={12}>
-                            <PassageDetailPlayer />
-                          </Grid>
+                  {tool !== ToolSlug.Transcribe && tool !== ToolSlug.Record && (
+                    <SplitPane
+                      defaultSize={INIT_PLAYERPANE_HEIGHT}
+                      minSize={INIT_PLAYERPANE_HEIGHT}
+                      maxSize={height - 280}
+                      style={{ position: 'static' }}
+                      split="horizontal"
+                      onChange={handleHorzSplitSize}
+                    >
+                      <Pane>
+                        {(tool !== ToolSlug.KeyTerm || mediafileId) && (
+                          <PassageDetailPlayer />
                         )}
-                    </Pane>
-                    <Pane>
-                      {tool === ToolSlug.TeamCheck && (
-                        <Grid item sx={descProps} xs={12}>
-                          <TeamCheckReference />
-                        </Grid>
-                      )}
-                      {tool === ToolSlug.Transcribe && (
-                        <Grid item sx={descProps} xs={12}>
-                          <PassageDetailTranscribe
-                            width={width - discussionSize.width - 16}
-                            artifactTypeId={artifactId}
-                            onFilter={handleFilter}
-                          />
-                        </Grid>
-                      )}
-                      {tool === ToolSlug.KeyTerm && (
-                        <Grid item sx={descProps} xs={12}>
+                      </Pane>
+                      <Pane>
+                        {tool === ToolSlug.TeamCheck && <TeamCheckReference />}
+                        {tool === ToolSlug.KeyTerm && (
                           <Suspense fallback={<Busy />}>
                             <KeyTerms />
                           </Suspense>
-                        </Grid>
-                      )}
+                        )}
+                      </Pane>
+                    </SplitPane>
+                  )}
+                  {tool === ToolSlug.Transcribe && (
+                    <Pane>
+                      <Grid item sx={descProps} xs={12}>
+                        <PassageDetailTranscribe
+                          width={width - discussionSize.width - 16}
+                          artifactTypeId={artifactId}
+                          onFilter={handleFilter}
+                        />
+                      </Grid>
                     </Pane>
-                  </SplitPane>
+                  )}
+                  {tool === ToolSlug.Record && (
+                    <Grid item sx={descProps} xs={12}>
+                      <PassageDetailRecord />
+                    </Grid>
+                  )}
                 </Pane>
                 {!topFilter && (
                   <Pane>
