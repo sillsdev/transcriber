@@ -154,5 +154,10 @@ export const useOrgWorkflowSteps = () => {
     return orgsteps.filter((s) => showAll || s.attributes.sequencenum >= 0);
   };
 
-  return { GetOrgWorkflowSteps, localizedWorkStepFromId, localizedWorkStep };
+  return {
+    GetOrgWorkflowSteps,
+    CreateOrgWorkflowSteps,
+    localizedWorkStepFromId,
+    localizedWorkStep,
+  };
 };

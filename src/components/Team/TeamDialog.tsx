@@ -40,7 +40,7 @@ export function TeamDialog(props: IProps) {
   const { cardStrings } = ctx.state;
   const t = cardStrings;
   const teamApiPull = useTeamApiPull();
-  const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
+  const { CreateOrgWorkflowSteps } = useOrgWorkflowSteps();
   const [memory] = useGlobal('memory');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [process, setProcess] = useState<string>();
@@ -66,10 +66,7 @@ export function TeamDialog(props: IProps) {
     } as Organization;
     onCommit(team, async () => {
       if (mode === DialogMode.add) {
-        await GetOrgWorkflowSteps({
-          process: process || defaultWorkflow,
-          org: team.id,
-        });
+        await CreateOrgWorkflowSteps(process || defaultWorkflow, team.id);
       }
       setProcess(undefined);
       savingRef.current = false;
