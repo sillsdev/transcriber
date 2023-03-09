@@ -5,7 +5,7 @@ import { ITeamCheckReferenceStrings, SectionResource } from '../../../model';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
-import { useArtifactCategory } from '../../../crud';
+import { related, useArtifactCategory } from '../../../crud';
 import { teamCheckRefSelector } from '../../../selector';
 
 interface IRecordProps {
@@ -20,7 +20,7 @@ interface IProps {
 export const SelectMyResource = (props: IProps & IRecordProps) => {
   const { onChange, inResource, required } = props;
   const ctx = useContext(PassageDetailContext);
-  const { rowData } = ctx.state;
+  const { rowData, section, passage } = ctx.state;
   const [resource, setResource] = useState('');
   const { scriptureTypeCategory } = useArtifactCategory();
   const [myWidth, setMyWidth] = useState(0);
@@ -76,7 +76,11 @@ export const SelectMyResource = (props: IProps & IRecordProps) => {
       {rowData
         .filter(
           (r) =>
-            r?.isResource && !r?.isText && checkCategory(r?.artifactCategory)
+            r?.isResource &&
+            !r?.isText &&
+            checkCategory(r?.artifactCategory) &&
+            related(r.resource, 'section') === section.id &&
+            (r.passageId === '' || r.passageId === passage.id)
         )
         .map((r, k) => (
           <MenuItem id={`my-res-${k}`} value={r.id} key={r.id}>
