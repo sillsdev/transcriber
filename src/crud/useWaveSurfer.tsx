@@ -94,6 +94,7 @@ export function useWaveSurfer(
     if (onPlayStatus) onPlayStatus(playingRef.current);
   };
   const progress = () => progressRef.current;
+
   const setPlaying = (value: boolean) => {
     if (value !== playingRef.current) {
       playingRef.current = value;
@@ -165,8 +166,10 @@ export function useWaveSurfer(
           durationRef.current = ws.getDuration();
           if (!regionsLoadedRef.current) {
             //we need to call this even if undefined to setup regions variables
-            loadRegions(inputRegionsRef.current, false);
-            regionsLoadedRef.current = true;
+            regionsLoadedRef.current = loadRegions(
+              inputRegionsRef.current,
+              false
+            );
           }
           if (playingRef.current) setPlaying(true);
           onReady();
