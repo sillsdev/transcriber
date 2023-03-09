@@ -75,7 +75,6 @@ export function useWaveSurferRegions(
       : [];
   const region = (id: string) => wavesurferRef.current?.regions.list[id];
   const numRegions = () => regionIds().length;
-
   const currentRegion = () =>
     singleRegionRef.current
       ? numRegions() > 0
@@ -99,7 +98,7 @@ export function useWaveSurferRegions(
     wavesurferRef.current = ws;
     if (ws) {
       ws.on('region-created', function (r: any) {
-        //console.log('region-created', r);
+        //console.log('region-created', singleRegionRef.current);
         if (singleRegionRef.current) {
           r.drag = true;
           if (currentRegion()) currentRegion().remove();
@@ -362,14 +361,14 @@ export function useWaveSurferRegions(
     newRegions: boolean = false
   ) {
     if (!newRegions) peaksRef.current = undefined; //because I know this is a new wave
-    if (!wavesurferRef.current) return;
+    if (!wavesurferRef.current) return false;
     loadingRef.current = true;
     paramsRef.current = regions?.params;
     wavesurferRef.current.regions.clear();
     if (!regions || !regions.regions || regions.regions.length === 0) {
       singleRegionRef.current = true;
       loadingRef.current = false;
-      return;
+      return true;
     }
     var regarray = Array.isArray(regions.regions)
       ? regions.regions
@@ -397,6 +396,7 @@ export function useWaveSurferRegions(
       }
       loadingRef.current = false;
     });
+    return true;
   }
 
   const findPrevRegion = (r: any) => {
