@@ -239,14 +239,8 @@ export const doDataChanges = async (
 
                       case 'discussion':
                       case 'comment':
-                        DeleteLocalCopy(
-                          upRec.record.attributes?.offlineId,
-                          upRec.record.type,
-                          tb,
-                          localOps
-                        );
-                        break;
                       case 'intellectualproperty':
+                      case 'orgkeytermtarget':
                         DeleteLocalCopy(
                           upRec.record.attributes?.offlineId,
                           upRec.record.type,
@@ -254,6 +248,7 @@ export const doDataChanges = async (
                           localOps
                         );
                         break;
+
                       case 'invitation':
                         const userrec = GetUser(memory, user);
                         if (
