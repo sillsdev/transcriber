@@ -16,6 +16,8 @@ import {
   VProject,
   Discussion,
   OrgWorkflowStep,
+  OrgKeytermTarget,
+  OrgKeyterm,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { getSerializer } from '../../serializers/JSONAPISerializerCustom';
@@ -93,7 +95,7 @@ export async function electronExport(
     localizedArtifactType: string,
     ext: string
   ) =>
-    'Transcriber' +
+    'APM' +
     idStr('user', userid) +
     '_' +
     idStr('project', projRec.id) +
@@ -108,8 +110,7 @@ export async function electronExport(
     '_' +
     fileName(projRec, '', 'itf');
 
-  const backupName =
-    'Transcriber' + idStr('user', userid) + '_backup.' + exportType;
+  const backupName = 'APM' + idStr('user', userid) + '_backup.' + exportType;
 
   const getProjRec = (projectid: number | string): Project => {
     return memory.cache.query((q: QueryBuilder) =>
@@ -334,6 +335,41 @@ export async function electronExport(
       }
       return ds;
     };
+    const OrgKeyTerms = (remoteIds: boolean) => {
+      var kts = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('orgkeyterm')
+      ) as OrgKeyterm[];
+
+      if (remoteIds) {
+        kts.forEach((kt) => {
+          if (!remoteId('orgkeyterm', kt.id, memory.keyMap) && kt.attributes)
+            kt.attributes.offlineid = kt.id;
+        });
+      }
+      return kts;
+    };
+
+    const OrgKeyTermTargets = (remoteIds: boolean) => {
+      var ktts = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('orgkeytermtarget')
+      ) as OrgKeytermTarget[];
+
+      if (remoteIds) {
+        ktts.forEach((ktt) => {
+          if (
+            !remoteId('orgkeytermtarget', ktt.id, memory.keyMap) &&
+            ktt.attributes
+          )
+            ktt.attributes.offlineId = ktt.id;
+          if (
+            related(ktt, 'mediafile') &&
+            !remoteId('mediafile', related(ktt, 'mediafile'), memory.keyMap)
+          )
+            ktt.attributes.offlineMediafileId = related(ktt, 'mediafile');
+        });
+      }
+      return ktts;
+    };
     const IntellectualProperties = (
       project: Project | undefined,
       remoteIds: boolean
@@ -524,13 +560,14 @@ export async function electronExport(
         case 'intellectualproperty':
           return IntellectualProperties(project, needsRemoteIds);
 
+        case 'orgkeyterm':
+          return OrgKeyTerms(needsRemoteIds);
+
+        case 'orgkeytermtarget':
+          return OrgKeyTermTargets(needsRemoteIds);
         default:
           //activitystate,integration,plantype,projecttype,role
-          return (
-            memory.cache.query((q: QueryBuilder) =>
-              q.findRecords(info.table)
-            ) as Record[]
-          ).filter((r) => Boolean(r?.keys?.remoteId) === needsRemoteIds);
+          return defaultQuery(info.table);
       }
     };
     const AddChanged = async (

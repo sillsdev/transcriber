@@ -9,13 +9,14 @@ export const updateableFiles = [
   { table: 'groupmembership', sort: 'D' },
   { table: 'intellectualproperty', sort: 'I' },
   { table: 'mediafile', sort: 'H' },
+  { table: 'orgkeyterm', sort: 'C' },
+  { table: 'orgkeytermtarget', sort: 'I' },
   { table: 'passage', sort: 'G' },
   { table: 'passagestatechange', sort: 'H' },
   { table: 'project', sort: 'D' },
   { table: 'section', sort: 'F' },
   { table: 'sectionresourceuser', sort: 'J' },
   { table: 'user', sort: 'A' },
-  { table: 'orgkeytermtarget', sort: 'I' },
 ];
 
 /* If these can change in electron, they must extend BaseModel instead of Record,
@@ -36,8 +37,9 @@ export const staticFiles = [
   { table: 'projecttype', sort: 'B' },
   { table: 'role', sort: 'B' },
   { table: 'sectionresource', sort: 'I' },
+  { table: 'sharedresource', sort: 'I' },
+  { table: 'sharedresourcereference', sort: 'J' },
   { table: 'workflowstep', sort: 'B' },
-  { table: 'orgkeyterm', sort: 'C' },
 ];
 
 export const localFiles = [

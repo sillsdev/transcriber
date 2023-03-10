@@ -5,8 +5,8 @@ export interface OrgKeytermTarget extends BaseModel {
     term: string;
     termIndex: number;
     target: string;
-    offlineid: string;
-    offlineMediafileid: string;
+    offlineId: string;
+    offlineMediafileId: string;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
