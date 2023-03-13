@@ -38,8 +38,8 @@ const TeamActions = () => {
     team: Organization,
     cb?: (id: string) => Promise<void>
   ) => {
-    teamCreate(team, async () => {
-      cb && (await cb(team.id));
+    teamCreate(team, async (id: string) => {
+      cb && (await cb(id));
       setOpenAdd(false);
     });
   };
