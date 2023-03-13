@@ -64,9 +64,9 @@ export function TeamDialog(props: IProps) {
       ...current,
       attributes: { ...current.attributes, name },
     } as Organization;
-    onCommit(team, async () => {
+    onCommit(team, async (id: string) => {
       if (mode === DialogMode.add) {
-        await CreateOrgWorkflowSteps(process || defaultWorkflow, team.id);
+        await CreateOrgWorkflowSteps(process || defaultWorkflow, id);
       }
       setProcess(undefined);
       savingRef.current = false;
