@@ -177,7 +177,14 @@
     },
     "mac": {
       "category": "public.app-category.utilities",
-      "icon": "public/icon.png"
+      "icon": "public/icon.png",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "env-config/entitlements.mac.plist",
+      "entitlementsInherit": "env-config/entitlements.mac.plist"
+    },
+    "dmg": {
+      "sign": false
     },
     "directories": {
       "buildResources": "assets"
