@@ -5257,10 +5257,10 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="transcriber.updateByOther">
+		<unit id="transcriber.updateByOther2">
 			<segment>
 				<source>Transcription updated by another person or process.</source>
-				<target/>
+				<target>Transcrição atualizada por outra pessoa. Manter as alterações? {0}</target>
 			</segment>
 		</unit>
 		<unit id="transcribeReject.cancel">
