@@ -170,7 +170,7 @@ export function SpeakerName({
           return option.name;
         }}
         renderOption={(props, option) => <li {...props}>{option.name}</li>}
-        sx={{ width: 300 }}
+        sx={{ width: 300, marginTop: '5px' }}
         freeSolo
         renderInput={(params) => (
           <TextField
