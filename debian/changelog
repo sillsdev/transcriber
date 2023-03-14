@@ -8,6 +8,12 @@ audio-project-manager (2.16.1.0)  experimental; urgency=high
 
   * Fix Desktop start
 
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 14 Mar 2023 13:49:00 -0600
+
+audio-project-manager (2.16.1.0)  experimental; urgency=high
+
+  * Fix Desktop start
+
  -- Greg Trihus <greg_trihus@sil.org>  Mon, 9 Dec 2022 16:27:00 -0600
 
 audio-project-manager (2.16.0.1)  experimental; urgency=high
