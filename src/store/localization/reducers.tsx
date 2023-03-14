@@ -1128,7 +1128,7 @@ const initialState = {
 			"submitReviewTip": "Submit as complete",
 			"submitTranscriptionTip": "Submit for review",
 			"transcribing": "Started to transcribe",
-			"updateByOther": "Transcription updated by another person or process.",
+			"updateByOther2": "Transcription updated by another person.  Keep their changes? {0}",
 		}
 	}),
 	"transcribeReject": new LocalizedStrings({

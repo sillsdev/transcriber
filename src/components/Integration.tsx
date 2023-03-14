@@ -206,7 +206,7 @@ export function IntegrationPanel(props: IProps) {
   const [connected] = useGlobal('connected');
   const [hasPtProj, setHasPtProj] = useState(false);
   const [ptProj, setPtProj] = useState(-1);
-  const [ptProjName, setPtProjName] = useState('');
+  const [ptProjId, setPtProjId] = useState('');
   const [ptShortName, setPtShortName] = useState('');
   const [hasParatext, setHasParatext] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
@@ -317,11 +317,11 @@ export function IntegrationPanel(props: IProps) {
 
   const handleParatextProjectChange = (e: any) => {
     let index: number = paratext_projects.findIndex(
-      (p) => p.Name === e.target.value
+      (p) => p.ParatextId === e.target.value
     );
 
     setPtProj(index);
-    setPtProjName(e.target.value);
+    setPtProjId(e.target.value);
     if (index >= 0) {
       setPtShortName(paratext_projects[index].ShortName);
       const paratextProject: ParatextProject = paratext_projects[index];
@@ -423,10 +423,10 @@ export function IntegrationPanel(props: IProps) {
       );
       if (index >= 0 && !intSave.current) {
         if (
-          intSave.current !== paratext_projects[index].Name &&
+          intSave.current !== paratext_projects[index].ParatextId &&
           paratextIntegration
         ) {
-          intSave.current = paratext_projects[index].Name;
+          intSave.current = paratext_projects[index].ParatextId;
           const setting = {
             Name: paratext_projects[index].Name,
             ParatextId: paratext_projects[index].ParatextId,
@@ -441,7 +441,7 @@ export function IntegrationPanel(props: IProps) {
       }
     }
     setPtProj(index);
-    setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
+    setPtProjId(index >= 0 ? paratext_projects[index].ParatextId : '');
     setPtShortName(index >= 0 ? paratext_projects[index].ShortName : '');
     if (pRef && pRef.current) pRef.current.focus();
   };
@@ -485,7 +485,7 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     if (project && project !== myProject) {
       setPtProj(-1);
-      setPtProjName('');
+      setPtProjId('');
       setPtShortName('');
       resetProjects();
       resetCount();
@@ -714,7 +714,7 @@ export function IntegrationPanel(props: IProps) {
                     select
                     label={getProjectLabel()}
                     className={classes.textField}
-                    value={ptProjName}
+                    value={ptProjId}
                     onChange={handleParatextProjectChange}
                     SelectProps={{
                       MenuProps: {
@@ -738,7 +738,10 @@ export function IntegrationPanel(props: IProps) {
                     {paratext_projects
                       .sort((i, j) => (i.ShortName <= j.ShortName ? -1 : 1))
                       .map((option: ParatextProject) => (
-                        <MenuItem key={option.ParatextId} value={option.Name}>
+                        <MenuItem
+                          key={option.ParatextId}
+                          value={option.ParatextId}
+                        >
                           {`${option.ShortName ? option.ShortName + '/' : ''}${
                             option.Name
                           } (${option.LanguageTag})`}
@@ -890,7 +893,7 @@ export function IntegrationPanel(props: IProps) {
                     select
                     label={getProjectLabel()}
                     className={classes.textField}
-                    value={ptProjName}
+                    value={ptProjId}
                     onChange={handleParatextProjectChange}
                     SelectProps={{
                       MenuProps: {

@@ -5164,9 +5164,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.updateByOther">
+      <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by another person or process.</source>
+            <source>Transcription updated by another person.  Keep their changes? {0}</source>
             <target/>
          </segment>
       </unit>
