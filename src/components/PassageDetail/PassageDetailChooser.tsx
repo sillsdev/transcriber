@@ -63,6 +63,7 @@ export const PassageDetailChooser = () => {
     if (Array.isArray(passages)) {
       const newCount = passages.length;
       if (passageCount !== newCount) setPassageCount(newCount);
+      marks.current = [];
       passages.forEach((p) => {
         const passRec = findRecord(memory, 'passage', p.id) as Passage;
         let reference = passageReference(passRec, allBookData);
