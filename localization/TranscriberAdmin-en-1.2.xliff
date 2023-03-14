@@ -6022,8 +6022,8 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriber.updateByOther">
-            <source>Transcription updated by another person or process.</source>
+         <trans-unit id="transcriber.updateByOther2">
+            <source>Transcription updated by another person.  Keep their changes? {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>

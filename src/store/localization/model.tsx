@@ -1057,7 +1057,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "submitReviewTip": string;
     "submitTranscriptionTip": string;
     "transcribing": string;
-    "updateByOther": string;
+    "updateByOther2": string;
 };
 
 export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMethods {

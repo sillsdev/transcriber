@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import SplitPane, { Pane } from 'react-split-pane';
 import styled from 'styled-components';
+import Confirm from './AlertDialog';
 import {
   MediaFile,
   Project,
@@ -233,6 +234,11 @@ interface IProps extends IStateProps, IRecordProps, IDispatchProps {
   defaultWidth?: number;
 }
 
+interface ITrans {
+  transcription: string;
+  position: number;
+  segments: string;
+}
 export function Transcriber(props: IProps) {
   const {
     mediafiles,
@@ -322,8 +328,10 @@ export function Transcriber(props: IProps) {
   const { toolsChanged, saveRequested, isChanged } =
     useContext(UnsavedContext).state;
   const [changed, setChanged] = useState(false);
+  const [confirm, setConfirm] = useState<ITrans>();
   const transcriptionRef = React.useRef<any>();
   const playingRef = useRef<Boolean>();
+  const mediaRef = useRef<MediaFile>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
@@ -500,23 +508,23 @@ export function Transcriber(props: IProps) {
   }, [height, playerSize]);
 
   useEffect(() => {
-    if (!selected) showTranscription({ transcription: '', position: 0 });
+    if (!selected)
+      showTranscription({ transcription: '', position: 0, segments: '{}' });
     else if (!saving.current) showTranscription(getTranscription());
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [selected]);
 
   useEffect(() => {
+    mediaRef.current = mediafile;
     if (mediafile && mediafile.attributes) {
       const trans = getTranscription();
       if (trans.transcription !== transcriptionIn.current && !saving.current) {
-        //show warning if changed
-        if (isChanged(toolId)) showMessage(t.updateByOther);
-        //but do it either way
-        showTranscription(trans);
+        //if someone else changed it...let the user pick
+        setConfirm(trans);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediafiles]);
+  }, [mediafiles, mediafile]);
 
   useEffect(() => {
     if (autosaveTimer.current === undefined) {
@@ -531,8 +539,9 @@ export function Transcriber(props: IProps) {
         autosaveTimer.current = undefined;
       }
     };
+    /* any variable used in save that isn't in a ref needs to be here! */
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediafile]);
+  }, [passage]);
 
   useEffect(() => {
     if (paratext_textStatus?.errStatus) {
@@ -544,6 +553,7 @@ export function Transcriber(props: IProps) {
       showTranscription({
         transcription: paratext_textStatus.statusMsg,
         position: 0,
+        segments: segmentsRef.current,
       });
       toolChanged(toolId, true);
       save(
@@ -792,6 +802,16 @@ export function Transcriber(props: IProps) {
     transcribed: ActivityStates.Reviewing,
   };
 
+  const handleUpdateConfirmed = () => {
+    if (confirm) showTranscription(confirm);
+    setConfirm(undefined);
+  };
+  const handleUpdateRefused = () => {
+    //it's been changed on the backend, but I want mine, so save mine over theirs
+    handleSave();
+    setConfirm(undefined);
+  };
+
   const handleSave = async () => {
     //this needs to use the refs because it is called from a timer, which
     //apparently remembers the values when it is kicked off...not when it is run
@@ -809,7 +829,7 @@ export function Transcriber(props: IProps) {
     segments: string,
     thiscomment: string | undefined
   ) => {
-    if (transcriptionRef.current) {
+    if (transcriptionRef.current && mediaRef.current) {
       saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;
       const curState = stateRef.current;
@@ -833,13 +853,13 @@ export function Transcriber(props: IProps) {
           tb,
           {
             type: 'mediafile',
-            id: mediafile.id,
+            id: mediaRef.current.id,
             attributes: {
               transcription: transcription,
               position: newPosition,
               segments: updateSegments(
                 NamedRegions.Transcription,
-                mediafile.attributes?.segments,
+                mediaRef.current.attributes?.segments,
                 segments
               ),
               transcriptionstate: nextState,
@@ -912,25 +932,19 @@ export function Transcriber(props: IProps) {
 
   const getTranscription = () => {
     const attr = mediafile.attributes || {};
-    segmentsRef.current = getSegments(
-      NamedRegions.Transcription,
-      attr.segments
-    );
-    setInitialSegments(segmentsRef.current);
     return {
       transcription: attr.transcription || '',
       position: attr.position,
+      segments: getSegments(NamedRegions.Transcription, attr.segments),
     };
   };
 
-  const showTranscription = (val: {
-    transcription: string;
-    position: number;
-  }) => {
+  const showTranscription = (val: ITrans) => {
     transcriptionIn.current = val.transcription;
     setTextValue(val.transcription);
     setDefaultPosition(val.position);
-
+    segmentsRef.current = val.segments;
+    setInitialSegments(segmentsRef.current);
     //focus on player
     if (transcriptionRef.current) {
       transcriptionRef.current.firstChild.value = val.transcription;
@@ -1291,6 +1305,14 @@ export function Transcriber(props: IProps) {
           addMethod={handleAddNote}
           cancelMethod={handleAddNoteCancel}
         />
+        {confirm && (
+          <Confirm
+            isDelete={false}
+            text={t.updateByOther2.replace('{0}', confirm.transcription)}
+            yesResponse={handleUpdateConfirmed}
+            noResponse={handleUpdateRefused}
+          />
+        )}
       </Paper>
     </div>
   );
