@@ -90,6 +90,7 @@
     "postinstall": "electron-builder install-app-deps",
     "electron-pack": "npm run stamp && node env-config/edPackage.js && env-cmd -f .env.electron craco build -w --config env-config/craco.config.electron.js",
     "stamp": "node env-config/writeDate.js",
+    "afterSign": "node env-config/notarize.js",
     "deploy": "npm run stamp && amplify publish",
     "deploySetup": "amplify init && git checkout amplify && git checkout .gitignore",
     "dev": "amplify env checkout appdev && node env-config/changeEnv.js dev && git checkout amplify\\#current-cloud-backend",
@@ -123,6 +124,7 @@
   "devDependencies": {
     "@aws-amplify/pubsub": "^1.2.4",
     "@craco/craco": "^5.7.0",
+    "@electron/notarize": "^1.2.3",
     "@hot-loader/react-dom": "^16.12.0",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^11.2.7",
@@ -146,6 +148,7 @@
     "@types/wavesurfer.js": "^3.3.2",
     "concurrently": "^6.5.1",
     "craco-plugin-react-hot-reload": "^0.1.0",
+    "dotenv": "^16.0.3",
     "electron": "^11.3.0",
     "electron-builder": "22.10.5",
     "electron-debug": "^3.2.0",
@@ -185,7 +188,14 @@
     },
     "mac": {
       "category": "public.app-category.utilities",
-      "icon": "public/icon.png"
+      "icon": "public/icon.png",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "env-config/entitlements.mac.plist",
+      "entitlementsInherit": "env-config/entitlements.mac.plist"
+    },
+    "dmg": {
+      "sign": false
     },
     "directories": {
       "buildResources": "assets"
@@ -216,7 +226,5 @@
         ]
       }
     ]
-  },
-  "main": "public/electron.js",
-  "homepage": "./"
+  }
 }
