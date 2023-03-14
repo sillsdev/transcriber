@@ -226,7 +226,5 @@
         ]
       }
     ]
-  },
-  "main": "public/electron.js",
-  "homepage": "./"
+  }
 }
