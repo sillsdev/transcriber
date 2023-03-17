@@ -758,9 +758,9 @@ export async function electronExport(
     const filename =
       exportType === ExportType.ITFBACKUP
         ? itfb_fileName(projects[ix])
-        : [ExportType.AUDIO, ExportType.BURRITO, ExportType.ELAN].findIndex(
-            (e) => e === exportType
-          ) >= 0
+        : [ExportType.AUDIO, ExportType.BURRITO, ExportType.ELAN].includes(
+            exportType
+          )
         ? fileName(projects[ix], `${localizedArtifact}_${exportType}`, 'zip')
         : fileName(projects[ix], localizedArtifact, exportType);
     changedRecs += numRecs;
