@@ -36,6 +36,8 @@ import {
   fileInfo,
   updateableFiles,
   staticFiles,
+  nameFromRef,
+  VernacularTag,
 } from '../../crud';
 import {
   dataPath,
@@ -214,8 +216,9 @@ export async function electronExport(
       }
     };
 
-    const AddMediaFiles = async (recs: Record[]) => {
+    const AddMediaFiles = async (recs: Record[], rename: boolean) => {
       const mediapath = PathType.MEDIA + '/';
+      var newname = '';
       for (const m of recs) {
         var mf = m as MediaFile;
         if (!mf.attributes) return;
@@ -225,10 +228,12 @@ export async function electronExport(
           scripturePackage,
           projRec,
         } as IExportScripturePath);
-        await AddStreamEntry(mp, fullPath || mediapath + path.basename(mp));
+        if (rename) newname = mediapath + nameFromRef(mf, memory);
+        else newname = fullPath || mediapath + path.basename(mp);
+        await AddStreamEntry(mp, newname);
         if (exportType === ExportType.ELAN) {
           const eafCode = getMediaEaf(mf, memory);
-          const name = path.basename(mp, path.extname(mp)) + '.eaf';
+          const name = path.basename(newname, path.extname(newname)) + '.eaf';
           await ipc?.zipAddFile(zip, mediapath + name, eafCode, 'EAF');
         }
       }
@@ -596,7 +601,7 @@ export async function electronExport(
               (m) =>
                 m.attributes && moment.utc(m.attributes.dateCreated) > imported
             );
-            await AddMediaFiles(newOnly);
+            await AddMediaFiles(newOnly, false);
         }
         return changed.length;
       }
@@ -607,7 +612,8 @@ export async function electronExport(
       info: fileInfo,
       project: Project | undefined,
       needsRemoteIds: boolean,
-      allowNew: boolean = true
+      allowNew: boolean = true,
+      checkRename: boolean = false
     ) => {
       let recs = GetTableRecs(info, project, needsRemoteIds);
       if (recs && Array.isArray(recs) && recs.length > 0) {
@@ -629,7 +635,12 @@ export async function electronExport(
             await AddUserAvatars(recs);
             break;
           case 'mediafile':
-            await AddMediaFiles(recs);
+            await AddMediaFiles(
+              recs,
+              checkRename &&
+                recs.length > 0 &&
+                related(recs[0], 'artifactType') === VernacularTag
+            );
         }
       }
       return recs?.length || 0;
@@ -685,7 +696,9 @@ export async function electronExport(
         numRecs += await AddAll(
           { table: 'mediafile', sort: 'H' },
           limit,
-          needsRemoteIds
+          needsRemoteIds,
+          true,
+          [ExportType.AUDIO, ExportType.ELAN].includes(exportType)
         );
         break;
       default:
@@ -745,7 +758,9 @@ export async function electronExport(
     const filename =
       exportType === ExportType.ITFBACKUP
         ? itfb_fileName(projects[ix])
-        : exportType === ExportType.AUDIO || exportType === ExportType.BURRITO
+        : [ExportType.AUDIO, ExportType.BURRITO, ExportType.ELAN].includes(
+            exportType
+          )
         ? fileName(projects[ix], `${localizedArtifact}_${exportType}`, 'zip')
         : fileName(projects[ix], localizedArtifact, exportType);
     changedRecs += numRecs;
