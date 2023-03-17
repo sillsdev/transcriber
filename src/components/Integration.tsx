@@ -366,7 +366,7 @@ export function IntegrationPanel(
     if (curInt.length > 0) {
       const settings = JSON.parse(curInt[0].attributes.settings);
       index = paratext_projects.findIndex((p) => {
-        return p.Name === settings.Name;
+        return p.ParatextId === settings.ParatextId;
       });
     }
     if (curInt.length === 0 || index === -1) {
@@ -848,7 +848,10 @@ export function IntegrationPanel(
                     {paratext_projects
                       .sort((i, j) => (i.ShortName <= j.ShortName ? -1 : 1))
                       .map((option: ParatextProject) => (
-                        <MenuItem key={option.ParatextId} value={option.Name}>
+                        <MenuItem
+                          key={option.ParatextId}
+                          value={option.ParatextId}
+                        >
                           {`${option.ShortName}/${option.Name} (${option.LanguageName}-${option.LanguageTag})`}
                         </MenuItem>
                       ))}
