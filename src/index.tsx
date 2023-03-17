@@ -16,8 +16,8 @@ import { Provider } from 'react-redux';
 import { coordinator, memory, backup, schema } from './schema';
 import configureStore from './store';
 import { setGlobal } from 'reactn';
-import bugsnag from '@bugsnag/js';
-import bugsnagReact from '@bugsnag/plugin-react';
+import Bugsnag from '@bugsnag/js';
+import BugsnagReact from '@bugsnag/plugin-react';
 import history from './history';
 import {
   logError,
@@ -41,14 +41,16 @@ const appVersion = require('../package.json').version;
 const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
 const prod = API_CONFIG.host.indexOf('prod') !== -1;
 const bugsnagClient = prodOrQa
-  ? bugsnag({
-    apiKey: API_CONFIG.snagId,
-    appVersion,
-    releaseStage: prod ? 'production' : 'staging',
-  })
+  ? Bugsnag.start({
+      apiKey: API_CONFIG.snagId,
+      plugins: [new BugsnagReact()],
+      appVersion,
+      releaseStage: prod ? 'production' : 'staging',
+    })
   : undefined;
-bugsnagClient?.use(bugsnagReact, React);
-const SnagBoundary = bugsnagClient?.getPlugin('react');
+const SnagBoundary = prodOrQa
+  ? Bugsnag.getPlugin('react')?.createErrorBoundary(React)
+  : null;
 const electronLog = isElectron ? logFile() : undefined;
 
 // Redux store
@@ -102,17 +104,18 @@ if (isElectron) {
   console.log('Running on the Web, Filesystem access disabled.');
 }
 
-const errorManagedApp = bugsnagClient ? (
-  <SnagBoundary>
-    <ErrorBoundary errorReporter={bugsnagClient} memory={memory}>
+const errorManagedApp =
+  bugsnagClient && SnagBoundary ? (
+    <SnagBoundary>
+      <ErrorBoundary errorReporter={bugsnagClient} memory={memory}>
+        <App />
+      </ErrorBoundary>
+    </SnagBoundary>
+  ) : (
+    <ErrorBoundary errorReporter={electronLog} memory={memory}>
       <App />
     </ErrorBoundary>
-  </SnagBoundary>
-) : (
-  <ErrorBoundary errorReporter={electronLog} memory={memory}>
-    <App />
-  </ErrorBoundary>
-);
+  );
 
 const onRedirectingCallbck = (appState?: { returnTo?: string }) => {
   history.push(
