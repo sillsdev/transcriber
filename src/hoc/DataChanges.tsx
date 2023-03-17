@@ -46,6 +46,7 @@ import {
   IState,
   OfflineProject,
   OrganizationMembership,
+  PassageStateChange,
   Plan,
   VProject,
 } from '../model';
@@ -241,6 +242,7 @@ export const doDataChanges = async (
                       case 'comment':
                       case 'intellectualproperty':
                       case 'orgkeytermtarget':
+                      case 'passagestatechange':
                         DeleteLocalCopy(
                           upRec.record.attributes?.offlineId,
                           upRec.record.type,
@@ -295,10 +297,22 @@ export const doDataChanges = async (
             operations.push(tb.removeRecord({ type: table.type, id: localId }));
           }
         });
+        if (version === 6) {
+          //clean up abandoned pscs
+          var pscs = (
+            memory.cache.query((q: QueryBuilder) =>
+              q.findRecords('passagestatechange')
+            ) as PassageStateChange[]
+          ).filter((p) => !Boolean(p.keys?.remoteId));
+          pscs.forEach((p) =>
+            operations.push(tb.removeRecord({ type: p.type, id: p.id }))
+          );
+        }
         if (operations.length > 0) {
           await memory.sync(await backup.push(operations));
         }
       }
+
       setDataChangeCount(0);
       return data?.attributes?.startnext;
     } catch (e: any) {
