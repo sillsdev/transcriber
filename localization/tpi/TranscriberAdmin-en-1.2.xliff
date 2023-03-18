@@ -618,6 +618,34 @@
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="cards.copyComplete">
+        <source>Copy Complete {0}</source>
+        <target state="needs-translation">Copy Complete {0}</target>
+        <context-group>
+          <context context-type="sourcefile">ProjectCard.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cards.copyNew">
+        <source>Copy project to new team.</source>
+        <target state="needs-translation">Copy project to new team.</target>
+        <context-group>
+          <context context-type="sourcefile">addCard.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cards.copySame">
+        <source>Copy project to same team.</source>
+        <target state="needs-translation">Copy project to same team.</target>
+        <context-group>
+          <context context-type="sourcefile">addCard.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cards.copyStatus">
+        <source>Copy to {0}</source>
+        <target state="needs-translation">Copy to {0}</target>
+        <context-group>
+          <context context-type="sourcefile">ProjectCard.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="cards.delete">
         <source>Delete</source>
         <target state="needs-translation">Delete</target>
@@ -5659,8 +5687,15 @@
         </context-group>
       </trans-unit>
       <trans-unit id="template.book">
-        <source>Paratext book identifier</source>
-        <target state="needs-translation">Paratext book identifier</target>
+        <source>Paratext book identifier (Length 3 uppercase)</source>
+        <target state="needs-translation">Paratext book identifier (Length 3 uppercase)</target>
+        <context-group>
+          <context context-type="sourcefile">template.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="template.bookname">
+        <source>Book name</source>
+        <target state="needs-translation">Book name</target>
         <context-group>
           <context context-type="sourcefile">template.tsx</context>
         </context-group>
@@ -6134,9 +6169,9 @@
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="transcriber.updateByOther">
-        <source>Transcription updated by another person or process.</source>
-        <target state="needs-translation">Transcription updated by another person or process.</target>
+      <trans-unit id="transcriber.updateByOther2">
+        <source>Transcription updated by another person.  Keep their changes? {0}</source>
+        <target state="needs-translation">Transcription updated by another person.  Keep their changes? {0}</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
@@ -6408,8 +6443,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="transcriptionTab.offlineData">
-        <source>You cannot export an online project after creating new content offline (recordings, discussions, comments etc.). Please export an ITF file.</source>
-        <target state="needs-translation">You cannot export an online project after creating new content offline (recordings, discussions, comments etc.). Please export an ITF file.</target>
+        <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+        <target state="needs-translation">You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</target>
         <context-group>
           <context context-type="sourcefile">TranscriptionTab.tsx</context>
         </context-group>
