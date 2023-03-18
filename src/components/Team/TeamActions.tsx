@@ -20,6 +20,7 @@ const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
 const TeamActions = () => {
   const [offline] = useGlobal('offline');
   const [isDeveloper] = useGlobal('developer');
+  const [, setBusy] = useGlobal('remoteBusy');
   const [openAdd, setOpenAdd] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const ctx = React.useContext(TeamContext);
@@ -38,6 +39,7 @@ const TeamActions = () => {
     team: Organization,
     cb?: (id: string) => Promise<void>
   ) => {
+    setBusy(true); //this will be reset by datachanges
     teamCreate(team, async (id: string) => {
       cb && (await cb(id));
       setOpenAdd(false);

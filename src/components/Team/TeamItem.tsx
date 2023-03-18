@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { Grid } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
@@ -23,15 +23,15 @@ export const TeamItem = (props: IProps) => {
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setOrganization] = useGlobal('organization');
-  const [busy] = useGlobal('importexportBusy');
-  const [editOpen, setEditOpen] = React.useState(false);
-  const [showWorkflow, setShowWorkflow] = React.useState(false);
-  const [deleteItem, setDeleteItem] = React.useState<Organization>();
+  const [busy] = useGlobal('remoteBusy');
+  const [editOpen, setEditOpen] = useState(false);
+  const [showWorkflow, setShowWorkflow] = useState(false);
+  const [deleteItem, setDeleteItem] = useState<Organization>();
   const ctx = React.useContext(TeamContext);
   const { teamProjects, teamMembers, teamUpdate, teamDelete, isAdmin } =
     ctx.state;
   const t = ctx.state.cardStrings;
-  const [openMember, setOpenMember] = React.useState(false);
+  const [openMember, setOpenMember] = useState(false);
   const { setMyOrgRole } = useRole();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [changed] = useGlobal('changed');
@@ -77,11 +77,9 @@ export const TeamItem = (props: IProps) => {
     setShowWorkflow(true);
   };
 
-  const canModify = (
-    offline: boolean,
-    team: Organization,
-    offlineOnly: boolean
-  ) => (!offline && isAdmin(team)) || offlineOnly;
+  const canModify = useMemo(() => {
+    return (!offline && isAdmin(team)) || offlineOnly;
+  }, [offline, team, offlineOnly, isAdmin]);
 
   return (
     <TeamPaper id="TeamItem">
@@ -95,9 +93,13 @@ export const TeamItem = (props: IProps) => {
             {t.members.replace('{0}', teamMembers(team.id).toString())}
           </AltButton>
           {' \u00A0'}
-          {canModify(offline, team, offlineOnly) && (
+          {canModify && (
             <>
-              <AltButton id="editWorkflow" onClick={handleEditWorkflow}>
+              <AltButton
+                id="editWorkflow"
+                onClick={handleEditWorkflow}
+                disabled={busy}
+              >
                 {t.editWorkflow.replace('{0}', '')}
               </AltButton>
               {' \u00A0'}
@@ -148,7 +150,7 @@ export const TeamItem = (props: IProps) => {
         {teamProjects(team.id).map((i) => {
           return <ProjectCard key={i.id} project={i} />;
         })}
-        {canModify(offline, team, offlineOnly) && <AddCard team={team} />}
+        {canModify && <AddCard team={team} />}
       </Grid>
     </TeamPaper>
   );
