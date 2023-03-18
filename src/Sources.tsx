@@ -277,9 +277,7 @@ export const Sources = async (
       memory,
       backup,
       0,
-      fingerprint,
       0,
-      '',
       '',
       '',
       getOfflineProject

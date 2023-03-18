@@ -34,6 +34,7 @@ import {
   DialogContentText,
   DialogActions,
   Box,
+  Alert,
 } from '@mui/material';
 // import CopyIcon from '@mui/icons-material/FileCopy';
 import FilterIcon from '@mui/icons-material/FilterList';
@@ -179,6 +180,7 @@ export function TranscriptionTab(
   const { showMessage, showTitledMessage } = useSnackBar();
   const [openExport, setOpenExport] = useState(false);
   const [data, setData] = useState(Array<IRow>());
+  const [alertOpen, setAlertOpen] = useState(false);
   const [passageId, setPassageId] = useState('');
   const eafAnchor = React.useRef<HTMLAnchorElement>(null);
   const [dataUrl, setDataUrl] = useState<string | undefined>();
@@ -190,7 +192,6 @@ export function TranscriptionTab(
   const [user] = useGlobal('user');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const { getOrganizedBy } = useOrganizedBy();
-  const [fingerprint] = useGlobal('fingerprint');
   const getOfflineProject = useOfflnProjRead();
   const [globalStore] = useGlobal();
   const { getTypeId, localizedArtifactType } = useArtifactType();
@@ -281,7 +282,6 @@ export function TranscriptionTab(
       memory,
       backup,
       project,
-      fingerprint,
       user,
       media.length,
       token,
@@ -293,7 +293,6 @@ export function TranscriptionTab(
           ? localizedArtifactType(artifactType)
           : t.changed
       ),
-      t.offlineData,
       localizedArtifact,
       getOfflineProject,
       step,
@@ -301,6 +300,7 @@ export function TranscriptionTab(
     );
   };
   const handleProjectExport = () => {
+    setAlertOpen(false);
     if (offline) setOpenExport(true);
     else doProjectExport(ExportType.PTF);
   };
@@ -463,6 +463,7 @@ export function TranscriptionTab(
         if (exportStatus.complete) {
           setBusy(false);
           if (exportFile && exportName === '') {
+            setAlertOpen(exportStatus.errMsg !== '');
             setExportName(exportFile.message);
             setExportUrl(exportFile.fileURL);
           }
@@ -649,7 +650,6 @@ export function TranscriptionTab(
     const closeNoChoice = () => {
       setOpenExport(false);
     };
-
     return (
       <Dialog
         open={openExport}
@@ -751,6 +751,16 @@ export function TranscriptionTab(
             </AltButton>
           </TabActions>
         </TabAppBar>
+        {alertOpen && (
+          <Alert
+            severity="warning"
+            onClose={() => {
+              setAlertOpen(false);
+            }}
+          >
+            {t.offlineData}
+          </Alert>
+        )}
         <PaddedBox>
           <TreeGrid
             columns={columnDefs}

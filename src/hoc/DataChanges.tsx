@@ -459,9 +459,7 @@ export function DataChanges(props: IProps) {
         memory,
         undefined,
         project,
-        fingerprint,
         user,
-        '',
         '',
         '',
         getOfflineProject
