@@ -5493,8 +5493,8 @@
 		</unit>
 		<unit id="transcriptionTab.offlineData">
 			<segment>
-				<source>You cannot export an online project after creating new content offline (recordings, discussions, comments etc.). Please export an ITF file.</source>
-				<target>Вы не можете экспортировать онлайн-проект после создания нового контента в автономном режиме (записи, обсуждения, комментарии и т. д.). Пожалуйста, экспортируйте файл ITF.</target>
+				<source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+				<target>У вас есть новые локальные изменения, которые не были включены в экспорт ptf. Также экспортируйте файл itf, чтобы зафиксировать все изменения.</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.changed">

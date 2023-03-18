@@ -57,10 +57,8 @@ export async function electronExport(
   memory: Memory,
   backup: IndexedDBSource | undefined,
   projectid: number | string,
-  fingerprint: string,
   userid: number | string,
   nodatamsg: string,
-  noNewallowed: string,
   localizedArtifact: string,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
   target?: string,
@@ -128,7 +126,7 @@ export async function electronExport(
   const createZip = async (
     zip: AdmZip,
     projRec: Project,
-    fingerprint: string
+    expType: ExportType
   ) => {
     const AddCheckEntry = async (): Promise<string> => {
       var dt = currentDateTime();
@@ -159,7 +157,7 @@ export async function electronExport(
     ) => {
       //put in the remoteIds for everything, then stringify
       const ser = projRec?.keys?.remoteId ? onlineSerlzr : offlineSrlzr;
-      let json = ![ExportType.AUDIO, ExportType.ELAN].includes(exportType)
+      let json = ![ExportType.AUDIO, ExportType.ELAN].includes(expType)
         ? '{"data":' + JSON.stringify(ser.serializeRecords(recs)) + '}'
         : JSON.stringify(ser.serializeRecords(recs), null, 2);
       await ipc?.zipAddJson(
@@ -231,7 +229,7 @@ export async function electronExport(
         if (rename) newname = mediapath + nameFromRef(mf, memory);
         else newname = fullPath || mediapath + path.basename(mp);
         await AddStreamEntry(mp, newname);
-        if (exportType === ExportType.ELAN) {
+        if (expType === ExportType.ELAN) {
           const eafCode = getMediaEaf(mf, memory);
           const name = path.basename(newname, path.extname(newname)) + '.eaf';
           await ipc?.zipAddFile(zip, mediapath + name, eafCode, 'EAF');
@@ -612,17 +610,17 @@ export async function electronExport(
       info: fileInfo,
       project: Project | undefined,
       needsRemoteIds: boolean,
-      allowNew: boolean = true,
+      excludeNew: boolean = false,
       checkRename: boolean = false
     ) => {
       let recs = GetTableRecs(info, project, needsRemoteIds);
-      if (recs && Array.isArray(recs) && recs.length > 0) {
-        if (
-          needsRemoteIds &&
-          !allowNew &&
-          recs.filter((r) => !Boolean(r.keys?.remoteId)).length > 0
-        ) {
-          throw new Error(noNewallowed);
+      let len = recs?.length || 0;
+      let ret = { Added: len, Filtered: 0 };
+      if (len > 0) {
+        if (needsRemoteIds && excludeNew) {
+          recs = recs.filter((r) => Boolean(r.keys?.remoteId));
+          ret.Added = recs?.length || 0;
+          ret.Filtered = len - ret.Added;
         }
         if (!scripturePackage) {
           AddJsonEntry(info.table + 's', recs, info.sort);
@@ -643,7 +641,7 @@ export async function electronExport(
             );
         }
       }
-      return recs?.length || 0;
+      return ret;
     };
 
     const onlyOneProject = (): boolean => {
@@ -657,7 +655,7 @@ export async function electronExport(
     if (!scripturePackage) {
       await AddSourceEntry(imported.toISOString());
       await AddVersionEntry((backup?.schema.version || 1).toString());
-    } else if (exportType === ExportType.BURRITO) {
+    } else if (expType === ExportType.BURRITO) {
       const userId =
         remoteIdGuid('user', userid.toString(), memory.keyMap) ||
         userid.toString();
@@ -676,7 +674,8 @@ export async function electronExport(
     if (!needsRemoteIds) await AddOfflineEntry();
     const limit = onlyOneProject() ? undefined : projRec;
     var numRecs = 0;
-    switch (exportType) {
+    var numFiltered = 0;
+    switch (expType) {
       case ExportType.ITF:
       case ExportType.ITFBACKUP:
       case ExportType.ITFSYNC:
@@ -684,7 +683,7 @@ export async function electronExport(
         for (const info of updateableFiles) {
           numRecs += await AddChanged(info, limit, needsRemoteIds);
         }
-        if (exportType !== ExportType.ITFBACKUP && backup && op.attributes) {
+        if (expType !== ExportType.ITFBACKUP && backup && op.attributes) {
           op.attributes.exportedDate = exported;
           await backup.push((t: TransformBuilder) => t.updateRecord(op));
         }
@@ -693,24 +692,28 @@ export async function electronExport(
       case ExportType.BURRITO:
       case ExportType.AUDIO:
       case ExportType.ELAN:
-        numRecs += await AddAll(
-          { table: 'mediafile', sort: 'H' },
-          limit,
-          needsRemoteIds,
-          true,
-          [ExportType.AUDIO, ExportType.ELAN].includes(exportType)
-        );
+        numRecs += (
+          await AddAll(
+            { table: 'mediafile', sort: 'H' },
+            limit,
+            needsRemoteIds,
+            false,
+            [ExportType.AUDIO, ExportType.ELAN].includes(expType)
+          )
+        ).Added;
         break;
       default:
         for (const info of updateableFiles) {
-          numRecs += await AddAll(info, limit, needsRemoteIds, false);
+          var result = await AddAll(info, limit, needsRemoteIds, true);
+          numRecs += result.Added;
+          numFiltered += result.Filtered;
         }
         for (const info of staticFiles) {
           await AddAll(info, limit, needsRemoteIds);
         }
         await AddFonts();
     }
-    return { zip, numRecs };
+    return { zip, numRecs, numFiltered };
   };
 
   var projects: Project[];
@@ -750,10 +753,10 @@ export async function electronExport(
   }
   var changedRecs = 0;
   for (var ix: number = 0; ix < projects.length; ix++) {
-    const { zip, numRecs } = await createZip(
+    let { zip, numRecs, numFiltered } = await createZip(
       (await ipc?.zipOpen()) as AdmZip,
       projects[ix],
-      fingerprint
+      exportType
     );
     const filename =
       exportType === ExportType.ITFBACKUP
@@ -772,12 +775,25 @@ export async function electronExport(
           zip,
           projects[ix].attributes.name
         );
+      if (numFiltered) {
+        const itf = await createZip(
+          (await ipc?.zipOpen()) as AdmZip,
+          projects[ix],
+          ExportType.ITF
+        );
+        await ipc?.zipAddZip(
+          backupZip,
+          fileName(projects[ix], localizedArtifact, ExportType.ITF),
+          itf.zip,
+          projects[ix].attributes.name
+        );
+      }
     } else {
       if (numRecs) {
         var where = dataPath(filename);
         await createPathFolder(where);
         await ipc?.zipWrite(zip, where);
-        return BuildFileResponse(where, filename, undefined, changedRecs);
+        return BuildFileResponse(where, filename, undefined, numFiltered);
       } else if (nodatamsg && projects.length === 1) throw new Error(nodatamsg);
     }
   }
@@ -789,5 +805,10 @@ export async function electronExport(
       ? await ipc?.zipToBuffer(backupZip)
       : undefined;
   await ipc?.zipClose(backupZip);
-  return BuildFileResponse(backupWhere, backupName, buffer, changedRecs);
+  return BuildFileResponse(
+    backupWhere,
+    backupName,
+    buffer,
+    backupZip ? 0 : changedRecs
+  );
 }

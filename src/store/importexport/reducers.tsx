@@ -1,4 +1,4 @@
-import { pendingStatus, successStatus, successStatusMsg } from '../AxiosStatus';
+import { pendingStatus, successStatusMsg } from '../AxiosStatus';
 import {
   EXPORT_SUCCESS,
   EXPORT_PENDING,
@@ -39,7 +39,10 @@ const ImportExportReducers = function (
         ...state,
         loaded: true,
         exportFile: action.payload,
-        importexportStatus: successStatus(action.payload.message),
+        importexportStatus: successStatusMsg(
+          action.payload.message,
+          action.payload.changes > 0 ? 'NeedITF' : ''
+        ),
       };
     case EXPORT_ERROR:
       return {

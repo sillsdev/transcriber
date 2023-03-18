@@ -1204,7 +1204,7 @@ const initialState = {
 			"latestAudio": "Latest Audio",
 			"latestAudioElan": "Latest Audio + Transcription",
 			"noData": "No {0} Data.",
-			"offlineData": "You cannot export an online project after creating new content offline (recordings, discussions, comments etc.). Please export an ITF file.",
+			"offlineData": "You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.",
 			"changed": "Changed",
 			"passages": "Passages",
 			"plan": "Plan",
