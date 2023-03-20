@@ -760,6 +760,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="commentEditor.comment">
+         <segment>
+            <source>Comment</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="commentEditor.record">
          <segment>
             <source>Record Comment</source>

@@ -68,6 +68,7 @@ import { usePeerGroups } from '../Peers/usePeerGroups';
 import { OldVernVersion } from '../../control/OldVernVersion';
 import { useSelector } from 'react-redux';
 import { discussionCardSelector, sharedSelector } from '../../selector';
+import { waitFor } from '@testing-library/dom';
 
 const DiscussionCardRoot = styled(Box)<BoxProps>(() => ({
   width: '100%',
@@ -216,11 +217,13 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     refresh,
   } = ctx.state;
   const {
+    isChanged,
     toolChanged,
     toolsChanged,
     saveCompleted,
     saveRequested,
     clearRequested,
+    startSave,
   } = useContext(UnsavedContext).state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
@@ -238,6 +241,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [myChanged, setMyChanged] = useState(false);
   const savingRef = useRef(false);
+
   const [editSubject, setEditSubject] = useState(
     discussion.attributes?.subject
   );
@@ -263,6 +267,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     if (discussion.id) return discussion.id;
     else return NewDiscussionToolId;
   }, [discussion]);
+
   const [changeAssignment, setChangeAssignment] = useState<
     boolean | undefined
   >();
@@ -585,6 +590,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
       discussion.attributes.subject = editSubject;
       var ops: Operation[] = [];
       var t = new TransformBuilder();
+      var newd = !Boolean(discussion.id);
       if (!discussion.id) {
         ops.push(...AddRecord(t, discussion, user, memory));
         ops.push(
@@ -635,6 +641,17 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
         )
       );
       await memory.update(ops);
+      if (newd) {
+        console.log('startSave', discussion.id);
+        startSave('newdiscussioncomment');
+        //wait for it to be done before we call onAddComplete and lose this discussioncard
+        await waitForIt(
+          'comment save',
+          () => !isChanged('newdiscussioncomment'),
+          () => false,
+          500
+        );
+      }
     }
     onAddComplete && onAddComplete(discussion.id);
     setEditing(false);
@@ -757,6 +774,10 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     setEditAssigned(currentAssigned());
     setChangeAssignment(!changeAssignment as boolean);
   };
+  const getDiscussion = () => {
+    console.log('getDiscussion', discussion.id);
+    return discussion;
+  };
 
   return (
     <DiscussionCardRoot>
@@ -823,6 +844,13 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
                 scripture={ScriptureEnum.hide}
                 discussion={true}
               />
+              {onAddComplete && (
+                <ReplyCard
+                  getDiscussion={getDiscussion}
+                  mediafileId={mediafileId}
+                  commentNumber={-1}
+                />
+              )}
               <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                 <Button
                   id={`ok-${discussion.id}`}
@@ -844,27 +872,29 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
           ) : (
             <Grid container sx={titleProps}>
               <Grid item sx={topicItemProps}>
-                {myRegion && related(discussion, 'mediafile') === mediafileId && (
-                  <IconButton
-                    id={`locate-${discussion.id}`}
-                    size="small"
-                    sx={lightButton}
-                    title={t.locate}
-                    onClick={handleLocateClick}
-                  >
-                    <LocationIcon fontSize="small" />
-                  </IconButton>
-                )}
-                {myRegion && related(discussion, 'mediafile') !== mediafileId && (
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <OldVernVersion
-                      id={discussion.id}
-                      oldVernVer={version}
-                      mediaId={related(discussion, 'mediafile')}
-                      text={discussion.attributes?.subject}
-                    />
-                  </Box>
-                )}
+                {myRegion &&
+                  related(discussion, 'mediafile') === mediafileId && (
+                    <IconButton
+                      id={`locate-${discussion.id}`}
+                      size="small"
+                      sx={lightButton}
+                      title={t.locate}
+                      onClick={handleLocateClick}
+                    >
+                      <LocationIcon fontSize="small" />
+                    </IconButton>
+                  )}
+                {myRegion &&
+                  related(discussion, 'mediafile') !== mediafileId && (
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <OldVernVersion
+                        id={discussion.id}
+                        oldVernVer={version}
+                        mediaId={related(discussion, 'mediafile')}
+                        text={discussion.attributes?.subject}
+                      />
+                    </Box>
+                  )}
                 <Typography
                   variant="h6"
                   component="h2"
@@ -965,12 +995,16 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
                   comment={i}
                   approvalStatus={approvalStatus(i.attributes?.visible)}
                   discussion={discussion}
-                  number={j}
+                  commentNumber={j}
                   onEditing={handleEditCard}
                 />
               ))}
               {!discussion.attributes.resolved && !editCard && (
-                <ReplyCard discussion={discussion} number={myComments.length} />
+                <ReplyCard
+                  getDiscussion={getDiscussion}
+                  mediafileId={mediafileId}
+                  commentNumber={myComments.length}
+                />
               )}
             </Grid>
           )}

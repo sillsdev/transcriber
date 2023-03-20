@@ -884,6 +884,13 @@
                <context context-type="sourcefile">CommentCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="commentEditor.comment">
+            <source>Comment</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">CommentCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="commentEditor.record">
             <source>Record Comment</source>
             <target/>

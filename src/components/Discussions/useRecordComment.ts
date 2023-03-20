@@ -8,7 +8,7 @@ import {
   useArtifactType,
   useOfflnMediafileCreate,
 } from '../../crud';
-import { Discussion, MediaFile } from '../../model';
+import { MediaFile } from '../../model';
 import * as actions from '../../store';
 import { cleanFileName } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
@@ -17,14 +17,14 @@ import { useDispatch } from 'react-redux';
 import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
 
 interface IProps {
-  discussion: Discussion;
-  number: number;
+  mediafileId: string;
+  commentNumber: number;
   afterUploadcb: (mediaId: string) => Promise<void>;
 }
 
 export const useRecordComment = ({
-  discussion,
-  number,
+  mediafileId,
+  commentNumber,
   afterUploadcb,
 }: IProps) => {
   const dispatch = useDispatch();
@@ -47,16 +47,16 @@ export const useRecordComment = ({
   const { createMedia } = useOfflnMediafileCreate();
 
   const passageId = useMemo(() => {
-    const vernMediaId = related(discussion, 'mediafile');
-    const vernRec = findRecord(memory, 'mediafile', vernMediaId) as MediaFile;
+    const vernRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
     return related(vernRec, 'passage') as string;
-  }, [discussion, memory]);
+  }, [mediafileId, memory]);
 
-  const fileName = useMemo(() => {
-    return `${cleanFileName(discussion.attributes?.subject)}${(
-      discussion.id + 'xxxx'
-    ).slice(0, 4)}-${number}`;
-  }, [discussion, number]);
+  const fileName = (subject: string, id: string) => {
+    return `${cleanFileName(subject)}${(id + 'xxxx').slice(
+      0,
+      4
+    )}-${commentNumber}`;
+  };
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     const uploadList = fileList.current;

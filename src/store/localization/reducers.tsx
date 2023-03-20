@@ -178,6 +178,7 @@ const initialState = {
 	}),
 	"commentEditor": new LocalizedStrings({
 		"en": {
+			"comment": "Comment",
 			"record": "Record Comment",
 			"recordUnavailable": "Another recorder is open.",
 			"saving": "Saving...",
