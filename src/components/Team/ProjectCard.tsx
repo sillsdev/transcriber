@@ -108,6 +108,7 @@ export const ProjectCard = (props: IProps) => {
   const copyStatus = useSelector(
     (state: IState) => state.importexport.importexportStatus
   );
+  const [copying, setCopying] = useState(false);
   const { accessToken } = useContext(TokenContext).state;
   const [errorReporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
@@ -154,12 +155,13 @@ export const ProjectCard = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
   useEffect(() => {
-    if (copyStatus) {
+    if (copying && copyStatus) {
       if (copyStatus.errStatus || copyStatus.complete) {
         copyComplete();
+        setCopying(false);
         setBusy(false);
-      }
-      showMessage(copyStatus.statusMsg);
+        showMessage(copyStatus.errMsg ?? copyStatus.statusMsg);
+      } else showMessage(copyStatus.statusMsg);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [copyStatus]);
@@ -196,6 +198,7 @@ export const ProjectCard = (props: IProps) => {
         break;
       case 'copysame':
       case 'copynew':
+        setCopying(true);
         copyProject({
           projectid: remoteIdNum('project', projectId, memory.keyMap),
           sameorg: what === 'copysame',
