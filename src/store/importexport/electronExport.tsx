@@ -77,7 +77,7 @@ export async function electronExport(
   ): FileResponse => {
     return {
       message: fileName,
-      fileURL: 'file:////' + fullpath,
+      fileURL: 'file:///' + fullpath,
       contentType: 'application/' + exportType,
       buffer: buffer,
       changes: changedRecs,
