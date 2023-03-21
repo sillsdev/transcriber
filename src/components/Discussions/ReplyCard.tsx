@@ -11,9 +11,10 @@ import { useContext, useEffect, useRef, useState } from 'reactn';
 import { CommentEditor } from './CommentEditor';
 import { useRecordComment } from './useRecordComment';
 import { useSaveComment } from '../../crud/useSaveComment';
-import { useMounted, waitForIt } from '../../utils';
+import { useMounted } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { Box } from '@mui/material';
+import { related } from '../../crud';
 
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
@@ -22,22 +23,13 @@ interface IRecordProps {
   memberships: Array<GroupMembership>;
 }
 interface IProps {
-  getDiscussion: () => Discussion;
-  mediafileId: string;
+  discussion: Discussion;
   commentNumber: number;
 }
 
 export const ReplyCard = (props: IProps & IRecordProps) => {
-  const {
-    getDiscussion,
-    mediafileId,
-    commentNumber,
-    users,
-    groups,
-    memberships,
-  } = props;
+  const { discussion, commentNumber, users, groups, memberships } = props;
   const [refresh, setRefresh] = useState(0);
-  const commentText = useRef('');
   const isMounted = useMounted('replycard');
   const {
     toolChanged,
@@ -46,10 +38,7 @@ export const ReplyCard = (props: IProps & IRecordProps) => {
     saveRequested,
     clearRequested,
   } = useContext(UnsavedContext).state;
-  const myToolId =
-    commentNumber === -1
-      ? 'newdiscussioncomment'
-      : getDiscussion().id + 'reply';
+  const myToolId = discussion.id + 'reply';
   const afterSavecb = () => {
     savingRef.current = false;
     saveCompleted(myToolId);
@@ -64,21 +53,13 @@ export const ReplyCard = (props: IProps & IRecordProps) => {
     groups,
     memberships,
   });
-
+  const commentText = useRef('');
   const afterUploadcb = async (mediaId: string) => {
-    console.log('afterUploadcb', getDiscussion().id, commentText.current);
-    saveComment(
-      getDiscussion().id,
-      '',
-      commentText.current,
-      mediaId,
-      undefined
-    );
+    saveComment(discussion.id, '', commentText.current, mediaId, undefined);
     commentText.current = '';
   };
-
   const { uploadMedia, fileName } = useRecordComment({
-    mediafileId,
+    mediafileId: related(discussion, 'mediafile'),
     commentNumber,
     afterUploadcb,
   });
@@ -86,29 +67,12 @@ export const ReplyCard = (props: IProps & IRecordProps) => {
   const [canSaveRecording, setCanSaveRecording] = useState(false);
 
   const handleSaveEdit = () => {
-    waitForIt(
-      'discussionid',
-      () => Boolean(getDiscussion().id),
-      () => false,
-      100
-    ).then(() => {
-      if (getDiscussion().id) {
-        savingRef.current = true;
-        //if we're recording and can save, the comment will save after upload
-        if (!canSaveRecording) {
-          console.log(
-            'handleSaveEdit',
-            commentNumber,
-            myToolId,
-            getDiscussion().id,
-            'comment',
-            commentText.current
-          );
-          if (commentText.current.length > 0) afterUploadcb('');
-          else saveCompleted(myToolId);
-        }
-      }
-    });
+    savingRef.current = true;
+    //if we're recording and can save, the comment will save after upload
+    if (!canSaveRecording) {
+      if (commentText.current.length > 0) afterUploadcb('');
+      else saveCompleted(myToolId);
+    }
   };
   const handleCancelEdit = () => {
     setRefresh(refresh + 1);
@@ -117,13 +81,6 @@ export const ReplyCard = (props: IProps & IRecordProps) => {
   };
 
   useEffect(() => {
-    console.log(
-      'toolsChanged',
-      commentNumber,
-      myToolId,
-      getDiscussion().id,
-      commentText.current
-    );
     if (saveRequested(myToolId) && !savingRef.current) {
       handleSaveEdit();
     } else if (clearRequested(myToolId)) handleCancelEdit();
@@ -153,12 +110,10 @@ export const ReplyCard = (props: IProps & IRecordProps) => {
         toolId={myToolId}
         comment={commentText.current}
         refresh={refresh}
+        onOk={handleSaveEdit}
         onCancel={handleCancelEdit}
         setCanSaveRecording={setCanSaveRecording}
-        fileName={fileName(
-          getDiscussion().attributes.subject,
-          getDiscussion().id
-        )}
+        fileName={fileName(discussion.attributes.subject, discussion.id)}
         uploadMethod={uploadMedia}
         onTextChange={handleTextChange}
         cancelOnlyIfChanged={true}

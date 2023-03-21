@@ -1067,7 +1067,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="discussionCard.addComment">
-      		<source>Add Comment</source>
+      		<source>Add</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">DiscussionCard.tsx</context>
@@ -6177,7 +6177,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="transcriber.updateByOther2">
-            <source>Transcription updated by another person.  Keep their changes? {0}</source>
+            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>

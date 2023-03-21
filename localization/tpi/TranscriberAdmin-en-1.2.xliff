@@ -1060,8 +1060,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="discussionCard.addComment">
-        <source>Add Comment</source>
-        <target state="needs-translation">Add Comment</target>
+        <source>Add</source>
+        <target state="needs-translation">Add</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>

@@ -885,8 +885,8 @@
 		</unit>
 		<unit id="discussionCard.addComment">
 			<segment>
-				<source>Add Comment</source>
-				<target>Добавить комментарий</target>
+				<source>Add</source>
+				<target>Добавить</target>
 			</segment>
 		</unit>
 		<unit id="discussionCard.assign">
@@ -5259,8 +5259,8 @@
 		</unit>
 		<unit id="transcriber.updateByOther2">
 			<segment>
-				<source>Transcription updated by another person or process.</source>
-				<target>Транскрипцию обновил другой человек. Сохранить их изменения? {0}</target>
+				<source>Transcription updated by {0}.  Keep their changes? {1}</source>
+				<target>Транскрипция обновлена ​​{0}. Сохранить их изменения? {1}</target>
 			</segment>
 		</unit>
 		<unit id="transcribeReject.cancel">

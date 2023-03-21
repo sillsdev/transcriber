@@ -68,7 +68,9 @@ import { usePeerGroups } from '../Peers/usePeerGroups';
 import { OldVernVersion } from '../../control/OldVernVersion';
 import { useSelector } from 'react-redux';
 import { discussionCardSelector, sharedSelector } from '../../selector';
-import { waitFor } from '@testing-library/dom';
+import { CommentEditor } from './CommentEditor';
+import { useSaveComment } from '../../crud/useSaveComment';
+import { useRecordComment } from './useRecordComment';
 
 const DiscussionCardRoot = styled(Box)<BoxProps>(() => ({
   width: '100%',
@@ -217,7 +219,6 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     refresh,
   } = ctx.state;
   const {
-    isChanged,
     toolChanged,
     toolsChanged,
     saveCompleted,
@@ -263,10 +264,46 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const { localizedArtifactCategory } = useArtifactCategory();
   const { localizedWorkStepFromId } = useOrgWorkflowSteps();
   const cardRef = useRef<any>();
-  const myToolId = useMemo(() => {
+  const commentText = useRef('');
+  const commentMediaId = useRef('');
+  const [canSaveRecording, setCanSaveRecording] = useState(false);
+
+  const myToolId: string = useMemo(() => {
     if (discussion.id) return discussion.id;
     else return NewDiscussionToolId;
   }, [discussion]);
+  const myCommentToolId = NewDiscussionToolId + 'comment';
+
+  const afterSaveCommentcb = () => {
+    saveCompleted(myCommentToolId);
+  };
+  const saveComment = useSaveComment({
+    cb: afterSaveCommentcb,
+    users,
+    groups,
+    memberships,
+  });
+  const afterUploadcb = async (mediaId: string) => {
+    commentMediaId.current = mediaId;
+    if (discussion.id) {
+      if (commentText.current || commentMediaId.current)
+        saveComment(
+          discussion.id,
+          '',
+          commentText.current,
+          commentMediaId.current,
+          undefined
+        );
+      else saveCompleted(myCommentToolId);
+      commentText.current = '';
+      commentMediaId.current = '';
+    }
+  };
+  const { uploadMedia, fileName } = useRecordComment({
+    mediafileId: mediafileId,
+    commentNumber: -1,
+    afterUploadcb,
+  });
 
   const [changeAssignment, setChangeAssignment] = useState<
     boolean | undefined
@@ -288,6 +325,12 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     setEditAssigned('');
     setEditCategory('');
   };
+  useEffect(() => {
+    if (canSaveRecording) {
+      setChanged(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canSaveRecording]);
 
   useEffect(() => {
     if (Boolean(onAddComplete) !== editing) {
@@ -587,10 +630,20 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   };
   const handleSave = async () => {
     if (mediafileId && myChanged && editSubject.length > 0) {
+      if (canSaveRecording && !commentMediaId.current) {
+        startSave(myCommentToolId);
+        await waitForIt(
+          'comment upload',
+          () => {
+            return Boolean(commentMediaId.current);
+          },
+          () => false,
+          500
+        );
+      }
       discussion.attributes.subject = editSubject;
       var ops: Operation[] = [];
       var t = new TransformBuilder();
-      var newd = !Boolean(discussion.id);
       if (!discussion.id) {
         ops.push(...AddRecord(t, discussion, user, memory));
         ops.push(
@@ -641,24 +694,16 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
         )
       );
       await memory.update(ops);
-      if (newd) {
-        console.log('startSave', discussion.id);
-        startSave('newdiscussioncomment');
-        //wait for it to be done before we call onAddComplete and lose this discussioncard
-        await waitForIt(
-          'comment save',
-          () => !isChanged('newdiscussioncomment'),
-          () => false,
-          500
-        );
-      }
     }
+    afterUploadcb(commentMediaId.current);
     onAddComplete && onAddComplete(discussion.id);
     setEditing(false);
     setChanged(false);
   };
 
   const handleCancel = (e: any) => {
+    commentText.current = '';
+    commentMediaId.current = '';
     onAddComplete && onAddComplete('');
     setEditing(false);
     setChanged(false);
@@ -774,11 +819,10 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     setEditAssigned(currentAssigned());
     setChangeAssignment(!changeAssignment as boolean);
   };
-  const getDiscussion = () => {
-    console.log('getDiscussion', discussion.id);
-    return discussion;
+  const handleTextChange = (newText: string) => {
+    commentText.current = newText;
+    setChanged(true);
   };
-
   return (
     <DiscussionCardRoot>
       <StyledCard
@@ -845,10 +889,15 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
                 discussion={true}
               />
               {onAddComplete && (
-                <ReplyCard
-                  getDiscussion={getDiscussion}
-                  mediafileId={mediafileId}
-                  commentNumber={-1}
+                <CommentEditor
+                  toolId={myCommentToolId}
+                  comment={commentText.current}
+                  refresh={refresh}
+                  setCanSaveRecording={setCanSaveRecording}
+                  fileName={fileName(editSubject, '')}
+                  uploadMethod={uploadMedia}
+                  onTextChange={handleTextChange}
+                  cancelOnlyIfChanged={true}
                 />
               )}
               <Box sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -1001,8 +1050,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
               ))}
               {!discussion.attributes.resolved && !editCard && (
                 <ReplyCard
-                  getDiscussion={getDiscussion}
-                  mediafileId={mediafileId}
+                  discussion={discussion}
                   commentNumber={myComments.length}
                 />
               )}

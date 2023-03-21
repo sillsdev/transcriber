@@ -44,7 +44,7 @@ interface IProps extends IStateProps {
   uploadMethod: (files: File[]) => Promise<void>;
   refresh: number;
   onOk?: () => void;
-  onCancel: () => void;
+  onCancel?: () => void;
   setCanSaveRecording: (canSave: boolean) => void;
   onTextChange: (txt: string) => void;
 }
@@ -157,7 +157,7 @@ export const CommentEditor = (props: IProps) => {
     if (doRecordRef.current) setCommentRecording(false);
   };
   const handleCancel = () => {
-    onCancel();
+    onCancel && onCancel();
     reset();
   };
 
@@ -187,7 +187,6 @@ export const CommentEditor = (props: IProps) => {
   return (
     <ColumnDiv id="commentedit">
       <TextField
-        autoFocus
         margin="dense"
         id="commenttext"
         value={curText}
@@ -195,6 +194,7 @@ export const CommentEditor = (props: IProps) => {
         fullWidth
         multiline
         label={t.comment}
+        focused
       />
       {doRecordRef.current && (
         <MediaRecord
