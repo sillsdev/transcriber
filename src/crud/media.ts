@@ -289,10 +289,12 @@ export const nameFromRef = (mf: MediaFile, memory: Memory) => {
     'passage',
     related(mf, 'passage')
   ) as Passage;
-  if (!passRec) return mf.attributes.s3file;
+  if (!passRec) return mf.attributes.originalFile;
   var tmp = passageDefaultFilename(passRec, '', memory, undefined, '');
   const ver = mf.attributes?.versionNumber;
-  const { ext } = removeExtension(mf.attributes.s3file);
+  const { ext } = removeExtension(
+    mf.attributes.s3file ?? mf.attributes.audioUrl
+  );
   return `${tmp}_v${ver}.${ext}`;
 };
 export const mediaArtifacts = ({
