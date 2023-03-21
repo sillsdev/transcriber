@@ -50,7 +50,8 @@ export const useSaveComment = (props: IProps) => {
   ) => {
     var mediafile = undefined;
     if (mediaRemId) {
-      const id = remoteIdGuid('mediafile', mediaRemId, memory.keyMap);
+      const id =
+        remoteIdGuid('mediafile', mediaRemId, memory.keyMap) || mediaRemId;
       mediafile = findRecord(memory, 'mediafile', id) as MediaFile;
     }
     interface IIndexable {
