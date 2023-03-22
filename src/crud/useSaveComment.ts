@@ -21,7 +21,6 @@ import { orbitErr } from '../utils';
 import * as actions from '../store';
 
 interface IProps {
-  discussion: string;
   cb: () => void;
   users: User[];
   groups: Group[];
@@ -40,8 +39,9 @@ export const useSaveComment = (props: IProps) => {
       groups,
       memberships,
     });
-  const { discussion, cb } = props;
+  const { cb } = props;
   return (
+    discussionId: string,
     commentId: string,
     commentText: string,
     mediaRemId: string,
@@ -50,7 +50,8 @@ export const useSaveComment = (props: IProps) => {
   ) => {
     var mediafile = undefined;
     if (mediaRemId) {
-      const id = remoteIdGuid('mediafile', mediaRemId, memory.keyMap);
+      const id =
+        remoteIdGuid('mediafile', mediaRemId, memory.keyMap) || mediaRemId;
       mediafile = findRecord(memory, 'mediafile', id) as MediaFile;
     }
     interface IIndexable {
@@ -94,12 +95,12 @@ export const useSaveComment = (props: IProps) => {
           commentRec,
           'discussion',
           'discussion',
-          discussion
+          discussionId
         )
       );
     }
     ops.push(
-      ...UpdateLastModifiedBy(t, { type: 'discussion', id: discussion }, user)
+      ...UpdateLastModifiedBy(t, { type: 'discussion', id: discussionId }, user)
     );
     if (mediafile) {
       ops.push(

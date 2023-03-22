@@ -885,8 +885,8 @@
 		</unit>
 		<unit id="discussionCard.addComment">
 			<segment>
-				<source>Add Comment</source>
-				<target>Añadir comentario</target>
+				<source>Add</source>
+				<target>Añadir</target>
 			</segment>
 		</unit>
 		<unit id="discussionCard.assign">
@@ -5257,10 +5257,10 @@
 				<target>Comenzó a transcribir</target>
 			</segment>
 		</unit>
-		<unit id="transcriber.updateByOther">
+		<unit id="transcriber.updateByOther2">
 			<segment>
-				<source>Transcription updated by another person or process.</source>
-				<target>Transcripción actualizada por otra persona o proceso.</target>
+				<source>Transcription updated by {0}.  Keep their changes? {1}</source>
+				<target>Transcripción actualizada por {0}. ¿Mantener sus cambios? {1}</target>
 			</segment>
 		</unit>
 		<unit id="transcribeReject.cancel">

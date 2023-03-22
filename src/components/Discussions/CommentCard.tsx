@@ -92,7 +92,7 @@ interface IRecordProps {
 interface IProps {
   comment: Comment;
   discussion: Discussion;
-  number: number;
+  commentNumber: number;
   onEditing: (val: boolean) => void;
   approvalStatus: boolean | undefined;
 }
@@ -101,7 +101,7 @@ export const CommentCard = (props: IProps & IRecordProps) => {
   const {
     comment,
     discussion,
-    number,
+    commentNumber,
     users,
     groups,
     memberships,
@@ -158,7 +158,6 @@ export const CommentCard = (props: IProps & IRecordProps) => {
   };
 
   const saveComment = useSaveComment({
-    discussion: discussion.id,
     cb: reset,
     users,
     groups,
@@ -166,6 +165,7 @@ export const CommentCard = (props: IProps & IRecordProps) => {
   });
   const afterUploadcb = async (mediaId: string) => {
     saveComment(
+      discussion.id,
       comment.id,
       editComment,
       mediaId,
@@ -174,8 +174,8 @@ export const CommentCard = (props: IProps & IRecordProps) => {
     );
   };
   const { uploadMedia, fileName } = useRecordComment({
-    discussion,
-    number,
+    mediafileId: related(discussion, 'mediafile'),
+    commentNumber,
     afterUploadcb,
   });
   const text = comment.attributes?.commentText;
@@ -359,7 +359,7 @@ export const CommentCard = (props: IProps & IRecordProps) => {
               onOk={handleSaveEdit}
               setCanSaveRecording={setCanSaveRecording}
               onTextChange={handleTextChange}
-              fileName={fileName}
+              fileName={fileName(discussion.attributes.subject, discussion.id)}
               uploadMethod={uploadMedia}
             />
           ) : (

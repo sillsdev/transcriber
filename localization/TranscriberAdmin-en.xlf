@@ -760,6 +760,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="commentEditor.comment">
+         <segment>
+            <source>Comment</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="commentEditor.record">
          <segment>
             <source>Record Comment</source>
@@ -912,7 +918,7 @@
       </unit>
       <unit id="discussionCard.addComment">
          <segment>
-            <source>Add Comment</source>
+            <source>Add</source>
             <target/>
          </segment>
       </unit>
@@ -5292,7 +5298,7 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by another person.  Keep their changes? {0}</source>
+            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
             <target/>
          </segment>
       </unit>

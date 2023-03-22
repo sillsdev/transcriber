@@ -168,7 +168,7 @@ const initState = {
   stepComplete: (stepId: string) => {
     return false;
   },
-  discussionSize: { width: 450, height: 700 },
+  discussionSize: { width: 450, height: 900 },
   playerSize: 280,
   setDiscussionSize: (size: { width: number; height: number }) => {},
   setPlayerSize: (size: number) => {},

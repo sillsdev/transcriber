@@ -68,6 +68,9 @@ import { usePeerGroups } from '../Peers/usePeerGroups';
 import { OldVernVersion } from '../../control/OldVernVersion';
 import { useSelector } from 'react-redux';
 import { discussionCardSelector, sharedSelector } from '../../selector';
+import { CommentEditor } from './CommentEditor';
+import { useSaveComment } from '../../crud/useSaveComment';
+import { useRecordComment } from './useRecordComment';
 
 const DiscussionCardRoot = styled(Box)<BoxProps>(() => ({
   width: '100%',
@@ -221,6 +224,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     saveCompleted,
     saveRequested,
     clearRequested,
+    startSave,
   } = useContext(UnsavedContext).state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
@@ -238,6 +242,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [myChanged, setMyChanged] = useState(false);
   const savingRef = useRef(false);
+
   const [editSubject, setEditSubject] = useState(
     discussion.attributes?.subject
   );
@@ -259,10 +264,47 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const { localizedArtifactCategory } = useArtifactCategory();
   const { localizedWorkStepFromId } = useOrgWorkflowSteps();
   const cardRef = useRef<any>();
-  const myToolId = useMemo(() => {
+  const commentText = useRef('');
+  const commentMediaId = useRef('');
+  const [canSaveRecording, setCanSaveRecording] = useState(false);
+
+  const myToolId: string = useMemo(() => {
     if (discussion.id) return discussion.id;
     else return NewDiscussionToolId;
   }, [discussion]);
+  const myCommentToolId = NewDiscussionToolId + 'comment';
+
+  const afterSaveCommentcb = () => {
+    saveCompleted(myCommentToolId);
+  };
+  const saveComment = useSaveComment({
+    cb: afterSaveCommentcb,
+    users,
+    groups,
+    memberships,
+  });
+  const afterUploadcb = async (mediaId: string) => {
+    commentMediaId.current = mediaId;
+    if (discussion.id) {
+      if (commentText.current || commentMediaId.current)
+        saveComment(
+          discussion.id,
+          '',
+          commentText.current,
+          commentMediaId.current,
+          undefined
+        );
+      else saveCompleted(myCommentToolId);
+      commentText.current = '';
+      commentMediaId.current = '';
+    }
+  };
+  const { uploadMedia, fileName } = useRecordComment({
+    mediafileId: mediafileId,
+    commentNumber: -1,
+    afterUploadcb,
+  });
+
   const [changeAssignment, setChangeAssignment] = useState<
     boolean | undefined
   >();
@@ -283,6 +325,12 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     setEditAssigned('');
     setEditCategory('');
   };
+  useEffect(() => {
+    if (canSaveRecording) {
+      setChanged(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canSaveRecording]);
 
   useEffect(() => {
     if (Boolean(onAddComplete) !== editing) {
@@ -582,6 +630,17 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   };
   const handleSave = async () => {
     if (mediafileId && myChanged && editSubject.length > 0) {
+      if (canSaveRecording && !commentMediaId.current) {
+        startSave(myCommentToolId);
+        await waitForIt(
+          'comment upload',
+          () => {
+            return Boolean(commentMediaId.current);
+          },
+          () => false,
+          500
+        );
+      }
       discussion.attributes.subject = editSubject;
       var ops: Operation[] = [];
       var t = new TransformBuilder();
@@ -636,12 +695,15 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
       );
       await memory.update(ops);
     }
+    afterUploadcb(commentMediaId.current);
     onAddComplete && onAddComplete(discussion.id);
     setEditing(false);
     setChanged(false);
   };
 
   const handleCancel = (e: any) => {
+    commentText.current = '';
+    commentMediaId.current = '';
     onAddComplete && onAddComplete('');
     setEditing(false);
     setChanged(false);
@@ -757,7 +819,10 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     setEditAssigned(currentAssigned());
     setChangeAssignment(!changeAssignment as boolean);
   };
-
+  const handleTextChange = (newText: string) => {
+    commentText.current = newText;
+    setChanged(true);
+  };
   return (
     <DiscussionCardRoot>
       <StyledCard
@@ -823,6 +888,18 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
                 scripture={ScriptureEnum.hide}
                 discussion={true}
               />
+              {onAddComplete && (
+                <CommentEditor
+                  toolId={myCommentToolId}
+                  comment={commentText.current}
+                  refresh={refresh}
+                  setCanSaveRecording={setCanSaveRecording}
+                  fileName={fileName(editSubject, '')}
+                  uploadMethod={uploadMedia}
+                  onTextChange={handleTextChange}
+                  cancelOnlyIfChanged={true}
+                />
+              )}
               <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                 <Button
                   id={`ok-${discussion.id}`}
@@ -844,27 +921,29 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
           ) : (
             <Grid container sx={titleProps}>
               <Grid item sx={topicItemProps}>
-                {myRegion && related(discussion, 'mediafile') === mediafileId && (
-                  <IconButton
-                    id={`locate-${discussion.id}`}
-                    size="small"
-                    sx={lightButton}
-                    title={t.locate}
-                    onClick={handleLocateClick}
-                  >
-                    <LocationIcon fontSize="small" />
-                  </IconButton>
-                )}
-                {myRegion && related(discussion, 'mediafile') !== mediafileId && (
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <OldVernVersion
-                      id={discussion.id}
-                      oldVernVer={version}
-                      mediaId={related(discussion, 'mediafile')}
-                      text={discussion.attributes?.subject}
-                    />
-                  </Box>
-                )}
+                {myRegion &&
+                  related(discussion, 'mediafile') === mediafileId && (
+                    <IconButton
+                      id={`locate-${discussion.id}`}
+                      size="small"
+                      sx={lightButton}
+                      title={t.locate}
+                      onClick={handleLocateClick}
+                    >
+                      <LocationIcon fontSize="small" />
+                    </IconButton>
+                  )}
+                {myRegion &&
+                  related(discussion, 'mediafile') !== mediafileId && (
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <OldVernVersion
+                        id={discussion.id}
+                        oldVernVer={version}
+                        mediaId={related(discussion, 'mediafile')}
+                        text={discussion.attributes?.subject}
+                      />
+                    </Box>
+                  )}
                 <Typography
                   variant="h6"
                   component="h2"
@@ -965,12 +1044,15 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
                   comment={i}
                   approvalStatus={approvalStatus(i.attributes?.visible)}
                   discussion={discussion}
-                  number={j}
+                  commentNumber={j}
                   onEditing={handleEditCard}
                 />
               ))}
               {!discussion.attributes.resolved && !editCard && (
-                <ReplyCard discussion={discussion} number={myComments.length} />
+                <ReplyCard
+                  discussion={discussion}
+                  commentNumber={myComments.length}
+                />
               )}
             </Grid>
           )}

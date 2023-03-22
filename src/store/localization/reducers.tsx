@@ -178,6 +178,7 @@ const initialState = {
 	}),
 	"commentEditor": new LocalizedStrings({
 		"en": {
+			"comment": "Comment",
 			"record": "Record Comment",
 			"recordUnavailable": "Another recorder is open.",
 			"saving": "Saving...",
@@ -219,7 +220,7 @@ const initialState = {
 	}),
 	"discussionCard": new LocalizedStrings({
 		"en": {
-			"addComment": "Add Comment",
+			"addComment": "Add",
 			"assign": "Assign to a Group or Team Member",
 			"earlierVersion": "From an earlier version",
 			"groupuser": "Group/Team Member",
@@ -1153,7 +1154,7 @@ const initialState = {
 			"submitReviewTip": "Submit as complete",
 			"submitTranscriptionTip": "Submit for review",
 			"transcribing": "Started to transcribe",
-			"updateByOther2": "Transcription updated by another person.  Keep their changes? {0}",
+			"updateByOther2": "Transcription updated by {0}.  Keep their changes? {1}",
 		}
 	}),
 	"transcribeReject": new LocalizedStrings({

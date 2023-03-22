@@ -43,8 +43,8 @@ interface IProps extends IStateProps {
   cancelOnlyIfChanged?: boolean;
   uploadMethod: (files: File[]) => Promise<void>;
   refresh: number;
-  onOk: () => void;
-  onCancel: () => void;
+  onOk?: () => void;
+  onCancel?: () => void;
   setCanSaveRecording: (canSave: boolean) => void;
   onTextChange: (txt: string) => void;
 }
@@ -152,12 +152,12 @@ export const CommentEditor = (props: IProps) => {
     if (!saveRequested(toolId)) {
       startSave(toolId);
     }
-    onOk();
+    onOk && onOk();
     setStatusText(t.saving);
     if (doRecordRef.current) setCommentRecording(false);
   };
   const handleCancel = () => {
-    onCancel();
+    onCancel && onCancel();
     reset();
   };
 
@@ -187,13 +187,14 @@ export const CommentEditor = (props: IProps) => {
   return (
     <ColumnDiv id="commentedit">
       <TextField
-        autoFocus
         margin="dense"
         id="commenttext"
         value={curText}
         onChange={handleTextChange}
         fullWidth
         multiline
+        label={t.comment}
+        focused
       />
       {doRecordRef.current && (
         <MediaRecord
@@ -227,34 +228,37 @@ export const CommentEditor = (props: IProps) => {
         )}
         <div>
           <StatusMessage variant="caption">{statusText}</StatusMessage>
-          {(!cancelOnlyIfChanged || doRecordRef.current || myChanged) && (
-            <Tooltip title={ts.cancel}>
+          {onOk &&
+            (!cancelOnlyIfChanged || doRecordRef.current || myChanged) && (
+              <Tooltip title={ts.cancel}>
+                <span>
+                  <Button
+                    id="cancel"
+                    onClick={handleCancel}
+                    sx={{ color: 'background.paper' }}
+                    disabled={recording}
+                  >
+                    <CancelIcon />
+                  </Button>
+                </span>
+              </Tooltip>
+            )}
+          {onOk && (
+            <Tooltip title={ts.save}>
               <span>
                 <Button
-                  id="cancel"
-                  onClick={handleCancel}
+                  id="ok"
+                  onClick={handleOk}
                   sx={{ color: 'background.paper' }}
-                  disabled={recording}
+                  disabled={
+                    (!canSave && !curText.length) || !myChanged || recording
+                  }
                 >
-                  <CancelIcon />
+                  <SendIcon />
                 </Button>
               </span>
             </Tooltip>
           )}
-          <Tooltip title={ts.save}>
-            <span>
-              <Button
-                id="ok"
-                onClick={handleOk}
-                sx={{ color: 'background.paper' }}
-                disabled={
-                  (!canSave && !curText.length) || !myChanged || recording
-                }
-              >
-                <SendIcon />
-              </Button>
-            </span>
-          </Tooltip>
         </div>
       </RowDiv>
     </ColumnDiv>

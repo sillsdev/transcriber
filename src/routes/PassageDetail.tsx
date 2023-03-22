@@ -188,7 +188,7 @@ const PassageDetailGrids = () => {
     setHeight(window.innerHeight);
     setDiscussionSize({
       width: discussionSize.width, //should we be smarter here?
-      height: window.innerHeight - 330,
+      height: window.innerHeight,
     });
     setPlayerSize(INIT_PLAYERPANE_HEIGHT + SMALLPLAYERDIFF);
     // setPaperStyle({ width: window.innerWidth - 10 });

@@ -63,6 +63,7 @@ import {
   findRecord,
   useOrgDefaults,
   useRole,
+  GetUser,
 } from '../crud';
 import {
   insertAtCursor,
@@ -285,7 +286,7 @@ export function Transcriber(
   const [totalSeconds, setTotalSeconds] = useState(duration);
   const [transcribing] = useState(
     state === ActivityStates.Transcribing ||
-    state === ActivityStates.TranscribeReady
+      state === ActivityStates.TranscribeReady
   );
   const [height, setHeight] = useState(window.innerHeight);
   const [boxHeight, setBoxHeight] = useState(
@@ -562,7 +563,7 @@ export function Transcriber(
       toolChanged(toolId, true);
       save(
         mediafile.attributes.transcriptionstate ||
-        ActivityStates.TranscribeReady,
+          ActivityStates.TranscribeReady,
         0,
         segmentsRef.current,
         t.pullParatextStatus
@@ -1025,8 +1026,8 @@ export function Transcriber(
       slug
         ? slug
         : artifactId
-          ? slugFromId(artifactId)
-          : ArtifactTypeSlug.Vernacular
+        ? slugFromId(artifactId)
+        : ArtifactTypeSlug.Vernacular
     );
   }, [slug, artifactId, slugFromId]);
 
@@ -1303,7 +1304,13 @@ export function Transcriber(
         {confirm && (
           <Confirm
             isDelete={false}
-            text={t.updateByOther2.replace('{0}', confirm.transcription)}
+            text={t.updateByOther2
+              .replace(
+                '{0}',
+                GetUser(memory, related(mediafile, 'lastModifiedByUser'))
+                  .attributes?.name ?? 'unknown'
+              )
+              .replace('{1}', confirm.transcription)}
             yesResponse={handleUpdateConfirmed}
             noResponse={handleUpdateRefused}
           />

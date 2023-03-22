@@ -884,6 +884,13 @@
           <context context-type="sourcefile">CommentCard.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="commentEditor.comment">
+        <source>Comment</source>
+        <target state="needs-translation">Comment</target>
+        <context-group>
+          <context context-type="sourcefile">CommentCard.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="commentEditor.record">
         <source>Record Comment</source>
         <target state="needs-translation">Record Comment</target>
@@ -1060,8 +1067,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="discussionCard.addComment">
-        <source>Add Comment</source>
-        <target state="needs-translation">Add Comment</target>
+        <source>Add</source>
+        <target state="needs-translation">Add</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
@@ -6170,8 +6177,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="transcriber.updateByOther2">
-        <source>Transcription updated by another person.  Keep their changes? {0}</source>
-        <target state="needs-translation">Transcription updated by another person.  Keep their changes? {0}</target>
+        <source>Transcription updated by {0}.  Keep their changes? {1}</source>
+        <target state="needs-translation">Transcription updated by {0}.  Keep their changes? {1}</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>

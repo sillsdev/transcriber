@@ -14,6 +14,7 @@ import { useSaveComment } from '../../crud/useSaveComment';
 import { useMounted } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { Box } from '@mui/material';
+import { related } from '../../crud';
 
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
@@ -23,11 +24,11 @@ interface IRecordProps {
 }
 interface IProps {
   discussion: Discussion;
-  number: number;
+  commentNumber: number;
 }
 
 export const ReplyCard = (props: IProps & IRecordProps) => {
-  const { discussion, number, users, groups, memberships } = props;
+  const { discussion, commentNumber, users, groups, memberships } = props;
   const [refresh, setRefresh] = useState(0);
   const isMounted = useMounted('replycard');
   const {
@@ -47,7 +48,6 @@ export const ReplyCard = (props: IProps & IRecordProps) => {
     }
   };
   const saveComment = useSaveComment({
-    discussion: discussion.id,
     cb: afterSavecb,
     users,
     groups,
@@ -55,12 +55,12 @@ export const ReplyCard = (props: IProps & IRecordProps) => {
   });
   const commentText = useRef('');
   const afterUploadcb = async (mediaId: string) => {
-    saveComment('', commentText.current, mediaId, undefined);
+    saveComment(discussion.id, '', commentText.current, mediaId, undefined);
     commentText.current = '';
   };
   const { uploadMedia, fileName } = useRecordComment({
-    discussion,
-    number,
+    mediafileId: related(discussion, 'mediafile'),
+    commentNumber,
     afterUploadcb,
   });
   const savingRef = useRef(false);
@@ -113,7 +113,7 @@ export const ReplyCard = (props: IProps & IRecordProps) => {
         onOk={handleSaveEdit}
         onCancel={handleCancelEdit}
         setCanSaveRecording={setCanSaveRecording}
-        fileName={fileName}
+        fileName={fileName(discussion.attributes.subject, discussion.id)}
         uploadMethod={uploadMedia}
         onTextChange={handleTextChange}
         cancelOnlyIfChanged={true}

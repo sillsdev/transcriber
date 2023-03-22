@@ -161,6 +161,7 @@ export interface ICommentCardStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface ICommentEditorStrings extends Localize.LocalizedStringsMethods {
+    "comment": string;
     "record": string;
     "recordUnavailable": string;
     "saving": string;
