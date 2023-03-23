@@ -90,3 +90,7 @@ export * from './useWavesurferRegions';
 export * from './useAvatarSource';
 export * from './useMediaUpload';
 export * from './pullTableList';
+export * from './useSharedResCreate';
+export * from './useSharedResRead';
+export * from './useSharedResUpdate';
+export * from './useSharedResDelete';

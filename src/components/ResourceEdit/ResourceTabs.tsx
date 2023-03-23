@@ -2,9 +2,21 @@ import * as React from 'react';
 import { Tabs, Tab, Typography, Box } from '@mui/material';
 import VersionDlg from '../AudioTab/VersionDlg';
 import ResourceOverview, { IResourceDialog } from './ResourceOverview';
-import { DialogMode, IResourceStrings } from '../../model';
+import { DialogMode, IResourceStrings, SharedResource } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { sharedResourceSelector } from '../../selector';
+import { withData } from 'react-orbitjs';
+import { QueryBuilder } from '@orbit/data';
+import {
+  related,
+  useSharedResCreate,
+  useSharedResRead,
+  useSharedResUpdate,
+} from '../../crud';
+
+interface IRecordProps {
+  sharedResources: SharedResource[];
+}
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -43,15 +55,69 @@ interface IProps {
   passId: string;
 }
 
-export default function ResourceTabs({ passId }: IProps) {
+export function ResourceTabs({
+  passId,
+  sharedResources,
+}: IProps & IRecordProps) {
   const [value, setValue] = React.useState(0);
+  const sharedResRec = React.useRef<SharedResource>();
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
+  const readSharedResource = useSharedResRead();
+  const updateSharedResource = useSharedResUpdate();
+  const createSharedResource = useSharedResCreate({
+    passage: { type: 'passage', id: passId },
+  });
+
+  const values = React.useMemo(() => {
+    sharedResRec.current = readSharedResource(passId);
+    if (sharedResRec.current) {
+      const { title, description, languagebcp47, termsOfUse, keywords } =
+        sharedResRec.current.attributes;
+      return {
+        title,
+        description,
+        bcp47: languagebcp47,
+        terms: termsOfUse,
+        keywords,
+        category: related(sharedResRec.current, 'artifactCategory'),
+      } as IResourceDialog;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sharedResources, passId]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  const handleCommit = (values: IResourceDialog) => {};
+  const handleCommit = (values: IResourceDialog) => {
+    const { title, description, bcp47, terms, keywords, category } = values;
+    if (sharedResRec.current) {
+      const rec = sharedResRec.current;
+      updateSharedResource(
+        {
+          ...rec,
+          attributes: {
+            ...rec.attributes,
+            title,
+            description,
+            languagebcp47: bcp47,
+            termsOfUse: terms,
+            keywords,
+          },
+        } as SharedResource,
+        category
+      );
+    } else {
+      createSharedResource({
+        title,
+        description,
+        languagebcp47: bcp47,
+        termsOfUse: terms,
+        keywords,
+        category,
+      });
+    }
+  };
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -68,7 +134,8 @@ export default function ResourceTabs({ passId }: IProps) {
       </Box>
       <TabPanel value={value} index={0}>
         <ResourceOverview
-          mode={DialogMode.add}
+          mode={values ? DialogMode.edit : DialogMode.add}
+          values={values}
           isOpen={true}
           onCommit={handleCommit}
         />
@@ -82,3 +149,11 @@ export default function ResourceTabs({ passId }: IProps) {
     </Box>
   );
 }
+
+const mapRecordsToProps = {
+  sharedResources: (q: QueryBuilder) => q.findRecords('sharedresource'),
+};
+
+export default withData(mapRecordsToProps)(ResourceTabs as any) as any as (
+  props: IProps
+) => JSX.Element;
