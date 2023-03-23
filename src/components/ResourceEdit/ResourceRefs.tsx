@@ -19,20 +19,19 @@ import { ActionRow, AltButton, PriButton } from '../StepEditor';
 
 interface ActionColProps {
   row: number;
-  select: string;
-  onSelect: (val: number, select: string) => void;
+  checked: boolean;
+  onSelect: (val: number) => void;
   onDelete: (val: number) => void;
 }
 
-function ActionCol({ row, select, onSelect, onDelete }: ActionColProps) {
-  const handleSelect = (row: number, select: string) => () =>
-    onSelect(row, select);
+function ActionCol({ row, checked, onSelect, onDelete }: ActionColProps) {
+  const handleToggle = (row: number) => () => onSelect(row);
   const handleDelete = (row: number) => () => onDelete(row);
 
   return (
     <Stack direction="row" sx={{ alignItems: 'center' }}>
-      <IconButton onClick={handleSelect(row, select)}>
-        {select.indexOf(row.toString()) === -1 ? (
+      <IconButton onClick={handleToggle(row)}>
+        {!checked ? (
           <UnCheckbox fontSize="small" />
         ) : (
           <CheckedCheckBox fontSize="small" />
@@ -66,6 +65,7 @@ interface ICell {
   readOnly?: boolean;
   width?: number;
   className?: string;
+  checked?: boolean;
 }
 
 interface ICellChange {
@@ -77,8 +77,7 @@ interface ICellChange {
 
 export default function ResourceRefs() {
   const [data, setData] = React.useState<ICell[][]>([]);
-  const selectSet = useRef(new Set<number>());
-  const [select, setSelect] = React.useState('');
+  const dataRef = React.useRef<ICell[][]>([]);
   const bookMap = useSelector((state: IState) => state.books.map);
   const bookSuggestions = useSelector(
     (state: IState) => state.books.suggestions
@@ -100,6 +99,11 @@ export default function ResourceRefs() {
     preventSave.current = val;
   };
 
+  const updData = (newData: ICell[][]) => {
+    setData(newData);
+    dataRef.current = newData;
+  };
+
   const bookEditor = (props: any) => {
     // if (readonly) return <></>;
     return (
@@ -113,22 +117,21 @@ export default function ResourceRefs() {
     );
   };
 
-  const newSelect = () => Array.from(selectSet.current).join(',');
-
-  const handleSelect = (row: number) => {
-    if (selectSet.current.has(row)) {
-      selectSet.current.delete(row);
-    } else {
-      selectSet.current.add(row);
-    }
-    setSelect(newSelect());
+  const handleToggle = (row: number) => {
+    let newData = dataRef.current.map((r) => r);
+    const newValue = !Boolean(newData[row][ColName.Act]?.checked) ? 'X' : '';
+    newData[row] = rowCells(
+      row,
+      newData[row].map((c, i) => (i !== ColName.Act ? c.value : newValue))
+    );
+    updData(newData);
   };
 
   const handleDelete = (row: number) => {
     console.log(`deleting ${row}`);
   };
 
-  const rowCells = (n: number, row: string[], select?: string) =>
+  const rowCells = (n: number, row: string[]) =>
     row.map((v, i) =>
       i === ColName.Book
         ? ({
@@ -143,14 +146,15 @@ export default function ResourceRefs() {
             value: (
               <ActionCol
                 row={n}
-                select={select || ''}
-                onSelect={handleSelect}
+                checked={Boolean(row[ColName.Act])}
+                onSelect={handleToggle}
                 onDelete={handleDelete}
               />
             ),
             width: widths[i],
             readOnly: true,
             className: n === 0 ? 'cTitle' : cClass[i],
+            checked: Boolean(row[ColName.Act]),
           } as ICell)
         : ({
             value: v,
@@ -170,28 +174,10 @@ export default function ResourceRefs() {
   React.useEffect(() => {
     let newData: ICell[][] = emptyTable();
     newData.push(rowCells(1, emptyRow()));
-    setData(newData);
+    updData(newData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
-    if (select || data.length > 1) {
-      let newData: ICell[][] = [];
-      data.forEach((r, i) => {
-        newData.push(
-          rowCells(
-            i,
-            r.map((c) => c.value),
-            select
-          )
-        );
-      });
-      setData(newData);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [select]);
-
-  const handleAddRef = () => {};
   const handleAddWord = () => {};
   const handleCancel = () => {};
   const handleSave = () => {};
@@ -202,20 +188,20 @@ export default function ResourceRefs() {
       : cell.value;
 
   const handleCellsChanged = (changes: Array<ICellChange>) => {
-    const newData = data.map((r) => r);
+    const newData = dataRef.current.map((r) => r);
     changes.forEach((c) => {
       newData[c.row][c.col].value = c.value;
     });
-    const lastRow = data[data.length - 1];
+    const len = dataRef.current.length;
+    const lastRow = dataRef.current[len - 1];
     if (lastRow[0].value || lastRow[1].value)
-      newData.push(rowCells(data.length, emptyRow()));
-    setData(newData);
+      newData.push(rowCells(len, emptyRow()));
+    updData(newData);
   };
 
   return (
     <Stack spacing={1}>
       <ButtonGroup>
-        <Button onClick={handleAddRef}>Add Ref</Button>
         <Button onClick={handleAddWord}>By Word</Button>
       </ButtonGroup>
       <Content>
