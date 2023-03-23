@@ -4180,6 +4180,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="resource.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="resource.description">
          <segment>
             <source>Description</source>

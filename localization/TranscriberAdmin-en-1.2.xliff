@@ -4874,6 +4874,13 @@
       			<context context-type="sourcefile">ResourceOverview.tsx</context>
       		</context-group>
       	</trans-unit>
+		<trans-unit id="resource.delete">
+			<source>Delete</source>
+			<target/>
+			<context-group>
+				<context context-type="sourcefile">ResourceOverview.tsx</context>
+			</context-group>
+		</trans-unit>
       	<trans-unit id="resource.description">
       		<source>Description</source>
       		<target/>

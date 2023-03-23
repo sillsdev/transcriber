@@ -12,6 +12,7 @@ import {
   useSharedResCreate,
   useSharedResRead,
   useSharedResUpdate,
+  useSharedResDelete,
 } from '../../crud';
 
 interface IRecordProps {
@@ -53,10 +54,12 @@ function a11yProps(index: number) {
 
 interface IProps {
   passId: string;
+  onOpen: () => void;
 }
 
 export function ResourceTabs({
   passId,
+  onOpen,
   sharedResources,
 }: IProps & IRecordProps) {
   const [value, setValue] = React.useState(0);
@@ -67,6 +70,7 @@ export function ResourceTabs({
   const createSharedResource = useSharedResCreate({
     passage: { type: 'passage', id: passId },
   });
+  const deleteSharedResource = useSharedResDelete();
 
   const values = React.useMemo(() => {
     sharedResRec.current = readSharedResource(passId);
@@ -117,6 +121,20 @@ export function ResourceTabs({
         category,
       });
     }
+    setValue(1);
+  };
+
+  const handleDelete = () => {
+    if (sharedResRec.current) {
+      deleteSharedResource({
+        type: 'sharedresource',
+        id: sharedResRec.current.id,
+      } as SharedResource);
+    }
+  };
+
+  const handleOverOpen = () => {
+    onOpen && onOpen();
   };
 
   return (
@@ -137,7 +155,9 @@ export function ResourceTabs({
           mode={values ? DialogMode.edit : DialogMode.add}
           values={values}
           isOpen={true}
+          onOpen={handleOverOpen}
           onCommit={handleCommit}
+          onDelete={handleDelete}
         />
       </TabPanel>
       <TabPanel value={value} index={1}>

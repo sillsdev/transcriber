@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import {
   ActionRow,
   AltButton,
+  GrowingDiv,
   ILanguage,
   Language,
   PriButton,
@@ -18,6 +19,7 @@ import {
   ResourceTerms,
   ResourceTitle,
 } from '.';
+import { useGlobal } from 'reactn';
 
 export interface IResourceDialog {
   title: string;
@@ -50,10 +52,12 @@ export interface IResourceState {
 
 interface IProps extends IDialog<IResourceDialog> {
   nameInUse?: (newName: string) => boolean;
+  onDelete?: () => void;
 }
 
 export default function ResourceOverview(props: IProps) {
-  const { mode, values, isOpen, onOpen, onCommit, onCancel } = props;
+  const { mode, values, isOpen, onOpen, onCommit, onCancel, onDelete } = props;
+  const [isDeveloper] = useGlobal('developer');
   const [state, setState] = React.useState({ ...initState });
   const { title, bcp47 } = state;
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
@@ -69,12 +73,15 @@ export default function ResourceOverview(props: IProps) {
   };
 
   const handleAdd = () => {
-    if (onOpen) onOpen(false);
     onCommit(state);
   };
 
   const handleLanguageChange = (val: ILanguage) => {
     setState((state) => ({ ...state, ...val }));
+  };
+
+  const handleDelete = () => {
+    onDelete && onDelete();
   };
 
   return (
@@ -83,12 +90,25 @@ export default function ResourceOverview(props: IProps) {
         <ResourceTitle state={state} setState={setState} />
         <ResourceDescription state={state} setState={setState} />
         <ResourceCategory state={state} setState={setState} />
-        <Language {...state} onChange={handleLanguageChange} hideSpelling />
+        <Language
+          {...state}
+          onChange={handleLanguageChange}
+          hideSpelling
+          hideFont
+        />
         <ResourceTerms state={state} setState={setState} />
         <ResourceKeywords state={state} setState={setState} />
       </Stack>
       <Divider sx={{ mt: 2 }} />
       <ActionRow>
+        {isDeveloper && (
+          <>
+            <AltButton id="delete" onClick={handleDelete}>
+              {t.delete}
+            </AltButton>
+            <GrowingDiv />
+          </>
+        )}
         <AltButton id="resCancel" onClick={handleClose}>
           {ts.cancel}
         </AltButton>

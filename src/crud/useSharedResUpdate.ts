@@ -9,7 +9,7 @@ export const useSharedResUpdate = () => {
 
   return (sharedResource: SharedResource, category: string) => {
     memory.update((t: TransformBuilder) => [
-      UpdateRecord(t, sharedResource, user),
+      ...UpdateRecord(t, sharedResource, user),
       ...ReplaceRelatedRecord(
         t,
         sharedResource,

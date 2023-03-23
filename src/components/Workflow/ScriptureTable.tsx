@@ -1161,7 +1161,7 @@ export function ScriptureTable(
         onOpen={handleVerHistClose}
       >
         {shared ? (
-          <ResourceTabs passId={versionItem} />
+          <ResourceTabs passId={versionItem} onOpen={handleVerHistClose} />
         ) : (
           <VersionDlg passId={versionItem} />
         )}

@@ -900,6 +900,7 @@ const initialState = {
 	"resource": new LocalizedStrings({
 		"en": {
 			"add": "Add",
+			"delete": "Delete",
 			"description": "Description",
 			"keywords": "Keywords",
 			"overview": "Overview",

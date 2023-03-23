@@ -21,6 +21,7 @@ export interface ILanguage {
 interface IProps extends ILanguage {
   onChange: (state: ILanguage) => void;
   hideSpelling?: boolean;
+  hideFont?: boolean;
 }
 
 export const Language = (props: IProps) => {
@@ -82,8 +83,8 @@ export const Language = (props: IProps) => {
           control={
             <LanguagePicker
               value={bcp47}
-              name={languageName}
-              font={font}
+              name={languageName ?? ''}
+              font={font ?? ''}
               setCode={handleBcp47}
               setName={handleLanguage}
               setFont={handleFont}
@@ -92,23 +93,25 @@ export const Language = (props: IProps) => {
           }
           label=""
         />
-        <FormControlLabel
-          control={
-            <TextField
-              id="language-font"
-              label={t.font}
-              sx={{ mx: 1 }}
-              value={font}
-              onClick={handleChangeFont}
-              onKeyDown={handleChangeFont}
-              margin="normal"
-              style={widthStyle}
-              variant="filled"
-              required={false}
-            />
-          }
-          label=""
-        />
+        {!Boolean(props?.hideFont) && (
+          <FormControlLabel
+            control={
+              <TextField
+                id="language-font"
+                label={t.font}
+                sx={{ mx: 1 }}
+                value={font}
+                onClick={handleChangeFont}
+                onKeyDown={handleChangeFont}
+                margin="normal"
+                style={widthStyle}
+                variant="filled"
+                required={false}
+              />
+            }
+            label=""
+          />
+        )}
         {!Boolean(props?.hideSpelling) && (
           <FormControlLabel
             control={

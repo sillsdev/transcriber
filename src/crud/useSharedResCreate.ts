@@ -1,6 +1,6 @@
 import { useGlobal } from 'reactn';
 import { RecordIdentity, TransformBuilder } from '@orbit/data';
-import { SectionResource } from '../model';
+import { SharedResource } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 
 interface IProps {
@@ -29,7 +29,7 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
     keywords,
     category, // id of artifactCateogy
   }: IProps) => {
-    const sharedRes: SectionResource = {
+    const sharedRes: SharedResource = {
       type: 'sharedresource',
       attributes: {
         title,
@@ -38,7 +38,7 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
         termsOfUse,
         keywords,
       },
-    } as any;
+    } as SharedResource;
     memory.schema.initializeRecord(sharedRes);
     const t = new TransformBuilder();
     const ops = [
@@ -46,26 +46,26 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
       ...ReplaceRelatedRecord(t, sharedRes, 'passage', 'passage', passage.id),
     ];
     if (cluster) {
-      ops.push([
+      ops.push(
         ...ReplaceRelatedRecord(
           t,
           sharedRes,
           'cluster',
           'organization',
           cluster.id
-        ),
-      ]);
+        )
+      );
     }
     if (category) {
-      ops.push([
+      ops.push(
         ...ReplaceRelatedRecord(
           t,
           sharedRes,
           'artifactCategory',
           'artifactcategory',
           category
-        ),
-      ]);
+        )
+      );
     }
     await memory.update(ops);
   };

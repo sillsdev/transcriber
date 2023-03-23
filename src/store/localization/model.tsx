@@ -845,6 +845,7 @@ export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethod
 
 export interface IResourceStrings extends Localize.LocalizedStringsMethods {
     "add": string;
+    "delete": string;
     "description": string;
     "keywords": string;
     "overview": string;

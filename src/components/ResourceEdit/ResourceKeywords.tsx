@@ -25,7 +25,7 @@ export const ResourceKeywords = (props: IResourceState) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
 
-  const getTags = (keywords: string, allKeywords: string) => {
+  const tags = React.useMemo(() => {
     const kwList = keywords.split('|');
     const kwSet = new Set(kwList);
     const allKw = Array.from(new Set(allKeywords.split('|').concat(kwList)));
@@ -36,7 +36,7 @@ export const ResourceKeywords = (props: IResourceState) => {
         tags[kw] = kwSet.has(kw);
       });
     return tags;
-  };
+  }, [keywords, allKeywords]);
 
   const handleChange = (tags: ITag) => {
     setState((state) => ({
@@ -45,11 +45,5 @@ export const ResourceKeywords = (props: IResourceState) => {
     }));
   };
 
-  return (
-    <Tags
-      label={t.keywords}
-      tags={getTags(keywords, allKeywords)}
-      onChange={handleChange}
-    />
-  );
+  return <Tags label={t.keywords} tags={tags} onChange={handleChange} />;
 };

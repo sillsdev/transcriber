@@ -150,8 +150,8 @@ export const SelectArtifactCategory = (props: IProps) => {
       >
         {artifactCategorys
           .sort((i, j) => (i.category < j.category ? -1 : 1))
-          .map((option: IArtifactCategory, i) => (
-            <StyledMenuItem key={i} value={option.id}>
+          .map((option: IArtifactCategory) => (
+            <StyledMenuItem key={option.id} value={option.id}>
               {option.category + '\u00A0\u00A0'}
               {scripture === ScriptureEnum.highlight ? (
                 scriptureTypeCategory(option.slug) ? (
@@ -167,7 +167,14 @@ export const SelectArtifactCategory = (props: IProps) => {
             </StyledMenuItem>
           ))
           .concat(
-            allowNew ? (
+            // if not populated yet
+            artifactCategorys.findIndex(
+              (v: IArtifactCategory) => v.id === initCategory
+            ) === -1 ? (
+              <StyledMenuItem key={initCategory} value={initCategory}>
+                <></>
+              </StyledMenuItem>
+            ) : allowNew ? (
               <StyledMenuItem key={t.addNewCategory} value={t.addNewCategory}>
                 {t.addNewCategory + '\u00A0\u00A0'}
                 <AddIcon />
