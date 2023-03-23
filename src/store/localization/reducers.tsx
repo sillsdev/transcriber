@@ -906,7 +906,7 @@ const initialState = {
 			"overview": "Overview",
 			"references": "References",
 			"resourceEdit": "Resource Edit",
-			"terms": "Terms",
+			"terms": "Terms of use",
 			"title": "Title",
 			"versions": "Versions",
 		}

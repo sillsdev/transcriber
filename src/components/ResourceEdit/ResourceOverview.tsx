@@ -107,14 +107,14 @@ export default function ResourceOverview(props: IProps) {
         <ResourceTitle state={state} setState={setState} />
         <ResourceDescription state={state} setState={setState} />
         <ResourceCategory state={state} setState={setState} />
+        <ResourceKeywords state={state} setState={setState} />
+        <ResourceTerms state={state} setState={setState} />
         <Language
           {...state}
           onChange={handleLanguageChange}
           hideSpelling
           hideFont
         />
-        <ResourceTerms state={state} setState={setState} />
-        <ResourceKeywords state={state} setState={setState} />
       </Stack>
       <Divider sx={{ mt: 2 }} />
       <ActionRow>

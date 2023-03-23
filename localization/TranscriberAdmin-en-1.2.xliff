@@ -4917,7 +4917,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="resource.terms">
-      		<source>Terms</source>
+      		<source>Terms of use</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ResourceOverview.tsx</context>
