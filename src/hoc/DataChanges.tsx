@@ -297,26 +297,33 @@ export const doDataChanges = async (
             operations.push(tb.removeRecord({ type: table.type, id: localId }));
           }
         });
-        if (version === 6) {
-          //clean up abandoned pscs
-          var pscs = (
-            memory.cache.query((q: QueryBuilder) =>
-              q.findRecords('passagestatechange')
-            ) as PassageStateChange[]
-          ).filter((p) => !Boolean(p.keys?.remoteId));
-          pscs.forEach((p) =>
-            operations.push(tb.removeRecord({ type: p.type, id: p.id }))
-          );
-        }
         if (operations.length > 0) {
           await memory.sync(await backup.push(operations));
         }
       }
-
+      if (version === 6) {
+        let operations: Operation[] = [];
+        //clean up abandoned pscs
+        var pscs = (
+          memory.cache.query((q: QueryBuilder) =>
+            q.findRecords('passagestatechange')
+          ) as PassageStateChange[]
+        ).filter((p) => !Boolean(p.keys?.remoteId));
+        pscs.forEach((p) =>
+          operations.push(tb.removeRecord({ type: p.type, id: p.id }))
+        );
+        if (operations.length > 0) {
+          await memory.sync(await backup.push(operations));
+        }
+      }
       setDataChangeCount(0);
       return data?.attributes?.startnext;
     } catch (e: any) {
       logError(Severity.error, errorReporter, e);
+      if ((e.response?.data?.errors?.length ?? 0) > 0) {
+        var s = e.response.data.errors[0].detail?.toString();
+        if (s.startsWith('Project not')) return -2;
+      }
       return started;
     }
   };
@@ -330,10 +337,11 @@ export const doDataChanges = async (
       const p = projectsLoaded[ix];
       const op = getOfflineProject(p);
       if (
+        remoteId('project', p, memory.keyMap) &&
         op.attributes?.snapshotDate &&
         Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
       ) {
-        start = 1;
+        start = 0;
         startNext = 0;
         tries = 5;
         while (startNext >= 0 && tries > 0) {
@@ -353,7 +361,11 @@ export const doDataChanges = async (
           if (startNext === start) tries--;
           else start = startNext;
         }
-        await updateSnapshotDate(p, nextTime, startNext + 1);
+        if (startNext === -1)
+          await updateSnapshotDate(p, nextTime, startNext + 1); //done
+        else if (startNext > 0)
+          //network error but not a known unrecoverable one so don't move on
+          await updateSnapshotDate(p, op.attributes.snapshotDate, startNext);
       }
     }
   }
@@ -369,8 +381,9 @@ export const doDataChanges = async (
     if (startNext === start) tries--;
     else start = startNext;
   }
-  if (startNext < 0) localStorage.setItem(userLastTimeKey, nextTime);
-  localStorage.setItem(userNextStartKey, (startNext + 1).toString());
+  if (startNext === -1) localStorage.setItem(userLastTimeKey, nextTime);
+  if (startNext !== -2)
+    localStorage.setItem(userNextStartKey, (startNext + 1).toString());
 };
 
 export function DataChanges(props: IProps) {
