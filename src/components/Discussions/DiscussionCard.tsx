@@ -643,7 +643,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
       }
       //we should only get here with no subject if they've clicked off the screen and then told us to save with no subject
       discussion.attributes.subject =
-        editSubject.length > 0 ? editSubject : 'discuss';
+        editSubject.length > 0 ? editSubject : tdcs.topic;
       var ops: Operation[] = [];
       var t = new TransformBuilder();
       if (!discussion.id) {
