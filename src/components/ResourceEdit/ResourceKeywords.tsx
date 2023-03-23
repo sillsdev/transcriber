@@ -7,7 +7,7 @@ import { useOrgDefaults } from '../../crud';
 import { IResourceStrings, ITag } from '../../model';
 import { sharedResourceSelector } from '../../selector';
 
-const ResKw = 'ResKw';
+export const ResKw = 'ResKw';
 
 export const ResourceKeywords = (props: IResourceState) => {
   const { state, setState } = props;

@@ -20,6 +20,8 @@ import {
   ResourceTitle,
 } from '.';
 import { useGlobal } from 'reactn';
+import { useOrgDefaults } from '../../crud';
+import { ResKw } from './ResourceKeywords';
 
 export interface IResourceDialog {
   title: string;
@@ -59,7 +61,8 @@ export default function ResourceOverview(props: IProps) {
   const { mode, values, isOpen, onOpen, onCommit, onCancel, onDelete } = props;
   const [isDeveloper] = useGlobal('developer');
   const [state, setState] = React.useState({ ...initState });
-  const { title, bcp47 } = state;
+  const { title, bcp47, keywords } = state;
+  const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
 
@@ -83,6 +86,20 @@ export default function ResourceOverview(props: IProps) {
   const handleDelete = () => {
     onDelete && onDelete();
   };
+
+  React.useEffect(() => {
+    if (canSetOrgDefault) {
+      const allKw = getOrgDefault(ResKw) as string | undefined;
+      if (allKw || keywords) {
+        const allList = allKw ? allKw?.split('|') : [];
+        const kwList = keywords ? keywords.split('|') : [];
+        const allSet = new Set(allList.concat(kwList));
+        const newList = Array.from(allSet).sort().join('|');
+        if (newList !== allKw) setOrgDefault(ResKw, newList);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keywords, canSetOrgDefault]);
 
   return (
     <Box>
