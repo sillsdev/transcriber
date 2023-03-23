@@ -14,6 +14,7 @@ import Mode from '../../model/dialogMode';
 import {
   ResourceCategory,
   ResourceDescription,
+  ResourceKeywords,
   ResourceTerms,
   ResourceTitle,
 } from '.';

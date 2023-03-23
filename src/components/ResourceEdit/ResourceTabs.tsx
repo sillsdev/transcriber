@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Tabs, Tab, Typography, Box } from '@mui/material';
 import VersionDlg from '../AudioTab/VersionDlg';
+import ResourceOverview, { IResourceDialog } from './ResourceOverview';
+import { DialogMode } from '../../model';
 
 const t = {
   resourceOverview: 'Overview',
@@ -52,6 +54,8 @@ export default function ResourceTabs({ passId }: IProps) {
     setValue(newValue);
   };
 
+  const handleCommit = (values: IResourceDialog) => {};
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -66,7 +70,11 @@ export default function ResourceTabs({ passId }: IProps) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        Item One
+        <ResourceOverview
+          mode={DialogMode.add}
+          isOpen={true}
+          onCommit={handleCommit}
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
         Item Two
