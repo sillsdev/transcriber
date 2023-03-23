@@ -77,10 +77,14 @@ export function ResourceTabs({
     if (sharedResRec.current) {
       const { title, description, languagebcp47, termsOfUse, keywords } =
         sharedResRec.current.attributes;
+      const lgParts = languagebcp47.split('|');
+      const bcp47 = lgParts.length === 1 ? languagebcp47 : lgParts[1];
+      const languageName = lgParts.length === 1 ? '' : lgParts[0];
       return {
         title,
         description,
-        bcp47: languagebcp47,
+        bcp47,
+        languageName,
         terms: termsOfUse,
         keywords,
         category: related(sharedResRec.current, 'artifactCategory'),
@@ -94,7 +98,15 @@ export function ResourceTabs({
   };
 
   const handleCommit = (values: IResourceDialog) => {
-    const { title, description, bcp47, terms, keywords, category } = values;
+    const {
+      title,
+      description,
+      bcp47,
+      languageName,
+      terms,
+      keywords,
+      category,
+    } = values;
     if (sharedResRec.current) {
       const rec = sharedResRec.current;
       updateSharedResource(
@@ -104,7 +116,7 @@ export function ResourceTabs({
             ...rec.attributes,
             title,
             description,
-            languagebcp47: bcp47,
+            languagebcp47: `${languageName}|${bcp47}`,
             termsOfUse: terms,
             keywords,
           },
@@ -115,7 +127,7 @@ export function ResourceTabs({
       createSharedResource({
         title,
         description,
-        languagebcp47: bcp47,
+        languagebcp47: `${languageName}|${bcp47}`,
         termsOfUse: terms,
         keywords,
         category,
