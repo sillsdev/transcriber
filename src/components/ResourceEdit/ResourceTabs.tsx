@@ -174,7 +174,7 @@ export function ResourceTabs({
         />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <ResourceRefs />
+        <ResourceRefs onOpen={handleOverOpen} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <VersionDlg passId={passId} />
