@@ -16,6 +16,7 @@ export const ResourceCategory = (props: IResourceState) => {
       initCategory={category}
       onCategoryChange={handleChange}
       required={false}
+      allowNew
     />
   );
 };
