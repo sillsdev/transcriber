@@ -79,6 +79,7 @@ import { PlanContext } from '../../context/PlanContext';
 import stringReplace from 'react-string-replace';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
+import ResourceTabs from '../ResourceEdit/ResourceTabs';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { ISTFilterState } from './filterMenu';
@@ -1149,11 +1150,15 @@ export function ScriptureTable(
         />
       )}
       <BigDialog
-        title={ts.versionHistory}
+        title={shared ? 't.resourceEdit' : ts.versionHistory}
         isOpen={versionItem !== ''}
         onOpen={handleVerHistClose}
       >
-        <VersionDlg passId={versionItem} />
+        {shared ? (
+          <ResourceTabs passId={versionItem} />
+        ) : (
+          <VersionDlg passId={versionItem} />
+        )}
       </BigDialog>
     </Box>
   );
