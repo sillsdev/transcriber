@@ -73,7 +73,8 @@ export async function electronExport(
     fullpath: string,
     fileName: string,
     buffer: Buffer | undefined,
-    changedRecs: number
+    changedRecs: number,
+    filteredRecs: number
   ): FileResponse => {
     return {
       message: fileName,
@@ -81,6 +82,7 @@ export async function electronExport(
       contentType: 'application/' + exportType,
       buffer: buffer,
       changes: changedRecs,
+      filtered: filteredRecs,
       id: '1',
     };
   };
@@ -793,7 +795,13 @@ export async function electronExport(
         var where = dataPath(filename);
         await createPathFolder(where);
         await ipc?.zipWrite(zip, where);
-        return BuildFileResponse(where, filename, undefined, numFiltered);
+        return BuildFileResponse(
+          where,
+          filename,
+          undefined,
+          changedRecs,
+          numFiltered
+        );
       } else if (nodatamsg && projects.length === 1) throw new Error(nodatamsg);
     }
   }
@@ -805,10 +813,5 @@ export async function electronExport(
       ? await ipc?.zipToBuffer(backupZip)
       : undefined;
   await ipc?.zipClose(backupZip);
-  return BuildFileResponse(
-    backupWhere,
-    backupName,
-    buffer,
-    backupZip ? 0 : changedRecs
-  );
+  return BuildFileResponse(backupWhere, backupName, buffer, changedRecs, 0);
 }

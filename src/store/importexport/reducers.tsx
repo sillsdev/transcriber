@@ -41,7 +41,7 @@ const ImportExportReducers = function (
         exportFile: action.payload,
         importexportStatus: successStatusMsg(
           action.payload.message,
-          action.payload.changes > 0 ? 'NeedITF' : ''
+          action.payload.filtered > 0 ? 'NeedITF' : ''
         ),
       };
     case EXPORT_ERROR:
