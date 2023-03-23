@@ -1,6 +1,6 @@
 import React from 'react';
 import { IResourceState } from '.';
-import { SelectArtifactCategory } from '../Workflow';
+import SelectArtifactCategory from '../Workflow/SelectArtifactCategory';
 
 export const ResourceCategory = (props: IResourceState) => {
   const { state, setState } = props;
@@ -12,10 +12,10 @@ export const ResourceCategory = (props: IResourceState) => {
 
   return (
     <SelectArtifactCategory
+      resource
       initCategory={category}
       onCategoryChange={handleChange}
       required={false}
-      artifactCategories={[]}
     />
   );
 };

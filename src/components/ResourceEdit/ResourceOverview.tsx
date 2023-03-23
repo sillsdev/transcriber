@@ -1,4 +1,4 @@
-import { Box, Paper } from '@mui/material';
+import { Box, Divider, Stack } from '@mui/material';
 import React, { useEffect } from 'react';
 import {
   ActionRow,
@@ -7,7 +7,7 @@ import {
   Language,
   PriButton,
 } from '../../control';
-import { IDialog } from '../../model';
+import { IDialog, ISharedStrings } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { sharedSelector } from '../../selector';
 import Mode from '../../model/dialogMode';
@@ -19,7 +19,19 @@ import {
   ResourceTitle,
 } from '.';
 
-const initState = {
+export interface IResourceDialog {
+  title: string;
+  description: string;
+  bcp47: string;
+  languageName: string;
+  font: string;
+  spellCheck: boolean;
+  terms: string;
+  keywords: string;
+  category: string;
+}
+
+const initState: IResourceDialog = {
   title: '',
   description: '',
   bcp47: 'und',
@@ -30,8 +42,6 @@ const initState = {
   keywords: '',
   category: '',
 };
-export const initResourceState = { ...initState };
-export type IResourceDialog = typeof initState;
 
 export interface IResourceState {
   state: IResourceDialog;
@@ -46,7 +56,7 @@ export default function ResourceOverview(props: IProps) {
   const { mode, values, isOpen, onOpen, onCommit, onCancel } = props;
   const [state, setState] = React.useState({ ...initState });
   const { title, bcp47 } = state;
-  const ts = useSelector(sharedSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   useEffect(() => {
     setState(!values ? { ...initState } : { ...values });
@@ -67,15 +77,16 @@ export default function ResourceOverview(props: IProps) {
   };
 
   return (
-    <Paper>
-      <Box>
+    <Box>
+      <Stack spacing={2}>
         <ResourceTitle state={state} setState={setState} />
-        <ResourceCategory state={state} setState={setState} />
         <ResourceDescription state={state} setState={setState} />
-        <Language {...state} onChange={handleLanguageChange} />
+        <ResourceCategory state={state} setState={setState} />
+        <Language {...state} onChange={handleLanguageChange} hideSpelling />
         <ResourceTerms state={state} setState={setState} />
         <ResourceKeywords state={state} setState={setState} />
-      </Box>
+      </Stack>
+      <Divider sx={{ mt: 2 }} />
       <ActionRow>
         <AltButton id="resCancel" onClick={handleClose}>
           {ts.cancel}
@@ -85,9 +96,9 @@ export default function ResourceOverview(props: IProps) {
           onClick={handleAdd}
           disabled={title === '' || bcp47 === 'und'}
         >
-          {mode === Mode.add ? ts.add : ts.save}
+          {mode === Mode.add ? 'ts.add' : ts.save}
         </PriButton>
       </ActionRow>
-    </Paper>
+    </Box>
   );
 }

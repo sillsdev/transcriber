@@ -33,7 +33,7 @@ interface IProps extends IRecordProps {
 }
 
 const textFieldProps = {
-  mx: 1,
+  mr: 1,
   width: 'inherit',
   maxWidth: '400px',
   minWidth: '200px',

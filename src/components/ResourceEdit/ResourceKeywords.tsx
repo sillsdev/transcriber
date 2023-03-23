@@ -27,9 +27,11 @@ export const ResourceKeywords = (props: IResourceState) => {
     const kwSet = new Set(kwList);
     const allKw = Array.from(new Set(allKeywords.split('|').concat(kwList)));
     const tags: ITag = {};
-    allKw.forEach((kw) => {
-      tags[kw] = kwSet.has(kw);
-    });
+    allKw
+      .filter((k) => k) // don't include empty string
+      .forEach((kw) => {
+        tags[kw] = kwSet.has(kw);
+      });
     return tags;
   };
 

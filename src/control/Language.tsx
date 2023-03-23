@@ -8,7 +8,8 @@ import {
   Box,
 } from '@mui/material';
 import { LanguagePicker } from 'mui-language-picker';
-import { TeamContext } from '../context/TeamContext';
+import { useSelector, shallowEqual } from 'react-redux';
+import { vProjectSelector, pickerSelector } from '../selector';
 
 export interface ILanguage {
   bcp47: string;
@@ -19,6 +20,7 @@ export interface ILanguage {
 
 interface IProps extends ILanguage {
   onChange: (state: ILanguage) => void;
+  hideSpelling?: boolean;
 }
 
 export const Language = (props: IProps) => {
@@ -29,9 +31,8 @@ export const Language = (props: IProps) => {
     font,
     spellCheck,
   });
-  const ctx = React.useContext(TeamContext);
-  const t = ctx.state.vProjectStrings;
-  const lt = ctx.state.pickerStrings;
+  const t = useSelector(vProjectSelector, shallowEqual);
+  const lt = useSelector(pickerSelector, shallowEqual);
   const stateRef = React.useRef<ILanguage>();
   const langEl = React.useRef<any>();
 
@@ -108,17 +109,19 @@ export const Language = (props: IProps) => {
           }
           label=""
         />
-        <FormControlLabel
-          control={
-            <Checkbox
-              id="language-spellCheck"
-              checked={spellCheck}
-              onChange={handleSpellCheckChange}
-              value="spellCheck"
-            />
-          }
-          label={t.spellCheck}
-        />
+        {!Boolean(props?.hideSpelling) && (
+          <FormControlLabel
+            control={
+              <Checkbox
+                id="language-spellCheck"
+                checked={spellCheck}
+                onChange={handleSpellCheckChange}
+                value="spellCheck"
+              />
+            }
+            label={t.spellCheck}
+          />
+        )}
       </FormGroup>
     </Box>
   );
