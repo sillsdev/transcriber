@@ -1,6 +1,8 @@
 import { Button, ButtonGroup, Stack } from '@mui/material';
 import React from 'react';
 import DataSheet from 'react-datasheet';
+import { useSelector } from 'react-redux';
+import { IState } from '../../model';
 import { ActionRow, AltButton, PriButton } from '../StepEditor';
 
 interface ICell {
@@ -19,10 +21,11 @@ interface ICellChange {
 
 export default function ResourceRefs() {
   const [data, setData] = React.useState<ICell[][]>([]);
+  const bookMap = useSelector((state: IState) => state.books.map);
 
   const readOnlys = [false, false];
   const widths = [200, 400];
-  const cClass = ['bkc', 'ref'];
+  const cClass = ['book', 'refs'];
 
   enum ColName {
     Book,
@@ -53,7 +56,10 @@ export default function ResourceRefs() {
   const handleCancel = () => {};
   const handleSave = () => {};
 
-  const handleValueRenderer = (cell: ICell) => cell.value;
+  const handleValueRenderer = (cell: ICell) =>
+    cell.className?.substring(0, 4) === 'book' && bookMap
+      ? bookMap[cell.value]
+      : cell.value;
 
   return (
     <Stack spacing={1}>
