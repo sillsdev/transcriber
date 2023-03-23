@@ -3,6 +3,7 @@ import { join } from 'path-browserify';
 import { Stats } from 'fs-extra';
 import { createFolder } from '.';
 import Bugsnag from '@bugsnag/js';
+import { AxiosError } from 'axios';
 const ipc = (window as any)?.electron;
 
 export enum Severity {
@@ -60,13 +61,27 @@ const levelText = (level: Severity) =>
     ? 'ERROR'
     : 'RETRY';
 
-const msgText = (message: Error | string) =>
-  typeof message === 'string' ? message : JSON.stringify(message);
+const axiosErrorText = (err: AxiosError) => {
+  var msg = err.request?.responseURL + '\n' + JSON.stringify(err) + '\n';
+  if (Array.isArray((err.response?.data as any)?.errors)) {
+    ((err.response?.data as any)?.errors as Array<any>).forEach(
+      (e) => (msg += JSON.stringify(e) + '\n')
+    );
+  }
+  return msg;
+};
+
+const msgText = (message: Error | string | AxiosError) =>
+  typeof message === 'string'
+    ? message
+    : message instanceof AxiosError
+    ? axiosErrorText(message as AxiosError)
+    : JSON.stringify(message) + '\n';
 
 const logMessage = async (
   logFullName: string,
   level: Severity,
-  msg: Error | string
+  msg: Error | string | AxiosError
 ) => {
   // Add file header
   console.log(`creating new file ${logFullName}`);
