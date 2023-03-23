@@ -3,11 +3,10 @@ import { ServerError } from '@orbit/data';
 import { Severity } from '.';
 import { IAxiosStatus } from '../store/AxiosStatus';
 
-export const infoMsg = (e: Error, info: string) =>
-  ({
-    ...e,
-    name: info + e.name,
-  } as Error);
+export const infoMsg = (e: Error, info: string) => {
+  e.name = info + e.name;
+  return e;
+};
 
 export const axiosError = (e: IAxiosStatus) =>
   ({

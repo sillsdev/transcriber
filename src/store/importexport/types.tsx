@@ -17,6 +17,7 @@ export interface FileResponse {
   contentType: string;
   buffer: Buffer | undefined;
   changes: number;
+  filtered: number;
   id: string;
 }
 // Describing the shape of the paratext integration slice of state
