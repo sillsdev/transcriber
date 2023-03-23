@@ -4174,6 +4174,60 @@
             <target/>
          </segment>
       </unit>
+      <unit id="resource.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.description">
+         <segment>
+            <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.keywords">
+         <segment>
+            <source>Keywords</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.overview">
+         <segment>
+            <source>Overview</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.references">
+         <segment>
+            <source>References</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.resourceEdit">
+         <segment>
+            <source>Resource Edit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.terms">
+         <segment>
+            <source>Terms</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.title">
+         <segment>
+            <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.versions">
+         <segment>
+            <source>Versions</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.book">
          <segment>
             <source>Book</source>

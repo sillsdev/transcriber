@@ -2,13 +2,9 @@ import * as React from 'react';
 import { Tabs, Tab, Typography, Box } from '@mui/material';
 import VersionDlg from '../AudioTab/VersionDlg';
 import ResourceOverview, { IResourceDialog } from './ResourceOverview';
-import { DialogMode } from '../../model';
-
-const t = {
-  resourceOverview: 'Overview',
-  resourceReferences: 'References',
-  versions: 'Versions',
-};
+import { DialogMode, IResourceStrings } from '../../model';
+import { useSelector, shallowEqual } from 'react-redux';
+import { sharedResourceSelector } from '../../selector';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -49,6 +45,7 @@ interface IProps {
 
 export default function ResourceTabs({ passId }: IProps) {
   const [value, setValue] = React.useState(0);
+  const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -64,8 +61,8 @@ export default function ResourceTabs({ passId }: IProps) {
           onChange={handleChange}
           aria-label="resource edit tabs"
         >
-          <Tab label={t.resourceOverview} {...a11yProps(0)} />
-          <Tab label={t.resourceReferences} {...a11yProps(1)} />
+          <Tab label={t.overview} {...a11yProps(0)} />
+          <Tab label={t.references} {...a11yProps(1)} />
           <Tab label={t.versions} {...a11yProps(2)} />
         </Tabs>
       </Box>

@@ -7,9 +7,9 @@ import {
   Language,
   PriButton,
 } from '../../control';
-import { IDialog, ISharedStrings } from '../../model';
+import { IDialog, IResourceStrings, ISharedStrings } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
-import { sharedSelector } from '../../selector';
+import { sharedResourceSelector, sharedSelector } from '../../selector';
 import Mode from '../../model/dialogMode';
 import {
   ResourceCategory,
@@ -57,6 +57,7 @@ export default function ResourceOverview(props: IProps) {
   const [state, setState] = React.useState({ ...initState });
   const { title, bcp47 } = state;
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
 
   useEffect(() => {
     setState(!values ? { ...initState } : { ...values });
@@ -96,7 +97,7 @@ export default function ResourceOverview(props: IProps) {
           onClick={handleAdd}
           disabled={title === '' || bcp47 === 'und'}
         >
-          {mode === Mode.add ? 'ts.add' : ts.save}
+          {mode === Mode.add ? t.add : ts.save}
         </PriButton>
       </ActionRow>
     </Box>

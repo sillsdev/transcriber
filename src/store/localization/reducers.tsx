@@ -897,6 +897,19 @@ const initialState = {
 			"downloadMb": "Download {0}MB of offline audio project files?",
 		}
 	}),
+	"resource": new LocalizedStrings({
+		"en": {
+			"add": "Add",
+			"description": "Description",
+			"keywords": "Keywords",
+			"overview": "Overview",
+			"references": "References",
+			"resourceEdit": "Resource Edit",
+			"terms": "Terms",
+			"title": "Title",
+			"versions": "Versions",
+		}
+	}),
 	"scriptureTable": new LocalizedStrings({
 		"en": {
 			"book": "Book",
@@ -1465,6 +1478,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"profile" : new LocalizedStrings(action.payload.data.profile),
 				"projButtons" : new LocalizedStrings(action.payload.data.projButtons),
 				"projectDownload" : new LocalizedStrings(action.payload.data.projectDownload),
+				"resource" : new LocalizedStrings(action.payload.data.resource),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"scriptureTableFilter" : new LocalizedStrings(action.payload.data.scriptureTableFilter),
 				"sectionResources" : new LocalizedStrings(action.payload.data.sectionResources),

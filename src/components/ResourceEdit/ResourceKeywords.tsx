@@ -1,9 +1,11 @@
 import React from 'react';
+import { shallowEqual, useSelector } from 'react-redux';
 import { useGlobal } from 'reactn';
 import { IResourceState } from '.';
 import Tags, { filteredOptions } from '../../control/Tags';
 import { useOrgDefaults } from '../../crud';
-import { ITag } from '../../model';
+import { IResourceStrings, ITag } from '../../model';
+import { sharedResourceSelector } from '../../selector';
 
 const ResKw = 'ResKw';
 
@@ -13,6 +15,7 @@ export const ResourceKeywords = (props: IResourceState) => {
   const [org] = useGlobal('organization');
   const [allKeywords, setAllKeywords] = React.useState('');
   const { getOrgDefault } = useOrgDefaults();
+  const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
 
   React.useEffect(() => {
     const resKw = getOrgDefault(ResKw, org);
@@ -44,7 +47,7 @@ export const ResourceKeywords = (props: IResourceState) => {
 
   return (
     <Tags
-      label={'t.keywords'}
+      label={t.keywords}
       tags={getTags(keywords, allKeywords)}
       onChange={handleChange}
     />

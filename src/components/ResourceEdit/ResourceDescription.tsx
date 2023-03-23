@@ -1,10 +1,14 @@
 import React from 'react';
 import { TextField } from '@mui/material';
 import { IResourceState } from '.';
+import { IResourceStrings } from '../../model';
+import { shallowEqual, useSelector } from 'react-redux';
+import { sharedResourceSelector } from '../../selector';
 
 export const ResourceDescription = (props: IResourceState) => {
   const { state, setState } = props;
   const { description } = state;
+  const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
 
   const handleChangeDescription = (e: any) => {
     e.persist();
@@ -15,7 +19,7 @@ export const ResourceDescription = (props: IResourceState) => {
     <TextField
       margin="dense"
       id="description"
-      label={'t.description'}
+      label={t.description}
       value={description}
       onChange={handleChangeDescription}
       fullWidth

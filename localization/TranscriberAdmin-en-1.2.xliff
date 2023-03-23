@@ -4867,6 +4867,69 @@
                <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="resource.add">
+      		<source>Add</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.description">
+      		<source>Description</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.keywords">
+      		<source>Keywords</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.overview">
+      		<source>Overview</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.references">
+      		<source>References</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.resourceEdit">
+      		<source>Resource Edit</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.terms">
+      		<source>Terms</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.title">
+      		<source>Title</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.versions">
+      		<source>Versions</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="scriptureTable.book">
             <source>Book</source>
             <target/>

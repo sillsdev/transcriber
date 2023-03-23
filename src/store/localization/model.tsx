@@ -843,6 +843,18 @@ export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethod
     "downloadMb": string;
 };
 
+export interface IResourceStrings extends Localize.LocalizedStringsMethods {
+    "add": string;
+    "description": string;
+    "keywords": string;
+    "overview": string;
+    "references": string;
+    "resourceEdit": string;
+    "terms": string;
+    "title": string;
+    "versions": string;
+};
+
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
     "book": string;
     "description": string;
@@ -1374,6 +1386,7 @@ export interface ILocalizedStrings {
 	profile: IProfileStrings;
 	projButtons: IProjButtonsStrings;
 	projectDownload: IProjectDownloadStrings;
+	resource: IResourceStrings;
 	scriptureTable: IScriptureTableStrings;
 	scriptureTableFilter: IScriptureTableFilterStrings;
 	sectionResources: ISectionResourcesStrings;
