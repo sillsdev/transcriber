@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Tabs, Tab, Typography, Box } from '@mui/material';
 import VersionDlg from '../AudioTab/VersionDlg';
 import ResourceOverview, { IResourceDialog } from './ResourceOverview';
+import ResourceRefs from './ResourceRefs';
 import { DialogMode, IResourceStrings, SharedResource } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { sharedResourceSelector } from '../../selector';
@@ -173,7 +174,7 @@ export function ResourceTabs({
         />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <ResourceRefs />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <VersionDlg passId={passId} />

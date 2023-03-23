@@ -4,3 +4,4 @@ export * from './ResourceDescription';
 export * from './ResourceCategory';
 export * from './ResourceTerms';
 export * from './ResourceKeywords';
+export * from './ResourceRefs';
