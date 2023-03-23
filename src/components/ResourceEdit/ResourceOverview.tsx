@@ -11,7 +11,12 @@ import { IDialog } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { sharedSelector } from '../../selector';
 import Mode from '../../model/dialogMode';
-import { ResourceDescription, ResourceTitle } from '.';
+import {
+  ResourceCategory,
+  ResourceDescription,
+  ResourceTerms,
+  ResourceTitle,
+} from '.';
 
 const initState = {
   title: '',
@@ -22,6 +27,7 @@ const initState = {
   spellCheck: false,
   terms: '',
   keywords: '',
+  category: '',
 };
 export const initResourceState = { ...initState };
 export type IResourceDialog = typeof initState;
