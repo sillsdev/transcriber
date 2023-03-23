@@ -72,10 +72,17 @@ export const Language = (props: IProps) => {
 
   const widthStyle: CSSProperties = { width: 400 };
 
+  const fullBox = React.useMemo(() => {
+    if (props.hideSpelling && props.hideFont) return undefined;
+    return { pt: 3 };
+  }, [props.hideSpelling, props.hideFont]);
+
   return (
-    <Box sx={{ pt: 3 }}>
-      <FormLabel sx={{ color: 'secondary.main' }}>{t.language}</FormLabel>
-      <FormGroup sx={{ pb: 3 }}>
+    <Box sx={fullBox}>
+      {fullBox && (
+        <FormLabel sx={{ color: 'secondary.main' }}>{t.language}</FormLabel>
+      )}
+      <FormGroup sx={fullBox ? { pb: 3 } : undefined}>
         <FormControlLabel
           id="language-code"
           ref={langEl}

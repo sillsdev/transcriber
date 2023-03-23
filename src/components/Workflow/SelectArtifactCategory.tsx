@@ -1,4 +1,12 @@
-import { Box, IconButton, Paper, SxProps, TextField } from '@mui/material';
+import {
+  Box,
+  BoxProps,
+  IconButton,
+  Paper,
+  styled,
+  SxProps,
+  TextField,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
   IArtifactCategory,
@@ -31,6 +39,14 @@ interface IProps extends IRecordProps {
   resource?: boolean;
   discussion?: boolean;
 }
+
+const StyledBox = styled(Box)<BoxProps>(() => ({
+  '& .MuiFormControl-root': {
+    margin: 0,
+  },
+  display: 'flex',
+  flexDirection: 'column',
+}));
 
 const textFieldProps = {
   mr: 1,
@@ -125,7 +141,7 @@ export const SelectArtifactCategory = (props: IProps) => {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    <StyledBox>
       <TextField
         id="artifact-category"
         select
@@ -213,7 +229,7 @@ export const SelectArtifactCategory = (props: IProps) => {
           </Box>
         </Paper>
       )}
-    </Box>
+    </StyledBox>
   );
 };
 

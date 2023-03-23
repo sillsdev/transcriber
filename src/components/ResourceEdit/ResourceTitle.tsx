@@ -17,6 +17,7 @@ export const ResourceTitle = (props: IResourceState) => {
 
   return (
     <TextField
+      required
       margin="dense"
       id="title"
       label={t.title}
