@@ -629,7 +629,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     }
   };
   const handleSave = async () => {
-    if (mediafileId && myChanged && editSubject.length > 0) {
+    if (mediafileId && myChanged) {
       if (canSaveRecording && !commentMediaId.current) {
         startSave(myCommentToolId);
         await waitForIt(
@@ -641,7 +641,9 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
           500
         );
       }
-      discussion.attributes.subject = editSubject;
+      //we should only get here with no subject if they've clicked off the screen and then told us to save with no subject
+      discussion.attributes.subject =
+        editSubject.length > 0 ? editSubject : 'discuss';
       var ops: Operation[] = [];
       var t = new TransformBuilder();
       if (!discussion.id) {
